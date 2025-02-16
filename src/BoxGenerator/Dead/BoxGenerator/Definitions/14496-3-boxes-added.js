@@ -472,8 +472,8 @@ class ALSSpecificConfig()
   bslbf(1) byte_align; // TODO: 0..7 bslbf 
   uimsbf(32) header_size;
   uimsbf(32) trailer_size;
-  bslbf(header_size * 8) orig_header[];
-  bslbf(trailer_size * 8) orig_trailer[];
+  bslbf(header_size * 8) orig_header;
+  bslbf(trailer_size * 8) orig_trailer;
   if (crc_enabled) {
     uimsbf(32) crc;
   }
@@ -484,7 +484,7 @@ class ALSSpecificConfig()
   }
   if (aux_data_enabled) {
     uimsbf(32) aux_size;
-    bslbf(aux_size * 8) aux_data[];
+    bslbf(aux_size * 8) aux_data;
   }
 }
 

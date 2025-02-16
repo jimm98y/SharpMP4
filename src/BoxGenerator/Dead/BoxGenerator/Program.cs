@@ -195,7 +195,7 @@ partial class Program
             }
             else if (item.Value.BoxName == "SampleGroupDescriptionEntry")
             {
-                fields.Add(new PseudoField() { Name = "children", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), "Box()", new Maybe<string>()), FieldArray = "[]" });
+                fields.Add(new PseudoField() { Name = "children", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), "Box", new Maybe<string>()), FieldArray = "[]" });
             }
 
             item.Value.FlattenedFields = fields;
@@ -585,7 +585,7 @@ namespace SharpMP4
             }
             else
             {
-                name = GetType(GetFieldType(field as PseudoField))?.Replace("[]", "");
+                name = GetType(field as PseudoField)?.Replace("[]", "");
             }
         }
 
@@ -1187,7 +1187,7 @@ namespace SharpMP4
                     value = "";
                 }
 
-                string tt = GetType(GetFieldType(field as PseudoField));
+                string tt = GetType(field as PseudoField);
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
                 {
                     value = "";
@@ -1772,7 +1772,7 @@ namespace SharpMP4
                                 }
                             }
 
-                            string variableType = GetType(GetFieldType(req));
+                            string variableType = GetType(req);
                             int indexesTypeDef = GetFieldTypeDef(req).Count(x => x == '[');
                             int indexesType = variableType.Count(x => x == '[');
                             string variableName = GetFieldName(req) + suffix;
@@ -1780,7 +1780,7 @@ namespace SharpMP4
                             {
                                 int diff = (indexesType - indexesTypeDef);
                                 variableType = variableType.Replace("[]", "");
-                                variableType = $"{variableType}[{variable}]";
+                                variableType = $"{variableType}[IsoStream.GetInt({variable})]";
                                 for (int i = 0; i < diff; i++)
                                 {
                                     variableType += "[]";
@@ -1788,7 +1788,7 @@ namespace SharpMP4
                             }
                             else
                             {
-                                variableType = variableType + $"[{variable}]";
+                                variableType = variableType + $"[IsoStream.GetInt({variable})]";
                             }
                             ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                         }
@@ -1836,6 +1836,8 @@ namespace SharpMP4
                 parts[1] != " i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0")
                 throw new Exception();
         }
+
+        parts[1] = parts[1].Replace("pattern_length[j]", "IsoStream.GetInt(pattern_length[j])");
         
         return $"(int {string.Join(";", parts)})";
     }
@@ -1867,7 +1869,7 @@ namespace SharpMP4
             { "unsigned int(64)",                       "stream.ReadUInt64(" },
             { "unsigned int(48)",                       "stream.ReadUInt48(" },
             { "unsigned int(32)[ entry_count ]",        "stream.ReadUInt32Array(entry_count, " },
-            { "template int(32)[9]",                    "stream.ReadUInt32Array(9, " },
+            { "template int(32)[9]",                    "stream.ReadInt32Array(9, " },
             { "unsigned int(32)[3]",                    "stream.ReadUInt32Array(3, " },
             { "unsigned int(32)",                       "stream.ReadUInt32(" },
             { "unsigned int(31)",                       "stream.ReadBits(31, " },
@@ -1920,7 +1922,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.ReadUInt8Array((uint)(length_size_of_sample_num+1), " },
             { "unsigned int(8*size-64)",                "stream.ReadUInt8Array((uint)(size-8), " },
             { "bit(8)[chunk_length]",                   "stream.ReadUInt8Array((uint)chunk_length, " },
-            { "unsigned int(subgroupIdLen)[i]",         "stream.ReadUInt32(" },
+            { "unsigned int(subgroupIdLen)[i]",         "stream.ReadBits((uint)subgroupIdLen, " },
             { "const unsigned int(8)[6]",               "stream.ReadUInt8Array(6, " },
             { "const unsigned int(32)[2]",              "stream.ReadUInt32Array(2, " },
             { "const unsigned int(32)[3]",              "stream.ReadUInt32Array(3, " },
@@ -2173,9 +2175,9 @@ namespace SharpMP4
             { "fixedpoint1616",                         "stream.ReadFixedPoint1616(" },
             { "QoS_Qualifier[]",                        "stream.ReadDescriptor(boxSize, readSize, this, " },
             { "GetAudioObjectType()",                   "stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), " },
-            { "bslbf(header_size * 8)[]",               "stream.ReadBslbf(header_size * 8, " },
-            { "bslbf(trailer_size * 8)[]",              "stream.ReadBslbf(trailer_size * 8, " },
-            { "bslbf(aux_size * 8)[]",                  "stream.ReadBslbf(aux_size * 8, " },
+            { "bslbf(header_size * 8)",               "stream.ReadBslbf(header_size * 8, " },
+            { "bslbf(trailer_size * 8)",              "stream.ReadBslbf(trailer_size * 8, " },
+            { "bslbf(aux_size * 8)",                  "stream.ReadBslbf(aux_size * 8, " },
             { "bslbf(11)",                              "stream.ReadBslbf(11, " },
             { "bslbf(5)",                               "stream.ReadBslbf(5, " },
             { "bslbf(4)",                               "stream.ReadBslbf(4, " },
@@ -2299,7 +2301,7 @@ namespace SharpMP4
             { "unsigned int(64)[ entry_count ]",        "stream.WriteUInt64Array(entry_count, " },
             { "unsigned int(64)",                       "stream.WriteUInt64(" },
             { "unsigned int(48)",                       "stream.WriteUInt48(" },
-            { "template int(32)[9]",                    "stream.WriteUInt32Array(9, " },
+            { "template int(32)[9]",                    "stream.WriteInt32Array(9, " },
             { "unsigned int(32)[ entry_count ]",        "stream.WriteUInt32Array(entry_count, " },
             { "unsigned int(32)[3]",                    "stream.WriteUInt32Array(3, " },
             { "unsigned int(32)",                       "stream.WriteUInt32(" },
@@ -2353,7 +2355,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_sample_num+1), " },
             { "unsigned int(8*size-64)",                "stream.WriteUInt8Array((uint)(size-8), " },
             { "bit(8)[chunk_length]",                "stream.WriteUInt8Array((uint)chunk_length, " },
-            { "unsigned int(subgroupIdLen)[i]",         "stream.WriteUInt32(" },
+            { "unsigned int(subgroupIdLen)[i]",         "stream.WriteBits((uint)subgroupIdLen, " },
             { "const unsigned int(8)[6]",               "stream.WriteUInt8Array(6, " },
             { "const unsigned int(32)[2]",              "stream.WriteUInt32Array(2, " },
             { "const unsigned int(32)[3]",              "stream.WriteUInt32Array(3, " },
@@ -2605,9 +2607,9 @@ namespace SharpMP4
             { "fixedpoint1616",                         "stream.WriteFixedPoint1616(" },
             { "QoS_Qualifier[]",                        "stream.WriteDescriptor(" },
             { "GetAudioObjectType()",                   "stream.WriteClass(" },
-            { "bslbf(header_size * 8)[]",               "stream.WriteBslbf(header_size * 8, " },
-            { "bslbf(trailer_size * 8)[]",              "stream.WriteBslbf(trailer_size * 8, " },
-            { "bslbf(aux_size * 8)[]",                  "stream.WriteBslbf(aux_size * 8, " },
+            { "bslbf(header_size * 8)",               "stream.WriteBslbf(header_size * 8, " },
+            { "bslbf(trailer_size * 8)",              "stream.WriteBslbf(trailer_size * 8, " },
+            { "bslbf(aux_size * 8)",                  "stream.WriteBslbf(aux_size * 8, " },
             { "bslbf(11)",                              "stream.WriteBslbf(11, " },
             { "bslbf(5)",                               "stream.WriteBslbf(5, " },
             { "bslbf(4)",                               "stream.WriteBslbf(4, " },
@@ -2784,7 +2786,7 @@ namespace SharpMP4
             { "unsigned int((length_size_of_sample_num+1) * 8)", "(ulong)(length_size_of_sample_num+1) * 8" },
             { "unsigned int(8*size-64)",                "(ulong)(size - 8) * 8" },
             { "bit(8)[chunk_length]",                "(ulong)(chunk_length * 8)" },
-            { "unsigned int(subgroupIdLen)[i]",         "32" },
+            { "unsigned int(subgroupIdLen)[i]",         "(ulong)subgroupIdLen" },
             { "const unsigned int(8)[6]",               "6 * 8" },
             { "const unsigned int(32)[2]",              "2 * 32" },
             { "const unsigned int(32)[3]",              "3 * 32" },
@@ -3036,9 +3038,9 @@ namespace SharpMP4
             { "fixedpoint1616",                         "32" },
             { "QoS_Qualifier[]",                        "IsoStream.CalculateDescriptorSize(value)" },
             { "GetAudioObjectType()",                   "IsoStream.CalculateClassSize(value)" },
-            { "bslbf(header_size * 8)[]",               "header_size * 8" },
-            { "bslbf(trailer_size * 8)[]",              "trailer_size * 8" },
-            { "bslbf(aux_size * 8)[]",                  "aux_size * 8" },
+            { "bslbf(header_size * 8)",               "header_size * 8" },
+            { "bslbf(trailer_size * 8)",              "trailer_size * 8" },
+            { "bslbf(aux_size * 8)",                  "aux_size * 8" },
             { "bslbf(11)",                              "11" },
             { "bslbf(5)",                               "5" },
             { "bslbf(4)",                               "4" },
@@ -3154,434 +3156,217 @@ namespace SharpMP4
             throw new NotSupportedException(type);
     }
 
-    private static string GetType(string type)
+    private static string GetType(PseudoField field)
     {
-        Dictionary<string, string> map = new Dictionary<string, string> {
-            { "unsigned int(64)[ entry_count ]",        "ulong[]" },
-            { "unsigned int(64)",                       "ulong" },
-            { "unsigned int(48)",                       "ulong" },
-            { "template int(32)[9]",                    "uint[]" },
-            { "unsigned int(32)[ entry_count ]",        "uint[]" },
-            { "unsigned int(32)[3]",                    "uint[]" },
-            { "unsigned int(32)",                       "uint" },
-            { "unsigned int(31)",                       "uint" },
-            { "unsigned_int(32)",                       "uint" },
-            { "unsigned int(24)",                       "uint" },
-            { "unsigned int(29)",                       "uint" },
-            { "unsigned int(28)",                       "uint" },
-            { "unsigned int(26)",                       "uint" },
-            { "unsigned int(16)[i]",                    "ushort[]" },
-            { "unsigned int(16)[j]",                    "ushort[]" },
-            { "unsigned int(16)[i][j]",                 "ushort[][]" },
-            { "unsigned int(16)",                       "ushort" },
-            { "unsigned_int(16)",                       "ushort" },
-            { "unsigned int(15)",                       "ushort" },
-            { "unsigned int(12)",                       "ushort" },
-            { "signed int(12)",                         "short" },
-            { "unsigned int(10)[i][j]",                 "ushort[][]" },
-            { "unsigned int(10)[i]",                    "ushort[]" },
-            { "unsigned int(10)",                       "ushort" },
-            { "unsigned int(8)[ sample_count ]",        "byte[]" },
-            { "unsigned int(8)[length]",                "byte[]" },
-            { "unsigned int(8)[32]",                    "byte[]" },
-            { "unsigned int(8)[36]",                    "byte[]" },
-            { "unsigned int(8)[20]",                    "byte[]" },
-            { "unsigned int(8)[16]",                    "byte[]" },
-            { "unsigned int(9)",                        "ushort" },
-            { "unsigned int(8)",                        "byte" },
-            { "unsigned int(7)",                        "byte" },
-            { "unsigned int(6)",                        "byte" },
-            { "unsigned int(5)[3]",                     "string" },
-            { "unsigned int(5)",                        "byte" },
-            { "unsigned int(4)",                        "byte" },
-            { "unsigned int(3)",                        "byte" },
-            { "unsigned int(2)[i][j]",                  "byte[][]" },
-            { "unsigned int(2)",                        "byte" },
-            { "unsigned int(1)[i]",                     "bool[]" },
-            { "unsigned int(1)",                        "bool" },
-            { "unsigned int (32)",                      "uint" },
-            { "unsigned int(f(pattern_size_code))[i]",  "byte[]" },
-            { "unsigned int(f(index_size_code))[j][k]", "byte[][]" },
-            { "unsigned int(f(count_size_code))[i]",    "byte[]" },
-            { "unsigned int(base_offset_size*8)",       "byte[]" },
-            { "unsigned int(offset_size*8)",            "byte[]" },
-            { "unsigned int(length_size*8)",            "byte[]" },
-            { "unsigned int(index_size*8)",             "byte[]" },
-            { "unsigned int(field_size)",               "byte[]" },
-            { "unsigned int((length_size_of_traf_num+1) * 8)", "byte[]" },
-            { "unsigned int((length_size_of_trun_num+1) * 8)", "byte[]" },
-            { "unsigned int((length_size_of_sample_num+1) * 8)", "byte[]" },
-            { "unsigned int(8*size-64)",                "byte[]" },
-            { "bit(8)[chunk_length]",                   "byte[]" },
-            { "unsigned int(subgroupIdLen)[i]",         "uint[]" },
-            { "const unsigned int(8)[6]",               "byte[]" },
-            { "const unsigned int(32)[2]",              "uint[]" },
-            { "const unsigned int(32)[3]",              "uint[]" },
-            { "const unsigned int(32)",                 "uint" },
-            { "const unsigned int(16)[3]",              "ushort[]" },
-            { "const unsigned int(16)",                 "ushort" },
-            { "const unsigned int(26)",                 "uint" },
-            { "template int(32)",                       "int" },
-            { "template int(16)",                       "short" },
-            { "template unsigned int(30)",              "uint" },
-            { "template unsigned int(32)",              "uint" },
-            { "template unsigned int(16)[3]",           "ushort[]" },
-            { "template unsigned int(16)",              "ushort" },
-            { "template unsigned int(8)[]",             "byte[]" },
-            { "template unsigned int(8)",               "byte" },
-            { "int(64)",                                "long" },
-            { "int(32)",                                "int" },
-            { "int(16)",                                "short" },
-            { "int(8)",                                 "sbyte" },
-            { "int(4)",                                 "byte" },
-            { "int",                                    "int" },
-            { "const bit(16)",                          "ushort" },
-            { "const bit(1)",                           "bool" },
-            { "bit(1)",                                 "bool" },
-            { "bit(2)",                                 "byte" },
-            { "bit(3)",                                 "byte" },
-            { "bit(length-3)",                          "byte[]" },
-            { "bit(length)",                            "byte[]" },
-            { "bit(4)",                                 "byte" },
-            { "bit(5)",                                 "byte" },
-            { "bit(6)",                                 "byte" },
-            { "bit(7)",                                 "byte" },
-            { "bit(8)[]",                               "byte[]" },
-            { "bit(8)",                                 "byte" },
-            { "bit(9)",                                 "ushort" },
-            { "bit(13)",                                "ushort" },
-            { "bit(14)",                                "ushort" },
-            { "bit(15)",                                "ushort" },
-            { "bit(16)[i]",                             "ushort[]" },
-            { "bit(16)",                                "ushort" },
-            { "bit(24)",                                "uint" },
-            { "bit(31)",                                "uint" },
-            { "bit(8 ceil(size / 8) \u2013 size)",      "byte[]" },
-            { "bit(8* ps_nalu_length)",                 "byte[]" },
-            { "bit(8*nalUnitLength)",                   "byte[]" },
-            { "bit(8*sequenceParameterSetLength)",      "byte[]" },
-            { "bit(8*pictureParameterSetLength)",       "byte[]" },
-            { "bit(8*sequenceParameterSetExtLength)",   "byte[]" },
-            { "unsigned int(8*num_bytes_constraint_info - 2)", "byte[]" },
-            { "bit(8*nal_unit_length)",                 "byte[]" },
-            { "bit(timeStampLength)",                   "byte[]" },
-            { "utf8string",                             "BinaryUTF8String" },
-            { "utfstring",                              "BinaryUTF8String" },
-            { "utf8list",                               "BinaryUTF8String" },
-            { "boxstring",                              "BinaryUTF8String" },
-            { "string",                                 "BinaryUTF8String" },
-            { "bit(32)[6]",                             "uint[]" },
-            { "bit(32)",                                "uint" },
-            { "uint(32)",                               "uint" },
-            { "uint(16)",                               "ushort" },
-            { "uint(64)",                               "ulong" },
-            { "uint(8)[32]",                            "byte[]" }, // compressor_name
-            { "uint(8)",                                "byte" },
-            { "uint(7)",                                "byte" },
-            { "uint(1)",                                "byte" },
-            { "signed int(64)",                       "long" },
-            { "signed int(32)",                         "int" },
-            { "signed int (16)",                        "short" },
-            { "signed int(16)[grid_pos_view_id[i]]",    "short[]" },
-            { "signed int(16)",                         "short" },
-            { "signed int (8)",                         "sbyte" },
-            { "signed int(8)",                        "sbyte" },
-            { "Box()[]",                                "Box[]" },
-            { "Box[]",                                  "Box[]" },
-            { "Box()",                                    "Box" },
-            { "Box",                                    "Box" },
-            { "SchemeTypeBox",                          "SchemeTypeBox" },
-            { "SchemeInformationBox",                   "SchemeInformationBox" },
-            { "ItemPropertyContainerBox",               "ItemPropertyContainerBox" },
-            { "ItemPropertyAssociationBox",             "ItemPropertyAssociationBox" },
-            { "char",                                   "byte" },
-            { "loudness",                               "int" },
-            { "ICC_profile",                            "ICC_profile" },
-            { "OriginalFormatBox(fmt)",                 "OriginalFormatBox" },
-            { "DataEntryBaseBox(entry_type, entry_flags)", "DataEntryBaseBox" },
-            { "ItemInfoEntry[ entry_count ]",           "ItemInfoEntry[]" },
-            { "TypeCombinationBox[]",                   "TypeCombinationBox[]" },
-            { "FilePartitionBox",                       "FilePartitionBox" },
-            { "FECReservoirBox",                        "FECReservoirBox" },
-            { "FileReservoirBox",                       "FileReservoirBox" },
-            { "PartitionEntry[ entry_count ]",          "PartitionEntry[]" },
-            { "FDSessionGroupBox",                      "FDSessionGroupBox" },
-            { "GroupIdToNameBox",                       "GroupIdToNameBox" },
-            { "base64string",                           "BinaryUTF8String" },
-            { "ProtectionSchemeInfoBox",                "ProtectionSchemeInfoBox" },
-            { "SingleItemTypeReferenceBox",             "SingleItemTypeReferenceBox" },
-            { "SingleItemTypeReferenceBox[]",           "SingleItemTypeReferenceBox[]" },
-            { "SingleItemTypeReferenceBoxLarge",        "SingleItemTypeReferenceBoxLarge" },
-            { "SingleItemTypeReferenceBoxLarge[]",      "SingleItemTypeReferenceBoxLarge[]" },
-            { "HandlerBox(handler_type)",               "HandlerBox" },
-            { "PrimaryItemBox",                         "PrimaryItemBox" },
-            { "DataInformationBox",                     "DataInformationBox" },
-            { "ItemLocationBox",                        "ItemLocationBox" },
-            { "ItemProtectionBox",                      "ItemProtectionBox" },
-            { "ItemInfoBox",                            "ItemInfoBox" },
-            { "IPMPControlBox",                         "IPMPControlBox" },
-            { "ItemReferenceBox",                       "ItemReferenceBox" },
-            { "ItemDataBox",                            "ItemDataBox" },
-            { "TrackReferenceTypeBox[]",               "TrackReferenceTypeBox[]" },
-            { "MetaDataKeyBox[]",                       "MetaDataKeyBox[]" },
-            { "TierInfoBox()",                            "TierInfoBox" },
-            { "TierInfoBox",                            "TierInfoBox" },
-            { "MultiviewRelationAttributeBox",          "MultiviewRelationAttributeBox" },
-            { "TierBitRateBox()",                         "TierBitRateBox" },
-            { "TierBitRateBox",                         "TierBitRateBox" },
-            { "BufferingBox()",                           "BufferingBox" },
-            { "BufferingBox",                           "BufferingBox" },
-            { "MultiviewSceneInfoBox",                  "MultiviewSceneInfoBox" },
-            { "MVDDecoderConfigurationRecord",          "MVDDecoderConfigurationRecord" },
-            { "MVDDepthResolutionBox",                  "MVDDepthResolutionBox" },
-            { "MVCDecoderConfigurationRecord()",        "MVCDecoderConfigurationRecord" },
-            { "AVCDecoderConfigurationRecord()",        "AVCDecoderConfigurationRecord" },
-            { "HEVCDecoderConfigurationRecord()",       "HEVCDecoderConfigurationRecord" },
-            { "LHEVCDecoderConfigurationRecord()",      "LHEVCDecoderConfigurationRecord" },
-            { "SVCDecoderConfigurationRecord()",        "SVCDecoderConfigurationRecord" },
-            { "HEVCTileTierLevelConfigurationRecord()", "HEVCTileTierLevelConfigurationRecord" },
-            { "EVCDecoderConfigurationRecord()",        "EVCDecoderConfigurationRecord" },
-            { "VvcDecoderConfigurationRecord()",        "VvcDecoderConfigurationRecord" },
-            { "EVCSliceComponentTrackConfigurationRecord()", "EVCSliceComponentTrackConfigurationRecord" },
-            { "Descriptor[0 .. 255]",                   "Descriptor[]" },
-            { "Descriptor[count]",                      "Descriptor[]" },
-            { "Descriptor",                             "Descriptor" },
-            { "WebVTTConfigurationBox",                 "WebVTTConfigurationBox" },
-            { "WebVTTSourceLabelBox",                   "WebVTTSourceLabelBox" },
-            { "OperatingPointsRecord",                  "OperatingPointsRecord" },
-            { "VvcSubpicIDEntry",                       "VvcSubpicIDEntry" },
-            { "VvcSubpicOrderEntry",                    "VvcSubpicOrderEntry" },
-            { "URIInitBox",                             "URIInitBox" },
-            { "URIBox",                                 "URIBox" },
-            { "CleanApertureBox",                       "CleanApertureBox" },
-            { "PixelAspectRatioBox",                    "PixelAspectRatioBox" },
-            { "DownMixInstructions()[]",               "DownMixInstructions[]" },
-            { "DRCCoefficientsBasic()[]",              "DRCCoefficientsBasic[]" },
-            { "DRCInstructionsBasic()[]",              "DRCInstructionsBasic[]" },
-            { "DRCCoefficientsUniDRC()[]",             "DRCCoefficientsUniDRC[]" },
-            { "DRCInstructionsUniDRC()[]",             "DRCInstructionsUniDRC[]" },
-            { "HEVCConfigurationBox",                   "HEVCConfigurationBox" },
-            { "LHEVCConfigurationBox",                  "LHEVCConfigurationBox" },
-            { "AVCConfigurationBox",                    "AVCConfigurationBox" },
-            { "SVCConfigurationBox",                    "SVCConfigurationBox" },
-            { "ScalabilityInformationSEIBox",           "ScalabilityInformationSEIBox" },
-            { "SVCPriorityAssignmentBox",               "SVCPriorityAssignmentBox" },
-            { "ViewScalabilityInformationSEIBox",       "ViewScalabilityInformationSEIBox" },
-            { "ViewIdentifierBox()",                      "ViewIdentifierBox" },
-            { "MVCConfigurationBox",                    "MVCConfigurationBox" },
-            { "MVCViewPriorityAssignmentBox",           "MVCViewPriorityAssignmentBox" },
-            { "IntrinsicCameraParametersBox",           "IntrinsicCameraParametersBox" },
-            { "ExtrinsicCameraParametersBox",           "ExtrinsicCameraParametersBox" },
-            { "MVCDConfigurationBox",                   "MVCDConfigurationBox" },
-            { "MVDScalabilityInformationSEIBox",        "MVDScalabilityInformationSEIBox" },
-            { "A3DConfigurationBox",                    "A3DConfigurationBox" },
-            { "VvcOperatingPointsRecord",               "VvcOperatingPointsRecord" },
-            { "VVCSubpicIDRewritingInfomationStruct()", "VVCSubpicIDRewritingInfomationStruct" },
-            { "MPEG4ExtensionDescriptorsBox ()",        "MPEG4ExtensionDescriptorsBox" },
-            { "MPEG4ExtensionDescriptorsBox()",         "MPEG4ExtensionDescriptorsBox" },
-            { "MPEG4ExtensionDescriptorsBox",           "MPEG4ExtensionDescriptorsBox" },
-            { "bit(8*dci_nal_unit_length)",             "byte[]" },
-            { "DependencyInfo[numReferences]",          "DependencyInfo[]" },
-            { "VvcPTLRecord(0)[i]",                     "VvcPTLRecord[]" },
-            { "EVCSliceComponentTrackConfigurationBox", "EVCSliceComponentTrackConfigurationBox" },
-            { "SVCMetadataSampleConfigBox",             "SVCMetadataSampleConfigBox" },
-            { "SVCPriorityLayerInfoBox",                "SVCPriorityLayerInfoBox" },
-            { "EVCConfigurationBox",                    "EVCConfigurationBox" },
-            { "VvcNALUConfigBox",                       "VvcNALUConfigBox" },
-            { "VvcConfigurationBox",                    "VvcConfigurationBox" },
-            { "HEVCTileConfigurationBox",               "HEVCTileConfigurationBox" },
-            { "MetaDataKeyTableBox()",                  "MetaDataKeyTableBox" },
-            { "BitRateBox()",                          "BitRateBox" },
-            { "char[count]",                            "byte[]" },
-            { "signed int(64)[j][k]",                 "long[][]" },
-            { "signed int(64)[j]",                    "long[]" },
-            { "unsigned int(8)[j][k]",                  "byte[][]" },
-            { "unsigned int(8)[j]",                     "byte[]" },
-            { "signed int(32)[ c ]",                    "int[]" },
-            { "unsigned int(8)[]",                      "byte[]" },
-            { "unsigned int(8)[i]",                     "byte[]" },
-            { "unsigned int(6)[i]",                     "byte[]" },
-            { "unsigned int(6)[i][j]",                  "byte[][]" },
-            { "unsigned int(1)[i][j]",                  "byte[][]" },
-            { "unsigned int(9)[i]",                     "ushort[]" },
-            { "unsigned int(32)[]",                     "uint[]" },
-            { "unsigned int(32)[i]",                    "uint[]" },
-            { "unsigned int(32)[j]",                    "uint[]" },
-            { "char[]",                                 "byte[]" },
-            { "loudness[]",                             "int[]" },
-            { "ItemPropertyAssociationBox[]",           "ItemPropertyAssociationBox[]" },
-            { "string[method_count]",                   "BinaryUTF8String[]" },
-            { "ItemInfoExtension(extension_type)",                      "ItemInfoExtension" },
-            { "SampleGroupDescriptionEntry(grouping_type)",            "SampleGroupDescriptionEntry" },
-            { "SampleEntry()",                            "SampleEntry" },
-            { "SampleConstructor()",                      "SampleConstructor" },
-            { "InlineConstructor()",                      "InlineConstructor" },
-            { "SampleConstructorFromTrackGroup()",        "SampleConstructorFromTrackGroup" },
-            { "NALUStartInlineConstructor()",             "NALUStartInlineConstructor" },
-            { "MPEG4BitRateBox",                        "MPEG4BitRateBox" },
-            { "ChannelLayout()",                          "ChannelLayout" },
-            { "UniDrcConfigExtension()",                  "UniDrcConfigExtension" },
-            { "SamplingRateBox()",                        "SamplingRateBox" },
-            { "TextConfigBox()",                          "TextConfigBox" },
-            { "MetaDataKeyTableBox",                    "MetaDataKeyTableBox" },
-            { "BitRateBox",                             "BitRateBox" },
-            { "CompleteTrackInfoBox",                   "CompleteTrackInfoBox" },
-            { "TierDependencyBox()",                      "TierDependencyBox" },
-            { "InitialParameterSetBox",                 "InitialParameterSetBox" },
-            { "PriorityRangeBox()",                       "PriorityRangeBox" },
-            { "ViewPriorityBox",                        "ViewPriorityBox" },
-            { "SVCDependencyRangeBox",                  "SVCDependencyRangeBox" },
-            { "RectRegionBox",                          "RectRegionBox" },
-            { "IroiInfoBox",                            "IroiInfoBox" },
-            { "TranscodingInfoBox",                     "TranscodingInfoBox" },
-            { "MetaDataKeyDeclarationBox()",              "MetaDataKeyDeclarationBox" },
-            { "MetaDataDatatypeBox()",                    "MetaDataDatatypeBox" },
-            { "MetaDataLocaleBox()",                      "MetaDataLocaleBox" },
-            { "MetaDataSetupBox()",                       "MetaDataSetupBox" },
-            { "MetaDataExtensionsBox()",                  "MetaDataExtensionsBox" },
-            { "TrackLoudnessInfo[]",                    "TrackLoudnessInfo[]" },
-            { "AlbumLoudnessInfo[]",                    "AlbumLoudnessInfo[]" },
-            { "VvcPTLRecord(num_sublayers)",            "VvcPTLRecord" },
-            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "VvcPTLRecord[]" },
-            { "OpusSpecificBox",                        "OpusSpecificBox" },
-            { "unsigned int(8 * OutputChannelCount)",   "byte[]" },
-            { "ChannelMappingTable(OutputChannelCount)",                    "ChannelMappingTable" },
-            // descriptors
-            { "DecoderConfigDescriptor",                "DecoderConfigDescriptor" },
-            { "SLConfigDescriptor",                     "SLConfigDescriptor" },
-            { "IPI_DescrPointer[0 .. 1]",               "IPI_DescrPointer" },
-            { "IP_IdentificationDataSet[0 .. 255]",     "IP_IdentificationDataSet[]" },
-            { "IPMP_DescriptorPointer[0 .. 255]",       "IPMP_DescriptorPointer[]" },
-            { "LanguageDescriptor[0 .. 255]",           "LanguageDescriptor" },
-            { "QoS_Descriptor[0 .. 1]",                 "QoS_Descriptor" },
-            { "ES_Descriptor",                          "ES_Descriptor" },
-            { "RegistrationDescriptor[0 .. 1]",         "RegistrationDescriptor" },
-            { "ExtensionDescriptor[0 .. 255]",          "ExtensionDescriptor[]" },
-            { "ProfileLevelIndicationIndexDescriptor[0..255]", "ProfileLevelIndicationIndexDescriptor[]" },
-            { "DecoderSpecificInfo[0 .. 1]",            "DecoderSpecificInfo[]" },
-            { "bit(8)[URLlength]",                      "byte[]" },
-            { "bit(8)[sizeOfInstance-4]",               "byte[]" },
-            { "bit(8)[sizeOfInstance-3]",               "byte[]" },
-            { "bit(8)[size-10]",                        "byte[]" },
-            { "double(32)",                             "double" },
-            { "fixedpoint1616",                         "double" },
-            { "QoS_Qualifier[]",                        "QoS_Qualifier[]" },
-            { "bslbf(header_size * 8)[]",               "byte[]" },
-            { "bslbf(trailer_size * 8)[]",              "byte[]" },
-            { "bslbf(aux_size * 8)[]",                  "byte[]" },
-            { "bslbf(11)",                              "ushort" },
-            { "bslbf(5)",                               "byte" },
-            { "bslbf(4)",                               "byte" },
-            { "bslbf(2)",                               "byte" },
-            { "bslbf(1)",                               "bool" },
-            { "uimsbf(32)",                             "uint" },
-            { "uimsbf(24)",                             "uint" },
-            { "uimsbf(18)",                             "uint" },
-            { "uimsbf(16)",                             "ushort" },
-            { "uimsbf(14)",                             "ushort" },
-            { "uimsbf(12)",                             "ushort" },
-            { "uimsbf(10)",                             "ushort" },
-            { "uimsbf(8)",                              "byte" },
-            { "uimsbf(7)",                              "byte" },
-            { "uimsbf(6)",                              "byte" },
-            { "uimsbf(5)",                              "byte" },
-            { "uimsbf(4)",                              "byte" },
-            { "uimsbf(3)",                              "byte" },
-            { "uimsbf(2)",                              "byte" },
-            { "uimsbf(1)",                              "bool" },
-            { "GetAudioObjectType()",                   "GetAudioObjectType" },
-            { "SpatialSpecificConfig",                  "SpatialSpecificConfig" },
-            { "ALSSpecificConfig",                      "ALSSpecificConfig" },
-            { "ErrorProtectionSpecificConfig",          "ErrorProtectionSpecificConfig" },
-            { "program_config_element",                 "program_config_element" },
-            { "byte_alignment",                         "byte" },
-            { "CelpHeader(samplingFrequencyIndex)",     "CelpHeader" },
-            { "CelpBWSenhHeader",                       "CelpBWSenhHeader" },
-            { "HVXCconfig",                             "HVXCconfig" },
-            { "TTS_Sequence",                           "TTS_Sequence" },
-            { "ER_SC_CelpHeader(samplingFrequencyIndex)", "ER_SC_CelpHeader" },
-            { "ErHVXCconfig",                           "ErHVXCconfig" },
-            { "PARAconfig",                             "PARAconfig" },
-            { "HILNenexConfig",                         "HILNenexConfig" },
-            { "HILNconfig",                             "HILNconfig" },
-            { "ld_sbr_header(channelConfiguration)",                          "ld_sbr_header" },
-            { "sbr_header",                             "sbr_header" },
-            { "uimsbf(1)[i]",                           "bool[]" },
-            { "uimsbf(8)[i]",                           "byte[]" },
-            { "bslbf(1)[i]",                            "byte[]" },
-            { "uimsbf(4)[i]",                           "byte[]" },
-            { "uimsbf(1)[c]",                           "bool[]" },
-            { "uimsbf(32)[f]",                          "uint[]" },
-            { "uimsbf(6)[i]",                           "byte[]" },
-            { "uimsbf(1)[i][j]",                        "bool[][]" },
-            { "uimsbf(2)[i][j]",                        "byte[][]" },
-            { "uimsbf(4)[i][j]",                        "byte[][]" },
-            { "uimsbf(16)[i][j]",                       "ushort[][]" },
-            { "uimsbf(7)[i][j]",                        "byte[][]" },
-            { "uimsbf(5)[i][j]",                        "byte[][]" },
-            { "uimsbf(6)[i][j]",                        "byte[][]" },
-            { "CelpHeader",                             "CelpHeader" },
-            { "ER_SC_CelpHeader",                       "ER_SC_CelpHeader" },
-            { "AV1CodecConfigurationBox",               "AV1CodecConfigurationBox" },
-            { "AV1CodecConfigurationRecord",            "AV1CodecConfigurationRecord" },
-            { "vluimsbf8",                              "byte" },
-            { "byte(urlMIDIStream_length)",             "byte[]" },
-            { "aligned bit(3)",                         "byte" },
-            { "aligned bit(1)",                         "bool" },
-            { "bit",                                    "bool" },
-            { "unsigned int(16)[3]",                    "ushort[]" },
-            { "MultiLanguageString[]",                  "MultiLanguageString[]" },
-            { "AdobeChapterRecord[]",                   "AdobeChapterRecord[]" },
-            { "ThreeGPPKeyword[]",                      "ThreeGPPKeyword[]" },
-            { "IodsSample[]",                           "IodsSample[]" },
-            { "XtraTag[]",                              "XtraTag[]" },
-            { "XtraValue[count]",                       "XtraValue[]" },
-            { "TrunEntry(version, flags)[ sample_count ]",       "TrunEntry[]" },
-            { "ViprEntry[]",                            "ViprEntry[]" },
-            { "TrickPlayEntry[]",                       "TrickPlayEntry[]" },
-            { "MtdtEntry[ entry_count ]",               "MtdtEntry[]" },
-            { "RectRecord",                             "RectRecord" },
-            { "StyleRecord",                            "StyleRecord" },
-            { "ProtectionSystemSpecificKeyID[count]",   "ProtectionSystemSpecificKeyID[]" },
-            { "unsigned int(8)[contentIDLength]",       "byte[]" },
-            { "unsigned int(8)[contentTypeLength]",     "byte[]" },
-            { "unsigned int(8)[rightsIssuerLength]",    "byte[]" },
-            { "unsigned int(8)[textualHeadersLength]",  "byte[]" },
-            { "unsigned int(8)[count]",                 "byte[]" },
-            { "unsigned int(8)[4]",                     "byte[]" },
-            { "unsigned int(8)[14]",                    "byte[]" },
-            { "unsigned int(8)[6]",                     "byte[]" },
-            { "unsigned int(8)[256]",                   "byte[]" },
-            { "unsigned int(8)[512]",                   "byte[]" },
-            { "char[tagLength]",                        "byte[]" },
-            { "unsigned int(8)[constant_IV_size]",      "byte[]" },
-            { "unsigned int(8)[length-6]",              "byte[]" },
-            { "unsigned int(Per_Sample_IV_Size*8)",     "byte[]" },
-            { "EC3SpecificEntry[numIndSub + 1]",        "EC3SpecificEntry[]" },
-            { "SampleEncryptionSubsample(version)[subsample_count]", "SampleEncryptionSubsample[]" },
-            { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "SampleEncryptionSample[]" },
-            { "CelpSpecificConfig()",                   "CelpSpecificConfig" },
-            { "HvxcSpecificConfig()",                   "HvxcSpecificConfig" },
-            { "TTSSpecificConfig()",                    "TTSSpecificConfig" },
-            { "ErrorResilientCelpSpecificConfig()",     "ErrorResilientCelpSpecificConfig" },
-            { "ErrorResilientHvxcSpecificConfig()",     "ErrorResilientHvxcSpecificConfig" },
-            { "SSCSpecificConfig()",                    "SSCSpecificConfig" },
-            { "DSTSpecificConfig()",                    "DSTSpecificConfig" },
-            { "ELDSpecificConfig(channelConfiguration)","ELDSpecificConfig" },
-            { "GASpecificConfig()",                     "GASpecificConfig" },
-            { "StructuredAudioSpecificConfig()",        "StructuredAudioSpecificConfig" },
-            { "ParametricSpecificConfig()",             "ParametricSpecificConfig" },
-            { "MPEG_1_2_SpecificConfig()",              "MPEG_1_2_SpecificConfig" },
-            { "SLSSpecificConfig()",                    "SLSSpecificConfig" },
-            { "SymbolicMusicSpecificConfig()",          "SymbolicMusicSpecificConfig" },
-            { "ViewIdentifierBox",                      "ViewIdentifierBox" },
-        };
-        if (map.ContainsKey(type))
-            return map[type];
-        else if (map.ContainsKey(type.Replace("()", "")))
-            return map[type.Replace("()", "")];
+        var fieldType = field.Type;
+
+        bool isNumber = false;
+        bool isFloatningPoint = false;
+        bool isString = false;
+        bool isSigned = false;
+        int arrayDimensions = 0;
+        int fieldSize = 0;
+
+        switch (fieldType.Type)
+        {
+            case "int":
+                fieldSize = 32; // assume standard int size
+                isNumber = true;
+                isSigned = true;
+                break;
+            
+            case "uint":
+            case "uimsbf":
+                isNumber = true;
+                isSigned = false;
+                break;
+
+            case "bit":
+                fieldSize = 1;
+                isNumber = true;
+                isSigned = false;
+                break;
+
+            case "char":
+            case "byte":
+            case "bslbf":
+            case "vluimsbf8":
+            case "byte_alignment":
+                fieldSize = 8;
+                isNumber = true;
+                isSigned = false;
+                break;
+
+            case "double":
+            case "fixedpoint1616":
+                fieldSize = 32;
+                isFloatningPoint = true;
+                isNumber = true;
+                isSigned = true;
+                break;
+
+            case "base64string":
+            case "boxstring":
+            case "utf8string":
+            case "utfstring":
+            case "utf8list":
+            case "string":
+                isString = true;
+                break;
+
+            default:
+                //Debug.WriteLine($"GetType - number: {fieldType.Type}");
+                break;
+        }
+
+        switch(fieldType.Sign)
+        {
+            case "unsigned":
+                isSigned = false;
+                break;
+
+            case "signed":
+                isSigned = true;
+                break;
+        }
+
+        if (!string.IsNullOrEmpty(field.FieldArray))
+        {
+            int level = 0;
+            for (int i = 0; i < field.FieldArray.Length; i++)
+            {
+                if (field.FieldArray[i] == '[')
+                {
+                    if (level == 0)
+                        arrayDimensions++;
+
+                    level++;
+                }
+                else if (field.FieldArray[i] == ']')
+                {
+                    level--;
+                }
+            }
+        }
+
+        // size
+        if(isNumber && !string.IsNullOrEmpty(fieldType.Param))
+        {
+            string innerParam = fieldType.Param.Substring(1, fieldType.Param.Length - 2);
+            if(innerParam.Length > 0)
+            {
+                if (!int.TryParse(innerParam, out fieldSize))
+                {
+                    // not a number
+                    //Debug.WriteLine($"GetType - number: {fieldType.Type} {innerParam}");
+                    fieldSize = -1; // we cannot determine the size, we'll use byte[]
+                }
+            }
+        }
+
+        if (isNumber && fieldSize == 0)
+            throw new NotSupportedException($"{fieldType.Type} is unknown");
+
+        string csharpType = GetCSharpType(fieldType.Type, field.FieldArray, isNumber, isFloatningPoint, isString, isSigned, arrayDimensions, fieldSize);
+        return csharpType;
+    }
+
+    private static string GetCSharpType(string type, string fieldArray, bool isNumber, bool isFloatingPoint, bool isString, bool isSigned, int arrayDimensions, int fieldSize)
+    {
+        string t = "";
+        if (isNumber)
+        {
+            if (!isFloatingPoint)
+            {
+                if (fieldSize == 1)
+                {
+                    t = "bool";
+                }
+                else if (fieldSize > 1 && fieldSize <= 8)
+                {
+                    if (isSigned)
+                    {
+                        t = "sbyte";
+                    }
+                    else
+                    {
+                        t = "byte";
+                    }
+                }
+                else if (fieldSize > 8 && fieldSize <= 16)
+                {
+                    if (isSigned)
+                    {
+                        t = "short";
+                    }
+                    else
+                    {
+                        t = "ushort";
+                    }
+                }
+                else if (fieldSize > 16 && fieldSize <= 32)
+                {
+                    if (isSigned)
+                    {
+                        t = "int";
+                    }
+                    else
+                    {
+                        t = "uint";
+                    }
+                }
+                else if (fieldSize > 32 && fieldSize <= 64)
+                {
+                    if (isSigned)
+                    {
+                        t = "long";
+                    }
+                    else
+                    {
+                        t = "ulong";
+                    }
+                }
+                else if (fieldSize == -1)
+                {
+                    t = "byte";
+
+                    arrayDimensions++;
+                }
+
+                // workaround: Iso639
+                if (type == "int" && !isSigned && arrayDimensions == 1 && fieldSize == 5 && fieldArray == "[3]")
+                {
+                    t = "string";
+                    arrayDimensions = 0;
+                }
+            }
+            else
+            {
+                if(fieldSize == 32)
+                {
+                    t = "double";
+                }
+                else
+                {
+                    throw new NotSupportedException($"{type} is unknown");
+                }
+            }
+        }
+        else if(isString)
+        {
+            t = "BinaryUTF8String";
+        }
         else
-            throw new NotSupportedException(type);
+        {
+            t = type;
+        }
+
+        for (int i = 0; i < arrayDimensions; i++)
+        {
+            t += "[]";
+        }
+
+        return t;
     }
 
     static partial void HelloFrom(string name);

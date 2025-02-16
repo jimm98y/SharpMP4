@@ -230,11 +230,26 @@ namespace SharpMP4
             return 1;
         }
 
+        internal ulong ReadBits(uint count, out bool value)
+        {
+            if (count > 1) throw new ArgumentException();
+            value = ReadBit() != 0;
+            return 1;
+        }
+
         internal ulong ReadBits(uint count, out byte value)
         {
             if (count > 8) throw new ArgumentException();
             ulong ret = ReadBits(count, out uint v);
             value = (byte)v;
+            return ret;
+        }
+
+        internal ulong ReadBits(uint count, out sbyte value)
+        {
+            if (count > 8) throw new ArgumentException();
+            ulong ret = ReadBits(count, out uint v);
+            value = (sbyte)v;
             return ret;
         }
 
@@ -300,6 +315,13 @@ namespace SharpMP4
         {
             WriteBit(value ? 1 : 0);
             return 1;
+        }
+
+        internal ulong WriteBits(uint count, bool value)
+        {
+            if (count > 1)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            return WriteBit(value);
         }
 
         internal ulong WriteBits(uint count, byte value)
@@ -1532,6 +1554,17 @@ namespace SharpMP4
             return size;
         }
 
+        internal ulong ReadInt32Array(uint count, out int[] value)
+        {
+            ulong size = 0;
+            value = new int[count];
+            for (uint i = 0; i < count; i++)
+            {
+                size += ReadInt32(out value[i]);
+            }
+            return size;
+        }
+
         internal ulong WriteUInt32Array(uint count, uint[] value)
         {
             ulong size = 0;
@@ -1542,6 +1575,20 @@ namespace SharpMP4
             for (uint i = 0; i < count; i++)
             {
                 size += WriteUInt32(value[i]);
+            }
+            return size;
+        }
+
+        internal ulong WriteInt32Array(uint count, int[] value)
+        {
+            ulong size = 0;
+
+            if (value == null)
+                return size;
+
+            for (uint i = 0; i < count; i++)
+            {
+                size += WriteInt32(value[i]);
             }
             return size;
         }
@@ -1723,6 +1770,13 @@ namespace SharpMP4
         {
             ulong count = ReadUInt32(out uint v);
             value = unchecked((int)v);
+            return count;
+        }
+
+        internal ulong ReadInt32(out byte value)
+        {
+            ulong count = ReadUInt32(out uint v);
+            value = (byte)v;
             return count;
         }
 
@@ -1998,6 +2052,33 @@ namespace SharpMP4
             return size;
         }
 
+        internal static int GetInt(byte[] bytes)
+        {
+            if (bytes.Length == 1)
+                return bytes[0];
+            else if (bytes.Length == 2)
+                return (int)(((int)bytes[0] << 8) + ((int)bytes[1]));
+            else if (bytes.Length == 4)
+                return (int)(((int)bytes[0] << 24) + ((int)bytes[1] << 16) + ((int)bytes[2] << 8) + ((int)bytes[3]));
+            else
+                throw new NotSupportedException();
+        }
+
+        internal static int GetInt(int size)
+        {
+            return size;
+        }
+
+        internal static int GetInt(uint size)
+        {
+            return (int)size;
+        }
+
+        internal static int GetInt(long size)
+        {
+            return (int)size;
+        }
+
         #endregion // Numbers
 
         #region Iso639
@@ -2123,12 +2204,22 @@ namespace SharpMP4
             return WriteBytes(count, value);
         }
 
+        internal ulong ReadBslbf(ulong count, out bool value)
+        {
+            return ReadBits((uint)count, out value);
+        }
+
         internal ulong ReadBslbf(ulong count, out ushort value)
         {
             return ReadBits((uint)count, out value);
         }
 
         internal ulong WriteBslbf(ulong count, ushort value)
+        {
+            return WriteBits((uint)count, value);
+        }
+
+        internal ulong WriteBslbf(ulong count, bool value)
         {
             return WriteBits((uint)count, value);
         }
