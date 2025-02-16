@@ -17,38 +17,7 @@ partial class Program
     {
         //var jds = File.ReadAllText("14496-3-added.js");
         //var test = Boxes.ParseOrThrow(jds);
-
-        string[] jsonFiles = {
-            "14496-23-boxes-added.json",
-            "14496-12-boxes-added.json",
-            "14496-15-boxes-added.json",
-            "14496-12-boxes.json",
-            "14496-15-boxes.json",
-            "14496-30-boxes.json",
-            "23008-12-boxes.json",
-            "14496-12-codecs.json",
-            "14496-12-entity-groups.json",
-            "14496-12-item-properties.json",
-            "14496-12-item-references.json",
-            "14496-12-sample-groups.json",
-            "14496-12-track-groups.json",
-            "14496-12-track-references.json",
-            "14496-15-codecs.json",
-            "14496-15-entity-groups.json",
-            "14496-15-sample-groups.json",
-            "14496-15-track-groups.json",
-            "14496-15-track-references.json",
-            "23008-12-entity-groups.json",
-            "23008-12-item-properties.json",
-            "23008-12-item-references.json",
-            "23008-12-sample-groups.json",
-            "14496-1-boxes-added.json",
-            "14496-3-boxes-added.json",
-            "Opus-boxes.json",
-            "AV1-boxes.json",
-            "AVIF-boxes.json",
-            "Added-boxes.json",
-        };
+        string[] jsonFiles = Directory.GetFiles("Definitions", "*.json");
 
         int success = 0;
         int duplicated = 0;
