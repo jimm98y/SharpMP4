@@ -276,7 +276,7 @@ partial class Program
             else
                 boxes[type] = new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "AudioSampleEntry").Value };
         }
-        
+
         foreach (var type in visualSampleEntryTypes)
         {
             if (!boxes.ContainsKey(type))
@@ -297,9 +297,14 @@ partial class Program
             boxes.Add("cdsc", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
 
         LogConsole($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
-                
+
+        string code = GenerateParser(ret, containers, boxes, entries, descriptors);
+    }
+
+    private static string GenerateParser(Dictionary<string, PseudoClass> ret, List<string> containers, SortedDictionary<string, List<PseudoClass>> boxes, SortedDictionary<string, List<PseudoClass>> entries, SortedDictionary<string, List<PseudoClass>> descriptors)
+    {
         string resultCode =
-@"using System;
+        @"using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -493,6 +498,7 @@ namespace SharpMP4
 @"
 }
 ";
+        return resultCode;
     }
 
     private static void LogConsole(string v)
@@ -551,6 +557,7 @@ namespace SharpMP4
 
     private static string Sanitize(string name)
     {
+        // in C#, we cannot use "namespace" as variable name
         if (name == "namespace")
             return "ns";
         return name;
@@ -683,7 +690,7 @@ namespace SharpMP4
                     return;
                 }
 
-                throw new Exception($"---Duplicated fileds: {name} of types: {field.Type}, {ret[name].Type}");
+                throw new Exception($"Duplicated fileds: {name} of types: {field.Type}, {ret[name].Type}");
             }
         }
     }
@@ -726,9 +733,6 @@ namespace SharpMP4
             parent = parent.Parent;
         }
     }
-
-
-
 
 
 
@@ -1297,11 +1301,7 @@ namespace SharpMP4
         else
             return "";
     }
-
-    
-
-    
-
+           
     private static int GetNestedInLoopSuffix(PseudoCode code, string currentSuffix, out string result)
     {
         List<string> ret = new List<string>();
@@ -1438,7 +1438,6 @@ namespace SharpMP4
 
         return condition;
     }
-
 
     private static string BuildMethodCode(PseudoClass b, PseudoBlock parent, PseudoCode field, int level, MethodType methodType)
     {
@@ -3167,45 +3166,7 @@ namespace SharpMP4
 
     private static bool IsWorkaround(string type)
     {
-        HashSet<string> map = new HashSet<string>
-        {
-            "samplerate = samplerate >> 16",
-            "int downmix_instructions_count = 1",
-            "int i, j",
-            "int i,j",
-            "int i",
-            "int size = 4",
-            "size += 5",
-            "j=1",
-            "j++",
-            "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8",
-            "totalPatternLength = 0",
-            "sizeOfInstance = sizeOfInstance<<7 | sizeByte",
-            "int sizeOfInstance = 0",
-            "sbrPresentFlag = -1", // WORKAROUND
-            "psPresentFlag = -1", // WORKAROUND
-            "extensionAudioObjectType = 0", // WORKAROUND
-            "extensionAudioObjectType = 5", // WORKAROUND
-            "sbrPresentFlag = 1", // WORKAROUND
-            "psPresentFlag = 1", // WORKAROUND
-            "sbrPresentFlag = -1",
-            "psPresentFlag = -1",
-            "extensionAudioObjectType = 0",
-            "extensionAudioObjectType = 5",
-            "sbrPresentFlag = 1",
-            "psPresentFlag = 1",
-            "audioObjectType = 32 + audioObjectTypeExt",
-            "return audioObjectType",
-            "len = eldExtLen",
-            "len += eldExtLenAddAdd",
-            "len += eldExtLenAdd",
-            "numSbrHeader = 1",
-            "numSbrHeader = 2",
-            "numSbrHeader = 3",
-            "numSbrHeader = 4",
-            "numSbrHeader = 0",
-        };
-        return map.Contains(type);
+        return Parser.Workarounds.Contains(type);
     }
 
     private static string GetType(string type)

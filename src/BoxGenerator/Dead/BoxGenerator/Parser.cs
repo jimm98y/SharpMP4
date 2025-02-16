@@ -145,39 +145,40 @@ namespace BoxGenerator
             return blockCommentStart.Then(Any.Until(blockCommentEnd), (first, rest) => string.Concat(rest));
         }
 
-        public static Parser<char, string> FieldTypeWorkaround =>
-            OneOf(
-                Try(String("int downmix_instructions_count = 1")),
-                Try(String("int i, j")),
-                Try(String("int i,j")),
-                Try(String("int i")),
-                Try(String("int size = 4")),
-                Try(String("sizeOfInstance = sizeOfInstance<<7 | sizeByte")),
-                Try(String("int sizeOfInstance = 0")),
-                Try(String("size += 5")),
-                Try(String("j=1")),
-                Try(String("j++")),
-                Try(String("subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")),
-                Try(String("totalPatternLength = 0")),
-                Try(String("samplerate = samplerate >> 16")),
-                Try(String("sbrPresentFlag = -1")),
-                Try(String("psPresentFlag = -1")),
-                Try(String("extensionAudioObjectType = 0")),
-                Try(String("extensionAudioObjectType = 5")),
-                Try(String("sbrPresentFlag = 1")),
-                Try(String("psPresentFlag = 1")),
-                Try(String("audioObjectType = 32 + audioObjectTypeExt")),
-                Try(String("return audioObjectType")),
-                Try(String("len = eldExtLen")),
-                Try(String("len += eldExtLenAddAdd")),
-                Try(String("len += eldExtLenAdd")),
-                Try(String("FieldLength = (large_size + 1) * 16")),
-                Try(String("numSbrHeader = 1")),
-                Try(String("numSbrHeader = 2")),
-                Try(String("numSbrHeader = 3")),
-                Try(String("numSbrHeader = 4")),
-                Try(String("numSbrHeader = 0"))
-                );
+        public static HashSet<string> Workarounds = new HashSet<string>()
+        {
+            "int downmix_instructions_count = 1",
+            "int i, j",
+            "int i,j",
+            "int i",
+            "j=1",
+            "j++",
+            "int size = 4",
+            "sizeOfInstance = sizeOfInstance<<7 | sizeByte",
+            "int sizeOfInstance = 0",
+            "size += 5",
+            "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8",
+            "totalPatternLength = 0",
+            "samplerate = samplerate >> 16",
+            "sbrPresentFlag = -1",
+            "psPresentFlag = -1",
+            "extensionAudioObjectType = 0",
+            "extensionAudioObjectType = 5",
+            "sbrPresentFlag = 1",
+            "psPresentFlag = 1",
+            "audioObjectType = 32 + audioObjectTypeExt",
+            "return audioObjectType",
+            "len = eldExtLen",
+            "len += eldExtLenAddAdd",
+            "len += eldExtLenAdd",
+            "numSbrHeader = 1",
+            "numSbrHeader = 2",
+            "numSbrHeader = 3",
+            "numSbrHeader = 4",
+            "numSbrHeader = 0"
+        };
+
+        public static Parser<char, string> FieldTypeWorkaround => OneOf(Workarounds.Select(x => Try(String(x))));
     }
 
     public enum ParsedBoxType
