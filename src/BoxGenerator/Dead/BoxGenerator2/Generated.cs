@@ -2323,6 +2323,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ES); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -2331,6 +2332,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.ES); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -2339,6 +2341,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(ES); // ES
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -2706,6 +2709,7 @@ namespace SharpMP4
             if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.schema_location); // optional 
             if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
                                                                                                                                                      // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.BitRateBox); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -2717,6 +2721,7 @@ namespace SharpMP4
             boxSize += stream.WriteStringZeroTerminated(this.schema_location); // optional 
             boxSize += stream.WriteStringZeroTerminated(this.auxiliary_mime_types); // optional, required if auxiliary resources are present 
                                                                                     // boxSize += stream.WriteBox( this.BitRateBox); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -2728,6 +2733,7 @@ namespace SharpMP4
             boxSize += IsoStream.CalculateStringSize(schema_location); // schema_location
             boxSize += IsoStream.CalculateStringSize(auxiliary_mime_types); // auxiliary_mime_types
                                                                             // boxSize += IsoStream.CalculateBoxSize(BitRateBox); // BitRateBox
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -2987,6 +2993,7 @@ namespace SharpMP4
             boxSize += stream.ReadBits(1, out this.precomputed_only_flag);
             boxSize += stream.ReadBits(7, out this.reserved);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.additionaldata); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -3001,6 +3008,7 @@ namespace SharpMP4
             boxSize += stream.WriteBits(1, this.precomputed_only_flag);
             boxSize += stream.WriteBits(7, this.reserved);
             // boxSize += stream.WriteBox( this.additionaldata); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -3015,6 +3023,7 @@ namespace SharpMP4
             boxSize += 1; // precomputed_only_flag
             boxSize += 7; // reserved
                           // boxSize += IsoStream.CalculateBoxSize(additionaldata); // additionaldata
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -3315,6 +3324,7 @@ namespace SharpMP4
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataLocaleBox); // optional
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataSetupBox); // optional
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataExtensionsBox); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -3327,6 +3337,7 @@ namespace SharpMP4
             // boxSize += stream.WriteBox( this.MetaDataLocaleBox); // optional
             // boxSize += stream.WriteBox( this.MetaDataSetupBox); // optional
             // boxSize += stream.WriteBox( this.MetaDataExtensionsBox); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -3339,6 +3350,7 @@ namespace SharpMP4
             // boxSize += IsoStream.CalculateBoxSize(MetaDataLocaleBox); // MetaDataLocaleBox
             // boxSize += IsoStream.CalculateBoxSize(MetaDataSetupBox); // MetaDataSetupBox
             // boxSize += IsoStream.CalculateBoxSize(MetaDataExtensionsBox); // MetaDataExtensionsBox
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -3504,6 +3516,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.extensions); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -3512,6 +3525,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.extensions); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -3520,6 +3534,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(extensions); // extensions
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -4926,6 +4941,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.length);
             boxSize += stream.ReadUInt8Array((uint)length, out this.stereo_indication_type);
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.any_box); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -4939,6 +4955,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt32(this.length);
             boxSize += stream.WriteUInt8Array(length, this.stereo_indication_type);
             // boxSize += stream.WriteBox( this.any_box); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -4952,6 +4969,7 @@ namespace SharpMP4
             boxSize += 32; // length
             boxSize += (ulong)length * 8; // stereo_indication_type
                                           // boxSize += IsoStream.CalculateBoxSize(any_box); // any_box
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -5709,6 +5727,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scheme_type_box); 
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.info); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -5718,6 +5737,7 @@ namespace SharpMP4
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.scheme_type_box); 
             // boxSize += stream.WriteBox( this.info); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -5727,6 +5747,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(scheme_type_box); // scheme_type_box
             // boxSize += IsoStream.CalculateBoxSize(info); // info
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -7686,6 +7707,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.original_format); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -7694,6 +7716,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.original_format); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -7702,6 +7725,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(original_format); // original_format
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -10385,6 +10409,7 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Type)), this, out this.references0);
             }
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -10402,6 +10427,7 @@ namespace SharpMP4
             {
                 boxSize += stream.WriteBox(this.references0);
             }
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -10419,6 +10445,7 @@ namespace SharpMP4
             {
                 boxSize += IsoStream.CalculateBoxSize(references0); // references0
             }
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -13004,6 +13031,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.integrity_algorithm_rtcp);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.scheme_type_box); 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.info); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -13017,6 +13045,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt32(this.integrity_algorithm_rtcp);
             // boxSize += stream.WriteBox( this.scheme_type_box); 
             // boxSize += stream.WriteBox( this.info); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -13030,6 +13059,7 @@ namespace SharpMP4
             boxSize += 32; // integrity_algorithm_rtcp
                            // boxSize += IsoStream.CalculateBoxSize(scheme_type_box); // scheme_type_box
                            // boxSize += IsoStream.CalculateBoxSize(info); // info
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -15689,6 +15719,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.MetaDataKeyBox); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -15698,6 +15729,7 @@ namespace SharpMP4
             boxSize += base.Write(stream);
             boxSize += stream.WriteUInt32(this.entry_count);
             // boxSize += stream.WriteBox( this.MetaDataKeyBox); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -15707,6 +15739,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // entry_count
                            // boxSize += IsoStream.CalculateBoxSize(MetaDataKeyBox); // MetaDataKeyBox
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -16068,6 +16101,7 @@ namespace SharpMP4
                                                                                                           // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
                                                                                                           // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.UniDrcConfigExtension); // optional boxes follow
                                                                                                           // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -16093,6 +16127,7 @@ namespace SharpMP4
                                                             // boxSize += stream.WriteBox( this.DRCInstructionsUniDRC); // we permit only one DRC Extension box:
                                                             // boxSize += stream.WriteBox( this.UniDrcConfigExtension); // optional boxes follow
                                                             // boxSize += stream.WriteBox( this.ChannelLayout); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -16118,6 +16153,7 @@ namespace SharpMP4
                            // boxSize += IsoStream.CalculateBoxSize(DRCInstructionsUniDRC); // DRCInstructionsUniDRC
                            // boxSize += IsoStream.CalculateBoxSize(UniDrcConfigExtension); // UniDrcConfigExtension
                            // boxSize += IsoStream.CalculateBoxSize(ChannelLayout); // ChannelLayout
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -16638,6 +16674,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SchemeInformation); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -16646,6 +16683,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.SchemeInformation); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -16654,6 +16692,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(SchemeInformation); // SchemeInformation
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -16680,6 +16719,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.SchemeInformation); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -16688,6 +16728,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.SchemeInformation); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -16696,6 +16737,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(SchemeInformation); // SchemeInformation
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -17003,6 +17045,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.otherboxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -17011,6 +17054,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.otherboxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -17019,6 +17063,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(otherboxes); // otherboxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -24677,6 +24722,7 @@ namespace SharpMP4
                     // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.NALUStartInlineConstructor[i]); 
                 }
             }
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -24711,6 +24757,7 @@ namespace SharpMP4
                     // boxSize += stream.WriteBox( this.NALUStartInlineConstructor[i]); 
                 }
             }
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -24745,6 +24792,7 @@ namespace SharpMP4
                     // boxSize += IsoStream.CalculateBoxSize(NALUStartInlineConstructor); // NALUStartInlineConstructor
                 }
             }
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -24963,6 +25011,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.lhvcconfig); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -24971,6 +25020,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.lhvcconfig); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -24979,6 +25029,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(lhvcconfig); // lhvcconfig
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -25393,6 +25444,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -25402,6 +25454,7 @@ namespace SharpMP4
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.config); 
             // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -25411,6 +25464,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(config); // config
             // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -25606,6 +25660,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.descr); // optional
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -25615,6 +25670,7 @@ namespace SharpMP4
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.config); 
             // boxSize += stream.WriteBox( this.descr); // optional
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -25624,6 +25680,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(config); // config
             // boxSize += IsoStream.CalculateBoxSize(descr); // descr
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -30766,6 +30823,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ViewPriorityBox); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -30774,6 +30832,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.ViewPriorityBox); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -30782,6 +30841,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(ViewPriorityBox); // ViewPriorityBox
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -49915,6 +49975,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.packetSize);
             boxSize += stream.ReadUInt32(out this.timeScale);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -49932,6 +49993,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt16(this.packetSize);
             boxSize += stream.WriteUInt32(this.timeScale);
             // boxSize += stream.WriteBox( this.boxes); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -49949,6 +50011,7 @@ namespace SharpMP4
             boxSize += 16; // packetSize
             boxSize += 32; // timeScale
                            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -51833,6 +51896,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.config); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -51841,6 +51905,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.config); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -51849,6 +51914,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(config); // config
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
@@ -52354,6 +52420,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.OpusSpecificBox); 
+            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -52362,6 +52429,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Write(stream);
             // boxSize += stream.WriteBox( this.OpusSpecificBox); 
+            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -52370,6 +52438,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             // boxSize += IsoStream.CalculateBoxSize(OpusSpecificBox); // OpusSpecificBox
+            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }
