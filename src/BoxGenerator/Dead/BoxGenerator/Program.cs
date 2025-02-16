@@ -777,6 +777,12 @@ namespace SharpMP4
         {
             ctorContent = "\t\tthis.version = v;\r\n\t\t this.flags = f;";
         }
+        else if(b.BoxName == "TrunEntry")
+        {
+            fields.Add(new PseudoField() { Name = "version", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(8)")) });
+            fields.Add(new PseudoField() { Name = "flags", Type = new PseudoType(new Maybe<string>(), new Maybe<string>(), new Maybe<string>(), new Maybe<string>("unsigned"), "int", new Maybe<string>("(24)")) });
+            ctorContent = "\t\tthis.version = version;\r\n\t\t this.flags = flags;";
+        }
 
         bool hasDescriptors = fields.Select(x => GetReadMethod(GetFieldType(x)).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
 
@@ -785,11 +791,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildField(b, field);
         }
 
-        if(b.BoxName == "TrackRunBox")
-        {
-            cls += "\r\n" + "protected List<TrunEntry> entries;  \r\n        public List<TrunEntry> Entries { get { return this.entries; } set { this.entries = value; } }";
-        }
-        else if(b.BoxName == "MetaBox")
+        if(b.BoxName == "MetaBox")
         {
             // This is very badly documented, but in case the Apple "ilst" box appears in "meta" inside "trak" or "udta", then the 
             //  serialization is incompatible with ISOBMFF as it uses the "Quicktime atom format".
@@ -983,7 +985,6 @@ namespace SharpMP4
             Dictionary<string, string> map = new Dictionary<string, string>() {
             { "(unsigned int(32) format)",          "string format" },
             { "(bit(24) flags)",                    "uint flags = 0" },
-            { "(flags)",                            "uint flags" },
             { "(fmt)",                              "string fmt = \"\"" },
             { "(codingname)",                       "string codingname = \"\"" },
             { "(handler_type)",                     "string handler_type = \"\"" },
@@ -1012,6 +1013,7 @@ namespace SharpMP4
             { "(entry_type, bit(24) flags)",        "string entry_type, uint flags" },
             { "(samplingFrequencyIndex)",           "int samplingFrequencyIndex" },
             { "(version, flags, Per_Sample_IV_Size)",  "byte version, uint flags, byte Per_Sample_IV_Size" },
+            { "(version, flags)",                   "byte version, uint flags" },
             { "(version)",                          "byte version" },
             };
             return map[classType];
@@ -2245,7 +2247,7 @@ namespace SharpMP4
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
             { "XtraTag[]",                              "stream.ReadClass(boxSize, readSize, this, " },
             { "XtraValue[count]",                       "stream.ReadClass(boxSize, readSize, this, " },
-            { "TrunEntry(flags)[ sample_count ]",       "stream.ReadClass(boxSize, readSize, this, sample_count, () => new TrunEntry(flags)" },
+            { "TrunEntry(version, flags)[ sample_count ]",       "stream.ReadClass(boxSize, readSize, this, sample_count, () => new TrunEntry(version, flags), " },
             { "ViprEntry[]",                            "stream.ReadClass(boxSize, readSize, this, " },
             { "TrickPlayEntry[]",                       "stream.ReadClass(boxSize, readSize, this, " },
             { "MtdtEntry[ entry_count ]",               "stream.ReadClass(boxSize, readSize, this, " },
@@ -2677,7 +2679,7 @@ namespace SharpMP4
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
             { "XtraTag[]",                              "IsoStream.CalculateClassSize(value)" },
             { "XtraValue[count]",                       "IsoStream.CalculateClassSize(value)" },
-            { "TrunEntry(flags)[ sample_count ]",       "IsoStream.CalculateClassSize(value)" },
+            { "TrunEntry(version, flags)[ sample_count ]",       "IsoStream.CalculateClassSize(value)" },
             { "ViprEntry[]",                            "IsoStream.CalculateClassSize(value)" },
             { "TrickPlayEntry[]",                       "IsoStream.CalculateClassSize(value)" },
             { "MtdtEntry[ entry_count ]",               "IsoStream.CalculateClassSize(value)" },
@@ -3108,7 +3110,7 @@ namespace SharpMP4
             { "IodsSample[]",                           "stream.WriteClass(" },
             { "XtraTag[]",                              "stream.WriteClass(" },
             { "XtraValue[count]",                       "stream.WriteClass(" },
-            { "TrunEntry(flags)[ sample_count ]",       "stream.WriteClass(" },
+            { "TrunEntry(version, flags)[ sample_count ]",       "stream.WriteClass(" },
             { "ViprEntry[]",                            "stream.WriteClass(" },
             { "TrickPlayEntry[]",                       "stream.WriteClass(" },
             { "MtdtEntry[ entry_count ]",               "stream.WriteClass(" },
@@ -3581,7 +3583,7 @@ namespace SharpMP4
             { "IodsSample[]",                           "IodsSample[]" },
             { "XtraTag[]",                              "XtraTag[]" },
             { "XtraValue[count]",                       "XtraValue[]" },
-            { "TrunEntry(flags)[ sample_count ]",       "TrunEntry[]" },
+            { "TrunEntry(version, flags)[ sample_count ]",       "TrunEntry[]" },
             { "ViprEntry[]",                            "ViprEntry[]" },
             { "TrickPlayEntry[]",                       "TrickPlayEntry[]" },
             { "MtdtEntry[ entry_count ]",               "MtdtEntry[]" },

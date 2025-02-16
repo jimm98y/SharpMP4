@@ -15108,7 +15108,6 @@ namespace SharpMP4
     /*
     aligned(8) class TrackRunBox extends FullBox('trun', version, tr_flags) {
         unsigned int(32)	sample_count;
-        // the following are optional fields
         if(flags & 0x1) {
            signed int(32)	data_offset;
         }
@@ -15117,7 +15116,7 @@ namespace SharpMP4
         }
         // all fields in the following array are optional
         // as indicated by bits set in the tr_flags
-        TrunEntry(flags)[ sample_count ];
+        TrunEntry(version, flags)[ sample_count ];
     }
 
 
@@ -15127,7 +15126,7 @@ namespace SharpMP4
         public const string TYPE = "trun";
         public override string DisplayName { get { return "TrackRunBox"; } }
 
-        protected uint sample_count;  //  the following are optional fields
+        protected uint sample_count;
         public uint SampleCount { get { return this.sample_count; } set { this.sample_count = value; } }
 
         protected int data_offset;
@@ -15138,8 +15137,6 @@ namespace SharpMP4
 
         protected TrunEntry[] TrunEntry;
         public TrunEntry[] _TrunEntry { get { return this.TrunEntry; } set { this.TrunEntry = value; } }
-        protected List<TrunEntry> entries;
-        public List<TrunEntry> Entries { get { return this.entries; } set { this.entries = value; } }
 
         public TrackRunBox(byte version = 0, uint tr_flags = 0) : base("trun", version, tr_flags)
         {
@@ -15149,7 +15146,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(out this.sample_count); // the following are optional fields
+            boxSize += stream.ReadUInt32(out this.sample_count);
 
             if ((flags & 0x1) == 0x1)
             {
@@ -15162,7 +15159,7 @@ namespace SharpMP4
             }
             /*  all fields in the following array are optional */
             /*  as indicated by bits set in the tr_flags */
-            boxSize += stream.ReadClass(boxSize, readSize, this, sample_count, () => new TrunEntry(flags), out this.TrunEntry);
+            boxSize += stream.ReadClass(boxSize, readSize, this, sample_count, () => new TrunEntry(version, flags), out this.TrunEntry);
             return boxSize;
         }
 
@@ -15170,7 +15167,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt32(this.sample_count); // the following are optional fields
+            boxSize += stream.WriteUInt32(this.sample_count);
 
             if ((flags & 0x1) == 0x1)
             {
@@ -15211,7 +15208,7 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TrunEntry(flags) {
+    aligned(8) class TrunEntry(version, flags) {
        if(flags & 0x100) {
           unsigned int(32) sample_duration;
        }
@@ -15255,8 +15252,16 @@ namespace SharpMP4
         protected int sample_composition_time_offset0;
         public int SampleCompositionTimeOffset0 { get { return this.sample_composition_time_offset0; } set { this.sample_composition_time_offset0 = value; } }
 
-        public TrunEntry(uint flags) : base()
+        protected byte version;
+        public byte Version { get { return this.version; } set { this.version = value; } }
+
+        protected uint flags;
+        public uint Flags { get { return this.flags; } set { this.flags = value; } }
+
+        public TrunEntry(byte version, uint flags) : base()
         {
+            this.version = version;
+            this.flags = flags;
         }
 
         public virtual ulong Read(IsoStream stream, ulong readSize)
