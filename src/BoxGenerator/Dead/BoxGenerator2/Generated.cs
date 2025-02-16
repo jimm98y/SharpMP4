@@ -15106,36 +15106,21 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TrackRunBox
-                    extends FullBox('trun', version, tr_flags) {
-            unsigned int(32)	sample_count;
-            // the following are optional fields
-            if(flags & 0x1) {
-               signed int(32)	data_offset;
-            }
-            if(flags & 0x4) {
-               unsigned int(32)	first_sample_flags;
-            }
-            // all fields in the following array are optional
-            // as indicated by bits set in the tr_flags
-            {
-                if(flags & 0x100) {
-                   unsigned int(32)	sample_duration;
-                }
-                if(flags & 0x200) {
-                   unsigned int(32)	sample_size;
-                }
-                if(flags & 0x400) {
-                   unsigned int(32)	sample_flags;
-                }
-                if(flags & 0x800) {
-                   if (version == 0)
-                       { unsigned int(32)	sample_composition_time_offset; }
-                   else
-                       { signed int(32)		sample_composition_time_offset; }
-                }
-            }[ sample_count ]
+    aligned(8) class TrackRunBox extends FullBox('trun', version, tr_flags) {
+        unsigned int(32)	sample_count;
+        // the following are optional fields
+        if(flags & 0x1) {
+           signed int(32)	data_offset;
         }
+        if(flags & 0x4) {
+           unsigned int(32)	first_sample_flags;
+        }
+        // all fields in the following array are optional
+        // as indicated by bits set in the tr_flags
+        TrunEntry(flags)[ sample_count ];
+    }
+
+
     */
     public class TrackRunBox : FullBox
     {
@@ -15150,6 +15135,9 @@ namespace SharpMP4
 
         protected uint first_sample_flags;
         public uint FirstSampleFlags { get { return this.first_sample_flags; } set { this.first_sample_flags = value; } }
+
+        protected TrunEntry[] TrunEntry;
+        public TrunEntry[] _TrunEntry { get { return this.TrunEntry; } set { this.TrunEntry = value; } }
         protected List<TrunEntry> entries;
         public List<TrunEntry> Entries { get { return this.entries; } set { this.entries = value; } }
 
@@ -15174,39 +15162,7 @@ namespace SharpMP4
             }
             /*  all fields in the following array are optional */
             /*  as indicated by bits set in the tr_flags */
-            entries = new List<TrunEntry>();
-            for (int i = 0; i < sample_count; i++)
-            {
-                TrunEntry entry = new TrunEntry();
-                if ((flags & 0x100) == 0x100)
-                {
-                    boxSize += stream.ReadUInt32(out entry.SampleDuration);
-                }
-
-                if ((flags & 0x200) == 0x200)
-                {
-                    boxSize += stream.ReadUInt32(out entry.SampleSize);
-                }
-
-                if ((flags & 0x400) == 0x400)
-                {
-                    boxSize = stream.ReadUInt32(out entry.SampleFlags);
-                }
-
-                if ((flags & 0x800) == 0x800)
-                {
-                    if (version == 0)
-                    {
-                        boxSize += stream.ReadUInt32(out entry.SampleCompositionTimeOffset0);
-                    }
-                    else
-                    {
-                        boxSize = stream.ReadInt32(out entry.SampleCompositionTimeOffset);
-                    }
-                }
-
-                entries.Add(entry);
-            }
+            boxSize += stream.ReadClass(boxSize, readSize, this, sample_count, () => new TrunEntry(flags), out this.TrunEntry);
             return boxSize;
         }
 
@@ -15227,35 +15183,7 @@ namespace SharpMP4
             }
             /*  all fields in the following array are optional */
             /*  as indicated by bits set in the tr_flags */
-            for (int i = 0; i < sample_count; i++)
-            {
-                if ((flags & 0x100) == 0x100)
-                {
-                    boxSize += stream.WriteUInt32(entries[i].SampleDuration);
-                }
-
-                if ((flags & 0x200) == 0x200)
-                {
-                    boxSize += stream.WriteUInt32(entries[i].SampleSize);
-                }
-
-                if ((flags & 0x400) == 0x400)
-                {
-                    boxSize = stream.WriteUInt32(entries[i].SampleFlags);
-                }
-
-                if ((flags & 0x800) == 0x800)
-                {
-                    if (version == 0)
-                    {
-                        boxSize += stream.WriteUInt32(entries[i].SampleCompositionTimeOffset0);
-                    }
-                    else
-                    {
-                        boxSize = stream.WriteInt32(entries[i].SampleCompositionTimeOffset);
-                    }
-                }
-            }
+            boxSize += stream.WriteClass(this.TrunEntry);
             return boxSize;
         }
 
@@ -15276,33 +15204,161 @@ namespace SharpMP4
             }
             /*  all fields in the following array are optional */
             /*  as indicated by bits set in the tr_flags */
-            for (int i = 0; i < sample_count; i++)
+            boxSize += IsoStream.CalculateClassSize(TrunEntry); // TrunEntry
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class TrunEntry(flags) {
+       if(flags & 0x100) {
+          unsigned int(32) sample_duration;
+       }
+       if(flags & 0x200) {
+          unsigned int(32) sample_size;
+       }
+       if(flags & 0x400) {
+          unsigned int(32) sample_flags;
+       }
+       if(flags & 0x800) 
+       {
+          if (version == 0)
+          { 
+              unsigned int(32) sample_composition_time_offset; 
+          }
+          else
+          {
+              signed int(32) sample_composition_time_offset; 
+          }
+       }
+    }
+    */
+    public class TrunEntry : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        public IMp4Serializable Parent { get; set; }
+        public virtual string DisplayName { get { return "TrunEntry"; } }
+
+        protected uint sample_duration;
+        public uint SampleDuration { get { return this.sample_duration; } set { this.sample_duration = value; } }
+
+        protected uint sample_size;
+        public uint SampleSize { get { return this.sample_size; } set { this.sample_size = value; } }
+
+        protected uint sample_flags;
+        public uint SampleFlags { get { return this.sample_flags; } set { this.sample_flags = value; } }
+
+        protected uint sample_composition_time_offset;
+        public uint SampleCompositionTimeOffset { get { return this.sample_composition_time_offset; } set { this.sample_composition_time_offset = value; } }
+
+        protected int sample_composition_time_offset0;
+        public int SampleCompositionTimeOffset0 { get { return this.sample_composition_time_offset0; } set { this.sample_composition_time_offset0 = value; } }
+
+        public TrunEntry(uint flags) : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+
+            if ((flags & 0x100) == 0x100)
             {
-                if ((flags & 0x100) == 0x100)
+                boxSize += stream.ReadUInt32(out this.sample_duration);
+            }
+
+            if ((flags & 0x200) == 0x200)
+            {
+                boxSize += stream.ReadUInt32(out this.sample_size);
+            }
+
+            if ((flags & 0x400) == 0x400)
+            {
+                boxSize += stream.ReadUInt32(out this.sample_flags);
+            }
+
+            if ((flags & 0x800) == 0x800)
+            {
+
+                if (version == 0)
                 {
-                    boxSize += 32;
+                    boxSize += stream.ReadUInt32(out this.sample_composition_time_offset);
                 }
 
-                if ((flags & 0x200) == 0x200)
+                else
                 {
-                    boxSize += 32;
+                    boxSize += stream.ReadInt32(out this.sample_composition_time_offset0);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+
+            if ((flags & 0x100) == 0x100)
+            {
+                boxSize += stream.WriteUInt32(this.sample_duration);
+            }
+
+            if ((flags & 0x200) == 0x200)
+            {
+                boxSize += stream.WriteUInt32(this.sample_size);
+            }
+
+            if ((flags & 0x400) == 0x400)
+            {
+                boxSize += stream.WriteUInt32(this.sample_flags);
+            }
+
+            if ((flags & 0x800) == 0x800)
+            {
+
+                if (version == 0)
+                {
+                    boxSize += stream.WriteUInt32(this.sample_composition_time_offset);
                 }
 
-                if ((flags & 0x400) == 0x400)
+                else
                 {
-                    boxSize = 32;
+                    boxSize += stream.WriteInt32(this.sample_composition_time_offset0);
+                }
+            }
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+
+            if ((flags & 0x100) == 0x100)
+            {
+                boxSize += 32; // sample_duration
+            }
+
+            if ((flags & 0x200) == 0x200)
+            {
+                boxSize += 32; // sample_size
+            }
+
+            if ((flags & 0x400) == 0x400)
+            {
+                boxSize += 32; // sample_flags
+            }
+
+            if ((flags & 0x800) == 0x800)
+            {
+
+                if (version == 0)
+                {
+                    boxSize += 32; // sample_composition_time_offset
                 }
 
-                if ((flags & 0x800) == 0x800)
+                else
                 {
-                    if (version == 0)
-                    {
-                        boxSize += 32;
-                    }
-                    else
-                    {
-                        boxSize = 32;
-                    }
+                    boxSize += 32; // sample_composition_time_offset0
                 }
             }
             return boxSize;

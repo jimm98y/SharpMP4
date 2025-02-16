@@ -149,32 +149,7 @@ partial class Program
                 item.Value.BoxName == "DefaultHevcExtractorConstructorBox";
         }
 
-        Debug.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
-        Console.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
-        
-        //string js = JsonConvert.SerializeObject(ret.Values.ToArray());
-        //File.WriteAllText("result.json", js);
-
-        string resultCode =
-@"using System;
-using System.Linq;
-using System.Collections.Generic;
-
-namespace SharpMP4
-{
-";
-        // build box factory
-        string factory =
-@"   public class BoxFactory
-    {
-        public static Box CreateBox(string fourCC, string parent, byte[] uuid = null)
-        {
-            if (uuid != null) fourCC = $""{fourCC} {Convert.ToHexString(uuid).ToLowerInvariant()}"";
-
-            switch(fourCC)
-            {
-               ";
-
+        // collect all boxes, entries and descriptors
         SortedDictionary<string, List<PseudoClass>> fourccBoxes = new SortedDictionary<string, List<PseudoClass>>();
         SortedDictionary<string, List<PseudoClass>> fourccEntries = new SortedDictionary<string, List<PseudoClass>>();
         foreach (var item in ret)
@@ -195,6 +170,18 @@ namespace SharpMP4
                     else
                         fourccEntries[item.Value.Extended.BoxType].Add(item.Value);
                 }
+            }
+        }
+
+        SortedDictionary<string, List<PseudoClass>> descriptors = new SortedDictionary<string, List<PseudoClass>>();
+        foreach (var item in ret)
+        {
+            if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.DescriptorTag) && string.IsNullOrEmpty(item.Value.Abstract))
+            {
+                if (!descriptors.ContainsKey(item.Value.Extended.DescriptorTag))
+                    descriptors.Add(item.Value.Extended.DescriptorTag, new List<PseudoClass>() { item.Value });
+                else
+                    descriptors[item.Value.Extended.DescriptorTag].Add(item.Value);
             }
         }
 
@@ -232,8 +219,33 @@ namespace SharpMP4
             fourccBoxes.Add("dimg", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "SingleItemTypeReferenceBox").Value });
 
         if (!fourccBoxes.ContainsKey("cdsc"))
-            fourccBoxes.Add("cdsc", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });
+            fourccBoxes.Add("cdsc", new List<PseudoClass>() { ret.First(x => x.Value.BoxName == "TrackReferenceTypeBox").Value });     
 
+        Debug.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
+        Console.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
+        
+        //string js = JsonConvert.SerializeObject(ret.Values.ToArray());
+        //File.WriteAllText("result.json", js);
+
+        string resultCode =
+@"using System;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace SharpMP4
+{
+";
+        // build box factory
+        string factory =
+@"   public class BoxFactory
+    {
+        public static Box CreateBox(string fourCC, string parent, byte[] uuid = null)
+        {
+            if (uuid != null) fourCC = $""{fourCC} {Convert.ToHexString(uuid).ToLowerInvariant()}"";
+
+            switch(fourCC)
+            {
+               ";
         foreach (var item in fourccBoxes)
         {
             string optCondition = "";
@@ -367,18 +379,6 @@ namespace SharpMP4
             switch (tag)
             {
 ";
-        SortedDictionary<string, List<PseudoClass>> descriptors = new SortedDictionary<string, List<PseudoClass>>();
-        foreach (var item in ret)
-        {
-            if (item.Value.Extended != null && !string.IsNullOrWhiteSpace(item.Value.Extended.DescriptorTag) && string.IsNullOrEmpty(item.Value.Abstract))
-            {
-                if (!descriptors.ContainsKey(item.Value.Extended.DescriptorTag))
-                    descriptors.Add(item.Value.Extended.DescriptorTag, new List<PseudoClass>() { item.Value });
-                else
-                    descriptors[item.Value.Extended.DescriptorTag].Add(item.Value);
-            }
-        }
-
         foreach (var item in descriptors)
         {
             if (!item.Key.StartsWith("0x"))
@@ -479,6 +479,171 @@ namespace SharpMP4
             return "ns";
         return name;
     }
+
+    private static string GetFieldType(PseudoField x)
+    {
+        if (x == null)
+            return null;
+
+        if (string.IsNullOrEmpty(x.FieldArray))
+            return x.Type.ToString();
+        else
+            return $"{x.Type}{x.FieldArray}";
+    }
+
+    private static string GetFieldName(PseudoCode field)
+    {
+        string name = Sanitize((field as PseudoField)?.Name);
+        if (string.IsNullOrEmpty(name))
+        {
+            if ((field as PseudoField).Type.Type.StartsWith("byte_"))
+            {
+                // byte_alignment would otherwise produce a name "byte"
+                name = "byte_alignment";
+            }
+            else
+            {
+                name = GetType(GetFieldType(field as PseudoField))?.Replace("[]", "");
+            }
+        }
+
+        return name;
+    }
+
+    private static List<PseudoField> FlattenFields(IEnumerable<PseudoCode> fields, PseudoBlock parent = null)
+    {
+        Dictionary<string, PseudoField> ret = new Dictionary<string, PseudoField>();
+        foreach (var code in fields)
+        {
+            if (code is PseudoField field)
+            {
+                field.Parent = parent; // keep track of parent blocks
+
+                if (IsWorkaround(field.Type.Type))
+                    continue;
+
+                string value = field.Value;
+                string tp = GetFieldType(field);
+
+                if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty(field.Name))
+                    tp = field.Name?.Replace("[]", "").Replace("()", "");
+
+                if (!string.IsNullOrEmpty(tp))
+                {
+                    // TODO: incorrectly parsed type
+                    if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
+                    {
+                        field.FieldArray = value;
+                    }
+                }
+
+                AddAndResolveDuplicates(ret, field);
+            }
+            else if (code is PseudoBlock block)
+            {
+                block.Parent = parent; // keep track of parent blocks
+
+                var blockFields = FlattenFields(block.Content, block);
+                foreach (var blockField in blockFields)
+                {
+                    AddAndResolveDuplicates(ret, blockField);
+                }
+            }
+        }
+        return ret.Values.ToList();
+    }
+
+    private static void AddAndResolveDuplicates(Dictionary<string, PseudoField> ret, PseudoField field)
+    {
+        string name = GetFieldName(field);
+        if (!ret.TryAdd(name, field))
+        {
+            if (name.StartsWith("reserved") || name == "pre_defined" || GetFieldType(field).StartsWith("SingleItemTypeReferenceBox") ||
+                (GetFieldType(field) == "signed int(32)" && GetFieldType(ret[name]) == "unsigned int(32)") ||
+                field.Name == "min_initial_alt_startup_offset" || field.Name == "target_rate_share") // special case: requires nesting
+            {
+                int i = 0;
+                string updatedName = $"{name}{i}";
+                while (!ret.TryAdd(updatedName, field))
+                {
+                    i++;
+                    updatedName = $"{name}{i}";
+                }
+                field.Name = updatedName;
+                //Debug.WriteLine($"-Resolved: {name} => {updatedName}");
+            }
+            else if (GetFieldType(field) == GetFieldType(ret[name]) && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
+            {
+                //Debug.WriteLine($"-Resolved: fields are the same");
+            }
+            else
+            {
+                // try to resolve the conflict using the type size
+                string type1 = GetCalculateSizeMethod(GetFieldType(field));
+                string type2 = GetCalculateSizeMethod(GetFieldType(ret[name]));
+                int type1Size;
+                if (int.TryParse(type1, out type1Size))
+                {
+                    int type2Size;
+                    if (int.TryParse(type2, out type2Size))
+                    {
+                        if (type1Size > type2Size)
+                            ret[name] = field;
+                        if (type1Size != type2Size)
+                            return;
+                    }
+                }
+
+                if (GetFieldType(field) == "unsigned int(64)[ entry_count ]" && GetFieldType(ret[name]) == "unsigned int(32)[ entry_count ]")
+                {
+                    ret[name] = field;
+                    return;
+                }
+                else if (GetFieldType(field) == "unsigned int(16)[3]" && GetFieldType(ret[name]) == "unsigned int(32)[3]")
+                {
+                    return;
+                }
+                else if (GetFieldType(field) == "aligned bit(1)" && GetFieldType(ret[name]) == "bit")
+                {
+                    return;
+                }
+
+                throw new Exception($"---Duplicated fileds: {name} of types: {field.Type}, {ret[name].Type}");
+            }
+        }
+    }
+
+    private static int GetNestedInLoop(PseudoCode code)
+    {
+        int ret = 0;
+        var field = code as PseudoField;
+        var block = code as PseudoBlock;
+        PseudoBlock parent = null;
+
+        if (field != null)
+            parent = field.Parent;
+
+        if (block != null)
+            parent = block.Parent;
+
+        while (parent != null)
+        {
+            if (parent.Type == "for")
+                ret++;
+            parent = parent.Parent;
+        }
+
+        return ret;
+    }
+
+
+
+
+
+
+
+
+
 
     private static string BuildCode(PseudoClass? b, List<string> containers)
     {
@@ -811,17 +976,6 @@ namespace SharpMP4
         return cls;
     }
 
-    private static string GetFieldType(PseudoField x)
-    {
-        if (x == null)
-            return null;
-
-        if (string.IsNullOrEmpty(x.FieldArray))
-            return x.Type.ToString();
-        else
-            return $"{x.Type}{x.FieldArray}";
-    }
-
     private static string GetCtorParams(string classType, IList<(string Name, string Value)> parameters)
     {
         if (!string.IsNullOrEmpty(classType) && classType != "()")
@@ -829,6 +983,7 @@ namespace SharpMP4
             Dictionary<string, string> map = new Dictionary<string, string>() {
             { "(unsigned int(32) format)",          "string format" },
             { "(bit(24) flags)",                    "uint flags = 0" },
+            { "(flags)",                            "uint flags" },
             { "(fmt)",                              "string fmt = \"\"" },
             { "(codingname)",                       "string codingname = \"\"" },
             { "(handler_type)",                     "string handler_type = \"\"" },
@@ -956,109 +1111,6 @@ namespace SharpMP4
         }
         
         return cls;
-    }
-
-    private static List<PseudoField> FlattenFields(IEnumerable<PseudoCode> fields, PseudoBlock parent = null)
-    {
-        Dictionary<string, PseudoField> ret = new Dictionary<string, PseudoField>();
-        foreach(var code in fields)
-        {
-            if (code is PseudoField field)
-            {
-                field.Parent = parent; // keep track of parent blocks
-
-                if (IsWorkaround(field.Type.Type))
-                    continue;
-
-                string value = field.Value;
-                string tp = GetFieldType(field);
-
-                if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty(field.Name))
-                    tp = field.Name?.Replace("[]", "").Replace("()", "");
-
-                if (!string.IsNullOrEmpty(tp))
-                {
-                    // TODO: incorrectly parsed type
-                    if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
-                    {
-                        field.FieldArray = value;
-                    }
-                }
-
-                AddAndResolveDuplicates(ret, field);
-            }
-            else if (code is PseudoBlock block)
-            {
-                block.Parent = parent; // keep track of parent blocks
-
-                var blockFields = FlattenFields(block.Content, block);
-                foreach (var blockField in blockFields)
-                {
-                    AddAndResolveDuplicates(ret, blockField);
-                }
-            }
-        }
-        return ret.Values.ToList();
-    }
-
-    private static void AddAndResolveDuplicates(Dictionary<string, PseudoField> ret, PseudoField field)
-    {
-        string name = GetFieldName(field);
-        if (!ret.TryAdd(name, field))
-        {
-            if (name.StartsWith("reserved") || name == "pre_defined" || GetFieldType(field).StartsWith("SingleItemTypeReferenceBox") ||
-                (GetFieldType(field) == "signed int(32)" && GetFieldType(ret[name]) == "unsigned int(32)") ||
-                field.Name == "min_initial_alt_startup_offset" || field.Name == "target_rate_share") // special case: requires nesting
-            {
-                int i = 0;
-                string updatedName = $"{name}{i}";
-                while (!ret.TryAdd(updatedName, field))
-                {
-                    i++;
-                    updatedName = $"{name}{i}";
-                }
-                field.Name = updatedName;
-                //Debug.WriteLine($"-Resolved: {name} => {updatedName}");
-            }
-            else if(GetFieldType(field) == GetFieldType(ret[name]) && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
-            {
-                //Debug.WriteLine($"-Resolved: fields are the same");
-            }
-            else
-            {
-                // try to resolve the conflict using the type size
-                string type1 = GetCalculateSizeMethod(GetFieldType(field));
-                string type2 = GetCalculateSizeMethod(GetFieldType(ret[name]));
-                int type1Size;
-                if (int.TryParse(type1, out type1Size))
-                {
-                    int type2Size;
-                    if(int.TryParse(type2, out type2Size))
-                    {
-                        if (type1Size > type2Size)
-                            ret[name] = field;
-                        if (type1Size != type2Size)
-                            return;
-                    }
-                }
-
-                if(GetFieldType(field) == "unsigned int(64)[ entry_count ]" && GetFieldType(ret[name]) == "unsigned int(32)[ entry_count ]")
-                {
-                    ret[name] = field;
-                    return;
-                }
-                else if(GetFieldType(field) == "unsigned int(16)[3]" && GetFieldType(ret[name]) == "unsigned int(32)[3]")
-                {
-                    return;
-                }
-                else if (GetFieldType(field) == "aligned bit(1)" && GetFieldType(ret[name]) == "bit")
-                {
-                    return;
-                }
-
-                throw new Exception($"---Duplicated fileds: {name} of types: {field.Type}, {ret[name].Type}");                
-            }
-        }
     }
 
     private static string BuildField(PseudoClass b, PseudoCode field)
@@ -1232,28 +1284,7 @@ namespace SharpMP4
         }
     }
 
-    private static int GetNestedInLoop(PseudoCode code)
-    {
-        int ret = 0;
-        var field = code as PseudoField;
-        var block = code as PseudoBlock;
-        PseudoBlock parent = null;
-
-        if (field != null)
-            parent = field.Parent;
-
-        if (block != null)
-            parent = block.Parent;
-
-        while (parent != null)
-        {
-            if (parent.Type == "for")
-                ret++;
-            parent = parent.Parent;
-        }
-
-        return ret;
-    }
+    
 
     private static int GetNestedInLoopSuffix(PseudoCode code, string currentSuffix, out string result)
     {
@@ -1392,24 +1423,6 @@ namespace SharpMP4
         return condition;
     }
 
-    private static string GetFieldName(PseudoCode field)
-    {
-        string name = Sanitize((field as PseudoField)?.Name);
-        if (string.IsNullOrEmpty(name))
-        {
-            if ((field as PseudoField).Type.Type.StartsWith("byte_"))
-            {
-                // byte_alignment would otherwise produce a name "byte"
-                name = "byte_alignment";
-            }
-            else
-            {
-                name = GetType(GetFieldType(field as PseudoField))?.Replace("[]", "");
-            }
-        }
-
-        return name;
-    }
 
     private static string BuildMethodCode(PseudoClass b, PseudoBlock parent, PseudoCode field, int level, MethodType methodType)
     {
@@ -1423,7 +1436,7 @@ namespace SharpMP4
         var repeatingBlock = field as PseudoRepeatingBlock;
         if(repeatingBlock != null)
         {
-            return BuildRepeatingBlock(b, parent, block, level, methodType);
+            throw new NotSupportedException();
         }
 
         var comment = field as PseudoComment;
@@ -1556,34 +1569,15 @@ namespace SharpMP4
         }
     }
 
-    private static string BuildRepeatingBlock(PseudoClass b, PseudoBlock parent, PseudoBlock? block, int level, MethodType methodType)
-    {
-        if (b.BoxName == "TrackRunBox")
-        {
-            if (methodType == MethodType.Read)
-            {
-                return "entries = new List<TrunEntry>();\r\n            for (int i = 0; i < sample_count; i++)\r\n            {\r\n                TrunEntry entry = new TrunEntry();\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += stream.ReadUInt32(out entry.SampleDuration);\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += stream.ReadUInt32(out entry.SampleSize);\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = stream.ReadUInt32(out entry.SampleFlags);\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += stream.ReadUInt32(out entry.SampleCompositionTimeOffset0);\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = stream.ReadInt32(out entry.SampleCompositionTimeOffset);\r\n                    }\r\n                }\r\n\r\n                entries.Add(entry);\r\n            }";
-            }
-            else if (methodType == MethodType.Write)
-            {
-                return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += stream.WriteUInt32(entries[i].SampleDuration);\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += stream.WriteUInt32(entries[i].SampleSize);\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = stream.WriteUInt32(entries[i].SampleFlags);\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += stream.WriteUInt32(entries[i].SampleCompositionTimeOffset0);\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = stream.WriteInt32(entries[i].SampleCompositionTimeOffset);\r\n                    }\r\n                }\r\n            }";
-            }
-            else if (methodType == MethodType.Size)
-            {
-                return "for (int i = 0; i < sample_count; i++)\r\n            {\r\n                if ((flags & 0x100) == 0x100)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x200) == 0x200)\r\n                {\r\n                    boxSize += 32;\r\n                }\r\n\r\n                if ((flags & 0x400) == 0x400)\r\n                {\r\n                    boxSize = 32;\r\n                }\r\n\r\n                if ((flags & 0x800) == 0x800)\r\n                {\r\n                    if (version == 0)\r\n                    {\r\n                        boxSize += 32;\r\n                    }\r\n                    else\r\n                    {\r\n                        boxSize = 32;\r\n                    }\r\n                }\r\n            }";
-            }
-        }
-        
-        throw new NotImplementedException();
-    }
-
     private static string GetFieldTypeDef(PseudoCode field)
     {
         string value = (field as PseudoField)?.Value;
         if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
             value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
             && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && value != "[sizeOfInstance-3]" && value != "[size-10]" && value != "[tagLength]" && value != "[length-6]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" && value != "[chunk_length]" &&
+            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && 
+            value != "[sizeOfInstance-3]" && value != "[size-10]" && value != "[tagLength]" && value != "[length-6]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && 
+            value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" && value != "[chunk_length]" &&
             value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
         {
             return value;
@@ -2251,6 +2245,7 @@ namespace SharpMP4
             { "IodsSample[]",                           "stream.ReadClass(boxSize, readSize, this, " },
             { "XtraTag[]",                              "stream.ReadClass(boxSize, readSize, this, " },
             { "XtraValue[count]",                       "stream.ReadClass(boxSize, readSize, this, " },
+            { "TrunEntry(flags)[ sample_count ]",       "stream.ReadClass(boxSize, readSize, this, sample_count, () => new TrunEntry(flags)" },
             { "ViprEntry[]",                            "stream.ReadClass(boxSize, readSize, this, " },
             { "TrickPlayEntry[]",                       "stream.ReadClass(boxSize, readSize, this, " },
             { "MtdtEntry[ entry_count ]",               "stream.ReadClass(boxSize, readSize, this, " },
@@ -2682,6 +2677,7 @@ namespace SharpMP4
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
             { "XtraTag[]",                              "IsoStream.CalculateClassSize(value)" },
             { "XtraValue[count]",                       "IsoStream.CalculateClassSize(value)" },
+            { "TrunEntry(flags)[ sample_count ]",       "IsoStream.CalculateClassSize(value)" },
             { "ViprEntry[]",                            "IsoStream.CalculateClassSize(value)" },
             { "TrickPlayEntry[]",                       "IsoStream.CalculateClassSize(value)" },
             { "MtdtEntry[ entry_count ]",               "IsoStream.CalculateClassSize(value)" },
@@ -3112,6 +3108,7 @@ namespace SharpMP4
             { "IodsSample[]",                           "stream.WriteClass(" },
             { "XtraTag[]",                              "stream.WriteClass(" },
             { "XtraValue[count]",                       "stream.WriteClass(" },
+            { "TrunEntry(flags)[ sample_count ]",       "stream.WriteClass(" },
             { "ViprEntry[]",                            "stream.WriteClass(" },
             { "TrickPlayEntry[]",                       "stream.WriteClass(" },
             { "MtdtEntry[ entry_count ]",               "stream.WriteClass(" },
@@ -3584,6 +3581,7 @@ namespace SharpMP4
             { "IodsSample[]",                           "IodsSample[]" },
             { "XtraTag[]",                              "XtraTag[]" },
             { "XtraValue[count]",                       "XtraValue[]" },
+            { "TrunEntry(flags)[ sample_count ]",       "TrunEntry[]" },
             { "ViprEntry[]",                            "ViprEntry[]" },
             { "TrickPlayEntry[]",                       "TrickPlayEntry[]" },
             { "MtdtEntry[ entry_count ]",               "MtdtEntry[]" },
