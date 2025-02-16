@@ -224,15 +224,17 @@ namespace BoxGenerator
     public class PseudoClass : PseudoCode
     {
         public ParsedBoxType ParsedBoxType { get; set; }
+        public string Syntax { get; set; }
+        public bool IsContainer { get; set; }
+
+        public string Comment { get; set; }
+        public string Abstract { get; set; }
         public string BoxName { get; set; }
         public string ClassType { get; set; }
-        public string Comment { get; set; }
-        public string EndComment { get; set; }
-        public IList<PseudoCode> Fields { get; set; }
-        public string Abstract { get; set; }
         public PseudoExtendedClass Extended { get; set; }
-        public string Syntax { get; set; }
+        public string EndComment { get; set; }
         public long CurrentOffset { get; set; }
+        public IList<PseudoCode> Fields { get; set; }
 
         public PseudoClass()
         { }
@@ -248,11 +250,11 @@ namespace BoxGenerator
             long currentOffset)
         {
             Comment = comment.GetValueOrDefault();
+            Abstract = abstrct.GetValueOrDefault();
             BoxName = boxName;
             ClassType = classType.GetValueOrDefault();
-            Fields = fields.ToList();
-            Abstract = abstrct.GetValueOrDefault();
             Extended = extended.GetValueOrDefault();
+            Fields = fields.ToList();
             EndComment = endComment.GetValueOrDefault();
             CurrentOffset = currentOffset;
         }

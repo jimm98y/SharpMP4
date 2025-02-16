@@ -12,7 +12,7 @@ using System.Text.RegularExpressions;
 namespace BoxGenerator;
 
 partial class Program
-{ 
+{
     static void Main(string[] args)
     {
         //var jds = File.ReadAllText("14496-3-added.js");
@@ -70,7 +70,7 @@ partial class Program
                         {
                             item.Syntax = GetSampleCode(sample, offset, item.CurrentOffset);
                             offset = item.CurrentOffset;
-                                                        
+
                             if (ret.TryAdd(item.BoxName, item))
                             {
                                 success++;
@@ -79,12 +79,13 @@ partial class Program
                             {
                                 duplicated++;
                                 duplicates.Add(item);
-                                Console.WriteLine($"Duplicated: {item.BoxName}");
+                                Debug.WriteLine($"Duplicated: {item.BoxName}");
 
                                 if (item.Extended != null && item.Extended.BoxType != ret[item.BoxName].Extended.BoxType)
                                 {
                                     if (!ret.TryAdd($"{item.BoxName}_{item.Extended.BoxType}", item))
                                     {
+                                        Debug.WriteLine($"Duplicated and failed to add: {item.BoxName}");
                                         Console.WriteLine($"Duplicated and failed to add: {item.BoxName}");
                                     }
                                     // override the name
@@ -93,12 +94,13 @@ partial class Program
                             }
                         }
 
-                        Console.WriteLine($"Succeeded parsing: {fourCC}");
+                        Debug.WriteLine($"Succeeded parsing: {fourCC}");
 
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        Debug.WriteLine(e.Message);
+                        Debug.WriteLine($"Failed to parse: {fourCC}");
                         Console.WriteLine($"Failed to parse: {fourCC}");
                         fail++;
                     }
@@ -109,8 +111,10 @@ partial class Program
         containers = containers.Distinct().ToList();
 
         // post-processing
+
         foreach (var item in ret)
         {
+            // determine the box type
             var ancestors = GetAncestors(ret, item);
 
             if (ancestors.Any())
@@ -124,9 +128,24 @@ partial class Program
                 else
                     item.Value.ParsedBoxType = ParsedBoxType.Class;
             }
+
+            // determine container
+            item.Value.IsContainer =
+                string.IsNullOrEmpty(item.Value.Abstract) && 
+                item.Value.BoxName != "MetaDataAccessUnit" &&
+                item.Value.BoxName != "ItemReferenceBox" &&
+                item.Value.BoxName != "SampleGroupDescriptionBox" &&
+                item.Value.BoxName != "SampleGroupDescriptionEntry" &&
+                (
+                    item.Value.Syntax.Contains("other boxes from derived specifications") ||
+                    (item.Value.Extended != null && containers.Contains(item.Value.Extended.BoxType)) || containers.Contains(item.Value.BoxName) ||
+                    item.Value.Syntax.Contains("Box boxes[]")
+                );
         }
 
+        Debug.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
         Console.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
+        
         string js = JsonConvert.SerializeObject(ret.Values.ToArray());
         File.WriteAllText("result.json", js);
 
@@ -588,7 +607,6 @@ namespace SharpMP4
             ctorContent = "\t\tthis.version = v;\r\n\t\t this.flags = f;";
         }
 
-        bool hasBoxes = (fields.Select(x => GetReadMethod(GetFieldType(x)).Contains("ReadBox(")).FirstOrDefault(x => x == true) != false && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "ItemReferenceBox") || b.Syntax.Contains("other boxes from derived specifications");
         bool hasDescriptors = fields.Select(x => GetReadMethod(GetFieldType(x)).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
 
         foreach (var field in fields)
@@ -700,8 +718,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Read);
         }
 
-        if ((string.IsNullOrWhiteSpace(b.Abstract) && ((b.Extended != null && containers.Contains(b.Extended.BoxType)) || containers.Contains(b.BoxName) || hasBoxes)) && 
-            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
+        if (b.IsContainer)
         {
             cls += "\r\n" + "boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
         }
@@ -735,8 +752,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Write);
         }
 
-        if ((string.IsNullOrWhiteSpace(b.Abstract) && ((b.Extended != null && containers.Contains(b.Extended.BoxType)) || containers.Contains(b.BoxName) || hasBoxes)) &&
-            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
+        if (b.IsContainer)
         {
             cls += "\r\n" + "boxSize += stream.WriteBoxArrayTillEnd(this);";
         }
@@ -769,8 +785,7 @@ namespace SharpMP4
             cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Size);
         }
 
-        if ((string.IsNullOrWhiteSpace(b.Abstract) && ((b.Extended != null && containers.Contains(b.Extended.BoxType)) || containers.Contains(b.BoxName) || hasBoxes)) &&
-            b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry")
+        if (b.IsContainer)
         {
             cls += "\r\n" + "boxSize += IsoStream.CalculateBoxArray(this);";
         }
