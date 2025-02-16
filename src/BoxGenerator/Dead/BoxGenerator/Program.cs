@@ -711,6 +711,21 @@ namespace SharpMP4
         return ret;
     }
 
+    private static void AddRequiresAllocation(PseudoField field)
+    {
+        PseudoBlock parent = null;
+        parent = field.Parent;
+        while (parent != null)
+        {
+            if (parent.Type == "for")
+            {
+                // add the allocation above the first for in the hierarchy
+                parent.RequiresAllocation.Add(field);
+            }
+
+            parent = parent.Parent;
+        }
+    }
 
 
 
@@ -1283,21 +1298,7 @@ namespace SharpMP4
             return "";
     }
 
-    private static void AddRequiresAllocation(PseudoField field)
-    {
-        PseudoBlock parent = null;
-        parent = field.Parent;
-        while (parent != null)
-        {
-            if (parent.Type == "for")
-            {
-                // add the allocation above the first for in the hierarchy
-                parent.RequiresAllocation.Add(field);
-            }
-
-            parent = parent.Parent;
-        }
-    }
+    
 
     
 
@@ -1586,15 +1587,15 @@ namespace SharpMP4
 
     private static string GetFieldTypeDef(PseudoCode field)
     {
+        //string[] wrong = ["[count]", "[ entry_count ]", "[numReferences]", "[0 .. 255]", "[0..1]", "[0 .. 1]", "[0..255]", "[ sample_count ]", "[sample_count]", "[subsample_count]",
+        //    "[method_count]","[URLlength]","[sizeOfInstance-4]","[sizeOfInstance-3]","[size-10]","[tagLength]","[length-6]","[3]","[16]","[14]","[4]","[6]","[32]","[36]","[256]","[512]",
+        //    "[chunk_length]","[contentIDLength]","[contentTypeLength]","[rightsIssuerLength]","[textualHeadersLength]","[numIndSub + 1]"];
+        string[] correct = ["[ c ]", "[i]", "[j][k]", "[j]", "[grid_pos_view_id[i]]", "[i][j]", "[c]", "[f]"];
+
         string value = (field as PseudoField)?.Value;
-        if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" &&
-            value != "[count]" && value != "[ entry_count ]" && value != "[numReferences]"
-            && value != "[0 .. 255]" && value != "[0..1]" && value != "[0 .. 1]" && value != "[0..255]" &&
-            value != "[ sample_count ]" && value != "[sample_count]" && value != "[subsample_count]" && value != "[method_count]" && value != "[URLlength]" && value != "[sizeOfInstance-4]" && 
-            value != "[sizeOfInstance-3]" && value != "[size-10]" && value != "[tagLength]" && value != "[length-6]" && value != "[3]" && value != "[16]" && value != "[14]" && value != "[4]" && 
-            value != "[6]" && value != "[32]" && value != "[36]" && value != "[256]" && value != "[512]" && value != "[chunk_length]" &&
-            value != "[contentIDLength]" && value != "[contentTypeLength]" && value != "[rightsIssuerLength]" && value != "[textualHeadersLength]" && value != "[numIndSub + 1]")
+        if (!string.IsNullOrEmpty(value) && value.StartsWith("[") && value != "[]" && correct.Contains(value))
         {
+            // TODO: maybe check instead whether we are in a loop?
             return value;
         }
 
