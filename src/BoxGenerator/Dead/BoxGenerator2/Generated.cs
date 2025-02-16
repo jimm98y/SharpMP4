@@ -10409,7 +10409,6 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Type)), this, out this.references0);
             }
-            boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
 
@@ -10427,7 +10426,6 @@ namespace SharpMP4
             {
                 boxSize += stream.WriteBox(this.references0);
             }
-            boxSize += stream.WriteBoxArrayTillEnd(this);
             return boxSize;
         }
 
@@ -10445,7 +10443,6 @@ namespace SharpMP4
             {
                 boxSize += IsoStream.CalculateBoxSize(references0); // references0
             }
-            boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
     }

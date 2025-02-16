@@ -235,6 +235,7 @@ namespace BoxGenerator
         public string EndComment { get; set; }
         public long CurrentOffset { get; set; }
         public IList<PseudoCode> Fields { get; set; }
+        public List<PseudoField> FlattenedFields { get; internal set; }
 
         public PseudoClass()
         { }

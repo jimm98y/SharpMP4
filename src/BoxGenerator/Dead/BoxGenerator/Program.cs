@@ -115,7 +115,7 @@ partial class Program
         foreach (var item in ret)
         {
             // determine the box type
-            var ancestors = GetAncestors(ret, item);
+            var ancestors = GetAncestors(ret, item.Value);
 
             if (ancestors.Any())
             {
@@ -129,6 +129,10 @@ partial class Program
                     item.Value.ParsedBoxType = ParsedBoxType.Class;
             }
 
+            // flatten fields
+            var fields = FlattenFields(item.Value.Fields);
+            item.Value.FlattenedFields = fields;
+
             // determine container
             item.Value.IsContainer =
                 string.IsNullOrEmpty(item.Value.Abstract) && 
@@ -139,15 +143,17 @@ partial class Program
                 (
                     item.Value.Syntax.Contains("other boxes from derived specifications") ||
                     (item.Value.Extended != null && containers.Contains(item.Value.Extended.BoxType)) || containers.Contains(item.Value.BoxName) ||
-                    item.Value.Syntax.Contains("Box boxes[]")
-                );
+                    item.Value.FlattenedFields.FirstOrDefault(x => 
+                        x.Type.Type == "Box" || GetAncestors(ret, ret.Values.FirstOrDefault(y => y.BoxName == x.Type.Type)).LastOrDefault(c => c.EndsWith("Box")) != null) != null
+                ) ||
+                item.Value.BoxName == "DefaultHevcExtractorConstructorBox";
         }
 
         Debug.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
         Console.WriteLine($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
         
-        string js = JsonConvert.SerializeObject(ret.Values.ToArray());
-        File.WriteAllText("result.json", js);
+        //string js = JsonConvert.SerializeObject(ret.Values.ToArray());
+        //File.WriteAllText("result.json", js);
 
         string resultCode =
 @"using System;
@@ -418,19 +424,19 @@ namespace SharpMP4
 ";
     }
 
-    private static string[] GetAncestors(Dictionary<string, PseudoClass> items, KeyValuePair<string, PseudoClass> item)
+    private static string[] GetAncestors(Dictionary<string, PseudoClass> items, PseudoClass item)
     {
         List<string> extended = new List<string>();
-        if (item.Value.Extended != null)
+        if (item != null && item.Extended != null)
         {
             var it = item;
-            while (it.Value != null && !string.IsNullOrEmpty(it.Value.Extended.BoxName))
+            while (it != null && !string.IsNullOrEmpty(it.Extended.BoxName))
             {
-                extended.Add(it.Value.Extended.BoxName);
-                it = items.SingleOrDefault(x => x.Value.BoxName == it.Value.Extended.BoxName);
+                extended.Add(it.Extended.BoxName);
+                it = items.Values.SingleOrDefault(x => x.BoxName == it.Extended.BoxName);
             }
+            //Debug.WriteLine($"Box {item.BoxName} - {string.Join(':', extended)}");
         }
-        Debug.WriteLine($"Box {item.Value.BoxName} - {string.Join(':', extended)}");
         return extended.ToArray();
     }
 
@@ -549,7 +555,7 @@ namespace SharpMP4
         cls += $"\tpublic {ov}string DisplayName {{ get {{ return \"{b.BoxName}\"; }} }}";
 
         string ctorContent = "";
-        var fields = FlattenFields(b.Fields);
+        var fields = b.FlattenedFields;
 
         if (b.BoxName == "GASpecificConfig" || b.BoxName == "SLSSpecificConfig")
         {
