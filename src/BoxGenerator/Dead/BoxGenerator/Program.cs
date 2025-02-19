@@ -123,11 +123,11 @@ partial class Program
 
             if (ancestors.Any())
             {
-                if (ancestors.LastOrDefault().EndsWith("Box"))
+                if (ancestors.LastOrDefault().BoxName.EndsWith("Box"))
                     item.Value.ParsedBoxType = ParsedBoxType.Box;
-                else if (ancestors.LastOrDefault().EndsWith("Descriptor"))
+                else if (ancestors.LastOrDefault().BoxName.EndsWith("Descriptor") || (item.Value.Extended != null && !string.IsNullOrEmpty(item.Value.Extended.DescriptorTag)))
                     item.Value.ParsedBoxType = ParsedBoxType.Descriptor;
-                else if (ancestors.LastOrDefault().EndsWith("Entry"))
+                else if (ancestors.LastOrDefault().BoxName.EndsWith("Entry"))
                     item.Value.ParsedBoxType = ParsedBoxType.Entry;
                 else
                     item.Value.ParsedBoxType = ParsedBoxType.Class;
@@ -213,7 +213,7 @@ partial class Program
                     item.Value.Syntax.Contains("other boxes from derived specifications") ||
                     (item.Value.Extended != null && containers.Contains(item.Value.Extended.BoxType)) || containers.Contains(item.Value.BoxName) ||
                     item.Value.FlattenedFields.FirstOrDefault(x =>
-                        x.Type.Type == "Box" || GetClassAncestors(x.Type.Type).LastOrDefault(c => c.EndsWith("Box")) != null) != null
+                        x.Type.Type == "Box" || GetClassAncestors(x.Type.Type).LastOrDefault(c => c != null && c.BoxName.EndsWith("Box")) != null) != null
                 ) ||
                 item.Value.BoxName == "DefaultHevcExtractorConstructorBox"; // DefaultHevcExtractorConstructorBox is a container, but the *constructor boxes have currently unknown syntax
         }
@@ -505,17 +505,24 @@ namespace SharpMP4
         Console.WriteLine(v);
     }
 
-    private static string[] GetClassAncestors(string item)
+    private static PseudoClass[] GetClassAncestors(string item)
     {
         // find all ancestors of the box/entry/class/descriptor - this allows us to determine the type of the class
-        List<string> extended = new List<string>();
+        List<PseudoClass> extended = new List<PseudoClass>();
 
         // right now this algorithm is terribly inefficient, but it works
         PseudoClass it = parsedClasses.Values.SingleOrDefault(x => x.BoxName == item);
-        while (it != null && !string.IsNullOrEmpty(it.Extended.BoxName))
+        if(it != null)
+            extended.Add(it);
+        
+        while (it != null)
         {
-            extended.Add(it.Extended.BoxName);
             it = parsedClasses.Values.SingleOrDefault(x => x.BoxName == it.Extended.BoxName);
+
+            if (it == null)
+                break;
+
+            extended.Add(it);
         }
 
         return extended.ToArray();
@@ -662,20 +669,13 @@ namespace SharpMP4
             else
             {
                 // try to resolve the conflict using the type size
-                string type1 = GetCalculateSizeMethod(field);
-                string type2 = GetCalculateSizeMethod(ret[name]);
-                int type1Size;
-                if (int.TryParse(type1, out type1Size))
-                {
-                    int type2Size;
-                    if (int.TryParse(type2, out type2Size))
-                    {
-                        if (type1Size > type2Size)
-                            ret[name] = field;
-                        if (type1Size != type2Size)
-                            return;
-                    }
-                }
+                var type1 = GetTypeInfo(field);
+                var type2 = GetTypeInfo(ret[name]);
+                
+                if (type1.ElementSizeInBits > type2.ElementSizeInBits)
+                    ret[name] = field;
+                if (type1.ElementSizeInBits != type2.ElementSizeInBits)
+                    return;
 
                 if (GetFieldType(field) == "unsigned int(64)[ entry_count ]" && GetFieldType(ret[name]) == "unsigned int(32)[ entry_count ]")
                 {
@@ -1559,7 +1559,9 @@ namespace SharpMP4
                 m = FixNestedInLoopVariables(field, m, ")", ","); // when casting
             }
             else
+            {
                 m = FixNestedInLoopVariables(field, m, "", " ");
+            }
         }
 
         if (methodType == MethodType.Read)
@@ -2730,15 +2732,103 @@ namespace SharpMP4
     private static string GetCalculateSizeMethod(PseudoField field)
     {
         var info = GetTypeInfo(field);
-        
+
+        // TODO: { "unsigned int(32)[ entry_count ]",        "IsoStream.CalculateSize((ulong)entry_count, value, 32)" },
+        string csharpResult = "";
+        if(info.IsClass)
+        {
+            csharpResult = "IsoStream.CalculateClassSize(value)";
+        }
+        else if(info.IsBox)
+        {
+            csharpResult = "IsoStream.CalculateBoxSize(value)";
+        }
+        else if(info.IsEntry)
+        {
+            csharpResult = "IsoStream.CalculateEntrySize(value)";
+        }
+        else if (info.IsDescriptor)
+        {
+            csharpResult = "IsoStream.CalculateDescriptorSize(value)";
+        }
+        else if (info.IsByteAlignment)
+        {
+            csharpResult = "IsoStream.CalculateByteAlignmentSize(boxSize, value)";
+        }
+        else if(info.IsString)
+        {
+            if (info.Type == "MultiLanguageString")
+            {
+                csharpResult = "IsoStream.CalculateStringSizeLangPrefixed(value)";
+            }
+            else
+            {
+                csharpResult = "IsoStream.CalculateStringSize(value)";
+            }
+        }
+        else if(info.IsNumber)
+        {
+            if (info.ElementSizeInBits > 0)
+            {
+                csharpResult = $"{info.ElementSizeInBits}";
+            }
+            else
+            {
+                // workaround
+                string elSizeVar = info.ElementSizeVariable
+                    .Replace("8 ceil(size / 8) – size", "(Math.Ceiling(size / 8d) - size) * 8")
+                    .Replace("f(pattern_size_code)", "pattern_size_code")
+                    .Replace("f(count_size_code)", "count_size_code")
+                    .Replace("f(index_size_code)", "index_size_code")
+                    ;
+                csharpResult = $"(ulong)({elSizeVar} )";
+            }
+            
+            if(info.IsArray)
+            {
+                string[] correct = ["[ c ]", "[i]", "[j][k]", "[j]", "[grid_pos_view_id[i]]", "[i][j]", "[c]", "[f]"];
+                if (!correct.Contains(info.ArrayLengthVariable))
+                {
+                    string arrayLength = info.ArrayLengthVariable.TrimStart('[').TrimEnd(']');
+
+                    Debug.WriteLine($"---Array: '{info.ArrayLengthVariable}', '{arrayLength}', '{csharpResult}'");
+
+                    if (int.TryParse(arrayLength, out int arrayLen))
+                    {
+                        csharpResult = $"{arrayLength} * {csharpResult}";
+                    }
+                    else if (string.IsNullOrWhiteSpace(arrayLength))
+                    {
+                        csharpResult = $"((ulong)value.Length * {csharpResult})";
+                    }
+                    else
+                    {
+                        csharpResult = $"((ulong)({arrayLength}) * {csharpResult})";
+                    }
+                }
+            }
+        }
+        else if(info.Type == "string" && info.IsString == false)
+        {
+            csharpResult = $"{info.ElementSizeInBits}";
+        }
+
+        csharpResult = csharpResult.Replace("constant_IV_size", "IsoStream.GetInt(constant_IV_size)");
+
+        if (csharpResult.Contains("pictureParameterSetLength"))
+        {
+
+        }
+
+        return csharpResult;
 
         string type = GetFieldType(field);
         Dictionary<string, string> map = new Dictionary<string, string>
         {
+            { "unsigned int(32)[ entry_count ]",        "IsoStream.CalculateSize((ulong)entry_count, value, 32)" },
             { "unsigned int(64)[ entry_count ]",        "(ulong)entry_count * 64" },
             { "unsigned int(64)",                       "64" },
             { "unsigned int(48)",                       "48" },
-            { "unsigned int(32)[ entry_count ]",        "IsoStream.CalculateSize((ulong)entry_count, value, 32)" },
             { "template int(32)[9]",                    "9 * 32" },
             { "unsigned int(32)[3]",                    "3 * 32" },
             { "unsigned int(32)",                       "32" },
@@ -2836,6 +2926,88 @@ namespace SharpMP4
             { "bit(24)",                                "24" },
             { "bit(31)",                                "31" },
             { "bit(8 ceil(size / 8) \u2013 size)",      "(ulong)(Math.Ceiling(size / 8d) - size) * 8" },
+            { "bit(8*dci_nal_unit_length)",             "(ulong)dci_nal_unit_length * 8" },
+            { "char[count]",                            "(ulong)count * 8" },
+            { "signed int(32)[ c ]",                    "32" },
+            { "unsigned int(8)[]",                      "(ulong)value.Length * 8" },
+            { "unsigned int(8)[i]",                     "8" },
+            { "unsigned int(6)[i]",                     "6" },
+            { "unsigned int(6)[i][j]",                  "6" },
+            { "unsigned int(1)[i][j]",                  "1" },
+            { "unsigned int(9)[i]",                     "9" },
+            { "unsigned int(32)[]",                     "(ulong)value.Length * 32" },
+            { "unsigned int(32)[i]",                    "32" },
+            { "unsigned int(32)[j]",                    "32" },
+            { "unsigned int(8)[j][k]",                  "8" },
+            { "unsigned int(8)[j]",                     "8" },
+            { "signed int(64)[j][k]",                 "64" },
+            { "signed int(64)[j]",                    "64" },
+            { "char[]",                                 "(ulong)value.Length * 8" },
+            { "unsigned int(8 * OutputChannelCount)",   "(ulong)(OutputChannelCount * 8)" },
+            // descriptors
+            { "bit(8)[URLlength]",                      "(ulong)(URLlength * 8)" },
+            { "bit(8)[sizeOfInstance-4]",               "(ulong)(sizeOfInstance - 4) * 8" },
+            { "bit(8)[sizeOfInstance-3]",               "(ulong)(sizeOfInstance - 3) * 8" },
+            { "bit(8)[size-10]",                        "(ulong)(size - 10) * 8" },
+            { "double(32)",                             "32" },
+            { "fixedpoint1616",                         "32" },
+            { "bslbf(header_size * 8)",               "header_size * 8" },
+            { "bslbf(trailer_size * 8)",              "trailer_size * 8" },
+            { "bslbf(aux_size * 8)",                  "aux_size * 8" },
+            { "bslbf(11)",                              "11" },
+            { "bslbf(5)",                               "5" },
+            { "bslbf(4)",                               "4" },
+            { "bslbf(2)",                               "2" },
+            { "bslbf(1)",                               "1" },
+            { "uimsbf(32)",                             "32" },
+            { "uimsbf(24)",                             "24" },
+            { "uimsbf(18)",                             "18" },
+            { "uimsbf(16)",                             "16" },
+            { "uimsbf(14)",                             "14" },
+            { "uimsbf(12)",                             "12" },
+            { "uimsbf(10)",                             "10" },
+            { "uimsbf(8)",                              "8" },
+            { "uimsbf(7)",                              "7" },
+            { "uimsbf(6)",                              "6" },
+            { "uimsbf(5)",                              "5" },
+            { "uimsbf(4)",                              "4" },
+            { "uimsbf(3)",                              "3" },
+            { "uimsbf(2)",                              "2" },
+            { "uimsbf(1)",                              "1" },
+            { "uimsbf(1)[i]",                           "1" },
+            { "uimsbf(8)[i]",                           "8" },
+            { "bslbf(1)[i]",                            "1" },
+            { "uimsbf(4)[i]",                           "4" },
+            { "uimsbf(1)[c]",                           "1" },
+            { "uimsbf(32)[f]",                          "32" },
+            { "uimsbf(6)[i]",                           "6" },
+            { "uimsbf(1)[i][j]",                        "1" },
+            { "uimsbf(2)[i][j]",                        "2" },
+            { "uimsbf(4)[i][j]",                        "4" },
+            { "uimsbf(16)[i][j]",                       "16" },
+            { "uimsbf(7)[i][j]",                        "7" },
+            { "uimsbf(5)[i][j]",                        "5" },
+            { "uimsbf(6)[i][j]",                        "6" },
+            { "vluimsbf8",                              "8" },
+            { "byte(urlMIDIStream_length)",             "(ulong)(urlMIDIStream_length * 8)" },
+            { "aligned bit(3)",                         "(ulong)3" }, // TODO: calculate alignment
+            { "aligned bit(1)",                         "(ulong)1" }, // TODO: calculate alignment
+            { "bit",                                    "1" },
+            { "unsigned int(16)[3]",                    "3 * 16" },
+            { "unsigned int(8)[contentIDLength]",       "(uint)contentIDLength * 8" },
+            { "unsigned int(8)[contentTypeLength]",     "(uint)contentTypeLength * 8" },
+            { "unsigned int(8)[rightsIssuerLength]",    "(uint)rightsIssuerLength * 8" },
+            { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
+            { "unsigned int(8)[count]",                 "(uint)count * 8" },
+            { "unsigned int(8)[4]",                     "(uint)32" },
+            { "unsigned int(8)[14]",                    "(uint)14 * 8" },
+            { "unsigned int(8)[6]",                     "(uint)48" },
+            { "unsigned int(8)[256]",                   "(uint)256 * 8" },
+            { "unsigned int(8)[512]",                   "(uint)512 * 8" },
+            { "char[tagLength]",                        "(uint)tagLength * 8" },
+            { "unsigned int(8)[constant_IV_size]",      "(uint)constant_IV_size * 8" },
+            { "unsigned int(8)[length-6]",              "(uint)(length-6) * 8" },
+            { "unsigned int(Per_Sample_IV_Size*8)",     "(uint)Per_Sample_IV_Size * 8" },
             { "bit(8* ps_nalu_length)",                 "(ulong)ps_nalu_length * 8" },
             { "bit(8*nalUnitLength)",                   "(ulong)nalUnitLength * 8" },
             { "bit(8*sequenceParameterSetLength)",      "(ulong)sequenceParameterSetLength * 8" },
@@ -2844,11 +3016,6 @@ namespace SharpMP4
             { "unsigned int(8*num_bytes_constraint_info - 2)", "(uint)(8*num_bytes_constraint_info - 2)" },
             { "bit(8*nal_unit_length)",                 "(ulong)nal_unit_length * 8" },
             { "bit(timeStampLength)",                   "(ulong)timeStampLength" },
-            { "utf8string",                             "IsoStream.CalculateStringSize(value)" },
-            { "utfstring",                              "IsoStream.CalculateStringSize(value)" },
-            { "utf8list",                               "IsoStream.CalculateStringSize(value)" },
-            { "boxstring",                              "IsoStream.CalculateStringSize(value)" },
-            { "string",                                 "IsoStream.CalculateStringSize(value)" },
             { "bit(32)[6]",                             "6 * 32" },
             { "bit(32)",                                "32" },
             { "uint(32)",                               "32" },
@@ -2864,18 +3031,17 @@ namespace SharpMP4
             { "signed int(16)",                         "16" },
             { "signed int (8)",                         "8" },
             { "signed int(64)",                         "64" },
-            { "signed int(8)",                        "8" },
+            { "signed int(8)",                          "8" },
+            { "char",                                   "8" },
             { "Box()[]",                                "IsoStream.CalculateBoxSize(value)" },
             { "Box[]",                                  "IsoStream.CalculateBoxSize(value)" },
-            { "Box()",                                    "IsoStream.CalculateBoxSize(value)" },
+            { "Box()",                                  "IsoStream.CalculateBoxSize(value)" },
             { "Box",                                    "IsoStream.CalculateBoxSize(value)" },
             { "SchemeTypeBox",                          "IsoStream.CalculateBoxSize(value)" },
             { "SchemeInformationBox",                   "IsoStream.CalculateBoxSize(value)" },
             { "ItemPropertyContainerBox",               "IsoStream.CalculateBoxSize(value)" },
             { "ItemPropertyAssociationBox",             "IsoStream.CalculateBoxSize(value)" },
             { "ItemPropertyAssociationBox[]",           "IsoStream.CalculateBoxSize(value)" },
-            { "char",                                   "8" },
-            { "ICC_profile",                            "IsoStream.CalculateClassSize(value)" },
             { "OriginalFormatBox(fmt)",                 "IsoStream.CalculateBoxSize(value)" },
             { "DataEntryBaseBox(entry_type, entry_flags)", "IsoStream.CalculateBoxSize(value)" },
             { "ItemInfoEntry[ entry_count ]",           "IsoStream.CalculateBoxSize(value)" },
@@ -2886,7 +3052,6 @@ namespace SharpMP4
             { "PartitionEntry[ entry_count ]",          "IsoStream.CalculateBoxSize(value)" },
             { "FDSessionGroupBox",                      "IsoStream.CalculateBoxSize(value)" },
             { "GroupIdToNameBox",                       "IsoStream.CalculateBoxSize(value)" },
-            { "base64string",                           "IsoStream.CalculateStringSize(value)" },
             { "ProtectionSchemeInfoBox",                "IsoStream.CalculateBoxSize(value)" },
             { "SingleItemTypeReferenceBox",             "IsoStream.CalculateBoxSize(value)" },
             { "SingleItemTypeReferenceBox[]",           "IsoStream.CalculateBoxSize(value)" },
@@ -2911,25 +3076,9 @@ namespace SharpMP4
             { "BufferingBox()",                           "IsoStream.CalculateBoxSize(value)" },
             { "BufferingBox",                           "IsoStream.CalculateBoxSize(value)" },
             { "MultiviewSceneInfoBox",                  "IsoStream.CalculateBoxSize(value)" },
-            { "MVDDecoderConfigurationRecord",          "IsoStream.CalculateClassSize(value)" },
             { "MVDDepthResolutionBox",                  "IsoStream.CalculateBoxSize(value)" },
-            { "MVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
-            { "AVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
-            { "HEVCDecoderConfigurationRecord()",       "IsoStream.CalculateClassSize(value)" },
-            { "LHEVCDecoderConfigurationRecord()",      "IsoStream.CalculateClassSize(value)" },
-            { "SVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
-            { "HEVCTileTierLevelConfigurationRecord()", "IsoStream.CalculateClassSize(value)" },
-            { "EVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
-            { "VvcDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
-            { "EVCSliceComponentTrackConfigurationRecord()", "IsoStream.CalculateClassSize(value)" },
-            { "Descriptor[0 .. 255]",                   "IsoStream.CalculateDescriptorSize(value)" },
-            { "Descriptor[count]",                      "IsoStream.CalculateDescriptorSize(value)" },
-            { "Descriptor",                             "IsoStream.CalculateDescriptorSize(value)" },
             { "WebVTTConfigurationBox",                 "IsoStream.CalculateBoxSize(value)" },
             { "WebVTTSourceLabelBox",                   "IsoStream.CalculateBoxSize(value)" },
-            { "OperatingPointsRecord",                  "IsoStream.CalculateClassSize(value)" },
-            { "VvcSubpicIDEntry",                       "IsoStream.CalculateEntrySize(value)" },
-            { "VvcSubpicOrderEntry",                    "IsoStream.CalculateEntrySize(value)" },
             { "URIInitBox",                             "IsoStream.CalculateBoxSize(value)" },
             { "URIBox",                                 "IsoStream.CalculateBoxSize(value)" },
             { "CleanApertureBox",                       "IsoStream.CalculateBoxSize(value)" },
@@ -2954,14 +3103,9 @@ namespace SharpMP4
             { "MVCDConfigurationBox",                   "IsoStream.CalculateBoxSize(value)" },
             { "MVDScalabilityInformationSEIBox",        "IsoStream.CalculateBoxSize(value)" },
             { "A3DConfigurationBox",                    "IsoStream.CalculateBoxSize(value)" },
-            { "VvcOperatingPointsRecord",               "IsoStream.CalculateClassSize(value)" },
-            { "VVCSubpicIDRewritingInfomationStruct()", "IsoStream.CalculateClassSize(value)" },
             { "MPEG4ExtensionDescriptorsBox ()",        "IsoStream.CalculateBoxSize(value)" },
             { "MPEG4ExtensionDescriptorsBox()",         "IsoStream.CalculateBoxSize(value)" },
             { "MPEG4ExtensionDescriptorsBox",           "IsoStream.CalculateBoxSize(value)" },
-            { "bit(8*dci_nal_unit_length)",             "(ulong)dci_nal_unit_length * 8" },
-            { "DependencyInfo[numReferences]",          "IsoStream.CalculateClassSize(value)" },
-            { "VvcPTLRecord(0)[i]",                     "IsoStream.CalculateClassSize(value)" },
             { "EVCSliceComponentTrackConfigurationBox", "IsoStream.CalculateBoxSize(value)" },
             { "SVCMetadataSampleConfigBox",             "IsoStream.CalculateBoxSize(value)" },
             { "SVCPriorityLayerInfoBox",                "IsoStream.CalculateBoxSize(value)" },
@@ -2971,25 +3115,6 @@ namespace SharpMP4
             { "HEVCTileConfigurationBox",               "IsoStream.CalculateBoxSize(value)" },
             { "MetaDataKeyTableBox()",                  "IsoStream.CalculateBoxSize(value)" },
             { "BitRateBox()",                          "IsoStream.CalculateBoxSize(value)" },
-            { "char[count]",                            "(ulong)count * 8" },
-            { "signed int(32)[ c ]",                    "32" },
-            { "unsigned int(8)[]",                      "(ulong)value.Length * 8" },
-            { "unsigned int(8)[i]",                     "8" },
-            { "unsigned int(6)[i]",                     "6" },
-            { "unsigned int(6)[i][j]",                  "6" },
-            { "unsigned int(1)[i][j]",                  "1" },
-            { "unsigned int(9)[i]",                     "9" },
-            { "unsigned int(32)[]",                     "(ulong)value.Length * 32" },
-            { "unsigned int(32)[i]",                    "32" },
-            { "unsigned int(32)[j]",                    "32" },
-            { "unsigned int(8)[j][k]",                  "8" },
-            { "unsigned int(8)[j]",                     "8" },
-            { "signed int(64)[j][k]",                 "64" },
-            { "signed int(64)[j]",                    "64" },
-            { "char[]",                                 "(ulong)value.Length * 8" },
-            { "string[method_count]",                   "IsoStream.CalculateStringSize(value)" },
-            { "ItemInfoExtension(extension_type)",                      "IsoStream.CalculateClassSize(value)" },
-            { "SampleGroupDescriptionEntry(grouping_type)",            "IsoStream.CalculateEntrySize(value)" },
             { "SampleEntry()",                            "IsoStream.CalculateBoxSize(value)" },
             { "SampleConstructor()",                      "IsoStream.CalculateBoxSize(value)" },
             { "InlineConstructor()",                      "IsoStream.CalculateBoxSize(value)" },
@@ -3018,60 +3143,35 @@ namespace SharpMP4
             { "MetaDataExtensionsBox()",                  "IsoStream.CalculateBoxSize(value)" },
             { "TrackLoudnessInfo[]",                    "IsoStream.CalculateBoxSize(value)" },
             { "AlbumLoudnessInfo[]",                    "IsoStream.CalculateBoxSize(value)" },
-            { "VvcPTLRecord(num_sublayers)",            "IsoStream.CalculateClassSize(value)" },
-            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "IsoStream.CalculateClassSize(value)" },
             { "OpusSpecificBox",                        "IsoStream.CalculateBoxSize(value)" },
-            { "unsigned int(8 * OutputChannelCount)",   "(ulong)(OutputChannelCount * 8)" },
-            { "ChannelMappingTable(OutputChannelCount)",                    "IsoStream.CalculateClassSize(value)" },
-            // descriptors
-            { "DecoderConfigDescriptor",                "IsoStream.CalculateDescriptorSize(value)" },
-            { "SLConfigDescriptor",                     "IsoStream.CalculateDescriptorSize(value)" },
-            { "IPI_DescrPointer[0 .. 1]",               "IsoStream.CalculateDescriptorSize(value)" },
-            { "IP_IdentificationDataSet[0 .. 255]",     "IsoStream.CalculateDescriptorSize(value)" },
-            { "IPMP_DescriptorPointer[0 .. 255]",       "IsoStream.CalculateDescriptorSize(value)" },
-            { "LanguageDescriptor[0 .. 255]",           "IsoStream.CalculateDescriptorSize(value)" },
-            { "QoS_Descriptor[0 .. 1]",                 "IsoStream.CalculateDescriptorSize(value)" },
-            { "ES_Descriptor",                          "IsoStream.CalculateDescriptorSize(value)" },
-            { "RegistrationDescriptor[0 .. 1]",         "IsoStream.CalculateDescriptorSize(value)" },
-            { "ExtensionDescriptor[0 .. 255]",          "IsoStream.CalculateDescriptorSize(value)" },
-            { "ProfileLevelIndicationIndexDescriptor[0..255]", "IsoStream.CalculateDescriptorSize(value)" },
-            { "DecoderSpecificInfo[0 .. 1]",            "IsoStream.CalculateDescriptorSize(value)" },
-            { "bit(8)[URLlength]",                      "(ulong)(URLlength * 8)" },
-            { "bit(8)[sizeOfInstance-4]",               "(ulong)(sizeOfInstance - 4) * 8" },
-            { "bit(8)[sizeOfInstance-3]",               "(ulong)(sizeOfInstance - 3) * 8" },
-            { "bit(8)[size-10]",                        "(ulong)(size - 10) * 8" },
-            { "double(32)",                             "32" },
-            { "fixedpoint1616",                         "32" },
-            { "QoS_Qualifier[]",                        "IsoStream.CalculateDescriptorSize(value)" },
+            { "AV1SampleEntry",                         "IsoStream.CalculateBoxSize(value)" },
+            { "AV1CodecConfigurationBox",               "IsoStream.CalculateBoxSize(value)" },
+            { "ViewIdentifierBox",                      "IsoStream.CalculateBoxSize(value)" },
+            { "ICC_profile",                            "IsoStream.CalculateClassSize(value)" },
+            { "MVDDecoderConfigurationRecord",          "IsoStream.CalculateClassSize(value)" },
+            { "MVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
+            { "AVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
+            { "HEVCDecoderConfigurationRecord()",       "IsoStream.CalculateClassSize(value)" },
+            { "LHEVCDecoderConfigurationRecord()",      "IsoStream.CalculateClassSize(value)" },
+            { "SVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
+            { "HEVCTileTierLevelConfigurationRecord()", "IsoStream.CalculateClassSize(value)" },
+            { "EVCDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
+            { "VvcDecoderConfigurationRecord()",        "IsoStream.CalculateClassSize(value)" },
+            { "EVCSliceComponentTrackConfigurationRecord()", "IsoStream.CalculateClassSize(value)" },
+            { "OperatingPointsRecord",                  "IsoStream.CalculateClassSize(value)" },
+            { "VvcOperatingPointsRecord",               "IsoStream.CalculateClassSize(value)" },
+            { "VVCSubpicIDRewritingInfomationStruct()", "IsoStream.CalculateClassSize(value)" },
+            { "DependencyInfo[numReferences]",          "IsoStream.CalculateClassSize(value)" },
+            { "VvcPTLRecord(0)[i]",                     "IsoStream.CalculateClassSize(value)" },
+            { "ItemInfoExtension(extension_type)",      "IsoStream.CalculateClassSize(value)" },
+            { "VvcPTLRecord(num_sublayers)",            "IsoStream.CalculateClassSize(value)" },
+            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]","IsoStream.CalculateClassSize(value)" },
+            { "ChannelMappingTable(OutputChannelCount)", "IsoStream.CalculateClassSize(value)" },
             { "GetAudioObjectType()",                   "IsoStream.CalculateClassSize(value)" },
-            { "bslbf(header_size * 8)",               "header_size * 8" },
-            { "bslbf(trailer_size * 8)",              "trailer_size * 8" },
-            { "bslbf(aux_size * 8)",                  "aux_size * 8" },
-            { "bslbf(11)",                              "11" },
-            { "bslbf(5)",                               "5" },
-            { "bslbf(4)",                               "4" },
-            { "bslbf(2)",                               "2" },
-            { "bslbf(1)",                               "1" },
-            { "uimsbf(32)",                             "32" },
-            { "uimsbf(24)",                             "24" },
-            { "uimsbf(18)",                             "18" },
-            { "uimsbf(16)",                             "16" },
-            { "uimsbf(14)",                             "14" },
-            { "uimsbf(12)",                             "12" },
-            { "uimsbf(10)",                             "10" },
-            { "uimsbf(8)",                              "8" },
-            { "uimsbf(7)",                              "7" },
-            { "uimsbf(6)",                              "6" },
-            { "uimsbf(5)",                              "5" },
-            { "uimsbf(4)",                              "4" },
-            { "uimsbf(3)",                              "3" },
-            { "uimsbf(2)",                              "2" },
-            { "uimsbf(1)",                              "1" },
             { "SpatialSpecificConfig",                  "IsoStream.CalculateClassSize(value)" },
             { "ALSSpecificConfig",                      "IsoStream.CalculateClassSize(value)" },
             { "ErrorProtectionSpecificConfig",          "IsoStream.CalculateClassSize(value)" },
             { "program_config_element",                 "IsoStream.CalculateClassSize(value)" },
-            { "byte_alignment",                         "IsoStream.CalculateByteAlignmentSize(boxSize, value)" },
             { "CelpHeader(samplingFrequencyIndex)",     "IsoStream.CalculateClassSize(value)" },
             { "CelpBWSenhHeader",                       "IsoStream.CalculateClassSize(value)" },
             { "HVXCconfig",                             "IsoStream.CalculateClassSize(value)" },
@@ -3081,63 +3181,24 @@ namespace SharpMP4
             { "PARAconfig",                             "IsoStream.CalculateClassSize(value)" },
             { "HILNenexConfig",                         "IsoStream.CalculateClassSize(value)" },
             { "HILNconfig",                             "IsoStream.CalculateClassSize(value)" },
-            { "ld_sbr_header(channelConfiguration)",                          "IsoStream.CalculateClassSize(value)" },
+            { "ld_sbr_header(channelConfiguration)",    "IsoStream.CalculateClassSize(value)" },
             { "sbr_header",                             "IsoStream.CalculateClassSize(value)" },
-            { "uimsbf(1)[i]",                           "1" },
-            { "uimsbf(8)[i]",                           "8" },
-            { "bslbf(1)[i]",                            "1" },
-            { "uimsbf(4)[i]",                           "4" },
-            { "uimsbf(1)[c]",                           "1" },
-            { "uimsbf(32)[f]",                          "32" },
             { "CelpHeader",                             "IsoStream.CalculateClassSize(value)" },
             { "ER_SC_CelpHeader",                       "IsoStream.CalculateClassSize(value)" },
-            { "uimsbf(6)[i]",                           "6" },
-            { "uimsbf(1)[i][j]",                        "1" },
-            { "uimsbf(2)[i][j]",                        "2" },
-            { "uimsbf(4)[i][j]",                        "4" },
-            { "uimsbf(16)[i][j]",                       "16" },
-            { "uimsbf(7)[i][j]",                        "7" },
-            { "uimsbf(5)[i][j]",                        "5" },
-            { "uimsbf(6)[i][j]",                        "6" },
-            { "AV1SampleEntry",                         "IsoStream.CalculateBoxSize(value)" },
-            { "AV1CodecConfigurationBox",               "IsoStream.CalculateBoxSize(value)" },
             { "AV1CodecConfigurationRecord",            "IsoStream.CalculateClassSize(value)" },
-            { "vluimsbf8",                              "8" },
-            { "byte(urlMIDIStream_length)",             "(ulong)(urlMIDIStream_length * 8)" },
-            { "aligned bit(3)",                         "(ulong)3" }, // TODO: calculate alignment
-            { "aligned bit(1)",                         "(ulong)1" }, // TODO: calculate alignment
-            { "bit",                                    "1" },
-            { "unsigned int(16)[3]",                    "3 * 16" },
-            { "MultiLanguageString[]",                  "IsoStream.CalculateStringSizeLangPrefixed(value)" },
             { "AdobeChapterRecord[]",                   "IsoStream.CalculateClassSize(value)" },
             { "ThreeGPPKeyword[]",                      "IsoStream.CalculateClassSize(value)" },
             { "IodsSample[]",                           "IsoStream.CalculateClassSize(value)" },
             { "XtraTag[]",                              "IsoStream.CalculateClassSize(value)" },
             { "XtraValue[count]",                       "IsoStream.CalculateClassSize(value)" },
-            { "TrunEntry(version, flags)[ sample_count ]",       "IsoStream.CalculateClassSize(value)" },
+            { "TrunEntry(version, flags)[ sample_count ]", "IsoStream.CalculateClassSize(value)" },
             { "ViprEntry[]",                            "IsoStream.CalculateClassSize(value)" },
             { "TrickPlayEntry[]",                       "IsoStream.CalculateClassSize(value)" },
             { "MtdtEntry[ entry_count ]",               "IsoStream.CalculateClassSize(value)" },
             { "RectRecord",                             "IsoStream.CalculateClassSize(value)" },
             { "StyleRecord",                            "IsoStream.CalculateClassSize(value)" },
             { "ProtectionSystemSpecificKeyID[count]",   "IsoStream.CalculateClassSize(value)" },
-            { "unsigned int(8)[contentIDLength]",       "(uint)contentIDLength * 8" },
-            { "unsigned int(8)[contentTypeLength]",     "(uint)contentTypeLength * 8" },
-            { "unsigned int(8)[rightsIssuerLength]",    "(uint)rightsIssuerLength * 8" },
-            { "unsigned int(8)[textualHeadersLength]",  "(uint)textualHeadersLength * 8" },
-            { "unsigned int(8)[count]",                 "(uint)count * 8" },
-            { "unsigned int(8)[4]",                     "(uint)32" },
-            { "unsigned int(8)[14]",                    "(uint)14 * 8" },
-            { "unsigned int(8)[6]",                     "(uint)48" },
-            { "unsigned int(8)[256]",                   "(uint)256 * 8" },
-            { "unsigned int(8)[512]",                   "(uint)512 * 8" },
-            { "char[tagLength]",                        "(uint)tagLength * 8" },
-            { "unsigned int(8)[constant_IV_size]",      "(uint)constant_IV_size * 8" },
-            { "unsigned int(8)[length-6]",              "(uint)(length-6) * 8" },
             { "EC3SpecificEntry[numIndSub + 1]",        "IsoStream.CalculateClassSize(value)" },
-            { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "IsoStream.CalculateClassSize(value)" },
-            { "SampleEncryptionSubsample(version)[subsample_count]", "IsoStream.CalculateClassSize(value)" },
-            { "unsigned int(Per_Sample_IV_Size*8)",     "(uint)Per_Sample_IV_Size * 8" },
             { "CelpSpecificConfig()",                   "IsoStream.CalculateClassSize(value)" },
             { "HvxcSpecificConfig()",                   "IsoStream.CalculateClassSize(value)" },
             { "TTSSpecificConfig()",                    "IsoStream.CalculateClassSize(value)" },
@@ -3152,12 +3213,55 @@ namespace SharpMP4
             { "MPEG_1_2_SpecificConfig()",              "IsoStream.CalculateClassSize(value)" },
             { "SLSSpecificConfig()",                    "IsoStream.CalculateClassSize(value)" },
             { "SymbolicMusicSpecificConfig()",          "IsoStream.CalculateClassSize(value)" },
-            { "ViewIdentifierBox",                      "IsoStream.CalculateBoxSize(value)" },
+            { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]", "IsoStream.CalculateClassSize(value)" },
+            { "SampleEncryptionSubsample(version)[subsample_count]", "IsoStream.CalculateClassSize(value)" },
+
+            { "VvcSubpicIDEntry",                       "IsoStream.CalculateEntrySize(value)" },
+            { "VvcSubpicOrderEntry",                    "IsoStream.CalculateEntrySize(value)" },
+            { "SampleGroupDescriptionEntry(grouping_type)", "IsoStream.CalculateEntrySize(value)" },
+
+            { "ProfileLevelIndicationIndexDescriptor[0..255]", "IsoStream.CalculateDescriptorSize(value)" },
+            { "QoS_Qualifier[]",                        "IsoStream.CalculateDescriptorSize(value)" },
+            { "Descriptor[0 .. 255]",                   "IsoStream.CalculateDescriptorSize(value)" },
+            { "Descriptor[count]",                      "IsoStream.CalculateDescriptorSize(value)" },
+            { "Descriptor",                             "IsoStream.CalculateDescriptorSize(value)" },
+            { "DecoderConfigDescriptor",                "IsoStream.CalculateDescriptorSize(value)" },
+            { "SLConfigDescriptor",                     "IsoStream.CalculateDescriptorSize(value)" },
+            { "IPI_DescrPointer[0 .. 1]",               "IsoStream.CalculateDescriptorSize(value)" },
+            { "IP_IdentificationDataSet[0 .. 255]",     "IsoStream.CalculateDescriptorSize(value)" },
+            { "IPMP_DescriptorPointer[0 .. 255]",       "IsoStream.CalculateDescriptorSize(value)" },
+            { "LanguageDescriptor[0 .. 255]",           "IsoStream.CalculateDescriptorSize(value)" },
+            { "QoS_Descriptor[0 .. 1]",                 "IsoStream.CalculateDescriptorSize(value)" },
+            { "ES_Descriptor",                          "IsoStream.CalculateDescriptorSize(value)" },
+            { "RegistrationDescriptor[0 .. 1]",         "IsoStream.CalculateDescriptorSize(value)" },
+            { "ExtensionDescriptor[0 .. 255]",          "IsoStream.CalculateDescriptorSize(value)" },
+            { "DecoderSpecificInfo[0 .. 1]",            "IsoStream.CalculateDescriptorSize(value)" },
+
+            { "MultiLanguageString[]",                  "IsoStream.CalculateStringSizeLangPrefixed(value)" },
+            { "string[method_count]",                   "IsoStream.CalculateStringSize(value)" },
+            { "utf8string",                             "IsoStream.CalculateStringSize(value)" },
+            { "utfstring",                              "IsoStream.CalculateStringSize(value)" },
+            { "utf8list",                               "IsoStream.CalculateStringSize(value)" },
+            { "boxstring",                              "IsoStream.CalculateStringSize(value)" },
+            { "string",                                 "IsoStream.CalculateStringSize(value)" },
+            { "base64string",                           "IsoStream.CalculateStringSize(value)" },
+
+            { "byte_alignment",                         "IsoStream.CalculateByteAlignmentSize(boxSize, value)" },
+
        };
+
         if (map.ContainsKey(type))
+        {
+            if(map[type] != csharpResult)
+                Debug.WriteLine($"GetCalculateSizeMethod: '{map[type]}' => '{csharpResult}'"); 
             return map[type];
+        }
         else if (map.ContainsKey(type.Replace("()", "")))
+        {
+            if (map[type.Replace("()", "")] != csharpResult) 
+                Debug.WriteLine($"GetCalculateSizeMethod: '{map[type.Replace("()", "")]}' => '{csharpResult}'");
             return map[type.Replace("()", "")];
+        }
         else
             throw new NotSupportedException(type);
     }
@@ -3178,14 +3282,23 @@ namespace SharpMP4
     {
         public bool IsNumber { get; internal set; }
         public bool IsFloatingPoint { get; internal set; }
-        public bool IsString { get; internal set; }
         public bool IsSigned { get; internal set; }
+        public bool IsString { get; internal set; }
+        public bool IsBox { get; internal set; }
+        public bool IsDescriptor { get; internal set; }
+        public bool IsEntry { get; internal set; }
+        public bool IsClass { get; internal set; }
+        public bool IsByteAlignment { get; internal set; }
+
+        public bool IsArray { get { return ArrayDimensions > 0; } }
+
+        public string Type { get; internal set; }
         public int ArrayDimensions { get; internal set; }
-        public int FieldSize { get; internal set; }
-        public string FieldSizeParam { get; internal set; }
-        public string TypeName { get; internal set; }
-        public string FieldArray { get; internal set; }
-        public string[] Ancestors { get; internal set; }
+        public int ElementSizeInBits { get; internal set; }
+        public string ElementSizeVariable { get; internal set; }
+        public string ArrayLengthVariable { get; internal set; }
+        
+        public PseudoClass[] Ancestors { get; internal set; }
     }
 
     private static FieldTypeInfo GetTypeInfo(PseudoField field)
@@ -3193,13 +3306,13 @@ namespace SharpMP4
         PseudoType fieldType = field.Type;
         FieldTypeInfo info = new FieldTypeInfo();
 
-        info.TypeName = fieldType.Type;
-        info.FieldArray = field.FieldArray;
+        info.Type = fieldType.Type;
+        info.ArrayLengthVariable = field.FieldArray;
 
         switch (fieldType.Type)
         {
             case "int":
-                info.FieldSize = 32; // assume standard int size
+                info.ElementSizeInBits = 32; // assume standard int size
                 info.IsNumber = true;
                 info.IsSigned = true;
                 break;
@@ -3211,7 +3324,7 @@ namespace SharpMP4
                 break;
 
             case "bit":
-                info.FieldSize = 1;
+                info.ElementSizeInBits = 1;
                 info.IsNumber = true;
                 info.IsSigned = false;
                 break;
@@ -3220,20 +3333,27 @@ namespace SharpMP4
             case "byte":
             case "bslbf":
             case "vluimsbf8":
+                info.ElementSizeInBits = 8;
+                info.IsNumber = true;
+                info.IsSigned = false;
+                break;
+
             case "byte_alignment":
-                info.FieldSize = 8;
+                info.IsByteAlignment = true;
+                info.ElementSizeInBits = 8;
                 info.IsNumber = true;
                 info.IsSigned = false;
                 break;
 
             case "double":
             case "fixedpoint1616":
-                info.FieldSize = 32;
+                info.ElementSizeInBits = 32;
                 info.IsFloatingPoint = true;
                 info.IsNumber = true;
                 info.IsSigned = true;
                 break;
 
+            case "MultiLanguageString":
             case "base64string":
             case "boxstring":
             case "utf8string":
@@ -3293,28 +3413,61 @@ namespace SharpMP4
                     // not a number
                     //Debug.WriteLine($"GetType - number: {fieldType.Type} {innerParam}");
                     fieldSize = -1; // we cannot determine the size, we'll use byte[]
-                    info.FieldSizeParam = innerParam;
+                    info.ElementSizeVariable = innerParam;
                 }
-                info.FieldSize = fieldSize;
+                info.ElementSizeInBits = fieldSize;
+            }
+        }
+
+        if (info.IsNumber && info.ElementSizeInBits == 0)
+            throw new NotSupportedException($"{fieldType.Type} is unknown");
+
+        if (!info.IsNumber && !info.IsString && !info.IsFloatingPoint && !info.IsByteAlignment)
+        {
+            info.Ancestors = GetClassAncestors(fieldType.Type);
+            
+            if (info.Ancestors.Any())
+            {
+                if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Box"))
+                    info.IsBox = true;
+                else if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Descriptor") || (info.Ancestors.FirstOrDefault().Extended != null && !string.IsNullOrEmpty(info.Ancestors.FirstOrDefault().Extended.DescriptorTag)))
+                    info.IsDescriptor = true;
+                else if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Entry"))
+                    info.IsEntry = true;
+                else
+                    info.IsClass = true;
+            }
+            else
+            {
+                if (info.Type.EndsWith("Box") ||
+                    info.Type == "DRCCoefficientsBasic" ||
+                    info.Type == "DRCInstructionsBasic" || 
+                    info.Type == "DRCCoefficientsUniDRC" || 
+                    info.Type == "DRCInstructionsUniDRC" || 
+                    info.Type == "UniDrcConfigExtension" ||
+                    info.Type == "SampleConstructor" ||
+                    info.Type == "InlineConstructor" ||
+                    info.Type == "SampleConstructorFromTrackGroup" ||
+                    info.Type == "NALUStartInlineConstructor" 
+                    )
+                    info.IsBox = true;
+                else if (info.Type.EndsWith("Descriptor"))
+                    info.IsDescriptor = true;
+                else
+                    info.IsClass = true;
             }
         }
 
         // workaround: Iso639
-        if (info.TypeName == "int" && !info.IsSigned && info.ArrayDimensions == 1 && info.FieldSize == 5 && info.FieldArray == "[3]")
+        if (info.Type == "int" && !info.IsSigned && info.ArrayDimensions == 1 && info.ElementSizeInBits == 5 && info.ArrayLengthVariable == "[3]")
         {
             info.IsString = false;
             info.IsNumber = false;
+            info.IsClass = false;
             info.ArrayDimensions = 0;
-            info.FieldArray = "";
-            info.TypeName = "string";
-        }
-
-        if (info.IsNumber && info.FieldSize == 0)
-            throw new NotSupportedException($"{fieldType.Type} is unknown");
-
-        if(!info.IsNumber && !info.IsString && !info.IsFloatingPoint)
-        {
-            info.Ancestors = GetClassAncestors(fieldType.Type);
+            info.ArrayLengthVariable = "";
+            info.Type = "string";
+            info.ElementSizeInBits = 15;
         }
 
         return info;
@@ -3328,11 +3481,11 @@ namespace SharpMP4
         {
             if (!info.IsFloatingPoint)
             {
-                if (info.FieldSize == 1)
+                if (info.ElementSizeInBits == 1)
                 {
                     t = "bool";
                 }
-                else if (info.FieldSize > 1 && info.FieldSize <= 8)
+                else if (info.ElementSizeInBits > 1 && info.ElementSizeInBits <= 8)
                 {
                     if (info.IsSigned)
                     {
@@ -3343,7 +3496,7 @@ namespace SharpMP4
                         t = "byte";
                     }
                 }
-                else if (info.FieldSize > 8 && info.FieldSize <= 16)
+                else if (info.ElementSizeInBits > 8 && info.ElementSizeInBits <= 16)
                 {
                     if (info.IsSigned)
                     {
@@ -3354,7 +3507,7 @@ namespace SharpMP4
                         t = "ushort";
                     }
                 }
-                else if (info.FieldSize > 16 && info.FieldSize <= 32)
+                else if (info.ElementSizeInBits > 16 && info.ElementSizeInBits <= 32)
                 {
                     if (info.IsSigned)
                     {
@@ -3365,7 +3518,7 @@ namespace SharpMP4
                         t = "uint";
                     }
                 }
-                else if (info.FieldSize > 32 && info.FieldSize <= 64)
+                else if (info.ElementSizeInBits > 32 && info.ElementSizeInBits <= 64)
                 {
                     if (info.IsSigned)
                     {
@@ -3376,7 +3529,7 @@ namespace SharpMP4
                         t = "ulong";
                     }
                 }
-                else if (info.FieldSize == -1)
+                else if (info.ElementSizeInBits == -1)
                 {
                     t = "byte";
                     arrayDimensions++;
@@ -3384,23 +3537,26 @@ namespace SharpMP4
             }
             else
             {
-                if(info.FieldSize == 32)
+                if(info.ElementSizeInBits == 32)
                 {
                     t = "double";
                 }
                 else
                 {
-                    throw new NotSupportedException($"{info.TypeName} is unknown");
+                    throw new NotSupportedException($"{info.Type} is unknown");
                 }
             }
         }
         else if(info.IsString)
         {
-            t = "BinaryUTF8String";
+            if (info.Type == "MultiLanguageString")
+                t = "MultiLanguageString";
+            else
+                t = "BinaryUTF8String";
         }
         else
         {
-            t = info.TypeName;
+            t = info.Type;
         }
 
         for (int i = 0; i < arrayDimensions; i++)

@@ -58,17 +58,12 @@ namespace SharpMP4
                 case "©swf": return new AppleCreatorBox();
                 case "©swk": return new AppleSwkBox();
                 case "©swr": return new AppleSoftwareBox();
-                case "©TIM": return new AppleStartTimecode();
                 case "©too": return new AppleEncoderToolBox();
-                case "©TSC": return new AppleStartTimeScale();
-                case "©TSZ": return new AppleStartTimeSampleSize();
                 case "©wrt": return new AppleComposersBox();
                 case "©xyz": return new AppleGPSCoordinatesBox();
                 case "0000": return new ZeroBox();
                 case "3dpr": return new MVDDepthResolutionBox();
                 case "3sib": return new MVDScalabilityInformationSEIBox();
-                case "a1lx": return new AV1LayeredImageIndexingProperty();
-                case "a1op": return new OperatingPointSelectorProperty();
                 case "a3d1": if (parent == "stsd") return new VisualSampleEntry("a3d1"); break;
                 case "a3d2": if (parent == "stsd") return new VisualSampleEntry("a3d2"); break;
                 case "a3d3": if (parent == "stsd") return new VisualSampleEntry("a3d3"); break;
@@ -151,21 +146,16 @@ namespace SharpMP4
                 case "dec3": return new EC3SpecificBox();
                 case "desc": return new AppleDescriptionBox();
                 case "devc": return new EVRCSpecificBox();
-                case "dfxp": return new DfxpSampleEntry();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
                 case "dimg": return new SingleItemTypeReferenceBox("dimg");
-                case "dimm": return new hintimmediateBytesSent();
                 case "dinf": return new DataInformationBox();
                 case "disk": return new DiskNumberBox();
-                case "dmax": return new hintlongestpacket();
-                case "dmed": return new hintmediaBytesSent();
                 case "dmix": return new DownMixInstructions();
                 case "dmlp": return new MLPSpecificBox();
                 case "dOps": return new OpusSpecificBox();
                 case "dpnd": return new DpndBox();
                 case "dqcp": return new QCELPSpecificBox();
                 case "dref": return new DataReferenceBox();
-                case "drep": return new hintrepeatedBytesSent();
                 case "drmi": if (parent == "stsd") return new VisualSampleEntry("drmi"); break;
                 case "drms": if (parent == "stsd") return new AudioSampleEntry("drms"); break;
                 case "dscp": return new ThreeGPPDescriptionBox();
@@ -199,7 +189,6 @@ namespace SharpMP4
                 case "exte": return new MetaDataExtensionsBox();
                 case "fade": return new FadeTransitionEffectProperty();
                 case "fall": return new FallBox();
-                case "fdp ": return new FDHintSampleEntry();
                 case "fecr": return new FECReservoirBox();
                 case "fiel": return new FielBox();
                 case "fiin": return new FDItemInformationBox();
@@ -213,8 +202,6 @@ namespace SharpMP4
                 case "ftyp": return new FileTypeBox();
                 case "geID": return new AppleGeIDBox();
                 case "gitn": return new GroupIdToNameBox();
-                case "gmhd": return new GenericMediaHeaderAtom();
-                case "gmin": return new BaseMediaInfoAtom();
                 case "gnre": return new GenreBox();
                 case "grpl": return new GroupsListBox();
                 case "gshh": return new GooglesHostHeaderBox();
@@ -229,12 +216,9 @@ namespace SharpMP4
                 case "hev1": if (parent == "stsd") return new VisualSampleEntry("hev1"); break;
                 case "hev2": if (parent == "stsd") return new VisualSampleEntry("hev2"); break;
                 case "hev3": if (parent == "stsd") return new VisualSampleEntry("hev3"); break;
-                case "hind": return new TrackReferenceTypeBox_hind(); // TODO: fix duplicate
-                case "hinf": return new hintstatisticsbox();
                 case "hint": return new HintBox();
                 case "hinv": return new AppleHintVersionBox();
                 case "hmhd": return new HintMediaHeaderBox();
-                case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
                 case "href": return new HrefBox();
                 case "hvc1": if (parent == "stsd") return new VisualSampleEntry("hvc1"); break;
                 case "hvc2": if (parent == "stsd") return new VisualSampleEntry("hvc2"); break;
@@ -257,7 +241,6 @@ namespace SharpMP4
                 case "imda": return new IdentifiedMediaDataBox();
                 case "imdt": return new DataEntryImdaBox();
                 case "imif": return new IPMPInfoBox();
-                case "imir": return new ImageMirror();
                 case "infe": return new ItemInfoEntry();
                 case "infu": return new OMAInfoURLBox();
                 case "iods": return new AppleInitialObjectDescriptorBox();
@@ -269,7 +252,6 @@ namespace SharpMP4
                 case "iprp": return new ItemPropertiesBox();
                 case "iref": return new ItemReferenceBox();
                 case "iroi": return new IroiInfoBox();
-                case "irot": return new ImageRotation();
                 case "iscl": return new ImageScaling();
                 case "ispe": return new ImageSpatialExtentsProperty();
                 case "iviv": return new FairPlayIvBox();
@@ -295,10 +277,8 @@ namespace SharpMP4
                 case "LOOP": return new AppleLOOPBox();
                 case "lpcm": if (parent == "stsd") return new AudioSampleEntry("lpcm"); break;
                 case "lrcu": return new OMALyricsURLBox();
-                case "lsel": return new LayerSelectorProperty();
                 case "ludt": return new LoudnessBox();
                 case "m4ds": return new MPEG4ExtensionDescriptorsBox();
-                case "maxr": return new hintmaxrate();
                 case "md5i": return new MD5IntegrityBox();
                 case "mdat": return new MediaDataBox();
                 case "mdcv": return new MasteringDisplayColourVolumeBox();
@@ -308,13 +288,10 @@ namespace SharpMP4
                 case "mdri": return new OMAMutableDRMBox();
                 case "mdta": return new MdtaBox();
                 case "mean": return new ITunesMetadataMeanBox();
-                case "mebx": return new BoxedMetaDataSampleEntry();
                 case "meco": return new AdditionalMetadataContainerBox();
                 case "mehd": return new MovieExtendsHeaderBox();
                 case "mere": return new MetaBoxRelationBox();
                 case "meta": return new MetaBox();
-                case "mett": return new TextMetaDataSampleEntry();
-                case "metx": return new XMLMetaDataSampleEntry();
                 case "mfhd": return new MovieFragmentHeaderBox();
                 case "mfra": return new MovieFragmentRandomAccessBox();
                 case "mfro": return new MovieFragmentRandomAccessOffsetBox();
@@ -349,8 +326,6 @@ namespace SharpMP4
                 case "name": return new AppleName2Box(); // TODO: box is ambiguous in between AppleName2Box and FairPlayUserNameBox
                 case "NCTG": return new NikonExifBox();
                 case "nmhd": return new NullMediaHeaderBox();
-                case "npck": return new hintPacketsSent_npck(); // TODO: fix duplicate
-                case "nump": return new hintPacketsSent();
                 case "odaf": return new OMAAccessUnitFormatBox();
                 case "odda": return new OMAContentObjectBox();
                 case "odhe": return new OMADiscreteMediaHeadersBox();
@@ -363,20 +338,15 @@ namespace SharpMP4
                 case "opeg": return new OperatingPointGroupBox();
                 case "Opus": if (parent == "stsd") return new AudioSampleEntry("Opus"); break;
                 case "otyp": return new OriginalFileTypeBox();
-                case "ovc1": return new Ovc1VisualSampleEntryImpl();
                 case "owma": if (parent == "stsd") return new AudioSampleEntry("owma"); break;
                 case "padb": return new PaddingBitsBox();
-                case "paen": return new PartitionEntry();
                 case "pasp": return new PixelAspectRatioBox();
-                case "payt": return new hintpayloadID();
                 case "pcst": return new PodcastBox();
                 case "pdin": return new ProgressiveDownloadInfoBox();
                 case "perf": return new ThreeGPPPerformerBox();
                 case "pgap": return new ApplePlayGapBox();
                 case "pitm": return new PrimaryItemBox();
                 case "pixi": return new PixelInformationProperty();
-                case "pm2t": return new ProtectedMPEG2TransportStreamSampleEntry();
-                case "pmax": return new hintlargestpacket();
                 case "prft": return new ProducerReferenceTimeBox();
                 case "priv": return new FairPlayPrivateKeyBox();
                 case "prof": return new AppleProductionApertureDimensionsBox();
@@ -391,30 +361,24 @@ namespace SharpMP4
                 case "resv": if (parent == "stsd") return new VisualSampleEntry("resv"); break;
                 case "rinf": return new RestrictedSchemeInfoBox();
                 case "rloc": return new RelativeLocationProperty();
-                case "rm2t": return new MPEG2TSReceptionSampleEntry();
                 case "rmda": return new AppleReferenceMovieDescriptorBox();
                 case "rmdr": return new AppleDataRateBox();
                 case "rmra": return new AppleReferenceMovieBox();
                 case "rref": return new RequiredReferenceTypesProperty();
                 case "rrgn": return new RectRegionBox();
-                case "rrtp": return new ReceivedRtpHintSampleEntry();
-                case "rsrp": return new ReceivedSrtpHintSampleEntry();
                 case "rssr": return new ReceivedSsrcBox();
                 case "rtng": return new AppleRatingBox();
-                case "rtp ": return new rtpmoviehintinformation(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
                 case "s263": if (parent == "stsd") return new VisualSampleEntry("s263"); break;
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
                 case "samr": if (parent == "stsd") return new AudioSampleEntry("samr"); break;
                 case "sawb": if (parent == "stsd") return new AudioSampleEntry("sawb"); break;
                 case "sbgp": return new SampleToGroupBox();
-                case "sbtt": return new TextSubtitleSampleEntry();
                 case "schi": return new SchemeInformationBox();
                 case "schm": return new SchemeTypeBox();
                 case "scrb": return new ScrambleSchemeInfoBox();
                 case "sdep": return new SampleDependencyBox();
                 case "sdes": return new AppleShortDescriptionBox();
-                case "sdp ": return new rtptracksdphintinformation();
                 case "sdtp": return new SampleDependencyTypeBox();
                 case "segr": return new FDSessionGroupBox();
                 case "seib": return new ScalabilityInformationSEIBox();
@@ -427,13 +391,10 @@ namespace SharpMP4
                 case "sgpd": return new SampleGroupDescriptionBox();
                 case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
                 case "sinf": return new ProtectionSchemeInfoBox();
-                case "skip": return new FreeSpaceBox_skip(); // TODO: fix duplicate
-                case "sm2t": return new MPEG2TSServerSampleEntry();
                 case "SmDm": return new SMPTE2086MasteringDisplayMetadataBox();
                 case "smhd": return new SoundMediaHeaderBox();
                 case "SMI ": return new SMIBox();
                 case "snim": return new DataEntrySeqNumImdaBox();
-                case "snro": return new sequenceoffset();
                 case "snut": return new TrackGroupTypeBox_snut(); // TODO: fix duplicate
                 case "soaa": return new AlbumArtistSortBox();
                 case "soal": return new AlbumSortBox();
@@ -448,7 +409,6 @@ namespace SharpMP4
                 case "sqcp": if (parent == "stsd") return new AudioSampleEntry("sqcp"); break;
                 case "srat": return new SamplingRateBox();
                 case "srpp": return new SRTPProcessBox();
-                case "srtp": return new SrtpHintSampleEntry();
                 case "ssix": return new CompressedSubsegmentIndexBox();
                 case "ssld": return new SuggestedTimeDisplayDurationProperty();
                 case "ssmv": if (parent == "stsd") return new AudioSampleEntry("ssmv"); break;
@@ -461,7 +421,6 @@ namespace SharpMP4
                 case "stik": return new AppleMediaTypeBox();
                 case "stmg": return new MVCSubTrackMultiviewGroupBox();
                 case "stpe": return new SuggestedTransitionPeriodProperty();
-                case "stpp": return new XMLSubtitleSampleEntry();
                 case "stps": return new ApplePartialSyncSamplesBox();
                 case "strd": return new SubTrackDefinitionBox();
                 case "stri": return new SubTrackInformationBox();
@@ -476,14 +435,12 @@ namespace SharpMP4
                 case "stti": return new SubTrackTierBox();
                 case "stts": return new TimeToSampleBox();
                 case "stvi": return new StereoVideoBox();
-                case "stxt": return new SimpleTextSampleEntry();
                 case "styp": return new SegmentTypeBox();
                 case "stz2": return new CompactSampleSizeBox();
                 case "subs": return new SubSampleInformationBox();
                 case "svc1": if (parent == "stsd") return new VisualSampleEntry("svc1"); break;
                 case "svc2": if (parent == "stsd") return new VisualSampleEntry("svc2"); break;
                 case "svcC": return new SVCConfigurationBox();
-                case "svcM": return new SVCMetaDataSampleEntry();
                 case "svcP": return new SVCPriorityAssignmentBox();
                 case "svdr": return new SVCDependencyRangeBox();
                 case "svip": return new InitialParameterSetBox();
@@ -502,19 +459,13 @@ namespace SharpMP4
                 case "tfra": return new TrackFragmentRandomAccessBox();
                 case "thmb": return new ThmbBox();
                 case "tibr": return new TierBitRateBox();
-                case "tims": return new timescaleentry();
                 case "tiri": return new TierInfoBox();
                 case "titl": return new ThreeGPPTitleBox();
                 case "tkhd": return new TrackHeaderBox();
                 case "tlou": return new TrackLoudnessInfo();
-                case "tmax": return new hintmaxrelativetime();
                 case "tmcd": return new TimeCodeBox();
-                case "tmin": return new hintminrelativetime();
                 case "tmpo": return new AppleBeatsPerMinuteBox();
                 case "tols": return new TargetOlsProperty();
-                case "totl": return new hintBytesSent_totl(); // TODO: fix duplicate
-                case "tpay": return new hintBytesSent_tpay(); // TODO: fix duplicate
-                case "tpyl": return new hintBytesSent_tpyl(); // TODO: fix duplicate
                 case "traf": return new TrackFragmentBox();
                 case "trak": return new TrackBox();
                 case "tran": return new TranscodingInfoBox();
@@ -524,11 +475,8 @@ namespace SharpMP4
                 case "trgr": return new TrackGroupBox();
                 case "trik": return new TrickPlayBox();
                 case "trkn": return new TrackNumberBox();
-                case "trpy": return new hintBytesSent();
                 case "trun": return new TrackRunBox();
                 case "tsel": return new TrackSelectionBox();
-                case "tsro": return new timeoffset();
-                case "tssy": return new timestampsynchrony();
                 case "tstb": return new TileSubTrackGroupBox();
                 case "ttyp": return new TrackTypeBox();
                 case "tven": return new TVEpisodeIDBox();
@@ -545,7 +493,6 @@ namespace SharpMP4
                 case "ulaw": return new UlawBox();
                 case "uri ": return new URIBox();
                 case "uriI": return new URIInitBox();
-                case "urim": return new URIMetaSampleEntry();
                 case "url ": return new DataEntryUrlBox();
                 case "urn ": return new DataEntryUrnBox();
                 case "user": return new FairPlayUserIDBox();
@@ -559,7 +506,6 @@ namespace SharpMP4
                 case "uuid be7acfcb97a942e89c71999491e3afac": return new XMPBox();
                 case "uuid d08a4f1810f34a82b6c832d8aba183d3": return new UuidBasedProtectionSystemSpecificHeaderBox();
                 case "uuid d4807ef2ca3946958e5426cb9e46a79f": return new TfrfBox();
-                case "vdep": return new TrackReferenceTypeBox_vdep(); // TODO: fix duplicate
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
                 case "vmhd": return new VideoMediaHeaderBox();
@@ -567,7 +513,6 @@ namespace SharpMP4
                 case "vp09": if (parent == "stsd") return new VisualSampleEntry("vp09"); break;
                 case "vp10": if (parent == "stsd") return new VisualSampleEntry("vp10"); break;
                 case "vpcC": return new VPCodecConfigurationBox();
-                case "vplx": return new TrackReferenceTypeBox_vplx(); // TODO: fix duplicate
                 case "VPRF": return new PspVprfBox();
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
@@ -581,10 +526,8 @@ namespace SharpMP4
                 case "vwdi": return new MultiviewSceneInfoBox();
                 case "vwid": return new ViewIdentifierBox();
                 case "wave": return new AppleWaveBox();
-                case "wide": return new FreeSpaceBox_wide(); // TODO: fix duplicate
                 case "wipe": return new WipeTransitionEffectProperty();
                 case "WLOC": return new AppleWLOCBox();
-                case "wvtt": return new WVTTSampleEntry();
                 case "xid ": return new AppleXidBox();
                 case "xml ": return new XMLBox();
                 case "Xtra": return new WindowsMediaXtraBox();
@@ -611,60 +554,160 @@ namespace SharpMP4
         {
             switch (fourCC)
             {
+                case "©TIM": return new AppleStartTimecode();
+                case "©TSC": return new AppleStartTimeScale();
+                case "©TSZ": return new AppleStartTimeSampleSize();
+                case "a1lx": return new AV1LayeredImageIndexingProperty();
+                case "a1op": return new OperatingPointSelectorProperty();
+                case "a3d1": return new A3DSampleEntry();
+                case "a3d2": return new A3DSampleEntry_a3d2(); // TODO: fix duplicate
+                case "a3d3": return new A3DSampleEntry_a3d3(); // TODO: fix duplicate
+                case "a3d4": return new A3DSampleEntry_a3d4(); // TODO: fix duplicate
                 case "aebr": return new AutoExposureBracketingEntry();
                 case "afbr": return new FlashExposureBracketingEntry();
                 case "alst": return new AlternativeStartupEntry();
                 case "aud ": return new AUDSampleEntry();
+                case "av01": return new AV1SampleEntry();
                 case "av1f": return new AV1ForwardKeyFrameSampleGroupEntry();
                 case "av1M": return new AV1MetadataSampleGroupEntry();
                 case "av1s": return new AV1SwitchFrameSampleGroupEntry();
+                case "avc1": throw new NotSupportedException("'avc1' is ambiguous in between AVCMVCSampleEntry and AVCSVCSampleEntry");
+                case "avc2": throw new NotSupportedException("'avc2' is ambiguous in between AVC2MVCSampleEntry and AVC2SVCSampleEntry");
+                case "avc3": throw new NotSupportedException("'avc3' is ambiguous in between AVCMVCSampleEntry_avc3 and AVCSVCSampleEntry_avc3");
+                case "avc4": throw new NotSupportedException("'avc4' is ambiguous in between AVC2MVCSampleEntry_avc4 and AVC2SVCSampleEntry_avc4");
+                case "avcp": return new AVCParameterSampleEntry();
                 case "avll": return new AVCLayerEntry();
                 case "avss": return new AVCSubSequenceEntry();
                 case "casg": return new CleanApertureEntry();
                 case "dcfi": return new DecodingCapabilityInformation();
+                case "dfxp": return new DfxpSampleEntry();
+                case "dimm": return new hintimmediateBytesSent();
+                case "dmax": return new hintlongestpacket();
+                case "dmed": return new hintmediaBytesSent();
                 case "dobr": return new DepthOfFieldBracketingEntry();
                 case "drap": return new VisualDRAPEntry();
+                case "drep": return new hintrepeatedBytesSent();
                 case "dtrt": return new DecodeRetimingEntry();
+                case "encv": return new GenericSampleEntry();
                 case "eob ": return new EndOfBitstreamSampleEntry();
                 case "eos ": return new EndOfSequenceSampleEntry();
                 case "eqiv": return new VisualEquivalenceEntry();
+                case "evc1": return new EVCSampleEntry();
+                case "evs1": return new EVCSliceComponentTrackSampleEntry();
+                case "evs2": return new EVCSliceComponentTrackSampleEntry_evs2(); // TODO: fix duplicate
                 case "fdel": return new FDItemInfoExtension();
+                case "fdp ": return new FDHintSampleEntry();
                 case "fobr": return new FocusBracketingEntry();
+                case "gmhd": return new GenericMediaHeaderAtom();
+                case "gmin": return new BaseMediaInfoAtom();
+                case "hev1": return new HEVCSampleEntry_hev1(); // TODO: fix duplicate
+                case "hev2": return new HEVCSampleEntry_hev2(); // TODO: fix duplicate
+                case "hev3": return new HEVCSampleEntry_hev3(); // TODO: fix duplicate
+                case "hind": return new TrackReferenceTypeBox_hind(); // TODO: fix duplicate
+                case "hinf": return new hintstatisticsbox();
+                case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
+                case "hvc1": return new HEVCSampleEntry();
+                case "hvc2": return new HEVCSampleEntry_hvc2(); // TODO: fix duplicate
+                case "hvc3": return new HEVCSampleEntry_hvc3(); // TODO: fix duplicate
+                case "hvt1": return new HEVCTileSampleEntry();
+                case "hvt2": return new HEVCSliceSegmentDataSampleEntry();
+                case "hvt3": return new HEVCTileSSHInfoSampleEntry();
+                case "icpv": return new IncompleteAVCSampleEntry();
+                case "imir": return new ImageMirror();
+                case "irot": return new ImageRotation();
                 case "lbli": return new LhvcExternalBaseLayerInfo();
+                case "lhe1": return new LHEVCSampleEntry_lhe1(); // TODO: fix duplicate
+                case "lht1": return new LHEVCTileSampleEntry();
+                case "lhv1": return new LHEVCSampleEntry();
                 case "linf": return new LayerInfoGroupEntry();
+                case "lsel": return new LayerSelectorProperty();
+                case "maxr": return new hintmaxrate();
+                case "mebx": return new BoxedMetaDataSampleEntry();
+                case "mett": return new TextMetaDataSampleEntry();
+                case "metx": return new XMLMetaDataSampleEntry();
                 case "minp": return new VvcMixedNALUnitTypePicEntry();
+                case "mp4s": return new MpegSampleEntry();
+                case "mvc1": return new MVCSampleEntry();
+                case "mvc2": return new MVCSampleEntry_mvc2(); // TODO: fix duplicate
+                case "mvc3": return new MVCSampleEntry_mvc3(); // TODO: fix duplicate
+                case "mvc4": return new MVCSampleEntry_mvc4(); // TODO: fix duplicate
+                case "mvd1": return new MVCDSampleEntry();
+                case "mvd2": return new MVCDSampleEntry_mvd2(); // TODO: fix duplicate
+                case "mvd3": return new MVCDSampleEntry_mvd3(); // TODO: fix duplicate
+                case "mvd4": return new MVCDSampleEntry_mvd4(); // TODO: fix duplicate
                 case "mvif": return new MultiviewGroupEntry();
                 case "nalm": return new NALUMapEntry();
+                case "npck": return new hintPacketsSent_npck(); // TODO: fix duplicate
+                case "nump": return new hintPacketsSent();
                 case "oinf": return new OperatingPointsInformation();
                 case "opth": return new OperatingPointDecodeTimeHint();
+                case "Opus": return new OpusSampleEntry();
+                case "ovc1": return new Ovc1VisualSampleEntryImpl();
+                case "paen": return new PartitionEntry();
                 case "pano": return new PanoramaEntry();
                 case "pase": return new ParameterSetNALUEntry();
                 case "pasr": return new PixelAspectRatioEntry();
+                case "payt": return new hintpayloadID();
+                case "pm2t": return new ProtectedMPEG2TransportStreamSampleEntry();
+                case "pmax": return new hintlargestpacket();
                 case "prol": return new AudioPreRollEntry();
                 case "prtp": return new ProtectedRtpReceptionHintSampleEntry();
                 case "pss1": return new PSSampleGroupEntry();
                 case "rap ": return new VisualRandomAccessEntry();
                 case "rash": return new RateShareEntry();
                 case "refs": return new DirectReferenceSamplesList();
+                case "rm2t": return new MPEG2TSReceptionSampleEntry();
                 case "roll": return new AudioRollRecoveryEntry();
                 case "rror": return new VvcRectRegionOrderEntry();
+                case "rrtp": return new ReceivedRtpHintSampleEntry();
+                case "rsrp": return new ReceivedSrtpHintSampleEntry();
+                case "rtp ": return new rtpmoviehintinformation(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
                 case "sap ": return new SAPEntry();
+                case "sbtt": return new TextSubtitleSampleEntry();
                 case "scif": return new ScalableGroupEntry();
                 case "scnm": return new ScalableNALUMapEntry();
+                case "sdp ": return new rtptracksdphintinformation();
+                case "skip": return new FreeSpaceBox_skip(); // TODO: fix duplicate
+                case "sm2t": return new MPEG2TSServerSampleEntry();
+                case "snro": return new sequenceoffset();
                 case "spid": return new VvcSubpicIDEntry();
                 case "spli": return new SubpicLevelInfoEntry();
                 case "spor": return new VvcSubpicOrderEntry();
+                case "srtp": return new SrtpHintSampleEntry();
                 case "stmi": return new SampleToMetadataItemEntry();
+                case "stpp": return new XMLSubtitleSampleEntry();
                 case "stsa": return new StepwiseTemporalLayerEntry();
+                case "stxt": return new SimpleTextSampleEntry();
                 case "sulm": return new VvcSubpicLayoutMapEntry();
+                case "svc1": return new SVCSampleEntry();
+                case "svc2": return new SVCSampleEntry_svc2(); // TODO: fix duplicate
+                case "svcM": return new SVCMetaDataSampleEntry();
                 case "sync": return new SyncSampleEntry();
                 case "tele": return new TemporalLevelEntry();
+                case "tims": return new timescaleentry();
+                case "tmax": return new hintmaxrelativetime();
+                case "tmin": return new hintminrelativetime();
+                case "totl": return new hintBytesSent_totl(); // TODO: fix duplicate
+                case "tpay": return new hintBytesSent_tpay(); // TODO: fix duplicate
+                case "tpyl": return new hintBytesSent_tpyl(); // TODO: fix duplicate
                 case "trif": return new RectangularRegionGroupEntry();
+                case "trpy": return new hintBytesSent();
                 case "tsas": return new TemporalSubLayerEntry();
                 case "tscl": return new TemporalLayerEntry();
+                case "tsro": return new timeoffset();
+                case "tssy": return new timestampsynchrony();
+                case "urim": return new URIMetaSampleEntry();
+                case "vdep": return new TrackReferenceTypeBox_vdep(); // TODO: fix duplicate
                 case "vipr": return new ViewPriorityEntry();
                 case "vopi": return new VvcOperatingPointsInformation();
+                case "vplx": return new TrackReferenceTypeBox_vplx(); // TODO: fix duplicate
+                case "vvc1": return new VvcSampleEntry();
+                case "vvcN": return new VvcNonVCLSampleEntry();
+                case "vvi1": return new VvcSampleEntry_vvi1(); // TODO: fix duplicate
+                case "vvs1": return new VvcSubpicSampleEntry();
                 case "wbbr": return new WhiteBalanceBracketingEntry();
+                case "wide": return new FreeSpaceBox_wide(); // TODO: fix duplicate
+                case "wvtt": return new WVTTSampleEntry();
             }
 
             //throw new NotImplementedException(fourCC);
@@ -940,7 +983,7 @@ namespace SharpMP4
             if (URL_Flag)
             {
                 boxSize += 8; // URLlength
-                boxSize += (ulong)(URLlength * 8); // URLstring
+                boxSize += ((ulong)(URLlength) * 8); // URLstring
             }
 
             if (OCRstreamFlag)
@@ -1206,10 +1249,10 @@ namespace SharpMP4
 
             if (!useTimeStampsFlag)
             {
-                boxSize += (ulong)timeStampLength; // startDecodingTimeStamp
-                boxSize += (ulong)timeStampLength; // startCompositionTimeStamp
+                boxSize += (ulong)(timeStampLength); // startDecodingTimeStamp
+                boxSize += (ulong)(timeStampLength); // startCompositionTimeStamp
             }
-            boxSize += 8 * (ulong)ocr.Length; // ocr
+            boxSize += ((ulong)ocr.Length * 8); // ocr
             return boxSize;
         }
     }
@@ -1753,7 +1796,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -2213,7 +2256,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // formatIdentifier
-            boxSize += (ulong)(sizeOfInstance - 4) * 8; // additionalIdentificationInfo
+            boxSize += ((ulong)(sizeOfInstance - 4) * 8); // additionalIdentificationInfo
             return boxSize;
         }
     }
@@ -3286,7 +3329,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // major_brand
             boxSize += 32; // minor_version
-            boxSize += (ulong)compatible_brands.Length * 32; // compatible_brands
+            boxSize += ((ulong)compatible_brands.Length * 32); // compatible_brands
             return boxSize;
         }
     }
@@ -3402,7 +3445,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // key_namespace
-            boxSize += (ulong)key_value.Length * 8; // key_value
+            boxSize += ((ulong)key_value.Length * 8); // key_value
             return boxSize;
         }
     }
@@ -4889,7 +4932,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // payloadID
             boxSize += 8; // count
-            boxSize += (ulong)count * 8; // rtpmap_string
+            boxSize += ((ulong)(count) * 8); // rtpmap_string
             return boxSize;
         }
     }
@@ -4967,8 +5010,8 @@ namespace SharpMP4
             boxSize += 2; // single_view_allowed
             boxSize += 32; // stereo_scheme
             boxSize += 32; // length
-            boxSize += (ulong)length * 8; // stereo_indication_type
-                                          // boxSize += IsoStream.CalculateBoxSize(any_box); // any_box
+            boxSize += ((ulong)(length) * 8); // stereo_indication_type
+                                              // boxSize += IsoStream.CalculateBoxSize(any_box); // any_box
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -6395,7 +6438,7 @@ namespace SharpMP4
                                 size += 5;
                             }
                         }
-                        boxSize += (ulong)(Math.Ceiling(size / 8d) - size) * 8; // reserved00
+                        boxSize += (ulong)((Math.Ceiling(size / 8d) - size) * 8); // reserved00
                     }
 
                     else
@@ -6541,7 +6584,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)uri_initialization_data.Length * 8; // uri_initialization_data
+            boxSize += ((ulong)uri_initialization_data.Length * 8); // uri_initialization_data
             return boxSize;
         }
     }
@@ -6700,7 +6743,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // switch_group
-            boxSize += (ulong)attribute_list.Length * 32; // attribute_list
+            boxSize += ((ulong)attribute_list.Length * 32); // attribute_list
             return boxSize;
         }
     }
@@ -6823,7 +6866,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)sdptext.Length * 8; // sdptext
+            boxSize += ((ulong)sdptext.Length * 8); // sdptext
             return boxSize;
         }
     }
@@ -6916,7 +6959,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // descriptionformat
-            boxSize += (ulong)sdptext.Length * 8; // sdptext
+            boxSize += ((ulong)sdptext.Length * 8); // sdptext
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -7681,7 +7724,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)data.Length * 8; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -7942,8 +7985,8 @@ namespace SharpMP4
 
             for (int i = 0; i < pattern_count; i++)
             {
-                boxSize += (ulong)pattern_size_code; // pattern_length
-                boxSize += (ulong)count_size_code; // sample_count
+                boxSize += (ulong)(pattern_size_code); // pattern_length
+                boxSize += (ulong)(count_size_code); // sample_count
             }
 
             for (int j = 0; j < pattern_count; j++)
@@ -7951,7 +7994,7 @@ namespace SharpMP4
 
                 for (int k = 0; k < IsoStream.GetInt(pattern_length[j]); k++)
                 {
-                    boxSize += (ulong)index_size_code; // sample_group_description_index
+                    boxSize += (ulong)(index_size_code); // sample_group_description_index
                 }
             }
             return boxSize;
@@ -9242,7 +9285,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)data.Length * 8; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -9353,7 +9396,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // major_brand
             boxSize += 32; // minor_version
-            boxSize += (ulong)compatible_brands.Length * 32; // compatible_brands
+            boxSize += ((ulong)compatible_brands.Length * 32); // compatible_brands
             return boxSize;
         }
     }
@@ -9645,7 +9688,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -10013,7 +10056,7 @@ namespace SharpMP4
                     boxSize += 4; // construction_method
                 }
                 boxSize += 16; // data_reference_index
-                boxSize += (ulong)base_offset_size * 8; // base_offset
+                boxSize += (ulong)(base_offset_size * 8); // base_offset
                 boxSize += 16; // extent_count
 
                 for (int j = 0; j < extent_count[i]; j++)
@@ -10021,10 +10064,10 @@ namespace SharpMP4
 
                     if (((version == 1) || (version == 2)) && (index_size > 0))
                     {
-                        boxSize += (ulong)index_size * 8; // item_reference_index
+                        boxSize += (ulong)(index_size * 8); // item_reference_index
                     }
-                    boxSize += (ulong)offset_size * 8; // extent_offset
-                    boxSize += (ulong)length_size * 8; // extent_length
+                    boxSize += (ulong)(offset_size * 8); // extent_offset
+                    boxSize += (ulong)(length_size * 8); // extent_length
                 }
             }
             return boxSize;
@@ -10076,7 +10119,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // imda_identifier
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -10675,7 +10718,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -12024,12 +12067,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                boxSize += IsoStream.CalculateSize((ulong)entry_count, offset, 32); // offset
+                boxSize += ((ulong)(entry_count) * 32); // offset
             }
 
             else
             {
-                boxSize += (ulong)entry_count * 64; // offset
+                boxSize += ((ulong)(entry_count) * 64); // offset
             }
             return boxSize;
         }
@@ -12130,7 +12173,7 @@ namespace SharpMP4
 
             if (default_sample_info_size == 0)
             {
-                boxSize += (ulong)sample_count * 8; // sample_info_size
+                boxSize += ((ulong)(sample_count) * 8); // sample_info_size
             }
             return boxSize;
         }
@@ -12790,7 +12833,7 @@ namespace SharpMP4
                         boxSize += 32; // description_length
                     }
                 }
-                boxSize += IsoStream.CalculateEntrySize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
+                boxSize += IsoStream.CalculateClassSize(SampleGroupDescriptionEntry); // SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
             return boxSize;
@@ -12928,7 +12971,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)data.Length * 8; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -13408,7 +13451,7 @@ namespace SharpMP4
             boxSize += 16; // switch_group
             boxSize += 16; // alternate_group
             boxSize += 32; // sub_track_ID
-            boxSize += (ulong)attribute_list.Length * 32; // attribute_list
+            boxSize += ((ulong)attribute_list.Length * 32); // attribute_list
             return boxSize;
         }
     }
@@ -14059,7 +14102,7 @@ namespace SharpMP4
 
             for (int i = 0; i < sample_count; i++)
             {
-                boxSize += (ulong)field_size; // entry_size
+                boxSize += (ulong)(field_size); // entry_size
             }
             return boxSize;
         }
@@ -14633,9 +14676,9 @@ namespace SharpMP4
                     boxSize += 32; // time
                     boxSize += 32; // moof_offset
                 }
-                boxSize += (ulong)(length_size_of_traf_num + 1) * 8; // traf_number
-                boxSize += (ulong)(length_size_of_trun_num + 1) * 8; // trun_number
-                boxSize += (ulong)(length_size_of_sample_num + 1) * 8; // sample_delta
+                boxSize += (ulong)((length_size_of_traf_num + 1) * 8); // traf_number
+                boxSize += (ulong)((length_size_of_trun_num + 1) * 8); // trun_number
+                boxSize += (ulong)((length_size_of_sample_num + 1) * 8); // sample_delta
             }
             return boxSize;
         }
@@ -15444,7 +15487,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)compatible_brands.Length * 32; // compatible_brands
+            boxSize += ((ulong)compatible_brands.Length * 32); // compatible_brands
             return boxSize;
         }
     }
@@ -18517,7 +18560,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)track_IDs.Length * 32; // track_IDs
+            boxSize += ((ulong)track_IDs.Length * 32); // track_IDs
             return boxSize;
         }
     }
@@ -19323,14 +19366,14 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += 16; // sequenceParameterSetLength
-                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
+                boxSize += (ulong)(8 * sequenceParameterSetLength[i]); // sequenceParameterSetNALUnit
             }
             boxSize += 8; // numOfPictureParameterSets
 
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += 16; // pictureParameterSetLength
-                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
+                boxSize += (ulong)(8 * pictureParameterSetLength[i]); // pictureParameterSetNALUnit
             }
 
             if (!HasExtensions) return boxSize;
@@ -19348,7 +19391,7 @@ namespace SharpMP4
                 for (int i = 0; i < numOfSequenceParameterSetExt; i++)
                 {
                     boxSize += 16; // sequenceParameterSetExtLength
-                    boxSize += (ulong)sequenceParameterSetExtLength[i] * 8; // sequenceParameterSetExtNALUnit
+                    boxSize += (ulong)(8 * sequenceParameterSetExtLength[i]); // sequenceParameterSetExtNALUnit
                 }
             }
             return boxSize;
@@ -19513,14 +19556,14 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += 16; // sequenceParameterSetLength
-                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
+                boxSize += (ulong)(8 * sequenceParameterSetLength[i]); // sequenceParameterSetNALUnit
             }
             boxSize += 8; // numOfPictureParameterSets
 
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += 16; // pictureParameterSetLength
-                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
+                boxSize += (ulong)(8 * pictureParameterSetLength[i]); // pictureParameterSetNALUnit
             }
             return boxSize;
         }
@@ -19677,14 +19720,14 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
             {
                 boxSize += 16; // sequenceParameterSetLength
-                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
+                boxSize += (ulong)(8 * sequenceParameterSetLength[i]); // sequenceParameterSetNALUnit
             }
             boxSize += 8; // numOfPictureParameterSets
 
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += 16; // pictureParameterSetLength
-                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
+                boxSize += (ulong)(8 * pictureParameterSetLength[i]); // pictureParameterSetNALUnit
             }
             return boxSize;
         }
@@ -19956,7 +19999,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += 16; // nalUnitLength
-                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
+                    boxSize += (ulong)(8 * nalUnitLength[j][i]); // nalUnit
                 }
             }
             return boxSize;
@@ -20132,7 +20175,7 @@ namespace SharpMP4
             boxSize += 8; // general_level_idc
             boxSize += 1; // ptl_frame_only_constraint_flag
             boxSize += 1; // ptl_multi_layer_enabled_flag
-            boxSize += (uint)(8 * num_bytes_constraint_info - 2); // general_constraint_info
+            boxSize += (ulong)(8 * num_bytes_constraint_info - 2); // general_constraint_info
 
             for (int i = num_sublayers - 2; i >= 0; i--)
             {
@@ -20401,7 +20444,7 @@ namespace SharpMP4
                     for (int i = 0; i < num_nalus[j]; i++)
                     {
                         boxSize += 16; // nal_unit_length
-                        boxSize += (ulong)nal_unit_length[j][i] * 8; // nal_unit
+                        boxSize += (ulong)(8 * nal_unit_length[j][i]); // nal_unit
                     }
                 }
             }
@@ -20567,14 +20610,14 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += 16; // sequenceParameterSetLength
-                boxSize += (ulong)sequenceParameterSetLength[i] * 8; // sequenceParameterSetNALUnit
+                boxSize += (ulong)(8 * sequenceParameterSetLength[i]); // sequenceParameterSetNALUnit
             }
             boxSize += 8; // numOfPictureParameterSets
 
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += 16; // pictureParameterSetLength
-                boxSize += (ulong)pictureParameterSetLength[i] * 8; // pictureParameterSetNALUnit
+                boxSize += (ulong)(8 * pictureParameterSetLength[i]); // pictureParameterSetNALUnit
             }
             return boxSize;
         }
@@ -21162,7 +21205,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += 16; // nalUnitLength
-                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
+                    boxSize += (ulong)(8 * nalUnitLength[j][i]); // nalUnit
                 }
             }
             return boxSize;
@@ -21448,7 +21491,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += 16; // nalUnitLength
-                    boxSize += (ulong)nalUnitLength[j][i] * 8; // nalUnit
+                    boxSize += (ulong)(8 * nalUnitLength[j][i]); // nalUnit
                 }
             }
             boxSize += 16; // operationPointIdx
@@ -24244,7 +24287,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(size - 8) * 8; // scalinfosei
+            boxSize += (ulong)(8 * size - 64); // scalinfosei
             return boxSize;
         }
     }
@@ -24339,7 +24382,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(size - 8) * 8; // mvcscalinfosei
+            boxSize += (ulong)(8 * size - 64); // mvcscalinfosei
             return boxSize;
         }
     }
@@ -24383,7 +24426,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)(size - 8) * 8; // mvdscalinfosei
+            boxSize += (ulong)(8 * size - 64); // mvdscalinfosei
             return boxSize;
         }
     }
@@ -27951,7 +27994,7 @@ namespace SharpMP4
 
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                boxSize += (ulong)subgroupIdLen; // track_subgroup_id
+                boxSize += (ulong)(subgroupIdLen); // track_subgroup_id
             }
 
             for (int i = 0; i < num_subgroup_ids; i++)
@@ -28690,7 +28733,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 16; // dci_nal_unit_length
-            boxSize += (ulong)dci_nal_unit_length * 8; // dci_nal_unit
+            boxSize += (ulong)(8 * dci_nal_unit_length); // dci_nal_unit
             return boxSize;
         }
     }
@@ -29610,7 +29653,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 16; // ps_nalu_length
-            boxSize += (ulong)ps_nalu_length * 8; // ps_nal_unit
+            boxSize += (ulong)(8 * ps_nalu_length); // ps_nal_unit
             return boxSize;
         }
     }
@@ -31419,7 +31462,7 @@ namespace SharpMP4
             boxSize += 8; // numberOfParts
             boxSize += 3; // notationFormat
             boxSize += 8; // urlMIDIStream_length
-            boxSize += (ulong)(urlMIDIStream_length * 8); // urlMIDIStream
+            boxSize += (ulong)(urlMIDIStream_length); // urlMIDIStream
             boxSize += 2; // codingType
             boxSize += 8; // length
             /*  start of decoderConfiguration  */
@@ -31436,43 +31479,43 @@ namespace SharpMP4
 
             else
             {
-                boxSize += (ulong)length; // reserved
+                boxSize += (ulong)(length); // reserved
             }
             /*  end of decoderConfiguration  */
             boxSize += 1; // more_data
 
             while (more_data)
             {
-                boxSize += (ulong)3; // chunk_type
+                boxSize += 3; // chunk_type
                 boxSize += 5; // reserved0
                 boxSize += 8; // chunk_length
 
                 switch (chunk_type)
                 {
                     case 0b000:
-                        boxSize += (ulong)(chunk_length * 8); // sco
+                        boxSize += ((ulong)(chunk_length) * 8); // sco
                         break;
 
                     case 0b001:
-                        boxSize += (ulong)(chunk_length * 8); // part
+                        boxSize += ((ulong)(chunk_length) * 8); // part
                         break;
 
                     case 0b010:
                         /*  this segment is always in binary as stated in Section 9  */
-                        boxSize += (ulong)(chunk_length * 8); // sync
+                        boxSize += ((ulong)(chunk_length) * 8); // sync
                         break;
 
                     case 0b011:
-                        boxSize += (ulong)(chunk_length * 8); // fmt
+                        boxSize += ((ulong)(chunk_length) * 8); // fmt
                         break;
 
                     case 0b100:
-                        boxSize += (ulong)(chunk_length * 8); // lyrics
+                        boxSize += ((ulong)(chunk_length) * 8); // lyrics
                         break;
 
                     case 0b101:
                         /*  this segment is always in binary as stated in Section 11.4  */
-                        boxSize += (ulong)(chunk_length * 8); // fon
+                        boxSize += ((ulong)(chunk_length) * 8); // fon
                         break;
 
                     case 0b110:
@@ -31484,7 +31527,7 @@ namespace SharpMP4
                         break;
 
                 }
-                boxSize += (ulong)1; // more_data
+                boxSize += 1; // more_data
                 boxSize += 7; // reserved00
             }
             return boxSize;
@@ -35029,8 +35072,8 @@ namespace SharpMP4
             boxSize += 1; // byte_align
             boxSize += 32; // header_size
             boxSize += 32; // trailer_size
-            boxSize += header_size * 8; // orig_header
-            boxSize += trailer_size * 8; // orig_trailer
+            boxSize += (ulong)(header_size * 8); // orig_header
+            boxSize += (ulong)(trailer_size * 8); // orig_trailer
 
             if (crc_enabled)
             {
@@ -35049,7 +35092,7 @@ namespace SharpMP4
             if (aux_data_enabled)
             {
                 boxSize += 32; // aux_size
-                boxSize += aux_size * 8; // aux_data
+                boxSize += (ulong)(aux_size * 8); // aux_data
             }
             return boxSize;
         }
@@ -36615,7 +36658,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += IsoStream.CalculateStringSize(aux_type); // aux_type
-            boxSize += (ulong)aux_subtype.Length * 8; // aux_subtype
+            boxSize += ((ulong)aux_subtype.Length * 8); // aux_subtype
             return boxSize;
         }
     }
@@ -36812,7 +36855,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)JPEGprefix.Length * 8; // JPEGprefix
+            boxSize += ((ulong)JPEGprefix.Length * 8); // JPEGprefix
             return boxSize;
         }
     }
@@ -38060,7 +38103,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateEntrySize(sid_info); // sid_info
+            boxSize += IsoStream.CalculateClassSize(sid_info); // sid_info
             return boxSize;
         }
     }
@@ -38104,7 +38147,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += IsoStream.CalculateEntrySize(sor_info); // sor_info
+            boxSize += IsoStream.CalculateClassSize(sor_info); // sor_info
             return boxSize;
         }
     }
@@ -38358,7 +38401,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -38489,7 +38532,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -38532,7 +38575,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -39449,7 +39492,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -39763,7 +39806,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 32; // displayFlags
             boxSize += 32; // textJustification
@@ -39937,7 +39980,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += 32; // inputSize
             boxSize += 32; // tagLength
-            boxSize += (uint)tagLength * 8; // tagName
+            boxSize += ((ulong)(tagLength) * 8); // tagName
             boxSize += 32; // count
             boxSize += IsoStream.CalculateClassSize(values); // values
             return boxSize;
@@ -39994,7 +40037,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += 32; // length
             boxSize += 16; // type
-            boxSize += (uint)(length - 6) * 8; // value
+            boxSize += ((ulong)(length - 6) * 8); // value
             return boxSize;
         }
     }
@@ -40037,7 +40080,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -40414,7 +40457,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -40763,7 +40806,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -40954,7 +40997,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41041,7 +41084,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41128,7 +41171,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41171,7 +41214,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41434,7 +41477,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41564,7 +41607,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41607,7 +41650,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41650,7 +41693,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41780,7 +41823,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41823,7 +41866,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41866,7 +41909,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41909,7 +41952,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -41952,7 +41995,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -42063,7 +42106,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += 64; // timestamp
             boxSize += 8; // count
-            boxSize += (ulong)count * 8; // title
+            boxSize += ((ulong)(count) * 8); // title
             return boxSize;
         }
     }
@@ -42150,7 +42193,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -42193,7 +42236,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -42236,7 +42279,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -42529,7 +42572,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // dataType
             boxSize += 32; // dataLang
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -42572,7 +42615,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -42615,7 +42658,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -42979,12 +43022,12 @@ namespace SharpMP4
 
             if (IPMPS_Type == 0)
             {
-                boxSize += (ulong)(sizeOfInstance - 3) * 8; // URLString
+                boxSize += ((ulong)(sizeOfInstance - 3) * 8); // URLString
             }
 
             else
             {
-                boxSize += (ulong)(sizeOfInstance - 3) * 8; // IPMP_data
+                boxSize += ((ulong)(sizeOfInstance - 3) * 8); // IPMP_data
             }
             return boxSize;
         }
@@ -43171,7 +43214,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -43214,7 +43257,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -43257,7 +43300,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -43300,7 +43343,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -43343,7 +43386,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -43443,7 +43486,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -44653,9 +44696,9 @@ namespace SharpMP4
             boxSize += 16; // contentIDLength
             boxSize += 16; // rightsIssuerLength
             boxSize += 16; // textualHeadersLength
-            boxSize += (uint)contentIDLength * 8; // contentID
-            boxSize += (uint)rightsIssuerLength * 8; // rightsIssuerURL
-            boxSize += (uint)textualHeadersLength * 8; // textualHeaders
+            boxSize += ((ulong)(contentIDLength) * 8); // contentID
+            boxSize += ((ulong)(rightsIssuerLength) * 8); // rightsIssuerURL
+            boxSize += ((ulong)(textualHeadersLength) * 8); // textualHeaders
             return boxSize;
         }
     }
@@ -44705,7 +44748,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 16; // contentIDLength
-            boxSize += (uint)contentIDLength * 8; // contentID
+            boxSize += ((ulong)(contentIDLength) * 8); // contentID
             return boxSize;
         }
     }
@@ -44755,7 +44798,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // count
-            boxSize += (uint)count * 8; // data
+            boxSize += ((ulong)(count) * 8); // data
             return boxSize;
         }
     }
@@ -44854,8 +44897,8 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 8; // contentTypeLength
-            boxSize += (uint)contentTypeLength * 8; // contentType
-                                                    // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+            boxSize += ((ulong)(contentTypeLength) * 8); // contentType
+                                                         // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
             boxSize += IsoStream.CalculateBoxArray(this);
             return boxSize;
         }
@@ -45160,7 +45203,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)data.Length * 8; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45246,7 +45289,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45289,7 +45332,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45332,7 +45375,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45375,7 +45418,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45418,7 +45461,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45461,7 +45504,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45504,7 +45547,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45547,7 +45590,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45590,7 +45633,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45633,7 +45676,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45676,7 +45719,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45719,7 +45762,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45762,7 +45805,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45805,7 +45848,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45848,7 +45891,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45891,7 +45934,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45934,7 +45977,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -45977,7 +46020,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46020,7 +46063,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46063,7 +46106,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46106,7 +46149,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46149,7 +46192,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46192,7 +46235,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46235,7 +46278,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46278,7 +46321,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46321,7 +46364,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46364,7 +46407,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46407,7 +46450,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46450,7 +46493,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46493,7 +46536,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46536,7 +46579,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46579,7 +46622,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46622,7 +46665,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46665,7 +46708,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46708,7 +46751,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46751,7 +46794,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -46794,7 +46837,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -47262,7 +47305,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 32; // dataReferenceType
             boxSize += 32; // count
-            boxSize += (uint)count * 8; // dataReference
+            boxSize += ((ulong)(count) * 8); // dataReference
             return boxSize;
         }
     }
@@ -47351,7 +47394,7 @@ namespace SharpMP4
             boxSize += 32; // displayFlags
             boxSize += 8; // horizontalJustification
             boxSize += 8; // verticalJustification
-            boxSize += (uint)32; // backgroundColorRgba
+            boxSize += 4 * 8; // backgroundColorRgba
             boxSize += IsoStream.CalculateClassSize(rectRecord); // rectRecord
             boxSize += IsoStream.CalculateClassSize(styleRecord); // styleRecord
                                                                   // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
@@ -47444,7 +47487,7 @@ namespace SharpMP4
             boxSize += 32; // displayFlags
             boxSize += 8; // horizontalJustification
             boxSize += 8; // verticalJustification
-            boxSize += (uint)32; // backgroundColorRgba
+            boxSize += 4 * 8; // backgroundColorRgba
             boxSize += IsoStream.CalculateClassSize(rectRecord); // rectRecord
             boxSize += IsoStream.CalculateClassSize(styleRecord); // styleRecord
                                                                   // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
@@ -47586,7 +47629,7 @@ namespace SharpMP4
             boxSize += 16; // fontId
             boxSize += 8; // faceStyleFlags
             boxSize += 8; // fontSize
-            boxSize += (uint)32; // textColor
+            boxSize += 4 * 8; // textColor
             return boxSize;
         }
     }
@@ -47892,7 +47935,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 48; // reserved
             boxSize += 16; // dataReferenceIndex
-            boxSize += 8 * (ulong)vc1Content.Length; // vc1Content
+            boxSize += ((ulong)vc1Content.Length * 8); // vc1Content
             return boxSize;
         }
     }
@@ -48187,9 +48230,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)256 * 8; // baseLocation
-            boxSize += (uint)256 * 8; // purchaseLocation
-            boxSize += (uint)512 * 8; // reserved
+            boxSize += 256 * 8; // baseLocation
+            boxSize += 256 * 8; // purchaseLocation
+            boxSize += 512 * 8; // reserved
             return boxSize;
         }
     }
@@ -48233,7 +48276,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)data.Length; // data
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
@@ -48288,7 +48331,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += 16; // fontId
             boxSize += 8; // count
-            boxSize += (uint)count * 8; // fontName
+            boxSize += ((ulong)(count) * 8); // fontName
             return boxSize;
         }
     }
@@ -48380,7 +48423,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)32; // profileVersion
+            boxSize += 4 * 8; // profileVersion
             boxSize += IsoStream.CalculateStringSize(apid); // apid
             return boxSize;
         }
@@ -48746,7 +48789,7 @@ namespace SharpMP4
                 if (Per_Sample_IV_Size[i] == 0)
                 {
                     boxSize += 8; // constant_IV_size
-                    boxSize += (uint)constant_IV_size[i] * 8; // constant_IV
+                    boxSize += ((ulong)(IsoStream.GetInt(constant_IV_size)) * 8); // constant_IV
                 }
             }
             return boxSize;
@@ -48995,7 +49038,7 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                boxSize += (uint)Per_Sample_IV_Size * 8; // InitializationVector
+                boxSize += (ulong)(Per_Sample_IV_Size * 8); // InitializationVector
 
                 if ((flags & 0x000002) == 0x000002)
                 {
@@ -49011,7 +49054,7 @@ namespace SharpMP4
                 for (int i = 0; i < multi_IV_count; i++)
                 {
                     boxSize += 8; // multi_subindex_IV
-                    boxSize += (uint)Per_Sample_IV_Size * 8; // IV
+                    boxSize += (ulong)(Per_Sample_IV_Size * 8); // IV
                 }
                 boxSize += 32; // subsample_count
                 boxSize += IsoStream.CalculateClassSize(subsamples); // subsamples
@@ -49414,7 +49457,7 @@ namespace SharpMP4
             boxSize += 32; // presentationTimeDelta
             boxSize += 32; // eventDuration
             boxSize += 32; // id
-            boxSize += (ulong)messageData.Length * 8; // messageData
+            boxSize += ((ulong)messageData.Length * 8); // messageData
             return boxSize;
         }
     }
@@ -49457,7 +49500,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)trackIds.Length * 32; // trackIds
+            boxSize += ((ulong)trackIds.Length * 32); // trackIds
             return boxSize;
         }
     }
@@ -49500,7 +49543,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)trackIds.Length * 32; // trackIds
+            boxSize += ((ulong)trackIds.Length * 32); // trackIds
             return boxSize;
         }
     }
@@ -49543,7 +49586,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (ulong)trackIds.Length * 32; // trackIds
+            boxSize += ((ulong)trackIds.Length * 32); // trackIds
             return boxSize;
         }
     }
@@ -49678,7 +49721,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved
+            boxSize += 6 * 8; // reserved
             boxSize += 16; // dataReferenceIndex
             return boxSize;
         }
@@ -49911,12 +49954,12 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16 * 8; // reserved2
             boxSize += 16; // width
             boxSize += 16; // height
-            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 14 * 8; // reserved3
             boxSize += 32 * 8; // compressorName
             boxSize += 16; // depth
             boxSize += 16; // colorTableId
@@ -49962,7 +50005,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 8 * (ulong)metadata.Length; // metadata
+            boxSize += ((ulong)metadata.Length * 8); // metadata
             return boxSize;
         }
     }
@@ -50059,10 +50102,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16; // soundVersion
-            boxSize += (uint)48; // reserved2
+            boxSize += 6 * 8; // reserved2
             boxSize += 16; // channels
             boxSize += 16; // sampleSize
             boxSize += 16; // compressionId
@@ -50123,7 +50166,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)32; // reserved1
+            boxSize += 4 * 8; // reserved1
             boxSize += 16; // reserved2
             boxSize += 16; // dataReferenceIndex
             return boxSize;
@@ -50215,12 +50258,12 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16 * 8; // reserved2
             boxSize += 16; // width
             boxSize += 16; // height
-            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 14 * 8; // reserved3
             boxSize += 32 * 8; // compressorName
             boxSize += 16; // depth
             boxSize += 16; // colorTableId
@@ -50278,7 +50321,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
                            // boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
             boxSize += IsoStream.CalculateBoxArray(this);
@@ -50331,7 +50374,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
             boxSize += 32; // entry_count
-            boxSize += IsoStream.CalculateSize((ulong)entry_count, trackIDs, 32); // trackIDs
+            boxSize += ((ulong)(entry_count) * 32); // trackIDs
             return boxSize;
         }
     }
@@ -50422,7 +50465,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16; // soundVersion
             boxSize += 16; // channels
@@ -50521,12 +50564,12 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16 * 8; // reserved2
             boxSize += 16; // width
             boxSize += 16; // height
-            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 14 * 8; // reserved3
             boxSize += 32 * 8; // compressorName
             boxSize += 16; // depth
             boxSize += 16; // colorTableId
@@ -50619,12 +50662,12 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16 * 8; // reserved2
             boxSize += 16; // width
             boxSize += 16; // height
-            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 14 * 8; // reserved3
             boxSize += 32 * 8; // compressorName
             boxSize += 16; // depth
             boxSize += 16; // colorTableId
@@ -50718,7 +50761,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16; // soundVersion
             boxSize += 16; // channels
@@ -50818,7 +50861,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16; // soundVersion
             boxSize += 16; // channels
@@ -50917,12 +50960,12 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += (uint)48; // reserved1
+            boxSize += 6 * 8; // reserved1
             boxSize += 16; // dataReferenceIndex
             boxSize += 16 * 8; // reserved2
             boxSize += 16; // width
             boxSize += 16; // height
-            boxSize += (uint)14 * 8; // reserved3
+            boxSize += 14 * 8; // reserved3
             boxSize += 32 * 8; // compressorName
             boxSize += 16; // depth
             boxSize += 16; // colorTableId
@@ -51198,7 +51241,7 @@ namespace SharpMP4
             boxSize += 1; // reserved
             boxSize += 15; // language
             boxSize += 16; // dataType
-            boxSize += (ulong)(size - 10) * 8; // data
+            boxSize += ((ulong)(size - 10) * 8); // data
             return boxSize;
         }
     }
@@ -51868,7 +51911,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 16 * 8; // systemID
             boxSize += 32; // count
-            boxSize += (uint)count * 8; // data
+            boxSize += ((ulong)(count) * 8); // data
             return boxSize;
         }
     }
@@ -51925,7 +51968,7 @@ namespace SharpMP4
             boxSize += base.CalculateSize();
             boxSize += 16; // unknown1
             boxSize += 16; // count
-            boxSize += (ulong)count * 8; // version
+            boxSize += ((ulong)(count) * 8); // version
             return boxSize;
         }
     }
@@ -52195,7 +52238,7 @@ namespace SharpMP4
             {
                 boxSize += 4; // reserved0
             }
-            boxSize += (ulong)configOBUs.Length * 8; // configOBUs
+            boxSize += ((ulong)configOBUs.Length * 8); // configOBUs
             return boxSize;
         }
     }
@@ -52557,7 +52600,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += 8; // StreamCount
             boxSize += 8; // CoupledCount
-            boxSize += (ulong)(OutputChannelCount * 8); // ChannelMapping
+            boxSize += (ulong)(8 * OutputChannelCount); // ChannelMapping
             return boxSize;
         }
     }
