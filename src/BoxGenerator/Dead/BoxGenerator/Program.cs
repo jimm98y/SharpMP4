@@ -123,11 +123,11 @@ partial class Program
 
             if (ancestors.Any())
             {
-                if (ancestors.LastOrDefault().BoxName.EndsWith("Box"))
+                if (item.Value.Extended != null && ancestors.LastOrDefault().Extended.BoxName != null && ancestors.LastOrDefault().Extended.BoxName.EndsWith("Box"))
                     item.Value.ParsedBoxType = ParsedBoxType.Box;
-                else if (ancestors.LastOrDefault().BoxName.EndsWith("Descriptor") || (item.Value.Extended != null && !string.IsNullOrEmpty(item.Value.Extended.DescriptorTag)))
+                else if (item.Value.Extended != null && !string.IsNullOrEmpty(item.Value.Extended.DescriptorTag))
                     item.Value.ParsedBoxType = ParsedBoxType.Descriptor;
-                else if (ancestors.LastOrDefault().BoxName.EndsWith("Entry"))
+                else if (item.Value.Extended != null && ancestors.LastOrDefault().Extended.BoxName != null && ancestors.LastOrDefault().Extended.BoxName.EndsWith("Entry"))
                     item.Value.ParsedBoxType = ParsedBoxType.Entry;
                 else
                     item.Value.ParsedBoxType = ParsedBoxType.Class;
@@ -1509,7 +1509,7 @@ namespace SharpMP4
         }
 
         string name = GetFieldName(field);
-        string m = methodType == MethodType.Read ? GetReadMethod(tt) : (methodType == MethodType.Write ? GetWriteMethod(tt) : GetCalculateSizeMethod(field as PseudoField));
+        string m = methodType == MethodType.Read ? GetReadMethod(tt) : (methodType == MethodType.Write ? GetWriteMethod(field as PseudoField) : GetCalculateSizeMethod(field as PseudoField));
         string typedef = "";
         typedef = GetFieldTypeDef(field);
 
@@ -1557,6 +1557,7 @@ namespace SharpMP4
             {
                 m = FixNestedInLoopVariables(field, m, "(", ",");
                 m = FixNestedInLoopVariables(field, m, ")", ","); // when casting
+                m = FixNestedInLoopVariables(field, m, "", " ");
             }
             else
             {
@@ -2298,8 +2299,146 @@ namespace SharpMP4
             throw new NotSupportedException(type);
     }
 
-    private static string GetWriteMethod(string type)
+    private static string GetWriteMethod(PseudoField field)
     {
+        var info = GetTypeInfo(field);      
+
+        string csharpResult = "";
+        if (info.IsClass)
+            csharpResult = "stream.WriteClass(";
+        else if (info.IsBox)
+            csharpResult = "stream.WriteBox(";
+        else if (info.IsEntry)
+            csharpResult = "stream.WriteEntry(";
+        else if (info.IsDescriptor)
+            csharpResult = "stream.WriteDescriptor(";
+        else if (info.IsByteAlignment)
+            csharpResult = "stream.WriteByteAlignment(";
+        else if (info.IsString)
+        {
+            string arraySuffix = "";
+            string arrayParam = "";
+
+            if (info.IsArray)
+            {
+                string arrayLength = info.ArrayLengthVariable.TrimStart('[').TrimEnd(']');
+
+                if (int.TryParse(arrayLength, out int arrayLen))
+                {
+                    arraySuffix = "Array";
+                    arrayParam = $"{arrayLength}, ";
+                }
+                else if (string.IsNullOrEmpty(arrayLength))
+                {
+                    arraySuffix = "Array";
+                    arrayParam = "";
+                }
+                else
+                {
+                    arraySuffix = "Array";
+                    arrayParam = $"(uint)({arrayLength}), ";
+                }
+
+                csharpResult = $"stream.WriteString{arraySuffix}({arrayParam}";
+            }
+
+            if (info.Type == "MultiLanguageString")
+            {
+                // TODO array
+                csharpResult = "stream.WriteStringSizeLangPrefixed(";
+            }
+            else
+            {
+                csharpResult = $"stream.WriteStringZeroTerminated{arraySuffix}({arrayParam}";
+            }
+        }
+        else if (info.IsNumber)
+        {
+            string arraySuffix = "";
+            string arrayParam = "";
+
+            if (info.IsArray)
+            {
+                string[] correct = ["[ c ]", "[i]", "[j][k]", "[j]", "[grid_pos_view_id[i]]", "[i][j]", "[c]", "[f]"];
+                if (correct.Contains(info.ArrayLengthVariable))
+                {
+                    // nothing
+                }
+                else
+                {
+                    string arrayLength = info.ArrayLengthVariable.TrimStart('[').TrimEnd(']');
+
+                    if (int.TryParse(arrayLength, out int arrayLen))
+                    {
+                        arraySuffix = "Array";
+                        arrayParam = $"{arrayLength}, ";
+                    }
+                    else if (string.IsNullOrEmpty(arrayLength))
+                    {
+                        arraySuffix = "ArrayTillEnd";
+                        arrayParam = "";
+                    }
+                    else
+                    {
+                        arraySuffix = "Array";
+                        arrayParam = $"(uint)({arrayLength}), ";
+                    }
+                }
+            }
+
+            if (!info.IsFloatingPoint)
+            {
+                if (info.ElementSizeInBits == 1)
+                {
+                    csharpResult = "stream.WriteBit(";
+                }
+                else if (info.ElementSizeInBits == -1)
+                {
+                    string elSizeVar = info.ElementSizeVariable
+                        .Replace("8 ceil(size / 8) – size", "(Math.Ceiling(size / 8d) - size) * 8")
+                        .Replace("f(pattern_size_code)", "pattern_size_code")
+                        .Replace("f(count_size_code)", "count_size_code")
+                        .Replace("f(index_size_code)", "index_size_code")
+                        ;
+                    csharpResult = $"stream.WriteBits{arraySuffix}((uint)({elSizeVar} ), ";
+                }
+                else if (info.ElementSizeInBits > 1 && info.ElementSizeInBits % 8 > 0)
+                {
+                    csharpResult = $"stream.WriteBits({info.ElementSizeInBits}, ";
+                }
+                else if (info.ElementSizeInBits % 8 == 0)
+                {
+                    if (info.IsSigned)
+                        csharpResult = $"stream.WriteInt{info.ElementSizeInBits}{arraySuffix}({arrayParam}";
+                    else
+                        csharpResult = $"stream.WriteUInt{info.ElementSizeInBits}{arraySuffix}({arrayParam}";
+                }
+            }
+            else
+            {
+                if (info.ElementSizeInBits == 32)
+                {
+                    csharpResult = "stream.WriteDouble32(";
+                }
+                else
+                {
+                    throw new NotSupportedException($"{info.Type} is unknown");
+                }
+            }
+        }
+        
+        if (info.Type == "string" && !info.IsSigned && info.ArrayDimensions == 0 && info.ElementSizeInBits == 15 && info.ArrayLengthVariable == "")
+        {
+            csharpResult = $"stream.WriteIso639(";
+        }
+
+
+        // TODO: fix this workaround
+        csharpResult = csharpResult.Replace("constant_IV_size", "IsoStream.GetInt(constant_IV_size)");
+
+        return csharpResult;
+
+        string type = GetFieldType(field);
         Dictionary<string, string> map = new Dictionary<string, string>
         {
             { "unsigned int(64)[ entry_count ]",        "stream.WriteUInt64Array(entry_count, " },
@@ -2722,9 +2861,17 @@ namespace SharpMP4
             { "ViewIdentifierBox",                      "stream.WriteBox(" },
         };
         if (map.ContainsKey(type))
+        {
+            if (csharpResult != map[type])
+                Debug.WriteLine($"'{map[type]}' => '{csharpResult}'");
             return map[type];
+        }
         else if (map.ContainsKey(type.Replace("()", "")))
+        {
+            if (csharpResult != map[type.Replace("()", "")])
+                Debug.WriteLine($"'{map[type.Replace("()", "")]}' => '{csharpResult}'");
             return map[type.Replace("()", "")];
+        }
         else
             throw new NotSupportedException(type);
     }

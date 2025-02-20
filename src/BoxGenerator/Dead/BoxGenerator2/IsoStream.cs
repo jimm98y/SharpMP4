@@ -425,7 +425,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteStringArray(uint count, BinaryUTF8String[] values)
+        internal ulong WriteStringZeroTerminatedArray(uint count, BinaryUTF8String[] values)
         {
             ulong size = 0;
             for (int i = 0; i < count && i < values.Length; i++)
