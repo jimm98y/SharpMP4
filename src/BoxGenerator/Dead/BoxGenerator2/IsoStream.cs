@@ -956,7 +956,7 @@ namespace SharpMP4
 
             foreach (IHasBoxChildren box in boxes)
             {
-                size += CalculateBoxSize(box);
+                size += box.CalculateSize();
             }
             return size;
         }
@@ -2081,11 +2081,6 @@ namespace SharpMP4
         }
 
         internal static ulong CalculateClassSize(IMp4Serializable value)
-        {
-            return value.CalculateSize();
-        }
-
-        internal static ulong CalculateBoxSize(IHasBoxChildren value)
         {
             return value.CalculateSize();
         }
