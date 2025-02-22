@@ -202,27 +202,23 @@ namespace BoxGenerator
             return Parser.Workarounds.Contains(type);
         }
 
-        public string SanitizeFieldName(string name)
+        public string GetFieldName(PseudoField field)
         {
+            string name = field.Name;
             // in C#, we cannot use "namespace" as variable name
             if (name == "namespace")
                 return "ns";
-            return name;
-        }
 
-        public string GetFieldName(PseudoField field)
-        {
-            string name = SanitizeFieldName(field.Name);
             if (string.IsNullOrEmpty(name))
             {
-                if ((field as PseudoField).Type.Type.StartsWith("byte_"))
+                if (field.Type.Type.StartsWith("byte_"))
                 {
                     // byte_alignment would otherwise produce a name "byte"
                     name = "byte_alignment";
                 }
                 else
                 {
-                    name = (field as PseudoField).Type.Type;
+                    name = field.Type.Type;
                 }
             }
 
@@ -252,7 +248,7 @@ namespace BoxGenerator
             return extended.ToArray();
         }
 
-        public int GetNestedInLoop(PseudoCode code)
+        public int GetLoopNestingLevel(PseudoCode code)
         {
             int ret = 0;
             var field = code as PseudoField;
@@ -672,7 +668,7 @@ namespace BoxGenerator
                     }
                     field.Name = updatedName;
                 }
-                else if (field.Type.ToString() == ret[name].Type.ToString() && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
+                else if (field.Type.ToString() == ret[name].Type.ToString() && GetLoopNestingLevel(field) == GetLoopNestingLevel(ret[name]))
                 {
                     //Debug.WriteLine($"-Resolved: fields are the same");
                 }

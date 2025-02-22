@@ -708,7 +708,7 @@ namespace SharpMP4
                 if (name == propertyName)
                     propertyName = "_" + name;
 
-                int nestingLevel = parserDocument.GetNestedInLoop(field);
+                int nestingLevel = parserDocument.GetLoopNestingLevel(field);
                 if (nestingLevel > 0)
                 {
                     string typedef = parserDocument.GetFieldTypeDef(field);
@@ -864,7 +864,7 @@ namespace SharpMP4
             if (methodType == MethodType.Size)
                 m = m.Replace("value", name);
 
-            if (parserDocument.GetNestedInLoop(field) > 0)
+            if (parserDocument.GetLoopNestingLevel(field) > 0)
             {
                 string suffix;
                 parserDocument.GetNestedInLoopSuffix(field, typedef, out suffix);
@@ -1019,7 +1019,7 @@ namespace SharpMP4
 
             condition = EscapeFourCC(condition);
 
-            int nestedLevel = parserDocument.GetNestedInLoop(block);
+            int nestedLevel = parserDocument.GetLoopNestingLevel(block);
             if (nestedLevel > 0)
             {
                 // patch condition
