@@ -27,7 +27,11 @@ namespace SharpMP4
                 while (true)
                 {
                     box = null;
-                    size += stream.ReadBox(out box);
+                    size += stream.ReadBox(size, null, out box);
+                    
+                    if (box == null)
+                        break;
+
                     Children.Add(box);
                 }
             }

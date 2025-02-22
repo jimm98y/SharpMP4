@@ -578,30 +578,20 @@ namespace SharpMP4
 
         #region Boxes
 
-        public ulong ReadBox(out Box box)
+        public ulong ReadBox(ulong boxSize, IMp4Serializable parent, out Box box)
         {
-            SafeBoxHeader header;
-            long headerOffset = this.GetCurrentOffset();
-            ulong headerSize = ReadBoxHeader(out header);
-            LogBox(header);
-            ulong readSize = header.GetBoxSizeInBits();
-            ulong size = ReadBoxContent(header, out box); // we're currently discarding headerSize because ReadBoxContent already includes it now
-            if (box != null)
-            {
-                box.SetBoxOffset(headerOffset);
-            }
-            return size;
+            return ReadBox(boxSize, ulong.MaxValue, parent, out box);
         }
 
         public ulong WriteBox(Box value)
         {
-            ulong writtenSize = WriteBoxHeader(value);
-            writtenSize += WriteBoxContent(value);
-            if (value.Padding != null)
+            ulong size = WriteBoxHeader(value);
+            size += value.Write(this);
+            if(value.Padding != null)
             {
-                writtenSize += WritePadding(value.Padding);
+                size += WritePadding(value.Padding);
             }
-            return writtenSize;
+            return size;
         }
 
         public ulong ReadBoxHeader(out SafeBoxHeader header)
@@ -659,26 +649,6 @@ namespace SharpMP4
             ulong writtenSize = 0;
             writtenSize += header.Write(this);
             return writtenSize;
-        }
-
-        public ulong ReadBoxContent(SafeBoxHeader header, out Box box)
-        {
-            if (header.Type == 0 && header.Size == 0 && header.Largesize == 0)
-            {
-                box = null;
-                return 0; // all zeros, looks like 8 zero bytes padding at the end of the file
-            }
-
-            string fourCC = ToFourCC(header.Type);
-            box = BoxFactory.CreateBox(fourCC, null, header.Usertype);
-            ulong size = ReadBox(header, box, GetBoxSize(header) - GetHeaderSize(header));
-            return size;
-        }
-
-        public ulong WriteBoxContent(Box box)
-        {
-            ulong size = box.Write(this);
-            return size;
         }
 
         internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T value) where T : Box
@@ -744,7 +714,10 @@ namespace SharpMP4
 
         private static Box DefaultBoxFactory(IMp4Serializable parent, SafeBoxHeader header)
         {
-            return BoxFactory.CreateBox(ToFourCC(header.Type), ToFourCC((parent as Box).FourCC), header.Usertype);
+            string parentFourCC = "";
+            if (parent != null)
+                parentFourCC = ToFourCC(((Box)parent).FourCC);
+            return BoxFactory.CreateBox(ToFourCC(header.Type), parentFourCC, header.Usertype);
         }
 
         internal ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value) where T : Box
