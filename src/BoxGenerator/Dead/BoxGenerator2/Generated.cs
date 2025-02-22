@@ -15255,7 +15255,7 @@ namespace SharpMP4
         protected uint flags;
         public uint Flags { get { return this.flags; } set { this.flags = value; } }
 
-        public TrunEntry(byte version, uint flags) : base()
+        public TrunEntry(byte version = 0, uint flags = 0) : base()
         {
             this.version = version;
             this.flags = flags;
@@ -15955,7 +15955,7 @@ namespace SharpMP4
 
             if (FourCC != IsoStream.FromFourCC("mlpa"))
             {
-                // samplerate = samplerate >> 16
+                // samplerate = samplerate >> 16;
             }
 
             if (soundversion == 1 || soundversion == 2)
@@ -15998,7 +15998,7 @@ namespace SharpMP4
 
             if (FourCC != IsoStream.FromFourCC("mlpa"))
             {
-                // samplerate = samplerate >> 16
+                // samplerate = samplerate >> 16;
             }
 
             if (soundversion == 1 || soundversion == 2)
@@ -16041,7 +16041,7 @@ namespace SharpMP4
 
             if (FourCC != IsoStream.FromFourCC("mlpa"))
             {
-                // samplerate = samplerate >> 16
+                // samplerate = samplerate >> 16;
             }
 
             if (soundversion == 1 || soundversion == 2)

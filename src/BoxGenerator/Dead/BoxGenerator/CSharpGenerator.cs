@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace BoxGenerator
 {
-    public class CSharpGenerator
+    public class CSharpGenerator : ICodeGenerator
     {
         private ParserDocument parserDocument;
 
@@ -17,70 +17,69 @@ namespace BoxGenerator
 
         private string GetCtorParams(string classType, IList<(string Name, string Value)> parameters)
         {
+            string par;
+
             if (!string.IsNullOrEmpty(classType) && classType != "()")
             {
-                Dictionary<string, string> map = new Dictionary<string, string>() {
-            { "(unsigned int(32) format)",          "uint format" },
-            { "(bit(24) flags)",                    "uint flags = 0" },
-            { "(fmt)",                              "uint fmt = 0" },
-            { "(codingname)",                       "uint codingname = 0" },
-            { "(handler_type)",                     "uint handler_type = 0" },
-            { "(referenceType)",                    "uint referenceType" },
-            { "(unsigned int(32) reference_type)",  "uint reference_type" },
-            { "(grouping_type, version, flags)",    "uint grouping_type, byte version, uint flags" },
-            { "(boxtype = 'msrc')",                 "uint boxtype = 1836282467" }, // msrc
-            { "(name)",                             "uint name" },
-            { "(uuid)",                             "byte[] uuid" },
-            { "(property_type)",                    "uint property_type" },
-            { "(channelConfiguration)",             "int channelConfiguration" },
-            { "(num_sublayers)",                    "byte num_sublayers" },
-            { "(code)",                             "uint code" },
-            { "(property_type, version, flags)",    "uint property_type, byte version, uint flags" },
-            { "(samplingFrequencyIndex, channelConfiguration, audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
-            { "(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
-            { "(unsigned int(32) extension_type)",  "uint extension_type" },
-            { "('vvcb', version, flags)",           "byte version = 0, uint flags = 0" },
-            { "(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)", "uint boxtype = 0, byte[] extended_type = null" },
-            { "(unsigned int(32) grouping_type)",   "uint grouping_type" },
-            { "(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)", "uint boxtype, byte v = 0, uint f = 0" },
-            { "(unsigned int(8) OutputChannelCount)", "byte OutputChannelCount" },
-            { "(entry_type, bit(24) flags)",        "uint entry_type, uint flags" },
-            { "(samplingFrequencyIndex)",           "int samplingFrequencyIndex" },
-            { "(version, flags, Per_Sample_IV_Size)",  "byte version, uint flags, byte Per_Sample_IV_Size" },
-            { "(version, flags)",                   "byte version, uint flags" },
-            { "(version)",                          "byte version" },
-            };
-                return map[classType];
+                par = classType.Substring(1, classType.Length - 2);
             }
             else if (parameters != null)
             {
-                string joinedParams = string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)));
-                Dictionary<string, string> map = new Dictionary<string, string>()
-            {
-                { "loudnessType",           "uint loudnessType" },
-                { "local_key_id",           "uint local_key_id" },
-                { "protocol",               "uint protocol" },
-                { "0, 0",                   "" },
-                { "size",                   "ulong size = 0" },
-                { "type",                   "uint type" },
-                { "version = 0, flags",     "uint flags = 0" },
-                { "version = 0, 0",         "" },
-                { "version = 0, 1",         "" },
-                { "version, 0",             "byte version = 0" },
-                { "version, flags = 0",     "byte version = 0" },
-                { "version",                "byte version" },
-                { "version = 0, flags = 0", "" },
-                { "version, flags",         "byte version = 0, uint flags = 0" },
-                { "0, tf_flags",            "uint tf_flags = 0" },
-                { "0, flags",               "uint flags = 0" },
-                { "version, tr_flags",      "byte version = 0, uint tr_flags = 0" },
-            };
-                return map[joinedParams];
+                par = string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)));
             }
             else
             {
                 return "";
             }
+
+            Dictionary<string, string> map = new Dictionary<string, string>() {
+                { "unsigned int(32) format",          "uint format" },
+                { "bit(24) flags",                    "uint flags = 0" },
+                { "fmt",                              "uint fmt = 0" },
+                { "codingname",                       "uint codingname = 0" },
+                { "handler_type",                     "uint handler_type = 0" },
+                { "referenceType",                    "uint referenceType" },
+                { "unsigned int(32) reference_type",  "uint reference_type" },
+                { "grouping_type, version, flags",    "uint grouping_type, byte version, uint flags" },
+                { "boxtype = 'msrc'",                 "uint boxtype = 1836282467" }, // msrc
+                { "name",                             "uint name" },
+                { "uuid",                             "byte[] uuid" },
+                { "property_type",                    "uint property_type" },
+                { "channelConfiguration",             "int channelConfiguration" },
+                { "num_sublayers",                    "byte num_sublayers" },
+                { "code",                             "uint code" },
+                { "property_type, version, flags",    "uint property_type, byte version, uint flags" },
+                { "samplingFrequencyIndex, channelConfiguration, audioObjectType", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
+                { "samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
+                { "unsigned int(32) extension_type",  "uint extension_type" },
+                { "'vvcb', version, flags",           "byte version = 0, uint flags = 0" },
+                { "\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type", "uint boxtype = 0, byte[] extended_type = null" },
+                { "unsigned int(32) grouping_type",   "uint grouping_type" },
+                { "unsigned int(32) boxtype, unsigned int(8) v, bit(24) f", "uint boxtype, byte v = 0, uint f = 0" },
+                { "unsigned int(8) OutputChannelCount", "byte OutputChannelCount" },
+                { "entry_type, bit(24) flags",        "uint entry_type, uint flags" },
+                { "samplingFrequencyIndex",           "int samplingFrequencyIndex" },
+                { "version, flags, Per_Sample_IV_Size",  "byte version, uint flags, byte Per_Sample_IV_Size" },
+                { "version, flags",                   "byte version = 0, uint flags = 0" },
+                { "loudnessType",                     "uint loudnessType" },
+                { "local_key_id",                     "uint local_key_id" },
+                { "protocol",                         "uint protocol" },
+                { "0, 0",                             "" },
+                { "size",                             "ulong size = 0" },
+                { "type",                             "uint type" },
+                { "version = 0, flags",               "uint flags = 0" },
+                { "version = 0, 0",                   "" },
+                { "version = 0, 1",                   "" },
+                { "version, 0",                       "byte version = 0" },
+                { "version, flags = 0",               "byte version = 0" },
+                { "version",                          "byte version" },
+                { "version = 0, flags = 0",           "" },
+                { "0, tf_flags",                      "uint tf_flags = 0" },
+                { "0, flags",                         "uint flags = 0" },
+                { "version, tr_flags",                "byte version = 0, uint tr_flags = 0" },
+            };
+
+            return map[par];            
         }
 
         public string GenerateParser()
@@ -120,13 +119,17 @@ namespace SharpMP4
                         if (item.Value.Single().BoxName.Contains('_'))
                             comment = " // TODO: fix duplicate";
                         string optParams = "";
-                        if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" ||
-                            item.Value.Single().BoxName == "SingleItemTypeReferenceBox" || item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
+                        if (item.Value.Single().BoxName == "AudioSampleEntry" || 
+                            item.Value.Single().BoxName == "VisualSampleEntry" ||
+                            item.Value.Single().BoxName == "SingleItemTypeReferenceBox" ||
+                            item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
                             item.Value.Single().BoxName == "TrackReferenceTypeBox")
                             optParams = $"IsoStream.FromFourCC(\"{item.Key}\")";
 
                         // for instance "mp4a" box can be also under the "wave" box where it has a different syntax
-                        if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" || item.Value.Single().BoxName == "MpegSampleEntry")
+                        if (item.Value.Single().BoxName == "AudioSampleEntry" || 
+                            item.Value.Single().BoxName == "VisualSampleEntry" || 
+                            item.Value.Single().BoxName == "MpegSampleEntry")
                             optCondition = "if(parent == \"stsd\") ";
 
                         factory += $"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? "break;" : "")}{comment}\r\n";
@@ -195,22 +198,25 @@ namespace SharpMP4
                     if (item.Value.Single().BoxName.Contains('_'))
                         comment = " // TODO: fix duplicate";
                     string optParams = "";
-                    if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" ||
-                        item.Value.Single().BoxName == "SingleItemTypeReferenceBox" || item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
+                    if (item.Value.Single().BoxName == "AudioSampleEntry" ||
+                        item.Value.Single().BoxName == "VisualSampleEntry" ||
+                        item.Value.Single().BoxName == "SingleItemTypeReferenceBox" ||
+                        item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
                         item.Value.Single().BoxName == "TrackReferenceTypeBox")
+                    {
                         optParams = $"IsoStream.FromFourCC(\"{item.Key}\")";
+                    }
+
                     factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
                 }
                 else
                 {
-                    if (
-                        item.Value.First().BoxName == "MovieBox" ||
+                    if (item.Value.First().BoxName == "MovieBox" ||
                         item.Value.First().BoxName == "MovieFragmentBox" ||
                         item.Value.First().BoxName == "SegmentIndexBox" ||
                         item.Value.First().BoxName == "trackhintinformation" ||
                         item.Value.First().BoxName == "ViewPriorityBox" ||
-                        item.Value.First().BoxName == "rtpmoviehintinformation"
-                        )
+                        item.Value.First().BoxName == "rtpmoviehintinformation")
                     {
                         string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
                         factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";
@@ -646,7 +652,7 @@ namespace SharpMP4
                     value = "";
                 }
 
-                string tt = GetCSharpType(field as PseudoField);
+                string fieldType = GetCSharpType(field as PseudoField);
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
                 {
                     value = "";
@@ -668,7 +674,7 @@ namespace SharpMP4
                     comment = "// " + value;
                     value = "";
                 }
-                else if (tt == "bool" && !string.IsNullOrEmpty(value))
+                else if (fieldType == "bool" && !string.IsNullOrEmpty(value))
                 {
                     if (value == "= 0" || value == "=0")
                         value = "= false";
@@ -677,14 +683,14 @@ namespace SharpMP4
                     else
                         Debug.WriteLine($"Unsupported bool value: {value}");
                 }
-                else if (tt.Contains('[') && value == "= 0")
+                else if (fieldType.Contains('[') && value == "= 0")
                 {
                     value = "= []";
                 }
 
-                if (tt == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "FreeSpaceBox_skip" || b.BoxName == "FreeSpaceBox" || b.BoxName == "ZeroBox"))
+                if (fieldType == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "FreeSpaceBox_skip" || b.BoxName == "FreeSpaceBox" || b.BoxName == "ZeroBox"))
                 {
-                    tt = "StreamMarker";
+                    fieldType = "StreamMarker";
                 }
 
                 if (!string.IsNullOrEmpty(value))
@@ -721,7 +727,7 @@ namespace SharpMP4
                         // change the type
                         for (int i = 0; i < nestingLevel; i++)
                         {
-                            tt += "[]";
+                            fieldType += "[]";
                         }
                     }
 
@@ -736,24 +742,24 @@ namespace SharpMP4
                 if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry"
                         && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
                 {
-                    string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
-                    string ttttt = tt.Replace("[]", "");
-                    string ttt = tt.Contains("[]") ? ("IEnumerable<" + tt.Replace("[]", "") + ">") : tt;
+                    string suffix = fieldType.Contains("[]") ? "" : ".FirstOrDefault()";
+                    string ttttt = fieldType.Replace("[]", "");
+                    string ttt = fieldType.Contains("[]") ? ("IEnumerable<" + fieldType.Replace("[]", "") + ">") : fieldType;
                     return $"\tpublic {ttt} {propertyName} {{ get {{ return this.children.OfType<{ttttt}>(){suffix}; }} }}";
                 }
                 else
                 {
                     if (b.BoxName == "SampleGroupDescriptionEntry")
                     {
-                        if (tt == "Box[]")
+                        if (fieldType == "Box[]")
                         {
-                            tt = "List<Box>";
+                            fieldType = "List<Box>";
                             value = "= new List<Box>()";
                         }
                     }
 
-                    return $"\r\n\tprotected {tt} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
-                        $"\tpublic {tt} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
+                    return $"\r\n\tprotected {fieldType} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
+                        $"\tpublic {fieldType} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
                 }
             }
         }
@@ -785,44 +791,40 @@ namespace SharpMP4
                 return BuildSwitchCase(b, swcase, level, methodType);
             }
 
-            string tt = (field as PseudoField).Type.ToString();
+            string fieldType = (field as PseudoField).Type.ToString();
 
-            if (string.IsNullOrEmpty(tt) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
-                tt = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
+            if (string.IsNullOrEmpty(fieldType) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
+                fieldType = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
 
-            if (string.IsNullOrEmpty(tt))
+            if (string.IsNullOrEmpty(fieldType))
                 return "";
 
-            if (parserDocument.IsWorkaround(tt))
+            if (parserDocument.IsWorkaround(fieldType))
             {
-                if (tt == "int i, j" || tt == "int i,j" || tt == "int i") // this one must be ignored
-                    return "";
-                else if (tt == "j=1")
-                    return "int j = 1;";
-                else if (tt == "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8")
-                    return "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);";
-                else if (tt == "totalPatternLength = 0")
-                    return "uint totalPatternLength = 0;";
-                else if (tt == "audioObjectType = 32 + audioObjectTypeExt")
-                    return "audioObjectType = (byte)(32 + audioObjectTypeExt);";
-                else if (tt == "sbrPresentFlag = -1")
-                    return "sbrPresentFlag = false;";
-                else if (tt == "psPresentFlag = -1")
-                    return "psPresentFlag = false;";
-                else if (tt == "sbrPresentFlag = 1")
-                    return "sbrPresentFlag = true;";
-                else if (tt == "psPresentFlag = 1")
-                    return "psPresentFlag = true;";
-                else if (tt.Contains("extensionAudioObjectType"))
-                    return tt.Replace("extensionAudioObjectType", "extensionAudioObjectType.AudioObjectType") + ";";
-                else if (tt == "int downmix_instructions_count = 1")
-                    return "downmix_instructions_count = 1;";
-                else if (tt == "return audioObjectType;")
-                    return "// return audioObjectType;";
-                else if (tt == "samplerate = samplerate >> 16")
-                    return "// samplerate = samplerate >> 16";
+                Dictionary<string, string> map = new Dictionary<string, string>()
+                {
+                    { "int i, j",                                                "" },
+                    { "int i,j",                                                 "" },
+                    { "int i",                                                   "" },
+                    { "j=1",                                                     "int j = 1;" },
+                    { "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8", "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);" },
+                    { "totalPatternLength = 0",                                  "uint totalPatternLength = 0;" },
+                    { "audioObjectType = 32 + audioObjectTypeExt",               "audioObjectType = (byte)(32 + audioObjectTypeExt);" },
+                    { "sbrPresentFlag = -1",                                     "sbrPresentFlag = false;" },
+                    { "psPresentFlag = -1",                                      "psPresentFlag = false;" },
+                    { "sbrPresentFlag = 1",                                      "sbrPresentFlag = true;" },
+                    { "psPresentFlag = 1",                                       "psPresentFlag = true;" },
+                    { "int downmix_instructions_count = 1",                      "downmix_instructions_count = 1;" },
+                    { "return audioObjectType;",                                 "// return audioObjectType;" },
+                    { "extensionAudioObjectType = 0",                            "extensionAudioObjectType.AudioObjectType = 0;"},
+                    { "extensionAudioObjectType = 5",                            "extensionAudioObjectType.AudioObjectType = 5;"},
+                    { "samplerate = samplerate >> 16",                           "// samplerate = samplerate >> 16;"},
+                };
+
+                if (map.ContainsKey(fieldType))
+                    return map[fieldType];
                 else
-                    return $"{tt};";
+                    return $"{fieldType};";
             }
 
             string name = parserDocument.GetFieldName(field as PseudoField);
@@ -888,29 +890,6 @@ namespace SharpMP4
                 return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
             else
                 return $"{spacing}{boxSize}{m}; // {name}";
-        }
-
-        private string BuildSwitchCase(PseudoClass b, PseudoCase swcase, int level, MethodType methodType)
-        {
-            string spacing = GetSpacing(level);
-            if (string.IsNullOrEmpty(swcase.Op))
-            {
-                if (swcase.Cs == "default:")
-                    return $"{spacing}default:\r\n";
-                else
-                    return $"{spacing}break;\r\n";
-            }
-            else
-            {
-                return $"{spacing}{swcase.Cs} {swcase.Op}:";
-            }
-        }
-
-        private string BuildComment(PseudoClass b, PseudoComment comment, int level, MethodType methodType)
-        {
-            string spacing = GetSpacing(level);
-            string text = comment.Comment;
-            return $"{spacing}/* {text} */";
         }
 
         private string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)
@@ -1121,6 +1100,29 @@ namespace SharpMP4
             ret += $"\r\n{spacing}}}";
 
             return ret;
+        }
+
+        private string BuildSwitchCase(PseudoClass b, PseudoCase swcase, int level, MethodType methodType)
+        {
+            string spacing = GetSpacing(level);
+            if (string.IsNullOrEmpty(swcase.Op))
+            {
+                if (swcase.Cs == "default:")
+                    return $"{spacing}default:\r\n";
+                else
+                    return $"{spacing}break;\r\n";
+            }
+            else
+            {
+                return $"{spacing}{swcase.Cs} {swcase.Op}:";
+            }
+        }
+
+        private string BuildComment(PseudoClass b, PseudoComment comment, int level, MethodType methodType)
+        {
+            string spacing = GetSpacing(level);
+            string text = comment.Comment;
+            return $"{spacing}/* {text} */";
         }
 
         private string FixForCycleCondition(string condition)

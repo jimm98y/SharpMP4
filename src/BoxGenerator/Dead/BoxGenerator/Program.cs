@@ -10,6 +10,11 @@ using System.Text.Json;
 
 namespace BoxGenerator;
 
+public interface ICodeGenerator
+{
+    string GenerateParser();
+}
+
 partial class Program
 {
     static void Main(string[] args)
@@ -105,8 +110,8 @@ partial class Program
 
         LogConsole($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
 
-        var parserDocument = new ParserDocument(parsedClasses, containers);
-        var generator = new CSharpGenerator(parserDocument);
+        ParserDocument parserDocument = new ParserDocument(parsedClasses, containers);
+        ICodeGenerator generator = new CSharpGenerator(parserDocument);
         string code = generator.GenerateParser();
     }
 
