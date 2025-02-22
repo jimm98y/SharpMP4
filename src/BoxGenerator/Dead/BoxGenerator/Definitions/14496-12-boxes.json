@@ -890,7 +890,8 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class ProgressiveDownloadInfoBox\n\t\textends FullBox('pdin', version = 0, 0) {\n\tfor (i=0; ; i++) {\t// to end of box\n\t\tunsigned int(32)  rate;\n\t\tunsigned int(32)  initial_delay;\n\t}\n}"
+      "originalSyntax": "aligned(8) class ProgressiveDownloadInfoBox\n\t\textends FullBox('pdin', version = 0, 0) {\n\tfor (i=0; ; i++) {\t// to end of box\n\t\tunsigned int(32)  rate;\n\t\tunsigned int(32)  initial_delay;\n\t}\n}",
+      "syntax": "aligned(8) class ProgressiveDownloadInfoBox\n\t\textends FullBox('pdin', version = 0, 0) {\r\n\t// to end of box\r\n\tProgressiveDownloadInfoItem items[];\r\n }\r\n aligned(8) class ProgressiveDownloadInfoItem {\r\n \t\tunsigned int(32)  rate;\r\n\t\tunsigned int(32)  initial_delay;\r\n }\r\n"
     },
     {
       "fourcc": "pitm",

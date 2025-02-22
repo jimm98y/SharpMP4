@@ -15,6 +15,62 @@ namespace BoxGenerator
             this.parserDocument = parserDocument;
         }
 
+        private string AddMissingMethodCode(PseudoClass box, MethodType methodType)
+        {
+            string cls = "";
+
+            if (box.BoxName == "SampleDependencyBox")
+            {
+                cls += "\r\n\t\tint sample_count = 0; // TODO: taken from the stsz sample_count\r\n";
+            }
+            else if (box.BoxName == "SampleDependencyTypeBox")
+            {
+                if (methodType == MethodType.Read)
+                    cls += "\r\n\t\tint sample_count = (int)((readSize - boxSize) >> 3); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 1 byte per sample\r\n";
+                else
+                    cls += "\r\n\t\tint sample_count = is_leading.Length;\r\n";
+            }
+            else if (box.BoxName == "DegradationPriorityBox")
+            {
+                if (methodType == MethodType.Read)
+                    cls += "\r\n\t\tint sample_count = (int)((readSize - boxSize) >> 4); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 2 bytes per sample\r\n";
+                else
+                    cls += "\r\n\t\tint sample_count = priority.Length;\r\n";
+            }
+            else if (box.BoxName == "DownMixInstructions")
+            {
+                cls += "\r\n\t\tint baseChannelCount = 0; // TODO: get somewhere";
+            }
+            else if (box.BoxName == "CompactSampleToGroupBox")
+            {
+                cls += "\r\n\t\tbool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);\r\n";
+                cls += "\t\tuint count_size_code = (flags >> 2) & 0x3;\r\n";
+                cls += "\t\tuint pattern_size_code = (flags >> 4) & 0x3;\r\n";
+                cls += "\t\tuint index_size_code = flags & 0x3;\r\n";
+            }
+            else if (box.BoxName == "VvcDecoderConfigurationRecord")
+            {
+                cls += "\r\n\t\tconst int OPI_NUT = 12;\r\n";
+                cls += "\t\tconst int DCI_NUT = 13;\r\n";
+            }
+            else if (box.BoxName == "ld_sbr_header")
+            {
+                cls += "\r\n\t\tint numSbrHeader = 0;\r\n";
+            }
+            else if (box.BoxName == "ELDSpecificConfig")
+            {
+                cls += "\r\n\t\tint len = 0;\r\n";
+                cls += "\r\n\t\tconst byte ELDEXT_TERM = 0;\r\n";
+            }
+            else if (box.BoxName == "CelpHeader" || box.BoxName == "ER_SC_CelpHeader")
+            {
+                cls += "\r\n\t\tconst bool RPE = true;\r\n";
+                cls += "\r\n\t\tconst bool MPE = false;\r\n";
+            }
+
+            return cls;
+        }
+
         private string GetCtorParams(string classType, IList<(string Name, string Value)> parameters)
         {
             string par;
@@ -469,7 +525,7 @@ namespace SharpMP4
                 cls += baseRead;
             }
 
-            cls = FixMissingMethodCode(b, cls, MethodType.Read);
+            cls += AddMissingMethodCode(b, MethodType.Read);
 
             foreach (var field in b.Fields)
             {
@@ -503,7 +559,7 @@ namespace SharpMP4
                 cls += baseWrite;
             }
 
-            cls = FixMissingMethodCode(b, cls, MethodType.Write);
+            cls += AddMissingMethodCode(b, MethodType.Write);
 
             foreach (var field in b.Fields)
             {
@@ -536,7 +592,7 @@ namespace SharpMP4
                 cls += baseSize;
             }
 
-            cls = FixMissingMethodCode(b, cls, MethodType.Size);
+            cls += AddMissingMethodCode(b, MethodType.Size);
 
             foreach (var field in b.Fields)
             {
@@ -559,60 +615,6 @@ namespace SharpMP4
 
             // end of class
             cls += "}\r\n";
-
-            return cls;
-        }
-
-        private string FixMissingMethodCode(PseudoClass box, string cls, MethodType methodType)
-        {
-            if (box.BoxName == "SampleDependencyBox")
-            {
-                cls += "\r\n\t\tint sample_count = 0; // TODO: taken from the stsz sample_count\r\n";
-            }
-            else if (box.BoxName == "SampleDependencyTypeBox")
-            {
-                if (methodType == MethodType.Read)
-                    cls += "\r\n\t\tint sample_count = (int)((readSize - boxSize) >> 3); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 1 byte per sample\r\n";
-                else
-                    cls += "\r\n\t\tint sample_count = is_leading.Length;\r\n";
-            }
-            else if (box.BoxName == "DegradationPriorityBox")
-            {
-                if (methodType == MethodType.Read)
-                    cls += "\r\n\t\tint sample_count = (int)((readSize - boxSize) >> 4); // should be taken from the stsz sample_count, but we can calculate it from the readSize - 2 bytes per sample\r\n";
-                else
-                    cls += "\r\n\t\tint sample_count = priority.Length;\r\n";
-            }
-            else if (box.BoxName == "DownMixInstructions")
-            {
-                cls += "\r\n\t\tint baseChannelCount = 0; // TODO: get somewhere";
-            }
-            else if (box.BoxName == "CompactSampleToGroupBox")
-            {
-                cls += "\r\n\t\tbool grouping_type_parameter_present = (flags & (1 << 6)) == (1 << 6);\r\n";
-                cls += "\t\tuint count_size_code = (flags >> 2) & 0x3;\r\n";
-                cls += "\t\tuint pattern_size_code = (flags >> 4) & 0x3;\r\n";
-                cls += "\t\tuint index_size_code = flags & 0x3;\r\n";
-            }
-            else if (box.BoxName == "VvcDecoderConfigurationRecord")
-            {
-                cls += "\r\n\t\tconst int OPI_NUT = 12;\r\n";
-                cls += "\t\tconst int DCI_NUT = 13;\r\n";
-            }
-            else if (box.BoxName == "ld_sbr_header")
-            {
-                cls += "\r\n\t\tint numSbrHeader = 0;\r\n";
-            }
-            else if (box.BoxName == "ELDSpecificConfig")
-            {
-                cls += "\r\n\t\tint len = 0;\r\n";
-                cls += "\r\n\t\tconst byte ELDEXT_TERM = 0;\r\n";
-            }
-            else if (box.BoxName == "CelpHeader" || box.BoxName == "ER_SC_CelpHeader")
-            {
-                cls += "\r\n\t\tconst bool RPE = true;\r\n";
-                cls += "\r\n\t\tconst bool MPE = false;\r\n";
-            }
 
             return cls;
         }
@@ -647,16 +649,12 @@ namespace SharpMP4
             else
             {
                 // TODO: incorrectly parsed type
-                if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
+                if (!string.IsNullOrEmpty(value) && (value.StartsWith('[') || value.StartsWith('(')))
                 {
                     value = "";
                 }
 
                 string fieldType = GetCSharpType(field as PseudoField);
-                if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
-                {
-                    value = "";
-                }
 
                 if (value == "= {if track_is_audio 0x0100 else 0}") // TODO
                 {
@@ -668,8 +666,7 @@ namespace SharpMP4
                     value = "= 0";
                     comment = "// = {if track_is_audio 0x0100 else 0};" + comment;
                 }
-                else if (value == "= boxtype" || value == "= extended_type" || value == "= codingname" ||
-                    value == "= f" || value == "= v")
+                else if (value == "= boxtype" || value == "= extended_type" || value == "= codingname" || value == "= f" || value == "= v")
                 {
                     comment = "// " + value;
                     value = "";
@@ -739,8 +736,16 @@ namespace SharpMP4
                 }
 
                 string readMethod = GetReadMethod(field as PseudoField);
-                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry"
-                        && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
+                
+                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") ||
+                    (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && 
+                    b.BoxName != "SampleGroupDescriptionBox" && 
+                    b.BoxName != "SampleGroupDescriptionEntry" && 
+                    b.BoxName != "ItemReferenceBox" && 
+                    b.BoxName != "MPEG4ExtensionDescriptorsBox" && 
+                    b.BoxName != "AppleInitialObjectDescriptorBox" && 
+                    b.BoxName != "IPMPControlBox" && 
+                    b.BoxName != "IPMPInfoBox")
                 {
                     string suffix = fieldType.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = fieldType.Replace("[]", "");
@@ -758,7 +763,9 @@ namespace SharpMP4
                         }
                     }
 
-                    return $"\r\n\tprotected {fieldType} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
+                    return
+                        "\r\n" +
+                        $"\tprotected {fieldType} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
                         $"\tpublic {fieldType} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
                 }
             }
@@ -793,12 +800,6 @@ namespace SharpMP4
 
             string fieldType = (field as PseudoField).Type.ToString();
 
-            if (string.IsNullOrEmpty(fieldType) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
-                fieldType = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
-
-            if (string.IsNullOrEmpty(fieldType))
-                return "";
-
             if (parserDocument.IsWorkaround(fieldType))
             {
                 Dictionary<string, string> map = new Dictionary<string, string>()
@@ -806,9 +807,8 @@ namespace SharpMP4
                     { "int i, j",                                                "" },
                     { "int i,j",                                                 "" },
                     { "int i",                                                   "" },
-                    { "j=1",                                                     "int j = 1;" },
+                    { "totalPatternLength = 0",                                  "" }, // unused
                     { "subgroupIdLen = (num_subgroup_ids >= (1 << 8)) ? 16 : 8", "ulong subgroupIdLen = (ulong)((num_subgroup_ids >= (1 << 8)) ? 16 : 8);" },
-                    { "totalPatternLength = 0",                                  "uint totalPatternLength = 0;" },
                     { "audioObjectType = 32 + audioObjectTypeExt",               "audioObjectType = (byte)(32 + audioObjectTypeExt);" },
                     { "sbrPresentFlag = -1",                                     "sbrPresentFlag = false;" },
                     { "psPresentFlag = -1",                                      "psPresentFlag = false;" },
@@ -819,6 +819,7 @@ namespace SharpMP4
                     { "extensionAudioObjectType = 0",                            "extensionAudioObjectType.AudioObjectType = 0;"},
                     { "extensionAudioObjectType = 5",                            "extensionAudioObjectType.AudioObjectType = 5;"},
                     { "samplerate = samplerate >> 16",                           "// samplerate = samplerate >> 16;"},
+                    { "return audioObjectType",                                  "// return audioObjectType;"},
                 };
 
                 if (map.ContainsKey(fieldType))
@@ -864,7 +865,9 @@ namespace SharpMP4
             }
 
             if (methodType == MethodType.Size)
+            {
                 m = m.Replace("value", name);
+            }
 
             if (parserDocument.GetLoopNestingLevel(field) > 0)
             {
@@ -897,7 +900,7 @@ namespace SharpMP4
             string spacing = GetSpacing(level);
             string ret = "";
 
-            string condition = block.Condition?.Replace("'", "\"").Replace("floor(", "(");
+            string condition = block.Condition?.Replace("'", "\"").Replace("floor(", "(int)Math.Floor((double)");
             string blockType = block.Type;
             if (blockType == "for")
             {
@@ -1077,10 +1080,6 @@ namespace SharpMP4
                                 }
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                             }
-                        }
-                        else
-                        {
-                            Debug.WriteLine("ERROR invalid variable");
                         }
                     }
                     else

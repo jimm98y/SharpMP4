@@ -7867,7 +7867,7 @@ namespace SharpMP4
                 boxSize += stream.ReadUInt32(boxSize, readSize, out this.grouping_type_parameter);
             }
             boxSize += stream.ReadUInt32(boxSize, readSize, out this.pattern_count);
-            uint totalPatternLength = 0;
+
 
             this.pattern_length = new byte[IsoStream.GetInt(pattern_count)][];
             this.sample_count = new byte[IsoStream.GetInt(pattern_count)][];
@@ -7906,7 +7906,7 @@ namespace SharpMP4
                 boxSize += stream.WriteUInt32(this.grouping_type_parameter);
             }
             boxSize += stream.WriteUInt32(this.pattern_count);
-            uint totalPatternLength = 0;
+
 
             for (int i = 0; i < pattern_count; i++)
             {
@@ -7941,7 +7941,7 @@ namespace SharpMP4
                 boxSize += 32; // grouping_type_parameter
             }
             boxSize += 32; // pattern_count
-            uint totalPatternLength = 0;
+
 
             for (int i = 0; i < pattern_count; i++)
             {
@@ -11591,11 +11591,11 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(boxSize, readSize, out this.sample_count);
 
 
-            this.reserved = new bool[IsoStream.GetInt(((sample_count + 1) / 2))];
-            this.pad1 = new byte[IsoStream.GetInt(((sample_count + 1) / 2))];
-            this.reserved0 = new bool[IsoStream.GetInt(((sample_count + 1) / 2))];
-            this.pad2 = new byte[IsoStream.GetInt(((sample_count + 1) / 2))];
-            for (int i = 0; i < ((sample_count + 1) / 2); i++)
+            this.reserved = new bool[IsoStream.GetInt((int)Math.Floor((double)(sample_count + 1) / 2))];
+            this.pad1 = new byte[IsoStream.GetInt((int)Math.Floor((double)(sample_count + 1) / 2))];
+            this.reserved0 = new bool[IsoStream.GetInt((int)Math.Floor((double)(sample_count + 1) / 2))];
+            this.pad2 = new byte[IsoStream.GetInt((int)Math.Floor((double)(sample_count + 1) / 2))];
+            for (int i = 0; i < (int)Math.Floor((double)(sample_count + 1) / 2); i++)
             {
                 boxSize += stream.ReadBit(boxSize, readSize, out this.reserved[i]);
                 boxSize += stream.ReadBits(boxSize, readSize, 3, out this.pad1[i]);
@@ -11612,7 +11612,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt32(this.sample_count);
 
 
-            for (int i = 0; i < ((sample_count + 1) / 2); i++)
+            for (int i = 0; i < (int)Math.Floor((double)(sample_count + 1) / 2); i++)
             {
                 boxSize += stream.WriteBit(this.reserved[i]);
                 boxSize += stream.WriteBits(3, this.pad1[i]);
@@ -11629,7 +11629,7 @@ namespace SharpMP4
             boxSize += 32; // sample_count
 
 
-            for (int i = 0; i < ((sample_count + 1) / 2); i++)
+            for (int i = 0; i < (int)Math.Floor((double)(sample_count + 1) / 2); i++)
             {
                 boxSize += 1; // reserved
                 boxSize += 3; // pad1
@@ -11644,22 +11644,18 @@ namespace SharpMP4
     /*
     aligned(8) class ProgressiveDownloadInfoBox
             extends FullBox('pdin', version = 0, 0) {
-        for (i=0; ; i++) {	// to end of box
-            unsigned int(32)  rate;
-            unsigned int(32)  initial_delay;
-        }
-    }
+        // to end of box
+        ProgressiveDownloadInfoItem items[];
+     }
+
     */
     public class ProgressiveDownloadInfoBox : FullBox
     {
         public const string TYPE = "pdin";
         public override string DisplayName { get { return "ProgressiveDownloadInfoBox"; } }
 
-        protected uint[] rate;
-        public uint[] Rate { get { return this.rate; } set { this.rate = value; } }
-
-        protected uint[] initial_delay;
-        public uint[] InitialDelay { get { return this.initial_delay; } set { this.initial_delay = value; } }
+        protected ProgressiveDownloadInfoItem[] items;
+        public ProgressiveDownloadInfoItem[] Items { get { return this.items; } set { this.items = value; } }
 
         public ProgressiveDownloadInfoBox() : base(IsoStream.FromFourCC("pdin"), 0, 0)
         {
@@ -11669,13 +11665,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-
-            for (int i = 0; ; i++)
-            {
-                /*  to end of box */
-                boxSize += stream.ReadUInt32(boxSize, readSize, out this.rate[i]);
-                boxSize += stream.ReadUInt32(boxSize, readSize, out this.initial_delay[i]);
-            }
+            /*  to end of box */
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new ProgressiveDownloadInfoItem(), out this.items);
             return boxSize;
         }
 
@@ -11683,13 +11674,8 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-
-            for (int i = 0; ; i++)
-            {
-                /*  to end of box */
-                boxSize += stream.WriteUInt32(this.rate[i]);
-                boxSize += stream.WriteUInt32(this.initial_delay[i]);
-            }
+            /*  to end of box */
+            boxSize += stream.WriteClass(this.items);
             return boxSize;
         }
 
@@ -11697,13 +11683,59 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
+            /*  to end of box */
+            boxSize += IsoStream.CalculateClassSize(items); // items
+            return boxSize;
+        }
+    }
 
-            for (int i = 0; ; i++)
-            {
-                /*  to end of box */
-                boxSize += 32; // rate
-                boxSize += 32; // initial_delay
-            }
+
+    /*
+    aligned(8) class ProgressiveDownloadInfoItem {
+            unsigned int(32)  rate;
+            unsigned int(32)  initial_delay;
+     }
+
+    */
+    public class ProgressiveDownloadInfoItem : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+        public virtual string DisplayName { get { return "ProgressiveDownloadInfoItem"; } }
+
+        protected uint rate;
+        public uint Rate { get { return this.rate; } set { this.rate = value; } }
+
+        protected uint initial_delay;
+        public uint InitialDelay { get { return this.initial_delay; } set { this.initial_delay = value; } }
+
+        public ProgressiveDownloadInfoItem() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt32(boxSize, readSize, out this.rate);
+            boxSize += stream.ReadUInt32(boxSize, readSize, out this.initial_delay);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt32(this.rate);
+            boxSize += stream.WriteUInt32(this.initial_delay);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 32; // rate
+            boxSize += 32; // initial_delay
             return boxSize;
         }
     }
@@ -17635,13 +17667,10 @@ namespace SharpMP4
         unsigned int(16) first_output_sample;
         for (i=1; i <= roll_count; i++)
             unsigned int(32) sample_offset[i];
-        j=1;
-        do { // optional, until the end of the structure
-            unsigned int(16) num_output_samples[j];
-            unsigned int(16) num_total_samples[j];
-            j++;
-        }
+         // optional, until the end of the structure
+    AlternativeStartupEntryItem items[];
     }
+
     */
     public class AlternativeStartupEntry : VisualSampleGroupEntry
     {
@@ -17654,14 +17683,11 @@ namespace SharpMP4
         protected ushort first_output_sample;
         public ushort FirstOutputSample { get { return this.first_output_sample; } set { this.first_output_sample = value; } }
 
-        protected uint[] sample_offset;
+        protected uint[] sample_offset;  //  optional, until the end of the structure
         public uint[] SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
 
-        protected ushort[] num_output_samples;
-        public ushort[] NumOutputSamples { get { return this.num_output_samples; } set { this.num_output_samples = value; } }
-
-        protected ushort[] num_total_samples;
-        public ushort[] NumTotalSamples { get { return this.num_total_samples; } set { this.num_total_samples = value; } }
+        protected AlternativeStartupEntryItem[] items;
+        public AlternativeStartupEntryItem[] Items { get { return this.items; } set { this.items = value; } }
 
         public AlternativeStartupEntry() : base(IsoStream.FromFourCC("alst"))
         {
@@ -17677,17 +17703,9 @@ namespace SharpMP4
             this.sample_offset = new uint[IsoStream.GetInt(roll_count)];
             for (int i = 0; i < roll_count; i++)
             {
-                boxSize += stream.ReadUInt32(boxSize, readSize, out this.sample_offset[i]);
+                if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(boxSize, readSize, out this.sample_offset[i]); // optional, until the end of the structure
             }
-            int j = 1;
-
-            while (true)
-            {
-                /*  optional, until the end of the structure */
-                boxSize += stream.ReadUInt16(boxSize, readSize, out this.num_output_samples[j]);
-                boxSize += stream.ReadUInt16(boxSize, readSize, out this.num_total_samples[j]);
-                j++;
-            }
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new AlternativeStartupEntryItem(), out this.items);
             return boxSize;
         }
 
@@ -17700,17 +17718,9 @@ namespace SharpMP4
 
             for (int i = 0; i < roll_count; i++)
             {
-                boxSize += stream.WriteUInt32(this.sample_offset[i]);
+                boxSize += stream.WriteUInt32(this.sample_offset[i]); // optional, until the end of the structure
             }
-            int j = 1;
-
-            while (true)
-            {
-                /*  optional, until the end of the structure */
-                boxSize += stream.WriteUInt16(this.num_output_samples[j]);
-                boxSize += stream.WriteUInt16(this.num_total_samples[j]);
-                j++;
-            }
+            boxSize += stream.WriteClass(this.items);
             return boxSize;
         }
 
@@ -17725,15 +17735,58 @@ namespace SharpMP4
             {
                 boxSize += 32; // sample_offset
             }
-            int j = 1;
+            boxSize += IsoStream.CalculateClassSize(items); // items
+            return boxSize;
+        }
+    }
 
-            while (true)
-            {
-                /*  optional, until the end of the structure */
-                boxSize += 16; // num_output_samples
-                boxSize += 16; // num_total_samples
-                j++;
-            }
+
+    /*
+    aligned(8) class AlternativeStartupEntryItem() {
+            unsigned int(16) num_output_samples;
+            unsigned int(16) num_total_samples;
+    }
+
+    */
+    public class AlternativeStartupEntryItem : IMp4Serializable
+    {
+        public StreamMarker Padding { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+        public virtual string DisplayName { get { return "AlternativeStartupEntryItem"; } }
+
+        protected ushort num_output_samples;
+        public ushort NumOutputSamples { get { return this.num_output_samples; } set { this.num_output_samples = value; } }
+
+        protected ushort num_total_samples;
+        public ushort NumTotalSamples { get { return this.num_total_samples; } set { this.num_total_samples = value; } }
+
+        public AlternativeStartupEntryItem() : base()
+        {
+        }
+
+        public virtual ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.ReadUInt16(boxSize, readSize, out this.num_output_samples);
+            boxSize += stream.ReadUInt16(boxSize, readSize, out this.num_total_samples);
+            return boxSize;
+        }
+
+        public virtual ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += stream.WriteUInt16(this.num_output_samples);
+            boxSize += stream.WriteUInt16(this.num_total_samples);
+            return boxSize;
+        }
+
+        public virtual ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += 16; // num_output_samples
+            boxSize += 16; // num_total_samples
             return boxSize;
         }
     }
@@ -32501,7 +32554,7 @@ namespace SharpMP4
                 boxSize += stream.ReadBits(boxSize, readSize, 6, out this.audioObjectTypeExt);
                 audioObjectType = (byte)(32 + audioObjectTypeExt);
             }
-            return audioObjectType;
+            // return audioObjectType;
             return boxSize;
         }
 
@@ -32515,7 +32568,7 @@ namespace SharpMP4
                 boxSize += stream.WriteBits(6, this.audioObjectTypeExt);
                 audioObjectType = (byte)(32 + audioObjectTypeExt);
             }
-            return audioObjectType;
+            // return audioObjectType;
             return boxSize;
         }
 
@@ -32529,7 +32582,7 @@ namespace SharpMP4
                 boxSize += 6; // audioObjectTypeExt
                 audioObjectType = (byte)(32 + audioObjectTypeExt);
             }
-            return audioObjectType;
+            // return audioObjectType;
             return boxSize;
         }
     }
