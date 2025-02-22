@@ -202,29 +202,6 @@ namespace BoxGenerator
             return Parser.Workarounds.Contains(type);
         }
 
-        private PseudoClass[] GetClassAncestors(string item)
-        {
-            // find all ancestors of the box/entry/class/descriptor - this allows us to determine the type of the class
-            List<PseudoClass> extended = new List<PseudoClass>();
-
-            // right now this algorithm is terribly inefficient, but it works
-            PseudoClass it = Classes.Values.SingleOrDefault(x => x.BoxName == item);
-            if (it != null)
-                extended.Add(it);
-
-            while (it != null)
-            {
-                it = Classes.Values.SingleOrDefault(x => x.BoxName == it.Extended.BoxName);
-
-                if (it == null)
-                    break;
-
-                extended.Add(it);
-            }
-
-            return extended.ToArray();
-        }
-
         public string GetFieldType(PseudoField x)
         {
             if (x == null)
@@ -263,93 +240,27 @@ namespace BoxGenerator
             return name;
         }
 
-        private List<PseudoField> FlattenFields(IEnumerable<PseudoCode> fields, PseudoBlock parent = null)
+        private PseudoClass[] GetClassAncestors(string item)
         {
-            Dictionary<string, PseudoField> ret = new Dictionary<string, PseudoField>();
-            foreach (var code in fields)
+            // find all ancestors of the box/entry/class/descriptor - this allows us to determine the type of the class
+            List<PseudoClass> extended = new List<PseudoClass>();
+
+            // right now this algorithm is terribly inefficient, but it works
+            PseudoClass it = Classes.Values.SingleOrDefault(x => x.BoxName == item);
+            if (it != null)
+                extended.Add(it);
+
+            while (it != null)
             {
-                if (code is PseudoField field)
-                {
-                    field.Parent = parent; // keep track of parent blocks
+                it = Classes.Values.SingleOrDefault(x => x.BoxName == it.Extended.BoxName);
 
-                    if (IsWorkaround(field.Type.Type))
-                        continue;
+                if (it == null)
+                    break;
 
-                    string value = field.Value;
-                    string tp = GetFieldType(field);
-
-                    if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty(field.Name))
-                        tp = field.Name?.Replace("[]", "").Replace("()", "");
-
-                    if (!string.IsNullOrEmpty(tp))
-                    {
-                        // TODO: incorrectly parsed type
-                        if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
-                        {
-                            field.FieldArray = value;
-                        }
-                    }
-
-                    AddAndResolveDuplicates(ret, field);
-                }
-                else if (code is PseudoBlock block)
-                {
-                    block.Parent = parent; // keep track of parent blocks
-
-                    var blockFields = FlattenFields(block.Content, block);
-                    foreach (var blockField in blockFields)
-                    {
-                        AddAndResolveDuplicates(ret, blockField);
-                    }
-                }
+                extended.Add(it);
             }
-            return ret.Values.ToList();
-        }
 
-        private void AddAndResolveDuplicates(Dictionary<string, PseudoField> ret, PseudoField field)
-        {
-            string name = GetFieldName(field);
-            if (!ret.TryAdd(name, field))
-            {
-                if (name.StartsWith("reserved") ||
-                    name == "pre_defined" ||
-                    GetFieldType(field).StartsWith("SingleItemTypeReferenceBox") ||
-                    (GetFieldType(field) == "signed int(32)" && GetFieldType(ret[name]) == "unsigned int(32)") ||
-                    field.Name == "min_initial_alt_startup_offset" ||
-                    field.Name == "target_rate_share") // special case: requires nesting
-                {
-                    int i = 0;
-                    string updatedName = $"{name}{i}";
-                    while (!ret.TryAdd(updatedName, field))
-                    {
-                        i++;
-                        updatedName = $"{name}{i}";
-                    }
-                    field.Name = updatedName;
-                }
-                else if (GetFieldType(field) == GetFieldType(ret[name]) && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
-                {
-                    //Debug.WriteLine($"-Resolved: fields are the same");
-                }
-                else
-                {
-                    // try to resolve the conflict using the type size
-                    var type1 = GetTypeInfo(field);
-                    var type2 = GetTypeInfo(ret[name]);
-
-                    if (type1.ElementSizeInBits > type2.ElementSizeInBits)
-                        ret[name] = field;
-                    if (type1.ElementSizeInBits != type2.ElementSizeInBits)
-                        return;
-
-                    if (GetFieldType(field) == "aligned bit(1)" && GetFieldType(ret[name]) == "bit")
-                    {
-                        return;
-                    }
-
-                    throw new Exception($"Duplicated fields: {name} of types: {field.Type}, {ret[name].Type}");
-                }
-            }
+            return extended.ToArray();
         }
 
         public int GetNestedInLoop(PseudoCode code)
@@ -713,6 +624,95 @@ namespace BoxGenerator
             }
 
             return info;
+        }
+
+        private List<PseudoField> FlattenFields(IEnumerable<PseudoCode> fields, PseudoBlock parent = null)
+        {
+            Dictionary<string, PseudoField> ret = new Dictionary<string, PseudoField>();
+            foreach (var code in fields)
+            {
+                if (code is PseudoField field)
+                {
+                    field.Parent = parent; // keep track of parent blocks
+
+                    if (IsWorkaround(field.Type.Type))
+                        continue;
+
+                    string value = field.Value;
+                    string tp = GetFieldType(field);
+
+                    if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty(field.Name))
+                        tp = field.Name?.Replace("[]", "").Replace("()", "");
+
+                    if (!string.IsNullOrEmpty(tp))
+                    {
+                        // TODO: incorrectly parsed type
+                        if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
+                        {
+                            field.FieldArray = value;
+                        }
+                    }
+
+                    AddAndResolveDuplicates(ret, field);
+                }
+                else if (code is PseudoBlock block)
+                {
+                    block.Parent = parent; // keep track of parent blocks
+
+                    var blockFields = FlattenFields(block.Content, block);
+                    foreach (var blockField in blockFields)
+                    {
+                        AddAndResolveDuplicates(ret, blockField);
+                    }
+                }
+            }
+            return ret.Values.ToList();
+        }
+
+        private void AddAndResolveDuplicates(Dictionary<string, PseudoField> ret, PseudoField field)
+        {
+            string name = GetFieldName(field);
+            if (!ret.TryAdd(name, field))
+            {
+                if (name.StartsWith("reserved") ||
+                    name == "pre_defined" ||
+                    GetFieldType(field).StartsWith("SingleItemTypeReferenceBox") ||
+                    (GetFieldType(field) == "signed int(32)" && GetFieldType(ret[name]) == "unsigned int(32)") ||
+                    field.Name == "min_initial_alt_startup_offset" ||
+                    field.Name == "target_rate_share") // special case: requires nesting
+                {
+                    int i = 0;
+                    string updatedName = $"{name}{i}";
+                    while (!ret.TryAdd(updatedName, field))
+                    {
+                        i++;
+                        updatedName = $"{name}{i}";
+                    }
+                    field.Name = updatedName;
+                }
+                else if (GetFieldType(field) == GetFieldType(ret[name]) && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
+                {
+                    //Debug.WriteLine($"-Resolved: fields are the same");
+                }
+                else
+                {
+                    // try to resolve the conflict using the type size
+                    var type1 = GetTypeInfo(field);
+                    var type2 = GetTypeInfo(ret[name]);
+
+                    if (type1.ElementSizeInBits > type2.ElementSizeInBits)
+                        ret[name] = field;
+                    if (type1.ElementSizeInBits != type2.ElementSizeInBits)
+                        return;
+
+                    if (GetFieldType(field) == "aligned bit(1)" && GetFieldType(ret[name]) == "bit")
+                    {
+                        return;
+                    }
+
+                    throw new Exception($"Duplicated fields: {name} of types: {field.Type}, {ret[name].Type}");
+                }
+            }
         }
     }
 

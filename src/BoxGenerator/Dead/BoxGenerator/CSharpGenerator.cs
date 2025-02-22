@@ -15,6 +15,74 @@ namespace BoxGenerator
             this.parserDocument = parserDocument;
         }
 
+        private string GetCtorParams(string classType, IList<(string Name, string Value)> parameters)
+        {
+            if (!string.IsNullOrEmpty(classType) && classType != "()")
+            {
+                Dictionary<string, string> map = new Dictionary<string, string>() {
+            { "(unsigned int(32) format)",          "uint format" },
+            { "(bit(24) flags)",                    "uint flags = 0" },
+            { "(fmt)",                              "uint fmt = 0" },
+            { "(codingname)",                       "uint codingname = 0" },
+            { "(handler_type)",                     "uint handler_type = 0" },
+            { "(referenceType)",                    "uint referenceType" },
+            { "(unsigned int(32) reference_type)",  "uint reference_type" },
+            { "(grouping_type, version, flags)",    "uint grouping_type, byte version, uint flags" },
+            { "(boxtype = 'msrc')",                 "uint boxtype = 1836282467" }, // msrc
+            { "(name)",                             "uint name" },
+            { "(uuid)",                             "byte[] uuid" },
+            { "(property_type)",                    "uint property_type" },
+            { "(channelConfiguration)",             "int channelConfiguration" },
+            { "(num_sublayers)",                    "byte num_sublayers" },
+            { "(code)",                             "uint code" },
+            { "(property_type, version, flags)",    "uint property_type, byte version, uint flags" },
+            { "(samplingFrequencyIndex, channelConfiguration, audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
+            { "(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
+            { "(unsigned int(32) extension_type)",  "uint extension_type" },
+            { "('vvcb', version, flags)",           "byte version = 0, uint flags = 0" },
+            { "(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)", "uint boxtype = 0, byte[] extended_type = null" },
+            { "(unsigned int(32) grouping_type)",   "uint grouping_type" },
+            { "(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)", "uint boxtype, byte v = 0, uint f = 0" },
+            { "(unsigned int(8) OutputChannelCount)", "byte OutputChannelCount" },
+            { "(entry_type, bit(24) flags)",        "uint entry_type, uint flags" },
+            { "(samplingFrequencyIndex)",           "int samplingFrequencyIndex" },
+            { "(version, flags, Per_Sample_IV_Size)",  "byte version, uint flags, byte Per_Sample_IV_Size" },
+            { "(version, flags)",                   "byte version, uint flags" },
+            { "(version)",                          "byte version" },
+            };
+                return map[classType];
+            }
+            else if (parameters != null)
+            {
+                string joinedParams = string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)));
+                Dictionary<string, string> map = new Dictionary<string, string>()
+            {
+                { "loudnessType",           "uint loudnessType" },
+                { "local_key_id",           "uint local_key_id" },
+                { "protocol",               "uint protocol" },
+                { "0, 0",                   "" },
+                { "size",                   "ulong size = 0" },
+                { "type",                   "uint type" },
+                { "version = 0, flags",     "uint flags = 0" },
+                { "version = 0, 0",         "" },
+                { "version = 0, 1",         "" },
+                { "version, 0",             "byte version = 0" },
+                { "version, flags = 0",     "byte version = 0" },
+                { "version",                "byte version" },
+                { "version = 0, flags = 0", "" },
+                { "version, flags",         "byte version = 0, uint flags = 0" },
+                { "0, tf_flags",            "uint tf_flags = 0" },
+                { "0, flags",               "uint flags = 0" },
+                { "version, tr_flags",      "byte version = 0, uint tr_flags = 0" },
+            };
+                return map[joinedParams];
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         public string GenerateParser()
         {
             string resultCode =
@@ -399,7 +467,7 @@ namespace SharpMP4
 
             foreach (var field in b.Fields)
             {
-                cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Read);
+                cls += "\r\n" + BuildMethod(b, null, field, 2, MethodType.Read);
             }
 
             if (b.IsContainer)
@@ -433,7 +501,7 @@ namespace SharpMP4
 
             foreach (var field in b.Fields)
             {
-                cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Write);
+                cls += "\r\n" + BuildMethod(b, null, field, 2, MethodType.Write);
             }
 
             if (b.IsContainer)
@@ -466,7 +534,7 @@ namespace SharpMP4
 
             foreach (var field in b.Fields)
             {
-                cls += "\r\n" + BuildMethodCode(b, null, field, 2, MethodType.Size);
+                cls += "\r\n" + BuildMethod(b, null, field, 2, MethodType.Size);
             }
 
             if (b.IsContainer)
@@ -487,74 +555,6 @@ namespace SharpMP4
             cls += "}\r\n";
 
             return cls;
-        }
-
-        private string GetCtorParams(string classType, IList<(string Name, string Value)> parameters)
-        {
-            if (!string.IsNullOrEmpty(classType) && classType != "()")
-            {
-                Dictionary<string, string> map = new Dictionary<string, string>() {
-            { "(unsigned int(32) format)",          "uint format" },
-            { "(bit(24) flags)",                    "uint flags = 0" },
-            { "(fmt)",                              "uint fmt = 0" },
-            { "(codingname)",                       "uint codingname = 0" },
-            { "(handler_type)",                     "uint handler_type = 0" },
-            { "(referenceType)",                    "uint referenceType" },
-            { "(unsigned int(32) reference_type)",  "uint reference_type" },
-            { "(grouping_type, version, flags)",    "uint grouping_type, byte version, uint flags" },
-            { "(boxtype = 'msrc')",                 "uint boxtype = 1836282467" }, // msrc
-            { "(name)",                             "uint name" },
-            { "(uuid)",                             "byte[] uuid" },
-            { "(property_type)",                    "uint property_type" },
-            { "(channelConfiguration)",             "int channelConfiguration" },
-            { "(num_sublayers)",                    "byte num_sublayers" },
-            { "(code)",                             "uint code" },
-            { "(property_type, version, flags)",    "uint property_type, byte version, uint flags" },
-            { "(samplingFrequencyIndex, channelConfiguration, audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
-            { "(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
-            { "(unsigned int(32) extension_type)",  "uint extension_type" },
-            { "('vvcb', version, flags)",           "byte version = 0, uint flags = 0" },
-            { "(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)", "uint boxtype = 0, byte[] extended_type = null" },
-            { "(unsigned int(32) grouping_type)",   "uint grouping_type" },
-            { "(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)", "uint boxtype, byte v = 0, uint f = 0" },
-            { "(unsigned int(8) OutputChannelCount)", "byte OutputChannelCount" },
-            { "(entry_type, bit(24) flags)",        "uint entry_type, uint flags" },
-            { "(samplingFrequencyIndex)",           "int samplingFrequencyIndex" },
-            { "(version, flags, Per_Sample_IV_Size)",  "byte version, uint flags, byte Per_Sample_IV_Size" },
-            { "(version, flags)",                   "byte version, uint flags" },
-            { "(version)",                          "byte version" },
-            };
-                return map[classType];
-            }
-            else if (parameters != null)
-            {
-                string joinedParams = string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)));
-                Dictionary<string, string> map = new Dictionary<string, string>()
-            {
-                { "loudnessType",           "uint loudnessType" },
-                { "local_key_id",           "uint local_key_id" },
-                { "protocol",               "uint protocol" },
-                { "0, 0",                   "" },
-                { "size",                   "ulong size = 0" },
-                { "type",                   "uint type" },
-                { "version = 0, flags",     "uint flags = 0" },
-                { "version = 0, 0",         "" },
-                { "version = 0, 1",         "" },
-                { "version, 0",             "byte version = 0" },
-                { "version, flags = 0",     "byte version = 0" },
-                { "version",                "byte version" },
-                { "version = 0, flags = 0", "" },
-                { "version, flags",         "byte version = 0, uint flags = 0" },
-                { "0, tf_flags",            "uint tf_flags = 0" },
-                { "0, flags",               "uint flags = 0" },
-                { "version, tr_flags",      "byte version = 0, uint tr_flags = 0" },
-            };
-                return map[joinedParams];
-            }
-            else
-            {
-                return "";
-            }
         }
 
         private string FixMissingMethodCode(PseudoClass box, string cls, MethodType methodType)
@@ -633,6 +633,7 @@ namespace SharpMP4
             {
                 comment = "";
             }
+
             string value = (field as PseudoField)?.Value;
             string tp = parserDocument.GetFieldType(field as PseudoField);
 
@@ -766,7 +767,7 @@ namespace SharpMP4
                 return "";
         }
 
-        private string BuildMethodCode(PseudoClass b, PseudoBlock parent, PseudoCode field, int level, MethodType methodType)
+        private string BuildMethod(PseudoClass b, PseudoBlock parent, PseudoCode field, int level, MethodType methodType)
         {
             string spacing = GetSpacing(level);
             var block = field as PseudoBlock;
@@ -898,7 +899,7 @@ namespace SharpMP4
                 return $"{spacing}{boxSize}{m}; // {name}";
         }
 
-        private static string BuildSwitchCase(PseudoClass b, PseudoCase swcase, int level, MethodType methodType)
+        private string BuildSwitchCase(PseudoClass b, PseudoCase swcase, int level, MethodType methodType)
         {
             string spacing = GetSpacing(level);
             if (string.IsNullOrEmpty(swcase.Op))
@@ -914,15 +915,14 @@ namespace SharpMP4
             }
         }
 
-
-        public string BuildComment(PseudoClass b, PseudoComment comment, int level, MethodType methodType)
+        private string BuildComment(PseudoClass b, PseudoComment comment, int level, MethodType methodType)
         {
             string spacing = GetSpacing(level);
             string text = comment.Comment;
             return $"{spacing}/* {text} */";
         }
 
-        public string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)
+        private string BuildBlock(PseudoClass b, PseudoBlock parent, PseudoBlock block, int level, MethodType methodType)
         {
             string spacing = GetSpacing(level);
             string ret = "";
@@ -950,6 +950,7 @@ namespace SharpMP4
                     }
                 }
 
+                // fix single field flags (in C# 0 is not the same as false and non-zero is not the same as true)
                 if (condition.Contains("grouping_type_parameter_present") ||
                     condition.Contains("omitted_channels_present") ||
                     condition.Contains("in_stream") ||
@@ -1123,7 +1124,7 @@ namespace SharpMP4
 
             foreach (var field in block.Content)
             {
-                ret += "\r\n" + BuildMethodCode(b, block, field, level + 1, methodType);
+                ret += "\r\n" + BuildMethod(b, block, field, level + 1, methodType);
             }
 
             ret += $"\r\n{spacing}}}";
@@ -1131,12 +1132,13 @@ namespace SharpMP4
             return ret;
         }
 
-        public string FixForCycleCondition(string condition)
+        private string FixForCycleCondition(string condition)
         {
             condition = condition.Substring(1, condition.Length - 2);
 
             string[] parts = condition.Split(";");
 
+            // indexes in C# begin at 0 instead of 1, shift the loop condition to this new range
             if (parts[0].Contains("1") && parts[1].Contains("="))
             {
                 parts[0] = parts[0].Replace("1", "0");
@@ -1148,7 +1150,7 @@ namespace SharpMP4
             return $"(int {string.Join(";", parts)})";
         }
 
-        public string EscapeFourCC(string value)
+        private string EscapeFourCC(string value)
         {
             if (!string.IsNullOrEmpty(value))
             {
@@ -1167,7 +1169,7 @@ namespace SharpMP4
             return value;
         }
 
-        public string GetReadMethod(PseudoField field)
+        private string GetReadMethod(PseudoField field)
         {
             var info = parserDocument.GetTypeInfo(field);
 
@@ -1347,7 +1349,7 @@ namespace SharpMP4
             return csharpResult;
         }
 
-        public string GetWriteMethod(PseudoField field)
+        private string GetWriteMethod(PseudoField field)
         {
             var info = parserDocument.GetTypeInfo(field);
 
@@ -1484,7 +1486,7 @@ namespace SharpMP4
             return csharpResult;
         }
 
-        public string GetCalculateSizeMethod(PseudoField field)
+        private string GetCalculateSizeMethod(PseudoField field)
         {
             var info = parserDocument.GetTypeInfo(field);
 
@@ -1563,7 +1565,7 @@ namespace SharpMP4
             return csharpResult;
         }
 
-        public string GetCSharpType(PseudoField field)
+        private string GetCSharpType(PseudoField field)
         {
             FieldTypeInfo info = parserDocument.GetTypeInfo(field);
             string t = "";
@@ -1666,7 +1668,7 @@ namespace SharpMP4
             return t;
         }
 
-        public static string GetSpacing(int level)
+        private string GetSpacing(int level)
         {
             string ret = "";
             for (int i = 0; i < level; i++)

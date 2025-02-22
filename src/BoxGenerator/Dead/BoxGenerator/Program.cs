@@ -12,8 +12,6 @@ namespace BoxGenerator;
 
 partial class Program
 {
-    static CSharpGenerator generator;
-
     static void Main(string[] args)
     {
         string[] jsonFiles = Directory.GetFiles("Definitions", "*.json");
@@ -108,7 +106,7 @@ partial class Program
         LogConsole($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
 
         var parserDocument = new ParserDocument(parsedClasses, containers);
-        generator = new CSharpGenerator(parserDocument);
+        var generator = new CSharpGenerator(parserDocument);
         string code = generator.GenerateParser();
     }
 
