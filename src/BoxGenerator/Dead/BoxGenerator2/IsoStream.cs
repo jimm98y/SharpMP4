@@ -700,7 +700,7 @@ namespace SharpMP4
             {
                 // make sure we do not modify any bytes
                 box = new InvalidBox(header.Type);
-                box.Parent = parent;
+                box.SetParent(parent);
                 box.Header = header;
                 LogBox(header, GetIndentation(box));
                 size = box.Read(this, availableSize) + GetHeaderSize(header);
@@ -708,7 +708,7 @@ namespace SharpMP4
             else
             {
                 box = factory(header);
-                box.Parent = parent;
+                box.SetParent(parent);
                 box.Header = header;
                 LogBox(header, GetIndentation(box));
                 size = ReadBox(header, box, availableSize);
@@ -946,7 +946,7 @@ namespace SharpMP4
             string indent = "";
             while (b != null)
             { 
-                b = b.Parent; 
+                b = b.GetParent(); 
                 indent += c;
             }
             return indent;
@@ -972,7 +972,7 @@ namespace SharpMP4
         internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, Func<T> factory, out T value) where T : IMp4Serializable
         {
             T c = factory();
-            c.Parent = parent;
+            c.SetParent(parent);
             Log.Debug($"CLS:{GetIndentation(c)}{c.DisplayName}");
             ulong size = c.Read(this, readSize - boxSize);
             value = c;
@@ -992,7 +992,7 @@ namespace SharpMP4
                 {
                     throw new Exception($"Class read through!");
                 }
-                c.Parent = parent;
+                c.SetParent(parent);
                 ret.Add(c);
             }
             value = ret.ToArray();
@@ -1056,7 +1056,7 @@ namespace SharpMP4
             long sizeOfInstanceBits = (long)sizeOfInstance << 3;
             descriptor = (T)BoxFactory.CreateDescriptor(tag);
             descriptor.SizeOfSize = sizeOfSize;
-            descriptor.Parent = parent;
+            descriptor.SetParent(parent);
 
             availableSize -= (long)size;
             if (availableSize < sizeOfInstanceBits)

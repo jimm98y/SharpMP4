@@ -2409,7 +2409,9 @@ namespace SharpMP4
     public abstract class SampleGroupDescriptionEntry : IHasBoxChildren
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "SampleGroupDescriptionEntry"; } }
 
         protected List<Box> children = new List<Box>();
@@ -3035,7 +3037,9 @@ namespace SharpMP4
     public class ItemInfoExtension : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ItemInfoExtension"; } }
 
         public ItemInfoExtension(uint extension_type) : base()
@@ -3592,7 +3596,9 @@ namespace SharpMP4
     public class MetaDataAccessUnit : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "MetaDataAccessUnit"; } }
 
         protected Box[] boxes;
@@ -10954,7 +10960,7 @@ namespace SharpMP4
         public ItemReferenceBox ItemRefs { get { return this.children.OfType<ItemReferenceBox>().FirstOrDefault(); } }
         public ItemDataBox ItemData { get { return this.children.OfType<ItemDataBox>().FirstOrDefault(); } }
         public IEnumerable<Box> OtherBoxes { get { return this.children.OfType<Box>(); } }
-        public bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == IsoStream.FromFourCC("udta") || ((Box)Parent).FourCC == IsoStream.FromFourCC("trak"))); } }
+        public bool IsQuickTime { get { return (GetParent() != null && (((Box)GetParent()).FourCC == IsoStream.FromFourCC("udta") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC("trak"))); } }
 
         public MetaBox(uint handler_type = 0) : base(IsoStream.FromFourCC("meta"), 0, 0)
         {
@@ -15231,7 +15237,9 @@ namespace SharpMP4
     public class TrunEntry : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "TrunEntry"; } }
 
         protected uint sample_duration;
@@ -15505,7 +15513,9 @@ namespace SharpMP4
     public class BoxHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "BoxHeader"; } }
 
         protected uint size;
@@ -18574,7 +18584,9 @@ namespace SharpMP4
     public class ViprEntry : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ViprEntry"; } }
 
         protected byte reserved = 0;
@@ -18631,7 +18643,9 @@ namespace SharpMP4
     public class DependencyInfo : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "DependencyInfo"; } }
 
         protected byte subSeqDirectionFlag;
@@ -19132,7 +19146,9 @@ namespace SharpMP4
     public class AVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "AVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
@@ -19378,7 +19394,9 @@ namespace SharpMP4
     public class MVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "MVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
@@ -19548,7 +19566,9 @@ namespace SharpMP4
     public class SVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "SVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
@@ -19727,7 +19747,9 @@ namespace SharpMP4
     public class HEVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "HEVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
@@ -19986,7 +20008,9 @@ namespace SharpMP4
     public class VvcPTLRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "VvcPTLRecord"; } }
 
         protected byte reserved = 0;
@@ -20194,7 +20218,9 @@ namespace SharpMP4
     public class VvcDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "VvcDecoderConfigurationRecord"; } }
 
         protected byte reserved = 0b11111;
@@ -20432,7 +20458,9 @@ namespace SharpMP4
     public class MVDDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "MVDDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
@@ -20630,7 +20658,9 @@ namespace SharpMP4
     public class VvcOperatingPointsRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "VvcOperatingPointsRecord"; } }
 
         protected byte num_profile_tier_level_minus1;
@@ -20994,7 +21024,9 @@ namespace SharpMP4
     public class EVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "EVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
@@ -21208,7 +21240,9 @@ namespace SharpMP4
     public class LHEVCDecoderConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "LHEVCDecoderConfigurationRecord"; } }
 
         protected byte configurationVersion = 1;
@@ -31161,7 +31195,9 @@ namespace SharpMP4
     public class SymbolicMusicSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "SymbolicMusicSpecificConfig"; } }
 
         protected byte version;  // version of this specification is 0b0000 
@@ -31651,7 +31687,9 @@ namespace SharpMP4
     public class AudioSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "AudioSpecificConfig"; } }
 
         protected GetAudioObjectType audioObjectType;
@@ -32438,7 +32476,9 @@ namespace SharpMP4
     public class GetAudioObjectType : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "GetAudioObjectType"; } }
 
         protected byte audioObjectType;
@@ -32534,7 +32574,9 @@ namespace SharpMP4
     public class GASpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "GASpecificConfig"; } }
 
         protected bool frameLengthFlag;
@@ -32789,7 +32831,9 @@ namespace SharpMP4
     public class program_config_element : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "program_config_element"; } }
 
         protected byte element_instance_tag;
@@ -33144,7 +33188,9 @@ namespace SharpMP4
     public class CelpSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "CelpSpecificConfig"; } }
 
         protected bool isBaseLayer;
@@ -33274,7 +33320,9 @@ namespace SharpMP4
     public class CelpHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "CelpHeader"; } }
 
         protected bool ExcitationMode;
@@ -33390,7 +33438,9 @@ namespace SharpMP4
     public class CelpBWSenhHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "CelpBWSenhHeader"; } }
 
         protected byte BWS_configuration;
@@ -33436,7 +33486,9 @@ namespace SharpMP4
     public class HvxcSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "HvxcSpecificConfig"; } }
 
         protected bool isBaseLayer;
@@ -33503,7 +33555,9 @@ namespace SharpMP4
     public class HVXCconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "HVXCconfig"; } }
 
         protected bool HVXCvarMode;
@@ -33573,7 +33627,9 @@ namespace SharpMP4
     public class TTSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "TTSSpecificConfig"; } }
 
         protected TTS_Sequence TTS_Sequence;
@@ -33625,7 +33681,9 @@ namespace SharpMP4
     public class TTS_Sequence : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "TTS_Sequence"; } }
 
         protected byte TTS_Sequence_ID;
@@ -33729,7 +33787,9 @@ namespace SharpMP4
     public class ErrorResilientCelpSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ErrorResilientCelpSpecificConfig"; } }
 
         protected bool isBaseLayer;
@@ -33860,7 +33920,9 @@ namespace SharpMP4
     public class ER_SC_CelpHeader : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ER_SC_CelpHeader"; } }
 
         protected bool ExcitationMode;
@@ -33988,7 +34050,9 @@ namespace SharpMP4
     public class ErrorResilientHvxcSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ErrorResilientHvxcSpecificConfig"; } }
 
         protected bool isBaseLayer;
@@ -34055,7 +34119,9 @@ namespace SharpMP4
     public class ErHVXCconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ErHVXCconfig"; } }
 
         protected bool HVXCvarMode;
@@ -34135,7 +34201,9 @@ namespace SharpMP4
     public class ParametricSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ParametricSpecificConfig"; } }
 
         protected bool isBaseLayer;
@@ -34225,7 +34293,9 @@ namespace SharpMP4
     public class PARAconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "PARAconfig"; } }
 
         protected byte PARAmode;
@@ -34330,7 +34400,9 @@ namespace SharpMP4
     public class HILNconfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "HILNconfig"; } }
 
         protected bool HILNquantMode;
@@ -34401,7 +34473,9 @@ namespace SharpMP4
     public class HILNenexConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "HILNenexConfig"; } }
 
         protected bool HILNenhaLayer;
@@ -34471,7 +34545,9 @@ namespace SharpMP4
     public class SSCSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "SSCSpecificConfig"; } }
 
         protected byte decoder_level;
@@ -34567,7 +34643,9 @@ namespace SharpMP4
     public class MPEG_1_2_SpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "MPEG_1_2_SpecificConfig"; } }
 
         protected bool extension;
@@ -34612,7 +34690,9 @@ namespace SharpMP4
     public class DSTSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "DSTSpecificConfig"; } }
 
         protected bool DSDDST_Coded;
@@ -34717,7 +34797,9 @@ namespace SharpMP4
     public class ALSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ALSSpecificConfig"; } }
 
         protected uint als_id;
@@ -35072,7 +35154,9 @@ namespace SharpMP4
     public class SLSSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "SLSSpecificConfig"; } }
 
         protected byte pcmWordLength;
@@ -35204,7 +35288,9 @@ namespace SharpMP4
     public class ELDSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ELDSpecificConfig"; } }
 
         protected bool frameLengthFlag;
@@ -35464,7 +35550,9 @@ namespace SharpMP4
     public class ld_sbr_header : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ld_sbr_header"; } }
 
         protected sbr_header[] sbr_header;
@@ -35634,7 +35722,9 @@ namespace SharpMP4
     public class sbr_header : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "sbr_header"; } }
 
         protected bool bs_amp_res;
@@ -35828,7 +35918,9 @@ namespace SharpMP4
     public class ErrorProtectionSpecificConfig : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ErrorProtectionSpecificConfig"; } }
 
         protected byte number_of_predefined_set;
@@ -39884,7 +39976,9 @@ namespace SharpMP4
     public class XtraTag : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "XtraTag"; } }
 
         protected uint inputSize;
@@ -39951,7 +40045,9 @@ namespace SharpMP4
     public class XtraValue : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "XtraValue"; } }
 
         protected uint length;
@@ -42020,7 +42116,9 @@ namespace SharpMP4
     public class AdobeChapterRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "AdobeChapterRecord"; } }
 
         protected ulong timestamp;
@@ -42850,7 +42948,9 @@ namespace SharpMP4
     public class IodsSample : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "IodsSample"; } }
 
         protected byte incTag;
@@ -47462,7 +47562,9 @@ namespace SharpMP4
     public class RectRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "RectRecord"; } }
 
         protected ushort top;
@@ -47525,7 +47627,9 @@ namespace SharpMP4
     public class StyleRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "StyleRecord"; } }
 
         protected ushort startChar;
@@ -47668,7 +47772,9 @@ namespace SharpMP4
     public class EC3SpecificEntry : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "EC3SpecificEntry"; } }
 
         protected byte fscod;
@@ -48245,7 +48351,9 @@ namespace SharpMP4
     public class FontRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "FontRecord"; } }
 
         protected ushort fontId;
@@ -48463,7 +48571,9 @@ namespace SharpMP4
     public class ProtectionSystemSpecificKeyID : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ProtectionSystemSpecificKeyID"; } }
 
         protected byte[] key;
@@ -48548,7 +48658,9 @@ namespace SharpMP4
     public class TrickPlayEntry : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "TrickPlayEntry"; } }
 
         protected byte picType;
@@ -48886,7 +48998,9 @@ namespace SharpMP4
     public class SampleEncryptionSample : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "SampleEncryptionSample"; } }
 
         protected byte[] InitializationVector;
@@ -49033,7 +49147,9 @@ namespace SharpMP4
     public class SampleEncryptionSubsample : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "SampleEncryptionSubsample"; } }
 
         protected ushort BytesOfClearData;
@@ -51137,7 +51253,9 @@ namespace SharpMP4
     public class MtdtEntry : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "MtdtEntry"; } }
 
         protected ushort size;
@@ -52050,7 +52168,9 @@ namespace SharpMP4
     public class AV1CodecConfigurationRecord : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "AV1CodecConfigurationRecord"; } }
 
         protected bool marker = true;
@@ -52510,7 +52630,9 @@ namespace SharpMP4
     public class ChannelMappingTable : IMp4Serializable
     {
         public StreamMarker Padding { get; set; }
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         public virtual string DisplayName { get { return "ChannelMappingTable"; } }
 
         protected byte StreamCount;

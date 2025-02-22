@@ -11,7 +11,8 @@ namespace SharpMP4
     public interface IMp4Serializable
     {
         StreamMarker Padding { get; set; }
-        IMp4Serializable Parent { get; set; }
+        IMp4Serializable GetParent();
+        void SetParent(IMp4Serializable parent);
         string DisplayName { get; }
 
         ulong Read(IsoStream stream, ulong readSize);
@@ -40,7 +41,9 @@ namespace SharpMP4
         public ulong Offset { get { return offset; } set { offset = value; } }
 
         protected IMp4Serializable parent = null;
-        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+
         protected List<Box> children = null;
         public List<Box> Children { get { return children; } set { children = value; } }
         protected StreamMarker padding = null;
@@ -251,7 +254,8 @@ namespace SharpMP4
         public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
         protected IMp4Serializable parent = null;
-        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 
         public UnknownClass()
         {
@@ -351,7 +355,9 @@ namespace SharpMP4
         /// </summary>
         public ulong SizeOfSize { get; set; } = 0;
 
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {

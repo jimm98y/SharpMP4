@@ -318,7 +318,7 @@ namespace SharpMP4
                     {
                         inType = "IHasBoxChildren";
                     }
-                    cls += $" : {inType}\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n\t\tpublic IMp4Serializable Parent {{ get; set; }}\r\n";
+                    cls += $" : {inType}\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n\t\tprotected IMp4Serializable parent = null;\r\n  public IMp4Serializable GetParent() {{ return parent; }}\r\n        public void SetParent(IMp4Serializable parent) {{ this.parent = parent; }}\r\n";
                 }
             }
 
@@ -382,7 +382,7 @@ namespace SharpMP4
                 //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
                 //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
                 // TODO: maybe instead of lookahead, we just have to check the parents
-                cls += "\r\npublic bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)Parent).FourCC == IsoStream.FromFourCC(\"trak\"))); } }";
+                cls += "\r\npublic bool IsQuickTime { get { return (GetParent() != null && (((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC(\"trak\"))); } }";
             }
             else if (b.BoxName == "AVCDecoderConfigurationRecord")
             {
