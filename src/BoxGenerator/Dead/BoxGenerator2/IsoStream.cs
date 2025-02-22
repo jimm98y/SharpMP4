@@ -852,7 +852,7 @@ namespace SharpMP4
                 consumed += ReadBox(consumed, remaining, box, out v);
                 if (consumed > readSize)
                 {
-                    Log.Debug($"Box \'{v.FourCC}\' read through!");
+                    Log.Debug($"Box \'{ToFourCC(v.FourCC)}\' read through!");
                     break;
                 }
                 box.Children.Add(v);
@@ -919,11 +919,11 @@ namespace SharpMP4
                     StreamMarker missing;
                     size += ReadPadding(size, availableSize, out missing);
                     box.Padding = missing;
-                    Log.Debug($"Box \'{box.FourCC}\' has extra padding of {missing.Length} bytes");
+                    Log.Debug($"Box \'{ToFourCC(box.FourCC)}\' has extra padding of {missing.Length} bytes");
                 }
                 else
                 {
-                    throw new Exception($"Box \'{box.FourCC}\' read through!");
+                    throw new Exception($"Box \'{ToFourCC(box.FourCC)}\' read through!");
                 }
             }
 
@@ -931,7 +931,7 @@ namespace SharpMP4
             if (calculatedSize != GetBoxSize(header))
             {
                 if (box.FourCC != FromFourCC("mdat"))
-                    Log.Debug($"Calculated \'{box.FourCC}\' size: {calculatedSize / 8}, read: {GetBoxSize(header) / 8}");
+                    Log.Debug($"Calculated \'{ToFourCC(box.FourCC)}\' size: {calculatedSize / 8}, read: {GetBoxSize(header) / 8}");
             }
 
             return size + GetHeaderSize(header);
@@ -2076,11 +2076,6 @@ namespace SharpMP4
         }
 
         public ulong WritePadding(StreamMarker padding)
-        {
-            return WriteUInt8ArrayTillEnd(padding);
-        }
-
-        public ulong WritePadding(byte[] padding)
         {
             return WriteUInt8ArrayTillEnd(padding);
         }

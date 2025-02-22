@@ -107,11 +107,11 @@ namespace SharpMP4
 
             if(this.Padding != null)
             {
-                size += stream.WritePadding(this.Padding);
+                size += stream.WriteUInt8ArrayTillEnd(this.Padding);
             }
             else if(this.PaddingBytes != null)
             {
-                size += stream.WritePadding(this.PaddingBytes);
+                size += stream.WriteUInt8ArrayTillEnd(this.PaddingBytes);
             }
 
             return size;
