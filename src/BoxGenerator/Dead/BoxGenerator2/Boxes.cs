@@ -17,29 +17,9 @@ namespace SharpMP4
         DataTypeFloat64BigEndian = 23,
     }
 
-    public sealed class TrunEntry
-    {
-        public uint SampleDuration;
-        public uint SampleSize;
-        public uint SampleFlags;
-        public uint SampleCompositionTimeOffset0;
-        public int SampleCompositionTimeOffset;
-
-        public TrunEntry(uint sampleDuration, uint sampleSize, uint sampleFlags, int sampleCompositionTimeOffset)
-        {
-            SampleDuration = sampleDuration;
-            SampleSize = sampleSize;
-            SampleFlags = sampleFlags;
-            SampleCompositionTimeOffset = sampleCompositionTimeOffset;
-        }
-
-        public TrunEntry()
-        { }
-    }
-
     public abstract class CompressedBox : Box 
     {
-        public CompressedBox(string boxtype) : base(boxtype) {  }
+        public CompressedBox(uint boxtype) : base(boxtype) {  }
     }
 
     public class ICC_profile : UnknownClass { } // ISO 15076‐1 or ICC.1:2010, or https://github.com/xcorail/metadata-extractor/blob/master/Source/com/drew/metadata/icc/IccReader.java#L50
@@ -50,7 +30,7 @@ namespace SharpMP4
     public abstract class UniDrcConfigExtension : UnknownBox { } // ISO/IEC 23003‐4
     public abstract class RtpReceptionHintSampleEntry : Box 
     {
-        public RtpReceptionHintSampleEntry(string boxtype) : base(boxtype) { }
+        public RtpReceptionHintSampleEntry(uint boxtype) : base(boxtype) { }
     }
     public class OperatingPointsRecord : UnknownClass { }
 
@@ -67,7 +47,8 @@ namespace SharpMP4
     {
         public virtual string DisplayName { get { return nameof(SpatialSpecificConfig); } }
         protected IMp4Serializable parent = null;
-        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         protected StreamMarker padding = null;
         public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
@@ -94,7 +75,8 @@ namespace SharpMP4
     {
         public virtual string DisplayName { get { return nameof(StructuredAudioSpecificConfig); } }
         protected IMp4Serializable parent = null;
-        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
         protected StreamMarker padding = null;
         public StreamMarker Padding { get { return padding; } set { padding = value; } }
 

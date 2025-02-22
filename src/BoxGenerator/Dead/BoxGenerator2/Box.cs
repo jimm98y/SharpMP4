@@ -11,7 +11,8 @@ namespace SharpMP4
     public interface IMp4Serializable
     {
         StreamMarker Padding { get; set; }
-        IMp4Serializable Parent { get; set; }
+        IMp4Serializable GetParent();
+        void SetParent(IMp4Serializable parent);
         string DisplayName { get; }
 
         ulong Read(IsoStream stream, ulong readSize);
@@ -21,7 +22,7 @@ namespace SharpMP4
 
     public abstract class Box : IMp4Serializable, IHasBoxChildren
     {
-        public virtual string FourCC { get; set; }
+        public virtual uint FourCC { get; set; }
         public abstract string DisplayName { get; }
 
         public SafeBoxHeader Header { get; set; } 
@@ -36,11 +37,14 @@ namespace SharpMP4
         protected bool hasLargeSize = false;
         public bool HasLargeSize { get { return hasLargeSize; } set { hasLargeSize = value; } }
 
-        protected ulong offset = 0;
-        public ulong Offset { get { return offset; } set { offset = value; } }
+        protected long boxOffset = 0;
+        public long GetBoxOffset() { return boxOffset; }
+        public void SetBoxOffset(long offset) { boxOffset = offset; }
 
         protected IMp4Serializable parent = null;
-        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+
         protected List<Box> children = null;
         public List<Box> Children { get { return children; } set { children = value; } }
         protected StreamMarker padding = null;
@@ -48,18 +52,18 @@ namespace SharpMP4
 
         public Box() {  }
 
-        public Box(string boxType) 
+        public Box(uint boxType) 
         {
             FourCC = boxType;    
         }
 
-        public Box(string boxType, byte[] uuid)
+        public Box(uint boxType, byte[] uuid)
         {
             FourCC = boxType;
             Uuid = uuid;    
         }
 
-        public Box(string boxType, ulong size) : this(boxType)
+        public Box(uint boxType, ulong size) : this(boxType)
         {
             Size = size;
         }
@@ -168,7 +172,7 @@ namespace SharpMP4
         {                
         }
 
-        public UnknownBox(string boxType) : base(boxType)
+        public UnknownBox(uint boxType) : base(boxType)
         {
         }
 
@@ -199,19 +203,19 @@ namespace SharpMP4
 
     public class InvalidBox : UnknownBox
     {
-        public InvalidBox(string fourCC) : base(fourCC)
+        public InvalidBox(uint fourCC) : base(fourCC)
         {
         }
     }
 
-    public class UnknownEntry : SampleEntry
+    public class UnknownEntry : SampleGroupDescriptionEntry
     {
         public override string DisplayName { get { return nameof(UnknownEntry); } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return data; } set { data = value; } }
 
-        public UnknownEntry(string format) : base(format)
+        public UnknownEntry(uint format) : base(format)
         {
         }
 
@@ -251,7 +255,8 @@ namespace SharpMP4
         public StreamMarker Padding { get { return padding; } set { padding = value; } }
 
         protected IMp4Serializable parent = null;
-        public IMp4Serializable Parent { get { return parent; } set { parent = value; } }
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 
         public UnknownClass()
         {
@@ -351,7 +356,9 @@ namespace SharpMP4
         /// </summary>
         public ulong SizeOfSize { get; set; } = 0;
 
-        public IMp4Serializable Parent { get; set; }
+        protected IMp4Serializable parent = null;
+        public IMp4Serializable GetParent() { return parent; }
+        public void SetParent(IMp4Serializable parent) { this.parent = parent; }
 
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {

@@ -67,7 +67,8 @@
       "containers": [ "*" ],
       "description": "Metadata sample entries",
       "type": "Box",
-      "syntax": "abstract aligned(8) class SampleEntry (unsigned int(32) format) extends Box(format){ \r\nconst unsigned int(8)[6] reserved = 0; \r\nunsigned int(16) data_reference_index; \r\n}\r\n"
+      "originalSyntax": "abstract aligned(8) class SampleEntry (unsigned int(32) format) extends Box(format){ \r\nconst unsigned int(8)[6] reserved = 0; \r\nunsigned int(16) data_reference_index; \r\n}\r\n",
+      "syntax": "abstract aligned(8) class SampleEntry (unsigned int(32) format) extends Box(format){ \r\nconst unsigned int(8)[6] reservedSampleEntry = 0; \r\nunsigned int(16) data_reference_index; \r\n}\r\n"
     },
     {
       "containers": [ "*" ],

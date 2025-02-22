@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Generated.cs~RF3f5f4123.TMP" />
     <None Remove="Generated.cs~RFc547fabc.TMP" />
   </ItemGroup>
 

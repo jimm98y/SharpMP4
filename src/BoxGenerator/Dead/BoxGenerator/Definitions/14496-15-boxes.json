@@ -580,7 +580,8 @@
         }
       ],
       "type": "FullBox",
-      "syntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\n\tunsigned int(32) num_entries;\n\tfor (i=1; i<= num_entries; i++) { \n\t\tunsigned int(8) constructor_type;\n\t\tunsigned int(8) flags; \n\t\tif( constructor_type == 0 ) \n\t\t\tSampleConstructor();\n\t\telse if( constructor_type == 2 ) \n\t\t\tInlineConstructor();\n\t\telse if( constructor_type == 3 ) \n\t\t\tSampleConstructorFromTrackGroup();\n\t\telse if( constructor_type == 6 ) \n\t\t\tNALUStartInlineConstructor ();\n\t}\n}"
+      "originalSyntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\n\tunsigned int(32) num_entries;\n\tfor (i=1; i<= num_entries; i++) { \n\t\tunsigned int(8) constructor_type;\n\t\tunsigned int(8) flags; \n\t\tif( constructor_type == 0 ) \n\t\t\tSampleConstructor();\n\t\telse if( constructor_type == 2 ) \n\t\t\tInlineConstructor();\n\t\telse if( constructor_type == 3 ) \n\t\t\tSampleConstructorFromTrackGroup();\n\t\telse if( constructor_type == 6 ) \n\t\t\tNALUStartInlineConstructor ();\n\t}\n}",
+      "syntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\n\tunsigned int(32) num_entries;\n\tfor (i=1; i<= num_entries; i++) { \n\t\tunsigned int(8) constructor_type;\n\t\tunsigned int(8) constructor_flags; \n\t\tif( constructor_type == 0 ) \n\t\t\tSampleConstructor();\n\t\telse if( constructor_type == 2 ) \n\t\t\tInlineConstructor();\n\t\telse if( constructor_type == 3 ) \n\t\t\tSampleConstructorFromTrackGroup();\n\t\telse if( constructor_type == 6 ) \n\t\t\tNALUStartInlineConstructor ();\n\t}\n}"
     },
     {
       "fourcc": "svmC",

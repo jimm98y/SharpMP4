@@ -1065,7 +1065,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {\r\n unsigned int(8) reserved[6];\r\n unsigned int(16) dataReferenceIndex;\r\n } "
+      "syntax": "aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {\r\n } "
     },
     {
       "containers": [ "*" ],

@@ -22,7 +22,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class timestampsynchrony() extends Box('tssy') {\n\tunsigned int(6) reserved;\n\tunsigned int(2) timestamp_sync;\n}"
+      "syntax": "class TimestampSynchrony() extends Box('tssy') {\n\tunsigned int(6) reserved;\n\tunsigned int(2) timestamp_sync;\n}"
     },
     {
       "fourcc": "tims",
@@ -42,7 +42,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class timescaleentry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass timeoffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass sequenceoffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
     },
     {
       "fourcc": "tsro",
@@ -59,7 +59,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class timescaleentry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass timeoffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass sequenceoffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
     },
     {
       "fourcc": "snro",
@@ -73,7 +73,7 @@
           "SrtpHintSampleEntry": [ "srtp" ]
         }
       ],
-      "syntax": "class timescaleentry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass timeoffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass sequenceoffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
     },
     {
       "fourcc": "trpy",
@@ -122,7 +122,7 @@
       "description": "maximum data rate",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintmaxrate extends Box('maxr') {\t// maximum data rate\n\tuint(32)\tperiod;\t\t\t// in milliseconds\n\tuint(32)\tbytes; }\t\t\t// max bytes sent in any period 'period' long including RTP headers"
+      "syntax": "aligned(8) class HintMaxRate extends Box('maxr') {\t// maximum data rate\n\tuint(32)\tperiod;\t\t\t// in milliseconds\n\tuint(32)\tbytes; }\t\t\t// max bytes sent in any period 'period' long including RTP headers"
     },
     {
       "fourcc": "dmed",
@@ -150,28 +150,28 @@
       "description": "smallest relative transmission time, milliseconds",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintminrelativetime extends Box('tmin') {\n\tint(32)\t\ttime; }\t\t// smallest relative transmission time, milliseconds\naligned(8) class hintmaxrelativetime extends Box('tmax') {\n\tint(32)\t\ttime; }\t\t// largest relative transmission time, milliseconds"
+      "syntax": "aligned(8) class HintMinRelativeTime extends Box('tmin') {\n\tint(32)\t\ttime; }\t\t// smallest relative transmission time, milliseconds\naligned(8) class HintMaxRelativeTime extends Box('tmax') {\n\tint(32)\t\ttime; }\t\t// largest relative transmission time, milliseconds"
     },
     {
       "fourcc": "tmax",
       "description": "largest relative transmission time, milliseconds",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintminrelativetime extends Box('tmin') {\n\tint(32)\t\ttime; }\t\t// smallest relative transmission time, milliseconds\naligned(8) class hintmaxrelativetime extends Box('tmax') {\n\tint(32)\t\ttime; }\t\t// largest relative transmission time, milliseconds"
+      "syntax": "aligned(8) class HintMinRelativeTime extends Box('tmin') {\n\tint(32)\t\ttime; }\t\t// smallest relative transmission time, milliseconds\naligned(8) class HintMaxRelativeTime extends Box('tmax') {\n\tint(32)\t\ttime; }\t\t// largest relative transmission time, milliseconds"
     },
     {
       "fourcc": "pmax",
       "description": "largest packet sent, including RTP header",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintlargestpacket extends Box('pmax') {\n\tuint(32)\tbytes; }\t\t\t// largest packet sent, including RTP header\naligned(8) class hintlongestpacket extends Box('dmax') {\n\tuint(32)\ttime; }\t\t\t// longest packet duration, milliseconds"
+      "syntax": "aligned(8) class HintLargestPacket extends Box('pmax') {\n\tuint(32)\tbytes; }\t\t\t// largest packet sent, including RTP header\naligned(8) class HintLongestPacket extends Box('dmax') {\n\tuint(32)\ttime; }\t\t\t// longest packet duration, milliseconds"
     },
     {
       "fourcc": "dmax",
       "description": "longest packet duration, milliseconds",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintlargestpacket extends Box('pmax') {\n\tuint(32)\tbytes; }\t\t\t// largest packet sent, including RTP header\naligned(8) class hintlongestpacket extends Box('dmax') {\n\tuint(32)\ttime; }\t\t\t// longest packet duration, milliseconds"
+      "syntax": "aligned(8) class HintLargestPacket extends Box('pmax') {\n\tuint(32)\tbytes; }\t\t\t// largest packet sent, including RTP header\naligned(8) class HintLongestPacket extends Box('dmax') {\n\tuint(32)\ttime; }\t\t\t// longest packet duration, milliseconds"
     },
     {
       "fourcc": "payt",
@@ -352,28 +352,28 @@
       "description": "Hint information",
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class trackhintinformation extends Box('hnti') {\n}\n\naligned(8) class rtptracksdphintinformation extends Box('sdp ') {\n\tchar\tsdptext[];\n}"
+      "syntax": "aligned(8) class TrackHintInformation extends Box('hnti') {\n}\n\naligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {\n\tchar\tsdptext[];\n}"
     },
     {
       "fourcc": "sdp ",
       "description": "SDP information",
       "type": "Box",
       "containers": [ "hnti" ],
-      "syntax": "aligned(8) class trackhintinformation extends Box('hnti') {\n}\n\naligned(8) class rtptracksdphintinformation extends Box('sdp ') {\n\tchar\tsdptext[];\n}"
+      "syntax": "aligned(8) class TrackHintInformation extends Box('hnti') {\n}\n\naligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {\n\tchar\tsdptext[];\n}"
     },
     {
       "fourcc": "rtp ",
       "description": "RTP information",
       "type": "Box",
       "containers": [ "hnti" ],
-      "syntax": "aligned(8) class moviehintinformation extends Box('hnti') {\n}\n\naligned(8) class rtpmoviehintinformation extends Box('rtp ') {\n\tuint(32) descriptionformat = 'sdp ';\n\tchar  sdptext[];\n}"
+      "syntax": "aligned(8) class MovieHintInformation extends Box('hnti') {\n}\n\naligned(8) class RtpMovieHintInformation extends Box('rtp ') {\n\tuint(32) descriptionformat = 'sdp ';\n\tchar  sdptext[];\n}"
     },
     {
       "fourcc": "hinf",
       "description": "hint information (statistics)",
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class hintstatisticsbox extends Box('hinf') {\n}"
+      "syntax": "aligned(8) class HintStatisticsBox extends Box('hinf') {\n}"
     },
     {
       "fourcc": "ludt",
@@ -890,7 +890,8 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class ProgressiveDownloadInfoBox\n\t\textends FullBox('pdin', version = 0, 0) {\n\tfor (i=0; ; i++) {\t// to end of box\n\t\tunsigned int(32)  rate;\n\t\tunsigned int(32)  initial_delay;\n\t}\n}"
+      "originalSyntax": "aligned(8) class ProgressiveDownloadInfoBox\n\t\textends FullBox('pdin', version = 0, 0) {\n\tfor (i=0; ; i++) {\t// to end of box\n\t\tunsigned int(32)  rate;\n\t\tunsigned int(32)  initial_delay;\n\t}\n}",
+      "syntax": "aligned(8) class ProgressiveDownloadInfoBox\n\t\textends FullBox('pdin', version = 0, 0) {\r\n\t// to end of box\r\n\tProgressiveDownloadInfoItem items[];\r\n }\r\n aligned(8) class ProgressiveDownloadInfoItem {\r\n \t\tunsigned int(32)  rate;\r\n\t\tunsigned int(32)  initial_delay;\r\n }\r\n"
     },
     {
       "fourcc": "pitm",
@@ -1387,7 +1388,8 @@
           "description": "each sample has a composition time offset"
         }
       ],
-      "syntax": "aligned(8) class TrackRunBox\r\n                extends FullBox('trun', version, tr_flags) {\r\n        unsigned int(32)\tsample_count;\r\n        // the following are optional fields\r\n        if(flags & 0x1) {\r\n           signed int(32)\tdata_offset;\r\n        }\r\n        if(flags & 0x4) {\r\n           unsigned int(32)\tfirst_sample_flags;\r\n        }\r\n        // all fields in the following array are optional\r\n        // as indicated by bits set in the tr_flags\r\n        {\r\n            if(flags & 0x100) {\r\n               unsigned int(32)\tsample_duration;\r\n            }\r\n            if(flags & 0x200) {\r\n               unsigned int(32)\tsample_size;\r\n            }\r\n            if(flags & 0x400) {\r\n               unsigned int(32)\tsample_flags;\r\n            }\r\n            if(flags & 0x800) {\r\n               if (version == 0)\r\n                   { unsigned int(32)\tsample_composition_time_offset; }\r\n               else\r\n                   { signed int(32)\t\tsample_composition_time_offset; }\r\n            }\r\n        }[ sample_count ]\r\n    }"
+      "originalSyntax": "aligned(8) class TrackRunBox\r\n                extends FullBox('trun', version, tr_flags) {\r\n        unsigned int(32)\tsample_count;\r\n        // the following are optional fields\r\n        if(flags & 0x1) {\r\n           signed int(32)\tdata_offset;\r\n        }\r\n        if(flags & 0x4) {\r\n           unsigned int(32)\tfirst_sample_flags;\r\n        }\r\n        // all fields in the following array are optional\r\n        // as indicated by bits set in the tr_flags\r\n        {\r\n            if(flags & 0x100) {\r\n               unsigned int(32)\tsample_duration;\r\n            }\r\n            if(flags & 0x200) {\r\n               unsigned int(32)\tsample_size;\r\n            }\r\n            if(flags & 0x400) {\r\n               unsigned int(32)\tsample_flags;\r\n            }\r\n            if(flags & 0x800) {\r\n               if (version == 0)\r\n                   { unsigned int(32)\tsample_composition_time_offset; }\r\n               else\r\n                   { signed int(32)\t\tsample_composition_time_offset; }\r\n            }\r\n        }[ sample_count ]\r\n    }",
+      "syntax": "aligned(8) class TrackRunBox extends FullBox('trun', version, tr_flags) {\r\n    unsigned int(32)\tsample_count;\r\n    if(flags & 0x1) {\r\n       signed int(32)\tdata_offset;\r\n    }\r\n    if(flags & 0x4) {\r\n       unsigned int(32)\tfirst_sample_flags;\r\n    }\r\n    // all fields in the following array are optional\r\n    // as indicated by bits set in the tr_flags\r\n    TrunEntry(version, flags)[ sample_count ];\r\n}\r\n\r\naligned(8) class TrunEntry(version, flags) {\r\n   if(flags & 0x100) {\r\n      unsigned int(32) sample_duration;\r\n   }\r\n   if(flags & 0x200) {\r\n      unsigned int(32) sample_size;\r\n   }\r\n   if(flags & 0x400) {\r\n      unsigned int(32) sample_flags;\r\n   }\r\n   if(flags & 0x800) \r\n   {\r\n      if (version == 0)\r\n      { \r\n          unsigned int(32) sample_composition_time_offset; \r\n      }\r\n      else\r\n      {\r\n          signed int(32) sample_composition_time_offset; \r\n      }\r\n   }\r\n}"
     },
     {
       "fourcc": "ttyp",
