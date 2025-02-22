@@ -6,7 +6,11 @@ namespace SharpMP4
 {
     public class BoxFactory
     {
-        public static Box CreateBox(string fourCC, string parent, byte[] uuid = null)
+        public static Func<string, string, byte[], Box> CreateBox = DefaultCreateBox;
+        public static Func<string, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
+        public static Func<byte, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
+
+        public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null)
         {
             if (uuid != null) fourCC = $"{fourCC} {Convert.ToHexString(uuid).ToLowerInvariant()}";
 
@@ -606,7 +610,8 @@ namespace SharpMP4
             Log.Debug($"Unknown box: '{fourCC}'");
             return new UnknownBox(IsoStream.FromFourCC(fourCC));
         }
-        public static SampleGroupDescriptionEntry CreateEntry(string fourCC)
+
+        public static SampleGroupDescriptionEntry DefaultCreateEntry(string fourCC)
         {
             switch (fourCC)
             {
@@ -669,7 +674,7 @@ namespace SharpMP4
             return new UnknownEntry(IsoStream.FromFourCC(fourCC));
         }
 
-        public static Descriptor CreateDescriptor(byte tag)
+        public static Descriptor DefaultCreateDescriptor(byte tag)
         {
             switch (tag)
             {

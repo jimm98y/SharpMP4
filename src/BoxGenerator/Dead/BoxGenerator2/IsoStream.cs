@@ -230,13 +230,6 @@ namespace SharpMP4
             return 1;
         }
 
-        internal ulong ReadBits(ulong boxSize, ulong readSize, uint count, out bool value)
-        {
-            if (count > 1) throw new ArgumentException();
-            value = ReadBit() != 0;
-            return 1;
-        }
-
         internal ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte value)
         {
             if (count > 8) throw new ArgumentException();
@@ -315,13 +308,6 @@ namespace SharpMP4
         {
             WriteBit(value ? 1 : 0);
             return 1;
-        }
-
-        internal ulong WriteBits(uint count, bool value)
-        {
-            if (count > 1)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            return WriteBit(value);
         }
 
         internal ulong WriteBits(uint count, byte value)
