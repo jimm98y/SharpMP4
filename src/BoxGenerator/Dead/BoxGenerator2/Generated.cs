@@ -157,7 +157,7 @@ namespace SharpMP4
                 case "dimm": return new hintimmediateBytesSent();
                 case "dinf": return new DataInformationBox();
                 case "disk": return new DiskNumberBox();
-                case "dmax": return new hintlongestpacket();
+                case "dmax": return new HintLongestPacket();
                 case "dmed": return new hintmediaBytesSent();
                 case "dmix": return new DownMixInstructions();
                 case "dmlp": return new MLPSpecificBox();
@@ -230,11 +230,11 @@ namespace SharpMP4
                 case "hev2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hev2")); break;
                 case "hev3": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hev3")); break;
                 case "hind": return new TrackReferenceTypeBox_hind(); // TODO: fix duplicate
-                case "hinf": return new hintstatisticsbox();
+                case "hinf": return new HintStatisticsBox();
                 case "hint": return new HintBox();
                 case "hinv": return new AppleHintVersionBox();
                 case "hmhd": return new HintMediaHeaderBox();
-                case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
+                case "hnti": return new TrackHintInformation(); // TODO: box is ambiguous in between TrackHintInformation and MovieHintInformation
                 case "href": return new HrefBox();
                 case "hvc1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hvc1")); break;
                 case "hvc2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hvc2")); break;
@@ -298,7 +298,7 @@ namespace SharpMP4
                 case "lsel": return new LayerSelectorProperty();
                 case "ludt": return new LoudnessBox();
                 case "m4ds": return new MPEG4ExtensionDescriptorsBox();
-                case "maxr": return new hintmaxrate();
+                case "maxr": return new HintMaxRate();
                 case "md5i": return new MD5IntegrityBox();
                 case "mdat": return new MediaDataBox();
                 case "mdcv": return new MasteringDisplayColourVolumeBox();
@@ -375,7 +375,7 @@ namespace SharpMP4
                 case "pitm": return new PrimaryItemBox();
                 case "pixi": return new PixelInformationProperty();
                 case "pm2t": return new ProtectedMPEG2TransportStreamSampleEntry();
-                case "pmax": return new hintlargestpacket();
+                case "pmax": return new HintLargestPacket();
                 case "prft": return new ProducerReferenceTimeBox();
                 case "priv": return new FairPlayPrivateKeyBox();
                 case "prof": return new AppleProductionApertureDimensionsBox();
@@ -400,7 +400,7 @@ namespace SharpMP4
                 case "rsrp": return new ReceivedSrtpHintSampleEntry();
                 case "rssr": return new ReceivedSsrcBox();
                 case "rtng": return new AppleRatingBox();
-                case "rtp ": return new rtpmoviehintinformation(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
+                case "rtp ": return new RtpMovieHintInformation(); // TODO: box is ambiguous in between RtpMovieHintInformation and RtpHintSampleEntry
                 case "s263": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("s263")); break;
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
@@ -413,7 +413,7 @@ namespace SharpMP4
                 case "scrb": return new ScrambleSchemeInfoBox();
                 case "sdep": return new SampleDependencyBox();
                 case "sdes": return new AppleShortDescriptionBox();
-                case "sdp ": return new rtptracksdphintinformation();
+                case "sdp ": return new RtpTrackSdpHintInformation();
                 case "sdtp": return new SampleDependencyTypeBox();
                 case "segr": return new FDSessionGroupBox();
                 case "seib": return new ScalabilityInformationSEIBox();
@@ -501,14 +501,14 @@ namespace SharpMP4
                 case "tfra": return new TrackFragmentRandomAccessBox();
                 case "thmb": return new ThmbBox();
                 case "tibr": return new TierBitRateBox();
-                case "tims": return new timescaleentry();
+                case "tims": return new TimeScaleEntry();
                 case "tiri": return new TierInfoBox();
                 case "titl": return new ThreeGPPTitleBox();
                 case "tkhd": return new TrackHeaderBox();
                 case "tlou": return new TrackLoudnessInfo();
-                case "tmax": return new hintmaxrelativetime();
+                case "tmax": return new HintMaxRelativeTime();
                 case "tmcd": return new TimeCodeBox();
-                case "tmin": return new hintminrelativetime();
+                case "tmin": return new HintMinRelativeTime();
                 case "tmpo": return new AppleBeatsPerMinuteBox();
                 case "tols": return new TargetOlsProperty();
                 case "totl": return new hintBytesSent_totl(); // TODO: fix duplicate
@@ -527,7 +527,7 @@ namespace SharpMP4
                 case "trun": return new TrackRunBox();
                 case "tsel": return new TrackSelectionBox();
                 case "tsro": return new timeoffset();
-                case "tssy": return new timestampsynchrony();
+                case "tssy": return new TimestampSynchrony();
                 case "tstb": return new TileSubTrackGroupBox();
                 case "ttyp": return new TrackTypeBox();
                 case "tven": return new TVEpisodeIDBox();
@@ -4054,15 +4054,15 @@ namespace SharpMP4
 
 
     /*
-    class timestampsynchrony() extends Box('tssy') {
+    class TimestampSynchrony() extends Box('tssy') {
         unsigned int(6) reserved;
         unsigned int(2) timestamp_sync;
     }
     */
-    public class timestampsynchrony : Box
+    public class TimestampSynchrony : Box
     {
         public const string TYPE = "tssy";
-        public override string DisplayName { get { return "timestampsynchrony"; } }
+        public override string DisplayName { get { return "TimestampSynchrony"; } }
 
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -4070,7 +4070,7 @@ namespace SharpMP4
         protected byte timestamp_sync;
         public byte TimestampSync { get { return this.timestamp_sync; } set { this.timestamp_sync = value; } }
 
-        public timestampsynchrony() : base(IsoStream.FromFourCC("tssy"))
+        public TimestampSynchrony() : base(IsoStream.FromFourCC("tssy"))
         {
         }
 
@@ -4104,21 +4104,21 @@ namespace SharpMP4
 
 
     /*
-    class timescaleentry() extends Box('tims') {
+    class TimeScaleEntry() extends Box('tims') {
         uint(32)	timescale;
     }
 
 
     */
-    public class timescaleentry : Box
+    public class TimeScaleEntry : Box
     {
         public const string TYPE = "tims";
-        public override string DisplayName { get { return "timescaleentry"; } }
+        public override string DisplayName { get { return "TimeScaleEntry"; } }
 
         protected uint timescale;
         public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
 
-        public timescaleentry() : base(IsoStream.FromFourCC("tims"))
+        public TimeScaleEntry() : base(IsoStream.FromFourCC("tims"))
         {
         }
 
@@ -4493,14 +4493,14 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintmaxrate extends Box('maxr') {	// maximum data rate
+    aligned(8) class HintMaxRate extends Box('maxr') {	// maximum data rate
         uint(32)	period;			// in milliseconds
         uint(32)	bytes; }			// max bytes sent in any period 'period' long including RTP headers
     */
-    public class hintmaxrate : Box
+    public class HintMaxRate : Box
     {
         public const string TYPE = "maxr";
-        public override string DisplayName { get { return "hintmaxrate"; } }
+        public override string DisplayName { get { return "HintMaxRate"; } }
 
         protected uint period;  //  in milliseconds
         public uint Period { get { return this.period; } set { this.period = value; } }
@@ -4508,7 +4508,7 @@ namespace SharpMP4
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
 
-        public hintmaxrate() : base(IsoStream.FromFourCC("maxr"))
+        public HintMaxRate() : base(IsoStream.FromFourCC("maxr"))
         {
         }
 
@@ -4673,19 +4673,19 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintminrelativetime extends Box('tmin') {
+    aligned(8) class HintMinRelativeTime extends Box('tmin') {
         int(32)		time; }		// smallest relative transmission time, milliseconds
 
     */
-    public class hintminrelativetime : Box
+    public class HintMinRelativeTime : Box
     {
         public const string TYPE = "tmin";
-        public override string DisplayName { get { return "hintminrelativetime"; } }
+        public override string DisplayName { get { return "HintMinRelativeTime"; } }
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
 
-        public hintminrelativetime() : base(IsoStream.FromFourCC("tmin"))
+        public HintMinRelativeTime() : base(IsoStream.FromFourCC("tmin"))
         {
         }
 
@@ -4716,18 +4716,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintmaxrelativetime extends Box('tmax') {
+    aligned(8) class HintMaxRelativeTime extends Box('tmax') {
         int(32)		time; }		// largest relative transmission time, milliseconds
     */
-    public class hintmaxrelativetime : Box
+    public class HintMaxRelativeTime : Box
     {
         public const string TYPE = "tmax";
-        public override string DisplayName { get { return "hintmaxrelativetime"; } }
+        public override string DisplayName { get { return "HintMaxRelativeTime"; } }
 
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
 
-        public hintmaxrelativetime() : base(IsoStream.FromFourCC("tmax"))
+        public HintMaxRelativeTime() : base(IsoStream.FromFourCC("tmax"))
         {
         }
 
@@ -4758,19 +4758,19 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintlargestpacket extends Box('pmax') {
+    aligned(8) class HintLargestPacket extends Box('pmax') {
         uint(32)	bytes; }			// largest packet sent, including RTP header
 
     */
-    public class hintlargestpacket : Box
+    public class HintLargestPacket : Box
     {
         public const string TYPE = "pmax";
-        public override string DisplayName { get { return "hintlargestpacket"; } }
+        public override string DisplayName { get { return "HintLargestPacket"; } }
 
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
 
-        public hintlargestpacket() : base(IsoStream.FromFourCC("pmax"))
+        public HintLargestPacket() : base(IsoStream.FromFourCC("pmax"))
         {
         }
 
@@ -4801,18 +4801,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintlongestpacket extends Box('dmax') {
+    aligned(8) class HintLongestPacket extends Box('dmax') {
         uint(32)	time; }			// longest packet duration, milliseconds
     */
-    public class hintlongestpacket : Box
+    public class HintLongestPacket : Box
     {
         public const string TYPE = "dmax";
-        public override string DisplayName { get { return "hintlongestpacket"; } }
+        public override string DisplayName { get { return "HintLongestPacket"; } }
 
         protected uint time;
         public uint Time { get { return this.time; } set { this.time = value; } }
 
-        public hintlongestpacket() : base(IsoStream.FromFourCC("dmax"))
+        public HintLongestPacket() : base(IsoStream.FromFourCC("dmax"))
         {
         }
 
@@ -6749,17 +6749,17 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class trackhintinformation extends Box('hnti') {
+    aligned(8) class TrackHintInformation extends Box('hnti') {
     }
 
 
     */
-    public class trackhintinformation : Box
+    public class TrackHintInformation : Box
     {
         public const string TYPE = "hnti";
-        public override string DisplayName { get { return "trackhintinformation"; } }
+        public override string DisplayName { get { return "TrackHintInformation"; } }
 
-        public trackhintinformation() : base(IsoStream.FromFourCC("hnti"))
+        public TrackHintInformation() : base(IsoStream.FromFourCC("hnti"))
         {
         }
 
@@ -6790,19 +6790,19 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class rtptracksdphintinformation extends Box('sdp ') {
+    aligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {
         char	sdptext[];
     }
     */
-    public class rtptracksdphintinformation : Box
+    public class RtpTrackSdpHintInformation : Box
     {
         public const string TYPE = "sdp ";
-        public override string DisplayName { get { return "rtptracksdphintinformation"; } }
+        public override string DisplayName { get { return "RtpTrackSdpHintInformation"; } }
 
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
-        public rtptracksdphintinformation() : base(IsoStream.FromFourCC("sdp "))
+        public RtpTrackSdpHintInformation() : base(IsoStream.FromFourCC("sdp "))
         {
         }
 
@@ -6833,17 +6833,17 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class moviehintinformation extends Box('hnti') {
+    aligned(8) class MovieHintInformation extends Box('hnti') {
     }
 
 
     */
-    public class moviehintinformation : Box
+    public class MovieHintInformation : Box
     {
         public const string TYPE = "hnti";
-        public override string DisplayName { get { return "moviehintinformation"; } }
+        public override string DisplayName { get { return "MovieHintInformation"; } }
 
-        public moviehintinformation() : base(IsoStream.FromFourCC("hnti"))
+        public MovieHintInformation() : base(IsoStream.FromFourCC("hnti"))
         {
         }
 
@@ -6874,15 +6874,15 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class rtpmoviehintinformation extends Box('rtp ') {
+    aligned(8) class RtpMovieHintInformation extends Box('rtp ') {
         uint(32) descriptionformat = 'sdp ';
         char  sdptext[];
     }
     */
-    public class rtpmoviehintinformation : Box
+    public class RtpMovieHintInformation : Box
     {
         public const string TYPE = "rtp ";
-        public override string DisplayName { get { return "rtpmoviehintinformation"; } }
+        public override string DisplayName { get { return "RtpMovieHintInformation"; } }
 
         protected uint descriptionformat = IsoStream.FromFourCC("sdp ");
         public uint Descriptionformat { get { return this.descriptionformat; } set { this.descriptionformat = value; } }
@@ -6890,7 +6890,7 @@ namespace SharpMP4
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
-        public rtpmoviehintinformation() : base(IsoStream.FromFourCC("rtp "))
+        public RtpMovieHintInformation() : base(IsoStream.FromFourCC("rtp "))
         {
         }
 
@@ -6927,15 +6927,15 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintstatisticsbox extends Box('hinf') {
+    aligned(8) class HintStatisticsBox extends Box('hinf') {
     }
     */
-    public class hintstatisticsbox : Box
+    public class HintStatisticsBox : Box
     {
         public const string TYPE = "hinf";
-        public override string DisplayName { get { return "hintstatisticsbox"; } }
+        public override string DisplayName { get { return "HintStatisticsBox"; } }
 
-        public hintstatisticsbox() : base(IsoStream.FromFourCC("hinf"))
+        public HintStatisticsBox() : base(IsoStream.FromFourCC("hinf"))
         {
         }
 

@@ -197,9 +197,9 @@ namespace SharpMP4
                         item.Value.First().BoxName == "MovieBox" ||
                         item.Value.First().BoxName == "MovieFragmentBox" ||
                         item.Value.First().BoxName == "SegmentIndexBox" ||
-                        item.Value.First().BoxName == "trackhintinformation" ||
+                        item.Value.First().BoxName == "TrackHintInformation" ||
                         item.Value.First().BoxName == "ViewPriorityBox" ||
-                        item.Value.First().BoxName == "rtpmoviehintinformation" ||
+                        item.Value.First().BoxName == "RtpMovieHintInformation" ||
                         item.Value.First().BoxName == "AppleName2Box"
                         )
                     {
@@ -270,9 +270,9 @@ namespace SharpMP4
                     if (item.Value.First().BoxName == "MovieBox" ||
                         item.Value.First().BoxName == "MovieFragmentBox" ||
                         item.Value.First().BoxName == "SegmentIndexBox" ||
-                        item.Value.First().BoxName == "trackhintinformation" ||
+                        item.Value.First().BoxName == "TrackHintInformation" ||
                         item.Value.First().BoxName == "ViewPriorityBox" ||
-                        item.Value.First().BoxName == "rtpmoviehintinformation")
+                        item.Value.First().BoxName == "RtpMovieHintInformation")
                     {
                         string comment = $" // TODO: box is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}";
                         factory += $"               case \"{item.Key}\": return new {item.Value.First().BoxName}();{comment}\r\n";

@@ -147,7 +147,7 @@
       "description": "RTP Hints",
       "type": "HintSampleEntry",
       "containers": [ "stsd" ],
-      "syntax": "aligned(8) class moviehintinformation extends Box('hnti') {\n}\n\naligned(8) class rtpmoviehintinformation extends Box('rtp ') {\n\tuint(32) descriptionformat = 'sdp ';\n\tchar  sdptext[];\n}"
+      "syntax": "aligned(8) class MovieHintInformation extends Box('hnti') {\n}\n\naligned(8) class RtpMovieHintInformation extends Box('rtp ') {\n\tuint(32) descriptionformat = 'sdp ';\n\tchar  sdptext[];\n}"
     },
     {
       "fourcc": "sbtt",
