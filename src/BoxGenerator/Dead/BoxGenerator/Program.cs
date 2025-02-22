@@ -592,7 +592,7 @@ namespace SharpMP4
             }
             else
             {
-                name = GetType(field as PseudoField)?.Replace("[]", "");
+                name = GetCSharpType(field as PseudoField)?.Replace("[]", "");
             }
         }
 
@@ -675,16 +675,7 @@ namespace SharpMP4
                 if (type1.ElementSizeInBits != type2.ElementSizeInBits)
                     return;
 
-                if (GetFieldType(field) == "unsigned int(64)[ entry_count ]" && GetFieldType(ret[name]) == "unsigned int(32)[ entry_count ]")
-                {
-                    ret[name] = field;
-                    return;
-                }
-                else if (GetFieldType(field) == "unsigned int(16)[3]" && GetFieldType(ret[name]) == "unsigned int(32)[3]")
-                {
-                    return;
-                }
-                else if (GetFieldType(field) == "aligned bit(1)" && GetFieldType(ret[name]) == "bit")
+                if (GetFieldType(field) == "aligned bit(1)" && GetFieldType(ret[name]) == "bit")
                 {
                     return;
                 }
@@ -747,8 +738,7 @@ namespace SharpMP4
     {
         return Parser.Workarounds.Contains(type);
     }
-
-
+    
     private static string BuildCode(PseudoClass? b, List<string> containers)
     {
         string cls = "";
@@ -1184,7 +1174,7 @@ namespace SharpMP4
                     value = "";
                 }
 
-                string tt = GetType(field as PseudoField);
+                string tt = GetCSharpType(field as PseudoField);
                 if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
                 {
                     value = "";
@@ -1238,7 +1228,7 @@ namespace SharpMP4
                     value = " " + value.Replace("'", "\"");
                 }
 
-                value = FixFourCC(value);
+                value = EscapeFourCC(value);
 
                 string name = GetFieldName(field);
                 string propertyName = name.ToPropertyCase();
@@ -1711,7 +1701,7 @@ namespace SharpMP4
             }
         }
 
-        condition = FixFourCC(condition);
+        condition = EscapeFourCC(condition);
 
         int nestedLevel = GetNestedInLoop(block);
         if (nestedLevel > 0)
@@ -1772,7 +1762,7 @@ namespace SharpMP4
                                 }
                             }
 
-                            string variableType = GetType(req);
+                            string variableType = GetCSharpType(req);
                             int indexesTypeDef = GetFieldTypeDef(req).Count(x => x == '[');
                             int indexesType = variableType.Count(x => x == '[');
                             string variableName = GetFieldName(req) + suffix;
@@ -1828,21 +1818,13 @@ namespace SharpMP4
             parts[0] = parts[0].Replace("1", "0");
             parts[1] = parts[1].Replace("=", "");
         }
-        else
-        {
-            if (!((parts[0].Contains("0") && !parts[1].Contains("=")) || (parts[0].Contains("0") && parts[1].Contains("_minus1") && parts[1].Contains("="))) &&
-                parts[1] != " i >= 0" &&
-                parts[1] != " j<=8 && num_sublayers > 1" && 
-                parts[1] != " i< numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0")
-                throw new Exception();
-        }
 
         parts[1] = parts[1].Replace("pattern_length[j]", "IsoStream.GetInt(pattern_length[j])");
         
         return $"(int {string.Join(";", parts)})";
     }
 
-    private static string FixFourCC(string value)
+    private static string EscapeFourCC(string value)
     {
         if (!string.IsNullOrEmpty(value))
         {
@@ -1872,7 +1854,7 @@ namespace SharpMP4
                 .Replace("ptl_max_temporal_id[i]+1", "(byte)(ptl_max_temporal_id[i]+1)"); // TODO: fix this workaround
 
         string csharpResult = "";
-        if (info.IsClass || info.IsEntry)
+        if (info.FieldType == ParsedBoxType.Class || info.FieldType == ParsedBoxType.Entry)
         {
             string factory;
             if (info.Type == "SampleGroupDescriptionEntry") // info.IsEntry? 
@@ -1905,19 +1887,19 @@ namespace SharpMP4
                 csharpResult = $"stream.ReadClass(boxSize, readSize, this, {factory}, ";
             }
         }
-        else if (info.IsBox)
+        else if (info.FieldType == ParsedBoxType.Box)
         {
             csharpResult = $"stream.ReadBox(boxSize, readSize, this, ";
         }
-        else if (info.IsDescriptor)
+        else if (info.FieldType == ParsedBoxType.Descriptor)
         {
             csharpResult = $"stream.ReadDescriptor(boxSize, readSize, this, ";
         }
-        else if (info.IsByteAlignment)
+        else if (info.FieldType == ParsedBoxType.ByteAlignment)
         {
             csharpResult = "stream.ReadByteAlignment(";
         }
-        else if (info.IsString)
+        else if (info.FieldType == ParsedBoxType.String)
         {
             string arraySuffix = "";
             string arrayParam = "";
@@ -1955,7 +1937,7 @@ namespace SharpMP4
                 csharpResult = $"stream.ReadStringZeroTerminated{arraySuffix}(boxSize, readSize, {arrayParam}";
             }
         }
-        else if (info.IsNumber)
+        else if (info.FieldType == ParsedBoxType.Number)
         {
             string arraySuffix = "";
             string arrayParam = "";
@@ -2046,15 +2028,15 @@ namespace SharpMP4
         var info = GetTypeInfo(field);      
 
         string csharpResult = "";
-        if (info.IsClass || info.IsEntry)
+        if (info.FieldType == ParsedBoxType.Class || info.FieldType == ParsedBoxType.Entry)
             csharpResult = "stream.WriteClass(";
-        else if (info.IsBox)
+        else if (info.FieldType == ParsedBoxType.Box)
             csharpResult = "stream.WriteBox(";
-        else if (info.IsDescriptor)
+        else if (info.FieldType == ParsedBoxType.Descriptor)
             csharpResult = "stream.WriteDescriptor(";
-        else if (info.IsByteAlignment)
+        else if (info.FieldType == ParsedBoxType.ByteAlignment)
             csharpResult = "stream.WriteByteAlignment(";
-        else if (info.IsString)
+        else if (info.FieldType == ParsedBoxType.String)
         {
             string arraySuffix = "";
             string arrayParam = "";
@@ -2092,7 +2074,7 @@ namespace SharpMP4
                 csharpResult = $"stream.WriteStringZeroTerminated{arraySuffix}({arrayParam}";
             }
         }
-        else if (info.IsNumber)
+        else if (info.FieldType == ParsedBoxType.Number)
         {
             string arraySuffix = "";
             string arrayParam = "";
@@ -2183,15 +2165,15 @@ namespace SharpMP4
         var info = GetTypeInfo(field);
 
         string csharpResult = "";
-        if(info.IsClass || info.IsEntry)
+        if(info.FieldType == ParsedBoxType.Class || info.FieldType == ParsedBoxType.Entry)
             csharpResult = "IsoStream.CalculateClassSize(value)";
-        else if(info.IsBox)
+        else if(info.FieldType == ParsedBoxType.Box)
             csharpResult = "IsoStream.CalculateBoxSize(value)";
-        else if (info.IsDescriptor)
+        else if (info.FieldType == ParsedBoxType.Descriptor)
             csharpResult = "IsoStream.CalculateDescriptorSize(value)";
-        else if (info.IsByteAlignment)
+        else if (info.FieldType == ParsedBoxType.ByteAlignment)
             csharpResult = "IsoStream.CalculateByteAlignmentSize(boxSize, value)";
-        else if(info.IsString)
+        else if(info.FieldType == ParsedBoxType.String)
         {
             if (info.Type == "MultiLanguageString")
             {
@@ -2202,7 +2184,7 @@ namespace SharpMP4
                 csharpResult = "IsoStream.CalculateStringSize(value)";
             }
         }
-        else if(info.IsNumber)
+        else if(info.FieldType == ParsedBoxType.Number)
         {
             if (info.ElementSizeInBits > 0)
             {
@@ -2246,7 +2228,7 @@ namespace SharpMP4
                 }
             }
         }
-        else if(info.Type == "string" && info.IsString == false)
+        else if(info.FieldType == ParsedBoxType.Iso639)
         {
             csharpResult = $"{info.ElementSizeInBits}";
         }
@@ -2255,41 +2237,6 @@ namespace SharpMP4
         csharpResult = csharpResult.Replace("constant_IV_size", "IsoStream.GetInt(constant_IV_size)");
 
         return csharpResult;
-    }
-
-    private static string GetType(PseudoField field)
-    {
-        var fieldType = field.Type;
-
-        bool isNumber, isFloatningPoint, isString, isSigned;
-        int arrayDimensions, fieldSize;
-        var info = GetTypeInfo(field);
-
-        string csharpType = GetCSharpType(info);
-        return csharpType;
-    }
-
-    public class FieldTypeInfo
-    {
-        public bool IsNumber { get; internal set; }
-        public bool IsFloatingPoint { get; internal set; }
-        public bool IsSigned { get; internal set; }
-        public bool IsString { get; internal set; }
-        public bool IsBox { get; internal set; }
-        public bool IsDescriptor { get; internal set; }
-        public bool IsEntry { get; internal set; }
-        public bool IsClass { get; internal set; }
-        public bool IsByteAlignment { get; internal set; }
-
-        public bool IsArray { get { return ArrayDimensions > 0; } }
-
-        public string Type { get; internal set; }
-        public int ArrayDimensions { get; internal set; }
-        public int ElementSizeInBits { get; internal set; }
-        public string ElementSizeVariable { get; internal set; }
-        public string ArrayLengthVariable { get; internal set; }
-        
-        public PseudoClass[] Ancestors { get; internal set; }
     }
 
     private static FieldTypeInfo GetTypeInfo(PseudoField field)
@@ -2304,19 +2251,19 @@ namespace SharpMP4
         {
             case "int":
                 info.ElementSizeInBits = 32; // assume standard int size
-                info.IsNumber = true;
+                info.FieldType = ParsedBoxType.Number;
                 info.IsSigned = true;
                 break;
 
             case "uint":
             case "uimsbf":
-                info.IsNumber = true;
+                info.FieldType = ParsedBoxType.Number;
                 info.IsSigned = false;
                 break;
 
             case "bit":
                 info.ElementSizeInBits = 1;
-                info.IsNumber = true;
+                info.FieldType = ParsedBoxType.Number;
                 info.IsSigned = false;
                 break;
 
@@ -2325,14 +2272,13 @@ namespace SharpMP4
             case "bslbf":
             case "vluimsbf8":
                 info.ElementSizeInBits = 8;
-                info.IsNumber = true;
+                info.FieldType = ParsedBoxType.Number;
                 info.IsSigned = false;
                 break;
 
             case "byte_alignment":
-                info.IsByteAlignment = true;
+                info.FieldType = ParsedBoxType.ByteAlignment;
                 info.ElementSizeInBits = 8;
-                info.IsNumber = true;
                 info.IsSigned = false;
                 break;
 
@@ -2340,7 +2286,7 @@ namespace SharpMP4
             case "fixedpoint1616":
                 info.ElementSizeInBits = 32;
                 info.IsFloatingPoint = true;
-                info.IsNumber = true;
+                info.FieldType = ParsedBoxType.Number;
                 info.IsSigned = true;
                 break;
 
@@ -2351,7 +2297,7 @@ namespace SharpMP4
             case "utfstring":
             case "utf8list":
             case "string":
-                info.IsString = true;
+                info.FieldType = ParsedBoxType.String;
                 break;
 
             default:
@@ -2359,7 +2305,7 @@ namespace SharpMP4
                 break;
         }
 
-        if (info.IsNumber)
+        if (info.FieldType == ParsedBoxType.Number)
         {
             switch (fieldType.Sign)
             {
@@ -2393,7 +2339,7 @@ namespace SharpMP4
         }
 
         // size
-        if (info.IsNumber && !string.IsNullOrEmpty(fieldType.Param))
+        if (info.FieldType == ParsedBoxType.Number && !string.IsNullOrEmpty(fieldType.Param))
         {
             string innerParam = fieldType.Param.Substring(1, fieldType.Param.Length - 2);
             if (innerParam.Length > 0)
@@ -2410,23 +2356,24 @@ namespace SharpMP4
             }
         }
 
-        if (info.IsNumber && info.ElementSizeInBits == 0)
+        if (info.FieldType == ParsedBoxType.Number && info.ElementSizeInBits == 0)
             throw new NotSupportedException($"{fieldType.Type} is unknown");
 
-        if (!info.IsNumber && !info.IsString && !info.IsFloatingPoint && !info.IsByteAlignment)
+        if (info.FieldType != ParsedBoxType.Number && info.FieldType != ParsedBoxType.String && !info.IsFloatingPoint && info.FieldType != ParsedBoxType.ByteAlignment)
         {
             info.Ancestors = GetClassAncestors(fieldType.Type);
 
             if (info.Ancestors.Any())
             {
                 if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Box"))
-                    info.IsBox = true;
-                else if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Descriptor") || (info.Ancestors.FirstOrDefault().Extended != null && !string.IsNullOrEmpty(info.Ancestors.FirstOrDefault().Extended.DescriptorTag)))
-                    info.IsDescriptor = true;
+                    info.FieldType = ParsedBoxType.Box;
+                else if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Descriptor") || 
+                    (info.Ancestors.FirstOrDefault().Extended != null && !string.IsNullOrEmpty(info.Ancestors.FirstOrDefault().Extended.DescriptorTag)))
+                    info.FieldType = ParsedBoxType.Descriptor;
                 else if (info.Ancestors.LastOrDefault().BoxName == "SampleGroupDescriptionEntry")
-                    info.IsEntry = true;
+                    info.FieldType = ParsedBoxType.Entry;
                 else
-                    info.IsClass = true;
+                    info.FieldType = ParsedBoxType.Class;
             }
             else
             {
@@ -2441,20 +2388,18 @@ namespace SharpMP4
                     info.Type == "SampleConstructorFromTrackGroup" ||
                     info.Type == "NALUStartInlineConstructor" 
                     )
-                    info.IsBox = true;
+                    info.FieldType = ParsedBoxType.Box;
                 else if (info.Type.EndsWith("Descriptor"))
-                    info.IsDescriptor = true;
+                    info.FieldType = ParsedBoxType.Descriptor;
                 else
-                    info.IsClass = true;
+                    info.FieldType = ParsedBoxType.Class;
             }
         }
 
         // workaround: Iso639
         if (info.Type == "int" && !info.IsSigned && info.ArrayDimensions == 1 && info.ElementSizeInBits == 5 && info.ArrayLengthVariable == "[3]")
         {
-            info.IsString = false;
-            info.IsNumber = false;
-            info.IsClass = false;
+            info.FieldType = ParsedBoxType.Iso639;
             info.ArrayDimensions = 0;
             info.ArrayLengthVariable = "";
             info.Type = "string";
@@ -2464,11 +2409,12 @@ namespace SharpMP4
         return info;
     }
 
-    private static string GetCSharpType(FieldTypeInfo info)
+    private static string GetCSharpType(PseudoField field)
     {
+        FieldTypeInfo info = GetTypeInfo(field);
         string t = "";
         int arrayDimensions = info.ArrayDimensions;
-        if (info.IsNumber)
+        if (info.FieldType == ParsedBoxType.Number)
         {
             if (!info.IsFloatingPoint)
             {
@@ -2538,12 +2484,20 @@ namespace SharpMP4
                 }
             }
         }
-        else if(info.IsString)
+        else if(info.FieldType == ParsedBoxType.String)
         {
             if (info.Type == "MultiLanguageString")
                 t = "MultiLanguageString";
             else
                 t = "BinaryUTF8String";
+        }
+        else if (info.FieldType == ParsedBoxType.Iso639)
+        {
+            t = "string";
+        }
+        else if(info.FieldType == ParsedBoxType.ByteAlignment)
+        {
+            t = "byte";
         }
         else
         {
@@ -2560,5 +2514,19 @@ namespace SharpMP4
 
     static partial void HelloFrom(string name);
 }
+public class FieldTypeInfo
+{
+    public bool IsFloatingPoint { get; internal set; }
+    public bool IsSigned { get; internal set; }
+    public ParsedBoxType FieldType { get; internal set; }
 
+    public bool IsArray { get { return ArrayDimensions > 0; } }
 
+    public string Type { get; internal set; }
+    public int ArrayDimensions { get; internal set; }
+    public int ElementSizeInBits { get; internal set; }
+    public string ElementSizeVariable { get; internal set; }
+    public string ArrayLengthVariable { get; internal set; }
+
+    public PseudoClass[] Ancestors { get; internal set; }
+}

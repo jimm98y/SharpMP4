@@ -183,10 +183,15 @@ namespace BoxGenerator
 
     public enum ParsedBoxType
     {
+        Unknown,
         Box,
         Entry,
         Descriptor,
-        Class
+        Class,
+        Number,
+        String,
+        Iso639,
+        ByteAlignment
     }
 
     [SuppressMessage("naming", "CA1724:The type name conflicts with the namespace name", Justification = "Example code")]
