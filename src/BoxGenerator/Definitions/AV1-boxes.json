@@ -1,0 +1,41 @@
+﻿{
+  "name": "Boxes",
+  "description": "Boxes (also called atoms)",
+  "entries": [
+    {
+      "fourcc": "av01",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AV1SampleEntry\r\nextends VisualSampleEntry('av01')\r\n{\r\n  AV1CodecConfigurationBox config;\r\n}\r\n"
+    },
+    {
+      "fourcc": "av1C",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AV1CodecConfigurationBox\r\nextends Box('av1C')\r\n{\r\n  AV1CodecConfigurationRecord av1Config;\r\n}\r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AV1CodecConfigurationRecord\r\n{\r\n  unsigned int(1) marker = 1;\r\n  unsigned int(7) version = 1;\r\n  unsigned int(3) seq_profile;\r\n  unsigned int(5) seq_level_idx_0;\r\n  unsigned int(1) seq_tier_0;\r\n  unsigned int(1) high_bitdepth;\r\n  unsigned int(1) twelve_bit;\r\n  unsigned int(1) monochrome;\r\n  unsigned int(1) chroma_subsampling_x;\r\n  unsigned int(1) chroma_subsampling_y;\r\n  unsigned int(2) chroma_sample_position;\r\n  unsigned int(3) reserved = 0;\r\n\r\n  unsigned int(1) initial_presentation_delay_present;\r\n  if(initial_presentation_delay_present) {\r\n    unsigned int(4) initial_presentation_delay_minus_one;\r\n  } else {\r\n    unsigned int(4) reserved = 0;\r\n  }\r\n\r\n  unsigned int(8) configOBUs[];\r\n}\r\n"
+    },
+    {
+      "fourcc": "av1f",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AV1ForwardKeyFrameSampleGroupEntry\r\nextends VisualSampleGroupEntry('av1f')\r\n{\r\n  unsigned int(8) fwd_distance;\r\n}\r\n"
+    },
+    {
+      "fourcc": "av1s",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AV1SwitchFrameSampleGroupEntry\r\nextends VisualSampleGroupEntry('av1s')\r\n{\r\n}\r\n"
+    },
+    {
+      "fourcc": "av1M",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AV1MetadataSampleGroupEntry\r\nextends VisualSampleGroupEntry('av1M')\r\n{\r\n}\r\n"
+    }
+  ]
+}

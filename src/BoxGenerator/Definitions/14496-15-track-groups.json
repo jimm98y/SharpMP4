@@ -1,0 +1,54 @@
+﻿{
+  "name": "Track Group Types",
+  "description": "Track grouping types",
+  "entries": [
+    {
+      "fourcc": "alte",
+      "description": "alternative extraction source track grouping",
+      "containers": [ "trgr" ],
+      "type": "TrackGroupTypeBox",
+      "versions": [ 0 ],
+      "flags": [
+        {
+          "name": "unique",
+          "value": "0x000001",
+          "description": "Indicates the uniqueness of track_group_id"
+        }
+      ],
+      "originalSyntax": "aligned(8) class TrackGroupTypeBox('alte') extends FullBox('alte', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}",
+      "syntax": "aligned(8) class AlteTrackGroupTypeBox() extends FullBox('alte', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}"
+    },
+    {
+      "fourcc": "cstg",
+      "description": "complete subset track grouping",
+      "containers": [ "trgr" ],
+      "type": "TrackGroupTypeBox",
+      "versions": [ 0 ],
+      "flags": [
+        {
+          "name": "unique",
+          "value": "0x000001",
+          "description": "Indicates the uniqueness of track_group_id"
+        }
+      ],
+      "originalSyntax": "aligned(8) class TrackGroupTypeBox('cstg') extends FullBox('cstg', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}",
+      "syntax": "aligned(8) class CstgTrackGroupTypeBox() extends FullBox('cstg', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}"
+    },
+    {
+      "fourcc": "snut",
+      "description": "a group of VVC subpicture tracks where the VCL NAL units of the time-aligned samples have the same NAL unit type",
+      "containers": [ "trgr" ],
+      "type": "TrackGroupTypeBox",
+      "versions": [ 0 ],
+      "flags": [
+        {
+          "name": "unique",
+          "value": "0x000001",
+          "description": "Indicates the uniqueness of track_group_id"
+        }
+      ],
+      "originalSyntax": "aligned(8) class TrackGroupTypeBox('snut') extends FullBox('snut', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}",
+      "syntax": "aligned(8) class SnutTrackGroupTypeBox() extends FullBox('snut', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+﻿{
+  "name": "Boxes",
+  "description": "Boxes (also called atoms)",
+  "entries": [
+    {
+      "fourcc": "a1op",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class OperatingPointSelectorProperty extends ItemProperty('a1op') {\r\n    unsigned int(8) op_index;\r\n}\r\n"
+    },
+    {
+      "fourcc": "a1lx",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {\r\n    unsigned int(7) reserved = 0;\r\n    unsigned int(1) large_size;\r\n    if(large_size) {\r\n       unsigned int(32) layer_size[3];\r\n    }\r\n    else {\r\n       unsigned int(16) layer_size[3];\r\n    }\r\n}"
+    }
+  ]
+}

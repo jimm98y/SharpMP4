@@ -1,0 +1,98 @@
+﻿{
+  "name": "Boxes",
+  "description": "Boxes (also called atoms)",
+  "entries": [
+    {
+      "fourcc": "uuid",
+      "containers": [ "*" ],
+      "description": "user-extension box",
+      "type": "Box",
+      "syntax": "aligned(8) class FullBox(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)\r\nextends Box(boxtype) { \r\nunsigned int(8) version = v;\r\nbit(24) flags = f;\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Sequence Entry",
+      "type": "Box",
+      "syntax": "// Sequence Entry  \r\nabstract class SampleGroupDescriptionEntry (unsigned int(32) grouping_type) \r\n{ \r\n} \r\n\r\nabstract class VisualSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n} \r\n\r\nabstract class AudioSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n} \r\n\r\nabstract class HintSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n} \r\n\r\nabstract class SubtitleSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n} \r\n\r\nabstract class TextSampleGroupEntry (unsigned int(32) grouping_type) extends \r\nSampleGroupDescriptionEntry (grouping_type) \r\n{ \r\n}"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Subtitle sample entry",
+      "type": "Box",
+      "syntax": "class SubtitleSampleEntry(codingname) extends SampleEntry (codingname) { \r\n} \r\n\r\nclass XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') { \r\n string namespace; \r\n string schema_location;  // optional \r\n string auxiliary_mime_types; // optional, required if auxiliary resources are present \r\n BitRateBox (); \r\n} \r\n\r\nclass TextSubtitleSampleEntry() extends SubtitleSampleEntry ('sbtt') { \r\n string content_encoding; // optional \r\n string mime_format; \r\n BitRateBox (); // optional \r\n TextConfigBox (); // optional \r\n}"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "loudness boxes",
+      "type": "Box",
+      "syntax": "aligned(8) class LoudnessBaseBox extends FullBox(loudnessType) { \r\nunsigned int(3) reserved = 0; \r\nunsigned int(7) downmix_ID;  // matching downmix \r\nunsigned int(6) DRC_set_ID;  // to match a DRC box \r\nsigned int(12)  bs_sample_peak_level; \r\nsigned int(12)  bs_true_peak_level; \r\nunsigned int(4) measurement_system_for_TP; \r\nunsigned int(4) reliability_for_TP; \r\nunsigned int(8) measurement_count; \r\nint i; \r\nfor (i = 1 ; i <= measurement_count; i++){ \r\n  unsigned int(8) method_definition; \r\n  unsigned int(8) method_value; \r\n  unsigned int(4) measurement_system; \r\n  unsigned int(4) reliability; \r\n } \r\n} \r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "MPEG2TS boxes",
+      "type": "Box",
+      "syntax": "class MPEG2TSSampleEntry(name) extends HintSampleEntry(name) { \r\n uint(16) hinttrackversion = 1; \r\n uint(16) highestcompatibleversion = 1; \r\n uint(8) precedingbyteslen; \r\n uint(8) trailingbyteslen; \r\n uint(1) precomputed_only_flag; \r\n uint(7) reserved; \r\n Box  additionaldata[]; \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ItemInfoExtension(unsigned int(32) extension_type)\r\n{ \r\n} \r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) { \r\n} \r\nclass SimpleTextSampleEntry(codingname) extends PlainTextSampleEntry ('stxt') { \r\n string content_encoding; // optional \r\n string mime_format; \r\n BitRateBox (); \r\n    // optional \r\n TextConfigBox (); \r\n \r\n   // optional \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class ItemProperty(property_type) extends Box(property_type){}\r\naligned(8) class ItemFullProperty(property_type, version, flags) extends FullBox(property_type, version, flags){}"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class GeneralTypeBox(code) extends Box(code) {\r\n      unsigned int(32)    major_brand;\r\n      unsigned int(32)    minor_version;\r\n      unsigned int(32)    compatible_brands[];    // to end of the box\r\n    }"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class MetaDataKeyBox extends\tBox(local_key_id) {\r\n MetaDataKeyDeclarationBox();\r\n MetaDataDatatypeBox();\t  // optional\r\n MetaDataLocaleBox();\t  // optional\r\n MetaDataSetupBox();\t  // optional\r\n MetaDataExtensionsBox();  // optional\r\n}\r\naligned(8) class MetaDataKeyDeclarationBox extends Box('keyd') {\r\n unsigned int(32) key_namespace;\r\n unsigned int(8) key_value[];\r\n}\r\n\r\naligned(8) class MetaDataLocaleBox extends Box('loca') {\r\n string locale_string;\r\n}\r\n\r\naligned(8) class MetaDataSetupBox extends Box('setu') { // 'init' instead?\r\n}\r\n\r\naligned(8) class MetaDataExtensionsBox extends Box('exte') {\r\n Box extensions[];\r\n}\r\n\r\naligned(8) class MetaDataInlineKeysPresentBox extends Box('keyi') {\r\nunsigned int(8) inlineKeyValueBoxesPresent;\r\n}\r\n\r\naligned(8) class MetaDataAccessUnit {\r\nBox boxes[];\r\n}\r\n\r\naligned(8) class MetaDataAUBox extends Box(local_key_id) {\r\n}\r\n\r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "originalSyntax": "abstract aligned(8) class SampleEntry (unsigned int(32) format) extends Box(format){ \r\nconst unsigned int(8)[6] reserved = 0; \r\nunsigned int(16) data_reference_index; \r\n}\r\n",
+      "syntax": "abstract aligned(8) class SampleEntry (unsigned int(32) format) extends Box(format){ \r\nconst unsigned int(8)[6] reservedSampleEntry = 0; \r\nunsigned int(16) data_reference_index; \r\n}\r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class SegmentIndexBox extends FullBox('sidx', version, 0) { \r\n  unsigned int(32) reference_ID; \r\n  unsigned int(32) timescale; \r\n  if (version==0) { \r\n   unsigned int(32) earliest_presentation_time; \r\n   unsigned int(32) first_offset; \r\n  }\r\n  else { \r\n   unsigned int(64) earliest_presentation_time; \r\n   unsigned int(64) first_offset; \r\n  }\r\n unsigned int(16) reserved = 0; \r\n unsigned int(16) reference_count; \r\n for(i=1; i <= reference_count; i++) \r\n {  \r\n  bit(1)   reference_type; \r\n  unsigned int(31) referenced_size; \r\n  unsigned int(32) subsegment_duration; \r\n  bit(1)    starts_with_SAP; \r\n  unsigned int(3) SAP_type; \r\n  unsigned int(28) SAP_delta_time;\r\n } \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class MovieBox extends Box('moov'){ \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class MovieFragmentBox extends Box('moof'){ \r\n} "
+    },
+    {
+      "containers": [ "*" ],
+      "description": "Metadata sample entries",
+      "type": "Box",
+      "syntax": "aligned(8) class DataEntryBaseBox(entry_type, bit(24) flags) \r\nextends FullBox(entry_type, version = 0, flags) { \r\n\r\n} "
+    }
+  ]
+}

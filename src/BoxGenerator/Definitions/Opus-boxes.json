@@ -1,0 +1,18 @@
+﻿{
+  "name": "Boxes",
+  "description": "Boxes (also called atoms)",
+  "entries": [
+    {
+      "fourcc": "Opus",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class OpusSampleEntry() extends AudioSampleEntry ('Opus'){\r\n OpusSpecificBox();\r\n }"
+    },
+    {
+      "fourcc": "dOps",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ChannelMappingTable (unsigned int(8) OutputChannelCount){\r\n unsigned int(8) StreamCount;\r\n unsigned int(8) CoupledCount;\r\n unsigned int(8 * OutputChannelCount) ChannelMapping;\r\n }\r\n\r\n aligned(8) class OpusSpecificBox extends Box('dOps'){\r\n unsigned int(8) Version;\r\n unsigned int(8) OutputChannelCount;\r\n unsigned int(16) PreSkip;\r\n unsigned int(32) InputSampleRate;\r\n signed int(16) OutputGain;\r\n unsigned int(8) ChannelMappingFamily;\r\n if (ChannelMappingFamily != 0) {\r\n ChannelMappingTable(OutputChannelCount);\r\n }\r\n }"
+    }    
+  ]
+}

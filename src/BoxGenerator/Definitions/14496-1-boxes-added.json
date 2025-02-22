@@ -1,0 +1,111 @@
+﻿{
+  "name": "Descriptors",
+  "description": "Descriptors",
+  "entries": [
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {\r\n // empty. To be filled by classes extending this class.\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag\r\n {\r\n // empty. To be filled by classes extending this class.\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {\r\n bit(16) ES_ID;\r\n bit(1) streamDependenceFlag;\r\n bit(1) URL_Flag;\r\n bit(1) OCRstreamFlag;\r\n bit(5) streamPriority;\r\n if (streamDependenceFlag)\r\n bit(16) dependsOn_ES_ID;\r\n if (URL_Flag) {\r\n bit(8) URLlength;\r\n bit(8) URLstring[URLlength];\r\n }\r\n if (OCRstreamFlag)\r\n bit(16) OCR_ES_Id;\r\n DecoderConfigDescriptor decConfigDescr;\r\n SLConfigDescriptor slConfigDescr;\r\n IPI_DescrPointer ipiPtr[0 .. 1];\r\n IP_IdentificationDataSet ipIDS[0 .. 255];\r\n IPMP_DescriptorPointer ipmpDescrPtr[0 .. 255];\r\n LanguageDescriptor langDescr[0 .. 255];\r\n QoS_Descriptor qosDescr[0 .. 1];\r\n RegistrationDescriptor regDescr[0 .. 1];\r\n ExtensionDescriptor extDescr[0 .. 255];\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {\r\n bit(8) predefined;\r\n if (predefined==0) {\r\n bit(1) useAccessUnitStartFlag;\r\n bit(1) useAccessUnitEndFlag;\r\n bit(1) useRandomAccessPointFlag;\r\n bit(1) hasRandomAccessUnitsOnlyFlag;\r\n bit(1) usePaddingFlag;\r\n bit(1) useTimeStampsFlag;\r\n bit(1) useIdleFlag;\r\n bit(1) durationFlag;\r\n bit(32) timeStampResolution;\r\n bit(32) OCRResolution;\r\n bit(8) timeStampLength; // must be <= 64\r\n bit(8) OCRLength; // must be <= 64\r\n bit(8) AU_Length; // must be <= 32\r\n bit(8) instantBitrateLength;\r\n bit(4) degradationPriorityLength;\r\n bit(5) AU_seqNumLength; // must be <= 16\r\n bit(5) packetSeqNumLength; // must be <= 16\r\n bit(2) reserved=0b11;\r\n }\r\n if (durationFlag) {\r\n bit(32) timeScale;\r\n bit(16) accessUnitDuration;\r\n bit(16) compositionUnitDuration;\r\n }\r\n if (!useTimeStampsFlag) {\r\n bit(timeStampLength) startDecodingTimeStamp;\r\n bit(timeStampLength) startCompositionTimeStamp;\r\n }\r\n bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id \r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigDescrTag {\r\n bit(8) objectTypeIndication;\r\n bit(6) streamType;\r\n bit(1) upStream;\r\n const bit(1) reserved=1;\r\n bit(24) bufferSizeDB;\r\n bit(32) maxBitrate;\r\n bit(32) avgBitrate;\r\n DecoderSpecificInfo decSpecificInfo[0 .. 1];\r\n ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor\r\n : bit(8) ProfileLevelIndicationIndexDescrTag {\r\n bit(8) profileLevelIndicationIndex;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {\r\n bit(16) IPI_ES_Id;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "abstract class IP_IdentificationDataSet extends BaseDescriptor\r\n : bit(8) tag=ContentIdentDescrTag..SupplContentIdentDescrTag\r\n {\r\n // empty. To be filled by classes extending this class.\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPointerTag {\r\n bit(8) IPMP_DescriptorID;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagStartRange..OCIDescrTagEndRange\r\n{\r\n // empty. To be filled by classes extending this class.\r\n}"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {\r\n bit(24) languageCode;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class IPMPDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {\r\n // IPMP system specific configuration information\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class OCIDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {\r\n bit(8) versionLabel = 0x01;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {\r\n int(16) headerLength;\r\n int(16) Xdensity;\r\n int(16) Ydensity;\r\n int(8) numComponents;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpecificInfoTag {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {\r\n bit(8) predefined;\r\n if (predefined==0) {\r\n QoS_Qualifier qualifiers[];\r\n }\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "abstract aligned(8) expandable(228-1) class QoS_Qualifier : bit(8) tag=0x01..0xff {\r\n // empty. To be filled by classes extending this class.\r\n }\r\n class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {\r\n unsigned int(32) MAX_DELAY;\r\n }\r\n class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {\r\n unsigned int(32) PREF_MAX_DELAY;\r\n }\r\n class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {\r\n double(32) LOSS_PROB;\r\n }\r\n class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {\r\n unsigned int(32) MAX_GAP_LOSS;\r\n }\r\n class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {\r\n unsigned int(32) MAX_AU_SIZE;\r\n }\r\n class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {\r\n unsigned int(32) AVG_AU_SIZE;\r\n }\r\n class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {\r\n unsigned int(32) MAX_AU_RATE;\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDescrTag {\r\n bit(32) formatIdentifier;\r\n bit(8) additionalIdentificationInfo[sizeOfInstance-4];\r\n }"
+    },
+    {
+      "type": "Descriptor",
+      "containers": [ "*" ],
+      "syntax": "abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrTagStartRange..ExtDescrTagEndRange {\r\n // empty. To be filled by classes extending this class.\r\n }"
+    },
+    {
+      "type": "Box",
+      "containers": [ "*" ],
+      "syntax": "aligned(8) class ESDBox\r\n extends FullBox('esds', version = 0, 0) {\r\n ES_Descriptor ES;\r\n }"
+    },
+    {
+      "type": "Box",
+      "containers": [ "*" ],
+      "syntax": "class MpegSampleEntry() extends SampleEntry ('mp4s') {\r\n Box ES;\r\n }"
+    }
+  ]
+}

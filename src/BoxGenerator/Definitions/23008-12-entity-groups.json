@@ -1,0 +1,123 @@
+﻿{
+  "name": "Entity Group Types",
+  "description": "Entity group types",
+  "entries": [
+    {
+      "fourcc": "eqiv",
+      "description": "equivalent entity grouping",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "ster",
+      "description": "Stereo entity grouping",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "aebr",
+      "description": "Auto exposure bracketing entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "afbr",
+      "description": "Flash exposure information entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "albc",
+      "description": "Album Collection entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "brst",
+      "description": "Burst image entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "iaug",
+      "description": "Image item with an audio track",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "tsyn",
+      "description": "Time-synchronized capture entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "dobr",
+      "description": "Depth of field bracketing entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "favc",
+      "description": "Favorites Collection entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "fobr",
+      "description": "Focus bracketing exposure bracketing",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "pano",
+      "description": "Panorama entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    },
+    {
+      "fourcc": "wbbr",
+      "description": "White balance bracketing entity group",
+      "versions": [ 0 ],
+      "flags": [],
+      "containers": [ "grpl" ],
+      "type": "EntityToGroupBox",
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+    }
+  ]
+}
