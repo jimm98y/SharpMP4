@@ -586,7 +586,10 @@ namespace SharpMP4
             LogBox(header);
             ulong readSize = header.GetBoxSizeInBits();
             ulong size = ReadBoxContent(header, out box); // we're currently discarding headerSize because ReadBoxContent already includes it now
-            box.SetBoxOffset(headerOffset);
+            if (box != null)
+            {
+                box.SetBoxOffset(headerOffset);
+            }
             return size;
         }
 
@@ -707,7 +710,11 @@ namespace SharpMP4
             }
 
             value = (T)box;
-            value.SetBoxOffset(headerOffset);
+
+            if (value != null)
+            {
+                value.SetBoxOffset(headerOffset);
+            }
 
             return size;
         }
