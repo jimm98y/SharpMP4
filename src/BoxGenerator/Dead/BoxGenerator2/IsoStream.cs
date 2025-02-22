@@ -592,12 +592,13 @@ namespace SharpMP4
 
         #region Boxes
 
-        public Box ReadBox()
+        public ulong ReadBox(out Box box)
         {
             SafeBoxHeader header = ReadBoxHeader();
+            LogBox(header);
             ulong readSize = header.GetBoxSizeInBits();
-            Box box = ReadBoxContent(header);
-            return box;
+            ulong size = ReadBoxContent(header, out box);
+            return size;
         }
 
         public ulong WriteBox(Box value)
@@ -668,15 +669,18 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        public Box ReadBoxContent(SafeBoxHeader header)
+        public ulong ReadBoxContent(SafeBoxHeader header, out Box box)
         {
             if (header.Type == 0 && header.Size == 0 && header.Largesize == 0)
-                return null; // all zeros, looks like 8 zero bytes padding at the end of the file
+            {
+                box = null;
+                return 0; // all zeros, looks like 8 zero bytes padding at the end of the file
+            }
 
             string fourCC = ToFourCC(header.Type);
-            var box = BoxFactory.CreateBox(fourCC, null, header.Usertype);
-            ReadBox(header, box, GetBoxSize(header) - GetHeaderSize(header));
-            return box;
+            box = BoxFactory.CreateBox(fourCC, null, header.Usertype);
+            ulong size = ReadBox(header, box, GetBoxSize(header) - GetHeaderSize(header));
+            return size;
         }
 
         public ulong WriteBoxContent(Box box)
