@@ -21,7 +21,7 @@ namespace SharpMP4
 
     public abstract class Box : IMp4Serializable, IHasBoxChildren
     {
-        public virtual string FourCC { get; set; }
+        public virtual uint FourCC { get; set; }
         public abstract string DisplayName { get; }
 
         public SafeBoxHeader Header { get; set; } 
@@ -48,18 +48,18 @@ namespace SharpMP4
 
         public Box() {  }
 
-        public Box(string boxType) 
+        public Box(uint boxType) 
         {
             FourCC = boxType;    
         }
 
-        public Box(string boxType, byte[] uuid)
+        public Box(uint boxType, byte[] uuid)
         {
             FourCC = boxType;
             Uuid = uuid;    
         }
 
-        public Box(string boxType, ulong size) : this(boxType)
+        public Box(uint boxType, ulong size) : this(boxType)
         {
             Size = size;
         }
@@ -168,7 +168,7 @@ namespace SharpMP4
         {                
         }
 
-        public UnknownBox(string boxType) : base(boxType)
+        public UnknownBox(uint boxType) : base(boxType)
         {
         }
 
@@ -199,19 +199,19 @@ namespace SharpMP4
 
     public class InvalidBox : UnknownBox
     {
-        public InvalidBox(string fourCC) : base(fourCC)
+        public InvalidBox(uint fourCC) : base(fourCC)
         {
         }
     }
 
-    public class UnknownEntry : SampleEntry
+    public class UnknownEntry : SampleGroupDescriptionEntry
     {
         public override string DisplayName { get { return nameof(UnknownEntry); } }
 
         protected StreamMarker data;
         public StreamMarker Data { get { return data; } set { data = value; } }
 
-        public UnknownEntry(string format) : base(format)
+        public UnknownEntry(uint format) : base(format)
         {
         }
 

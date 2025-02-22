@@ -121,17 +121,15 @@ partial class Program
             // determine the box type
             var ancestors = GetClassAncestors(item.Value.BoxName);
 
-            if (ancestors.Any())
-            {
-                if (item.Value.Extended != null && ancestors.LastOrDefault().Extended.BoxName != null && ancestors.LastOrDefault().Extended.BoxName.EndsWith("Box"))
-                    item.Value.ParsedBoxType = ParsedBoxType.Box;
-                else if (item.Value.Extended != null && !string.IsNullOrEmpty(item.Value.Extended.DescriptorTag))
-                    item.Value.ParsedBoxType = ParsedBoxType.Descriptor;
-                else if (item.Value.Extended != null && ancestors.LastOrDefault().Extended.BoxName != null && ancestors.LastOrDefault().Extended.BoxName.EndsWith("Entry"))
-                    item.Value.ParsedBoxType = ParsedBoxType.Entry;
-                else
-                    item.Value.ParsedBoxType = ParsedBoxType.Class;
-            }
+            // TODO: fix duplicated code
+            if (ancestors.LastOrDefault().Extended.BoxName != null && ancestors.LastOrDefault().Extended.BoxName.EndsWith("Box"))
+                item.Value.ParsedBoxType = ParsedBoxType.Box;
+            else if (ancestors.LastOrDefault().Extended.BoxName != null && ancestors.LastOrDefault().Extended.BoxName.EndsWith("Descriptor") || (ancestors.FirstOrDefault().Extended != null && !string.IsNullOrEmpty(ancestors.FirstOrDefault().Extended.DescriptorTag)))
+                item.Value.ParsedBoxType = ParsedBoxType.Descriptor;
+            else if (ancestors.LastOrDefault().BoxName == "SampleGroupDescriptionEntry")
+                item.Value.ParsedBoxType = ParsedBoxType.Entry;
+            else
+                item.Value.ParsedBoxType = ParsedBoxType.Class;
 
             // flatten fields
             var fields = FlattenFields(item.Value.Fields);
@@ -185,7 +183,7 @@ partial class Program
             }
             else if (item.Value.BoxName == "BoxHeader")
             {
-                item.Value.CtorContent = "\t\tthis.type = IsoStream.FromFourCC(boxtype);\r\n\t\tthis.usertype = extended_type;\r\n";
+                item.Value.CtorContent = "\t\tthis.type = boxtype;\r\n\t\tthis.usertype = extended_type;\r\n";
             }
             else if (item.Value.BoxName == "FullBox")
             {
@@ -232,8 +230,8 @@ partial class Program
                     else
                         boxes[item.Value.Extended.BoxType].Add(item.Value);
                 }
-                else
-                {
+                else if(item.Value.ParsedBoxType == ParsedBoxType.Entry)
+                { 
                     if (!entries.ContainsKey(item.Value.Extended.BoxType))
                         entries.Add(item.Value.Extended.BoxType, new List<PseudoClass>() { item.Value });
                     else
@@ -338,7 +336,7 @@ namespace SharpMP4
                     if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" ||
                         item.Value.Single().BoxName == "SingleItemTypeReferenceBox" || item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
                         item.Value.Single().BoxName == "TrackReferenceTypeBox")
-                        optParams = $"\"{item.Key}\"";
+                        optParams = $"IsoStream.FromFourCC(\"{item.Key}\")";
 
                     // for instance "mp4a" box can be also under the "wave" box where it has a different syntax
                     if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" || item.Value.Single().BoxName == "MpegSampleEntry")
@@ -382,7 +380,7 @@ namespace SharpMP4
 
             if(parent == ""ilst"")
             {
-                if (fourCC[0] == '\0') return new IlstKey(fourCC);
+                if (fourCC[0] == '\0') return new IlstKey(IsoStream.FromFourCC(fourCC));
             }
             else if(uuid != null)
             {
@@ -392,12 +390,12 @@ namespace SharpMP4
 
             //throw new NotImplementedException(fourCC);
             Log.Debug($""Unknown box: '{fourCC}'"");
-            return new UnknownBox(fourCC);
+            return new UnknownBox(IsoStream.FromFourCC(fourCC));
         }";
 
 
         factory += @"
-        public static IMp4Serializable CreateEntry(string fourCC)
+        public static SampleGroupDescriptionEntry CreateEntry(string fourCC)
         {
             switch(fourCC)
             {
@@ -413,7 +411,7 @@ namespace SharpMP4
                 if (item.Value.Single().BoxName == "AudioSampleEntry" || item.Value.Single().BoxName == "VisualSampleEntry" ||
                     item.Value.Single().BoxName == "SingleItemTypeReferenceBox" || item.Value.Single().BoxName == "SingleItemTypeReferenceBoxLarge" ||
                     item.Value.Single().BoxName == "TrackReferenceTypeBox")
-                    optParams = $"\"{item.Key}\"";
+                    optParams = $"IsoStream.FromFourCC(\"{item.Key}\")";
                 factory += $"               case \"{item.Key}\": return new {item.Value.Single().BoxName}({optParams});{comment}\r\n";
             }
             else
@@ -442,7 +440,7 @@ namespace SharpMP4
 
             //throw new NotImplementedException(fourCC);
             Log.Debug($""Unknown entry: '{fourCC}'"");
-            return new UnknownEntry(fourCC);
+            return new UnknownEntry(IsoStream.FromFourCC(fourCC));
         }
 ";
 
@@ -829,7 +827,7 @@ namespace SharpMP4
         var fields = b.FlattenedFields;    
                
 
-        bool hasDescriptors = fields.Select(x => GetReadMethod(GetFieldType(x)).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
+        bool hasDescriptors = fields.Select(x => GetReadMethod(x).Contains("ReadDescriptor(")).FirstOrDefault(x => x == true) != false && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox";
 
         foreach (var field in fields)
         {
@@ -843,7 +841,7 @@ namespace SharpMP4
             //  see: https://www.academia.edu/66625880/Forensic_Analysis_of_Video_Files_Using_Metadata
             //  see: https://web.archive.org/web/20220126080109/https://leo-van-stee.github.io/
             // TODO: maybe instead of lookahead, we just have to check the parents
-            cls += "\r\npublic bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == \"udta\" || ((Box)Parent).FourCC == \"trak\")); } }";
+            cls += "\r\npublic bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == IsoStream.FromFourCC(\"udta\") || ((Box)Parent).FourCC == IsoStream.FromFourCC(\"trak\"))); } }";
         }
         else if(b.BoxName == "AVCDecoderConfigurationRecord")
         {
@@ -851,7 +849,7 @@ namespace SharpMP4
         }
         else if(b.BoxName == "FullBox")
         {
-            cls += "\r\npublic FullBox(string boxtype, byte[] uuid) : base(boxtype, uuid) { }\r\n";
+            cls += "\r\npublic FullBox(uint boxtype, byte[] uuid) : base(boxtype, uuid) { }\r\n";
         }
 
         string ctorParams = "";
@@ -865,7 +863,7 @@ namespace SharpMP4
         {
             string base4cc = "";
             if (!string.IsNullOrWhiteSpace(b.Extended.BoxType))
-                base4cc = $"\"{b.Extended.BoxType}\"";
+                base4cc = $"IsoStream.FromFourCC(\"{b.Extended.BoxType}\")";
             string base4ccparams = "";
             if (b.Extended.BoxName != null && b.Extended.Parameters != null)
             {
@@ -1029,34 +1027,31 @@ namespace SharpMP4
         if (!string.IsNullOrEmpty(classType) && classType != "()")
         {
             Dictionary<string, string> map = new Dictionary<string, string>() {
-            { "(unsigned int(32) format)",          "string format" },
+            { "(unsigned int(32) format)",          "uint format" },
             { "(bit(24) flags)",                    "uint flags = 0" },
-            { "(fmt)",                              "string fmt = \"\"" },
-            { "(codingname)",                       "string codingname = \"\"" },
-            { "(handler_type)",                     "string handler_type = \"\"" },
-            { "(referenceType)",                    "string referenceType" },
-            { "(unsigned int(32) reference_type)",  "string reference_type" },
-            { "(grouping_type, version, flags)",    "string grouping_type, byte version, uint flags" },
-            { "('snut')",                           "string boxtype = \"snut\"" },
-            { "('msrc')",                           "string boxtype = \"msrc\"" },
-            { "('cstg')",                           "string boxtype = \"cstg\"" },
-            { "('alte')",                           "string boxtype = \"alte\"" },
-            { "(name)",                             "string name" },
+            { "(fmt)",                              "uint fmt = 0" },
+            { "(codingname)",                       "uint codingname = 0" },
+            { "(handler_type)",                     "uint handler_type = 0" },
+            { "(referenceType)",                    "uint referenceType" },
+            { "(unsigned int(32) reference_type)",  "uint reference_type" },
+            { "(grouping_type, version, flags)",    "uint grouping_type, byte version, uint flags" }, 
+            { "(boxtype = 'msrc')",                 "uint boxtype = 1836282467" }, // msrc
+            { "(name)",                             "uint name" },
             { "(uuid)",                             "byte[] uuid" },
-            { "(property_type)",                    "string property_type" },
+            { "(property_type)",                    "uint property_type" },
             { "(channelConfiguration)",             "int channelConfiguration" },
             { "(num_sublayers)",                    "byte num_sublayers" },
-            { "(code)",                             "string code" },
-            { "(property_type, version, flags)",    "string property_type, byte version, uint flags" },
+            { "(code)",                             "uint code" },
+            { "(property_type, version, flags)",    "uint property_type, byte version, uint flags" },
             { "(samplingFrequencyIndex, channelConfiguration, audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
             { "(samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType)", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
-            { "(unsigned int(32) extension_type)",  "string extension_type" },
+            { "(unsigned int(32) extension_type)",  "uint extension_type" },
             { "('vvcb', version, flags)",           "byte version = 0, uint flags = 0" },
-            { "(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)", "string boxtype = \"\", byte[] extended_type = null" },
-            { "(unsigned int(32) grouping_type)",   "string grouping_type" },
-            { "(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)", "string boxtype, byte v = 0, uint f = 0" },
+            { "(\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type)", "uint boxtype = 0, byte[] extended_type = null" },
+            { "(unsigned int(32) grouping_type)",   "uint grouping_type" },
+            { "(unsigned int(32) boxtype, unsigned int(8) v, bit(24) f)", "uint boxtype, byte v = 0, uint f = 0" },
             { "(unsigned int(8) OutputChannelCount)", "byte OutputChannelCount" },
-            { "(entry_type, bit(24) flags)",        "string entry_type, uint flags" },
+            { "(entry_type, bit(24) flags)",        "uint entry_type, uint flags" },
             { "(samplingFrequencyIndex)",           "int samplingFrequencyIndex" },
             { "(version, flags, Per_Sample_IV_Size)",  "byte version, uint flags, byte Per_Sample_IV_Size" },
             { "(version, flags)",                   "byte version, uint flags" },
@@ -1069,12 +1064,12 @@ namespace SharpMP4
             string joinedParams = string.Join(", ", parameters.Select(x => x.Name + (string.IsNullOrEmpty(x.Value) ? "" : " = " + x.Value)));
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
-                { "loudnessType",           "string loudnessType" },
-                { "local_key_id",           "string local_key_id" },
-                { "protocol",               "string protocol" },
+                { "loudnessType",           "uint loudnessType" },
+                { "local_key_id",           "uint local_key_id" },
+                { "protocol",               "uint protocol" },
                 { "0, 0",                   "" },
                 { "size",                   "ulong size = 0" },
-                { "type",                   "string type" },
+                { "type",                   "uint type" },
                 { "version = 0, flags",     "uint flags = 0" },
                 { "version = 0, 0",         "" },
                 { "version = 0, 1",         "" },
@@ -1275,7 +1270,7 @@ namespace SharpMP4
                     }
                 }
 
-                string readMethod = GetReadMethod(GetFieldType(field as PseudoField));
+                string readMethod = GetReadMethod(field as PseudoField);
                 if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry"
                      && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
                 {
@@ -1509,7 +1504,7 @@ namespace SharpMP4
         }
 
         string name = GetFieldName(field);
-        string m = methodType == MethodType.Read ? GetReadMethod(tt) : (methodType == MethodType.Write ? GetWriteMethod(field as PseudoField) : GetCalculateSizeMethod(field as PseudoField));
+        string m = methodType == MethodType.Read ? GetReadMethod(field as PseudoField) : (methodType == MethodType.Write ? GetWriteMethod(field as PseudoField) : GetCalculateSizeMethod(field as PseudoField));
         string typedef = "";
         typedef = GetFieldTypeDef(field);
 
@@ -1676,7 +1671,7 @@ namespace SharpMP4
 
             // fix for Apple extensions to AudioSampleEntry
             if (condition.Contains("codingname"))
-                condition = condition.Replace("codingname", "IsoStream.FromFourCC(FourCC)");
+                condition = condition.Replace("codingname", "FourCC");
         }
 
         if (!string.IsNullOrEmpty(condition))
@@ -1758,7 +1753,7 @@ namespace SharpMP4
                     {
                         foreach (var req in block.RequiresAllocation)
                         {
-                            bool hasBoxes = GetReadMethod(GetFieldType(req)).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox";
+                            bool hasBoxes = GetReadMethod(req).Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox";
                             if (hasBoxes)
                                 continue;
 
@@ -1866,8 +1861,186 @@ namespace SharpMP4
         return value;
     }
 
-    private static string GetReadMethod(string type)
+    private static string GetReadMethod(PseudoField field)
     {
+        var info = GetTypeInfo(field);
+
+        string p = "";
+        if(!string.IsNullOrEmpty(field.Type.Param))
+            p = field.Type.Param.Substring(1, field.Type.Param.Length - 2)
+                .Replace("audioObjectType", "audioObjectType.AudioObjectType")
+                .Replace("ptl_max_temporal_id[i]+1", "(byte)(ptl_max_temporal_id[i]+1)"); // TODO: fix this workaround
+
+        string csharpResult = "";
+        if (info.IsClass || info.IsEntry)
+        {
+            string factory;
+            if (info.Type == "SampleGroupDescriptionEntry") // info.IsEntry? 
+            {
+                factory = $"() => BoxFactory.CreateEntry(IsoStream.ToFourCC(grouping_type))";
+            }
+            else
+            {
+                factory = $"() => new {info.Type}({p})";
+            }
+
+            if (info.IsArray)
+            {
+                string arrayLength = info.ArrayLengthVariable.TrimStart('[').TrimEnd(']');
+
+                string[] correct = ["[ c ]", "[i]", "[j][k]", "[j]", "[grid_pos_view_id[i]]", "[i][j]", "[c]", "[f]"];
+                if (correct.Contains(info.ArrayLengthVariable))
+                {
+                    csharpResult = $"stream.ReadClass(boxSize, readSize, this, {factory}, ";
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(arrayLength))
+                        arrayLength = "uint.MaxValue";
+                    csharpResult = $"stream.ReadClass(boxSize, readSize, this, (uint)({arrayLength}), {factory}, ";
+                }
+            }
+            else
+            {
+                csharpResult = $"stream.ReadClass(boxSize, readSize, this, {factory}, ";
+            }
+        }
+        else if (info.IsBox)
+        {
+            csharpResult = $"stream.ReadBox(boxSize, readSize, this, ";
+        }
+        else if (info.IsDescriptor)
+        {
+            csharpResult = $"stream.ReadDescriptor(boxSize, readSize, this, ";
+        }
+        else if (info.IsByteAlignment)
+        {
+            csharpResult = "stream.ReadByteAlignment(";
+        }
+        else if (info.IsString)
+        {
+            string arraySuffix = "";
+            string arrayParam = "";
+
+            if (info.IsArray)
+            {
+                string arrayLength = info.ArrayLengthVariable.TrimStart('[').TrimEnd(']');
+
+                if (int.TryParse(arrayLength, out int arrayLen))
+                {
+                    arraySuffix = "Array";
+                    arrayParam = $"{arrayLength}, ";
+                }
+                else if (string.IsNullOrEmpty(arrayLength))
+                {
+                    arraySuffix = "Array";
+                    arrayParam = "";
+                }
+                else
+                {
+                    arraySuffix = "Array";
+                    arrayParam = $"(uint)({arrayLength}), ";
+                }
+
+                csharpResult = $"stream.ReadString{arraySuffix}({arrayParam}";
+            }
+
+            if (info.Type == "MultiLanguageString")
+            {
+                // TODO array
+                csharpResult = "stream.ReadStringSizeLangPrefixed(boxSize, readSize, ";
+            }
+            else
+            {
+                csharpResult = $"stream.ReadStringZeroTerminated{arraySuffix}(boxSize, readSize, {arrayParam}";
+            }
+        }
+        else if (info.IsNumber)
+        {
+            string arraySuffix = "";
+            string arrayParam = "";
+
+            if (info.IsArray)
+            {
+                string[] correct = ["[ c ]", "[i]", "[j][k]", "[j]", "[grid_pos_view_id[i]]", "[i][j]", "[c]", "[f]"];
+                if (correct.Contains(info.ArrayLengthVariable))
+                {
+                    // nothing
+                }
+                else
+                {
+                    string arrayLength = info.ArrayLengthVariable.TrimStart('[').TrimEnd(']');
+
+                    if (int.TryParse(arrayLength, out int arrayLen))
+                    {
+                        arraySuffix = "Array";
+                        arrayParam = $"boxSize, readSize, {arrayLength}, ";
+                    }
+                    else if (string.IsNullOrEmpty(arrayLength))
+                    {
+                        arraySuffix = "ArrayTillEnd";
+                        arrayParam = "boxSize, readSize, ";
+                    }
+                    else
+                    {
+                        arraySuffix = "Array";
+                        arrayParam = $"boxSize, readSize, (uint)({arrayLength}), ";
+                    }
+                }
+            }
+
+            if (!info.IsFloatingPoint)
+            {
+                if (info.ElementSizeInBits == 1)
+                {
+                    csharpResult = "stream.ReadBit(";
+                }
+                else if (info.ElementSizeInBits == -1)
+                {
+                    string elSizeVar = info.ElementSizeVariable
+                        .Replace("8 ceil(size / 8) – size", "(Math.Ceiling(size / 8d) - size) * 8")
+                        .Replace("f(pattern_size_code)", "pattern_size_code")
+                        .Replace("f(count_size_code)", "count_size_code")
+                        .Replace("f(index_size_code)", "index_size_code")
+                        ;
+                    csharpResult = $"stream.ReadBits{arraySuffix}((uint)({elSizeVar} ), ";
+                }
+                else if (info.ElementSizeInBits > 1 && info.ElementSizeInBits % 8 > 0)
+                {
+                    csharpResult = $"stream.ReadBits({info.ElementSizeInBits}, ";
+                }
+                else if (info.ElementSizeInBits % 8 == 0)
+                {
+                    if (info.IsSigned)
+                        csharpResult = $"stream.ReadInt{info.ElementSizeInBits}{arraySuffix}({arrayParam}";
+                    else
+                        csharpResult = $"stream.ReadUInt{info.ElementSizeInBits}{arraySuffix}({arrayParam}";
+                }
+            }
+            else
+            {
+                if (info.ElementSizeInBits == 32)
+                {
+                    csharpResult = "stream.ReadDouble32(";
+                }
+                else
+                {
+                    throw new NotSupportedException($"{info.Type} is unknown");
+                }
+            }
+        }
+
+        if (info.Type == "string" && !info.IsSigned && info.ArrayDimensions == 0 && info.ElementSizeInBits == 15 && info.ArrayLengthVariable == "")
+        {
+            csharpResult = $"stream.ReadIso639(";
+        }
+
+        // TODO: fix this workaround
+        csharpResult = csharpResult.Replace("constant_IV_size", "IsoStream.GetInt(constant_IV_size)");
+
+        return csharpResult;
+
+        string type = GetFieldType(field);
         Dictionary<string, string> map = new Dictionary<string, string>
         {
             { "unsigned int(64)[ entry_count ]",        "stream.ReadUInt64Array(entry_count, " },
@@ -2291,10 +2464,22 @@ namespace SharpMP4
             { "ViewIdentifierBox",                      "stream.ReadBox(boxSize, readSize, this, " },
        };
 
-        if(map.ContainsKey(type))
+        if (map.ContainsKey(type))
+        {
+            if(csharpResult != map[type])
+            {
+                Debug.WriteLine($"'{map[type]}' => '{csharpResult}'");
+            }
             return map[type];
-        else if(map.ContainsKey(type.Replace("()","")))
+        }
+        else if (map.ContainsKey(type.Replace("()", "")))
+        {
+            if (csharpResult != map[type.Replace("()", "")])
+            {
+                Debug.WriteLine($"'{map[type.Replace("()", "")]}' => '{csharpResult}'");
+            }
             return map[type.Replace("()", "")];
+        }
         else
             throw new NotSupportedException(type);
     }
@@ -2304,12 +2489,10 @@ namespace SharpMP4
         var info = GetTypeInfo(field);      
 
         string csharpResult = "";
-        if (info.IsClass)
+        if (info.IsClass || info.IsEntry)
             csharpResult = "stream.WriteClass(";
         else if (info.IsBox)
             csharpResult = "stream.WriteBox(";
-        else if (info.IsEntry)
-            csharpResult = "stream.WriteEntry(";
         else if (info.IsDescriptor)
             csharpResult = "stream.WriteDescriptor(";
         else if (info.IsByteAlignment)
@@ -2432,448 +2615,10 @@ namespace SharpMP4
             csharpResult = $"stream.WriteIso639(";
         }
 
-
         // TODO: fix this workaround
         csharpResult = csharpResult.Replace("constant_IV_size", "IsoStream.GetInt(constant_IV_size)");
 
         return csharpResult;
-
-        string type = GetFieldType(field);
-        Dictionary<string, string> map = new Dictionary<string, string>
-        {
-            { "unsigned int(64)[ entry_count ]",        "stream.WriteUInt64Array(entry_count, " },
-            { "unsigned int(64)",                       "stream.WriteUInt64(" },
-            { "unsigned int(48)",                       "stream.WriteUInt48(" },
-            { "template int(32)[9]",                    "stream.WriteInt32Array(9, " },
-            { "unsigned int(32)[ entry_count ]",        "stream.WriteUInt32Array(entry_count, " },
-            { "unsigned int(32)[3]",                    "stream.WriteUInt32Array(3, " },
-            { "unsigned int(32)",                       "stream.WriteUInt32(" },
-            { "unsigned int(31)",                       "stream.WriteBits(31, " },
-            { "unsigned_int(32)",                       "stream.WriteUInt32(" },
-            { "unsigned int(24)",                       "stream.WriteUInt24(" },
-            { "unsigned int(29)",                       "stream.WriteBits(29, " },
-            { "unsigned int(28)",                       "stream.WriteBits(28, " },
-            { "unsigned int(26)",                       "stream.WriteBits(26, " },
-            { "unsigned int(16)[i]",                    "stream.WriteUInt16(" },
-            { "unsigned int(16)[j]",                    "stream.WriteUInt16(" },
-            { "unsigned int(16)[i][j]",                 "stream.WriteUInt16(" },
-            { "unsigned int(16)",                       "stream.WriteUInt16(" },
-            { "unsigned_int(16)",                       "stream.WriteUInt16(" },
-            { "unsigned int(15)",                       "stream.WriteBits(15, " },
-            { "unsigned int(12)",                       "stream.WriteBits(12, " },
-            { "signed int(12)",                         "stream.WriteBits(12, " },
-            { "unsigned int(10)[i][j]",                 "stream.WriteBits(10, " },
-            { "unsigned int(10)[i]",                    "stream.WriteBits(10, " },
-            { "unsigned int(10)",                       "stream.WriteBits(10, " },
-            { "unsigned int(8)[ sample_count ]",        "stream.WriteUInt8Array(sample_count, " },
-            { "unsigned int(8)[length]",                "stream.WriteUInt8Array(length, " },
-            { "unsigned int(8)[32]",                    "stream.WriteUInt8Array(32, " },
-            { "unsigned int(8)[36]",                    "stream.WriteUInt8Array(36, " },
-            { "unsigned int(8)[20]",                    "stream.WriteUInt8Array(20, " },
-            { "unsigned int(8)[16]",                    "stream.WriteUInt8Array(16, " },
-            { "unsigned int(9)",                        "stream.WriteBits(9, " },
-            { "unsigned int(8)",                        "stream.WriteUInt8(" },
-            { "unsigned int(7)",                        "stream.WriteBits(7, " },
-            { "unsigned int(6)",                        "stream.WriteBits(6, " },
-            { "unsigned int(5)[3]",                     "stream.WriteIso639(" },
-            { "unsigned int(5)",                        "stream.WriteBits(5, " },
-            { "unsigned int(4)",                        "stream.WriteBits(4, " },
-            { "unsigned int(3)",                        "stream.WriteBits(3, " },
-            { "unsigned int(2)[i][j]",                  "stream.WriteBits(2, " },
-            { "unsigned int(2)",                        "stream.WriteBits(2, " },
-            { "unsigned int(1)[i]",                     "stream.WriteBit(" },
-            { "unsigned int(1)",                        "stream.WriteBit(" },
-            { "unsigned int (32)",                      "stream.WriteUInt32(" },
-            { "unsigned int(f(pattern_size_code))[i]",  "stream.WriteBits(pattern_size_code, " },
-            { "unsigned int(f(index_size_code))[i]",    "stream.WriteBits(index_size_code, " },
-            { "unsigned int(f(index_size_code))[j][k]", "stream.WriteBits(index_size_code, " },
-            { "unsigned int(f(count_size_code))[i]",    "stream.WriteBits(count_size_code, " },
-            { "unsigned int(base_offset_size*8)",       "stream.WriteUInt8Array((uint)base_offset_size, " },
-            { "unsigned int(offset_size*8)",            "stream.WriteUInt8Array((uint)offset_size, " },
-            { "unsigned int(length_size*8)",            "stream.WriteUInt8Array((uint)length_size, " },
-            { "unsigned int(index_size*8)",             "stream.WriteUInt8Array((uint)index_size, " },
-            { "unsigned int(field_size)",               "stream.WriteUInt8Array((uint)field_size, " },
-            { "unsigned int((length_size_of_traf_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_traf_num+1), " },
-            { "unsigned int((length_size_of_trun_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_trun_num+1), " },
-            { "unsigned int((length_size_of_sample_num+1) * 8)", "stream.WriteUInt8Array((uint)(length_size_of_sample_num+1), " },
-            { "unsigned int(8*size-64)",                "stream.WriteUInt8Array((uint)(size-8), " },
-            { "bit(8)[chunk_length]",                "stream.WriteUInt8Array((uint)chunk_length, " },
-            { "unsigned int(subgroupIdLen)[i]",         "stream.WriteBits((uint)subgroupIdLen, " },
-            { "const unsigned int(8)[6]",               "stream.WriteUInt8Array(6, " },
-            { "const unsigned int(32)[2]",              "stream.WriteUInt32Array(2, " },
-            { "const unsigned int(32)[3]",              "stream.WriteUInt32Array(3, " },
-            { "const unsigned int(32)",                 "stream.WriteUInt32(" },
-            { "const unsigned int(16)[3]",              "stream.WriteUInt16Array(3, " },
-            { "const unsigned int(16)",                 "stream.WriteUInt16(" },
-            { "const unsigned int(26)",                 "stream.WriteBits(26, " },
-            { "template int(32)",                       "stream.WriteInt32(" },
-            { "template int(16)",                       "stream.WriteInt16(" },
-            { "template unsigned int(30)",              "stream.WriteBits(30, " },
-            { "template unsigned int(32)",              "stream.WriteUInt32(" },
-            { "template unsigned int(16)[3]",           "stream.WriteUInt16Array(3, " },
-            { "template unsigned int(16)",              "stream.WriteUInt16(" },
-            { "template unsigned int(8)[]",             "stream.WriteUInt8ArrayTillEnd(" },
-            { "template unsigned int(8)",               "stream.WriteUInt8(" },
-            { "int(64)",                                "stream.WriteInt64(" },
-            { "int(32)",                                "stream.WriteInt32(" },
-            { "int(16)",                                "stream.WriteInt16(" },
-            { "int(8)",                                 "stream.WriteInt8(" },
-            { "int(4)",                                 "stream.WriteBits(4, " },
-            { "int",                                    "stream.WriteInt32(" },
-            { "const bit(16)",                          "stream.WriteUInt16(" },
-            { "const bit(1)",                           "stream.WriteBit(" },
-            { "bit(1)",                                 "stream.WriteBit(" },
-            { "bit(2)",                                 "stream.WriteBits(2, " },
-            { "bit(3)",                                 "stream.WriteBits(3, " },
-            { "bit(length-3)",                          "stream.WriteBits((uint)(length-3), " },
-            { "bit(length)",                            "stream.WriteBits(length, " },
-            { "bit(4)",                                 "stream.WriteBits(4, " },
-            { "bit(5)",                                 "stream.WriteBits(5, " },
-            { "bit(6)",                                 "stream.WriteBits(6, " },
-            { "bit(7)",                                 "stream.WriteBits(7, " },
-            { "bit(8)[]",                               "stream.WriteUInt8ArrayTillEnd(" },
-            { "bit(8)",                                 "stream.WriteUInt8(" },
-            { "bit(9)",                                 "stream.WriteBits(9, " },
-            { "bit(13)",                                "stream.WriteBits(13, " },
-            { "bit(14)",                                "stream.WriteBits(14, " },
-            { "bit(15)",                                "stream.WriteBits(15, " },
-            { "bit(16)[i]",                             "stream.WriteUInt16(" },
-            { "bit(16)",                                "stream.WriteUInt16(" },
-            { "bit(24)",                                "stream.WriteBits(24, " },
-            { "bit(31)",                                "stream.WriteBits(31, " },
-            { "bit(8 ceil(size / 8) \u2013 size)",      "stream.WriteUInt8Array((uint)(Math.Ceiling(size / 8d) - size), " },
-            { "bit(8* ps_nalu_length)",                 "stream.WriteUInt8Array((uint)ps_nalu_length, " },
-            { "bit(8*nalUnitLength)",                   "stream.WriteUInt8Array((uint)nalUnitLength, " },
-            { "bit(8*sequenceParameterSetLength)",      "stream.WriteUInt8Array((uint)sequenceParameterSetLength, " },
-            { "bit(8*pictureParameterSetLength)",       "stream.WriteUInt8Array((uint)pictureParameterSetLength, " },
-            { "bit(8*sequenceParameterSetExtLength)",   "stream.WriteUInt8Array((uint)sequenceParameterSetExtLength, " },
-            { "unsigned int(8*num_bytes_constraint_info - 2)", "stream.WriteBits((uint)(8*num_bytes_constraint_info - 2), " },
-            { "bit(8*nal_unit_length)",                 "stream.WriteUInt8Array((uint)nal_unit_length, " },
-            { "bit(timeStampLength)",                   "stream.WriteUInt8Array((uint)timeStampLength, " },
-            { "utf8string",                             "stream.WriteStringZeroTerminated(" },
-            { "utfstring",                              "stream.WriteStringZeroTerminated(" },
-            { "utf8list",                               "stream.WriteStringZeroTerminated(" },
-            { "boxstring",                              "stream.WriteStringZeroTerminated(" },
-            { "string",                                 "stream.WriteStringZeroTerminated(" },
-            { "bit(32)[6]",                             "stream.WriteUInt32Array(6, " },
-            { "bit(32)",                                "stream.WriteUInt32(" },
-            { "uint(32)",                               "stream.WriteUInt32(" },
-            { "uint(16)",                               "stream.WriteUInt16(" },
-            { "uint(64)",                               "stream.WriteUInt64(" },
-            { "uint(8)[32]",                            "stream.WriteUInt8Array(32, " }, // compressor_name
-            { "uint(8)",                                "stream.WriteUInt8(" },
-            { "uint(7)",                                "stream.WriteBits(7, " },
-            { "uint(1)",                                "stream.WriteBits(1, " },
-            { "signed int(64)",                       "stream.WriteInt64(" },
-            { "signed int(32)",                         "stream.WriteInt32(" },
-            { "signed int (16)",                        "stream.WriteInt16(" },
-            { "signed int(16)[grid_pos_view_id[i]]",    "stream.WriteInt16(" },
-            { "signed int(16)",                         "stream.WriteInt16(" },
-            { "signed int (8)",                         "stream.WriteInt8(" },
-            { "signed int(8)",                        "stream.WriteInt8(" },
-            { "Box()[]",                                "stream.WriteBox(" },
-            { "Box[]",                                  "stream.WriteBox(" },
-            { "Box()",                                    "stream.WriteBox(" },
-            { "Box",                                    "stream.WriteBox(" },
-            { "SchemeTypeBox",                          "stream.WriteBox(" },
-            { "SchemeInformationBox",                   "stream.WriteBox(" },
-            { "ItemPropertyContainerBox",               "stream.WriteBox(" },
-            { "ItemPropertyAssociationBox",             "stream.WriteBox(" },
-            { "ItemPropertyAssociationBox[]",           "stream.WriteBox(" },
-            { "char",                                   "stream.WriteInt8(" },
-            { "ICC_profile",                            "stream.WriteClass(" },
-            { "OriginalFormatBox(fmt)",                 "stream.WriteBox(" },
-            { "DataEntryBaseBox(entry_type, entry_flags)", "stream.WriteBox(" },
-            { "ItemInfoEntry[ entry_count ]",           "stream.WriteBox(entry_count, " },
-            { "TypeCombinationBox[]",                   "stream.WriteBox(" },
-            { "FilePartitionBox",                       "stream.WriteBox(" },
-            { "FECReservoirBox",                        "stream.WriteBox(" },
-            { "FileReservoirBox",                       "stream.WriteBox(" },
-            { "PartitionEntry[ entry_count ]",          "stream.WriteBox(entry_count, " },
-            { "FDSessionGroupBox",                      "stream.WriteBox(" },
-            { "GroupIdToNameBox",                       "stream.WriteBox(" },
-            { "base64string",                           "stream.WriteStringZeroTerminated(" },
-            { "ProtectionSchemeInfoBox",                "stream.WriteBox(" },
-            { "SingleItemTypeReferenceBox",             "stream.WriteBox(" },
-            { "SingleItemTypeReferenceBox[]",           "stream.WriteBox(" },
-            { "SingleItemTypeReferenceBoxLarge",        "stream.WriteBox(" },
-            { "SingleItemTypeReferenceBoxLarge[]",      "stream.WriteBox(" },
-            { "HandlerBox(handler_type)",               "stream.WriteBox(" },
-            { "PrimaryItemBox",                         "stream.WriteBox(" },
-            { "DataInformationBox",                     "stream.WriteBox(" },
-            { "ItemLocationBox",                        "stream.WriteBox(" },
-            { "ItemProtectionBox",                      "stream.WriteBox(" },
-            { "ItemInfoBox",                            "stream.WriteBox(" },
-            { "IPMPControlBox",                         "stream.WriteBox(" },
-            { "ItemReferenceBox",                       "stream.WriteBox(" },
-            { "ItemDataBox",                            "stream.WriteBox(" },
-            { "TrackReferenceTypeBox[]",               "stream.WriteBox(" },
-            { "MetaDataKeyBox[]",                       "stream.WriteBox(" },
-            { "TierInfoBox()",                            "stream.WriteBox(" },
-            { "TierInfoBox",                            "stream.WriteBox(" },
-            { "MultiviewRelationAttributeBox",          "stream.WriteBox(" },
-            { "TierBitRateBox()",                         "stream.WriteBox(" },
-            { "TierBitRateBox",                         "stream.WriteBox(" },
-            { "BufferingBox()",                           "stream.WriteBox(" },
-            { "BufferingBox",                           "stream.WriteBox(" },
-            { "MultiviewSceneInfoBox",                  "stream.WriteBox(" },
-            { "MVDDecoderConfigurationRecord",          "stream.WriteClass(" },
-            { "MVDDepthResolutionBox",                  "stream.WriteBox(" },
-            { "MVCDecoderConfigurationRecord()",        "stream.WriteClass(" },
-            { "AVCDecoderConfigurationRecord()",        "stream.WriteClass(" },
-            { "HEVCDecoderConfigurationRecord()",       "stream.WriteClass(" },
-            { "LHEVCDecoderConfigurationRecord()",      "stream.WriteClass(" },
-            { "SVCDecoderConfigurationRecord()",        "stream.WriteClass(" },
-            { "HEVCTileTierLevelConfigurationRecord()", "stream.WriteClass(" },
-            { "EVCDecoderConfigurationRecord()",        "stream.WriteClass(" },
-            { "VvcDecoderConfigurationRecord()",        "stream.WriteClass(" },
-            { "EVCSliceComponentTrackConfigurationRecord()", "stream.WriteClass(" },
-            { "Descriptor[0 .. 255]",                   "stream.WriteDescriptor(" },
-            { "Descriptor[count]",                      "stream.WriteDescriptor(" },
-            { "Descriptor",                             "stream.WriteDescriptor(" },
-            { "WebVTTConfigurationBox",                 "stream.WriteBox(" },
-            { "WebVTTSourceLabelBox",                   "stream.WriteBox(" },
-            { "OperatingPointsRecord",                  "stream.WriteClass(" },
-            { "VvcSubpicIDEntry",                       "stream.WriteEntry(" },
-            { "VvcSubpicOrderEntry",                    "stream.WriteEntry(" },
-            { "URIInitBox",                             "stream.WriteBox(" },
-            { "URIBox",                                 "stream.WriteBox(" },
-            { "CleanApertureBox",                       "stream.WriteBox(" },
-            { "PixelAspectRatioBox",                    "stream.WriteBox(" },
-            { "DownMixInstructions()[]",               "stream.WriteBox(" },
-            { "DRCCoefficientsBasic()[]",              "stream.WriteBox(" },
-            { "DRCInstructionsBasic()[]",              "stream.WriteBox(" },
-            { "DRCCoefficientsUniDRC()[]",             "stream.WriteBox(" },
-            { "DRCInstructionsUniDRC()[]",             "stream.WriteBox(" },
-            { "HEVCConfigurationBox",                   "stream.WriteBox(" },
-            { "LHEVCConfigurationBox",                  "stream.WriteBox(" },
-            { "AVCConfigurationBox",                    "stream.WriteBox(" },
-            { "SVCConfigurationBox",                    "stream.WriteBox(" },
-            { "ScalabilityInformationSEIBox",           "stream.WriteBox(" },
-            { "SVCPriorityAssignmentBox",               "stream.WriteBox(" },
-            { "ViewScalabilityInformationSEIBox",       "stream.WriteBox(" },
-            { "ViewIdentifierBox()",                      "stream.WriteBox(" },
-            { "MVCConfigurationBox",                    "stream.WriteBox(" },
-            { "MVCViewPriorityAssignmentBox",           "stream.WriteBox(" },
-            { "IntrinsicCameraParametersBox",           "stream.WriteBox(" },
-            { "ExtrinsicCameraParametersBox",           "stream.WriteBox(" },
-            { "MVCDConfigurationBox",                   "stream.WriteBox(" },
-            { "MVDScalabilityInformationSEIBox",        "stream.WriteBox(" },
-            { "A3DConfigurationBox",                    "stream.WriteBox(" },
-            { "VvcOperatingPointsRecord",               "stream.WriteClass(" },
-            { "VVCSubpicIDRewritingInfomationStruct()", "stream.WriteClass(" },
-            { "MPEG4ExtensionDescriptorsBox ()",        "stream.WriteBox(" },
-            { "MPEG4ExtensionDescriptorsBox()",         "stream.WriteBox(" },
-            { "MPEG4ExtensionDescriptorsBox",           "stream.WriteBox(" },
-            { "bit(8*dci_nal_unit_length)",             "stream.WriteUInt8Array((uint)dci_nal_unit_length, " },
-            { "DependencyInfo[numReferences]",          "stream.WriteClass(" },
-            { "VvcPTLRecord(0)[i]",                     "stream.WriteClass(" },
-            { "EVCSliceComponentTrackConfigurationBox", "stream.WriteBox(" },
-            { "SVCMetadataSampleConfigBox",             "stream.WriteBox(" },
-            { "SVCPriorityLayerInfoBox",                "stream.WriteBox(" },
-            { "EVCConfigurationBox",                    "stream.WriteBox(" },
-            { "VvcNALUConfigBox",                       "stream.WriteBox(" },
-            { "VvcConfigurationBox",                    "stream.WriteBox(" },
-            { "HEVCTileConfigurationBox",               "stream.WriteBox(" },
-            { "MetaDataKeyTableBox()",                  "stream.WriteBox(" },
-            { "BitRateBox()",                          "stream.WriteBox(" },
-            { "char[count]",                            "stream.WriteUInt8Array((uint)count, " },
-            { "signed int(32)[ c ]",                    "stream.WriteInt32(" },
-            { "unsigned int(8)[]",                      "stream.WriteUInt8ArrayTillEnd(" },
-            { "unsigned int(8)[i]",                     "stream.WriteUInt8(" },
-            { "unsigned int(6)[i]",                     "stream.WriteBits(6, " },
-            { "unsigned int(6)[i][j]",                  "stream.WriteBits(6, " },
-            { "unsigned int(1)[i][j]",                  "stream.WriteBits(1, " },
-            { "unsigned int(9)[i]",                     "stream.WriteBits(9, " },
-            { "unsigned int(32)[]",                     "stream.WriteUInt32ArrayTillEnd(" },
-            { "unsigned int(32)[i]",                    "stream.WriteUInt32(" },
-            { "unsigned int(32)[j]",                    "stream.WriteUInt32(" },
-            { "unsigned int(8)[j][k]",                  "stream.WriteUInt8(" },
-            { "signed int(64)[j][k]",                 "stream.WriteInt64(" },
-            { "unsigned int(8)[j]",                     "stream.WriteUInt8(" },
-            { "signed int(64)[j]",                    "stream.WriteInt64(" },
-            { "char[]",                                 "stream.WriteUInt8ArrayTillEnd(" },
-            { "string[method_count]",                   "stream.WriteStringArray(method_count, " },
-             { "ItemInfoExtension(extension_type)",                     "stream.WriteClass(" },
-            { "SampleGroupDescriptionEntry(grouping_type)",            "stream.WriteEntry(" },
-            { "SampleEntry()",                            "stream.WriteBox(" },
-            { "SampleConstructor()",                      "stream.WriteBox(" },
-            { "InlineConstructor()",                      "stream.WriteBox(" },
-            { "SampleConstructorFromTrackGroup()",        "stream.WriteBox(" },
-            { "NALUStartInlineConstructor()",             "stream.WriteBox(" },
-            { "MPEG4BitRateBox",                        "stream.WriteBox(" },
-            { "ChannelLayout()",                          "stream.WriteBox(" },
-            { "UniDrcConfigExtension()",                  "stream.WriteBox(" },
-            { "SamplingRateBox()",                        "stream.WriteBox(" },
-            { "TextConfigBox()",                          "stream.WriteBox(" },
-            { "MetaDataKeyTableBox",                    "stream.WriteBox(" },
-            { "BitRateBox",                             "stream.WriteBox(" },
-            { "CompleteTrackInfoBox",                   "stream.WriteBox(" },
-            { "TierDependencyBox()",                      "stream.WriteBox(" },
-            { "InitialParameterSetBox",                 "stream.WriteBox(" },
-            { "PriorityRangeBox()",                       "stream.WriteBox(" },
-            { "ViewPriorityBox",                        "stream.WriteBox(" },
-            { "SVCDependencyRangeBox",                  "stream.WriteBox(" },
-            { "RectRegionBox",                          "stream.WriteBox(" },
-            { "IroiInfoBox",                            "stream.WriteBox(" },
-            { "TranscodingInfoBox",                     "stream.WriteBox(" },
-            { "MetaDataKeyDeclarationBox()",              "stream.WriteBox(" },
-            { "MetaDataDatatypeBox()",                    "stream.WriteBox(" },
-            { "MetaDataLocaleBox()",                      "stream.WriteBox(" },
-            { "MetaDataSetupBox()",                       "stream.WriteBox(" },
-            { "MetaDataExtensionsBox()",                  "stream.WriteBox(" },
-            { "TrackLoudnessInfo[]",                    "stream.WriteBox(" },
-            { "AlbumLoudnessInfo[]",                    "stream.WriteBox(" },
-            { "VvcPTLRecord(num_sublayers)",            "stream.WriteClass(" },
-            { "VvcPTLRecord(ptl_max_temporal_id[i]+1)[i]", "stream.WriteClass(" },
-            { "OpusSpecificBox",                        "stream.WriteBox(" },
-            { "unsigned int(8 * OutputChannelCount)",   "stream.WriteUInt8Array((uint)OutputChannelCount, " },
-            { "ChannelMappingTable(OutputChannelCount)",                    "stream.WriteClass(" },
-            // descriptors
-            { "DecoderConfigDescriptor",                "stream.WriteDescriptor(" },
-            { "SLConfigDescriptor",                     "stream.WriteDescriptor(" },
-            { "IPI_DescrPointer[0 .. 1]",               "stream.WriteDescriptor(" },
-            { "IP_IdentificationDataSet[0 .. 255]",     "stream.WriteDescriptor(" },
-            { "IPMP_DescriptorPointer[0 .. 255]",       "stream.WriteDescriptor(" },
-            { "LanguageDescriptor[0 .. 255]",           "stream.WriteDescriptor(" },
-            { "QoS_Descriptor[0 .. 1]",                 "stream.WriteDescriptor(" },
-            { "ES_Descriptor",                          "stream.WriteDescriptor(" },
-            { "RegistrationDescriptor[0 .. 1]",         "stream.WriteDescriptor(" },
-            { "ExtensionDescriptor[0 .. 255]",          "stream.WriteDescriptor(" },
-            { "ProfileLevelIndicationIndexDescriptor[0..255]", "stream.WriteDescriptor(" },
-            { "DecoderSpecificInfo[0 .. 1]",            "stream.WriteDescriptor(" },
-            { "bit(8)[URLlength]",                      "stream.WriteUInt8Array((uint)URLlength, " },
-            { "bit(8)[sizeOfInstance-4]",               "stream.WriteUInt8Array((uint)(sizeOfInstance - 4), " },
-            { "bit(8)[sizeOfInstance-3]",               "stream.WriteUInt8Array((uint)(sizeOfInstance - 3), " },
-            { "bit(8)[size-10]",                        "stream.WriteUInt8Array((uint)(size - 10), " },
-            { "double(32)",                             "stream.WriteDouble32(" },
-            { "fixedpoint1616",                         "stream.WriteFixedPoint1616(" },
-            { "QoS_Qualifier[]",                        "stream.WriteDescriptor(" },
-            { "GetAudioObjectType()",                   "stream.WriteClass(" },
-            { "bslbf(header_size * 8)",               "stream.WriteBslbf(header_size * 8, " },
-            { "bslbf(trailer_size * 8)",              "stream.WriteBslbf(trailer_size * 8, " },
-            { "bslbf(aux_size * 8)",                  "stream.WriteBslbf(aux_size * 8, " },
-            { "bslbf(11)",                              "stream.WriteBslbf(11, " },
-            { "bslbf(5)",                               "stream.WriteBslbf(5, " },
-            { "bslbf(4)",                               "stream.WriteBslbf(4, " },
-            { "bslbf(2)",                               "stream.WriteBslbf(2, " },
-            { "bslbf(1)",                               "stream.WriteBslbf(" },
-            { "uimsbf(32)",                             "stream.WriteUimsbf(32, " },
-            { "uimsbf(24)",                             "stream.WriteUimsbf(24, " },
-            { "uimsbf(18)",                             "stream.WriteUimsbf(18, " },
-            { "uimsbf(16)",                             "stream.WriteUimsbf(16, " },
-            { "uimsbf(14)",                             "stream.WriteUimsbf(14, " },
-            { "uimsbf(12)",                             "stream.WriteUimsbf(12, " },
-            { "uimsbf(10)",                             "stream.WriteUimsbf(10, " },
-            { "uimsbf(8)",                              "stream.WriteUimsbf(8, " },
-            { "uimsbf(7)",                              "stream.WriteUimsbf(7, " },
-            { "uimsbf(6)",                              "stream.WriteUimsbf(6, " },
-            { "uimsbf(5)",                              "stream.WriteUimsbf(5, " },
-            { "uimsbf(4)",                              "stream.WriteUimsbf(4, " },
-            { "uimsbf(3)",                              "stream.WriteUimsbf(3, " },
-            { "uimsbf(2)",                              "stream.WriteUimsbf(2, " },
-            { "uimsbf(1)",                              "stream.WriteUimsbf(" },
-            { "SpatialSpecificConfig", "stream.WriteClass(" },
-            { "ALSSpecificConfig",                      "stream.WriteClass(" },
-            { "ErrorProtectionSpecificConfig",          "stream.WriteClass(" },
-            { "program_config_element",                 "stream.WriteClass(" },
-            { "byte_alignment",                         "stream.WriteByteAlignment(" },
-            { "CelpHeader(samplingFrequencyIndex)",     "stream.WriteClass(" },
-            { "CelpBWSenhHeader",                       "stream.WriteClass(" },
-            { "HVXCconfig",                             "stream.WriteClass(" },
-            { "TTS_Sequence",                           "stream.WriteClass(" },
-            { "ER_SC_CelpHeader(samplingFrequencyIndex)", "stream.WriteClass(" },
-            { "ErHVXCconfig",                           "stream.WriteClass(" },
-            { "PARAconfig",                             "stream.WriteClass(" },
-            { "HILNenexConfig",                         "stream.WriteClass(" },
-            { "HILNconfig",                             "stream.WriteClass(" },
-            { "ld_sbr_header(channelConfiguration)",                          "stream.WriteClass(" },
-            { "sbr_header",                             "stream.WriteClass(" },
-            { "uimsbf(1)[i]",                           "stream.WriteUimsbf(" },
-            { "uimsbf(8)[i]",                           "stream.WriteUimsbf(8, " },
-            { "bslbf(1)[i]",                            "stream.WriteBslbf(1, " },
-            { "uimsbf(4)[i]",                           "stream.WriteUimsbf(4, " },
-            { "uimsbf(1)[c]",                           "stream.WriteUimsbf(" },
-            { "uimsbf(32)[f]",                          "stream.WriteUimsbf(32, " },
-            { "CelpHeader",                             "stream.WriteClass(" },
-            { "ER_SC_CelpHeader",                       "stream.WriteClass(" },
-            { "uimsbf(6)[i]",                           "stream.WriteUimsbf(6, " },
-            { "uimsbf(1)[i][j]",                        "stream.WriteUimsbf(" },
-            { "uimsbf(2)[i][j]",                        "stream.WriteUimsbf(2, " },
-            { "uimsbf(4)[i][j]",                        "stream.WriteUimsbf(4, " },
-            { "uimsbf(16)[i][j]",                       "stream.WriteUimsbf(16, " },
-            { "uimsbf(7)[i][j]",                        "stream.WriteUimsbf(7, " },
-            { "uimsbf(5)[i][j]",                        "stream.WriteUimsbf(5, " },
-            { "uimsbf(6)[i][j]",                        "stream.WriteUimsbf(6, " },
-            { "AV1SampleEntry",                         "stream.WriteBox(" },
-            { "AV1CodecConfigurationBox",               "stream.WriteBox(" },
-            { "AV1CodecConfigurationRecord",            "stream.WriteClass(" },
-            { "vluimsbf8",                              "stream.WriteUimsbf(8, " },
-            { "byte(urlMIDIStream_length)",             "stream.WriteUInt8Array((uint)urlMIDIStream_length, " },
-            { "aligned bit(3)",                         "stream.WriteAlignedBits(3, " },
-            { "aligned bit(1)",                         "stream.WriteAlignedBits(1, " },
-            { "bit",                                    "stream.WriteBit(" },
-            { "unsigned int(16)[3]",                    "stream.WriteUInt16Array(3, " },
-            { "MultiLanguageString[]",                  "stream.WriteStringSizeLangPrefixed(" },
-            { "AdobeChapterRecord[]",                   "stream.WriteClass(" },
-            { "ThreeGPPKeyword[]",                      "stream.WriteClass(" },
-            { "IodsSample[]",                           "stream.WriteClass(" },
-            { "XtraTag[]",                              "stream.WriteClass(" },
-            { "XtraValue[count]",                       "stream.WriteClass(" },
-            { "TrunEntry(version, flags)[ sample_count ]",       "stream.WriteClass(" },
-            { "ViprEntry[]",                            "stream.WriteClass(" },
-            { "TrickPlayEntry[]",                       "stream.WriteClass(" },
-            { "MtdtEntry[ entry_count ]",               "stream.WriteClass(" },
-            { "RectRecord",                             "stream.WriteClass(" },
-            { "StyleRecord",                            "stream.WriteClass(" },
-            { "ProtectionSystemSpecificKeyID[count]",   "stream.WriteClass(" },
-            { "unsigned int(8)[contentIDLength]",       "stream.WriteUInt8Array((uint)contentIDLength, " },
-            { "unsigned int(8)[contentTypeLength]",     "stream.WriteUInt8Array((uint)contentTypeLength, " },
-            { "unsigned int(8)[rightsIssuerLength]",    "stream.WriteUInt8Array((uint)rightsIssuerLength, " },
-            { "unsigned int(8)[textualHeadersLength]",  "stream.WriteUInt8Array((uint)textualHeadersLength, " },
-            { "unsigned int(8)[count]",                 "stream.WriteUInt8Array((uint)count, " },
-            { "unsigned int(8)[4]",                     "stream.WriteUInt8Array((uint)4, " },
-            { "unsigned int(8)[14]",                    "stream.WriteUInt8Array((uint)14, " },
-            { "unsigned int(8)[6]",                     "stream.WriteUInt8Array((uint)6, " },
-            { "unsigned int(8)[256]",                   "stream.WriteUInt8Array((uint)256, " },
-            { "unsigned int(8)[512]",                   "stream.WriteUInt8Array((uint)512, " },
-            { "char[tagLength]",                        "stream.WriteUInt8Array((uint)tagLength, " },
-            { "unsigned int(8)[constant_IV_size]",      "stream.WriteUInt8Array((uint)constant_IV_size, " },
-            { "unsigned int(8)[length-6]",              "stream.WriteUInt8Array((uint)(length-6), " },
-            { "EC3SpecificEntry[numIndSub + 1]",        "stream.WriteClass(" },
-            { "SampleEncryptionSample(version, flags, Per_Sample_IV_Size)[sample_count]",        "stream.WriteClass(" },
-            { "unsigned int(Per_Sample_IV_Size*8)",     "stream.WriteUInt8Array((uint)Per_Sample_IV_Size, " },
-            { "SampleEncryptionSubsample(version)[subsample_count]", "stream.WriteClass(" },
-            { "CelpSpecificConfig()",                   "stream.WriteClass(" },
-            { "HvxcSpecificConfig()",                   "stream.WriteClass(" },
-            { "TTSSpecificConfig()",                    "stream.WriteClass(" },
-            { "ErrorResilientCelpSpecificConfig()",     "stream.WriteClass(" },
-            { "ErrorResilientHvxcSpecificConfig()",     "stream.WriteClass(" },
-            { "SSCSpecificConfig()",                    "stream.WriteClass(" },
-            { "DSTSpecificConfig()",                    "stream.WriteClass(" },
-            { "ELDSpecificConfig(channelConfiguration)","stream.WriteClass(" },
-            { "GASpecificConfig()",                     "stream.WriteClass(" },
-            { "StructuredAudioSpecificConfig()",        "stream.WriteClass(" },
-            { "ParametricSpecificConfig()",             "stream.WriteClass(" },
-            { "MPEG_1_2_SpecificConfig()",              "stream.WriteClass(" },
-            { "SLSSpecificConfig()",                    "stream.WriteClass(" },
-            { "SymbolicMusicSpecificConfig()",          "stream.WriteClass(" },
-            { "ViewIdentifierBox",                      "stream.WriteBox(" },
-        };
-        if (map.ContainsKey(type))
-        {
-            if (csharpResult != map[type])
-                Debug.WriteLine($"'{map[type]}' => '{csharpResult}'");
-            return map[type];
-        }
-        else if (map.ContainsKey(type.Replace("()", "")))
-        {
-            if (csharpResult != map[type.Replace("()", "")])
-                Debug.WriteLine($"'{map[type.Replace("()", "")]}' => '{csharpResult}'");
-            return map[type.Replace("()", "")];
-        }
-        else
-            throw new NotSupportedException(type);
     }
 
     private static string GetCalculateSizeMethod(PseudoField field)
@@ -2881,12 +2626,10 @@ namespace SharpMP4
         var info = GetTypeInfo(field);
 
         string csharpResult = "";
-        if(info.IsClass)
+        if(info.IsClass || info.IsEntry)
             csharpResult = "IsoStream.CalculateClassSize(value)";
         else if(info.IsBox)
             csharpResult = "IsoStream.CalculateBoxSize(value)";
-        else if(info.IsEntry)
-            csharpResult = "IsoStream.CalculateEntrySize(value)";
         else if (info.IsDescriptor)
             csharpResult = "IsoStream.CalculateDescriptorSize(value)";
         else if (info.IsByteAlignment)
@@ -3116,14 +2859,14 @@ namespace SharpMP4
         if (!info.IsNumber && !info.IsString && !info.IsFloatingPoint && !info.IsByteAlignment)
         {
             info.Ancestors = GetClassAncestors(fieldType.Type);
-            
+
             if (info.Ancestors.Any())
             {
                 if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Box"))
                     info.IsBox = true;
                 else if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Descriptor") || (info.Ancestors.FirstOrDefault().Extended != null && !string.IsNullOrEmpty(info.Ancestors.FirstOrDefault().Extended.DescriptorTag)))
                     info.IsDescriptor = true;
-                else if (info.Ancestors.LastOrDefault().Extended.BoxName != null && info.Ancestors.LastOrDefault().Extended.BoxName.EndsWith("Entry"))
+                else if (info.Ancestors.LastOrDefault().BoxName == "SampleGroupDescriptionEntry")
                     info.IsEntry = true;
                 else
                     info.IsClass = true;

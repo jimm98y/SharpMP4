@@ -69,28 +69,28 @@ namespace SharpMP4
                 case "3sib": return new MVDScalabilityInformationSEIBox();
                 case "a1lx": return new AV1LayeredImageIndexingProperty();
                 case "a1op": return new OperatingPointSelectorProperty();
-                case "a3d1": if (parent == "stsd") return new VisualSampleEntry("a3d1"); break;
-                case "a3d2": if (parent == "stsd") return new VisualSampleEntry("a3d2"); break;
-                case "a3d3": if (parent == "stsd") return new VisualSampleEntry("a3d3"); break;
-                case "a3d4": if (parent == "stsd") return new VisualSampleEntry("a3d4"); break;
+                case "a3d1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("a3d1")); break;
+                case "a3d2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("a3d2")); break;
+                case "a3d3": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("a3d3")); break;
+                case "a3d4": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("a3d4")); break;
                 case "a3dC": return new A3DConfigurationBox();
                 case "aART": return new AppleArtist2Box();
-                case "ac-3": if (parent == "stsd") return new AudioSampleEntry("ac-3"); break;
+                case "ac-3": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("ac-3")); break;
                 case "acgl": return new SubpicCommonGroupBox();
                 case "ainf": return new AssetInformationBox();
                 case "akID": return new ITunesAccountTypeBox();
-                case "alac": if (parent == "stsd") return new AudioSampleEntry("alac"); break;
+                case "alac": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("alac")); break;
                 case "alaw": return new AlawBox();
                 case "albm": return new ThreeGPPAlbumBox();
                 case "alis": return new AlisBox();
                 case "Allf": return new AppleAllfBox();
                 case "alou": return new AlbumLoudnessInfo();
-                case "alte": return new TrackGroupTypeBox_alte(); // TODO: fix duplicate
+                case "alte": return new AlteTrackGroupTypeBox();
                 case "altt": return new AccessibilityTextProperty();
                 case "amf0": return new Amf0Box();
                 case "amgl": return new SubpicMultipleGroupsBox();
                 case "amve": return new AmbientViewingEnvironmentBox();
-                case "apcn": if (parent == "stsd") return new VisualSampleEntry("apcn"); break;
+                case "apcn": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("apcn")); break;
                 case "apID": return new ITunesPurchaseAccountBox();
                 case "apmd": return new AppleApertureModeBox();
                 case "APRF": return new PspAprfBox();
@@ -99,15 +99,15 @@ namespace SharpMP4
                 case "auth": return new ThreeGPPAuthorBox();
                 case "auxC": return new AuxiliaryTypeProperty();
                 case "auxi": return new AuxiliaryTypeInfoBox();
-                case "av01": if (parent == "stsd") return new VisualSampleEntry("av01"); break;
+                case "av01": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("av01")); break;
                 case "av1C": return new AV1CodecConfigurationBox();
-                case "avc1": if (parent == "stsd") return new VisualSampleEntry("avc1"); break;
-                case "avc2": if (parent == "stsd") return new VisualSampleEntry("avc2"); break;
-                case "avc3": if (parent == "stsd") return new VisualSampleEntry("avc3"); break;
-                case "avc4": if (parent == "stsd") return new VisualSampleEntry("avc4"); break;
+                case "avc1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("avc1")); break;
+                case "avc2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("avc2")); break;
+                case "avc3": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("avc3")); break;
+                case "avc4": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("avc4")); break;
                 case "avcC": return new AVCConfigurationBox();
                 case "avcn": return new AvcNalUnitStorageBox();
-                case "avcp": if (parent == "stsd") return new VisualSampleEntry("avcp"); break;
+                case "avcp": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("avcp")); break;
                 case "bloc": return new BaseLocationBox();
                 case "brnd": return new BrandProperty();
                 case "btrt": return new BitRateBox();
@@ -118,7 +118,7 @@ namespace SharpMP4
                 case "ccid": return new OMAContentIDBox();
                 case "cclv": return new ContentColourVolumeBox();
                 case "ccst": return new CodingConstraintsBox();
-                case "cdsc": return new TrackReferenceTypeBox("cdsc");
+                case "cdsc": return new TrackReferenceTypeBox(IsoStream.FromFourCC("cdsc"));
                 case "chan": return new ChanBox();
                 case "chap": return new ChapBox();
                 case "chnl": return new ChannelLayout();
@@ -140,7 +140,7 @@ namespace SharpMP4
                 case "csch": return new CompatibleSchemeTypeBox();
                 case "csgp": return new CompactSampleToGroupBox();
                 case "cslg": return new CompositionToDecodeBox();
-                case "cstg": return new TrackGroupTypeBox_cstg(); // TODO: fix duplicate
+                case "cstg": return new CstgTrackGroupTypeBox();
                 case "ctts": return new CompositionOffsetBox();
                 case "cvru": return new OMACoverURLBox();
                 case "d263": return new H263SpecificBox();
@@ -153,7 +153,7 @@ namespace SharpMP4
                 case "devc": return new EVRCSpecificBox();
                 case "dfxp": return new DfxpSampleEntry();
                 case "dhec": return new DefaultHevcExtractorConstructorBox();
-                case "dimg": return new SingleItemTypeReferenceBox("dimg");
+                case "dimg": return new SingleItemTypeReferenceBox(IsoStream.FromFourCC("dimg"));
                 case "dimm": return new hintimmediateBytesSent();
                 case "dinf": return new DataInformationBox();
                 case "disk": return new DiskNumberBox();
@@ -166,35 +166,35 @@ namespace SharpMP4
                 case "dqcp": return new QCELPSpecificBox();
                 case "dref": return new DataReferenceBox();
                 case "drep": return new hintrepeatedBytesSent();
-                case "drmi": if (parent == "stsd") return new VisualSampleEntry("drmi"); break;
-                case "drms": if (parent == "stsd") return new AudioSampleEntry("drms"); break;
+                case "drmi": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("drmi")); break;
+                case "drms": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("drms")); break;
                 case "dscp": return new ThreeGPPDescriptionBox();
                 case "dsmv": return new SMVSpecificBox();
-                case "dtsc": if (parent == "stsd") return new AudioSampleEntry("dtsc"); break;
-                case "dtse": if (parent == "stsd") return new AudioSampleEntry("dtse"); break;
-                case "dtsh": if (parent == "stsd") return new AudioSampleEntry("dtsh"); break;
-                case "dtsl": if (parent == "stsd") return new AudioSampleEntry("dtsl"); break;
-                case "dvav": if (parent == "stsd") return new VisualSampleEntry("dvav"); break;
+                case "dtsc": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("dtsc")); break;
+                case "dtse": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("dtse")); break;
+                case "dtsh": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("dtsh")); break;
+                case "dtsl": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("dtsl")); break;
+                case "dvav": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("dvav")); break;
                 case "dvcC": return new DoViConfigurationBox();
-                case "dvhe": if (parent == "stsd") return new VisualSampleEntry("dvhe"); break;
-                case "ec-3": if (parent == "stsd") return new AudioSampleEntry("ec-3"); break;
+                case "dvhe": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("dvhe")); break;
+                case "ec-3": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("ec-3")); break;
                 case "ecam": return new ExtrinsicCameraParametersBox();
                 case "edts": return new EditBox();
                 case "egid": return new EpisodeGlobalUniqueIdBox();
                 case "elng": return new ExtendedLanguageBox();
                 case "elst": return new EditListBox();
                 case "emsg": return new EventMessageBox();
-                case "enca": if (parent == "stsd") return new AudioSampleEntry("enca"); break;
+                case "enca": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("enca")); break;
                 case "enct": return new TextSampleEntry();
-                case "encv": if (parent == "stsd") return new VisualSampleEntry("encv"); break;
+                case "encv": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("encv")); break;
                 case "enda": return new AppleEndiannessBox();
                 case "enof": return new AppleEncodedPixelsDimensionsBox();
                 case "esds": return new ESDBox();
                 case "etyp": return new ExtendedTypeBox();
-                case "evc1": if (parent == "stsd") return new VisualSampleEntry("evc1"); break;
+                case "evc1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("evc1")); break;
                 case "evcC": return new EVCConfigurationBox();
-                case "evs1": if (parent == "stsd") return new VisualSampleEntry("evs1"); break;
-                case "evs2": if (parent == "stsd") return new VisualSampleEntry("evs2"); break;
+                case "evs1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("evs1")); break;
+                case "evs2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("evs2")); break;
                 case "evsC": return new EVCSliceComponentTrackConfigurationBox();
                 case "exte": return new MetaDataExtensionsBox();
                 case "fade": return new FadeTransitionEffectProperty();
@@ -226,9 +226,9 @@ namespace SharpMP4
                 case "h263": return new H263Box();
                 case "hdlr": return new HandlerBox();
                 case "hdvd": return new HdvdBox();
-                case "hev1": if (parent == "stsd") return new VisualSampleEntry("hev1"); break;
-                case "hev2": if (parent == "stsd") return new VisualSampleEntry("hev2"); break;
-                case "hev3": if (parent == "stsd") return new VisualSampleEntry("hev3"); break;
+                case "hev1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hev1")); break;
+                case "hev2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hev2")); break;
+                case "hev3": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hev3")); break;
                 case "hind": return new TrackReferenceTypeBox_hind(); // TODO: fix duplicate
                 case "hinf": return new hintstatisticsbox();
                 case "hint": return new HintBox();
@@ -236,17 +236,17 @@ namespace SharpMP4
                 case "hmhd": return new HintMediaHeaderBox();
                 case "hnti": return new trackhintinformation(); // TODO: box is ambiguous in between trackhintinformation and moviehintinformation
                 case "href": return new HrefBox();
-                case "hvc1": if (parent == "stsd") return new VisualSampleEntry("hvc1"); break;
-                case "hvc2": if (parent == "stsd") return new VisualSampleEntry("hvc2"); break;
-                case "hvc3": if (parent == "stsd") return new VisualSampleEntry("hvc3"); break;
+                case "hvc1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hvc1")); break;
+                case "hvc2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hvc2")); break;
+                case "hvc3": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hvc3")); break;
                 case "hvcC": return new HEVCConfigurationBox();
-                case "hvt1": if (parent == "stsd") return new VisualSampleEntry("hvt1"); break;
-                case "hvt2": if (parent == "stsd") return new VisualSampleEntry("hvt2"); break;
-                case "hvt3": if (parent == "stsd") return new VisualSampleEntry("hvt3"); break;
+                case "hvt1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hvt1")); break;
+                case "hvt2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hvt2")); break;
+                case "hvt3": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("hvt3")); break;
                 case "hvtC": return new HEVCTileConfigurationBox();
                 case "icam": return new IntrinsicCameraParametersBox();
                 case "icnu": return new OMAIconURLBox();
-                case "icpv": if (parent == "stsd") return new VisualSampleEntry("icpv"); break;
+                case "icpv": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("icpv")); break;
                 case "id32": return new ID3TagBox();
                 case "idat": return new ItemDataBox();
                 case "ienc": return new ItemEncryptionBox();
@@ -285,15 +285,15 @@ namespace SharpMP4
                 case "ldep": return new TierDependencyBox();
                 case "ldes": return new AppleLongDescriptionBox();
                 case "leva": return new LevelAssignmentBox();
-                case "lhe1": if (parent == "stsd") return new VisualSampleEntry("lhe1"); break;
-                case "lht1": if (parent == "stsd") return new VisualSampleEntry("lht1"); break;
-                case "lhv1": if (parent == "stsd") return new VisualSampleEntry("lhv1"); break;
+                case "lhe1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("lhe1")); break;
+                case "lht1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("lht1")); break;
+                case "lhv1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("lhv1")); break;
                 case "lhvC": return new LHEVCConfigurationBox();
                 case "load": return new LoadBox();
                 case "loca": return new MetaDataLocaleBox();
                 case "loci": return new ThreeGPPLocationInformationBox();
                 case "LOOP": return new AppleLOOPBox();
-                case "lpcm": if (parent == "stsd") return new AudioSampleEntry("lpcm"); break;
+                case "lpcm": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("lpcm")); break;
                 case "lrcu": return new OMALyricsURLBox();
                 case "lsel": return new LayerSelectorProperty();
                 case "ludt": return new LoudnessBox();
@@ -319,29 +319,28 @@ namespace SharpMP4
                 case "mfra": return new MovieFragmentRandomAccessBox();
                 case "mfro": return new MovieFragmentRandomAccessOffsetBox();
                 case "minf": return new MediaInformationBox();
-                case "mlpa": if (parent == "stsd") return new AudioSampleEntry("mlpa"); break;
+                case "mlpa": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("mlpa")); break;
                 case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
                 case "moov": return new MovieBox(); // TODO: box is ambiguous in between MovieBox and CompressedMovieBox
-                case "mp4a": if (parent == "stsd") return new AudioSampleEntry("mp4a"); break;
+                case "mp4a": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("mp4a")); break;
                 case "mp4s": if (parent == "stsd") return new MpegSampleEntry(); break;
-                case "mp4v": if (parent == "stsd") return new VisualSampleEntry("mp4v"); break;
+                case "mp4v": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mp4v")); break;
                 case "mpod": return new MpodBox();
                 case "mskC": return new MaskConfigurationProperty();
-                case "msrc": return new TrackGroupTypeBox();
                 case "mstv": return new MVCSubTrackViewBox();
                 case "MTDT": return new PspMtdtBox();
-                case "mvc1": if (parent == "stsd") return new VisualSampleEntry("mvc1"); break;
-                case "mvc2": if (parent == "stsd") return new VisualSampleEntry("mvc2"); break;
-                case "mvc3": if (parent == "stsd") return new VisualSampleEntry("mvc3"); break;
-                case "mvc4": if (parent == "stsd") return new VisualSampleEntry("mvc4"); break;
+                case "mvc1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mvc1")); break;
+                case "mvc2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mvc2")); break;
+                case "mvc3": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mvc3")); break;
+                case "mvc4": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mvc4")); break;
                 case "mvcC": return new MVCConfigurationBox();
                 case "mvcg": return new MultiviewGroupBox();
                 case "mvci": return new MultiviewInformationBox();
                 case "mvcP": return new MVCViewPriorityAssignmentBox();
-                case "mvd1": if (parent == "stsd") return new VisualSampleEntry("mvd1"); break;
-                case "mvd2": if (parent == "stsd") return new VisualSampleEntry("mvd2"); break;
-                case "mvd3": if (parent == "stsd") return new VisualSampleEntry("mvd3"); break;
-                case "mvd4": if (parent == "stsd") return new VisualSampleEntry("mvd4"); break;
+                case "mvd1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mvd1")); break;
+                case "mvd2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mvd2")); break;
+                case "mvd3": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mvd3")); break;
+                case "mvd4": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("mvd4")); break;
                 case "mvdC": return new MVCDConfigurationBox();
                 case "mvex": return new MovieExtendsBox();
                 case "mvhd": return new MovieHeaderBox();
@@ -361,10 +360,10 @@ namespace SharpMP4
                 case "ohdr": return new OMACommonHeadersBox();
                 case "oinf": return new OperatingPointsInformationProperty();
                 case "opeg": return new OperatingPointGroupBox();
-                case "Opus": if (parent == "stsd") return new AudioSampleEntry("Opus"); break;
+                case "Opus": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("Opus")); break;
                 case "otyp": return new OriginalFileTypeBox();
                 case "ovc1": return new Ovc1VisualSampleEntryImpl();
-                case "owma": if (parent == "stsd") return new AudioSampleEntry("owma"); break;
+                case "owma": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("owma")); break;
                 case "padb": return new PaddingBitsBox();
                 case "paen": return new PartitionEntry();
                 case "pasp": return new PixelAspectRatioBox();
@@ -387,8 +386,8 @@ namespace SharpMP4
                 case "qlif": return new SVCPriorityLayerInfoBox();
                 case "raw ": return new RawBox();
                 case "rdrf": return new AppleDataReferenceBox();
-                case "resa": if (parent == "stsd") return new AudioSampleEntry("resa"); break;
-                case "resv": if (parent == "stsd") return new VisualSampleEntry("resv"); break;
+                case "resa": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("resa")); break;
+                case "resv": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("resv")); break;
                 case "rinf": return new RestrictedSchemeInfoBox();
                 case "rloc": return new RelativeLocationProperty();
                 case "rm2t": return new MPEG2TSReceptionSampleEntry();
@@ -402,11 +401,11 @@ namespace SharpMP4
                 case "rssr": return new ReceivedSsrcBox();
                 case "rtng": return new AppleRatingBox();
                 case "rtp ": return new rtpmoviehintinformation(); // TODO: box is ambiguous in between rtpmoviehintinformation and RtpHintSampleEntry
-                case "s263": if (parent == "stsd") return new VisualSampleEntry("s263"); break;
+                case "s263": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("s263")); break;
                 case "saio": return new SampleAuxiliaryInformationOffsetsBox();
                 case "saiz": return new SampleAuxiliaryInformationSizesBox();
-                case "samr": if (parent == "stsd") return new AudioSampleEntry("samr"); break;
-                case "sawb": if (parent == "stsd") return new AudioSampleEntry("sawb"); break;
+                case "samr": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("samr")); break;
+                case "sawb": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("sawb")); break;
                 case "sbgp": return new SampleToGroupBox();
                 case "sbtt": return new TextSubtitleSampleEntry();
                 case "schi": return new SchemeInformationBox();
@@ -422,7 +421,7 @@ namespace SharpMP4
                 case "SelO": return new AppleSelOBox();
                 case "senc": return new SampleEncryptionBox();
                 case "setu": return new MetaDataSetupBox();
-                case "sevc": if (parent == "stsd") return new AudioSampleEntry("sevc"); break;
+                case "sevc": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("sevc")); break;
                 case "sfID": return new ITunesCountryCodeBox();
                 case "sgpd": return new SampleGroupDescriptionBox();
                 case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
@@ -434,24 +433,24 @@ namespace SharpMP4
                 case "SMI ": return new SMIBox();
                 case "snim": return new DataEntrySeqNumImdaBox();
                 case "snro": return new sequenceoffset();
-                case "snut": return new TrackGroupTypeBox_snut(); // TODO: fix duplicate
+                case "snut": return new SnutTrackGroupTypeBox();
                 case "soaa": return new AlbumArtistSortBox();
                 case "soal": return new AlbumSortBox();
                 case "soar": return new ArtistSortBox();
                 case "soco": return new ComposerSortBox();
                 case "sonm": return new TrackSortBox();
                 case "sosn": return new TVShowSortBox();
-                case "sowt": if (parent == "stsd") return new AudioSampleEntry("sowt"); break;
+                case "sowt": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("sowt")); break;
                 case "spid": return new VvcSubpicIDProperty();
                 case "splt": return new SplitTransitionEffectProperty();
                 case "spor": return new VvcSubpicOrderProperty();
-                case "sqcp": if (parent == "stsd") return new AudioSampleEntry("sqcp"); break;
+                case "sqcp": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("sqcp")); break;
                 case "srat": return new SamplingRateBox();
                 case "srpp": return new SRTPProcessBox();
                 case "srtp": return new SrtpHintSampleEntry();
                 case "ssix": return new CompressedSubsegmentIndexBox();
                 case "ssld": return new SuggestedTimeDisplayDurationProperty();
-                case "ssmv": if (parent == "stsd") return new AudioSampleEntry("ssmv"); break;
+                case "ssmv": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("ssmv")); break;
                 case "sstl": return new SVCSubTrackLayerBox();
                 case "stbl": return new SampleTableBox();
                 case "stco": return new ChunkOffsetBox();
@@ -480,8 +479,8 @@ namespace SharpMP4
                 case "styp": return new SegmentTypeBox();
                 case "stz2": return new CompactSampleSizeBox();
                 case "subs": return new SubSampleInformationBox();
-                case "svc1": if (parent == "stsd") return new VisualSampleEntry("svc1"); break;
-                case "svc2": if (parent == "stsd") return new VisualSampleEntry("svc2"); break;
+                case "svc1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("svc1")); break;
+                case "svc2": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("svc2")); break;
                 case "svcC": return new SVCConfigurationBox();
                 case "svcM": return new SVCMetaDataSampleEntry();
                 case "svcP": return new SVCPriorityAssignmentBox();
@@ -563,21 +562,21 @@ namespace SharpMP4
                 case "vipr": return new ViewPriorityBox();
                 case "vlab": return new WebVTTSourceLabelBox();
                 case "vmhd": return new VideoMediaHeaderBox();
-                case "vp08": if (parent == "stsd") return new VisualSampleEntry("vp08"); break;
-                case "vp09": if (parent == "stsd") return new VisualSampleEntry("vp09"); break;
-                case "vp10": if (parent == "stsd") return new VisualSampleEntry("vp10"); break;
+                case "vp08": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("vp08")); break;
+                case "vp09": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("vp09")); break;
+                case "vp10": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("vp10")); break;
                 case "vpcC": return new VPCodecConfigurationBox();
                 case "vplx": return new TrackReferenceTypeBox_vplx(); // TODO: fix duplicate
                 case "VPRF": return new PspVprfBox();
                 case "vsib": return new ViewScalabilityInformationSEIBox();
                 case "vttC": return new WebVTTConfigurationBox();
-                case "vvc1": if (parent == "stsd") return new VisualSampleEntry("vvc1"); break;
+                case "vvc1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("vvc1")); break;
                 case "vvcb": return new EntityToGroupBox_vvcb(); // TODO: fix duplicate
                 case "vvcC": return new VvcConfigurationBox();
-                case "vvcN": if (parent == "stsd") return new VisualSampleEntry("vvcN"); break;
-                case "vvi1": if (parent == "stsd") return new VisualSampleEntry("vvi1"); break;
+                case "vvcN": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("vvcN")); break;
+                case "vvi1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("vvi1")); break;
                 case "vvnC": return new VvcNALUConfigBox();
-                case "vvs1": if (parent == "stsd") return new VisualSampleEntry("vvs1"); break;
+                case "vvs1": if (parent == "stsd") return new VisualSampleEntry(IsoStream.FromFourCC("vvs1")); break;
                 case "vwdi": return new MultiviewSceneInfoBox();
                 case "vwid": return new ViewIdentifierBox();
                 case "wave": return new AppleWaveBox();
@@ -595,7 +594,7 @@ namespace SharpMP4
 
             if (parent == "ilst")
             {
-                if (fourCC[0] == '\0') return new IlstKey(fourCC);
+                if (fourCC[0] == '\0') return new IlstKey(IsoStream.FromFourCC(fourCC));
             }
             else if (uuid != null)
             {
@@ -605,9 +604,9 @@ namespace SharpMP4
 
             //throw new NotImplementedException(fourCC);
             Log.Debug($"Unknown box: '{fourCC}'");
-            return new UnknownBox(fourCC);
+            return new UnknownBox(IsoStream.FromFourCC(fourCC));
         }
-        public static IMp4Serializable CreateEntry(string fourCC)
+        public static SampleGroupDescriptionEntry CreateEntry(string fourCC)
         {
             switch (fourCC)
             {
@@ -628,7 +627,6 @@ namespace SharpMP4
                 case "eob ": return new EndOfBitstreamSampleEntry();
                 case "eos ": return new EndOfSequenceSampleEntry();
                 case "eqiv": return new VisualEquivalenceEntry();
-                case "fdel": return new FDItemInfoExtension();
                 case "fobr": return new FocusBracketingEntry();
                 case "lbli": return new LhvcExternalBaseLayerInfo();
                 case "linf": return new LayerInfoGroupEntry();
@@ -641,7 +639,6 @@ namespace SharpMP4
                 case "pase": return new ParameterSetNALUEntry();
                 case "pasr": return new PixelAspectRatioEntry();
                 case "prol": return new AudioPreRollEntry();
-                case "prtp": return new ProtectedRtpReceptionHintSampleEntry();
                 case "pss1": return new PSSampleGroupEntry();
                 case "rap ": return new VisualRandomAccessEntry();
                 case "rash": return new RateShareEntry();
@@ -669,7 +666,7 @@ namespace SharpMP4
 
             //throw new NotImplementedException(fourCC);
             Log.Debug($"Unknown entry: '{fourCC}'");
-            return new UnknownEntry(fourCC);
+            return new UnknownEntry(IsoStream.FromFourCC(fourCC));
         }
 
         public static Descriptor CreateDescriptor(byte tag)
@@ -864,7 +861,7 @@ namespace SharpMP4
             if (URL_Flag)
             {
                 boxSize += stream.ReadUInt8(out this.URLlength);
-                boxSize += stream.ReadUInt8Array((uint)URLlength, out this.URLstring);
+                boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(URLlength), out this.URLstring);
             }
 
             if (OCRstreamFlag)
@@ -1118,8 +1115,8 @@ namespace SharpMP4
 
             if (!useTimeStampsFlag)
             {
-                boxSize += stream.ReadUInt8Array((uint)timeStampLength, out this.startDecodingTimeStamp);
-                boxSize += stream.ReadUInt8Array((uint)timeStampLength, out this.startCompositionTimeStamp);
+                boxSize += stream.ReadBits((uint)(timeStampLength), out this.startDecodingTimeStamp);
+                boxSize += stream.ReadBits((uint)(timeStampLength), out this.startCompositionTimeStamp);
             }
             boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.ocr); // OCR stream flag, reserved, OCR_ES_id 
             return boxSize;
@@ -1268,7 +1265,7 @@ namespace SharpMP4
             boxSize += stream.ReadBits(6, out this.streamType);
             boxSize += stream.ReadBit(out this.upStream);
             boxSize += stream.ReadBit(out this.reserved);
-            boxSize += stream.ReadBits(24, out this.bufferSizeDB);
+            boxSize += stream.ReadUInt24(out this.bufferSizeDB);
             boxSize += stream.ReadUInt32(out this.maxBitrate);
             boxSize += stream.ReadUInt32(out this.avgBitrate);
             // boxSize += stream.ReadDescriptor(boxSize, readSize, this,  out this.decSpecificInfo); 
@@ -1547,7 +1544,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBits(24, out this.languageCode);
+            boxSize += stream.ReadUInt24(out this.languageCode);
             return boxSize;
         }
 
@@ -2195,7 +2192,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.formatIdentifier);
-            boxSize += stream.ReadUInt8Array((uint)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(sizeOfInstance - 4), out this.additionalIdentificationInfo);
             return boxSize;
         }
 
@@ -2273,7 +2270,7 @@ namespace SharpMP4
         protected ES_Descriptor ES;
         public ES_Descriptor _ES { get { return this.ES; } set { this.ES = value; } }
 
-        public ESDBox() : base("esds", 0, 0)
+        public ESDBox() : base(IsoStream.FromFourCC("esds"), 0, 0)
         {
         }
 
@@ -2314,7 +2311,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "MpegSampleEntry"; } }
         public Box _ES { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 
-        public MpegSampleEntry() : base("mp4s")
+        public MpegSampleEntry() : base(IsoStream.FromFourCC("mp4s"))
         {
         }
 
@@ -2363,10 +2360,10 @@ namespace SharpMP4
 
         protected uint flags; // = f
         public uint Flags { get { return this.flags; } set { this.flags = value; } }
-        public FullBox(string boxtype, byte[] uuid) : base(boxtype, uuid) { }
+        public FullBox(uint boxtype, byte[] uuid) : base(boxtype, uuid) { }
 
 
-        public FullBox(string boxtype, byte v = 0, uint f = 0) : base(boxtype)
+        public FullBox(uint boxtype, byte v = 0, uint f = 0) : base(boxtype)
         {
             this.version = v;
             this.flags = f;
@@ -2377,7 +2374,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt8(out this.version);
-            boxSize += stream.ReadBits(24, out this.flags);
+            boxSize += stream.ReadUInt24(out this.flags);
             return boxSize;
         }
 
@@ -2418,7 +2415,7 @@ namespace SharpMP4
         protected List<Box> children = new List<Box>();
         public List<Box> Children { get { return this.children; } set { this.children = value; } }
 
-        public SampleGroupDescriptionEntry(string grouping_type) : base()
+        public SampleGroupDescriptionEntry(uint grouping_type) : base()
         {
         }
 
@@ -2454,7 +2451,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "VisualSampleGroupEntry"; } }
 
-        public VisualSampleGroupEntry(string grouping_type) : base(grouping_type)
+        public VisualSampleGroupEntry(uint grouping_type) : base(grouping_type)
         {
         }
 
@@ -2493,7 +2490,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "AudioSampleGroupEntry"; } }
 
-        public AudioSampleGroupEntry(string grouping_type) : base(grouping_type)
+        public AudioSampleGroupEntry(uint grouping_type) : base(grouping_type)
         {
         }
 
@@ -2532,7 +2529,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "HintSampleGroupEntry"; } }
 
-        public HintSampleGroupEntry(string grouping_type) : base(grouping_type)
+        public HintSampleGroupEntry(uint grouping_type) : base(grouping_type)
         {
         }
 
@@ -2571,7 +2568,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "SubtitleSampleGroupEntry"; } }
 
-        public SubtitleSampleGroupEntry(string grouping_type) : base(grouping_type)
+        public SubtitleSampleGroupEntry(uint grouping_type) : base(grouping_type)
         {
         }
 
@@ -2608,7 +2605,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "TextSampleGroupEntry"; } }
 
-        public TextSampleGroupEntry(string grouping_type) : base(grouping_type)
+        public TextSampleGroupEntry(uint grouping_type) : base(grouping_type)
         {
         }
 
@@ -2645,7 +2642,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "SubtitleSampleEntry"; } }
 
-        public SubtitleSampleEntry(string codingname = "") : base(codingname)
+        public SubtitleSampleEntry(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -2697,7 +2694,7 @@ namespace SharpMP4
         public BinaryUTF8String AuxiliaryMimeTypes { get { return this.auxiliary_mime_types; } set { this.auxiliary_mime_types = value; } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
-        public XMLSubtitleSampleEntry() : base("stpp")
+        public XMLSubtitleSampleEntry() : base(IsoStream.FromFourCC("stpp"))
         {
         }
 
@@ -2760,7 +2757,7 @@ namespace SharpMP4
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
-        public TextSubtitleSampleEntry() : base("sbtt")
+        public TextSubtitleSampleEntry() : base(IsoStream.FromFourCC("sbtt"))
         {
         }
 
@@ -2862,7 +2859,7 @@ namespace SharpMP4
         protected byte[] reliability;
         public byte[] Reliability { get { return this.reliability; } set { this.reliability = value; } }
 
-        public LoudnessBaseBox(string loudnessType) : base(loudnessType)
+        public LoudnessBaseBox(uint loudnessType) : base(loudnessType)
         {
         }
 
@@ -2978,7 +2975,7 @@ namespace SharpMP4
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
         public IEnumerable<Box> Additionaldata { get { return this.children.OfType<Box>(); } }
 
-        public MPEG2TSSampleEntry(string name) : base(name)
+        public MPEG2TSSampleEntry(uint name) : base(name)
         {
         }
 
@@ -2990,7 +2987,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.highestcompatibleversion);
             boxSize += stream.ReadUInt8(out this.precedingbyteslen);
             boxSize += stream.ReadUInt8(out this.trailingbyteslen);
-            boxSize += stream.ReadBits(1, out this.precomputed_only_flag);
+            boxSize += stream.ReadBit(out this.precomputed_only_flag);
             boxSize += stream.ReadBits(7, out this.reserved);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.additionaldata); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -3041,7 +3038,7 @@ namespace SharpMP4
         public IMp4Serializable Parent { get; set; }
         public virtual string DisplayName { get { return "ItemInfoExtension"; } }
 
-        public ItemInfoExtension(string extension_type) : base()
+        public ItemInfoExtension(uint extension_type) : base()
         {
         }
 
@@ -3074,7 +3071,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "PlainTextSampleEntry"; } }
 
-        public PlainTextSampleEntry(string codingname = "") : base(codingname)
+        public PlainTextSampleEntry(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -3125,7 +3122,7 @@ namespace SharpMP4
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
-        public SimpleTextSampleEntry(string codingname = "") : base("stxt")
+        public SimpleTextSampleEntry(uint codingname = 0) : base(IsoStream.FromFourCC("stxt"))
         {
         }
 
@@ -3175,7 +3172,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "ItemProperty"; } }
 
-        public ItemProperty(string property_type) : base(property_type)
+        public ItemProperty(uint property_type) : base(property_type)
         {
         }
 
@@ -3209,7 +3206,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "ItemFullProperty"; } }
 
-        public ItemFullProperty(string property_type, byte version, uint flags) : base(property_type, version, flags)
+        public ItemFullProperty(uint property_type, byte version, uint flags) : base(property_type, version, flags)
         {
         }
 
@@ -3256,7 +3253,7 @@ namespace SharpMP4
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
-        public GeneralTypeBox(string code) : base(code)
+        public GeneralTypeBox(uint code) : base(code)
         {
         }
 
@@ -3311,7 +3308,7 @@ namespace SharpMP4
         public MetaDataSetupBox _MetaDataSetupBox { get { return this.children.OfType<MetaDataSetupBox>().FirstOrDefault(); } }
         public MetaDataExtensionsBox _MetaDataExtensionsBox { get { return this.children.OfType<MetaDataExtensionsBox>().FirstOrDefault(); } }
 
-        public MetaDataKeyBox(string local_key_id) : base(local_key_id)
+        public MetaDataKeyBox(uint local_key_id) : base(local_key_id)
         {
         }
 
@@ -3375,7 +3372,7 @@ namespace SharpMP4
         protected byte[] key_value;
         public byte[] KeyValue { get { return this.key_value; } set { this.key_value = value; } }
 
-        public MetaDataKeyDeclarationBox() : base("keyd")
+        public MetaDataKeyDeclarationBox() : base(IsoStream.FromFourCC("keyd"))
         {
         }
 
@@ -3423,7 +3420,7 @@ namespace SharpMP4
         protected BinaryUTF8String locale_string;
         public BinaryUTF8String LocaleString { get { return this.locale_string; } set { this.locale_string = value; } }
 
-        public MetaDataLocaleBox() : base("loca")
+        public MetaDataLocaleBox() : base(IsoStream.FromFourCC("loca"))
         {
         }
 
@@ -3464,7 +3461,7 @@ namespace SharpMP4
         public const string TYPE = "setu";
         public override string DisplayName { get { return "MetaDataSetupBox"; } }
 
-        public MetaDataSetupBox() : base("setu")
+        public MetaDataSetupBox() : base(IsoStream.FromFourCC("setu"))
         {
         }
 
@@ -3507,7 +3504,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "MetaDataExtensionsBox"; } }
         public IEnumerable<Box> Extensions { get { return this.children.OfType<Box>(); } }
 
-        public MetaDataExtensionsBox() : base("exte")
+        public MetaDataExtensionsBox() : base(IsoStream.FromFourCC("exte"))
         {
         }
 
@@ -3555,7 +3552,7 @@ namespace SharpMP4
         protected byte inlineKeyValueBoxesPresent;
         public byte InlineKeyValueBoxesPresent { get { return this.inlineKeyValueBoxesPresent; } set { this.inlineKeyValueBoxesPresent = value; } }
 
-        public MetaDataInlineKeysPresentBox() : base("keyi")
+        public MetaDataInlineKeysPresentBox() : base(IsoStream.FromFourCC("keyi"))
         {
         }
 
@@ -3638,7 +3635,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "MetaDataAUBox"; } }
 
-        public MetaDataAUBox(string local_key_id) : base(local_key_id)
+        public MetaDataAUBox(uint local_key_id) : base(local_key_id)
         {
         }
 
@@ -3682,7 +3679,7 @@ namespace SharpMP4
         protected ushort data_reference_index;
         public ushort DataReferenceIndex { get { return this.data_reference_index; } set { this.data_reference_index = value; } }
 
-        public SampleEntry(string format) : base(format)
+        public SampleEntry(uint format) : base(format)
         {
         }
 
@@ -3690,7 +3687,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(6, out this.reserved);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved);
             boxSize += stream.ReadUInt16(out this.data_reference_index);
             return boxSize;
         }
@@ -3781,7 +3778,7 @@ namespace SharpMP4
         protected uint[] SAP_delta_time;
         public uint[] SAPDeltaTime { get { return this.SAP_delta_time; } set { this.SAP_delta_time = value; } }
 
-        public SegmentIndexBox(byte version = 0) : base("sidx", version, 0)
+        public SegmentIndexBox(byte version = 0) : base(IsoStream.FromFourCC("sidx"), version, 0)
         {
         }
 
@@ -3901,7 +3898,7 @@ namespace SharpMP4
         public const string TYPE = "moov";
         public override string DisplayName { get { return "MovieBox"; } }
 
-        public MovieBox() : base("moov")
+        public MovieBox() : base(IsoStream.FromFourCC("moov"))
         {
         }
 
@@ -3940,7 +3937,7 @@ namespace SharpMP4
         public const string TYPE = "moof";
         public override string DisplayName { get { return "MovieFragmentBox"; } }
 
-        public MovieFragmentBox() : base("moof")
+        public MovieFragmentBox() : base(IsoStream.FromFourCC("moof"))
         {
         }
 
@@ -3980,7 +3977,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "DataEntryBaseBox"; } }
 
-        public DataEntryBaseBox(string entry_type, uint flags) : base(entry_type, 0, flags)
+        public DataEntryBaseBox(uint entry_type, uint flags) : base(entry_type, 0, flags)
         {
         }
 
@@ -4020,7 +4017,7 @@ namespace SharpMP4
         protected uint SSRC;
         public uint _SSRC { get { return this.SSRC; } set { this.SSRC = value; } }
 
-        public ReceivedSsrcBox() : base("rssr")
+        public ReceivedSsrcBox() : base(IsoStream.FromFourCC("rssr"))
         {
         }
 
@@ -4067,7 +4064,7 @@ namespace SharpMP4
         protected byte timestamp_sync;
         public byte TimestampSync { get { return this.timestamp_sync; } set { this.timestamp_sync = value; } }
 
-        public timestampsynchrony() : base("tssy")
+        public timestampsynchrony() : base(IsoStream.FromFourCC("tssy"))
         {
         }
 
@@ -4115,7 +4112,7 @@ namespace SharpMP4
         protected uint timescale;
         public uint Timescale { get { return this.timescale; } set { this.timescale = value; } }
 
-        public timescaleentry() : base("tims")
+        public timescaleentry() : base(IsoStream.FromFourCC("tims"))
         {
         }
 
@@ -4160,7 +4157,7 @@ namespace SharpMP4
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
 
-        public timeoffset() : base("tsro")
+        public timeoffset() : base(IsoStream.FromFourCC("tsro"))
         {
         }
 
@@ -4203,7 +4200,7 @@ namespace SharpMP4
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
 
-        public sequenceoffset() : base("snro")
+        public sequenceoffset() : base(IsoStream.FromFourCC("snro"))
         {
         }
 
@@ -4246,7 +4243,7 @@ namespace SharpMP4
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent() : base("trpy")
+        public hintBytesSent() : base(IsoStream.FromFourCC("trpy"))
         {
         }
 
@@ -4289,7 +4286,7 @@ namespace SharpMP4
         protected ulong packetssent;
         public ulong Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSent() : base("nump")
+        public hintPacketsSent() : base(IsoStream.FromFourCC("nump"))
         {
         }
 
@@ -4331,7 +4328,7 @@ namespace SharpMP4
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_tpyl() : base("tpyl")
+        public hintBytesSent_tpyl() : base(IsoStream.FromFourCC("tpyl"))
         {
         }
 
@@ -4374,7 +4371,7 @@ namespace SharpMP4
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_totl() : base("totl")
+        public hintBytesSent_totl() : base(IsoStream.FromFourCC("totl"))
         {
         }
 
@@ -4417,7 +4414,7 @@ namespace SharpMP4
         protected uint packetssent;
         public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-        public hintPacketsSent_npck() : base("npck")
+        public hintPacketsSent_npck() : base(IsoStream.FromFourCC("npck"))
         {
         }
 
@@ -4459,7 +4456,7 @@ namespace SharpMP4
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_tpay() : base("tpay")
+        public hintBytesSent_tpay() : base(IsoStream.FromFourCC("tpay"))
         {
         }
 
@@ -4505,7 +4502,7 @@ namespace SharpMP4
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
 
-        public hintmaxrate() : base("maxr")
+        public hintmaxrate() : base(IsoStream.FromFourCC("maxr"))
         {
         }
 
@@ -4554,7 +4551,7 @@ namespace SharpMP4
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintmediaBytesSent() : base("dmed")
+        public hintmediaBytesSent() : base(IsoStream.FromFourCC("dmed"))
         {
         }
 
@@ -4597,7 +4594,7 @@ namespace SharpMP4
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintimmediateBytesSent() : base("dimm")
+        public hintimmediateBytesSent() : base(IsoStream.FromFourCC("dimm"))
         {
         }
 
@@ -4639,7 +4636,7 @@ namespace SharpMP4
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintrepeatedBytesSent() : base("drep")
+        public hintrepeatedBytesSent() : base(IsoStream.FromFourCC("drep"))
         {
         }
 
@@ -4682,7 +4679,7 @@ namespace SharpMP4
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
 
-        public hintminrelativetime() : base("tmin")
+        public hintminrelativetime() : base(IsoStream.FromFourCC("tmin"))
         {
         }
 
@@ -4724,7 +4721,7 @@ namespace SharpMP4
         protected int time;
         public int Time { get { return this.time; } set { this.time = value; } }
 
-        public hintmaxrelativetime() : base("tmax")
+        public hintmaxrelativetime() : base(IsoStream.FromFourCC("tmax"))
         {
         }
 
@@ -4767,7 +4764,7 @@ namespace SharpMP4
         protected uint bytes;
         public uint Bytes { get { return this.bytes; } set { this.bytes = value; } }
 
-        public hintlargestpacket() : base("pmax")
+        public hintlargestpacket() : base(IsoStream.FromFourCC("pmax"))
         {
         }
 
@@ -4809,7 +4806,7 @@ namespace SharpMP4
         protected uint time;
         public uint Time { get { return this.time; } set { this.time = value; } }
 
-        public hintlongestpacket() : base("dmax")
+        public hintlongestpacket() : base(IsoStream.FromFourCC("dmax"))
         {
         }
 
@@ -4859,7 +4856,7 @@ namespace SharpMP4
         protected byte[] rtpmap_string;
         public byte[] RtpmapString { get { return this.rtpmap_string; } set { this.rtpmap_string = value; } }
 
-        public hintpayloadID() : base("payt")
+        public hintpayloadID() : base(IsoStream.FromFourCC("payt"))
         {
         }
 
@@ -4869,7 +4866,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.payloadID); // payload ID used in RTP packets
             boxSize += stream.ReadUInt8(out this.count);
-            boxSize += stream.ReadUInt8Array((uint)count, out this.rtpmap_string);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(count), out this.rtpmap_string);
             return boxSize;
         }
 
@@ -4927,7 +4924,7 @@ namespace SharpMP4
         public byte[] StereoIndicationType { get { return this.stereo_indication_type; } set { this.stereo_indication_type = value; } }
         public IEnumerable<Box> AnyBox { get { return this.children.OfType<Box>(); } }
 
-        public StereoVideoBox() : base("stvi", 0, 0)
+        public StereoVideoBox() : base(IsoStream.FromFourCC("stvi"), 0, 0)
         {
         }
 
@@ -4939,7 +4936,7 @@ namespace SharpMP4
             boxSize += stream.ReadBits(2, out this.single_view_allowed);
             boxSize += stream.ReadUInt32(out this.stereo_scheme);
             boxSize += stream.ReadUInt32(out this.length);
-            boxSize += stream.ReadUInt8Array((uint)length, out this.stereo_indication_type);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(length), out this.stereo_indication_type);
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.any_box); // optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -4988,7 +4985,7 @@ namespace SharpMP4
         protected BinaryUTF8String extended_language;
         public BinaryUTF8String ExtendedLanguage { get { return this.extended_language; } set { this.extended_language = value; } }
 
-        public ExtendedLanguageBox() : base("elng", 0, 0)
+        public ExtendedLanguageBox() : base(IsoStream.FromFourCC("elng"), 0, 0)
         {
         }
 
@@ -5039,7 +5036,7 @@ namespace SharpMP4
         protected uint avgBitrate;
         public uint AvgBitrate { get { return this.avgBitrate; } set { this.avgBitrate = value; } }
 
-        public BitRateBox() : base("btrt")
+        public BitRateBox() : base(IsoStream.FromFourCC("btrt"))
         {
         }
 
@@ -5092,7 +5089,7 @@ namespace SharpMP4
         protected uint vSpacing;
         public uint VSpacing { get { return this.vSpacing; } set { this.vSpacing = value; } }
 
-        public PixelAspectRatioBox() : base("pasp")
+        public PixelAspectRatioBox() : base(IsoStream.FromFourCC("pasp"))
         {
         }
 
@@ -5172,7 +5169,7 @@ namespace SharpMP4
         protected uint vertOffD;
         public uint VertOffD { get { return this.vertOffD; } set { this.vertOffD = value; } }
 
-        public CleanApertureBox() : base("clap")
+        public CleanApertureBox() : base(IsoStream.FromFourCC("clap"))
         {
         }
 
@@ -5287,7 +5284,7 @@ namespace SharpMP4
         protected uint ccv_avg_luminance_value;
         public uint CcvAvgLuminanceValue { get { return this.ccv_avg_luminance_value; } set { this.ccv_avg_luminance_value = value; } }
 
-        public ContentColourVolumeBox() : base("cclv")
+        public ContentColourVolumeBox() : base(IsoStream.FromFourCC("cclv"))
         {
         }
 
@@ -5461,7 +5458,7 @@ namespace SharpMP4
         protected ICC_profile ICC_profile;  //  restricted ICC profile
         public ICC_profile ICCProfile { get { return this.ICC_profile; } set { this.ICC_profile = value; } }
 
-        public ColourInformationBox() : base("colr")
+        public ColourInformationBox() : base(IsoStream.FromFourCC("colr"))
         {
         }
 
@@ -5486,12 +5483,12 @@ namespace SharpMP4
 
             else if (colour_type == IsoStream.FromFourCC("rICC"))
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ICC_profile(), out this.ICC_profile); // restricted ICC profile
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new ICC_profile(), out this.ICC_profile); // restricted ICC profile
             }
 
             else if (colour_type == IsoStream.FromFourCC("prof"))
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ICC_profile(), out this.ICC_profile); // unrestricted ICC profile
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new ICC_profile(), out this.ICC_profile); // unrestricted ICC profile
             }
             return boxSize;
         }
@@ -5577,7 +5574,7 @@ namespace SharpMP4
         protected ushort max_pic_average_light_level;
         public ushort MaxPicAverageLightLevel { get { return this.max_pic_average_light_level; } set { this.max_pic_average_light_level = value; } }
 
-        public ContentLightLevelBox() : base("clli")
+        public ContentLightLevelBox() : base(IsoStream.FromFourCC("clli"))
         {
         }
 
@@ -5645,7 +5642,7 @@ namespace SharpMP4
         protected uint min_display_mastering_luminance;
         public uint MinDisplayMasteringLuminance { get { return this.min_display_mastering_luminance; } set { this.min_display_mastering_luminance = value; } }
 
-        public MasteringDisplayColourVolumeBox() : base("mdcv")
+        public MasteringDisplayColourVolumeBox() : base(IsoStream.FromFourCC("mdcv"))
         {
         }
 
@@ -5717,7 +5714,7 @@ namespace SharpMP4
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
 
-        public ScrambleSchemeInfoBox() : base("scrb")
+        public ScrambleSchemeInfoBox() : base(IsoStream.FromFourCC("scrb"))
         {
         }
 
@@ -5851,7 +5848,7 @@ namespace SharpMP4
         protected bool omitted_channels_present;
         public bool OmittedChannelsPresent { get { return this.omitted_channels_present; } set { this.omitted_channels_present = value; } }
 
-        public ChannelLayout(byte version = 0) : base("chnl", version, 0)
+        public ChannelLayout(byte version = 0) : base(IsoStream.FromFourCC("chnl"), version, 0)
         {
         }
 
@@ -6206,7 +6203,7 @@ namespace SharpMP4
         protected byte[][][] bs_downmix_coefficient;
         public byte[][][] BsDownmixCoefficient { get { return this.bs_downmix_coefficient; } set { this.bs_downmix_coefficient = value; } }
 
-        public DownMixInstructions(byte version = 0) : base("dmix", version, 0)
+        public DownMixInstructions(byte version = 0) : base(IsoStream.FromFourCC("dmix"), version, 0)
         {
         }
 
@@ -6265,7 +6262,7 @@ namespace SharpMP4
                                 size += 5;
                             }
                         }
-                        boxSize += stream.ReadUInt8Array((uint)(Math.Ceiling(size / 8d) - size), out this.reserved00[a]); // byte align
+                        boxSize += stream.ReadBits((uint)((Math.Ceiling(size / 8d) - size) * 8), out this.reserved00[a]); // byte align
                     }
 
                     else
@@ -6430,7 +6427,7 @@ namespace SharpMP4
         protected uint sampling_rate;
         public uint SamplingRate { get { return this.sampling_rate; } set { this.sampling_rate = value; } }
 
-        public SamplingRateBox() : base("srat")
+        public SamplingRateBox() : base(IsoStream.FromFourCC("srat"))
         {
         }
 
@@ -6473,7 +6470,7 @@ namespace SharpMP4
         protected BinaryUTF8String text_config;
         public BinaryUTF8String TextConfig { get { return this.text_config; } set { this.text_config = value; } }
 
-        public TextConfigBox() : base("txtC", 0, 0)
+        public TextConfigBox() : base(IsoStream.FromFourCC("txtC"), 0, 0)
         {
         }
 
@@ -6517,7 +6514,7 @@ namespace SharpMP4
         protected byte[] uri_initialization_data;
         public byte[] UriInitializationData { get { return this.uri_initialization_data; } set { this.uri_initialization_data = value; } }
 
-        public URIInitBox() : base("uriI", 0, 0)
+        public URIInitBox() : base(IsoStream.FromFourCC("uriI"), 0, 0)
         {
         }
 
@@ -6569,7 +6566,7 @@ namespace SharpMP4
         protected BinaryUTF8String notice;
         public BinaryUTF8String Notice { get { return this.notice; } set { this.notice = value; } }
 
-        public CopyrightBox() : base("cprt", 0, 0)
+        public CopyrightBox() : base(IsoStream.FromFourCC("cprt"), 0, 0)
         {
         }
 
@@ -6622,7 +6619,7 @@ namespace SharpMP4
         protected BinaryUTF8String value;
         public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-        public KindBox() : base("kind", 0, 0)
+        public KindBox() : base(IsoStream.FromFourCC("kind"), 0, 0)
         {
         }
 
@@ -6673,7 +6670,7 @@ namespace SharpMP4
         protected uint[] attribute_list;  //  to end of the box
         public uint[] AttributeList { get { return this.attribute_list; } set { this.attribute_list = value; } }
 
-        public TrackSelectionBox() : base("tsel", 0, 0)
+        public TrackSelectionBox() : base(IsoStream.FromFourCC("tsel"), 0, 0)
         {
         }
 
@@ -6715,7 +6712,7 @@ namespace SharpMP4
         public const string TYPE = "strk";
         public override string DisplayName { get { return "SubTrackBox"; } }
 
-        public SubTrackBox() : base("strk")
+        public SubTrackBox() : base(IsoStream.FromFourCC("strk"))
         {
         }
 
@@ -6756,7 +6753,7 @@ namespace SharpMP4
         public const string TYPE = "hnti";
         public override string DisplayName { get { return "trackhintinformation"; } }
 
-        public trackhintinformation() : base("hnti")
+        public trackhintinformation() : base(IsoStream.FromFourCC("hnti"))
         {
         }
 
@@ -6799,7 +6796,7 @@ namespace SharpMP4
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
-        public rtptracksdphintinformation() : base("sdp ")
+        public rtptracksdphintinformation() : base(IsoStream.FromFourCC("sdp "))
         {
         }
 
@@ -6840,7 +6837,7 @@ namespace SharpMP4
         public const string TYPE = "hnti";
         public override string DisplayName { get { return "moviehintinformation"; } }
 
-        public moviehintinformation() : base("hnti")
+        public moviehintinformation() : base(IsoStream.FromFourCC("hnti"))
         {
         }
 
@@ -6887,7 +6884,7 @@ namespace SharpMP4
         protected byte[] sdptext;
         public byte[] Sdptext { get { return this.sdptext; } set { this.sdptext = value; } }
 
-        public rtpmoviehintinformation() : base("rtp ")
+        public rtpmoviehintinformation() : base(IsoStream.FromFourCC("rtp "))
         {
         }
 
@@ -6932,7 +6929,7 @@ namespace SharpMP4
         public const string TYPE = "hinf";
         public override string DisplayName { get { return "hintstatisticsbox"; } }
 
-        public hintstatisticsbox() : base("hinf")
+        public hintstatisticsbox() : base(IsoStream.FromFourCC("hinf"))
         {
         }
 
@@ -6977,7 +6974,7 @@ namespace SharpMP4
         public IEnumerable<TrackLoudnessInfo> Loudness { get { return this.children.OfType<TrackLoudnessInfo>(); } }
         public IEnumerable<AlbumLoudnessInfo> AlbumLoudness { get { return this.children.OfType<AlbumLoudnessInfo>(); } }
 
-        public LoudnessBox() : base("ludt")
+        public LoudnessBox() : base(IsoStream.FromFourCC("ludt"))
         {
         }
 
@@ -7024,7 +7021,7 @@ namespace SharpMP4
         public const string TYPE = "tlou";
         public override string DisplayName { get { return "TrackLoudnessInfo"; } }
 
-        public TrackLoudnessInfo() : base("tlou")
+        public TrackLoudnessInfo() : base(IsoStream.FromFourCC("tlou"))
         {
         }
 
@@ -7059,7 +7056,7 @@ namespace SharpMP4
         public const string TYPE = "alou";
         public override string DisplayName { get { return "AlbumLoudnessInfo"; } }
 
-        public AlbumLoudnessInfo() : base("alou")
+        public AlbumLoudnessInfo() : base(IsoStream.FromFourCC("alou"))
         {
         }
 
@@ -7100,7 +7097,7 @@ namespace SharpMP4
         protected BinaryUTF8String location;
         public BinaryUTF8String Location { get { return this.location; } set { this.location = value; } }
 
-        public DataEntryUrlBox(uint flags = 0) : base("url ", flags)
+        public DataEntryUrlBox(uint flags = 0) : base(IsoStream.FromFourCC("url "), flags)
         {
         }
 
@@ -7148,7 +7145,7 @@ namespace SharpMP4
         protected BinaryUTF8String location;
         public BinaryUTF8String Location { get { return this.location; } set { this.location = value; } }
 
-        public DataEntryUrnBox(uint flags = 0) : base("urn ", flags)
+        public DataEntryUrnBox(uint flags = 0) : base(IsoStream.FromFourCC("urn "), flags)
         {
         }
 
@@ -7195,7 +7192,7 @@ namespace SharpMP4
         protected uint imda_ref_identifier;
         public uint ImdaRefIdentifier { get { return this.imda_ref_identifier; } set { this.imda_ref_identifier = value; } }
 
-        public DataEntryImdaBox(uint flags = 0) : base("imdt", flags)
+        public DataEntryImdaBox(uint flags = 0) : base(IsoStream.FromFourCC("imdt"), flags)
         {
         }
 
@@ -7235,7 +7232,7 @@ namespace SharpMP4
         public const string TYPE = "snim";
         public override string DisplayName { get { return "DataEntrySeqNumImdaBox"; } }
 
-        public DataEntrySeqNumImdaBox(uint flags = 0) : base("snim", flags)
+        public DataEntrySeqNumImdaBox(uint flags = 0) : base(IsoStream.FromFourCC("snim"), flags)
         {
         }
 
@@ -7278,7 +7275,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
         public IEnumerable<Box> Properties { get { return this.children.OfType<Box>(); } }
 
-        public ItemPropertyContainerBox() : base("ipco")
+        public ItemPropertyContainerBox() : base(IsoStream.FromFourCC("ipco"))
         {
         }
 
@@ -7359,7 +7356,7 @@ namespace SharpMP4
         protected ushort[][] property_index;
         public ushort[][] PropertyIndex { get { return this.property_index; } set { this.property_index = value; } }
 
-        public ItemPropertyAssociationBox(byte version = 0, uint flags = 0) : base("ipma", version, flags)
+        public ItemPropertyAssociationBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("ipma"), version, flags)
         {
         }
 
@@ -7499,7 +7496,7 @@ namespace SharpMP4
         public ItemPropertyContainerBox PropertyContainer { get { return this.children.OfType<ItemPropertyContainerBox>().FirstOrDefault(); } }
         public IEnumerable<ItemPropertyAssociationBox> Association { get { return this.children.OfType<ItemPropertyAssociationBox>(); } }
 
-        public ItemPropertiesBox() : base("iprp")
+        public ItemPropertiesBox() : base(IsoStream.FromFourCC("iprp"))
         {
         }
 
@@ -7566,7 +7563,7 @@ namespace SharpMP4
         protected int[] min_initial_alt_startup_offset0;
         public int[] MinInitialAltStartupOffset0 { get { return this.min_initial_alt_startup_offset0; } set { this.min_initial_alt_startup_offset0 = value; } }
 
-        public AlternativeStartupSequencePropertiesBox(byte version = 0) : base("assp", version, 0)
+        public AlternativeStartupSequencePropertiesBox(byte version = 0) : base(IsoStream.FromFourCC("assp"), version, 0)
         {
         }
 
@@ -7657,7 +7654,7 @@ namespace SharpMP4
         protected byte[] data;  //  to end of box
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public BinaryXMLBox() : base("bxml", 0, 0)
+        public BinaryXMLBox() : base(IsoStream.FromFourCC("bxml"), 0, 0)
         {
         }
 
@@ -7698,7 +7695,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "CompleteTrackInfoBox"; } }
         public OriginalFormatBox OriginalFormat { get { return this.children.OfType<OriginalFormatBox>().FirstOrDefault(); } }
 
-        public CompleteTrackInfoBox(string fmt = "") : base("cinf")
+        public CompleteTrackInfoBox(uint fmt = 0) : base(IsoStream.FromFourCC("cinf"))
         {
         }
 
@@ -7751,7 +7748,7 @@ namespace SharpMP4
         protected ulong[] chunk_offset;
         public ulong[] ChunkOffset { get { return this.chunk_offset; } set { this.chunk_offset = value; } }
 
-        public ChunkLargeOffsetBox() : base("co64", 0, 0)
+        public ChunkLargeOffsetBox() : base(IsoStream.FromFourCC("co64"), 0, 0)
         {
         }
 
@@ -7844,7 +7841,7 @@ namespace SharpMP4
         protected byte[][][] sample_group_description_index;  //  whose msb might indicate fragment_local or global
         public byte[][][] SampleGroupDescriptionIndex { get { return this.sample_group_description_index; } set { this.sample_group_description_index = value; } }
 
-        public CompactSampleToGroupBox(byte version = 0, uint flags = 0) : base("csgp", version, flags)
+        public CompactSampleToGroupBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("csgp"), version, flags)
         {
         }
 
@@ -7870,8 +7867,8 @@ namespace SharpMP4
             this.sample_count = new byte[IsoStream.GetInt(pattern_count)][];
             for (int i = 0; i < pattern_count; i++)
             {
-                boxSize += stream.ReadBits(pattern_size_code, out this.pattern_length[i]);
-                boxSize += stream.ReadBits(count_size_code, out this.sample_count[i]);
+                boxSize += stream.ReadBits((uint)(pattern_size_code), out this.pattern_length[i]);
+                boxSize += stream.ReadBits((uint)(count_size_code), out this.sample_count[i]);
             }
 
             this.sample_group_description_index = new byte[IsoStream.GetInt(pattern_count)][][];
@@ -7881,7 +7878,7 @@ namespace SharpMP4
                 this.sample_group_description_index[j] = new byte[IsoStream.GetInt(IsoStream.GetInt(pattern_length[j]))][];
                 for (int k = 0; k < IsoStream.GetInt(pattern_length[j]); k++)
                 {
-                    boxSize += stream.ReadBits(index_size_code, out this.sample_group_description_index[j][k]); // whose msb might indicate fragment_local or global
+                    boxSize += stream.ReadBits((uint)(index_size_code), out this.sample_group_description_index[j][k]); // whose msb might indicate fragment_local or global
                 }
             }
             return boxSize;
@@ -7996,7 +7993,7 @@ namespace SharpMP4
         protected long compositionEndTime;
         public long CompositionEndTime { get { return this.compositionEndTime; } set { this.compositionEndTime = value; } }
 
-        public CompositionToDecodeBox(byte version = 0) : base("cslg", version, 0)
+        public CompositionToDecodeBox(byte version = 0) : base(IsoStream.FromFourCC("cslg"), version, 0)
         {
         }
 
@@ -8113,7 +8110,7 @@ namespace SharpMP4
         protected int[] sample_offset0;
         public int[] SampleOffset0 { get { return this.sample_offset0; } set { this.sample_offset0 = value; } }
 
-        public CompositionOffsetBox(byte version = 0) : base("ctts", version, 0)
+        public CompositionOffsetBox(byte version = 0) : base(IsoStream.FromFourCC("ctts"), version, 0)
         {
         }
 
@@ -8218,7 +8215,7 @@ namespace SharpMP4
         public const string TYPE = "dinf";
         public override string DisplayName { get { return "DataInformationBox"; } }
 
-        public DataInformationBox() : base("dinf")
+        public DataInformationBox() : base(IsoStream.FromFourCC("dinf"))
         {
         }
 
@@ -8266,7 +8263,7 @@ namespace SharpMP4
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
         public IEnumerable<DataEntryBaseBox> DataEntry { get { return this.children.OfType<DataEntryBaseBox>(); } }
 
-        public DataReferenceBox() : base("dref", 0, 0)
+        public DataReferenceBox() : base(IsoStream.FromFourCC("dref"), 0, 0)
         {
         }
 
@@ -8323,7 +8320,7 @@ namespace SharpMP4
         public const string TYPE = "edts";
         public override string DisplayName { get { return "EditBox"; } }
 
-        public EditBox() : base("edts")
+        public EditBox() : base(IsoStream.FromFourCC("edts"))
         {
         }
 
@@ -8389,7 +8386,7 @@ namespace SharpMP4
         protected short[] media_rate_fraction;
         public short[] MediaRateFraction { get { return this.media_rate_fraction; } set { this.media_rate_fraction = value; } }
 
-        public EditListBox(byte version = 0, uint flags = 0) : base("elst", version, flags)
+        public EditListBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("elst"), version, flags)
         {
         }
 
@@ -8491,7 +8488,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ExtendedTypeBox"; } }
         public IEnumerable<TypeCombinationBox> CompatibleCombinations { get { return this.children.OfType<TypeCombinationBox>(); } }
 
-        public ExtendedTypeBox() : base("etyp")
+        public ExtendedTypeBox() : base(IsoStream.FromFourCC("etyp"))
         {
         }
 
@@ -8558,7 +8555,7 @@ namespace SharpMP4
         protected uint[] group_id;
         public uint[] GroupId { get { return this.group_id; } set { this.group_id = value; } }
 
-        public FDItemInfoExtension() : base("fdel")
+        public FDItemInfoExtension() : base(IsoStream.FromFourCC("fdel"))
         {
         }
 
@@ -8648,7 +8645,7 @@ namespace SharpMP4
         protected uint[] symbol_count;
         public uint[] SymbolCount { get { return this.symbol_count; } set { this.symbol_count = value; } }
 
-        public FECReservoirBox(byte version = 0) : base("fecr", version, 0)
+        public FECReservoirBox(byte version = 0) : base(IsoStream.FromFourCC("fecr"), version, 0)
         {
         }
 
@@ -8769,7 +8766,7 @@ namespace SharpMP4
         public FECReservoirBox FECSymbolLocations { get { return this.children.OfType<FECReservoirBox>().FirstOrDefault(); } }
         public FileReservoirBox FileSymbolLocations { get { return this.children.OfType<FileReservoirBox>().FirstOrDefault(); } }
 
-        public PartitionEntry() : base("paen")
+        public PartitionEntry() : base(IsoStream.FromFourCC("paen"))
         {
         }
 
@@ -8828,7 +8825,7 @@ namespace SharpMP4
         public FDSessionGroupBox SessionInfo { get { return this.children.OfType<FDSessionGroupBox>().FirstOrDefault(); } }
         public GroupIdToNameBox GroupIdToName { get { return this.children.OfType<GroupIdToNameBox>().FirstOrDefault(); } }
 
-        public FDItemInformationBox() : base("fiin", 0, 0)
+        public FDItemInformationBox() : base(IsoStream.FromFourCC("fiin"), 0, 0)
         {
         }
 
@@ -8837,7 +8834,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.entry_count);
-            // boxSize += stream.ReadBox(boxSize, readSize, this, entry_count,  out this.partition_entries); 
+            // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.partition_entries); 
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.session_info); //optional
             // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.group_id_to_name); //optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -8902,7 +8899,7 @@ namespace SharpMP4
         protected uint[] symbol_count;
         public uint[] SymbolCount { get { return this.symbol_count; } set { this.symbol_count = value; } }
 
-        public FileReservoirBox(byte version = 0) : base("fire", version, 0)
+        public FileReservoirBox(byte version = 0) : base(IsoStream.FromFourCC("fire"), version, 0)
         {
         }
 
@@ -9074,7 +9071,7 @@ namespace SharpMP4
         protected uint[] block_size;
         public uint[] BlockSize { get { return this.block_size; } set { this.block_size = value; } }
 
-        public FilePartitionBox(byte version = 0) : base("fpar", version, 0)
+        public FilePartitionBox(byte version = 0) : base(IsoStream.FromFourCC("fpar"), version, 0)
         {
         }
 
@@ -9218,7 +9215,7 @@ namespace SharpMP4
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
-        public FreeSpaceBox() : base("free")
+        public FreeSpaceBox() : base(IsoStream.FromFourCC("free"))
         {
         }
 
@@ -9264,7 +9261,7 @@ namespace SharpMP4
         protected uint data_format; // = codingname
         public uint DataFormat { get { return this.data_format; } set { this.data_format = value; } }
 
-        public OriginalFormatBox(string codingname = "") : base("frma")
+        public OriginalFormatBox(uint codingname = 0) : base(IsoStream.FromFourCC("frma"))
         {
         }
 
@@ -9323,7 +9320,7 @@ namespace SharpMP4
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
-        public FileTypeBox() : base("ftyp")
+        public FileTypeBox() : base(IsoStream.FromFourCC("ftyp"))
         {
         }
 
@@ -9383,7 +9380,7 @@ namespace SharpMP4
         protected BinaryUTF8String[] group_name;
         public BinaryUTF8String[] GroupName { get { return this.group_name; } set { this.group_name = value; } }
 
-        public GroupIdToNameBox() : base("gitn", 0, 0)
+        public GroupIdToNameBox() : base(IsoStream.FromFourCC("gitn"), 0, 0)
         {
         }
 
@@ -9442,7 +9439,7 @@ namespace SharpMP4
         public const string TYPE = "grpl";
         public override string DisplayName { get { return "GroupsListBox"; } }
 
-        public GroupsListBox() : base("grpl")
+        public GroupsListBox() : base(IsoStream.FromFourCC("grpl"))
         {
         }
 
@@ -9497,7 +9494,7 @@ namespace SharpMP4
         protected BinaryUTF8String name;
         public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
 
-        public HandlerBox() : base("hdlr", 0, 0)
+        public HandlerBox() : base(IsoStream.FromFourCC("hdlr"), 0, 0)
         {
         }
 
@@ -9507,7 +9504,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.pre_defined);
             boxSize += stream.ReadUInt32(out this.handler_type);
-            boxSize += stream.ReadUInt32Array(3, out this.reserved);
+            boxSize += stream.ReadUInt32Array(boxSize, readSize, 3, out this.reserved);
             boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.name);
             return boxSize;
         }
@@ -9566,7 +9563,7 @@ namespace SharpMP4
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public HintMediaHeaderBox() : base("hmhd", 0, 0)
+        public HintMediaHeaderBox() : base(IsoStream.FromFourCC("hmhd"), 0, 0)
         {
         }
 
@@ -9621,7 +9618,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ItemDataBox() : base("idat")
+        public ItemDataBox() : base(IsoStream.FromFourCC("idat"))
         {
         }
 
@@ -9671,7 +9668,7 @@ namespace SharpMP4
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
         public IEnumerable<ItemInfoEntry> ItemInfos { get { return this.children.OfType<ItemInfoEntry>(); } }
 
-        public ItemInfoBox(byte version = 0) : base("iinf", version, 0)
+        public ItemInfoBox(byte version = 0) : base(IsoStream.FromFourCC("iinf"), version, 0)
         {
         }
 
@@ -9822,7 +9819,7 @@ namespace SharpMP4
         protected byte[][][] extent_length;
         public byte[][][] ExtentLength { get { return this.extent_length; } set { this.extent_length = value; } }
 
-        public ItemLocationBox(byte version = 0) : base("iloc", version, 0)
+        public ItemLocationBox(byte version = 0) : base(IsoStream.FromFourCC("iloc"), version, 0)
         {
         }
 
@@ -9882,7 +9879,7 @@ namespace SharpMP4
                     boxSize += stream.ReadBits(4, out this.construction_method[i]);
                 }
                 boxSize += stream.ReadUInt16(out this.data_reference_index[i]);
-                boxSize += stream.ReadUInt8Array((uint)base_offset_size, out this.base_offset[i]);
+                boxSize += stream.ReadBits((uint)(base_offset_size * 8), out this.base_offset[i]);
                 boxSize += stream.ReadUInt16(out this.extent_count[i]);
 
                 this.item_reference_index[i] = new byte[IsoStream.GetInt(extent_count[i])][];
@@ -9893,10 +9890,10 @@ namespace SharpMP4
 
                     if (((version == 1) || (version == 2)) && (index_size > 0))
                     {
-                        boxSize += stream.ReadUInt8Array((uint)index_size, out this.item_reference_index[i][j]);
+                        boxSize += stream.ReadBits((uint)(index_size * 8), out this.item_reference_index[i][j]);
                     }
-                    boxSize += stream.ReadUInt8Array((uint)offset_size, out this.extent_offset[i][j]);
-                    boxSize += stream.ReadUInt8Array((uint)length_size, out this.extent_length[i][j]);
+                    boxSize += stream.ReadBits((uint)(offset_size * 8), out this.extent_offset[i][j]);
+                    boxSize += stream.ReadBits((uint)(length_size * 8), out this.extent_length[i][j]);
                 }
             }
             return boxSize;
@@ -10049,7 +10046,7 @@ namespace SharpMP4
         protected byte[] data;  //  until the end of the box
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public IdentifiedMediaDataBox() : base("imda")
+        public IdentifiedMediaDataBox() : base(IsoStream.FromFourCC("imda"))
         {
         }
 
@@ -10146,7 +10143,7 @@ namespace SharpMP4
         protected BinaryUTF8String item_uri_type;
         public BinaryUTF8String ItemUriType { get { return this.item_uri_type; } set { this.item_uri_type = value; } }
 
-        public ItemInfoEntry(byte version = 0, uint flags = 0) : base("infe", version, flags)
+        public ItemInfoEntry(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("infe"), version, flags)
         {
         }
 
@@ -10167,7 +10164,7 @@ namespace SharpMP4
             if (version == 1)
             {
                 if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadUInt32(out this.extension_type); //optional
-                if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadClass(boxSize, readSize, this, new ItemInfoExtension(IsoStream.ToFourCC(extension_type)), out this.ItemInfoExtension); //optional
+                if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadClass(boxSize, readSize, this, () => new ItemInfoExtension(extension_type), out this.ItemInfoExtension); //optional
             }
 
             if (version >= 2)
@@ -10323,7 +10320,7 @@ namespace SharpMP4
         public ushort ProtectionCount { get { return this.protection_count; } set { this.protection_count = value; } }
         public IEnumerable<ProtectionSchemeInfoBox> ProtectionInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>(); } }
 
-        public ItemProtectionBox() : base("ipro", 0, 0)
+        public ItemProtectionBox() : base(IsoStream.FromFourCC("ipro"), 0, 0)
         {
         }
 
@@ -10391,7 +10388,7 @@ namespace SharpMP4
         protected SingleItemTypeReferenceBoxLarge[] references0;
         public SingleItemTypeReferenceBoxLarge[] References0 { get { return this.references0; } set { this.references0 = value; } }
 
-        public ItemReferenceBox(byte version = 0) : base("iref", version, 0)
+        public ItemReferenceBox(byte version = 0) : base(IsoStream.FromFourCC("iref"), version, 0)
         {
         }
 
@@ -10402,12 +10399,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                boxSize += stream.ReadBox<SingleItemTypeReferenceBox>(boxSize, readSize, (header) => new SingleItemTypeReferenceBox(IsoStream.ToFourCC(header.Type)), this, out this.references);
+                boxSize += stream.ReadBox(boxSize, readSize, this, out this.references);
             }
 
             else if (version == 1)
             {
-                boxSize += stream.ReadBox<SingleItemTypeReferenceBoxLarge>(boxSize, readSize, (header) => new SingleItemTypeReferenceBoxLarge(IsoStream.ToFourCC(header.Type)), this, out this.references0);
+                boxSize += stream.ReadBox(boxSize, readSize, this, out this.references0);
             }
             return boxSize;
         }
@@ -10500,7 +10497,7 @@ namespace SharpMP4
         protected uint[] sub_track_ID;
         public uint[] SubTrackID { get { return this.sub_track_ID; } set { this.sub_track_ID = value; } }
 
-        public LevelAssignmentBox() : base("leva", 0, 0)
+        public LevelAssignmentBox() : base(IsoStream.FromFourCC("leva"), 0, 0)
         {
         }
 
@@ -10651,7 +10648,7 @@ namespace SharpMP4
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
-        public MediaDataBox() : base("mdat")
+        public MediaDataBox() : base(IsoStream.FromFourCC("mdat"))
         {
         }
 
@@ -10725,7 +10722,7 @@ namespace SharpMP4
         protected ushort pre_defined = 0;
         public ushort PreDefined { get { return this.pre_defined; } set { this.pre_defined = value; } }
 
-        public MediaHeaderBox(byte version = 0) : base("mdhd", version, 0)
+        public MediaHeaderBox(byte version = 0) : base(IsoStream.FromFourCC("mdhd"), version, 0)
         {
         }
 
@@ -10821,7 +10818,7 @@ namespace SharpMP4
         public const string TYPE = "mdia";
         public override string DisplayName { get { return "MediaBox"; } }
 
-        public MediaBox() : base("mdia")
+        public MediaBox() : base(IsoStream.FromFourCC("mdia"))
         {
         }
 
@@ -10868,7 +10865,7 @@ namespace SharpMP4
         protected ulong fragment_duration;
         public ulong FragmentDuration { get { return this.fragment_duration; } set { this.fragment_duration = value; } }
 
-        public MovieExtendsHeaderBox(byte version = 0) : base("mehd", version, 0)
+        public MovieExtendsHeaderBox(byte version = 0) : base(IsoStream.FromFourCC("mehd"), version, 0)
         {
         }
 
@@ -10957,9 +10954,9 @@ namespace SharpMP4
         public ItemReferenceBox ItemRefs { get { return this.children.OfType<ItemReferenceBox>().FirstOrDefault(); } }
         public ItemDataBox ItemData { get { return this.children.OfType<ItemDataBox>().FirstOrDefault(); } }
         public IEnumerable<Box> OtherBoxes { get { return this.children.OfType<Box>(); } }
-        public bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == "udta" || ((Box)Parent).FourCC == "trak")); } }
+        public bool IsQuickTime { get { return (Parent != null && (((Box)Parent).FourCC == IsoStream.FromFourCC("udta") || ((Box)Parent).FourCC == IsoStream.FromFourCC("trak"))); } }
 
-        public MetaBox(string handler_type = "") : base("meta", 0, 0)
+        public MetaBox(uint handler_type = 0) : base(IsoStream.FromFourCC("meta"), 0, 0)
         {
         }
 
@@ -11033,7 +11030,7 @@ namespace SharpMP4
         protected uint sequence_number;
         public uint SequenceNumber { get { return this.sequence_number; } set { this.sequence_number = value; } }
 
-        public MovieFragmentHeaderBox() : base("mfhd", 0, 0)
+        public MovieFragmentHeaderBox() : base(IsoStream.FromFourCC("mfhd"), 0, 0)
         {
         }
 
@@ -11074,7 +11071,7 @@ namespace SharpMP4
         public const string TYPE = "mfra";
         public override string DisplayName { get { return "MovieFragmentRandomAccessBox"; } }
 
-        public MovieFragmentRandomAccessBox() : base("mfra")
+        public MovieFragmentRandomAccessBox() : base(IsoStream.FromFourCC("mfra"))
         {
         }
 
@@ -11118,7 +11115,7 @@ namespace SharpMP4
         protected uint parent_size;
         public uint ParentSize { get { return this.parent_size; } set { this.parent_size = value; } }
 
-        public MovieFragmentRandomAccessOffsetBox(byte version = 0) : base("mfro", version, 0)
+        public MovieFragmentRandomAccessOffsetBox(byte version = 0) : base(IsoStream.FromFourCC("mfro"), version, 0)
         {
         }
 
@@ -11157,7 +11154,7 @@ namespace SharpMP4
         public const string TYPE = "minf";
         public override string DisplayName { get { return "MediaInformationBox"; } }
 
-        public MediaInformationBox() : base("minf")
+        public MediaInformationBox() : base(IsoStream.FromFourCC("minf"))
         {
         }
 
@@ -11198,7 +11195,7 @@ namespace SharpMP4
         public const string TYPE = "moof";
         public override string DisplayName { get { return "CompressedMovieFragmentBox"; } }
 
-        public CompressedMovieFragmentBox() : base("moof")
+        public CompressedMovieFragmentBox() : base(IsoStream.FromFourCC("moof"))
         {
         }
 
@@ -11238,7 +11235,7 @@ namespace SharpMP4
         public const string TYPE = "moov";
         public override string DisplayName { get { return "CompressedMovieBox"; } }
 
-        public CompressedMovieBox() : base("moov")
+        public CompressedMovieBox() : base(IsoStream.FromFourCC("moov"))
         {
         }
 
@@ -11277,7 +11274,7 @@ namespace SharpMP4
         public const string TYPE = "mvex";
         public override string DisplayName { get { return "MovieExtendsBox"; } }
 
-        public MovieExtendsBox() : base("mvex")
+        public MovieExtendsBox() : base(IsoStream.FromFourCC("mvex"))
         {
         }
 
@@ -11370,7 +11367,7 @@ namespace SharpMP4
         protected uint next_track_ID;
         public uint NextTrackID { get { return this.next_track_ID; } set { this.next_track_ID = value; } }
 
-        public MovieHeaderBox(byte version = 0) : base("mvhd", version, 0)
+        public MovieHeaderBox(byte version = 0) : base(IsoStream.FromFourCC("mvhd"), version, 0)
         {
         }
 
@@ -11398,9 +11395,9 @@ namespace SharpMP4
             boxSize += stream.ReadInt32(out this.rate); // typically 1.0
             boxSize += stream.ReadInt16(out this.volume); // typically, full volume
             boxSize += stream.ReadUInt16(out this.reserved);
-            boxSize += stream.ReadUInt32Array(2, out this.reserved0);
-            boxSize += stream.ReadInt32Array(9, out this.matrix); // Unity matrix
-            boxSize += stream.ReadUInt32Array(6, out this.pre_defined);
+            boxSize += stream.ReadUInt32Array(boxSize, readSize, 2, out this.reserved0);
+            boxSize += stream.ReadInt32Array(boxSize, readSize, 9, out this.matrix); // Unity matrix
+            boxSize += stream.ReadUInt32Array(boxSize, readSize, 6, out this.pre_defined);
             boxSize += stream.ReadUInt32(out this.next_track_ID);
             return boxSize;
         }
@@ -11479,7 +11476,7 @@ namespace SharpMP4
         public const string TYPE = "nmhd";
         public override string DisplayName { get { return "NullMediaHeaderBox"; } }
 
-        public NullMediaHeaderBox(uint flags = 0) : base("nmhd", 0, flags)
+        public NullMediaHeaderBox(uint flags = 0) : base(IsoStream.FromFourCC("nmhd"), 0, flags)
         {
         }
 
@@ -11515,7 +11512,7 @@ namespace SharpMP4
         public const string TYPE = "otyp";
         public override string DisplayName { get { return "OriginalFileTypeBox"; } }
 
-        public OriginalFileTypeBox() : base("otyp")
+        public OriginalFileTypeBox() : base(IsoStream.FromFourCC("otyp"))
         {
         }
 
@@ -11577,7 +11574,7 @@ namespace SharpMP4
         protected byte[] pad2;
         public byte[] Pad2 { get { return this.pad2; } set { this.pad2 = value; } }
 
-        public PaddingBitsBox() : base("padb", 0, 0)
+        public PaddingBitsBox() : base(IsoStream.FromFourCC("padb"), 0, 0)
         {
         }
 
@@ -11658,7 +11655,7 @@ namespace SharpMP4
         protected uint[] initial_delay;
         public uint[] InitialDelay { get { return this.initial_delay; } set { this.initial_delay = value; } }
 
-        public ProgressiveDownloadInfoBox() : base("pdin", 0, 0)
+        public ProgressiveDownloadInfoBox() : base(IsoStream.FromFourCC("pdin"), 0, 0)
         {
         }
 
@@ -11724,7 +11721,7 @@ namespace SharpMP4
         protected uint item_ID;
         public uint ItemID { get { return this.item_ID; } set { this.item_ID = value; } }
 
-        public PrimaryItemBox(byte version = 0) : base("pitm", version, 0)
+        public PrimaryItemBox(byte version = 0) : base(IsoStream.FromFourCC("pitm"), version, 0)
         {
         }
 
@@ -11807,7 +11804,7 @@ namespace SharpMP4
         protected ulong media_time;
         public ulong MediaTime { get { return this.media_time; } set { this.media_time = value; } }
 
-        public ProducerReferenceTimeBox(byte version = 0, uint flags = 0) : base("prft", version, flags)
+        public ProducerReferenceTimeBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("prft"), version, flags)
         {
         }
 
@@ -11885,7 +11882,7 @@ namespace SharpMP4
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
 
-        public RestrictedSchemeInfoBox(string fmt = "") : base("rinf")
+        public RestrictedSchemeInfoBox(uint fmt = 0) : base(IsoStream.FromFourCC("rinf"))
         {
         }
 
@@ -11958,7 +11955,7 @@ namespace SharpMP4
         protected ulong[] offset;
         public ulong[] Offset { get { return this.offset; } set { this.offset = value; } }
 
-        public SampleAuxiliaryInformationOffsetsBox(byte version = 0, uint flags = 0) : base("saio", version, flags)
+        public SampleAuxiliaryInformationOffsetsBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("saio"), version, flags)
         {
         }
 
@@ -11976,12 +11973,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                boxSize += stream.ReadUInt32Array(entry_count, out this.offset);
+                boxSize += stream.ReadUInt32Array(boxSize, readSize, (uint)(entry_count), out this.offset);
             }
 
             else
             {
-                boxSize += stream.ReadUInt64Array(entry_count, out this.offset);
+                boxSize += stream.ReadUInt64Array(boxSize, readSize, (uint)(entry_count), out this.offset);
             }
             return boxSize;
         }
@@ -12071,7 +12068,7 @@ namespace SharpMP4
         protected byte[] sample_info_size;
         public byte[] SampleInfoSize { get { return this.sample_info_size; } set { this.sample_info_size = value; } }
 
-        public SampleAuxiliaryInformationSizesBox(uint flags = 0) : base("saiz", 0, flags)
+        public SampleAuxiliaryInformationSizesBox(uint flags = 0) : base(IsoStream.FromFourCC("saiz"), 0, flags)
         {
         }
 
@@ -12090,7 +12087,7 @@ namespace SharpMP4
 
             if (default_sample_info_size == 0)
             {
-                boxSize += stream.ReadUInt8Array((uint)sample_count, out this.sample_info_size);
+                boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(sample_count), out this.sample_info_size);
             }
             return boxSize;
         }
@@ -12173,7 +12170,7 @@ namespace SharpMP4
         protected uint[] group_description_index;
         public uint[] GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
-        public SampleToGroupBox(byte version = 0) : base("sbgp", version, 0)
+        public SampleToGroupBox(byte version = 0) : base(IsoStream.FromFourCC("sbgp"), version, 0)
         {
         }
 
@@ -12252,7 +12249,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "SchemeInformationBox"; } }
         public IEnumerable<Box> SchemeSpecificData { get { return this.children.OfType<Box>(); } }
 
-        public SchemeInformationBox() : base("schi")
+        public SchemeInformationBox() : base(IsoStream.FromFourCC("schi"))
         {
         }
 
@@ -12308,7 +12305,7 @@ namespace SharpMP4
         protected BinaryUTF8String scheme_uri;  //  browser uri
         public BinaryUTF8String SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
-        public SchemeTypeBox(uint flags = 0) : base("schm", 0, flags)
+        public SchemeTypeBox(uint flags = 0) : base(IsoStream.FromFourCC("schm"), 0, flags)
         {
         }
 
@@ -12381,7 +12378,7 @@ namespace SharpMP4
         protected BinaryUTF8String scheme_uri;  //  browser uri
         public BinaryUTF8String SchemeUri { get { return this.scheme_uri; } set { this.scheme_uri = value; } }
 
-        public CompatibleSchemeTypeBox(uint flags = 0) : base("csch", 0, flags)
+        public CompatibleSchemeTypeBox(uint flags = 0) : base(IsoStream.FromFourCC("csch"), 0, flags)
         {
         }
 
@@ -12460,7 +12457,7 @@ namespace SharpMP4
         protected byte[] sample_has_redundancy;
         public byte[] SampleHasRedundancy { get { return this.sample_has_redundancy; } set { this.sample_has_redundancy = value; } }
 
-        public SampleDependencyTypeBox() : base("sdtp", 0, 0)
+        public SampleDependencyTypeBox() : base(IsoStream.FromFourCC("sdtp"), 0, 0)
         {
         }
 
@@ -12556,7 +12553,7 @@ namespace SharpMP4
         protected uint[][] hint_track_ID;
         public uint[][] HintTrackID { get { return this.hint_track_ID; } set { this.hint_track_ID = value; } }
 
-        public FDSessionGroupBox() : base("segr")
+        public FDSessionGroupBox() : base(IsoStream.FromFourCC("segr"))
         {
         }
 
@@ -12685,7 +12682,7 @@ namespace SharpMP4
         protected SampleGroupDescriptionEntry[] SampleGroupDescriptionEntry;  //  an instance of a class derived from SampleGroupDescriptionEntry
         public SampleGroupDescriptionEntry[] _SampleGroupDescriptionEntry { get { return this.SampleGroupDescriptionEntry; } set { this.SampleGroupDescriptionEntry = value; } }
 
-        public SampleGroupDescriptionBox(byte version = 0, uint flags = 0) : base("sgpd", version, flags)
+        public SampleGroupDescriptionBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("sgpd"), version, flags)
         {
         }
 
@@ -12720,7 +12717,7 @@ namespace SharpMP4
                         boxSize += stream.ReadUInt32(out this.description_length[i]);
                     }
                 }
-                boxSize += stream.ReadEntry(boxSize, readSize, this, IsoStream.ToFourCC(grouping_type), out this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => BoxFactory.CreateEntry(IsoStream.ToFourCC(grouping_type)), out this.SampleGroupDescriptionEntry[i]); // an instance of a class derived from SampleGroupDescriptionEntry
                 /*   that is appropriate and permitted for the media type */
             }
             return boxSize;
@@ -12809,7 +12806,7 @@ namespace SharpMP4
         public const string TYPE = "sidx";
         public override string DisplayName { get { return "CompressedSegmentIndexBox"; } }
 
-        public CompressedSegmentIndexBox() : base("sidx")
+        public CompressedSegmentIndexBox() : base(IsoStream.FromFourCC("sidx"))
         {
         }
 
@@ -12852,7 +12849,7 @@ namespace SharpMP4
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
 
-        public ProtectionSchemeInfoBox(string fmt = "") : base("sinf")
+        public ProtectionSchemeInfoBox(uint fmt = 0) : base(IsoStream.FromFourCC("sinf"))
         {
         }
 
@@ -12904,7 +12901,7 @@ namespace SharpMP4
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
-        public FreeSpaceBox_skip() : base("skip")
+        public FreeSpaceBox_skip() : base(IsoStream.FromFourCC("skip"))
         {
         }
 
@@ -12952,7 +12949,7 @@ namespace SharpMP4
         protected ushort reserved = 0;
         public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public SoundMediaHeaderBox() : base("smhd", 0, 0)
+        public SoundMediaHeaderBox() : base(IsoStream.FromFourCC("smhd"), 0, 0)
         {
         }
 
@@ -13014,7 +13011,7 @@ namespace SharpMP4
         public SchemeTypeBox SchemeTypeBox { get { return this.children.OfType<SchemeTypeBox>().FirstOrDefault(); } }
         public SchemeInformationBox Info { get { return this.children.OfType<SchemeInformationBox>().FirstOrDefault(); } }
 
-        public SRTPProcessBox(byte version = 0) : base("srpp", version, 0)
+        public SRTPProcessBox(byte version = 0) : base(IsoStream.FromFourCC("srpp"), version, 0)
         {
         }
 
@@ -13072,7 +13069,7 @@ namespace SharpMP4
         public const string TYPE = "ssix";
         public override string DisplayName { get { return "CompressedSubsegmentIndexBox"; } }
 
-        public CompressedSubsegmentIndexBox() : base("ssix")
+        public CompressedSubsegmentIndexBox() : base(IsoStream.FromFourCC("ssix"))
         {
         }
 
@@ -13108,7 +13105,7 @@ namespace SharpMP4
         public const string TYPE = "stbl";
         public override string DisplayName { get { return "SampleTableBox"; } }
 
-        public SampleTableBox() : base("stbl")
+        public SampleTableBox() : base(IsoStream.FromFourCC("stbl"))
         {
         }
 
@@ -13158,7 +13155,7 @@ namespace SharpMP4
         protected uint[] chunk_offset;
         public uint[] ChunkOffset { get { return this.chunk_offset; } set { this.chunk_offset = value; } }
 
-        public ChunkOffsetBox() : base("stco", 0, 0)
+        public ChunkOffsetBox() : base(IsoStream.FromFourCC("stco"), 0, 0)
         {
         }
 
@@ -13221,7 +13218,7 @@ namespace SharpMP4
         protected ushort[] priority;
         public ushort[] Priority { get { return this.priority; } set { this.priority = value; } }
 
-        public DegradationPriorityBox() : base("stdp", 0, 0)
+        public DegradationPriorityBox() : base(IsoStream.FromFourCC("stdp"), 0, 0)
         {
         }
 
@@ -13283,7 +13280,7 @@ namespace SharpMP4
         public const string TYPE = "sthd";
         public override string DisplayName { get { return "SubtitleMediaHeaderBox"; } }
 
-        public SubtitleMediaHeaderBox() : base("sthd", 0, 0)
+        public SubtitleMediaHeaderBox() : base(IsoStream.FromFourCC("sthd"), 0, 0)
         {
         }
 
@@ -13319,7 +13316,7 @@ namespace SharpMP4
         public const string TYPE = "strd";
         public override string DisplayName { get { return "SubTrackDefinitionBox"; } }
 
-        public SubTrackDefinitionBox() : base("strd")
+        public SubTrackDefinitionBox() : base(IsoStream.FromFourCC("strd"))
         {
         }
 
@@ -13375,7 +13372,7 @@ namespace SharpMP4
         protected uint[] attribute_list;  //  to the end of the box
         public uint[] AttributeList { get { return this.attribute_list; } set { this.attribute_list = value; } }
 
-        public SubTrackInformationBox() : base("stri", 0, 0)
+        public SubTrackInformationBox() : base(IsoStream.FromFourCC("stri"), 0, 0)
         {
         }
 
@@ -13442,7 +13439,7 @@ namespace SharpMP4
         protected uint[] sample_description_index;
         public uint[] SampleDescriptionIndex { get { return this.sample_description_index; } set { this.sample_description_index = value; } }
 
-        public SampleToChunkBox() : base("stsc", 0, 0)
+        public SampleToChunkBox() : base(IsoStream.FromFourCC("stsc"), 0, 0)
         {
         }
 
@@ -13515,7 +13512,7 @@ namespace SharpMP4
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
         public IEnumerable<SampleEntry> _SampleEntry { get { return this.children.OfType<SampleEntry>(); } }
 
-        public SampleDescriptionBox(byte version = 0) : base("stsd", version, 0)
+        public SampleDescriptionBox(byte version = 0) : base(IsoStream.FromFourCC("stsd"), version, 0)
         {
         }
 
@@ -13589,7 +13586,7 @@ namespace SharpMP4
         protected uint[] group_description_index;
         public uint[] GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
-        public SubTrackSampleGroupBox() : base("stsg", 0, 0)
+        public SubTrackSampleGroupBox() : base(IsoStream.FromFourCC("stsg"), 0, 0)
         {
         }
 
@@ -13663,7 +13660,7 @@ namespace SharpMP4
         protected uint[] sync_sample_number;
         public uint[] SyncSampleNumber { get { return this.sync_sample_number; } set { this.sync_sample_number = value; } }
 
-        public ShadowSyncSampleBox() : base("stsh", 0, 0)
+        public ShadowSyncSampleBox() : base(IsoStream.FromFourCC("stsh"), 0, 0)
         {
         }
 
@@ -13737,7 +13734,7 @@ namespace SharpMP4
         protected uint[] sample_number;
         public uint[] SampleNumber { get { return this.sample_number; } set { this.sample_number = value; } }
 
-        public SyncSampleBox() : base("stss", 0, 0)
+        public SyncSampleBox() : base(IsoStream.FromFourCC("stss"), 0, 0)
         {
         }
 
@@ -13811,7 +13808,7 @@ namespace SharpMP4
         protected uint[] entry_size;
         public uint[] EntrySize { get { return this.entry_size; } set { this.entry_size = value; } }
 
-        public SampleSizeBox() : base("stsz", 0, 0)
+        public SampleSizeBox() : base(IsoStream.FromFourCC("stsz"), 0, 0)
         {
         }
 
@@ -13897,7 +13894,7 @@ namespace SharpMP4
         protected uint[] sample_delta;
         public uint[] SampleDelta { get { return this.sample_delta; } set { this.sample_delta = value; } }
 
-        public TimeToSampleBox() : base("stts", 0, 0)
+        public TimeToSampleBox() : base(IsoStream.FromFourCC("stts"), 0, 0)
         {
         }
 
@@ -13959,7 +13956,7 @@ namespace SharpMP4
         public const string TYPE = "styp";
         public override string DisplayName { get { return "SegmentTypeBox"; } }
 
-        public SegmentTypeBox() : base("styp")
+        public SegmentTypeBox() : base(IsoStream.FromFourCC("styp"))
         {
         }
 
@@ -14014,7 +14011,7 @@ namespace SharpMP4
         protected byte[][] entry_size;
         public byte[][] EntrySize { get { return this.entry_size; } set { this.entry_size = value; } }
 
-        public CompactSampleSizeBox() : base("stz2", 0, 0)
+        public CompactSampleSizeBox() : base(IsoStream.FromFourCC("stz2"), 0, 0)
         {
         }
 
@@ -14029,7 +14026,7 @@ namespace SharpMP4
             this.entry_size = new byte[IsoStream.GetInt(sample_count)][];
             for (int i = 0; i < sample_count; i++)
             {
-                boxSize += stream.ReadUInt8Array((uint)field_size, out this.entry_size[i]);
+                boxSize += stream.ReadBits((uint)(field_size), out this.entry_size[i]);
             }
             return boxSize;
         }
@@ -14118,7 +14115,7 @@ namespace SharpMP4
         protected uint[][] codec_specific_parameters;
         public uint[][] CodecSpecificParameters { get { return this.codec_specific_parameters; } set { this.codec_specific_parameters = value; } }
 
-        public SubSampleInformationBox(byte version = 0, uint flags = 0) : base("subs", version, flags)
+        public SubSampleInformationBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("subs"), version, flags)
         {
         }
 
@@ -14260,7 +14257,7 @@ namespace SharpMP4
         protected ulong baseMediaDecodeTime;
         public ulong BaseMediaDecodeTime { get { return this.baseMediaDecodeTime; } set { this.baseMediaDecodeTime = value; } }
 
-        public TrackFragmentBaseMediaDecodeTimeBox(byte version = 0) : base("tfdt", version, 0)
+        public TrackFragmentBaseMediaDecodeTimeBox(byte version = 0) : base(IsoStream.FromFourCC("tfdt"), version, 0)
         {
         }
 
@@ -14366,7 +14363,7 @@ namespace SharpMP4
         protected uint default_sample_flags;
         public uint DefaultSampleFlags { get { return this.default_sample_flags; } set { this.default_sample_flags = value; } }
 
-        public TrackFragmentHeaderBox(uint tf_flags = 0) : base("tfhd", 0, tf_flags)
+        public TrackFragmentHeaderBox(uint tf_flags = 0) : base(IsoStream.FromFourCC("tfhd"), 0, tf_flags)
         {
         }
 
@@ -14535,7 +14532,7 @@ namespace SharpMP4
         protected byte[][] sample_delta;
         public byte[][] SampleDelta { get { return this.sample_delta; } set { this.sample_delta = value; } }
 
-        public TrackFragmentRandomAccessBox(byte version = 0) : base("tfra", version, 0)
+        public TrackFragmentRandomAccessBox(byte version = 0) : base(IsoStream.FromFourCC("tfra"), version, 0)
         {
         }
 
@@ -14569,9 +14566,9 @@ namespace SharpMP4
                     boxSize += stream.ReadUInt32(out this.time[i]);
                     boxSize += stream.ReadUInt32(out this.moof_offset[i]);
                 }
-                boxSize += stream.ReadUInt8Array((uint)(length_size_of_traf_num + 1), out this.traf_number[i]);
-                boxSize += stream.ReadUInt8Array((uint)(length_size_of_trun_num + 1), out this.trun_number[i]);
-                boxSize += stream.ReadUInt8Array((uint)(length_size_of_sample_num + 1), out this.sample_delta[i]);
+                boxSize += stream.ReadBits((uint)((length_size_of_traf_num + 1) * 8), out this.traf_number[i]);
+                boxSize += stream.ReadBits((uint)((length_size_of_trun_num + 1) * 8), out this.trun_number[i]);
+                boxSize += stream.ReadBits((uint)((length_size_of_sample_num + 1) * 8), out this.sample_delta[i]);
             }
             return boxSize;
         }
@@ -14718,7 +14715,7 @@ namespace SharpMP4
         protected uint height;
         public uint Height { get { return this.height; } set { this.height = value; } }
 
-        public TrackHeaderBox(byte version = 0, uint flags = 0) : base("tkhd", version, flags)
+        public TrackHeaderBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("tkhd"), version, flags)
         {
         }
 
@@ -14745,12 +14742,12 @@ namespace SharpMP4
                 boxSize += stream.ReadUInt32(out this.reserved0);
                 boxSize += stream.ReadUInt32(out this.duration);
             }
-            boxSize += stream.ReadUInt32Array(2, out this.reserved1);
+            boxSize += stream.ReadUInt32Array(boxSize, readSize, 2, out this.reserved1);
             boxSize += stream.ReadInt16(out this.layer);
             boxSize += stream.ReadInt16(out this.alternate_group);
             boxSize += stream.ReadInt16(out this.volume);
             boxSize += stream.ReadUInt16(out this.reserved2);
-            boxSize += stream.ReadInt32Array(9, out this.matrix); // unity matrix
+            boxSize += stream.ReadInt32Array(boxSize, readSize, 9, out this.matrix); // unity matrix
             boxSize += stream.ReadUInt32(out this.width);
             boxSize += stream.ReadUInt32(out this.height);
             return boxSize;
@@ -14835,7 +14832,7 @@ namespace SharpMP4
         public const string TYPE = "traf";
         public override string DisplayName { get { return "TrackFragmentBox"; } }
 
-        public TrackFragmentBox() : base("traf")
+        public TrackFragmentBox() : base(IsoStream.FromFourCC("traf"))
         {
         }
 
@@ -14874,7 +14871,7 @@ namespace SharpMP4
         public const string TYPE = "trak";
         public override string DisplayName { get { return "TrackBox"; } }
 
-        public TrackBox() : base("trak")
+        public TrackBox() : base(IsoStream.FromFourCC("trak"))
         {
         }
 
@@ -14915,7 +14912,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "TrackReferenceBox"; } }
         public IEnumerable<TrackReferenceTypeBox> _TrackReferenceTypeBox { get { return this.children.OfType<TrackReferenceTypeBox>(); } }
 
-        public TrackReferenceBox() : base("tref")
+        public TrackReferenceBox() : base(IsoStream.FromFourCC("tref"))
         {
         }
 
@@ -14962,7 +14959,7 @@ namespace SharpMP4
         protected uint track_ID;  //  Any number of boxes may follow
         public uint TrackID { get { return this.track_ID; } set { this.track_ID = value; } }
 
-        public TrackExtensionPropertiesBox() : base("trep", 0, 0)
+        public TrackExtensionPropertiesBox() : base(IsoStream.FromFourCC("trep"), 0, 0)
         {
         }
 
@@ -15024,7 +15021,7 @@ namespace SharpMP4
         protected uint default_sample_flags;
         public uint DefaultSampleFlags { get { return this.default_sample_flags; } set { this.default_sample_flags = value; } }
 
-        public TrackExtendsBox() : base("trex", 0, 0)
+        public TrackExtendsBox() : base(IsoStream.FromFourCC("trex"), 0, 0)
         {
         }
 
@@ -15075,7 +15072,7 @@ namespace SharpMP4
         public const string TYPE = "trgr";
         public override string DisplayName { get { return "TrackGroupBox"; } }
 
-        public TrackGroupBox() : base("trgr")
+        public TrackGroupBox() : base(IsoStream.FromFourCC("trgr"))
         {
         }
 
@@ -15138,7 +15135,7 @@ namespace SharpMP4
         protected TrunEntry[] TrunEntry;
         public TrunEntry[] _TrunEntry { get { return this.TrunEntry; } set { this.TrunEntry = value; } }
 
-        public TrackRunBox(byte version = 0, uint tr_flags = 0) : base("trun", version, tr_flags)
+        public TrackRunBox(byte version = 0, uint tr_flags = 0) : base(IsoStream.FromFourCC("trun"), version, tr_flags)
         {
         }
 
@@ -15159,7 +15156,7 @@ namespace SharpMP4
             }
             /*  all fields in the following array are optional */
             /*  as indicated by bits set in the tr_flags */
-            boxSize += stream.ReadClass(boxSize, readSize, this, sample_count, () => new TrunEntry(version, flags), out this.TrunEntry);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(sample_count), () => new TrunEntry(version, flags), out this.TrunEntry);
             return boxSize;
         }
 
@@ -15380,7 +15377,7 @@ namespace SharpMP4
         public const string TYPE = "ttyp";
         public override string DisplayName { get { return "TrackTypeBox"; } }
 
-        public TrackTypeBox() : base("ttyp")
+        public TrackTypeBox() : base(IsoStream.FromFourCC("ttyp"))
         {
         }
 
@@ -15420,7 +15417,7 @@ namespace SharpMP4
         protected uint[] compatible_brands;  //  to end of the box
         public uint[] CompatibleBrands { get { return this.compatible_brands; } set { this.compatible_brands = value; } }
 
-        public TypeCombinationBox() : base("tyco")
+        public TypeCombinationBox() : base(IsoStream.FromFourCC("tyco"))
         {
         }
 
@@ -15459,7 +15456,7 @@ namespace SharpMP4
         public const string TYPE = "udta";
         public override string DisplayName { get { return "UserDataBox"; } }
 
-        public UserDataBox() : base("udta")
+        public UserDataBox() : base(IsoStream.FromFourCC("udta"))
         {
         }
 
@@ -15523,9 +15520,9 @@ namespace SharpMP4
         protected byte[] usertype; // = extended_type
         public byte[] Usertype { get { return this.usertype; } set { this.usertype = value; } }
 
-        public BoxHeader(string boxtype = "", byte[] extended_type = null) : base()
+        public BoxHeader(uint boxtype = 0, byte[] extended_type = null) : base()
         {
-            this.type = IsoStream.FromFourCC(boxtype);
+            this.type = boxtype;
             this.usertype = extended_type;
         }
 
@@ -15547,7 +15544,7 @@ namespace SharpMP4
 
             if (type == IsoStream.FromFourCC("uuid"))
             {
-                boxSize += stream.ReadUInt8Array(16, out this.usertype);
+                boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.usertype);
             }
             return boxSize;
         }
@@ -15618,7 +15615,7 @@ namespace SharpMP4
         protected ushort[] opcolor = { 0, 0, 0 };
         public ushort[] Opcolor { get { return this.opcolor; } set { this.opcolor = value; } }
 
-        public VideoMediaHeaderBox() : base("vmhd", 0, 1)
+        public VideoMediaHeaderBox() : base(IsoStream.FromFourCC("vmhd"), 0, 1)
         {
         }
 
@@ -15627,7 +15624,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.graphicsmode); // copy, see below
-            boxSize += stream.ReadUInt16Array(3, out this.opcolor);
+            boxSize += stream.ReadUInt16Array(boxSize, readSize, 3, out this.opcolor);
             return boxSize;
         }
 
@@ -15665,7 +15662,7 @@ namespace SharpMP4
         protected BinaryUTF8String xml;
         public BinaryUTF8String Xml { get { return this.xml; } set { this.xml = value; } }
 
-        public XMLBox() : base("xml ", 0, 0)
+        public XMLBox() : base(IsoStream.FromFourCC("xml "), 0, 0)
         {
         }
 
@@ -15716,7 +15713,7 @@ namespace SharpMP4
         protected ushort ambient_light_y;
         public ushort AmbientLighty { get { return this.ambient_light_y; } set { this.ambient_light_y = value; } }
 
-        public AmbientViewingEnvironmentBox() : base("amve")
+        public AmbientViewingEnvironmentBox() : base(IsoStream.FromFourCC("amve"))
         {
         }
 
@@ -15767,7 +15764,7 @@ namespace SharpMP4
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
         public IEnumerable<MetaDataKeyBox> _MetaDataKeyBox { get { return this.children.OfType<MetaDataKeyBox>(); } }
 
-        public MetaDataKeyTableBox() : base("keys")
+        public MetaDataKeyTableBox() : base(IsoStream.FromFourCC("keys"))
         {
         }
 
@@ -15816,7 +15813,7 @@ namespace SharpMP4
         protected BinaryUTF8String theURI;
         public BinaryUTF8String TheURI { get { return this.theURI; } set { this.theURI = value; } }
 
-        public URIBox() : base("uri ", 0, 0)
+        public URIBox() : base(IsoStream.FromFourCC("uri "), 0, 0)
         {
         }
 
@@ -15939,7 +15936,7 @@ namespace SharpMP4
         public SamplingRateBox _SamplingRateBox { get { return this.children.OfType<SamplingRateBox>().FirstOrDefault(); } }
         public Box _Box { get { return this.children.OfType<Box>().FirstOrDefault(); } }
 
-        public AudioSampleEntry(string codingname = "") : base(codingname)
+        public AudioSampleEntry(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -15956,7 +15953,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.reserved);
             boxSize += stream.ReadUInt32(out this.samplerate);
 
-            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            if (FourCC != IsoStream.FromFourCC("mlpa"))
             {
                 // samplerate = samplerate >> 16
             }
@@ -15971,7 +15968,7 @@ namespace SharpMP4
 
             if (soundversion == 2)
             {
-                boxSize += stream.ReadUInt8Array(20, out this.soundVersion2Data);
+                boxSize += stream.ReadUInt8Array(boxSize, readSize, 20, out this.soundVersion2Data);
             }
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.ChannelLayout); // we permit any number of DownMix or DRC boxes: 
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.DownMixInstructions); 
@@ -15999,7 +15996,7 @@ namespace SharpMP4
             boxSize += stream.WriteUInt16(this.reserved);
             boxSize += stream.WriteUInt32(this.samplerate);
 
-            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            if (FourCC != IsoStream.FromFourCC("mlpa"))
             {
                 // samplerate = samplerate >> 16
             }
@@ -16042,7 +16039,7 @@ namespace SharpMP4
             boxSize += 16; // reserved
             boxSize += 32; // samplerate
 
-            if (IsoStream.FromFourCC(FourCC) != IsoStream.FromFourCC("mlpa"))
+            if (FourCC != IsoStream.FromFourCC("mlpa"))
             {
                 // samplerate = samplerate >> 16
             }
@@ -16133,7 +16130,7 @@ namespace SharpMP4
         public IEnumerable<DRCInstructionsUniDRC> _DRCInstructionsUniDRC { get { return this.children.OfType<DRCInstructionsUniDRC>(); } }
         public UniDrcConfigExtension _UniDrcConfigExtension { get { return this.children.OfType<UniDrcConfigExtension>().FirstOrDefault(); } }
 
-        public AudioSampleEntryV1(string codingname = "") : base(codingname)
+        public AudioSampleEntryV1(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -16143,7 +16140,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.entry_version); // shall be 1, 
             /*  and shall be in an stsd with version ==1 */
-            boxSize += stream.ReadUInt16Array(3, out this.reserved);
+            boxSize += stream.ReadUInt16Array(boxSize, readSize, 3, out this.reserved);
             boxSize += stream.ReadUInt16(out this.channelcount); // shall be correct
             boxSize += stream.ReadUInt16(out this.samplesize);
             boxSize += stream.ReadUInt16(out this.pre_defined);
@@ -16226,7 +16223,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "FontSampleEntry"; } }
 
-        public FontSampleEntry(string codingname = "") : base(codingname)
+        public FontSampleEntry(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -16267,7 +16264,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "MetaDataSampleEntry"; } }
 
-        public MetaDataSampleEntry(string codingname = "") : base(codingname)
+        public MetaDataSampleEntry(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -16315,7 +16312,7 @@ namespace SharpMP4
         public const string TYPE = "encv";
         public override string DisplayName { get { return "GenericSampleEntry"; } }
 
-        public GenericSampleEntry() : base("encv")
+        public GenericSampleEntry() : base(IsoStream.FromFourCC("encv"))
         {
         }
 
@@ -16402,7 +16399,7 @@ namespace SharpMP4
         protected BinaryUTF8String schema_location;  //  optional
         public BinaryUTF8String SchemaLocation { get { return this.schema_location; } set { this.schema_location = value; } }
 
-        public XMLMetaDataSampleEntry() : base("metx")
+        public XMLMetaDataSampleEntry() : base(IsoStream.FromFourCC("metx"))
         {
         }
 
@@ -16457,7 +16454,7 @@ namespace SharpMP4
         public BinaryUTF8String MimeFormat { get { return this.mime_format; } set { this.mime_format = value; } }
         public TextConfigBox _TextConfigBox { get { return this.children.OfType<TextConfigBox>().FirstOrDefault(); } }
 
-        public TextMetaDataSampleEntry() : base("mett")
+        public TextMetaDataSampleEntry() : base(IsoStream.FromFourCC("mett"))
         {
         }
 
@@ -16509,7 +16506,7 @@ namespace SharpMP4
         public URIBox TheLabel { get { return this.children.OfType<URIBox>().FirstOrDefault(); } }
         public URIInitBox Init { get { return this.children.OfType<URIInitBox>().FirstOrDefault(); } }
 
-        public URIMetaSampleEntry() : base("urim")
+        public URIMetaSampleEntry() : base(IsoStream.FromFourCC("urim"))
         {
         }
 
@@ -16559,7 +16556,7 @@ namespace SharpMP4
         public MetaDataKeyTableBox _MetaDataKeyTableBox { get { return this.children.OfType<MetaDataKeyTableBox>().FirstOrDefault(); } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
-        public BoxedMetaDataSampleEntry() : base("mebx")
+        public BoxedMetaDataSampleEntry() : base(IsoStream.FromFourCC("mebx"))
         {
         }
 
@@ -16620,7 +16617,7 @@ namespace SharpMP4
         protected ushort FEC_overhead;
         public ushort FECOverhead { get { return this.FEC_overhead; } set { this.FEC_overhead = value; } }
 
-        public FDHintSampleEntry() : base("fdp ")
+        public FDHintSampleEntry() : base(IsoStream.FromFourCC("fdp "))
         {
         }
 
@@ -16675,7 +16672,7 @@ namespace SharpMP4
         public CompleteTrackInfoBox _CompleteTrackInfoBox { get { return this.children.OfType<CompleteTrackInfoBox>().FirstOrDefault(); } }
         public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
 
-        public IncompleteAVCSampleEntry() : base("icpv")
+        public IncompleteAVCSampleEntry() : base(IsoStream.FromFourCC("icpv"))
         {
         }
 
@@ -16723,7 +16720,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ProtectedMPEG2TransportStreamSampleEntry"; } }
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
 
-        public ProtectedMPEG2TransportStreamSampleEntry() : base("pm2t")
+        public ProtectedMPEG2TransportStreamSampleEntry() : base(IsoStream.FromFourCC("pm2t"))
         {
         }
 
@@ -16768,7 +16765,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ProtectedRtpReceptionHintSampleEntry"; } }
         public ProtectionSchemeInfoBox _SchemeInformation { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
 
-        public ProtectedRtpReceptionHintSampleEntry() : base("prtp")
+        public ProtectedRtpReceptionHintSampleEntry() : base(IsoStream.FromFourCC("prtp"))
         {
         }
 
@@ -16809,7 +16806,7 @@ namespace SharpMP4
         public const string TYPE = "rm2t";
         public override string DisplayName { get { return "MPEG2TSReceptionSampleEntry"; } }
 
-        public MPEG2TSReceptionSampleEntry() : base("rm2t")
+        public MPEG2TSReceptionSampleEntry() : base(IsoStream.FromFourCC("rm2t"))
         {
         }
 
@@ -16857,7 +16854,7 @@ namespace SharpMP4
         protected uint maxpacketsize;
         public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
-        public ReceivedRtpHintSampleEntry() : base("rrtp")
+        public ReceivedRtpHintSampleEntry() : base(IsoStream.FromFourCC("rrtp"))
         {
         }
 
@@ -16917,7 +16914,7 @@ namespace SharpMP4
         protected uint maxpacketsize;
         public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
-        public ReceivedSrtpHintSampleEntry() : base("rsrp")
+        public ReceivedSrtpHintSampleEntry() : base(IsoStream.FromFourCC("rsrp"))
         {
         }
 
@@ -16961,7 +16958,7 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "HintSampleEntry"; } }
 
-        public HintSampleEntry(string protocol) : base(protocol)
+        public HintSampleEntry(uint protocol) : base(protocol)
         {
         }
 
@@ -16996,7 +16993,7 @@ namespace SharpMP4
         public const string TYPE = "sm2t";
         public override string DisplayName { get { return "MPEG2TSServerSampleEntry"; } }
 
-        public MPEG2TSServerSampleEntry() : base("sm2t")
+        public MPEG2TSServerSampleEntry() : base(IsoStream.FromFourCC("sm2t"))
         {
         }
 
@@ -17044,7 +17041,7 @@ namespace SharpMP4
         protected uint maxpacketsize;
         public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
-        public SrtpHintSampleEntry() : base("srtp")
+        public SrtpHintSampleEntry() : base(IsoStream.FromFourCC("srtp"))
         {
         }
 
@@ -17094,7 +17091,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "HapticSampleEntry"; } }
         public IEnumerable<Box> Otherboxes { get { return this.children.OfType<Box>(); } }
 
-        public HapticSampleEntry(string codingname = "") : base(codingname)
+        public HapticSampleEntry(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -17141,7 +17138,7 @@ namespace SharpMP4
         protected byte[] compressorname;  //  other boxes from derived specifications
         public byte[] Compressorname { get { return this.compressorname; } set { this.compressorname = value; } }
 
-        public VolumetricVisualSampleEntry(string codingname = "") : base(codingname)
+        public VolumetricVisualSampleEntry(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -17149,7 +17146,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorname); // other boxes from derived specifications
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 32, out this.compressorname); // other boxes from derived specifications
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
         }
@@ -17236,7 +17233,7 @@ namespace SharpMP4
         public CleanApertureBox Clap { get { return this.children.OfType<CleanApertureBox>().FirstOrDefault(); } }
         public PixelAspectRatioBox Pasp { get { return this.children.OfType<PixelAspectRatioBox>().FirstOrDefault(); } }
 
-        public VisualSampleEntry(string codingname = "") : base(codingname)
+        public VisualSampleEntry(uint codingname = 0) : base(codingname)
         {
         }
 
@@ -17246,14 +17243,14 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.pre_defined);
             boxSize += stream.ReadUInt16(out this.reserved);
-            boxSize += stream.ReadUInt32Array(3, out this.pre_defined0);
+            boxSize += stream.ReadUInt32Array(boxSize, readSize, 3, out this.pre_defined0);
             boxSize += stream.ReadUInt16(out this.width);
             boxSize += stream.ReadUInt16(out this.height);
             boxSize += stream.ReadUInt32(out this.horizresolution); // 72 dpi
             boxSize += stream.ReadUInt32(out this.vertresolution); // 72 dpi
             boxSize += stream.ReadUInt32(out this.reserved0);
             boxSize += stream.ReadUInt16(out this.frame_count);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorname);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 32, out this.compressorname);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadInt16(out this.pre_defined1); // other boxes from derived specifications
                                                                 // if (stream.HasMoreData(boxSize, readSize)) boxSize += stream.ReadBox(boxSize, readSize, this,  out this.clap); // optional
@@ -17329,7 +17326,7 @@ namespace SharpMP4
         protected uint maxpacketsize;
         public uint Maxpacketsize { get { return this.maxpacketsize; } set { this.maxpacketsize = value; } }
 
-        public RtpHintSampleEntry() : base("rtp ")
+        public RtpHintSampleEntry() : base(IsoStream.FromFourCC("rtp "))
         {
         }
 
@@ -17391,7 +17388,7 @@ namespace SharpMP4
         protected uint[] entity_id;  //  the remaining data may be specified for a particular grouping_type
         public uint[] EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
 
-        public EntityToGroupBox(string grouping_type, byte version, uint flags) : base(grouping_type, version, flags)
+        public EntityToGroupBox(uint grouping_type, byte version, uint flags) : base(grouping_type, version, flags)
         {
         }
 
@@ -17449,7 +17446,7 @@ namespace SharpMP4
         public const string TYPE = "brnd";
         public override string DisplayName { get { return "BrandProperty"; } }
 
-        public BrandProperty() : base("brnd")
+        public BrandProperty() : base(IsoStream.FromFourCC("brnd"))
         {
         }
 
@@ -17501,7 +17498,7 @@ namespace SharpMP4
         protected ushort[] to_item_ID;
         public ushort[] ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
 
-        public SingleItemTypeReferenceBox(string referenceType) : base(referenceType)
+        public SingleItemTypeReferenceBox(uint referenceType) : base(referenceType)
         {
         }
 
@@ -17572,7 +17569,7 @@ namespace SharpMP4
         protected uint[] to_item_ID;
         public uint[] ToItemID { get { return this.to_item_ID; } set { this.to_item_ID = value; } }
 
-        public SingleItemTypeReferenceBoxLarge(string referenceType) : base(referenceType)
+        public SingleItemTypeReferenceBoxLarge(uint referenceType) : base(referenceType)
         {
         }
 
@@ -17656,7 +17653,7 @@ namespace SharpMP4
         protected ushort[] num_total_samples;
         public ushort[] NumTotalSamples { get { return this.num_total_samples; } set { this.num_total_samples = value; } }
 
-        public AlternativeStartupEntry() : base("alst")
+        public AlternativeStartupEntry() : base(IsoStream.FromFourCC("alst"))
         {
         }
 
@@ -17750,7 +17747,7 @@ namespace SharpMP4
         protected uint reserved = 0;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public VisualDRAPEntry() : base("drap")
+        public VisualDRAPEntry() : base(IsoStream.FromFourCC("drap"))
         {
         }
 
@@ -17797,7 +17794,7 @@ namespace SharpMP4
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
 
-        public AudioPreRollEntry() : base("prol")
+        public AudioPreRollEntry() : base(IsoStream.FromFourCC("prol"))
         {
         }
 
@@ -17845,7 +17842,7 @@ namespace SharpMP4
         protected byte num_leading_samples;
         public byte NumLeadingSamples { get { return this.num_leading_samples; } set { this.num_leading_samples = value; } }
 
-        public VisualRandomAccessEntry() : base("rap ")
+        public VisualRandomAccessEntry() : base(IsoStream.FromFourCC("rap "))
         {
         }
 
@@ -17921,7 +17918,7 @@ namespace SharpMP4
         protected byte discard_priority;
         public byte DiscardPriority { get { return this.discard_priority; } set { this.discard_priority = value; } }
 
-        public RateShareEntry() : base("rash")
+        public RateShareEntry() : base(IsoStream.FromFourCC("rash"))
         {
         }
 
@@ -18021,7 +18018,7 @@ namespace SharpMP4
         protected short roll_distance;
         public short RollDistance { get { return this.roll_distance; } set { this.roll_distance = value; } }
 
-        public AudioRollRecoveryEntry() : base("roll")
+        public AudioRollRecoveryEntry() : base(IsoStream.FromFourCC("roll"))
         {
         }
 
@@ -18073,7 +18070,7 @@ namespace SharpMP4
         protected byte SAP_type;
         public byte SAPType { get { return this.SAP_type; } set { this.SAP_type = value; } }
 
-        public SAPEntry() : base("sap ")
+        public SAPEntry() : base(IsoStream.FromFourCC("sap "))
         {
         }
 
@@ -18133,7 +18130,7 @@ namespace SharpMP4
         protected uint[] item_id;
         public uint[] ItemId { get { return this.item_id; } set { this.item_id = value; } }
 
-        public SampleToMetadataItemEntry() : base("stmi")
+        public SampleToMetadataItemEntry() : base(IsoStream.FromFourCC("stmi"))
         {
         }
 
@@ -18200,7 +18197,7 @@ namespace SharpMP4
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public TemporalLevelEntry() : base("tele")
+        public TemporalLevelEntry() : base(IsoStream.FromFourCC("tele"))
         {
         }
 
@@ -18250,7 +18247,7 @@ namespace SharpMP4
         protected uint vSpacing;
         public uint VSpacing { get { return this.vSpacing; } set { this.vSpacing = value; } }
 
-        public PixelAspectRatioEntry() : base("pasr")
+        public PixelAspectRatioEntry() : base(IsoStream.FromFourCC("pasr"))
         {
         }
 
@@ -18330,7 +18327,7 @@ namespace SharpMP4
         protected uint vertOffD;
         public uint VertOffD { get { return this.vertOffD; } set { this.vertOffD = value; } }
 
-        public CleanApertureEntry() : base("casg")
+        public CleanApertureEntry() : base(IsoStream.FromFourCC("casg"))
         {
         }
 
@@ -18382,7 +18379,7 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TrackGroupTypeBox('msrc') extends FullBox('msrc', version = 0, flags = 0)
+    aligned(8) class TrackGroupTypeBox(boxtype = 'msrc') extends FullBox(boxtype, version = 0, flags = 0)
     {
         unsigned int(32) track_group_id;
         // the remaining data may be specified 
@@ -18391,13 +18388,12 @@ namespace SharpMP4
     */
     public class TrackGroupTypeBox : FullBox
     {
-        public const string TYPE = "msrc";
         public override string DisplayName { get { return "TrackGroupTypeBox"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox(string boxtype = "msrc") : base("msrc", 0, 0)
+        public TrackGroupTypeBox(uint boxtype = 1836282467) : base(boxtype, 0, 0)
         {
         }
 
@@ -18448,7 +18444,7 @@ namespace SharpMP4
         protected uint reserved;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public StereoVideoGroupBox() : base("ster")
+        public StereoVideoGroupBox() : base(IsoStream.FromFourCC("ster"))
         {
         }
 
@@ -18493,7 +18489,7 @@ namespace SharpMP4
         protected uint[] track_IDs;
         public uint[] TrackIDs { get { return this.track_IDs; } set { this.track_IDs = value; } }
 
-        public TrackReferenceTypeBox(string reference_type) : base(reference_type)
+        public TrackReferenceTypeBox(uint reference_type) : base(reference_type)
         {
         }
 
@@ -18537,7 +18533,7 @@ namespace SharpMP4
         protected ViprEntry[] entries;
         public ViprEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
-        public ViewPriorityBox() : base("vipr")
+        public ViewPriorityBox() : base(IsoStream.FromFourCC("vipr"))
         {
         }
 
@@ -18545,7 +18541,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.entries);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new ViprEntry(), out this.entries);
             return boxSize;
         }
 
@@ -18739,7 +18735,7 @@ namespace SharpMP4
         protected DependencyInfo[] dependency;
         public DependencyInfo[] Dependency { get { return this.dependency; } set { this.dependency = value; } }
 
-        public AVCSubSequenceEntry() : base("avss")
+        public AVCSubSequenceEntry() : base(IsoStream.FromFourCC("avss"))
         {
         }
 
@@ -18765,7 +18761,7 @@ namespace SharpMP4
                 boxSize += stream.ReadUInt16(out this.avgFrameRate);
             }
             boxSize += stream.ReadUInt8(out this.numReferences);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.dependency);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(numReferences), () => new DependencyInfo(), out this.dependency);
             return boxSize;
         }
 
@@ -18893,7 +18889,7 @@ namespace SharpMP4
         protected long mantissa_skew_factor;
         public long MantissaSkewFactor { get { return this.mantissa_skew_factor; } set { this.mantissa_skew_factor = value; } }
 
-        public IntrinsicCameraParametersBox(uint flags = 0) : base("icam", 0, flags)
+        public IntrinsicCameraParametersBox(uint flags = 0) : base(IsoStream.FromFourCC("icam"), 0, flags)
         {
         }
 
@@ -19010,7 +19006,7 @@ namespace SharpMP4
         protected long[] mantissa_t;
         public long[] Mantissat { get { return this.mantissa_t; } set { this.mantissa_t = value; } }
 
-        public ExtrinsicCameraParametersBox(uint flags = 0) : base("ecam", 0, flags)
+        public ExtrinsicCameraParametersBox(uint flags = 0) : base(IsoStream.FromFourCC("ecam"), 0, flags)
         {
         }
 
@@ -19227,7 +19223,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.ReadBits((uint)(8 * sequenceParameterSetLength[i]), out this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
 
@@ -19236,7 +19232,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.ReadBits((uint)(8 * pictureParameterSetLength[i]), out this.pictureParameterSetNALUnit[i]);
             }
 
             if (boxSize >= readSize || (readSize - boxSize) < 4) return boxSize; else HasExtensions = true;
@@ -19256,7 +19252,7 @@ namespace SharpMP4
                 for (int i = 0; i < numOfSequenceParameterSetExt; i++)
                 {
                     boxSize += stream.ReadUInt16(out this.sequenceParameterSetExtLength[i]);
-                    boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetExtLength[i], out this.sequenceParameterSetExtNALUnit[i]);
+                    boxSize += stream.ReadBits((uint)(8 * sequenceParameterSetExtLength[i]), out this.sequenceParameterSetExtNALUnit[i]);
                 }
             }
             return boxSize;
@@ -19453,7 +19449,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.ReadBits((uint)(8 * sequenceParameterSetLength[i]), out this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
 
@@ -19462,7 +19458,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.ReadBits((uint)(8 * pictureParameterSetLength[i]), out this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -19619,7 +19615,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets && numOfSequenceParameterSets <= 64 && numOfSequenceParameterSets >= 0; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.ReadBits((uint)(8 * sequenceParameterSetLength[i]), out this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
 
@@ -19628,7 +19624,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.ReadBits((uint)(8 * pictureParameterSetLength[i]), out this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -19870,7 +19866,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
+                    boxSize += stream.ReadBits((uint)(8 * nalUnitLength[j][i]), out this.nalUnit[j][i]);
                 }
             }
             return boxSize;
@@ -20283,7 +20279,7 @@ namespace SharpMP4
                 boxSize += stream.ReadBits(2, out this.chroma_format_idc);
                 boxSize += stream.ReadBits(3, out this.bit_depth_minus8);
                 boxSize += stream.ReadBits(5, out this.reserved0);
-                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(num_sublayers), out this.native_ptl);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new VvcPTLRecord(num_sublayers), out this.native_ptl);
                 boxSize += stream.ReadUInt16(out this.max_picture_width);
                 boxSize += stream.ReadUInt16(out this.max_picture_height);
                 boxSize += stream.ReadUInt16(out this.avg_frame_rate);
@@ -20311,7 +20307,7 @@ namespace SharpMP4
                     for (int i = 0; i < num_nalus[j]; i++)
                     {
                         boxSize += stream.ReadUInt16(out this.nal_unit_length[j][i]);
-                        boxSize += stream.ReadUInt8Array((uint)nal_unit_length[j][i], out this.nal_unit[j][i]);
+                        boxSize += stream.ReadBits((uint)(8 * nal_unit_length[j][i]), out this.nal_unit[j][i]);
                     }
                 }
             }
@@ -20507,7 +20503,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfSequenceParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.sequenceParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)sequenceParameterSetLength[i], out this.sequenceParameterSetNALUnit[i]);
+                boxSize += stream.ReadBits((uint)(8 * sequenceParameterSetLength[i]), out this.sequenceParameterSetNALUnit[i]);
             }
             boxSize += stream.ReadUInt8(out this.numOfPictureParameterSets);
 
@@ -20516,7 +20512,7 @@ namespace SharpMP4
             for (int i = 0; i < numOfPictureParameterSets; i++)
             {
                 boxSize += stream.ReadUInt16(out this.pictureParameterSetLength[i]);
-                boxSize += stream.ReadUInt8Array((uint)pictureParameterSetLength[i], out this.pictureParameterSetNALUnit[i]);
+                boxSize += stream.ReadBits((uint)(8 * pictureParameterSetLength[i]), out this.pictureParameterSetNALUnit[i]);
             }
             return boxSize;
         }
@@ -20738,7 +20734,7 @@ namespace SharpMP4
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
                 boxSize += stream.ReadUInt8(out this.ptl_max_temporal_id[i]);
-                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord((byte)(ptl_max_temporal_id[i] + 1)), out this.ptl[i]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new VvcPTLRecord((byte)(ptl_max_temporal_id[i] + 1)), out this.ptl[i]);
             }
             boxSize += stream.ReadBit(out this.all_independent_layers_flag);
             boxSize += stream.ReadBits(7, out this.reserved);
@@ -21096,7 +21092,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
+                    boxSize += stream.ReadBits((uint)(8 * nalUnitLength[j][i]), out this.nalUnit[j][i]);
                 }
             }
             return boxSize;
@@ -21358,7 +21354,7 @@ namespace SharpMP4
                 for (int i = 0; i < numNalus[j]; i++)
                 {
                     boxSize += stream.ReadUInt16(out this.nalUnitLength[j][i]);
-                    boxSize += stream.ReadUInt8Array((uint)nalUnitLength[j][i], out this.nalUnit[j][i]);
+                    boxSize += stream.ReadBits((uint)(8 * nalUnitLength[j][i]), out this.nalUnit[j][i]);
                 }
             }
             boxSize += stream.ReadUInt16(out this.operationPointIdx);
@@ -21504,7 +21500,7 @@ namespace SharpMP4
         protected byte[] roi_mb_height;
         public byte[] RoiMbHeight { get { return this.roi_mb_height; } set { this.roi_mb_height = value; } }
 
-        public IroiInfoBox() : base("iroi")
+        public IroiInfoBox() : base(IsoStream.FromFourCC("iroi"))
         {
         }
 
@@ -21612,7 +21608,7 @@ namespace SharpMP4
         protected ushort[] dependencyTierId;
         public ushort[] DependencyTierId { get { return this.dependencyTierId; } set { this.dependencyTierId = value; } }
 
-        public TierDependencyBox() : base("ldep")
+        public TierDependencyBox() : base(IsoStream.FromFourCC("ldep"))
         {
         }
 
@@ -21699,7 +21695,7 @@ namespace SharpMP4
         protected byte max_quality_id;
         public byte MaxQualityId { get { return this.max_quality_id; } set { this.max_quality_id = value; } }
 
-        public SVCDependencyRangeBox() : base("svdr")
+        public SVCDependencyRangeBox() : base(IsoStream.FromFourCC("svdr"))
         {
         }
 
@@ -21777,7 +21773,7 @@ namespace SharpMP4
         protected byte[] PPS_index;
         public byte[] PPSIndex { get { return this.PPS_index; } set { this.PPS_index = value; } }
 
-        public InitialParameterSetBox() : base("svip")
+        public InitialParameterSetBox() : base(IsoStream.FromFourCC("svip"))
         {
         }
 
@@ -21867,7 +21863,7 @@ namespace SharpMP4
         protected byte max_priorityId;
         public byte MaxPriorityId { get { return this.max_priorityId; } set { this.max_priorityId = value; } }
 
-        public PriorityRangeBox() : base("svpr")
+        public PriorityRangeBox() : base(IsoStream.FromFourCC("svpr"))
         {
         }
 
@@ -21959,7 +21955,7 @@ namespace SharpMP4
         protected uint cabac_avg_bitrate;
         public uint CabacAvgBitrate { get { return this.cabac_avg_bitrate; } set { this.cabac_avg_bitrate = value; } }
 
-        public TranscodingInfoBox() : base("tran")
+        public TranscodingInfoBox() : base(IsoStream.FromFourCC("tran"))
         {
         }
 
@@ -22079,7 +22075,7 @@ namespace SharpMP4
         protected ushort region_height;
         public ushort RegionHeight { get { return this.region_height; } set { this.region_height = value; } }
 
-        public RectRegionBox() : base("rrgn")
+        public RectRegionBox() : base(IsoStream.FromFourCC("rrgn"))
         {
         }
 
@@ -22174,7 +22170,7 @@ namespace SharpMP4
         protected uint[] init_dpb_delay;
         public uint[] InitDpbDelay { get { return this.init_dpb_delay; } set { this.init_dpb_delay = value; } }
 
-        public BufferingBox() : base("buff")
+        public BufferingBox() : base(IsoStream.FromFourCC("buff"))
         {
         }
 
@@ -22264,7 +22260,7 @@ namespace SharpMP4
         protected byte[] reserved;
         public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public MVCSubTrackViewBox() : base("mstv", 0, 0)
+        public MVCSubTrackViewBox() : base(IsoStream.FromFourCC("mstv"), 0, 0)
         {
         }
 
@@ -22391,7 +22387,7 @@ namespace SharpMP4
         public BufferingBox SubsetStreamBuffering { get { return this.children.OfType<BufferingBox>().FirstOrDefault(); } }
         public MultiviewSceneInfoBox MultiviewSceneInfo { get { return this.children.OfType<MultiviewSceneInfoBox>().FirstOrDefault(); } }
 
-        public MultiviewGroupBox(uint flags = 0) : base("mvcg", 0, flags)
+        public MultiviewGroupBox(uint flags = 0) : base(IsoStream.FromFourCC("mvcg"), 0, flags)
         {
         }
 
@@ -22550,7 +22546,7 @@ namespace SharpMP4
         public const string TYPE = "mvci";
         public override string DisplayName { get { return "MultiviewInformationBox"; } }
 
-        public MultiviewInformationBox(uint flags = 0) : base("mvci", 0, flags)
+        public MultiviewInformationBox(uint flags = 0) : base(IsoStream.FromFourCC("mvci"), 0, flags)
         {
         }
 
@@ -22637,7 +22633,7 @@ namespace SharpMP4
         protected short[] grid_pos_y;
         public short[] GridPosy { get { return this.grid_pos_y; } set { this.grid_pos_y = value; } }
 
-        public MVDDepthResolutionBox() : base("3dpr")
+        public MVDDepthResolutionBox() : base(IsoStream.FromFourCC("3dpr"))
         {
         }
 
@@ -22757,7 +22753,7 @@ namespace SharpMP4
         protected uint[] differentiating_attribute;
         public uint[] DifferentiatingAttribute { get { return this.differentiating_attribute; } set { this.differentiating_attribute = value; } }
 
-        public MultiviewRelationAttributeBox(uint flags = 0) : base("mvra", 0, flags)
+        public MultiviewRelationAttributeBox(uint flags = 0) : base(IsoStream.FromFourCC("mvra"), 0, flags)
         {
         }
 
@@ -22854,7 +22850,7 @@ namespace SharpMP4
         protected short[][] relative_sample_number;
         public short[][] RelativeSampleNumber { get { return this.relative_sample_number; } set { this.relative_sample_number = value; } }
 
-        public SampleDependencyBox() : base("sdep", 0, 0)
+        public SampleDependencyBox() : base(IsoStream.FromFourCC("sdep"), 0, 0)
         {
         }
 
@@ -22949,7 +22945,7 @@ namespace SharpMP4
         protected ushort[] notrequiredSEI_ID;
         public ushort[] NotrequiredSEIID { get { return this.notrequiredSEI_ID; } set { this.notrequiredSEI_ID = value; } }
 
-        public SeiInformationBox() : base("seii")
+        public SeiInformationBox() : base(IsoStream.FromFourCC("seii"))
         {
         }
 
@@ -23062,7 +23058,7 @@ namespace SharpMP4
         protected byte[] priority_id_range;
         public byte[] PriorityIdRange { get { return this.priority_id_range; } set { this.priority_id_range = value; } }
 
-        public SVCSubTrackLayerBox() : base("sstl", 0, 0)
+        public SVCSubTrackLayerBox() : base(IsoStream.FromFourCC("sstl"), 0, 0)
         {
         }
 
@@ -23156,7 +23152,7 @@ namespace SharpMP4
         protected uint[] MultiviewGroupId;
         public uint[] _MultiviewGroupId { get { return this.MultiviewGroupId; } set { this.MultiviewGroupId = value; } }
 
-        public MVCSubTrackMultiviewGroupBox() : base("stmg", 0, 0)
+        public MVCSubTrackMultiviewGroupBox() : base(IsoStream.FromFourCC("stmg"), 0, 0)
         {
         }
 
@@ -23222,7 +23218,7 @@ namespace SharpMP4
         protected ushort[] tierID;
         public ushort[] TierID { get { return this.tierID; } set { this.tierID = value; } }
 
-        public SubTrackTierBox() : base("stti", 0, 0)
+        public SubTrackTierBox() : base(IsoStream.FromFourCC("stti"), 0, 0)
         {
         }
 
@@ -23288,7 +23284,7 @@ namespace SharpMP4
         public uint[] MultiviewGroupId { get { return this.multiview_group_id; } set { this.multiview_group_id = value; } }
         public MultiviewRelationAttributeBox RelationAttributes { get { return this.children.OfType<MultiviewRelationAttributeBox>().FirstOrDefault(); } }
 
-        public MultiviewGroupRelationBox(uint flags = 0) : base("swtc", 0, flags)
+        public MultiviewGroupRelationBox(uint flags = 0) : base(IsoStream.FromFourCC("swtc"), 0, flags)
         {
         }
 
@@ -23374,7 +23370,7 @@ namespace SharpMP4
         protected uint tierAvgBitRate;
         public uint TierAvgBitRate { get { return this.tierAvgBitRate; } set { this.tierAvgBitRate = value; } }
 
-        public TierBitRateBox() : base("tibr")
+        public TierBitRateBox() : base(IsoStream.FromFourCC("tibr"))
         {
         }
 
@@ -23474,7 +23470,7 @@ namespace SharpMP4
         protected ushort frameRate;
         public ushort FrameRate { get { return this.frameRate; } set { this.frameRate = value; } }
 
-        public TierInfoBox() : base("tiri")
+        public TierInfoBox() : base(IsoStream.FromFourCC("tiri"))
         {
         }
 
@@ -23556,7 +23552,7 @@ namespace SharpMP4
         protected ushort[] tileGroupID;
         public ushort[] TileGroupID { get { return this.tileGroupID; } set { this.tileGroupID = value; } }
 
-        public TileSubTrackGroupBox() : base("tstb", 0, 0)
+        public TileSubTrackGroupBox() : base(IsoStream.FromFourCC("tstb"), 0, 0)
         {
         }
 
@@ -23616,7 +23612,7 @@ namespace SharpMP4
         protected byte max_disparity;
         public byte MaxDisparity { get { return this.max_disparity; } set { this.max_disparity = value; } }
 
-        public MultiviewSceneInfoBox() : base("vwdi")
+        public MultiviewSceneInfoBox() : base(IsoStream.FromFourCC("vwdi"))
         {
         }
 
@@ -23661,7 +23657,7 @@ namespace SharpMP4
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
         public MVDDepthResolutionBox MvdDepthRes { get { return this.children.OfType<MVDDepthResolutionBox>().FirstOrDefault(); } }
 
-        public MVCDConfigurationBox() : base("mvdC")
+        public MVCDConfigurationBox() : base(IsoStream.FromFourCC("mvdC"))
         {
         }
 
@@ -23669,7 +23665,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new MVDDecoderConfigurationRecord(), out this.MVDConfig);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdDepthRes); //Optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -23712,7 +23708,7 @@ namespace SharpMP4
         public MVDDecoderConfigurationRecord _MVDConfig { get { return this.MVDConfig; } set { this.MVDConfig = value; } }
         public MVDDepthResolutionBox MvdDepthRes { get { return this.children.OfType<MVDDepthResolutionBox>().FirstOrDefault(); } }
 
-        public A3DConfigurationBox() : base("a3dC")
+        public A3DConfigurationBox() : base(IsoStream.FromFourCC("a3dC"))
         {
         }
 
@@ -23720,7 +23716,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new MVDDecoderConfigurationRecord(), out this.MVDConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new MVDDecoderConfigurationRecord(), out this.MVDConfig);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.mvdDepthRes); //Optional
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -23830,7 +23826,7 @@ namespace SharpMP4
         protected ushort[][] ref_view_id;
         public ushort[][] RefViewId { get { return this.ref_view_id; } set { this.ref_view_id = value; } }
 
-        public ViewIdentifierBox(uint flags = 0) : base("vwid", 0, flags)
+        public ViewIdentifierBox(uint flags = 0) : base(IsoStream.FromFourCC("vwid"), 0, flags)
         {
         }
 
@@ -23961,7 +23957,7 @@ namespace SharpMP4
         protected MVCDecoderConfigurationRecord MVCConfig;
         public MVCDecoderConfigurationRecord _MVCConfig { get { return this.MVCConfig; } set { this.MVCConfig = value; } }
 
-        public MVCConfigurationBox() : base("mvcC")
+        public MVCConfigurationBox() : base(IsoStream.FromFourCC("mvcC"))
         {
         }
 
@@ -23969,7 +23965,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new MVCDecoderConfigurationRecord(), out this.MVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new MVCDecoderConfigurationRecord(), out this.MVCConfig);
             return boxSize;
         }
 
@@ -24004,7 +24000,7 @@ namespace SharpMP4
         protected AVCDecoderConfigurationRecord AVCConfig;
         public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }
 
-        public AVCConfigurationBox() : base("avcC")
+        public AVCConfigurationBox() : base(IsoStream.FromFourCC("avcC"))
         {
         }
 
@@ -24012,7 +24008,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new AVCDecoderConfigurationRecord(), out this.AVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new AVCDecoderConfigurationRecord(), out this.AVCConfig);
             return boxSize;
         }
 
@@ -24047,7 +24043,7 @@ namespace SharpMP4
         protected HEVCDecoderConfigurationRecord HEVCConfig;
         public HEVCDecoderConfigurationRecord _HEVCConfig { get { return this.HEVCConfig; } set { this.HEVCConfig = value; } }
 
-        public HEVCConfigurationBox() : base("hvcC")
+        public HEVCConfigurationBox() : base(IsoStream.FromFourCC("hvcC"))
         {
         }
 
@@ -24055,7 +24051,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new HEVCDecoderConfigurationRecord(), out this.HEVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new HEVCDecoderConfigurationRecord(), out this.HEVCConfig);
             return boxSize;
         }
 
@@ -24090,7 +24086,7 @@ namespace SharpMP4
         protected LHEVCDecoderConfigurationRecord LHEVCConfig;
         public LHEVCDecoderConfigurationRecord _LHEVCConfig { get { return this.LHEVCConfig; } set { this.LHEVCConfig = value; } }
 
-        public LHEVCConfigurationBox() : base("lhvC")
+        public LHEVCConfigurationBox() : base(IsoStream.FromFourCC("lhvC"))
         {
         }
 
@@ -24098,7 +24094,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new LHEVCDecoderConfigurationRecord(), out this.LHEVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new LHEVCDecoderConfigurationRecord(), out this.LHEVCConfig);
             return boxSize;
         }
 
@@ -24133,7 +24129,7 @@ namespace SharpMP4
         protected Descriptor[] Descr;
         public Descriptor[] _Descr { get { return this.Descr; } set { this.Descr = value; } }
 
-        public MPEG4ExtensionDescriptorsBox() : base("m4ds")
+        public MPEG4ExtensionDescriptorsBox() : base(IsoStream.FromFourCC("m4ds"))
         {
         }
 
@@ -24176,7 +24172,7 @@ namespace SharpMP4
         protected SVCDecoderConfigurationRecord SVCConfig;
         public SVCDecoderConfigurationRecord _SVCConfig { get { return this.SVCConfig; } set { this.SVCConfig = value; } }
 
-        public SVCConfigurationBox() : base("svcC")
+        public SVCConfigurationBox() : base(IsoStream.FromFourCC("svcC"))
         {
         }
 
@@ -24184,7 +24180,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new SVCDecoderConfigurationRecord(), out this.SVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new SVCDecoderConfigurationRecord(), out this.SVCConfig);
             return boxSize;
         }
 
@@ -24220,7 +24216,7 @@ namespace SharpMP4
         protected byte[] scalinfosei;
         public byte[] Scalinfosei { get { return this.scalinfosei; } set { this.scalinfosei = value; } }
 
-        public ScalabilityInformationSEIBox(ulong size = 0) : base("seib", size)
+        public ScalabilityInformationSEIBox(ulong size = 0) : base(IsoStream.FromFourCC("seib"), size)
         {
         }
 
@@ -24228,7 +24224,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)(size - 8), out this.scalinfosei);
+            boxSize += stream.ReadBits((uint)(8 * size - 64), out this.scalinfosei);
             return boxSize;
         }
 
@@ -24268,7 +24264,7 @@ namespace SharpMP4
         protected BinaryUTF8String[] PriorityAssignmentURI;
         public BinaryUTF8String[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
-        public SVCPriorityAssignmentBox() : base("svcP")
+        public SVCPriorityAssignmentBox() : base(IsoStream.FromFourCC("svcP"))
         {
         }
 
@@ -24277,7 +24273,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt8(out this.method_count);
-            boxSize += stream.ReadStringArray(method_count, out this.PriorityAssignmentURI);
+            boxSize += stream.ReadStringZeroTerminatedArray(boxSize, readSize, (uint)(method_count), out this.PriorityAssignmentURI);
             return boxSize;
         }
 
@@ -24315,7 +24311,7 @@ namespace SharpMP4
         protected byte[] mvcscalinfosei;
         public byte[] Mvcscalinfosei { get { return this.mvcscalinfosei; } set { this.mvcscalinfosei = value; } }
 
-        public ViewScalabilityInformationSEIBox(ulong size = 0) : base("vsib", size)
+        public ViewScalabilityInformationSEIBox(ulong size = 0) : base(IsoStream.FromFourCC("vsib"), size)
         {
         }
 
@@ -24323,7 +24319,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)(size - 8), out this.mvcscalinfosei);
+            boxSize += stream.ReadBits((uint)(8 * size - 64), out this.mvcscalinfosei);
             return boxSize;
         }
 
@@ -24359,7 +24355,7 @@ namespace SharpMP4
         protected byte[] mvdscalinfosei;
         public byte[] Mvdscalinfosei { get { return this.mvdscalinfosei; } set { this.mvdscalinfosei = value; } }
 
-        public MVDScalabilityInformationSEIBox(ulong size = 0) : base("3sib", size)
+        public MVDScalabilityInformationSEIBox(ulong size = 0) : base(IsoStream.FromFourCC("3sib"), size)
         {
         }
 
@@ -24367,7 +24363,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)(size - 8), out this.mvdscalinfosei);
+            boxSize += stream.ReadBits((uint)(8 * size - 64), out this.mvdscalinfosei);
             return boxSize;
         }
 
@@ -24407,7 +24403,7 @@ namespace SharpMP4
         protected BinaryUTF8String[] PriorityAssignmentURI;
         public BinaryUTF8String[] _PriorityAssignmentURI { get { return this.PriorityAssignmentURI; } set { this.PriorityAssignmentURI = value; } }
 
-        public MVCViewPriorityAssignmentBox() : base("mvcP")
+        public MVCViewPriorityAssignmentBox() : base(IsoStream.FromFourCC("mvcP"))
         {
         }
 
@@ -24416,7 +24412,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt8(out this.method_count);
-            boxSize += stream.ReadStringArray(method_count, out this.PriorityAssignmentURI);
+            boxSize += stream.ReadStringZeroTerminatedArray(boxSize, readSize, (uint)(method_count), out this.PriorityAssignmentURI);
             return boxSize;
         }
 
@@ -24453,7 +24449,7 @@ namespace SharpMP4
         protected HEVCTileTierLevelConfigurationRecord HEVCTileTierLevelConfig;
         public HEVCTileTierLevelConfigurationRecord _HEVCTileTierLevelConfig { get { return this.HEVCTileTierLevelConfig; } set { this.HEVCTileTierLevelConfig = value; } }
 
-        public HEVCTileConfigurationBox() : base("hvtC")
+        public HEVCTileConfigurationBox() : base(IsoStream.FromFourCC("hvtC"))
         {
         }
 
@@ -24461,7 +24457,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new HEVCTileTierLevelConfigurationRecord(), out this.HEVCTileTierLevelConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new HEVCTileTierLevelConfigurationRecord(), out this.HEVCTileTierLevelConfig);
             return boxSize;
         }
 
@@ -24496,7 +24492,7 @@ namespace SharpMP4
         protected EVCDecoderConfigurationRecord EVCConfig;
         public EVCDecoderConfigurationRecord _EVCConfig { get { return this.EVCConfig; } set { this.EVCConfig = value; } }
 
-        public EVCConfigurationBox() : base("evcC")
+        public EVCConfigurationBox() : base(IsoStream.FromFourCC("evcC"))
         {
         }
 
@@ -24504,7 +24500,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new EVCDecoderConfigurationRecord(), out this.EVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new EVCDecoderConfigurationRecord(), out this.EVCConfig);
             return boxSize;
         }
 
@@ -24557,7 +24553,7 @@ namespace SharpMP4
         protected uint[] avg_bitrate;
         public uint[] AvgBitrate { get { return this.avg_bitrate; } set { this.avg_bitrate = value; } }
 
-        public SVCPriorityLayerInfoBox() : base("qlif")
+        public SVCPriorityLayerInfoBox() : base(IsoStream.FromFourCC("qlif"))
         {
         }
 
@@ -24628,7 +24624,7 @@ namespace SharpMP4
         protected VvcDecoderConfigurationRecord VvcConfig;
         public VvcDecoderConfigurationRecord _VvcConfig { get { return this.VvcConfig; } set { this.VvcConfig = value; } }
 
-        public VvcConfigurationBox(uint flags = 0) : base("vvcC", 0, flags)
+        public VvcConfigurationBox(uint flags = 0) : base(IsoStream.FromFourCC("vvcC"), 0, flags)
         {
         }
 
@@ -24636,7 +24632,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new VvcDecoderConfigurationRecord(), out this.VvcConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new VvcDecoderConfigurationRecord(), out this.VvcConfig);
             return boxSize;
         }
 
@@ -24675,7 +24671,7 @@ namespace SharpMP4
         protected byte LengthSizeMinusOne;
         public byte _LengthSizeMinusOne { get { return this.LengthSizeMinusOne; } set { this.LengthSizeMinusOne = value; } }
 
-        public VvcNALUConfigBox(uint flags = 0) : base("vvnC", 0, flags)
+        public VvcNALUConfigBox(uint flags = 0) : base(IsoStream.FromFourCC("vvnC"), 0, flags)
         {
         }
 
@@ -24743,7 +24739,7 @@ namespace SharpMP4
         public IEnumerable<SampleConstructorFromTrackGroup> _SampleConstructorFromTrackGroup { get { return this.children.OfType<SampleConstructorFromTrackGroup>(); } }
         public IEnumerable<NALUStartInlineConstructor> _NALUStartInlineConstructor { get { return this.children.OfType<NALUStartInlineConstructor>(); } }
 
-        public DefaultHevcExtractorConstructorBox() : base("dhec")
+        public DefaultHevcExtractorConstructorBox() : base(IsoStream.FromFourCC("dhec"))
         {
         }
 
@@ -24893,7 +24889,7 @@ namespace SharpMP4
         protected BinaryUTF8String[] statement_namespace;
         public BinaryUTF8String[] StatementNamespace { get { return this.statement_namespace; } set { this.statement_namespace = value; } }
 
-        public SVCMetadataSampleConfigBox() : base("svmC")
+        public SVCMetadataSampleConfigBox() : base(IsoStream.FromFourCC("svmC"))
         {
         }
 
@@ -24971,7 +24967,7 @@ namespace SharpMP4
         protected EVCSliceComponentTrackConfigurationRecord config;
         public EVCSliceComponentTrackConfigurationRecord Config { get { return this.config; } set { this.config = value; } }
 
-        public EVCSliceComponentTrackConfigurationBox() : base("evsC")
+        public EVCSliceComponentTrackConfigurationBox() : base(IsoStream.FromFourCC("evsC"))
         {
         }
 
@@ -24979,7 +24975,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new EVCSliceComponentTrackConfigurationRecord(), out this.config);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new EVCSliceComponentTrackConfigurationRecord(), out this.config);
             return boxSize;
         }
 
@@ -25014,7 +25010,7 @@ namespace SharpMP4
         public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public HEVCSampleEntry() : base("hvc1")
+        public HEVCSampleEntry() : base(IsoStream.FromFourCC("hvc1"))
         {
         }
 
@@ -25106,7 +25102,7 @@ namespace SharpMP4
         public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public HEVCSampleEntry_hvc2() : base("hvc2")
+        public HEVCSampleEntry_hvc2() : base(IsoStream.FromFourCC("hvc2"))
         {
         }
 
@@ -25155,7 +25151,7 @@ namespace SharpMP4
         public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public HEVCSampleEntry_hvc3() : base("hvc3")
+        public HEVCSampleEntry_hvc3() : base(IsoStream.FromFourCC("hvc3"))
         {
         }
 
@@ -25204,7 +25200,7 @@ namespace SharpMP4
         public LHEVCConfigurationBox Lhvcconfig { get { return this.children.OfType<LHEVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public LHEVCSampleEntry() : base("lhv1")
+        public LHEVCSampleEntry() : base(IsoStream.FromFourCC("lhv1"))
         {
         }
 
@@ -25253,7 +25249,7 @@ namespace SharpMP4
         public LHEVCConfigurationBox Lhvcconfig { get { return this.children.OfType<LHEVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public LHEVCSampleEntry_lhe1() : base("lhe1")
+        public LHEVCSampleEntry_lhe1() : base(IsoStream.FromFourCC("lhe1"))
         {
         }
 
@@ -25302,7 +25298,7 @@ namespace SharpMP4
         public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public HEVCSampleEntry_hev1() : base("hev1")
+        public HEVCSampleEntry_hev1() : base(IsoStream.FromFourCC("hev1"))
         {
         }
 
@@ -25351,7 +25347,7 @@ namespace SharpMP4
         public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public HEVCSampleEntry_hev2() : base("hev2")
+        public HEVCSampleEntry_hev2() : base(IsoStream.FromFourCC("hev2"))
         {
         }
 
@@ -25400,7 +25396,7 @@ namespace SharpMP4
         public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public HEVCSampleEntry_hev3() : base("hev3")
+        public HEVCSampleEntry_hev3() : base(IsoStream.FromFourCC("hev3"))
         {
         }
 
@@ -25447,7 +25443,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AVCParameterSampleEntry"; } }
         public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
 
-        public AVCParameterSampleEntry() : base("avcp")
+        public AVCParameterSampleEntry() : base(IsoStream.FromFourCC("avcp"))
         {
         }
 
@@ -25492,7 +25488,7 @@ namespace SharpMP4
         public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public AVCSampleEntry(string type) : base(type)
+        public AVCSampleEntry(uint type) : base(type)
         {
         }
 
@@ -25555,7 +25551,7 @@ namespace SharpMP4
         public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public AVCMVCSampleEntry() : base("avc1")
+        public AVCMVCSampleEntry() : base(IsoStream.FromFourCC("avc1"))
         {
         }
 
@@ -25639,7 +25635,7 @@ namespace SharpMP4
         public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public AVCMVCSampleEntry_avc3() : base("avc3")
+        public AVCMVCSampleEntry_avc3() : base(IsoStream.FromFourCC("avc3"))
         {
         }
 
@@ -25708,7 +25704,7 @@ namespace SharpMP4
         public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public AVC2SampleEntry(string type) : base(type)
+        public AVC2SampleEntry(uint type) : base(type)
         {
         }
 
@@ -25771,7 +25767,7 @@ namespace SharpMP4
         public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public AVC2MVCSampleEntry() : base("avc2")
+        public AVC2MVCSampleEntry() : base(IsoStream.FromFourCC("avc2"))
         {
         }
 
@@ -25855,7 +25851,7 @@ namespace SharpMP4
         public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public AVC2MVCSampleEntry_avc4() : base("avc4")
+        public AVC2MVCSampleEntry_avc4() : base(IsoStream.FromFourCC("avc4"))
         {
         }
 
@@ -25941,7 +25937,7 @@ namespace SharpMP4
         public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public MVCSampleEntry() : base("mvc1")
+        public MVCSampleEntry() : base(IsoStream.FromFourCC("mvc1"))
         {
         }
 
@@ -26030,7 +26026,7 @@ namespace SharpMP4
         public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public MVCSampleEntry_mvc2() : base("mvc2")
+        public MVCSampleEntry_mvc2() : base(IsoStream.FromFourCC("mvc2"))
         {
         }
 
@@ -26119,7 +26115,7 @@ namespace SharpMP4
         public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public MVCSampleEntry_mvc3() : base("mvc3")
+        public MVCSampleEntry_mvc3() : base(IsoStream.FromFourCC("mvc3"))
         {
         }
 
@@ -26208,7 +26204,7 @@ namespace SharpMP4
         public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public MVCSampleEntry_mvc4() : base("mvc4")
+        public MVCSampleEntry_mvc4() : base(IsoStream.FromFourCC("mvc4"))
         {
         }
 
@@ -26292,7 +26288,7 @@ namespace SharpMP4
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public MVCDSampleEntry() : base("mvd1")
+        public MVCDSampleEntry() : base(IsoStream.FromFourCC("mvd1"))
         {
         }
 
@@ -26367,7 +26363,7 @@ namespace SharpMP4
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public MVCDSampleEntry_mvd2() : base("mvd2")
+        public MVCDSampleEntry_mvd2() : base(IsoStream.FromFourCC("mvd2"))
         {
         }
 
@@ -26442,7 +26438,7 @@ namespace SharpMP4
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public MVCDSampleEntry_mvd3() : base("mvd3")
+        public MVCDSampleEntry_mvd3() : base(IsoStream.FromFourCC("mvd3"))
         {
         }
 
@@ -26517,7 +26513,7 @@ namespace SharpMP4
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
         public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-        public MVCDSampleEntry_mvd4() : base("mvd4")
+        public MVCDSampleEntry_mvd4() : base(IsoStream.FromFourCC("mvd4"))
         {
         }
 
@@ -26589,7 +26585,7 @@ namespace SharpMP4
         public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 
-        public A3DSampleEntry() : base("a3d1")
+        public A3DSampleEntry() : base(IsoStream.FromFourCC("a3d1"))
         {
         }
 
@@ -26658,7 +26654,7 @@ namespace SharpMP4
         public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 
-        public A3DSampleEntry_a3d2() : base("a3d2")
+        public A3DSampleEntry_a3d2() : base(IsoStream.FromFourCC("a3d2"))
         {
         }
 
@@ -26727,7 +26723,7 @@ namespace SharpMP4
         public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 
-        public A3DSampleEntry_a3d3() : base("a3d3")
+        public A3DSampleEntry_a3d3() : base(IsoStream.FromFourCC("a3d3"))
         {
         }
 
@@ -26796,7 +26792,7 @@ namespace SharpMP4
         public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
         public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 
-        public A3DSampleEntry_a3d4() : base("a3d4")
+        public A3DSampleEntry_a3d4() : base(IsoStream.FromFourCC("a3d4"))
         {
         }
 
@@ -26859,7 +26855,7 @@ namespace SharpMP4
         public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-        public AVCSVCSampleEntry() : base("avc1")
+        public AVCSVCSampleEntry() : base(IsoStream.FromFourCC("avc1"))
         {
         }
 
@@ -26909,7 +26905,7 @@ namespace SharpMP4
         public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-        public AVCSVCSampleEntry_avc3() : base("avc3")
+        public AVCSVCSampleEntry_avc3() : base(IsoStream.FromFourCC("avc3"))
         {
         }
 
@@ -26963,7 +26959,7 @@ namespace SharpMP4
         public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-        public AVC2SVCSampleEntry() : base("avc2")
+        public AVC2SVCSampleEntry() : base(IsoStream.FromFourCC("avc2"))
         {
         }
 
@@ -27013,7 +27009,7 @@ namespace SharpMP4
         public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-        public AVC2SVCSampleEntry_avc4() : base("avc4")
+        public AVC2SVCSampleEntry_avc4() : base(IsoStream.FromFourCC("avc4"))
         {
         }
 
@@ -27070,7 +27066,7 @@ namespace SharpMP4
         public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-        public SVCSampleEntry() : base("svc1")
+        public SVCSampleEntry() : base(IsoStream.FromFourCC("svc1"))
         {
         }
 
@@ -27124,7 +27120,7 @@ namespace SharpMP4
         public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
         public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-        public SVCSampleEntry_svc2() : base("svc2")
+        public SVCSampleEntry_svc2() : base(IsoStream.FromFourCC("svc2"))
         {
         }
 
@@ -27177,7 +27173,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "HEVCTileSampleEntry"; } }
         public HEVCTileConfigurationBox Config { get { return this.children.OfType<HEVCTileConfigurationBox>().FirstOrDefault(); } }
 
-        public HEVCTileSampleEntry() : base("hvt1")
+        public HEVCTileSampleEntry() : base(IsoStream.FromFourCC("hvt1"))
         {
         }
 
@@ -27219,7 +27215,7 @@ namespace SharpMP4
         public const string TYPE = "lht1";
         public override string DisplayName { get { return "LHEVCTileSampleEntry"; } }
 
-        public LHEVCTileSampleEntry() : base("lht1")
+        public LHEVCTileSampleEntry() : base(IsoStream.FromFourCC("lht1"))
         {
         }
 
@@ -27257,7 +27253,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "HEVCTileSSHInfoSampleEntry"; } }
         public HEVCTileConfigurationBox Config { get { return this.children.OfType<HEVCTileConfigurationBox>().FirstOrDefault(); } }
 
-        public HEVCTileSSHInfoSampleEntry() : base("hvt3")
+        public HEVCTileSSHInfoSampleEntry() : base(IsoStream.FromFourCC("hvt3"))
         {
         }
 
@@ -27301,7 +27297,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "HEVCSliceSegmentDataSampleEntry"; } }
         public HEVCTileConfigurationBox Config { get { return this.children.OfType<HEVCTileConfigurationBox>().FirstOrDefault(); } }
 
-        public HEVCSliceSegmentDataSampleEntry() : base("hvt2")
+        public HEVCSliceSegmentDataSampleEntry() : base(IsoStream.FromFourCC("hvt2"))
         {
         }
 
@@ -27347,7 +27343,7 @@ namespace SharpMP4
         public VvcConfigurationBox Config { get { return this.children.OfType<VvcConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public VvcSampleEntry() : base("vvc1")
+        public VvcSampleEntry() : base(IsoStream.FromFourCC("vvc1"))
         {
         }
 
@@ -27393,7 +27389,7 @@ namespace SharpMP4
         public VvcConfigurationBox Config { get { return this.children.OfType<VvcConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public VvcSampleEntry_vvi1() : base("vvi1")
+        public VvcSampleEntry_vvi1() : base(IsoStream.FromFourCC("vvi1"))
         {
         }
 
@@ -27440,7 +27436,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "VvcSubpicSampleEntry"; } }
         public VvcNALUConfigBox Config { get { return this.children.OfType<VvcNALUConfigBox>().FirstOrDefault(); } }
 
-        public VvcSubpicSampleEntry() : base("vvs1")
+        public VvcSubpicSampleEntry() : base(IsoStream.FromFourCC("vvs1"))
         {
         }
 
@@ -27484,7 +27480,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "VvcNonVCLSampleEntry"; } }
         public VvcNALUConfigBox Config { get { return this.children.OfType<VvcNALUConfigBox>().FirstOrDefault(); } }
 
-        public VvcNonVCLSampleEntry() : base("vvcN")
+        public VvcNonVCLSampleEntry() : base(IsoStream.FromFourCC("vvcN"))
         {
         }
 
@@ -27530,7 +27526,7 @@ namespace SharpMP4
         public EVCConfigurationBox Config { get { return this.children.OfType<EVCConfigurationBox>().FirstOrDefault(); } }
         public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-        public EVCSampleEntry() : base("evc1")
+        public EVCSampleEntry() : base(IsoStream.FromFourCC("evc1"))
         {
         }
 
@@ -27582,7 +27578,7 @@ namespace SharpMP4
         public SVCPriorityAssignmentBox Methods { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
         public SVCPriorityLayerInfoBox Priorities { get { return this.children.OfType<SVCPriorityLayerInfoBox>().FirstOrDefault(); } }
 
-        public SVCMetaDataSampleEntry() : base("svcM")
+        public SVCMetaDataSampleEntry() : base(IsoStream.FromFourCC("svcM"))
         {
         }
 
@@ -27633,7 +27629,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntry"; } }
         public EVCSliceComponentTrackConfigurationBox Config { get { return this.children.OfType<EVCSliceComponentTrackConfigurationBox>().FirstOrDefault(); } }
 
-        public EVCSliceComponentTrackSampleEntry() : base("evs1")
+        public EVCSliceComponentTrackSampleEntry() : base(IsoStream.FromFourCC("evs1"))
         {
         }
 
@@ -27675,7 +27671,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntry_evs2"; } }
         public EVCSliceComponentTrackConfigurationBox Config { get { return this.children.OfType<EVCSliceComponentTrackConfigurationBox>().FirstOrDefault(); } }
 
-        public EVCSliceComponentTrackSampleEntry_evs2() : base("evs2")
+        public EVCSliceComponentTrackSampleEntry_evs2() : base(IsoStream.FromFourCC("evs2"))
         {
         }
 
@@ -27743,7 +27739,7 @@ namespace SharpMP4
         protected ushort num_active_tracks;
         public ushort NumActiveTracks { get { return this.num_active_tracks; } set { this.num_active_tracks = value; } }
 
-        public SubpicCommonGroupBox() : base("acgl", 0, 0)
+        public SubpicCommonGroupBox() : base(IsoStream.FromFourCC("acgl"), 0, 0)
         {
         }
 
@@ -27859,7 +27855,7 @@ namespace SharpMP4
         protected ushort[] num_active_tracks;
         public ushort[] NumActiveTracks { get { return this.num_active_tracks; } set { this.num_active_tracks = value; } }
 
-        public SubpicMultipleGroupsBox() : base("amgl", 0, 0)
+        public SubpicMultipleGroupsBox() : base(IsoStream.FromFourCC("amgl"), 0, 0)
         {
         }
 
@@ -27886,7 +27882,7 @@ namespace SharpMP4
             this.track_subgroup_id = new byte[IsoStream.GetInt(num_entities_in_group)][];
             for (int i = 0; i < num_entities_in_group; i++)
             {
-                boxSize += stream.ReadBits((uint)subgroupIdLen, out this.track_subgroup_id[i]);
+                boxSize += stream.ReadBits((uint)(subgroupIdLen), out this.track_subgroup_id[i]);
             }
 
             this.num_active_tracks = new ushort[IsoStream.GetInt(num_subgroup_ids)];
@@ -28122,7 +28118,7 @@ namespace SharpMP4
         protected byte[][] entity_idx;
         public byte[][] EntityIdx { get { return this.entity_idx; } set { this.entity_idx = value; } }
 
-        public OperatingPointGroupBox() : base("opeg", 0, 0)
+        public OperatingPointGroupBox() : base(IsoStream.FromFourCC("opeg"), 0, 0)
         {
         }
 
@@ -28135,7 +28131,7 @@ namespace SharpMP4
             this.opeg_ptl = new VvcPTLRecord[IsoStream.GetInt(num_profile_tier_level_minus1 + 1)];
             for (int i = 0; i <= num_profile_tier_level_minus1; i++)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new VvcPTLRecord(0), out this.opeg_ptl[i]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new VvcPTLRecord(0), out this.opeg_ptl[i]);
             }
             boxSize += stream.ReadBits(6, out this.reserved);
             boxSize += stream.ReadBit(out this.incomplete_operating_points_flag);
@@ -28166,7 +28162,7 @@ namespace SharpMP4
                     for (int j = 0; j < layer_count[i]; j++)
                     {
                         boxSize += stream.ReadBits(6, out this.layer_id[i][j]);
-                        boxSize += stream.ReadBits(1, out this.is_output_layer[i][j]);
+                        boxSize += stream.ReadBit(out this.is_output_layer[i][j]);
                         boxSize += stream.ReadBit(out this.reserved00[i][j]);
                     }
                 }
@@ -28414,7 +28410,7 @@ namespace SharpMP4
         protected ushort[] track_switch_hierarchy_id;
         public ushort[] TrackSwitchHierarchyId { get { return this.track_switch_hierarchy_id; } set { this.track_switch_hierarchy_id = value; } }
 
-        public SwitchableTracksGroupBox() : base("swtk", 0, 0)
+        public SwitchableTracksGroupBox() : base(IsoStream.FromFourCC("swtk"), 0, 0)
         {
         }
 
@@ -28481,7 +28477,7 @@ namespace SharpMP4
         protected uint[] entity_id;  //  the remaining data may be specified for a particular grouping_type
         public uint[] EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
 
-        public EntityToGroupBox_vvcb(byte version = 0, uint flags = 0) : base("vvcb", version, flags)
+        public EntityToGroupBox_vvcb(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("vvcb"), version, flags)
         {
         }
 
@@ -28544,7 +28540,7 @@ namespace SharpMP4
         protected uint audNalUnit;
         public uint AudNalUnit { get { return this.audNalUnit; } set { this.audNalUnit = value; } }
 
-        public AUDSampleEntry() : base("aud ")
+        public AUDSampleEntry() : base(IsoStream.FromFourCC("aud "))
         {
         }
 
@@ -28552,7 +28548,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadBits(24, out this.audNalUnit);
+            boxSize += stream.ReadUInt24(out this.audNalUnit);
             return boxSize;
         }
 
@@ -28604,7 +28600,7 @@ namespace SharpMP4
         protected ushort avgFrameRate;
         public ushort AvgFrameRate { get { return this.avgFrameRate; } set { this.avgFrameRate = value; } }
 
-        public AVCLayerEntry() : base("avll")
+        public AVCLayerEntry() : base(IsoStream.FromFourCC("avll"))
         {
         }
 
@@ -28663,7 +28659,7 @@ namespace SharpMP4
         protected byte[] dci_nal_unit;
         public byte[] DciNalUnit { get { return this.dci_nal_unit; } set { this.dci_nal_unit = value; } }
 
-        public DecodingCapabilityInformation() : base("dcfi")
+        public DecodingCapabilityInformation() : base(IsoStream.FromFourCC("dcfi"))
         {
         }
 
@@ -28672,7 +28668,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.dci_nal_unit_length);
-            boxSize += stream.ReadUInt8Array((uint)dci_nal_unit_length, out this.dci_nal_unit);
+            boxSize += stream.ReadBits((uint)(8 * dci_nal_unit_length), out this.dci_nal_unit);
             return boxSize;
         }
 
@@ -28719,7 +28715,7 @@ namespace SharpMP4
         protected short[] delta;
         public short[] Delta { get { return this.delta; } set { this.delta = value; } }
 
-        public DecodeRetimingEntry() : base("dtrt")
+        public DecodeRetimingEntry() : base(IsoStream.FromFourCC("dtrt"))
         {
         }
 
@@ -28783,7 +28779,7 @@ namespace SharpMP4
         protected ushort eobNalUnit;
         public ushort EobNalUnit { get { return this.eobNalUnit; } set { this.eobNalUnit = value; } }
 
-        public EndOfBitstreamSampleEntry() : base("eob ")
+        public EndOfBitstreamSampleEntry() : base(IsoStream.FromFourCC("eob "))
         {
         }
 
@@ -28832,7 +28828,7 @@ namespace SharpMP4
         protected ushort[] eosNalUnit;
         public ushort[] EosNalUnit { get { return this.eosNalUnit; } set { this.eosNalUnit = value; } }
 
-        public EndOfSequenceSampleEntry() : base("eos ")
+        public EndOfSequenceSampleEntry() : base(IsoStream.FromFourCC("eos "))
         {
         }
 
@@ -28904,7 +28900,7 @@ namespace SharpMP4
         protected sbyte sample_offset;
         public sbyte SampleOffset { get { return this.sample_offset; } set { this.sample_offset = value; } }
 
-        public LhvcExternalBaseLayerInfo() : base("lbli")
+        public LhvcExternalBaseLayerInfo() : base(IsoStream.FromFourCC("lbli"))
         {
         }
 
@@ -28994,7 +28990,7 @@ namespace SharpMP4
         protected byte[] sub_layer_presence_flags;
         public byte[] SubLayerPresenceFlags { get { return this.sub_layer_presence_flags; } set { this.sub_layer_presence_flags = value; } }
 
-        public LayerInfoGroupEntry() : base("linf")
+        public LayerInfoGroupEntry() : base(IsoStream.FromFourCC("linf"))
         {
         }
 
@@ -29103,7 +29099,7 @@ namespace SharpMP4
         protected byte pps_id;
         public byte PpsId { get { return this.pps_id; } set { this.pps_id = value; } }
 
-        public VvcMixedNALUnitTypePicEntry() : base("minp")
+        public VvcMixedNALUnitTypePicEntry() : base(IsoStream.FromFourCC("minp"))
         {
         }
 
@@ -29216,7 +29212,7 @@ namespace SharpMP4
         public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
         public ViewPriorityBox _ViewPriorityBox { get { return this.children.OfType<ViewPriorityBox>().FirstOrDefault(); } }
 
-        public MultiviewGroupEntry() : base("mvif")
+        public MultiviewGroupEntry() : base(IsoStream.FromFourCC("mvif"))
         {
         }
 
@@ -29351,7 +29347,7 @@ namespace SharpMP4
         protected ushort[] groupID;
         public ushort[] GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
-        public NALUMapEntry() : base("nalm")
+        public NALUMapEntry() : base(IsoStream.FromFourCC("nalm"))
         {
         }
 
@@ -29489,7 +29485,7 @@ namespace SharpMP4
         protected OperatingPointsRecord oinf;
         public OperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
 
-        public OperatingPointsInformation() : base("oinf")
+        public OperatingPointsInformation() : base(IsoStream.FromFourCC("oinf"))
         {
         }
 
@@ -29497,7 +29493,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), out this.oinf);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new OperatingPointsRecord(), out this.oinf);
             return boxSize;
         }
 
@@ -29535,7 +29531,7 @@ namespace SharpMP4
         protected int delta_time;
         public int DeltaTime { get { return this.delta_time; } set { this.delta_time = value; } }
 
-        public OperatingPointDecodeTimeHint() : base("opth")
+        public OperatingPointDecodeTimeHint() : base(IsoStream.FromFourCC("opth"))
         {
         }
 
@@ -29583,7 +29579,7 @@ namespace SharpMP4
         protected byte[] ps_nal_unit;
         public byte[] PsNalUnit { get { return this.ps_nal_unit; } set { this.ps_nal_unit = value; } }
 
-        public ParameterSetNALUEntry() : base("pase")
+        public ParameterSetNALUEntry() : base(IsoStream.FromFourCC("pase"))
         {
         }
 
@@ -29592,7 +29588,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.ps_nalu_length);
-            boxSize += stream.ReadUInt8Array((uint)ps_nalu_length, out this.ps_nal_unit);
+            boxSize += stream.ReadBits((uint)(8 * ps_nalu_length), out this.ps_nal_unit);
             return boxSize;
         }
 
@@ -29642,7 +29638,7 @@ namespace SharpMP4
         protected byte reserved = 0;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public PSSampleGroupEntry() : base("pss1")
+        public PSSampleGroupEntry() : base(IsoStream.FromFourCC("pss1"))
         {
         }
 
@@ -29732,7 +29728,7 @@ namespace SharpMP4
         protected VVCSubpicIDRewritingInfomationStruct subpic_id_rewriting_info;
         public VVCSubpicIDRewritingInfomationStruct SubpicIdRewritingInfo { get { return this.subpic_id_rewriting_info; } set { this.subpic_id_rewriting_info = value; } }
 
-        public VvcRectRegionOrderEntry() : base("rror")
+        public VvcRectRegionOrderEntry() : base(IsoStream.FromFourCC("rror"))
         {
         }
 
@@ -29768,7 +29764,7 @@ namespace SharpMP4
 
             if (subpic_id_info_flag)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
             }
             return boxSize;
         }
@@ -29912,7 +29908,7 @@ namespace SharpMP4
         public ProtectionSchemeInfoBox _ProtectionSchemeInfoBox { get { return this.children.OfType<ProtectionSchemeInfoBox>().FirstOrDefault(); } }
         public TranscodingInfoBox _TranscodingInfoBox { get { return this.children.OfType<TranscodingInfoBox>().FirstOrDefault(); } }
 
-        public ScalableGroupEntry() : base("scif")
+        public ScalableGroupEntry() : base(IsoStream.FromFourCC("scif"))
         {
         }
 
@@ -30040,7 +30036,7 @@ namespace SharpMP4
         protected byte[] groupID;
         public byte[] GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
-        public ScalableNALUMapEntry() : base("scnm")
+        public ScalableNALUMapEntry() : base(IsoStream.FromFourCC("scnm"))
         {
         }
 
@@ -30127,7 +30123,7 @@ namespace SharpMP4
         protected ushort[] groupID;
         public ushort[] GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
-        public VvcSubpicIDEntry() : base("spid")
+        public VvcSubpicIDEntry() : base(IsoStream.FromFourCC("spid"))
         {
         }
 
@@ -30224,7 +30220,7 @@ namespace SharpMP4
         protected byte level_idc;
         public byte LevelIdc { get { return this.level_idc; } set { this.level_idc = value; } }
 
-        public SubpicLevelInfoEntry() : base("spli")
+        public SubpicLevelInfoEntry() : base(IsoStream.FromFourCC("spli"))
         {
         }
 
@@ -30282,7 +30278,7 @@ namespace SharpMP4
         protected VVCSubpicIDRewritingInfomationStruct subpic_id_rewriting_info;
         public VVCSubpicIDRewritingInfomationStruct SubpicIdRewritingInfo { get { return this.subpic_id_rewriting_info; } set { this.subpic_id_rewriting_info = value; } }
 
-        public VvcSubpicOrderEntry() : base("spor")
+        public VvcSubpicOrderEntry() : base(IsoStream.FromFourCC("spor"))
         {
         }
 
@@ -30301,7 +30297,7 @@ namespace SharpMP4
 
             if (subpic_id_info_flag)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new VVCSubpicIDRewritingInfomationStruct(), out this.subpic_id_rewriting_info);
             }
             return boxSize;
         }
@@ -30356,7 +30352,7 @@ namespace SharpMP4
         public const string TYPE = "stsa";
         public override string DisplayName { get { return "StepwiseTemporalLayerEntry"; } }
 
-        public StepwiseTemporalLayerEntry() : base("stsa")
+        public StepwiseTemporalLayerEntry() : base(IsoStream.FromFourCC("stsa"))
         {
         }
 
@@ -30405,7 +30401,7 @@ namespace SharpMP4
         protected ushort[] groupID;
         public ushort[] GroupID { get { return this.groupID; } set { this.groupID = value; } }
 
-        public VvcSubpicLayoutMapEntry() : base("sulm")
+        public VvcSubpicLayoutMapEntry() : base(IsoStream.FromFourCC("sulm"))
         {
         }
 
@@ -30472,7 +30468,7 @@ namespace SharpMP4
         protected byte NAL_unit_type;
         public byte NALUnitType { get { return this.NAL_unit_type; } set { this.NAL_unit_type = value; } }
 
-        public SyncSampleEntry() : base("sync")
+        public SyncSampleEntry() : base(IsoStream.FromFourCC("sync"))
         {
         }
 
@@ -30579,7 +30575,7 @@ namespace SharpMP4
         protected ushort[] dependencyRectRegionGroupID;
         public ushort[] DependencyRectRegionGroupID { get { return this.dependencyRectRegionGroupID; } set { this.dependencyRectRegionGroupID = value; } }
 
-        public RectangularRegionGroupEntry() : base("trif")
+        public RectangularRegionGroupEntry() : base(IsoStream.FromFourCC("trif"))
         {
         }
 
@@ -30719,7 +30715,7 @@ namespace SharpMP4
         public const string TYPE = "tsas";
         public override string DisplayName { get { return "TemporalSubLayerEntry"; } }
 
-        public TemporalSubLayerEntry() : base("tsas")
+        public TemporalSubLayerEntry() : base(IsoStream.FromFourCC("tsas"))
         {
         }
 
@@ -30800,7 +30796,7 @@ namespace SharpMP4
         protected ushort tlAvgFrameRate;
         public ushort TlAvgFrameRate { get { return this.tlAvgFrameRate; } set { this.tlAvgFrameRate = value; } }
 
-        public TemporalLayerEntry() : base("tscl")
+        public TemporalLayerEntry() : base(IsoStream.FromFourCC("tscl"))
         {
         }
 
@@ -30872,7 +30868,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ViewPriorityEntry"; } }
         public ViewPriorityBox _ViewPriorityBox { get { return this.children.OfType<ViewPriorityBox>().FirstOrDefault(); } }
 
-        public ViewPriorityEntry() : base("vipr")
+        public ViewPriorityEntry() : base(IsoStream.FromFourCC("vipr"))
         {
         }
 
@@ -30918,7 +30914,7 @@ namespace SharpMP4
         protected VvcOperatingPointsRecord oinf;
         public VvcOperatingPointsRecord Oinf { get { return this.oinf; } set { this.oinf = value; } }
 
-        public VvcOperatingPointsInformation() : base("vopi")
+        public VvcOperatingPointsInformation() : base(IsoStream.FromFourCC("vopi"))
         {
         }
 
@@ -30926,7 +30922,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new VvcOperatingPointsRecord(), out this.oinf);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new VvcOperatingPointsRecord(), out this.oinf);
             return boxSize;
         }
 
@@ -30949,22 +30945,22 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TrackGroupTypeBox('alte') extends FullBox('alte', version = 0, flags = 0)
+    aligned(8) class AlteTrackGroupTypeBox() extends FullBox('alte', version = 0, flags = 0)
     {
         unsigned int(32) track_group_id;
         // the remaining data may be specified 
         //  for a particular track_group_type
     }
     */
-    public class TrackGroupTypeBox_alte : FullBox
+    public class AlteTrackGroupTypeBox : FullBox
     {
         public const string TYPE = "alte";
-        public override string DisplayName { get { return "TrackGroupTypeBox_alte"; } }
+        public override string DisplayName { get { return "AlteTrackGroupTypeBox"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox_alte(string boxtype = "alte") : base("alte", 0, 0)
+        public AlteTrackGroupTypeBox() : base(IsoStream.FromFourCC("alte"), 0, 0)
         {
         }
 
@@ -30998,22 +30994,22 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TrackGroupTypeBox('cstg') extends FullBox('cstg', version = 0, flags = 0)
+    aligned(8) class CstgTrackGroupTypeBox() extends FullBox('cstg', version = 0, flags = 0)
     {
         unsigned int(32) track_group_id;
         // the remaining data may be specified 
         //  for a particular track_group_type
     }
     */
-    public class TrackGroupTypeBox_cstg : FullBox
+    public class CstgTrackGroupTypeBox : FullBox
     {
         public const string TYPE = "cstg";
-        public override string DisplayName { get { return "TrackGroupTypeBox_cstg"; } }
+        public override string DisplayName { get { return "CstgTrackGroupTypeBox"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox_cstg(string boxtype = "cstg") : base("cstg", 0, 0)
+        public CstgTrackGroupTypeBox() : base(IsoStream.FromFourCC("cstg"), 0, 0)
         {
         }
 
@@ -31047,22 +31043,22 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class TrackGroupTypeBox('snut') extends FullBox('snut', version = 0, flags = 0)
+    aligned(8) class SnutTrackGroupTypeBox() extends FullBox('snut', version = 0, flags = 0)
     {
         unsigned int(32) track_group_id;
         // the remaining data may be specified 
         //  for a particular track_group_type
     }
     */
-    public class TrackGroupTypeBox_snut : FullBox
+    public class SnutTrackGroupTypeBox : FullBox
     {
         public const string TYPE = "snut";
-        public override string DisplayName { get { return "TrackGroupTypeBox_snut"; } }
+        public override string DisplayName { get { return "SnutTrackGroupTypeBox"; } }
 
         protected uint track_group_id;  //  the remaining data may be specified 
         public uint TrackGroupId { get { return this.track_group_id; } set { this.track_group_id = value; } }
 
-        public TrackGroupTypeBox_snut(string boxtype = "snut") : base("snut", 0, 0)
+        public SnutTrackGroupTypeBox() : base(IsoStream.FromFourCC("snut"), 0, 0)
         {
         }
 
@@ -31254,10 +31250,10 @@ namespace SharpMP4
             boxSize += stream.ReadBit(out this.isScoreMultiwindow); // 0: one window only – 1: multiple windows 
             boxSize += stream.ReadUInt8(out this.numberOfParts); // parts of the main score 
             boxSize += stream.ReadBits(3, out this.notationFormat); // CWMN or other sets 
-            boxSize += stream.ReadUimsbf(8, out this.urlMIDIStream_length); //length in bytes 
-            boxSize += stream.ReadUInt8Array((uint)urlMIDIStream_length, out this.urlMIDIStream); // reference to the MIDI stream, as url 
+            boxSize += stream.ReadUInt8(out this.urlMIDIStream_length); //length in bytes 
+            boxSize += stream.ReadBits((uint)(urlMIDIStream_length), out this.urlMIDIStream); // reference to the MIDI stream, as url 
             boxSize += stream.ReadBits(2, out this.codingType); // coding of the XML chunks 
-            boxSize += stream.ReadUimsbf(8, out this.length); //length in bits of decoder configuration, unsigned integer 
+            boxSize += stream.ReadUInt8(out this.length); //length in bits of decoder configuration, unsigned integer 
             /*  start of decoderConfiguration  */
 
             if (codingType == 0b11)
@@ -31272,43 +31268,43 @@ namespace SharpMP4
 
             else
             {
-                boxSize += stream.ReadBits(length, out this.reserved);
+                boxSize += stream.ReadBits((uint)(length), out this.reserved);
             }
             /*  end of decoderConfiguration  */
             boxSize += stream.ReadBit(out this.more_data); // 1 if yes, 0 if no 
 
             while (more_data)
             {
-                boxSize += stream.ReadAlignedBits(3, out this.chunk_type);
+                boxSize += stream.ReadBits(3, out this.chunk_type);
                 boxSize += stream.ReadBits(5, out this.reserved0); // for alignment 
-                boxSize += stream.ReadUimsbf(8, out this.chunk_length); // length of the chunk in byte 
+                boxSize += stream.ReadUInt8(out this.chunk_length); // length of the chunk in byte 
 
                 switch (chunk_type)
                 {
                     case 0b000:
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.sco);
+                        boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(chunk_length), out this.sco);
                         break;
 
                     case 0b001:
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.part); // ID of the part at which the following info refers 
+                        boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(chunk_length), out this.part); // ID of the part at which the following info refers 
                         break;
 
                     case 0b010:
                         /*  this segment is always in binary as stated in Section 9  */
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.sync);
+                        boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(chunk_length), out this.sync);
                         break;
 
                     case 0b011:
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.fmt);
+                        boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(chunk_length), out this.fmt);
                         break;
 
                     case 0b100:
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.lyrics);
+                        boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(chunk_length), out this.lyrics);
                         break;
 
                     case 0b101:
                         /*  this segment is always in binary as stated in Section 11.4  */
-                        boxSize += stream.ReadUInt8Array((uint)chunk_length, out this.fon);
+                        boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(chunk_length), out this.fon);
                         break;
 
                     case 0b110:
@@ -31320,7 +31316,7 @@ namespace SharpMP4
                         break;
 
                 }
-                boxSize += stream.ReadAlignedBits(1, out this.more_data);
+                boxSize += stream.ReadBit(out this.more_data);
                 boxSize += stream.ReadBits(7, out this.reserved00); //for alignment 
             }
             return boxSize;
@@ -31532,10 +31528,10 @@ namespace SharpMP4
         case 21:
         case 22:
         case 23:
-          GASpecificConfig();
+          GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType);
           break;
         case 8:
-          CelpSpecificConfig();
+          CelpSpecificConfig(samplingFrequencyIndex);
           break;
         case 9:
           HvxcSpecificConfig();
@@ -31550,7 +31546,7 @@ namespace SharpMP4
           StructuredAudioSpecificConfig();
           break;
         case 24:
-          ErrorResilientCelpSpecificConfig();
+          ErrorResilientCelpSpecificConfig(samplingFrequencyIndex);
           break;
         case 25:
           ErrorResilientHvxcSpecificConfig();
@@ -31560,7 +31556,7 @@ namespace SharpMP4
           ParametricSpecificConfig();
           break;
         case 28:
-          SSCSpecificConfig();
+          SSCSpecificConfig(channelConfiguration);
           break;
         case 30:
           uimsbf(1) sacPayloadEmbedding;
@@ -31572,7 +31568,7 @@ namespace SharpMP4
           MPEG_1_2_SpecificConfig();
           break;
         case 35:
-          DSTSpecificConfig();
+          DSTSpecificConfig(channelConfiguration);
           break;
         case 36:
           bslbf(5) fillBits;
@@ -31580,7 +31576,7 @@ namespace SharpMP4
           break;
         case 37:
         case 38:
-          SLSSpecificConfig();
+          SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType);
           break;
         case 39:
           ELDSpecificConfig(channelConfiguration);
@@ -31761,14 +31757,14 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.audioObjectType);
-            boxSize += stream.ReadBslbf(4, out this.samplingFrequencyIndex);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new GetAudioObjectType(), out this.audioObjectType);
+            boxSize += stream.ReadBits(4, out this.samplingFrequencyIndex);
 
             if (samplingFrequencyIndex == 0xf)
             {
-                boxSize += stream.ReadUimsbf(24, out this.samplingFrequency);
+                boxSize += stream.ReadUInt24(out this.samplingFrequency);
             }
-            boxSize += stream.ReadBslbf(4, out this.channelConfiguration);
+            boxSize += stream.ReadBits(4, out this.channelConfiguration);
             sbrPresentFlag = false;
             psPresentFlag = false;
 
@@ -31781,17 +31777,17 @@ namespace SharpMP4
                 {
                     psPresentFlag = true;
                 }
-                boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex);
+                boxSize += stream.ReadBits(4, out this.extensionSamplingFrequencyIndex);
 
                 if (extensionSamplingFrequencyIndex == 0xf)
                 {
-                    boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
+                    boxSize += stream.ReadUInt24(out this.extensionSamplingFrequency);
                 }
-                boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.audioObjectType);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new GetAudioObjectType(), out this.audioObjectType);
 
                 if (audioObjectType.AudioObjectType == 22)
                 {
-                    boxSize += stream.ReadUimsbf(4, out this.extensionChannelConfiguration);
+                    boxSize += stream.ReadBits(4, out this.extensionChannelConfiguration);
                 }
             }
 
@@ -31814,77 +31810,77 @@ namespace SharpMP4
                 case 21:
                 case 22:
                 case 23:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.GASpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.GASpecificConfig);
                     break;
 
                 case 8:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpSpecificConfig(samplingFrequencyIndex), out this.CelpSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new CelpSpecificConfig(samplingFrequencyIndex), out this.CelpSpecificConfig);
                     break;
 
                 case 9:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new HvxcSpecificConfig(), out this.HvxcSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new HvxcSpecificConfig(), out this.HvxcSpecificConfig);
                     break;
 
                 case 12:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new TTSSpecificConfig(), out this.TTSSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new TTSSpecificConfig(), out this.TTSSpecificConfig);
                     break;
 
                 case 13:
                 case 14:
                 case 15:
                 case 16:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new StructuredAudioSpecificConfig(), out this.StructuredAudioSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new StructuredAudioSpecificConfig(), out this.StructuredAudioSpecificConfig);
                     break;
 
                 case 24:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), out this.ErrorResilientCelpSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new ErrorResilientCelpSpecificConfig(samplingFrequencyIndex), out this.ErrorResilientCelpSpecificConfig);
                     break;
 
                 case 25:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorResilientHvxcSpecificConfig(), out this.ErrorResilientHvxcSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new ErrorResilientHvxcSpecificConfig(), out this.ErrorResilientHvxcSpecificConfig);
                     break;
 
                 case 26:
                 case 27:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new ParametricSpecificConfig(), out this.ParametricSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new ParametricSpecificConfig(), out this.ParametricSpecificConfig);
                     break;
 
                 case 28:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new SSCSpecificConfig(channelConfiguration), out this.SSCSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new SSCSpecificConfig(channelConfiguration), out this.SSCSpecificConfig);
                     break;
 
                 case 30:
-                    boxSize += stream.ReadUimsbf(out this.sacPayloadEmbedding);
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new SpatialSpecificConfig(), out this.SpatialSpecificConfig);
+                    boxSize += stream.ReadBit(out this.sacPayloadEmbedding);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new SpatialSpecificConfig(), out this.SpatialSpecificConfig);
                     break;
 
                 case 32:
                 case 33:
                 case 34:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new MPEG_1_2_SpecificConfig(), out this.MPEG_1_2_SpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new MPEG_1_2_SpecificConfig(), out this.MPEG_1_2_SpecificConfig);
                     break;
 
                 case 35:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new DSTSpecificConfig(channelConfiguration), out this.DSTSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new DSTSpecificConfig(channelConfiguration), out this.DSTSpecificConfig);
                     break;
 
                 case 36:
-                    boxSize += stream.ReadBslbf(5, out this.fillBits);
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new ALSSpecificConfig(), out this.ALSSpecificConfig);
+                    boxSize += stream.ReadBits(5, out this.fillBits);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new ALSSpecificConfig(), out this.ALSSpecificConfig);
                     break;
 
                 case 37:
                 case 38:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.SLSSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new SLSSpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObjectType.AudioObjectType), out this.SLSSpecificConfig);
                     break;
 
                 case 39:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new ELDSpecificConfig(channelConfiguration), out this.ELDSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new ELDSpecificConfig(channelConfiguration), out this.ELDSpecificConfig);
                     break;
 
                 case 40:
                 case 41:
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new SymbolicMusicSpecificConfig(), out this.SymbolicMusicSpecificConfig);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new SymbolicMusicSpecificConfig(), out this.SymbolicMusicSpecificConfig);
                     break;
 
                 default:
@@ -31907,16 +31903,16 @@ namespace SharpMP4
                 case 26:
                 case 27:
                 case 39:
-                    boxSize += stream.ReadBslbf(2, out this.epConfig);
+                    boxSize += stream.ReadBits(2, out this.epConfig);
 
                     if (epConfig == 2 || epConfig == 3)
                     {
-                        boxSize += stream.ReadClass(boxSize, readSize, this, new ErrorProtectionSpecificConfig(), out this.ErrorProtectionSpecificConfig);
+                        boxSize += stream.ReadClass(boxSize, readSize, this, () => new ErrorProtectionSpecificConfig(), out this.ErrorProtectionSpecificConfig);
                     }
 
                     if (epConfig == 3)
                     {
-                        boxSize += stream.ReadBslbf(out this.directMapping);
+                        boxSize += stream.ReadBit(out this.directMapping);
 
                         if (!directMapping)
                         {
@@ -31929,32 +31925,32 @@ namespace SharpMP4
 
             if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode(boxSize, readSize) >= 16)
             {
-                boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
+                boxSize += stream.ReadBits(11, out this.syncExtensionType);
 
                 if (syncExtensionType == 0x2b7)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new GetAudioObjectType(), out this.extensionAudioObjectType);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new GetAudioObjectType(), out this.extensionAudioObjectType);
 
                     if (extensionAudioObjectType.AudioObjectType == 5)
                     {
-                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag);
+                        boxSize += stream.ReadBit(out this.sbrPresentFlag);
 
                         if (sbrPresentFlag == true)
                         {
-                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex);
+                            boxSize += stream.ReadBits(4, out this.extensionSamplingFrequencyIndex);
 
                             if (extensionSamplingFrequencyIndex == 0xf)
                             {
-                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
+                                boxSize += stream.ReadUInt24(out this.extensionSamplingFrequency);
                             }
 
                             if (IsoStream.BitsToDecode(boxSize, readSize) >= 12)
                             {
-                                boxSize += stream.ReadBslbf(11, out this.syncExtensionType);
+                                boxSize += stream.ReadBits(11, out this.syncExtensionType);
 
                                 if (syncExtensionType == 0x548)
                                 {
-                                    boxSize += stream.ReadUimsbf(out this.psPresentFlag);
+                                    boxSize += stream.ReadBit(out this.psPresentFlag);
                                 }
                             }
                         }
@@ -31962,18 +31958,18 @@ namespace SharpMP4
 
                     if (extensionAudioObjectType.AudioObjectType == 22)
                     {
-                        boxSize += stream.ReadUimsbf(out this.sbrPresentFlag);
+                        boxSize += stream.ReadBit(out this.sbrPresentFlag);
 
                         if (sbrPresentFlag == true)
                         {
-                            boxSize += stream.ReadUimsbf(4, out this.extensionSamplingFrequencyIndex);
+                            boxSize += stream.ReadBits(4, out this.extensionSamplingFrequencyIndex);
 
                             if (extensionSamplingFrequencyIndex == 0xf)
                             {
-                                boxSize += stream.ReadUimsbf(24, out this.extensionSamplingFrequency);
+                                boxSize += stream.ReadUInt24(out this.extensionSamplingFrequency);
                             }
                         }
-                        boxSize += stream.ReadUimsbf(4, out this.extensionChannelConfiguration);
+                        boxSize += stream.ReadBits(4, out this.extensionChannelConfiguration);
                     }
                 }
             }
@@ -32458,11 +32454,11 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(5, out this.audioObjectType);
+            boxSize += stream.ReadBits(5, out this.audioObjectType);
 
             if (audioObjectType == 31)
             {
-                boxSize += stream.ReadUimsbf(6, out this.audioObjectTypeExt);
+                boxSize += stream.ReadBits(6, out this.audioObjectTypeExt);
                 audioObjectType = (byte)(32 + audioObjectTypeExt);
             }
             return audioObjectType;
@@ -32596,23 +32592,23 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadBslbf(out this.frameLengthFlag);
-            boxSize += stream.ReadBslbf(out this.dependsOnCoreCoder);
+            boxSize += stream.ReadBit(out this.frameLengthFlag);
+            boxSize += stream.ReadBit(out this.dependsOnCoreCoder);
 
             if (dependsOnCoreCoder)
             {
-                boxSize += stream.ReadUimsbf(14, out this.coreCoderDelay);
+                boxSize += stream.ReadBits(14, out this.coreCoderDelay);
             }
-            boxSize += stream.ReadBslbf(out this.extensionFlag);
+            boxSize += stream.ReadBit(out this.extensionFlag);
 
             if (channelConfiguration == 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new program_config_element(), out this.program_config_element);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new program_config_element(), out this.program_config_element);
             }
 
             if ((audioObjectType == 6) || (audioObjectType == 20))
             {
-                boxSize += stream.ReadUimsbf(3, out this.layerNr);
+                boxSize += stream.ReadBits(3, out this.layerNr);
             }
 
             if (extensionFlag)
@@ -32620,18 +32616,18 @@ namespace SharpMP4
 
                 if (audioObjectType == 22)
                 {
-                    boxSize += stream.ReadBslbf(5, out this.numOfSubFrame);
-                    boxSize += stream.ReadBslbf(11, out this.layer_length);
+                    boxSize += stream.ReadBits(5, out this.numOfSubFrame);
+                    boxSize += stream.ReadBits(11, out this.layer_length);
                 }
 
                 if (audioObjectType == 17 || audioObjectType == 19 ||
           audioObjectType == 20 || audioObjectType == 23)
                 {
-                    boxSize += stream.ReadBslbf(out this.aacSectionDataResilienceFlag);
-                    boxSize += stream.ReadBslbf(out this.aacScalefactorDataResilienceFlag);
-                    boxSize += stream.ReadBslbf(out this.aacSpectralDataResilienceFlag);
+                    boxSize += stream.ReadBit(out this.aacSectionDataResilienceFlag);
+                    boxSize += stream.ReadBit(out this.aacScalefactorDataResilienceFlag);
+                    boxSize += stream.ReadBit(out this.aacSpectralDataResilienceFlag);
                 }
-                boxSize += stream.ReadBslbf(out this.extensionFlag3);
+                boxSize += stream.ReadBit(out this.extensionFlag3);
 
                 if (extensionFlag3)
                 {
@@ -32890,85 +32886,85 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(4, out this.element_instance_tag);
-            boxSize += stream.ReadUimsbf(2, out this.object_type);
-            boxSize += stream.ReadUimsbf(4, out this.sampling_frequency_index);
-            boxSize += stream.ReadUimsbf(4, out this.num_front_channel_elements);
-            boxSize += stream.ReadUimsbf(4, out this.num_side_channel_elements);
-            boxSize += stream.ReadUimsbf(4, out this.num_back_channel_elements);
-            boxSize += stream.ReadUimsbf(2, out this.num_lfe_channel_elements);
-            boxSize += stream.ReadUimsbf(3, out this.num_assoc_data_elements);
-            boxSize += stream.ReadUimsbf(4, out this.num_valid_cc_elements);
-            boxSize += stream.ReadUimsbf(out this.mono_mixdown_present);
+            boxSize += stream.ReadBits(4, out this.element_instance_tag);
+            boxSize += stream.ReadBits(2, out this.object_type);
+            boxSize += stream.ReadBits(4, out this.sampling_frequency_index);
+            boxSize += stream.ReadBits(4, out this.num_front_channel_elements);
+            boxSize += stream.ReadBits(4, out this.num_side_channel_elements);
+            boxSize += stream.ReadBits(4, out this.num_back_channel_elements);
+            boxSize += stream.ReadBits(2, out this.num_lfe_channel_elements);
+            boxSize += stream.ReadBits(3, out this.num_assoc_data_elements);
+            boxSize += stream.ReadBits(4, out this.num_valid_cc_elements);
+            boxSize += stream.ReadBit(out this.mono_mixdown_present);
 
             if (mono_mixdown_present == true)
             {
-                boxSize += stream.ReadUimsbf(4, out this.mono_mixdown_element_number);
+                boxSize += stream.ReadBits(4, out this.mono_mixdown_element_number);
             }
-            boxSize += stream.ReadUimsbf(out this.stereo_mixdown_present);
+            boxSize += stream.ReadBit(out this.stereo_mixdown_present);
 
             if (stereo_mixdown_present == true)
             {
-                boxSize += stream.ReadUimsbf(4, out this.stereo_mixdown_element_number);
+                boxSize += stream.ReadBits(4, out this.stereo_mixdown_element_number);
             }
-            boxSize += stream.ReadUimsbf(out this.matrix_mixdown_idx_present);
+            boxSize += stream.ReadBit(out this.matrix_mixdown_idx_present);
 
             if (matrix_mixdown_idx_present == true)
             {
-                boxSize += stream.ReadUimsbf(2, out this.matrix_mixdown_idx);
-                boxSize += stream.ReadUimsbf(out this.pseudo_surround_enable);
+                boxSize += stream.ReadBits(2, out this.matrix_mixdown_idx);
+                boxSize += stream.ReadBit(out this.pseudo_surround_enable);
             }
 
             this.front_element_is_cpe = new bool[IsoStream.GetInt(num_front_channel_elements)];
             this.front_element_tag_select = new byte[IsoStream.GetInt(num_front_channel_elements)];
             for (int i = 0; i < num_front_channel_elements; i++)
             {
-                boxSize += stream.ReadBslbf(1, out this.front_element_is_cpe[i]);
-                boxSize += stream.ReadUimsbf(4, out this.front_element_tag_select[i]);
+                boxSize += stream.ReadBit(out this.front_element_is_cpe[i]);
+                boxSize += stream.ReadBits(4, out this.front_element_tag_select[i]);
             }
 
             this.side_element_is_cpe = new bool[IsoStream.GetInt(num_side_channel_elements)];
             this.side_element_tag_select = new byte[IsoStream.GetInt(num_side_channel_elements)];
             for (int i = 0; i < num_side_channel_elements; i++)
             {
-                boxSize += stream.ReadBslbf(1, out this.side_element_is_cpe[i]);
-                boxSize += stream.ReadUimsbf(4, out this.side_element_tag_select[i]);
+                boxSize += stream.ReadBit(out this.side_element_is_cpe[i]);
+                boxSize += stream.ReadBits(4, out this.side_element_tag_select[i]);
             }
 
             this.back_element_is_cpe = new bool[IsoStream.GetInt(num_back_channel_elements)];
             this.back_element_tag_select = new byte[IsoStream.GetInt(num_back_channel_elements)];
             for (int i = 0; i < num_back_channel_elements; i++)
             {
-                boxSize += stream.ReadBslbf(1, out this.back_element_is_cpe[i]);
-                boxSize += stream.ReadUimsbf(4, out this.back_element_tag_select[i]);
+                boxSize += stream.ReadBit(out this.back_element_is_cpe[i]);
+                boxSize += stream.ReadBits(4, out this.back_element_tag_select[i]);
             }
 
             this.lfe_element_tag_select = new byte[IsoStream.GetInt(num_lfe_channel_elements)];
             for (int i = 0; i < num_lfe_channel_elements; i++)
             {
-                boxSize += stream.ReadUimsbf(4, out this.lfe_element_tag_select[i]);
+                boxSize += stream.ReadBits(4, out this.lfe_element_tag_select[i]);
             }
 
             this.assoc_data_element_tag_select = new byte[IsoStream.GetInt(num_assoc_data_elements)];
             for (int i = 0; i < num_assoc_data_elements; i++)
             {
-                boxSize += stream.ReadUimsbf(4, out this.assoc_data_element_tag_select[i]);
+                boxSize += stream.ReadBits(4, out this.assoc_data_element_tag_select[i]);
             }
 
             this.cc_element_is_ind_sw = new bool[IsoStream.GetInt(num_valid_cc_elements)];
             this.valid_cc_element_tag_select = new byte[IsoStream.GetInt(num_valid_cc_elements)];
             for (int i = 0; i < num_valid_cc_elements; i++)
             {
-                boxSize += stream.ReadUimsbf(out this.cc_element_is_ind_sw[i]);
-                boxSize += stream.ReadUimsbf(4, out this.valid_cc_element_tag_select[i]);
+                boxSize += stream.ReadBit(out this.cc_element_is_ind_sw[i]);
+                boxSize += stream.ReadBits(4, out this.valid_cc_element_tag_select[i]);
             }
             boxSize += stream.ReadByteAlignment(out this.byte_alignment); // Note 1 
-            boxSize += stream.ReadUimsbf(8, out this.comment_field_bytes);
+            boxSize += stream.ReadUInt8(out this.comment_field_bytes);
 
             this.comment_field_data = new byte[IsoStream.GetInt(comment_field_bytes)];
             for (int i = 0; i < comment_field_bytes; i++)
             {
-                boxSize += stream.ReadUimsbf(8, out this.comment_field_data[i]);
+                boxSize += stream.ReadUInt8(out this.comment_field_data[i]);
             }
             return boxSize;
         }
@@ -33177,25 +33173,25 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+            boxSize += stream.ReadBit(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new CelpHeader(samplingFrequencyIndex), out this.CelpHeader);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new CelpHeader(samplingFrequencyIndex), out this.CelpHeader);
             }
 
             else
             {
-                boxSize += stream.ReadUimsbf(out this.isBWSLayer);
+                boxSize += stream.ReadBit(out this.isBWSLayer);
 
                 if (isBWSLayer)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
                 }
 
                 else
                 {
-                    boxSize += stream.ReadUimsbf(2, out this.CELPBRSid);
+                    boxSize += stream.ReadBits(2, out this.CELPBRSid);
                 }
             }
             return boxSize;
@@ -33313,20 +33309,20 @@ namespace SharpMP4
 
             const bool MPE = false;
 
-            boxSize += stream.ReadUimsbf(out this.ExcitationMode);
-            boxSize += stream.ReadUimsbf(out this.SampleRateMode);
-            boxSize += stream.ReadUimsbf(out this.FineRateControl);
+            boxSize += stream.ReadBit(out this.ExcitationMode);
+            boxSize += stream.ReadBit(out this.SampleRateMode);
+            boxSize += stream.ReadBit(out this.FineRateControl);
 
             if (ExcitationMode == RPE)
             {
-                boxSize += stream.ReadUimsbf(3, out this.RPE_Configuration);
+                boxSize += stream.ReadBits(3, out this.RPE_Configuration);
             }
 
             if (ExcitationMode == MPE)
             {
-                boxSize += stream.ReadUimsbf(5, out this.MPE_Configuration);
-                boxSize += stream.ReadUimsbf(2, out this.NumEnhLayers);
-                boxSize += stream.ReadUimsbf(out this.BandwidthScalabilityMode);
+                boxSize += stream.ReadBits(5, out this.MPE_Configuration);
+                boxSize += stream.ReadBits(2, out this.NumEnhLayers);
+                boxSize += stream.ReadBit(out this.BandwidthScalabilityMode);
             }
             return boxSize;
         }
@@ -33407,7 +33403,7 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(2, out this.BWS_configuration);
+            boxSize += stream.ReadBits(2, out this.BWS_configuration);
             return boxSize;
         }
 
@@ -33456,11 +33452,11 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+            boxSize += stream.ReadBit(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new HVXCconfig(), out this.HVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new HVXCconfig(), out this.HVXCconfig);
             }
             return boxSize;
         }
@@ -33526,9 +33522,9 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
-            boxSize += stream.ReadUimsbf(2, out this.HVXCrateMode);
-            boxSize += stream.ReadUimsbf(out this.extensionFlag);
+            boxSize += stream.ReadBit(out this.HVXCvarMode);
+            boxSize += stream.ReadBits(2, out this.HVXCrateMode);
+            boxSize += stream.ReadBit(out this.extensionFlag);
 
             if (extensionFlag)
             {
@@ -33590,7 +33586,7 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadClass(boxSize, readSize, this, new TTS_Sequence(), out this.TTS_Sequence);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new TTS_Sequence(), out this.TTS_Sequence);
             return boxSize;
         }
 
@@ -33666,15 +33662,15 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(5, out this.TTS_Sequence_ID);
-            boxSize += stream.ReadUimsbf(18, out this.Language_Code);
-            boxSize += stream.ReadBslbf(out this.Gender_Enable);
-            boxSize += stream.ReadBslbf(out this.Age_Enable);
-            boxSize += stream.ReadBslbf(out this.Speech_Rate_Enable);
-            boxSize += stream.ReadBslbf(out this.Prosody_Enable);
-            boxSize += stream.ReadBslbf(out this.Video_Enable);
-            boxSize += stream.ReadBslbf(out this.Lip_Shape_Enable);
-            boxSize += stream.ReadBslbf(out this.Trick_Mode_Enable);
+            boxSize += stream.ReadBits(5, out this.TTS_Sequence_ID);
+            boxSize += stream.ReadBits(18, out this.Language_Code);
+            boxSize += stream.ReadBit(out this.Gender_Enable);
+            boxSize += stream.ReadBit(out this.Age_Enable);
+            boxSize += stream.ReadBit(out this.Speech_Rate_Enable);
+            boxSize += stream.ReadBit(out this.Prosody_Enable);
+            boxSize += stream.ReadBit(out this.Video_Enable);
+            boxSize += stream.ReadBit(out this.Lip_Shape_Enable);
+            boxSize += stream.ReadBit(out this.Trick_Mode_Enable);
             return boxSize;
         }
 
@@ -33762,25 +33758,25 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+            boxSize += stream.ReadBit(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ER_SC_CelpHeader(samplingFrequencyIndex), out this.ER_SC_CelpHeader);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new ER_SC_CelpHeader(samplingFrequencyIndex), out this.ER_SC_CelpHeader);
             }
 
             else
             {
-                boxSize += stream.ReadUimsbf(out this.isBWSLayer);
+                boxSize += stream.ReadBit(out this.isBWSLayer);
 
                 if (isBWSLayer)
                 {
-                    boxSize += stream.ReadClass(boxSize, readSize, this, new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, () => new CelpBWSenhHeader(), out this.CelpBWSenhHeader);
                 }
 
                 else
                 {
-                    boxSize += stream.ReadUimsbf(2, out this.CELPBRSid);
+                    boxSize += stream.ReadBits(2, out this.CELPBRSid);
                 }
             }
             return boxSize;
@@ -33906,21 +33902,21 @@ namespace SharpMP4
 
             const bool MPE = false;
 
-            boxSize += stream.ReadUimsbf(out this.ExcitationMode);
-            boxSize += stream.ReadUimsbf(out this.SampleRateMode);
-            boxSize += stream.ReadUimsbf(out this.FineRateControl);
-            boxSize += stream.ReadUimsbf(out this.SilenceCompression);
+            boxSize += stream.ReadBit(out this.ExcitationMode);
+            boxSize += stream.ReadBit(out this.SampleRateMode);
+            boxSize += stream.ReadBit(out this.FineRateControl);
+            boxSize += stream.ReadBit(out this.SilenceCompression);
 
             if (ExcitationMode == RPE)
             {
-                boxSize += stream.ReadUimsbf(3, out this.RPE_Configuration);
+                boxSize += stream.ReadBits(3, out this.RPE_Configuration);
             }
 
             if (ExcitationMode == MPE)
             {
-                boxSize += stream.ReadUimsbf(5, out this.MPE_Configuration);
-                boxSize += stream.ReadUimsbf(2, out this.NumEnhLayers);
-                boxSize += stream.ReadUimsbf(out this.BandwidthScalabilityMode);
+                boxSize += stream.ReadBits(5, out this.MPE_Configuration);
+                boxSize += stream.ReadBits(2, out this.NumEnhLayers);
+                boxSize += stream.ReadBit(out this.BandwidthScalabilityMode);
             }
             return boxSize;
         }
@@ -34008,11 +34004,11 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+            boxSize += stream.ReadBit(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ErHVXCconfig(), out this.ErHVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new ErHVXCconfig(), out this.ErHVXCconfig);
             }
             return boxSize;
         }
@@ -34081,13 +34077,13 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.HVXCvarMode);
-            boxSize += stream.ReadUimsbf(2, out this.HVXCrateMode);
-            boxSize += stream.ReadUimsbf(out this.extensionFlag);
+            boxSize += stream.ReadBit(out this.HVXCvarMode);
+            boxSize += stream.ReadBits(2, out this.HVXCrateMode);
+            boxSize += stream.ReadBit(out this.extensionFlag);
 
             if (extensionFlag)
             {
-                boxSize += stream.ReadUimsbf(out this.var_ScalableFlag);
+                boxSize += stream.ReadBit(out this.var_ScalableFlag);
             }
             return boxSize;
         }
@@ -34158,16 +34154,16 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.isBaseLayer);
+            boxSize += stream.ReadBit(out this.isBaseLayer);
 
             if (isBaseLayer)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new PARAconfig(), out this.PARAconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new PARAconfig(), out this.PARAconfig);
             }
 
             else
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new HILNenexConfig(), out this.HILNenexConfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new HILNenexConfig(), out this.HILNenexConfig);
             }
             return boxSize;
         }
@@ -34251,18 +34247,18 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(2, out this.PARAmode);
+            boxSize += stream.ReadBits(2, out this.PARAmode);
 
             if (PARAmode != 1)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ErHVXCconfig(), out this.ErHVXCconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new ErHVXCconfig(), out this.ErHVXCconfig);
             }
 
             if (PARAmode != 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new HILNconfig(), out this.HILNconfig);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new HILNconfig(), out this.HILNconfig);
             }
-            boxSize += stream.ReadUimsbf(out this.PARAextensionFlag);
+            boxSize += stream.ReadBit(out this.PARAextensionFlag);
 
             if (PARAextensionFlag)
             {
@@ -34359,11 +34355,11 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.HILNquantMode);
-            boxSize += stream.ReadUimsbf(8, out this.HILNmaxNumLine);
-            boxSize += stream.ReadUimsbf(4, out this.HILNsampleRateCode);
-            boxSize += stream.ReadUimsbf(12, out this.HILNframeLength);
-            boxSize += stream.ReadUimsbf(2, out this.HILNcontMode);
+            boxSize += stream.ReadBit(out this.HILNquantMode);
+            boxSize += stream.ReadUInt8(out this.HILNmaxNumLine);
+            boxSize += stream.ReadBits(4, out this.HILNsampleRateCode);
+            boxSize += stream.ReadBits(12, out this.HILNframeLength);
+            boxSize += stream.ReadBits(2, out this.HILNcontMode);
             return boxSize;
         }
 
@@ -34421,11 +34417,11 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.HILNenhaLayer);
+            boxSize += stream.ReadBit(out this.HILNenhaLayer);
 
             if (HILNenhaLayer)
             {
-                boxSize += stream.ReadUimsbf(2, out this.HILNenhaQuantMode);
+                boxSize += stream.ReadBits(2, out this.HILNenhaQuantMode);
             }
             return boxSize;
         }
@@ -34504,17 +34500,17 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(2, out this.decoder_level);
-            boxSize += stream.ReadUimsbf(4, out this.update_rate);
-            boxSize += stream.ReadUimsbf(2, out this.synthesis_method);
+            boxSize += stream.ReadBits(2, out this.decoder_level);
+            boxSize += stream.ReadBits(4, out this.update_rate);
+            boxSize += stream.ReadBits(2, out this.synthesis_method);
 
             if (channelConfiguration != 1)
             {
-                boxSize += stream.ReadUimsbf(2, out this.mode_ext);
+                boxSize += stream.ReadBits(2, out this.mode_ext);
 
                 if ((channelConfiguration == 2) && (mode_ext == 1))
                 {
-                    boxSize += stream.ReadUimsbf(2, out this.reserved);
+                    boxSize += stream.ReadBits(2, out this.reserved);
                 }
             }
             return boxSize;
@@ -34584,7 +34580,7 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadBslbf(out this.extension);
+            boxSize += stream.ReadBit(out this.extension);
             return boxSize;
         }
 
@@ -34635,9 +34631,9 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.DSDDST_Coded);
-            boxSize += stream.ReadUimsbf(14, out this.N_Channels);
-            boxSize += stream.ReadUimsbf(out this.reserved);
+            boxSize += stream.ReadBit(out this.DSDDST_Coded);
+            boxSize += stream.ReadBits(14, out this.N_Channels);
+            boxSize += stream.ReadBit(out this.reserved);
             return boxSize;
         }
 
@@ -34842,36 +34838,36 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(32, out this.als_id);
-            boxSize += stream.ReadUimsbf(32, out this.samp_freq);
-            boxSize += stream.ReadUimsbf(32, out this.samples);
-            boxSize += stream.ReadUimsbf(16, out this.channels);
-            boxSize += stream.ReadUimsbf(3, out this.file_type);
-            boxSize += stream.ReadUimsbf(3, out this.resolution);
-            boxSize += stream.ReadUimsbf(out this.floating);
-            boxSize += stream.ReadUimsbf(out this.msb_first);
-            boxSize += stream.ReadUimsbf(16, out this.frame_length);
-            boxSize += stream.ReadUimsbf(8, out this.random_access);
-            boxSize += stream.ReadUimsbf(2, out this.ra_flag);
-            boxSize += stream.ReadUimsbf(out this.adapt_order);
-            boxSize += stream.ReadUimsbf(2, out this.coef_table);
-            boxSize += stream.ReadUimsbf(out this.long_term_prediction);
-            boxSize += stream.ReadUimsbf(10, out this.max_order);
-            boxSize += stream.ReadUimsbf(2, out this.block_switching);
-            boxSize += stream.ReadUimsbf(out this.bgmc_mode);
-            boxSize += stream.ReadUimsbf(out this.sb_part);
-            boxSize += stream.ReadUimsbf(out this.joint_stereo);
-            boxSize += stream.ReadUimsbf(out this.mc_coding);
-            boxSize += stream.ReadUimsbf(out this.chan_config);
-            boxSize += stream.ReadUimsbf(out this.chan_sort);
-            boxSize += stream.ReadUimsbf(out this.crc_enabled);
-            boxSize += stream.ReadUimsbf(out this.RLSLMS);
-            boxSize += stream.ReadUimsbf(5, out this.reserved);
-            boxSize += stream.ReadUimsbf(out this.aux_data_enabled);
+            boxSize += stream.ReadUInt32(out this.als_id);
+            boxSize += stream.ReadUInt32(out this.samp_freq);
+            boxSize += stream.ReadUInt32(out this.samples);
+            boxSize += stream.ReadUInt16(out this.channels);
+            boxSize += stream.ReadBits(3, out this.file_type);
+            boxSize += stream.ReadBits(3, out this.resolution);
+            boxSize += stream.ReadBit(out this.floating);
+            boxSize += stream.ReadBit(out this.msb_first);
+            boxSize += stream.ReadUInt16(out this.frame_length);
+            boxSize += stream.ReadUInt8(out this.random_access);
+            boxSize += stream.ReadBits(2, out this.ra_flag);
+            boxSize += stream.ReadBit(out this.adapt_order);
+            boxSize += stream.ReadBits(2, out this.coef_table);
+            boxSize += stream.ReadBit(out this.long_term_prediction);
+            boxSize += stream.ReadBits(10, out this.max_order);
+            boxSize += stream.ReadBits(2, out this.block_switching);
+            boxSize += stream.ReadBit(out this.bgmc_mode);
+            boxSize += stream.ReadBit(out this.sb_part);
+            boxSize += stream.ReadBit(out this.joint_stereo);
+            boxSize += stream.ReadBit(out this.mc_coding);
+            boxSize += stream.ReadBit(out this.chan_config);
+            boxSize += stream.ReadBit(out this.chan_sort);
+            boxSize += stream.ReadBit(out this.crc_enabled);
+            boxSize += stream.ReadBit(out this.RLSLMS);
+            boxSize += stream.ReadBits(5, out this.reserved);
+            boxSize += stream.ReadBit(out this.aux_data_enabled);
 
             if (chan_config)
             {
-                boxSize += stream.ReadUimsbf(16, out this.chan_config_info);
+                boxSize += stream.ReadUInt16(out this.chan_config_info);
             }
 
             if (chan_sort)
@@ -34880,18 +34876,18 @@ namespace SharpMP4
                 this.chan_pos = new bool[IsoStream.GetInt(channels)];
                 for (int c = 0; c < channels; c++)
                 {
-                    boxSize += stream.ReadUimsbf(out this.chan_pos[c]); // 1..16 uimsbf 
+                    boxSize += stream.ReadBit(out this.chan_pos[c]); // 1..16 uimsbf 
                 }
             }
-            boxSize += stream.ReadBslbf(out this.byte_align); // TODO: 0..7 bslbf 
-            boxSize += stream.ReadUimsbf(32, out this.header_size);
-            boxSize += stream.ReadUimsbf(32, out this.trailer_size);
-            boxSize += stream.ReadBslbf(header_size * 8, out this.orig_header);
-            boxSize += stream.ReadBslbf(trailer_size * 8, out this.orig_trailer);
+            boxSize += stream.ReadBit(out this.byte_align); // TODO: 0..7 bslbf 
+            boxSize += stream.ReadUInt32(out this.header_size);
+            boxSize += stream.ReadUInt32(out this.trailer_size);
+            boxSize += stream.ReadBits((uint)(header_size * 8), out this.orig_header);
+            boxSize += stream.ReadBits((uint)(trailer_size * 8), out this.orig_trailer);
 
             if (crc_enabled)
             {
-                boxSize += stream.ReadUimsbf(32, out this.crc);
+                boxSize += stream.ReadUInt32(out this.crc);
             }
 
             if ((ra_flag == 2) && (random_access > 0))
@@ -34900,14 +34896,14 @@ namespace SharpMP4
                 this.ra_unit_size = new uint[IsoStream.GetInt(((samples - 1) / (frame_length + 1)) + 1)];
                 for (int f = 0; f < ((samples - 1) / (frame_length + 1)) + 1; f++)
                 {
-                    boxSize += stream.ReadUimsbf(32, out this.ra_unit_size[f]);
+                    boxSize += stream.ReadUInt32(out this.ra_unit_size[f]);
                 }
             }
 
             if (aux_data_enabled)
             {
-                boxSize += stream.ReadUimsbf(32, out this.aux_size);
-                boxSize += stream.ReadBslbf(aux_size * 8, out this.aux_data);
+                boxSize += stream.ReadUInt32(out this.aux_size);
+                boxSize += stream.ReadBits((uint)(aux_size * 8), out this.aux_data);
             }
             return boxSize;
         }
@@ -35116,15 +35112,15 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(3, out this.pcmWordLength);
-            boxSize += stream.ReadUimsbf(out this.aac_core_present);
-            boxSize += stream.ReadUimsbf(out this.lle_main_stream);
-            boxSize += stream.ReadUimsbf(out this.reserved_bit);
-            boxSize += stream.ReadUimsbf(3, out this.frameLength);
+            boxSize += stream.ReadBits(3, out this.pcmWordLength);
+            boxSize += stream.ReadBit(out this.aac_core_present);
+            boxSize += stream.ReadBit(out this.lle_main_stream);
+            boxSize += stream.ReadBit(out this.reserved_bit);
+            boxSize += stream.ReadBits(3, out this.frameLength);
 
             if (channelConfiguration == 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new program_config_element(), out this.program_config_element);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new program_config_element(), out this.program_config_element);
             }
             return boxSize;
         }
@@ -35268,34 +35264,34 @@ namespace SharpMP4
 
             const byte ELDEXT_TERM = 0;
 
-            boxSize += stream.ReadBslbf(out this.frameLengthFlag);
-            boxSize += stream.ReadBslbf(out this.aacSectionDataResilienceFlag);
-            boxSize += stream.ReadBslbf(out this.aacScalefactorDataResilienceFlag);
-            boxSize += stream.ReadBslbf(out this.aacSpectralDataResilienceFlag);
-            boxSize += stream.ReadBslbf(out this.ldSbrPresentFlag);
+            boxSize += stream.ReadBit(out this.frameLengthFlag);
+            boxSize += stream.ReadBit(out this.aacSectionDataResilienceFlag);
+            boxSize += stream.ReadBit(out this.aacScalefactorDataResilienceFlag);
+            boxSize += stream.ReadBit(out this.aacSpectralDataResilienceFlag);
+            boxSize += stream.ReadBit(out this.ldSbrPresentFlag);
 
             if (ldSbrPresentFlag)
             {
-                boxSize += stream.ReadBslbf(out this.ldSbrSamplingRate);
-                boxSize += stream.ReadBslbf(out this.ldSbrCrcFlag);
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ld_sbr_header(channelConfiguration), out this.ld_sbr_header);
+                boxSize += stream.ReadBit(out this.ldSbrSamplingRate);
+                boxSize += stream.ReadBit(out this.ldSbrCrcFlag);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new ld_sbr_header(channelConfiguration), out this.ld_sbr_header);
             }
-            boxSize += stream.ReadBslbf(4, out this.eldExtType);
+            boxSize += stream.ReadBits(4, out this.eldExtType);
 
             while (eldExtType != ELDEXT_TERM)
             {
-                boxSize += stream.ReadUimsbf(4, out this.eldExtLen);
+                boxSize += stream.ReadBits(4, out this.eldExtLen);
                 len = eldExtLen;
 
                 if (eldExtLen == 15)
                 {
-                    boxSize += stream.ReadUimsbf(8, out this.eldExtLenAdd);
+                    boxSize += stream.ReadUInt8(out this.eldExtLenAdd);
                     len += eldExtLenAdd;
                 }
 
                 if (eldExtLenAdd == 255)
                 {
-                    boxSize += stream.ReadUimsbf(16, out this.eldExtLenAddAdd);
+                    boxSize += stream.ReadUInt16(out this.eldExtLenAddAdd);
                     len += eldExtLenAddAdd;
                 }
 
@@ -35309,12 +35305,12 @@ namespace SharpMP4
                         this.other_byte = new byte[IsoStream.GetInt(len)];
                         for (int cnt = 0; cnt < len; cnt++)
                         {
-                            boxSize += stream.ReadUimsbf(8, out this.other_byte[cnt]);
+                            boxSize += stream.ReadUInt8(out this.other_byte[cnt]);
                         }
                         break;
 
                 }
-                boxSize += stream.ReadBslbf(4, out this.eldExtType);
+                boxSize += stream.ReadBits(4, out this.eldExtType);
             }
             return boxSize;
         }
@@ -35519,7 +35515,7 @@ namespace SharpMP4
             this.sbr_header = new sbr_header[IsoStream.GetInt(numSbrHeader)];
             for (int el = 0; el < numSbrHeader; el++)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new sbr_header(), out this.sbr_header[el]);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new sbr_header(), out this.sbr_header[el]);
             }
             return boxSize;
         }
@@ -35690,27 +35686,27 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(out this.bs_amp_res);
-            boxSize += stream.ReadUimsbf(4, out this.bs_start_freq);
-            boxSize += stream.ReadUimsbf(4, out this.bs_stop_freq);
-            boxSize += stream.ReadUimsbf(3, out this.bs_xover_band);
-            boxSize += stream.ReadUimsbf(2, out this.bs_reserved);
-            boxSize += stream.ReadUimsbf(out this.bs_header_extra_1);
-            boxSize += stream.ReadUimsbf(out this.bs_header_extra_2);
+            boxSize += stream.ReadBit(out this.bs_amp_res);
+            boxSize += stream.ReadBits(4, out this.bs_start_freq);
+            boxSize += stream.ReadBits(4, out this.bs_stop_freq);
+            boxSize += stream.ReadBits(3, out this.bs_xover_band);
+            boxSize += stream.ReadBits(2, out this.bs_reserved);
+            boxSize += stream.ReadBit(out this.bs_header_extra_1);
+            boxSize += stream.ReadBit(out this.bs_header_extra_2);
 
             if (bs_header_extra_1)
             {
-                boxSize += stream.ReadUimsbf(2, out this.bs_freq_scale);
-                boxSize += stream.ReadUimsbf(out this.bs_alter_scale);
-                boxSize += stream.ReadUimsbf(2, out this.bs_noise_bands);
+                boxSize += stream.ReadBits(2, out this.bs_freq_scale);
+                boxSize += stream.ReadBit(out this.bs_alter_scale);
+                boxSize += stream.ReadBits(2, out this.bs_noise_bands);
             }
 
             if (bs_header_extra_2)
             {
-                boxSize += stream.ReadUimsbf(2, out this.bs_limiter_bands);
-                boxSize += stream.ReadUimsbf(2, out this.bs_limiter_gains);
-                boxSize += stream.ReadUimsbf(out this.bs_interpol_freq);
-                boxSize += stream.ReadUimsbf(out this.bs_smoothing_mode);
+                boxSize += stream.ReadBits(2, out this.bs_limiter_bands);
+                boxSize += stream.ReadBits(2, out this.bs_limiter_gains);
+                boxSize += stream.ReadBit(out this.bs_interpol_freq);
+                boxSize += stream.ReadBit(out this.bs_smoothing_mode);
             }
             return boxSize;
         }
@@ -35908,10 +35904,10 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUimsbf(8, out this.number_of_predefined_set);
-            boxSize += stream.ReadUimsbf(2, out this.interleave_type);
-            boxSize += stream.ReadUimsbf(3, out this.bit_stuffing);
-            boxSize += stream.ReadUimsbf(3, out this.number_of_concatenated_frame);
+            boxSize += stream.ReadUInt8(out this.number_of_predefined_set);
+            boxSize += stream.ReadBits(2, out this.interleave_type);
+            boxSize += stream.ReadBits(3, out this.bit_stuffing);
+            boxSize += stream.ReadBits(3, out this.number_of_concatenated_frame);
 
             this.number_of_class = new byte[IsoStream.GetInt(number_of_predefined_set)];
             this.length_escape = new bool[IsoStream.GetInt(number_of_predefined_set)][];
@@ -35930,7 +35926,7 @@ namespace SharpMP4
             this.class_output_order = new byte[IsoStream.GetInt(number_of_predefined_set)][];
             for (int i = 0; i < number_of_predefined_set; i++)
             {
-                boxSize += stream.ReadUimsbf(6, out this.number_of_class[i]);
+                boxSize += stream.ReadBits(6, out this.number_of_class[i]);
 
                 this.length_escape[i] = new bool[IsoStream.GetInt(number_of_class[i])];
                 this.rate_escape[i] = new bool[IsoStream.GetInt(number_of_class[i])];
@@ -35946,36 +35942,36 @@ namespace SharpMP4
                 this.class_crclen[i] = new byte[IsoStream.GetInt(number_of_class[i])];
                 for (int j = 0; j < number_of_class[i]; j++)
                 {
-                    boxSize += stream.ReadUimsbf(out this.length_escape[i][j]);
-                    boxSize += stream.ReadUimsbf(out this.rate_escape[i][j]);
-                    boxSize += stream.ReadUimsbf(out this.crclen_escape[i][j]);
+                    boxSize += stream.ReadBit(out this.length_escape[i][j]);
+                    boxSize += stream.ReadBit(out this.rate_escape[i][j]);
+                    boxSize += stream.ReadBit(out this.crclen_escape[i][j]);
 
                     if (number_of_concatenated_frame != 1)
                     {
-                        boxSize += stream.ReadUimsbf(out this.concatenate_flag[i][j]);
+                        boxSize += stream.ReadBit(out this.concatenate_flag[i][j]);
                     }
-                    boxSize += stream.ReadUimsbf(2, out this.fec_type[i][j]);
+                    boxSize += stream.ReadBits(2, out this.fec_type[i][j]);
 
                     if (fec_type[i][j] == 0)
                     {
-                        boxSize += stream.ReadUimsbf(out this.termination_switch[i][j]);
+                        boxSize += stream.ReadBit(out this.termination_switch[i][j]);
                     }
 
                     if (interleave_type == 2)
                     {
-                        boxSize += stream.ReadUimsbf(2, out this.interleave_switch[i][j]);
+                        boxSize += stream.ReadBits(2, out this.interleave_switch[i][j]);
                     }
-                    boxSize += stream.ReadUimsbf(out this.class_optional[i][j]);
+                    boxSize += stream.ReadBit(out this.class_optional[i][j]);
 
                     if (length_escape[i][j] == true)
                     {
                         /*  ESC  */
-                        boxSize += stream.ReadUimsbf(4, out this.number_of_bits_for_length[i][j]);
+                        boxSize += stream.ReadBits(4, out this.number_of_bits_for_length[i][j]);
                     }
 
                     else
                     {
-                        boxSize += stream.ReadUimsbf(16, out this.class_length[i][j]);
+                        boxSize += stream.ReadUInt16(out this.class_length[i][j]);
                     }
 
                     if (rate_escape[i][j] != true)
@@ -35984,22 +35980,22 @@ namespace SharpMP4
 
                         if (fec_type[i][j] != 0)
                         {
-                            boxSize += stream.ReadUimsbf(7, out this.class_rate[i][j]);
+                            boxSize += stream.ReadBits(7, out this.class_rate[i][j]);
                         }
 
                         else
                         {
-                            boxSize += stream.ReadUimsbf(5, out this.class_rate[i][j]);
+                            boxSize += stream.ReadBits(5, out this.class_rate[i][j]);
                         }
                     }
 
                     if (crclen_escape[i][j] != true)
                     {
                         /*  not ESC  */
-                        boxSize += stream.ReadUimsbf(5, out this.class_crclen[i][j]);
+                        boxSize += stream.ReadBits(5, out this.class_crclen[i][j]);
                     }
                 }
-                boxSize += stream.ReadUimsbf(out this.class_reordered_output[i]);
+                boxSize += stream.ReadBit(out this.class_reordered_output[i]);
 
                 if (class_reordered_output[i] == true)
                 {
@@ -36007,16 +36003,16 @@ namespace SharpMP4
                     this.class_output_order[i] = new byte[IsoStream.GetInt(number_of_class[i])];
                     for (int j = 0; j < number_of_class[i]; j++)
                     {
-                        boxSize += stream.ReadUimsbf(6, out this.class_output_order[i][j]);
+                        boxSize += stream.ReadBits(6, out this.class_output_order[i][j]);
                     }
                 }
             }
-            boxSize += stream.ReadUimsbf(out this.header_protection);
+            boxSize += stream.ReadBit(out this.header_protection);
 
             if (header_protection == true)
             {
-                boxSize += stream.ReadUimsbf(5, out this.header_rate);
-                boxSize += stream.ReadUimsbf(5, out this.header_crclen);
+                boxSize += stream.ReadBits(5, out this.header_rate);
+                boxSize += stream.ReadBits(5, out this.header_crclen);
             }
             return boxSize;
         }
@@ -36212,7 +36208,7 @@ namespace SharpMP4
         protected BinaryUTF8String config;
         public BinaryUTF8String Config { get { return this.config; } set { this.config = value; } }
 
-        public WebVTTConfigurationBox() : base("vttC")
+        public WebVTTConfigurationBox() : base(IsoStream.FromFourCC("vttC"))
         {
         }
 
@@ -36255,7 +36251,7 @@ namespace SharpMP4
         protected BinaryUTF8String source_label;
         public BinaryUTF8String SourceLabel { get { return this.source_label; } set { this.source_label = value; } }
 
-        public WebVTTSourceLabelBox() : base("vlab")
+        public WebVTTSourceLabelBox() : base(IsoStream.FromFourCC("vlab"))
         {
         }
 
@@ -36300,7 +36296,7 @@ namespace SharpMP4
         public WebVTTSourceLabelBox Label { get { return this.children.OfType<WebVTTSourceLabelBox>().FirstOrDefault(); } }
         public BitRateBox _BitRateBox { get { return this.children.OfType<BitRateBox>().FirstOrDefault(); } }
 
-        public WVTTSampleEntry() : base("wvtt")
+        public WVTTSampleEntry() : base(IsoStream.FromFourCC("wvtt"))
         {
         }
 
@@ -36353,7 +36349,7 @@ namespace SharpMP4
         protected BinaryUTF8String aux_track_type;
         public BinaryUTF8String AuxTrackType { get { return this.aux_track_type; } set { this.aux_track_type = value; } }
 
-        public AuxiliaryTypeInfoBox() : base("auxi", 0, 0)
+        public AuxiliaryTypeInfoBox() : base(IsoStream.FromFourCC("auxi"), 0, 0)
         {
         }
 
@@ -36409,7 +36405,7 @@ namespace SharpMP4
         protected uint reserved;
         public uint Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public CodingConstraintsBox() : base("ccst", 0, 0)
+        public CodingConstraintsBox() : base(IsoStream.FromFourCC("ccst"), 0, 0)
         {
         }
 
@@ -36487,7 +36483,7 @@ namespace SharpMP4
         protected uint[] group_description_index;
         public uint[] GroupDescriptionIndex { get { return this.group_description_index; } set { this.group_description_index = value; } }
 
-        public MD5IntegrityBox(uint flags = 0) : base("md5i", 0, flags)
+        public MD5IntegrityBox(uint flags = 0) : base(IsoStream.FromFourCC("md5i"), 0, flags)
         {
         }
 
@@ -36495,7 +36491,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(16, out this.input_MD5);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.input_MD5);
             boxSize += stream.ReadUInt32(out this.input_4cc);
 
             if (input_4cc == IsoStream.FromFourCC("sgpd"))
@@ -36588,7 +36584,7 @@ namespace SharpMP4
         protected byte[] aux_subtype;  //  until the end of the box, the semantics depend on the aux_type value
         public byte[] AuxSubtype { get { return this.aux_subtype; } set { this.aux_subtype = value; } }
 
-        public AuxiliaryTypeProperty(uint flags = 0) : base("auxC", 0, flags)
+        public AuxiliaryTypeProperty(uint flags = 0) : base(IsoStream.FromFourCC("auxC"), 0, flags)
         {
         }
 
@@ -36639,7 +36635,7 @@ namespace SharpMP4
         protected bool axis;
         public bool Axis { get { return this.axis; } set { this.axis = value; } }
 
-        public ImageMirror() : base("imir")
+        public ImageMirror() : base(IsoStream.FromFourCC("imir"))
         {
         }
 
@@ -36690,7 +36686,7 @@ namespace SharpMP4
         protected byte angle;
         public byte Angle { get { return this.angle; } set { this.angle = value; } }
 
-        public ImageRotation() : base("irot")
+        public ImageRotation() : base(IsoStream.FromFourCC("irot"))
         {
         }
 
@@ -36742,7 +36738,7 @@ namespace SharpMP4
         protected uint image_height;
         public uint ImageHeight { get { return this.image_height; } set { this.image_height = value; } }
 
-        public ImageSpatialExtentsProperty() : base("ispe", 0, 0)
+        public ImageSpatialExtentsProperty() : base(IsoStream.FromFourCC("ispe"), 0, 0)
         {
         }
 
@@ -36788,7 +36784,7 @@ namespace SharpMP4
         protected byte[] JPEGprefix;
         public byte[] _JPEGprefix { get { return this.JPEGprefix; } set { this.JPEGprefix = value; } }
 
-        public JPEGConfigurationBox() : base("jpgC")
+        public JPEGConfigurationBox() : base(IsoStream.FromFourCC("jpgC"))
         {
         }
 
@@ -36832,7 +36828,7 @@ namespace SharpMP4
         protected ushort layer_id;
         public ushort LayerId { get { return this.layer_id; } set { this.layer_id = value; } }
 
-        public LayerSelectorProperty() : base("lsel")
+        public LayerSelectorProperty() : base(IsoStream.FromFourCC("lsel"))
         {
         }
 
@@ -36876,7 +36872,7 @@ namespace SharpMP4
         protected OperatingPointsRecord op_info;  //  specified in ISO/IEC 14496-15
         public OperatingPointsRecord OpInfo { get { return this.op_info; } set { this.op_info = value; } }
 
-        public OperatingPointsInformationProperty() : base("oinf", 0, 0)
+        public OperatingPointsInformationProperty() : base(IsoStream.FromFourCC("oinf"), 0, 0)
         {
         }
 
@@ -36884,7 +36880,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new OperatingPointsRecord(), out this.op_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new OperatingPointsRecord(), out this.op_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -36926,7 +36922,7 @@ namespace SharpMP4
         protected byte[] bits_per_channel;
         public byte[] BitsPerChannel { get { return this.bits_per_channel; } set { this.bits_per_channel = value; } }
 
-        public PixelInformationProperty() : base("pixi", 0, 0)
+        public PixelInformationProperty() : base(IsoStream.FromFourCC("pixi"), 0, 0)
         {
         }
 
@@ -36991,7 +36987,7 @@ namespace SharpMP4
         protected uint vertical_offset;
         public uint VerticalOffset { get { return this.vertical_offset; } set { this.vertical_offset = value; } }
 
-        public RelativeLocationProperty() : base("rloc", 0, 0)
+        public RelativeLocationProperty() : base(IsoStream.FromFourCC("rloc"), 0, 0)
         {
         }
 
@@ -37038,7 +37034,7 @@ namespace SharpMP4
         protected ushort target_ols_idx;
         public ushort TargetOlsIdx { get { return this.target_ols_idx; } set { this.target_ols_idx = value; } }
 
-        public TargetOlsProperty() : base("tols", 0, 0)
+        public TargetOlsProperty() : base(IsoStream.FromFourCC("tols"), 0, 0)
         {
         }
 
@@ -37086,7 +37082,7 @@ namespace SharpMP4
         protected sbyte exposure_numerator;
         public sbyte ExposureNumerator { get { return this.exposure_numerator; } set { this.exposure_numerator = value; } }
 
-        public AutoExposureBracketingEntry() : base("aebr")
+        public AutoExposureBracketingEntry() : base(IsoStream.FromFourCC("aebr"))
         {
         }
 
@@ -37137,7 +37133,7 @@ namespace SharpMP4
         protected sbyte flash_exposure_denominator;
         public sbyte FlashExposureDenominator { get { return this.flash_exposure_denominator; } set { this.flash_exposure_denominator = value; } }
 
-        public FlashExposureBracketingEntry() : base("afbr")
+        public FlashExposureBracketingEntry() : base(IsoStream.FromFourCC("afbr"))
         {
         }
 
@@ -37189,7 +37185,7 @@ namespace SharpMP4
         protected BinaryUTF8String alt_lang;
         public BinaryUTF8String AltLang { get { return this.alt_lang; } set { this.alt_lang = value; } }
 
-        public AccessibilityTextProperty() : base("altt", 0, 0)
+        public AccessibilityTextProperty() : base(IsoStream.FromFourCC("altt"), 0, 0)
         {
         }
 
@@ -37237,7 +37233,7 @@ namespace SharpMP4
         protected ulong creation_time;
         public ulong CreationTime { get { return this.creation_time; } set { this.creation_time = value; } }
 
-        public CreationTimeProperty() : base("crtt", 0, 0)
+        public CreationTimeProperty() : base(IsoStream.FromFourCC("crtt"), 0, 0)
         {
         }
 
@@ -37285,7 +37281,7 @@ namespace SharpMP4
         protected sbyte f_stop_denominator;
         public sbyte fStopDenominator { get { return this.f_stop_denominator; } set { this.f_stop_denominator = value; } }
 
-        public DepthOfFieldBracketingEntry() : base("dobr")
+        public DepthOfFieldBracketingEntry() : base(IsoStream.FromFourCC("dobr"))
         {
         }
 
@@ -37336,7 +37332,7 @@ namespace SharpMP4
         protected ushort focus_distance_denominator;
         public ushort FocusDistanceDenominator { get { return this.focus_distance_denominator; } set { this.focus_distance_denominator = value; } }
 
-        public FocusBracketingEntry() : base("fobr")
+        public FocusBracketingEntry() : base(IsoStream.FromFourCC("fobr"))
         {
         }
 
@@ -37395,7 +37391,7 @@ namespace SharpMP4
         protected ushort target_height_denominator;
         public ushort TargetHeightDenominator { get { return this.target_height_denominator; } set { this.target_height_denominator = value; } }
 
-        public ImageScaling() : base("iscl", 0, 0)
+        public ImageScaling() : base(IsoStream.FromFourCC("iscl"), 0, 0)
         {
         }
 
@@ -37449,7 +37445,7 @@ namespace SharpMP4
         protected ulong modification_time;
         public ulong ModificationTime { get { return this.modification_time; } set { this.modification_time = value; } }
 
-        public ModificationTimeProperty() : base("mdft", 0, 0)
+        public ModificationTimeProperty() : base(IsoStream.FromFourCC("mdft"), 0, 0)
         {
         }
 
@@ -37494,7 +37490,7 @@ namespace SharpMP4
         protected ushort frame_number;
         public ushort FrameNumber { get { return this.frame_number; } set { this.frame_number = value; } }
 
-        public PanoramaEntry() : base("pano")
+        public PanoramaEntry() : base(IsoStream.FromFourCC("pano"))
         {
         }
 
@@ -37544,7 +37540,7 @@ namespace SharpMP4
         protected uint[] reference_type;
         public uint[] ReferenceType { get { return this.reference_type; } set { this.reference_type = value; } }
 
-        public RequiredReferenceTypesProperty() : base("rref", 0, 0)
+        public RequiredReferenceTypesProperty() : base(IsoStream.FromFourCC("rref"), 0, 0)
         {
         }
 
@@ -37617,7 +37613,7 @@ namespace SharpMP4
         protected BinaryUTF8String tags;
         public BinaryUTF8String Tags { get { return this.tags; } set { this.tags = value; } }
 
-        public UserDescriptionProperty() : base("udes", 0, 0)
+        public UserDescriptionProperty() : base(IsoStream.FromFourCC("udes"), 0, 0)
         {
         }
 
@@ -37674,7 +37670,7 @@ namespace SharpMP4
         protected sbyte green_magenta;
         public sbyte GreenMagenta { get { return this.green_magenta; } set { this.green_magenta = value; } }
 
-        public WhiteBalanceBracketingEntry() : base("wbbr")
+        public WhiteBalanceBracketingEntry() : base(IsoStream.FromFourCC("wbbr"))
         {
         }
 
@@ -37721,7 +37717,7 @@ namespace SharpMP4
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
-        public WipeTransitionEffectProperty() : base("wipe", 0, 0)
+        public WipeTransitionEffectProperty() : base(IsoStream.FromFourCC("wipe"), 0, 0)
         {
         }
 
@@ -37769,7 +37765,7 @@ namespace SharpMP4
         protected byte transition_shape;
         public byte TransitionShape { get { return this.transition_shape; } set { this.transition_shape = value; } }
 
-        public ZoomTransitionEffectProperty() : base("zoom", 0, 0)
+        public ZoomTransitionEffectProperty() : base(IsoStream.FromFourCC("zoom"), 0, 0)
         {
         }
 
@@ -37816,7 +37812,7 @@ namespace SharpMP4
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
-        public FadeTransitionEffectProperty() : base("fade", 0, 0)
+        public FadeTransitionEffectProperty() : base(IsoStream.FromFourCC("fade"), 0, 0)
         {
         }
 
@@ -37860,7 +37856,7 @@ namespace SharpMP4
         protected byte transition_direction;
         public byte TransitionDirection { get { return this.transition_direction; } set { this.transition_direction = value; } }
 
-        public SplitTransitionEffectProperty() : base("splt", 0, 0)
+        public SplitTransitionEffectProperty() : base(IsoStream.FromFourCC("splt"), 0, 0)
         {
         }
 
@@ -37904,7 +37900,7 @@ namespace SharpMP4
         protected byte transition_period;
         public byte TransitionPeriod { get { return this.transition_period; } set { this.transition_period = value; } }
 
-        public SuggestedTransitionPeriodProperty() : base("stpe", 0, 0)
+        public SuggestedTransitionPeriodProperty() : base(IsoStream.FromFourCC("stpe"), 0, 0)
         {
         }
 
@@ -37948,7 +37944,7 @@ namespace SharpMP4
         protected ushort duration;
         public ushort Duration { get { return this.duration; } set { this.duration = value; } }
 
-        public SuggestedTimeDisplayDurationProperty() : base("ssld", 0, 0)
+        public SuggestedTimeDisplayDurationProperty() : base(IsoStream.FromFourCC("ssld"), 0, 0)
         {
         }
 
@@ -37992,7 +37988,7 @@ namespace SharpMP4
         protected byte bits_per_pixel;
         public byte BitsPerPixel { get { return this.bits_per_pixel; } set { this.bits_per_pixel = value; } }
 
-        public MaskConfigurationProperty() : base("mskC", 0, 0)
+        public MaskConfigurationProperty() : base(IsoStream.FromFourCC("mskC"), 0, 0)
         {
         }
 
@@ -38036,7 +38032,7 @@ namespace SharpMP4
         protected VvcSubpicIDEntry sid_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicIDEntry SidInfo { get { return this.sid_info; } set { this.sid_info = value; } }
 
-        public VvcSubpicIDProperty() : base("spid", 0, 0)
+        public VvcSubpicIDProperty() : base(IsoStream.FromFourCC("spid"), 0, 0)
         {
         }
 
@@ -38044,7 +38040,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sid_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new VvcSubpicIDEntry(), out this.sid_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -38080,7 +38076,7 @@ namespace SharpMP4
         protected VvcSubpicOrderEntry sor_info;  //  specified in ISO/IEC 14496-15
         public VvcSubpicOrderEntry SorInfo { get { return this.sor_info; } set { this.sor_info = value; } }
 
-        public VvcSubpicOrderProperty() : base("spor", 0, 0)
+        public VvcSubpicOrderProperty() : base(IsoStream.FromFourCC("spor"), 0, 0)
         {
         }
 
@@ -38088,7 +38084,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadEntry(boxSize, readSize, this, TYPE, out this.sor_info); // specified in ISO/IEC 14496-15
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new VvcSubpicOrderEntry(), out this.sor_info); // specified in ISO/IEC 14496-15
             return boxSize;
         }
 
@@ -38128,7 +38124,7 @@ namespace SharpMP4
         protected ushort timescale_multiplier;
         public ushort TimescaleMultiplier { get { return this.timescale_multiplier; } set { this.timescale_multiplier = value; } }
 
-        public VisualEquivalenceEntry() : base("eqiv")
+        public VisualEquivalenceEntry() : base(IsoStream.FromFourCC("eqiv"))
         {
         }
 
@@ -38185,7 +38181,7 @@ namespace SharpMP4
         protected uint[] direct_reference_sample_id;
         public uint[] DirectReferenceSampleId { get { return this.direct_reference_sample_id; } set { this.direct_reference_sample_id = value; } }
 
-        public DirectReferenceSamplesList() : base("refs")
+        public DirectReferenceSamplesList() : base(IsoStream.FromFourCC("refs"))
         {
         }
 
@@ -38246,7 +38242,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleItemListBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleItemListBox() : base("ilst")
+        public AppleItemListBox() : base(IsoStream.FromFourCC("ilst"))
         {
         }
 
@@ -38288,7 +38284,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "IlstKey"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public IlstKey(string format) : base(format)
+        public IlstKey(uint format) : base(format)
         {
         }
 
@@ -38334,7 +38330,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleCameraModelBox() : base("©mod")
+        public AppleCameraModelBox() : base(IsoStream.FromFourCC("©mod"))
         {
         }
 
@@ -38375,7 +38371,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleEncoderToolBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleEncoderToolBox() : base("©too")
+        public AppleEncoderToolBox() : base(IsoStream.FromFourCC("©too"))
         {
         }
 
@@ -38419,7 +38415,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleComposersBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleComposersBox() : base("©wrt")
+        public AppleComposersBox() : base(IsoStream.FromFourCC("©wrt"))
         {
         }
 
@@ -38465,7 +38461,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleSoftwareBox() : base("©swr")
+        public AppleSoftwareBox() : base(IsoStream.FromFourCC("©swr"))
         {
         }
 
@@ -38508,7 +38504,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleCreatorBox() : base("©swf")
+        public AppleCreatorBox() : base(IsoStream.FromFourCC("©swf"))
         {
         }
 
@@ -38549,7 +38545,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleCommentBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleCommentBox() : base("©cmt")
+        public AppleCommentBox() : base(IsoStream.FromFourCC("©cmt"))
         {
         }
 
@@ -38595,7 +38591,7 @@ namespace SharpMP4
         protected MultiLanguageString[] value;
         public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleStartTimecode() : base("©TIM")
+        public AppleStartTimecode() : base(IsoStream.FromFourCC("©TIM"))
         {
         }
 
@@ -38638,7 +38634,7 @@ namespace SharpMP4
         protected MultiLanguageString[] value;
         public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleStartTimeScale() : base("©TSC")
+        public AppleStartTimeScale() : base(IsoStream.FromFourCC("©TSC"))
         {
         }
 
@@ -38681,7 +38677,7 @@ namespace SharpMP4
         protected MultiLanguageString[] value;
         public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleStartTimeSampleSize() : base("©TSZ")
+        public AppleStartTimeSampleSize() : base(IsoStream.FromFourCC("©TSZ"))
         {
         }
 
@@ -38722,7 +38718,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleNameBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleNameBox() : base("©nam")
+        public AppleNameBox() : base(IsoStream.FromFourCC("©nam"))
         {
         }
 
@@ -38768,7 +38764,7 @@ namespace SharpMP4
         protected BinaryUTF8String requirement;
         public BinaryUTF8String Requirement { get { return this.requirement; } set { this.requirement = value; } }
 
-        public AppleRequirementsBox() : base("©req", 0, 0)
+        public AppleRequirementsBox() : base(IsoStream.FromFourCC("©req"), 0, 0)
         {
         }
 
@@ -38809,7 +38805,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleLyricsBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleLyricsBox() : base("©lyr")
+        public AppleLyricsBox() : base(IsoStream.FromFourCC("©lyr"))
         {
         }
 
@@ -38853,7 +38849,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleGroupingBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleGroupingBox() : base("©grp")
+        public AppleGroupingBox() : base(IsoStream.FromFourCC("©grp"))
         {
         }
 
@@ -38897,7 +38893,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleAlbumBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleAlbumBox() : base("©alb")
+        public AppleAlbumBox() : base(IsoStream.FromFourCC("©alb"))
         {
         }
 
@@ -38941,7 +38937,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleArtistBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleArtistBox() : base("©ART")
+        public AppleArtistBox() : base(IsoStream.FromFourCC("©ART"))
         {
         }
 
@@ -38985,7 +38981,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleArtist2Box"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleArtist2Box() : base("aART")
+        public AppleArtist2Box() : base(IsoStream.FromFourCC("aART"))
         {
         }
 
@@ -39029,7 +39025,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleCopyrightBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleCopyrightBox() : base("cprt")
+        public AppleCopyrightBox() : base(IsoStream.FromFourCC("cprt"))
         {
         }
 
@@ -39073,7 +39069,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleCopyright2Box"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleCopyright2Box() : base("©cpy")
+        public AppleCopyright2Box() : base(IsoStream.FromFourCC("©cpy"))
         {
         }
 
@@ -39117,7 +39113,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleRecordingYear2Box"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleRecordingYear2Box() : base("©day")
+        public AppleRecordingYear2Box() : base(IsoStream.FromFourCC("©day"))
         {
         }
 
@@ -39161,7 +39157,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleGenreBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleGenreBox() : base("©gen")
+        public AppleGenreBox() : base(IsoStream.FromFourCC("©gen"))
         {
         }
 
@@ -39207,7 +39203,7 @@ namespace SharpMP4
         protected MultiLanguageString[] value;
         public MultiLanguageString[] Value { get { return this.value; } set { this.value = value; } }
 
-        public AppleGPSCoordinatesBox() : base("©xyz")
+        public AppleGPSCoordinatesBox() : base(IsoStream.FromFourCC("©xyz"))
         {
         }
 
@@ -39248,7 +39244,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleCompilationBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleCompilationBox() : base("cpil")
+        public AppleCompilationBox() : base(IsoStream.FromFourCC("cpil"))
         {
         }
 
@@ -39294,7 +39290,7 @@ namespace SharpMP4
         protected BinaryUTF8String name;
         public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
 
-        public AppleName2Box() : base("name")
+        public AppleName2Box() : base(IsoStream.FromFourCC("name"))
         {
         }
 
@@ -39335,7 +39331,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleDescriptionBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleDescriptionBox() : base("desc")
+        public AppleDescriptionBox() : base(IsoStream.FromFourCC("desc"))
         {
         }
 
@@ -39379,7 +39375,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleLongDescriptionBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleLongDescriptionBox() : base("ldes")
+        public AppleLongDescriptionBox() : base(IsoStream.FromFourCC("ldes"))
         {
         }
 
@@ -39425,7 +39421,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public UserBox(byte[] uuid) : base("uuid", uuid)
+        public UserBox(byte[] uuid) : base(IsoStream.FromFourCC("uuid"), uuid)
         {
         }
 
@@ -39468,7 +39464,7 @@ namespace SharpMP4
         protected Descriptor[] descriptor;
         public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
-        public AppleInitialObjectDescriptorBox() : base("iods")
+        public AppleInitialObjectDescriptorBox() : base(IsoStream.FromFourCC("iods"))
         {
         }
 
@@ -39519,7 +39515,7 @@ namespace SharpMP4
         protected BinaryUTF8String value;
         public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-        public ThreeGPPTitleBox() : base("titl")
+        public ThreeGPPTitleBox() : base(IsoStream.FromFourCC("titl"))
         {
         }
 
@@ -39576,7 +39572,7 @@ namespace SharpMP4
         protected BinaryUTF8String value;
         public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-        public ThreeGPPAuthorBox() : base("auth")
+        public ThreeGPPAuthorBox() : base(IsoStream.FromFourCC("auth"))
         {
         }
 
@@ -39701,7 +39697,7 @@ namespace SharpMP4
         protected BinaryUTF8String name;
         public BinaryUTF8String Name { get { return this.name; } set { this.name = value; } }
 
-        public TextMediaBox() : base("text")
+        public TextMediaBox() : base(IsoStream.FromFourCC("text"))
         {
         }
 
@@ -39709,7 +39705,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             boxSize += stream.ReadUInt32(out this.displayFlags);
             boxSize += stream.ReadUInt32(out this.textJustification);
@@ -39801,7 +39797,7 @@ namespace SharpMP4
         protected byte[] textData;
         public byte[] TextData { get { return this.textData; } set { this.textData = value; } }
 
-        public TextGmhdMediaBox() : base("text")
+        public TextGmhdMediaBox() : base(IsoStream.FromFourCC("text"))
         {
         }
 
@@ -39809,7 +39805,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(36, out this.textData);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 36, out this.textData);
             return boxSize;
         }
 
@@ -39845,7 +39841,7 @@ namespace SharpMP4
         protected XtraTag[] tags;
         public XtraTag[] Tags { get { return this.tags; } set { this.tags = value; } }
 
-        public WindowsMediaXtraBox() : base("Xtra")
+        public WindowsMediaXtraBox() : base(IsoStream.FromFourCC("Xtra"))
         {
         }
 
@@ -39853,7 +39849,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.tags);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new XtraTag(), out this.tags);
             return boxSize;
         }
 
@@ -39915,9 +39911,9 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += stream.ReadUInt32(out this.inputSize);
             boxSize += stream.ReadUInt32(out this.tagLength);
-            boxSize += stream.ReadUInt8Array((uint)tagLength, out this.tagName);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(tagLength), out this.tagName);
             boxSize += stream.ReadUInt32(out this.count);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.values);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(count), () => new XtraValue(), out this.values);
             return boxSize;
         }
 
@@ -39976,7 +39972,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += stream.ReadUInt32(out this.length);
             boxSize += stream.ReadUInt16(out this.type);
-            boxSize += stream.ReadUInt8Array((uint)(length - 6), out this.value);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(length - 6), out this.value);
             return boxSize;
         }
 
@@ -40013,7 +40009,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AC3SpecificBox() : base("dac3")
+        public AC3SpecificBox() : base(IsoStream.FromFourCC("dac3"))
         {
         }
 
@@ -40064,7 +40060,7 @@ namespace SharpMP4
         protected BinaryUTF8String value;
         public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-        public ThreeGPPDescriptionBox() : base("dscp")
+        public ThreeGPPDescriptionBox() : base(IsoStream.FromFourCC("dscp"))
         {
         }
 
@@ -40111,7 +40107,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "GenericMediaHeaderAtom"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public GenericMediaHeaderAtom() : base("gmhd")
+        public GenericMediaHeaderAtom() : base(IsoStream.FromFourCC("gmhd"))
         {
         }
 
@@ -40165,7 +40161,7 @@ namespace SharpMP4
         protected BinaryUTF8String value;
         public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-        public ThreeGPPKeywordsBox() : base("kywd")
+        public ThreeGPPKeywordsBox() : base(IsoStream.FromFourCC("kywd"))
         {
         }
 
@@ -40212,7 +40208,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleMediaTypeBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleMediaTypeBox() : base("stik")
+        public AppleMediaTypeBox() : base(IsoStream.FromFourCC("stik"))
         {
         }
 
@@ -40256,7 +40252,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleRatingBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleRatingBox() : base("rtng")
+        public AppleRatingBox() : base(IsoStream.FromFourCC("rtng"))
         {
         }
 
@@ -40300,7 +40296,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ApplePlayGapBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public ApplePlayGapBox() : base("pgap")
+        public ApplePlayGapBox() : base(IsoStream.FromFourCC("pgap"))
         {
         }
 
@@ -40344,7 +40340,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleStoreCatalogIDBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleStoreCatalogIDBox() : base("cnID")
+        public AppleStoreCatalogIDBox() : base(IsoStream.FromFourCC("cnID"))
         {
         }
 
@@ -40390,7 +40386,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public TimeCodeBox() : base("tmcd")
+        public TimeCodeBox() : base(IsoStream.FromFourCC("tmcd"))
         {
         }
 
@@ -40431,7 +40427,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleBeatsPerMinuteBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleBeatsPerMinuteBox() : base("tmpo")
+        public AppleBeatsPerMinuteBox() : base(IsoStream.FromFourCC("tmpo"))
         {
         }
 
@@ -40475,7 +40471,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleTVEpisodeBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleTVEpisodeBox() : base("tves")
+        public AppleTVEpisodeBox() : base(IsoStream.FromFourCC("tves"))
         {
         }
 
@@ -40519,7 +40515,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleTVSeasonBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleTVSeasonBox() : base("tvsn")
+        public AppleTVSeasonBox() : base(IsoStream.FromFourCC("tvsn"))
         {
         }
 
@@ -40563,7 +40559,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "HdvdBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public HdvdBox() : base("hdvd")
+        public HdvdBox() : base(IsoStream.FromFourCC("hdvd"))
         {
         }
 
@@ -40609,7 +40605,7 @@ namespace SharpMP4
         protected uint trackId;
         public uint TrackId { get { return this.trackId; } set { this.trackId = value; } }
 
-        public SyncBox() : base("sync")
+        public SyncBox() : base(IsoStream.FromFourCC("sync"))
         {
         }
 
@@ -40650,7 +40646,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "DiskNumberBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public DiskNumberBox() : base("disk")
+        public DiskNumberBox() : base(IsoStream.FromFourCC("disk"))
         {
         }
 
@@ -40696,7 +40692,7 @@ namespace SharpMP4
         protected uint trackId;
         public uint TrackId { get { return this.trackId; } set { this.trackId = value; } }
 
-        public HintBox() : base("hint")
+        public HintBox() : base(IsoStream.FromFourCC("hint"))
         {
         }
 
@@ -40739,7 +40735,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FreeSpaceBox_wide() : base("wide")
+        public FreeSpaceBox_wide() : base(IsoStream.FromFourCC("wide"))
         {
         }
 
@@ -40786,7 +40782,7 @@ namespace SharpMP4
         protected byte order;
         public byte Order { get { return this.order; } set { this.order = value; } }
 
-        public FielBox() : base("fiel")
+        public FielBox() : base(IsoStream.FromFourCC("fiel"))
         {
         }
 
@@ -40835,7 +40831,7 @@ namespace SharpMP4
         protected uint unknown2;
         public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
 
-        public Amf0Box() : base("amf0")
+        public Amf0Box() : base(IsoStream.FromFourCC("amf0"))
         {
         }
 
@@ -40884,7 +40880,7 @@ namespace SharpMP4
         protected uint unknown2;
         public uint Unknown2 { get { return this.unknown2; } set { this.unknown2 = value; } }
 
-        public MpodBox() : base("mpod")
+        public MpodBox() : base(IsoStream.FromFourCC("mpod"))
         {
         }
 
@@ -40930,7 +40926,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public GoogleStartTimeBox() : base("gsst")
+        public GoogleStartTimeBox() : base(IsoStream.FromFourCC("gsst"))
         {
         }
 
@@ -40971,7 +40967,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "GoogleSourceDataBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public GoogleSourceDataBox() : base("gssd")
+        public GoogleSourceDataBox() : base(IsoStream.FromFourCC("gssd"))
         {
         }
 
@@ -41017,7 +41013,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public GoogleTrackDurationBox() : base("gstd")
+        public GoogleTrackDurationBox() : base(IsoStream.FromFourCC("gstd"))
         {
         }
 
@@ -41058,7 +41054,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "TrackNumberBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TrackNumberBox() : base("trkn")
+        public TrackNumberBox() : base(IsoStream.FromFourCC("trkn"))
         {
         }
 
@@ -41104,7 +41100,7 @@ namespace SharpMP4
         protected StreamMarker data;
         public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
-        public ZeroBox() : base("0000")
+        public ZeroBox() : base(IsoStream.FromFourCC("0000"))
         {
         }
 
@@ -41147,7 +41143,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public DpndBox() : base("dpnd")
+        public DpndBox() : base(IsoStream.FromFourCC("dpnd"))
         {
         }
 
@@ -41188,7 +41184,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "GooglePingUrlBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public GooglePingUrlBox() : base("gspu")
+        public GooglePingUrlBox() : base(IsoStream.FromFourCC("gspu"))
         {
         }
 
@@ -41232,7 +41228,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "GooglePingMessageBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public GooglePingMessageBox() : base("gspm")
+        public GooglePingMessageBox() : base(IsoStream.FromFourCC("gspm"))
         {
         }
 
@@ -41276,7 +41272,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "GooglesHostHeaderBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public GooglesHostHeaderBox() : base("gshh")
+        public GooglesHostHeaderBox() : base(IsoStream.FromFourCC("gshh"))
         {
         }
 
@@ -41320,7 +41316,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "TVEpisodeIDBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TVEpisodeIDBox() : base("tven")
+        public TVEpisodeIDBox() : base(IsoStream.FromFourCC("tven"))
         {
         }
 
@@ -41364,7 +41360,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleCoverArtBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleCoverArtBox() : base("covr")
+        public AppleCoverArtBox() : base(IsoStream.FromFourCC("covr"))
         {
         }
 
@@ -41410,7 +41406,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public LoadBox() : base("load")
+        public LoadBox() : base(IsoStream.FromFourCC("load"))
         {
         }
 
@@ -41453,7 +41449,7 @@ namespace SharpMP4
         protected BinaryUTF8String version;
         public BinaryUTF8String Version { get { return this.version; } set { this.version = value; } }
 
-        public AppleHintVersionBox() : base("hinv")
+        public AppleHintVersionBox() : base(IsoStream.FromFourCC("hinv"))
         {
         }
 
@@ -41494,7 +41490,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleTrackApertureBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleTrackApertureBox() : base("tapt")
+        public AppleTrackApertureBox() : base(IsoStream.FromFourCC("tapt"))
         {
         }
 
@@ -41540,7 +41536,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleCleanApertureDimensionsBox() : base("clef")
+        public AppleCleanApertureDimensionsBox() : base(IsoStream.FromFourCC("clef"))
         {
         }
 
@@ -41583,7 +41579,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEncodedPixelsDimensionsBox() : base("enof")
+        public AppleEncodedPixelsDimensionsBox() : base(IsoStream.FromFourCC("enof"))
         {
         }
 
@@ -41626,7 +41622,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleProductionApertureDimensionsBox() : base("prof")
+        public AppleProductionApertureDimensionsBox() : base(IsoStream.FromFourCC("prof"))
         {
         }
 
@@ -41669,7 +41665,7 @@ namespace SharpMP4
         protected BinaryUTF8String mode;
         public BinaryUTF8String Mode { get { return this.mode; } set { this.mode = value; } }
 
-        public AppleApertureModeBox() : base("apmd")
+        public AppleApertureModeBox() : base(IsoStream.FromFourCC("apmd"))
         {
         }
 
@@ -41710,7 +41706,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleWaveBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleWaveBox() : base("wave")
+        public AppleWaveBox() : base(IsoStream.FromFourCC("wave"))
         {
         }
 
@@ -41756,7 +41752,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEndiannessBox() : base("enda")
+        public AppleEndiannessBox() : base(IsoStream.FromFourCC("enda"))
         {
         }
 
@@ -41799,7 +41795,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AlisBox() : base("alis")
+        public AlisBox() : base(IsoStream.FromFourCC("alis"))
         {
         }
 
@@ -41842,7 +41838,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ChanBox() : base("chan")
+        public ChanBox() : base(IsoStream.FromFourCC("chan"))
         {
         }
 
@@ -41885,7 +41881,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public MdtaBox() : base("mdta")
+        public MdtaBox() : base(IsoStream.FromFourCC("mdta"))
         {
         }
 
@@ -41928,7 +41924,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ChapBox() : base("chap")
+        public ChapBox() : base(IsoStream.FromFourCC("chap"))
         {
         }
 
@@ -41979,7 +41975,7 @@ namespace SharpMP4
         protected AdobeChapterRecord[] chapters;
         public AdobeChapterRecord[] Chapters { get { return this.chapters; } set { this.chapters = value; } }
 
-        public AdobeChapterBox() : base("chpl", 0, 0)
+        public AdobeChapterBox() : base(IsoStream.FromFourCC("chpl"), 0, 0)
         {
         }
 
@@ -41989,7 +41985,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.unknown);
             boxSize += stream.ReadUInt8(out this.count);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.chapters);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new AdobeChapterRecord(), out this.chapters);
             return boxSize;
         }
 
@@ -42045,7 +42041,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += stream.ReadUInt64(out this.timestamp);
             boxSize += stream.ReadUInt8(out this.count);
-            boxSize += stream.ReadUInt8Array((uint)count, out this.title);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(count), out this.title);
             return boxSize;
         }
 
@@ -42080,7 +42076,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleKeywordBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleKeywordBox() : base("keyw")
+        public AppleKeywordBox() : base(IsoStream.FromFourCC("keyw"))
         {
         }
 
@@ -42126,7 +42122,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ClfnBox() : base("clfn")
+        public ClfnBox() : base(IsoStream.FromFourCC("clfn"))
         {
         }
 
@@ -42169,7 +42165,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ThmbBox() : base("thmb")
+        public ThmbBox() : base(IsoStream.FromFourCC("thmb"))
         {
         }
 
@@ -42212,7 +42208,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FallBox() : base("fall")
+        public FallBox() : base(IsoStream.FromFourCC("fall"))
         {
         }
 
@@ -42253,7 +42249,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "TVShowBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TVShowBox() : base("tvsh")
+        public TVShowBox() : base(IsoStream.FromFourCC("tvsh"))
         {
         }
 
@@ -42297,7 +42293,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleEncoderNameBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleEncoderNameBox() : base("©enc")
+        public AppleEncoderNameBox() : base(IsoStream.FromFourCC("©enc"))
         {
         }
 
@@ -42403,7 +42399,7 @@ namespace SharpMP4
         protected byte reserved;
         public byte Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public DTSSpecificBox() : base("ddts")
+        public DTSSpecificBox() : base(IsoStream.FromFourCC("ddts"))
         {
         }
 
@@ -42499,7 +42495,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public DataBox() : base("data")
+        public DataBox() : base(IsoStream.FromFourCC("data"))
         {
         }
 
@@ -42548,7 +42544,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public NikonExifBox() : base("NCTG")
+        public NikonExifBox() : base(IsoStream.FromFourCC("NCTG"))
         {
         }
 
@@ -42591,7 +42587,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public CustomBox() : base("----")
+        public CustomBox() : base(IsoStream.FromFourCC("----"))
         {
         }
 
@@ -42641,7 +42637,7 @@ namespace SharpMP4
         protected uint[] sample_number;
         public uint[] SampleNumber { get { return this.sample_number; } set { this.sample_number = value; } }
 
-        public ApplePartialSyncSamplesBox() : base("stps", 0, 0)
+        public ApplePartialSyncSamplesBox() : base(IsoStream.FromFourCC("stps"), 0, 0)
         {
         }
 
@@ -42717,7 +42713,7 @@ namespace SharpMP4
         protected short displayCenterY;
         public short DisplayCenterY { get { return this.displayCenterY; } set { this.displayCenterY = value; } }
 
-        public SampleScaleBox() : base("stsl", 0, 0)
+        public SampleScaleBox() : base(IsoStream.FromFourCC("stsl"), 0, 0)
         {
         }
 
@@ -42810,7 +42806,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt8(out this.audioProfileId);
             boxSize += stream.ReadUInt8(out this.videoProfileId);
             boxSize += stream.ReadUInt8(out this.graphicsProfileLevel);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.samples);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new IodsSample(), out this.samples);
             return boxSize;
         }
 
@@ -42941,12 +42937,12 @@ namespace SharpMP4
 
             if (IPMPS_Type == 0)
             {
-                boxSize += stream.ReadUInt8Array((uint)(sizeOfInstance - 3), out this.URLString);
+                boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(sizeOfInstance - 3), out this.URLString);
             }
 
             else
             {
-                boxSize += stream.ReadUInt8Array((uint)(sizeOfInstance - 3), out this.IPMP_data);
+                boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(sizeOfInstance - 3), out this.IPMP_data);
             }
             return boxSize;
         }
@@ -43011,7 +43007,7 @@ namespace SharpMP4
         protected Descriptor[] descriptor;
         public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
-        public IPMPControlBox() : base("ipmc")
+        public IPMPControlBox() : base(IsoStream.FromFourCC("ipmc"))
         {
         }
 
@@ -43060,7 +43056,7 @@ namespace SharpMP4
         protected Descriptor[] descriptor;
         public Descriptor[] Descriptor { get { return this.descriptor; } set { this.descriptor = value; } }
 
-        public IPMPInfoBox() : base("imif")
+        public IPMPInfoBox() : base(IsoStream.FromFourCC("imif"))
         {
         }
 
@@ -43101,7 +43097,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "GenreBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public GenreBox() : base("gnre")
+        public GenreBox() : base(IsoStream.FromFourCC("gnre"))
         {
         }
 
@@ -43147,7 +43143,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FairPlayUserIDBox() : base("user")
+        public FairPlayUserIDBox() : base(IsoStream.FromFourCC("user"))
         {
         }
 
@@ -43190,7 +43186,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FairPlayUserNameBox() : base("name")
+        public FairPlayUserNameBox() : base(IsoStream.FromFourCC("name"))
         {
         }
 
@@ -43233,7 +43229,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FairPlayUserKeyBox() : base("key ")
+        public FairPlayUserKeyBox() : base(IsoStream.FromFourCC("key "))
         {
         }
 
@@ -43276,7 +43272,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FairPlayIvBox() : base("iviv")
+        public FairPlayIvBox() : base(IsoStream.FromFourCC("iviv"))
         {
         }
 
@@ -43319,7 +43315,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FairPlayPrivateKeyBox() : base("priv")
+        public FairPlayPrivateKeyBox() : base(IsoStream.FromFourCC("priv"))
         {
         }
 
@@ -43370,7 +43366,7 @@ namespace SharpMP4
         protected byte metaboxRelation;
         public byte MetaboxRelation { get { return this.metaboxRelation; } set { this.metaboxRelation = value; } }
 
-        public MetaBoxRelationBox() : base("mere")
+        public MetaBoxRelationBox() : base(IsoStream.FromFourCC("mere"))
         {
         }
 
@@ -43419,7 +43415,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ID3TagBox() : base("id32")
+        public ID3TagBox() : base(IsoStream.FromFourCC("id32"))
         {
         }
 
@@ -43462,7 +43458,7 @@ namespace SharpMP4
         protected BinaryUTF8String domain;
         public BinaryUTF8String Domain { get { return this.domain; } set { this.domain = value; } }
 
-        public ITunesMetadataMeanBox() : base("mean")
+        public ITunesMetadataMeanBox() : base(IsoStream.FromFourCC("mean"))
         {
         }
 
@@ -43503,7 +43499,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AlbumArtistSortBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AlbumArtistSortBox() : base("soaa")
+        public AlbumArtistSortBox() : base(IsoStream.FromFourCC("soaa"))
         {
         }
 
@@ -43547,7 +43543,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AlbumSortBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AlbumSortBox() : base("soal")
+        public AlbumSortBox() : base(IsoStream.FromFourCC("soal"))
         {
         }
 
@@ -43591,7 +43587,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ArtistSortBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public ArtistSortBox() : base("soar")
+        public ArtistSortBox() : base(IsoStream.FromFourCC("soar"))
         {
         }
 
@@ -43635,7 +43631,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "CategoryBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public CategoryBox() : base("catg")
+        public CategoryBox() : base(IsoStream.FromFourCC("catg"))
         {
         }
 
@@ -43679,7 +43675,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ComposerSortBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public ComposerSortBox() : base("soco")
+        public ComposerSortBox() : base(IsoStream.FromFourCC("soco"))
         {
         }
 
@@ -43723,7 +43719,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "EpisodeGlobalUniqueIdBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public EpisodeGlobalUniqueIdBox() : base("egid")
+        public EpisodeGlobalUniqueIdBox() : base(IsoStream.FromFourCC("egid"))
         {
         }
 
@@ -43767,7 +43763,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ITunesPurchaseAccountBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public ITunesPurchaseAccountBox() : base("apID")
+        public ITunesPurchaseAccountBox() : base(IsoStream.FromFourCC("apID"))
         {
         }
 
@@ -43811,7 +43807,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ITunesAccountTypeBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public ITunesAccountTypeBox() : base("akID")
+        public ITunesAccountTypeBox() : base(IsoStream.FromFourCC("akID"))
         {
         }
 
@@ -43855,7 +43851,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "ITunesCountryCodeBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public ITunesCountryCodeBox() : base("sfID")
+        public ITunesCountryCodeBox() : base(IsoStream.FromFourCC("sfID"))
         {
         }
 
@@ -43899,7 +43895,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "PodcastBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public PodcastBox() : base("pcst")
+        public PodcastBox() : base(IsoStream.FromFourCC("pcst"))
         {
         }
 
@@ -43943,7 +43939,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "PodcastUrlBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public PodcastUrlBox() : base("purl")
+        public PodcastUrlBox() : base(IsoStream.FromFourCC("purl"))
         {
         }
 
@@ -43987,7 +43983,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "PurchaseDateBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public PurchaseDateBox() : base("purd")
+        public PurchaseDateBox() : base(IsoStream.FromFourCC("purd"))
         {
         }
 
@@ -44031,7 +44027,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "TrackSortBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TrackSortBox() : base("sonm")
+        public TrackSortBox() : base(IsoStream.FromFourCC("sonm"))
         {
         }
 
@@ -44075,7 +44071,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "TVNetworkNameBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TVNetworkNameBox() : base("tvnn")
+        public TVNetworkNameBox() : base(IsoStream.FromFourCC("tvnn"))
         {
         }
 
@@ -44119,7 +44115,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "TVShowSortBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TVShowSortBox() : base("sosn")
+        public TVShowSortBox() : base(IsoStream.FromFourCC("sosn"))
         {
         }
 
@@ -44177,7 +44173,7 @@ namespace SharpMP4
         protected byte trackNumber;  //  optional
         public byte TrackNumber { get { return this.trackNumber; } set { this.trackNumber = value; } }
 
-        public ThreeGPPAlbumBox() : base("albm")
+        public ThreeGPPAlbumBox() : base(IsoStream.FromFourCC("albm"))
         {
         }
 
@@ -44237,7 +44233,7 @@ namespace SharpMP4
         protected BinaryUTF8String value;
         public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-        public ThreeGPPClassificationBox() : base("clsf")
+        public ThreeGPPClassificationBox() : base(IsoStream.FromFourCC("clsf"))
         {
         }
 
@@ -44320,7 +44316,7 @@ namespace SharpMP4
         protected BinaryUTF8String additionalNotes;
         public BinaryUTF8String AdditionalNotes { get { return this.additionalNotes; } set { this.additionalNotes = value; } }
 
-        public ThreeGPPLocationInformationBox() : base("loci")
+        public ThreeGPPLocationInformationBox() : base(IsoStream.FromFourCC("loci"))
         {
         }
 
@@ -44333,9 +44329,9 @@ namespace SharpMP4
             boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.value);
             boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.placeName);
             boxSize += stream.ReadUInt8(out this.role);
-            boxSize += stream.ReadFixedPoint1616(out this.longitude);
-            boxSize += stream.ReadFixedPoint1616(out this.latitude);
-            boxSize += stream.ReadFixedPoint1616(out this.altitude);
+            boxSize += stream.ReadDouble32(out this.longitude);
+            boxSize += stream.ReadDouble32(out this.latitude);
+            boxSize += stream.ReadDouble32(out this.altitude);
             boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.astronomicalBody);
             boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.additionalNotes);
             return boxSize;
@@ -44398,7 +44394,7 @@ namespace SharpMP4
         protected BinaryUTF8String value;
         public BinaryUTF8String Value { get { return this.value; } set { this.value = value; } }
 
-        public ThreeGPPPerformerBox() : base("perf")
+        public ThreeGPPPerformerBox() : base(IsoStream.FromFourCC("perf"))
         {
         }
 
@@ -44459,7 +44455,7 @@ namespace SharpMP4
         protected ushort year;
         public ushort Year { get { return this.year; } set { this.year = value; } }
 
-        public ThreeGPPRecordingYearBox() : base("yrrc")
+        public ThreeGPPRecordingYearBox() : base(IsoStream.FromFourCC("yrrc"))
         {
         }
 
@@ -44523,7 +44519,7 @@ namespace SharpMP4
         protected byte initialVectorLength;
         public byte InitialVectorLength { get { return this.initialVectorLength; } set { this.initialVectorLength = value; } }
 
-        public OMAAccessUnitFormatBox() : base("odaf")
+        public OMAAccessUnitFormatBox() : base(IsoStream.FromFourCC("odaf"))
         {
         }
 
@@ -44607,7 +44603,7 @@ namespace SharpMP4
         protected byte[] textualHeaders;
         public byte[] TextualHeaders { get { return this.textualHeaders; } set { this.textualHeaders = value; } }
 
-        public OMACommonHeadersBox() : base("ohdr")
+        public OMACommonHeadersBox() : base(IsoStream.FromFourCC("ohdr"))
         {
         }
 
@@ -44621,9 +44617,9 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.contentIDLength);
             boxSize += stream.ReadUInt16(out this.rightsIssuerLength);
             boxSize += stream.ReadUInt16(out this.textualHeadersLength);
-            boxSize += stream.ReadUInt8Array((uint)contentIDLength, out this.contentID);
-            boxSize += stream.ReadUInt8Array((uint)rightsIssuerLength, out this.rightsIssuerURL);
-            boxSize += stream.ReadUInt8Array((uint)textualHeadersLength, out this.textualHeaders);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(contentIDLength), out this.contentID);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(rightsIssuerLength), out this.rightsIssuerURL);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(textualHeadersLength), out this.textualHeaders);
             return boxSize;
         }
 
@@ -44678,7 +44674,7 @@ namespace SharpMP4
         protected byte[] contentID;
         public byte[] ContentID { get { return this.contentID; } set { this.contentID = value; } }
 
-        public OMAContentIDBox() : base("ccid")
+        public OMAContentIDBox() : base(IsoStream.FromFourCC("ccid"))
         {
         }
 
@@ -44687,7 +44683,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.contentIDLength);
-            boxSize += stream.ReadUInt8Array((uint)contentIDLength, out this.contentID);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(contentIDLength), out this.contentID);
             return boxSize;
         }
 
@@ -44728,7 +44724,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public OMAContentObjectBox() : base("odda")
+        public OMAContentObjectBox() : base(IsoStream.FromFourCC("odda"))
         {
         }
 
@@ -44737,7 +44733,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.count);
-            boxSize += stream.ReadUInt8Array((uint)count, out this.data);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(count), out this.data);
             return boxSize;
         }
 
@@ -44774,7 +44770,7 @@ namespace SharpMP4
         protected BinaryUTF8String content;
         public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
 
-        public OMACoverURLBox() : base("cvru")
+        public OMACoverURLBox() : base(IsoStream.FromFourCC("cvru"))
         {
         }
 
@@ -44823,7 +44819,7 @@ namespace SharpMP4
         public byte[] ContentType { get { return this.contentType; } set { this.contentType = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public OMADiscreteMediaHeadersBox() : base("odhe")
+        public OMADiscreteMediaHeadersBox() : base(IsoStream.FromFourCC("odhe"))
         {
         }
 
@@ -44832,7 +44828,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt8(out this.contentTypeLength);
-            boxSize += stream.ReadUInt8Array((uint)contentTypeLength, out this.contentType);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(contentTypeLength), out this.contentType);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -44873,7 +44869,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "OMADrmContainerBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public OMADrmContainerBox() : base("odrm")
+        public OMADrmContainerBox() : base(IsoStream.FromFourCC("odrm"))
         {
         }
 
@@ -44919,7 +44915,7 @@ namespace SharpMP4
         protected BinaryUTF8String content;
         public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
 
-        public OMAIconURLBox() : base("icnu")
+        public OMAIconURLBox() : base(IsoStream.FromFourCC("icnu"))
         {
         }
 
@@ -44962,7 +44958,7 @@ namespace SharpMP4
         protected BinaryUTF8String content;
         public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
 
-        public OMAInfoURLBox() : base("infu")
+        public OMAInfoURLBox() : base(IsoStream.FromFourCC("infu"))
         {
         }
 
@@ -45005,7 +45001,7 @@ namespace SharpMP4
         protected BinaryUTF8String content;
         public BinaryUTF8String Content { get { return this.content; } set { this.content = value; } }
 
-        public OMALyricsURLBox() : base("lrcu")
+        public OMALyricsURLBox() : base(IsoStream.FromFourCC("lrcu"))
         {
         }
 
@@ -45046,7 +45042,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "OMAMutableDRMBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public OMAMutableDRMBox() : base("mdri")
+        public OMAMutableDRMBox() : base(IsoStream.FromFourCC("mdri"))
         {
         }
 
@@ -45090,7 +45086,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "OMAKeyManagementBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public OMAKeyManagementBox() : base("odkm")
+        public OMAKeyManagementBox() : base(IsoStream.FromFourCC("odkm"))
         {
         }
 
@@ -45136,7 +45132,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public OMARightsObjectBox() : base("odrb")
+        public OMARightsObjectBox() : base(IsoStream.FromFourCC("odrb"))
         {
         }
 
@@ -45179,7 +45175,7 @@ namespace SharpMP4
         protected byte[] transactionID;
         public byte[] TransactionID { get { return this.transactionID; } set { this.transactionID = value; } }
 
-        public OMATransactionTrackingBox() : base("odtt")
+        public OMATransactionTrackingBox() : base(IsoStream.FromFourCC("odtt"))
         {
         }
 
@@ -45187,7 +45183,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(16, out this.transactionID);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.transactionID);
             return boxSize;
         }
 
@@ -45222,7 +45218,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public NeroMetadataTagsBox() : base("tags")
+        public NeroMetadataTagsBox() : base(IsoStream.FromFourCC("tags"))
         {
         }
 
@@ -45265,7 +45261,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleSelOBox() : base("SelO")
+        public AppleSelOBox() : base(IsoStream.FromFourCC("SelO"))
         {
         }
 
@@ -45308,7 +45304,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleWLOCBox() : base("WLOC")
+        public AppleWLOCBox() : base(IsoStream.FromFourCC("WLOC"))
         {
         }
 
@@ -45351,7 +45347,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleAllfBox() : base("Allf")
+        public AppleAllfBox() : base(IsoStream.FromFourCC("Allf"))
         {
         }
 
@@ -45394,7 +45390,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleLOOPBox() : base("LOOP")
+        public AppleLOOPBox() : base(IsoStream.FromFourCC("LOOP"))
         {
         }
 
@@ -45437,7 +45433,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ApplePtvBox() : base("ptv ")
+        public ApplePtvBox() : base(IsoStream.FromFourCC("ptv "))
         {
         }
 
@@ -45480,7 +45476,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleArgBox() : base("©arg")
+        public AppleArgBox() : base(IsoStream.FromFourCC("©arg"))
         {
         }
 
@@ -45523,7 +45519,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleArkBox() : base("©ark")
+        public AppleArkBox() : base(IsoStream.FromFourCC("©ark"))
         {
         }
 
@@ -45566,7 +45562,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleCokBox() : base("©cok")
+        public AppleCokBox() : base(IsoStream.FromFourCC("©cok"))
         {
         }
 
@@ -45609,7 +45605,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleComBox() : base("©com")
+        public AppleComBox() : base(IsoStream.FromFourCC("©com"))
         {
         }
 
@@ -45652,7 +45648,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleDirBox() : base("©dir")
+        public AppleDirBox() : base(IsoStream.FromFourCC("©dir"))
         {
         }
 
@@ -45695,7 +45691,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd1Box() : base("©ed1")
+        public AppleEd1Box() : base(IsoStream.FromFourCC("©ed1"))
         {
         }
 
@@ -45738,7 +45734,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd2Box() : base("©ed2")
+        public AppleEd2Box() : base(IsoStream.FromFourCC("©ed2"))
         {
         }
 
@@ -45781,7 +45777,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd3Box() : base("©ed3")
+        public AppleEd3Box() : base(IsoStream.FromFourCC("©ed3"))
         {
         }
 
@@ -45824,7 +45820,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd4Box() : base("©ed4")
+        public AppleEd4Box() : base(IsoStream.FromFourCC("©ed4"))
         {
         }
 
@@ -45867,7 +45863,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd5Box() : base("©ed5")
+        public AppleEd5Box() : base(IsoStream.FromFourCC("©ed5"))
         {
         }
 
@@ -45910,7 +45906,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd6Box() : base("©ed6")
+        public AppleEd6Box() : base(IsoStream.FromFourCC("©ed6"))
         {
         }
 
@@ -45953,7 +45949,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd7Box() : base("©ed7")
+        public AppleEd7Box() : base(IsoStream.FromFourCC("©ed7"))
         {
         }
 
@@ -45996,7 +45992,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd8Box() : base("©ed8")
+        public AppleEd8Box() : base(IsoStream.FromFourCC("©ed8"))
         {
         }
 
@@ -46039,7 +46035,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleEd9Box() : base("©ed9")
+        public AppleEd9Box() : base(IsoStream.FromFourCC("©ed9"))
         {
         }
 
@@ -46082,7 +46078,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleFmtBox() : base("©fmt")
+        public AppleFmtBox() : base(IsoStream.FromFourCC("©fmt"))
         {
         }
 
@@ -46125,7 +46121,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleInfBox() : base("©inf")
+        public AppleInfBox() : base(IsoStream.FromFourCC("©inf"))
         {
         }
 
@@ -46168,7 +46164,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleIsrBox() : base("©isr")
+        public AppleIsrBox() : base(IsoStream.FromFourCC("©isr"))
         {
         }
 
@@ -46211,7 +46207,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleLabBox() : base("©lab")
+        public AppleLabBox() : base(IsoStream.FromFourCC("©lab"))
         {
         }
 
@@ -46254,7 +46250,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleLalBox() : base("©lal")
+        public AppleLalBox() : base(IsoStream.FromFourCC("©lal"))
         {
         }
 
@@ -46297,7 +46293,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleMakBox() : base("©mak")
+        public AppleMakBox() : base(IsoStream.FromFourCC("©mak"))
         {
         }
 
@@ -46340,7 +46336,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleNakBox() : base("©nak")
+        public AppleNakBox() : base(IsoStream.FromFourCC("©nak"))
         {
         }
 
@@ -46383,7 +46379,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ApplePdkBox() : base("©pdk")
+        public ApplePdkBox() : base(IsoStream.FromFourCC("©pdk"))
         {
         }
 
@@ -46426,7 +46422,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ApplePhgBox() : base("©phg")
+        public ApplePhgBox() : base(IsoStream.FromFourCC("©phg"))
         {
         }
 
@@ -46469,7 +46465,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ApplePrdBox() : base("©prd")
+        public ApplePrdBox() : base(IsoStream.FromFourCC("©prd"))
         {
         }
 
@@ -46512,7 +46508,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ApplePrfBox() : base("©prf")
+        public ApplePrfBox() : base(IsoStream.FromFourCC("©prf"))
         {
         }
 
@@ -46555,7 +46551,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ApplePrkBox() : base("©prk")
+        public ApplePrkBox() : base(IsoStream.FromFourCC("©prk"))
         {
         }
 
@@ -46598,7 +46594,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public ApplePrlBox() : base("©prl")
+        public ApplePrlBox() : base(IsoStream.FromFourCC("©prl"))
         {
         }
 
@@ -46641,7 +46637,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleSnkBox() : base("©snk")
+        public AppleSnkBox() : base(IsoStream.FromFourCC("©snk"))
         {
         }
 
@@ -46684,7 +46680,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleSnmBox() : base("©snm")
+        public AppleSnmBox() : base(IsoStream.FromFourCC("©snm"))
         {
         }
 
@@ -46727,7 +46723,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleSrcBox() : base("©src")
+        public AppleSrcBox() : base(IsoStream.FromFourCC("©src"))
         {
         }
 
@@ -46770,7 +46766,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public AppleSwkBox() : base("©swk")
+        public AppleSwkBox() : base(IsoStream.FromFourCC("©swk"))
         {
         }
 
@@ -46811,7 +46807,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AdditionalMetadataContainerBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AdditionalMetadataContainerBox() : base("meco")
+        public AdditionalMetadataContainerBox() : base(IsoStream.FromFourCC("meco"))
         {
         }
 
@@ -46869,7 +46865,7 @@ namespace SharpMP4
         protected byte profile;
         public byte Profile { get { return this.profile; } set { this.profile = value; } }
 
-        public H263SpecificBox() : base("d263")
+        public H263SpecificBox() : base(IsoStream.FromFourCC("d263"))
         {
         }
 
@@ -46929,7 +46925,7 @@ namespace SharpMP4
         protected byte framesPerSample;
         public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
 
-        public EVRCSpecificBox() : base("devc")
+        public EVRCSpecificBox() : base(IsoStream.FromFourCC("devc"))
         {
         }
 
@@ -46986,7 +46982,7 @@ namespace SharpMP4
         protected byte framesPerSample;
         public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
 
-        public QCELPSpecificBox() : base("dqcp")
+        public QCELPSpecificBox() : base(IsoStream.FromFourCC("dqcp"))
         {
         }
 
@@ -47043,7 +47039,7 @@ namespace SharpMP4
         protected byte framesPerSample;
         public byte FramesPerSample { get { return this.framesPerSample; } set { this.framesPerSample = value; } }
 
-        public SMVSpecificBox() : base("dsmv")
+        public SMVSpecificBox() : base(IsoStream.FromFourCC("dsmv"))
         {
         }
 
@@ -47090,7 +47086,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleReferenceMovieBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleReferenceMovieBox() : base("rmra")
+        public AppleReferenceMovieBox() : base(IsoStream.FromFourCC("rmra"))
         {
         }
 
@@ -47134,7 +47130,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleReferenceMovieDescriptorBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleReferenceMovieDescriptorBox() : base("rmda")
+        public AppleReferenceMovieDescriptorBox() : base(IsoStream.FromFourCC("rmda"))
         {
         }
 
@@ -47178,7 +47174,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleDataRateBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleDataRateBox() : base("rmdr")
+        public AppleDataRateBox() : base(IsoStream.FromFourCC("rmdr"))
         {
         }
 
@@ -47232,7 +47228,7 @@ namespace SharpMP4
         protected byte[] dataReference;
         public byte[] DataReference { get { return this.dataReference; } set { this.dataReference = value; } }
 
-        public AppleDataReferenceBox() : base("rdrf")
+        public AppleDataReferenceBox() : base(IsoStream.FromFourCC("rdrf"))
         {
         }
 
@@ -47242,7 +47238,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.dataReferenceType);
             boxSize += stream.ReadUInt32(out this.count);
-            boxSize += stream.ReadUInt8Array((uint)count, out this.dataReference);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(count), out this.dataReference);
             return boxSize;
         }
 
@@ -47307,7 +47303,7 @@ namespace SharpMP4
         public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TextSampleEntry() : base("enct")
+        public TextSampleEntry() : base(IsoStream.FromFourCC("enct"))
         {
         }
 
@@ -47319,9 +47315,9 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.displayFlags);
             boxSize += stream.ReadUInt8(out this.horizontalJustification);
             boxSize += stream.ReadUInt8(out this.verticalJustification);
-            boxSize += stream.ReadUInt8Array((uint)4, out this.backgroundColorRgba);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new RectRecord(), out this.rectRecord);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new StyleRecord(), out this.styleRecord);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 4, out this.backgroundColorRgba);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new RectRecord(), out this.rectRecord);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new StyleRecord(), out this.styleRecord);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -47400,7 +47396,7 @@ namespace SharpMP4
         public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TextSampleEntry_tx3g() : base("tx3g")
+        public TextSampleEntry_tx3g() : base(IsoStream.FromFourCC("tx3g"))
         {
         }
 
@@ -47412,9 +47408,9 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(out this.displayFlags);
             boxSize += stream.ReadUInt8(out this.horizontalJustification);
             boxSize += stream.ReadUInt8(out this.verticalJustification);
-            boxSize += stream.ReadUInt8Array((uint)4, out this.backgroundColorRgba);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new RectRecord(), out this.rectRecord);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new StyleRecord(), out this.styleRecord);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 4, out this.backgroundColorRgba);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new RectRecord(), out this.rectRecord);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new StyleRecord(), out this.styleRecord);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
             return boxSize;
@@ -47562,7 +47558,7 @@ namespace SharpMP4
             boxSize += stream.ReadUInt16(out this.fontId);
             boxSize += stream.ReadUInt8(out this.faceStyleFlags);
             boxSize += stream.ReadUInt8(out this.fontSize);
-            boxSize += stream.ReadUInt8Array((uint)4, out this.textColor);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 4, out this.textColor);
             return boxSize;
         }
 
@@ -47614,7 +47610,7 @@ namespace SharpMP4
         protected EC3SpecificEntry[] entries;
         public EC3SpecificEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
-        public EC3SpecificBox() : base("dec3")
+        public EC3SpecificBox() : base(IsoStream.FromFourCC("dec3"))
         {
         }
 
@@ -47624,7 +47620,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadBits(13, out this.dataRate);
             boxSize += stream.ReadBits(3, out this.numIndSub);
-            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)numIndSub + 1, out this.entries);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(numIndSub + 1), () => new EC3SpecificEntry(), out this.entries);
             return boxSize;
         }
 
@@ -47802,7 +47798,7 @@ namespace SharpMP4
         protected uint reserved2;
         public uint Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
 
-        public MLPSpecificBox() : base("dmlp")
+        public MLPSpecificBox() : base(IsoStream.FromFourCC("dmlp"))
         {
         }
 
@@ -47862,7 +47858,7 @@ namespace SharpMP4
         protected byte[] vc1Content;
         public byte[] Vc1Content { get { return this.vc1Content; } set { this.vc1Content = value; } }
 
-        public Ovc1VisualSampleEntryImpl() : base("ovc1")
+        public Ovc1VisualSampleEntryImpl() : base(IsoStream.FromFourCC("ovc1"))
         {
         }
 
@@ -47942,7 +47938,7 @@ namespace SharpMP4
         protected ushort codecInitializationData;
         public ushort CodecInitializationData { get { return this.codecInitializationData; } set { this.codecInitializationData = value; } }
 
-        public VPCodecConfigurationBox() : base("vpcC")
+        public VPCodecConfigurationBox() : base(IsoStream.FromFourCC("vpcC"))
         {
         }
 
@@ -48021,7 +48017,7 @@ namespace SharpMP4
         protected byte framesPerSecond;
         public byte FramesPerSecond { get { return this.framesPerSecond; } set { this.framesPerSecond = value; } }
 
-        public AmrSpecificBox() : base("damr")
+        public AmrSpecificBox() : base(IsoStream.FromFourCC("damr"))
         {
         }
 
@@ -48093,7 +48089,7 @@ namespace SharpMP4
         protected ushort reserved;
         public ushort Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public BaseMediaInfoAtom() : base("gmin")
+        public BaseMediaInfoAtom() : base(IsoStream.FromFourCC("gmin"))
         {
         }
 
@@ -48159,7 +48155,7 @@ namespace SharpMP4
         protected byte[] reserved;
         public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
 
-        public BaseLocationBox() : base("bloc")
+        public BaseLocationBox() : base(IsoStream.FromFourCC("bloc"))
         {
         }
 
@@ -48167,9 +48163,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)256, out this.baseLocation);
-            boxSize += stream.ReadUInt8Array((uint)256, out this.purchaseLocation);
-            boxSize += stream.ReadUInt8Array((uint)512, out this.reserved);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 256, out this.baseLocation);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 256, out this.purchaseLocation);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 512, out this.reserved);
             return boxSize;
         }
 
@@ -48209,7 +48205,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public FontTableBox() : base("ftab")
+        public FontTableBox() : base(IsoStream.FromFourCC("ftab"))
         {
         }
 
@@ -48270,7 +48266,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += stream.ReadUInt16(out this.fontId);
             boxSize += stream.ReadUInt8(out this.count);
-            boxSize += stream.ReadUInt8Array((uint)count, out this.fontName);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(count), out this.fontName);
             return boxSize;
         }
 
@@ -48307,7 +48303,7 @@ namespace SharpMP4
         protected AVCDecoderConfigurationRecord AVCConfig;
         public AVCDecoderConfigurationRecord _AVCConfig { get { return this.AVCConfig; } set { this.AVCConfig = value; } }
 
-        public AvcNalUnitStorageBox() : base("avcn")
+        public AvcNalUnitStorageBox() : base(IsoStream.FromFourCC("avcn"))
         {
         }
 
@@ -48315,7 +48311,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new AVCDecoderConfigurationRecord(), out this.AVCConfig);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new AVCDecoderConfigurationRecord(), out this.AVCConfig);
             return boxSize;
         }
 
@@ -48354,7 +48350,7 @@ namespace SharpMP4
         protected BinaryUTF8String apid;
         public BinaryUTF8String Apid { get { return this.apid; } set { this.apid = value; } }
 
-        public AssetInformationBox() : base("ainf")
+        public AssetInformationBox() : base(IsoStream.FromFourCC("ainf"))
         {
         }
 
@@ -48362,7 +48358,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)4, out this.profileVersion);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 4, out this.profileVersion);
             boxSize += stream.ReadStringZeroTerminated(boxSize, readSize, out this.apid);
             return boxSize;
         }
@@ -48411,7 +48407,7 @@ namespace SharpMP4
         protected ProtectionSystemSpecificKeyID[] keyIDs;
         public ProtectionSystemSpecificKeyID[] KeyIDs { get { return this.keyIDs; } set { this.keyIDs = value; } }
 
-        public ProtectionSystemSpecificHeaderBox() : base("pssh")
+        public ProtectionSystemSpecificHeaderBox() : base(IsoStream.FromFourCC("pssh"))
         {
         }
 
@@ -48419,12 +48415,12 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(16, out this.systemId);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.systemId);
 
             if (version > 0)
             {
                 boxSize += stream.ReadUInt32(out this.count);
-                boxSize += stream.ReadClass(boxSize, readSize, this, (uint)count, out this.keyIDs);
+                boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(count), () => new ProtectionSystemSpecificKeyID(), out this.keyIDs);
             }
             return boxSize;
         }
@@ -48480,7 +48476,7 @@ namespace SharpMP4
         public virtual ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUInt8Array(16, out this.key);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.key);
             return boxSize;
         }
 
@@ -48514,7 +48510,7 @@ namespace SharpMP4
         protected TrickPlayEntry[] entries;
         public TrickPlayEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
-        public TrickPlayBox() : base("trik")
+        public TrickPlayBox() : base(IsoStream.FromFourCC("trik"))
         {
         }
 
@@ -48522,7 +48518,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.entries);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new TrickPlayEntry(), out this.entries);
             return boxSize;
         }
 
@@ -48645,7 +48641,7 @@ namespace SharpMP4
         protected byte[][] constant_IV;
         public byte[][] ConstantIV { get { return this.constant_IV; } set { this.constant_IV = value; } }
 
-        public ItemEncryptionBox(byte version = 0) : base("ienc", version, 0)
+        public ItemEncryptionBox(byte version = 0) : base(IsoStream.FromFourCC("ienc"), version, 0)
         {
         }
 
@@ -48675,12 +48671,12 @@ namespace SharpMP4
             for (int i = 0; i < num_keys; i++)
             {
                 boxSize += stream.ReadUInt8(out this.Per_Sample_IV_Size[i]);
-                boxSize += stream.ReadUInt8Array(16, out this.KID[i]);
+                boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.KID[i]);
 
                 if (Per_Sample_IV_Size[i] == 0)
                 {
                     boxSize += stream.ReadUInt8(out this.constant_IV_size[i]);
-                    boxSize += stream.ReadUInt8Array((uint)constant_IV_size[i], out this.constant_IV[i]);
+                    boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(IsoStream.GetInt(constant_IV_size)), out this.constant_IV[i]);
                 }
             }
             return boxSize;
@@ -48775,7 +48771,7 @@ namespace SharpMP4
         protected byte[] defaultKID;
         public byte[] DefaultKID { get { return this.defaultKID; } set { this.defaultKID = value; } }
 
-        public TrackEncryptionBox() : base("tenc")
+        public TrackEncryptionBox() : base(IsoStream.FromFourCC("tenc"))
         {
         }
 
@@ -48785,7 +48781,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt24(out this.defaultAlgorithmID);
             boxSize += stream.ReadUInt8(out this.defaultIvSize);
-            boxSize += stream.ReadUInt8Array(16, out this.defaultKID);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.defaultKID);
             return boxSize;
         }
 
@@ -48834,7 +48830,7 @@ namespace SharpMP4
         protected byte Per_Sample_IV_Size = 16; // TODO: get from the IsoStream.FromFourCC("tenc") box; 
         public byte PerSampleIVSize { get { return this.Per_Sample_IV_Size; } set { this.Per_Sample_IV_Size = value; } }
 
-        public SampleEncryptionBox(byte version = 0, uint flags = 0) : base("senc", version, flags)
+        public SampleEncryptionBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("senc"), version, flags)
         {
         }
 
@@ -48843,7 +48839,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.sample_count);
-            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)sample_count, () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), out this.samples);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(sample_count), () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), out this.samples);
             return boxSize;
         }
 
@@ -48933,12 +48929,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                boxSize += stream.ReadUInt8Array((uint)Per_Sample_IV_Size, out this.InitializationVector);
+                boxSize += stream.ReadBits((uint)(Per_Sample_IV_Size * 8), out this.InitializationVector);
 
                 if ((flags & 0x000002) == 0x000002)
                 {
                     boxSize += stream.ReadUInt16(out this.subsample_count);
-                    boxSize += stream.ReadClass(boxSize, readSize, this, (uint)subsample_count, () => new SampleEncryptionSubsample(version), out this.subsamples);
+                    boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(subsample_count), () => new SampleEncryptionSubsample(version), out this.subsamples);
                 }
             }
 
@@ -48951,10 +48947,10 @@ namespace SharpMP4
                 for (int i = 0; i < multi_IV_count; i++)
                 {
                     boxSize += stream.ReadUInt8(out this.multi_subindex_IV[i]);
-                    boxSize += stream.ReadUInt8Array((uint)Per_Sample_IV_Size, out this.IV[i]);
+                    boxSize += stream.ReadBits((uint)(Per_Sample_IV_Size * 8), out this.IV[i]);
                 }
                 boxSize += stream.ReadUInt32(out this.subsample_count);
-                boxSize += stream.ReadClass(boxSize, readSize, this, (uint)subsample_count, () => new SampleEncryptionSubsample(version), out this.subsamples);
+                boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(subsample_count), () => new SampleEncryptionSubsample(version), out this.subsamples);
             }
             return boxSize;
         }
@@ -49127,7 +49123,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleAtIDBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleAtIDBox() : base("atID")
+        public AppleAtIDBox() : base(IsoStream.FromFourCC("atID"))
         {
         }
 
@@ -49171,7 +49167,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleGeIDBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleGeIDBox() : base("geID")
+        public AppleGeIDBox() : base(IsoStream.FromFourCC("geID"))
         {
         }
 
@@ -49215,7 +49211,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleXidBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleXidBox() : base("xid ")
+        public AppleXidBox() : base(IsoStream.FromFourCC("xid "))
         {
         }
 
@@ -49259,7 +49255,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleFlvrBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleFlvrBox() : base("flvr")
+        public AppleFlvrBox() : base(IsoStream.FromFourCC("flvr"))
         {
         }
 
@@ -49303,7 +49299,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AppleShortDescriptionBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AppleShortDescriptionBox() : base("sdes")
+        public AppleShortDescriptionBox() : base(IsoStream.FromFourCC("sdes"))
         {
         }
 
@@ -49372,7 +49368,7 @@ namespace SharpMP4
         protected byte[] messageData;
         public byte[] MessageData { get { return this.messageData; } set { this.messageData = value; } }
 
-        public EventMessageBox() : base("emsg")
+        public EventMessageBox() : base(IsoStream.FromFourCC("emsg"))
         {
         }
 
@@ -49433,7 +49429,7 @@ namespace SharpMP4
         protected uint[] trackIds;
         public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }
 
-        public TrackReferenceTypeBox_hind() : base("hind")
+        public TrackReferenceTypeBox_hind() : base(IsoStream.FromFourCC("hind"))
         {
         }
 
@@ -49476,7 +49472,7 @@ namespace SharpMP4
         protected uint[] trackIds;
         public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }
 
-        public TrackReferenceTypeBox_vdep() : base("vdep")
+        public TrackReferenceTypeBox_vdep() : base(IsoStream.FromFourCC("vdep"))
         {
         }
 
@@ -49519,7 +49515,7 @@ namespace SharpMP4
         protected uint[] trackIds;
         public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }
 
-        public TrackReferenceTypeBox_vplx() : base("vplx")
+        public TrackReferenceTypeBox_vplx() : base(IsoStream.FromFourCC("vplx"))
         {
         }
 
@@ -49587,7 +49583,7 @@ namespace SharpMP4
         protected uint reserved4;
         public uint Reserved4 { get { return this.reserved4; } set { this.reserved4 = value; } }
 
-        public DoViConfigurationBox() : base("dvcC")
+        public DoViConfigurationBox() : base(IsoStream.FromFourCC("dvcC"))
         {
         }
 
@@ -49652,7 +49648,7 @@ namespace SharpMP4
         protected ushort dataReferenceIndex;
         public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
 
-        public DfxpSampleEntry() : base("dfxp")
+        public DfxpSampleEntry() : base(IsoStream.FromFourCC("dfxp"))
         {
         }
 
@@ -49660,7 +49656,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             return boxSize;
         }
@@ -49702,7 +49698,7 @@ namespace SharpMP4
         protected byte maxFALL;
         public byte MaxFALL { get { return this.maxFALL; } set { this.maxFALL = value; } }
 
-        public ContentLightLevelBox_CoLL() : base("CoLL")
+        public ContentLightLevelBox_CoLL() : base(IsoStream.FromFourCC("CoLL"))
         {
         }
 
@@ -49776,7 +49772,7 @@ namespace SharpMP4
         protected uint luminanceMin;
         public uint LuminanceMin { get { return this.luminanceMin; } set { this.luminanceMin = value; } }
 
-        public SMPTE2086MasteringDisplayMetadataBox() : base("SmDm")
+        public SMPTE2086MasteringDisplayMetadataBox() : base(IsoStream.FromFourCC("SmDm"))
         {
         }
 
@@ -49871,7 +49867,7 @@ namespace SharpMP4
         protected ushort colorTableId;
         public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
-        public SVQ3Box() : base("SVQ3")
+        public SVQ3Box() : base(IsoStream.FromFourCC("SVQ3"))
         {
         }
 
@@ -49879,13 +49875,13 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
-            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.reserved2);
             boxSize += stream.ReadUInt16(out this.width);
             boxSize += stream.ReadUInt16(out this.height);
-            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 32, out this.compressorName);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
@@ -49938,7 +49934,7 @@ namespace SharpMP4
         protected byte[] metadata;
         public byte[] Metadata { get { return this.metadata; } set { this.metadata = value; } }
 
-        public SMIBox() : base("SMI ")
+        public SMIBox() : base(IsoStream.FromFourCC("SMI "))
         {
         }
 
@@ -50015,7 +50011,7 @@ namespace SharpMP4
         public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public AlawBox() : base("alaw")
+        public AlawBox() : base(IsoStream.FromFourCC("alaw"))
         {
         }
 
@@ -50023,10 +50019,10 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             boxSize += stream.ReadUInt16(out this.soundVersion);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved2);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved2);
             boxSize += stream.ReadUInt16(out this.channels);
             boxSize += stream.ReadUInt16(out this.sampleSize);
             boxSize += stream.ReadUInt16(out this.compressionId);
@@ -50095,7 +50091,7 @@ namespace SharpMP4
         protected ushort dataReferenceIndex;
         public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
 
-        public C608Box() : base("c608")
+        public C608Box() : base(IsoStream.FromFourCC("c608"))
         {
         }
 
@@ -50103,7 +50099,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)4, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 4, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.reserved2);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             return boxSize;
@@ -50175,7 +50171,7 @@ namespace SharpMP4
         protected ushort colorTableId;
         public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
-        public H263Box() : base("h263")
+        public H263Box() : base(IsoStream.FromFourCC("h263"))
         {
         }
 
@@ -50183,13 +50179,13 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
-            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.reserved2);
             boxSize += stream.ReadUInt16(out this.width);
             boxSize += stream.ReadUInt16(out this.height);
-            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 32, out this.compressorName);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
@@ -50248,7 +50244,7 @@ namespace SharpMP4
         public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public HrefBox() : base("href")
+        public HrefBox() : base(IsoStream.FromFourCC("href"))
         {
         }
 
@@ -50256,7 +50252,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             // boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes); 
             boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
@@ -50304,7 +50300,7 @@ namespace SharpMP4
         protected uint[] trackIDs;
         public uint[] TrackIDs { get { return this.trackIDs; } set { this.trackIDs = value; } }
 
-        public IpirBox() : base("ipir")
+        public IpirBox() : base(IsoStream.FromFourCC("ipir"))
         {
         }
 
@@ -50313,7 +50309,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt32(out this.entry_count);
-            boxSize += stream.ReadUInt32Array(entry_count, out this.trackIDs);
+            boxSize += stream.ReadUInt32Array(boxSize, readSize, (uint)(entry_count), out this.trackIDs);
             return boxSize;
         }
 
@@ -50380,7 +50376,7 @@ namespace SharpMP4
         public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public Ima4Box() : base("ima4")
+        public Ima4Box() : base(IsoStream.FromFourCC("ima4"))
         {
         }
 
@@ -50388,7 +50384,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             boxSize += stream.ReadUInt16(out this.soundVersion);
             boxSize += stream.ReadUInt16(out this.channels);
@@ -50481,7 +50477,7 @@ namespace SharpMP4
         protected ushort colorTableId;
         public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
-        public JpegBox() : base("jpeg")
+        public JpegBox() : base(IsoStream.FromFourCC("jpeg"))
         {
         }
 
@@ -50489,13 +50485,13 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
-            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.reserved2);
             boxSize += stream.ReadUInt16(out this.width);
             boxSize += stream.ReadUInt16(out this.height);
-            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 32, out this.compressorName);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
@@ -50579,7 +50575,7 @@ namespace SharpMP4
         protected ushort colorTableId;
         public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
-        public RawBox() : base("raw ")
+        public RawBox() : base(IsoStream.FromFourCC("raw "))
         {
         }
 
@@ -50587,13 +50583,13 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
-            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.reserved2);
             boxSize += stream.ReadUInt16(out this.width);
             boxSize += stream.ReadUInt16(out this.height);
-            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 32, out this.compressorName);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
@@ -50676,7 +50672,7 @@ namespace SharpMP4
         public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public TwosBox() : base("twos")
+        public TwosBox() : base(IsoStream.FromFourCC("twos"))
         {
         }
 
@@ -50684,7 +50680,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             boxSize += stream.ReadUInt16(out this.soundVersion);
             boxSize += stream.ReadUInt16(out this.channels);
@@ -50776,7 +50772,7 @@ namespace SharpMP4
         public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public UlawBox() : base("ulaw")
+        public UlawBox() : base(IsoStream.FromFourCC("ulaw"))
         {
         }
 
@@ -50784,7 +50780,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
             boxSize += stream.ReadUInt16(out this.soundVersion);
             boxSize += stream.ReadUInt16(out this.channels);
@@ -50877,7 +50873,7 @@ namespace SharpMP4
         protected ushort colorTableId;
         public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
 
-        public Yuv2Box() : base("yuv2")
+        public Yuv2Box() : base(IsoStream.FromFourCC("yuv2"))
         {
         }
 
@@ -50885,13 +50881,13 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array((uint)6, out this.reserved1);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved1);
             boxSize += stream.ReadUInt16(out this.dataReferenceIndex);
-            boxSize += stream.ReadUInt8Array(16, out this.reserved2);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.reserved2);
             boxSize += stream.ReadUInt16(out this.width);
             boxSize += stream.ReadUInt16(out this.height);
-            boxSize += stream.ReadUInt8Array((uint)14, out this.reserved3);
-            boxSize += stream.ReadUInt8Array(32, out this.compressorName);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 14, out this.reserved3);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 32, out this.compressorName);
             boxSize += stream.ReadUInt16(out this.depth);
             boxSize += stream.ReadUInt16(out this.colorTableId);
             return boxSize;
@@ -50944,7 +50940,7 @@ namespace SharpMP4
         protected BinaryUTF8String data;
         public BinaryUTF8String Data { get { return this.data; } set { this.data = value; } }
 
-        public XMPBox() : base("uuid", Convert.FromHexString("be7acfcb97a942e89c71999491e3afac"))
+        public XMPBox() : base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("be7acfcb97a942e89c71999491e3afac"))
         {
         }
 
@@ -50985,7 +50981,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "PspUsmtExtensionBox"; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public PspUsmtExtensionBox() : base("uuid", Convert.FromHexString("55534d5421d24fcebb88695cfac9c740"))
+        public PspUsmtExtensionBox() : base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("55534d5421d24fcebb88695cfac9c740"))
         {
         }
 
@@ -51037,7 +51033,7 @@ namespace SharpMP4
         public uint EntryCount { get { return this.entry_count; } set { this.entry_count = value; } }
         public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-        public PspProfExtensionBox() : base("uuid", Convert.FromHexString("50524f4621d24fcebb88695cfac9c740"))
+        public PspProfExtensionBox() : base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("50524f4621d24fcebb88695cfac9c740"))
         {
         }
 
@@ -51094,7 +51090,7 @@ namespace SharpMP4
         protected MtdtEntry[] entries;
         public MtdtEntry[] Entries { get { return this.entries; } set { this.entries = value; } }
 
-        public PspMtdtBox() : base("MTDT")
+        public PspMtdtBox() : base(IsoStream.FromFourCC("MTDT"))
         {
         }
 
@@ -51103,7 +51099,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.entry_count);
-            boxSize += stream.ReadClass(boxSize, readSize, this, out this.entries);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(entry_count), () => new MtdtEntry(), out this.entries);
             return boxSize;
         }
 
@@ -51174,7 +51170,7 @@ namespace SharpMP4
             boxSize += stream.ReadBit(out this.reserved);
             boxSize += stream.ReadIso639(out this.language);
             boxSize += stream.ReadUInt16(out this.dataType);
-            boxSize += stream.ReadUInt8Array((uint)(size - 10), out this.data);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(size - 10), out this.data);
             return boxSize;
         }
 
@@ -51225,7 +51221,7 @@ namespace SharpMP4
         protected uint unknown3;
         public uint Unknown3 { get { return this.unknown3; } set { this.unknown3 = value; } }
 
-        public PspFprfBox() : base("FPRF")
+        public PspFprfBox() : base(IsoStream.FromFourCC("FPRF"))
         {
         }
 
@@ -51306,7 +51302,7 @@ namespace SharpMP4
         protected uint channels;
         public uint Channels { get { return this.channels; } set { this.channels = value; } }
 
-        public PspAprfBox() : base("APRF")
+        public PspAprfBox() : base(IsoStream.FromFourCC("APRF"))
         {
         }
 
@@ -51417,7 +51413,7 @@ namespace SharpMP4
         protected uint unknown5;
         public uint Unknown5 { get { return this.unknown5; } set { this.unknown5 = value; } }
 
-        public PspVprfBox() : base("VPRF")
+        public PspVprfBox() : base(IsoStream.FromFourCC("VPRF"))
         {
         }
 
@@ -51513,7 +51509,7 @@ namespace SharpMP4
         protected SampleEncryptionSample[] samples;
         public SampleEncryptionSample[] Samples { get { return this.samples; } set { this.samples = value; } }
 
-        public PiffSampleEncryptionBox(byte version = 0, uint flags = 0) : base("uuid", version, flags)
+        public PiffSampleEncryptionBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("uuid"), version, flags)
         {
         }
 
@@ -51526,10 +51522,10 @@ namespace SharpMP4
             {
                 boxSize += stream.ReadUInt24(out this.algorithmID);
                 boxSize += stream.ReadUInt8(out this.Per_Sample_IV_Size);
-                boxSize += stream.ReadUInt8Array(16, out this.kid);
+                boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.kid);
             }
             boxSize += stream.ReadUInt32(out this.sample_count);
-            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)sample_count, () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), out this.samples);
+            boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(sample_count), () => new SampleEncryptionSample(version, flags, Per_Sample_IV_Size), out this.samples);
             return boxSize;
         }
 
@@ -51590,7 +51586,7 @@ namespace SharpMP4
         protected byte[] kid;
         public byte[] Kid { get { return this.kid; } set { this.kid = value; } }
 
-        public PiffTrackEncryptionBox(byte version = 0, uint flags = 0) : base("uuid", version, flags)
+        public PiffTrackEncryptionBox(byte version = 0, uint flags = 0) : base(IsoStream.FromFourCC("uuid"), version, flags)
         {
         }
 
@@ -51600,7 +51596,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt24(out this.algorithmID);
             boxSize += stream.ReadUInt8(out this.Per_Sample_IV_Size);
-            boxSize += stream.ReadUInt8Array(16, out this.kid);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.kid);
             return boxSize;
         }
 
@@ -51653,7 +51649,7 @@ namespace SharpMP4
         protected ulong[] fragmentAbsoluteDuration;
         public ulong[] FragmentAbsoluteDuration { get { return this.fragmentAbsoluteDuration; } set { this.fragmentAbsoluteDuration = value; } }
 
-        public TfrfBox() : base("uuid", Convert.FromHexString("d4807ef2ca3946958e5426cb9e46a79f"))
+        public TfrfBox() : base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("d4807ef2ca3946958e5426cb9e46a79f"))
         {
         }
 
@@ -51754,7 +51750,7 @@ namespace SharpMP4
         protected ulong fragmentAbsoluteDuration;
         public ulong FragmentAbsoluteDuration { get { return this.fragmentAbsoluteDuration; } set { this.fragmentAbsoluteDuration = value; } }
 
-        public TfxdBox() : base("uuid", Convert.FromHexString("6d1d9b0542d544e680e2141daff757b2"))
+        public TfxdBox() : base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("6d1d9b0542d544e680e2141daff757b2"))
         {
         }
 
@@ -51838,7 +51834,7 @@ namespace SharpMP4
         protected byte[] data;
         public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-        public UuidBasedProtectionSystemSpecificHeaderBox() : base("uuid", Convert.FromHexString("d08a4f1810f34a82b6c832d8aba183d3"))
+        public UuidBasedProtectionSystemSpecificHeaderBox() : base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("d08a4f1810f34a82b6c832d8aba183d3"))
         {
         }
 
@@ -51846,9 +51842,9 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(16, out this.systemID);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 16, out this.systemID);
             boxSize += stream.ReadUInt32(out this.count);
-            boxSize += stream.ReadUInt8Array((uint)count, out this.data);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(count), out this.data);
             return boxSize;
         }
 
@@ -51895,7 +51891,7 @@ namespace SharpMP4
         protected byte[] version;
         public byte[] Version { get { return this.version; } set { this.version = value; } }
 
-        public MicrosoftWindowsVersionBox() : base("uuid", Convert.FromHexString("5ca708fb328e4205a861650eca0a9596"))
+        public MicrosoftWindowsVersionBox() : base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("5ca708fb328e4205a861650eca0a9596"))
         {
         }
 
@@ -51905,7 +51901,7 @@ namespace SharpMP4
             boxSize += base.Read(stream, readSize);
             boxSize += stream.ReadUInt16(out this.unknown1);
             boxSize += stream.ReadUInt16(out this.count);
-            boxSize += stream.ReadUInt8Array((uint)count, out this.version);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, (uint)(count), out this.version);
             return boxSize;
         }
 
@@ -51945,7 +51941,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "AV1SampleEntry"; } }
         public AV1CodecConfigurationBox Config { get { return this.children.OfType<AV1CodecConfigurationBox>().FirstOrDefault(); } }
 
-        public AV1SampleEntry() : base("av01")
+        public AV1SampleEntry() : base(IsoStream.FromFourCC("av01"))
         {
         }
 
@@ -51994,7 +51990,7 @@ namespace SharpMP4
         protected AV1CodecConfigurationRecord av1Config;
         public AV1CodecConfigurationRecord Av1Config { get { return this.av1Config; } set { this.av1Config = value; } }
 
-        public AV1CodecConfigurationBox() : base("av1C")
+        public AV1CodecConfigurationBox() : base(IsoStream.FromFourCC("av1C"))
         {
         }
 
@@ -52002,7 +51998,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadClass(boxSize, readSize, this, new AV1CodecConfigurationRecord(), out this.av1Config);
+            boxSize += stream.ReadClass(boxSize, readSize, this, () => new AV1CodecConfigurationRecord(), out this.av1Config);
             return boxSize;
         }
 
@@ -52217,7 +52213,7 @@ namespace SharpMP4
         protected byte fwd_distance;
         public byte FwdDistance { get { return this.fwd_distance; } set { this.fwd_distance = value; } }
 
-        public AV1ForwardKeyFrameSampleGroupEntry() : base("av1f")
+        public AV1ForwardKeyFrameSampleGroupEntry() : base(IsoStream.FromFourCC("av1f"))
         {
         }
 
@@ -52259,7 +52255,7 @@ namespace SharpMP4
         public const string TYPE = "av1s";
         public override string DisplayName { get { return "AV1SwitchFrameSampleGroupEntry"; } }
 
-        public AV1SwitchFrameSampleGroupEntry() : base("av1s")
+        public AV1SwitchFrameSampleGroupEntry() : base(IsoStream.FromFourCC("av1s"))
         {
         }
 
@@ -52298,7 +52294,7 @@ namespace SharpMP4
         public const string TYPE = "av1M";
         public override string DisplayName { get { return "AV1MetadataSampleGroupEntry"; } }
 
-        public AV1MetadataSampleGroupEntry() : base("av1M")
+        public AV1MetadataSampleGroupEntry() : base(IsoStream.FromFourCC("av1M"))
         {
         }
 
@@ -52339,7 +52335,7 @@ namespace SharpMP4
         protected byte op_index;
         public byte OpIndex { get { return this.op_index; } set { this.op_index = value; } }
 
-        public OperatingPointSelectorProperty() : base("a1op")
+        public OperatingPointSelectorProperty() : base(IsoStream.FromFourCC("a1op"))
         {
         }
 
@@ -52395,7 +52391,7 @@ namespace SharpMP4
         protected uint[] layer_size;
         public uint[] LayerSize { get { return this.layer_size; } set { this.layer_size = value; } }
 
-        public AV1LayeredImageIndexingProperty() : base("a1lx")
+        public AV1LayeredImageIndexingProperty() : base(IsoStream.FromFourCC("a1lx"))
         {
         }
 
@@ -52408,12 +52404,12 @@ namespace SharpMP4
 
             if (large_size)
             {
-                boxSize += stream.ReadUInt32Array(3, out this.layer_size);
+                boxSize += stream.ReadUInt32Array(boxSize, readSize, 3, out this.layer_size);
             }
 
             else
             {
-                boxSize += stream.ReadUInt16Array(3, out this.layer_size);
+                boxSize += stream.ReadUInt16Array(boxSize, readSize, 3, out this.layer_size);
             }
             return boxSize;
         }
@@ -52469,7 +52465,7 @@ namespace SharpMP4
         public override string DisplayName { get { return "OpusSampleEntry"; } }
         public OpusSpecificBox _OpusSpecificBox { get { return this.children.OfType<OpusSpecificBox>().FirstOrDefault(); } }
 
-        public OpusSampleEntry() : base("Opus")
+        public OpusSampleEntry() : base(IsoStream.FromFourCC("Opus"))
         {
         }
 
@@ -52539,7 +52535,7 @@ namespace SharpMP4
             ulong boxSize = 0;
             boxSize += stream.ReadUInt8(out this.StreamCount);
             boxSize += stream.ReadUInt8(out this.CoupledCount);
-            boxSize += stream.ReadUInt8Array((uint)OutputChannelCount, out this.ChannelMapping);
+            boxSize += stream.ReadBits((uint)(8 * OutputChannelCount), out this.ChannelMapping);
             return boxSize;
         }
 
@@ -52602,7 +52598,7 @@ namespace SharpMP4
         protected ChannelMappingTable ChannelMappingTable;
         public ChannelMappingTable _ChannelMappingTable { get { return this.ChannelMappingTable; } set { this.ChannelMappingTable = value; } }
 
-        public OpusSpecificBox() : base("dOps")
+        public OpusSpecificBox() : base(IsoStream.FromFourCC("dOps"))
         {
         }
 
@@ -52619,7 +52615,7 @@ namespace SharpMP4
 
             if (ChannelMappingFamily != 0)
             {
-                boxSize += stream.ReadClass(boxSize, readSize, this, new ChannelMappingTable(_OutputChannelCount), out this.ChannelMappingTable);
+                boxSize += stream.ReadClass(boxSize, readSize, this, () => new ChannelMappingTable(OutputChannelCount), out this.ChannelMappingTable);
             }
             return boxSize;
         }
