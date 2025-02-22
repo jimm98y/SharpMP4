@@ -1164,9 +1164,9 @@ namespace SharpMP4
         {
             var info = parserDocument.GetTypeInfo(field);
 
-            string p = "";
+            string parameter = "";
             if (!string.IsNullOrEmpty(field.Type.Param))
-                p = field.Type.Param.Substring(1, field.Type.Param.Length - 2)
+                parameter = field.Type.Param.Substring(1, field.Type.Param.Length - 2)
                     .Replace("audioObjectType", "audioObjectType.AudioObjectType")
                     .Replace("ptl_max_temporal_id[i]+1", "(byte)(ptl_max_temporal_id[i]+1)"); // TODO: fix this workaround
 
@@ -1176,11 +1176,11 @@ namespace SharpMP4
                 string factory;
                 if (info.Type == "SampleGroupDescriptionEntry") // info.IsEntry? 
                 {
-                    factory = $"() => BoxFactory.CreateEntry(IsoStream.ToFourCC(grouping_type))";
+                    factory = $"() => BoxFactory.CreateEntry(IsoStream.ToFourCC({parameter}))";
                 }
                 else
                 {
-                    factory = $"() => new {info.Type}({p})";
+                    factory = $"() => new {info.Type}({parameter})";
                 }
 
                 if (info.IsArray)
@@ -1214,7 +1214,7 @@ namespace SharpMP4
             }
             else if (info.FieldType == ParsedBoxType.ByteAlignment)
             {
-                csharpResult = "stream.ReadByteAlignment(";
+                csharpResult = "stream.ReadByteAlignment(boxSize, readSize, ";
             }
             else if (info.FieldType == ParsedBoxType.String)
             {
@@ -1240,8 +1240,6 @@ namespace SharpMP4
                         arraySuffix = "Array";
                         arrayParam = $"(uint)({arrayLength}), ";
                     }
-
-                    csharpResult = $"stream.ReadString{arraySuffix}({arrayParam}";
                 }
 
                 if (info.Type == "MultiLanguageString")
@@ -1273,17 +1271,17 @@ namespace SharpMP4
                         if (int.TryParse(arrayLength, out int arrayLen))
                         {
                             arraySuffix = "Array";
-                            arrayParam = $"boxSize, readSize, {arrayLength}, ";
+                            arrayParam = $"{arrayLength}, ";
                         }
                         else if (string.IsNullOrEmpty(arrayLength))
                         {
                             arraySuffix = "ArrayTillEnd";
-                            arrayParam = "boxSize, readSize, ";
+                            arrayParam = "";
                         }
                         else
                         {
                             arraySuffix = "Array";
-                            arrayParam = $"boxSize, readSize, (uint)({arrayLength}), ";
+                            arrayParam = $"(uint)({arrayLength}), ";
                         }
                     }
                 }
@@ -1292,7 +1290,7 @@ namespace SharpMP4
                 {
                     if (info.ElementSizeInBits == 1)
                     {
-                        csharpResult = "stream.ReadBit(";
+                        csharpResult = "stream.ReadBit(boxSize, readSize, ";
                     }
                     else if (info.ElementSizeInBits == -1)
                     {
@@ -1302,25 +1300,25 @@ namespace SharpMP4
                             .Replace("f(count_size_code)", "count_size_code")
                             .Replace("f(index_size_code)", "index_size_code")
                             ;
-                        csharpResult = $"stream.ReadBits{arraySuffix}((uint)({elSizeVar} ), ";
+                        csharpResult = $"stream.ReadBits{arraySuffix}(boxSize, readSize, (uint)({elSizeVar} ), ";
                     }
                     else if (info.ElementSizeInBits > 1 && info.ElementSizeInBits % 8 > 0)
                     {
-                        csharpResult = $"stream.ReadBits({info.ElementSizeInBits}, ";
+                        csharpResult = $"stream.ReadBits(boxSize, readSize, {info.ElementSizeInBits}, ";
                     }
                     else if (info.ElementSizeInBits % 8 == 0)
                     {
                         if (info.IsSigned)
-                            csharpResult = $"stream.ReadInt{info.ElementSizeInBits}{arraySuffix}({arrayParam}";
+                            csharpResult = $"stream.ReadInt{info.ElementSizeInBits}{arraySuffix}(boxSize, readSize, {arrayParam}";
                         else
-                            csharpResult = $"stream.ReadUInt{info.ElementSizeInBits}{arraySuffix}({arrayParam}";
+                            csharpResult = $"stream.ReadUInt{info.ElementSizeInBits}{arraySuffix}(boxSize, readSize, {arrayParam}";
                     }
                 }
                 else
                 {
                     if (info.ElementSizeInBits == 32)
                     {
-                        csharpResult = "stream.ReadDouble32(";
+                        csharpResult = "stream.ReadDouble32(boxSize, readSize, ";
                     }
                     else
                     {
@@ -1331,7 +1329,7 @@ namespace SharpMP4
 
             if (info.Type == "string" && !info.IsSigned && info.ArrayDimensions == 0 && info.ElementSizeInBits == 15 && info.ArrayLengthVariable == "")
             {
-                csharpResult = $"stream.ReadIso639(";
+                csharpResult = $"stream.ReadIso639(boxSize, readSize, ";
             }
 
             // TODO: fix this workaround
