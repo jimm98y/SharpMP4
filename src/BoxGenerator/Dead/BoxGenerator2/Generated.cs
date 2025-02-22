@@ -432,7 +432,7 @@ namespace SharpMP4
                 case "smhd": return new SoundMediaHeaderBox();
                 case "SMI ": return new SMIBox();
                 case "snim": return new DataEntrySeqNumImdaBox();
-                case "snro": return new sequenceoffset();
+                case "snro": return new SequenceOffset();
                 case "snut": return new SnutTrackGroupTypeBox();
                 case "soaa": return new AlbumArtistSortBox();
                 case "soal": return new AlbumSortBox();
@@ -526,7 +526,7 @@ namespace SharpMP4
                 case "trpy": return new hintBytesSent();
                 case "trun": return new TrackRunBox();
                 case "tsel": return new TrackSelectionBox();
-                case "tsro": return new timeoffset();
+                case "tsro": return new TimeOffset();
                 case "tssy": return new TimestampSynchrony();
                 case "tstb": return new TileSubTrackGroupBox();
                 case "ttyp": return new TrackTypeBox();
@@ -701,7 +701,6 @@ namespace SharpMP4
     */
     public abstract class BaseDescriptor : Descriptor
     {
-        public const byte TYPE = 0;
         public override string DisplayName { get { return "BaseDescriptor"; } }
 
         public BaseDescriptor(byte tag) : base(tag)
@@ -739,7 +738,6 @@ namespace SharpMP4
     */
     public abstract class DecoderSpecificInfo : BaseDescriptor
     {
-        public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
         public override string DisplayName { get { return "DecoderSpecificInfo"; } }
 
         public DecoderSpecificInfo() : base(DescriptorTags.DecSpecificInfoTag)
@@ -4149,21 +4147,21 @@ namespace SharpMP4
 
 
     /*
-    class timeoffset() extends Box('tsro') {
+    class TimeOffset() extends Box('tsro') {
         int(32)		offset;
     }
 
 
     */
-    public class timeoffset : Box
+    public class TimeOffset : Box
     {
         public const string TYPE = "tsro";
-        public override string DisplayName { get { return "timeoffset"; } }
+        public override string DisplayName { get { return "TimeOffset"; } }
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
 
-        public timeoffset() : base(IsoStream.FromFourCC("tsro"))
+        public TimeOffset() : base(IsoStream.FromFourCC("tsro"))
         {
         }
 
@@ -4194,19 +4192,19 @@ namespace SharpMP4
 
 
     /*
-    class sequenceoffset() extends Box('snro') {
+    class SequenceOffset() extends Box('snro') {
         int(32)		offset;
     }
     */
-    public class sequenceoffset : Box
+    public class SequenceOffset : Box
     {
         public const string TYPE = "snro";
-        public override string DisplayName { get { return "sequenceoffset"; } }
+        public override string DisplayName { get { return "SequenceOffset"; } }
 
         protected int offset;
         public int Offset { get { return this.offset; } set { this.offset = value; } }
 
-        public sequenceoffset() : base(IsoStream.FromFourCC("snro"))
+        public SequenceOffset() : base(IsoStream.FromFourCC("snro"))
         {
         }
 
@@ -24796,7 +24794,7 @@ namespace SharpMP4
         unsigned int(32) num_entries;
         for (i=1; i<= num_entries; i++) { 
             unsigned int(8) constructor_type;
-            unsigned int(8) flags; 
+            unsigned int(8) constructor_flags; 
             if( constructor_type == 0 ) 
                 SampleConstructor();
             else if( constructor_type == 2 ) 
@@ -24819,8 +24817,8 @@ namespace SharpMP4
         protected byte[] constructor_type;
         public byte[] ConstructorType { get { return this.constructor_type; } set { this.constructor_type = value; } }
 
-        protected byte[] flags;
-        public byte[] Flags { get { return this.flags; } set { this.flags = value; } }
+        protected byte[] constructor_flags;
+        public byte[] ConstructorFlags { get { return this.constructor_flags; } set { this.constructor_flags = value; } }
         public IEnumerable<SampleConstructor> _SampleConstructor { get { return this.children.OfType<SampleConstructor>(); } }
         public IEnumerable<InlineConstructor> _InlineConstructor { get { return this.children.OfType<InlineConstructor>(); } }
         public IEnumerable<SampleConstructorFromTrackGroup> _SampleConstructorFromTrackGroup { get { return this.children.OfType<SampleConstructorFromTrackGroup>(); } }
@@ -24837,11 +24835,11 @@ namespace SharpMP4
             boxSize += stream.ReadUInt32(boxSize, readSize, out this.num_entries);
 
             this.constructor_type = new byte[IsoStream.GetInt(num_entries)];
-            this.flags = new byte[IsoStream.GetInt(num_entries)];
+            this.constructor_flags = new byte[IsoStream.GetInt(num_entries)];
             for (int i = 0; i < num_entries; i++)
             {
                 boxSize += stream.ReadUInt8(boxSize, readSize, out this.constructor_type[i]);
-                boxSize += stream.ReadUInt8(boxSize, readSize, out this.flags[i]);
+                boxSize += stream.ReadUInt8(boxSize, readSize, out this.constructor_flags[i]);
 
                 if (constructor_type[i] == 0)
                 {
@@ -24876,7 +24874,7 @@ namespace SharpMP4
             for (int i = 0; i < num_entries; i++)
             {
                 boxSize += stream.WriteUInt8(this.constructor_type[i]);
-                boxSize += stream.WriteUInt8(this.flags[i]);
+                boxSize += stream.WriteUInt8(this.constructor_flags[i]);
 
                 if (constructor_type[i] == 0)
                 {
@@ -24911,7 +24909,7 @@ namespace SharpMP4
             for (int i = 0; i < num_entries; i++)
             {
                 boxSize += 8; // constructor_type
-                boxSize += 8; // flags
+                boxSize += 8; // constructor_flags
 
                 if (constructor_type[i] == 0)
                 {
@@ -49802,20 +49800,12 @@ namespace SharpMP4
 
     /*
     aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {
-     unsigned int(8) reserved[6];
-     unsigned int(16) dataReferenceIndex;
      } 
     */
     public class DfxpSampleEntry : SampleEntry
     {
         public const string TYPE = "dfxp";
         public override string DisplayName { get { return "DfxpSampleEntry"; } }
-
-        protected byte[] reserved;
-        public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
-
-        protected ushort dataReferenceIndex;
-        public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
 
         public DfxpSampleEntry() : base(IsoStream.FromFourCC("dfxp"))
         {
@@ -49825,8 +49815,6 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved);
-            boxSize += stream.ReadUInt16(boxSize, readSize, out this.dataReferenceIndex);
             return boxSize;
         }
 
@@ -49834,8 +49822,6 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8Array(6, this.reserved);
-            boxSize += stream.WriteUInt16(this.dataReferenceIndex);
             return boxSize;
         }
 
@@ -49843,8 +49829,6 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 6 * 8; // reserved
-            boxSize += 16; // dataReferenceIndex
             return boxSize;
         }
     }

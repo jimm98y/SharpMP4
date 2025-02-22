@@ -594,10 +594,13 @@ namespace SharpMP4
 
         public ulong ReadBox(out Box box)
         {
-            SafeBoxHeader header = ReadBoxHeader();
+            SafeBoxHeader header;
+            long headerOffset = this.GetCurrentOffset();
+            ulong headerSize = ReadBoxHeader(out header);
             LogBox(header);
             ulong readSize = header.GetBoxSizeInBits();
-            ulong size = ReadBoxContent(header, out box);
+            ulong size = ReadBoxContent(header, out box); // we're currently discarding headerSize because ReadBoxContent already includes it now
+            box.SetBoxOffset(headerOffset);
             return size;
         }
 
@@ -612,9 +615,9 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        public SafeBoxHeader ReadBoxHeader()
+        public ulong ReadBoxHeader(out SafeBoxHeader header)
         {
-            SafeBoxHeader header = new SafeBoxHeader();
+            header = new SafeBoxHeader();
             long headerOffset = 0;
             ulong headerSize = 0;
 
@@ -633,7 +636,7 @@ namespace SharpMP4
             }
 
             headerSize = header.Read(this, 0);
-            return header;
+            return headerSize;
         }
 
         public ulong WriteBoxHeader(Box value)
@@ -691,19 +694,22 @@ namespace SharpMP4
 
         internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T value) where T : Box
         {
-            var header = ReadBoxHeader();
-            ulong availableSize = readSize - boxSize - GetHeaderSize(header);
+            SafeBoxHeader header;
+            long headerOffset = this.GetCurrentOffset();
+            ulong headerSize = ReadBoxHeader(out header);
+
+            ulong availableSize = readSize - boxSize - headerSize;
             Box box;
             ulong size;
 
-            if (GetBoxSize(header) - GetHeaderSize(header) > availableSize)
+            if (GetBoxSize(header) - headerSize > availableSize)
             {
                 // make sure we do not modify any bytes
                 box = new InvalidBox(header.Type);
                 box.SetParent(parent);
                 box.Header = header;
                 LogBox(header, GetIndentation(box));
-                size = box.Read(this, availableSize) + GetHeaderSize(header);
+                size = box.Read(this, availableSize) + headerSize;
             }
             else
             {
@@ -715,6 +721,8 @@ namespace SharpMP4
             }
 
             value = (T)box;
+            value.SetBoxOffset(headerOffset);
+
             return size;
         }
 

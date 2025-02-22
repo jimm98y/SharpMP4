@@ -394,12 +394,15 @@ namespace SharpMP4
             {
                 if (!b.Extended.DescriptorTag.Contains(".."))
                 {
-                    string tag = b.Extended.DescriptorTag;
-                    if (!tag.StartsWith("0"))
+                    if (string.IsNullOrEmpty(b.Abstract)) // do not generate the TYPE constant for abstract types, such as BaseDescriptor
                     {
-                        tag = "DescriptorTags." + tag;
+                        string tag = b.Extended.DescriptorTag;
+                        if (!tag.StartsWith("0"))
+                        {
+                            tag = "DescriptorTags." + tag;
+                        }
+                        cls += $"\tpublic const byte TYPE = {tag};\r\n";
                     }
-                    cls += $"\tpublic const byte TYPE = {tag};\r\n";
                 }
                 else
                 {

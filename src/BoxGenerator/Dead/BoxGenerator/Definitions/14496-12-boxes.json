@@ -42,7 +42,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass timeoffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass sequenceoffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
     },
     {
       "fourcc": "tsro",
@@ -59,7 +59,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass timeoffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass sequenceoffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
     },
     {
       "fourcc": "snro",
@@ -73,7 +73,7 @@
           "SrtpHintSampleEntry": [ "srtp" ]
         }
       ],
-      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass timeoffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass sequenceoffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
     },
     {
       "fourcc": "trpy",

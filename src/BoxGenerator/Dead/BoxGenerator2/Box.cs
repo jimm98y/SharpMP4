@@ -37,8 +37,9 @@ namespace SharpMP4
         protected bool hasLargeSize = false;
         public bool HasLargeSize { get { return hasLargeSize; } set { hasLargeSize = value; } }
 
-        protected ulong offset = 0;
-        public ulong Offset { get { return offset; } set { offset = value; } }
+        protected long boxOffset = 0;
+        public long GetBoxOffset() { return boxOffset; }
+        public void SetBoxOffset(long offset) { boxOffset = offset; }
 
         protected IMp4Serializable parent = null;
         public IMp4Serializable GetParent() { return parent; }
