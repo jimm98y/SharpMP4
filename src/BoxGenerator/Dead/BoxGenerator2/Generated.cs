@@ -3668,7 +3668,7 @@ namespace SharpMP4
 
     /*
     abstract aligned(8) class SampleEntry (unsigned int(32) format) extends Box(format){ 
-    const unsigned int(8)[6] reserved = 0; 
+    const unsigned int(8)[6] reservedSampleEntry = 0; 
     unsigned int(16) data_reference_index; 
     }
 
@@ -3677,8 +3677,8 @@ namespace SharpMP4
     {
         public override string DisplayName { get { return "SampleEntry"; } }
 
-        protected byte[] reserved = [];
-        public byte[] Reserved { get { return this.reserved; } set { this.reserved = value; } }
+        protected byte[] reservedSampleEntry = [];
+        public byte[] ReservedSampleEntry { get { return this.reservedSampleEntry; } set { this.reservedSampleEntry = value; } }
 
         protected ushort data_reference_index;
         public ushort DataReferenceIndex { get { return this.data_reference_index; } set { this.data_reference_index = value; } }
@@ -3691,7 +3691,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reserved);
+            boxSize += stream.ReadUInt8Array(boxSize, readSize, 6, out this.reservedSampleEntry);
             boxSize += stream.ReadUInt16(boxSize, readSize, out this.data_reference_index);
             return boxSize;
         }
@@ -3700,7 +3700,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8Array(6, this.reserved);
+            boxSize += stream.WriteUInt8Array(6, this.reservedSampleEntry);
             boxSize += stream.WriteUInt16(this.data_reference_index);
             return boxSize;
         }
@@ -3709,7 +3709,7 @@ namespace SharpMP4
         {
             ulong boxSize = 0;
             boxSize += base.CalculateSize();
-            boxSize += 6 * 8; // reserved
+            boxSize += 6 * 8; // reservedSampleEntry
             boxSize += 16; // data_reference_index
             return boxSize;
         }
