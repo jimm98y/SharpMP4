@@ -635,136 +635,127 @@ namespace SharpMP4
             }
 
             string value = (field as PseudoField)?.Value;
-            string tp = parserDocument.GetFieldType(field as PseudoField);
 
-            if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
-                tp = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");
-
-            if (!string.IsNullOrEmpty(tp))
+            if (parserDocument.IsWorkaround((field as PseudoField).Type.Type))
+                return "";
+            else
             {
-                if (parserDocument.IsWorkaround(parserDocument.GetFieldType(field as PseudoField)))
-                    return "";
-                else
+                // TODO: incorrectly parsed type
+                if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
                 {
-                    // TODO: incorrectly parsed type
-                    if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
-                    {
-                        value = "";
-                    }
+                    value = "";
+                }
 
-                    string tt = GetCSharpType(field as PseudoField);
-                    if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
-                    {
-                        value = "";
-                    }
+                string tt = GetCSharpType(field as PseudoField);
+                if (!string.IsNullOrEmpty(value) && value.StartsWith('('))
+                {
+                    value = "";
+                }
 
-                    if (value == "= {if track_is_audio 0x0100 else 0}") // TODO
+                if (value == "= {if track_is_audio 0x0100 else 0}") // TODO
+                {
+                    value = "= 0";
+                    comment = "// = { default samplerate of media}<<16;" + comment;
+                }
+                else if (value == "= { default samplerate of media}<<16")
+                {
+                    value = "= 0";
+                    comment = "// = {if track_is_audio 0x0100 else 0};" + comment;
+                }
+                else if (value == "= boxtype" || value == "= extended_type" || value == "= codingname" ||
+                    value == "= f" || value == "= v")
+                {
+                    comment = "// " + value;
+                    value = "";
+                }
+                else if (tt == "bool" && !string.IsNullOrEmpty(value))
+                {
+                    if (value == "= 0" || value == "=0")
+                        value = "= false";
+                    else if (value == "= 1" || value == "=1")
+                        value = "= true";
+                    else
+                        Debug.WriteLine($"Unsupported bool value: {value}");
+                }
+                else if (tt.Contains('[') && value == "= 0")
+                {
+                    value = "= []";
+                }
+
+                if (tt == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "FreeSpaceBox_skip" || b.BoxName == "FreeSpaceBox" || b.BoxName == "ZeroBox"))
+                {
+                    tt = "StreamMarker";
+                }
+
+                if (!string.IsNullOrEmpty(value))
+                {
+                    if (value.Contains("'b"))
                     {
-                        value = "= 0";
-                        comment = "// = { default samplerate of media}<<16;" + comment;
-                    }
-                    else if (value == "= { default samplerate of media}<<16")
-                    {
-                        value = "= 0";
-                        comment = "// = {if track_is_audio 0x0100 else 0};" + comment;
-                    }
-                    else if (value == "= boxtype" || value == "= extended_type" || value == "= codingname" ||
-                        value == "= f" || value == "= v")
-                    {
-                        comment = "// " + value;
-                        value = "";
-                    }
-                    else if (tt == "bool" && !string.IsNullOrEmpty(value))
-                    {
-                        if (value == "= 0" || value == "=0")
+                        value = value.Replace("'b", "").Replace("'", "0b");
+
+                        if (value == "= 0b0")
                             value = "= false";
-                        else if (value == "= 1" || value == "=1")
-                            value = "= true";
-                        else
-                            Debug.WriteLine($"Unsupported bool value: {value}");
-                    }
-                    else if (tt.Contains('[') && value == "= 0")
-                    {
-                        value = "= []";
                     }
 
-                    if (tt == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "FreeSpaceBox_skip" || b.BoxName == "FreeSpaceBox" || b.BoxName == "ZeroBox"))
+                    value = " " + value.Replace("'", "\"");
+                }
+
+                value = EscapeFourCC(value);
+
+                string name = parserDocument.GetFieldName(field as PseudoField);
+                string propertyName = name.ToPropertyCase();
+
+                if (name == propertyName)
+                    propertyName = "_" + name;
+
+                int nestingLevel = parserDocument.GetNestedInLoop(field);
+                if (nestingLevel > 0)
+                {
+                    string typedef = parserDocument.GetFieldTypeDef(field);
+                    nestingLevel = parserDocument.GetNestedInLoopSuffix(field, typedef, out _);
+
+                    parserDocument.AddRequiresAllocation((PseudoField)field);
+
+                    if (nestingLevel > 0)
                     {
-                        tt = "StreamMarker";
+                        // change the type
+                        for (int i = 0; i < nestingLevel; i++)
+                        {
+                            tt += "[]";
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(value))
                     {
-                        if (value.Contains("'b"))
-                        {
-                            value = value.Replace("'b", "").Replace("'", "0b");
-
-                            if (value == "= 0b0")
-                                value = "= false";
-                        }
-
-                        value = " " + value.Replace("'", "\"");
-                    }
-
-                    value = EscapeFourCC(value);
-
-                    string name = parserDocument.GetFieldName(field as PseudoField);
-                    string propertyName = name.ToPropertyCase();
-
-                    if (name == propertyName)
-                        propertyName = "_" + name;
-
-                    int nestingLevel = parserDocument.GetNestedInLoop(field);
-                    if (nestingLevel > 0)
-                    {
-                        string typedef = parserDocument.GetFieldTypeDef(field);
-                        nestingLevel = parserDocument.GetNestedInLoopSuffix(field, typedef, out _);
-
-                        parserDocument.AddRequiresAllocation((PseudoField)field);
-
-                        if (nestingLevel > 0)
-                        {
-                            // change the type
-                            for (int i = 0; i < nestingLevel; i++)
-                            {
-                                tt += "[]";
-                            }
-                        }
-
-                        if (!string.IsNullOrEmpty(value))
-                        {
-                            Debug.WriteLine($"Removing default value: {value}");
-                            value = ""; // default value can no longer be used
-                        }
-                    }
-
-                    string readMethod = GetReadMethod(field as PseudoField);
-                    if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry"
-                         && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
-                    {
-                        string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
-                        string ttttt = tt.Replace("[]", "");
-                        string ttt = tt.Contains("[]") ? ("IEnumerable<" + tt.Replace("[]", "") + ">") : tt;
-                        return $"\tpublic {ttt} {propertyName} {{ get {{ return this.children.OfType<{ttttt}>(){suffix}; }} }}";
-                    }
-                    else
-                    {
-                        if (b.BoxName == "SampleGroupDescriptionEntry")
-                        {
-                            if (tt == "Box[]")
-                            {
-                                tt = "List<Box>";
-                                value = "= new List<Box>()";
-                            }
-                        }
-
-                        return $"\r\n\tprotected {tt} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
-                         $"\tpublic {tt} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
+                        Debug.WriteLine($"Removing default value: {value}");
+                        value = ""; // default value can no longer be used
                     }
                 }
+
+                string readMethod = GetReadMethod(field as PseudoField);
+                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") || (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "SampleGroupDescriptionEntry"
+                        && b.BoxName != "ItemReferenceBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox")
+                {
+                    string suffix = tt.Contains("[]") ? "" : ".FirstOrDefault()";
+                    string ttttt = tt.Replace("[]", "");
+                    string ttt = tt.Contains("[]") ? ("IEnumerable<" + tt.Replace("[]", "") + ">") : tt;
+                    return $"\tpublic {ttt} {propertyName} {{ get {{ return this.children.OfType<{ttttt}>(){suffix}; }} }}";
+                }
+                else
+                {
+                    if (b.BoxName == "SampleGroupDescriptionEntry")
+                    {
+                        if (tt == "Box[]")
+                        {
+                            tt = "List<Box>";
+                            value = "= new List<Box>()";
+                        }
+                    }
+
+                    return $"\r\n\tprotected {tt} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
+                        $"\tpublic {tt} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
+                }
             }
-            else
-                return "";
         }
 
         private string BuildMethod(PseudoClass b, PseudoBlock parent, PseudoCode field, int level, MethodType methodType)
@@ -794,7 +785,7 @@ namespace SharpMP4
                 return BuildSwitchCase(b, swcase, level, methodType);
             }
 
-            string tt = parserDocument.GetFieldType(field as PseudoField);
+            string tt = (field as PseudoField).Type.ToString();
 
             if (string.IsNullOrEmpty(tt) && !string.IsNullOrEmpty((field as PseudoField)?.Name))
                 tt = (field as PseudoField)?.Name?.Replace("[]", "").Replace("()", "");

@@ -202,17 +202,6 @@ namespace BoxGenerator
             return Parser.Workarounds.Contains(type);
         }
 
-        public string GetFieldType(PseudoField x)
-        {
-            if (x == null)
-                return null;
-
-            if (string.IsNullOrEmpty(x.FieldArray))
-                return x.Type.ToString();
-            else
-                return $"{x.Type}{x.FieldArray}";
-        }
-
         public string SanitizeFieldName(string name)
         {
             // in C#, we cannot use "namespace" as variable name
@@ -639,18 +628,11 @@ namespace BoxGenerator
                         continue;
 
                     string value = field.Value;
-                    string tp = GetFieldType(field);
 
-                    if (string.IsNullOrEmpty(tp) && !string.IsNullOrEmpty(field.Name))
-                        tp = field.Name?.Replace("[]", "").Replace("()", "");
-
-                    if (!string.IsNullOrEmpty(tp))
+                    // TODO: incorrectly parsed type
+                    if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
                     {
-                        // TODO: incorrectly parsed type
-                        if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
-                        {
-                            field.FieldArray = value;
-                        }
+                        field.FieldArray = value;
                     }
 
                     AddAndResolveDuplicates(ret, field);
@@ -676,8 +658,8 @@ namespace BoxGenerator
             {
                 if (name.StartsWith("reserved") ||
                     name == "pre_defined" ||
-                    GetFieldType(field).StartsWith("SingleItemTypeReferenceBox") ||
-                    (GetFieldType(field) == "signed int(32)" && GetFieldType(ret[name]) == "unsigned int(32)") ||
+                    field.Type.Type == "SingleItemTypeReferenceBoxLarge" ||
+                    (field.Type.ToString() == "signed int(32)" && ret[name].Type.ToString() == "unsigned int(32)") ||
                     field.Name == "min_initial_alt_startup_offset" ||
                     field.Name == "target_rate_share") // special case: requires nesting
                 {
@@ -690,7 +672,7 @@ namespace BoxGenerator
                     }
                     field.Name = updatedName;
                 }
-                else if (GetFieldType(field) == GetFieldType(ret[name]) && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
+                else if (field.Type.ToString() == ret[name].Type.ToString() && GetNestedInLoop(field) == GetNestedInLoop(ret[name]))
                 {
                     //Debug.WriteLine($"-Resolved: fields are the same");
                 }
@@ -705,7 +687,7 @@ namespace BoxGenerator
                     if (type1.ElementSizeInBits != type2.ElementSizeInBits)
                         return;
 
-                    if (GetFieldType(field) == "aligned bit(1)" && GetFieldType(ret[name]) == "bit")
+                    if (field.Type.ToString() == "aligned bit(1)" && ret[name].Type.ToString() == "bit")
                     {
                         return;
                     }
