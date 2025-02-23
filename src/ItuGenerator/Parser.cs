@@ -92,11 +92,11 @@ namespace ItuGenerator
         public static Parser<char, string> FieldArrays => FieldArray.SeparatedAndTerminated(SkipWhitespaces).Select(x => string.Concat(x));
 
         public static Parser<char, ItuCode> Field =>
-             Map((className, increment, classParameter, classArray, value, comment, category, type) => new ItuField(className, increment, classParameter, classArray, value, comment, category, type),
+             Map((className, classParameter, classArray, increment, value, comment, category, type) => new ItuField(className, classParameter, classArray, increment, value, comment, category, type),
                 SkipWhitespaces.Then(Identifier),
-                OneOf(Try(String("++")), Try(String("−−"))).Optional(),
                 SkipWhitespaces.Then(Try(Parentheses).Optional()), 
                 SkipWhitespaces.Then(Try(FieldArrays).Optional()),
+                OneOf(Try(String("++")), Try(String("−−"))).Optional(),
                 SkipWhitespaces.Then(Try(FieldValue).Optional()),
                 SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
                 SkipWhitespaces.Then(Try(FieldCategory).Optional()),
@@ -158,7 +158,7 @@ namespace ItuGenerator
         { }
 
 
-        public ItuField(string name, Maybe<string> increment, Maybe<string> parameter, Maybe<string> array, Maybe<string> value, Maybe<string> comment, Maybe<string> category, Maybe<string> type)
+        public ItuField(string name, Maybe<string> parameter, Maybe<string> array, Maybe<string> increment, Maybe<string> value, Maybe<string> comment, Maybe<string> category, Maybe<string> type)
         {
             Name = name;
             Increment = increment.GetValueOrDefault();

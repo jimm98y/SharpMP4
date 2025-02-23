@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <None Remove="Definitions\H265.js" />
+    <None Remove="Definitions\H266.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +17,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Definitions\H265.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Definitions\H266.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
