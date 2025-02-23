@@ -155,7 +155,4 @@ partial class Program
         Debug.WriteLine(v);
         Console.WriteLine(v);
     }
-
-
-    static partial void HelloFrom(string name);
 }

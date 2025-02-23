@@ -80,42 +80,42 @@
       "description": "total bytes sent, including 12-byte RTP headers",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class hintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "nump",
       "description": "total packets sent",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class hintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "tpyl",
       "description": "total bytes sent, not including RTP headers",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class hintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "totl",
       "description": "total bytes sent, including 12-byte RTP headers",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class hintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "npck",
       "description": "total packets sent",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class hintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "tpay",
       "description": "total bytes sent, not including RTP headers",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class hintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "maxr",
@@ -178,7 +178,7 @@
       "description": "payload ID used in RTP packets",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintpayloadID extends Box('payt') {\n\tuint(32)\tpayloadID;\t\t// payload ID used in RTP packets\n\tuint(8)\t\tcount;\n\tchar\t\trtpmap_string[count]; }"
+      "syntax": "aligned(8) class HintPayloadID extends Box('payt') {\n\tuint(32)\tpayloadID;\t\t// payload ID used in RTP packets\n\tuint(8)\t\tcount;\n\tchar\t\trtpmap_string[count]; }"
     },
     {
       "fourcc": "stvi",

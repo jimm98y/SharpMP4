@@ -371,7 +371,7 @@ namespace SharpMP4
                 case "padb": return new PaddingBitsBox();
                 case "paen": return new PartitionEntry();
                 case "pasp": return new PixelAspectRatioBox();
-                case "payt": return new hintpayloadID();
+                case "payt": return new HintPayloadID();
                 case "pcst": return new PodcastBox();
                 case "pdin": return new ProgressiveDownloadInfoBox();
                 case "perf": return new ThreeGPPPerformerBox();
@@ -515,9 +515,9 @@ namespace SharpMP4
                 case "tmin": return new HintMinRelativeTime();
                 case "tmpo": return new AppleBeatsPerMinuteBox();
                 case "tols": return new TargetOlsProperty();
-                case "totl": return new hintBytesSent_totl(); // TODO: fix duplicate
-                case "tpay": return new hintBytesSent_tpay(); // TODO: fix duplicate
-                case "tpyl": return new hintBytesSent_tpyl(); // TODO: fix duplicate
+                case "totl": return new HintBytesSent_totl(); // TODO: fix duplicate
+                case "tpay": return new HintBytesSent_tpay(); // TODO: fix duplicate
+                case "tpyl": return new HintBytesSent_tpyl(); // TODO: fix duplicate
                 case "traf": return new TrackFragmentBox();
                 case "trak": return new TrackBox();
                 case "tran": return new TranscodingInfoBox();
@@ -527,7 +527,7 @@ namespace SharpMP4
                 case "trgr": return new TrackGroupBox();
                 case "trik": return new TrickPlayBox();
                 case "trkn": return new TrackNumberBox();
-                case "trpy": return new hintBytesSent();
+                case "trpy": return new HintBytesSent();
                 case "trun": return new TrackRunBox();
                 case "tsel": return new TrackSelectionBox();
                 case "tsro": return new TimeOffset();
@@ -4240,19 +4240,19 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintBytesSent extends Box('trpy') {
+    aligned(8) class HintBytesSent extends Box('trpy') {
         uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
     */
-    public class hintBytesSent : Box
+    public class HintBytesSent : Box
     {
         public const string TYPE = "trpy";
-        public override string DisplayName { get { return "hintBytesSent"; } }
+        public override string DisplayName { get { return "HintBytesSent"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent() : base(IsoStream.FromFourCC("trpy"))
+        public HintBytesSent() : base(IsoStream.FromFourCC("trpy"))
         {
         }
 
@@ -4326,18 +4326,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintBytesSent extends Box('tpyl') {
+    aligned(8) class HintBytesSent extends Box('tpyl') {
         uint(64)	bytessent; }	// total bytes sent, not including RTP headers
     */
-    public class hintBytesSent_tpyl : Box
+    public class HintBytesSent_tpyl : Box
     {
         public const string TYPE = "tpyl";
-        public override string DisplayName { get { return "hintBytesSent_tpyl"; } }
+        public override string DisplayName { get { return "HintBytesSent_tpyl"; } }
 
         protected ulong bytessent;
         public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_tpyl() : base(IsoStream.FromFourCC("tpyl"))
+        public HintBytesSent_tpyl() : base(IsoStream.FromFourCC("tpyl"))
         {
         }
 
@@ -4368,19 +4368,19 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintBytesSent extends Box('totl') {
+    aligned(8) class HintBytesSent extends Box('totl') {
         uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
     */
-    public class hintBytesSent_totl : Box
+    public class HintBytesSent_totl : Box
     {
         public const string TYPE = "totl";
-        public override string DisplayName { get { return "hintBytesSent_totl"; } }
+        public override string DisplayName { get { return "HintBytesSent_totl"; } }
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_totl() : base(IsoStream.FromFourCC("totl"))
+        public HintBytesSent_totl() : base(IsoStream.FromFourCC("totl"))
         {
         }
 
@@ -4454,18 +4454,18 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintBytesSent extends Box('tpay') {
+    aligned(8) class HintBytesSent extends Box('tpay') {
         uint(32)	bytessent; }	// total bytes sent, not including RTP headers
     */
-    public class hintBytesSent_tpay : Box
+    public class HintBytesSent_tpay : Box
     {
         public const string TYPE = "tpay";
-        public override string DisplayName { get { return "hintBytesSent_tpay"; } }
+        public override string DisplayName { get { return "HintBytesSent_tpay"; } }
 
         protected uint bytessent;
         public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-        public hintBytesSent_tpay() : base(IsoStream.FromFourCC("tpay"))
+        public HintBytesSent_tpay() : base(IsoStream.FromFourCC("tpay"))
         {
         }
 
@@ -4846,15 +4846,15 @@ namespace SharpMP4
 
 
     /*
-    aligned(8) class hintpayloadID extends Box('payt') {
+    aligned(8) class HintPayloadID extends Box('payt') {
         uint(32)	payloadID;		// payload ID used in RTP packets
         uint(8)		count;
         char		rtpmap_string[count]; }
     */
-    public class hintpayloadID : Box
+    public class HintPayloadID : Box
     {
         public const string TYPE = "payt";
-        public override string DisplayName { get { return "hintpayloadID"; } }
+        public override string DisplayName { get { return "HintPayloadID"; } }
 
         protected uint payloadID;  //  payload ID used in RTP packets
         public uint PayloadID { get { return this.payloadID; } set { this.payloadID = value; } }
@@ -4865,7 +4865,7 @@ namespace SharpMP4
         protected byte[] rtpmap_string;
         public byte[] RtpmapString { get { return this.rtpmap_string; } set { this.rtpmap_string = value; } }
 
-        public hintpayloadID() : base(IsoStream.FromFourCC("payt"))
+        public HintPayloadID() : base(IsoStream.FromFourCC("payt"))
         {
         }
 
