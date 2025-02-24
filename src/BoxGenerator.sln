@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMP4", "SharpMP4\SharpM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItuGenerator", "ItuGenerator\ItuGenerator.csproj", "{EBF64E59-EEFA-4392-A900-2713C47BEEA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpH264", "SharpH264\SharpH264.csproj", "{079D2E5A-D78B-479B-8D6C-D6B29AD002F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{EBF64E59-EEFA-4392-A900-2713C47BEEA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBF64E59-EEFA-4392-A900-2713C47BEEA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBF64E59-EEFA-4392-A900-2713C47BEEA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{079D2E5A-D78B-479B-8D6C-D6B29AD002F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{079D2E5A-D78B-479B-8D6C-D6B29AD002F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{079D2E5A-D78B-479B-8D6C-D6B29AD002F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{079D2E5A-D78B-479B-8D6C-D6B29AD002F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
