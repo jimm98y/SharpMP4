@@ -178,7 +178,8 @@ namespace ItuGenerator
         public string ArrayParameter { get; set; }
         public string Comment { get; set; }
         public string Category { get; set; }
-        //public ItuBlock Parent { get; set; }
+
+        public ItuCode Parent { get; internal set; }
     }
 
     public class ItuClass : ItuCode
@@ -195,6 +196,8 @@ namespace ItuGenerator
         public string ClassParameter { get; }
         public IEnumerable<ItuCode> Fields { get; }
         public int EndOffset { get; }
+
+        public List<ItuField> FlattenedFields { get; internal set; }
     }
 
     internal class ItuBlock : ItuCode
@@ -203,6 +206,8 @@ namespace ItuGenerator
         public string Condition { get; }
         public string Comment { get; }
         public IEnumerable<ItuCode> Content { get; }
+
+        public ItuCode Parent { get; internal set; }
 
         public ItuBlock(string type, Maybe<string> condition, Maybe<string> comment, IEnumerable<ItuCode> content)
         {
