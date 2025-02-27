@@ -6,7 +6,7 @@
  nalUnitHeaderBytes = 1   
  if( nal_unit_type  ==  14  ||  nal_unit_type  ==  20  ||  nal_unit_type  ==  21 ) { 
   
-  if( nal_unit_type ! =  21 )   
+  if( nal_unit_type !=  21 )   
    svc_extension_flag All u(1) 
   else   
    avc_3d_extension_flag All u(1) 

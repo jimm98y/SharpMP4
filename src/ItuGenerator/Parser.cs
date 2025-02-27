@@ -179,7 +179,7 @@ namespace ItuGenerator
         public string Comment { get; set; }
         public string Category { get; set; }
 
-        public ItuCode Parent { get; internal set; }
+        public ItuBlock Parent { get; internal set; }
     }
 
     public class ItuClass : ItuCode
@@ -200,14 +200,15 @@ namespace ItuGenerator
         public List<ItuField> FlattenedFields { get; internal set; }
     }
 
-    internal class ItuBlock : ItuCode
+    public class ItuBlock : ItuCode
     {
         public string Type { get; }
         public string Condition { get; }
         public string Comment { get; }
         public IEnumerable<ItuCode> Content { get; }
 
-        public ItuCode Parent { get; internal set; }
+        public ItuBlock Parent { get; internal set; }
+        public List<ItuField> RequiresAllocation { get; internal set; } = new List<ItuField>();
 
         public ItuBlock(string type, Maybe<string> condition, Maybe<string> comment, IEnumerable<ItuCode> content)
         {

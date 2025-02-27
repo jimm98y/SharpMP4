@@ -19,7 +19,7 @@ partial class Program
             Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parsed, Newtonsoft.Json.Formatting.Indented));
 
             CSharpGenerator generator = new CSharpGenerator();
-            string code = generator.GenerateParser(parsed.First());
+            string code = generator.GenerateParser(Path.GetFileNameWithoutExtension(file), parsed.First());
             Debug.WriteLine(code);
         }
     }
