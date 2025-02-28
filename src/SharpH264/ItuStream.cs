@@ -47,5 +47,10 @@ namespace SharpH264
         {
             throw new NotImplementedException();
         }
+
+        internal ulong ReadClass<T>(ulong size, out T value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

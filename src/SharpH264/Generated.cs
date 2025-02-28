@@ -27,9 +27,13 @@ namespace SharpH264
         public byte[] RbspByte { get { return rbsp_byte; } set { rbsp_byte = value; } }
         private byte emulation_prevention_three_byte;
         public byte EmulationPreventionThreeByte { get { return emulation_prevention_three_byte; } set { emulation_prevention_three_byte = value; } }
+        private uint numBytesInNALunit;
+        public uint NumBytesInNALunit { get { return numBytesInNALunit; } set { numBytesInNALunit = value; } }
 
-        public NalUnit(int NumBytesInNALunit)
-        { }
+        public NalUnit(uint NumBytesInNALunit)
+        {
+            this.numBytesInNALunit = NumBytesInNALunit;
+        }
 
         public ulong Read(ItuStream stream)
         {

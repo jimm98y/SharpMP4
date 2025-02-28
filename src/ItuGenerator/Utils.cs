@@ -26,5 +26,12 @@ namespace ItuGenerator
                 return source;
             return string.Format("{0}{1}", char.ToUpper(source[0]), source.Substring(1));
         }
+
+        public static string ToFirstLower(this string source)
+        {
+            if (string.IsNullOrEmpty(source) || source.Length < 2)
+                return source;
+            return string.Format("{0}{1}", char.ToLower(source[0]), source.Substring(1));
+        }
     }
 }

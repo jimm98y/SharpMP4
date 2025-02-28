@@ -192,11 +192,9 @@ namespace Sharp{type}
                 case "b(8)":
                     return "stream.ReadBits(size, 8, ";
                 default:
-                    {
-                        if (ituField.Type == null)
-                            return $"stream.ReadClass<{ituField.Name.ToPropertyCase()}>(size, ";
-                        throw new NotImplementedException();
-                    }
+                    if (ituField.Type == null)
+                        return $"stream.ReadClass<{ituField.Name.ToPropertyCase()}>(size, ";
+                    throw new NotImplementedException();
             }
         }
 
@@ -421,44 +419,40 @@ namespace Sharp{type}
 
         private string GenerateCtor(ItuClass ituClass)
         {
-            string resultCode = "";
-            string ituClassParameters = $"({GetCtorParameters(ituClass)})";            
+            string[] ctorParameters = GetCtorParameters(ituClass);
+            string[] ctorParameterDefs = ctorParameters.Select(x => $"{GetCSharpTypeMapping()[GetCtorParameterType(x)]} {x}").ToArray();
+            string ituClassParameters = $"({string.Join(", ", ctorParameterDefs)})";
 
-            resultCode = $@"
+            string ctorInitializer = string.Join("\r\n", ctorParameters.Select(x => $"\t\t\tthis.{x.ToFirstLower()} = {x};"));
+
+            string resultCode = $@"
          public {ituClass.ClassName.ToPropertyCase()}{ituClassParameters}
-         {{ }}
+         {{ 
+{ctorInitializer}
+         }}
 ";
-
             return resultCode;
         }
 
-        private object GetCtorParameters(ItuClass ituClass)
+        private string[] GetCtorParameters(ItuClass ituClass)
         {
-            string[] parameters = ituClass.ClassParameter.Substring(1, ituClass.ClassParameter.Length - 2).Split(',');
-            if (parameters.Length > 0)
-            {
-                Dictionary<string, string> map = new Dictionary<string, string>()
-                {
-                    { "NumBytesInNALunit", "int" },
-                };
+            return ituClass.ClassParameter.Substring(1, ituClass.ClassParameter.Length - 2).Split(',').Select(x => x.Trim()).ToArray();
+        }
 
-                List<string> ret = new List<string>();
-                foreach(var parameter in parameters)
-                {
-                    ret.Add($"{map[parameter.Trim()]} {parameter.Trim()}");
-                }
-                return string.Join(", ", ret);
-            }
-            else
+        private string GetCtorParameterType(string parameter)
+        {
+            Dictionary<string, string> map = new Dictionary<string, string>()
             {
-                return "";
-            }
+                { "NumBytesInNALunit", "u(32)" },
+            };
+
+            return map[parameter];
         }
 
         private string GenerateFields(ItuClass ituClass)
         {
             string resultCode = "";
-            ituClass.FlattenedFields = FlattenFields(ituClass.Fields);
+            ituClass.FlattenedFields = FlattenFields(ituClass, ituClass.Fields);
 
             foreach(var field in ituClass.FlattenedFields)
             {
@@ -479,7 +473,7 @@ namespace Sharp{type}
             }
 
             string propertyName = GetFieldName(field).ToPropertyCase();
-            return $"\t\tprivate {type} {field.Name};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
+            return $"\t\tprivate {type} {field.Name.ToFirstLower()};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
         }
 
         public void AddRequiresAllocation(ItuField field)
@@ -508,9 +502,17 @@ namespace Sharp{type}
 
         private string GetCSharpType(ItuField field)
         {
-            if (field.Type == null)    
+            if (field.Type == null)
                 return field.Name.ToPropertyCase(); // type is a class
 
+            Dictionary<string, string> map = GetCSharpTypeMapping();
+
+            Debug.WriteLine($"Field type: {field.Type}, opt: array: {field.ArrayParameter}");
+            return map[field.Type] + (!string.IsNullOrWhiteSpace(field.ArrayParameter) ? "[]" : "");
+        }
+
+        private static Dictionary<string, string> GetCSharpTypeMapping()
+        {
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
                 { "f(1)",                       "bool" },
@@ -518,14 +520,13 @@ namespace Sharp{type}
                 { "u(1)",                       "bool" },
                 { "u(2)",                       "uint" }, // unsigned integer
                 { "u(5)",                       "byte" },
+                { "u(32)",                      "uint" },
                 { "b(8)",                       "byte" }, // byte
             };
-
-            Debug.WriteLine($"Field type: {field.Type}, opt: array: {field.ArrayParameter}");
-            return map[field.Type] + (!string.IsNullOrWhiteSpace(field.ArrayParameter) ? "[]" : "");
+            return map;
         }
 
-        private List<ItuField> FlattenFields(IEnumerable<ItuCode> fields, ItuBlock parent = null)
+        private List<ItuField> FlattenFields(ItuClass cls, IEnumerable<ItuCode> fields, ItuBlock parent = null)
         {
             Dictionary<string, ItuField> ret = new Dictionary<string, ItuField>();
             foreach (var code in fields)
@@ -544,13 +545,29 @@ namespace Sharp{type}
                 {
                     block.Parent = parent; // keep track of parent blocks
 
-                    var blockFields = FlattenFields(block.Content, block);
+                    var blockFields = FlattenFields(cls, block.Content, block);
                     foreach (var blockField in blockFields)
                     {
                         AddAndResolveDuplicates(ret, blockField);
                     }
                 }
             }
+
+            if (parent == null)
+            {
+                // add also ctor params as fields
+                string[] ctorParams = GetCtorParameters(cls);
+                for (int i = 0; i < ctorParams.Length; i++)
+                {
+                    AddAndResolveDuplicates(ret,
+                        new ItuField()
+                        {
+                            Name = ctorParams[i].ToFirstLower(),
+                            Type = GetCtorParameterType(ctorParams[i])
+                        });
+                }
+            }
+
             return ret.Values.ToList();
         }
 
