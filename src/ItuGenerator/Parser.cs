@@ -198,6 +198,7 @@ namespace ItuGenerator
         public int EndOffset { get; }
 
         public List<ItuField> FlattenedFields { get; internal set; }
+        public List<ItuField> AddedFields { get; internal set; } = new List<ItuField>();
     }
 
     public class ItuBlock : ItuCode

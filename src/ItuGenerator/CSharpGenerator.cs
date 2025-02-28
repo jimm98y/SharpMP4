@@ -54,6 +54,39 @@ namespace Sharp{type}
             {
                 resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Read);
             }
+            ituClass.AddedFields.Clear();
+            resultCode += $@"
+
+             return size;
+         }}
+";
+
+            resultCode += $@"
+         public ulong Write(ItuStream stream)
+         {{
+             ulong size = 0;
+";
+            foreach (var field in ituClass.Fields)
+            {
+                resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Write);
+            }
+            ituClass.AddedFields.Clear();
+            resultCode += $@"
+
+             return size;
+         }}
+";
+
+            resultCode += $@"
+         public ulong CalculateSize(ItuStream stream)
+         {{
+             ulong size = 0;
+";
+            foreach (var field in ituClass.Fields)
+            {
+                resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Size);
+            }
+            ituClass.AddedFields.Clear();
             resultCode += $@"
 
              return size;
@@ -160,19 +193,56 @@ namespace Sharp{type}
             }
             else
             {
-                b.FlattenedFields.Add(new ItuField() { Name = field.Name, Value = field.Value});
+                if(b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
+                    b.AddedFields.Add(new ItuField() { Name = field.Name, Value = field.Value });
                 return $"{GetSpacing(level)}var {field.Name} {field.Value};";
             }
         }
 
         private string GetCalculateSizeMethod(ItuField ituField)
         {
-            throw new NotImplementedException();
+            switch (ituField.Type)
+            {
+                case "f(1)":
+                    return "1";
+                case "f(8)":
+                    return "8";
+                case "u(1)":
+                    return "1";
+                case "u(2)":
+                    return "2";
+                case "u(5)":
+                    return "5";
+                case "b(8)":
+                    return "8";
+                default:
+                    if (ituField.Type == null)
+                        return $"stream.CalculateSize<{ituField.Name.ToPropertyCase()}>(value)";
+                    throw new NotImplementedException();
+            }
         }
 
         private string GetWriteMethod(ItuField ituField)
         {
-            throw new NotImplementedException();
+            switch (ituField.Type)
+            {
+                case "f(1)":
+                    return "stream.WriteFixed(1, ";
+                case "f(8)":
+                    return "stream.WriteFixed(8, ";
+                case "u(1)":
+                    return "stream.WriteUnsignedInt(1, ";
+                case "u(2)":
+                    return "stream.WriteUnsignedInt(2, ";
+                case "u(5)":
+                    return "stream.WriteUnsignedInt(5, ";
+                case "b(8)":
+                    return "stream.WriteBits(8, ";
+                default:
+                    if (ituField.Type == null)
+                        return $"stream.WriteClass<{ituField.Name.ToPropertyCase()}>(";
+                    throw new NotImplementedException();
+            }
         }
 
         private string GetReadMethod(ItuField ituField)

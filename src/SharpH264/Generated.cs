@@ -98,6 +98,130 @@ namespace SharpH264
             return size;
         }
 
+        public ulong Write(ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteFixed(1, this.forbidden_zero_bit);
+            size += stream.WriteUnsignedInt(2, this.nal_ref_idc);
+            size += stream.WriteUnsignedInt(5, this.nal_unit_type);
+            var NumBytesInRBSP = 0;
+            var nalUnitHeaderBytes = 1;
+
+            if (nal_unit_type == 14 || nal_unit_type == 20 || nal_unit_type == 21)
+            {
+
+                if (nal_unit_type != 21)
+                {
+                    size += stream.WriteUnsignedInt(1, this.svc_extension_flag);
+                }
+
+                else
+                {
+                    size += stream.WriteUnsignedInt(1, this.avc_3d_extension_flag);
+                }
+
+                if (svc_extension_flag)
+                {
+                    size += stream.WriteClass<NalUnitHeaderSvcExtension>(this.nal_unit_header_svc_extension); // specified in Annex G 
+                    nalUnitHeaderBytes += 3;
+                }
+
+                else if (avc_3d_extension_flag)
+                {
+                    size += stream.WriteClass<NalUnitHeader3davcExtension>(this.nal_unit_header_3davc_extension); // specified in Annex J 
+                    nalUnitHeaderBytes += 2;
+                }
+
+                else
+                {
+                    size += stream.WriteClass<NalUnitHeaderMvcExtension>(this.nal_unit_header_mvc_extension); // specified in Annex H 
+                    nalUnitHeaderBytes += 3;
+                }
+            }
+
+            for (int i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++)
+            {
+
+                if (i + 2 < NumBytesInNALunit && stream.NextBits(24) == 0x000003)
+                {
+                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRBSP++]);
+                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRBSP++]);
+                    i += 2;
+                    size += stream.WriteFixed(8, this.emulation_prevention_three_byte); // equal to 0x03 
+                }
+
+                else
+                {
+                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRBSP++]);
+                }
+            }
+
+            return size;
+        }
+
+        public ulong CalculateSize(ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += 1; // forbidden_zero_bit
+            size += 2; // nal_ref_idc
+            size += 5; // nal_unit_type
+            var NumBytesInRBSP = 0;
+            var nalUnitHeaderBytes = 1;
+
+            if (nal_unit_type == 14 || nal_unit_type == 20 || nal_unit_type == 21)
+            {
+
+                if (nal_unit_type != 21)
+                {
+                    size += 1; // svc_extension_flag
+                }
+
+                else
+                {
+                    size += 1; // avc_3d_extension_flag
+                }
+
+                if (svc_extension_flag)
+                {
+                    size += stream.CalculateSize<NalUnitHeaderSvcExtension>(nal_unit_header_svc_extension); // nal_unit_header_svc_extension
+                    nalUnitHeaderBytes += 3;
+                }
+
+                else if (avc_3d_extension_flag)
+                {
+                    size += stream.CalculateSize<NalUnitHeader3davcExtension>(nal_unit_header_3davc_extension); // nal_unit_header_3davc_extension
+                    nalUnitHeaderBytes += 2;
+                }
+
+                else
+                {
+                    size += stream.CalculateSize<NalUnitHeaderMvcExtension>(nal_unit_header_mvc_extension); // nal_unit_header_mvc_extension
+                    nalUnitHeaderBytes += 3;
+                }
+            }
+
+            for (int i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++)
+            {
+
+                if (i + 2 < NumBytesInNALunit && stream.NextBits(24) == 0x000003)
+                {
+                    size += 8; // rbsp_byte
+                    size += 8; // rbsp_byte
+                    i += 2;
+                    size += 8; // emulation_prevention_three_byte
+                }
+
+                else
+                {
+                    size += 8; // rbsp_byte
+                }
+            }
+
+            return size;
+        }
+
     }
 
 }

@@ -52,5 +52,45 @@ namespace SharpH264
         {
             throw new NotImplementedException();
         }
+
+        internal ulong WriteBits(int count, byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteFixed(int count, byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteFixed(int count, bool value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteClass<T>(T value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteUnsignedInt(int count, bool value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteUnsignedInt(int count, byte value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteUnsignedInt(int count, uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong CalculateSize<T>(T value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
