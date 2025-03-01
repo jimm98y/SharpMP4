@@ -442,9 +442,9 @@ pic_parameter_set_rbsp() {
    if( pps_num_slices_in_pic_minus1 > 1 )  
     pps_tile_idx_delta_present_flag u(1) 
    for( i = 0; i < pps_num_slices_in_pic_minus1; i++ ) {  
-    if( SliceTopLeftTileIdx[ i ] % NumTileColumns  !=  NumTileColumns − 1 )  
+    if( SliceTopLeftTileIdx[ i ] % NumTileColumns  !=  NumTileColumns - 1 )  
      pps_slice_width_in_tiles_minus1[ i ] ue(v) 
-    if( SliceTopLeftTileIdx[ i ] / NumTileColumns  !=  NumTileRows − 1  && 
+    if( SliceTopLeftTileIdx[ i ] / NumTileColumns  !=  NumTileRows - 1  && 
       ( pps_tile_idx_delta_present_flag  || 
       SliceTopLeftTileIdx[ i ] % NumTileColumns  ==  0 ) ) 
  
@@ -456,7 +456,7 @@ pic_parameter_set_rbsp() {
      pps_num_exp_slices_in_tile[ i ] ue(v) 
      for( j = 0; j < pps_num_exp_slices_in_tile[ i ]; j++ )  
       pps_exp_slice_height_in_ctus_minus1[ i ][ j ] ue(v) 
-     i  +=  NumSlicesInTile[ i ] − 1  
+     i  +=  NumSlicesInTile[ i ] - 1  
     }  
     if( pps_tile_idx_delta_present_flag  &&  i < pps_num_slices_in_pic_minus1 )  
      pps_tile_idx_delta_val[ i ] se(v) 
@@ -871,8 +871,8 @@ scaling_list_data() {
    if( !scaling_list_copy_mode_flag[ id ] ) {  
     nextCoef = 0  
     if( id > 13 ) {  
-     scaling_list_dc_coef[ id − 14 ] se(v) 
-     nextCoef  +=  scaling_list_dc_coef[ id − 14 ]  
+     scaling_list_dc_coef[ id - 14 ] se(v) 
+     nextCoef  +=  scaling_list_dc_coef[ id - 14 ]  
     }  
     for( i = 0; i < matrixSize * matrixSize; i++ ) {  
      x = DiagScanOrder[ 3 ][ 3 ][ i ][ 0 ]  
@@ -909,11 +909,11 @@ profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {
  ptl_multilayer_enabled_flag u(1) 
  if( profileTierPresentFlag )  
   general_constraints_info()  
- for( i = MaxNumSubLayersMinus1 − 1; i  >=  0; i−− )  
+ for( i = MaxNumSubLayersMinus1 - 1; i  >=  0; i-- )  
   ptl_sublayer_level_present_flag[ i ] u(1) 
  while( !byte_aligned() )  
   ptl_reserved_zero_bit u(1) 
- for( i = MaxNumSubLayersMinus1 − 1; i  >=  0; i−− )  
+ for( i = MaxNumSubLayersMinus1 - 1; i  >=  0; i-- )  
   if( ptl_sublayer_level_present_flag[ i ] )  
    sublayer_level_idc[ i ] u(8) 
  if( profileTierPresentFlag ) {  
@@ -1092,7 +1092,7 @@ slice_header() {
   sh_slice_address u(v) 
  for( i = 0; i < NumExtraShBits; i++ )  
   sh_extra_bit[ i ] u(1) 
- if( !pps_rect_slice_flag  &&  NumTilesInPic − sh_slice_address > 1 )  
+ if( !pps_rect_slice_flag  &&  NumTilesInPic - sh_slice_address > 1 )  
   sh_num_tiles_in_slice_minus1 ue(v) 
  if( ph_inter_slice_allowed_flag )  
   sh_slice_type ue(v) 
@@ -1310,10 +1310,10 @@ slice_data() {
    ResetIbcBuf = 1  
   }  
   coding_tree_unit()  
-  if( i  ==  NumCtusInCurrSlice − 1 )  
+  if( i  ==  NumCtusInCurrSlice - 1 )  
    end_of_slice_one_bit  /* equal to 1 */ ae(v) 
-  else if( CtbAddrX  ==  CtbToTileColBd[ CtbAddrX + 1 ] − 1 ) {  
-   if( CtbAddrY  ==  CtbToTileRowBd[ CtbAddrY + 1 ] − 1 ) {  
+  else if( CtbAddrX  ==  CtbToTileColBd[ CtbAddrX + 1 ] - 1 ) {  
+   if( CtbAddrY  ==  CtbToTileRowBd[ CtbAddrY + 1 ] - 1 ) {  
     end_of_tile_one_bit  /* equal to 1 */ ae(v) 
     byte_alignment()  
    } else if( sps_entropy_coding_sync_enabled_flag ) {  
@@ -1687,7 +1687,7 @@ coding_unit( x0, y0, cbWidth, cbHeight, cqtDepth, treeType, modeType ) {
    }  
    if( sps_smvd_enabled_flag  &&  !ph_mvd_l1_zero_flag  && 
      inter_pred_idc[ x0 ][ y0 ]  ==  PRED_BI  && 
-     !inter_affine_flag[ x0 ][ y0 ]  &&  RefIdxSymL0 > −1  &&  RefIdxSymL1 > −1 ) 
+     !inter_affine_flag[ x0 ][ y0 ]  &&  RefIdxSymL0 > -1  &&  RefIdxSymL1 > -1 ) 
  
     sym_mvd_flag[ x0 ][ y0 ] ae(v) 
    if( inter_pred_idc[ x0 ][ y0 ]  !=  PRED_L1 ) {  
@@ -1717,8 +1717,8 @@ coding_unit( x0, y0, cbWidth, cbHeight, cqtDepth, treeType, modeType ) {
           MvdCpL1[ x0 ][ y0 ][ 2 ][ 1 ] = 0  
     } else {  
      if( sym_mvd_flag[ x0 ][ y0 ] ) {  
-      MvdL1[ x0 ][ y0 ][ 0 ] = −MvdL0[ x0 ][ y0 ][ 0 ]  
-      MvdL1[ x0 ][ y0 ][ 1 ] = −MvdL0[ x0 ][ y0 ][ 1 ]  
+      MvdL1[ x0 ][ y0 ][ 0 ] = -MvdL0[ x0 ][ y0 ][ 0 ]  
+      MvdL1[ x0 ][ y0 ][ 1 ] = -MvdL0[ x0 ][ y0 ][ 1 ]  
      } else  
       mvd_coding( x0, y0, 1, 0 )  
      if( MotionModelIdc[ x0 ][ y0 ] > 0 )  
@@ -1832,7 +1832,7 @@ palette_coding( x0, y0, cbWidth, cbHeight, treeType ) {
   palette_predictor_run ae(v) 
   if( palette_predictor_run  !=  1 ) {  
    if( palette_predictor_run > 1 )   
-    predictorEntryIdx  +=  palette_predictor_run − 1  
+    predictorEntryIdx  +=  palette_predictor_run - 1  
    PalettePredictorEntryReuseFlags[ predictorEntryIdx ] = 1  
    NumPredictedPaletteEntries++  
   } else  
@@ -1863,7 +1863,7 @@ palette_coding( x0, y0, cbWidth, cbHeight, treeType ) {
   }  
  PreviousRunPosition = 0  
  PreviousRunType = 0  
- for( subSetId = 0; subSetId  <=  ( cbWidth * cbHeight − 1 ) / 16; subSetId++ ) {  
+ for( subSetId = 0; subSetId  <=  ( cbWidth * cbHeight - 1 ) / 16; subSetId++ ) {  
   minSubPos = subSetId * 16  
   if( minSubPos + 16 > cbWidth * cbHeight)  
    maxSubPos = cbWidth * cbHeight  
@@ -1877,8 +1877,8 @@ palette_coding( x0, y0, cbWidth, cbHeight, treeType ) {
    xC = x0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos ][ 0 ]  
    yC = y0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos ][ 1 ]  
    if( PaletteScanPos > 0 ) {  
-    xcPrev = x0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos − 1 ][ 0 ]  
-    ycPrev = y0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos − 1 ][ 1 ]  
+    xcPrev = x0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos - 1 ][ 0 ]  
+    ycPrev = y0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos - 1 ][ 1 ]  
    }  
    if( MaxPaletteIndex > 0  &&  PaletteScanPos > 0 ) {  
     run_copy_flag ae(v) 
@@ -1902,12 +1902,12 @@ palette_coding( x0, y0, cbWidth, cbHeight, treeType ) {
    xC = x0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos ][ 0 ]  
    yC = y0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos ][ 1 ]  
    if( PaletteScanPos > 0 ) {  
-    xcPrev =x0 +  TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos − 1 ][ 0 ]  
-    ycPrev = y0 +  TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos − 1 ][ 1 ]  
+    xcPrev =x0 +  TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos - 1 ][ 0 ]  
+    ycPrev = y0 +  TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos - 1 ][ 1 ]  
    }  
    if( MaxPaletteIndex > 0  &&  !RunCopyMap[ xC ][ yC ]  && CopyAboveIndicesFlag[ xC ][ yC ]  ==  0 ) { 
  
-    if( MaxPaletteIndex − adjust > 0 )  
+    if( MaxPaletteIndex - adjust > 0 )  
      palette_idx_idc ae(v) 
     adjust = 1  
    }  
@@ -1916,9 +1916,9 @@ palette_coding( x0, y0, cbWidth, cbHeight, treeType ) {
    if( CopyAboveIndicesFlag[ xC ][ yC ]  ==  0 )  
     PaletteIndexMap[ xC ][ yC ] = CurrPaletteIndex  
    else if( !palette_transpose_flag )  
-       PaletteIndexMap[ xC ][ yC ] = PaletteIndexMap[ xC ][ yC − 1 ]  
+       PaletteIndexMap[ xC ][ yC ] = PaletteIndexMap[ xC ][ yC - 1 ]  
    else  
-    PaletteIndexMap[ xC ][ yC ] = PaletteIndexMap[ xC − 1 ][ yC ]  
+    PaletteIndexMap[ xC ][ yC ] = PaletteIndexMap[ xC - 1 ][ yC ]  
    PaletteScanPos++  
   }  
   if( palette_escape_val_present_flag ) {  
@@ -2026,11 +2026,11 @@ transform_tree( x0, y0, tbWidth, tbHeight, treeType, chType ) {
   if( !cu_sbt_horizontal_flag ) {  
    trafoWidth = tbWidth * SbtNumFourthsTb0 / 4  
    transform_unit( x0, y0, trafoWidth, tbHeight, treeType, 0, 0 )  
-   transform_unit( x0 + trafoWidth, y0, tbWidth − trafoWidth, tbHeight, treeType, 1, 0 )  
+   transform_unit( x0 + trafoWidth, y0, tbWidth - trafoWidth, tbHeight, treeType, 1, 0 )  
   } else {  
    trafoHeight = tbHeight * SbtNumFourthsTb0 / 4  
    transform_unit( x0, y0, tbWidth, trafoHeight, treeType, 0, 0 )  
-   transform_unit( x0, y0 + trafoHeight, tbWidth, tbHeight − trafoHeight, treeType, 1, 0 )  
+   transform_unit( x0, y0 + trafoHeight, tbWidth, tbHeight - trafoHeight, treeType, 1, 0 )  
   }  
   } else if( IntraSubPartitionsSplitType  ==  ISP_HOR_SPLIT ) {  
   trafoHeight = tbHeight / NumIntraSubPartitions  
@@ -2045,7 +2045,7 @@ transform_tree( x0, y0, tbWidth, tbHeight, treeType, chType ) {
 
 transform_unit( x0, y0, tbWidth, tbHeight, treeType, subTuIndex, chType ) {  
  if( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT  && 
-   treeType  ==  SINGLE_TREE  &&  subTuIndex  ==  NumIntraSubPartitions − 1 ) { 
+   treeType  ==  SINGLE_TREE  &&  subTuIndex  ==  NumIntraSubPartitions - 1 ) { 
  
   xC = CbPosX[ chType ][ x0 ][ y0 ]  
   yC = CbPosY[ chType ][ x0 ][ y0 ]  
@@ -2057,7 +2057,7 @@ transform_unit( x0, y0, tbWidth, tbHeight, treeType, subTuIndex, chType ) {
   wC = tbWidth / SubWidthC  
   hC = tbHeight / SubHeightC  
  }  
- chromaAvailable = treeType  !=  DUAL_TREE_LUMA  &&  sps_chroma_format_idc  !=  0  && ( IntraSubPartitionsSplitType  ==  ISP_NO_SPLIT   ||  ( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT  &&  subTuIndex  ==  NumIntraSubPartitions − 1 ) ) 
+ chromaAvailable = treeType  !=  DUAL_TREE_LUMA  &&  sps_chroma_format_idc  !=  0  && ( IntraSubPartitionsSplitType  ==  ISP_NO_SPLIT   ||  ( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT  &&  subTuIndex  ==  NumIntraSubPartitions - 1 ) ) 
  
  if( ( treeType  ==  SINGLE_TREE  ||  treeType  ==  DUAL_TREE_CHROMA )  && 
    sps_chroma_format_idc  !=  0  &&   
@@ -2065,7 +2065,7 @@ transform_unit( x0, y0, tbWidth, tbHeight, treeType, subTuIndex, chType ) {
    ( ( subTuIndex  == 0  &&  cu_sbt_pos_flag )  || 
    ( subTuIndex  == 1  &&  !cu_sbt_pos_flag ) ) ) )  || 
    ( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT  && 
-   ( subTuIndex  ==  NumIntraSubPartitions − 1 ) ) ) ) { 
+   ( subTuIndex  ==  NumIntraSubPartitions - 1 ) ) ) ) { 
  
   tu_cb_coded_flag[ xC ][ yC ] ae(v) 
   tu_cr_coded_flag[ xC ][ yC ] ae(v) 
@@ -2081,7 +2081,7 @@ transform_unit( x0, y0, tbWidth, tbHeight, treeType, subTuIndex, chType ) {
     CbWidth[ chType ][ x0 ][ y0 ] > MaxTbSizeY  || 
     CbHeight[ chType ][ x0 ][ y0 ] > MaxTbSizeY ) )  || 
     ( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT && 
-    ( subTuIndex < NumIntraSubPartitions − 1  ||  !InferTuCbfLuma ) ) ) 
+    ( subTuIndex < NumIntraSubPartitions - 1  ||  !InferTuCbfLuma ) ) ) 
  
    tu_y_coded_flag[ x0 ][ y0 ] ae(v) 
   if(IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT )  
@@ -2176,22 +2176,22 @@ residual_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {
  if( log2TbWidth + log2TbHeight > 3 )  
   if( log2TbWidth < 2 ) {  
    log2SbW = log2TbWidth  
-   log2SbH = 4 − log2SbW  
+   log2SbH = 4 - log2SbW  
   } else if( log2TbHeight < 2 ) {  
    log2SbH = log2TbHeight  
-   log2SbW = 4 − log2SbH  
+   log2SbW = 4 - log2SbH  
   }  
  numSbCoeff = 1  <<  ( log2SbW + log2SbH )  
  lastScanPos = numSbCoeff  
- lastSubBlock = ( 1  <<  ( log2TbWidth + log2TbHeight − ( log2SbW + log2SbH ) ) ) − 1  
+ lastSubBlock = ( 1  <<  ( log2TbWidth + log2TbHeight - ( log2SbW + log2SbH ) ) ) - 1  
  do {  
   if( lastScanPos  ==  0 ) {  
    lastScanPos = numSbCoeff  
-   lastSubBlock−−  
+   lastSubBlock--  
   }  
-  lastScanPos−−  
-  xS = DiagScanOrder[ log2TbWidth − log2SbW ][ log2TbHeight − log2SbH ][ lastSubBlock ][ 0 ] 
-  yS = DiagScanOrder[ log2TbWidth − log2SbW ][ log2TbHeight − log2SbH ][ lastSubBlock ][ 1 ] 
+  lastScanPos--  
+  xS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ lastSubBlock ][ 0 ] 
+  yS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ lastSubBlock ][ 1 ] 
   xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ lastScanPos ][ 0 ]  
   yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ lastScanPos ][ 1 ]  
  } while( ( xC  !=  LastSignificantCoeffX )  ||  ( yC  !=  LastSignificantCoeffY ) )  
@@ -2202,10 +2202,10 @@ residual_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {
  if( ( lastSubBlock > 0  ||  lastScanPos > 0 )  &&  cIdx == 0 )  
   MtsDcOnly = 0  
  QState = 0  
- for( i = lastSubBlock; i  >=  0; i−− ) {  
+ for( i = lastSubBlock; i  >=  0; i-- ) {  
   startQStateSb = QState  
-  xS = DiagScanOrder[ log2TbWidth − log2SbW ][ log2TbHeight − log2SbH ][ i ][ 0 ] 
-  yS = DiagScanOrder[ log2TbWidth − log2SbW ][ log2TbHeight − log2SbH ][ i ][ 1 ] 
+  xS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ i ][ 0 ] 
+  yS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ i ][ 1 ] 
   inferSbDcSigCoeffFlag = 0  
   if( i < lastSubBlock  &&  i > 0 ) {  
    sb_coded_flag[ xS ][ yS ] ae(v) 
@@ -2214,30 +2214,30 @@ residual_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {
   if( sb_coded_flag[ xS ][ yS ]  &&  ( xS > 3  ||  yS > 3 )  &&  cIdx  ==  0 )  
    MtsZeroOutSigCoeffFlag = 0  
   firstSigScanPosSb = numSbCoeff  
-  lastSigScanPosSb = −1  
-  firstPosMode0 = ( i  ==  lastSubBlock ? lastScanPos : numSbCoeff − 1 )  
+  lastSigScanPosSb = -1  
+  firstPosMode0 = ( i  ==  lastSubBlock ? lastScanPos : numSbCoeff - 1 )  
   firstPosMode1 = firstPosMode0  
-  for( n = firstPosMode0; n  >=  0  &&  remBinsPass1  >=  4; n−− ) {  
+  for( n = firstPosMode0; n  >=  0  &&  remBinsPass1  >=  4; n-- ) {  
    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]   
    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
    if( sb_coded_flag[ xS ][ yS ]  &&  ( n > 0  ||  !inferSbDcSigCoeffFlag )  && 
      ( xC  !=  LastSignificantCoeffX  ||  yC  !=  LastSignificantCoeffY ) ) { 
  
     sig_coeff_flag[ xC ][ yC ] ae(v) 
-    remBinsPass1−−  
+    remBinsPass1--  
     if( sig_coeff_flag[ xC ][ yC ] )  
      inferSbDcSigCoeffFlag = 0  
    }  
    if( sig_coeff_flag[ xC ][ yC ] ) {  
     abs_level_gtx_flag[ n ][ 0 ] ae(v) 
-    remBinsPass1−−  
+    remBinsPass1--  
     if( abs_level_gtx_flag[ n ][ 0 ] ) {  
      par_level_flag[ n ] ae(v) 
-     remBinsPass1−−  
+     remBinsPass1--  
      abs_level_gtx_flag[ n ][ 1 ] ae(v) 
-     remBinsPass1−−  
+     remBinsPass1--  
     }  
-    if( lastSigScanPosSb  ==  −1 )  
+    if( lastSigScanPosSb  ==  -1 )  
      lastSigScanPosSb = n  
     firstSigScanPosSb = n  
    }  
@@ -2245,31 +2245,31 @@ residual_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {
  
    if( sh_dep_quant_used_flag )  
     QState = QStateTransTable[ QState ][ AbsLevelPass1[ xC ][ yC ] & 1 ]  
-   firstPosMode1 = n − 1  
+   firstPosMode1 = n - 1  
   }  
-  for( n = firstPosMode0; n > firstPosMode1; n−− ) {  
+  for( n = firstPosMode0; n > firstPosMode1; n-- ) {  
    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
    if( abs_level_gtx_flag[ n ][ 1 ] )  
     abs_remainder[ n ] ae(v) 
    AbsLevel[ xC ][ yC ] = AbsLevelPass1[ xC ][ yC ] +2 * abs_remainder[ n ]  
   }  
-  for( n = firstPosMode1; n  >=  0; n−− ) {  
+  for( n = firstPosMode1; n  >=  0; n-- ) {  
    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
    if( sb_coded_flag[ xS ][ yS ] )  
     dec_abs_level[ n ] ae(v) 
    if( AbsLevel[ xC ][ yC ] > 0 ) {  
-       if( lastSigScanPosSb  ==  −1 )  
+       if( lastSigScanPosSb  ==  -1 )  
      lastSigScanPosSb = n  
     firstSigScanPosSb = n  
    }  
    if( sh_dep_quant_used_flag )  
     QState = QStateTransTable[ QState ][ AbsLevel[ xC ][ yC ] & 1 ]  
   }  
-  signHiddenFlag = sh_sign_data_hiding_used_flag  && ( lastSigScanPosSb − firstSigScanPosSb > 3 ? 1 : 0 ) 
+  signHiddenFlag = sh_sign_data_hiding_used_flag  && ( lastSigScanPosSb - firstSigScanPosSb > 3 ? 1 : 0 ) 
  
-  for( n = numSbCoeff − 1; n  >=  0; n−− ) {  
+  for( n = numSbCoeff - 1; n  >=  0; n-- ) {  
    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]   
    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
    if( ( AbsLevel[ xC ][ yC ] > 0 )  && ( !signHiddenFlag  ||  ( n  !=  firstSigScanPosSb ) ) ) 
@@ -2277,25 +2277,25 @@ residual_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {
   }  
   if( sh_dep_quant_used_flag ) {  
    QState = startQStateSb  
-   for( n = numSbCoeff − 1; n  >=  0; n−− ) {  
+   for( n = numSbCoeff - 1; n  >=  0; n-- ) {  
     xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
     yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
     if( AbsLevel[ xC ][ yC ] > 0 )  
-     TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = ( 2 * AbsLevel[ xC ][ yC ] − ( QState > 1 ? 1 : 0 ) ) * ( 1 − 2 * coeff_sign_flag[ n ] ) 
+     TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = ( 2 * AbsLevel[ xC ][ yC ] - ( QState > 1 ? 1 : 0 ) ) * ( 1 - 2 * coeff_sign_flag[ n ] ) 
     QState = QStateTransTable[ QState ][ AbsLevel[ xC ][ yC ] & 1 ]  
    }  
   } else {  
    sumAbsLevel = 0  
-   for( n = numSbCoeff − 1; n  >=  0; n−− ) {  
+   for( n = numSbCoeff - 1; n  >=  0; n-- ) {  
     xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
     yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
     if( AbsLevel[ xC ][ yC ] > 0 ) {  
      TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ]  = 
-       AbsLevel[ xC ][ yC ] * ( 1 − 2 * coeff_sign_flag[ n ] )  
+       AbsLevel[ xC ][ yC ] * ( 1 - 2 * coeff_sign_flag[ n ] )  
      if( signHiddenFlag ) {  
       sumAbsLevel  +=  AbsLevel[ xC ][ yC ]  
       if( n  ==  firstSigScanPosSb  &&  sumAbsLevel % 2  ==  1 )  
-       TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ]  = −TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ]  
+       TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ]  = -TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ]  
      }  
     }  
    }  
@@ -2309,46 +2309,46 @@ residual_ts_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {
  if( log2TbWidth + log2TbHeight > 3 )  
   if( log2TbWidth < 2 ) {  
    log2SbW = log2TbWidth  
-   log2SbH = 4 − log2SbW  
+   log2SbH = 4 - log2SbW  
   } else if( log2TbHeight < 2 ) {  
    log2SbH = log2TbHeight  
-   log2SbW = 4 − log2SbH  
+   log2SbW = 4 - log2SbH  
   }  
  numSbCoeff = 1  <<  ( log2SbW + log2SbH )  
- lastSubBlock = ( 1  <<  ( log2TbWidth + log2TbHeight − ( log2SbW + log2SbH ) ) ) − 1  
+ lastSubBlock = ( 1  <<  ( log2TbWidth + log2TbHeight - ( log2SbW + log2SbH ) ) ) - 1  
  inferSbCbf = 1  
  RemCcbs = ( ( 1  <<  ( log2TbWidth + log2TbHeight ) ) * 7 )  >>  2  
  for( i =0; i  <=  lastSubBlock; i++ ) {  
-  xS = DiagScanOrder[ log2TbWidth − log2SbW ][ log2TbHeight − log2SbH ][ i ][ 0 ]  
-  yS = DiagScanOrder[ log2TbWidth − log2SbW ][ log2TbHeight − log2SbH ][ i ][ 1 ]  
+  xS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ i ][ 0 ]  
+  yS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ i ][ 1 ]  
   if( i  !=  lastSubBlock  ||  !inferSbCbf )  
    sb_coded_flag[ xS ][ yS ] ae(v) 
   if( sb_coded_flag[ xS ][ yS ]  &&  i < lastSubBlock )  
    inferSbCbf = 0  
  /* First scan pass */  
   inferSbSigCoeffFlag = 1  
-  lastScanPosPass1 = −1  
-  for( n = 0; n  <=  numSbCoeff − 1  &&  RemCcbs  >=  4; n++ ) {  
+  lastScanPosPass1 = -1  
+  for( n = 0; n  <=  numSbCoeff - 1  &&  RemCcbs  >=  4; n++ ) {  
    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
    lastScanPosPass1 = n  
-   if( sb_coded_flag[ xS ][ yS ]  && ( n  !=  numSbCoeff − 1  ||  !inferSbSigCoeffFlag ) ) { 
+   if( sb_coded_flag[ xS ][ yS ]  && ( n  !=  numSbCoeff - 1  ||  !inferSbSigCoeffFlag ) ) { 
  
     sig_coeff_flag[ xC ][ yC ] ae(v) 
-    RemCcbs−−  
+    RemCcbs--  
     if( sig_coeff_flag[ xC ][ yC ] )  
      inferSbSigCoeffFlag = 0  
    }  
    CoeffSignLevel[ xC ][ yC ] = 0  
    if( sig_coeff_flag[ xC ][ yC ] ) {  
     coeff_sign_flag[ n ] ae(v) 
-    RemCcbs−−  
-    CoeffSignLevel[ xC ][ yC ] = ( coeff_sign_flag[ n ] > 0 ? −1 : 1 )  
+    RemCcbs--  
+    CoeffSignLevel[ xC ][ yC ] = ( coeff_sign_flag[ n ] > 0 ? -1 : 1 )  
     abs_level_gtx_flag[ n ][ 0 ] ae(v) 
-    RemCcbs−−  
+    RemCcbs--  
     if( abs_level_gtx_flag[ n ][ 0 ] ) {  
      par_level_flag[ n ] ae(v) 
-     RemCcbs−−  
+     RemCcbs--  
     }  
    }  
    AbsLevelPass1[ xC ][ yC ] = 
@@ -2356,22 +2356,22 @@ residual_ts_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {
  
   }  
    /* Greater than X scan pass (numGtXFlags=5) */  
-  lastScanPosPass2 = −1  
-  for( n = 0; n  <=  numSbCoeff − 1  &&  RemCcbs  >=  4; n++ ) {  
+  lastScanPosPass2 = -1  
+  for( n = 0; n  <=  numSbCoeff - 1  &&  RemCcbs  >=  4; n++ ) {  
    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
    AbsLevelPass2[ xC ][ yC ] = AbsLevelPass1[ xC ][ yC ]  
    for( j = 1; j < 5; j++ ) {  
-    if( abs_level_gtx_flag[ n ][ j − 1 ] ) {  
+    if( abs_level_gtx_flag[ n ][ j - 1 ] ) {  
      abs_level_gtx_flag[ n ][ j ] ae(v) 
-     RemCcbs−−  
+     RemCcbs--  
     }  
     AbsLevelPass2[ xC ][ yC ]  +=  2 * abs_level_gtx_flag[ n ][ j ]  
    }  
    lastScanPosPass2 = n  
   }  
  /* remainder scan pass */  
-  for( n = 0; n  <=  numSbCoeff − 1; n++ ) {  
+  for( n = 0; n  <=  numSbCoeff - 1; n++ ) {  
    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
    if( ( n  <=  lastScanPosPass2  &&  AbsLevelPass2[ xC ][ yC ]  >=  10 )  || 
@@ -2390,15 +2390,15 @@ residual_ts_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {
      coeff_sign_flag[ n ] ae(v) 
    }  
    if( BdpcmFlag[ x0 ][ y0 ][ cIdx ]  ==  0  &&  n  <=  lastScanPosPass1 ) {  
-    absLeftCoeff = xC > 0 ? AbsLevel[ xC − 1 ][ yC ] : 0  
-    absAboveCoeff  = yC > 0 ? AbsLevel[ xC ][ yC − 1 ] : 0  
+    absLeftCoeff = xC > 0 ? AbsLevel[ xC - 1 ][ yC ] : 0  
+    absAboveCoeff  = yC > 0 ? AbsLevel[ xC ][ yC - 1 ] : 0  
     predCoeff = Max( absLeftCoeff, absAboveCoeff )  
     if( AbsLevel[ xC ][ yC ]  ==  1  &&  predCoeff > 0 )  
      AbsLevel[ xC ][ yC ] = predCoeff  
     else if( AbsLevel[ xC ][ yC ] > 0  && AbsLevel[ xC ][ yC ]  <=  predCoeff )  
-     AbsLevel[ xC ][ yC ]−−  
+     AbsLevel[ xC ][ yC ]--  
    }  
-   TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = ( 1 − 2 * coeff_sign_flag[ n ] ) * AbsLevel[ xC ][ yC ] 
+   TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = ( 1 - 2 * coeff_sign_flag[ n ] ) * AbsLevel[ xC ][ yC ] 
  
   }  
  }  

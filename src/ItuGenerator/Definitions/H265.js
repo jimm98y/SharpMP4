@@ -481,8 +481,8 @@ scaling_list_data() {
     nextCoef = 8  
     coefNum = Min( 64, ( 1  <<  ( 4 + ( sizeId  <<  1 ) ) ) )  
     if( sizeId > 1 ) {  
-     scaling_list_dc_coef_minus8[ sizeId − 2 ][ matrixId ] se(v) 
-     nextCoef = scaling_list_dc_coef_minus8[ sizeId − 2 ][ matrixId ] + 8  
+     scaling_list_dc_coef_minus8[ sizeId - 2 ][ matrixId ] se(v) 
+     nextCoef = scaling_list_dc_coef_minus8[ sizeId - 2 ][ matrixId ] + 8  
     }  
     for( i = 0; i < coefNum; i++ ) {  
      scaling_list_delta_coef se(v) 
@@ -731,7 +731,7 @@ slice_segment_data() {
   end_of_slice_segment_flag ae(v) 
   CtbAddrInTs++  
   CtbAddrInRs = CtbAddrTsToRs[ CtbAddrInTs ]  
-  if (!end_of_slice_segment_flag && ((tiles_enabled_flag && TileId[CtbAddrInTs] != TileId[CtbAddrInTs − 1 ] )  || (entropy_coding_sync_enabled_flag && (CtbAddrInRs % PicWidthInCtbsY == 0 || TileId[CtbAddrInTs] != TileId[CtbAddrRsToTs[CtbAddrInRs − 1 ] ] ) ) ) ) { 
+  if (!end_of_slice_segment_flag && ((tiles_enabled_flag && TileId[CtbAddrInTs] != TileId[CtbAddrInTs - 1 ] )  || (entropy_coding_sync_enabled_flag && (CtbAddrInRs % PicWidthInCtbsY == 0 || TileId[CtbAddrInTs] != TileId[CtbAddrRsToTs[CtbAddrInRs - 1 ] ] ) ) ) ) { 
    end_of_subset_one_bit  /* equal to 1 */ ae(v) 
    byte_alignment()  
   }  
@@ -749,14 +749,14 @@ coding_tree_unit() {
 sao( rx, ry ) {  
  if( rx > 0 ) {  
   leftCtbInSliceSeg = CtbAddrInRs > SliceAddrRs  
-  leftCtbInTile = TileId[ CtbAddrInTs ]  ==  TileId[ CtbAddrRsToTs[ CtbAddrInRs − 1 ] ]  
+  leftCtbInTile = TileId[ CtbAddrInTs ]  ==  TileId[ CtbAddrRsToTs[ CtbAddrInRs - 1 ] ]  
   if( leftCtbInSliceSeg  &&  leftCtbInTile )  
    sao_merge_left_flag ae(v) 
  }  
  if( ry > 0  &&  !sao_merge_left_flag ) {  
-  upCtbInSliceSeg = ( CtbAddrInRs − PicWidthInCtbsY )  >=  SliceAddrRs  
+  upCtbInSliceSeg = ( CtbAddrInRs - PicWidthInCtbsY )  >=  SliceAddrRs  
   upCtbInTile = TileId[ CtbAddrInTs ]  ==   
-        TileId[ CtbAddrRsToTs[ CtbAddrInRs − PicWidthInCtbsY ] ] 
+        TileId[ CtbAddrRsToTs[ CtbAddrInRs - PicWidthInCtbsY ] ] 
  
   if( upCtbInSliceSeg  &&  upCtbInTile )  
    sao_merge_up_flag ae(v) 
@@ -803,15 +803,15 @@ coding_quadtree( x0, y0, log2CbSize, cqtDepth ) {
  
   IsCuChromaQpOffsetCoded = 0  
  if( split_cu_flag[ x0 ][ y0 ] ) {  
-  x1 = x0 + ( 1  <<  ( log2CbSize − 1 ) )  
-  y1 = y0 + ( 1  <<  ( log2CbSize − 1 ) )  
-  coding_quadtree( x0, y0, log2CbSize − 1, cqtDepth + 1 )  
+  x1 = x0 + ( 1  <<  ( log2CbSize - 1 ) )  
+  y1 = y0 + ( 1  <<  ( log2CbSize - 1 ) )  
+  coding_quadtree( x0, y0, log2CbSize - 1, cqtDepth + 1 )  
   if( x1 < pic_width_in_luma_samples )  
-   coding_quadtree( x1, y0, log2CbSize − 1, cqtDepth + 1 )  
+   coding_quadtree( x1, y0, log2CbSize - 1, cqtDepth + 1 )  
   if( y1 < pic_height_in_luma_samples )  
-   coding_quadtree( x0, y1, log2CbSize − 1, cqtDepth + 1 )  
+   coding_quadtree( x0, y1, log2CbSize - 1, cqtDepth + 1 )  
   if( x1 < pic_width_in_luma_samples  &&  y1 < pic_height_in_luma_samples )  
-   coding_quadtree( x1, y1, log2CbSize − 1, cqtDepth + 1 )  
+   coding_quadtree( x1, y1, log2CbSize - 1, cqtDepth + 1 )  
  } else  
   coding_unit( x0, y0, log2CbSize )  
 } 
@@ -953,34 +953,34 @@ transform_tree( x0, y0, xBase, yBase, log2TrafoSize, trafoDepth, blkIdx ) {
  
   split_transform_flag[ x0 ][ y0 ][ trafoDepth ] ae(v) 
  if( ( log2TrafoSize > 2  &&  ChromaArrayType  !=  0 )  ||  ChromaArrayType  ==  3 ) {  
-  if( trafoDepth  ==  0  ||  cbf_cb[ xBase ][ yBase ][ trafoDepth − 1 ] ) {  
+  if( trafoDepth  ==  0  ||  cbf_cb[ xBase ][ yBase ][ trafoDepth - 1 ] ) {  
    cbf_cb[ x0 ][ y0 ][ trafoDepth ] ae(v) 
    if( ChromaArrayType  ==  2  && 
     ( !split_transform_flag[ x0 ][ y0 ][ trafoDepth ]  ||  log2TrafoSize  ==  3 ) ) 
  
-    cbf_cb[ x0 ][ y0 + ( 1  <<  ( log2TrafoSize − 1 ) ) ][ trafoDepth ] ae(v) 
+    cbf_cb[ x0 ][ y0 + ( 1  <<  ( log2TrafoSize - 1 ) ) ][ trafoDepth ] ae(v) 
   }  
-  if( trafoDepth  ==  0  ||  cbf_cr[ xBase ][ yBase ][ trafoDepth − 1 ] ) {  
+  if( trafoDepth  ==  0  ||  cbf_cr[ xBase ][ yBase ][ trafoDepth - 1 ] ) {  
    cbf_cr[ x0 ][ y0 ][ trafoDepth ] ae(v) 
    if( ChromaArrayType  ==  2  && 
     ( !split_transform_flag[ x0 ][ y0 ][ trafoDepth ]  ||  log2TrafoSize  ==  3 ) ) 
  
-    cbf_cr[ x0 ][ y0 + ( 1  <<  ( log2TrafoSize − 1 ) ) ][ trafoDepth ] ae(v) 
+    cbf_cr[ x0 ][ y0 + ( 1  <<  ( log2TrafoSize - 1 ) ) ][ trafoDepth ] ae(v) 
   }  
  }  
  if( split_transform_flag[ x0 ][ y0 ][ trafoDepth ] ) {  
-  x1 = x0 + ( 1  <<  ( log2TrafoSize − 1 ) )  
-  y1 = y0 + ( 1  <<  ( log2TrafoSize − 1 ) )  
-  transform_tree( x0, y0, x0, y0, log2TrafoSize − 1, trafoDepth + 1, 0 )  
-  transform_tree( x1, y0, x0, y0, log2TrafoSize − 1, trafoDepth + 1, 1 )  
-  transform_tree( x0, y1, x0, y0, log2TrafoSize − 1, trafoDepth + 1, 2 )  
-  transform_tree( x1, y1, x0, y0, log2TrafoSize − 1, trafoDepth + 1, 3 )  
+  x1 = x0 + ( 1  <<  ( log2TrafoSize - 1 ) )  
+  y1 = y0 + ( 1  <<  ( log2TrafoSize - 1 ) )  
+  transform_tree( x0, y0, x0, y0, log2TrafoSize - 1, trafoDepth + 1, 0 )  
+  transform_tree( x1, y0, x0, y0, log2TrafoSize - 1, trafoDepth + 1, 1 )  
+  transform_tree( x0, y1, x0, y0, log2TrafoSize - 1, trafoDepth + 1, 2 )  
+  transform_tree( x1, y1, x0, y0, log2TrafoSize - 1, trafoDepth + 1, 3 )  
  } else {  
   if( CuPredMode[ x0 ][ y0 ]  ==  MODE_INTRA  ||  trafoDepth  !=  0  || 
    cbf_cb[ x0 ][ y0 ][ trafoDepth ]  ||  cbf_cr[ x0 ][ y0 ][ trafoDepth ]  || 
    ( ChromaArrayType  ==  2  && 
-    ( cbf_cb[ x0 ][ y0 + ( 1  <<  ( log2TrafoSize − 1 ) ) ][ trafoDepth ]  || 
-     cbf_cr[ x0 ][ y0 + ( 1  <<  ( log2TrafoSize − 1 ) ) ][ trafoDepth ] ) ) ) 
+    ( cbf_cb[ x0 ][ y0 + ( 1  <<  ( log2TrafoSize - 1 ) ) ][ trafoDepth ]  || 
+     cbf_cr[ x0 ][ y0 + ( 1  <<  ( log2TrafoSize - 1 ) ) ][ trafoDepth ] ) ) ) 
  
    cbf_luma[ x0 ][ y0 ][ trafoDepth ] ae(v) 
   transform_unit( x0, y0, xBase, yBase, log2TrafoSize, trafoDepth, blkIdx )  
@@ -1007,8 +1007,8 @@ mvd_coding( x0, y0, refList ) {
 }  
 
 transform_unit( x0, y0, xBase, yBase, log2TrafoSize, trafoDepth, blkIdx ) {  
- log2TrafoSizeC = Max( 2, log2TrafoSize − ( ChromaArrayType  ==  3 ? 0 : 1 ) )  
- cbfDepthC = trafoDepth − ( ChromaArrayType  !=  3  &&  log2TrafoSize  ==  2 ? 1 : 0 )  
+ log2TrafoSizeC = Max( 2, log2TrafoSize - ( ChromaArrayType  ==  3 ? 0 : 1 ) )  
+ cbfDepthC = trafoDepth - ( ChromaArrayType  !=  3  &&  log2TrafoSize  ==  2 ? 1 : 0 )  
  xC = ( ChromaArrayType  !=  3  &&  log2TrafoSize  ==  2 ) ? xBase : x0  
  yC = ( ChromaArrayType  !=  3  &&  log2TrafoSize  ==  2 ) ? yBase : y0  
  cbfLuma = cbf_luma[ x0 ][ y0 ][ trafoDepth ]  
@@ -1051,10 +1051,10 @@ transform_unit( x0, y0, xBase, yBase, log2TrafoSize, trafoDepth, blkIdx ) {
      residual_coding( x0, y0 + ( tIdx  <<  log2TrafoSizeC ), log2TrafoSizeC, 2 )  
   } else if( blkIdx  ==  3 ) {  
    for( tIdx = 0; tIdx < ( ChromaArrayType  ==  2 ? 2 : 1 ); tIdx++ )  
-    if( cbf_cb[ xBase ][ yBase + ( tIdx  <<  log2TrafoSizeC ) ][ trafoDepth − 1 ] )  
+    if( cbf_cb[ xBase ][ yBase + ( tIdx  <<  log2TrafoSizeC ) ][ trafoDepth - 1 ] )  
      residual_coding( xBase, yBase + ( tIdx  <<  log2TrafoSizeC ), log2TrafoSize, 1 )  
    for( tIdx = 0; tIdx < ( ChromaArrayType  ==  2 ? 2 : 1 ); tIdx++ )  
-    if( cbf_cr[ xBase ][ yBase + ( tIdx  <<  log2TrafoSizeC ) ][ trafoDepth − 1 ] )  
+    if( cbf_cr[ xBase ][ yBase + ( tIdx  <<  log2TrafoSizeC ) ][ trafoDepth - 1 ] )  
      residual_coding( xBase, yBase + ( tIdx  <<  log2TrafoSizeC ), log2TrafoSize, 2 )  
   }  
  }  
@@ -1078,29 +1078,29 @@ residual_coding(x0, y0, log2TrafoSize, cIdx) {
  if( last_sig_coeff_y_prefix > 3 )  
   last_sig_coeff_y_suffix ae(v) 
  lastScanPos = 16  
- lastSubBlock = ( 1  <<  ( log2TrafoSize − 2 ) ) * ( 1  <<  ( log2TrafoSize − 2 ) ) − 1  
+ lastSubBlock = ( 1  <<  ( log2TrafoSize - 2 ) ) * ( 1  <<  ( log2TrafoSize - 2 ) ) - 1  
  do {  
   if( lastScanPos  ==  0 ) { 
      lastScanPos = 16  
-     lastSubBlock−−  
+     lastSubBlock--  
   }  
-  lastScanPos−−  
-  xS = ScanOrder[ log2TrafoSize − 2 ][ scanIdx ][ lastSubBlock ][ 0 ]  
-  yS = ScanOrder[ log2TrafoSize − 2 ][ scanIdx ][ lastSubBlock ][ 1 ]  
+  lastScanPos--  
+  xS = ScanOrder[ log2TrafoSize - 2 ][ scanIdx ][ lastSubBlock ][ 0 ]  
+  yS = ScanOrder[ log2TrafoSize - 2 ][ scanIdx ][ lastSubBlock ][ 1 ]  
   xC = ( xS  <<  2 ) + ScanOrder[ 2 ][ scanIdx ][ lastScanPos ][ 0 ]   
   yC = ( yS  <<  2 ) + ScanOrder[ 2 ][ scanIdx ][ lastScanPos ][ 1 ]  
     } while ((xC != LastSignificantCoeffX) || (yC != LastSignificantCoeffY))  
 
  for( i = lastSubBlock; i  >=  0; i-- ) {  
-  xS = ScanOrder[ log2TrafoSize − 2 ][ scanIdx ][ i ][ 0 ]  
-  yS = ScanOrder[ log2TrafoSize − 2 ][ scanIdx ][ i ][ 1 ]  
+  xS = ScanOrder[ log2TrafoSize - 2 ][ scanIdx ][ i ][ 0 ]  
+  yS = ScanOrder[ log2TrafoSize - 2 ][ scanIdx ][ i ][ 1 ]  
   escapeDataPresent = 0  
   inferSbDcSigCoeffFlag = 0  
   if( ( i < lastSubBlock )  &&  ( i > 0 ) ) {  
    coded_sub_block_flag[ xS ][ yS ] ae(v) 
    inferSbDcSigCoeffFlag = 1  
   }  
-  for( n = ( i  ==  lastSubBlock ) ? lastScanPos − 1 : 15; n  >=  0; n-- ) {  
+  for( n = ( i  ==  lastSubBlock ) ? lastScanPos - 1 : 15; n  >=  0; n-- ) {  
    xC = ( xS  <<  2 ) + ScanOrder[ 2 ][ scanIdx ][ n ][ 0 ]   
    yC = ( yS  <<  2 ) + ScanOrder[ 2 ][ scanIdx ][ n ][ 1 ]  
    if( coded_sub_block_flag[ xS ][ yS ]  &&  ( n > 0  ||  !inferSbDcSigCoeffFlag ) ) {  
@@ -1110,9 +1110,9 @@ residual_coding(x0, y0, log2TrafoSize, cIdx) {
    }  
   }  
   firstSigScanPos = 16  
-  lastSigScanPos = −1  
+  lastSigScanPos = -1  
   numGreater1Flag = 0  
-  lastGreater1ScanPos = −1  
+  lastGreater1ScanPos = -1  
   for( n = 15; n  >=  0; n-- ) {  
    xC = ( xS  <<  2 ) + ScanOrder[ 2 ][ scanIdx ][ n ][ 0 ]   
    yC = ( yS  <<  2 ) + ScanOrder[ 2 ][ scanIdx ][ n ][ 1 ]  
@@ -1120,13 +1120,13 @@ residual_coding(x0, y0, log2TrafoSize, cIdx) {
     if( numGreater1Flag < 8 ) {  
      coeff_abs_level_greater1_flag[ n ] ae(v) 
      numGreater1Flag++  
-     if( coeff_abs_level_greater1_flag[ n ]  &&  lastGreater1ScanPos  ==  −1 )  
+     if( coeff_abs_level_greater1_flag[ n ]  &&  lastGreater1ScanPos  ==  -1 )  
       lastGreater1ScanPos = n  
      else if( coeff_abs_level_greater1_flag[ n ] )  
       escapeDataPresent = 1  
     } else  
      escapeDataPresent = 1  
-    if( lastSigScanPos  ==  −1 )  
+    if( lastSigScanPos  ==  -1 )  
      lastSigScanPos = n  
     firstSigScanPos = n  
    }  
@@ -1135,8 +1135,8 @@ residual_coding(x0, y0, log2TrafoSize, cIdx) {
      transform_skip_flag[x0][y0][cIdx] && (predModeIntra == 10 || predModeIntra == 26)) || explicit_rdpcm_flag[x0][y0][cIdx]) 
    signHidden = 0  
   else  
-   signHidden = lastSigScanPos − firstSigScanPos > 3  
-  if( lastGreater1ScanPos  !=  −1 ) {  
+   signHidden = lastSigScanPos - firstSigScanPos > 3  
+  if( lastGreater1ScanPos  !=  -1 ) {  
    coeff_abs_level_greater2_flag[ lastGreater1ScanPos ] ae(v) 
    if( coeff_abs_level_greater2_flag[ lastGreater1ScanPos ] )  
     escapeDataPresent = 1  
@@ -1157,12 +1157,12 @@ residual_coding(x0, y0, log2TrafoSize, cIdx) {
  
     if( baseLevel  ==  ( ( numSigCoeff < 8 ) ? ( (n  ==  lastGreater1ScanPos) ? 3 : 2 ) : 1 ) ) 
      coeff_abs_level_remaining[ n ] ae(v) 
-    TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = ( coeff_abs_level_remaining[ n ] + baseLevel ) * ( 1 − 2 * coeff_sign_flag[ n ] ) 
+    TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = ( coeff_abs_level_remaining[ n ] + baseLevel ) * ( 1 - 2 * coeff_sign_flag[ n ] ) 
  
     if( sign_data_hiding_enabled_flag  &&  signHidden ) {  
      sumAbsLevel  +=  ( coeff_abs_level_remaining[ n ] + baseLevel )  
      if( ( n  ==  firstSigScanPos )  &&  ( ( sumAbsLevel % 2 )  ==  1 ) )  
-      TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = −TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] 
+      TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = -TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] 
     }  
     numSigCoeff++  
    }  
@@ -1186,7 +1186,7 @@ palette_coding( x0, y0, nCbS ) {
   palette_predictor_run ae(v) 
   if( palette_predictor_run  !=  1 ) {  
    if( palette_predictor_run > 1 )   
-    predictorEntryIdx  +=  palette_predictor_run − 1  
+    predictorEntryIdx  +=  palette_predictor_run - 1  
    PalettePredictorEntryReuseFlags[ predictorEntryIdx ] = 1  
    NumPredictedPaletteEntries++  
   } else  
@@ -1204,7 +1204,7 @@ palette_coding( x0, y0, nCbS ) {
   num_palette_indices_minus1 ae(v) 
   adjust = 0  
   for( i = 0; i  <=  num_palette_indices_minus1; i++ ) {  
-   if( MaxPaletteIndex − adjust > 0 ) {  
+   if( MaxPaletteIndex - adjust > 0 ) {  
     palette_idx_idc ae(v) 
     PaletteIndexIdc[ i ] = palette_idx_idc  
    }  
@@ -1225,24 +1225,24 @@ palette_coding( x0, y0, nCbS ) {
   xC = x0 + ScanOrder[ log2BlockSize ][ 3 ][ PaletteScanPos ][ 0 ]  
   yC = y0 + ScanOrder[ log2BlockSize ][ 3 ][ PaletteScanPos ][ 1 ]  
   if( PaletteScanPos > 0) {  
-   xcPrev = x0 + ScanOrder[ log2BlockSize ][ 3 ][ PaletteScanPos − 1 ][ 0 ]  
-   ycPrev = y0 + ScanOrder[ log2BlockSize ][ 3 ][ PaletteScanPos − 1 ][ 1 ]  
+   xcPrev = x0 + ScanOrder[ log2BlockSize ][ 3 ][ PaletteScanPos - 1 ][ 0 ]  
+   ycPrev = y0 + ScanOrder[ log2BlockSize ][ 3 ][ PaletteScanPos - 1 ][ 1 ]  
   }  
-  PaletteRunMinus1 = nCbS * nCbS − PaletteScanPos − 1  
+  PaletteRunMinus1 = nCbS * nCbS - PaletteScanPos - 1  
   RunToEnd = 1  
   CopyAboveIndicesFlag[ xC ][ yC ] = 0  
   if( MaxPaletteIndex > 0 )  
    if( PaletteScanPos  >=  nCbS  &&  CopyAboveIndicesFlag[ xcPrev ][ ycPrev ]  ==  0 )  
-    if( remainingNumIndices > 0  &&  PaletteScanPos < nCbS * nCbS − 1 ) {  
+    if( remainingNumIndices > 0  &&  PaletteScanPos < nCbS * nCbS - 1 ) {  
      copy_above_palette_indices_flag ae(v) 
      CopyAboveIndicesFlag[ xC ][ yC ] = copy_above_palette_indices_flag  
     } else  
-     if( PaletteScanPos  ==  nCbS * nCbS − 1  &&  remainingNumIndices > 0 )  
+     if( PaletteScanPos  ==  nCbS * nCbS - 1  &&  remainingNumIndices > 0 )  
       CopyAboveIndicesFlag[ xC ][ yC ] = 0  
      else  
       CopyAboveIndicesFlag[ xC ][ yC ] = 1  
   if ( CopyAboveIndicesFlag[ xC ][ yC ]  ==  0 ) {  
-   currNumIndices = num_palette_indices_minus1 + 1 − remainingNumIndices  
+   currNumIndices = num_palette_indices_minus1 + 1 - remainingNumIndices  
    CurrPaletteIndex = PaletteIndexIdc[ currNumIndices ]  
   }  
   if( MaxPaletteIndex > 0 ) {  
@@ -1251,13 +1251,13 @@ palette_coding( x0, y0, nCbS ) {
    if( remainingNumIndices > 0  ||  CopyAboveIndicesFlag[ xC ][ yC ]  != 
      copy_above_indices_for_final_run_flag ) { 
  
-    PaletteMaxRunMinus1 = nCbS * nCbS − PaletteScanPos − 1 − remainingNumIndices − copy_above_indices_for_final_run_flag 
+    PaletteMaxRunMinus1 = nCbS * nCbS - PaletteScanPos - 1 - remainingNumIndices - copy_above_indices_for_final_run_flag 
  
     RunToEnd = 0  
     if( PaletteMaxRunMinus1 > 0 ) {  
      palette_run_prefix ae(v) 
      if( ( palette_run_prefix > 1 )  &&  ( PaletteMaxRunMinus1  != 
-      ( 1  <<  ( palette_run_prefix − 1 ) ) ) ) 
+      ( 1  <<  ( palette_run_prefix - 1 ) ) ) ) 
       palette_run_suffix ae(v) 
     }  
    }  
@@ -1271,7 +1271,7 @@ palette_coding( x0, y0, nCbS ) {
     PaletteIndexMap[ xR ][ yR ] = CurrPaletteIndex  
    } else {  
     CopyAboveIndicesFlag[ xR ][ yR ] = 1  
-    PaletteIndexMap[ xR ][ yR ] = PaletteIndexMap[ xR ][ yR − 1 ]  
+    PaletteIndexMap[ xR ][ yR ] = PaletteIndexMap[ xR ][ yR - 1 ]  
    }  
    runPos++  
    PaletteScanPos++  
@@ -2362,7 +2362,7 @@ vps_extension() {
   scalability_mask_flag[ i ] u(1) 
   NumScalabilityTypes  +=  scalability_mask_flag[ i ]  
  }  
- for( j = 0; j < ( NumScalabilityTypes − splitting_flag ); j++ )  
+ for( j = 0; j < ( NumScalabilityTypes - splitting_flag ); j++ )  
   dimension_id_len_minus1[ j ] u(3) 
  vps_nuh_layer_id_present_flag u(1) 
  for( i = 1; i  <=  MaxLayersMinus1; i++ ) {  
@@ -2789,7 +2789,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
  
  else  
   for( i = 0; i < PartNumY; i++ ) {  
-   idxShiftY = idxY + ( i << ( cm_octant_depth − inpDepth ) )  
+   idxShiftY = idxY + ( i << ( cm_octant_depth - inpDepth ) )  
    for( j = 0; j < 4; j++ ) {  
     coded_res_flag[ idxShiftY ][ idxCb ][ idxCr ][ j ] u(1) 
     if( coded_res_flag[ idxShiftY ][ idxCb ][ idxCr ][ j ] )  
@@ -2973,7 +2973,7 @@ inter_layer_constrained_tile_sets( payloadSize ) {
   il_num_sets_in_message_minus1 ue(v) 
   if( il_num_sets_in_message_minus1 )  
    skipped_tile_set_present_flag u(1) 
-  numSignificantSets = il_num_sets_in_message_minus1 − skipped_tile_set_present_flag + 1 
+  numSignificantSets = il_num_sets_in_message_minus1 - skipped_tile_set_present_flag + 1 
   for( i = 0; i < numSignificantSets; i++ ) {  
    ilcts_id[ i ] ue(v) 
    il_num_tile_rects_in_set_minus1[ i ] ue(v) 
@@ -3516,15 +3516,15 @@ coding_quadtree( x0, y0, log2CbSize, cqtDepth ) {
   log2CbSize  >=  Log2MinCuChromaQpOffsetSize )  
   IsCuChromaQpOffsetCoded = 0  
  if( split_cu_flag[ x0 ][ y0 ] ) {  
-  x1 = x0 + ( 1  <<  ( log2CbSize − 1 ) )  
-  y1 = y0 + ( 1  <<  ( log2CbSize − 1 ) )  
-  coding_quadtree( x0, y0, log2CbSize − 1, cqtDepth + 1 )  
+  x1 = x0 + ( 1  <<  ( log2CbSize - 1 ) )  
+  y1 = y0 + ( 1  <<  ( log2CbSize - 1 ) )  
+  coding_quadtree( x0, y0, log2CbSize - 1, cqtDepth + 1 )  
   if( x1 < pic_width_in_luma_samples )  
-   coding_quadtree( x1, y0, log2CbSize − 1, cqtDepth + 1 )  
+   coding_quadtree( x1, y0, log2CbSize - 1, cqtDepth + 1 )  
   if( y1 < pic_height_in_luma_samples )  
-   coding_quadtree( x0, y1, log2CbSize − 1, cqtDepth + 1 )  
+   coding_quadtree( x0, y1, log2CbSize - 1, cqtDepth + 1 )  
   if( x1 < pic_width_in_luma_samples  &&  y1 < pic_height_in_luma_samples )  
-   coding_quadtree( x1, y1, log2CbSize − 1, cqtDepth + 1 )  
+   coding_quadtree( x1, y1, log2CbSize - 1, cqtDepth + 1 )  
  } else  
   coding_unit( x0, y0, log2CbSize )  
 } 
@@ -3557,7 +3557,7 @@ coding_unit( x0, y0, log2CbSize ) {
     pcm_sample( x0, y0, log2CbSize )  
    } else {  
     pbOffset = ( PartMode  ==  PART_NxN ) ? ( nCbS / 2 ) : nCbS  
-    log2PbSize = log2CbSize − ( ( PartMode  ==  PART_NxN ) ? 1 : 0 )  
+    log2PbSize = log2CbSize - ( ( PartMode  ==  PART_NxN ) ? 1 : 0 )  
     for( j = 0; j < nCbS; j = j + pbOffset )  
      for( i = 0; i < nCbS; i = i + pbOffset ) {  
       if( IntraDcOnlyWedgeEnabledFlag  ||  IntraContourEnabledFlag )  
@@ -3675,7 +3675,7 @@ depth_dcs( x0, y0, log2CbSize ) {
     if( depth_dc_present_flag[ x0 + k ][ y0 + j ] )  
      for( i = 0; i < dcNumSeg; i++ ) {  
       depth_dc_abs[ x0 + k ][ y0 + j ][ i ] ae(v) 
-      if( ( depth_dc_abs[ x0 + k ][ y0 + j ][ i ] − dcNumSeg + 2 ) > 0 )  
+      if( ( depth_dc_abs[ x0 + k ][ y0 + j ][ i ] - dcNumSeg + 2 ) > 0 )  
        depth_dc_sign_flag[ x0 + k ][ y0 + j ][ i ] ae(v) 
      }  
    }  

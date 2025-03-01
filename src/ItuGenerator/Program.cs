@@ -16,7 +16,10 @@ partial class Program
         foreach (var file in jsonFiles)
         {
             string definitions = File.ReadAllText(file);
-            definitions = definitions.Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
+            definitions = definitions
+                .Replace("3dv_acquisition_idc", "three_dv_acquisition_idc")
+                .Replace("3dv_acquisition_element", "three_dv_acquisition_element")
+                .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
 
             var parsed = Parser.ItuClasses.ParseOrThrow(definitions);
             Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parsed, Newtonsoft.Json.Formatting.Indented));

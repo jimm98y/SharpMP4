@@ -70,7 +70,7 @@ seq_parameter_set_data() {
      if( i < 6 )    
       scaling_list( ScalingList4x4[ i ], 16, UseDefaultScalingMatrix4x4Flag[ i ] ) 0  
      else   
-      scaling_list( ScalingList8x8[ i − 6 ], 64, UseDefaultScalingMatrix8x8Flag[ i − 6 ] ) 0  
+      scaling_list( ScalingList8x8[ i - 6 ], 64, UseDefaultScalingMatrix8x8Flag[ i - 6 ] ) 0  
    }   
  }   
  
@@ -215,7 +215,7 @@ pic_parameter_set_rbsp() {
      if( i < 6 )    
      scaling_list( ScalingList4x4[ i ], 16, UseDefaultScalingMatrix4x4Flag[ i ] ) 1  
      else   
-      scaling_list( ScalingList8x8[ i − 6 ], 64, UseDefaultScalingMatrix8x8Flag[ i − 6 ] ) 1  
+      scaling_list( ScalingList8x8[ i - 6 ], 64, UseDefaultScalingMatrix8x8Flag[ i - 6 ] ) 1  
    }   
   second_chroma_qp_index_offset 1 se(v) 
  }   
@@ -635,7 +635,7 @@ residual( startIdx, endIdx ) {
   NumC8x8 = 4 / ( SubWidthC * SubHeightC )   
   for( iCbCr = 0; iCbCr < 2; iCbCr++ )   
    if( ( CodedBlockPatternChroma & 3 )  &&  startIdx  ==  0 )   
-    residual_block(ChromaDCLevel[iCbCr], 0, 4 * NumC8x8 − 1, 4 * NumC8x8) /* chroma DC residual present */  3 | 4  
+    residual_block(ChromaDCLevel[iCbCr], 0, 4 * NumC8x8 - 1, 4 * NumC8x8) /* chroma DC residual present */  3 | 4  
    else   
     for( i = 0; i < 4 * NumC8x8; i++ )   
      ChromaDCLevel[ iCbCr ][ i ] = 0   
@@ -643,7 +643,7 @@ residual( startIdx, endIdx ) {
    for( i8x8 = 0; i8x8 < NumC8x8; i8x8++ )   
     for( i4x4 = 0; i4x4 < 4; i4x4++ )   
      if( CodedBlockPatternChroma & 2 )   
-       residual_block(ChromaACLevel[iCbCr][i8x8 * 4 + i4x4], Max(0, startIdx − 1), endIdx − 1, 15) /* chroma AC residual present */  3 | 4  
+       residual_block(ChromaACLevel[iCbCr][i8x8 * 4 + i4x4], Max(0, startIdx - 1), endIdx - 1, 15) /* chroma AC residual present */  3 | 4  
      else   
       for( i = 0; i < 15; i++ )   
        ChromaACLevel[ iCbCr ][ i8x8 * 4 + i4x4 ][ i ] = 0   
@@ -669,7 +669,7 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
  if( coded_block_flag ) {   
   numCoeff = endIdx + 1   
   i = startIdx   
-  while( i < numCoeff − 1 )  {   
+  while( i < numCoeff - 1 )  {   
    significant_coeff_flag[ i ] 3 | 4 ae(v) 
    if( significant_coeff_flag[ i ] ) {   
     last_significant_coeff_flag[ i ] 3 | 4 ae(v) 
@@ -678,14 +678,14 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
    }    
    i++   
   }   
-  coeff_abs_level_minus1[ numCoeff − 1 ] 3 | 4 ae(v) 
-  coeff_sign_flag[ numCoeff − 1 ] 3 | 4 ae(v) 
-  coeffLevel[ numCoeff − 1 ] = ( coeff_abs_level_minus1[ numCoeff − 1 ] + 1 ) * ( 1 − 2 * coeff_sign_flag[ numCoeff − 1 ] ) 
-  for( i = numCoeff − 2; i >= startIdx; i−− )   
+  coeff_abs_level_minus1[ numCoeff - 1 ] 3 | 4 ae(v) 
+  coeff_sign_flag[ numCoeff - 1 ] 3 | 4 ae(v) 
+  coeffLevel[ numCoeff - 1 ] = ( coeff_abs_level_minus1[ numCoeff - 1 ] + 1 ) * ( 1 - 2 * coeff_sign_flag[ numCoeff - 1 ] ) 
+  for( i = numCoeff - 2; i >= startIdx; i-- )   
    if( significant_coeff_flag[ i ] ) {   
     coeff_abs_level_minus1[ i ] 3 | 4 ae(v) 
     coeff_sign_flag[ i ] 3 | 4 ae(v) 
-    coeffLevel[ i ] = ( coeff_abs_level_minus1[ i ] + 1 ) * ( 1 − 2 * coeff_sign_flag[ i ] ) 
+    coeffLevel[ i ] = ( coeff_abs_level_minus1[ i ] + 1 ) * ( 1 - 2 * coeff_sign_flag[ i ] ) 
    }   
  }   
 }   
@@ -2472,9 +2472,9 @@ base_view_temporal_hrd( payloadSize ) {
    hrd_parameters() 5  
   sei_mvc_vcl_hrd_parameters_present_flag[ i ] 5 u(1) 
   if( sei_mvc_vcl_hrd_parameters_present_flag[ i ] )   
-  hrd_parameters() 
+  hrd_parameters() 5
 if( sei_mvc_nal_hrd_parameters_present_flag[ i ]  ||   
-sei_mvc_vcl_hrd_parameters_present_flag[ i ] ) 5  
+sei_mvc_vcl_hrd_parameters_present_flag[ i ] ) 
 sei_mvc_low_delay_hrd_flag[ i ] 5 u(1) 
 sei_mvc_pic_struct_present_flag[ i ] 5 u(1) 
 }   
@@ -3032,7 +3032,7 @@ depth_ranges( numViews, predDirection, index ) {
   }   
  }   
  if( element_equal_flag  ==  1 ) {   
-  for( i = 1; i < num_views_minus1 + 1 − deltaFlag; i++ ) {   
+  for( i = 1; i < num_views_minus1 + 1 - deltaFlag; i++ ) {   
    outSign[ index, i ] = outSign[ index, 0 ]   
    outExp[ index, i ] = outExp[ index, 0 ]   
    outMantissa[ index, i ] = outMantissa[ index, 0 ]   

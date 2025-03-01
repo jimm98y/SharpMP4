@@ -138,6 +138,17 @@ namespace Sharp{type}
                 return BuildBlock(b, parent, block, level, methodType);
             }
 
+            var blockIf = field as ItuBlockIfThenElse;
+            if (blockIf != null)
+            {
+                string ifPart = BuildBlock(b, parent, (ItuBlock)blockIf.BlockIf, level, methodType);
+                foreach(var elseBlock in blockIf.BlockElse)
+                {
+                    ifPart += BuildBlock(b, parent, (ItuBlock)blockIf.BlockIf, level, methodType);
+                }
+                return ifPart;
+            }
+
             var comment = field as ItuComment;
             if (comment != null)
             {
@@ -242,8 +253,12 @@ namespace Sharp{type}
                     return "7";
                 case "u(8)":
                     return "8";
+                case "u(10)":
+                    return "10";
                 case "u(16)":
                     return "16";
+                case "u(24)":
+                    return "24";
                 case "u(32)":
                     return "32";                
                 case "i(32)":
@@ -305,8 +320,12 @@ namespace Sharp{type}
                     return "stream.WriteUnsignedInt(7, ";
                 case "u(8)":
                     return "stream.WriteUnsignedInt(8, ";
+                case "u(10)":
+                    return "stream.WriteUnsignedInt(10, ";
                 case "u(16)":
                     return "stream.WriteUnsignedInt(16, ";
+                case "u(24)":
+                    return "stream.WriteUnsignedInt(24, ";
                 case "u(32)":
                     return "stream.WriteUnsignedInt(32, ";
                 case "i(32)":
@@ -368,8 +387,12 @@ namespace Sharp{type}
                     return "stream.ReadUnsignedInt(size, 7, ";
                 case "u(8)":
                     return "stream.ReadUnsignedInt(size, 8, ";
+                case "u(10)":
+                    return "stream.ReadUnsignedInt(size, 10, ";
                 case "u(16)":
                     return "stream.ReadUnsignedInt(size, 16, ";
+                case "u(24)":
+                    return "stream.ReadUnsignedInt(size, 24, ";
                 case "u(32)":
                     return "stream.ReadUnsignedInt(size, 32, ";
                 case "i(32)":
@@ -418,7 +441,9 @@ namespace Sharp{type}
                 { "u(6)",                       "byte" },
                 { "u(7)",                       "byte" },
                 { "u(8)",                       "byte" },
+                { "u(10)",                      "ushort" },
                 { "u(16)",                      "ushort" },
+                { "u(24)",                      "uint" },
                 { "u(32)",                      "uint" },
                 { "i(32)",                      "int" },
                 { "u(v)",                       "uint" },
@@ -551,6 +576,12 @@ namespace Sharp{type}
                                 {
                                     variableType = variableType + $"[{variable}]";
                                 }
+
+                                if(variableName.Contains("[( i"))
+                                {
+
+                                }
+
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                             }
                         }
@@ -562,7 +593,10 @@ namespace Sharp{type}
                 }
             }
 
-            ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
+            if (block.Type == "do")
+                ret += $"\r\n{spacing}{blockType}\r\n{spacing}{{";
+            else
+                ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
             foreach (var field in block.Content)
             {
@@ -570,6 +604,9 @@ namespace Sharp{type}
             }
 
             ret += $"\r\n{spacing}}}";
+
+            if(block.Type == "do")
+                ret += $"while {condition};";
 
             return ret;
         }
@@ -673,7 +710,7 @@ namespace Sharp{type}
             {
                 if (parent.Type == "for")
                 {
-                    ret.Insert(0, $"[{parent.Condition.Split(';').First().Split('=').First()}]");
+                    ret.Insert(0, $"[{parent.Condition.Substring(1, parent.Condition.Length - 2).Split(';').First().Split('=').First()}]");
                 }
                 parent = parent.Parent;
             }
@@ -800,6 +837,25 @@ namespace Sharp{type}
                     foreach (var blockField in blockFields)
                     {
                         AddAndResolveDuplicates(ret, blockField);
+                    }
+                }
+                else if (code is ItuBlockIfThenElse blockif)
+                {
+                    blockif.Parent = parent; // keep track of parent blocks
+
+                    var blockFields = FlattenFields(cls, ((ItuBlock)blockif.BlockIf).Content, (ItuBlock)blockif.BlockIf);
+                    foreach (var blockField in blockFields)
+                    {
+                        AddAndResolveDuplicates(ret, blockField);
+                    }
+
+                    foreach (var blockelse in blockif.BlockElse)
+                    {
+                        var blockElseFields = FlattenFields(cls, ((ItuBlock)blockelse).Content, (ItuBlock)blockelse);
+                        foreach (var blockField in blockElseFields)
+                        {
+                            AddAndResolveDuplicates(ret, blockField);
+                        }
                     }
                 }
             }
