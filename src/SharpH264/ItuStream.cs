@@ -28,6 +28,11 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
+        internal ulong ReadFixed(ulong size, int count, out ushort value)
+        {
+            throw new NotImplementedException();
+        }
+
         internal ulong ReadFixed(ulong size, int count, out byte value)
         {
             throw new NotImplementedException();
@@ -44,6 +49,11 @@ namespace SharpH264
         }
 
         internal ulong ReadUnsignedInt(ulong size, int count, out uint value)
+        {
+            throw new NotImplementedException();
+        }
+        
+        internal ulong ReadSignedInt(ulong size, int count, out int value)
         {
             throw new NotImplementedException();
         }
@@ -73,6 +83,11 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
+        internal ulong WriteFixed(int count, ushort value)
+        {
+            throw new NotImplementedException();
+        }
+
         internal ulong WriteFixed(int count, bool value)
         {
             throw new NotImplementedException();
@@ -84,6 +99,41 @@ namespace SharpH264
         }
 
         internal ulong WriteUnsignedInt(int count, bool value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteSignedIntT(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteSignedInt(int count, int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteUnsignedIntT(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadSignedIntT(ulong size, out int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadUnsignedIntT(ulong size, out uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong CalculateSignedIntT(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong CalculateUnsignedIntT(uint value)
         {
             throw new NotImplementedException();
         }
@@ -128,12 +178,27 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
+        internal ulong ReadSignedIntVariable(ulong size, out int value)
+        {
+            throw new NotImplementedException();
+        }
+
         internal static ulong CalculateUnsignedIntVariable(uint value)
         {
             throw new NotImplementedException();
         }
 
-        internal ulong WriteUnsignedIntVariable(int count, uint value)
+        internal static ulong CalculateSignedIntVariable(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteUnsignedIntVariable(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteSignedIntVariable(int value)
         {
             throw new NotImplementedException();
         }

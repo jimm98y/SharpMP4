@@ -23,6 +23,7 @@ namespace ItuGenerator
             $@"using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace Sharp{type}
 {{
@@ -57,6 +58,8 @@ namespace Sharp{type}
          {{
              ulong size = 0;
 ";
+            resultCode += BuildRequiredVariables(ituClass);
+
             foreach (var field in ituClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Read);
@@ -73,6 +76,8 @@ namespace Sharp{type}
          {{
              ulong size = 0;
 ";
+            resultCode += BuildRequiredVariables(ituClass);
+
             foreach (var field in ituClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Write);
@@ -88,7 +93,9 @@ namespace Sharp{type}
          public ulong CalculateSize(ItuStream stream)
          {{
              ulong size = 0;
-";
+"; 
+            resultCode += BuildRequiredVariables(ituClass);
+            
             foreach (var field in ituClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Size);
@@ -103,6 +110,18 @@ namespace Sharp{type}
             resultCode += $@"
     }}
 ";
+            return resultCode;
+        }
+
+        private static string BuildRequiredVariables(ItuClass ituClass)
+        {
+            string resultCode = "";
+
+            foreach (var v in ituClass.RequiresDefinition)
+            {
+                resultCode += $"\r\nint {v.Name} = 0;";
+            }
+
             return resultCode;
         }
 
@@ -155,7 +174,7 @@ namespace Sharp{type}
                 return BuildComment(b, comment, level, methodType);
             }
 
-            if ((field as ItuField).Type == null && !string.IsNullOrWhiteSpace((field as ItuField).Value))
+            if ((field as ItuField).Type == null && (!string.IsNullOrWhiteSpace((field as ItuField).Value) || !string.IsNullOrWhiteSpace((field as ItuField).Increment)))
             {
                 // statement
                 return BuildStatement(b, parent, field as ItuField, level, methodType);
@@ -207,18 +226,18 @@ namespace Sharp{type}
         {
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
             {
-                return $"{GetSpacing(level)}{field.Name} {field.Value};";
+                return $"{GetSpacing(level)}{field.Name}{field.ArrayParameter}{field.Increment}{field.Value};";
             }
             else
             {
-                if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
+                if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null && b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
                     b.AddedFields.Add(new ItuField() { Name = field.Name, Value = field.Value });
-                    return $"{GetSpacing(level)}var {field.Name} {field.Value};";
+                    return $"{GetSpacing(level)}var {field.Name}{field.ArrayParameter}{field.Value};";
                 }
                 else
                 {
-                    return $"{GetSpacing(level)}{field.Name} {field.Value};";
+                    return $"{GetSpacing(level)}{field.Name}{field.ArrayParameter}{field.Increment}{field.Value};";
                 }
             }
         }
@@ -257,17 +276,25 @@ namespace Sharp{type}
                     return "10";
                 case "u(16)":
                     return "16";
+                case "u(20)":
+                    return "20";
                 case "u(24)":
                     return "24";
                 case "u(32)":
                     return "32";                
+                case "u(128)":
+                    return "128";                
                 case "i(32)":
                     return "32";
                 case "u(v)":
                     return "ItuStream.CalculateUnsignedIntVariable(value)";
+                case "i(v)":
+                    return "ItuStream.CalculateSignedIntVariable(value)";
                 case "ue(v)":
                     return "ItuStream.CalculateUnsignedIntGolomb(value)";
                 case "ae(v)":
+                    return "ItuStream.CalculateUnsignedIntGolomb(value)";
+                case "ce(v)":
                     return "ItuStream.CalculateUnsignedIntGolomb(value)";
                 case "ue(v) | ae(v)":
                     return "ItuStream.CalculateUnsignedIntGolomb(value)";
@@ -324,17 +351,25 @@ namespace Sharp{type}
                     return "stream.WriteUnsignedInt(10, ";
                 case "u(16)":
                     return "stream.WriteUnsignedInt(16, ";
+                case "u(20)":
+                    return "stream.WriteUnsignedInt(20, ";
                 case "u(24)":
                     return "stream.WriteUnsignedInt(24, ";
                 case "u(32)":
                     return "stream.WriteUnsignedInt(32, ";
+                case "u(128)":
+                    return "stream.WriteUnsignedInt(128, ";
                 case "i(32)":
                     return "stream.WriteSignedInt(32, ";
                 case "u(v)":
-                    return "stream.WriteUnsignedIntVariable(8, ";
+                    return "stream.WriteUnsignedIntVariable(";
+                case "i(v)":
+                    return "stream.WriteSignedIntVariable(";
                 case "ue(v)":
                     return "stream.WriteUnsignedIntGolomb(";
                 case "ae(v)":
+                    return "stream.WriteUnsignedIntGolomb(";
+                case "ce(v)":
                     return "stream.WriteUnsignedIntGolomb(";
                 case "ue(v) | ae(v)":
                     return "stream.WriteUnsignedIntGolomb(";
@@ -391,17 +426,25 @@ namespace Sharp{type}
                     return "stream.ReadUnsignedInt(size, 10, ";
                 case "u(16)":
                     return "stream.ReadUnsignedInt(size, 16, ";
+                case "u(20)":
+                    return "stream.ReadUnsignedInt(size, 20, ";
                 case "u(24)":
                     return "stream.ReadUnsignedInt(size, 24, ";
                 case "u(32)":
                     return "stream.ReadUnsignedInt(size, 32, ";
+                case "u(128)":
+                    return "stream.ReadUnsignedInt(size, 128, ";
                 case "i(32)":
                     return "stream.ReadSignedInt(size, 32, ";
                 case "u(v)":
                     return "stream.ReadUnsignedIntVariable(size, ";
+                case "i(v)":
+                    return "stream.ReadSignedIntVariable(size, ";
                 case "ue(v)":
                     return "stream.ReadUnsignedIntGolomb(size, ";
                 case "ae(v)":
+                    return "stream.ReadUnsignedIntGolomb(size, ";
+                case "ce(v)":
                     return "stream.ReadUnsignedIntGolomb(size, ";
                 case "ue(v) | ae(v)":
                     return "stream.ReadUnsignedIntGolomb(size, ";
@@ -430,33 +473,37 @@ namespace Sharp{type}
             {
                 { "f(1)",                       "bool" },
                 { "f(8)",                       "byte" },
-                { "f(16)",                      "short" },
+                { "f(16)",                      "ushort" },
                 { "u(1)",                       "bool" },
-                { "u(1) | ae(v)",               "bool" },
+                { "u(1) | ae(v)",               "uint" },
                 { "u(2)",                       "uint" },
                 { "u(3)",                       "uint" },
                 { "u(3) | ae(v)",               "uint" },
-                { "u(4)",                       "byte" },
-                { "u(5)",                       "byte" },
-                { "u(6)",                       "byte" },
-                { "u(7)",                       "byte" },
-                { "u(8)",                       "byte" },
-                { "u(10)",                      "ushort" },
-                { "u(16)",                      "ushort" },
+                { "u(4)",                       "uint" },
+                { "u(5)",                       "uint" },
+                { "u(6)",                       "uint" },
+                { "u(7)",                       "uint" },
+                { "u(8)",                       "uint" },
+                { "u(10)",                      "uint" },
+                { "u(16)",                      "uint" },
+                { "u(20)",                      "uint" },
                 { "u(24)",                      "uint" },
                 { "u(32)",                      "uint" },
-                { "i(32)",                      "int" },
+                { "u(128)",                     "BigInteger" },
                 { "u(v)",                       "uint" },
                 { "ue(v)",                      "uint" },
                 { "ae(v)",                      "uint" },
+                { "ce(v)",                      "uint" },
                 { "ue(v) | ae(v)",              "uint" },
                 { "me(v) | ae(v)",              "uint" },
+                { "i(32)",                      "int" },
+                { "i(v)",                       "int" },
                 { "se(v)",                      "int" },
                 { "st(v)",                      "int" },
                 { "se(v) | ae(v)",              "int" },
                 { "te(v) | ae(v)",              "int" },
                 { "b(8)",                       "byte" },
-                { "ScalingList",                "ScalingList" },
+                { "u(32)[]",                    "int[]" },
             };
             return map;
         }
@@ -480,7 +527,7 @@ namespace Sharp{type}
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
                 { "NumBytesInNALunit",             "u(32)" },
-                { "scalingLst",                    "ScalingList" }, // TODO: remove this temporary fix
+                { "scalingLst",                    "u(32)[]" }, // TODO: remove this temporary fix
                 { "sizeOfScalingList",             "u(32)" },
                 { "useDefaultScalingMatrixFlag",   "u(1)" },
                 { "mb_type",                       "ue(v) | ae(v)" },
@@ -498,6 +545,10 @@ namespace Sharp{type}
                 { "predDirection",                 "u(32)" },
                 { "index",                         "u(32)" },
                 { "expLen",                        "u(32)" },
+                { "i16x16DClevel",                 "u(32)" },
+                { "i16x16AClevel",                 "u(32)" },
+                { "level4x4",                      "u(32)" },
+                { "level8x8",                      "u(32)" },
             };
 
             return map[parameter];
@@ -516,14 +567,11 @@ namespace Sharp{type}
             string condition = block.Condition;
             string blockType = block.Type;
 
-            if (block.Type == "for")
-            {
-                condition = FixForCycleCondition(condition);
-            }
-
             if (!string.IsNullOrEmpty(condition))
             {
-                condition = condition.Replace("next_bits(", "stream.NextBits(");
+                condition = condition
+                    .Replace("_flag  ==  1 ", "_flag  ==  true ")
+                    .Replace("next_bits(", "stream.NextBits(");
             }
 
             if (methodType == MethodType.Read)
@@ -577,11 +625,6 @@ namespace Sharp{type}
                                     variableType = variableType + $"[{variable}]";
                                 }
 
-                                if(variableName.Contains("[( i"))
-                                {
-
-                                }
-
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                             }
                         }
@@ -609,14 +652,6 @@ namespace Sharp{type}
                 ret += $"while {condition};";
 
             return ret;
-        }
-
-        private string FixForCycleCondition(string condition)
-        {
-            condition = condition.Substring(1, condition.Length - 2);
-
-            string[] parts = condition.Split(";");
-            return $"(int {string.Join(";", parts)})";
         }
 
         public string FixNestedInLoopVariables(ItuCode code, string condition, string prefix = "", string suffix = "")
@@ -816,6 +851,11 @@ namespace Sharp{type}
 
         private List<ItuField> FlattenFields(ItuClass cls, IEnumerable<ItuCode> fields, ItuBlock parent = null)
         {
+            if(cls.ClassName == "residual_block_cabac")
+            {
+
+            }
+
             Dictionary<string, ItuField> ret = new Dictionary<string, ItuField>();
             foreach (var code in fields)
             {
@@ -832,6 +872,19 @@ namespace Sharp{type}
                 else if (code is ItuBlock block)
                 {
                     block.Parent = parent; // keep track of parent blocks
+
+                    // make sure we define for cycle variables
+                    if (block.Type == "for")
+                    {
+                        string[] parts = block.Condition.Substring(1, block.Condition.Length - 2).Split(';');
+                        var conditionChars = new char[] { '=' };
+                        int variableIndex = parts[0].IndexOfAny(conditionChars);
+                        string variable = parts[0].Substring(0, variableIndex).TrimStart(conditionChars).Trim();
+                        if (cls.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null)
+                        {
+                            cls.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "u(32)" });
+                        }
+                    }
 
                     var blockFields = FlattenFields(cls, block.Content, block);
                     foreach (var blockField in blockFields)
@@ -880,6 +933,9 @@ namespace Sharp{type}
 
         private void AddAndResolveDuplicates(Dictionary<string, ItuField> ret, ItuField field)
         {
+            if (!string.IsNullOrEmpty(field.Increment))
+                return;
+
             string name = field.Name;
             int index = 0;
             if (!ret.TryAdd(name, field))

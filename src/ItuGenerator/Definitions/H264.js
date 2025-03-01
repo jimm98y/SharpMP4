@@ -399,6 +399,49 @@ slice_header() {
   slice_group_change_cycle 2 u(v) 
 }   
 
+slice_data() { 
+ if( entropy_coding_mode_flag )   
+  while( !byte_aligned() )   
+   cabac_alignment_one_bit 2 f(1) 
+ CurrMbAddr = first_mb_in_slice * ( 1 + MbaffFrameFlag )   
+ moreDataFlag = 1   
+ prevMbSkipped = 0   
+ do {   
+  if( slice_type  !=  I  &&  slice_type  !=  SI )   
+   if( !entropy_coding_mode_flag ) {   
+    mb_skip_run 2 ue(v) 
+    prevMbSkipped = ( mb_skip_run > 0 )   
+    for( i=0; i<mb_skip_run; i++ )   
+     CurrMbAddr = NextMbAddress( CurrMbAddr )   
+    if( mb_skip_run > 0 )   
+     moreDataFlag = more_rbsp_data()   
+   } else {   
+    mb_skip_flag 2 ae(v) 
+    moreDataFlag = !mb_skip_flag   
+   }   
+  if( moreDataFlag ) {   
+   if( MbaffFrameFlag && ( CurrMbAddr % 2  ==  0  || 
+    ( CurrMbAddr % 2  ==  1  &&  prevMbSkipped ) ) ) 
+  
+    mb_field_decoding_flag 2 u(1) | ae(v) 
+   macroblock_layer() 2 | 3 | 4  
+  }   
+  if( !entropy_coding_mode_flag )   
+   moreDataFlag = more_rbsp_data()   
+  else {   
+   if( slice_type  !=  I  &&  slice_type  !=  SI )   
+    prevMbSkipped = mb_skip_flag   
+   if( MbaffFrameFlag  &&  CurrMbAddr % 2  ==  0 )   
+    moreDataFlag = 1   
+   else {   
+    end_of_slice_flag 2 ae(v) 
+    moreDataFlag = !end_of_slice_flag   
+   }   
+  }   
+  CurrMbAddr = NextMbAddress( CurrMbAddr )   
+ } while( moreDataFlag )   
+} 
+
 ref_pic_list_modification() { 
  if( slice_type % 5  !=  2  &&  slice_type % 5  !=  4 ) {    
   ref_pic_list_modification_flag_l0 2 u(1) 
@@ -659,7 +702,96 @@ residual( startIdx, endIdx ) {
   CrLevel4x4 = level4x4   
   CrLevel8x8 = level8x8   
   }  
- }
+}
+
+residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endIdx ) { 
+ if( startIdx  ==  0  &&  MbPartPredMode( mb_type, 0 )  ==  Intra_16x16 )   
+  residual_block( i16x16DClevel, 0, 15, 16 ) 3  
+ for( i8x8 = 0; i8x8 < 4; i8x8++ )   
+  if( !transform_size_8x8_flag  ||  !entropy_coding_mode_flag )   
+   for( i4x4 = 0; i4x4 < 4; i4x4++ ) {   
+    if( CodedBlockPatternLuma & ( 1 << i8x8 ) )   
+     if( MbPartPredMode( mb_type, 0 )  ==  Intra_16x16 )   
+      residual_block( i16x16AClevel[ i8x8 * 4 + i4x4 ], Max( 0, startIdx - 1 ), endIdx - 1, 15 ) 3  
+     else   
+      residual_block( level4x4[ i8x8 * 4 + i4x4 ], startIdx, endIdx, 16 ) 3 | 4  
+    else if( MbPartPredMode( mb_type, 0 )  ==  Intra_16x16 )   
+     for( i = 0; i < 15; i++ )   
+      i16x16AClevel[ i8x8 * 4 + i4x4 ][ i ] = 0   
+    else   
+     for( i = 0; i < 16; i++ )   
+      level4x4[ i8x8 * 4 + i4x4 ][ i ] = 0   
+    if( !entropy_coding_mode_flag && transform_size_8x8_flag )   
+     for( i = 0; i < 16; i++ )   
+      level8x8[ i8x8 ][ 4 * i + i4x4 ] = level4x4[ i8x8 * 4 + i4x4 ][ i ]   
+   }   
+  else if( CodedBlockPatternLuma & ( 1 << i8x8 ) )   
+   residual_block( level8x8[ i8x8 ], 4 * startIdx, 4 * endIdx + 3, 64 ) 3 | 4  
+  else   
+   for( i = 0; i < 64; i++ )   
+    level8x8[ i8x8 ][ i ] = 0   
+}  
+
+residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) { 
+ for( i = 0; i < maxNumCoeff; i++ )   
+  coeffLevel[ i ] = 0   
+ coeff_token 3 | 4 ce(v) 
+ if( TotalCoeff( coeff_token ) > 0 ) {   
+  if( TotalCoeff( coeff_token ) > 10  &&  TrailingOnes( coeff_token ) < 3 )   
+   suffixLength = 1   
+  else   
+   suffixLength = 0   
+  for( i = 0; i < TotalCoeff( coeff_token ); i++ )   
+   if( i < TrailingOnes( coeff_token ) ) {   
+    trailing_ones_sign_flag 3 | 4 u(1) 
+    levelVal[ i ] = 1 - 2 * trailing_ones_sign_flag   
+   } else {  
+  level_prefix 3 | 4 ce(v)
+                levelCode = (Min(15, level_prefix) << suffixLength)
+                if (suffixLength > 0 || level_prefix >= 14) {   
+     level_suffix 3 | 4 u(v)
+                    levelCode += level_suffix
+                }
+                if (level_prefix > = 15 && suffixLength  ==  0 )
+                levelCode += 15
+                if (level_prefix > = 16 )
+                levelCode += (1 << (level_prefix - 3 ) ) - 4096
+                if (i == TrailingOnes(coeff_token) &&
+                    TrailingOnes(coeff_token) < 3)
+
+                    levelCode += 2
+                if (levelCode % 2  == 0 )
+                levelVal[i] = (levelCode + 2) >> 1   
+    else
+                levelVal[i] = ( -levelCode - 1 ) >> 1
+                if (suffixLength == 0)
+                    suffixLength = 1
+                if (Abs(levelVal[i]) > (3 << (suffixLength - 1 ) )  &&
+                    suffixLength < 6 )
+
+                suffixLength++
+            }
+        if (TotalCoeff(coeff_token) < endIdx - startIdx + 1 ) {   
+   total_zeros 3 | 4 ce(v)
+            zerosLeft = total_zeros
+        } else
+        zerosLeft = 0
+        for (i = 0; i < TotalCoeff(coeff_token) - 1; i++ ) {
+            if (zerosLeft > 0) {   
+    run_before 3 | 4 ce(v)
+                runVal[i] = run_before
+            } else
+                runVal[i] = 0
+            zerosLeft = zerosLeft - runVal[i]
+        }
+        runVal[TotalCoeff(coeff_token) - 1 ] = zerosLeft
+        coeffNum = -1
+        for (i = TotalCoeff(coeff_token) - 1; i >= 0; i-- ) {
+            coeffNum += runVal[i] + 1
+            coeffLevel[startIdx + coeffNum] = levelVal[i]
+        }
+    }
+}
 
 residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) { 
  if( maxNumCoeff  !=  64  ||  ChromaArrayType  ==  3 )   
@@ -1490,6 +1622,79 @@ reserved_sei_message( payloadSize ) {
  for( i = 0; i < payloadSize; i++ )   
   reserved_sei_message_payload_byte 5 b(8) 
 }   
+
+
+vui_parameters() { 
+ aspect_ratio_info_present_flag 0 u(1) 
+ if( aspect_ratio_info_present_flag ) {   
+  aspect_ratio_idc 0 u(8) 
+  if( aspect_ratio_idc  ==  Extended_SAR ) {   
+   sar_width 0 u(16) 
+   sar_height 0 u(16) 
+  }   
+ }   
+ overscan_info_present_flag 0 u(1) 
+ if( overscan_info_present_flag )   
+  overscan_appropriate_flag 0 u(1) 
+ video_signal_type_present_flag 0 u(1) 
+ if( video_signal_type_present_flag ) {   
+  video_format 0 u(3) 
+  video_full_range_flag 0 u(1) 
+  colour_description_present_flag 0 u(1) 
+  if( colour_description_present_flag ) {   
+   colour_primaries 0 u(8) 
+   transfer_characteristics 0 u(8) 
+   matrix_coefficients 0 u(8) 
+  }   
+ }   
+ chroma_loc_info_present_flag 0 u(1) 
+ if( chroma_loc_info_present_flag ) {   
+  chroma_sample_loc_type_top_field 0 ue(v) 
+  chroma_sample_loc_type_bottom_field 0 ue(v) 
+ }
+  timing_info_present_flag 0 u(1) 
+ if( timing_info_present_flag ) {   
+  num_units_in_tick 0 u(32) 
+  time_scale 0 u(32) 
+  fixed_frame_rate_flag 0 u(1) 
+ }   
+ nal_hrd_parameters_present_flag 0 u(1) 
+ if( nal_hrd_parameters_present_flag )   
+  hrd_parameters() 0  
+ vcl_hrd_parameters_present_flag 0 u(1) 
+ if( vcl_hrd_parameters_present_flag )   
+  hrd_parameters() 0  
+ if( nal_hrd_parameters_present_flag  ||  vcl_hrd_parameters_present_flag )   
+  low_delay_hrd_flag 0 u(1) 
+ pic_struct_present_flag  0 u(1) 
+ bitstream_restriction_flag 0 u(1) 
+ if( bitstream_restriction_flag ) {   
+  motion_vectors_over_pic_boundaries_flag 0 u(1) 
+  max_bytes_per_pic_denom 0 ue(v) 
+  max_bits_per_mb_denom 0 ue(v) 
+  log2_max_mv_length_horizontal 0 ue(v) 
+  log2_max_mv_length_vertical 0 ue(v) 
+  max_num_reorder_frames 0 ue(v) 
+  max_dec_frame_buffering 0 ue(v) 
+ }   
+}   
+
+
+hrd_parameters() { 
+ cpb_cnt_minus1 0 | 5 ue(v) 
+ bit_rate_scale 0 | 5 u(4) 
+ cpb_size_scale 0 | 5 u(4)
+    for (SchedSelIdx = 0; SchedSelIdx <= cpb_cnt_minus1; SchedSelIdx++) {
+        bit_rate_value_minus1[SchedSelIdx] 0 | 5 ue(v)
+        cpb_size_value_minus1[SchedSelIdx] 0 | 5 ue(v)
+        cbr_flag[SchedSelIdx] 0 | 5 u(1)
+    }   
+ initial_cpb_removal_delay_length_minus1 0 | 5 u(5) 
+ cpb_removal_delay_length_minus1 0 | 5 u(5) 
+ dpb_output_delay_length_minus1 0 | 5 u(5) 
+ time_offset_length 0 | 5 u(5)
+} 
+
 
 
 nal_unit_header_svc_extension() { 
@@ -2654,8 +2859,8 @@ mvcd_scalable_nesting( payloadSize ) {
   for( i = 0; i <= num_view_components_op_minus1; i++ ) {   
    sei_op_view_id[ i ] 5 u(10) 
    if( !sei_op_texture_only_flag ) {   
-    sei_op_depth_flag[ i ]   
-    sei_op_texture_flag[ i ]   
+    sei_op_depth_flag[ i ] 5 u(1) 
+    sei_op_texture_flag[ i ] 5 u(1) 
    }   
   }   
   sei_op_temporal_id 5 u(3) 

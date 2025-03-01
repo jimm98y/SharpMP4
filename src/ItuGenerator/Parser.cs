@@ -34,6 +34,7 @@ namespace ItuGenerator
             Try(String("All")), 
             Try(String("2 | 3 | 4")),
             Try(String("0 | 1")),
+            Try(String("0 | 5")),
             Try(String("2 | 5")),
             Try(String("3 | 4")),
             Try(String("10")),
@@ -65,13 +66,18 @@ namespace ItuGenerator
             Try(String("u(6)")), 
             Try(String("u(7)")), 
             Try(String("u(8)")), 
+            Try(String("u(10)")), 
+            Try(String("u(20)")), 
             Try(String("u(16)")), 
+            Try(String("u(24)")), 
             Try(String("u(32)")), 
             Try(String("i(32)")), // ?
+            Try(String("i(v)")), // ?
             Try(String("u(33)")), 
             Try(String("u(34)")), 
             Try(String("u(35)")), 
             Try(String("u(43)")), 
+            Try(String("u(128)")), 
             Try(String("b(8)")),
             Try(String("f(8)")),
             Try(String("f(16)")),
@@ -79,7 +85,8 @@ namespace ItuGenerator
             Try(String("se(v)")),
             Try(String("st(v)")),
             Try(String("u(v)")),
-            Try(String("ae(v)"))
+            Try(String("ae(v)")),
+            Try(String("ce(v)"))
             );
 
         public static Parser<char, string> FieldValue =>
@@ -237,6 +244,7 @@ namespace ItuGenerator
 
         public List<ItuField> FlattenedFields { get; internal set; }
         public List<ItuField> AddedFields { get; internal set; } = new List<ItuField>();
+        public List<ItuField> RequiresDefinition { get; internal set; } = new List<ItuField>();
         public string Syntax { get; set; }
     }
 
