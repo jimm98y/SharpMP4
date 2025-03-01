@@ -62,9 +62,12 @@ namespace ItuGenerator
             Try(String("u(3)")), 
             Try(String("u(4)")), 
             Try(String("u(5)")), 
+            Try(String("u(6)")), 
             Try(String("u(7)")), 
             Try(String("u(8)")), 
             Try(String("u(16)")), 
+            Try(String("u(32)")), 
+            Try(String("i(32)")), // ?
             Try(String("u(33)")), 
             Try(String("u(34)")), 
             Try(String("u(35)")), 
@@ -199,6 +202,7 @@ namespace ItuGenerator
 
         public List<ItuField> FlattenedFields { get; internal set; }
         public List<ItuField> AddedFields { get; internal set; } = new List<ItuField>();
+        public string Syntax { get; set; }
     }
 
     public class ItuBlock : ItuCode

@@ -222,10 +222,11 @@ pic_parameter_set_rbsp() {
  rbsp_trailing_bits() 1  
 }  
 
-sei_rbsp() { 
-  do   
-    sei_message() 5  
-  while( more_rbsp_data() )   
+sei_rbsp() {
+    do   
+    {
+        sei_message() 5
+    } while( more_rbsp_data() )   
   rbsp_trailing_bits() 5  
 }  
 

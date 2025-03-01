@@ -48,6 +48,16 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
+        internal ulong ReadUnsignedIntGolomb(ulong size, out uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadSignedIntGolomb(ulong size, out int value)
+        {
+            throw new NotImplementedException();
+        }
+
         internal ulong ReadClass<T>(ulong size, out T value)
         {
             throw new NotImplementedException();
@@ -88,7 +98,42 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
-        internal ulong CalculateSize<T>(T value)
+        internal ulong WriteUnsignedIntGolomb(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteSignedIntGolomb(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateClassSize<T>(T value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateUnsignedIntGolomb(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateSignedIntGolomb(int value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadUnsignedIntVariable(ulong size, out uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static ulong CalculateUnsignedIntVariable(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong WriteUnsignedIntVariable(int count, uint value)
         {
             throw new NotImplementedException();
         }
