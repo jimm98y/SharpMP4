@@ -228,20 +228,27 @@ namespace Sharp{type}
 
         private string BuildStatement(ItuClass b, ItuBlock parent, ItuField field, int level, MethodType methodType)
         {
+            string fieldValue = field.Value;
+
+            if (!string.IsNullOrEmpty(fieldValue))
+            {
+                fieldValue = fieldValue.Replace("<<", "<< (int)");
+            }
+
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
             {
-                return $"{GetSpacing(level)}{field.Name}{field.FieldArray}{field.Increment}{field.Value};";
+                return $"{GetSpacing(level)}{field.Name}{field.FieldArray}{field.Increment}{fieldValue};";
             }
             else
             {
                 if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null && b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
-                    b.AddedFields.Add(new ItuField() { Name = field.Name, Value = field.Value });
-                    return $"{GetSpacing(level)}var {field.Name}{field.FieldArray}{field.Value};";
+                    b.AddedFields.Add(new ItuField() { Name = field.Name, Value = fieldValue });
+                    return $"{GetSpacing(level)}var {field.Name}{field.FieldArray}{fieldValue};";
                 }
                 else
                 {
-                    return $"{GetSpacing(level)}{field.Name}{field.FieldArray}{field.Increment}{field.Value};";
+                    return $"{GetSpacing(level)}{field.Name}{field.FieldArray}{field.Increment}{fieldValue};";
                 }
             }
         }
@@ -609,6 +616,11 @@ namespace Sharp{type}
                 {
                     condition = FixCondition(b, condition);
                 }
+            }
+
+            if (!string.IsNullOrEmpty(condition))
+            {
+                condition = condition.Replace("<<", "<< (int)");
             }
 
             if (methodType == MethodType.Read)

@@ -5704,7 +5704,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (CodedBlockPatternLuma & (1 << i8x8))
+                        if (CodedBlockPatternLuma & (1 << (int)i8x8))
                         {
 
                             if (MbPartPredMode(mb_type, 0) == Intra_16x16)
@@ -5743,7 +5743,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         }
                     }
                 }
-                else if (CodedBlockPatternLuma & (1 << i8x8))
+                else if (CodedBlockPatternLuma & (1 << (int)i8x8))
                 {
                     size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
                 }
@@ -5782,7 +5782,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (CodedBlockPatternLuma & (1 << i8x8))
+                        if (CodedBlockPatternLuma & (1 << (int)i8x8))
                         {
 
                             if (MbPartPredMode(mb_type, 0) == Intra_16x16)
@@ -5821,7 +5821,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         }
                     }
                 }
-                else if (CodedBlockPatternLuma & (1 << i8x8))
+                else if (CodedBlockPatternLuma & (1 << (int)i8x8))
                 {
                     size += stream.WriteClass<ResidualBlock>(this.residual_block);
                 }
@@ -5860,7 +5860,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (CodedBlockPatternLuma & (1 << i8x8))
+                        if (CodedBlockPatternLuma & (1 << (int)i8x8))
                         {
 
                             if (MbPartPredMode(mb_type, 0) == Intra_16x16)
@@ -5899,7 +5899,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         }
                     }
                 }
-                else if (CodedBlockPatternLuma & (1 << i8x8))
+                else if (CodedBlockPatternLuma & (1 << (int)i8x8))
                 {
                     size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                 }
@@ -6048,7 +6048,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.level_prefix);
-                        levelCode = (Min(15, level_prefix) << suffixLength);
+                        levelCode = (Min(15, level_prefix) << (int)suffixLength);
 
                         if (suffixLength > 0 || level_prefix >= 14)
                         {
@@ -6063,7 +6063,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
 
                         if (level_prefix >= 16)
                         {
-                            levelCode += (1 << (level_prefix - 3)) - 4096;
+                            levelCode += (1 << (int)(level_prefix - 3)) - 4096;
                         }
 
                         if (i == TrailingOnes(coeff_token) &&
@@ -6086,7 +6086,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             suffixLength = 1;
                         }
 
-                        if (Abs(levelVal[i]) > (3 << (suffixLength - 1)) &&
+                        if (Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
                     suffixLength < 6)
                         {
                             suffixLength++;
@@ -6166,7 +6166,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.level_prefix);
-                        levelCode = (Min(15, level_prefix) << suffixLength);
+                        levelCode = (Min(15, level_prefix) << (int)suffixLength);
 
                         if (suffixLength > 0 || level_prefix >= 14)
                         {
@@ -6181,7 +6181,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
 
                         if (level_prefix >= 16)
                         {
-                            levelCode += (1 << (level_prefix - 3)) - 4096;
+                            levelCode += (1 << (int)(level_prefix - 3)) - 4096;
                         }
 
                         if (i == TrailingOnes(coeff_token) &&
@@ -6204,7 +6204,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             suffixLength = 1;
                         }
 
-                        if (Abs(levelVal[i]) > (3 << (suffixLength - 1)) &&
+                        if (Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
                     suffixLength < 6)
                         {
                             suffixLength++;
@@ -6284,7 +6284,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(level_prefix); // level_prefix
-                        levelCode = (Min(15, level_prefix) << suffixLength);
+                        levelCode = (Min(15, level_prefix) << (int)suffixLength);
 
                         if (suffixLength > 0 || level_prefix >= 14)
                         {
@@ -6299,7 +6299,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
 
                         if (level_prefix >= 16)
                         {
-                            levelCode += (1 << (level_prefix - 3)) - 4096;
+                            levelCode += (1 << (int)(level_prefix - 3)) - 4096;
                         }
 
                         if (i == TrailingOnes(coeff_token) &&
@@ -6322,7 +6322,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             suffixLength = 1;
                         }
 
-                        if (Abs(levelVal[i]) > (3 << (suffixLength - 1)) &&
+                        if (Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
                     suffixLength < 6)
                         {
                             suffixLength++;
@@ -10518,8 +10518,8 @@ tone_mapping_info( payloadSize ) {
                 if (tone_map_model_id == 2)
                 {
 
-                    this.start_of_coded_interval = new uint[(1 << target_bit_depth)];
-                    for (i = 0; i < (1 << target_bit_depth); i++)
+                    this.start_of_coded_interval = new uint[(1 << (int)target_bit_depth)];
+                    for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
                         size += stream.ReadUnsignedIntVariable(size, out this.start_of_coded_interval[i]);
                     }
@@ -10596,7 +10596,7 @@ tone_mapping_info( payloadSize ) {
                 if (tone_map_model_id == 2)
                 {
 
-                    for (i = 0; i < (1 << target_bit_depth); i++)
+                    for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
                         size += stream.WriteUnsignedIntVariable(this.start_of_coded_interval[i]);
                     }
@@ -10671,7 +10671,7 @@ tone_mapping_info( payloadSize ) {
                 if (tone_map_model_id == 2)
                 {
 
-                    for (i = 0; i < (1 << target_bit_depth); i++)
+                    for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
                         size += ItuStream.CalculateUnsignedIntVariable(start_of_coded_interval[i]); // start_of_coded_interval
                     }
