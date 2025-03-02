@@ -119,7 +119,7 @@ namespace Sharp{type}
 
             foreach (var v in ituClass.RequiresDefinition)
             {
-                resultCode += $"\r\nint {v.Name} = 0;";
+                resultCode += $"\r\nuint {v.Name} = 0;";
             }
 
             return resultCode;
@@ -249,7 +249,7 @@ namespace Sharp{type}
                 if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null && b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
                     b.AddedFields.Add(new ItuField() { Name = field.Name, Value = fieldValue });
-                    return $"{GetSpacing(level)}var {field.Name}{field.FieldArray}{fieldValue};";
+                    return $"{GetSpacing(level)}uint {field.Name}{field.FieldArray}{fieldValue};";
                 }
                 else
                 {
@@ -519,7 +519,7 @@ namespace Sharp{type}
                 { "se(v) | ae(v)",              "int" },
                 { "te(v) | ae(v)",              "int" },
                 { "b(8)",                       "byte" },
-                { "u(32)[]",                    "int[]" },
+                { "u(32)[]",                    "uint[]" },
                 { "u(32)[][]",                  "int[][]" },
                 { "u(32)[,]",                   "uint[,]" },
             };
@@ -722,7 +722,8 @@ namespace Sharp{type}
                 }
                 else if (!parts[i].Contains('=') && !parts[i].Contains('>') && !parts[i].Contains('<'))
                 {
-                    condition = condition.Replace(parts[i], parts[i] + " != 0");
+                    string trimmed = parts[i].Trim(new char[] { '(', ')' });
+                    condition = condition.Replace(trimmed, trimmed + " != 0");
                 }
             }
 
