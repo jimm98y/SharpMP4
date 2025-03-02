@@ -508,6 +508,8 @@ namespace Sharp{type}
                 { "te(v) | ae(v)",              "int" },
                 { "b(8)",                       "byte" },
                 { "u(32)[]",                    "int[]" },
+                { "u(32)[][]",                  "int[][]" },
+                { "u(32)[,]",                  "int[,]" },
             };
             return map;
         }
@@ -564,22 +566,22 @@ namespace Sharp{type}
                 { "mb_type",                       "ue(v) | ae(v)" },
                 { "startIdx",                      "u(32)" },
                 { "endIdx",                        "u(32)" },
-                { "coeffLevel",                    "u(32)" },
+                { "coeffLevel",                    "u(32)[]" },
                 { "maxNumCoeff",                   "u(32)" },
                 { "payloadType",                   "u(32)" },
                 { "payloadSize",                   "u(32)" },
-                { "outSign",                       "u(32)" },
-                { "outExp",                        "u(32)" },
-                { "outMantissa",                   "u(32)" },
-                { "outManLen",                     "u(32)" },
+                { "outSign",                       "u(32)[,]" },
+                { "outExp",                        "u(32)[,]" },
+                { "outMantissa",                   "u(32)[,]" },
+                { "outManLen",                     "u(32)[,]" },
                 { "numViews",                      "u(32)" },
                 { "predDirection",                 "u(32)" },
                 { "index",                         "u(32)" },
                 { "expLen",                        "u(32)" },
-                { "i16x16DClevel",                 "u(32)" },
-                { "i16x16AClevel",                 "u(32)" },
-                { "level4x4",                      "u(32)" },
-                { "level8x8",                      "u(32)" },
+                { "i16x16DClevel",                 "u(32)[][]" },
+                { "i16x16AClevel",                 "u(32)[][]" },
+                { "level4x4",                      "u(32)[][]" },
+                { "level8x8",                      "u(32)[][]" },
             };
 
             return map[parameter];

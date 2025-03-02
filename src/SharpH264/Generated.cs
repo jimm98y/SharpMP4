@@ -5640,20 +5640,20 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
     {
         private ResidualBlock residual_block;
         public ResidualBlock ResidualBlock { get { return residual_block; } set { residual_block = value; } }
-        private uint i16x16DClevel;
-        public uint I16x16DClevel { get { return i16x16DClevel; } set { i16x16DClevel = value; } }
-        private uint i16x16AClevel;
-        public uint I16x16AClevel { get { return i16x16AClevel; } set { i16x16AClevel = value; } }
-        private uint level4x4;
-        public uint Level4x4 { get { return level4x4; } set { level4x4 = value; } }
-        private uint level8x8;
-        public uint Level8x8 { get { return level8x8; } set { level8x8 = value; } }
+        private int[][] i16x16DClevel;
+        public int[][] I16x16DClevel { get { return i16x16DClevel; } set { i16x16DClevel = value; } }
+        private int[][] i16x16AClevel;
+        public int[][] I16x16AClevel { get { return i16x16AClevel; } set { i16x16AClevel = value; } }
+        private int[][] level4x4;
+        public int[][] Level4x4 { get { return level4x4; } set { level4x4 = value; } }
+        private int[][] level8x8;
+        public int[][] Level8x8 { get { return level8x8; } set { level8x8 = value; } }
         private uint startIdx;
         public uint StartIdx { get { return startIdx; } set { startIdx = value; } }
         private uint endIdx;
         public uint EndIdx { get { return endIdx; } set { endIdx = value; } }
 
-        public ResidualLuma(uint i16x16DClevel, uint i16x16AClevel, uint level4x4, uint level8x8, uint startIdx, uint endIdx)
+        public ResidualLuma(int[][] i16x16DClevel, int[][] i16x16AClevel, int[][] level4x4, int[][] level8x8, uint startIdx, uint endIdx)
         {
             this.i16x16DClevel = i16x16DClevel;
             this.i16x16AClevel = i16x16AClevel;
@@ -5977,8 +5977,8 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
         public uint TotalZeros { get { return total_zeros; } set { total_zeros = value; } }
         private uint run_before;
         public uint RunBefore { get { return run_before; } set { run_before = value; } }
-        private uint coeffLevel;
-        public uint CoeffLevel { get { return coeffLevel; } set { coeffLevel = value; } }
+        private int[] coeffLevel;
+        public int[] CoeffLevel { get { return coeffLevel; } set { coeffLevel = value; } }
         private uint startIdx;
         public uint StartIdx { get { return startIdx; } set { startIdx = value; } }
         private uint endIdx;
@@ -5986,7 +5986,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
         private uint maxNumCoeff;
         public uint MaxNumCoeff { get { return maxNumCoeff; } set { maxNumCoeff = value; } }
 
-        public ResidualBlockCavlc(uint coeffLevel, uint startIdx, uint endIdx, uint maxNumCoeff)
+        public ResidualBlockCavlc(int[] coeffLevel, uint startIdx, uint endIdx, uint maxNumCoeff)
         {
             this.coeffLevel = coeffLevel;
             this.startIdx = startIdx;
@@ -6394,8 +6394,8 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
         public uint[] CoeffAbsLevelMinus1 { get { return coeff_abs_level_minus1; } set { coeff_abs_level_minus1 = value; } }
         private uint[] coeff_sign_flag;
         public uint[] CoeffSignFlag { get { return coeff_sign_flag; } set { coeff_sign_flag = value; } }
-        private uint coeffLevel;
-        public uint CoeffLevel { get { return coeffLevel; } set { coeffLevel = value; } }
+        private int[] coeffLevel;
+        public int[] CoeffLevel { get { return coeffLevel; } set { coeffLevel = value; } }
         private uint startIdx;
         public uint StartIdx { get { return startIdx; } set { startIdx = value; } }
         private uint endIdx;
@@ -6403,7 +6403,7 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
         private uint maxNumCoeff;
         public uint MaxNumCoeff { get { return maxNumCoeff; } set { maxNumCoeff = value; } }
 
-        public ResidualBlockCabac(uint coeffLevel, uint startIdx, uint endIdx, uint maxNumCoeff)
+        public ResidualBlockCabac(int[] coeffLevel, uint startIdx, uint endIdx, uint maxNumCoeff)
         {
             this.coeffLevel = coeffLevel;
             this.startIdx = startIdx;
@@ -23643,16 +23643,16 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
         public uint DaMantissaLenMinus1 { get { return da_mantissa_len_minus1; } set { da_mantissa_len_minus1 = value; } }
         private uint da_mantissa;
         public uint DaMantissa { get { return da_mantissa; } set { da_mantissa = value; } }
-        private uint outSign;
-        public uint OutSign { get { return outSign; } set { outSign = value; } }
-        private uint outExp;
-        public uint OutExp { get { return outExp; } set { outExp = value; } }
-        private uint outMantissa;
-        public uint OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
-        private uint outManLen;
-        public uint OutManLen { get { return outManLen; } set { outManLen = value; } }
+        private int[,] outSign;
+        public int[,] OutSign { get { return outSign; } set { outSign = value; } }
+        private int[,] outExp;
+        public int[,] OutExp { get { return outExp; } set { outExp = value; } }
+        private int[,] outMantissa;
+        public int[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
+        private int[,] outManLen;
+        public int[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
 
-        public DepthRepresentationSeiElement(uint outSign, uint outExp, uint outMantissa, uint outManLen)
+        public DepthRepresentationSeiElement(int[,] outSign, int[,] outExp, int[,] outMantissa, int[,] outManLen)
         {
             this.outSign = outSign;
             this.outExp = outExp;
@@ -25885,16 +25885,16 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
         public uint ExpLen { get { return expLen; } set { expLen = value; } }
         private uint index;
         public uint Index { get { return index; } set { index = value; } }
-        private uint outSign;
-        public uint OutSign { get { return outSign; } set { outSign = value; } }
-        private uint outExp;
-        public uint OutExp { get { return outExp; } set { outExp = value; } }
-        private uint outMantissa;
-        public uint OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
-        private uint outManLen;
-        public uint OutManLen { get { return outManLen; } set { outManLen = value; } }
+        private int[,] outSign;
+        public int[,] OutSign { get { return outSign; } set { outSign = value; } }
+        private int[,] outExp;
+        public int[,] OutExp { get { return outExp; } set { outExp = value; } }
+        private int[,] outMantissa;
+        public int[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
+        private int[,] outManLen;
+        public int[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
 
-        public ThreeDvAcquisitionElement(uint numViews, uint predDirection, uint expLen, uint index, uint outSign, uint outExp, uint outMantissa, uint outManLen)
+        public ThreeDvAcquisitionElement(uint numViews, uint predDirection, uint expLen, uint index, int[,] outSign, int[,] outExp, int[,] outMantissa, int[,] outManLen)
         {
             this.numViews = numViews;
             this.predDirection = predDirection;

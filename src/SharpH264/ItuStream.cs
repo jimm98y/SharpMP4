@@ -19,12 +19,7 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
-        internal ulong ReadFixed(ulong size, int count, out bool value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadFixed(ulong size, int count, out ushort value)
+        internal ulong ReadFixed(ulong size, int count, out uint value)
         {
             throw new NotImplementedException();
         }
@@ -79,27 +74,12 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
-        internal ulong WriteFixed(int count, byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteFixed(int count, ushort value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteFixed(int count, bool value)
+        internal ulong WriteFixed(int count, uint value)
         {
             throw new NotImplementedException();
         }
 
         internal ulong WriteClass<T>(T value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteUnsignedInt(int count, bool value)
         {
             throw new NotImplementedException();
         }
