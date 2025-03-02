@@ -647,6 +647,7 @@ namespace Sharp{type}
                                 int indexesTypeDef = req.FieldArray.Count(x => x == '[');
                                 int indexesType = variableType.Count(x => x == '[');
                                 string variableName = GetFieldName(req) + suffix;
+
                                 if (variableType.Contains("[]"))
                                 {
                                     int diff = (indexesType - indexesTypeDef);
@@ -945,32 +946,35 @@ namespace Sharp{type}
                         AddAndResolveDuplicates(ret, blockField);
                     }
                 }
-                else if (code is ItuBlockIfThenElse blockif)
+                else if (code is ItuBlockIfThenElse blockifThenElse)
                 {
-                    blockif.Parent = parent; // keep track of parent blocks
+                    blockifThenElse.Parent = parent; // keep track of parent blocks
 
-                    var blockFields = FlattenFields(cls, ((ItuBlock)blockif.BlockIf).Content, (ItuBlock)blockif.BlockIf);
+                    var blockFields = FlattenFields(cls, ((ItuBlock)blockifThenElse.BlockIf).Content, (ItuBlock)blockifThenElse.BlockIf);
                     foreach (var blockField in blockFields)
                     {
                         AddAndResolveDuplicates(ret, blockField);
                     }
+                    ((ItuBlock)blockifThenElse.BlockIf).Parent = parent;
 
-                    foreach (var blockelseif in blockif.BlockElseIf)
+                    foreach (var blockelseif in blockifThenElse.BlockElseIf)
                     {
                         var blockElseIfFields = FlattenFields(cls, ((ItuBlock)blockelseif).Content, (ItuBlock)blockelseif);
                         foreach (var blockField in blockElseIfFields)
                         {
                             AddAndResolveDuplicates(ret, blockField);
                         }
+                        ((ItuBlock)blockelseif).Parent = parent;
                     }
 
-                    if(blockif.BlockElse != null)
+                    if(blockifThenElse.BlockElse != null)
                     {
-                        var blockElseFields = FlattenFields(cls, ((ItuBlock)blockif.BlockElse).Content, (ItuBlock)blockif.BlockElse);
+                        var blockElseFields = FlattenFields(cls, ((ItuBlock)blockifThenElse.BlockElse).Content, (ItuBlock)blockifThenElse.BlockElse);
                         foreach (var blockElseField in blockElseFields)
                         {
                             AddAndResolveDuplicates(ret, blockElseField);
                         }
+                        ((ItuBlock)blockifThenElse.BlockElse).Parent = parent;
                     }
                 }
             }

@@ -111,6 +111,7 @@ nal_unit( NumBytesInNALunit ) {
                 }
             }
 
+            this.rbsp_byte = new byte[NumBytesInNALunit];
             for (i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++)
             {
 
@@ -3832,6 +3833,10 @@ pred_weight_table() {
                 size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom);
             }
 
+            this.luma_weight_l0 = new int[num_ref_idx_l0_active_minus1];
+            this.luma_offset_l0 = new int[num_ref_idx_l0_active_minus1];
+            this.chroma_weight_l0 = new int[num_ref_idx_l0_active_minus1][];
+            this.chroma_offset_l0 = new int[num_ref_idx_l0_active_minus1][];
             for (i = 0; i <= num_ref_idx_l0_active_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag);
@@ -3849,8 +3854,8 @@ pred_weight_table() {
                     if (chroma_weight_l0_flag != 0)
                     {
 
-                        this.chroma_weight_l0 = new int[2];
-                        this.chroma_offset_l0 = new int[2];
+                        this.chroma_weight_l0[i] = new int[2];
+                        this.chroma_offset_l0[i] = new int[2];
                         for (j = 0; j < 2; j++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l0[i][j]);
@@ -3863,6 +3868,10 @@ pred_weight_table() {
             if (slice_type % 5 == 1)
             {
 
+                this.luma_weight_l1 = new int[num_ref_idx_l1_active_minus1];
+                this.luma_offset_l1 = new int[num_ref_idx_l1_active_minus1];
+                this.chroma_weight_l1 = new int[num_ref_idx_l1_active_minus1][];
+                this.chroma_offset_l1 = new int[num_ref_idx_l1_active_minus1][];
                 for (i = 0; i <= num_ref_idx_l1_active_minus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag);
@@ -3880,8 +3889,8 @@ pred_weight_table() {
                         if (chroma_weight_l1_flag != 0)
                         {
 
-                            this.chroma_weight_l1 = new int[2];
-                            this.chroma_offset_l1 = new int[2];
+                            this.chroma_weight_l1[i] = new int[2];
+                            this.chroma_offset_l1[i] = new int[2];
                             for (j = 0; j < 2; j++)
                             {
                                 size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l1[i][j]);
@@ -4678,6 +4687,7 @@ mb_pred( mb_type ) {
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
+                    this.rem_intra4x4_pred_mode = new uint[16];
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra4x4_pred_mode_flag[luma4x4BlkIdx]);
@@ -4693,6 +4703,7 @@ mb_pred( mb_type ) {
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
+                    this.rem_intra8x8_pred_mode = new uint[4];
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra8x8_pred_mode_flag[luma8x8BlkIdx]);
@@ -4712,6 +4723,7 @@ mb_pred( mb_type ) {
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
+                this.ref_idx_l0 = new int[NumMbPart(mb_type)];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
@@ -4723,6 +4735,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
+                this.ref_idx_l1 = new int[NumMbPart(mb_type)];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
@@ -4734,13 +4747,14 @@ mb_pred( mb_type ) {
                     }
                 }
 
+                this.mvd_l0 = new int[NumMbPart(mb_type)][];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
                     {
 
-                        this.mvd_l0 = new int[2];
+                        this.mvd_l0[mbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][0][compIdx]);
@@ -4748,13 +4762,14 @@ mb_pred( mb_type ) {
                     }
                 }
 
+                this.mvd_l1 = new int[NumMbPart(mb_type)][];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
                     {
 
-                        this.mvd_l1 = new int[2];
+                        this.mvd_l1[mbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][0][compIdx]);
@@ -5049,6 +5064,7 @@ sub_mb_pred( mb_type ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.sub_mb_type[mbPartIdx]);
             }
 
+            this.ref_idx_l0 = new int[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -5062,6 +5078,7 @@ sub_mb_pred( mb_type ) {
                 }
             }
 
+            this.ref_idx_l1 = new int[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -5074,6 +5091,7 @@ sub_mb_pred( mb_type ) {
                 }
             }
 
+            this.mvd_l0 = new int[4][][];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -5081,13 +5099,13 @@ sub_mb_pred( mb_type ) {
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
-                    this.mvd_l0 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
        subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
-                        this.mvd_l0[subMbPartIdx] = new int[2];
+                        this.mvd_l0[mbPartIdx][subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][subMbPartIdx][compIdx]);
@@ -5096,6 +5114,7 @@ sub_mb_pred( mb_type ) {
                 }
             }
 
+            this.mvd_l1 = new int[4][][];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -5103,13 +5122,13 @@ sub_mb_pred( mb_type ) {
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
-                    this.mvd_l1 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
        subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
-                        this.mvd_l1[subMbPartIdx] = new int[2];
+                        this.mvd_l1[mbPartIdx][subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][subMbPartIdx][compIdx]);
@@ -8866,7 +8885,10 @@ spare_pic( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_spare_pics_minus1);
 
             this.delta_spare_frame_num = new uint[num_spare_pics_minus1 + 1];
+            this.spare_bottom_field_flag = new uint[num_spare_pics_minus1 + 1];
             this.spare_area_idc = new uint[num_spare_pics_minus1 + 1];
+            this.spare_unit_flag = new uint[num_spare_pics_minus1 + 1][];
+            this.zero_run_length = new uint[num_spare_pics_minus1 + 1][];
             for (i = 0; i < num_spare_pics_minus1 + 1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.delta_spare_frame_num[i]);
@@ -8880,7 +8902,7 @@ spare_pic( payloadSize ) {
                 if (spare_area_idc[i] == 1)
                 {
 
-                    this.spare_unit_flag = new uint[PicSizeInMapUnits];
+                    this.spare_unit_flag[i] = new uint[PicSizeInMapUnits];
                     for (j = 0; j < PicSizeInMapUnits; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.spare_unit_flag[i][j]);
@@ -8890,7 +8912,7 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    this.zero_run_length = new uint[PicSizeInMapUnits];
+                    this.zero_run_length[i] = new uint[PicSizeInMapUnits];
                     for (j = 0; mapUnitCnt < PicSizeInMapUnits; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.zero_run_length[i][j]);
@@ -9900,6 +9922,11 @@ film_grain_characteristics( payloadSize ) {
                     size += stream.ReadUnsignedInt(size, 1, out this.comp_model_present_flag[c]);
                 }
 
+                this.num_intensity_intervals_minus1 = new uint[3];
+                this.num_model_values_minus1 = new uint[3];
+                this.intensity_interval_lower_bound = new uint[3][];
+                this.intensity_interval_upper_bound = new uint[3][];
+                this.comp_model_value = new int[3][][];
                 for (c = 0; c < 3; c++)
                 {
 
@@ -9908,15 +9935,15 @@ film_grain_characteristics( payloadSize ) {
                         size += stream.ReadUnsignedInt(size, 8, out this.num_intensity_intervals_minus1[c]);
                         size += stream.ReadUnsignedInt(size, 3, out this.num_model_values_minus1[c]);
 
-                        this.intensity_interval_lower_bound = new uint[num_intensity_intervals_minus1[c]];
-                        this.intensity_interval_upper_bound = new uint[num_intensity_intervals_minus1[c]];
-                        this.comp_model_value = new int[num_intensity_intervals_minus1[c]][];
+                        this.intensity_interval_lower_bound[c] = new uint[num_intensity_intervals_minus1[c]];
+                        this.intensity_interval_upper_bound[c] = new uint[num_intensity_intervals_minus1[c]];
+                        this.comp_model_value[c] = new int[num_intensity_intervals_minus1[c]][];
                         for (i = 0; i <= num_intensity_intervals_minus1[c]; i++)
                         {
                             size += stream.ReadUnsignedInt(size, 8, out this.intensity_interval_lower_bound[c][i]);
                             size += stream.ReadUnsignedInt(size, 8, out this.intensity_interval_upper_bound[c][i]);
 
-                            this.comp_model_value[i] = new int[num_model_values_minus1[c]];
+                            this.comp_model_value[c][i] = new int[num_model_values_minus1[c]];
                             for (j = 0; j <= num_model_values_minus1[c]; j++)
                             {
                                 size += stream.ReadSignedIntGolomb(size, out this.comp_model_value[c][i][j]);
@@ -11180,6 +11207,8 @@ colour_remapping_info( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_output_bit_depth);
 
                 this.pre_lut_num_val_minus1 = new uint[3];
+                this.pre_lut_coded_value = new uint[3][];
+                this.pre_lut_target_value = new uint[3][];
                 for (c = 0; c < 3; c++)
                 {
                     size += stream.ReadUnsignedInt(size, 8, out this.pre_lut_num_val_minus1[c]);
@@ -11187,8 +11216,8 @@ colour_remapping_info( payloadSize ) {
                     if (pre_lut_num_val_minus1[c] > 0)
                     {
 
-                        this.pre_lut_coded_value = new uint[pre_lut_num_val_minus1[c]];
-                        this.pre_lut_target_value = new uint[pre_lut_num_val_minus1[c]];
+                        this.pre_lut_coded_value[c] = new uint[pre_lut_num_val_minus1[c]];
+                        this.pre_lut_target_value[c] = new uint[pre_lut_num_val_minus1[c]];
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
                             size += stream.ReadUnsignedIntVariable(size, out this.pre_lut_coded_value[c][i]);
@@ -11215,6 +11244,8 @@ colour_remapping_info( payloadSize ) {
                 }
 
                 this.post_lut_num_val_minus1 = new uint[3];
+                this.post_lut_coded_value = new uint[3][];
+                this.post_lut_target_value = new uint[3][];
                 for (c = 0; c < 3; c++)
                 {
                     size += stream.ReadUnsignedInt(size, 8, out this.post_lut_num_val_minus1[c]);
@@ -11222,8 +11253,8 @@ colour_remapping_info( payloadSize ) {
                     if (post_lut_num_val_minus1[c] > 0)
                     {
 
-                        this.post_lut_coded_value = new uint[post_lut_num_val_minus1[c]];
-                        this.post_lut_target_value = new uint[post_lut_num_val_minus1[c]];
+                        this.post_lut_coded_value[c] = new uint[post_lut_num_val_minus1[c]];
+                        this.post_lut_target_value[c] = new uint[post_lut_num_val_minus1[c]];
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
                             size += stream.ReadUnsignedIntVariable(size, out this.post_lut_coded_value[c][i]);
@@ -12150,6 +12181,13 @@ regionwise_packing( payloadSize ) {
                 this.packed_region_height = new uint[num_packed_regions];
                 this.packed_region_top = new uint[num_packed_regions];
                 this.packed_region_left = new uint[num_packed_regions];
+                this.left_gb_width = new uint[num_packed_regions];
+                this.right_gb_width = new uint[num_packed_regions];
+                this.top_gb_height = new uint[num_packed_regions];
+                this.bottom_gb_height = new uint[num_packed_regions];
+                this.gb_not_used_for_pred_flag = new uint[num_packed_regions];
+                this.gb_type = new uint[num_packed_regions][];
+                this.rwp_gb_reserved_zero_3bits = new uint[num_packed_regions];
                 for (i = 0; i < num_packed_regions; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 4, out this.rwp_reserved_zero_4bits[i]);
@@ -12172,7 +12210,7 @@ regionwise_packing( payloadSize ) {
                         size += stream.ReadUnsignedInt(size, 8, out this.bottom_gb_height[i]);
                         size += stream.ReadUnsignedInt(size, 1, out this.gb_not_used_for_pred_flag[i]);
 
-                        this.gb_type = new uint[4];
+                        this.gb_type[i] = new uint[4];
                         for (j = 0; j < 4; j++)
                         {
                             size += stream.ReadUnsignedInt(size, 3, out this.gb_type[i][j]);
@@ -12793,6 +12831,7 @@ annotated_regions( payloadSize ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates);
 
                     this.ar_label_idx = new uint[ar_num_label_updates];
+                    this.ar_label = new int[ar_num_label_updates];
                     for (i = 0; i < ar_num_label_updates; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i]);
@@ -12813,6 +12852,13 @@ annotated_regions( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_object_updates);
 
                 this.ar_object_idx = new uint[ar_num_object_updates];
+                this.ar_object_label_idx = new uint[ar_num_object_updates];
+                this.ar_bounding_box_top = new uint[ar_num_object_updates];
+                this.ar_bounding_box_left = new uint[ar_num_object_updates];
+                this.ar_bounding_box_width = new uint[ar_num_object_updates];
+                this.ar_bounding_box_height = new uint[ar_num_object_updates];
+                this.ar_partial_object_flag = new uint[ar_num_object_updates];
+                this.ar_object_confidence = new uint[ar_num_object_updates];
                 for (i = 0; i < ar_num_object_updates; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_idx[i]);
@@ -16133,6 +16179,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
+                    this.rem_intra4x4_pred_mode = new uint[16];
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra4x4_pred_mode_flag[luma4x4BlkIdx]);
@@ -16148,6 +16195,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
+                    this.rem_intra8x8_pred_mode = new uint[4];
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra8x8_pred_mode_flag[luma8x8BlkIdx]);
@@ -16171,6 +16219,7 @@ mb_pred_in_scalable_extension( mb_type ) {
               adaptive_motion_prediction_flag != 0)
                 {
 
+                    this.motion_prediction_flag_l0 = new uint[NumMbPart(mb_type)];
                     for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                     {
 
@@ -16180,6 +16229,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                         }
                     }
 
+                    this.motion_prediction_flag_l1 = new uint[NumMbPart(mb_type)];
                     for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                     {
 
@@ -16190,6 +16240,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
+                this.ref_idx_l0 = new int[NumMbPart(mb_type)];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
@@ -16202,6 +16253,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
+                this.ref_idx_l1 = new int[NumMbPart(mb_type)];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
@@ -16214,13 +16266,14 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
+                this.mvd_l0 = new int[NumMbPart(mb_type)][];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
                     {
 
-                        this.mvd_l0 = new int[2];
+                        this.mvd_l0[mbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][0][compIdx]);
@@ -16228,13 +16281,14 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
+                this.mvd_l1 = new int[NumMbPart(mb_type)][];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
                     {
 
-                        this.mvd_l1 = new int[2];
+                        this.mvd_l1[mbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][0][compIdx]);
@@ -16600,6 +16654,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             if (InCropWindow(CurrMbAddr) != 0 && adaptive_motion_prediction_flag != 0)
             {
 
+                this.motion_prediction_flag_l0 = new uint[4];
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
@@ -16610,6 +16665,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
+                this.motion_prediction_flag_l1 = new uint[4];
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
@@ -16621,6 +16677,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 }
             }
 
+            this.ref_idx_l0 = new int[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -16635,6 +16692,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 }
             }
 
+            this.ref_idx_l1 = new int[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -16648,6 +16706,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 }
             }
 
+            this.mvd_l0 = new int[4][][];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -16655,13 +16714,13 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
-                    this.mvd_l0 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
        subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
-                        this.mvd_l0[subMbPartIdx] = new int[2];
+                        this.mvd_l0[mbPartIdx][subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][subMbPartIdx][compIdx]);
@@ -16670,6 +16729,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 }
             }
 
+            this.mvd_l1 = new int[4][][];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -16677,13 +16737,13 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
-                    this.mvd_l1 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
        subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
-                        this.mvd_l1[subMbPartIdx] = new int[2];
+                        this.mvd_l1[mbPartIdx][subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][subMbPartIdx][compIdx]);
@@ -17237,8 +17297,54 @@ scalability_info( payloadSize ) {
             this.parameter_sets_info_present_flag = new uint[num_layers_minus1];
             this.bitstream_restriction_info_present_flag = new uint[num_layers_minus1];
             this.exact_inter_layer_pred_flag = new uint[num_layers_minus1];
+            this.exact_sample_value_match_flag = new uint[num_layers_minus1];
             this.layer_conversion_flag = new uint[num_layers_minus1];
             this.layer_output_flag = new uint[num_layers_minus1];
+            this.layer_profile_level_idc = new uint[num_layers_minus1];
+            this.avg_bitrate = new uint[num_layers_minus1];
+            this.max_bitrate_layer = new uint[num_layers_minus1];
+            this.max_bitrate_layer_representation = new uint[num_layers_minus1];
+            this.max_bitrate_calc_window = new uint[num_layers_minus1];
+            this.constant_frm_rate_idc = new uint[num_layers_minus1];
+            this.avg_frm_rate = new uint[num_layers_minus1];
+            this.frm_width_in_mbs_minus1 = new uint[num_layers_minus1];
+            this.frm_height_in_mbs_minus1 = new uint[num_layers_minus1];
+            this.base_region_layer_id = new uint[num_layers_minus1];
+            this.dynamic_rect_flag = new uint[num_layers_minus1];
+            this.horizontal_offset = new uint[num_layers_minus1];
+            this.vertical_offset = new uint[num_layers_minus1];
+            this.region_width = new uint[num_layers_minus1];
+            this.region_height = new uint[num_layers_minus1];
+            this.roi_id = new uint[num_layers_minus1];
+            this.iroi_grid_flag = new uint[num_layers_minus1];
+            this.grid_width_in_mbs_minus1 = new uint[num_layers_minus1];
+            this.grid_height_in_mbs_minus1 = new uint[num_layers_minus1];
+            this.num_rois_minus1 = new uint[num_layers_minus1];
+            this.first_mb_in_roi = new uint[num_layers_minus1][];
+            this.roi_width_in_mbs_minus1 = new uint[num_layers_minus1][];
+            this.roi_height_in_mbs_minus1 = new uint[num_layers_minus1][];
+            this.num_directly_dependent_layers = new uint[num_layers_minus1];
+            this.directly_dependent_layer_id_delta_minus1 = new uint[num_layers_minus1][];
+            this.layer_dependency_info_src_layer_id_delta = new uint[num_layers_minus1];
+            this.num_seq_parameter_sets = new uint[num_layers_minus1];
+            this.seq_parameter_set_id_delta = new uint[num_layers_minus1][];
+            this.num_subset_seq_parameter_sets = new uint[num_layers_minus1];
+            this.subset_seq_parameter_set_id_delta = new uint[num_layers_minus1][];
+            this.num_pic_parameter_sets_minus1 = new uint[num_layers_minus1];
+            this.pic_parameter_set_id_delta = new uint[num_layers_minus1][];
+            this.parameter_sets_info_src_layer_id_delta = new uint[num_layers_minus1];
+            this.motion_vectors_over_pic_boundaries_flag = new uint[num_layers_minus1];
+            this.max_bytes_per_pic_denom = new uint[num_layers_minus1];
+            this.max_bits_per_mb_denom = new uint[num_layers_minus1];
+            this.log2_max_mv_length_horizontal = new uint[num_layers_minus1];
+            this.log2_max_mv_length_vertical = new uint[num_layers_minus1];
+            this.max_num_reorder_frames = new uint[num_layers_minus1];
+            this.max_dec_frame_buffering = new uint[num_layers_minus1];
+            this.conversion_type_idc = new uint[num_layers_minus1];
+            this.rewriting_info_flag = new uint[num_layers_minus1][];
+            this.rewriting_profile_level_idc = new uint[num_layers_minus1][];
+            this.rewriting_avg_bitrate = new uint[num_layers_minus1][];
+            this.rewriting_max_bitrate = new uint[num_layers_minus1][];
             for (i = 0; i <= num_layers_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i]);
@@ -17324,9 +17430,9 @@ scalability_info( payloadSize ) {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_rois_minus1[i]);
 
-                        this.first_mb_in_roi = new uint[num_rois_minus1[i]];
-                        this.roi_width_in_mbs_minus1 = new uint[num_rois_minus1[i]];
-                        this.roi_height_in_mbs_minus1 = new uint[num_rois_minus1[i]];
+                        this.first_mb_in_roi[i] = new uint[num_rois_minus1[i]];
+                        this.roi_width_in_mbs_minus1[i] = new uint[num_rois_minus1[i]];
+                        this.roi_height_in_mbs_minus1[i] = new uint[num_rois_minus1[i]];
                         for (j = 0; j <= num_rois_minus1[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_roi[i][j]);
@@ -17340,7 +17446,7 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i]);
 
-                    this.directly_dependent_layer_id_delta_minus1 = new uint[num_directly_dependent_layers[i]];
+                    this.directly_dependent_layer_id_delta_minus1[i] = new uint[num_directly_dependent_layers[i]];
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j]);
@@ -17355,21 +17461,21 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i]);
 
-                    this.seq_parameter_set_id_delta = new uint[num_seq_parameter_sets[i]];
+                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_sets[i]];
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i]);
 
-                    this.subset_seq_parameter_set_id_delta = new uint[num_subset_seq_parameter_sets[i]];
+                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_sets[i]];
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i]);
 
-                    this.pic_parameter_set_id_delta = new uint[num_pic_parameter_sets_minus1[i]];
+                    this.pic_parameter_set_id_delta[i] = new uint[num_pic_parameter_sets_minus1[i]];
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
@@ -17395,7 +17501,10 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.conversion_type_idc[i]);
 
-                    this.rewriting_info_flag = new uint[2];
+                    this.rewriting_info_flag[i] = new uint[2];
+                    this.rewriting_profile_level_idc[i] = new uint[2];
+                    this.rewriting_avg_bitrate[i] = new uint[2];
+                    this.rewriting_max_bitrate[i] = new uint[2];
                     for (j = 0; j < 2; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.rewriting_info_flag[i][j]);
@@ -18226,6 +18335,9 @@ layer_dependency_change( payloadSize ) {
 
             this.layer_id = new uint[num_layers_minus1];
             this.layer_dependency_info_present_flag = new uint[num_layers_minus1];
+            this.num_directly_dependent_layers = new uint[num_layers_minus1];
+            this.directly_dependent_layer_id_delta_minus1 = new uint[num_layers_minus1][];
+            this.layer_dependency_info_src_layer_id_delta_minus1 = new uint[num_layers_minus1];
             for (i = 0; i <= num_layers_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i]);
@@ -18235,7 +18347,7 @@ layer_dependency_change( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i]);
 
-                    this.directly_dependent_layer_id_delta_minus1 = new uint[num_directly_dependent_layers[i]];
+                    this.directly_dependent_layer_id_delta_minus1[i] = new uint[num_directly_dependent_layers[i]];
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j]);
@@ -18526,8 +18638,12 @@ base_layer_temporal_hrd( payloadSize ) {
 
             this.sei_temporal_id = new uint[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_timing_info_present_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_num_units_in_tick = new uint[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_time_scale = new uint[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_fixed_frame_rate_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_nal_hrd_parameters_present_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_vcl_hrd_parameters_present_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_low_delay_hrd_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_pic_struct_present_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
             for (i = 0; i <= num_of_temporal_layers_in_base_layer_minus1; i++)
             {
@@ -18801,6 +18917,10 @@ redundant_pic_property( payloadSize ) {
             this.num_redundant_pics_minus1 = new uint[num_dIds_minus1][];
             this.redundant_pic_cnt_minus1 = new uint[num_dIds_minus1][][];
             this.pic_match_flag = new uint[num_dIds_minus1][][];
+            this.mb_type_match_flag = new uint[num_dIds_minus1][][];
+            this.motion_match_flag = new uint[num_dIds_minus1][][];
+            this.residual_match_flag = new uint[num_dIds_minus1][][];
+            this.intra_samples_match_flag = new uint[num_dIds_minus1][][];
             for (i = 0; i <= num_dIds_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.dependency_id[i]);
@@ -18810,6 +18930,10 @@ redundant_pic_property( payloadSize ) {
                 this.num_redundant_pics_minus1[i] = new uint[num_qIds_minus1[i]];
                 this.redundant_pic_cnt_minus1[i] = new uint[num_qIds_minus1[i]][];
                 this.pic_match_flag[i] = new uint[num_qIds_minus1[i]][];
+                this.mb_type_match_flag[i] = new uint[num_qIds_minus1[i]][];
+                this.motion_match_flag[i] = new uint[num_qIds_minus1[i]][];
+                this.residual_match_flag[i] = new uint[num_qIds_minus1[i]][];
+                this.intra_samples_match_flag[i] = new uint[num_qIds_minus1[i]][];
                 for (j = 0; j <= num_qIds_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedInt(size, 4, out this.quality_id[i][j]);
@@ -18817,6 +18941,10 @@ redundant_pic_property( payloadSize ) {
 
                     this.redundant_pic_cnt_minus1[i][j] = new uint[num_redundant_pics_minus1[i][j]];
                     this.pic_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
+                    this.mb_type_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
+                    this.motion_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
+                    this.residual_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
+                    this.intra_samples_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
                     for (k = 0; k <= num_redundant_pics_minus1[i][j]; k++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt_minus1[i][j][k]);
@@ -19090,8 +19218,12 @@ svc_vui_parameters_extension() {
             this.vui_ext_quality_id = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_temporal_id = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_timing_info_present_flag = new uint[vui_ext_num_entries_minus1];
+            this.vui_ext_num_units_in_tick = new uint[vui_ext_num_entries_minus1];
+            this.vui_ext_time_scale = new uint[vui_ext_num_entries_minus1];
+            this.vui_ext_fixed_frame_rate_flag = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_nal_hrd_parameters_present_flag = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_vcl_hrd_parameters_present_flag = new uint[vui_ext_num_entries_minus1];
+            this.vui_ext_low_delay_hrd_flag = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_pic_struct_present_flag = new uint[vui_ext_num_entries_minus1];
             for (i = 0; i <= vui_ext_num_entries_minus1; i++)
             {
@@ -20023,19 +20155,23 @@ parallel_decoding_info( payloadSize ) {
             int j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
+            this.pdi_init_delay_anchor_minus2_l0 = new uint[num_views_minus1][];
+            this.pdi_init_delay_anchor_minus2_l1 = new uint[num_views_minus1][];
+            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[num_views_minus1][];
+            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[num_views_minus1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
 
                 if (anchor_pic_flag != 0)
                 {
 
-                    this.pdi_init_delay_anchor_minus2_l0 = new uint[num_anchor_refs_l0[i]];
+                    this.pdi_init_delay_anchor_minus2_l0[i] = new uint[num_anchor_refs_l0[i]];
                     for (j = 0; j <= num_anchor_refs_l0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l0[i][j]);
                     }
 
-                    this.pdi_init_delay_anchor_minus2_l1 = new uint[num_anchor_refs_l1[i]];
+                    this.pdi_init_delay_anchor_minus2_l1[i] = new uint[num_anchor_refs_l1[i]];
                     for (j = 0; j <= num_anchor_refs_l1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l1[i][j]);
@@ -20044,13 +20180,13 @@ parallel_decoding_info( payloadSize ) {
                 else
                 {
 
-                    this.pdi_init_delay_non_anchor_minus2_l0 = new uint[num_non_anchor_refs_l0[i]];
+                    this.pdi_init_delay_non_anchor_minus2_l0[i] = new uint[num_non_anchor_refs_l0[i]];
                     for (j = 0; j <= num_non_anchor_refs_l0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l0[i][j]);
                     }
 
-                    this.pdi_init_delay_non_anchor_minus2_l1 = new uint[num_non_anchor_refs_l1[i]];
+                    this.pdi_init_delay_non_anchor_minus2_l1[i] = new uint[num_non_anchor_refs_l1[i]];
                     for (j = 0; j <= num_non_anchor_refs_l1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l1[i][j]);
@@ -20482,8 +20618,32 @@ view_scalability_info( payloadSize ) {
             this.profile_level_info_present_flag = new uint[num_operation_points_minus1];
             this.bitrate_info_present_flag = new uint[num_operation_points_minus1];
             this.frm_rate_info_present_flag = new uint[num_operation_points_minus1];
+            this.view_dependency_info_present_flag = new uint[num_operation_points_minus1];
             this.parameter_sets_info_present_flag = new uint[num_operation_points_minus1];
             this.bitstream_restriction_info_present_flag = new uint[num_operation_points_minus1];
+            this.op_profile_level_idc = new uint[num_operation_points_minus1];
+            this.avg_bitrate = new uint[num_operation_points_minus1];
+            this.max_bitrate = new uint[num_operation_points_minus1];
+            this.max_bitrate_calc_window = new uint[num_operation_points_minus1];
+            this.constant_frm_rate_idc = new uint[num_operation_points_minus1];
+            this.avg_frm_rate = new uint[num_operation_points_minus1];
+            this.num_directly_dependent_views = new uint[num_operation_points_minus1];
+            this.directly_dependent_view_id = new uint[num_operation_points_minus1][];
+            this.view_dependency_info_src_op_id = new uint[num_operation_points_minus1];
+            this.num_seq_parameter_sets = new uint[num_operation_points_minus1];
+            this.seq_parameter_set_id_delta = new uint[num_operation_points_minus1][];
+            this.num_subset_seq_parameter_sets = new uint[num_operation_points_minus1];
+            this.subset_seq_parameter_set_id_delta = new uint[num_operation_points_minus1][];
+            this.num_pic_parameter_sets_minus1 = new uint[num_operation_points_minus1];
+            this.pic_parameter_set_id_delta = new uint[num_operation_points_minus1][];
+            this.parameter_sets_info_src_op_id = new uint[num_operation_points_minus1];
+            this.motion_vectors_over_pic_boundaries_flag = new uint[num_operation_points_minus1];
+            this.max_bytes_per_pic_denom = new uint[num_operation_points_minus1];
+            this.max_bits_per_mb_denom = new uint[num_operation_points_minus1];
+            this.log2_max_mv_length_horizontal = new uint[num_operation_points_minus1];
+            this.log2_max_mv_length_vertical = new uint[num_operation_points_minus1];
+            this.max_num_reorder_frames = new uint[num_operation_points_minus1];
+            this.max_dec_frame_buffering = new uint[num_operation_points_minus1];
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i]);
@@ -20529,7 +20689,7 @@ view_scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i]);
 
-                    this.directly_dependent_view_id = new uint[num_directly_dependent_views[i]];
+                    this.directly_dependent_view_id[i] = new uint[num_directly_dependent_views[i]];
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j]);
@@ -20544,21 +20704,21 @@ view_scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i]);
 
-                    this.seq_parameter_set_id_delta = new uint[num_seq_parameter_sets[i]];
+                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_sets[i]];
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i]);
 
-                    this.subset_seq_parameter_set_id_delta = new uint[num_subset_seq_parameter_sets[i]];
+                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_sets[i]];
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i]);
 
-                    this.pic_parameter_set_id_delta = new uint[num_pic_parameter_sets_minus1[i]];
+                    this.pic_parameter_set_id_delta[i] = new uint[num_pic_parameter_sets_minus1[i]];
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
@@ -21647,8 +21807,12 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
 
             this.sei_mvc_temporal_id = new uint[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_timing_info_present_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_num_units_in_tick = new uint[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_time_scale = new uint[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_fixed_frame_rate_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_nal_hrd_parameters_present_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_vcl_hrd_parameters_present_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_low_delay_hrd_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_pic_struct_present_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
             for (i = 0; i <= num_of_temporal_layers_in_base_view_minus1; i++)
             {
@@ -21924,8 +22088,12 @@ mvc_vui_parameters_extension() {
             this.vui_mvc_num_target_output_views_minus1 = new uint[vui_mvc_num_ops_minus1];
             this.vui_mvc_view_id = new uint[vui_mvc_num_ops_minus1][];
             this.vui_mvc_timing_info_present_flag = new uint[vui_mvc_num_ops_minus1];
+            this.vui_mvc_num_units_in_tick = new uint[vui_mvc_num_ops_minus1];
+            this.vui_mvc_time_scale = new uint[vui_mvc_num_ops_minus1];
+            this.vui_mvc_fixed_frame_rate_flag = new uint[vui_mvc_num_ops_minus1];
             this.vui_mvc_nal_hrd_parameters_present_flag = new uint[vui_mvc_num_ops_minus1];
             this.vui_mvc_vcl_hrd_parameters_present_flag = new uint[vui_mvc_num_ops_minus1];
+            this.vui_mvc_low_delay_hrd_flag = new uint[vui_mvc_num_ops_minus1];
             this.vui_mvc_pic_struct_present_flag = new uint[vui_mvc_num_ops_minus1];
             for (i = 0; i <= vui_mvc_num_ops_minus1; i++)
             {
@@ -22206,6 +22374,10 @@ seq_parameter_set_mvcd_extension() {
                 size += stream.ReadUnsignedInt(size, 1, out this.texture_view_present_flag[i]);
             }
 
+            this.num_anchor_refs_l0 = new uint[num_views_minus1];
+            this.anchor_ref_l0 = new uint[num_views_minus1][];
+            this.num_anchor_refs_l1 = new uint[num_views_minus1];
+            this.anchor_ref_l1 = new uint[num_views_minus1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
 
@@ -22213,14 +22385,14 @@ seq_parameter_set_mvcd_extension() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i]);
 
-                    this.anchor_ref_l0 = new uint[num_anchor_refs_l0[i]];
+                    this.anchor_ref_l0[i] = new uint[num_anchor_refs_l0[i]];
                     for (j = 0; j < num_anchor_refs_l0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i]);
 
-                    this.anchor_ref_l1 = new uint[num_anchor_refs_l1[i]];
+                    this.anchor_ref_l1[i] = new uint[num_anchor_refs_l1[i]];
                     for (j = 0; j < num_anchor_refs_l1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j]);
@@ -22228,6 +22400,10 @@ seq_parameter_set_mvcd_extension() {
                 }
             }
 
+            this.num_non_anchor_refs_l0 = new uint[num_views_minus1];
+            this.non_anchor_ref_l0 = new uint[num_views_minus1][];
+            this.num_non_anchor_refs_l1 = new uint[num_views_minus1];
+            this.non_anchor_ref_l1 = new uint[num_views_minus1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
 
@@ -22235,14 +22411,14 @@ seq_parameter_set_mvcd_extension() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i]);
 
-                    this.non_anchor_ref_l0 = new uint[num_non_anchor_refs_l0[i]];
+                    this.non_anchor_ref_l0[i] = new uint[num_non_anchor_refs_l0[i]];
                     for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i]);
 
-                    this.non_anchor_ref_l1 = new uint[num_non_anchor_refs_l1[i]];
+                    this.non_anchor_ref_l1[i] = new uint[num_non_anchor_refs_l1[i]];
                     for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j]);
@@ -22663,8 +22839,32 @@ priority_id[ i ] 5 u(5)
             this.profile_level_info_present_flag = new uint[num_operation_points_minus1];
             this.bitrate_info_present_flag = new uint[num_operation_points_minus1];
             this.frm_rate_info_present_flag = new uint[num_operation_points_minus1];
+            this.view_dependency_info_present_flag = new uint[num_operation_points_minus1];
             this.parameter_sets_info_present_flag = new uint[num_operation_points_minus1];
             this.bitstream_restriction_info_present_flag = new uint[num_operation_points_minus1];
+            this.op_profile_level_idc = new uint[num_operation_points_minus1];
+            this.avg_bitrate = new uint[num_operation_points_minus1];
+            this.max_bitrate = new uint[num_operation_points_minus1];
+            this.max_bitrate_calc_window = new uint[num_operation_points_minus1];
+            this.constant_frm_rate_idc = new uint[num_operation_points_minus1];
+            this.avg_frm_rate = new uint[num_operation_points_minus1];
+            this.num_directly_dependent_views = new uint[num_operation_points_minus1];
+            this.directly_dependent_view_id = new uint[num_operation_points_minus1][];
+            this.view_dependency_info_src_op_id = new uint[num_operation_points_minus1];
+            this.num_seq_parameter_set_minus1 = new uint[num_operation_points_minus1];
+            this.seq_parameter_set_id_delta = new uint[num_operation_points_minus1][];
+            this.num_subset_seq_parameter_set_minus1 = new uint[num_operation_points_minus1];
+            this.subset_seq_parameter_set_id_delta = new uint[num_operation_points_minus1][];
+            this.num_pic_parameter_set_minus1 = new uint[num_operation_points_minus1];
+            this.pic_parameter_set_id_delta = new uint[num_operation_points_minus1][];
+            this.parameter_sets_info_src_op_id = new uint[num_operation_points_minus1];
+            this.motion_vectors_over_pic_boundaries_flag = new uint[num_operation_points_minus1];
+            this.max_bytes_per_pic_denom = new uint[num_operation_points_minus1];
+            this.max_bits_per_mb_denom = new uint[num_operation_points_minus1];
+            this.log2_max_mv_length_horizontal = new uint[num_operation_points_minus1];
+            this.log2_max_mv_length_vertical = new uint[num_operation_points_minus1];
+            this.num_reorder_frames = new uint[num_operation_points_minus1];
+            this.max_dec_frame_buffering = new uint[num_operation_points_minus1];
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i]);
@@ -22711,7 +22911,7 @@ priority_id[ i ] 5 u(5)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i]);
 
-                    this.directly_dependent_view_id = new uint[num_directly_dependent_views[i]];
+                    this.directly_dependent_view_id[i] = new uint[num_directly_dependent_views[i]];
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j]);
@@ -22727,21 +22927,21 @@ priority_id[ i ] 5 u(5)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_set_minus1[i]);
 
-                    this.seq_parameter_set_id_delta = new uint[num_seq_parameter_set_minus1[i]];
+                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_set_minus1[i]];
                     for (j = 0; j <= num_seq_parameter_set_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_set_minus1[i]);
 
-                    this.subset_seq_parameter_set_id_delta = new uint[num_subset_seq_parameter_set_minus1[i]];
+                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_set_minus1[i]];
                     for (j = 0; j <= num_subset_seq_parameter_set_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i]);
 
-                    this.pic_parameter_set_id_delta = new uint[num_init_pic_parameter_set_minus1[i]];
+                    this.pic_parameter_set_id_delta[i] = new uint[num_init_pic_parameter_set_minus1[i]];
                     for (j = 0; j <= num_init_pic_parameter_set_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
@@ -23166,6 +23366,8 @@ mvcd_scalable_nesting( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1);
 
                 this.sei_op_view_id = new uint[num_view_components_op_minus1];
+                this.sei_op_depth_flag = new uint[num_view_components_op_minus1];
+                this.sei_op_texture_flag = new uint[num_view_components_op_minus1];
                 for (i = 0; i <= num_view_components_op_minus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 10, out this.sei_op_view_id[i]);
@@ -23411,6 +23613,8 @@ depth_representation_info( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.depth_representation_type);
 
             this.depth_info_view_id = new uint[numViews];
+            this.z_axis_reference_view = new uint[numViews];
+            this.disparity_reference_view = new uint[numViews];
             for (i = 0; i < numViews; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.depth_info_view_id[i]);
@@ -23783,7 +23987,10 @@ three_dimensional_reference_displays_info( payloadSize ) {
             this.mantissa_ref_baseline = new uint[numRefDisplays];
             this.exponent_ref_display_width = new uint[numRefDisplays];
             this.mantissa_ref_display_width = new uint[numRefDisplays];
+            this.exponent_ref_viewing_distance = new uint[numRefDisplays];
+            this.mantissa_ref_viewing_distance = new uint[numRefDisplays];
             this.additional_shift_present_flag = new uint[numRefDisplays];
+            this.num_sample_shift_plus512 = new uint[numRefDisplays];
             for (i = 0; i < numRefDisplays; i++)
             {
                 size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_baseline[i]);
@@ -24249,6 +24456,24 @@ alternative_depth_info( payloadSize ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_translation_param);
                 }
 
+                this.sign_gvd_focal_length_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.exp_gvd_focal_length_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.man_gvd_focal_length_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_focal_length_y = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.exp_gvd_focal_length_y = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.man_gvd_focal_length_y = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_principal_point_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.exp_gvd_principal_point_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.man_gvd_principal_point_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_principal_point_y = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.exp_gvd_principal_point_y = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.man_gvd_principal_point_y = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_r = new uint[num_constituent_views_gvd_minus1 + 1][][];
+                this.exp_gvd_r = new uint[num_constituent_views_gvd_minus1 + 1][][];
+                this.man_gvd_r = new uint[num_constituent_views_gvd_minus1 + 1][][];
+                this.sign_gvd_t_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.exp_gvd_t_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.man_gvd_t_x = new uint[num_constituent_views_gvd_minus1 + 1];
                 for (i = 0; i <= num_constituent_views_gvd_minus1 + 1; i++)
                 {
 
@@ -24271,15 +24496,15 @@ alternative_depth_info( payloadSize ) {
                     if (rotation_gvd_flag != 0)
                     {
 
-                        this.sign_gvd_r = new uint[3][];
-                        this.exp_gvd_r = new uint[3][];
-                        this.man_gvd_r = new uint[3][];
+                        this.sign_gvd_r[i] = new uint[3][];
+                        this.exp_gvd_r[i] = new uint[3][];
+                        this.man_gvd_r[i] = new uint[3][];
                         for (j = 0; j < 3; j++)
                         {
 
-                            this.sign_gvd_r[j] = new uint[3];
-                            this.exp_gvd_r[j] = new uint[3];
-                            this.man_gvd_r[j] = new uint[3];
+                            this.sign_gvd_r[i][j] = new uint[3];
+                            this.exp_gvd_r[i][j] = new uint[3];
+                            this.man_gvd_r[i][j] = new uint[3];
                             for (k = 0; k < 3; k++)
                             {
                                 /*  column  */
@@ -24797,8 +25022,12 @@ mvcd_vui_parameters_extension() {
             this.vui_mvcd_depth_flag = new uint[vui_mvcd_num_ops_minus1][];
             this.vui_mvcd_texture_flag = new uint[vui_mvcd_num_ops_minus1][];
             this.vui_mvcd_timing_info_present_flag = new uint[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_num_units_in_tick = new uint[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_time_scale = new uint[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_fixed_frame_rate_flag = new uint[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_nal_hrd_parameters_present_flag = new uint[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_vcl_hrd_parameters_present_flag = new uint[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_low_delay_hrd_flag = new uint[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_pic_struct_present_flag = new uint[vui_mvcd_num_ops_minus1];
             for (i = 0; i <= vui_mvcd_num_ops_minus1; i++)
             {
@@ -25221,6 +25450,10 @@ seq_parameter_set_3davc_extension() {
             if (AllViewsPairedFlag == 0)
             {
 
+                this.num_anchor_refs_l0 = new uint[num_views_minus1];
+                this.anchor_ref_l0 = new uint[num_views_minus1][];
+                this.num_anchor_refs_l1 = new uint[num_views_minus1];
+                this.anchor_ref_l1 = new uint[num_views_minus1][];
                 for (i = 1; i <= num_views_minus1; i++)
                 {
 
@@ -25228,14 +25461,14 @@ seq_parameter_set_3davc_extension() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i]);
 
-                        this.anchor_ref_l0 = new uint[num_anchor_refs_l0[i]];
+                        this.anchor_ref_l0[i] = new uint[num_anchor_refs_l0[i]];
                         for (j = 0; j < num_anchor_refs_l0[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j]);
                         }
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i]);
 
-                        this.anchor_ref_l1 = new uint[num_anchor_refs_l1[i]];
+                        this.anchor_ref_l1[i] = new uint[num_anchor_refs_l1[i]];
                         for (j = 0; j < num_anchor_refs_l1[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j]);
@@ -25243,6 +25476,10 @@ seq_parameter_set_3davc_extension() {
                     }
                 }
 
+                this.num_non_anchor_refs_l0 = new uint[num_views_minus1];
+                this.non_anchor_ref_l0 = new uint[num_views_minus1][];
+                this.num_non_anchor_refs_l1 = new uint[num_views_minus1];
+                this.non_anchor_ref_l1 = new uint[num_views_minus1][];
                 for (i = 1; i <= num_views_minus1; i++)
                 {
 
@@ -25250,14 +25487,14 @@ seq_parameter_set_3davc_extension() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i]);
 
-                        this.non_anchor_ref_l0 = new uint[num_non_anchor_refs_l0[i]];
+                        this.non_anchor_ref_l0[i] = new uint[num_non_anchor_refs_l0[i]];
                         for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j]);
                         }
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i]);
 
-                        this.non_anchor_ref_l1 = new uint[num_non_anchor_refs_l1[i]];
+                        this.non_anchor_ref_l1[i] = new uint[num_non_anchor_refs_l1[i]];
                         for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j]);
@@ -28150,6 +28387,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
+                    this.rem_intra4x4_pred_mode = new uint[16];
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra4x4_pred_mode_flag[luma4x4BlkIdx]);
@@ -28165,6 +28403,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
+                    this.rem_intra8x8_pred_mode = new uint[4];
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra8x8_pred_mode_flag[luma8x8BlkIdx]);
@@ -28184,6 +28423,8 @@ mb_pred_in_3davc_extension( mb_type ) {
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
+                this.ref_idx_l0 = new int[NumMbPart(mb_type)];
+                this.bvsp_flag_l0 = new uint[NumMbPart(mb_type)];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
@@ -28201,6 +28442,8 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
+                this.ref_idx_l1 = new int[NumMbPart(mb_type)];
+                this.bvsp_flag_l1 = new uint[NumMbPart(mb_type)];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
@@ -28217,6 +28460,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
+                this.mvd_l0 = new int[NumMbPart(mb_type)][];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
@@ -28224,7 +28468,7 @@ mb_pred_in_3davc_extension( mb_type ) {
     (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                     {
 
-                        this.mvd_l0 = new int[2];
+                        this.mvd_l0[mbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][0][compIdx]);
@@ -28232,6 +28476,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
+                this.mvd_l1 = new int[NumMbPart(mb_type)][];
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
@@ -28239,7 +28484,7 @@ mb_pred_in_3davc_extension( mb_type ) {
     (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                     {
 
-                        this.mvd_l1 = new int[2];
+                        this.mvd_l1[mbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][0][compIdx]);
@@ -28555,6 +28800,8 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.sub_mb_type[mbPartIdx]);
             }
 
+            this.ref_idx_l0 = new int[4];
+            this.bvsp_flag_l0 = new uint[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -28569,6 +28816,8 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 }
             }
 
+            this.ref_idx_l1 = new int[4];
+            this.bvsp_flag_l1 = new uint[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
@@ -28586,17 +28835,18 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 }
             }
 
+            this.mvd_l0 = new int[4][][];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
                 if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
-                    this.mvd_l0 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
-                        this.mvd_l0[subMbPartIdx] = new int[2];
+                        this.mvd_l0[mbPartIdx][subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][subMbPartIdx][compIdx]);
@@ -28605,17 +28855,18 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 }
             }
 
+            this.mvd_l1 = new int[4][][];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
                 if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
-                    this.mvd_l1 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
-                        this.mvd_l1[subMbPartIdx] = new int[2];
+                        this.mvd_l1[mbPartIdx][subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][subMbPartIdx][compIdx]);
