@@ -206,7 +206,7 @@ namespace ItuGenerator
             Name = name;
             Increment = increment.GetValueOrDefault();
             Parameter = parameter.GetValueOrDefault();
-            ArrayParameter = array.GetValueOrDefault();
+            FieldArray = array.GetValueOrDefault();
             Value = value.GetValueOrDefault();
             Comment = comment.GetValueOrDefault();
             Category = category.GetValueOrDefault();
@@ -218,7 +218,7 @@ namespace ItuGenerator
         public string Value { get; set; }
         public string Parameter { get; set; }
         public string Increment { get; set; }
-        public string ArrayParameter { get; set; }
+        public string FieldArray { get; set; }
         public string Comment { get; set; }
         public string Category { get; set; }
 

@@ -186,7 +186,7 @@ namespace Sharp{type}
            
             string name = GetFieldName(field as ItuField);
             string m = methodType == MethodType.Read ? GetReadMethod(field as ItuField) : (methodType == MethodType.Write ? GetWriteMethod(field as ItuField) : GetCalculateSizeMethod(field as ItuField));
-            string typedef = (field as ItuField).ArrayParameter;
+            string typedef = (field as ItuField).FieldArray;
 
             string fieldComment = "";
             if (!string.IsNullOrEmpty((field as ItuField)?.Comment))
@@ -230,18 +230,18 @@ namespace Sharp{type}
         {
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
             {
-                return $"{GetSpacing(level)}{field.Name}{field.ArrayParameter}{field.Increment}{field.Value};";
+                return $"{GetSpacing(level)}{field.Name}{field.FieldArray}{field.Increment}{field.Value};";
             }
             else
             {
                 if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null && b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
                     b.AddedFields.Add(new ItuField() { Name = field.Name, Value = field.Value });
-                    return $"{GetSpacing(level)}var {field.Name}{field.ArrayParameter}{field.Value};";
+                    return $"{GetSpacing(level)}var {field.Name}{field.FieldArray}{field.Value};";
                 }
                 else
                 {
-                    return $"{GetSpacing(level)}{field.Name}{field.ArrayParameter}{field.Increment}{field.Value};";
+                    return $"{GetSpacing(level)}{field.Name}{field.FieldArray}{field.Increment}{field.Value};";
                 }
             }
         }
@@ -475,10 +475,10 @@ namespace Sharp{type}
         {
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
-                { "f(1)",                       "bool" },
-                { "f(8)",                       "byte" },
-                { "f(16)",                      "ushort" },
-                { "u(1)",                       "bool" },
+                { "f(1)",                       "uint" },
+                { "f(8)",                       "uint" },
+                { "f(16)",                      "uint" },
+                { "u(1)",                       "uint" },
                 { "u(1) | ae(v)",               "uint" },
                 { "u(2)",                       "uint" },
                 { "u(3)",                       "uint" },
@@ -519,8 +519,35 @@ namespace Sharp{type}
 
             Dictionary<string, string> map = GetCSharpTypeMapping();
 
-            Debug.WriteLine($"Field type: {field.Type}, opt: array: {field.ArrayParameter}");
-            return map[field.Type] + (!string.IsNullOrWhiteSpace(field.ArrayParameter) ? "[]" : "");
+            Debug.WriteLine($"Field type: {field.Type}, opt: array: {field.FieldArray}");
+
+            int arrayDimensions = 0;
+            if (!string.IsNullOrEmpty(field.FieldArray))
+            {
+                int level = 0;
+                for (int i = 0; i < field.FieldArray.Length; i++)
+                {
+                    if (field.FieldArray[i] == '[')
+                    {
+                        if (level == 0)
+                            arrayDimensions++;
+
+                        level++;
+                    }
+                    else if (field.FieldArray[i] == ']')
+                    {
+                        level--;
+                    }
+                }
+            }
+
+            string arraySuffix = "";
+            for (int i = 0; i < arrayDimensions; i++)
+            {
+                arraySuffix += "[]";
+            }
+
+            return map[field.Type] + arraySuffix;
         }
 
         private string GetCtorParameterType(string parameter)
@@ -574,8 +601,12 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(condition))
             {
                 condition = condition
-                    .Replace("_flag  ==  1 ", "_flag  ==  true ")
                     .Replace("next_bits(", "stream.NextBits(");
+
+                if(blockType == "if" || blockType == "else if" || blockType == "while" || blockType == "do")
+                {
+                    condition = FixCondition(b, condition);
+                }
             }
 
             if (methodType == MethodType.Read)
@@ -611,7 +642,7 @@ namespace Sharp{type}
                                 }
 
                                 string variableType = GetCSharpType(req);
-                                int indexesTypeDef = req.ArrayParameter.Count(x => x == '[');
+                                int indexesTypeDef = req.FieldArray.Count(x => x == '[');
                                 int indexesType = variableType.Count(x => x == '[');
                                 string variableName = GetFieldName(req) + suffix;
                                 if (variableType.Contains("[]"))
@@ -656,6 +687,26 @@ namespace Sharp{type}
                 ret += $"while {condition};";
 
             return ret;
+        }
+
+        private string FixCondition(ItuClass b, string condition)
+        {
+            string[] parts = condition.Substring(1, condition.Length - 2).Split(new string[] { "||", "&&" }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                if (parts[i].StartsWith('!'))
+                {
+                    // we don't have bool anymore, so in this case it's easy fix
+                    condition = condition.Replace(parts[i], parts[i].Substring(1, parts[i].Length - 1) + "== 0");
+                }
+                else if (!parts[i].Contains('=') && !parts[i].Contains('>') && !parts[i].Contains('<'))
+                {
+                    condition = condition.Replace(parts[i], parts[i] + " != 0");
+                }
+            }
+
+            return condition;
         }
 
         public string FixNestedInLoopVariables(ItuCode code, string condition, string prefix = "", string suffix = "")
@@ -837,7 +888,7 @@ namespace Sharp{type}
             {
                 if (parent.Type == "for")
                 {
-                    if (!string.IsNullOrEmpty(field.ArrayParameter))
+                    if (!string.IsNullOrEmpty(field.FieldArray))
                     {
                         // add the allocation above the first for in the hierarchy
                         parent.RequiresAllocation.Add(field);

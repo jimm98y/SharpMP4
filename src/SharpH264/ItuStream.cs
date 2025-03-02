@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Numerics;
 
 namespace SharpH264
 {
@@ -124,27 +119,12 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
-        internal ulong WriteUnsignedIntT(uint value)
-        {
-            throw new NotImplementedException();
-        }
-
         internal ulong ReadSignedIntT(ulong size, out int value)
         {
             throw new NotImplementedException();
         }
 
-        internal ulong ReadUnsignedIntT(ulong size, out uint value)
-        {
-            throw new NotImplementedException();
-        }
-
         internal static ulong CalculateSignedIntT(int value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong CalculateUnsignedIntT(uint value)
         {
             throw new NotImplementedException();
         }
