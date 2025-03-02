@@ -23847,16 +23847,16 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
         public uint DaMantissaLenMinus1 { get { return da_mantissa_len_minus1; } set { da_mantissa_len_minus1 = value; } }
         private uint da_mantissa;
         public uint DaMantissa { get { return da_mantissa; } set { da_mantissa = value; } }
-        private int[,] outSign;
-        public int[,] OutSign { get { return outSign; } set { outSign = value; } }
-        private int[,] outExp;
-        public int[,] OutExp { get { return outExp; } set { outExp = value; } }
-        private int[,] outMantissa;
-        public int[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
-        private int[,] outManLen;
-        public int[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
+        private uint[,] outSign;
+        public uint[,] OutSign { get { return outSign; } set { outSign = value; } }
+        private uint[,] outExp;
+        public uint[,] OutExp { get { return outExp; } set { outExp = value; } }
+        private uint[,] outMantissa;
+        public uint[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
+        private uint[,] outManLen;
+        public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
 
-        public DepthRepresentationSeiElement(int[,] outSign, int[,] outExp, int[,] outMantissa, int[,] outManLen)
+        public DepthRepresentationSeiElement(uint[,] outSign, uint[,] outExp, uint[,] outMantissa, uint[,] outManLen)
         {
             this.outSign = outSign;
             this.outExp = outExp;
@@ -26122,16 +26122,16 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
         public uint ExpLen { get { return expLen; } set { expLen = value; } }
         private uint index;
         public uint Index { get { return index; } set { index = value; } }
-        private int[,] outSign;
-        public int[,] OutSign { get { return outSign; } set { outSign = value; } }
-        private int[,] outExp;
-        public int[,] OutExp { get { return outExp; } set { outExp = value; } }
-        private int[,] outMantissa;
-        public int[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
-        private int[,] outManLen;
-        public int[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
+        private uint[,] outSign;
+        public uint[,] OutSign { get { return outSign; } set { outSign = value; } }
+        private uint[,] outExp;
+        public uint[,] OutExp { get { return outExp; } set { outExp = value; } }
+        private uint[,] outMantissa;
+        public uint[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
+        private uint[,] outManLen;
+        public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
 
-        public ThreeDvAcquisitionElement(uint numViews, uint predDirection, uint expLen, uint index, int[,] outSign, int[,] outExp, int[,] outMantissa, int[,] outManLen)
+        public ThreeDvAcquisitionElement(uint numViews, uint predDirection, uint expLen, uint index, uint[,] outSign, uint[,] outExp, uint[,] outMantissa, uint[,] outManLen)
         {
             this.numViews = numViews;
             this.predDirection = predDirection;

@@ -509,7 +509,7 @@ namespace Sharp{type}
                 { "b(8)",                       "byte" },
                 { "u(32)[]",                    "int[]" },
                 { "u(32)[][]",                  "int[][]" },
-                { "u(32)[,]",                  "int[,]" },
+                { "u(32)[,]",                   "uint[,]" },
             };
             return map;
         }
