@@ -752,9 +752,9 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
      level_suffix 3 | 4 u(v)
                     levelCode += level_suffix
                 }
-                if (level_prefix > = 15 && suffixLength  ==  0 )
+                if (level_prefix >= 15 && suffixLength  ==  0 )
                 levelCode += 15
-                if (level_prefix > = 16 )
+                if (level_prefix >= 16 )
                 levelCode += (1 << (level_prefix - 3 ) ) - 4096
                 if (i == TrailingOnes(coeff_token) &&
                     TrailingOnes(coeff_token) < 3)
@@ -911,7 +911,7 @@ else if( payloadType  ==  41 )
 else if( payloadType  ==  42 )   
  view_dependency_change( payloadSize )  /* specified in Annex H */ 5  
 else if( payloadType  ==  43 )   
- operation_points_not_present( payloadSize )  /* specified in Annex H */ 5  
+ operation_point_not_present( payloadSize )  /* specified in Annex H */ 5  
 else if( payloadType  ==  44 )   
  base_view_temporal_hrd( payloadSize )  /* specified in Annex H */ 5  
 else if( payloadType  ==  45 )   
@@ -1172,7 +1172,7 @@ full_frame_freeze_release( payloadSize ) {
 }  
 
 full_frame_snapshot( payloadSize ) { 
-  snapshot_id 5 
+  snapshot_id 5 ue(v)
 }   
 
 progressive_refinement_segment_start( payloadSize ) { 
@@ -2354,7 +2354,7 @@ tl0_dep_rep_index( payloadSize ) {
 }   
 
 tl_switching_point( payloadSize ) { 
-delta_frame_num 5 
+delta_frame_num 5 se(v)
 }   
 
 svc_vui_parameters_extension() {  

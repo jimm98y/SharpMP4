@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,6 +40,11 @@ namespace SharpH264
         }
 
         internal ulong ReadUnsignedInt(ulong size, int count, out bool value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal ulong ReadUnsignedInt(ulong size, int count, out BigInteger value)
         {
             throw new NotImplementedException();
         }
@@ -102,6 +108,11 @@ namespace SharpH264
         {
             throw new NotImplementedException();
         }
+        
+        internal ulong WriteUnsignedInt(int count, BigInteger value)
+        {
+            throw new NotImplementedException();
+        }
 
         internal ulong WriteSignedIntT(int value)
         {
@@ -128,7 +139,7 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
-        internal ulong CalculateSignedIntT(int value)
+        internal static ulong CalculateSignedIntT(int value)
         {
             throw new NotImplementedException();
         }

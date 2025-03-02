@@ -89,7 +89,6 @@ nal_unit( NumBytesInNALunit ) {
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.svc_extension_flag);
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.avc_3d_extension_flag);
@@ -100,13 +99,11 @@ nal_unit( NumBytesInNALunit ) {
                     size += stream.ReadClass<NalUnitHeaderSvcExtension>(size, out this.nal_unit_header_svc_extension); // specified in Annex G 
                     nalUnitHeaderBytes += 3;
                 }
-
                 else if (avc_3d_extension_flag)
                 {
                     size += stream.ReadClass<NalUnitHeader3davcExtension>(size, out this.nal_unit_header_3davc_extension); // specified in Annex J 
                     nalUnitHeaderBytes += 2;
                 }
-
                 else
                 {
                     size += stream.ReadClass<NalUnitHeaderMvcExtension>(size, out this.nal_unit_header_mvc_extension); // specified in Annex H 
@@ -114,7 +111,6 @@ nal_unit( NumBytesInNALunit ) {
                 }
             }
 
-            this.rbsp_byte = new byte[NumBytesInNALunit];
             for (i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++)
             {
 
@@ -125,7 +121,6 @@ nal_unit( NumBytesInNALunit ) {
                     i += 2;
                     size += stream.ReadFixed(size, 8, out this.emulation_prevention_three_byte); // equal to 0x03 
                 }
-
                 else
                 {
                     size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRBSP++]);
@@ -153,7 +148,6 @@ nal_unit( NumBytesInNALunit ) {
                 {
                     size += stream.WriteUnsignedInt(1, this.svc_extension_flag);
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedInt(1, this.avc_3d_extension_flag);
@@ -164,13 +158,11 @@ nal_unit( NumBytesInNALunit ) {
                     size += stream.WriteClass<NalUnitHeaderSvcExtension>(this.nal_unit_header_svc_extension); // specified in Annex G 
                     nalUnitHeaderBytes += 3;
                 }
-
                 else if (avc_3d_extension_flag)
                 {
                     size += stream.WriteClass<NalUnitHeader3davcExtension>(this.nal_unit_header_3davc_extension); // specified in Annex J 
                     nalUnitHeaderBytes += 2;
                 }
-
                 else
                 {
                     size += stream.WriteClass<NalUnitHeaderMvcExtension>(this.nal_unit_header_mvc_extension); // specified in Annex H 
@@ -188,7 +180,6 @@ nal_unit( NumBytesInNALunit ) {
                     i += 2;
                     size += stream.WriteFixed(8, this.emulation_prevention_three_byte); // equal to 0x03 
                 }
-
                 else
                 {
                     size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRBSP++]);
@@ -216,7 +207,6 @@ nal_unit( NumBytesInNALunit ) {
                 {
                     size += 1; // svc_extension_flag
                 }
-
                 else
                 {
                     size += 1; // avc_3d_extension_flag
@@ -227,13 +217,11 @@ nal_unit( NumBytesInNALunit ) {
                     size += ItuStream.CalculateClassSize<NalUnitHeaderSvcExtension>(nal_unit_header_svc_extension); // nal_unit_header_svc_extension
                     nalUnitHeaderBytes += 3;
                 }
-
                 else if (avc_3d_extension_flag)
                 {
                     size += ItuStream.CalculateClassSize<NalUnitHeader3davcExtension>(nal_unit_header_3davc_extension); // nal_unit_header_3davc_extension
                     nalUnitHeaderBytes += 2;
                 }
-
                 else
                 {
                     size += ItuStream.CalculateClassSize<NalUnitHeaderMvcExtension>(nal_unit_header_mvc_extension); // nal_unit_header_mvc_extension
@@ -251,7 +239,6 @@ nal_unit( NumBytesInNALunit ) {
                     i += 2;
                     size += 8; // emulation_prevention_three_byte
                 }
-
                 else
                 {
                     size += 8; // rbsp_byte
@@ -523,7 +510,7 @@ seq_parameter_set_data() {
                             {
                                 size += stream.ReadClass<ScalingList>(size, out this.scaling_list);
                             }
-                            if (i < 6)
+                            else
                             {
                                 size += stream.ReadClass<ScalingList>(size, out this.scaling_list);
                             }
@@ -538,7 +525,6 @@ seq_parameter_set_data() {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_pic_order_cnt_lsb_minus4);
             }
-
             else if (pic_order_cnt_type == 1)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.delta_pic_order_always_zero_flag);
@@ -629,7 +615,7 @@ seq_parameter_set_data() {
                             {
                                 size += stream.WriteClass<ScalingList>(this.scaling_list);
                             }
-                            if (i < 6)
+                            else
                             {
                                 size += stream.WriteClass<ScalingList>(this.scaling_list);
                             }
@@ -644,7 +630,6 @@ seq_parameter_set_data() {
             {
                 size += stream.WriteUnsignedIntGolomb(this.log2_max_pic_order_cnt_lsb_minus4);
             }
-
             else if (pic_order_cnt_type == 1)
             {
                 size += stream.WriteUnsignedInt(1, this.delta_pic_order_always_zero_flag);
@@ -734,7 +719,7 @@ seq_parameter_set_data() {
                             {
                                 size += ItuStream.CalculateClassSize<ScalingList>(scaling_list); // scaling_list
                             }
-                            if (i < 6)
+                            else
                             {
                                 size += ItuStream.CalculateClassSize<ScalingList>(scaling_list); // scaling_list
                             }
@@ -749,7 +734,6 @@ seq_parameter_set_data() {
             {
                 size += ItuStream.CalculateUnsignedIntGolomb(log2_max_pic_order_cnt_lsb_minus4); // log2_max_pic_order_cnt_lsb_minus4
             }
-
             else if (pic_order_cnt_type == 1)
             {
                 size += 1; // delta_pic_order_always_zero_flag
@@ -1088,7 +1072,6 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.ReadClass<SvcVuiParametersExtension>(size, out this.svc_vui_parameters_extension); // specified in Annex G 
                 }
             }
-
             else if (profile_idc == 118 || profile_idc == 128 ||
   profile_idc == 134)
             {
@@ -1101,13 +1084,11 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.ReadClass<MvcVuiParametersExtension>(size, out this.mvc_vui_parameters_extension); // specified in Annex H 
                 }
             }
-
             else if (profile_idc == 138 || profile_idc == 135)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
                 size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, out this.seq_parameter_set_mvcd_extension); // specified in Annex I 
             }
-
             else if (profile_idc == 139)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
@@ -1145,7 +1126,6 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.WriteClass<SvcVuiParametersExtension>(this.svc_vui_parameters_extension); // specified in Annex G 
                 }
             }
-
             else if (profile_idc == 118 || profile_idc == 128 ||
   profile_idc == 134)
             {
@@ -1158,13 +1138,11 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.WriteClass<MvcVuiParametersExtension>(this.mvc_vui_parameters_extension); // specified in Annex H 
                 }
             }
-
             else if (profile_idc == 138 || profile_idc == 135)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
                 size += stream.WriteClass<SeqParameterSetMvcdExtension>(this.seq_parameter_set_mvcd_extension); // specified in Annex I 
             }
-
             else if (profile_idc == 139)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
@@ -1202,7 +1180,6 @@ subset_seq_parameter_set_rbsp() {
                     size += ItuStream.CalculateClassSize<SvcVuiParametersExtension>(svc_vui_parameters_extension); // svc_vui_parameters_extension
                 }
             }
-
             else if (profile_idc == 118 || profile_idc == 128 ||
   profile_idc == 134)
             {
@@ -1215,13 +1192,11 @@ subset_seq_parameter_set_rbsp() {
                     size += ItuStream.CalculateClassSize<MvcVuiParametersExtension>(mvc_vui_parameters_extension); // mvc_vui_parameters_extension
                 }
             }
-
             else if (profile_idc == 138 || profile_idc == 135)
             {
                 size += 1; // bit_equal_to_one
                 size += ItuStream.CalculateClassSize<SeqParameterSetMvcdExtension>(seq_parameter_set_mvcd_extension); // seq_parameter_set_mvcd_extension
             }
-
             else if (profile_idc == 139)
             {
                 size += 1; // bit_equal_to_one
@@ -1377,6 +1352,7 @@ pic_parameter_set_rbsp() {
         {
             ulong size = 0;
 
+            int iGroup = 0;
             int i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
@@ -1396,10 +1372,33 @@ pic_parameter_set_rbsp() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.run_length_minus1[iGroup]);
                     }
-                    this.run_length_minus1 = new uint[num_slice_groups_minus1];
-                    for (iGroup = 0; iGroup <= num_slice_groups_minus1; iGroup++)
+                }
+                else if (slice_group_map_type == 2)
+                {
+
+                    this.top_left = new uint[num_slice_groups_minus1];
+                    this.bottom_right = new uint[num_slice_groups_minus1];
+                    for (iGroup = 0; iGroup < num_slice_groups_minus1; iGroup++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.run_length_minus1[iGroup]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.top_left[iGroup]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.bottom_right[iGroup]);
+                    }
+                }
+                else if (slice_group_map_type == 3 ||
+     slice_group_map_type == 4 ||
+     slice_group_map_type == 5)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.slice_group_change_direction_flag);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.slice_group_change_rate_minus1);
+                }
+                else if (slice_group_map_type == 6)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.pic_size_in_map_units_minus1);
+
+                    this.slice_group_id = new uint[pic_size_in_map_units_minus1];
+                    for (i = 0; i <= pic_size_in_map_units_minus1; i++)
+                    {
+                        size += stream.ReadUnsignedIntVariable(size, out this.slice_group_id[i]);
                     }
                 }
             }
@@ -1437,7 +1436,7 @@ pic_parameter_set_rbsp() {
                             {
                                 size += stream.ReadClass<ScalingList>(size, out this.scaling_list);
                             }
-                            if (i < 6)
+                            else
                             {
                                 size += stream.ReadClass<ScalingList>(size, out this.scaling_list);
                             }
@@ -1455,6 +1454,7 @@ pic_parameter_set_rbsp() {
         {
             ulong size = 0;
 
+            int iGroup = 0;
             int i = 0;
             size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
@@ -1473,9 +1473,30 @@ pic_parameter_set_rbsp() {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.run_length_minus1[iGroup]);
                     }
-                    for (iGroup = 0; iGroup <= num_slice_groups_minus1; iGroup++)
+                }
+                else if (slice_group_map_type == 2)
+                {
+
+                    for (iGroup = 0; iGroup < num_slice_groups_minus1; iGroup++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.run_length_minus1[iGroup]);
+                        size += stream.WriteUnsignedIntGolomb(this.top_left[iGroup]);
+                        size += stream.WriteUnsignedIntGolomb(this.bottom_right[iGroup]);
+                    }
+                }
+                else if (slice_group_map_type == 3 ||
+     slice_group_map_type == 4 ||
+     slice_group_map_type == 5)
+                {
+                    size += stream.WriteUnsignedInt(1, this.slice_group_change_direction_flag);
+                    size += stream.WriteUnsignedIntGolomb(this.slice_group_change_rate_minus1);
+                }
+                else if (slice_group_map_type == 6)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.pic_size_in_map_units_minus1);
+
+                    for (i = 0; i <= pic_size_in_map_units_minus1; i++)
+                    {
+                        size += stream.WriteUnsignedIntVariable(this.slice_group_id[i]);
                     }
                 }
             }
@@ -1511,7 +1532,7 @@ pic_parameter_set_rbsp() {
                             {
                                 size += stream.WriteClass<ScalingList>(this.scaling_list);
                             }
-                            if (i < 6)
+                            else
                             {
                                 size += stream.WriteClass<ScalingList>(this.scaling_list);
                             }
@@ -1529,6 +1550,7 @@ pic_parameter_set_rbsp() {
         {
             ulong size = 0;
 
+            int iGroup = 0;
             int i = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(pic_parameter_set_id); // pic_parameter_set_id
             size += ItuStream.CalculateUnsignedIntGolomb(seq_parameter_set_id); // seq_parameter_set_id
@@ -1547,9 +1569,30 @@ pic_parameter_set_rbsp() {
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(run_length_minus1[iGroup]); // run_length_minus1
                     }
-                    for (iGroup = 0; iGroup <= num_slice_groups_minus1; iGroup++)
+                }
+                else if (slice_group_map_type == 2)
+                {
+
+                    for (iGroup = 0; iGroup < num_slice_groups_minus1; iGroup++)
                     {
-                        size += ItuStream.CalculateUnsignedIntGolomb(run_length_minus1[iGroup]); // run_length_minus1
+                        size += ItuStream.CalculateUnsignedIntGolomb(top_left[iGroup]); // top_left
+                        size += ItuStream.CalculateUnsignedIntGolomb(bottom_right[iGroup]); // bottom_right
+                    }
+                }
+                else if (slice_group_map_type == 3 ||
+     slice_group_map_type == 4 ||
+     slice_group_map_type == 5)
+                {
+                    size += 1; // slice_group_change_direction_flag
+                    size += ItuStream.CalculateUnsignedIntGolomb(slice_group_change_rate_minus1); // slice_group_change_rate_minus1
+                }
+                else if (slice_group_map_type == 6)
+                {
+                    size += ItuStream.CalculateUnsignedIntGolomb(pic_size_in_map_units_minus1); // pic_size_in_map_units_minus1
+
+                    for (i = 0; i <= pic_size_in_map_units_minus1; i++)
+                    {
+                        size += ItuStream.CalculateUnsignedIntVariable(slice_group_id[i]); // slice_group_id
                     }
                 }
             }
@@ -1585,7 +1628,7 @@ pic_parameter_set_rbsp() {
                             {
                                 size += ItuStream.CalculateClassSize<ScalingList>(scaling_list); // scaling_list
                             }
-                            if (i < 6)
+                            else
                             {
                                 size += ItuStream.CalculateClassSize<ScalingList>(scaling_list); // scaling_list
                             }
@@ -2556,13 +2599,11 @@ slice_layer_extension_rbsp() {
                     size += stream.ReadClass<SliceDataInScalableExtension>(size, out this.slice_data_in_scalable_extension); // specified in Annex G 
                 }
             }
-
             else if (avc_3d_extension_flag)
             {
                 size += stream.ReadClass<SliceHeaderIn3davcExtension>(size, out this.slice_header_in_3davc_extension); // specified in Annex J 
                 size += stream.ReadClass<SliceDataIn3davcExtension>(size, out this.slice_data_in_3davc_extension); // specified in Annex J 
             }
-
             else
             {
                 size += stream.ReadClass<SliceHeader>(size, out this.slice_header);
@@ -2587,13 +2628,11 @@ slice_layer_extension_rbsp() {
                     size += stream.WriteClass<SliceDataInScalableExtension>(this.slice_data_in_scalable_extension); // specified in Annex G 
                 }
             }
-
             else if (avc_3d_extension_flag)
             {
                 size += stream.WriteClass<SliceHeaderIn3davcExtension>(this.slice_header_in_3davc_extension); // specified in Annex J 
                 size += stream.WriteClass<SliceDataIn3davcExtension>(this.slice_data_in_3davc_extension); // specified in Annex J 
             }
-
             else
             {
                 size += stream.WriteClass<SliceHeader>(this.slice_header);
@@ -2618,13 +2657,11 @@ slice_layer_extension_rbsp() {
                     size += ItuStream.CalculateClassSize<SliceDataInScalableExtension>(slice_data_in_scalable_extension); // slice_data_in_scalable_extension
                 }
             }
-
             else if (avc_3d_extension_flag)
             {
                 size += ItuStream.CalculateClassSize<SliceHeaderIn3davcExtension>(slice_header_in_3davc_extension); // slice_header_in_3davc_extension
                 size += ItuStream.CalculateClassSize<SliceDataIn3davcExtension>(slice_data_in_3davc_extension); // slice_data_in_3davc_extension
             }
-
             else
             {
                 size += ItuStream.CalculateClassSize<SliceHeader>(slice_header); // slice_header
@@ -2849,7 +2886,6 @@ slice_header() {
             {
                 size += stream.ReadClass<RefPicListMvcModification>(size, out this.ref_pic_list_mvc_modification); // specified in Annex H 
             }
-
             else
             {
                 size += stream.ReadClass<RefPicListModification>(size, out this.ref_pic_list_modification);
@@ -2980,7 +3016,6 @@ slice_header() {
             {
                 size += stream.WriteClass<RefPicListMvcModification>(this.ref_pic_list_mvc_modification); // specified in Annex H 
             }
-
             else
             {
                 size += stream.WriteClass<RefPicListModification>(this.ref_pic_list_modification);
@@ -3111,7 +3146,6 @@ slice_header() {
             {
                 size += ItuStream.CalculateClassSize<RefPicListMvcModification>(ref_pic_list_mvc_modification); // ref_pic_list_mvc_modification
             }
-
             else
             {
                 size += ItuStream.CalculateClassSize<RefPicListModification>(ref_pic_list_modification); // ref_pic_list_modification
@@ -3271,20 +3305,10 @@ slice_data() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
-
-                        for (i = 0; i < mb_skip_run; i++)
-                        {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
-                        }
+                        size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_flag);
+                        moreDataFlag = !mb_skip_flag;
                     }
                 }
 
@@ -3303,7 +3327,6 @@ slice_data() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -3316,7 +3339,6 @@ slice_data() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.end_of_slice_flag);
@@ -3368,20 +3390,10 @@ slice_data() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
-
-                        for (i = 0; i < mb_skip_run; i++)
-                        {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
-                        }
+                        size += stream.WriteUnsignedIntGolomb(this.mb_skip_flag);
+                        moreDataFlag = !mb_skip_flag;
                     }
                 }
 
@@ -3400,7 +3412,6 @@ slice_data() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -3413,7 +3424,6 @@ slice_data() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.end_of_slice_flag);
@@ -3465,20 +3475,10 @@ slice_data() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0);
-
-                        for (i = 0; i < mb_skip_run; i++)
-                        {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
-                        }
+                        size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_flag); // mb_skip_flag
+                        moreDataFlag = !mb_skip_flag;
                     }
                 }
 
@@ -3497,7 +3497,6 @@ slice_data() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -3510,7 +3509,6 @@ slice_data() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(end_of_slice_flag); // end_of_slice_flag
@@ -3596,7 +3594,6 @@ ref_pic_list_modification() {
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
@@ -3621,7 +3618,6 @@ ref_pic_list_modification() {
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
@@ -3654,7 +3650,6 @@ ref_pic_list_modification() {
                         {
                             size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
@@ -3679,7 +3674,6 @@ ref_pic_list_modification() {
                         {
                             size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
@@ -3712,7 +3706,6 @@ ref_pic_list_modification() {
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(abs_diff_pic_num_minus1); // abs_diff_pic_num_minus1
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(long_term_pic_num); // long_term_pic_num
@@ -3737,7 +3730,6 @@ ref_pic_list_modification() {
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(abs_diff_pic_num_minus1); // abs_diff_pic_num_minus1
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(long_term_pic_num); // long_term_pic_num
@@ -3832,6 +3824,7 @@ pred_weight_table() {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.luma_log2_weight_denom);
 
             if (ChromaArrayType != 0)
@@ -3839,8 +3832,6 @@ pred_weight_table() {
                 size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom);
             }
 
-            this.luma_weight_l0 = new int[num_ref_idx_l0_active_minus1];
-            this.luma_offset_l0 = new int[num_ref_idx_l0_active_minus1];
             for (i = 0; i <= num_ref_idx_l0_active_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag);
@@ -3872,8 +3863,6 @@ pred_weight_table() {
             if (slice_type % 5 == 1)
             {
 
-                this.luma_weight_l1 = new int[num_ref_idx_l1_active_minus1];
-                this.luma_offset_l1 = new int[num_ref_idx_l1_active_minus1];
                 for (i = 0; i <= num_ref_idx_l1_active_minus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag);
@@ -3911,6 +3900,7 @@ pred_weight_table() {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
             size += stream.WriteUnsignedIntGolomb(this.luma_log2_weight_denom);
 
             if (ChromaArrayType != 0)
@@ -3982,6 +3972,7 @@ pred_weight_table() {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(luma_log2_weight_denom); // luma_log2_weight_denom
 
             if (ChromaArrayType != 0)
@@ -4112,7 +4103,6 @@ dec_ref_pic_marking() {
                 size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag);
                 size += stream.ReadUnsignedInt(size, 1, out this.long_term_reference_flag);
             }
-
             else
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.adaptive_ref_pic_marking_mode_flag);
@@ -4162,7 +4152,6 @@ dec_ref_pic_marking() {
                 size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag);
                 size += stream.WriteUnsignedInt(1, this.long_term_reference_flag);
             }
-
             else
             {
                 size += stream.WriteUnsignedInt(1, this.adaptive_ref_pic_marking_mode_flag);
@@ -4212,7 +4201,6 @@ dec_ref_pic_marking() {
                 size += 1; // no_output_of_prior_pics_flag
                 size += 1; // long_term_reference_flag
             }
-
             else
             {
                 size += 1; // adaptive_ref_pic_marking_mode_flag
@@ -4361,7 +4349,6 @@ macroblock_layer() {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_chroma[i]);
                 }
             }
-
             else
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
@@ -4383,17 +4370,12 @@ macroblock_layer() {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        else if (!direct_8x8_inference_flag)
                         {
-
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                            {
-                                noSubMbPartSizeLessThan8x8Flag = 0;
-                            }
+                            noSubMbPartSizeLessThan8x8Flag = 0;
                         }
                     }
                 }
-
                 else
                 {
 
@@ -4454,7 +4436,6 @@ macroblock_layer() {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_chroma[i]);
                 }
             }
-
             else
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
@@ -4476,17 +4457,12 @@ macroblock_layer() {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        else if (!direct_8x8_inference_flag)
                         {
-
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                            {
-                                noSubMbPartSizeLessThan8x8Flag = 0;
-                            }
+                            noSubMbPartSizeLessThan8x8Flag = 0;
                         }
                     }
                 }
-
                 else
                 {
 
@@ -4547,7 +4523,6 @@ macroblock_layer() {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_chroma[i]); // pcm_sample_chroma
                 }
             }
-
             else
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
@@ -4569,17 +4544,12 @@ macroblock_layer() {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        else if (!direct_8x8_inference_flag)
                         {
-
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                            {
-                                noSubMbPartSizeLessThan8x8Flag = 0;
-                            }
+                            noSubMbPartSizeLessThan8x8Flag = 0;
                         }
                     }
                 }
-
                 else
                 {
 
@@ -4694,7 +4664,10 @@ mb_pred( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -4705,7 +4678,6 @@ mb_pred( mb_type ) {
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
-                    this.rem_intra4x4_pred_mode = new uint[16];
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra4x4_pred_mode_flag[luma4x4BlkIdx]);
@@ -4721,7 +4693,6 @@ mb_pred( mb_type ) {
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
-                    this.rem_intra8x8_pred_mode = new uint[4];
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra8x8_pred_mode_flag[luma8x8BlkIdx]);
@@ -4738,7 +4709,6 @@ mb_pred( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -4800,7 +4770,10 @@ mb_pred( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -4840,7 +4813,6 @@ mb_pred( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -4900,7 +4872,10 @@ mb_pred( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -4940,7 +4915,6 @@ mb_pred( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -5066,6 +5040,8 @@ sub_mb_pred( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             this.sub_mb_type = new uint[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
@@ -5105,12 +5081,13 @@ sub_mb_pred( mb_type ) {
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
+                    this.mvd_l0 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
        subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
-                        this.mvd_l0 = new int[2];
+                        this.mvd_l0[subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][subMbPartIdx][compIdx]);
@@ -5126,12 +5103,13 @@ sub_mb_pred( mb_type ) {
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
+                    this.mvd_l1 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
        subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
-                        this.mvd_l1 = new int[2];
+                        this.mvd_l1[subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][subMbPartIdx][compIdx]);
@@ -5148,6 +5126,8 @@ sub_mb_pred( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
@@ -5227,6 +5207,8 @@ sub_mb_pred( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
@@ -5368,12 +5350,14 @@ residual( startIdx, endIdx ) {
             ulong size = 0;
 
             int iCbCr = 0;
+            int i = 0;
+            int i8x8 = 0;
+            int i4x4 = 0;
 
             if (!entropy_coding_mode_flag)
             {
                 residual_block = residual_block_cavlc;
             }
-
             else
             {
                 residual_block = residual_block_cabac;
@@ -5395,9 +5379,13 @@ residual( startIdx, endIdx ) {
                     {
                         size += stream.ReadClass<ResidualBlock>(size, out this.residual_block); // chroma DC residual present 
                     }
-                    if ((CodedBlockPatternChroma & 3) && startIdx == 0)
+                    else
                     {
-                        size += stream.ReadClass<ResidualBlock>(size, out this.residual_block); // chroma DC residual present 
+
+                        for (i = 0; i < 4 * NumC8x8; i++)
+                        {
+                            ChromaDCLevel[iCbCr][i] = 0;
+                        }
                     }
                 }
 
@@ -5414,15 +5402,18 @@ residual( startIdx, endIdx ) {
                             {
                                 size += stream.ReadClass<ResidualBlock>(size, out this.residual_block); // chroma AC residual present 
                             }
-                            if (CodedBlockPatternChroma & 2)
+                            else
                             {
-                                size += stream.ReadClass<ResidualBlock>(size, out this.residual_block); // chroma AC residual present 
+
+                                for (i = 0; i < 15; i++)
+                                {
+                                    ChromaACLevel[iCbCr][i8x8 * 4 + i4x4][i] = 0;
+                                }
                             }
                         }
                     }
                 }
             }
-
             else if (ChromaArrayType == 3)
             {
                 size += stream.ReadClass<ResidualLuma>(size, out this.residual_luma);
@@ -5445,12 +5436,14 @@ residual( startIdx, endIdx ) {
             ulong size = 0;
 
             int iCbCr = 0;
+            int i = 0;
+            int i8x8 = 0;
+            int i4x4 = 0;
 
             if (!entropy_coding_mode_flag)
             {
                 residual_block = residual_block_cavlc;
             }
-
             else
             {
                 residual_block = residual_block_cabac;
@@ -5472,9 +5465,13 @@ residual( startIdx, endIdx ) {
                     {
                         size += stream.WriteClass<ResidualBlock>(this.residual_block); // chroma DC residual present 
                     }
-                    if ((CodedBlockPatternChroma & 3) && startIdx == 0)
+                    else
                     {
-                        size += stream.WriteClass<ResidualBlock>(this.residual_block); // chroma DC residual present 
+
+                        for (i = 0; i < 4 * NumC8x8; i++)
+                        {
+                            ChromaDCLevel[iCbCr][i] = 0;
+                        }
                     }
                 }
 
@@ -5491,15 +5488,18 @@ residual( startIdx, endIdx ) {
                             {
                                 size += stream.WriteClass<ResidualBlock>(this.residual_block); // chroma AC residual present 
                             }
-                            if (CodedBlockPatternChroma & 2)
+                            else
                             {
-                                size += stream.WriteClass<ResidualBlock>(this.residual_block); // chroma AC residual present 
+
+                                for (i = 0; i < 15; i++)
+                                {
+                                    ChromaACLevel[iCbCr][i8x8 * 4 + i4x4][i] = 0;
+                                }
                             }
                         }
                     }
                 }
             }
-
             else if (ChromaArrayType == 3)
             {
                 size += stream.WriteClass<ResidualLuma>(this.residual_luma);
@@ -5522,12 +5522,14 @@ residual( startIdx, endIdx ) {
             ulong size = 0;
 
             int iCbCr = 0;
+            int i = 0;
+            int i8x8 = 0;
+            int i4x4 = 0;
 
             if (!entropy_coding_mode_flag)
             {
                 residual_block = residual_block_cavlc;
             }
-
             else
             {
                 residual_block = residual_block_cabac;
@@ -5549,9 +5551,13 @@ residual( startIdx, endIdx ) {
                     {
                         size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                     }
-                    if ((CodedBlockPatternChroma & 3) && startIdx == 0)
+                    else
                     {
-                        size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+
+                        for (i = 0; i < 4 * NumC8x8; i++)
+                        {
+                            ChromaDCLevel[iCbCr][i] = 0;
+                        }
                     }
                 }
 
@@ -5568,15 +5574,18 @@ residual( startIdx, endIdx ) {
                             {
                                 size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                             }
-                            if (CodedBlockPatternChroma & 2)
+                            else
                             {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+
+                                for (i = 0; i < 15; i++)
+                                {
+                                    ChromaACLevel[iCbCr][i8x8 * 4 + i4x4][i] = 0;
+                                }
                             }
                         }
                     }
                 }
             }
-
             else if (ChromaArrayType == 3)
             {
                 size += ItuStream.CalculateClassSize<ResidualLuma>(residual_luma); // residual_luma
@@ -5659,6 +5668,8 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             ulong size = 0;
 
             int i8x8 = 0;
+            int i4x4 = 0;
+            int i = 0;
 
             if (startIdx == 0 && MbPartPredMode(mb_type, 0) == Intra_16x16)
             {
@@ -5681,71 +5692,25 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                             {
                                 size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
                             }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                            else
                             {
                                 size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
                             }
                         }
+                        else if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                        {
 
-                        if (!entropy_coding_mode_flag && transform_size_8x8_flag)
+                            for (i = 0; i < 15; i++)
+                            {
+                                i16x16AClevel[i8x8 * 4 + i4x4][i] = 0;
+                            }
+                        }
+                        else
                         {
 
                             for (i = 0; i < 16; i++)
                             {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
-                            }
-                        }
-                    }
-                    for (i4x4 = 0; i4x4 < 4; i4x4++)
-                    {
-
-                        if (CodedBlockPatternLuma & (1 << i8x8))
-                        {
-
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
-                            }
-                        }
-
-                        if (!entropy_coding_mode_flag && transform_size_8x8_flag)
-                        {
-
-                            for (i = 0; i < 16; i++)
-                            {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
-                            }
-                        }
-                    }
-                    for (i4x4 = 0; i4x4 < 4; i4x4++)
-                    {
-
-                        if (CodedBlockPatternLuma & (1 << i8x8))
-                        {
-
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
+                                level4x4[i8x8 * 4 + i4x4][i] = 0;
                             }
                         }
 
@@ -5759,6 +5724,18 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         }
                     }
                 }
+                else if (CodedBlockPatternLuma & (1 << i8x8))
+                {
+                    size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
+                }
+                else
+                {
+
+                    for (i = 0; i < 64; i++)
+                    {
+                        level8x8[i8x8][i] = 0;
+                    }
+                }
             }
 
             return size;
@@ -5769,6 +5746,8 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             ulong size = 0;
 
             int i8x8 = 0;
+            int i4x4 = 0;
+            int i = 0;
 
             if (startIdx == 0 && MbPartPredMode(mb_type, 0) == Intra_16x16)
             {
@@ -5791,71 +5770,25 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                             {
                                 size += stream.WriteClass<ResidualBlock>(this.residual_block);
                             }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.WriteClass<ResidualBlock>(this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                            else
                             {
                                 size += stream.WriteClass<ResidualBlock>(this.residual_block);
                             }
                         }
+                        else if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                        {
 
-                        if (!entropy_coding_mode_flag && transform_size_8x8_flag)
+                            for (i = 0; i < 15; i++)
+                            {
+                                i16x16AClevel[i8x8 * 4 + i4x4][i] = 0;
+                            }
+                        }
+                        else
                         {
 
                             for (i = 0; i < 16; i++)
                             {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
-                            }
-                        }
-                    }
-                    for (i4x4 = 0; i4x4 < 4; i4x4++)
-                    {
-
-                        if (CodedBlockPatternLuma & (1 << i8x8))
-                        {
-
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.WriteClass<ResidualBlock>(this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.WriteClass<ResidualBlock>(this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.WriteClass<ResidualBlock>(this.residual_block);
-                            }
-                        }
-
-                        if (!entropy_coding_mode_flag && transform_size_8x8_flag)
-                        {
-
-                            for (i = 0; i < 16; i++)
-                            {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
-                            }
-                        }
-                    }
-                    for (i4x4 = 0; i4x4 < 4; i4x4++)
-                    {
-
-                        if (CodedBlockPatternLuma & (1 << i8x8))
-                        {
-
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.WriteClass<ResidualBlock>(this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.WriteClass<ResidualBlock>(this.residual_block);
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += stream.WriteClass<ResidualBlock>(this.residual_block);
+                                level4x4[i8x8 * 4 + i4x4][i] = 0;
                             }
                         }
 
@@ -5869,6 +5802,18 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         }
                     }
                 }
+                else if (CodedBlockPatternLuma & (1 << i8x8))
+                {
+                    size += stream.WriteClass<ResidualBlock>(this.residual_block);
+                }
+                else
+                {
+
+                    for (i = 0; i < 64; i++)
+                    {
+                        level8x8[i8x8][i] = 0;
+                    }
+                }
             }
 
             return size;
@@ -5879,6 +5824,8 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             ulong size = 0;
 
             int i8x8 = 0;
+            int i4x4 = 0;
+            int i = 0;
 
             if (startIdx == 0 && MbPartPredMode(mb_type, 0) == Intra_16x16)
             {
@@ -5901,13 +5848,25 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                             {
                                 size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                             }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                            else
                             {
                                 size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                             }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                        }
+                        else if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                        {
+
+                            for (i = 0; i < 15; i++)
                             {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+                                i16x16AClevel[i8x8 * 4 + i4x4][i] = 0;
+                            }
+                        }
+                        else
+                        {
+
+                            for (i = 0; i < 16; i++)
+                            {
+                                level4x4[i8x8 * 4 + i4x4][i] = 0;
                             }
                         }
 
@@ -5920,63 +5879,17 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                             }
                         }
                     }
-                    for (i4x4 = 0; i4x4 < 4; i4x4++)
+                }
+                else if (CodedBlockPatternLuma & (1 << i8x8))
+                {
+                    size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+                }
+                else
+                {
+
+                    for (i = 0; i < 64; i++)
                     {
-
-                        if (CodedBlockPatternLuma & (1 << i8x8))
-                        {
-
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
-                            }
-                        }
-
-                        if (!entropy_coding_mode_flag && transform_size_8x8_flag)
-                        {
-
-                            for (i = 0; i < 16; i++)
-                            {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
-                            }
-                        }
-                    }
-                    for (i4x4 = 0; i4x4 < 4; i4x4++)
-                    {
-
-                        if (CodedBlockPatternLuma & (1 << i8x8))
-                        {
-
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
-                            }
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
-                            {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
-                            }
-                        }
-
-                        if (!entropy_coding_mode_flag && transform_size_8x8_flag)
-                        {
-
-                            for (i = 0; i < 16; i++)
-                            {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
-                            }
-                        }
+                        level8x8[i8x8][i] = 0;
                     }
                 }
             }
@@ -6009,9 +5922,9 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
      level_suffix 3 | 4 u(v)
                     levelCode += level_suffix
                 }
-                if (level_prefix > = 15 && suffixLength  ==  0 )
+                if (level_prefix >= 15 && suffixLength  ==  0 )
                 levelCode += 15
-                if (level_prefix > = 16 )
+                if (level_prefix >= 16 )
                 levelCode += (1 << (level_prefix - 3 ) ) - 4096
                 if (i == TrailingOnes(coeff_token) &&
                     TrailingOnes(coeff_token) < 3)
@@ -6100,7 +6013,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                 {
                     suffixLength = 1;
                 }
-
                 else
                 {
                     suffixLength = 0;
@@ -6114,10 +6026,52 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                         size += stream.ReadUnsignedInt(size, 1, out this.trailing_ones_sign_flag);
                         levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
                     }
-                    if (i < TrailingOnes(coeff_token))
+                    else
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.trailing_ones_sign_flag);
-                        levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
+                        size += stream.ReadUnsignedIntGolomb(size, out this.level_prefix);
+                        levelCode = (Min(15, level_prefix) << suffixLength);
+
+                        if (suffixLength > 0 || level_prefix >= 14)
+                        {
+                            size += stream.ReadUnsignedIntVariable(size, out this.level_suffix);
+                            levelCode += level_suffix;
+                        }
+
+                        if (level_prefix >= 15 && suffixLength == 0)
+                        {
+                            levelCode += 15;
+                        }
+
+                        if (level_prefix >= 16)
+                        {
+                            levelCode += (1 << (level_prefix - 3)) - 4096;
+                        }
+
+                        if (i == TrailingOnes(coeff_token) &&
+                    TrailingOnes(coeff_token) < 3)
+                        {
+                            levelCode += 2;
+                        }
+
+                        if (levelCode % 2 == 0)
+                        {
+                            levelVal[i] = (levelCode + 2) >> 1;
+                        }
+                        else
+                        {
+                            levelVal[i] = (-levelCode - 1) >> 1;
+                        }
+
+                        if (suffixLength == 0)
+                        {
+                            suffixLength = 1;
+                        }
+
+                        if (Abs(levelVal[i]) > (3 << (suffixLength - 1)) &&
+                    suffixLength < 6)
+                        {
+                            suffixLength++;
+                        }
                     }
                 }
 
@@ -6126,7 +6080,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.total_zeros);
                     zerosLeft = total_zeros;
                 }
-
                 else
                 {
                     zerosLeft = 0;
@@ -6140,7 +6093,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                         size += stream.ReadUnsignedIntGolomb(size, out this.run_before);
                         runVal[i] = run_before;
                     }
-
                     else
                     {
                         runVal[i] = 0;
@@ -6179,7 +6131,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                 {
                     suffixLength = 1;
                 }
-
                 else
                 {
                     suffixLength = 0;
@@ -6193,10 +6144,52 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                         size += stream.WriteUnsignedInt(1, this.trailing_ones_sign_flag);
                         levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
                     }
-                    if (i < TrailingOnes(coeff_token))
+                    else
                     {
-                        size += stream.WriteUnsignedInt(1, this.trailing_ones_sign_flag);
-                        levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
+                        size += stream.WriteUnsignedIntGolomb(this.level_prefix);
+                        levelCode = (Min(15, level_prefix) << suffixLength);
+
+                        if (suffixLength > 0 || level_prefix >= 14)
+                        {
+                            size += stream.WriteUnsignedIntVariable(this.level_suffix);
+                            levelCode += level_suffix;
+                        }
+
+                        if (level_prefix >= 15 && suffixLength == 0)
+                        {
+                            levelCode += 15;
+                        }
+
+                        if (level_prefix >= 16)
+                        {
+                            levelCode += (1 << (level_prefix - 3)) - 4096;
+                        }
+
+                        if (i == TrailingOnes(coeff_token) &&
+                    TrailingOnes(coeff_token) < 3)
+                        {
+                            levelCode += 2;
+                        }
+
+                        if (levelCode % 2 == 0)
+                        {
+                            levelVal[i] = (levelCode + 2) >> 1;
+                        }
+                        else
+                        {
+                            levelVal[i] = (-levelCode - 1) >> 1;
+                        }
+
+                        if (suffixLength == 0)
+                        {
+                            suffixLength = 1;
+                        }
+
+                        if (Abs(levelVal[i]) > (3 << (suffixLength - 1)) &&
+                    suffixLength < 6)
+                        {
+                            suffixLength++;
+                        }
                     }
                 }
 
@@ -6205,7 +6198,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     size += stream.WriteUnsignedIntGolomb(this.total_zeros);
                     zerosLeft = total_zeros;
                 }
-
                 else
                 {
                     zerosLeft = 0;
@@ -6219,7 +6211,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                         size += stream.WriteUnsignedIntGolomb(this.run_before);
                         runVal[i] = run_before;
                     }
-
                     else
                     {
                         runVal[i] = 0;
@@ -6258,7 +6249,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                 {
                     suffixLength = 1;
                 }
-
                 else
                 {
                     suffixLength = 0;
@@ -6272,10 +6262,52 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                         size += 1; // trailing_ones_sign_flag
                         levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
                     }
-                    if (i < TrailingOnes(coeff_token))
+                    else
                     {
-                        size += 1; // trailing_ones_sign_flag
-                        levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
+                        size += ItuStream.CalculateUnsignedIntGolomb(level_prefix); // level_prefix
+                        levelCode = (Min(15, level_prefix) << suffixLength);
+
+                        if (suffixLength > 0 || level_prefix >= 14)
+                        {
+                            size += ItuStream.CalculateUnsignedIntVariable(level_suffix); // level_suffix
+                            levelCode += level_suffix;
+                        }
+
+                        if (level_prefix >= 15 && suffixLength == 0)
+                        {
+                            levelCode += 15;
+                        }
+
+                        if (level_prefix >= 16)
+                        {
+                            levelCode += (1 << (level_prefix - 3)) - 4096;
+                        }
+
+                        if (i == TrailingOnes(coeff_token) &&
+                    TrailingOnes(coeff_token) < 3)
+                        {
+                            levelCode += 2;
+                        }
+
+                        if (levelCode % 2 == 0)
+                        {
+                            levelVal[i] = (levelCode + 2) >> 1;
+                        }
+                        else
+                        {
+                            levelVal[i] = (-levelCode - 1) >> 1;
+                        }
+
+                        if (suffixLength == 0)
+                        {
+                            suffixLength = 1;
+                        }
+
+                        if (Abs(levelVal[i]) > (3 << (suffixLength - 1)) &&
+                    suffixLength < 6)
+                        {
+                            suffixLength++;
+                        }
                     }
                 }
 
@@ -6284,7 +6316,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(total_zeros); // total_zeros
                     zerosLeft = total_zeros;
                 }
-
                 else
                 {
                     zerosLeft = 0;
@@ -6298,7 +6329,6 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                         size += ItuStream.CalculateUnsignedIntGolomb(run_before); // run_before
                         runVal[i] = run_before;
                     }
-
                     else
                     {
                         runVal[i] = 0;
@@ -6640,7 +6670,7 @@ else if( payloadType  ==  41 )
 else if( payloadType  ==  42 )   
  view_dependency_change( payloadSize )  /* specified in Annex H *//* 5  
 else if( payloadType  ==  43 )   
- operation_points_not_present( payloadSize )  /* specified in Annex H *//* 5  
+ operation_point_not_present( payloadSize )  /* specified in Annex H *//* 5  
 else if( payloadType  ==  44 )   
  base_view_temporal_hrd( payloadSize )  /* specified in Annex H *//* 5  
 else if( payloadType  ==  45 )   
@@ -6794,8 +6824,8 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
         public NonRequiredViewComponent NonRequiredViewComponent { get { return non_required_view_component; } set { non_required_view_component = value; } }
         private ViewDependencyChange view_dependency_change;
         public ViewDependencyChange ViewDependencyChange { get { return view_dependency_change; } set { view_dependency_change = value; } }
-        private OperationPointsNotPresent operation_points_not_present;
-        public OperationPointsNotPresent OperationPointsNotPresent { get { return operation_points_not_present; } set { operation_points_not_present = value; } }
+        private OperationPointNotPresent operation_point_not_present;
+        public OperationPointNotPresent OperationPointNotPresent { get { return operation_point_not_present; } set { operation_point_not_present = value; } }
         private BaseViewTemporalHrd base_view_temporal_hrd;
         public BaseViewTemporalHrd BaseViewTemporalHrd { get { return base_view_temporal_hrd; } set { base_view_temporal_hrd = value; } }
         private FramePackingArrangement frame_packing_arrangement;
@@ -6878,362 +6908,290 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             {
                 size += stream.ReadClass<BufferingPeriod>(size, out this.buffering_period);
             }
-
             else if (payloadType == 1)
             {
                 size += stream.ReadClass<PicTiming>(size, out this.pic_timing);
             }
-
             else if (payloadType == 2)
             {
                 size += stream.ReadClass<PanScanRect>(size, out this.pan_scan_rect);
             }
-
             else if (payloadType == 3)
             {
                 size += stream.ReadClass<FillerPayload>(size, out this.filler_payload);
             }
-
             else if (payloadType == 4)
             {
                 size += stream.ReadClass<UserDataRegisteredItutT35>(size, out this.user_data_registered_itu_t_t35);
             }
-
             else if (payloadType == 5)
             {
                 size += stream.ReadClass<UserDataUnregistered>(size, out this.user_data_unregistered);
             }
-
             else if (payloadType == 6)
             {
                 size += stream.ReadClass<RecoveryPoint>(size, out this.recovery_point);
             }
-
             else if (payloadType == 7)
             {
                 size += stream.ReadClass<DecRefPicMarkingRepetition>(size, out this.dec_ref_pic_marking_repetition);
             }
-
             else if (payloadType == 8)
             {
                 size += stream.ReadClass<SparePic>(size, out this.spare_pic);
             }
-
             else if (payloadType == 9)
             {
                 size += stream.ReadClass<SceneInfo>(size, out this.scene_info);
             }
-
             else if (payloadType == 10)
             {
                 size += stream.ReadClass<SubSeqInfo>(size, out this.sub_seq_info);
             }
-
             else if (payloadType == 11)
             {
                 size += stream.ReadClass<SubSeqLayerCharacteristics>(size, out this.sub_seq_layer_characteristics);
             }
-
             else if (payloadType == 12)
             {
                 size += stream.ReadClass<SubSeqCharacteristics>(size, out this.sub_seq_characteristics);
             }
-
             else if (payloadType == 13)
             {
                 size += stream.ReadClass<FullFrameFreeze>(size, out this.full_frame_freeze);
             }
-
             else if (payloadType == 14)
             {
                 size += stream.ReadClass<FullFrameFreezeRelease>(size, out this.full_frame_freeze_release);
             }
-
             else if (payloadType == 15)
             {
                 size += stream.ReadClass<FullFrameSnapshot>(size, out this.full_frame_snapshot);
             }
-
             else if (payloadType == 16)
             {
                 size += stream.ReadClass<ProgressiveRefinementSegmentStart>(size, out this.progressive_refinement_segment_start);
             }
-
             else if (payloadType == 17)
             {
                 size += stream.ReadClass<ProgressiveRefinementSegmentEnd>(size, out this.progressive_refinement_segment_end);
             }
-
             else if (payloadType == 18)
             {
                 size += stream.ReadClass<MotionConstrainedSliceGroupSet>(size, out this.motion_constrained_slice_group_set);
             }
-
             else if (payloadType == 19)
             {
                 size += stream.ReadClass<FilmGrainCharacteristics>(size, out this.film_grain_characteristics);
             }
-
             else if (payloadType == 20)
             {
                 size += stream.ReadClass<DeblockingFilterDisplayPreference>(size, out this.deblocking_filter_display_preference);
             }
-
             else if (payloadType == 21)
             {
                 size += stream.ReadClass<StereoVideoInfo>(size, out this.stereo_video_info);
             }
-
             else if (payloadType == 22)
             {
                 size += stream.ReadClass<PostFilterHint>(size, out this.post_filter_hint);
             }
-
             else if (payloadType == 23)
             {
                 size += stream.ReadClass<ToneMappingInfo>(size, out this.tone_mapping_info);
             }
-
             else if (payloadType == 24)
             {
                 size += stream.ReadClass<ScalabilityInfo>(size, out this.scalability_info); // specified in Annex G 
             }
-
             else if (payloadType == 25)
             {
                 size += stream.ReadClass<SubPicScalableLayer>(size, out this.sub_pic_scalable_layer); // specified in Annex G 
             }
-
             else if (payloadType == 26)
             {
                 size += stream.ReadClass<NonRequiredLayerRep>(size, out this.non_required_layer_rep); // specified in Annex G 
             }
-
             else if (payloadType == 27)
             {
                 size += stream.ReadClass<PriorityLayerInfo>(size, out this.priority_layer_info); // specified in Annex G 
             }
-
             else if (payloadType == 28)
             {
                 size += stream.ReadClass<LayersNotPresent>(size, out this.layers_not_present); // specified in Annex G 
             }
-
             else if (payloadType == 29)
             {
                 size += stream.ReadClass<LayerDependencyChange>(size, out this.layer_dependency_change); // specified in Annex G 
             }
-
             else if (payloadType == 30)
             {
                 size += stream.ReadClass<ScalableNesting>(size, out this.scalable_nesting); // specified in Annex G 
             }
-
             else if (payloadType == 31)
             {
                 size += stream.ReadClass<BaseLayerTemporalHrd>(size, out this.base_layer_temporal_hrd); // specified in Annex G 
             }
-
             else if (payloadType == 32)
             {
                 size += stream.ReadClass<QualityLayerIntegrityCheck>(size, out this.quality_layer_integrity_check); // specified in Annex G 
             }
-
             else if (payloadType == 33)
             {
                 size += stream.ReadClass<RedundantPicProperty>(size, out this.redundant_pic_property); // specified in Annex G 
             }
-
             else if (payloadType == 34)
             {
                 size += stream.ReadClass<Tl0DepRepIndex>(size, out this.tl0_dep_rep_index); // specified in Annex G 
             }
-
             else if (payloadType == 35)
             {
                 size += stream.ReadClass<TlSwitchingPoint>(size, out this.tl_switching_point); // specified in Annex G 
             }
-
             else if (payloadType == 36)
             {
                 size += stream.ReadClass<ParallelDecodingInfo>(size, out this.parallel_decoding_info); // specified in Annex H 
             }
-
             else if (payloadType == 37)
             {
                 size += stream.ReadClass<MvcScalableNesting>(size, out this.mvc_scalable_nesting); // specified in Annex H 
             }
-
             else if (payloadType == 38)
             {
                 size += stream.ReadClass<ViewScalabilityInfo>(size, out this.view_scalability_info); // specified in Annex H 
             }
-
             else if (payloadType == 39)
             {
                 size += stream.ReadClass<MultiviewSceneInfo>(size, out this.multiview_scene_info); // specified in Annex H 
             }
-
             else if (payloadType == 40)
             {
                 size += stream.ReadClass<MultiviewAcquisitionInfo>(size, out this.multiview_acquisition_info); // specified in Annex H 
             }
-
             else if (payloadType == 41)
             {
                 size += stream.ReadClass<NonRequiredViewComponent>(size, out this.non_required_view_component); // specified in Annex H 
             }
-
             else if (payloadType == 42)
             {
                 size += stream.ReadClass<ViewDependencyChange>(size, out this.view_dependency_change); // specified in Annex H 
             }
-
             else if (payloadType == 43)
             {
-                size += stream.ReadClass<OperationPointsNotPresent>(size, out this.operation_points_not_present); // specified in Annex H 
+                size += stream.ReadClass<OperationPointNotPresent>(size, out this.operation_point_not_present); // specified in Annex H 
             }
-
             else if (payloadType == 44)
             {
                 size += stream.ReadClass<BaseViewTemporalHrd>(size, out this.base_view_temporal_hrd); // specified in Annex H 
             }
-
             else if (payloadType == 45)
             {
                 size += stream.ReadClass<FramePackingArrangement>(size, out this.frame_packing_arrangement);
             }
-
             else if (payloadType == 46)
             {
                 size += stream.ReadClass<MultiviewViewPosition>(size, out this.multiview_view_position); // specified in Annex H 
             }
-
             else if (payloadType == 47)
             {
                 size += stream.ReadClass<DisplayOrientation>(size, out this.display_orientation);
             }
-
             else if (payloadType == 48)
             {
                 size += stream.ReadClass<MvcdScalableNesting>(size, out this.mvcd_scalable_nesting); // specified in Annex I 
             }
-
             else if (payloadType == 49)
             {
                 size += stream.ReadClass<MvcdViewScalabilityInfo>(size, out this.mvcd_view_scalability_info); // specified in Annex I 
             }
-
             else if (payloadType == 50)
             {
                 size += stream.ReadClass<DepthRepresentationInfo>(size, out this.depth_representation_info); // specified in Annex I 
             }
-
             else if (payloadType == 51)
             {
                 size += stream.ReadClass<ThreeDimensionalReferenceDisplaysInfo>(size, out this.three_dimensional_reference_displays_info); // specified in Annex I 
             }
-
             else if (payloadType == 52)
             {
                 size += stream.ReadClass<DepthTiming>(size, out this.depth_timing); // specified in Annex I 
             }
-
             else if (payloadType == 53)
             {
                 size += stream.ReadClass<DepthSamplingInfo>(size, out this.depth_sampling_info); // specified in Annex I 
             }
-
             else if (payloadType == 54)
             {
                 size += stream.ReadClass<ConstrainedDepthParameterSetIdentifier>(size, out this.constrained_depth_parameter_set_identifier); // specified in Annex J 
             }
-
             else if (payloadType == 56)
             {
                 size += stream.ReadClass<GreenMetadata>(size, out this.green_metadata); // specified in ISO/IEC 23001-11 
             }
-
             else if (payloadType == 137)
             {
                 size += stream.ReadClass<MasteringDisplayColourVolume>(size, out this.mastering_display_colour_volume);
             }
-
             else if (payloadType == 142)
             {
                 size += stream.ReadClass<ColourRemappingInfo>(size, out this.colour_remapping_info);
             }
-
             else if (payloadType == 144)
             {
                 size += stream.ReadClass<ContentLightLevelInfo>(size, out this.content_light_level_info);
             }
-
             else if (payloadType == 147)
             {
                 size += stream.ReadClass<AlternativeTransferCharacteristics>(size, out this.alternative_transfer_characteristics);
             }
-
             else if (payloadType == 148)
             {
                 size += stream.ReadClass<AmbientViewingEnvironment>(size, out this.ambient_viewing_environment);
             }
-
             else if (payloadType == 149)
             {
                 size += stream.ReadClass<ContentColourVolume>(size, out this.content_colour_volume);
             }
-
             else if (payloadType == 150)
             {
                 size += stream.ReadClass<EquirectangularProjection>(size, out this.equirectangular_projection);
             }
-
             else if (payloadType == 151)
             {
                 size += stream.ReadClass<CubemapProjection>(size, out this.cubemap_projection);
             }
-
             else if (payloadType == 154)
             {
                 size += stream.ReadClass<SphereRotation>(size, out this.sphere_rotation);
             }
-
             else if (payloadType == 155)
             {
                 size += stream.ReadClass<RegionwisePacking>(size, out this.regionwise_packing);
             }
-
             else if (payloadType == 156)
             {
                 size += stream.ReadClass<OmniViewport>(size, out this.omni_viewport);
             }
-
             else if (payloadType == 181)
             {
                 size += stream.ReadClass<AlternativeDepthInfo>(size, out this.alternative_depth_info); // specified in Annex I 
             }
-
             else if (payloadType == 200)
             {
                 size += stream.ReadClass<SeiManifest>(size, out this.sei_manifest);
             }
-
             else if (payloadType == 201)
             {
                 size += stream.ReadClass<SeiPrefixIndication>(size, out this.sei_prefix_indication);
             }
-
             else if (payloadType == 202)
             {
                 size += stream.ReadClass<AnnotatedRegions>(size, out this.annotated_regions);
             }
-
             else if (payloadType == 205)
             {
                 size += stream.ReadClass<ShutterIntervalInfo>(size, out this.shutter_interval_info);
             }
-
             else
             {
                 size += stream.ReadClass<ReservedSeiMessage>(size, out this.reserved_sei_message);
@@ -7261,362 +7219,290 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             {
                 size += stream.WriteClass<BufferingPeriod>(this.buffering_period);
             }
-
             else if (payloadType == 1)
             {
                 size += stream.WriteClass<PicTiming>(this.pic_timing);
             }
-
             else if (payloadType == 2)
             {
                 size += stream.WriteClass<PanScanRect>(this.pan_scan_rect);
             }
-
             else if (payloadType == 3)
             {
                 size += stream.WriteClass<FillerPayload>(this.filler_payload);
             }
-
             else if (payloadType == 4)
             {
                 size += stream.WriteClass<UserDataRegisteredItutT35>(this.user_data_registered_itu_t_t35);
             }
-
             else if (payloadType == 5)
             {
                 size += stream.WriteClass<UserDataUnregistered>(this.user_data_unregistered);
             }
-
             else if (payloadType == 6)
             {
                 size += stream.WriteClass<RecoveryPoint>(this.recovery_point);
             }
-
             else if (payloadType == 7)
             {
                 size += stream.WriteClass<DecRefPicMarkingRepetition>(this.dec_ref_pic_marking_repetition);
             }
-
             else if (payloadType == 8)
             {
                 size += stream.WriteClass<SparePic>(this.spare_pic);
             }
-
             else if (payloadType == 9)
             {
                 size += stream.WriteClass<SceneInfo>(this.scene_info);
             }
-
             else if (payloadType == 10)
             {
                 size += stream.WriteClass<SubSeqInfo>(this.sub_seq_info);
             }
-
             else if (payloadType == 11)
             {
                 size += stream.WriteClass<SubSeqLayerCharacteristics>(this.sub_seq_layer_characteristics);
             }
-
             else if (payloadType == 12)
             {
                 size += stream.WriteClass<SubSeqCharacteristics>(this.sub_seq_characteristics);
             }
-
             else if (payloadType == 13)
             {
                 size += stream.WriteClass<FullFrameFreeze>(this.full_frame_freeze);
             }
-
             else if (payloadType == 14)
             {
                 size += stream.WriteClass<FullFrameFreezeRelease>(this.full_frame_freeze_release);
             }
-
             else if (payloadType == 15)
             {
                 size += stream.WriteClass<FullFrameSnapshot>(this.full_frame_snapshot);
             }
-
             else if (payloadType == 16)
             {
                 size += stream.WriteClass<ProgressiveRefinementSegmentStart>(this.progressive_refinement_segment_start);
             }
-
             else if (payloadType == 17)
             {
                 size += stream.WriteClass<ProgressiveRefinementSegmentEnd>(this.progressive_refinement_segment_end);
             }
-
             else if (payloadType == 18)
             {
                 size += stream.WriteClass<MotionConstrainedSliceGroupSet>(this.motion_constrained_slice_group_set);
             }
-
             else if (payloadType == 19)
             {
                 size += stream.WriteClass<FilmGrainCharacteristics>(this.film_grain_characteristics);
             }
-
             else if (payloadType == 20)
             {
                 size += stream.WriteClass<DeblockingFilterDisplayPreference>(this.deblocking_filter_display_preference);
             }
-
             else if (payloadType == 21)
             {
                 size += stream.WriteClass<StereoVideoInfo>(this.stereo_video_info);
             }
-
             else if (payloadType == 22)
             {
                 size += stream.WriteClass<PostFilterHint>(this.post_filter_hint);
             }
-
             else if (payloadType == 23)
             {
                 size += stream.WriteClass<ToneMappingInfo>(this.tone_mapping_info);
             }
-
             else if (payloadType == 24)
             {
                 size += stream.WriteClass<ScalabilityInfo>(this.scalability_info); // specified in Annex G 
             }
-
             else if (payloadType == 25)
             {
                 size += stream.WriteClass<SubPicScalableLayer>(this.sub_pic_scalable_layer); // specified in Annex G 
             }
-
             else if (payloadType == 26)
             {
                 size += stream.WriteClass<NonRequiredLayerRep>(this.non_required_layer_rep); // specified in Annex G 
             }
-
             else if (payloadType == 27)
             {
                 size += stream.WriteClass<PriorityLayerInfo>(this.priority_layer_info); // specified in Annex G 
             }
-
             else if (payloadType == 28)
             {
                 size += stream.WriteClass<LayersNotPresent>(this.layers_not_present); // specified in Annex G 
             }
-
             else if (payloadType == 29)
             {
                 size += stream.WriteClass<LayerDependencyChange>(this.layer_dependency_change); // specified in Annex G 
             }
-
             else if (payloadType == 30)
             {
                 size += stream.WriteClass<ScalableNesting>(this.scalable_nesting); // specified in Annex G 
             }
-
             else if (payloadType == 31)
             {
                 size += stream.WriteClass<BaseLayerTemporalHrd>(this.base_layer_temporal_hrd); // specified in Annex G 
             }
-
             else if (payloadType == 32)
             {
                 size += stream.WriteClass<QualityLayerIntegrityCheck>(this.quality_layer_integrity_check); // specified in Annex G 
             }
-
             else if (payloadType == 33)
             {
                 size += stream.WriteClass<RedundantPicProperty>(this.redundant_pic_property); // specified in Annex G 
             }
-
             else if (payloadType == 34)
             {
                 size += stream.WriteClass<Tl0DepRepIndex>(this.tl0_dep_rep_index); // specified in Annex G 
             }
-
             else if (payloadType == 35)
             {
                 size += stream.WriteClass<TlSwitchingPoint>(this.tl_switching_point); // specified in Annex G 
             }
-
             else if (payloadType == 36)
             {
                 size += stream.WriteClass<ParallelDecodingInfo>(this.parallel_decoding_info); // specified in Annex H 
             }
-
             else if (payloadType == 37)
             {
                 size += stream.WriteClass<MvcScalableNesting>(this.mvc_scalable_nesting); // specified in Annex H 
             }
-
             else if (payloadType == 38)
             {
                 size += stream.WriteClass<ViewScalabilityInfo>(this.view_scalability_info); // specified in Annex H 
             }
-
             else if (payloadType == 39)
             {
                 size += stream.WriteClass<MultiviewSceneInfo>(this.multiview_scene_info); // specified in Annex H 
             }
-
             else if (payloadType == 40)
             {
                 size += stream.WriteClass<MultiviewAcquisitionInfo>(this.multiview_acquisition_info); // specified in Annex H 
             }
-
             else if (payloadType == 41)
             {
                 size += stream.WriteClass<NonRequiredViewComponent>(this.non_required_view_component); // specified in Annex H 
             }
-
             else if (payloadType == 42)
             {
                 size += stream.WriteClass<ViewDependencyChange>(this.view_dependency_change); // specified in Annex H 
             }
-
             else if (payloadType == 43)
             {
-                size += stream.WriteClass<OperationPointsNotPresent>(this.operation_points_not_present); // specified in Annex H 
+                size += stream.WriteClass<OperationPointNotPresent>(this.operation_point_not_present); // specified in Annex H 
             }
-
             else if (payloadType == 44)
             {
                 size += stream.WriteClass<BaseViewTemporalHrd>(this.base_view_temporal_hrd); // specified in Annex H 
             }
-
             else if (payloadType == 45)
             {
                 size += stream.WriteClass<FramePackingArrangement>(this.frame_packing_arrangement);
             }
-
             else if (payloadType == 46)
             {
                 size += stream.WriteClass<MultiviewViewPosition>(this.multiview_view_position); // specified in Annex H 
             }
-
             else if (payloadType == 47)
             {
                 size += stream.WriteClass<DisplayOrientation>(this.display_orientation);
             }
-
             else if (payloadType == 48)
             {
                 size += stream.WriteClass<MvcdScalableNesting>(this.mvcd_scalable_nesting); // specified in Annex I 
             }
-
             else if (payloadType == 49)
             {
                 size += stream.WriteClass<MvcdViewScalabilityInfo>(this.mvcd_view_scalability_info); // specified in Annex I 
             }
-
             else if (payloadType == 50)
             {
                 size += stream.WriteClass<DepthRepresentationInfo>(this.depth_representation_info); // specified in Annex I 
             }
-
             else if (payloadType == 51)
             {
                 size += stream.WriteClass<ThreeDimensionalReferenceDisplaysInfo>(this.three_dimensional_reference_displays_info); // specified in Annex I 
             }
-
             else if (payloadType == 52)
             {
                 size += stream.WriteClass<DepthTiming>(this.depth_timing); // specified in Annex I 
             }
-
             else if (payloadType == 53)
             {
                 size += stream.WriteClass<DepthSamplingInfo>(this.depth_sampling_info); // specified in Annex I 
             }
-
             else if (payloadType == 54)
             {
                 size += stream.WriteClass<ConstrainedDepthParameterSetIdentifier>(this.constrained_depth_parameter_set_identifier); // specified in Annex J 
             }
-
             else if (payloadType == 56)
             {
                 size += stream.WriteClass<GreenMetadata>(this.green_metadata); // specified in ISO/IEC 23001-11 
             }
-
             else if (payloadType == 137)
             {
                 size += stream.WriteClass<MasteringDisplayColourVolume>(this.mastering_display_colour_volume);
             }
-
             else if (payloadType == 142)
             {
                 size += stream.WriteClass<ColourRemappingInfo>(this.colour_remapping_info);
             }
-
             else if (payloadType == 144)
             {
                 size += stream.WriteClass<ContentLightLevelInfo>(this.content_light_level_info);
             }
-
             else if (payloadType == 147)
             {
                 size += stream.WriteClass<AlternativeTransferCharacteristics>(this.alternative_transfer_characteristics);
             }
-
             else if (payloadType == 148)
             {
                 size += stream.WriteClass<AmbientViewingEnvironment>(this.ambient_viewing_environment);
             }
-
             else if (payloadType == 149)
             {
                 size += stream.WriteClass<ContentColourVolume>(this.content_colour_volume);
             }
-
             else if (payloadType == 150)
             {
                 size += stream.WriteClass<EquirectangularProjection>(this.equirectangular_projection);
             }
-
             else if (payloadType == 151)
             {
                 size += stream.WriteClass<CubemapProjection>(this.cubemap_projection);
             }
-
             else if (payloadType == 154)
             {
                 size += stream.WriteClass<SphereRotation>(this.sphere_rotation);
             }
-
             else if (payloadType == 155)
             {
                 size += stream.WriteClass<RegionwisePacking>(this.regionwise_packing);
             }
-
             else if (payloadType == 156)
             {
                 size += stream.WriteClass<OmniViewport>(this.omni_viewport);
             }
-
             else if (payloadType == 181)
             {
                 size += stream.WriteClass<AlternativeDepthInfo>(this.alternative_depth_info); // specified in Annex I 
             }
-
             else if (payloadType == 200)
             {
                 size += stream.WriteClass<SeiManifest>(this.sei_manifest);
             }
-
             else if (payloadType == 201)
             {
                 size += stream.WriteClass<SeiPrefixIndication>(this.sei_prefix_indication);
             }
-
             else if (payloadType == 202)
             {
                 size += stream.WriteClass<AnnotatedRegions>(this.annotated_regions);
             }
-
             else if (payloadType == 205)
             {
                 size += stream.WriteClass<ShutterIntervalInfo>(this.shutter_interval_info);
             }
-
             else
             {
                 size += stream.WriteClass<ReservedSeiMessage>(this.reserved_sei_message);
@@ -7644,362 +7530,290 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             {
                 size += ItuStream.CalculateClassSize<BufferingPeriod>(buffering_period); // buffering_period
             }
-
             else if (payloadType == 1)
             {
                 size += ItuStream.CalculateClassSize<PicTiming>(pic_timing); // pic_timing
             }
-
             else if (payloadType == 2)
             {
                 size += ItuStream.CalculateClassSize<PanScanRect>(pan_scan_rect); // pan_scan_rect
             }
-
             else if (payloadType == 3)
             {
                 size += ItuStream.CalculateClassSize<FillerPayload>(filler_payload); // filler_payload
             }
-
             else if (payloadType == 4)
             {
                 size += ItuStream.CalculateClassSize<UserDataRegisteredItutT35>(user_data_registered_itu_t_t35); // user_data_registered_itu_t_t35
             }
-
             else if (payloadType == 5)
             {
                 size += ItuStream.CalculateClassSize<UserDataUnregistered>(user_data_unregistered); // user_data_unregistered
             }
-
             else if (payloadType == 6)
             {
                 size += ItuStream.CalculateClassSize<RecoveryPoint>(recovery_point); // recovery_point
             }
-
             else if (payloadType == 7)
             {
                 size += ItuStream.CalculateClassSize<DecRefPicMarkingRepetition>(dec_ref_pic_marking_repetition); // dec_ref_pic_marking_repetition
             }
-
             else if (payloadType == 8)
             {
                 size += ItuStream.CalculateClassSize<SparePic>(spare_pic); // spare_pic
             }
-
             else if (payloadType == 9)
             {
                 size += ItuStream.CalculateClassSize<SceneInfo>(scene_info); // scene_info
             }
-
             else if (payloadType == 10)
             {
                 size += ItuStream.CalculateClassSize<SubSeqInfo>(sub_seq_info); // sub_seq_info
             }
-
             else if (payloadType == 11)
             {
                 size += ItuStream.CalculateClassSize<SubSeqLayerCharacteristics>(sub_seq_layer_characteristics); // sub_seq_layer_characteristics
             }
-
             else if (payloadType == 12)
             {
                 size += ItuStream.CalculateClassSize<SubSeqCharacteristics>(sub_seq_characteristics); // sub_seq_characteristics
             }
-
             else if (payloadType == 13)
             {
                 size += ItuStream.CalculateClassSize<FullFrameFreeze>(full_frame_freeze); // full_frame_freeze
             }
-
             else if (payloadType == 14)
             {
                 size += ItuStream.CalculateClassSize<FullFrameFreezeRelease>(full_frame_freeze_release); // full_frame_freeze_release
             }
-
             else if (payloadType == 15)
             {
                 size += ItuStream.CalculateClassSize<FullFrameSnapshot>(full_frame_snapshot); // full_frame_snapshot
             }
-
             else if (payloadType == 16)
             {
                 size += ItuStream.CalculateClassSize<ProgressiveRefinementSegmentStart>(progressive_refinement_segment_start); // progressive_refinement_segment_start
             }
-
             else if (payloadType == 17)
             {
                 size += ItuStream.CalculateClassSize<ProgressiveRefinementSegmentEnd>(progressive_refinement_segment_end); // progressive_refinement_segment_end
             }
-
             else if (payloadType == 18)
             {
                 size += ItuStream.CalculateClassSize<MotionConstrainedSliceGroupSet>(motion_constrained_slice_group_set); // motion_constrained_slice_group_set
             }
-
             else if (payloadType == 19)
             {
                 size += ItuStream.CalculateClassSize<FilmGrainCharacteristics>(film_grain_characteristics); // film_grain_characteristics
             }
-
             else if (payloadType == 20)
             {
                 size += ItuStream.CalculateClassSize<DeblockingFilterDisplayPreference>(deblocking_filter_display_preference); // deblocking_filter_display_preference
             }
-
             else if (payloadType == 21)
             {
                 size += ItuStream.CalculateClassSize<StereoVideoInfo>(stereo_video_info); // stereo_video_info
             }
-
             else if (payloadType == 22)
             {
                 size += ItuStream.CalculateClassSize<PostFilterHint>(post_filter_hint); // post_filter_hint
             }
-
             else if (payloadType == 23)
             {
                 size += ItuStream.CalculateClassSize<ToneMappingInfo>(tone_mapping_info); // tone_mapping_info
             }
-
             else if (payloadType == 24)
             {
                 size += ItuStream.CalculateClassSize<ScalabilityInfo>(scalability_info); // scalability_info
             }
-
             else if (payloadType == 25)
             {
                 size += ItuStream.CalculateClassSize<SubPicScalableLayer>(sub_pic_scalable_layer); // sub_pic_scalable_layer
             }
-
             else if (payloadType == 26)
             {
                 size += ItuStream.CalculateClassSize<NonRequiredLayerRep>(non_required_layer_rep); // non_required_layer_rep
             }
-
             else if (payloadType == 27)
             {
                 size += ItuStream.CalculateClassSize<PriorityLayerInfo>(priority_layer_info); // priority_layer_info
             }
-
             else if (payloadType == 28)
             {
                 size += ItuStream.CalculateClassSize<LayersNotPresent>(layers_not_present); // layers_not_present
             }
-
             else if (payloadType == 29)
             {
                 size += ItuStream.CalculateClassSize<LayerDependencyChange>(layer_dependency_change); // layer_dependency_change
             }
-
             else if (payloadType == 30)
             {
                 size += ItuStream.CalculateClassSize<ScalableNesting>(scalable_nesting); // scalable_nesting
             }
-
             else if (payloadType == 31)
             {
                 size += ItuStream.CalculateClassSize<BaseLayerTemporalHrd>(base_layer_temporal_hrd); // base_layer_temporal_hrd
             }
-
             else if (payloadType == 32)
             {
                 size += ItuStream.CalculateClassSize<QualityLayerIntegrityCheck>(quality_layer_integrity_check); // quality_layer_integrity_check
             }
-
             else if (payloadType == 33)
             {
                 size += ItuStream.CalculateClassSize<RedundantPicProperty>(redundant_pic_property); // redundant_pic_property
             }
-
             else if (payloadType == 34)
             {
                 size += ItuStream.CalculateClassSize<Tl0DepRepIndex>(tl0_dep_rep_index); // tl0_dep_rep_index
             }
-
             else if (payloadType == 35)
             {
                 size += ItuStream.CalculateClassSize<TlSwitchingPoint>(tl_switching_point); // tl_switching_point
             }
-
             else if (payloadType == 36)
             {
                 size += ItuStream.CalculateClassSize<ParallelDecodingInfo>(parallel_decoding_info); // parallel_decoding_info
             }
-
             else if (payloadType == 37)
             {
                 size += ItuStream.CalculateClassSize<MvcScalableNesting>(mvc_scalable_nesting); // mvc_scalable_nesting
             }
-
             else if (payloadType == 38)
             {
                 size += ItuStream.CalculateClassSize<ViewScalabilityInfo>(view_scalability_info); // view_scalability_info
             }
-
             else if (payloadType == 39)
             {
                 size += ItuStream.CalculateClassSize<MultiviewSceneInfo>(multiview_scene_info); // multiview_scene_info
             }
-
             else if (payloadType == 40)
             {
                 size += ItuStream.CalculateClassSize<MultiviewAcquisitionInfo>(multiview_acquisition_info); // multiview_acquisition_info
             }
-
             else if (payloadType == 41)
             {
                 size += ItuStream.CalculateClassSize<NonRequiredViewComponent>(non_required_view_component); // non_required_view_component
             }
-
             else if (payloadType == 42)
             {
                 size += ItuStream.CalculateClassSize<ViewDependencyChange>(view_dependency_change); // view_dependency_change
             }
-
             else if (payloadType == 43)
             {
-                size += ItuStream.CalculateClassSize<OperationPointsNotPresent>(operation_points_not_present); // operation_points_not_present
+                size += ItuStream.CalculateClassSize<OperationPointNotPresent>(operation_point_not_present); // operation_point_not_present
             }
-
             else if (payloadType == 44)
             {
                 size += ItuStream.CalculateClassSize<BaseViewTemporalHrd>(base_view_temporal_hrd); // base_view_temporal_hrd
             }
-
             else if (payloadType == 45)
             {
                 size += ItuStream.CalculateClassSize<FramePackingArrangement>(frame_packing_arrangement); // frame_packing_arrangement
             }
-
             else if (payloadType == 46)
             {
                 size += ItuStream.CalculateClassSize<MultiviewViewPosition>(multiview_view_position); // multiview_view_position
             }
-
             else if (payloadType == 47)
             {
                 size += ItuStream.CalculateClassSize<DisplayOrientation>(display_orientation); // display_orientation
             }
-
             else if (payloadType == 48)
             {
                 size += ItuStream.CalculateClassSize<MvcdScalableNesting>(mvcd_scalable_nesting); // mvcd_scalable_nesting
             }
-
             else if (payloadType == 49)
             {
                 size += ItuStream.CalculateClassSize<MvcdViewScalabilityInfo>(mvcd_view_scalability_info); // mvcd_view_scalability_info
             }
-
             else if (payloadType == 50)
             {
                 size += ItuStream.CalculateClassSize<DepthRepresentationInfo>(depth_representation_info); // depth_representation_info
             }
-
             else if (payloadType == 51)
             {
                 size += ItuStream.CalculateClassSize<ThreeDimensionalReferenceDisplaysInfo>(three_dimensional_reference_displays_info); // three_dimensional_reference_displays_info
             }
-
             else if (payloadType == 52)
             {
                 size += ItuStream.CalculateClassSize<DepthTiming>(depth_timing); // depth_timing
             }
-
             else if (payloadType == 53)
             {
                 size += ItuStream.CalculateClassSize<DepthSamplingInfo>(depth_sampling_info); // depth_sampling_info
             }
-
             else if (payloadType == 54)
             {
                 size += ItuStream.CalculateClassSize<ConstrainedDepthParameterSetIdentifier>(constrained_depth_parameter_set_identifier); // constrained_depth_parameter_set_identifier
             }
-
             else if (payloadType == 56)
             {
                 size += ItuStream.CalculateClassSize<GreenMetadata>(green_metadata); // green_metadata
             }
-
             else if (payloadType == 137)
             {
                 size += ItuStream.CalculateClassSize<MasteringDisplayColourVolume>(mastering_display_colour_volume); // mastering_display_colour_volume
             }
-
             else if (payloadType == 142)
             {
                 size += ItuStream.CalculateClassSize<ColourRemappingInfo>(colour_remapping_info); // colour_remapping_info
             }
-
             else if (payloadType == 144)
             {
                 size += ItuStream.CalculateClassSize<ContentLightLevelInfo>(content_light_level_info); // content_light_level_info
             }
-
             else if (payloadType == 147)
             {
                 size += ItuStream.CalculateClassSize<AlternativeTransferCharacteristics>(alternative_transfer_characteristics); // alternative_transfer_characteristics
             }
-
             else if (payloadType == 148)
             {
                 size += ItuStream.CalculateClassSize<AmbientViewingEnvironment>(ambient_viewing_environment); // ambient_viewing_environment
             }
-
             else if (payloadType == 149)
             {
                 size += ItuStream.CalculateClassSize<ContentColourVolume>(content_colour_volume); // content_colour_volume
             }
-
             else if (payloadType == 150)
             {
                 size += ItuStream.CalculateClassSize<EquirectangularProjection>(equirectangular_projection); // equirectangular_projection
             }
-
             else if (payloadType == 151)
             {
                 size += ItuStream.CalculateClassSize<CubemapProjection>(cubemap_projection); // cubemap_projection
             }
-
             else if (payloadType == 154)
             {
                 size += ItuStream.CalculateClassSize<SphereRotation>(sphere_rotation); // sphere_rotation
             }
-
             else if (payloadType == 155)
             {
                 size += ItuStream.CalculateClassSize<RegionwisePacking>(regionwise_packing); // regionwise_packing
             }
-
             else if (payloadType == 156)
             {
                 size += ItuStream.CalculateClassSize<OmniViewport>(omni_viewport); // omni_viewport
             }
-
             else if (payloadType == 181)
             {
                 size += ItuStream.CalculateClassSize<AlternativeDepthInfo>(alternative_depth_info); // alternative_depth_info
             }
-
             else if (payloadType == 200)
             {
                 size += ItuStream.CalculateClassSize<SeiManifest>(sei_manifest); // sei_manifest
             }
-
             else if (payloadType == 201)
             {
                 size += ItuStream.CalculateClassSize<SeiPrefixIndication>(sei_prefix_indication); // sei_prefix_indication
             }
-
             else if (payloadType == 202)
             {
                 size += ItuStream.CalculateClassSize<AnnotatedRegions>(annotated_regions); // annotated_regions
             }
-
             else if (payloadType == 205)
             {
                 size += ItuStream.CalculateClassSize<ShutterIntervalInfo>(shutter_interval_info); // shutter_interval_info
             }
-
             else
             {
                 size += ItuStream.CalculateClassSize<ReservedSeiMessage>(reserved_sei_message); // reserved_sei_message
@@ -8057,6 +7871,7 @@ buffering_period( payloadSize ) {
         {
             ulong size = 0;
 
+            int SchedSelIdx = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
             if (NalHrdBpPresentFlag)
@@ -8088,6 +7903,7 @@ buffering_period( payloadSize ) {
         {
             ulong size = 0;
 
+            int SchedSelIdx = 0;
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
 
             if (NalHrdBpPresentFlag)
@@ -8117,6 +7933,7 @@ buffering_period( payloadSize ) {
         {
             ulong size = 0;
 
+            int SchedSelIdx = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(seq_parameter_set_id); // seq_parameter_set_id
 
             if (NalHrdBpPresentFlag)
@@ -8271,7 +8088,6 @@ pic_timing( payloadSize ) {
                             size += stream.ReadUnsignedInt(size, 6, out this.minutes_value); // 0..59 
                             size += stream.ReadUnsignedInt(size, 5, out this.hours_value); // 0..23 
                         }
-
                         else
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.seconds_flag);
@@ -8341,7 +8157,6 @@ pic_timing( payloadSize ) {
                             size += stream.WriteUnsignedInt(6, this.minutes_value); // 0..59 
                             size += stream.WriteUnsignedInt(5, this.hours_value); // 0..23 
                         }
-
                         else
                         {
                             size += stream.WriteUnsignedInt(1, this.seconds_flag);
@@ -8411,7 +8226,6 @@ pic_timing( payloadSize ) {
                             size += 6; // minutes_value
                             size += 5; // hours_value
                         }
-
                         else
                         {
                             size += 1; // seconds_flag
@@ -8679,7 +8493,6 @@ user_data_registered_itu_t_t35( payloadSize ) {
             {
                 i = 1;
             }
-
             else
             {
                 size += stream.ReadBits(size, 8, out this.itu_t_t35_country_code_extension_byte);
@@ -8705,7 +8518,6 @@ user_data_registered_itu_t_t35( payloadSize ) {
             {
                 i = 1;
             }
-
             else
             {
                 size += stream.WriteBits(8, this.itu_t_t35_country_code_extension_byte);
@@ -8731,7 +8543,6 @@ user_data_registered_itu_t_t35( payloadSize ) {
             {
                 i = 1;
             }
-
             else
             {
                 size += 8; // itu_t_t35_country_code_extension_byte
@@ -9055,7 +8866,6 @@ spare_pic( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_spare_pics_minus1);
 
             this.delta_spare_frame_num = new uint[num_spare_pics_minus1 + 1];
-            this.spare_bottom_field_flag = new bool[num_spare_pics_minus1 + 1];
             this.spare_area_idc = new uint[num_spare_pics_minus1 + 1];
             for (i = 0; i < num_spare_pics_minus1 + 1; i++)
             {
@@ -9075,10 +8885,16 @@ spare_pic( payloadSize ) {
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.spare_unit_flag[i][j]);
                     }
-                    this.spare_unit_flag = new bool[PicSizeInMapUnits];
-                    for (j = 0; j < PicSizeInMapUnits; j++)
+                }
+                else if (spare_area_idc[i] == 2)
+                {
+                    mapUnitCnt = 0;
+
+                    this.zero_run_length = new uint[PicSizeInMapUnits];
+                    for (j = 0; mapUnitCnt < PicSizeInMapUnits; j++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.spare_unit_flag[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.zero_run_length[i][j]);
+                        mapUnitCnt += zero_run_length[i][j] + 1;
                     }
                 }
             }
@@ -9118,9 +8934,15 @@ spare_pic( payloadSize ) {
                     {
                         size += stream.WriteUnsignedInt(1, this.spare_unit_flag[i][j]);
                     }
-                    for (j = 0; j < PicSizeInMapUnits; j++)
+                }
+                else if (spare_area_idc[i] == 2)
+                {
+                    mapUnitCnt = 0;
+
+                    for (j = 0; mapUnitCnt < PicSizeInMapUnits; j++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.spare_unit_flag[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.zero_run_length[i][j]);
+                        mapUnitCnt += zero_run_length[i][j] + 1;
                     }
                 }
             }
@@ -9160,9 +8982,15 @@ spare_pic( payloadSize ) {
                     {
                         size += 1; // spare_unit_flag
                     }
-                    for (j = 0; j < PicSizeInMapUnits; j++)
+                }
+                else if (spare_area_idc[i] == 2)
+                {
+                    mapUnitCnt = 0;
+
+                    for (j = 0; mapUnitCnt < PicSizeInMapUnits; j++)
                     {
-                        size += 1; // spare_unit_flag
+                        size += ItuStream.CalculateUnsignedIntGolomb(zero_run_length[i][j]); // zero_run_length
+                        mapUnitCnt += zero_run_length[i][j] + 1;
                     }
                 }
             }
@@ -9697,13 +9525,13 @@ full_frame_freeze_release( payloadSize ) {
   
 
 full_frame_snapshot( payloadSize ) { 
-  snapshot_id 5 
+  snapshot_id 5 ue(v)
 }
     */
     public class FullFrameSnapshot : IItuSerializable
     {
-        private SnapshotId snapshot_id;
-        public SnapshotId SnapshotId { get { return snapshot_id; } set { snapshot_id = value; } }
+        private uint snapshot_id;
+        public uint SnapshotId { get { return snapshot_id; } set { snapshot_id = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -9716,7 +9544,7 @@ full_frame_snapshot( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadClass<SnapshotId>(size, out this.snapshot_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.snapshot_id);
 
             return size;
         }
@@ -9725,7 +9553,7 @@ full_frame_snapshot( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteClass<SnapshotId>(this.snapshot_id);
+            size += stream.WriteUnsignedIntGolomb(this.snapshot_id);
 
             return size;
         }
@@ -9734,7 +9562,7 @@ full_frame_snapshot( payloadSize ) {
         {
             ulong size = 0;
 
-            size += ItuStream.CalculateClassSize<SnapshotId>(snapshot_id); // snapshot_id
+            size += ItuStream.CalculateUnsignedIntGolomb(snapshot_id); // snapshot_id
 
             return size;
         }
@@ -9882,6 +9710,7 @@ motion_constrained_slice_group_set( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_slice_groups_in_set_minus1);
 
             if (num_slice_groups_minus1 > 0)
@@ -9908,6 +9737,7 @@ motion_constrained_slice_group_set( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             size += stream.WriteUnsignedIntGolomb(this.num_slice_groups_in_set_minus1);
 
             if (num_slice_groups_minus1 > 0)
@@ -9933,6 +9763,7 @@ motion_constrained_slice_group_set( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(num_slice_groups_in_set_minus1); // num_slice_groups_in_set_minus1
 
             if (num_slice_groups_minus1 > 0)
@@ -10342,7 +10173,6 @@ stereo_video_info( payloadSize ) {
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.top_field_is_left_view_flag);
             }
-
             else
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.current_frame_is_left_view_flag);
@@ -10364,7 +10194,6 @@ stereo_video_info( payloadSize ) {
             {
                 size += stream.WriteUnsignedInt(1, this.top_field_is_left_view_flag);
             }
-
             else
             {
                 size += stream.WriteUnsignedInt(1, this.current_frame_is_left_view_flag);
@@ -10386,7 +10215,6 @@ stereo_video_info( payloadSize ) {
             {
                 size += 1; // top_field_is_left_view_flag
             }
-
             else
             {
                 size += 1; // current_frame_is_left_view_flag
@@ -10439,17 +10267,21 @@ post_filter_hint( payloadSize ) {
             ulong size = 0;
 
             int colour_component = 0;
+            int cy = 0;
+            int cx = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_y);
             size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_x);
             size += stream.ReadUnsignedInt(size, 2, out this.filter_hint_type);
 
+            this.filter_hint = new int[3][][];
             for (colour_component = 0; colour_component < 3; colour_component++)
             {
 
+                this.filter_hint[colour_component] = new int[filter_hint_size_y][];
                 for (cy = 0; cy < filter_hint_size_y; cy++)
                 {
 
-                    this.filter_hint = new int[filter_hint_size_x];
+                    this.filter_hint[colour_component][cy] = new int[filter_hint_size_x];
                     for (cx = 0; cx < filter_hint_size_x; cx++)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.filter_hint[colour_component][cy][cx]);
@@ -10466,6 +10298,8 @@ post_filter_hint( payloadSize ) {
             ulong size = 0;
 
             int colour_component = 0;
+            int cy = 0;
+            int cx = 0;
             size += stream.WriteUnsignedIntGolomb(this.filter_hint_size_y);
             size += stream.WriteUnsignedIntGolomb(this.filter_hint_size_x);
             size += stream.WriteUnsignedInt(2, this.filter_hint_type);
@@ -10492,6 +10326,8 @@ post_filter_hint( payloadSize ) {
             ulong size = 0;
 
             int colour_component = 0;
+            int cy = 0;
+            int cx = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(filter_hint_size_y); // filter_hint_size_y
             size += ItuStream.CalculateUnsignedIntGolomb(filter_hint_size_x); // filter_hint_size_x
             size += 2; // filter_hint_type
@@ -11324,6 +11160,7 @@ colour_remapping_info( payloadSize ) {
             ulong size = 0;
 
             int c = 0;
+            int i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.colour_remap_id);
             size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_cancel_flag);
 
@@ -11365,10 +11202,11 @@ colour_remapping_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedInt(size, 4, out this.log2_matrix_denom);
 
+                    this.colour_remap_coeffs = new int[3][];
                     for (c = 0; c < 3; c++)
                     {
 
-                        this.colour_remap_coeffs = new int[3];
+                        this.colour_remap_coeffs[c] = new int[3];
                         for (i = 0; i < 3; i++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.colour_remap_coeffs[c][i]);
@@ -11403,6 +11241,7 @@ colour_remapping_info( payloadSize ) {
             ulong size = 0;
 
             int c = 0;
+            int i = 0;
             size += stream.WriteUnsignedIntGolomb(this.colour_remap_id);
             size += stream.WriteUnsignedInt(1, this.colour_remap_cancel_flag);
 
@@ -11475,6 +11314,7 @@ colour_remapping_info( payloadSize ) {
             ulong size = 0;
 
             int c = 0;
+            int i = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(colour_remap_id); // colour_remap_id
             size += 1; // colour_remap_cancel_flag
 
@@ -11710,6 +11550,7 @@ content_colour_volume( payloadSize ) {
         {
             ulong size = 0;
 
+            int c = 0;
             size += stream.ReadUnsignedInt(size, 1, out this.ccv_cancel_flag);
 
             if (!ccv_cancel_flag)
@@ -11756,6 +11597,7 @@ content_colour_volume( payloadSize ) {
         {
             ulong size = 0;
 
+            int c = 0;
             size += stream.WriteUnsignedInt(1, this.ccv_cancel_flag);
 
             if (!ccv_cancel_flag)
@@ -11800,6 +11642,7 @@ content_colour_volume( payloadSize ) {
         {
             ulong size = 0;
 
+            int c = 0;
             size += 1; // ccv_cancel_flag
 
             if (!ccv_cancel_flag)
@@ -12307,13 +12150,6 @@ regionwise_packing( payloadSize ) {
                 this.packed_region_height = new uint[num_packed_regions];
                 this.packed_region_top = new uint[num_packed_regions];
                 this.packed_region_left = new uint[num_packed_regions];
-                this.left_gb_width = new uint[num_packed_regions];
-                this.right_gb_width = new uint[num_packed_regions];
-                this.top_gb_height = new uint[num_packed_regions];
-                this.bottom_gb_height = new uint[num_packed_regions];
-                this.gb_not_used_for_pred_flag = new bool[num_packed_regions];
-                this.gb_type = new uint[num_packed_regions][];
-                this.rwp_gb_reserved_zero_3bits = new uint[num_packed_regions];
                 for (i = 0; i < num_packed_regions; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 4, out this.rwp_reserved_zero_4bits[i]);
@@ -12336,7 +12172,7 @@ regionwise_packing( payloadSize ) {
                         size += stream.ReadUnsignedInt(size, 8, out this.bottom_gb_height[i]);
                         size += stream.ReadUnsignedInt(size, 1, out this.gb_not_used_for_pred_flag[i]);
 
-                        this.gb_type[i] = new uint[4];
+                        this.gb_type = new uint[4];
                         for (j = 0; j < 4; j++)
                         {
                             size += stream.ReadUnsignedInt(size, 3, out this.gb_type[i][j]);
@@ -12957,7 +12793,6 @@ annotated_regions( payloadSize ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates);
 
                     this.ar_label_idx = new uint[ar_num_label_updates];
-                    this.ar_label = new int[ar_num_label_updates];
                     for (i = 0; i < ar_num_label_updates; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i]);
@@ -12978,13 +12813,6 @@ annotated_regions( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_object_updates);
 
                 this.ar_object_idx = new uint[ar_num_object_updates];
-                this.ar_object_label_idx = new uint[ar_num_object_updates];
-                this.ar_bounding_box_top = new uint[ar_num_object_updates];
-                this.ar_bounding_box_left = new uint[ar_num_object_updates];
-                this.ar_bounding_box_width = new uint[ar_num_object_updates];
-                this.ar_bounding_box_height = new uint[ar_num_object_updates];
-                this.ar_partial_object_flag = new bool[ar_num_object_updates];
-                this.ar_object_confidence = new uint[ar_num_object_updates];
                 for (i = 0; i < ar_num_object_updates; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_idx[i]);
@@ -13313,7 +13141,6 @@ shutter_interval_info( payloadSize ) {
                     {
                         size += stream.ReadUnsignedInt(size, 32, out this.sii_num_units_in_shutter_interval);
                     }
-
                     else
                     {
                         size += stream.ReadUnsignedInt(size, 3, out this.sii_max_sub_layers_minus1);
@@ -13350,7 +13177,6 @@ shutter_interval_info( payloadSize ) {
                     {
                         size += stream.WriteUnsignedInt(32, this.sii_num_units_in_shutter_interval);
                     }
-
                     else
                     {
                         size += stream.WriteUnsignedInt(3, this.sii_max_sub_layers_minus1);
@@ -13386,7 +13212,6 @@ shutter_interval_info( payloadSize ) {
                     {
                         size += 32; // sii_num_units_in_shutter_interval
                     }
-
                     else
                     {
                         size += 3; // sii_max_sub_layers_minus1
@@ -14336,7 +14161,6 @@ prefix_nal_unit_svc() {
                 }
                 size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
             }
-
             else if (more_rbsp_data())
             {
 
@@ -14376,7 +14200,6 @@ prefix_nal_unit_svc() {
                 }
                 size += stream.WriteClass<RbspTrailingBits>(this.rbsp_trailing_bits);
             }
-
             else if (more_rbsp_data())
             {
 
@@ -14416,7 +14239,6 @@ prefix_nal_unit_svc() {
                 }
                 size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
             }
-
             else if (more_rbsp_data())
             {
 
@@ -14833,7 +14655,6 @@ slice_header_in_scalable_extension() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_mbs_in_slice_minus1);
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.adaptive_base_mode_flag);
@@ -15047,7 +14868,6 @@ slice_header_in_scalable_extension() {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.num_mbs_in_slice_minus1);
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedInt(1, this.adaptive_base_mode_flag);
@@ -15261,7 +15081,6 @@ slice_header_in_scalable_extension() {
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(num_mbs_in_slice_minus1); // num_mbs_in_slice_minus1
                 }
-
                 else
                 {
                     size += 1; // adaptive_base_mode_flag
@@ -15527,20 +15346,10 @@ slice_data_in_scalable_extension() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
-
-                        for (i = 0; i < mb_skip_run; i++)
-                        {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
-                        }
+                        size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_flag);
+                        moreDataFlag = !mb_skip_flag;
                     }
                 }
 
@@ -15559,7 +15368,6 @@ slice_data_in_scalable_extension() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -15572,7 +15380,6 @@ slice_data_in_scalable_extension() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.end_of_slice_flag);
@@ -15624,20 +15431,10 @@ slice_data_in_scalable_extension() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
-
-                        for (i = 0; i < mb_skip_run; i++)
-                        {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
-                        }
+                        size += stream.WriteUnsignedIntGolomb(this.mb_skip_flag);
+                        moreDataFlag = !mb_skip_flag;
                     }
                 }
 
@@ -15656,7 +15453,6 @@ slice_data_in_scalable_extension() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -15669,7 +15465,6 @@ slice_data_in_scalable_extension() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.end_of_slice_flag);
@@ -15721,20 +15516,10 @@ slice_data_in_scalable_extension() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0);
-
-                        for (i = 0; i < mb_skip_run; i++)
-                        {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
-                        }
+                        size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_flag); // mb_skip_flag
+                        moreDataFlag = !mb_skip_flag;
                     }
                 }
 
@@ -15753,7 +15538,6 @@ slice_data_in_scalable_extension() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -15766,7 +15550,6 @@ slice_data_in_scalable_extension() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(end_of_slice_flag); // end_of_slice_flag
@@ -15919,7 +15702,6 @@ macroblock_layer_in_scalable_extension() {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_chroma[i]);
                 }
             }
-
             else
             {
 
@@ -15944,17 +15726,12 @@ macroblock_layer_in_scalable_extension() {
                                     noSubMbPartSizeLessThan8x8Flag = 0;
                                 }
                             }
-                            if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                            else if (!direct_8x8_inference_flag)
                             {
-
-                                if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                                {
-                                    noSubMbPartSizeLessThan8x8Flag = 0;
-                                }
+                                noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
                     }
-
                     else
                     {
 
@@ -16044,7 +15821,6 @@ macroblock_layer_in_scalable_extension() {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_chroma[i]);
                 }
             }
-
             else
             {
 
@@ -16069,17 +15845,12 @@ macroblock_layer_in_scalable_extension() {
                                     noSubMbPartSizeLessThan8x8Flag = 0;
                                 }
                             }
-                            if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                            else if (!direct_8x8_inference_flag)
                             {
-
-                                if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                                {
-                                    noSubMbPartSizeLessThan8x8Flag = 0;
-                                }
+                                noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
                     }
-
                     else
                     {
 
@@ -16169,7 +15940,6 @@ macroblock_layer_in_scalable_extension() {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_chroma[i]); // pcm_sample_chroma
                 }
             }
-
             else
             {
 
@@ -16194,17 +15964,12 @@ macroblock_layer_in_scalable_extension() {
                                     noSubMbPartSizeLessThan8x8Flag = 0;
                                 }
                             }
-                            if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                            else if (!direct_8x8_inference_flag)
                             {
-
-                                if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                                {
-                                    noSubMbPartSizeLessThan8x8Flag = 0;
-                                }
+                                noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
                     }
-
                     else
                     {
 
@@ -16354,7 +16119,10 @@ mb_pred_in_scalable_extension( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -16365,7 +16133,6 @@ mb_pred_in_scalable_extension( mb_type ) {
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
-                    this.rem_intra4x4_pred_mode = new uint[16];
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra4x4_pred_mode_flag[luma4x4BlkIdx]);
@@ -16381,7 +16148,6 @@ mb_pred_in_scalable_extension( mb_type ) {
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
-                    this.rem_intra8x8_pred_mode = new uint[4];
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra8x8_pred_mode_flag[luma8x8BlkIdx]);
@@ -16398,7 +16164,6 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -16485,7 +16250,10 @@ mb_pred_in_scalable_extension( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -16525,7 +16293,6 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -16610,7 +16377,10 @@ mb_pred_in_scalable_extension( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -16650,7 +16420,6 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -16819,6 +16588,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             this.sub_mb_type = new uint[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
@@ -16884,12 +16655,13 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
+                    this.mvd_l0 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
        subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
-                        this.mvd_l0 = new int[2];
+                        this.mvd_l0[subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][subMbPartIdx][compIdx]);
@@ -16905,12 +16677,13 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
+                    this.mvd_l1 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
        subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
-                        this.mvd_l1 = new int[2];
+                        this.mvd_l1[subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][subMbPartIdx][compIdx]);
@@ -16927,6 +16700,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
@@ -17032,6 +16807,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
@@ -17460,54 +17237,8 @@ scalability_info( payloadSize ) {
             this.parameter_sets_info_present_flag = new bool[num_layers_minus1];
             this.bitstream_restriction_info_present_flag = new bool[num_layers_minus1];
             this.exact_inter_layer_pred_flag = new bool[num_layers_minus1];
-            this.exact_sample_value_match_flag = new bool[num_layers_minus1];
             this.layer_conversion_flag = new bool[num_layers_minus1];
             this.layer_output_flag = new bool[num_layers_minus1];
-            this.layer_profile_level_idc = new uint[num_layers_minus1];
-            this.avg_bitrate = new uint[num_layers_minus1];
-            this.max_bitrate_layer = new uint[num_layers_minus1];
-            this.max_bitrate_layer_representation = new uint[num_layers_minus1];
-            this.max_bitrate_calc_window = new uint[num_layers_minus1];
-            this.constant_frm_rate_idc = new uint[num_layers_minus1];
-            this.avg_frm_rate = new uint[num_layers_minus1];
-            this.frm_width_in_mbs_minus1 = new uint[num_layers_minus1];
-            this.frm_height_in_mbs_minus1 = new uint[num_layers_minus1];
-            this.base_region_layer_id = new uint[num_layers_minus1];
-            this.dynamic_rect_flag = new bool[num_layers_minus1];
-            this.horizontal_offset = new uint[num_layers_minus1];
-            this.vertical_offset = new uint[num_layers_minus1];
-            this.region_width = new uint[num_layers_minus1];
-            this.region_height = new uint[num_layers_minus1];
-            this.roi_id = new uint[num_layers_minus1];
-            this.iroi_grid_flag = new bool[num_layers_minus1];
-            this.grid_width_in_mbs_minus1 = new uint[num_layers_minus1];
-            this.grid_height_in_mbs_minus1 = new uint[num_layers_minus1];
-            this.num_rois_minus1 = new uint[num_layers_minus1];
-            this.first_mb_in_roi = new uint[num_layers_minus1][];
-            this.roi_width_in_mbs_minus1 = new uint[num_layers_minus1][];
-            this.roi_height_in_mbs_minus1 = new uint[num_layers_minus1][];
-            this.num_directly_dependent_layers = new uint[num_layers_minus1];
-            this.directly_dependent_layer_id_delta_minus1 = new uint[num_layers_minus1][];
-            this.layer_dependency_info_src_layer_id_delta = new uint[num_layers_minus1];
-            this.num_seq_parameter_sets = new uint[num_layers_minus1];
-            this.seq_parameter_set_id_delta = new uint[num_layers_minus1][];
-            this.num_subset_seq_parameter_sets = new uint[num_layers_minus1];
-            this.subset_seq_parameter_set_id_delta = new uint[num_layers_minus1][];
-            this.num_pic_parameter_sets_minus1 = new uint[num_layers_minus1];
-            this.pic_parameter_set_id_delta = new uint[num_layers_minus1][];
-            this.parameter_sets_info_src_layer_id_delta = new uint[num_layers_minus1];
-            this.motion_vectors_over_pic_boundaries_flag = new bool[num_layers_minus1];
-            this.max_bytes_per_pic_denom = new uint[num_layers_minus1];
-            this.max_bits_per_mb_denom = new uint[num_layers_minus1];
-            this.log2_max_mv_length_horizontal = new uint[num_layers_minus1];
-            this.log2_max_mv_length_vertical = new uint[num_layers_minus1];
-            this.max_num_reorder_frames = new uint[num_layers_minus1];
-            this.max_dec_frame_buffering = new uint[num_layers_minus1];
-            this.conversion_type_idc = new uint[num_layers_minus1];
-            this.rewriting_info_flag = new bool[num_layers_minus1][];
-            this.rewriting_profile_level_idc = new uint[num_layers_minus1][];
-            this.rewriting_avg_bitrate = new uint[num_layers_minus1][];
-            this.rewriting_max_bitrate = new uint[num_layers_minus1][];
             for (i = 0; i <= num_layers_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i]);
@@ -17589,14 +17320,13 @@ scalability_info( payloadSize ) {
                         size += stream.ReadUnsignedIntGolomb(size, out this.grid_width_in_mbs_minus1[i]);
                         size += stream.ReadUnsignedIntGolomb(size, out this.grid_height_in_mbs_minus1[i]);
                     }
-
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_rois_minus1[i]);
 
-                        this.first_mb_in_roi[i] = new uint[num_rois_minus1[i]];
-                        this.roi_width_in_mbs_minus1[i] = new uint[num_rois_minus1[i]];
-                        this.roi_height_in_mbs_minus1[i] = new uint[num_rois_minus1[i]];
+                        this.first_mb_in_roi = new uint[num_rois_minus1[i]];
+                        this.roi_width_in_mbs_minus1 = new uint[num_rois_minus1[i]];
+                        this.roi_height_in_mbs_minus1 = new uint[num_rois_minus1[i]];
                         for (j = 0; j <= num_rois_minus1[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_roi[i][j]);
@@ -17610,13 +17340,12 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i]);
 
-                    this.directly_dependent_layer_id_delta_minus1[i] = new uint[num_directly_dependent_layers[i]];
+                    this.directly_dependent_layer_id_delta_minus1 = new uint[num_directly_dependent_layers[i]];
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.layer_dependency_info_src_layer_id_delta[i]);
@@ -17626,27 +17355,26 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i]);
 
-                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_sets[i]];
+                    this.seq_parameter_set_id_delta = new uint[num_seq_parameter_sets[i]];
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i]);
 
-                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_sets[i]];
+                    this.subset_seq_parameter_set_id_delta = new uint[num_subset_seq_parameter_sets[i]];
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i]);
 
-                    this.pic_parameter_set_id_delta[i] = new uint[num_pic_parameter_sets_minus1[i]];
+                    this.pic_parameter_set_id_delta = new uint[num_pic_parameter_sets_minus1[i]];
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_layer_id_delta[i]);
@@ -17667,10 +17395,7 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.conversion_type_idc[i]);
 
-                    this.rewriting_info_flag[i] = new bool[2];
-                    this.rewriting_profile_level_idc[i] = new uint[2];
-                    this.rewriting_avg_bitrate[i] = new uint[2];
-                    this.rewriting_max_bitrate[i] = new uint[2];
+                    this.rewriting_info_flag = new bool[2];
                     for (j = 0; j < 2; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.rewriting_info_flag[i][j]);
@@ -17819,7 +17544,6 @@ scalability_info( payloadSize ) {
                         size += stream.WriteUnsignedIntGolomb(this.grid_width_in_mbs_minus1[i]);
                         size += stream.WriteUnsignedIntGolomb(this.grid_height_in_mbs_minus1[i]);
                     }
-
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_rois_minus1[i]);
@@ -17842,7 +17566,6 @@ scalability_info( payloadSize ) {
                         size += stream.WriteUnsignedIntGolomb(this.directly_dependent_layer_id_delta_minus1[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedIntGolomb(this.layer_dependency_info_src_layer_id_delta[i]);
@@ -17869,7 +17592,6 @@ scalability_info( payloadSize ) {
                         size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_layer_id_delta[i]);
@@ -18028,7 +17750,6 @@ scalability_info( payloadSize ) {
                         size += ItuStream.CalculateUnsignedIntGolomb(grid_width_in_mbs_minus1[i]); // grid_width_in_mbs_minus1
                         size += ItuStream.CalculateUnsignedIntGolomb(grid_height_in_mbs_minus1[i]); // grid_height_in_mbs_minus1
                     }
-
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(num_rois_minus1[i]); // num_rois_minus1
@@ -18051,7 +17772,6 @@ scalability_info( payloadSize ) {
                         size += ItuStream.CalculateUnsignedIntGolomb(directly_dependent_layer_id_delta_minus1[i][j]); // directly_dependent_layer_id_delta_minus1
                     }
                 }
-
                 else
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(layer_dependency_info_src_layer_id_delta[i]); // layer_dependency_info_src_layer_id_delta
@@ -18078,7 +17798,6 @@ scalability_info( payloadSize ) {
                         size += ItuStream.CalculateUnsignedIntGolomb(pic_parameter_set_id_delta[i][j]); // pic_parameter_set_id_delta
                     }
                 }
-
                 else
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(parameter_sets_info_src_layer_id_delta[i]); // parameter_sets_info_src_layer_id_delta
@@ -18507,9 +18226,6 @@ layer_dependency_change( payloadSize ) {
 
             this.layer_id = new uint[num_layers_minus1];
             this.layer_dependency_info_present_flag = new bool[num_layers_minus1];
-            this.num_directly_dependent_layers = new uint[num_layers_minus1];
-            this.directly_dependent_layer_id_delta_minus1 = new uint[num_layers_minus1][];
-            this.layer_dependency_info_src_layer_id_delta_minus1 = new uint[num_layers_minus1];
             for (i = 0; i <= num_layers_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i]);
@@ -18519,13 +18235,12 @@ layer_dependency_change( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i]);
 
-                    this.directly_dependent_layer_id_delta_minus1[i] = new uint[num_directly_dependent_layers[i]];
+                    this.directly_dependent_layer_id_delta_minus1 = new uint[num_directly_dependent_layers[i]];
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.layer_dependency_info_src_layer_id_delta_minus1[i]);
@@ -18557,7 +18272,6 @@ layer_dependency_change( payloadSize ) {
                         size += stream.WriteUnsignedIntGolomb(this.directly_dependent_layer_id_delta_minus1[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedIntGolomb(this.layer_dependency_info_src_layer_id_delta_minus1[i]);
@@ -18589,7 +18303,6 @@ layer_dependency_change( payloadSize ) {
                         size += ItuStream.CalculateUnsignedIntGolomb(directly_dependent_layer_id_delta_minus1[i][j]); // directly_dependent_layer_id_delta_minus1
                     }
                 }
-
                 else
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(layer_dependency_info_src_layer_id_delta_minus1[i]); // layer_dependency_info_src_layer_id_delta_minus1
@@ -18813,12 +18526,8 @@ base_layer_temporal_hrd( payloadSize ) {
 
             this.sei_temporal_id = new uint[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_timing_info_present_flag = new bool[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_num_units_in_tick = new uint[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_time_scale = new uint[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_fixed_frame_rate_flag = new bool[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_nal_hrd_parameters_present_flag = new bool[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_vcl_hrd_parameters_present_flag = new bool[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_low_delay_hrd_flag = new bool[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_pic_struct_present_flag = new bool[num_of_temporal_layers_in_base_layer_minus1];
             for (i = 0; i <= num_of_temporal_layers_in_base_layer_minus1; i++)
             {
@@ -19092,10 +18801,6 @@ redundant_pic_property( payloadSize ) {
             this.num_redundant_pics_minus1 = new uint[num_dIds_minus1][];
             this.redundant_pic_cnt_minus1 = new uint[num_dIds_minus1][][];
             this.pic_match_flag = new bool[num_dIds_minus1][][];
-            this.mb_type_match_flag = new bool[num_dIds_minus1][][];
-            this.motion_match_flag = new bool[num_dIds_minus1][][];
-            this.residual_match_flag = new bool[num_dIds_minus1][][];
-            this.intra_samples_match_flag = new bool[num_dIds_minus1][][];
             for (i = 0; i <= num_dIds_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.dependency_id[i]);
@@ -19105,10 +18810,6 @@ redundant_pic_property( payloadSize ) {
                 this.num_redundant_pics_minus1[i] = new uint[num_qIds_minus1[i]];
                 this.redundant_pic_cnt_minus1[i] = new uint[num_qIds_minus1[i]][];
                 this.pic_match_flag[i] = new bool[num_qIds_minus1[i]][];
-                this.mb_type_match_flag[i] = new bool[num_qIds_minus1[i]][];
-                this.motion_match_flag[i] = new bool[num_qIds_minus1[i]][];
-                this.residual_match_flag[i] = new bool[num_qIds_minus1[i]][];
-                this.intra_samples_match_flag[i] = new bool[num_qIds_minus1[i]][];
                 for (j = 0; j <= num_qIds_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedInt(size, 4, out this.quality_id[i][j]);
@@ -19116,10 +18817,6 @@ redundant_pic_property( payloadSize ) {
 
                     this.redundant_pic_cnt_minus1[i][j] = new uint[num_redundant_pics_minus1[i][j]];
                     this.pic_match_flag[i][j] = new bool[num_redundant_pics_minus1[i][j]];
-                    this.mb_type_match_flag[i][j] = new bool[num_redundant_pics_minus1[i][j]];
-                    this.motion_match_flag[i][j] = new bool[num_redundant_pics_minus1[i][j]];
-                    this.residual_match_flag[i][j] = new bool[num_redundant_pics_minus1[i][j]];
-                    this.intra_samples_match_flag[i][j] = new bool[num_redundant_pics_minus1[i][j]];
                     for (k = 0; k <= num_redundant_pics_minus1[i][j]; k++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt_minus1[i][j][k]);
@@ -19275,13 +18972,13 @@ tl0_dep_rep_index( payloadSize ) {
    
 
 tl_switching_point( payloadSize ) { 
-delta_frame_num 5 
+delta_frame_num 5 se(v)
 }
     */
     public class TlSwitchingPoint : IItuSerializable
     {
-        private DeltaFrameNum delta_frame_num;
-        public DeltaFrameNum DeltaFrameNum { get { return delta_frame_num; } set { delta_frame_num = value; } }
+        private int delta_frame_num;
+        public int DeltaFrameNum { get { return delta_frame_num; } set { delta_frame_num = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -19294,7 +18991,7 @@ delta_frame_num 5
         {
             ulong size = 0;
 
-            size += stream.ReadClass<DeltaFrameNum>(size, out this.delta_frame_num);
+            size += stream.ReadSignedIntGolomb(size, out this.delta_frame_num);
 
             return size;
         }
@@ -19303,7 +19000,7 @@ delta_frame_num 5
         {
             ulong size = 0;
 
-            size += stream.WriteClass<DeltaFrameNum>(this.delta_frame_num);
+            size += stream.WriteSignedIntGolomb(this.delta_frame_num);
 
             return size;
         }
@@ -19312,7 +19009,7 @@ delta_frame_num 5
         {
             ulong size = 0;
 
-            size += ItuStream.CalculateClassSize<DeltaFrameNum>(delta_frame_num); // delta_frame_num
+            size += ItuStream.CalculateSignedIntGolomb(delta_frame_num); // delta_frame_num
 
             return size;
         }
@@ -19393,12 +19090,8 @@ svc_vui_parameters_extension() {
             this.vui_ext_quality_id = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_temporal_id = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_timing_info_present_flag = new bool[vui_ext_num_entries_minus1];
-            this.vui_ext_num_units_in_tick = new uint[vui_ext_num_entries_minus1];
-            this.vui_ext_time_scale = new uint[vui_ext_num_entries_minus1];
-            this.vui_ext_fixed_frame_rate_flag = new bool[vui_ext_num_entries_minus1];
             this.vui_ext_nal_hrd_parameters_present_flag = new bool[vui_ext_num_entries_minus1];
             this.vui_ext_vcl_hrd_parameters_present_flag = new bool[vui_ext_num_entries_minus1];
-            this.vui_ext_low_delay_hrd_flag = new bool[vui_ext_num_entries_minus1];
             this.vui_ext_pic_struct_present_flag = new bool[vui_ext_num_entries_minus1];
             for (i = 0; i <= vui_ext_num_entries_minus1; i++)
             {
@@ -20102,12 +19795,10 @@ ref_pic_list_mvc_modification() {
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
                         }
-
                         else if (modification_of_pic_nums_idc == 4 ||
        modification_of_pic_nums_idc == 5)
                         {
@@ -20133,12 +19824,10 @@ ref_pic_list_mvc_modification() {
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
                         }
-
                         else if (modification_of_pic_nums_idc == 4 ||
        modification_of_pic_nums_idc == 5)
                         {
@@ -20172,12 +19861,10 @@ ref_pic_list_mvc_modification() {
                         {
                             size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
                         }
-
                         else if (modification_of_pic_nums_idc == 4 ||
        modification_of_pic_nums_idc == 5)
                         {
@@ -20203,12 +19890,10 @@ ref_pic_list_mvc_modification() {
                         {
                             size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
                         }
-
                         else if (modification_of_pic_nums_idc == 4 ||
        modification_of_pic_nums_idc == 5)
                         {
@@ -20242,12 +19927,10 @@ ref_pic_list_mvc_modification() {
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(abs_diff_pic_num_minus1); // abs_diff_pic_num_minus1
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(long_term_pic_num); // long_term_pic_num
                         }
-
                         else if (modification_of_pic_nums_idc == 4 ||
        modification_of_pic_nums_idc == 5)
                         {
@@ -20273,12 +19956,10 @@ ref_pic_list_mvc_modification() {
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(abs_diff_pic_num_minus1); // abs_diff_pic_num_minus1
                         }
-
                         else if (modification_of_pic_nums_idc == 2)
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(long_term_pic_num); // long_term_pic_num
                         }
-
                         else if (modification_of_pic_nums_idc == 4 ||
        modification_of_pic_nums_idc == 5)
                         {
@@ -20342,39 +20023,34 @@ parallel_decoding_info( payloadSize ) {
             int j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
-            this.pdi_init_delay_anchor_minus2_l0 = new uint[num_views_minus1][];
-            this.pdi_init_delay_anchor_minus2_l1 = new uint[num_views_minus1][];
-            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[num_views_minus1][];
-            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[num_views_minus1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
 
                 if (anchor_pic_flag)
                 {
 
-                    this.pdi_init_delay_anchor_minus2_l0[i] = new uint[num_anchor_refs_l0[i]];
+                    this.pdi_init_delay_anchor_minus2_l0 = new uint[num_anchor_refs_l0[i]];
                     for (j = 0; j <= num_anchor_refs_l0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l0[i][j]);
                     }
 
-                    this.pdi_init_delay_anchor_minus2_l1[i] = new uint[num_anchor_refs_l1[i]];
+                    this.pdi_init_delay_anchor_minus2_l1 = new uint[num_anchor_refs_l1[i]];
                     for (j = 0; j <= num_anchor_refs_l1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l1[i][j]);
                     }
                 }
-
                 else
                 {
 
-                    this.pdi_init_delay_non_anchor_minus2_l0[i] = new uint[num_non_anchor_refs_l0[i]];
+                    this.pdi_init_delay_non_anchor_minus2_l0 = new uint[num_non_anchor_refs_l0[i]];
                     for (j = 0; j <= num_non_anchor_refs_l0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l0[i][j]);
                     }
 
-                    this.pdi_init_delay_non_anchor_minus2_l1[i] = new uint[num_non_anchor_refs_l1[i]];
+                    this.pdi_init_delay_non_anchor_minus2_l1 = new uint[num_non_anchor_refs_l1[i]];
                     for (j = 0; j <= num_non_anchor_refs_l1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l1[i][j]);
@@ -20409,7 +20085,6 @@ parallel_decoding_info( payloadSize ) {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l1[i][j]);
                     }
                 }
-
                 else
                 {
 
@@ -20452,7 +20127,6 @@ parallel_decoding_info( payloadSize ) {
                         size += ItuStream.CalculateUnsignedIntGolomb(pdi_init_delay_anchor_minus2_l1[i][j]); // pdi_init_delay_anchor_minus2_l1
                     }
                 }
-
                 else
                 {
 
@@ -20546,7 +20220,6 @@ mvc_scalable_nesting( payloadSize ) {
                     }
                 }
             }
-
             else
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1);
@@ -20589,7 +20262,6 @@ mvc_scalable_nesting( payloadSize ) {
                     }
                 }
             }
-
             else
             {
                 size += stream.WriteUnsignedIntGolomb(this.num_view_components_op_minus1);
@@ -20631,7 +20303,6 @@ mvc_scalable_nesting( payloadSize ) {
                     }
                 }
             }
-
             else
             {
                 size += ItuStream.CalculateUnsignedIntGolomb(num_view_components_op_minus1); // num_view_components_op_minus1
@@ -20811,32 +20482,8 @@ view_scalability_info( payloadSize ) {
             this.profile_level_info_present_flag = new bool[num_operation_points_minus1];
             this.bitrate_info_present_flag = new bool[num_operation_points_minus1];
             this.frm_rate_info_present_flag = new bool[num_operation_points_minus1];
-            this.view_dependency_info_present_flag = new bool[num_operation_points_minus1];
             this.parameter_sets_info_present_flag = new bool[num_operation_points_minus1];
             this.bitstream_restriction_info_present_flag = new bool[num_operation_points_minus1];
-            this.op_profile_level_idc = new uint[num_operation_points_minus1];
-            this.avg_bitrate = new uint[num_operation_points_minus1];
-            this.max_bitrate = new uint[num_operation_points_minus1];
-            this.max_bitrate_calc_window = new uint[num_operation_points_minus1];
-            this.constant_frm_rate_idc = new uint[num_operation_points_minus1];
-            this.avg_frm_rate = new uint[num_operation_points_minus1];
-            this.num_directly_dependent_views = new uint[num_operation_points_minus1];
-            this.directly_dependent_view_id = new uint[num_operation_points_minus1][];
-            this.view_dependency_info_src_op_id = new uint[num_operation_points_minus1];
-            this.num_seq_parameter_sets = new uint[num_operation_points_minus1];
-            this.seq_parameter_set_id_delta = new uint[num_operation_points_minus1][];
-            this.num_subset_seq_parameter_sets = new uint[num_operation_points_minus1];
-            this.subset_seq_parameter_set_id_delta = new uint[num_operation_points_minus1][];
-            this.num_pic_parameter_sets_minus1 = new uint[num_operation_points_minus1];
-            this.pic_parameter_set_id_delta = new uint[num_operation_points_minus1][];
-            this.parameter_sets_info_src_op_id = new uint[num_operation_points_minus1];
-            this.motion_vectors_over_pic_boundaries_flag = new bool[num_operation_points_minus1];
-            this.max_bytes_per_pic_denom = new uint[num_operation_points_minus1];
-            this.max_bits_per_mb_denom = new uint[num_operation_points_minus1];
-            this.log2_max_mv_length_horizontal = new uint[num_operation_points_minus1];
-            this.log2_max_mv_length_vertical = new uint[num_operation_points_minus1];
-            this.max_num_reorder_frames = new uint[num_operation_points_minus1];
-            this.max_dec_frame_buffering = new uint[num_operation_points_minus1];
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i]);
@@ -20882,13 +20529,12 @@ view_scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i]);
 
-                    this.directly_dependent_view_id[i] = new uint[num_directly_dependent_views[i]];
+                    this.directly_dependent_view_id = new uint[num_directly_dependent_views[i]];
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_dependency_info_src_op_id[i]);
@@ -20898,27 +20544,26 @@ view_scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i]);
 
-                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_sets[i]];
+                    this.seq_parameter_set_id_delta = new uint[num_seq_parameter_sets[i]];
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i]);
 
-                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_sets[i]];
+                    this.subset_seq_parameter_set_id_delta = new uint[num_subset_seq_parameter_sets[i]];
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i]);
 
-                    this.pic_parameter_set_id_delta[i] = new uint[num_pic_parameter_sets_minus1[i]];
+                    this.pic_parameter_set_id_delta = new uint[num_pic_parameter_sets_minus1[i]];
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_op_id[i]);
@@ -20996,7 +20641,6 @@ view_scalability_info( payloadSize ) {
                         size += stream.WriteUnsignedIntGolomb(this.directly_dependent_view_id[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedIntGolomb(this.view_dependency_info_src_op_id[i]);
@@ -21023,7 +20667,6 @@ view_scalability_info( payloadSize ) {
                         size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_op_id[i]);
@@ -21101,7 +20744,6 @@ view_scalability_info( payloadSize ) {
                         size += ItuStream.CalculateUnsignedIntGolomb(directly_dependent_view_id[i][j]); // directly_dependent_view_id
                     }
                 }
-
                 else
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(view_dependency_info_src_op_id[i]); // view_dependency_info_src_op_id
@@ -21128,7 +20770,6 @@ view_scalability_info( payloadSize ) {
                         size += ItuStream.CalculateUnsignedIntGolomb(pic_parameter_set_id_delta[i][j]); // pic_parameter_set_id_delta
                     }
                 }
-
                 else
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(parameter_sets_info_src_op_id[i]); // parameter_sets_info_src_op_id
@@ -21715,6 +21356,7 @@ view_dependency_change( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             int j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
             size += stream.ReadUnsignedInt(size, 1, out this.anchor_update_flag);
@@ -21771,6 +21413,7 @@ view_dependency_change( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             int j = 0;
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
             size += stream.WriteUnsignedInt(1, this.anchor_update_flag);
@@ -21819,6 +21462,7 @@ view_dependency_change( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             int j = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(seq_parameter_set_id); // seq_parameter_set_id
             size += 1; // anchor_update_flag
@@ -22003,12 +21647,8 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
 
             this.sei_mvc_temporal_id = new uint[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_timing_info_present_flag = new bool[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_num_units_in_tick = new uint[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_time_scale = new uint[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_fixed_frame_rate_flag = new bool[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_nal_hrd_parameters_present_flag = new bool[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_vcl_hrd_parameters_present_flag = new bool[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_low_delay_hrd_flag = new bool[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_pic_struct_present_flag = new bool[num_of_temporal_layers_in_base_view_minus1];
             for (i = 0; i <= num_of_temporal_layers_in_base_view_minus1; i++)
             {
@@ -22284,12 +21924,8 @@ mvc_vui_parameters_extension() {
             this.vui_mvc_num_target_output_views_minus1 = new uint[vui_mvc_num_ops_minus1];
             this.vui_mvc_view_id = new uint[vui_mvc_num_ops_minus1][];
             this.vui_mvc_timing_info_present_flag = new bool[vui_mvc_num_ops_minus1];
-            this.vui_mvc_num_units_in_tick = new uint[vui_mvc_num_ops_minus1];
-            this.vui_mvc_time_scale = new uint[vui_mvc_num_ops_minus1];
-            this.vui_mvc_fixed_frame_rate_flag = new bool[vui_mvc_num_ops_minus1];
             this.vui_mvc_nal_hrd_parameters_present_flag = new bool[vui_mvc_num_ops_minus1];
             this.vui_mvc_vcl_hrd_parameters_present_flag = new bool[vui_mvc_num_ops_minus1];
-            this.vui_mvc_low_delay_hrd_flag = new bool[vui_mvc_num_ops_minus1];
             this.vui_mvc_pic_struct_present_flag = new bool[vui_mvc_num_ops_minus1];
             for (i = 0; i <= vui_mvc_num_ops_minus1; i++)
             {
@@ -23027,32 +22663,8 @@ priority_id[ i ] 5 u(5)
             this.profile_level_info_present_flag = new bool[num_operation_points_minus1];
             this.bitrate_info_present_flag = new bool[num_operation_points_minus1];
             this.frm_rate_info_present_flag = new bool[num_operation_points_minus1];
-            this.view_dependency_info_present_flag = new bool[num_operation_points_minus1];
             this.parameter_sets_info_present_flag = new bool[num_operation_points_minus1];
             this.bitstream_restriction_info_present_flag = new bool[num_operation_points_minus1];
-            this.op_profile_level_idc = new uint[num_operation_points_minus1];
-            this.avg_bitrate = new uint[num_operation_points_minus1];
-            this.max_bitrate = new uint[num_operation_points_minus1];
-            this.max_bitrate_calc_window = new uint[num_operation_points_minus1];
-            this.constant_frm_rate_idc = new uint[num_operation_points_minus1];
-            this.avg_frm_rate = new uint[num_operation_points_minus1];
-            this.num_directly_dependent_views = new uint[num_operation_points_minus1];
-            this.directly_dependent_view_id = new uint[num_operation_points_minus1][];
-            this.view_dependency_info_src_op_id = new uint[num_operation_points_minus1];
-            this.num_seq_parameter_set_minus1 = new uint[num_operation_points_minus1];
-            this.seq_parameter_set_id_delta = new uint[num_operation_points_minus1][];
-            this.num_subset_seq_parameter_set_minus1 = new uint[num_operation_points_minus1];
-            this.subset_seq_parameter_set_id_delta = new uint[num_operation_points_minus1][];
-            this.num_pic_parameter_set_minus1 = new uint[num_operation_points_minus1];
-            this.pic_parameter_set_id_delta = new uint[num_operation_points_minus1][];
-            this.parameter_sets_info_src_op_id = new uint[num_operation_points_minus1];
-            this.motion_vectors_over_pic_boundaries_flag = new bool[num_operation_points_minus1];
-            this.max_bytes_per_pic_denom = new uint[num_operation_points_minus1];
-            this.max_bits_per_mb_denom = new uint[num_operation_points_minus1];
-            this.log2_max_mv_length_horizontal = new uint[num_operation_points_minus1];
-            this.log2_max_mv_length_vertical = new uint[num_operation_points_minus1];
-            this.num_reorder_frames = new uint[num_operation_points_minus1];
-            this.max_dec_frame_buffering = new uint[num_operation_points_minus1];
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i]);
@@ -23099,14 +22711,13 @@ priority_id[ i ] 5 u(5)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i]);
 
-                    this.directly_dependent_view_id[i] = new uint[num_directly_dependent_views[i]];
+                    this.directly_dependent_view_id = new uint[num_directly_dependent_views[i]];
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j]);
                         size += stream.ReadClass<MvcdOpViewInfo>(size, out this.mvcd_op_view_info);
                     }
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_dependency_info_src_op_id[i]);
@@ -23116,27 +22727,26 @@ priority_id[ i ] 5 u(5)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_set_minus1[i]);
 
-                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_set_minus1[i]];
+                    this.seq_parameter_set_id_delta = new uint[num_seq_parameter_set_minus1[i]];
                     for (j = 0; j <= num_seq_parameter_set_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_set_minus1[i]);
 
-                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_set_minus1[i]];
+                    this.subset_seq_parameter_set_id_delta = new uint[num_subset_seq_parameter_set_minus1[i]];
                     for (j = 0; j <= num_subset_seq_parameter_set_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i]);
 
-                    this.pic_parameter_set_id_delta[i] = new uint[num_init_pic_parameter_set_minus1[i]];
+                    this.pic_parameter_set_id_delta = new uint[num_init_pic_parameter_set_minus1[i]];
                     for (j = 0; j <= num_init_pic_parameter_set_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_op_id[i]);
@@ -23216,7 +22826,6 @@ priority_id[ i ] 5 u(5)
                         size += stream.WriteClass<MvcdOpViewInfo>(this.mvcd_op_view_info);
                     }
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedIntGolomb(this.view_dependency_info_src_op_id[i]);
@@ -23243,7 +22852,6 @@ priority_id[ i ] 5 u(5)
                         size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
                     }
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_op_id[i]);
@@ -23323,7 +22931,6 @@ priority_id[ i ] 5 u(5)
                         size += ItuStream.CalculateClassSize<MvcdOpViewInfo>(mvcd_op_view_info); // mvcd_op_view_info
                     }
                 }
-
                 else
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(view_dependency_info_src_op_id[i]); // view_dependency_info_src_op_id
@@ -23350,7 +22957,6 @@ priority_id[ i ] 5 u(5)
                         size += ItuStream.CalculateUnsignedIntGolomb(pic_parameter_set_id_delta[i][j]); // pic_parameter_set_id_delta
                     }
                 }
-
                 else
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(parameter_sets_info_src_op_id[i]); // parameter_sets_info_src_op_id
@@ -23554,15 +23160,12 @@ mvcd_scalable_nesting( payloadSize ) {
                     }
                 }
             }
-
             else
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.sei_op_texture_only_flag);
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1);
 
                 this.sei_op_view_id = new uint[num_view_components_op_minus1];
-                this.sei_op_depth_flag = new bool[num_view_components_op_minus1];
-                this.sei_op_texture_flag = new bool[num_view_components_op_minus1];
                 for (i = 0; i <= num_view_components_op_minus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 10, out this.sei_op_view_id[i]);
@@ -23607,7 +23210,6 @@ mvcd_scalable_nesting( payloadSize ) {
                     }
                 }
             }
-
             else
             {
                 size += stream.WriteUnsignedInt(1, this.sei_op_texture_only_flag);
@@ -23657,7 +23259,6 @@ mvcd_scalable_nesting( payloadSize ) {
                     }
                 }
             }
-
             else
             {
                 size += 1; // sei_op_texture_only_flag
@@ -23789,7 +23390,6 @@ depth_representation_info( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1);
                 numViews = num_views_minus1 + 1;
             }
-
             else
             {
                 numViews = 1;
@@ -23811,8 +23411,6 @@ depth_representation_info( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.depth_representation_type);
 
             this.depth_info_view_id = new uint[numViews];
-            this.z_axis_reference_view = new uint[numViews];
-            this.disparity_reference_view = new uint[numViews];
             for (i = 0; i < numViews; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.depth_info_view_id[i]);
@@ -23874,7 +23472,6 @@ depth_representation_info( payloadSize ) {
                 size += stream.WriteUnsignedIntGolomb(this.num_views_minus1);
                 numViews = num_views_minus1 + 1;
             }
-
             else
             {
                 numViews = 1;
@@ -23955,7 +23552,6 @@ depth_representation_info( payloadSize ) {
                 size += ItuStream.CalculateUnsignedIntGolomb(num_views_minus1); // num_views_minus1
                 numViews = num_views_minus1 + 1;
             }
-
             else
             {
                 numViews = 1;
@@ -24187,10 +23783,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
             this.mantissa_ref_baseline = new uint[numRefDisplays];
             this.exponent_ref_display_width = new uint[numRefDisplays];
             this.mantissa_ref_display_width = new uint[numRefDisplays];
-            this.exponent_ref_viewing_distance = new uint[numRefDisplays];
-            this.mantissa_ref_viewing_distance = new uint[numRefDisplays];
             this.additional_shift_present_flag = new bool[numRefDisplays];
-            this.num_sample_shift_plus512 = new uint[numRefDisplays];
             for (i = 0; i < numRefDisplays; i++)
             {
                 size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_baseline[i]);
@@ -24327,6 +23920,7 @@ depth_timing( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             size += stream.ReadUnsignedInt(size, 1, out this.per_view_depth_timing_flag);
 
             if (per_view_depth_timing_flag)
@@ -24336,10 +23930,10 @@ depth_timing( payloadSize ) {
                 {
                     size += stream.ReadClass<DepthTimingOffset>(size, out this.depth_timing_offset);
                 }
-                for (i = 0; i < NumDepthViews; i++)
-                {
-                    size += stream.ReadClass<DepthTimingOffset>(size, out this.depth_timing_offset);
-                }
+            }
+            else
+            {
+                size += stream.ReadClass<DepthTimingOffset>(size, out this.depth_timing_offset);
             }
 
             return size;
@@ -24349,6 +23943,7 @@ depth_timing( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             size += stream.WriteUnsignedInt(1, this.per_view_depth_timing_flag);
 
             if (per_view_depth_timing_flag)
@@ -24358,10 +23953,10 @@ depth_timing( payloadSize ) {
                 {
                     size += stream.WriteClass<DepthTimingOffset>(this.depth_timing_offset);
                 }
-                for (i = 0; i < NumDepthViews; i++)
-                {
-                    size += stream.WriteClass<DepthTimingOffset>(this.depth_timing_offset);
-                }
+            }
+            else
+            {
+                size += stream.WriteClass<DepthTimingOffset>(this.depth_timing_offset);
             }
 
             return size;
@@ -24371,6 +23966,7 @@ depth_timing( payloadSize ) {
         {
             ulong size = 0;
 
+            int i = 0;
             size += 1; // per_view_depth_timing_flag
 
             if (per_view_depth_timing_flag)
@@ -24380,10 +23976,10 @@ depth_timing( payloadSize ) {
                 {
                     size += ItuStream.CalculateClassSize<DepthTimingOffset>(depth_timing_offset); // depth_timing_offset
                 }
-                for (i = 0; i < NumDepthViews; i++)
-                {
-                    size += ItuStream.CalculateClassSize<DepthTimingOffset>(depth_timing_offset); // depth_timing_offset
-                }
+            }
+            else
+            {
+                size += ItuStream.CalculateClassSize<DepthTimingOffset>(depth_timing_offset); // depth_timing_offset
             }
 
             return size;
@@ -24600,6 +24196,8 @@ alternative_depth_info( payloadSize ) {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
+            int k = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.depth_type);
 
             if (depth_type == 0)
@@ -24651,21 +24249,6 @@ alternative_depth_info( payloadSize ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_translation_param);
                 }
 
-                this.sign_gvd_focal_length_x = new bool[num_constituent_views_gvd_minus1 + 1];
-                this.exp_gvd_focal_length_x = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.man_gvd_focal_length_x = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.sign_gvd_focal_length_y = new bool[num_constituent_views_gvd_minus1 + 1];
-                this.exp_gvd_focal_length_y = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.man_gvd_focal_length_y = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.sign_gvd_principal_point_x = new bool[num_constituent_views_gvd_minus1 + 1];
-                this.exp_gvd_principal_point_x = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.man_gvd_principal_point_x = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.sign_gvd_principal_point_y = new bool[num_constituent_views_gvd_minus1 + 1];
-                this.exp_gvd_principal_point_y = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.man_gvd_principal_point_y = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.sign_gvd_t_x = new bool[num_constituent_views_gvd_minus1 + 1];
-                this.exp_gvd_t_x = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.man_gvd_t_x = new uint[num_constituent_views_gvd_minus1 + 1];
                 for (i = 0; i <= num_constituent_views_gvd_minus1 + 1; i++)
                 {
 
@@ -24688,12 +24271,15 @@ alternative_depth_info( payloadSize ) {
                     if (rotation_gvd_flag)
                     {
 
+                        this.sign_gvd_r = new bool[3][];
+                        this.exp_gvd_r = new uint[3][];
+                        this.man_gvd_r = new uint[3][];
                         for (j = 0; j < 3; j++)
                         {
 
-                            this.sign_gvd_r = new bool[3];
-                            this.exp_gvd_r = new uint[3];
-                            this.man_gvd_r = new uint[3];
+                            this.sign_gvd_r[j] = new bool[3];
+                            this.exp_gvd_r[j] = new uint[3];
+                            this.man_gvd_r[j] = new uint[3];
                             for (k = 0; k < 3; k++)
                             {
                                 /*  column  */
@@ -24722,6 +24308,8 @@ alternative_depth_info( payloadSize ) {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
+            int k = 0;
             size += stream.WriteUnsignedIntGolomb(this.depth_type);
 
             if (depth_type == 0)
@@ -24818,6 +24406,8 @@ alternative_depth_info( payloadSize ) {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
+            int k = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(depth_type); // depth_type
 
             if (depth_type == 0)
@@ -24978,7 +24568,6 @@ depth_sampling_info( payloadSize ) {
                     size += stream.ReadClass<DepthGridPosition>(size, out this.depth_grid_position);
                 }
             }
-
             else
             {
                 size += stream.ReadClass<DepthGridPosition>(size, out this.depth_grid_position);
@@ -25008,7 +24597,6 @@ depth_sampling_info( payloadSize ) {
                     size += stream.WriteClass<DepthGridPosition>(this.depth_grid_position);
                 }
             }
-
             else
             {
                 size += stream.WriteClass<DepthGridPosition>(this.depth_grid_position);
@@ -25038,7 +24626,6 @@ depth_sampling_info( payloadSize ) {
                     size += ItuStream.CalculateClassSize<DepthGridPosition>(depth_grid_position); // depth_grid_position
                 }
             }
-
             else
             {
                 size += ItuStream.CalculateClassSize<DepthGridPosition>(depth_grid_position); // depth_grid_position
@@ -25210,12 +24797,8 @@ mvcd_vui_parameters_extension() {
             this.vui_mvcd_depth_flag = new bool[vui_mvcd_num_ops_minus1][];
             this.vui_mvcd_texture_flag = new bool[vui_mvcd_num_ops_minus1][];
             this.vui_mvcd_timing_info_present_flag = new bool[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_num_units_in_tick = new uint[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_time_scale = new uint[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_fixed_frame_rate_flag = new bool[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_nal_hrd_parameters_present_flag = new bool[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_vcl_hrd_parameters_present_flag = new bool[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_low_delay_hrd_flag = new bool[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_pic_struct_present_flag = new bool[vui_mvcd_num_ops_minus1];
             for (i = 0; i <= vui_mvcd_num_ops_minus1; i++)
             {
@@ -26338,7 +25921,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
             {
                 numValues = numViews;
             }
-
             else
             {
                 numValues = 1;
@@ -26362,7 +25944,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                     size += stream.ReadUnsignedIntVariable(size, out this.mantissa0);
                     outMantissa[index, i] = mantissa0;
                 }
-
                 else
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.skip_flag);
@@ -26378,7 +25959,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                             size += stream.ReadUnsignedIntVariable(size, out this.exponent1);
                             outExp[index, i] = exponent1;
                         }
-
                         else
                         {
                             outExp[index, i] = outExp[ref_dps_id0, i];
@@ -26389,7 +25969,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         {
                             mantissaPred = ((OutMantissa[ref_dps_id0, i] * predWeight0 + outMantissa[ref_dps_id1, i] * (64 - predWeight0) + 32) >> 6);
                         }
-
                         else
                         {
                             mantissaPred = outMantissa[ref_dps_id0, i];
@@ -26397,7 +25976,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         outMantissa[index, i] = mantissaPred + mantissa_diff;
                         outManLen[index, i] = outManLen[ref_dps_id0, i];
                     }
-
                     else
                     {
                         outSign[index, i] = outSign[ref_dps_id0, i];
@@ -26438,7 +26016,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
             {
                 numValues = numViews;
             }
-
             else
             {
                 numValues = 1;
@@ -26462,7 +26039,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                     size += stream.WriteUnsignedIntVariable(this.mantissa0);
                     outMantissa[index, i] = mantissa0;
                 }
-
                 else
                 {
                     size += stream.WriteUnsignedInt(1, this.skip_flag);
@@ -26478,7 +26054,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                             size += stream.WriteUnsignedIntVariable(this.exponent1);
                             outExp[index, i] = exponent1;
                         }
-
                         else
                         {
                             outExp[index, i] = outExp[ref_dps_id0, i];
@@ -26489,7 +26064,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         {
                             mantissaPred = ((OutMantissa[ref_dps_id0, i] * predWeight0 + outMantissa[ref_dps_id1, i] * (64 - predWeight0) + 32) >> 6);
                         }
-
                         else
                         {
                             mantissaPred = outMantissa[ref_dps_id0, i];
@@ -26497,7 +26071,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         outMantissa[index, i] = mantissaPred + mantissa_diff;
                         outManLen[index, i] = outManLen[ref_dps_id0, i];
                     }
-
                     else
                     {
                         outSign[index, i] = outSign[ref_dps_id0, i];
@@ -26538,7 +26111,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
             {
                 numValues = numViews;
             }
-
             else
             {
                 numValues = 1;
@@ -26562,7 +26134,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                     size += ItuStream.CalculateUnsignedIntVariable(mantissa0); // mantissa0
                     outMantissa[index, i] = mantissa0;
                 }
-
                 else
                 {
                     size += 1; // skip_flag
@@ -26578,7 +26149,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                             size += ItuStream.CalculateUnsignedIntVariable(exponent1); // exponent1
                             outExp[index, i] = exponent1;
                         }
-
                         else
                         {
                             outExp[index, i] = outExp[ref_dps_id0, i];
@@ -26589,7 +26159,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         {
                             mantissaPred = ((OutMantissa[ref_dps_id0, i] * predWeight0 + outMantissa[ref_dps_id1, i] * (64 - predWeight0) + 32) >> 6);
                         }
-
                         else
                         {
                             mantissaPred = outMantissa[ref_dps_id0, i];
@@ -26597,7 +26166,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         outMantissa[index, i] = mantissaPred + mantissa_diff;
                         outManLen[index, i] = outManLen[ref_dps_id0, i];
                     }
-
                     else
                     {
                         outSign[index, i] = outSign[ref_dps_id0, i];
@@ -26667,14 +26235,19 @@ vsp_param( numViews, predDirection, index ) {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
 
+            this.disparity_diff_wji = new uint[numViews][];
+            this.disparity_diff_oji = new uint[numViews][];
+            this.disparity_diff_wij = new uint[numViews][];
+            this.disparity_diff_oij = new uint[numViews][];
             for (i = 0; i < numViews; i++)
             {
 
-                this.disparity_diff_wji = new uint[i];
-                this.disparity_diff_oji = new uint[i];
-                this.disparity_diff_wij = new uint[i];
-                this.disparity_diff_oij = new uint[i];
+                this.disparity_diff_wji[i] = new uint[i];
+                this.disparity_diff_oji[i] = new uint[i];
+                this.disparity_diff_wij[i] = new uint[i];
+                this.disparity_diff_oij[i] = new uint[i];
                 for (j = 0; j < i; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_wji[j][i]);
@@ -26692,6 +26265,7 @@ vsp_param( numViews, predDirection, index ) {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
 
             for (i = 0; i < numViews; i++)
             {
@@ -26713,6 +26287,7 @@ vsp_param( numViews, predDirection, index ) {
             ulong size = 0;
 
             int i = 0;
+            int j = 0;
 
             for (i = 0; i < numViews; i++)
             {
@@ -26969,7 +26544,6 @@ slice_header_in_3davc_extension() {
                 }
                 size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
             }
-
             else
             {
 
@@ -27043,7 +26617,6 @@ slice_header_in_3davc_extension() {
                 {
                     size += stream.ReadClass<RefPicListMvcModification>(size, out this.ref_pic_list_mvc_modification); // specified in Annex H 
                 }
-
                 else
                 {
                     size += stream.ReadClass<RefPicListModification>(size, out this.ref_pic_list_modification);
@@ -27098,7 +26671,6 @@ slice_header_in_3davc_extension() {
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.depth_weighted_pred_flag);
                     }
-
                     else if (avc_3d_extension_flag)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.dmvp_flag);
@@ -27173,7 +26745,6 @@ slice_header_in_3davc_extension() {
                 }
                 size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
             }
-
             else
             {
 
@@ -27247,7 +26818,6 @@ slice_header_in_3davc_extension() {
                 {
                     size += stream.WriteClass<RefPicListMvcModification>(this.ref_pic_list_mvc_modification); // specified in Annex H 
                 }
-
                 else
                 {
                     size += stream.WriteClass<RefPicListModification>(this.ref_pic_list_modification);
@@ -27302,7 +26872,6 @@ slice_header_in_3davc_extension() {
                     {
                         size += stream.WriteUnsignedInt(1, this.depth_weighted_pred_flag);
                     }
-
                     else if (avc_3d_extension_flag)
                     {
                         size += stream.WriteUnsignedInt(1, this.dmvp_flag);
@@ -27377,7 +26946,6 @@ slice_header_in_3davc_extension() {
                 }
                 size += ItuStream.CalculateSignedIntGolomb(slice_qp_delta); // slice_qp_delta
             }
-
             else
             {
 
@@ -27451,7 +27019,6 @@ slice_header_in_3davc_extension() {
                 {
                     size += ItuStream.CalculateClassSize<RefPicListMvcModification>(ref_pic_list_mvc_modification); // ref_pic_list_mvc_modification
                 }
-
                 else
                 {
                     size += ItuStream.CalculateClassSize<RefPicListModification>(ref_pic_list_modification); // ref_pic_list_modification
@@ -27506,7 +27073,6 @@ slice_header_in_3davc_extension() {
                     {
                         size += 1; // depth_weighted_pred_flag
                     }
-
                     else if (avc_3d_extension_flag)
                     {
                         size += 1; // dmvp_flag
@@ -27678,25 +27244,60 @@ slice_data_in_3davc_extension() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
 
-                        for (i = 0; i < mb_skip_run; i++)
+                        if (nal_unit_type == 21 && !DepthFlag && VspRefExist && leftMbVSSkipped && upMbVSSkipped)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.mb_vsskip_flag);
+                            moreDataFlag = !mb_vsskip_flag;
+
+                            if (!mb_vsskip_flag)
+                            {
+                                size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_flag);
+                                moreDataFlag = !mb_skip_flag;
+                            }
+                            RunLength = 0;
+                        }
+                        else
+                        {
+                            rleCtx = RLESkipContext();
+
+                            if (rleCtx && !RunLength)
+                            {
+                                size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run_type);
+                                RunLength = 16;
+                            }
+                            else if (!rleCtx && RunLength)
+                            {
+                                RunLength = 0;
+                            }
+
+                            if (rleCtx && mb_skip_run_type)
+                            {
+                                RunLength -= 1;
+                            }
+                            else
+                            {
+                                size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_flag);
+                            }
+
+                            if (rleCtx && !mb_skip_flag)
+                            {
+                                RunLength = 0;
+                            }
+                            moreDataFlag = !mb_skip_flag;
+
+                            if (nal_unit_type == 21 && !DepthFlag && VspRefExist && !mb_skip_flag)
+                            {
+                                size += stream.ReadUnsignedIntGolomb(size, out this.mb_vsskip_flag);
+                                moreDataFlag = !mb_vsskip_flag;
+                            }
                         }
 
-                        if (nal_unit_type == 21 && !DepthFlag &&
-     mb_skip_run > 0 && VspRefExist)
+                        if (alc_sps_enable_flag && nal_unit_type == 21 && slice_type == P && !DepthFlag && !mb_vsskip_flag && mb_skip_flag == true)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.mb_skip_type_flag);
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
+                            size += stream.ReadUnsignedIntGolomb(size, out this.mb_alc_skip_flag);
                         }
                     }
                 }
@@ -27715,7 +27316,6 @@ slice_data_in_3davc_extension() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -27728,7 +27328,6 @@ slice_data_in_3davc_extension() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.end_of_slice_flag);
@@ -27787,25 +27386,60 @@ slice_data_in_3davc_extension() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
 
-                        for (i = 0; i < mb_skip_run; i++)
+                        if (nal_unit_type == 21 && !DepthFlag && VspRefExist && leftMbVSSkipped && upMbVSSkipped)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            size += stream.WriteUnsignedIntGolomb(this.mb_vsskip_flag);
+                            moreDataFlag = !mb_vsskip_flag;
+
+                            if (!mb_vsskip_flag)
+                            {
+                                size += stream.WriteUnsignedIntGolomb(this.mb_skip_flag);
+                                moreDataFlag = !mb_skip_flag;
+                            }
+                            RunLength = 0;
+                        }
+                        else
+                        {
+                            rleCtx = RLESkipContext();
+
+                            if (rleCtx && !RunLength)
+                            {
+                                size += stream.WriteUnsignedIntGolomb(this.mb_skip_run_type);
+                                RunLength = 16;
+                            }
+                            else if (!rleCtx && RunLength)
+                            {
+                                RunLength = 0;
+                            }
+
+                            if (rleCtx && mb_skip_run_type)
+                            {
+                                RunLength -= 1;
+                            }
+                            else
+                            {
+                                size += stream.WriteUnsignedIntGolomb(this.mb_skip_flag);
+                            }
+
+                            if (rleCtx && !mb_skip_flag)
+                            {
+                                RunLength = 0;
+                            }
+                            moreDataFlag = !mb_skip_flag;
+
+                            if (nal_unit_type == 21 && !DepthFlag && VspRefExist && !mb_skip_flag)
+                            {
+                                size += stream.WriteUnsignedIntGolomb(this.mb_vsskip_flag);
+                                moreDataFlag = !mb_vsskip_flag;
+                            }
                         }
 
-                        if (nal_unit_type == 21 && !DepthFlag &&
-     mb_skip_run > 0 && VspRefExist)
+                        if (alc_sps_enable_flag && nal_unit_type == 21 && slice_type == P && !DepthFlag && !mb_vsskip_flag && mb_skip_flag == true)
                         {
-                            size += stream.WriteUnsignedInt(1, this.mb_skip_type_flag);
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
+                            size += stream.WriteUnsignedIntGolomb(this.mb_alc_skip_flag);
                         }
                     }
                 }
@@ -27824,7 +27458,6 @@ slice_data_in_3davc_extension() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -27837,7 +27470,6 @@ slice_data_in_3davc_extension() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.end_of_slice_flag);
@@ -27896,25 +27528,60 @@ slice_data_in_3davc_extension() {
                             moreDataFlag = more_rbsp_data();
                         }
                     }
-                    if (!entropy_coding_mode_flag)
+                    else
                     {
-                        size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0);
 
-                        for (i = 0; i < mb_skip_run; i++)
+                        if (nal_unit_type == 21 && !DepthFlag && VspRefExist && leftMbVSSkipped && upMbVSSkipped)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            size += ItuStream.CalculateUnsignedIntGolomb(mb_vsskip_flag); // mb_vsskip_flag
+                            moreDataFlag = !mb_vsskip_flag;
+
+                            if (!mb_vsskip_flag)
+                            {
+                                size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_flag); // mb_skip_flag
+                                moreDataFlag = !mb_skip_flag;
+                            }
+                            RunLength = 0;
+                        }
+                        else
+                        {
+                            rleCtx = RLESkipContext();
+
+                            if (rleCtx && !RunLength)
+                            {
+                                size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run_type); // mb_skip_run_type
+                                RunLength = 16;
+                            }
+                            else if (!rleCtx && RunLength)
+                            {
+                                RunLength = 0;
+                            }
+
+                            if (rleCtx && mb_skip_run_type)
+                            {
+                                RunLength -= 1;
+                            }
+                            else
+                            {
+                                size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_flag); // mb_skip_flag
+                            }
+
+                            if (rleCtx && !mb_skip_flag)
+                            {
+                                RunLength = 0;
+                            }
+                            moreDataFlag = !mb_skip_flag;
+
+                            if (nal_unit_type == 21 && !DepthFlag && VspRefExist && !mb_skip_flag)
+                            {
+                                size += ItuStream.CalculateUnsignedIntGolomb(mb_vsskip_flag); // mb_vsskip_flag
+                                moreDataFlag = !mb_vsskip_flag;
+                            }
                         }
 
-                        if (nal_unit_type == 21 && !DepthFlag &&
-     mb_skip_run > 0 && VspRefExist)
+                        if (alc_sps_enable_flag && nal_unit_type == 21 && slice_type == P && !DepthFlag && !mb_vsskip_flag && mb_skip_flag == true)
                         {
-                            size += 1; // mb_skip_type_flag
-                        }
-
-                        if (mb_skip_run > 0)
-                        {
-                            moreDataFlag = more_rbsp_data();
+                            size += ItuStream.CalculateUnsignedIntGolomb(mb_alc_skip_flag); // mb_alc_skip_flag
                         }
                     }
                 }
@@ -27933,7 +27600,6 @@ slice_data_in_3davc_extension() {
                 {
                     moreDataFlag = more_rbsp_data();
                 }
-
                 else
                 {
 
@@ -27946,7 +27612,6 @@ slice_data_in_3davc_extension() {
                     {
                         moreDataFlag = 1;
                     }
-
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(end_of_slice_flag); // end_of_slice_flag
@@ -28101,7 +27766,6 @@ macroblock_layer_in_3davc_extension() {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_chroma[i]);
                 }
             }
-
             else
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
@@ -28123,17 +27787,12 @@ macroblock_layer_in_3davc_extension() {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        else if (!direct_8x8_inference_flag)
                         {
-
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                            {
-                                noSubMbPartSizeLessThan8x8Flag = 0;
-                            }
+                            noSubMbPartSizeLessThan8x8Flag = 0;
                         }
                     }
                 }
-
                 else
                 {
 
@@ -28213,7 +27872,6 @@ macroblock_layer_in_3davc_extension() {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_chroma[i]);
                 }
             }
-
             else
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
@@ -28235,17 +27893,12 @@ macroblock_layer_in_3davc_extension() {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        else if (!direct_8x8_inference_flag)
                         {
-
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                            {
-                                noSubMbPartSizeLessThan8x8Flag = 0;
-                            }
+                            noSubMbPartSizeLessThan8x8Flag = 0;
                         }
                     }
                 }
-
                 else
                 {
 
@@ -28325,7 +27978,6 @@ macroblock_layer_in_3davc_extension() {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_chroma[i]); // pcm_sample_chroma
                 }
             }
-
             else
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
@@ -28347,17 +27999,12 @@ macroblock_layer_in_3davc_extension() {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
                         }
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        else if (!direct_8x8_inference_flag)
                         {
-
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
-                            {
-                                noSubMbPartSizeLessThan8x8Flag = 0;
-                            }
+                            noSubMbPartSizeLessThan8x8Flag = 0;
                         }
                     }
                 }
-
                 else
                 {
 
@@ -28489,7 +28136,10 @@ mb_pred_in_3davc_extension( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -28500,7 +28150,6 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
-                    this.rem_intra4x4_pred_mode = new uint[16];
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra4x4_pred_mode_flag[luma4x4BlkIdx]);
@@ -28516,7 +28165,6 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
-                    this.rem_intra8x8_pred_mode = new uint[4];
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.prev_intra8x8_pred_mode_flag[luma8x8BlkIdx]);
@@ -28533,7 +28181,6 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -28608,7 +28255,10 @@ mb_pred_in_3davc_extension( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -28648,7 +28298,6 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -28721,7 +28370,10 @@ mb_pred_in_3davc_extension( mb_type ) {
         {
             ulong size = 0;
 
+            int luma4x4BlkIdx = 0;
+            int luma8x8BlkIdx = 0;
             int mbPartIdx = 0;
+            int compIdx = 0;
 
             if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
   MbPartPredMode(mb_type, 0) == Intra_8x8 ||
@@ -28761,7 +28413,6 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-
             else if (MbPartPredMode(mb_type, 0) != Direct)
             {
 
@@ -28895,6 +28546,8 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             this.sub_mb_type = new uint[4];
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
@@ -28939,10 +28592,11 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] || !bvsp_flag_l0[mbPartIdx]))
                 {
 
+                    this.mvd_l0 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
-                        this.mvd_l0 = new int[2];
+                        this.mvd_l0[subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][subMbPartIdx][compIdx]);
@@ -28957,10 +28611,11 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] || !bvsp_flag_l1[mbPartIdx]))
                 {
 
+                    this.mvd_l1 = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
-                        this.mvd_l1 = new int[2];
+                        this.mvd_l1[subMbPartIdx] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][subMbPartIdx][compIdx]);
@@ -28977,6 +28632,8 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
@@ -29056,6 +28713,8 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             ulong size = 0;
 
             int mbPartIdx = 0;
+            int subMbPartIdx = 0;
+            int compIdx = 0;
 
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {

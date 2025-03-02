@@ -160,12 +160,16 @@ namespace Sharp{type}
             var blockIf = field as ItuBlockIfThenElse;
             if (blockIf != null)
             {
-                string ifPart = BuildBlock(b, parent, (ItuBlock)blockIf.BlockIf, level, methodType);
-                foreach(var elseBlock in blockIf.BlockElse)
+                string ret = BuildBlock(b, parent, (ItuBlock)blockIf.BlockIf, level, methodType);
+                foreach(var elseBlock in blockIf.BlockElseIf)
                 {
-                    ifPart += BuildBlock(b, parent, (ItuBlock)blockIf.BlockIf, level, methodType);
+                    ret += BuildBlock(b, parent, (ItuBlock)elseBlock, level, methodType);
                 }
-                return ifPart;
+                if(blockIf.BlockElse != null)
+                {
+                    ret += BuildBlock(b, parent, (ItuBlock)blockIf.BlockElse, level, methodType);
+                }
+                return ret;
             }
 
             var comment = field as ItuComment;
@@ -851,10 +855,6 @@ namespace Sharp{type}
 
         private List<ItuField> FlattenFields(ItuClass cls, IEnumerable<ItuCode> fields, ItuBlock parent = null)
         {
-            if(cls.ClassName == "residual_block_cabac")
-            {
-
-            }
 
             Dictionary<string, ItuField> ret = new Dictionary<string, ItuField>();
             foreach (var code in fields)
@@ -902,12 +902,21 @@ namespace Sharp{type}
                         AddAndResolveDuplicates(ret, blockField);
                     }
 
-                    foreach (var blockelse in blockif.BlockElse)
+                    foreach (var blockelseif in blockif.BlockElseIf)
                     {
-                        var blockElseFields = FlattenFields(cls, ((ItuBlock)blockelse).Content, (ItuBlock)blockelse);
-                        foreach (var blockField in blockElseFields)
+                        var blockElseIfFields = FlattenFields(cls, ((ItuBlock)blockelseif).Content, (ItuBlock)blockelseif);
+                        foreach (var blockField in blockElseIfFields)
                         {
                             AddAndResolveDuplicates(ret, blockField);
+                        }
+                    }
+
+                    if(blockif.BlockElse != null)
+                    {
+                        var blockElseFields = FlattenFields(cls, ((ItuBlock)blockif.BlockElse).Content, (ItuBlock)blockif.BlockElse);
+                        foreach (var blockElseField in blockElseFields)
+                        {
+                            AddAndResolveDuplicates(ret, blockElseField);
                         }
                     }
                 }

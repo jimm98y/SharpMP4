@@ -28,7 +28,7 @@ namespace ItuGenerator
         public static Parser<char, string> AnyCharE => AnyCharExcept('(', ')').AtLeastOnceString();
         public static Parser<char, string> Expr => OneOf(Rec(() => Parentheses), AnyCharE);
         public static Parser<char, string> Parentheses => Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");
-        public static Parser<char, IEnumerable<ItuCode>> SingleBlock => (Try(BlockDoWhile).Or(Try(BlockSingle).Or(Field))).Repeat(1);
+        public static Parser<char, IEnumerable<ItuCode>> SingleBlock => (Try(BlockDoWhile).Or(Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Field)))).Repeat(1);
 
         public static Parser<char, string> FieldCategory => OneOf(
             Try(String("All")), 
@@ -113,41 +113,39 @@ namespace ItuGenerator
                 SkipWhitespaces.Then(Try(FieldType).Optional())
              ).Select(x => (ItuCode)x);
 
-        public static Parser<char, ItuCode> BlockWithoutElse =>
+        public static Parser<char, ItuCode> BlockIf =>
             Map((type, condition, comment, content) => new ItuBlock(type, condition, comment, content),
-                OneOf(
-                    Try(String("if").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
-                    Try(String("for").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
-                    Try(String("while").Before(SkipWhitespaces).Before(Lookahead(Parentheses)))
-                    ).Before(SkipWhitespaces),
+                Try(String("if").Before(SkipWhitespaces).Before(Lookahead(Parentheses))).Before(SkipWhitespaces),
+                Try(Parentheses).Optional(),
+                SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
+                SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
+            ).Select(x => (ItuCode)x);
+        public static Parser<char, ItuCode> BlockElseIf =>
+            Map((type, condition, comment, content) => new ItuBlock(type, condition, comment, content),
+                Try(String("else if").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
                 Try(Parentheses).Optional(),
                 SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
                 SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
             ).Select(x => (ItuCode)x);
         public static Parser<char, ItuCode> BlockElse =>
             Map((type, condition, comment, content) => new ItuBlock(type, condition, comment, content),
-                OneOf(
-                    Try(String("else if").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
-                    Try(String("else"))
-                    ).Before(SkipWhitespaces),
+                Try(String("else")).Before(SkipWhitespaces),
                 Try(Parentheses).Optional(),
                 SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
                 SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
             ).Select(x => (ItuCode)x);
-        public static Parser<char, ItuCode> BlockSingle =>
-            Map((blockIf, blockElse) => new ItuBlockIfThenElse(blockIf, blockElse),
-                SkipWhitespaces.Then(Try(BlockWithoutElse)),
-                SkipWhitespaces.Then(Try(BlockElse).SeparatedAndOptionallyTerminated(SkipWhitespaces)).Optional()
+        public static Parser<char, ItuCode> BlockIfThenElse =>
+            Map((blockIf, blockElseIf, blockElse) => new ItuBlockIfThenElse(blockIf, blockElseIf, blockElse),
+                SkipWhitespaces.Then(Try(BlockIf)),
+                SkipWhitespaces.Then(Try(BlockElseIf).SeparatedAndOptionallyTerminated(SkipWhitespaces)).Optional(),
+                SkipWhitespaces.Then(Try(BlockElse)).Optional()
             ).Select(x => (ItuCode)x);
 
 
 
-        public static Parser<char, ItuCode> Block =>
+        public static Parser<char, ItuCode> BlockForWhile =>
             Map((type, condition, comment, content) => new ItuBlock(type, condition, comment, content),
                 OneOf(
-                    Try(String("else if").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
-                    Try(String("else")),
-                    Try(String("if").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
                     Try(String("for").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
                     Try(String("while").Before(SkipWhitespaces).Before(Lookahead(Parentheses)))
                     ).Before(SkipWhitespaces),
@@ -164,7 +162,7 @@ namespace ItuGenerator
                 Try(SkipWhitespaces.Then(String("while")).Then(SkipWhitespaces.Then(Parentheses))).Optional()
             ).Select(x => (ItuCode)x);
 
-        public static Parser<char, ItuCode> CodeBlock => Try(BlockDoWhile).Or(Try(Block).Or(Try(Field).Or(Comment)));
+        public static Parser<char, ItuCode> CodeBlock => Try(BlockIfThenElse).Or(Try(BlockDoWhile).Or(Try(BlockForWhile).Or(Try(Field).Or(Comment))));
 
         public static Parser<char, IEnumerable<ItuCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
@@ -268,16 +266,18 @@ namespace ItuGenerator
 
     public class ItuBlockIfThenElse : ItuCode
     {
-        public ItuBlockIfThenElse(ItuCode blockIf, Maybe<IEnumerable<ItuCode>> blockElse)
+        public ItuBlockIfThenElse(ItuCode blockIf, Maybe<IEnumerable<ItuCode>> blockElseIf, Maybe<ItuCode> blockElse)
         {
             BlockIf = blockIf;
+            BlockElseIf = blockElseIf.GetValueOrDefault();
+            if (BlockElseIf == null)
+                BlockElseIf = new List<ItuCode>();
             BlockElse = blockElse.GetValueOrDefault();
-            if (BlockElse == null)
-                BlockElse = new List<ItuCode>();
         }
 
         public ItuCode BlockIf { get; }
-        public IEnumerable<ItuCode> BlockElse { get; set; } 
+        public ItuCode BlockElse { get; }
+        public IEnumerable<ItuCode> BlockElseIf { get; set; } 
         public ItuBlock Parent { get; internal set; }
     }
 }
