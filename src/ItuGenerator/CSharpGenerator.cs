@@ -180,7 +180,6 @@ namespace Sharp{type}
 
             if ((field as ItuField).Type == null && (!string.IsNullOrWhiteSpace((field as ItuField).Value) || !string.IsNullOrWhiteSpace((field as ItuField).Increment)))
             {
-                // statement
                 return BuildStatement(b, parent, field as ItuField, level, methodType);
             }
            
@@ -233,6 +232,12 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 fieldValue = fieldValue.Replace("<<", "<< (int)");
+
+                string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
+                if (trimmed.StartsWith('!'))
+                {
+                    fieldValue = $"= {trimmed.Substring(1)} != 0";
+                }
             }
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
