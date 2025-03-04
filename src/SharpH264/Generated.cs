@@ -3309,7 +3309,7 @@ slice_data() {
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_flag);
-                        moreDataFlag = mb_skip_flag != 0;
+                        moreDataFlag = mb_skip_flag;
                     }
                 }
 
@@ -3317,7 +3317,7 @@ slice_data() {
                 {
 
                     if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 ||
-    (CurrMbAddr % 2 == 1 && prevMbSkipped) != 0))
+    (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.mb_field_decoding_flag);
                     }
@@ -3343,7 +3343,7 @@ slice_data() {
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.end_of_slice_flag);
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -3394,7 +3394,7 @@ slice_data() {
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.mb_skip_flag);
-                        moreDataFlag = mb_skip_flag != 0;
+                        moreDataFlag = mb_skip_flag;
                     }
                 }
 
@@ -3402,7 +3402,7 @@ slice_data() {
                 {
 
                     if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 ||
-    (CurrMbAddr % 2 == 1 && prevMbSkipped) != 0))
+    (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.WriteUnsignedInt(1, this.mb_field_decoding_flag);
                     }
@@ -3428,7 +3428,7 @@ slice_data() {
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.end_of_slice_flag);
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -3479,7 +3479,7 @@ slice_data() {
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_flag); // mb_skip_flag
-                        moreDataFlag = mb_skip_flag != 0;
+                        moreDataFlag = mb_skip_flag;
                     }
                 }
 
@@ -3487,7 +3487,7 @@ slice_data() {
                 {
 
                     if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 ||
-    (CurrMbAddr % 2 == 1 && prevMbSkipped) != 0))
+    (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += 1; // mb_field_decoding_flag
                     }
@@ -3513,7 +3513,7 @@ slice_data() {
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(end_of_slice_flag); // end_of_slice_flag
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -4754,7 +4754,7 @@ mb_pred( mb_type ) {
                     if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
                     {
 
-                        this.mvd_l0[mbPartIdx] = new int[2];
+                        this.mvd_l0[mbPartIdx][0] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][0][compIdx]);
@@ -4769,7 +4769,7 @@ mb_pred( mb_type ) {
                     if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
                     {
 
-                        this.mvd_l1[mbPartIdx] = new int[2];
+                        this.mvd_l1[mbPartIdx][0] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][0][compIdx]);
@@ -12836,7 +12836,7 @@ annotated_regions( payloadSize ) {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i]);
                         size += stream.ReadUnsignedInt(size, 1, out this.ar_label_cancel_flag);
-                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag != 0;
+                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag;
 
                         if (ar_label_cancel_flag == 0)
                         {
@@ -12863,7 +12863,7 @@ annotated_regions( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_idx[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.ar_object_cancel_flag);
-                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag != 0;
+                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag;
 
                     if (ar_object_cancel_flag == 0)
                     {
@@ -12949,7 +12949,7 @@ annotated_regions( payloadSize ) {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.ar_label_idx[i]);
                         size += stream.WriteUnsignedInt(1, this.ar_label_cancel_flag);
-                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag != 0;
+                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag;
 
                         if (ar_label_cancel_flag == 0)
                         {
@@ -12968,7 +12968,7 @@ annotated_regions( payloadSize ) {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.ar_object_idx[i]);
                     size += stream.WriteUnsignedInt(1, this.ar_object_cancel_flag);
-                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag != 0;
+                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag;
 
                     if (ar_object_cancel_flag == 0)
                     {
@@ -13054,7 +13054,7 @@ annotated_regions( payloadSize ) {
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(ar_label_idx[i]); // ar_label_idx
                         size += 1; // ar_label_cancel_flag
-                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag != 0;
+                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag;
 
                         if (ar_label_cancel_flag == 0)
                         {
@@ -13073,7 +13073,7 @@ annotated_regions( payloadSize ) {
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(ar_object_idx[i]); // ar_object_idx
                     size += 1; // ar_object_cancel_flag
-                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag != 0;
+                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag;
 
                     if (ar_object_cancel_flag == 0)
                     {
@@ -15395,7 +15395,7 @@ slice_data_in_scalable_extension() {
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_flag);
-                        moreDataFlag = mb_skip_flag != 0;
+                        moreDataFlag = mb_skip_flag;
                     }
                 }
 
@@ -15403,7 +15403,7 @@ slice_data_in_scalable_extension() {
                 {
 
                     if (MbaffFrameFlag != 0 && ((CurrMbAddr % 2) == 0 ||
-    ((CurrMbAddr % 2) == 1 && prevMbSkipped) != 0))
+    ((CurrMbAddr % 2) == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.mb_field_decoding_flag);
                     }
@@ -15429,7 +15429,7 @@ slice_data_in_scalable_extension() {
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.end_of_slice_flag);
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -15480,7 +15480,7 @@ slice_data_in_scalable_extension() {
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.mb_skip_flag);
-                        moreDataFlag = mb_skip_flag != 0;
+                        moreDataFlag = mb_skip_flag;
                     }
                 }
 
@@ -15488,7 +15488,7 @@ slice_data_in_scalable_extension() {
                 {
 
                     if (MbaffFrameFlag != 0 && ((CurrMbAddr % 2) == 0 ||
-    ((CurrMbAddr % 2) == 1 && prevMbSkipped) != 0))
+    ((CurrMbAddr % 2) == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.WriteUnsignedInt(1, this.mb_field_decoding_flag);
                     }
@@ -15514,7 +15514,7 @@ slice_data_in_scalable_extension() {
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.end_of_slice_flag);
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -15565,7 +15565,7 @@ slice_data_in_scalable_extension() {
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_flag); // mb_skip_flag
-                        moreDataFlag = mb_skip_flag != 0;
+                        moreDataFlag = mb_skip_flag;
                     }
                 }
 
@@ -15573,7 +15573,7 @@ slice_data_in_scalable_extension() {
                 {
 
                     if (MbaffFrameFlag != 0 && ((CurrMbAddr % 2) == 0 ||
-    ((CurrMbAddr % 2) == 1 && prevMbSkipped) != 0))
+    ((CurrMbAddr % 2) == 1 && prevMbSkipped != 0)))
                     {
                         size += 1; // mb_field_decoding_flag
                     }
@@ -15599,7 +15599,7 @@ slice_data_in_scalable_extension() {
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(end_of_slice_flag); // end_of_slice_flag
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -15813,7 +15813,7 @@ macroblock_layer_in_scalable_extension() {
       (mb_type != I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
         (mb_type != B_Direct_16x16 ||
-          direct_8x8_inference_flag)) != 0))
+          direct_8x8_inference_flag != 0))))
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.transform_size_8x8_flag);
                         }
@@ -15932,7 +15932,7 @@ macroblock_layer_in_scalable_extension() {
       (mb_type != I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
         (mb_type != B_Direct_16x16 ||
-          direct_8x8_inference_flag)) != 0))
+          direct_8x8_inference_flag != 0))))
                         {
                             size += stream.WriteUnsignedInt(1, this.transform_size_8x8_flag);
                         }
@@ -16051,7 +16051,7 @@ macroblock_layer_in_scalable_extension() {
       (mb_type != I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
         (mb_type != B_Direct_16x16 ||
-          direct_8x8_inference_flag)) != 0))
+          direct_8x8_inference_flag != 0))))
                         {
                             size += 1; // transform_size_8x8_flag
                         }
@@ -16273,7 +16273,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
                     {
 
-                        this.mvd_l0[mbPartIdx] = new int[2];
+                        this.mvd_l0[mbPartIdx][0] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][0][compIdx]);
@@ -16288,7 +16288,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
                     {
 
-                        this.mvd_l1[mbPartIdx] = new int[2];
+                        this.mvd_l1[mbPartIdx][0] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][0][compIdx]);
@@ -21007,7 +21007,7 @@ multiview_acquisition_info( payloadSize ) {
  num_views_minus1  ue(v) 
  intrinsic_param_flag 5 u(1) 
  extrinsic_param_flag 5 u(1) 
- if( instrinsic_param_flag ) {   
+if (intrinsic_param_flag ) {   
   intrinsic_params_equal_flag 5 u(1) 
   prec_focal_length 5 ue(v) 
   prec_principal_point 5 ue(v) 
@@ -21131,7 +21131,7 @@ multiview_acquisition_info( payloadSize ) {
             size += stream.ReadUnsignedInt(size, 1, out this.intrinsic_param_flag);
             size += stream.ReadUnsignedInt(size, 1, out this.extrinsic_param_flag);
 
-            if (instrinsic_param_flag != 0)
+            if (intrinsic_param_flag != 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.intrinsic_params_equal_flag);
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_focal_length);
@@ -21231,7 +21231,7 @@ multiview_acquisition_info( payloadSize ) {
             size += stream.WriteUnsignedInt(1, this.intrinsic_param_flag);
             size += stream.WriteUnsignedInt(1, this.extrinsic_param_flag);
 
-            if (instrinsic_param_flag != 0)
+            if (intrinsic_param_flag != 0)
             {
                 size += stream.WriteUnsignedInt(1, this.intrinsic_params_equal_flag);
                 size += stream.WriteUnsignedIntGolomb(this.prec_focal_length);
@@ -21301,7 +21301,7 @@ multiview_acquisition_info( payloadSize ) {
             size += 1; // intrinsic_param_flag
             size += 1; // extrinsic_param_flag
 
-            if (instrinsic_param_flag != 0)
+            if (intrinsic_param_flag != 0)
             {
                 size += 1; // intrinsic_params_equal_flag
                 size += ItuStream.CalculateUnsignedIntGolomb(prec_focal_length); // prec_focal_length
@@ -27487,12 +27487,12 @@ slice_data_in_3davc_extension() {
                         if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.mb_vsskip_flag);
-                            moreDataFlag = mb_vsskip_flag != 0;
+                            moreDataFlag = mb_vsskip_flag;
 
                             if (mb_vsskip_flag == 0)
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_flag);
-                                moreDataFlag = mb_skip_flag != 0;
+                                moreDataFlag = mb_skip_flag;
                             }
                             RunLength = 0;
                         }
@@ -27523,12 +27523,12 @@ slice_data_in_3davc_extension() {
                             {
                                 RunLength = 0;
                             }
-                            moreDataFlag = mb_skip_flag != 0;
+                            moreDataFlag = mb_skip_flag;
 
                             if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && mb_skip_flag == 0)
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.mb_vsskip_flag);
-                                moreDataFlag = mb_vsskip_flag != 0;
+                                moreDataFlag = mb_vsskip_flag;
                             }
                         }
 
@@ -27542,7 +27542,7 @@ slice_data_in_3davc_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped) != 0))
+                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.mb_field_decoding_flag);
                     }
@@ -27568,7 +27568,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.end_of_slice_flag);
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -27629,12 +27629,12 @@ slice_data_in_3davc_extension() {
                         if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.mb_vsskip_flag);
-                            moreDataFlag = mb_vsskip_flag != 0;
+                            moreDataFlag = mb_vsskip_flag;
 
                             if (mb_vsskip_flag == 0)
                             {
                                 size += stream.WriteUnsignedIntGolomb(this.mb_skip_flag);
-                                moreDataFlag = mb_skip_flag != 0;
+                                moreDataFlag = mb_skip_flag;
                             }
                             RunLength = 0;
                         }
@@ -27665,12 +27665,12 @@ slice_data_in_3davc_extension() {
                             {
                                 RunLength = 0;
                             }
-                            moreDataFlag = mb_skip_flag != 0;
+                            moreDataFlag = mb_skip_flag;
 
                             if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && mb_skip_flag == 0)
                             {
                                 size += stream.WriteUnsignedIntGolomb(this.mb_vsskip_flag);
-                                moreDataFlag = mb_vsskip_flag != 0;
+                                moreDataFlag = mb_vsskip_flag;
                             }
                         }
 
@@ -27684,7 +27684,7 @@ slice_data_in_3davc_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped) != 0))
+                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.WriteUnsignedInt(1, this.mb_field_decoding_flag);
                     }
@@ -27710,7 +27710,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
                         size += stream.WriteUnsignedIntGolomb(this.end_of_slice_flag);
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -27771,12 +27771,12 @@ slice_data_in_3davc_extension() {
                         if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(mb_vsskip_flag); // mb_vsskip_flag
-                            moreDataFlag = mb_vsskip_flag != 0;
+                            moreDataFlag = mb_vsskip_flag;
 
                             if (mb_vsskip_flag == 0)
                             {
                                 size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_flag); // mb_skip_flag
-                                moreDataFlag = mb_skip_flag != 0;
+                                moreDataFlag = mb_skip_flag;
                             }
                             RunLength = 0;
                         }
@@ -27807,12 +27807,12 @@ slice_data_in_3davc_extension() {
                             {
                                 RunLength = 0;
                             }
-                            moreDataFlag = mb_skip_flag != 0;
+                            moreDataFlag = mb_skip_flag;
 
                             if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && mb_skip_flag == 0)
                             {
                                 size += ItuStream.CalculateUnsignedIntGolomb(mb_vsskip_flag); // mb_vsskip_flag
-                                moreDataFlag = mb_vsskip_flag != 0;
+                                moreDataFlag = mb_vsskip_flag;
                             }
                         }
 
@@ -27826,7 +27826,7 @@ slice_data_in_3davc_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped) != 0))
+                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += 1; // mb_field_decoding_flag
                     }
@@ -27852,7 +27852,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(end_of_slice_flag); // end_of_slice_flag
-                        moreDataFlag = end_of_slice_flag != 0;
+                        moreDataFlag = end_of_slice_flag;
                     }
                 }
                 CurrMbAddr = NextMbAddress(CurrMbAddr);
@@ -28468,7 +28468,7 @@ mb_pred_in_3davc_extension( mb_type ) {
     (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                     {
 
-                        this.mvd_l0[mbPartIdx] = new int[2];
+                        this.mvd_l0[mbPartIdx][0] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l0[mbPartIdx][0][compIdx]);
@@ -28484,7 +28484,7 @@ mb_pred_in_3davc_extension( mb_type ) {
     (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                     {
 
-                        this.mvd_l1[mbPartIdx] = new int[2];
+                        this.mvd_l1[mbPartIdx][0] = new int[2];
                         for (compIdx = 0; compIdx < 2; compIdx++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.mvd_l1[mbPartIdx][0][compIdx]);

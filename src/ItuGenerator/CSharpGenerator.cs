@@ -238,6 +238,11 @@ namespace Sharp{type}
                 {
                     fieldValue = $"= {trimmed.Substring(1)} != 0";
                 }
+
+                if (!fieldValue.Contains("||") && !fieldValue.Contains("&&"))
+                    fieldValue = fieldValue.Replace("_flag    != 0", "_flag");
+                //else if(fieldValue.Contains("flag"))
+                //    fieldValue = fieldValue.Replace("||", "|").Replace("&&", "&");
             }
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
@@ -640,7 +645,6 @@ namespace Sharp{type}
                         int variableIndex = parts[1].IndexOfAny(conditionChars);
                         string variable = parts[1].Substring(variableIndex).TrimStart(conditionChars);
 
-
                         if (!string.IsNullOrWhiteSpace(variable))
                         {
                             foreach (var req in block.RequiresAllocation)
@@ -678,6 +682,12 @@ namespace Sharp{type}
                                 else
                                 {
                                     variableType = variableType + $"[{variable}]";
+                                }
+
+                                // TODO: Fix this workaround
+                                if (req.FieldArray.Contains("[ 0 ]") && variableName.Contains("["))
+                                {
+                                    variableName += "[0]";
                                 }
 
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
@@ -722,7 +732,7 @@ namespace Sharp{type}
                 }
                 else if (!parts[i].Contains('=') && !parts[i].Contains('>') && !parts[i].Contains('<'))
                 {
-                    string trimmed = parts[i].Trim(new char[] { '(', ')' });
+                    string trimmed = parts[i].Trim(new char[] { ' ', '(', ')' });
                     condition = condition.Replace(trimmed, trimmed + " != 0");
                 }
             }

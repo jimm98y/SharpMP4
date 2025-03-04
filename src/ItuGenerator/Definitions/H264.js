@@ -2583,7 +2583,7 @@ multiview_acquisition_info( payloadSize ) {
  num_views_minus1  ue(v) 
  intrinsic_param_flag 5 u(1) 
  extrinsic_param_flag 5 u(1) 
- if( instrinsic_param_flag ) {   
+if (intrinsic_param_flag ) {   
   intrinsic_params_equal_flag 5 u(1) 
   prec_focal_length 5 ue(v) 
   prec_principal_point 5 ue(v) 
