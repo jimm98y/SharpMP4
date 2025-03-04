@@ -829,7 +829,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.delta_scale);
                     nextScale = (lastScale + delta_scale + 256) % 256;
-                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0);
+                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? 1 : 0;
                 }
                 scalingLst[j] = (nextScale == 0) ? lastScale : nextScale;
                 lastScale = scalingLst[j];
@@ -853,7 +853,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
                 {
                     size += stream.WriteSignedIntGolomb(this.delta_scale);
                     nextScale = (lastScale + delta_scale + 256) % 256;
-                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0);
+                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? 1 : 0;
                 }
                 scalingLst[j] = (nextScale == 0) ? lastScale : nextScale;
                 lastScale = scalingLst[j];
@@ -877,7 +877,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
                 {
                     size += ItuStream.CalculateSignedIntGolomb(delta_scale); // delta_scale
                     nextScale = (lastScale + delta_scale + 256) % 256;
-                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0);
+                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? 1 : 0;
                 }
                 scalingLst[j] = (nextScale == 0) ? lastScale : nextScale;
                 lastScale = scalingLst[j];
@@ -3294,7 +3294,7 @@ slice_data() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -3379,7 +3379,7 @@ slice_data() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -3464,7 +3464,7 @@ slice_data() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -15380,7 +15380,7 @@ slice_data_in_scalable_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -15465,7 +15465,7 @@ slice_data_in_scalable_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -15550,7 +15550,7 @@ slice_data_in_scalable_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -27463,7 +27463,7 @@ slice_data_in_3davc_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -27558,7 +27558,7 @@ slice_data_in_3davc_extension() {
 
                     if (slice_type != I && slice_type != SI)
                     {
-                        prevMbSkipped = mb_skip_flag || mb_vsskip_flag;
+                        prevMbSkipped = mb_skip_flag | mb_vsskip_flag;
                     }
 
                     if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)
@@ -27605,7 +27605,7 @@ slice_data_in_3davc_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -27700,7 +27700,7 @@ slice_data_in_3davc_extension() {
 
                     if (slice_type != I && slice_type != SI)
                     {
-                        prevMbSkipped = mb_skip_flag || mb_vsskip_flag;
+                        prevMbSkipped = mb_skip_flag | mb_vsskip_flag;
                     }
 
                     if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)
@@ -27747,7 +27747,7 @@ slice_data_in_3davc_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0);
+                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -27842,7 +27842,7 @@ slice_data_in_3davc_extension() {
 
                     if (slice_type != I && slice_type != SI)
                     {
-                        prevMbSkipped = mb_skip_flag || mb_vsskip_flag;
+                        prevMbSkipped = mb_skip_flag | mb_vsskip_flag;
                     }
 
                     if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)

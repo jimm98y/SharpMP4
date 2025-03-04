@@ -241,8 +241,12 @@ namespace Sharp{type}
 
                 if (!fieldValue.Contains("||") && !fieldValue.Contains("&&"))
                     fieldValue = fieldValue.Replace("_flag    != 0", "_flag");
-                //else if(fieldValue.Contains("flag"))
-                //    fieldValue = fieldValue.Replace("||", "|").Replace("&&", "&");
+                
+                if (fieldValue.Contains("flag") && !fieldValue.Contains(")"))
+                    fieldValue = fieldValue.Replace("||", "|").Replace("&&", "&");
+                
+                if (((fieldValue.Contains("==") || fieldValue.Contains(">") || fieldValue.Contains("<"))) && !fieldValue.Contains("?") && !fieldValue.Contains("<<") && !fieldValue.Contains(">>"))
+                    fieldValue += " ? 1 : 0";
             }
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
