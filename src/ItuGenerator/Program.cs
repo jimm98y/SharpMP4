@@ -19,6 +19,7 @@ partial class Program
             definitions = definitions
                 .Replace("3dv_acquisition_idc", "three_dv_acquisition_idc")
                 .Replace("3dv_acquisition_element", "three_dv_acquisition_element")
+                .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
                 .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
 
             var parsed = Parser.ItuClasses.ParseOrThrow(definitions);

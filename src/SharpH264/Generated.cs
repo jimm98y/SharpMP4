@@ -828,8 +828,8 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
                 if (nextScale != 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.delta_scale);
-                    nextScale = (lastScale + delta_scale + 256) % 256;
-                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? 1 : 0;
+                    nextScale = (uint)(lastScale + delta_scale + 256) % 256;
+                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? (uint)1 : (uint)0;
                 }
                 scalingLst[j] = (nextScale == 0) ? lastScale : nextScale;
                 lastScale = scalingLst[j];
@@ -852,8 +852,8 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
                 if (nextScale != 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.delta_scale);
-                    nextScale = (lastScale + delta_scale + 256) % 256;
-                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? 1 : 0;
+                    nextScale = (uint)(lastScale + delta_scale + 256) % 256;
+                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? (uint)1 : (uint)0;
                 }
                 scalingLst[j] = (nextScale == 0) ? lastScale : nextScale;
                 lastScale = scalingLst[j];
@@ -876,8 +876,8 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
                 if (nextScale != 0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(delta_scale); // delta_scale
-                    nextScale = (lastScale + delta_scale + 256) % 256;
-                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? 1 : 0;
+                    nextScale = (uint)(lastScale + delta_scale + 256) % 256;
+                    useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? (uint)1 : (uint)0;
                 }
                 scalingLst[j] = (nextScale == 0) ? lastScale : nextScale;
                 lastScale = scalingLst[j];
@@ -3294,7 +3294,7 @@ slice_data() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -3379,7 +3379,7 @@ slice_data() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -3464,7 +3464,7 @@ slice_data() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -15380,7 +15380,7 @@ slice_data_in_scalable_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -15465,7 +15465,7 @@ slice_data_in_scalable_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -15550,7 +15550,7 @@ slice_data_in_scalable_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -21012,7 +21012,7 @@ if (intrinsic_param_flag ) {
   prec_focal_length 5 ue(v) 
   prec_principal_point 5 ue(v) 
   prec_skew_factor 5 ue(v) 
-  for( i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1; 
+  for( i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1); 
    i++ ) { 
   
    sign_focal_length_x[ i ] 5 u(1) 
@@ -21138,22 +21138,22 @@ if (intrinsic_param_flag ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_principal_point);
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_skew_factor);
 
-                this.sign_focal_length_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.exponent_focal_length_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.mantissa_focal_length_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.sign_focal_length_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.exponent_focal_length_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.mantissa_focal_length_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.sign_principal_point_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.exponent_principal_point_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.mantissa_principal_point_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.sign_principal_point_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.exponent_principal_point_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.mantissa_principal_point_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.sign_skew_factor = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.exponent_skew_factor = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                this.mantissa_skew_factor = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1];
-                for (i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1;
+                this.sign_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.exponent_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.mantissa_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_focal_length_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.exponent_focal_length_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.mantissa_focal_length_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_principal_point_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.exponent_principal_point_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.mantissa_principal_point_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_principal_point_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.exponent_principal_point_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.mantissa_principal_point_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_skew_factor = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.exponent_skew_factor = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.mantissa_skew_factor = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1);
    i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_x[i]);
@@ -21238,7 +21238,7 @@ if (intrinsic_param_flag ) {
                 size += stream.WriteUnsignedIntGolomb(this.prec_principal_point);
                 size += stream.WriteUnsignedIntGolomb(this.prec_skew_factor);
 
-                for (i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1;
+                for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1);
    i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.sign_focal_length_x[i]);
@@ -21308,7 +21308,7 @@ if (intrinsic_param_flag ) {
                 size += ItuStream.CalculateUnsignedIntGolomb(prec_principal_point); // prec_principal_point
                 size += ItuStream.CalculateUnsignedIntGolomb(prec_skew_factor); // prec_skew_factor
 
-                for (i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1;
+                for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1);
    i++)
                 {
                     size += 1; // sign_focal_length_x
@@ -27463,7 +27463,7 @@ slice_data_in_3davc_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -27605,7 +27605,7 @@ slice_data_in_3davc_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.mb_skip_run);
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
@@ -27747,7 +27747,7 @@ slice_data_in_3davc_extension() {
                     if (entropy_coding_mode_flag == 0)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(mb_skip_run); // mb_skip_run
-                        prevMbSkipped = (mb_skip_run > 0) ? 1 : 0;
+                        prevMbSkipped = (mb_skip_run > 0) ? (uint)1 : (uint)0;
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
