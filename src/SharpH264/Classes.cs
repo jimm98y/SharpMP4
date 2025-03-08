@@ -23,6 +23,13 @@ namespace SharpH264
         public static bool IsSI(uint value) { return value % 5 == SI; }
     }
 
+    public class MbTypes
+    {
+        public const uint B_Direct_8x8 = 0;
+        public const uint B_Direct_16x16 = 0;
+        public const uint Direct = 0;
+    }
+
     public static class ScalingLists
     {
         public static uint[] Default_4x4_Intra = new uint[] { 6, 13, 13, 20, 20, 20, 28, 28, 28, 28, 32, 32, 32, 37, 37, 42 };

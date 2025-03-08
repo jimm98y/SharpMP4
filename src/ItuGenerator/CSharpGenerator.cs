@@ -765,6 +765,10 @@ namespace Sharp{type}
                 condition = condition.Replace("slice_type  ==  EB", "FrameTypes.IsB(slice_type)");
                 condition = condition.Replace("slice_type  ==  EI", "FrameTypes.IsI(slice_type)");
                 condition = condition.Replace("slice_type  !=  EI", "!FrameTypes.IsI(slice_type)");
+
+                condition = condition.Replace("!=  Direct", "!=  MbTypes.Direct");
+                condition = condition.Replace("!=  B_Direct_8x8", "!=  MbTypes.B_Direct_8x8");
+                condition = condition.Replace("!=  B_Direct_16x16", "!=  MbTypes.B_Direct_16x16");
             }
 
             condition = condition.Replace("Abs(", "Math.Abs(");

@@ -4371,7 +4371,7 @@ macroblock_layer() {
                     for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                     {
 
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
                             if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -4402,7 +4402,7 @@ macroblock_layer() {
                     if (CodedBlockPatternLuma > 0 &&
      transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
-     (mb_type != B_Direct_16x16 || direct_8x8_inference_flag != 0))
+     (mb_type != MbTypes.B_Direct_16x16 || direct_8x8_inference_flag != 0))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.transform_size_8x8_flag);
                     }
@@ -4458,7 +4458,7 @@ macroblock_layer() {
                     for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                     {
 
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
                             if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -4489,7 +4489,7 @@ macroblock_layer() {
                     if (CodedBlockPatternLuma > 0 &&
      transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
-     (mb_type != B_Direct_16x16 || direct_8x8_inference_flag != 0))
+     (mb_type != MbTypes.B_Direct_16x16 || direct_8x8_inference_flag != 0))
                     {
                         size += stream.WriteUnsignedInt(1, this.transform_size_8x8_flag);
                     }
@@ -4545,7 +4545,7 @@ macroblock_layer() {
                     for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                     {
 
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
                             if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -4576,7 +4576,7 @@ macroblock_layer() {
                     if (CodedBlockPatternLuma > 0 &&
      transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
-     (mb_type != B_Direct_16x16 || direct_8x8_inference_flag != 0))
+     (mb_type != MbTypes.B_Direct_16x16 || direct_8x8_inference_flag != 0))
                     {
                         size += 1; // transform_size_8x8_flag
                     }
@@ -4720,7 +4720,7 @@ mb_pred( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 this.ref_idx_l0 = new int[NumMbPart(mb_type)];
@@ -4828,7 +4828,7 @@ mb_pred( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
@@ -4930,7 +4930,7 @@ mb_pred( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
@@ -5071,7 +5071,7 @@ sub_mb_pred( mb_type ) {
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
    mb_type != P_8x8ref0 &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
@@ -5084,7 +5084,7 @@ sub_mb_pred( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-     sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+     sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
      SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
@@ -5095,7 +5095,7 @@ sub_mb_pred( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
@@ -5118,7 +5118,7 @@ sub_mb_pred( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
@@ -5159,7 +5159,7 @@ sub_mb_pred( mb_type ) {
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
    mb_type != P_8x8ref0 &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
@@ -5171,7 +5171,7 @@ sub_mb_pred( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-     sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+     sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
      SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
@@ -5181,7 +5181,7 @@ sub_mb_pred( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
@@ -5201,7 +5201,7 @@ sub_mb_pred( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
@@ -5240,7 +5240,7 @@ sub_mb_pred( mb_type ) {
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
    mb_type != P_8x8ref0 &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
@@ -5252,7 +5252,7 @@ sub_mb_pred( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-     sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+     sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
      SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
@@ -5262,7 +5262,7 @@ sub_mb_pred( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
@@ -5282,7 +5282,7 @@ sub_mb_pred( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
@@ -15764,7 +15764,7 @@ macroblock_layer_in_scalable_extension() {
                         for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                         {
 
-                            if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                            if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                             {
 
                                 if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -15812,7 +15812,7 @@ macroblock_layer_in_scalable_extension() {
      (base_mode_flag != 0 ||
       (mb_type != I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
-        (mb_type != B_Direct_16x16 ||
+        (mb_type != MbTypes.B_Direct_16x16 ||
           direct_8x8_inference_flag != 0))))
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.transform_size_8x8_flag);
@@ -15883,7 +15883,7 @@ macroblock_layer_in_scalable_extension() {
                         for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                         {
 
-                            if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                            if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                             {
 
                                 if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -15931,7 +15931,7 @@ macroblock_layer_in_scalable_extension() {
      (base_mode_flag != 0 ||
       (mb_type != I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
-        (mb_type != B_Direct_16x16 ||
+        (mb_type != MbTypes.B_Direct_16x16 ||
           direct_8x8_inference_flag != 0))))
                         {
                             size += stream.WriteUnsignedInt(1, this.transform_size_8x8_flag);
@@ -16002,7 +16002,7 @@ macroblock_layer_in_scalable_extension() {
                         for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                         {
 
-                            if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                            if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                             {
 
                                 if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -16050,7 +16050,7 @@ macroblock_layer_in_scalable_extension() {
      (base_mode_flag != 0 ||
       (mb_type != I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
-        (mb_type != B_Direct_16x16 ||
+        (mb_type != MbTypes.B_Direct_16x16 ||
           direct_8x8_inference_flag != 0))))
                         {
                             size += 1; // transform_size_8x8_flag
@@ -16212,7 +16212,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 if (InCropWindow(CurrMbAddr != 0) &&
@@ -16347,7 +16347,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 if (InCropWindow(CurrMbAddr != 0) &&
@@ -16474,7 +16474,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 if (InCropWindow(CurrMbAddr != 0) &&
@@ -16658,7 +16658,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != Direct &&
+                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.motion_prediction_flag_l0[mbPartIdx]);
@@ -16669,7 +16669,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != Direct &&
+                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.motion_prediction_flag_l1[mbPartIdx]);
@@ -16684,7 +16684,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
    mb_type != P_8x8ref0 &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 &&
    motion_prediction_flag_l0[mbPartIdx] == 0)
                 {
@@ -16698,7 +16698,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 &&
    motion_prediction_flag_l1[mbPartIdx] == 0)
                 {
@@ -16710,7 +16710,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
@@ -16733,7 +16733,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
@@ -16774,7 +16774,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != Direct &&
+                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                     {
                         size += stream.WriteUnsignedInt(1, this.motion_prediction_flag_l0[mbPartIdx]);
@@ -16784,7 +16784,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != Direct &&
+                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                     {
                         size += stream.WriteUnsignedInt(1, this.motion_prediction_flag_l1[mbPartIdx]);
@@ -16798,7 +16798,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
    mb_type != P_8x8ref0 &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 &&
    motion_prediction_flag_l0[mbPartIdx] == 0)
                 {
@@ -16811,7 +16811,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 &&
    motion_prediction_flag_l1[mbPartIdx] == 0)
                 {
@@ -16822,7 +16822,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
@@ -16842,7 +16842,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
@@ -16881,7 +16881,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != Direct &&
+                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                     {
                         size += 1; // motion_prediction_flag_l0
@@ -16891,7 +16891,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != Direct &&
+                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                     {
                         size += 1; // motion_prediction_flag_l1
@@ -16905,7 +16905,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
    mb_type != P_8x8ref0 &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 &&
    motion_prediction_flag_l0[mbPartIdx] == 0)
                 {
@@ -16918,7 +16918,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
-   sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+   sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 &&
    motion_prediction_flag_l1[mbPartIdx] == 0)
                 {
@@ -16929,7 +16929,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
                 {
 
@@ -16949,7 +16949,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
 
@@ -24864,6 +24864,60 @@ depth_sampling_info( payloadSize ) {
     /*
   
 
+constrained_depth_parameter_set_identifier(payloadSize) {
+    max_dps_id 5  ue(v)
+    max_dps_id_diff  5  ue(v)
+}
+    */
+    public class ConstrainedDepthParameterSetIdentifier : IItuSerializable
+    {
+        private uint max_dps_id;
+        public uint MaxDpsId { get { return max_dps_id; } set { max_dps_id = value; } }
+        private uint max_dps_id_diff;
+        public uint MaxDpsIdDiff { get { return max_dps_id_diff; } set { max_dps_id_diff = value; } }
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+
+        public ConstrainedDepthParameterSetIdentifier(uint payloadSize)
+        {
+            this.payloadSize = payloadSize;
+        }
+
+        public ulong Read(ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedIntGolomb(size, out this.max_dps_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.max_dps_id_diff);
+
+            return size;
+        }
+
+        public ulong Write(ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedIntGolomb(this.max_dps_id);
+            size += stream.WriteUnsignedIntGolomb(this.max_dps_id_diff);
+
+            return size;
+        }
+
+        public ulong CalculateSize(ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += ItuStream.CalculateUnsignedIntGolomb(max_dps_id); // max_dps_id
+            size += ItuStream.CalculateUnsignedIntGolomb(max_dps_id_diff); // max_dps_id_diff
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
 depth_grid_position() { 
 depth_grid_pos_x_fp 5 u(20) 
 depth_grid_pos_x_dp 5 u(4) 
@@ -28016,7 +28070,7 @@ macroblock_layer_in_3davc_extension() {
                     for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                     {
 
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
                             if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -28047,7 +28101,7 @@ macroblock_layer_in_3davc_extension() {
                     if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
      transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
-     (mb_type != B_Direct_16x16 ||
+     (mb_type != MbTypes.B_Direct_16x16 ||
        direct_8x8_inference_flag != 0))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.transform_size_8x8_flag);
@@ -28122,7 +28176,7 @@ macroblock_layer_in_3davc_extension() {
                     for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                     {
 
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
                             if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -28153,7 +28207,7 @@ macroblock_layer_in_3davc_extension() {
                     if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
      transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
-     (mb_type != B_Direct_16x16 ||
+     (mb_type != MbTypes.B_Direct_16x16 ||
        direct_8x8_inference_flag != 0))
                     {
                         size += stream.WriteUnsignedInt(1, this.transform_size_8x8_flag);
@@ -28228,7 +28282,7 @@ macroblock_layer_in_3davc_extension() {
                     for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                     {
 
-                        if (sub_mb_type[mbPartIdx] != B_Direct_8x8)
+                        if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
                             if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
@@ -28259,7 +28313,7 @@ macroblock_layer_in_3davc_extension() {
                     if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
      transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
-     (mb_type != B_Direct_16x16 ||
+     (mb_type != MbTypes.B_Direct_16x16 ||
        direct_8x8_inference_flag != 0))
                     {
                         size += 1; // transform_size_8x8_flag
@@ -28420,7 +28474,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 this.ref_idx_l0 = new int[NumMbPart(mb_type)];
@@ -28543,7 +28597,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
@@ -28658,7 +28712,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != Direct)
+            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
@@ -28805,7 +28859,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
+                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
 
@@ -28823,7 +28877,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-     sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+     sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
      SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
@@ -28839,7 +28893,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
                     this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -28859,7 +28913,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
                     this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -28894,7 +28948,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
+                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
 
@@ -28910,7 +28964,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-     sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+     sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
      SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
@@ -28925,7 +28979,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -28942,7 +28996,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -28975,7 +29029,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
+                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
 
@@ -28991,7 +29045,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
 
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-     sub_mb_type[mbPartIdx] != B_Direct_8x8 &&
+     sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
      SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
@@ -29006,7 +29060,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -29023,7 +29077,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
