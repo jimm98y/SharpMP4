@@ -740,10 +740,15 @@ namespace Sharp{type}
                 else if (!parts[i].Contains('=') && !parts[i].Contains('>') && !parts[i].Contains('<'))
                 {
                     string trimmed = parts[i].Trim(new char[] { ' ', '(', ')' });
-                    condition = condition.Replace(trimmed, trimmed + " != 0");
+                    if (!condition.Contains("()")) // if (more_rbsp_data())
+                    {
+                        condition = condition.Replace(trimmed, trimmed + " != 0");
+                    }
                 }
             }
 
+            condition = condition.Replace("Abs(", "Math.Abs(");
+            
             return condition;
         }
 

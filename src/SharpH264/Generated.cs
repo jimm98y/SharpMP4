@@ -1101,7 +1101,7 @@ subset_seq_parameter_set_rbsp() {
             if (additional_extension2_flag == 1)
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.additional_extension2_data_flag);
                 }
@@ -1155,7 +1155,7 @@ subset_seq_parameter_set_rbsp() {
             if (additional_extension2_flag == 1)
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += stream.WriteUnsignedInt(1, this.additional_extension2_data_flag);
                 }
@@ -1209,7 +1209,7 @@ subset_seq_parameter_set_rbsp() {
             if (additional_extension2_flag == 1)
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += 1; // additional_extension2_data_flag
                 }
@@ -1414,7 +1414,7 @@ pic_parameter_set_rbsp() {
             size += stream.ReadUnsignedInt(size, 1, out this.constrained_intra_pred_flag);
             size += stream.ReadUnsignedInt(size, 1, out this.redundant_pic_cnt_present_flag);
 
-            if (more_rbsp_data != 0())
+            if (more_rbsp_data())
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.transform_8x8_mode_flag);
                 size += stream.ReadUnsignedInt(size, 1, out this.pic_scaling_matrix_present_flag);
@@ -1512,7 +1512,7 @@ pic_parameter_set_rbsp() {
             size += stream.WriteUnsignedInt(1, this.constrained_intra_pred_flag);
             size += stream.WriteUnsignedInt(1, this.redundant_pic_cnt_present_flag);
 
-            if (more_rbsp_data != 0())
+            if (more_rbsp_data())
             {
                 size += stream.WriteUnsignedInt(1, this.transform_8x8_mode_flag);
                 size += stream.WriteUnsignedInt(1, this.pic_scaling_matrix_present_flag);
@@ -1608,7 +1608,7 @@ pic_parameter_set_rbsp() {
             size += 1; // constrained_intra_pred_flag
             size += 1; // redundant_pic_cnt_present_flag
 
-            if (more_rbsp_data != 0())
+            if (more_rbsp_data())
             {
                 size += 1; // transform_8x8_mode_flag
                 size += 1; // pic_scaling_matrix_present_flag
@@ -1676,7 +1676,7 @@ sei_rbsp() {
             do
             {
                 size += stream.ReadClass<SeiMessage>(size, out this.sei_message);
-            } while (more_rbsp_data != 0());
+            } while (more_rbsp_data());
             size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
 
             return size;
@@ -1690,7 +1690,7 @@ sei_rbsp() {
             do
             {
                 size += stream.WriteClass<SeiMessage>(this.sei_message);
-            } while (more_rbsp_data != 0());
+            } while (more_rbsp_data());
             size += stream.WriteClass<RbspTrailingBits>(this.rbsp_trailing_bits);
 
             return size;
@@ -1704,7 +1704,7 @@ sei_rbsp() {
             do
             {
                 size += ItuStream.CalculateClassSize<SeiMessage>(sei_message); // sei_message
-            } while (more_rbsp_data != 0());
+            } while (more_rbsp_data());
             size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
@@ -2375,7 +2375,7 @@ rbsp_slice_trailing_bits() {
             if (entropy_coding_mode_flag != 0)
             {
 
-                while (more_rbsp_trailing_data != 0())
+                while (more_rbsp_trailing_data())
                 {
                     size += stream.ReadFixed(size, 16, out this.cabac_zero_word); // equal to 0x0000 
                 }
@@ -2393,7 +2393,7 @@ rbsp_slice_trailing_bits() {
             if (entropy_coding_mode_flag != 0)
             {
 
-                while (more_rbsp_trailing_data != 0())
+                while (more_rbsp_trailing_data())
                 {
                     size += stream.WriteFixed(16, this.cabac_zero_word); // equal to 0x0000 
                 }
@@ -2411,7 +2411,7 @@ rbsp_slice_trailing_bits() {
             if (entropy_coding_mode_flag != 0)
             {
 
-                while (more_rbsp_trailing_data != 0())
+                while (more_rbsp_trailing_data())
                 {
                     size += 16; // cabac_zero_word
                 }
@@ -6086,7 +6086,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             suffixLength = 1;
                         }
 
-                        if (Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
+                        if (Math.Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
                     suffixLength < 6)
                         {
                             suffixLength++;
@@ -6204,7 +6204,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             suffixLength = 1;
                         }
 
-                        if (Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
+                        if (Math.Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
                     suffixLength < 6)
                         {
                             suffixLength++;
@@ -6322,7 +6322,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             suffixLength = 1;
                         }
 
-                        if (Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
+                        if (Math.Abs(levelVal[i]) > (3 << (int)(suffixLength - 1)) &&
                     suffixLength < 6)
                         {
                             suffixLength++;
@@ -14200,17 +14200,17 @@ prefix_nal_unit_svc() {
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
 
-                    while (more_rbsp_data != 0())
+                    while (more_rbsp_data())
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_data_flag);
                     }
                 }
                 size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
             }
-            else if (more_rbsp_data != 0())
+            else if (more_rbsp_data())
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_data_flag);
                 }
@@ -14239,17 +14239,17 @@ prefix_nal_unit_svc() {
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
 
-                    while (more_rbsp_data != 0())
+                    while (more_rbsp_data())
                     {
                         size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_data_flag);
                     }
                 }
                 size += stream.WriteClass<RbspTrailingBits>(this.rbsp_trailing_bits);
             }
-            else if (more_rbsp_data != 0())
+            else if (more_rbsp_data())
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_data_flag);
                 }
@@ -14278,17 +14278,17 @@ prefix_nal_unit_svc() {
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
 
-                    while (more_rbsp_data != 0())
+                    while (more_rbsp_data())
                     {
                         size += 1; // additional_prefix_nal_unit_extension_data_flag
                     }
                 }
                 size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
             }
-            else if (more_rbsp_data != 0())
+            else if (more_rbsp_data())
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += 1; // additional_prefix_nal_unit_extension_data_flag
                 }
@@ -18499,7 +18499,7 @@ scalable_nesting( payloadSize ) {
             do
             {
                 size += stream.ReadClass<SeiMessage>(size, out this.sei_message);
-            } while (more_rbsp_data != 0());
+            } while (more_rbsp_data());
 
             return size;
         }
@@ -18531,7 +18531,7 @@ scalable_nesting( payloadSize ) {
             do
             {
                 size += stream.WriteClass<SeiMessage>(this.sei_message);
-            } while (more_rbsp_data != 0());
+            } while (more_rbsp_data());
 
             return size;
         }
@@ -18563,7 +18563,7 @@ scalable_nesting( payloadSize ) {
             do
             {
                 size += ItuStream.CalculateClassSize<SeiMessage>(sei_message); // sei_message
-            } while (more_rbsp_data != 0());
+            } while (more_rbsp_data());
 
             return size;
         }
@@ -25822,7 +25822,7 @@ depth_parameter_set_rbsp() {
             if (depth_param_additional_extension_flag == 1)
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_data_flag);
                 }
@@ -25871,7 +25871,7 @@ depth_parameter_set_rbsp() {
             if (depth_param_additional_extension_flag == 1)
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += stream.WriteUnsignedInt(1, this.depth_param_additional_extension_data_flag);
                 }
@@ -25920,7 +25920,7 @@ depth_parameter_set_rbsp() {
             if (depth_param_additional_extension_flag == 1)
             {
 
-                while (more_rbsp_data != 0())
+                while (more_rbsp_data())
                 {
                     size += 1; // depth_param_additional_extension_data_flag
                 }
