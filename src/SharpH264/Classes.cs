@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,96 @@ namespace SharpH264
         public static bool IsSI(uint value) { return value % 5 == SI; }
     }
 
+    public class H264Constants
+    {
+        public const uint Extended_ISO = 255;
+        public const uint Extended_SAR = 255;
+    }
+
     public class MbTypes
     {
-        public const uint B_Direct_8x8 = 0;
+        public const uint I_NxN = 0;
+        public const uint I_16x16_0_0_0 = 1;
+        public const uint I_16x16_1_0_0 = 2;
+        public const uint I_16x16_2_0_0 = 3;
+        public const uint I_16x16_3_0_0 = 4;
+        public const uint I_16x16_0_1_0 = 5;
+        public const uint I_16x16_1_1_0 = 6;
+        public const uint I_16x16_2_1_0 = 7;
+        public const uint I_16x16_3_1_0 = 8;
+        public const uint I_16x16_0_2_0 = 9;
+        public const uint I_16x16_1_2_0 = 10;
+        public const uint I_16x16_2_2_0 = 11;
+        public const uint I_16x16_3_2_0 = 12;
+        public const uint I_16x16_0_0_1 = 13;
+        public const uint I_16x16_1_0_1 = 14;
+        public const uint I_16x16_2_0_1 = 15;
+        public const uint I_16x16_3_0_1 = 16;
+        public const uint I_16x16_0_1_1 = 17;
+        public const uint I_16x16_1_1_1 = 18;
+        public const uint I_16x16_2_1_1 = 19;
+        public const uint I_16x16_3_1_1 = 20;
+        public const uint I_16x16_0_2_1 = 21;
+        public const uint I_16x16_1_2_1 = 22;
+        public const uint I_16x16_2_2_1 = 23;
+        public const uint I_16x16_3_2_1 = 24;
+        public const uint I_PCM = 25;
+
+        public const uint P_L0_16x16 = 0;
+        public const uint P_L0_L0_16x8 = 1;
+        public const uint P_L0_L0_8x16 = 2;
+        public const uint P_8x8 = 3;
+        public const uint P_8x8ref0 = 4;
+
         public const uint B_Direct_16x16 = 0;
-        public const uint Direct = 0;
+        public const uint B_L0_16x16 = 1;
+        public const uint B_L1_16x16 = 2;
+        public const uint B_Bi_16x16 = 3;
+        public const uint B_L0_L0_16x8 = 4;
+        public const uint B_L0_L0_8x16 = 5;
+        public const uint B_L1_L1_16x8 = 6;
+        public const uint B_L1_L1_8x16 = 7;
+        public const uint B_L0_L1_16x8 = 8;
+        public const uint B_L0_L1_8x16 = 9;
+        public const uint B_L1_L0_16x8 = 10;
+        public const uint B_L1_L0_8x16 = 11;
+        public const uint B_L0_Bi_16x8 = 12;
+        public const uint B_L0_Bi_8x16 = 13;
+        public const uint B_L1_Bi_16x8 = 14;
+        public const uint B_L1_Bi_8x16 = 15;
+        public const uint B_Bi_L0_16x8 = 16;
+        public const uint B_Bi_L0_8x16 = 17;
+        public const uint B_Bi_L1_16x8 = 18;
+        public const uint B_Bi_L1_8x16 = 19;
+        public const uint B_Bi_Bi_16x8 = 20;
+        public const uint B_Bi_Bi_8x16 = 21;
+        public const uint B_8x8 = 22;
+
+        public const uint B_Direct_8x8 = 0;
+
+        public static MbPartPredModes MbPartPredMode(uint mb_type, uint part)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static MbPartPredModes SubMbPredMode(uint mb_type)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public enum MbPartPredModes
+    {
+        NA,
+        Direct,
+
+        Intra_4x4,
+        Intra_8x8,
+        Intra_16x16,
+
+        Pred_L0,
+        Pred_L1,
+        BiPred
     }
 
     public static class ScalingLists

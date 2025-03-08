@@ -2375,7 +2375,7 @@ rbsp_slice_trailing_bits() {
             if (entropy_coding_mode_flag != 0)
             {
 
-                while (more_rbsp_trailing_data())
+                while (stream.MoreRbspTrailingData())
                 {
                     size += stream.ReadFixed(size, 16, out this.cabac_zero_word); // equal to 0x0000 
                 }
@@ -2393,7 +2393,7 @@ rbsp_slice_trailing_bits() {
             if (entropy_coding_mode_flag != 0)
             {
 
-                while (more_rbsp_trailing_data())
+                while (stream.MoreRbspTrailingData())
                 {
                     size += stream.WriteFixed(16, this.cabac_zero_word); // equal to 0x0000 
                 }
@@ -2411,7 +2411,7 @@ rbsp_slice_trailing_bits() {
             if (entropy_coding_mode_flag != 0)
             {
 
-                while (more_rbsp_trailing_data())
+                while (stream.MoreRbspTrailingData())
                 {
                     size += 16; // cabac_zero_word
                 }
@@ -4338,7 +4338,7 @@ macroblock_layer() {
             uint mbPartIdx = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.mb_type);
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -4362,8 +4362,8 @@ macroblock_layer() {
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
 
-                if (mb_type != I_NxN &&
-   MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                if (mb_type != MbTypes.I_NxN &&
+   MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
    NumMbPart(mb_type) == 4)
                 {
                     size += stream.ReadClass<SubMbPred>(size, out this.sub_mb_pred);
@@ -4388,19 +4388,19 @@ macroblock_layer() {
                 else
                 {
 
-                    if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                    if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.transform_size_8x8_flag);
                     }
                     size += stream.ReadClass<MbPred>(size, out this.mb_pred);
                 }
 
-                if (MbPartPredMode(mb_type, 0) != Intra_16x16)
+                if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.coded_block_pattern);
 
                     if (CodedBlockPatternLuma > 0 &&
-     transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
+     transform_8x8_mode_flag != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 || direct_8x8_inference_flag != 0))
                     {
@@ -4409,7 +4409,7 @@ macroblock_layer() {
                 }
 
                 if (CodedBlockPatternLuma > 0 || CodedBlockPatternChroma > 0 ||
-   MbPartPredMode(mb_type, 0) == Intra_16x16)
+   MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.mb_qp_delta);
                     size += stream.ReadClass<Residual>(size, out this.residual);
@@ -4427,7 +4427,7 @@ macroblock_layer() {
             uint mbPartIdx = 0;
             size += stream.WriteUnsignedIntGolomb(this.mb_type);
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -4449,8 +4449,8 @@ macroblock_layer() {
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
 
-                if (mb_type != I_NxN &&
-   MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                if (mb_type != MbTypes.I_NxN &&
+   MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
    NumMbPart(mb_type) == 4)
                 {
                     size += stream.WriteClass<SubMbPred>(this.sub_mb_pred);
@@ -4475,19 +4475,19 @@ macroblock_layer() {
                 else
                 {
 
-                    if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                    if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                     {
                         size += stream.WriteUnsignedInt(1, this.transform_size_8x8_flag);
                     }
                     size += stream.WriteClass<MbPred>(this.mb_pred);
                 }
 
-                if (MbPartPredMode(mb_type, 0) != Intra_16x16)
+                if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.coded_block_pattern);
 
                     if (CodedBlockPatternLuma > 0 &&
-     transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
+     transform_8x8_mode_flag != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 || direct_8x8_inference_flag != 0))
                     {
@@ -4496,7 +4496,7 @@ macroblock_layer() {
                 }
 
                 if (CodedBlockPatternLuma > 0 || CodedBlockPatternChroma > 0 ||
-   MbPartPredMode(mb_type, 0) == Intra_16x16)
+   MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += stream.WriteSignedIntGolomb(this.mb_qp_delta);
                     size += stream.WriteClass<Residual>(this.residual);
@@ -4514,7 +4514,7 @@ macroblock_layer() {
             uint mbPartIdx = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(mb_type); // mb_type
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -4536,8 +4536,8 @@ macroblock_layer() {
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
 
-                if (mb_type != I_NxN &&
-   MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                if (mb_type != MbTypes.I_NxN &&
+   MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
    NumMbPart(mb_type) == 4)
                 {
                     size += ItuStream.CalculateClassSize<SubMbPred>(sub_mb_pred); // sub_mb_pred
@@ -4562,19 +4562,19 @@ macroblock_layer() {
                 else
                 {
 
-                    if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                    if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                     {
                         size += 1; // transform_size_8x8_flag
                     }
                     size += ItuStream.CalculateClassSize<MbPred>(mb_pred); // mb_pred
                 }
 
-                if (MbPartPredMode(mb_type, 0) != Intra_16x16)
+                if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(coded_block_pattern); // coded_block_pattern
 
                     if (CodedBlockPatternLuma > 0 &&
-     transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
+     transform_8x8_mode_flag != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 || direct_8x8_inference_flag != 0))
                     {
@@ -4583,7 +4583,7 @@ macroblock_layer() {
                 }
 
                 if (CodedBlockPatternLuma > 0 || CodedBlockPatternChroma > 0 ||
-   MbPartPredMode(mb_type, 0) == Intra_16x16)
+   MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
                     size += ItuStream.CalculateClassSize<Residual>(residual); // residual
@@ -4678,12 +4678,12 @@ mb_pred( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
@@ -4699,7 +4699,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
@@ -4720,7 +4720,7 @@ mb_pred( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 this.ref_idx_l0 = new int[NumMbPart(mb_type)];
@@ -4729,7 +4729,7 @@ mb_pred( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
                     }
@@ -4741,7 +4741,7 @@ mb_pred( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
                     }
@@ -4751,7 +4751,7 @@ mb_pred( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
 
                         this.mvd_l0[mbPartIdx][0] = new int[2];
@@ -4766,7 +4766,7 @@ mb_pred( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
 
                         this.mvd_l1[mbPartIdx][0] = new int[2];
@@ -4790,12 +4790,12 @@ mb_pred( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
@@ -4809,7 +4809,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
@@ -4828,7 +4828,7 @@ mb_pred( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
@@ -4836,7 +4836,7 @@ mb_pred( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
                         size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
                     }
@@ -4847,7 +4847,7 @@ mb_pred( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
                         size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
                     }
@@ -4856,7 +4856,7 @@ mb_pred( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -4869,7 +4869,7 @@ mb_pred( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -4892,12 +4892,12 @@ mb_pred( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
@@ -4911,7 +4911,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
@@ -4930,7 +4930,7 @@ mb_pred( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
@@ -4938,7 +4938,7 @@ mb_pred( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
                     }
@@ -4949,7 +4949,7 @@ mb_pred( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
                     }
@@ -4958,7 +4958,7 @@ mb_pred( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -4971,7 +4971,7 @@ mb_pred( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -5070,9 +5070,9 @@ sub_mb_pred( mb_type ) {
 
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-   mb_type != P_8x8ref0 &&
+   mb_type != MbTypes.P_8x8ref0 &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
                 }
@@ -5085,7 +5085,7 @@ sub_mb_pred( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
      sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+     MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
                 }
@@ -5096,7 +5096,7 @@ sub_mb_pred( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
 
                     this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -5119,7 +5119,7 @@ sub_mb_pred( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
 
                     this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -5158,9 +5158,9 @@ sub_mb_pred( mb_type ) {
 
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-   mb_type != P_8x8ref0 &&
+   mb_type != MbTypes.P_8x8ref0 &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
                 }
@@ -5172,7 +5172,7 @@ sub_mb_pred( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
      sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+     MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
                 }
@@ -5182,7 +5182,7 @@ sub_mb_pred( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
 
                     for (subMbPartIdx = 0;
@@ -5202,7 +5202,7 @@ sub_mb_pred( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
 
                     for (subMbPartIdx = 0;
@@ -5239,9 +5239,9 @@ sub_mb_pred( mb_type ) {
 
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
-   mb_type != P_8x8ref0 &&
+   mb_type != MbTypes.P_8x8ref0 &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
                 }
@@ -5253,7 +5253,7 @@ sub_mb_pred( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
      sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+     MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
                 }
@@ -5263,7 +5263,7 @@ sub_mb_pred( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
 
                     for (subMbPartIdx = 0;
@@ -5283,7 +5283,7 @@ sub_mb_pred( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
 
                     for (subMbPartIdx = 0;
@@ -5690,7 +5690,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             uint i4x4 = 0;
             uint i = 0;
 
-            if (startIdx == 0 && MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (startIdx == 0 && MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
                 size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
             }
@@ -5707,7 +5707,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         if (CodedBlockPatternLuma & (1 << (int)i8x8))
                         {
 
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                             {
                                 size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
                             }
@@ -5716,7 +5716,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                                 size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
                             }
                         }
-                        else if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                        else if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                         {
 
                             for (i = 0; i < 15; i++)
@@ -5768,7 +5768,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             uint i4x4 = 0;
             uint i = 0;
 
-            if (startIdx == 0 && MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (startIdx == 0 && MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
                 size += stream.WriteClass<ResidualBlock>(this.residual_block);
             }
@@ -5785,7 +5785,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         if (CodedBlockPatternLuma & (1 << (int)i8x8))
                         {
 
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                             {
                                 size += stream.WriteClass<ResidualBlock>(this.residual_block);
                             }
@@ -5794,7 +5794,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                                 size += stream.WriteClass<ResidualBlock>(this.residual_block);
                             }
                         }
-                        else if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                        else if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                         {
 
                             for (i = 0; i < 15; i++)
@@ -5846,7 +5846,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             uint i4x4 = 0;
             uint i = 0;
 
-            if (startIdx == 0 && MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (startIdx == 0 && MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
                 size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
             }
@@ -5863,7 +5863,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         if (CodedBlockPatternLuma & (1 << (int)i8x8))
                         {
 
-                            if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                             {
                                 size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                             }
@@ -5872,7 +5872,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                                 size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                             }
                         }
-                        else if (MbPartPredMode(mb_type, 0) == Intra_16x16)
+                        else if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                         {
 
                             for (i = 0; i < 15; i++)
@@ -8506,6 +8506,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
         {
             ulong size = 0;
 
+            uint i = 0;
             size += stream.ReadBits(size, 8, out this.itu_t_t35_country_code);
 
             if (itu_t_t35_country_code != 0xFF)
@@ -8531,6 +8532,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
         {
             ulong size = 0;
 
+            uint i = 0;
             size += stream.WriteBits(8, this.itu_t_t35_country_code);
 
             if (itu_t_t35_country_code != 0xFF)
@@ -8556,6 +8558,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
         {
             ulong size = 0;
 
+            uint i = 0;
             size += 8; // itu_t_t35_country_code
 
             if (itu_t_t35_country_code != 0xFF)
@@ -10542,13 +10545,13 @@ tone_mapping_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedInt(size, 8, out this.camera_iso_speed_idc);
 
-                    if (camera_iso_speed_idc == Extended_ISO)
+                    if (camera_iso_speed_idc == H264Constants.Extended_ISO)
                     {
                         size += stream.ReadUnsignedInt(size, 32, out this.camera_iso_speed_value);
                     }
                     size += stream.ReadUnsignedInt(size, 8, out this.exposure_index_idc);
 
-                    if (exposure_index_idc == Extended_ISO)
+                    if (exposure_index_idc == H264Constants.Extended_ISO)
                     {
                         size += stream.ReadUnsignedInt(size, 32, out this.exposure_index_value);
                     }
@@ -10617,13 +10620,13 @@ tone_mapping_info( payloadSize ) {
                 {
                     size += stream.WriteUnsignedInt(8, this.camera_iso_speed_idc);
 
-                    if (camera_iso_speed_idc == Extended_ISO)
+                    if (camera_iso_speed_idc == H264Constants.Extended_ISO)
                     {
                         size += stream.WriteUnsignedInt(32, this.camera_iso_speed_value);
                     }
                     size += stream.WriteUnsignedInt(8, this.exposure_index_idc);
 
-                    if (exposure_index_idc == Extended_ISO)
+                    if (exposure_index_idc == H264Constants.Extended_ISO)
                     {
                         size += stream.WriteUnsignedInt(32, this.exposure_index_value);
                     }
@@ -10692,13 +10695,13 @@ tone_mapping_info( payloadSize ) {
                 {
                     size += 8; // camera_iso_speed_idc
 
-                    if (camera_iso_speed_idc == Extended_ISO)
+                    if (camera_iso_speed_idc == H264Constants.Extended_ISO)
                     {
                         size += 32; // camera_iso_speed_value
                     }
                     size += 8; // exposure_index_idc
 
-                    if (exposure_index_idc == Extended_ISO)
+                    if (exposure_index_idc == H264Constants.Extended_ISO)
                     {
                         size += 32; // exposure_index_value
                     }
@@ -13482,7 +13485,7 @@ vui_parameters() {
             {
                 size += stream.ReadUnsignedInt(size, 8, out this.aspect_ratio_idc);
 
-                if (aspect_ratio_idc == Extended_SAR)
+                if (aspect_ratio_idc == H264Constants.Extended_SAR)
                 {
                     size += stream.ReadUnsignedInt(size, 16, out this.sar_width);
                     size += stream.ReadUnsignedInt(size, 16, out this.sar_height);
@@ -13568,7 +13571,7 @@ vui_parameters() {
             {
                 size += stream.WriteUnsignedInt(8, this.aspect_ratio_idc);
 
-                if (aspect_ratio_idc == Extended_SAR)
+                if (aspect_ratio_idc == H264Constants.Extended_SAR)
                 {
                     size += stream.WriteUnsignedInt(16, this.sar_width);
                     size += stream.WriteUnsignedInt(16, this.sar_height);
@@ -13654,7 +13657,7 @@ vui_parameters() {
             {
                 size += 8; // aspect_ratio_idc
 
-                if (aspect_ratio_idc == Extended_SAR)
+                if (aspect_ratio_idc == H264Constants.Extended_SAR)
                 {
                     size += 16; // sar_width
                     size += 16; // sar_height
@@ -15728,7 +15731,7 @@ macroblock_layer_in_scalable_extension() {
                 size += stream.ReadUnsignedIntGolomb(size, out this.mb_type);
             }
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -15755,8 +15758,8 @@ macroblock_layer_in_scalable_extension() {
                 {
                     noSubMbPartSizeLessThan8x8Flag = 1;
 
-                    if (mb_type != I_NxN &&
-    MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                    if (mb_type != MbTypes.I_NxN &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     NumMbPart(mb_type) == 4)
                     {
                         size += stream.ReadClass<SubMbPredInScalableExtension>(size, out this.sub_mb_pred_in_scalable_extension);
@@ -15781,7 +15784,7 @@ macroblock_layer_in_scalable_extension() {
                     else
                     {
 
-                        if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                        if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.transform_size_8x8_flag);
                         }
@@ -15792,9 +15795,9 @@ macroblock_layer_in_scalable_extension() {
                 if (adaptive_residual_prediction_flag != 0 && !FrameTypes.IsI(slice_type) &&
    InCropWindow(CurrMbAddr != 0) &&
    (base_mode_flag != 0 ||
-     (MbPartPredMode(mb_type, 0) != Intra_16x16 &&
-    MbPartPredMode(mb_type, 0) != Intra_8x8 &&
-    MbPartPredMode(mb_type, 0) != Intra_4x4)))
+     (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_4x4)))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.residual_prediction_flag);
                 }
@@ -15803,14 +15806,14 @@ macroblock_layer_in_scalable_extension() {
                 {
 
                     if (base_mode_flag != 0 ||
-    MbPartPredMode(mb_type, 0) != Intra_16x16)
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.coded_block_pattern);
 
                         if (CodedBlockPatternLuma > 0 &&
       transform_8x8_mode_flag != 0 &&
      (base_mode_flag != 0 ||
-      (mb_type != I_NxN &&
+      (mb_type != MbTypes.I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
         (mb_type != MbTypes.B_Direct_16x16 ||
           direct_8x8_inference_flag != 0))))
@@ -15821,7 +15824,7 @@ macroblock_layer_in_scalable_extension() {
 
                     if (CodedBlockPatternLuma > 0 ||
      CodedBlockPatternChroma > 0 ||
-     MbPartPredMode(mb_type, 0) == Intra_16x16)
+     MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.mb_qp_delta);
                         size += stream.ReadClass<Residual>(size, out this.residual);
@@ -15849,7 +15852,7 @@ macroblock_layer_in_scalable_extension() {
                 size += stream.WriteUnsignedIntGolomb(this.mb_type);
             }
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -15874,8 +15877,8 @@ macroblock_layer_in_scalable_extension() {
                 {
                     noSubMbPartSizeLessThan8x8Flag = 1;
 
-                    if (mb_type != I_NxN &&
-    MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                    if (mb_type != MbTypes.I_NxN &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     NumMbPart(mb_type) == 4)
                     {
                         size += stream.WriteClass<SubMbPredInScalableExtension>(this.sub_mb_pred_in_scalable_extension);
@@ -15900,7 +15903,7 @@ macroblock_layer_in_scalable_extension() {
                     else
                     {
 
-                        if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                        if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                         {
                             size += stream.WriteUnsignedInt(1, this.transform_size_8x8_flag);
                         }
@@ -15911,9 +15914,9 @@ macroblock_layer_in_scalable_extension() {
                 if (adaptive_residual_prediction_flag != 0 && !FrameTypes.IsI(slice_type) &&
    InCropWindow(CurrMbAddr != 0) &&
    (base_mode_flag != 0 ||
-     (MbPartPredMode(mb_type, 0) != Intra_16x16 &&
-    MbPartPredMode(mb_type, 0) != Intra_8x8 &&
-    MbPartPredMode(mb_type, 0) != Intra_4x4)))
+     (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_4x4)))
                 {
                     size += stream.WriteUnsignedInt(1, this.residual_prediction_flag);
                 }
@@ -15922,14 +15925,14 @@ macroblock_layer_in_scalable_extension() {
                 {
 
                     if (base_mode_flag != 0 ||
-    MbPartPredMode(mb_type, 0) != Intra_16x16)
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.coded_block_pattern);
 
                         if (CodedBlockPatternLuma > 0 &&
       transform_8x8_mode_flag != 0 &&
      (base_mode_flag != 0 ||
-      (mb_type != I_NxN &&
+      (mb_type != MbTypes.I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
         (mb_type != MbTypes.B_Direct_16x16 ||
           direct_8x8_inference_flag != 0))))
@@ -15940,7 +15943,7 @@ macroblock_layer_in_scalable_extension() {
 
                     if (CodedBlockPatternLuma > 0 ||
      CodedBlockPatternChroma > 0 ||
-     MbPartPredMode(mb_type, 0) == Intra_16x16)
+     MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                     {
                         size += stream.WriteSignedIntGolomb(this.mb_qp_delta);
                         size += stream.WriteClass<Residual>(this.residual);
@@ -15968,7 +15971,7 @@ macroblock_layer_in_scalable_extension() {
                 size += ItuStream.CalculateUnsignedIntGolomb(mb_type); // mb_type
             }
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -15993,8 +15996,8 @@ macroblock_layer_in_scalable_extension() {
                 {
                     noSubMbPartSizeLessThan8x8Flag = 1;
 
-                    if (mb_type != I_NxN &&
-    MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                    if (mb_type != MbTypes.I_NxN &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     NumMbPart(mb_type) == 4)
                     {
                         size += ItuStream.CalculateClassSize<SubMbPredInScalableExtension>(sub_mb_pred_in_scalable_extension); // sub_mb_pred_in_scalable_extension
@@ -16019,7 +16022,7 @@ macroblock_layer_in_scalable_extension() {
                     else
                     {
 
-                        if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                        if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                         {
                             size += 1; // transform_size_8x8_flag
                         }
@@ -16030,9 +16033,9 @@ macroblock_layer_in_scalable_extension() {
                 if (adaptive_residual_prediction_flag != 0 && !FrameTypes.IsI(slice_type) &&
    InCropWindow(CurrMbAddr != 0) &&
    (base_mode_flag != 0 ||
-     (MbPartPredMode(mb_type, 0) != Intra_16x16 &&
-    MbPartPredMode(mb_type, 0) != Intra_8x8 &&
-    MbPartPredMode(mb_type, 0) != Intra_4x4)))
+     (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_4x4)))
                 {
                     size += 1; // residual_prediction_flag
                 }
@@ -16041,14 +16044,14 @@ macroblock_layer_in_scalable_extension() {
                 {
 
                     if (base_mode_flag != 0 ||
-    MbPartPredMode(mb_type, 0) != Intra_16x16)
+    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(coded_block_pattern); // coded_block_pattern
 
                         if (CodedBlockPatternLuma > 0 &&
       transform_8x8_mode_flag != 0 &&
      (base_mode_flag != 0 ||
-      (mb_type != I_NxN &&
+      (mb_type != MbTypes.I_NxN &&
         noSubMbPartSizeLessThan8x8Flag != 0 &&
         (mb_type != MbTypes.B_Direct_16x16 ||
           direct_8x8_inference_flag != 0))))
@@ -16059,7 +16062,7 @@ macroblock_layer_in_scalable_extension() {
 
                     if (CodedBlockPatternLuma > 0 ||
      CodedBlockPatternChroma > 0 ||
-     MbPartPredMode(mb_type, 0) == Intra_16x16)
+     MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
                         size += ItuStream.CalculateClassSize<Residual>(residual); // residual
@@ -16170,12 +16173,12 @@ mb_pred_in_scalable_extension( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
@@ -16191,7 +16194,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
@@ -16212,7 +16215,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 if (InCropWindow(CurrMbAddr != 0) &&
@@ -16223,7 +16226,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                     {
 
-                        if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                        if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.motion_prediction_flag_l0[mbPartIdx]);
                         }
@@ -16233,7 +16236,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                     {
 
-                        if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                        if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.motion_prediction_flag_l1[mbPartIdx]);
                         }
@@ -16246,7 +16249,7 @@ mb_pred_in_scalable_extension( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
        mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     motion_prediction_flag_l0[mbPartIdx] == 0)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
@@ -16259,7 +16262,7 @@ mb_pred_in_scalable_extension( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
        mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
     motion_prediction_flag_l1[mbPartIdx] == 0)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
@@ -16270,7 +16273,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
 
                         this.mvd_l0[mbPartIdx][0] = new int[2];
@@ -16285,7 +16288,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
 
                         this.mvd_l1[mbPartIdx][0] = new int[2];
@@ -16309,12 +16312,12 @@ mb_pred_in_scalable_extension( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
@@ -16328,7 +16331,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
@@ -16347,7 +16350,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 if (InCropWindow(CurrMbAddr != 0) &&
@@ -16357,7 +16360,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                     {
 
-                        if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                        if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                         {
                             size += stream.WriteUnsignedInt(1, this.motion_prediction_flag_l0[mbPartIdx]);
                         }
@@ -16366,7 +16369,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                     {
 
-                        if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                        if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                         {
                             size += stream.WriteUnsignedInt(1, this.motion_prediction_flag_l1[mbPartIdx]);
                         }
@@ -16378,7 +16381,7 @@ mb_pred_in_scalable_extension( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
        mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     motion_prediction_flag_l0[mbPartIdx] == 0)
                     {
                         size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
@@ -16390,7 +16393,7 @@ mb_pred_in_scalable_extension( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
        mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
     motion_prediction_flag_l1[mbPartIdx] == 0)
                     {
                         size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
@@ -16400,7 +16403,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -16413,7 +16416,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -16436,12 +16439,12 @@ mb_pred_in_scalable_extension( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
@@ -16455,7 +16458,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
@@ -16474,7 +16477,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 if (InCropWindow(CurrMbAddr != 0) &&
@@ -16484,7 +16487,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                     {
 
-                        if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                        if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                         {
                             size += 1; // motion_prediction_flag_l0
                         }
@@ -16493,7 +16496,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                     {
 
-                        if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                        if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                         {
                             size += 1; // motion_prediction_flag_l1
                         }
@@ -16505,7 +16508,7 @@ mb_pred_in_scalable_extension( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
        mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     motion_prediction_flag_l0[mbPartIdx] == 0)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
@@ -16517,7 +16520,7 @@ mb_pred_in_scalable_extension( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
        mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
     motion_prediction_flag_l1[mbPartIdx] == 0)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
@@ -16527,7 +16530,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -16540,7 +16543,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -16658,8 +16661,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
-    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+                    if (MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Direct &&
+    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.motion_prediction_flag_l0[mbPartIdx]);
                     }
@@ -16669,8 +16672,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
-    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+                    if (MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Direct &&
+    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.motion_prediction_flag_l1[mbPartIdx]);
                     }
@@ -16683,9 +16686,9 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
 
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
-   mb_type != P_8x8ref0 &&
+   mb_type != MbTypes.P_8x8ref0 &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 &&
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 &&
    motion_prediction_flag_l0[mbPartIdx] == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
@@ -16699,7 +16702,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 &&
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 &&
    motion_prediction_flag_l1[mbPartIdx] == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
@@ -16711,7 +16714,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
 
                     this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -16734,7 +16737,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
 
                     this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -16774,8 +16777,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
-    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+                    if (MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Direct &&
+    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                     {
                         size += stream.WriteUnsignedInt(1, this.motion_prediction_flag_l0[mbPartIdx]);
                     }
@@ -16784,8 +16787,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
-    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+                    if (MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Direct &&
+    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                     {
                         size += stream.WriteUnsignedInt(1, this.motion_prediction_flag_l1[mbPartIdx]);
                     }
@@ -16797,9 +16800,9 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
 
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
-   mb_type != P_8x8ref0 &&
+   mb_type != MbTypes.P_8x8ref0 &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 &&
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 &&
    motion_prediction_flag_l0[mbPartIdx] == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
@@ -16812,7 +16815,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 &&
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 &&
    motion_prediction_flag_l1[mbPartIdx] == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
@@ -16823,7 +16826,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
 
                     for (subMbPartIdx = 0;
@@ -16843,7 +16846,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
 
                     for (subMbPartIdx = 0;
@@ -16881,8 +16884,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
-    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+                    if (MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Direct &&
+    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                     {
                         size += 1; // motion_prediction_flag_l0
                     }
@@ -16891,8 +16894,8 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                 {
 
-                    if (SubMbPredMode(sub_mb_type[mbPartIdx]) != MbTypes.Direct &&
-    SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+                    if (MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Direct &&
+    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                     {
                         size += 1; // motion_prediction_flag_l1
                     }
@@ -16904,9 +16907,9 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
 
                 if ((num_ref_idx_l0_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
-   mb_type != P_8x8ref0 &&
+   mb_type != MbTypes.P_8x8ref0 &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 &&
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 &&
    motion_prediction_flag_l0[mbPartIdx] == 0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
@@ -16919,7 +16922,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
       mb_field_decoding_flag != field_pic_flag) &&
    sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 &&
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 &&
    motion_prediction_flag_l1[mbPartIdx] == 0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
@@ -16930,7 +16933,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
 
                     for (subMbPartIdx = 0;
@@ -16950,7 +16953,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
             {
 
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-   SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+   MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
 
                     for (subMbPartIdx = 0;
@@ -28023,21 +28026,21 @@ macroblock_layer_in_3davc_extension() {
             if (nal_unit_type == 21 && DepthFlag == 0
   && FrameTypes.IsB(slice_type)
   && direct_spatial_mv_pred_flag != 0 && VspRefExist != 0
-  && mb_type == B_Direct_16x16)
+  && mb_type == MbTypes.B_Direct_16x16)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.mb_direct_type_flag);
             }
 
             if (alc_sps_enable_flag != 0 && nal_unit_type == 21 &&
   FrameTypes.IsP(slice_type) && DepthFlag == 0 &&
-  (mb_type == P_L0_16x16 ||
-   mb_type == P_L0_L0_16x8 ||
-   mb_type == P_L0_L0_8x16))
+  (mb_type == MbTypes.P_L0_16x16 ||
+   mb_type == MbTypes.P_L0_L0_16x8 ||
+   mb_type == MbTypes.P_L0_L0_8x16))
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.mb_alc_flag);
             }
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -28061,8 +28064,8 @@ macroblock_layer_in_3davc_extension() {
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
 
-                if (mb_type != I_NxN &&
-   MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                if (mb_type != MbTypes.I_NxN &&
+   MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
    NumMbPart(mb_type) == 4)
                 {
                     size += stream.ReadClass<SubMbPredIn3davcExtension>(size, out this.sub_mb_pred_in_3davc_extension);
@@ -28087,19 +28090,19 @@ macroblock_layer_in_3davc_extension() {
                 else
                 {
 
-                    if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                    if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.transform_size_8x8_flag);
                     }
                     size += stream.ReadClass<MbPredIn3davcExtension>(size, out this.mb_pred_in_3davc_extension);
                 }
 
-                if (MbPartPredMode(mb_type, 0) != Intra_16x16)
+                if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.coded_block_pattern);
 
                     if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
-     transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
+     transform_8x8_mode_flag != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 ||
        direct_8x8_inference_flag != 0))
@@ -28110,7 +28113,7 @@ macroblock_layer_in_3davc_extension() {
 
                 if (CodedBlockPatternLuma > 0 ||
    CodedBlockPatternChroma > 0 ||
-   MbPartPredMode(mb_type, 0) == Intra_16x16)
+   MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.mb_qp_delta);
                     size += stream.ReadClass<Residual>(size, out this.residual);
@@ -28131,21 +28134,21 @@ macroblock_layer_in_3davc_extension() {
             if (nal_unit_type == 21 && DepthFlag == 0
   && FrameTypes.IsB(slice_type)
   && direct_spatial_mv_pred_flag != 0 && VspRefExist != 0
-  && mb_type == B_Direct_16x16)
+  && mb_type == MbTypes.B_Direct_16x16)
             {
                 size += stream.WriteUnsignedInt(1, this.mb_direct_type_flag);
             }
 
             if (alc_sps_enable_flag != 0 && nal_unit_type == 21 &&
   FrameTypes.IsP(slice_type) && DepthFlag == 0 &&
-  (mb_type == P_L0_16x16 ||
-   mb_type == P_L0_L0_16x8 ||
-   mb_type == P_L0_L0_8x16))
+  (mb_type == MbTypes.P_L0_16x16 ||
+   mb_type == MbTypes.P_L0_L0_16x8 ||
+   mb_type == MbTypes.P_L0_L0_8x16))
             {
                 size += stream.WriteUnsignedInt(1, this.mb_alc_flag);
             }
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -28167,8 +28170,8 @@ macroblock_layer_in_3davc_extension() {
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
 
-                if (mb_type != I_NxN &&
-   MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                if (mb_type != MbTypes.I_NxN &&
+   MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
    NumMbPart(mb_type) == 4)
                 {
                     size += stream.WriteClass<SubMbPredIn3davcExtension>(this.sub_mb_pred_in_3davc_extension);
@@ -28193,19 +28196,19 @@ macroblock_layer_in_3davc_extension() {
                 else
                 {
 
-                    if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                    if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                     {
                         size += stream.WriteUnsignedInt(1, this.transform_size_8x8_flag);
                     }
                     size += stream.WriteClass<MbPredIn3davcExtension>(this.mb_pred_in_3davc_extension);
                 }
 
-                if (MbPartPredMode(mb_type, 0) != Intra_16x16)
+                if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.coded_block_pattern);
 
                     if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
-     transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
+     transform_8x8_mode_flag != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 ||
        direct_8x8_inference_flag != 0))
@@ -28216,7 +28219,7 @@ macroblock_layer_in_3davc_extension() {
 
                 if (CodedBlockPatternLuma > 0 ||
    CodedBlockPatternChroma > 0 ||
-   MbPartPredMode(mb_type, 0) == Intra_16x16)
+   MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += stream.WriteSignedIntGolomb(this.mb_qp_delta);
                     size += stream.WriteClass<Residual>(this.residual);
@@ -28237,21 +28240,21 @@ macroblock_layer_in_3davc_extension() {
             if (nal_unit_type == 21 && DepthFlag == 0
   && FrameTypes.IsB(slice_type)
   && direct_spatial_mv_pred_flag != 0 && VspRefExist != 0
-  && mb_type == B_Direct_16x16)
+  && mb_type == MbTypes.B_Direct_16x16)
             {
                 size += 1; // mb_direct_type_flag
             }
 
             if (alc_sps_enable_flag != 0 && nal_unit_type == 21 &&
   FrameTypes.IsP(slice_type) && DepthFlag == 0 &&
-  (mb_type == P_L0_16x16 ||
-   mb_type == P_L0_L0_16x8 ||
-   mb_type == P_L0_L0_8x16))
+  (mb_type == MbTypes.P_L0_16x16 ||
+   mb_type == MbTypes.P_L0_L0_16x8 ||
+   mb_type == MbTypes.P_L0_L0_8x16))
             {
                 size += 1; // mb_alc_flag
             }
 
-            if (mb_type == I_PCM)
+            if (mb_type == MbTypes.I_PCM)
             {
 
                 while (!stream.ByteAligned())
@@ -28273,8 +28276,8 @@ macroblock_layer_in_3davc_extension() {
             {
                 noSubMbPartSizeLessThan8x8Flag = 1;
 
-                if (mb_type != I_NxN &&
-   MbPartPredMode(mb_type, 0) != Intra_16x16 &&
+                if (mb_type != MbTypes.I_NxN &&
+   MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
    NumMbPart(mb_type) == 4)
                 {
                     size += ItuStream.CalculateClassSize<SubMbPredIn3davcExtension>(sub_mb_pred_in_3davc_extension); // sub_mb_pred_in_3davc_extension
@@ -28299,19 +28302,19 @@ macroblock_layer_in_3davc_extension() {
                 else
                 {
 
-                    if (transform_8x8_mode_flag != 0 && mb_type == I_NxN)
+                    if (transform_8x8_mode_flag != 0 && mb_type == MbTypes.I_NxN)
                     {
                         size += 1; // transform_size_8x8_flag
                     }
                     size += ItuStream.CalculateClassSize<MbPredIn3davcExtension>(mb_pred_in_3davc_extension); // mb_pred_in_3davc_extension
                 }
 
-                if (MbPartPredMode(mb_type, 0) != Intra_16x16)
+                if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(coded_block_pattern); // coded_block_pattern
 
                     if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
-     transform_8x8_mode_flag != 0 && mb_type != I_NxN &&
+     transform_8x8_mode_flag != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 ||
        direct_8x8_inference_flag != 0))
@@ -28322,7 +28325,7 @@ macroblock_layer_in_3davc_extension() {
 
                 if (CodedBlockPatternLuma > 0 ||
    CodedBlockPatternChroma > 0 ||
-   MbPartPredMode(mb_type, 0) == Intra_16x16)
+   MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
                     size += ItuStream.CalculateClassSize<Residual>(residual); // residual
@@ -28432,12 +28435,12 @@ mb_pred_in_3davc_extension( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     this.prev_intra4x4_pred_mode_flag = new uint[16];
@@ -28453,7 +28456,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     this.prev_intra8x8_pred_mode_flag = new uint[4];
@@ -28474,7 +28477,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 this.ref_idx_l0 = new int[NumMbPart(mb_type)];
@@ -28484,7 +28487,7 @@ mb_pred_in_3davc_extension( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     mb_alc_flag == 0)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
@@ -28503,7 +28506,7 @@ mb_pred_in_3davc_extension( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
 
@@ -28518,7 +28521,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                     {
 
@@ -28534,7 +28537,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0 &&
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
     (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                     {
 
@@ -28559,12 +28562,12 @@ mb_pred_in_3davc_extension( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
@@ -28578,7 +28581,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
@@ -28597,7 +28600,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
@@ -28605,7 +28608,7 @@ mb_pred_in_3davc_extension( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     mb_alc_flag == 0)
                     {
                         size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
@@ -28622,7 +28625,7 @@ mb_pred_in_3davc_extension( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
                         size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
 
@@ -28636,7 +28639,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                     {
 
@@ -28650,7 +28653,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0 &&
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
     (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                     {
 
@@ -28674,12 +28677,12 @@ mb_pred_in_3davc_extension( mb_type ) {
             uint mbPartIdx = 0;
             uint compIdx = 0;
 
-            if (MbPartPredMode(mb_type, 0) == Intra_4x4 ||
-  MbPartPredMode(mb_type, 0) == Intra_8x8 ||
-  MbPartPredMode(mb_type, 0) == Intra_16x16)
+            if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8 ||
+  MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
             {
 
-                if (MbPartPredMode(mb_type, 0) == Intra_4x4)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_4x4)
                 {
 
                     for (luma4x4BlkIdx = 0; luma4x4BlkIdx < 16; luma4x4BlkIdx++)
@@ -28693,7 +28696,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                if (MbPartPredMode(mb_type, 0) == Intra_8x8)
+                if (MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_8x8)
                 {
 
                     for (luma8x8BlkIdx = 0; luma8x8BlkIdx < 4; luma8x8BlkIdx++)
@@ -28712,7 +28715,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
             }
-            else if (MbPartPredMode(mb_type, 0) != MbTypes.Direct)
+            else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
@@ -28720,7 +28723,7 @@ mb_pred_in_3davc_extension( mb_type ) {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     mb_alc_flag == 0)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
@@ -28737,7 +28740,7 @@ mb_pred_in_3davc_extension( mb_type ) {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
      mb_field_decoding_flag != field_pic_flag) &&
-    MbPartPredMode(mb_type, mbPartIdx) != Pred_L0)
+    MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
 
@@ -28751,7 +28754,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L1 &&
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
     (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                     {
 
@@ -28765,7 +28768,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
                 {
 
-                    if (MbPartPredMode(mb_type, mbPartIdx) != Pred_L0 &&
+                    if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
     (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                     {
 
@@ -28859,7 +28862,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
+                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != MbTypes.P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && mb_alc_flag == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
 
@@ -28878,7 +28881,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
      sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+     MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
 
@@ -28893,7 +28896,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
                     this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -28913,7 +28916,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
                     this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -28948,7 +28951,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
+                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != MbTypes.P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && mb_alc_flag == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
 
@@ -28965,7 +28968,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
      sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+     MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
 
@@ -28979,7 +28982,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -28996,7 +28999,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -29029,7 +29032,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && mb_alc_flag == 0)
+                if ((num_ref_idx_l0_active_minus1 > 0 || mb_field_decoding_flag != field_pic_flag) && mb_type != MbTypes.P_8x8ref0 && sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && mb_alc_flag == 0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
 
@@ -29046,7 +29049,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if ((num_ref_idx_l1_active_minus1 > 0 ||
     mb_field_decoding_flag != field_pic_flag) &&
      sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 &&
-     SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0)
+     MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
 
@@ -29060,7 +29063,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -29077,7 +29080,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && SubMbPredMode(sub_mb_type[mbPartIdx]) != Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)

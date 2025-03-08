@@ -17,6 +17,11 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
+        internal bool MoreRbspTrailingData()
+        {
+            throw new NotImplementedException();
+        }
+
         internal bool ByteAligned()
         {
             throw new NotImplementedException();

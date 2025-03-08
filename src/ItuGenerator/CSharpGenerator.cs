@@ -766,16 +766,25 @@ namespace Sharp{type}
                 condition = condition.Replace("slice_type  ==  EI", "FrameTypes.IsI(slice_type)");
                 condition = condition.Replace("slice_type  !=  EI", "!FrameTypes.IsI(slice_type)");
 
-                condition = condition.Replace("!=  Direct", "!=  MbTypes.Direct");
-                condition = condition.Replace("!=  B_Direct_8x8", "!=  MbTypes.B_Direct_8x8");
-                condition = condition.Replace("!=  B_Direct_16x16", "!=  MbTypes.B_Direct_16x16");
             }
+            condition = condition.Replace("Extended_ISO", "H264Constants.Extended_ISO");
+            condition = condition.Replace("Extended_SAR", "H264Constants.Extended_SAR");
 
             condition = condition.Replace("Abs(", "Math.Abs(");
             condition = condition.Replace("Min(", "Math.Min(");
             condition = condition.Replace("Max(", "Math.Max(");
             condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
             condition = condition.Replace("more_rbsp_data()", "stream.MoreRbspData()");
+            condition = condition.Replace("more_rbsp_trailing_data()", "stream.MoreRbspTrailingData()");
+
+            condition = condition.Replace("MbPartPredMode( mb_type, 0 )  ==  ", "MbTypes.MbPartPredMode( mb_type, 0 )  ==  MbPartPredModes.");
+            condition = condition.Replace("MbPartPredMode( mb_type, 0 )  !=  ", "MbTypes.MbPartPredMode( mb_type, 0 )  !=  MbPartPredModes.");
+            condition = condition.Replace("MbPartPredMode( mb_type, mbPartIdx )  !=  ", "MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.");
+            condition = condition.Replace("MbPartPredMode ( mb_type, mbPartIdx )  !=  ", "MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.");
+            condition = condition.Replace("SubMbPredMode( sub_mb_type[ mbPartIdx ] )  !=  ", "MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.");
+            condition = condition.Replace("mb_type  ==  ", "mb_type  ==  MbTypes.");
+            condition = condition.Replace("mb_type  !=  ", "mb_type  !=  MbTypes.");
+            condition = condition.Replace("sub_mb_type[ mbPartIdx ]  !=  ", "sub_mb_type[ mbPartIdx ]  !=  MbTypes.");
             
             return condition;
         }
@@ -1005,6 +1014,17 @@ namespace Sharp{type}
                         if (cls.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null)
                         {
                             cls.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "u(32)" });
+                        }
+                    }
+
+                    if(block.Type == "do" || block.Type == "while")
+                    {
+                        if (block.Condition.Contains("i "))
+                        {
+                            if (cls.RequiresDefinition.FirstOrDefault(x => x.Name == "i") == null)
+                            {
+                                cls.RequiresDefinition.Add(new ItuField() { Name = "i", Type = "u(32)" });
+                            }
                         }
                     }
 
