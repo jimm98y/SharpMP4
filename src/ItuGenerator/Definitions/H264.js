@@ -1791,7 +1791,7 @@ slice_header_in_scalable_extension() {
    }   
   }   
   ref_pic_list_modification() 2  
-  if( ( weighted_pred_flag  &&  slice_type == EP  )  || 
+  if( ( weighted_pred_flag  &&  slice_type  ==  EP  )  || 
    ( weighted_bipred_idc  ==  1  &&  slice_type  ==  EB ) ) { 
   
    if( !no_inter_layer_pred_flag )   
@@ -3038,6 +3038,11 @@ depth_sampling_info( payloadSize ) {
  } else   
   depth_grid_position()   
 }  
+
+constrained_depth_parameter_set_identifier(payloadSize) {
+    max_dps_id 5  ue(v)
+    max_dps_id_diff  5  ue(v)
+}
 
 depth_grid_position() { 
 depth_grid_pos_x_fp 5 u(20) 

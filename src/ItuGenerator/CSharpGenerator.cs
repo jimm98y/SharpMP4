@@ -232,6 +232,11 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 fieldValue = fieldValue.Replace("<<", "<< (int)");
+                fieldValue = fieldValue.Replace("more_rbsp_data()", "stream.MoreRbspData() ? (uint)1 : (uint)0");
+
+                fieldValue = fieldValue.Replace("Abs(", "Math.Abs(");
+                fieldValue = fieldValue.Replace("Min(", "Math.Min(");
+                fieldValue = fieldValue.Replace("Max(", "Math.Max(");
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith('!'))
@@ -734,8 +739,11 @@ namespace Sharp{type}
             {
                 if (parts[i].StartsWith('!'))
                 {
-                    // we don't have bool anymore, so in this case it's easy fix
-                    condition = condition.Replace(parts[i], parts[i].Substring(1, parts[i].Length - 1) + "== 0");
+                    if (!condition.Contains("()")) // if (more_rbsp_data())
+                    {
+                        // we don't have bool anymore, so in this case it's easy fix
+                        condition = condition.Replace(parts[i], parts[i].Substring(1, parts[i].Length - 1) + "== 0");
+                    }
                 }
                 else if (!parts[i].Contains('=') && !parts[i].Contains('>') && !parts[i].Contains('<'))
                 {
@@ -745,9 +753,25 @@ namespace Sharp{type}
                         condition = condition.Replace(trimmed, trimmed + " != 0");
                     }
                 }
+
+                condition = condition.Replace("slice_type  ==  B", "FrameTypes.IsB(slice_type)");
+                condition = condition.Replace("slice_type  ==  P", "FrameTypes.IsP(slice_type)");
+                condition = condition.Replace("slice_type  ==  I", "FrameTypes.IsI(slice_type)");
+                condition = condition.Replace("slice_type  !=  I", "!FrameTypes.IsI(slice_type)");
+                condition = condition.Replace("slice_type  ==  SP", "FrameTypes.IsSP(slice_type)");
+                condition = condition.Replace("slice_type  ==  SI", "FrameTypes.IsSI(slice_type)");
+                condition = condition.Replace("slice_type  !=  SI", "!FrameTypes.IsSI(slice_type)");
+                condition = condition.Replace("slice_type  ==  EP", "FrameTypes.IsP(slice_type)");
+                condition = condition.Replace("slice_type  ==  EB", "FrameTypes.IsB(slice_type)");
+                condition = condition.Replace("slice_type  ==  EI", "FrameTypes.IsI(slice_type)");
+                condition = condition.Replace("slice_type  !=  EI", "!FrameTypes.IsI(slice_type)");
             }
 
             condition = condition.Replace("Abs(", "Math.Abs(");
+            condition = condition.Replace("Min(", "Math.Min(");
+            condition = condition.Replace("Max(", "Math.Max(");
+            condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
+            condition = condition.Replace("more_rbsp_data()", "stream.MoreRbspData()");
             
             return condition;
         }

@@ -1,14 +1,27 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace SharpH264
 {
     public interface IItuSerializable
     {
         ulong Read(ItuStream stream);
+        ulong Write(ItuStream stream);
+        ulong CalculateSize(ItuStream stream);
     }
 
     public class ItuStream
     {
+        internal bool MoreRbspData()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal bool ByteAligned()
+        {
+            throw new NotImplementedException();
+        }
+
         internal int NextBits(int count)
         {
             throw new NotImplementedException();
