@@ -3298,7 +3298,7 @@ slice_data() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
                         if (mb_skip_run > 0)
@@ -3316,7 +3316,7 @@ slice_data() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 ||
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2 == 0 ||
     (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.mb_field_decoding_flag);
@@ -3336,7 +3336,7 @@ slice_data() {
                         prevMbSkipped = mb_skip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && CurrMbAddr % 2 == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -3346,7 +3346,7 @@ slice_data() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -3383,7 +3383,7 @@ slice_data() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
                         if (mb_skip_run > 0)
@@ -3401,7 +3401,7 @@ slice_data() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 ||
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2 == 0 ||
     (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.WriteUnsignedInt(1, this.mb_field_decoding_flag);
@@ -3421,7 +3421,7 @@ slice_data() {
                         prevMbSkipped = mb_skip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && CurrMbAddr % 2 == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -3431,7 +3431,7 @@ slice_data() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -3468,7 +3468,7 @@ slice_data() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
                         if (mb_skip_run > 0)
@@ -3486,7 +3486,7 @@ slice_data() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 ||
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2 == 0 ||
     (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += 1; // mb_field_decoding_flag
@@ -3506,7 +3506,7 @@ slice_data() {
                         prevMbSkipped = mb_skip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && CurrMbAddr % 2 == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -3516,7 +3516,7 @@ slice_data() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -3828,7 +3828,7 @@ pred_weight_table() {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.luma_log2_weight_denom);
 
-            if (ChromaArrayType != 0)
+            if (H264Helpers.GetChromaArrayType() != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom);
             }
@@ -3847,7 +3847,7 @@ pred_weight_table() {
                     size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l0[i]);
                 }
 
-                if (ChromaArrayType != 0)
+                if (H264Helpers.GetChromaArrayType() != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l0_flag);
 
@@ -3882,7 +3882,7 @@ pred_weight_table() {
                         size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l1[i]);
                     }
 
-                    if (ChromaArrayType != 0)
+                    if (H264Helpers.GetChromaArrayType() != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l1_flag);
 
@@ -3912,7 +3912,7 @@ pred_weight_table() {
             uint j = 0;
             size += stream.WriteUnsignedIntGolomb(this.luma_log2_weight_denom);
 
-            if (ChromaArrayType != 0)
+            if (H264Helpers.GetChromaArrayType() != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.chroma_log2_weight_denom);
             }
@@ -3927,7 +3927,7 @@ pred_weight_table() {
                     size += stream.WriteSignedIntGolomb(this.luma_offset_l0[i]);
                 }
 
-                if (ChromaArrayType != 0)
+                if (H264Helpers.GetChromaArrayType() != 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.chroma_weight_l0_flag);
 
@@ -3956,7 +3956,7 @@ pred_weight_table() {
                         size += stream.WriteSignedIntGolomb(this.luma_offset_l1[i]);
                     }
 
-                    if (ChromaArrayType != 0)
+                    if (H264Helpers.GetChromaArrayType() != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.chroma_weight_l1_flag);
 
@@ -3984,7 +3984,7 @@ pred_weight_table() {
             uint j = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(luma_log2_weight_denom); // luma_log2_weight_denom
 
-            if (ChromaArrayType != 0)
+            if (H264Helpers.GetChromaArrayType() != 0)
             {
                 size += ItuStream.CalculateUnsignedIntGolomb(chroma_log2_weight_denom); // chroma_log2_weight_denom
             }
@@ -3999,7 +3999,7 @@ pred_weight_table() {
                     size += ItuStream.CalculateSignedIntGolomb(luma_offset_l0[i]); // luma_offset_l0
                 }
 
-                if (ChromaArrayType != 0)
+                if (H264Helpers.GetChromaArrayType() != 0)
                 {
                     size += 1; // chroma_weight_l0_flag
 
@@ -4028,7 +4028,7 @@ pred_weight_table() {
                         size += ItuStream.CalculateSignedIntGolomb(luma_offset_l1[i]); // luma_offset_l1
                     }
 
-                    if (ChromaArrayType != 0)
+                    if (H264Helpers.GetChromaArrayType() != 0)
                     {
                         size += 1; // chroma_weight_l1_flag
 
@@ -4364,7 +4364,7 @@ macroblock_layer() {
 
                 if (mb_type != MbTypes.I_NxN &&
    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-   NumMbPart(mb_type) == 4)
+   H264Helpers.NumMbPart(mb_type) == 4)
                 {
                     size += stream.ReadClass<SubMbPred>(size, out this.sub_mb_pred);
 
@@ -4374,7 +4374,7 @@ macroblock_layer() {
                         if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                            if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                             {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
@@ -4451,7 +4451,7 @@ macroblock_layer() {
 
                 if (mb_type != MbTypes.I_NxN &&
    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-   NumMbPart(mb_type) == 4)
+   H264Helpers.NumMbPart(mb_type) == 4)
                 {
                     size += stream.WriteClass<SubMbPred>(this.sub_mb_pred);
 
@@ -4461,7 +4461,7 @@ macroblock_layer() {
                         if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                            if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                             {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
@@ -4538,7 +4538,7 @@ macroblock_layer() {
 
                 if (mb_type != MbTypes.I_NxN &&
    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-   NumMbPart(mb_type) == 4)
+   H264Helpers.NumMbPart(mb_type) == 4)
                 {
                     size += ItuStream.CalculateClassSize<SubMbPred>(sub_mb_pred); // sub_mb_pred
 
@@ -4548,7 +4548,7 @@ macroblock_layer() {
                         if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                            if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                             {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
@@ -4715,7 +4715,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType == 1 || ChromaArrayType == 2)
+                if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
@@ -4723,8 +4723,8 @@ mb_pred( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                this.ref_idx_l0 = new int[NumMbPart(mb_type)];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.ref_idx_l0 = new int[H264Helpers.NumMbPart(mb_type)];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -4735,8 +4735,8 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                this.ref_idx_l1 = new int[NumMbPart(mb_type)];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.ref_idx_l1 = new int[H264Helpers.NumMbPart(mb_type)];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -4747,8 +4747,8 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                this.mvd_l0 = new int[NumMbPart(mb_type)][];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.mvd_l0 = new int[H264Helpers.NumMbPart(mb_type)][][];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -4762,8 +4762,8 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                this.mvd_l1 = new int[NumMbPart(mb_type)][];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.mvd_l1 = new int[H264Helpers.NumMbPart(mb_type)][][];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -4823,7 +4823,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType == 1 || ChromaArrayType == 2)
+                if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
@@ -4831,7 +4831,7 @@ mb_pred( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -4842,7 +4842,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -4853,7 +4853,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -4866,7 +4866,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -4925,7 +4925,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType == 1 || ChromaArrayType == 2)
+                if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
@@ -4933,7 +4933,7 @@ mb_pred( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -4944,7 +4944,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -4955,7 +4955,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -4968,7 +4968,7 @@ mb_pred( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -5099,9 +5099,9 @@ sub_mb_pred( mb_type ) {
    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
 
-                    this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l0[mbPartIdx] = new int[H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -5122,9 +5122,9 @@ sub_mb_pred( mb_type ) {
    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
 
-                    this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l1[mbPartIdx] = new int[H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -5186,7 +5186,7 @@ sub_mb_pred( mb_type ) {
                 {
 
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -5206,7 +5206,7 @@ sub_mb_pred( mb_type ) {
                 {
 
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -5267,7 +5267,7 @@ sub_mb_pred( mb_type ) {
                 {
 
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -5287,7 +5287,7 @@ sub_mb_pred( mb_type ) {
                 {
 
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -5387,7 +5387,7 @@ residual( startIdx, endIdx ) {
             uint LumaLevel4x4 = level4x4;
             uint LumaLevel8x8 = level8x8;
 
-            if (ChromaArrayType == 1 || ChromaArrayType == 2)
+            if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
                 NumC8x8 = 4 / (SubWidthC * SubHeightC);
 
@@ -5433,7 +5433,7 @@ residual( startIdx, endIdx ) {
                     }
                 }
             }
-            else if (ChromaArrayType == 3)
+            else if (H264Helpers.GetChromaArrayType() == 3)
             {
                 size += stream.ReadClass<ResidualLuma>(size, out this.residual_luma);
                 CbIntra16x16DCLevel = i16x16DClevel;
@@ -5473,7 +5473,7 @@ residual( startIdx, endIdx ) {
             uint LumaLevel4x4 = level4x4;
             uint LumaLevel8x8 = level8x8;
 
-            if (ChromaArrayType == 1 || ChromaArrayType == 2)
+            if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
                 NumC8x8 = 4 / (SubWidthC * SubHeightC);
 
@@ -5519,7 +5519,7 @@ residual( startIdx, endIdx ) {
                     }
                 }
             }
-            else if (ChromaArrayType == 3)
+            else if (H264Helpers.GetChromaArrayType() == 3)
             {
                 size += stream.WriteClass<ResidualLuma>(this.residual_luma);
                 CbIntra16x16DCLevel = i16x16DClevel;
@@ -5559,7 +5559,7 @@ residual( startIdx, endIdx ) {
             uint LumaLevel4x4 = level4x4;
             uint LumaLevel8x8 = level8x8;
 
-            if (ChromaArrayType == 1 || ChromaArrayType == 2)
+            if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
                 NumC8x8 = 4 / (SubWidthC * SubHeightC);
 
@@ -5605,7 +5605,7 @@ residual( startIdx, endIdx ) {
                     }
                 }
             }
-            else if (ChromaArrayType == 3)
+            else if (H264Helpers.GetChromaArrayType() == 3)
             {
                 size += ItuStream.CalculateClassSize<ResidualLuma>(residual_luma); // residual_luma
                 CbIntra16x16DCLevel = i16x16DClevel;
@@ -6025,10 +6025,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             }
             size += stream.ReadUnsignedIntGolomb(size, out this.coeff_token);
 
-            if (TotalCoeff(coeff_token) > 0)
+            if (H264Helpers.TotalCoeff(coeff_token) > 0)
             {
 
-                if (TotalCoeff(coeff_token) > 10 && TrailingOnes(coeff_token) < 3)
+                if (H264Helpers.TotalCoeff(coeff_token) > 10 && H264Helpers.TrailingOnes(coeff_token) < 3)
                 {
                     suffixLength = 1;
                 }
@@ -6037,10 +6037,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     suffixLength = 0;
                 }
 
-                for (i = 0; i < TotalCoeff(coeff_token); i++)
+                for (i = 0; i < H264Helpers.TotalCoeff(coeff_token); i++)
                 {
 
-                    if (i < TrailingOnes(coeff_token))
+                    if (i < H264Helpers.TrailingOnes(coeff_token))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.trailing_ones_sign_flag);
                         levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
@@ -6066,8 +6066,8 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             levelCode += (1 << (int)(level_prefix - 3)) - 4096;
                         }
 
-                        if (i == TrailingOnes(coeff_token) &&
-                    TrailingOnes(coeff_token) < 3)
+                        if (i == H264Helpers.TrailingOnes(coeff_token) &&
+                    H264Helpers.TrailingOnes(coeff_token) < 3)
                         {
                             levelCode += 2;
                         }
@@ -6094,7 +6094,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     }
                 }
 
-                if (TotalCoeff(coeff_token) < endIdx - startIdx + 1)
+                if (H264Helpers.TotalCoeff(coeff_token) < endIdx - startIdx + 1)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.total_zeros);
                     zerosLeft = total_zeros;
@@ -6104,7 +6104,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     zerosLeft = 0;
                 }
 
-                for (i = 0; i < TotalCoeff(coeff_token) - 1; i++)
+                for (i = 0; i < H264Helpers.TotalCoeff(coeff_token) - 1; i++)
                 {
 
                     if (zerosLeft > 0)
@@ -6118,10 +6118,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     }
                     zerosLeft = zerosLeft - runVal[i];
                 }
-                runVal[TotalCoeff(coeff_token) - 1] = zerosLeft;
+                runVal[H264Helpers.TotalCoeff(coeff_token) - 1] = zerosLeft;
                 coeffNum = -1;
 
-                for (i = TotalCoeff(coeff_token) - 1; i >= 0; i--)
+                for (i = H264Helpers.TotalCoeff(coeff_token) - 1; i >= 0; i--)
                 {
                     coeffNum += runVal[i] + 1;
                     coeffLevel[startIdx + coeffNum] = levelVal[i];
@@ -6143,10 +6143,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             }
             size += stream.WriteUnsignedIntGolomb(this.coeff_token);
 
-            if (TotalCoeff(coeff_token) > 0)
+            if (H264Helpers.TotalCoeff(coeff_token) > 0)
             {
 
-                if (TotalCoeff(coeff_token) > 10 && TrailingOnes(coeff_token) < 3)
+                if (H264Helpers.TotalCoeff(coeff_token) > 10 && H264Helpers.TrailingOnes(coeff_token) < 3)
                 {
                     suffixLength = 1;
                 }
@@ -6155,10 +6155,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     suffixLength = 0;
                 }
 
-                for (i = 0; i < TotalCoeff(coeff_token); i++)
+                for (i = 0; i < H264Helpers.TotalCoeff(coeff_token); i++)
                 {
 
-                    if (i < TrailingOnes(coeff_token))
+                    if (i < H264Helpers.TrailingOnes(coeff_token))
                     {
                         size += stream.WriteUnsignedInt(1, this.trailing_ones_sign_flag);
                         levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
@@ -6184,8 +6184,8 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             levelCode += (1 << (int)(level_prefix - 3)) - 4096;
                         }
 
-                        if (i == TrailingOnes(coeff_token) &&
-                    TrailingOnes(coeff_token) < 3)
+                        if (i == H264Helpers.TrailingOnes(coeff_token) &&
+                    H264Helpers.TrailingOnes(coeff_token) < 3)
                         {
                             levelCode += 2;
                         }
@@ -6212,7 +6212,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     }
                 }
 
-                if (TotalCoeff(coeff_token) < endIdx - startIdx + 1)
+                if (H264Helpers.TotalCoeff(coeff_token) < endIdx - startIdx + 1)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.total_zeros);
                     zerosLeft = total_zeros;
@@ -6222,7 +6222,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     zerosLeft = 0;
                 }
 
-                for (i = 0; i < TotalCoeff(coeff_token) - 1; i++)
+                for (i = 0; i < H264Helpers.TotalCoeff(coeff_token) - 1; i++)
                 {
 
                     if (zerosLeft > 0)
@@ -6236,10 +6236,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     }
                     zerosLeft = zerosLeft - runVal[i];
                 }
-                runVal[TotalCoeff(coeff_token) - 1] = zerosLeft;
+                runVal[H264Helpers.TotalCoeff(coeff_token) - 1] = zerosLeft;
                 coeffNum = -1;
 
-                for (i = TotalCoeff(coeff_token) - 1; i >= 0; i--)
+                for (i = H264Helpers.TotalCoeff(coeff_token) - 1; i >= 0; i--)
                 {
                     coeffNum += runVal[i] + 1;
                     coeffLevel[startIdx + coeffNum] = levelVal[i];
@@ -6261,10 +6261,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             }
             size += ItuStream.CalculateUnsignedIntGolomb(coeff_token); // coeff_token
 
-            if (TotalCoeff(coeff_token) > 0)
+            if (H264Helpers.TotalCoeff(coeff_token) > 0)
             {
 
-                if (TotalCoeff(coeff_token) > 10 && TrailingOnes(coeff_token) < 3)
+                if (H264Helpers.TotalCoeff(coeff_token) > 10 && H264Helpers.TrailingOnes(coeff_token) < 3)
                 {
                     suffixLength = 1;
                 }
@@ -6273,10 +6273,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     suffixLength = 0;
                 }
 
-                for (i = 0; i < TotalCoeff(coeff_token); i++)
+                for (i = 0; i < H264Helpers.TotalCoeff(coeff_token); i++)
                 {
 
-                    if (i < TrailingOnes(coeff_token))
+                    if (i < H264Helpers.TrailingOnes(coeff_token))
                     {
                         size += 1; // trailing_ones_sign_flag
                         levelVal[i] = 1 - 2 * trailing_ones_sign_flag;
@@ -6302,8 +6302,8 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                             levelCode += (1 << (int)(level_prefix - 3)) - 4096;
                         }
 
-                        if (i == TrailingOnes(coeff_token) &&
-                    TrailingOnes(coeff_token) < 3)
+                        if (i == H264Helpers.TrailingOnes(coeff_token) &&
+                    H264Helpers.TrailingOnes(coeff_token) < 3)
                         {
                             levelCode += 2;
                         }
@@ -6330,7 +6330,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     }
                 }
 
-                if (TotalCoeff(coeff_token) < endIdx - startIdx + 1)
+                if (H264Helpers.TotalCoeff(coeff_token) < endIdx - startIdx + 1)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(total_zeros); // total_zeros
                     zerosLeft = total_zeros;
@@ -6340,7 +6340,7 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     zerosLeft = 0;
                 }
 
-                for (i = 0; i < TotalCoeff(coeff_token) - 1; i++)
+                for (i = 0; i < H264Helpers.TotalCoeff(coeff_token) - 1; i++)
                 {
 
                     if (zerosLeft > 0)
@@ -6354,10 +6354,10 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
                     }
                     zerosLeft = zerosLeft - runVal[i];
                 }
-                runVal[TotalCoeff(coeff_token) - 1] = zerosLeft;
+                runVal[H264Helpers.TotalCoeff(coeff_token) - 1] = zerosLeft;
                 coeffNum = -1;
 
-                for (i = TotalCoeff(coeff_token) - 1; i >= 0; i--)
+                for (i = H264Helpers.TotalCoeff(coeff_token) - 1; i >= 0; i--)
                 {
                     coeffNum += runVal[i] + 1;
                     coeffLevel[startIdx + coeffNum] = levelVal[i];
@@ -6436,7 +6436,7 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
 
             uint i = 0;
 
-            if (maxNumCoeff != 64 || ChromaArrayType == 3)
+            if (maxNumCoeff != 64 || H264Helpers.GetChromaArrayType() == 3)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.coded_block_flag);
             }
@@ -6491,7 +6491,7 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
 
             uint i = 0;
 
-            if (maxNumCoeff != 64 || ChromaArrayType == 3)
+            if (maxNumCoeff != 64 || H264Helpers.GetChromaArrayType() == 3)
             {
                 size += stream.WriteUnsignedIntGolomb(this.coded_block_flag);
             }
@@ -6546,7 +6546,7 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
 
             uint i = 0;
 
-            if (maxNumCoeff != 64 || ChromaArrayType == 3)
+            if (maxNumCoeff != 64 || H264Helpers.GetChromaArrayType() == 3)
             {
                 size += ItuStream.CalculateUnsignedIntGolomb(coded_block_flag); // coded_block_flag
             }
@@ -14026,12 +14026,12 @@ seq_parameter_set_svc_extension() {
             size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_deblocking_filter_control_present_flag);
             size += stream.ReadUnsignedInt(size, 2, out this.extended_spatial_scalability_idc);
 
-            if (ChromaArrayType == 1 || ChromaArrayType == 2)
+            if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.chroma_phase_x_plus1_flag);
             }
 
-            if (ChromaArrayType == 1)
+            if (H264Helpers.GetChromaArrayType() == 1)
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.chroma_phase_y_plus1);
             }
@@ -14039,7 +14039,7 @@ seq_parameter_set_svc_extension() {
             if (extended_spatial_scalability_idc == 1)
             {
 
-                if (ChromaArrayType > 0)
+                if (H264Helpers.GetChromaArrayType() > 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.seq_ref_layer_chroma_phase_x_plus1_flag);
                     size += stream.ReadUnsignedInt(size, 2, out this.seq_ref_layer_chroma_phase_y_plus1);
@@ -14067,12 +14067,12 @@ seq_parameter_set_svc_extension() {
             size += stream.WriteUnsignedInt(1, this.inter_layer_deblocking_filter_control_present_flag);
             size += stream.WriteUnsignedInt(2, this.extended_spatial_scalability_idc);
 
-            if (ChromaArrayType == 1 || ChromaArrayType == 2)
+            if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
                 size += stream.WriteUnsignedInt(1, this.chroma_phase_x_plus1_flag);
             }
 
-            if (ChromaArrayType == 1)
+            if (H264Helpers.GetChromaArrayType() == 1)
             {
                 size += stream.WriteUnsignedInt(2, this.chroma_phase_y_plus1);
             }
@@ -14080,7 +14080,7 @@ seq_parameter_set_svc_extension() {
             if (extended_spatial_scalability_idc == 1)
             {
 
-                if (ChromaArrayType > 0)
+                if (H264Helpers.GetChromaArrayType() > 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.seq_ref_layer_chroma_phase_x_plus1_flag);
                     size += stream.WriteUnsignedInt(2, this.seq_ref_layer_chroma_phase_y_plus1);
@@ -14108,12 +14108,12 @@ seq_parameter_set_svc_extension() {
             size += 1; // inter_layer_deblocking_filter_control_present_flag
             size += 2; // extended_spatial_scalability_idc
 
-            if (ChromaArrayType == 1 || ChromaArrayType == 2)
+            if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
                 size += 1; // chroma_phase_x_plus1_flag
             }
 
-            if (ChromaArrayType == 1)
+            if (H264Helpers.GetChromaArrayType() == 1)
             {
                 size += 2; // chroma_phase_y_plus1
             }
@@ -14121,7 +14121,7 @@ seq_parameter_set_svc_extension() {
             if (extended_spatial_scalability_idc == 1)
             {
 
-                if (ChromaArrayType > 0)
+                if (H264Helpers.GetChromaArrayType() > 0)
                 {
                     size += 1; // seq_ref_layer_chroma_phase_x_plus1_flag
                     size += 2; // seq_ref_layer_chroma_phase_y_plus1
@@ -14684,7 +14684,7 @@ slice_header_in_scalable_extension() {
                 if (extended_spatial_scalability_idc == 2)
                 {
 
-                    if (ChromaArrayType > 0)
+                    if (H264Helpers.GetChromaArrayType() > 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.ref_layer_chroma_phase_x_plus1_flag);
                         size += stream.ReadUnsignedInt(size, 2, out this.ref_layer_chroma_phase_y_plus1);
@@ -14897,7 +14897,7 @@ slice_header_in_scalable_extension() {
                 if (extended_spatial_scalability_idc == 2)
                 {
 
-                    if (ChromaArrayType > 0)
+                    if (H264Helpers.GetChromaArrayType() > 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.ref_layer_chroma_phase_x_plus1_flag);
                         size += stream.WriteUnsignedInt(2, this.ref_layer_chroma_phase_y_plus1);
@@ -15110,7 +15110,7 @@ slice_header_in_scalable_extension() {
                 if (extended_spatial_scalability_idc == 2)
                 {
 
-                    if (ChromaArrayType > 0)
+                    if (H264Helpers.GetChromaArrayType() > 0)
                     {
                         size += 1; // ref_layer_chroma_phase_x_plus1_flag
                         size += 2; // ref_layer_chroma_phase_y_plus1
@@ -15387,7 +15387,7 @@ slice_data_in_scalable_extension() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
                         if (mb_skip_run > 0)
@@ -15405,7 +15405,7 @@ slice_data_in_scalable_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && ((CurrMbAddr % 2) == 0 ||
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && ((CurrMbAddr % 2) == 0 ||
     ((CurrMbAddr % 2) == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.mb_field_decoding_flag);
@@ -15425,7 +15425,7 @@ slice_data_in_scalable_extension() {
                         prevMbSkipped = mb_skip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2) == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2) == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -15435,7 +15435,7 @@ slice_data_in_scalable_extension() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -15472,7 +15472,7 @@ slice_data_in_scalable_extension() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
                         if (mb_skip_run > 0)
@@ -15490,7 +15490,7 @@ slice_data_in_scalable_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && ((CurrMbAddr % 2) == 0 ||
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && ((CurrMbAddr % 2) == 0 ||
     ((CurrMbAddr % 2) == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.WriteUnsignedInt(1, this.mb_field_decoding_flag);
@@ -15510,7 +15510,7 @@ slice_data_in_scalable_extension() {
                         prevMbSkipped = mb_skip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2) == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2) == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -15520,7 +15520,7 @@ slice_data_in_scalable_extension() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -15557,7 +15557,7 @@ slice_data_in_scalable_extension() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
                         if (mb_skip_run > 0)
@@ -15575,7 +15575,7 @@ slice_data_in_scalable_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && ((CurrMbAddr % 2) == 0 ||
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && ((CurrMbAddr % 2) == 0 ||
     ((CurrMbAddr % 2) == 1 && prevMbSkipped != 0)))
                     {
                         size += 1; // mb_field_decoding_flag
@@ -15595,7 +15595,7 @@ slice_data_in_scalable_extension() {
                         prevMbSkipped = mb_skip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2) == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2) == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -15605,7 +15605,7 @@ slice_data_in_scalable_extension() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -15721,7 +15721,7 @@ macroblock_layer_in_scalable_extension() {
             uint i = 0;
             uint mbPartIdx = 0;
 
-            if (InCropWindow(CurrMbAddr != 0) && adaptive_base_mode_flag != 0)
+            if (H264Helpers.InCropWindow(CurrMbAddr) && adaptive_base_mode_flag != 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.base_mode_flag);
             }
@@ -15760,7 +15760,7 @@ macroblock_layer_in_scalable_extension() {
 
                     if (mb_type != MbTypes.I_NxN &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-    NumMbPart(mb_type) == 4)
+    H264Helpers.NumMbPart(mb_type) == 4)
                     {
                         size += stream.ReadClass<SubMbPredInScalableExtension>(size, out this.sub_mb_pred_in_scalable_extension);
 
@@ -15770,7 +15770,7 @@ macroblock_layer_in_scalable_extension() {
                             if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                             {
 
-                                if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                                if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                                 {
                                     noSubMbPartSizeLessThan8x8Flag = 0;
                                 }
@@ -15793,7 +15793,7 @@ macroblock_layer_in_scalable_extension() {
                 }
 
                 if (adaptive_residual_prediction_flag != 0 && !FrameTypes.IsI(slice_type) &&
-   InCropWindow(CurrMbAddr != 0) &&
+   H264Helpers.InCropWindow(CurrMbAddr) &&
    (base_mode_flag != 0 ||
      (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
@@ -15842,7 +15842,7 @@ macroblock_layer_in_scalable_extension() {
             uint i = 0;
             uint mbPartIdx = 0;
 
-            if (InCropWindow(CurrMbAddr != 0) && adaptive_base_mode_flag != 0)
+            if (H264Helpers.InCropWindow(CurrMbAddr) && adaptive_base_mode_flag != 0)
             {
                 size += stream.WriteUnsignedInt(1, this.base_mode_flag);
             }
@@ -15879,7 +15879,7 @@ macroblock_layer_in_scalable_extension() {
 
                     if (mb_type != MbTypes.I_NxN &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-    NumMbPart(mb_type) == 4)
+    H264Helpers.NumMbPart(mb_type) == 4)
                     {
                         size += stream.WriteClass<SubMbPredInScalableExtension>(this.sub_mb_pred_in_scalable_extension);
 
@@ -15889,7 +15889,7 @@ macroblock_layer_in_scalable_extension() {
                             if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                             {
 
-                                if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                                if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                                 {
                                     noSubMbPartSizeLessThan8x8Flag = 0;
                                 }
@@ -15912,7 +15912,7 @@ macroblock_layer_in_scalable_extension() {
                 }
 
                 if (adaptive_residual_prediction_flag != 0 && !FrameTypes.IsI(slice_type) &&
-   InCropWindow(CurrMbAddr != 0) &&
+   H264Helpers.InCropWindow(CurrMbAddr) &&
    (base_mode_flag != 0 ||
      (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
@@ -15961,7 +15961,7 @@ macroblock_layer_in_scalable_extension() {
             uint i = 0;
             uint mbPartIdx = 0;
 
-            if (InCropWindow(CurrMbAddr != 0) && adaptive_base_mode_flag != 0)
+            if (H264Helpers.InCropWindow(CurrMbAddr) && adaptive_base_mode_flag != 0)
             {
                 size += 1; // base_mode_flag
             }
@@ -15998,7 +15998,7 @@ macroblock_layer_in_scalable_extension() {
 
                     if (mb_type != MbTypes.I_NxN &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-    NumMbPart(mb_type) == 4)
+    H264Helpers.NumMbPart(mb_type) == 4)
                     {
                         size += ItuStream.CalculateClassSize<SubMbPredInScalableExtension>(sub_mb_pred_in_scalable_extension); // sub_mb_pred_in_scalable_extension
 
@@ -16008,7 +16008,7 @@ macroblock_layer_in_scalable_extension() {
                             if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                             {
 
-                                if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                                if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                                 {
                                     noSubMbPartSizeLessThan8x8Flag = 0;
                                 }
@@ -16031,7 +16031,7 @@ macroblock_layer_in_scalable_extension() {
                 }
 
                 if (adaptive_residual_prediction_flag != 0 && !FrameTypes.IsI(slice_type) &&
-   InCropWindow(CurrMbAddr != 0) &&
+   H264Helpers.InCropWindow(CurrMbAddr) &&
    (base_mode_flag != 0 ||
      (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
@@ -16210,7 +16210,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType != 0)
+                if (H264Helpers.GetChromaArrayType() != 0)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
@@ -16218,12 +16218,12 @@ mb_pred_in_scalable_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                if (InCropWindow(CurrMbAddr != 0) &&
+                if (H264Helpers.InCropWindow(CurrMbAddr) &&
               adaptive_motion_prediction_flag != 0)
                 {
 
-                    this.motion_prediction_flag_l0 = new uint[NumMbPart(mb_type)];
-                    for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                    this.motion_prediction_flag_l0 = new uint[H264Helpers.NumMbPart(mb_type)];
+                    for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                     {
 
                         if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -16232,8 +16232,8 @@ mb_pred_in_scalable_extension( mb_type ) {
                         }
                     }
 
-                    this.motion_prediction_flag_l1 = new uint[NumMbPart(mb_type)];
-                    for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                    this.motion_prediction_flag_l1 = new uint[H264Helpers.NumMbPart(mb_type)];
+                    for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                     {
 
                         if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -16243,8 +16243,8 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                this.ref_idx_l0 = new int[NumMbPart(mb_type)];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.ref_idx_l0 = new int[H264Helpers.NumMbPart(mb_type)];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -16256,8 +16256,8 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                this.ref_idx_l1 = new int[NumMbPart(mb_type)];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.ref_idx_l1 = new int[H264Helpers.NumMbPart(mb_type)];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -16269,8 +16269,8 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                this.mvd_l0 = new int[NumMbPart(mb_type)][];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.mvd_l0 = new int[H264Helpers.NumMbPart(mb_type)][][];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -16284,8 +16284,8 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                this.mvd_l1 = new int[NumMbPart(mb_type)][];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.mvd_l1 = new int[H264Helpers.NumMbPart(mb_type)][][];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -16345,7 +16345,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType != 0)
+                if (H264Helpers.GetChromaArrayType() != 0)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
@@ -16353,11 +16353,11 @@ mb_pred_in_scalable_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                if (InCropWindow(CurrMbAddr != 0) &&
+                if (H264Helpers.InCropWindow(CurrMbAddr) &&
               adaptive_motion_prediction_flag != 0)
                 {
 
-                    for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                    for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                     {
 
                         if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -16366,7 +16366,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                         }
                     }
 
-                    for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                    for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                     {
 
                         if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -16376,7 +16376,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -16388,7 +16388,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -16400,7 +16400,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -16413,7 +16413,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -16472,7 +16472,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType != 0)
+                if (H264Helpers.GetChromaArrayType() != 0)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
@@ -16480,11 +16480,11 @@ mb_pred_in_scalable_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                if (InCropWindow(CurrMbAddr != 0) &&
+                if (H264Helpers.InCropWindow(CurrMbAddr) &&
               adaptive_motion_prediction_flag != 0)
                 {
 
-                    for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                    for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                     {
 
                         if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -16493,7 +16493,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                         }
                     }
 
-                    for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                    for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                     {
 
                         if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -16503,7 +16503,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -16515,7 +16515,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -16527,7 +16527,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1)
@@ -16540,7 +16540,7 @@ mb_pred_in_scalable_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0)
@@ -16654,7 +16654,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.sub_mb_type[mbPartIdx]);
             }
 
-            if (InCropWindow(CurrMbAddr != 0) && adaptive_motion_prediction_flag != 0)
+            if (H264Helpers.InCropWindow(CurrMbAddr) && adaptive_motion_prediction_flag != 0)
             {
 
                 this.motion_prediction_flag_l0 = new uint[4];
@@ -16717,9 +16717,9 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1)
                 {
 
-                    this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l0[mbPartIdx] = new int[H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -16740,9 +16740,9 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
    MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0)
                 {
 
-                    this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    this.mvd_l1[mbPartIdx] = new int[H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx])][];
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -16771,7 +16771,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 size += stream.WriteUnsignedIntGolomb(this.sub_mb_type[mbPartIdx]);
             }
 
-            if (InCropWindow(CurrMbAddr != 0) && adaptive_motion_prediction_flag != 0)
+            if (H264Helpers.InCropWindow(CurrMbAddr) && adaptive_motion_prediction_flag != 0)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
@@ -16830,7 +16830,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 {
 
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -16850,7 +16850,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 {
 
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -16878,7 +16878,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 size += ItuStream.CalculateUnsignedIntGolomb(sub_mb_type[mbPartIdx]); // sub_mb_type
             }
 
-            if (InCropWindow(CurrMbAddr != 0) && adaptive_motion_prediction_flag != 0)
+            if (H264Helpers.InCropWindow(CurrMbAddr) && adaptive_motion_prediction_flag != 0)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
@@ -16937,7 +16937,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 {
 
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -16957,7 +16957,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 {
 
                     for (subMbPartIdx = 0;
-       subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]);
+       subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]);
        subMbPartIdx++)
                     {
 
@@ -25504,7 +25504,7 @@ seq_parameter_set_3davc_extension() {
             size += stream.ReadUnsignedInt(size, 1, out this.alc_sps_enable_flag);
             size += stream.ReadUnsignedInt(size, 1, out this.enable_rle_skip_flag);
 
-            if (AllViewsPairedFlag == 0)
+            if (H264Helpers.GetAllViewsPairedFlag() == 0)
             {
 
                 this.num_anchor_refs_l0 = new uint[num_views_minus1];
@@ -25618,7 +25618,7 @@ seq_parameter_set_3davc_extension() {
             size += stream.WriteUnsignedInt(1, this.alc_sps_enable_flag);
             size += stream.WriteUnsignedInt(1, this.enable_rle_skip_flag);
 
-            if (AllViewsPairedFlag == 0)
+            if (H264Helpers.GetAllViewsPairedFlag() == 0)
             {
 
                 for (i = 1; i <= num_views_minus1; i++)
@@ -25720,7 +25720,7 @@ seq_parameter_set_3davc_extension() {
             size += 1; // alc_sps_enable_flag
             size += 1; // enable_rle_skip_flag
 
-            if (AllViewsPairedFlag == 0)
+            if (H264Helpers.GetAllViewsPairedFlag() == 0)
             {
 
                 for (i = 1; i <= num_views_minus1; i++)
@@ -26961,7 +26961,7 @@ slice_header_in_3davc_extension() {
                 if (nal_unit_type == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))
                 {
 
-                    if (DepthFlag != 0)
+                    if (H264Helpers.GetDepthFlag() != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.depth_weighted_pred_flag);
                     }
@@ -27162,7 +27162,7 @@ slice_header_in_3davc_extension() {
                 if (nal_unit_type == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))
                 {
 
-                    if (DepthFlag != 0)
+                    if (H264Helpers.GetDepthFlag() != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.depth_weighted_pred_flag);
                     }
@@ -27363,7 +27363,7 @@ slice_header_in_3davc_extension() {
                 if (nal_unit_type == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))
                 {
 
-                    if (DepthFlag != 0)
+                    if (H264Helpers.GetDepthFlag() != 0)
                     {
                         size += 1; // depth_weighted_pred_flag
                     }
@@ -27524,11 +27524,11 @@ slice_data_in_3davc_extension() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
-                        if (nal_unit_type == 21 && DepthFlag == 0 &&
-     mb_skip_run > 0 && VspRefExist != 0)
+                        if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 &&
+     mb_skip_run > 0 && H264Helpers.GetVspRefExist() != 0)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.mb_skip_type_flag);
                         }
@@ -27541,7 +27541,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
 
-                        if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
+                        if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.mb_vsskip_flag);
                             moreDataFlag = mb_vsskip_flag;
@@ -27555,7 +27555,7 @@ slice_data_in_3davc_extension() {
                         }
                         else
                         {
-                            rleCtx = RLESkipContext();
+                            rleCtx = H264Helpers.RLESkipContext();
 
                             if (rleCtx != 0 && RunLength == 0)
                             {
@@ -27582,14 +27582,14 @@ slice_data_in_3davc_extension() {
                             }
                             moreDataFlag = mb_skip_flag;
 
-                            if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && mb_skip_flag == 0)
+                            if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && mb_skip_flag == 0)
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.mb_vsskip_flag);
                                 moreDataFlag = mb_vsskip_flag;
                             }
                         }
 
-                        if (alc_sps_enable_flag != 0 && nal_unit_type == 21 && FrameTypes.IsP(slice_type) && DepthFlag == 0 && mb_vsskip_flag == 0 && mb_skip_flag == 1)
+                        if (alc_sps_enable_flag != 0 && nal_unit_type == 21 && FrameTypes.IsP(slice_type) && H264Helpers.GetDepthFlag() == 0 && mb_vsskip_flag == 0 && mb_skip_flag == 1)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.mb_alc_skip_flag);
                         }
@@ -27599,7 +27599,7 @@ slice_data_in_3davc_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.mb_field_decoding_flag);
                     }
@@ -27618,7 +27618,7 @@ slice_data_in_3davc_extension() {
                         prevMbSkipped = mb_skip_flag | mb_vsskip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && CurrMbAddr % 2 == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -27628,7 +27628,7 @@ slice_data_in_3davc_extension() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -27666,11 +27666,11 @@ slice_data_in_3davc_extension() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
-                        if (nal_unit_type == 21 && DepthFlag == 0 &&
-     mb_skip_run > 0 && VspRefExist != 0)
+                        if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 &&
+     mb_skip_run > 0 && H264Helpers.GetVspRefExist() != 0)
                         {
                             size += stream.WriteUnsignedInt(1, this.mb_skip_type_flag);
                         }
@@ -27683,7 +27683,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
 
-                        if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
+                        if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.mb_vsskip_flag);
                             moreDataFlag = mb_vsskip_flag;
@@ -27697,7 +27697,7 @@ slice_data_in_3davc_extension() {
                         }
                         else
                         {
-                            rleCtx = RLESkipContext();
+                            rleCtx = H264Helpers.RLESkipContext();
 
                             if (rleCtx != 0 && RunLength == 0)
                             {
@@ -27724,14 +27724,14 @@ slice_data_in_3davc_extension() {
                             }
                             moreDataFlag = mb_skip_flag;
 
-                            if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && mb_skip_flag == 0)
+                            if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && mb_skip_flag == 0)
                             {
                                 size += stream.WriteUnsignedIntGolomb(this.mb_vsskip_flag);
                                 moreDataFlag = mb_vsskip_flag;
                             }
                         }
 
-                        if (alc_sps_enable_flag != 0 && nal_unit_type == 21 && FrameTypes.IsP(slice_type) && DepthFlag == 0 && mb_vsskip_flag == 0 && mb_skip_flag == 1)
+                        if (alc_sps_enable_flag != 0 && nal_unit_type == 21 && FrameTypes.IsP(slice_type) && H264Helpers.GetDepthFlag() == 0 && mb_vsskip_flag == 0 && mb_skip_flag == 1)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.mb_alc_skip_flag);
                         }
@@ -27741,7 +27741,7 @@ slice_data_in_3davc_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += stream.WriteUnsignedInt(1, this.mb_field_decoding_flag);
                     }
@@ -27760,7 +27760,7 @@ slice_data_in_3davc_extension() {
                         prevMbSkipped = mb_skip_flag | mb_vsskip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && CurrMbAddr % 2 == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -27770,7 +27770,7 @@ slice_data_in_3davc_extension() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -27808,11 +27808,11 @@ slice_data_in_3davc_extension() {
 
                         for (i = 0; i < mb_skip_run; i++)
                         {
-                            CurrMbAddr = NextMbAddress(CurrMbAddr);
+                            CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
                         }
 
-                        if (nal_unit_type == 21 && DepthFlag == 0 &&
-     mb_skip_run > 0 && VspRefExist != 0)
+                        if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 &&
+     mb_skip_run > 0 && H264Helpers.GetVspRefExist() != 0)
                         {
                             size += 1; // mb_skip_type_flag
                         }
@@ -27825,7 +27825,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
 
-                        if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
+                        if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(mb_vsskip_flag); // mb_vsskip_flag
                             moreDataFlag = mb_vsskip_flag;
@@ -27839,7 +27839,7 @@ slice_data_in_3davc_extension() {
                         }
                         else
                         {
-                            rleCtx = RLESkipContext();
+                            rleCtx = H264Helpers.RLESkipContext();
 
                             if (rleCtx != 0 && RunLength == 0)
                             {
@@ -27866,14 +27866,14 @@ slice_data_in_3davc_extension() {
                             }
                             moreDataFlag = mb_skip_flag;
 
-                            if (nal_unit_type == 21 && DepthFlag == 0 && VspRefExist != 0 && mb_skip_flag == 0)
+                            if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && mb_skip_flag == 0)
                             {
                                 size += ItuStream.CalculateUnsignedIntGolomb(mb_vsskip_flag); // mb_vsskip_flag
                                 moreDataFlag = mb_vsskip_flag;
                             }
                         }
 
-                        if (alc_sps_enable_flag != 0 && nal_unit_type == 21 && FrameTypes.IsP(slice_type) && DepthFlag == 0 && mb_vsskip_flag == 0 && mb_skip_flag == 1)
+                        if (alc_sps_enable_flag != 0 && nal_unit_type == 21 && FrameTypes.IsP(slice_type) && H264Helpers.GetDepthFlag() == 0 && mb_vsskip_flag == 0 && mb_skip_flag == 1)
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(mb_alc_skip_flag); // mb_alc_skip_flag
                         }
@@ -27883,7 +27883,7 @@ slice_data_in_3davc_extension() {
                 if (moreDataFlag != 0)
                 {
 
-                    if (MbaffFrameFlag != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && (CurrMbAddr % 2 == 0 || (CurrMbAddr % 2 == 1 && prevMbSkipped != 0)))
                     {
                         size += 1; // mb_field_decoding_flag
                     }
@@ -27902,7 +27902,7 @@ slice_data_in_3davc_extension() {
                         prevMbSkipped = mb_skip_flag | mb_vsskip_flag;
                     }
 
-                    if (MbaffFrameFlag != 0 && CurrMbAddr % 2 == 0)
+                    if (H264Helpers.GetMbaffFrameFlag() != 0 && CurrMbAddr % 2 == 0)
                     {
                         moreDataFlag = 1;
                     }
@@ -27912,7 +27912,7 @@ slice_data_in_3davc_extension() {
                         moreDataFlag = end_of_slice_flag;
                     }
                 }
-                CurrMbAddr = NextMbAddress(CurrMbAddr);
+                CurrMbAddr = H264Helpers.NextMbAddress(CurrMbAddr);
             } while (moreDataFlag != 0);
 
             return size;
@@ -28023,16 +28023,16 @@ macroblock_layer_in_3davc_extension() {
             uint mbPartIdx = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.mb_type);
 
-            if (nal_unit_type == 21 && DepthFlag == 0
+            if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0
   && FrameTypes.IsB(slice_type)
-  && direct_spatial_mv_pred_flag != 0 && VspRefExist != 0
+  && direct_spatial_mv_pred_flag != 0 && H264Helpers.GetVspRefExist() != 0
   && mb_type == MbTypes.B_Direct_16x16)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.mb_direct_type_flag);
             }
 
             if (alc_sps_enable_flag != 0 && nal_unit_type == 21 &&
-  FrameTypes.IsP(slice_type) && DepthFlag == 0 &&
+  FrameTypes.IsP(slice_type) && H264Helpers.GetDepthFlag() == 0 &&
   (mb_type == MbTypes.P_L0_16x16 ||
    mb_type == MbTypes.P_L0_L0_16x8 ||
    mb_type == MbTypes.P_L0_L0_8x16))
@@ -28066,7 +28066,7 @@ macroblock_layer_in_3davc_extension() {
 
                 if (mb_type != MbTypes.I_NxN &&
    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-   NumMbPart(mb_type) == 4)
+   H264Helpers.NumMbPart(mb_type) == 4)
                 {
                     size += stream.ReadClass<SubMbPredIn3davcExtension>(size, out this.sub_mb_pred_in_3davc_extension);
 
@@ -28076,7 +28076,7 @@ macroblock_layer_in_3davc_extension() {
                         if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                            if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                             {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
@@ -28131,16 +28131,16 @@ macroblock_layer_in_3davc_extension() {
             uint mbPartIdx = 0;
             size += stream.WriteUnsignedIntGolomb(this.mb_type);
 
-            if (nal_unit_type == 21 && DepthFlag == 0
+            if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0
   && FrameTypes.IsB(slice_type)
-  && direct_spatial_mv_pred_flag != 0 && VspRefExist != 0
+  && direct_spatial_mv_pred_flag != 0 && H264Helpers.GetVspRefExist() != 0
   && mb_type == MbTypes.B_Direct_16x16)
             {
                 size += stream.WriteUnsignedInt(1, this.mb_direct_type_flag);
             }
 
             if (alc_sps_enable_flag != 0 && nal_unit_type == 21 &&
-  FrameTypes.IsP(slice_type) && DepthFlag == 0 &&
+  FrameTypes.IsP(slice_type) && H264Helpers.GetDepthFlag() == 0 &&
   (mb_type == MbTypes.P_L0_16x16 ||
    mb_type == MbTypes.P_L0_L0_16x8 ||
    mb_type == MbTypes.P_L0_L0_8x16))
@@ -28172,7 +28172,7 @@ macroblock_layer_in_3davc_extension() {
 
                 if (mb_type != MbTypes.I_NxN &&
    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-   NumMbPart(mb_type) == 4)
+   H264Helpers.NumMbPart(mb_type) == 4)
                 {
                     size += stream.WriteClass<SubMbPredIn3davcExtension>(this.sub_mb_pred_in_3davc_extension);
 
@@ -28182,7 +28182,7 @@ macroblock_layer_in_3davc_extension() {
                         if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                            if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                             {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
@@ -28237,16 +28237,16 @@ macroblock_layer_in_3davc_extension() {
             uint mbPartIdx = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(mb_type); // mb_type
 
-            if (nal_unit_type == 21 && DepthFlag == 0
+            if (nal_unit_type == 21 && H264Helpers.GetDepthFlag() == 0
   && FrameTypes.IsB(slice_type)
-  && direct_spatial_mv_pred_flag != 0 && VspRefExist != 0
+  && direct_spatial_mv_pred_flag != 0 && H264Helpers.GetVspRefExist() != 0
   && mb_type == MbTypes.B_Direct_16x16)
             {
                 size += 1; // mb_direct_type_flag
             }
 
             if (alc_sps_enable_flag != 0 && nal_unit_type == 21 &&
-  FrameTypes.IsP(slice_type) && DepthFlag == 0 &&
+  FrameTypes.IsP(slice_type) && H264Helpers.GetDepthFlag() == 0 &&
   (mb_type == MbTypes.P_L0_16x16 ||
    mb_type == MbTypes.P_L0_L0_16x8 ||
    mb_type == MbTypes.P_L0_L0_8x16))
@@ -28278,7 +28278,7 @@ macroblock_layer_in_3davc_extension() {
 
                 if (mb_type != MbTypes.I_NxN &&
    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
-   NumMbPart(mb_type) == 4)
+   H264Helpers.NumMbPart(mb_type) == 4)
                 {
                     size += ItuStream.CalculateClassSize<SubMbPredIn3davcExtension>(sub_mb_pred_in_3davc_extension); // sub_mb_pred_in_3davc_extension
 
@@ -28288,7 +28288,7 @@ macroblock_layer_in_3davc_extension() {
                         if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8)
                         {
 
-                            if (NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
+                            if (H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]) > 1)
                             {
                                 noSubMbPartSizeLessThan8x8Flag = 0;
                             }
@@ -28472,7 +28472,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType == 1 || ChromaArrayType == 2)
+                if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.intra_chroma_pred_mode);
                 }
@@ -28480,9 +28480,9 @@ mb_pred_in_3davc_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                this.ref_idx_l0 = new int[NumMbPart(mb_type)];
-                this.bvsp_flag_l0 = new uint[NumMbPart(mb_type)];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.ref_idx_l0 = new int[H264Helpers.NumMbPart(mb_type)];
+                this.bvsp_flag_l0 = new uint[H264Helpers.NumMbPart(mb_type)];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -28499,9 +28499,9 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                this.ref_idx_l1 = new int[NumMbPart(mb_type)];
-                this.bvsp_flag_l1 = new uint[NumMbPart(mb_type)];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.ref_idx_l1 = new int[H264Helpers.NumMbPart(mb_type)];
+                this.bvsp_flag_l1 = new uint[H264Helpers.NumMbPart(mb_type)];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -28517,8 +28517,8 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                this.mvd_l0 = new int[NumMbPart(mb_type)][];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.mvd_l0 = new int[H264Helpers.NumMbPart(mb_type)][][];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
@@ -28533,8 +28533,8 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                this.mvd_l1 = new int[NumMbPart(mb_type)][];
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                this.mvd_l1 = new int[H264Helpers.NumMbPart(mb_type)][][];
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
@@ -28595,7 +28595,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType == 1 || ChromaArrayType == 2)
+                if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.intra_chroma_pred_mode);
                 }
@@ -28603,7 +28603,7 @@ mb_pred_in_3davc_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -28620,7 +28620,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -28636,7 +28636,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
@@ -28650,7 +28650,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
@@ -28710,7 +28710,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                if (ChromaArrayType == 1 || ChromaArrayType == 2)
+                if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(intra_chroma_pred_mode); // intra_chroma_pred_mode
                 }
@@ -28718,7 +28718,7 @@ mb_pred_in_3davc_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l0_active_minus1 > 0 ||
@@ -28735,7 +28735,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if ((num_ref_idx_l1_active_minus1 > 0 ||
@@ -28751,7 +28751,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
@@ -28765,7 +28765,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     }
                 }
 
-                for (mbPartIdx = 0; mbPartIdx < NumMbPart(mb_type); mbPartIdx++)
+                for (mbPartIdx = 0; mbPartIdx < H264Helpers.NumMbPart(mb_type); mbPartIdx++)
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
@@ -28899,8 +28899,8 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
-                    this.mvd_l0[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
-                    for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
+                    this.mvd_l0[mbPartIdx] = new int[H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
                         this.mvd_l0[mbPartIdx][subMbPartIdx] = new int[2];
@@ -28919,8 +28919,8 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
-                    this.mvd_l1[mbPartIdx] = new int[NumSubMbPart(sub_mb_type[mbPartIdx])][];
-                    for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
+                    this.mvd_l1[mbPartIdx] = new int[H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx])][];
+                    for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
                         this.mvd_l1[mbPartIdx][subMbPartIdx] = new int[2];
@@ -28985,7 +28985,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
-                    for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
+                    for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -29002,7 +29002,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
-                    for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
+                    for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -29066,7 +29066,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
                 {
 
-                    for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
+                    for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -29083,7 +29083,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
                 {
 
-                    for (subMbPartIdx = 0; subMbPartIdx < NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
+                    for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)

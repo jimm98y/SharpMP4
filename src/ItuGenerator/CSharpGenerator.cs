@@ -228,6 +228,12 @@ namespace Sharp{type}
         private string BuildStatement(ItuClass b, ItuBlock parent, ItuField field, int level, MethodType methodType)
         {
             string fieldValue = field.Value;
+            string fieldArray = field.FieldArray;
+
+            if(!string.IsNullOrEmpty(fieldArray))
+            {
+                fieldArray = fieldArray.Replace("TotalCoeff", "H264Helpers.TotalCoeff");
+            }
 
             if (!string.IsNullOrEmpty(fieldValue))
             {
@@ -237,6 +243,10 @@ namespace Sharp{type}
                 fieldValue = fieldValue.Replace("Abs(", "Math.Abs(");
                 fieldValue = fieldValue.Replace("Min(", "Math.Min(");
                 fieldValue = fieldValue.Replace("Max(", "Math.Max(");
+
+                // TODO
+                fieldValue = fieldValue.Replace("NextMbAddress", "H264Helpers.NextMbAddress");
+                fieldValue = fieldValue.Replace("RLESkipContext", "H264Helpers.RLESkipContext");
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith('!'))
@@ -259,18 +269,18 @@ namespace Sharp{type}
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
             {
-                return $"{GetSpacing(level)}{field.Name}{field.FieldArray}{field.Increment}{fieldValue};";
+                return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue};";
             }
             else
             {
                 if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null && b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
                     b.AddedFields.Add(new ItuField() { Name = field.Name, Value = fieldValue });
-                    return $"{GetSpacing(level)}uint {field.Name}{field.FieldArray}{fieldValue};";
+                    return $"{GetSpacing(level)}uint {field.Name}{fieldArray}{fieldValue};";
                 }
                 else
                 {
-                    return $"{GetSpacing(level)}{field.Name}{field.FieldArray}{field.Increment}{fieldValue};";
+                    return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue};";
                 }
             }
         }
@@ -632,7 +642,10 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(condition))
             {
                 condition = condition
-                    .Replace("next_bits(", "stream.NextBits(");
+                    .Replace("next_bits(", "stream.NextBits(")
+                    .Replace("NumSubMbPart", "H264Helpers.NumSubMbPart")
+                    .Replace("TotalCoeff", "H264Helpers.TotalCoeff")
+                    .Replace("NumMbPart", "H264Helpers.NumMbPart");
 
                 if(blockType == "if" || blockType == "else if" || blockType == "while" || blockType == "do")
                 {
@@ -702,6 +715,12 @@ namespace Sharp{type}
                                     variableName += "[0]";
                                 }
 
+                                if(variableName == "mvd_l1" || variableName == "mvd_l0")
+                                {
+                                    if(appendType == "[]")
+                                        appendType += "[]";
+                                }
+
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                             }
                         }
@@ -739,7 +758,8 @@ namespace Sharp{type}
             {
                 if (parts[i].StartsWith('!'))
                 {
-                    if (!condition.Contains("()")) // if (more_rbsp_data())
+                    string trimmed = parts[i].Trim(new char[] { ' ', '(', ')' });
+                    if (!trimmed.Contains("(") && !parts[i].Contains("()")) // if (more_rbsp_data())
                     {
                         // we don't have bool anymore, so in this case it's easy fix
                         condition = condition.Replace(parts[i], parts[i].Substring(1, parts[i].Length - 1) + "== 0");
@@ -748,7 +768,7 @@ namespace Sharp{type}
                 else if (!parts[i].Contains('=') && !parts[i].Contains('>') && !parts[i].Contains('<'))
                 {
                     string trimmed = parts[i].Trim(new char[] { ' ', '(', ')' });
-                    if (!condition.Contains("()")) // if (more_rbsp_data())
+                    if (!trimmed.Contains("(") && !parts[i].Contains("()")) // if (more_rbsp_data())
                     {
                         condition = condition.Replace(trimmed, trimmed + " != 0");
                     }
@@ -770,6 +790,8 @@ namespace Sharp{type}
             condition = condition.Replace("Extended_ISO", "H264Constants.Extended_ISO");
             condition = condition.Replace("Extended_SAR", "H264Constants.Extended_SAR");
 
+            condition = condition.Replace("TrailingOnes", "H264Helpers.TrailingOnes");
+
             condition = condition.Replace("Abs(", "Math.Abs(");
             condition = condition.Replace("Min(", "Math.Min(");
             condition = condition.Replace("Max(", "Math.Max(");
@@ -785,6 +807,14 @@ namespace Sharp{type}
             condition = condition.Replace("mb_type  ==  ", "mb_type  ==  MbTypes.");
             condition = condition.Replace("mb_type  !=  ", "mb_type  !=  MbTypes.");
             condition = condition.Replace("sub_mb_type[ mbPartIdx ]  !=  ", "sub_mb_type[ mbPartIdx ]  !=  MbTypes.");
+
+            // TODO
+            condition = condition.Replace("ChromaArrayType", "H264Helpers.GetChromaArrayType()");
+            condition = condition.Replace("DepthFlag", "H264Helpers.GetDepthFlag()");
+            condition = condition.Replace("InCropWindow", "H264Helpers.InCropWindow");
+            condition = condition.Replace("AllViewsPairedFlag", "H264Helpers.GetAllViewsPairedFlag()");
+            condition = condition.Replace("MbaffFrameFlag", "H264Helpers.GetMbaffFrameFlag()");
+            condition = condition.Replace("VspRefExist", "H264Helpers.GetVspRefExist()");
             
             return condition;
         }

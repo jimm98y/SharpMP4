@@ -30,6 +30,87 @@ namespace SharpH264
         public const uint Extended_SAR = 255;
     }
 
+    public class H264Helpers
+    {
+        public static uint GetChromaArrayType()
+        {
+            // inferred from SPS
+            /*
+Depending on the value of separate_colour_plane_flag, the value of the variable ChromaArrayType is assigned as follows:
+– If separate_colour_plane_flag is equal to 0, ChromaArrayType is set equal to chroma_format_idc.
+– Otherwise (separate_colour_plane_flag is equal to 1), ChromaArrayType is set equal to 0.
+             */
+            throw new NotImplementedException();
+        }
+
+        public static uint GetDepthFlag()
+        {
+            // DepthFlag = ( nal_unit_type ! = 21 ) ? 0 : ( avc_3d_extension_flag ? depth_flag : 1 )
+            throw new NotImplementedException();
+        }
+
+        public static uint GetMbaffFrameFlag()
+        {
+            // MbaffFrameFlag = ( mb_adaptive_frame_field_flag && !field_pic_flag )
+            throw new NotImplementedException();
+        }
+
+        public static uint GetVspRefExist()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetAllViewsPairedFlag()
+        {
+            /*
+            The variable AllViewsPairedFlag is derived as follows:
+AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFlag = ( AllViewsPairedFlag && depth_view_present_flag[ i ] && (J-9) texture_view_present_flag[ i ] )
+             */
+            throw new NotImplementedException();
+        }
+
+        public static int NumMbPart(uint value)
+        {
+            /*
+             The variable numMbPart is derived as follows:
+– If mbType[ CurrMbAddr ] is equal to B_Skip or B_Direct_16x16 and DQId is equal to 0 (nal_unit_type is not equal to 20), numMbPart is set equal to 4.
+– Otherwise, if mbType[ CurrMbAddr ] is equal to B_Skip or B_Direct_16x16 (and DQId is greater than 0 and nal_unit_type is equal to 20), numMbPart is set equal to 1.
+– Otherwise (mbType[ CurrMbAddr ] is not equal to B_Skip or B_Direct_16x16), numMbPart is set equal to NumMbPart( mbType[ CurrMbAddr ] ).
+             */
+            throw new NotImplementedException();
+        }
+
+        public static int NumSubMbPart(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint RLESkipContext()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint TrailingOnes(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint TotalCoeff(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint InCropWindow(uint value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint NextMbAddress(uint value)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class MbTypes
     {
         public const uint I_NxN = 0;
