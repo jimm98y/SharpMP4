@@ -121,10 +121,51 @@ namespace Sharp{type}
             foreach (var v in ituClass.RequiresDefinition)
             {
                 string type = GetCSharpTypeMapping()[v.Type];
-                if(string.IsNullOrEmpty(v.FieldArray))
+                if (string.IsNullOrEmpty(v.FieldArray))
                     resultCode += $"\r\n{type} {v.Name} = 0;";
                 else
-                    resultCode += $"\r\n{type}[] {v.Name} = null;"; // TODO: size
+                {
+                    int arrayDimensions = 0;
+                    int indicesArrayDimensions = 0;
+                    int level = 0;
+                    for (int i = 0; i < v.FieldArray.Length; i++)
+                    {
+                        if (v.FieldArray[i] == '[')
+                        {
+                            if (level == 0)
+                                arrayDimensions++;
+
+                            level++;
+                        }
+                        else if (v.FieldArray[i] == ']')
+                        {
+                            level--;
+                        }
+                        else if(v.FieldArray[i] == ',')
+                        {
+                            indicesArrayDimensions++;
+                        }
+                    }
+
+                    string array = "";
+                    if (arrayDimensions == 1 && indicesArrayDimensions > 0)
+                    {
+                        array += "[";
+                        for (int i = 0; i < indicesArrayDimensions; i++)
+                        {
+                            array += ",";
+                        }
+                        array += "]";
+                    }
+                    else
+                    {
+                        for (int i = 0; i < arrayDimensions; i++)
+                        {
+                            array += "[]";
+                        }
+                    }
+                    resultCode += $"\r\n{type}{array} {v.Name} = null;"; // TODO: size
+                }
             }
 
             return resultCode;

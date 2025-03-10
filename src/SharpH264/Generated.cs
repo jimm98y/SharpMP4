@@ -5412,10 +5412,10 @@ residual( startIdx, endIdx ) {
             uint NumC8x8 = 0;
             uint iCbCr = 0;
             uint i = 0;
-            uint[] ChromaDCLevel = null;
+            uint[][] ChromaDCLevel = null;
             uint i8x8 = 0;
             uint i4x4 = 0;
-            uint[] ChromaACLevel = null;
+            uint[][][] ChromaACLevel = null;
             uint CbIntra16x16DCLevel = 0;
             uint CbIntra16x16ACLevel = 0;
             uint CbLevel4x4 = 0;
@@ -5514,10 +5514,10 @@ residual( startIdx, endIdx ) {
             uint NumC8x8 = 0;
             uint iCbCr = 0;
             uint i = 0;
-            uint[] ChromaDCLevel = null;
+            uint[][] ChromaDCLevel = null;
             uint i8x8 = 0;
             uint i4x4 = 0;
-            uint[] ChromaACLevel = null;
+            uint[][][] ChromaACLevel = null;
             uint CbIntra16x16DCLevel = 0;
             uint CbIntra16x16ACLevel = 0;
             uint CbLevel4x4 = 0;
@@ -5616,10 +5616,10 @@ residual( startIdx, endIdx ) {
             uint NumC8x8 = 0;
             uint iCbCr = 0;
             uint i = 0;
-            uint[] ChromaDCLevel = null;
+            uint[][] ChromaDCLevel = null;
             uint i8x8 = 0;
             uint i4x4 = 0;
-            uint[] ChromaACLevel = null;
+            uint[][][] ChromaACLevel = null;
             uint CbIntra16x16DCLevel = 0;
             uint CbIntra16x16ACLevel = 0;
             uint CbLevel4x4 = 0;
@@ -5773,9 +5773,9 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             uint i8x8 = 0;
             uint i4x4 = 0;
             uint i = 0;
-            uint[] i16x16AClevel = null;
-            uint[] level4x4 = null;
-            uint[] level8x8 = null;
+            uint[][] i16x16AClevel = null;
+            uint[][] level4x4 = null;
+            uint[][] level8x8 = null;
 
             if (startIdx == 0 && MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
             {
@@ -5854,9 +5854,9 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             uint i8x8 = 0;
             uint i4x4 = 0;
             uint i = 0;
-            uint[] i16x16AClevel = null;
-            uint[] level4x4 = null;
-            uint[] level8x8 = null;
+            uint[][] i16x16AClevel = null;
+            uint[][] level4x4 = null;
+            uint[][] level8x8 = null;
 
             if (startIdx == 0 && MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
             {
@@ -5935,9 +5935,9 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
             uint i8x8 = 0;
             uint i4x4 = 0;
             uint i = 0;
-            uint[] i16x16AClevel = null;
-            uint[] level4x4 = null;
-            uint[] level8x8 = null;
+            uint[][] i16x16AClevel = null;
+            uint[][] level4x4 = null;
+            uint[][] level8x8 = null;
 
             if (startIdx == 0 && MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
             {
@@ -26368,10 +26368,10 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
             uint numValues = 0;
             uint i = 0;
-            uint[] outManLen = null;
-            uint[] outSign = null;
-            uint[] outExp = null;
-            uint[] outMantissa = null;
+            uint[,] outManLen = null;
+            uint[,] outSign = null;
+            uint[,] outExp = null;
+            uint[,] outMantissa = null;
             uint mantissaPred = 0;
 
             if (numViews > 1)
@@ -26469,10 +26469,10 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
             uint numValues = 0;
             uint i = 0;
-            uint[] outManLen = null;
-            uint[] outSign = null;
-            uint[] outExp = null;
-            uint[] outMantissa = null;
+            uint[,] outManLen = null;
+            uint[,] outSign = null;
+            uint[,] outExp = null;
+            uint[,] outMantissa = null;
             uint mantissaPred = 0;
 
             if (numViews > 1)
@@ -26570,10 +26570,10 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
             uint numValues = 0;
             uint i = 0;
-            uint[] outManLen = null;
-            uint[] outSign = null;
-            uint[] outExp = null;
-            uint[] outMantissa = null;
+            uint[,] outManLen = null;
+            uint[,] outSign = null;
+            uint[,] outExp = null;
+            uint[,] outMantissa = null;
             uint mantissaPred = 0;
 
             if (numViews > 1)
