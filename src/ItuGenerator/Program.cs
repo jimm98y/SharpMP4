@@ -23,7 +23,7 @@ partial class Program
                 .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
 
             var parsed = Parser.ItuClasses.ParseOrThrow(definitions);
-            Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parsed, Newtonsoft.Json.Formatting.Indented));
+            //Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parsed, Newtonsoft.Json.Formatting.Indented));
 
             long startOffset = 0;
             foreach (var c in parsed)
@@ -34,7 +34,7 @@ partial class Program
 
             CSharpGenerator generator = new CSharpGenerator();
             string code = generator.GenerateParser(Path.GetFileNameWithoutExtension(file), parsed);
-            Debug.WriteLine(code);
+            //Debug.WriteLine(code);
             break;
         }
     }

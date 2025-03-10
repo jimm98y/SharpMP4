@@ -60,6 +60,20 @@ Depending on the value of separate_colour_plane_flag, the value of the variable 
             throw new NotImplementedException();
         }
 
+        public static uint GetIdrPicFlag()
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetValue(string field)
+        {
+            throw new NotImplementedException();
+        }
+        public static uint[] GetArray(string field)
+        {
+            throw new NotImplementedException();
+        }
+
         public static uint GetAllViewsPairedFlag()
         {
             /*

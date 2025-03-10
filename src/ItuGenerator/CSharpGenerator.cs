@@ -1,9 +1,10 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ItuGenerator
@@ -119,7 +120,11 @@ namespace Sharp{type}
 
             foreach (var v in ituClass.RequiresDefinition)
             {
-                resultCode += $"\r\nuint {v.Name} = 0;";
+                string type = GetCSharpTypeMapping()[v.Type];
+                if(string.IsNullOrEmpty(v.FieldArray))
+                    resultCode += $"\r\n{type} {v.Name} = 0;";
+                else
+                    resultCode += $"\r\n{type}[] {v.Name} = null;"; // TODO: size
             }
 
             return resultCode;
@@ -233,6 +238,7 @@ namespace Sharp{type}
             if(!string.IsNullOrEmpty(fieldArray))
             {
                 fieldArray = fieldArray.Replace("TotalCoeff", "H264Helpers.TotalCoeff");
+                fieldArray = FixMissingFields(b, fieldArray);
             }
 
             if (!string.IsNullOrEmpty(fieldValue))
@@ -247,6 +253,7 @@ namespace Sharp{type}
                 // TODO
                 fieldValue = fieldValue.Replace("NextMbAddress", "H264Helpers.NextMbAddress");
                 fieldValue = fieldValue.Replace("RLESkipContext", "H264Helpers.RLESkipContext");
+                fieldValue = fieldValue.Replace("MbaffFrameFlag", "H264Helpers.GetMbaffFrameFlag()");
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith('!'))
@@ -265,6 +272,8 @@ namespace Sharp{type}
 
                 if (fieldValue.Contains("+ 256"))
                     fieldValue = "= (uint)" + fieldValue.TrimStart(' ', '=');
+
+                fieldValue = FixMissingFields(b, fieldValue);
             }
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
@@ -560,7 +569,7 @@ namespace Sharp{type}
 
             Dictionary<string, string> map = GetCSharpTypeMapping();
 
-            Debug.WriteLine($"Field type: {field.Type}, opt: array: {field.FieldArray}");
+            //Debug.WriteLine($"Field type: {field.Type}, opt: array: {field.FieldArray}");
 
             int arrayDimensions = 0;
             if (!string.IsNullOrEmpty(field.FieldArray))
@@ -656,6 +665,8 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(condition))
             {
                 condition = condition.Replace("<<", "<< (int)");
+
+                condition = FixMissingFields(b, condition);
             }
 
             if (methodType == MethodType.Read)
@@ -773,20 +784,22 @@ namespace Sharp{type}
                         condition = condition.Replace(trimmed, trimmed + " != 0");
                     }
                 }
-
-                condition = condition.Replace("slice_type  ==  B", "FrameTypes.IsB(slice_type)");
-                condition = condition.Replace("slice_type  ==  P", "FrameTypes.IsP(slice_type)");
-                condition = condition.Replace("slice_type  ==  I", "FrameTypes.IsI(slice_type)");
-                condition = condition.Replace("slice_type  !=  I", "!FrameTypes.IsI(slice_type)");
-                condition = condition.Replace("slice_type  ==  SP", "FrameTypes.IsSP(slice_type)");
-                condition = condition.Replace("slice_type  ==  SI", "FrameTypes.IsSI(slice_type)");
-                condition = condition.Replace("slice_type  !=  SI", "!FrameTypes.IsSI(slice_type)");
-                condition = condition.Replace("slice_type  ==  EP", "FrameTypes.IsP(slice_type)");
-                condition = condition.Replace("slice_type  ==  EB", "FrameTypes.IsB(slice_type)");
-                condition = condition.Replace("slice_type  ==  EI", "FrameTypes.IsI(slice_type)");
-                condition = condition.Replace("slice_type  !=  EI", "!FrameTypes.IsI(slice_type)");
-
             }
+
+            //Debug.WriteLine($"---Condition parts: {string.Join(" ##### ", parts)}");
+
+            condition = condition.Replace("slice_type  ==  B", "FrameTypes.IsB(slice_type)");
+            condition = condition.Replace("slice_type  ==  P", "FrameTypes.IsP(slice_type)");
+            condition = condition.Replace("slice_type  ==  I", "FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type  !=  I", "!FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type  ==  SP", "FrameTypes.IsSP(slice_type)");
+            condition = condition.Replace("slice_type  ==  SI", "FrameTypes.IsSI(slice_type)");
+            condition = condition.Replace("slice_type  !=  SI", "!FrameTypes.IsSI(slice_type)");
+            condition = condition.Replace("slice_type  ==  EP", "FrameTypes.IsP(slice_type)");
+            condition = condition.Replace("slice_type  ==  EB", "FrameTypes.IsB(slice_type)");
+            condition = condition.Replace("slice_type  ==  EI", "FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type  !=  EI", "!FrameTypes.IsI(slice_type)");
+
             condition = condition.Replace("Extended_ISO", "H264Constants.Extended_ISO");
             condition = condition.Replace("Extended_SAR", "H264Constants.Extended_SAR");
 
@@ -815,7 +828,29 @@ namespace Sharp{type}
             condition = condition.Replace("AllViewsPairedFlag", "H264Helpers.GetAllViewsPairedFlag()");
             condition = condition.Replace("MbaffFrameFlag", "H264Helpers.GetMbaffFrameFlag()");
             condition = condition.Replace("VspRefExist", "H264Helpers.GetVspRefExist()");
-            
+            condition = condition.Replace("IdrPicFlag", "H264Helpers.GetIdrPicFlag()");
+
+            return condition;
+        }
+
+        private static string FixMissingFields(ItuClass b, string condition)
+        {
+            Regex r = new Regex("\\b[a-z_][\\w_]+");
+            var matches = r.Matches(condition).Select(x => x.Value).Distinct().ToArray();
+            foreach (var match in matches)
+            {
+                if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null && 
+                    b.AddedFields.FirstOrDefault(x => x.Name == match) == null && 
+                    b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null && 
+                    match.Contains("_"))
+                {
+                    if(condition.Substring(condition.IndexOf(match) + match.Length).Trim().StartsWith("["))
+                        condition = condition.Replace(match, $"H264Helpers.GetArray(\"{match}\")");
+                    else
+                        condition = condition.Replace(match, $"H264Helpers.GetValue(\"{match}\")");
+                }
+            }
+
             return condition;
         }
 
@@ -1014,7 +1049,7 @@ namespace Sharp{type}
             return field.Name;
         }
 
-        private List<ItuField> FlattenFields(ItuClass cls, IEnumerable<ItuCode> fields, ItuBlock parent = null)
+        private List<ItuField> FlattenFields(ItuClass b, IEnumerable<ItuCode> fields, ItuBlock parent = null)
         {
 
             Dictionary<string, ItuField> ret = new Dictionary<string, ItuField>();
@@ -1024,11 +1059,8 @@ namespace Sharp{type}
                 {
                     field.Parent = parent; // keep track of parent blocks
 
-                    if (!string.IsNullOrEmpty(field.Value))
-                        continue;
-
                     string value = field.Value;
-                    AddAndResolveDuplicates(ret, field);
+                    AddAndResolveDuplicates(b, ret, field);
                 }
                 else if (code is ItuBlock block)
                 {
@@ -1037,13 +1069,17 @@ namespace Sharp{type}
                     // make sure we define for cycle variables
                     if (block.Type == "for")
                     {
-                        string[] parts = block.Condition.Substring(1, block.Condition.Length - 2).Split(';');
+                        string[] partsFor = block.Condition.Substring(1, block.Condition.Length - 2).Split(';');
+                        string[] parts = partsFor[0].Split(',');
                         var conditionChars = new char[] { '=' };
-                        int variableIndex = parts[0].IndexOfAny(conditionChars);
-                        string variable = parts[0].Substring(0, variableIndex).TrimStart(conditionChars).Trim();
-                        if (cls.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null)
+                        foreach (var part in parts)
                         {
-                            cls.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "u(32)" });
+                            int variableIndex = part.IndexOfAny(conditionChars);
+                            string variable = part.Substring(0, variableIndex).TrimStart(conditionChars).Trim();
+                            if (b.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null)
+                            {
+                                b.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "u(32)" });
+                            }
                         }
                     }
 
@@ -1051,46 +1087,46 @@ namespace Sharp{type}
                     {
                         if (block.Condition.Contains("i "))
                         {
-                            if (cls.RequiresDefinition.FirstOrDefault(x => x.Name == "i") == null)
+                            if (b.RequiresDefinition.FirstOrDefault(x => x.Name == "i") == null)
                             {
-                                cls.RequiresDefinition.Add(new ItuField() { Name = "i", Type = "u(32)" });
+                                b.RequiresDefinition.Add(new ItuField() { Name = "i", Type = "u(32)" });
                             }
                         }
                     }
 
-                    var blockFields = FlattenFields(cls, block.Content, block);
+                    var blockFields = FlattenFields(b, block.Content, block);
                     foreach (var blockField in blockFields)
                     {
-                        AddAndResolveDuplicates(ret, blockField);
+                        AddAndResolveDuplicates(b, ret, blockField);
                     }
                 }
                 else if (code is ItuBlockIfThenElse blockifThenElse)
                 {
                     blockifThenElse.Parent = parent; // keep track of parent blocks
 
-                    var blockFields = FlattenFields(cls, ((ItuBlock)blockifThenElse.BlockIf).Content, (ItuBlock)blockifThenElse.BlockIf);
+                    var blockFields = FlattenFields(b, ((ItuBlock)blockifThenElse.BlockIf).Content, (ItuBlock)blockifThenElse.BlockIf);
                     foreach (var blockField in blockFields)
                     {
-                        AddAndResolveDuplicates(ret, blockField);
+                        AddAndResolveDuplicates(b, ret, blockField);
                     }
                     ((ItuBlock)blockifThenElse.BlockIf).Parent = parent;
 
                     foreach (var blockelseif in blockifThenElse.BlockElseIf)
                     {
-                        var blockElseIfFields = FlattenFields(cls, ((ItuBlock)blockelseif).Content, (ItuBlock)blockelseif);
+                        var blockElseIfFields = FlattenFields(b, ((ItuBlock)blockelseif).Content, (ItuBlock)blockelseif);
                         foreach (var blockField in blockElseIfFields)
                         {
-                            AddAndResolveDuplicates(ret, blockField);
+                            AddAndResolveDuplicates(b, ret, blockField);
                         }
                         ((ItuBlock)blockelseif).Parent = parent;
                     }
 
                     if(blockifThenElse.BlockElse != null)
                     {
-                        var blockElseFields = FlattenFields(cls, ((ItuBlock)blockifThenElse.BlockElse).Content, (ItuBlock)blockifThenElse.BlockElse);
+                        var blockElseFields = FlattenFields(b, ((ItuBlock)blockifThenElse.BlockElse).Content, (ItuBlock)blockifThenElse.BlockElse);
                         foreach (var blockElseField in blockElseFields)
                         {
-                            AddAndResolveDuplicates(ret, blockElseField);
+                            AddAndResolveDuplicates(b, ret, blockElseField);
                         }
                         ((ItuBlock)blockifThenElse.BlockElse).Parent = parent;
                     }
@@ -1100,10 +1136,10 @@ namespace Sharp{type}
             if (parent == null)
             {
                 // add also ctor params as fields
-                string[] ctorParams = GetCtorParameters(cls);
+                string[] ctorParams = GetCtorParameters(b);
                 for (int i = 0; i < ctorParams.Length; i++)
                 {
-                    AddAndResolveDuplicates(ret,
+                    AddAndResolveDuplicates(b, ret,
                         new ItuField()
                         {
                             Name = ctorParams[i].ToFirstLower(),
@@ -1115,10 +1151,40 @@ namespace Sharp{type}
             return ret.Values.ToList();
         }
 
-        private void AddAndResolveDuplicates(Dictionary<string, ItuField> ret, ItuField field)
+        private void AddAndResolveDuplicates(ItuClass b, Dictionary<string, ItuField> ret, ItuField field)
         {
-            if (!string.IsNullOrEmpty(field.Increment))
-                return;
+            if(field.Name == "levelVal")
+            {
+
+            }
+
+            if(string.IsNullOrEmpty(field.Type))
+            {
+                if (!string.IsNullOrEmpty(field.Increment))
+                {
+                    if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
+                    {
+                        b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "u(32)", FieldArray = field.FieldArray });
+                    }
+                    return;
+                }
+                else if(!string.IsNullOrEmpty(field.Value))
+                {
+                    if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
+                    {
+                        if (field.Value.TrimEnd().EndsWith("-1"))
+                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(32)", FieldArray = field.FieldArray });
+                        else
+                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "u(32)", FieldArray = field.FieldArray });
+                    }
+                    else
+                    {
+                        if (field.Value.TrimEnd().EndsWith("-1"))
+                            b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name).Type = "i(32)";
+                    }
+                    return;
+                }
+            }            
 
             string name = field.Name;
             int index = 0;
