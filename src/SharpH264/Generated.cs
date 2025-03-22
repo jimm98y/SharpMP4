@@ -221,17 +221,17 @@ nal_unit( NumBytesInNALunit ) {
 
                 if (svc_extension_flag != 0)
                 {
-                    size += ItuStream.CalculateClassSize<NalUnitHeaderSvcExtension>(nal_unit_header_svc_extension); // nal_unit_header_svc_extension
+                    size += ItuStream.CalculateClassSize<NalUnitHeaderSvcExtension>(this.nal_unit_header_svc_extension); // nal_unit_header_svc_extension
                     nalUnitHeaderBytes += 3;
                 }
                 else if (avc_3d_extension_flag != 0)
                 {
-                    size += ItuStream.CalculateClassSize<NalUnitHeader3davcExtension>(nal_unit_header_3davc_extension); // nal_unit_header_3davc_extension
+                    size += ItuStream.CalculateClassSize<NalUnitHeader3davcExtension>(this.nal_unit_header_3davc_extension); // nal_unit_header_3davc_extension
                     nalUnitHeaderBytes += 2;
                 }
                 else
                 {
-                    size += ItuStream.CalculateClassSize<NalUnitHeaderMvcExtension>(nal_unit_header_mvc_extension); // nal_unit_header_mvc_extension
+                    size += ItuStream.CalculateClassSize<NalUnitHeaderMvcExtension>(this.nal_unit_header_mvc_extension); // nal_unit_header_mvc_extension
                     nalUnitHeaderBytes += 3;
                 }
             }
@@ -301,8 +301,8 @@ seq_parameter_set_rbsp() {
         {
             ulong size = 0;
 
-            size += ItuStream.CalculateClassSize<SeqParameterSetData>(seq_parameter_set_data); // seq_parameter_set_data
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<SeqParameterSetData>(this.seq_parameter_set_data); // seq_parameter_set_data
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
         }
@@ -722,11 +722,11 @@ seq_parameter_set_data() {
 
                             if (i < 6)
                             {
-                                size += ItuStream.CalculateClassSize<ScalingList>(scaling_list); // scaling_list
+                                size += ItuStream.CalculateClassSize<ScalingList>(this.scaling_list); // scaling_list
                             }
                             else
                             {
-                                size += ItuStream.CalculateClassSize<ScalingList>(scaling_list); // scaling_list
+                                size += ItuStream.CalculateClassSize<ScalingList>(this.scaling_list); // scaling_list
                             }
                         }
                     }
@@ -775,7 +775,7 @@ seq_parameter_set_data() {
 
             if (vui_parameters_present_flag != 0)
             {
-                size += ItuStream.CalculateClassSize<VuiParameters>(vui_parameters); // vui_parameters
+                size += ItuStream.CalculateClassSize<VuiParameters>(this.vui_parameters); // vui_parameters
             }
 
             return size;
@@ -999,7 +999,7 @@ seq_parameter_set_extension_rbsp() {
                 size += ItuStream.CalculateUnsignedIntVariable(alpha_transparent_value); // alpha_transparent_value
             }
             size += 1; // additional_extension_flag
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
         }
@@ -1185,40 +1185,40 @@ subset_seq_parameter_set_rbsp() {
         {
             ulong size = 0;
 
-            size += ItuStream.CalculateClassSize<SeqParameterSetData>(seq_parameter_set_data); // seq_parameter_set_data
+            size += ItuStream.CalculateClassSize<SeqParameterSetData>(this.seq_parameter_set_data); // seq_parameter_set_data
 
             if (H264Helpers.GetValue("profile_idc") == 83 || H264Helpers.GetValue("profile_idc") == 86)
             {
-                size += ItuStream.CalculateClassSize<SeqParameterSetSvcExtension>(seq_parameter_set_svc_extension); // seq_parameter_set_svc_extension
+                size += ItuStream.CalculateClassSize<SeqParameterSetSvcExtension>(this.seq_parameter_set_svc_extension); // seq_parameter_set_svc_extension
                 size += 1; // svc_vui_parameters_present_flag
 
                 if (svc_vui_parameters_present_flag == 1)
                 {
-                    size += ItuStream.CalculateClassSize<SvcVuiParametersExtension>(svc_vui_parameters_extension); // svc_vui_parameters_extension
+                    size += ItuStream.CalculateClassSize<SvcVuiParametersExtension>(this.svc_vui_parameters_extension); // svc_vui_parameters_extension
                 }
             }
             else if (H264Helpers.GetValue("profile_idc") == 118 || H264Helpers.GetValue("profile_idc") == 128 ||
   H264Helpers.GetValue("profile_idc") == 134)
             {
                 size += 1; // bit_equal_to_one
-                size += ItuStream.CalculateClassSize<SeqParameterSetMvcExtension>(seq_parameter_set_mvc_extension); // seq_parameter_set_mvc_extension
+                size += ItuStream.CalculateClassSize<SeqParameterSetMvcExtension>(this.seq_parameter_set_mvc_extension); // seq_parameter_set_mvc_extension
                 size += 1; // mvc_vui_parameters_present_flag
 
                 if (mvc_vui_parameters_present_flag == 1)
                 {
-                    size += ItuStream.CalculateClassSize<MvcVuiParametersExtension>(mvc_vui_parameters_extension); // mvc_vui_parameters_extension
+                    size += ItuStream.CalculateClassSize<MvcVuiParametersExtension>(this.mvc_vui_parameters_extension); // mvc_vui_parameters_extension
                 }
             }
             else if (H264Helpers.GetValue("profile_idc") == 138 || H264Helpers.GetValue("profile_idc") == 135)
             {
                 size += 1; // bit_equal_to_one
-                size += ItuStream.CalculateClassSize<SeqParameterSetMvcdExtension>(seq_parameter_set_mvcd_extension); // seq_parameter_set_mvcd_extension
+                size += ItuStream.CalculateClassSize<SeqParameterSetMvcdExtension>(this.seq_parameter_set_mvcd_extension); // seq_parameter_set_mvcd_extension
             }
             else if (H264Helpers.GetValue("profile_idc") == 139)
             {
                 size += 1; // bit_equal_to_one
-                size += ItuStream.CalculateClassSize<SeqParameterSetMvcdExtension>(seq_parameter_set_mvcd_extension); // seq_parameter_set_mvcd_extension
-                size += ItuStream.CalculateClassSize<SeqParameterSet3davcExtension>(seq_parameter_set_3davc_extension); // seq_parameter_set_3davc_extension
+                size += ItuStream.CalculateClassSize<SeqParameterSetMvcdExtension>(this.seq_parameter_set_mvcd_extension); // seq_parameter_set_mvcd_extension
+                size += ItuStream.CalculateClassSize<SeqParameterSet3davcExtension>(this.seq_parameter_set_3davc_extension); // seq_parameter_set_3davc_extension
             }
             size += 1; // additional_extension2_flag
 
@@ -1230,7 +1230,7 @@ subset_seq_parameter_set_rbsp() {
                     size += 1; // additional_extension2_data_flag
                 }
             }
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
         }
@@ -1643,18 +1643,18 @@ pic_parameter_set_rbsp() {
 
                             if (i < 6)
                             {
-                                size += ItuStream.CalculateClassSize<ScalingList>(scaling_list); // scaling_list
+                                size += ItuStream.CalculateClassSize<ScalingList>(this.scaling_list); // scaling_list
                             }
                             else
                             {
-                                size += ItuStream.CalculateClassSize<ScalingList>(scaling_list); // scaling_list
+                                size += ItuStream.CalculateClassSize<ScalingList>(this.scaling_list); // scaling_list
                             }
                         }
                     }
                 }
                 size += ItuStream.CalculateSignedIntGolomb(second_chroma_qp_index_offset); // second_chroma_qp_index_offset
             }
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
         }
@@ -1719,9 +1719,9 @@ sei_rbsp() {
 
             do
             {
-                size += ItuStream.CalculateClassSize<SeiMessage>(sei_message); // sei_message
+                size += ItuStream.CalculateClassSize<SeiMessage>(this.sei_message); // sei_message
             } while (stream.MoreRbspData());
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
         }
@@ -1847,7 +1847,7 @@ sei_message() {
             }
             size += 8; // last_payload_size_byte
             payloadSize += last_payload_size_byte;
-            size += ItuStream.CalculateClassSize<SeiPayload>(sei_payload); // sei_payload
+            size += ItuStream.CalculateClassSize<SeiPayload>(this.sei_payload); // sei_payload
 
             return size;
         }
@@ -1899,7 +1899,7 @@ access_unit_delimiter_rbsp() {
             ulong size = 0;
 
             size += 3; // primary_pic_type
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
         }
@@ -2045,7 +2045,7 @@ filler_data_rbsp() {
             {
                 size += 8; // ff_byte
             }
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
         }
@@ -2101,9 +2101,9 @@ slice_layer_without_partitioning_rbsp() {
         {
             ulong size = 0;
 
-            size += ItuStream.CalculateClassSize<SliceHeader>(slice_header); // slice_header
-            size += ItuStream.CalculateClassSize<SliceData>(slice_data); // slice_data
-            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
+            size += ItuStream.CalculateClassSize<SliceHeader>(this.slice_header); // slice_header
+            size += ItuStream.CalculateClassSize<SliceData>(this.slice_data); // slice_data
+            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(this.rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
 
             return size;
         }
@@ -2164,10 +2164,10 @@ slice_data_partition_a_layer_rbsp() {
         {
             ulong size = 0;
 
-            size += ItuStream.CalculateClassSize<SliceHeader>(slice_header); // slice_header
+            size += ItuStream.CalculateClassSize<SliceHeader>(this.slice_header); // slice_header
             size += ItuStream.CalculateUnsignedIntGolomb(slice_id); // slice_id
-            size += ItuStream.CalculateClassSize<SliceData>(slice_data); // slice_data
-            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
+            size += ItuStream.CalculateClassSize<SliceData>(this.slice_data); // slice_data
+            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(this.rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
 
             return size;
         }
@@ -2262,8 +2262,8 @@ slice_data_partition_b_layer_rbsp() {
             {
                 size += ItuStream.CalculateUnsignedIntGolomb(redundant_pic_cnt); // redundant_pic_cnt
             }
-            size += ItuStream.CalculateClassSize<SliceData>(slice_data); // slice_data
-            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
+            size += ItuStream.CalculateClassSize<SliceData>(this.slice_data); // slice_data
+            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(this.rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
 
             return size;
         }
@@ -2358,8 +2358,8 @@ slice_data_partition_c_layer_rbsp() {
             {
                 size += ItuStream.CalculateUnsignedIntGolomb(redundant_pic_cnt); // redundant_pic_cnt
             }
-            size += ItuStream.CalculateClassSize<SliceData>(slice_data); // slice_data
-            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
+            size += ItuStream.CalculateClassSize<SliceData>(this.slice_data); // slice_data
+            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(this.rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
 
             return size;
         }
@@ -2428,7 +2428,7 @@ rbsp_slice_trailing_bits() {
         {
             ulong size = 0;
 
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             if (H264Helpers.GetValue("entropy_coding_mode_flag") != 0)
             {
@@ -2560,7 +2560,7 @@ prefix_nal_unit_rbsp() {
 
             if (H264Helpers.GetValue("svc_extension_flag") != 0)
             {
-                size += ItuStream.CalculateClassSize<PrefixNalUnitSvc>(prefix_nal_unit_svc); // prefix_nal_unit_svc
+                size += ItuStream.CalculateClassSize<PrefixNalUnitSvc>(this.prefix_nal_unit_svc); // prefix_nal_unit_svc
             }
 
             return size;
@@ -2673,24 +2673,24 @@ slice_layer_extension_rbsp() {
 
             if (H264Helpers.GetValue("svc_extension_flag") != 0)
             {
-                size += ItuStream.CalculateClassSize<SliceHeaderInScalableExtension>(slice_header_in_scalable_extension); // slice_header_in_scalable_extension
+                size += ItuStream.CalculateClassSize<SliceHeaderInScalableExtension>(this.slice_header_in_scalable_extension); // slice_header_in_scalable_extension
 
                 if (H264Helpers.GetValue("slice_skip_flag") == 0)
                 {
-                    size += ItuStream.CalculateClassSize<SliceDataInScalableExtension>(slice_data_in_scalable_extension); // slice_data_in_scalable_extension
+                    size += ItuStream.CalculateClassSize<SliceDataInScalableExtension>(this.slice_data_in_scalable_extension); // slice_data_in_scalable_extension
                 }
             }
             else if (H264Helpers.GetValue("avc_3d_extension_flag") != 0)
             {
-                size += ItuStream.CalculateClassSize<SliceHeaderIn3davcExtension>(slice_header_in_3davc_extension); // slice_header_in_3davc_extension
-                size += ItuStream.CalculateClassSize<SliceDataIn3davcExtension>(slice_data_in_3davc_extension); // slice_data_in_3davc_extension
+                size += ItuStream.CalculateClassSize<SliceHeaderIn3davcExtension>(this.slice_header_in_3davc_extension); // slice_header_in_3davc_extension
+                size += ItuStream.CalculateClassSize<SliceDataIn3davcExtension>(this.slice_data_in_3davc_extension); // slice_data_in_3davc_extension
             }
             else
             {
-                size += ItuStream.CalculateClassSize<SliceHeader>(slice_header); // slice_header
-                size += ItuStream.CalculateClassSize<SliceData>(slice_data); // slice_data
+                size += ItuStream.CalculateClassSize<SliceHeader>(this.slice_header); // slice_header
+                size += ItuStream.CalculateClassSize<SliceData>(this.slice_data); // slice_data
             }
-            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspSliceTrailingBits>(this.rbsp_slice_trailing_bits); // rbsp_slice_trailing_bits
 
             return size;
         }
@@ -3167,22 +3167,22 @@ slice_header() {
 
             if (H264Helpers.GetValue("nal_unit_type") == 20 || H264Helpers.GetValue("nal_unit_type") == 21)
             {
-                size += ItuStream.CalculateClassSize<RefPicListMvcModification>(ref_pic_list_mvc_modification); // ref_pic_list_mvc_modification
+                size += ItuStream.CalculateClassSize<RefPicListMvcModification>(this.ref_pic_list_mvc_modification); // ref_pic_list_mvc_modification
             }
             else
             {
-                size += ItuStream.CalculateClassSize<RefPicListModification>(ref_pic_list_modification); // ref_pic_list_modification
+                size += ItuStream.CalculateClassSize<RefPicListModification>(this.ref_pic_list_modification); // ref_pic_list_modification
             }
 
             if ((H264Helpers.GetValue("weighted_pred_flag") != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) ||
   (H264Helpers.GetValue("weighted_bipred_idc") == 1 && FrameTypes.IsB(slice_type)))
             {
-                size += ItuStream.CalculateClassSize<PredWeightTable>(pred_weight_table); // pred_weight_table
+                size += ItuStream.CalculateClassSize<PredWeightTable>(this.pred_weight_table); // pred_weight_table
             }
 
             if (H264Helpers.GetValue("nal_ref_idc") != 0)
             {
-                size += ItuStream.CalculateClassSize<DecRefPicMarking>(dec_ref_pic_marking); // dec_ref_pic_marking
+                size += ItuStream.CalculateClassSize<DecRefPicMarking>(this.dec_ref_pic_marking); // dec_ref_pic_marking
             }
 
             if (H264Helpers.GetValue("entropy_coding_mode_flag") != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
@@ -3522,7 +3522,7 @@ slice_data() {
                     {
                         size += 1; // mb_field_decoding_flag
                     }
-                    size += ItuStream.CalculateClassSize<MacroblockLayer>(macroblock_layer); // macroblock_layer
+                    size += ItuStream.CalculateClassSize<MacroblockLayer>(this.macroblock_layer); // macroblock_layer
                 }
 
                 if (H264Helpers.GetValue("entropy_coding_mode_flag") == 0)
@@ -4574,7 +4574,7 @@ macroblock_layer() {
    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
    H264Helpers.NumMbPart(mb_type) == 4)
                 {
-                    size += ItuStream.CalculateClassSize<SubMbPred>(sub_mb_pred); // sub_mb_pred
+                    size += ItuStream.CalculateClassSize<SubMbPred>(this.sub_mb_pred); // sub_mb_pred
 
                     for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                     {
@@ -4600,7 +4600,7 @@ macroblock_layer() {
                     {
                         size += 1; // transform_size_8x8_flag
                     }
-                    size += ItuStream.CalculateClassSize<MbPred>(mb_pred); // mb_pred
+                    size += ItuStream.CalculateClassSize<MbPred>(this.mb_pred); // mb_pred
                 }
 
                 if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
@@ -4620,7 +4620,7 @@ macroblock_layer() {
    MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
-                    size += ItuStream.CalculateClassSize<Residual>(residual); // residual
+                    size += ItuStream.CalculateClassSize<Residual>(this.residual); // residual
                 }
             }
 
@@ -5635,7 +5635,7 @@ residual( startIdx, endIdx ) {
             {
                 residual_block = H264Helpers.GetValue("residual_block_cabac");
             }
-            size += ItuStream.CalculateClassSize<ResidualLuma>(residual_luma); // residual_luma
+            size += ItuStream.CalculateClassSize<ResidualLuma>(this.residual_luma); // residual_luma
 
 
 
@@ -5650,7 +5650,7 @@ residual( startIdx, endIdx ) {
 
                     if (((H264Helpers.GetValue("CodedBlockPatternChroma") & 3) != 0) && startIdx == 0)
                     {
-                        size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+                        size += ItuStream.CalculateClassSize<ResidualBlock>(this.residual_block); // residual_block
                     }
                     else
                     {
@@ -5673,7 +5673,7 @@ residual( startIdx, endIdx ) {
 
                             if ((H264Helpers.GetValue("CodedBlockPatternChroma") & 2) != 0)
                             {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+                                size += ItuStream.CalculateClassSize<ResidualBlock>(this.residual_block); // residual_block
                             }
                             else
                             {
@@ -5689,12 +5689,12 @@ residual( startIdx, endIdx ) {
             }
             else if (H264Helpers.GetChromaArrayType() == 3)
             {
-                size += ItuStream.CalculateClassSize<ResidualLuma>(residual_luma); // residual_luma
+                size += ItuStream.CalculateClassSize<ResidualLuma>(this.residual_luma); // residual_luma
 
 
 
 
-                size += ItuStream.CalculateClassSize<ResidualLuma>(residual_luma); // residual_luma
+                size += ItuStream.CalculateClassSize<ResidualLuma>(this.residual_luma); // residual_luma
 
 
 
@@ -5789,7 +5789,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
+                        if ((H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8)) != 0)
                         {
 
                             if (MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
@@ -5828,7 +5828,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         }
                     }
                 }
-                else if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
+                else if ((H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8)) != 0)
                 {
                     size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
                 }
@@ -5870,7 +5870,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
+                        if ((H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8)) != 0)
                         {
 
                             if (MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
@@ -5909,7 +5909,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         }
                     }
                 }
-                else if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
+                else if ((H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8)) != 0)
                 {
                     size += stream.WriteClass<ResidualBlock>(this.residual_block);
                 }
@@ -5939,7 +5939,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
 
             if (startIdx == 0 && MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
             {
-                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+                size += ItuStream.CalculateClassSize<ResidualBlock>(this.residual_block); // residual_block
             }
 
             for (i8x8 = 0; i8x8 < 4; i8x8++)
@@ -5951,16 +5951,16 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
+                        if ((H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8)) != 0)
                         {
 
                             if (MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
                             {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+                                size += ItuStream.CalculateClassSize<ResidualBlock>(this.residual_block); // residual_block
                             }
                             else
                             {
-                                size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+                                size += ItuStream.CalculateClassSize<ResidualBlock>(this.residual_block); // residual_block
                             }
                         }
                         else if (MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
@@ -5990,9 +5990,9 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                         }
                     }
                 }
-                else if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
+                else if ((H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8)) != 0)
                 {
-                    size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
+                    size += ItuStream.CalculateClassSize<ResidualBlock>(this.residual_block); // residual_block
                 }
                 else
                 {
@@ -6109,13 +6109,13 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             ulong size = 0;
 
             uint i = 0;
-            uint[] coeffLevel = null;
+            long[] coeffLevel = null;
             uint suffixLength = 0;
-            uint[] levelVal = null;
-            uint levelCode = 0;
+            long[] levelVal = null;
+            long levelCode = 0;
             uint zerosLeft = 0;
             uint[] runVal = null;
-            int coeffNum = 0;
+            long coeffNum = 0;
 
             for (i = 0; i < maxNumCoeff; i++)
             {
@@ -6234,13 +6234,13 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             ulong size = 0;
 
             uint i = 0;
-            uint[] coeffLevel = null;
+            long[] coeffLevel = null;
             uint suffixLength = 0;
-            uint[] levelVal = null;
-            uint levelCode = 0;
+            long[] levelVal = null;
+            long levelCode = 0;
             uint zerosLeft = 0;
             uint[] runVal = null;
-            int coeffNum = 0;
+            long coeffNum = 0;
 
             for (i = 0; i < maxNumCoeff; i++)
             {
@@ -6359,13 +6359,13 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             ulong size = 0;
 
             uint i = 0;
-            uint[] coeffLevel = null;
+            long[] coeffLevel = null;
             uint suffixLength = 0;
-            uint[] levelVal = null;
-            uint levelCode = 0;
+            long[] levelVal = null;
+            long levelCode = 0;
             uint zerosLeft = 0;
             uint[] runVal = null;
-            int coeffNum = 0;
+            long coeffNum = 0;
 
             for (i = 0; i < maxNumCoeff; i++)
             {
@@ -6547,7 +6547,7 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             ulong size = 0;
 
             uint i = 0;
-            uint[] coeffLevel = null;
+            long[] coeffLevel = null;
             uint numCoeff = 0;
 
             if (maxNumCoeff != 64 || H264Helpers.GetChromaArrayType() == 3)
@@ -6604,7 +6604,7 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             ulong size = 0;
 
             uint i = 0;
-            uint[] coeffLevel = null;
+            long[] coeffLevel = null;
             uint numCoeff = 0;
 
             if (maxNumCoeff != 64 || H264Helpers.GetChromaArrayType() == 3)
@@ -6661,7 +6661,7 @@ residual_block_cabac( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
             ulong size = 0;
 
             uint i = 0;
-            uint[] coeffLevel = null;
+            long[] coeffLevel = null;
             uint numCoeff = 0;
 
             if (maxNumCoeff != 64 || H264Helpers.GetChromaArrayType() == 3)
@@ -7665,295 +7665,295 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
 
             if (payloadType == 0)
             {
-                size += ItuStream.CalculateClassSize<BufferingPeriod>(buffering_period); // buffering_period
+                size += ItuStream.CalculateClassSize<BufferingPeriod>(this.buffering_period); // buffering_period
             }
             else if (payloadType == 1)
             {
-                size += ItuStream.CalculateClassSize<PicTiming>(pic_timing); // pic_timing
+                size += ItuStream.CalculateClassSize<PicTiming>(this.pic_timing); // pic_timing
             }
             else if (payloadType == 2)
             {
-                size += ItuStream.CalculateClassSize<PanScanRect>(pan_scan_rect); // pan_scan_rect
+                size += ItuStream.CalculateClassSize<PanScanRect>(this.pan_scan_rect); // pan_scan_rect
             }
             else if (payloadType == 3)
             {
-                size += ItuStream.CalculateClassSize<FillerPayload>(filler_payload); // filler_payload
+                size += ItuStream.CalculateClassSize<FillerPayload>(this.filler_payload); // filler_payload
             }
             else if (payloadType == 4)
             {
-                size += ItuStream.CalculateClassSize<UserDataRegisteredItutT35>(user_data_registered_itu_t_t35); // user_data_registered_itu_t_t35
+                size += ItuStream.CalculateClassSize<UserDataRegisteredItutT35>(this.user_data_registered_itu_t_t35); // user_data_registered_itu_t_t35
             }
             else if (payloadType == 5)
             {
-                size += ItuStream.CalculateClassSize<UserDataUnregistered>(user_data_unregistered); // user_data_unregistered
+                size += ItuStream.CalculateClassSize<UserDataUnregistered>(this.user_data_unregistered); // user_data_unregistered
             }
             else if (payloadType == 6)
             {
-                size += ItuStream.CalculateClassSize<RecoveryPoint>(recovery_point); // recovery_point
+                size += ItuStream.CalculateClassSize<RecoveryPoint>(this.recovery_point); // recovery_point
             }
             else if (payloadType == 7)
             {
-                size += ItuStream.CalculateClassSize<DecRefPicMarkingRepetition>(dec_ref_pic_marking_repetition); // dec_ref_pic_marking_repetition
+                size += ItuStream.CalculateClassSize<DecRefPicMarkingRepetition>(this.dec_ref_pic_marking_repetition); // dec_ref_pic_marking_repetition
             }
             else if (payloadType == 8)
             {
-                size += ItuStream.CalculateClassSize<SparePic>(spare_pic); // spare_pic
+                size += ItuStream.CalculateClassSize<SparePic>(this.spare_pic); // spare_pic
             }
             else if (payloadType == 9)
             {
-                size += ItuStream.CalculateClassSize<SceneInfo>(scene_info); // scene_info
+                size += ItuStream.CalculateClassSize<SceneInfo>(this.scene_info); // scene_info
             }
             else if (payloadType == 10)
             {
-                size += ItuStream.CalculateClassSize<SubSeqInfo>(sub_seq_info); // sub_seq_info
+                size += ItuStream.CalculateClassSize<SubSeqInfo>(this.sub_seq_info); // sub_seq_info
             }
             else if (payloadType == 11)
             {
-                size += ItuStream.CalculateClassSize<SubSeqLayerCharacteristics>(sub_seq_layer_characteristics); // sub_seq_layer_characteristics
+                size += ItuStream.CalculateClassSize<SubSeqLayerCharacteristics>(this.sub_seq_layer_characteristics); // sub_seq_layer_characteristics
             }
             else if (payloadType == 12)
             {
-                size += ItuStream.CalculateClassSize<SubSeqCharacteristics>(sub_seq_characteristics); // sub_seq_characteristics
+                size += ItuStream.CalculateClassSize<SubSeqCharacteristics>(this.sub_seq_characteristics); // sub_seq_characteristics
             }
             else if (payloadType == 13)
             {
-                size += ItuStream.CalculateClassSize<FullFrameFreeze>(full_frame_freeze); // full_frame_freeze
+                size += ItuStream.CalculateClassSize<FullFrameFreeze>(this.full_frame_freeze); // full_frame_freeze
             }
             else if (payloadType == 14)
             {
-                size += ItuStream.CalculateClassSize<FullFrameFreezeRelease>(full_frame_freeze_release); // full_frame_freeze_release
+                size += ItuStream.CalculateClassSize<FullFrameFreezeRelease>(this.full_frame_freeze_release); // full_frame_freeze_release
             }
             else if (payloadType == 15)
             {
-                size += ItuStream.CalculateClassSize<FullFrameSnapshot>(full_frame_snapshot); // full_frame_snapshot
+                size += ItuStream.CalculateClassSize<FullFrameSnapshot>(this.full_frame_snapshot); // full_frame_snapshot
             }
             else if (payloadType == 16)
             {
-                size += ItuStream.CalculateClassSize<ProgressiveRefinementSegmentStart>(progressive_refinement_segment_start); // progressive_refinement_segment_start
+                size += ItuStream.CalculateClassSize<ProgressiveRefinementSegmentStart>(this.progressive_refinement_segment_start); // progressive_refinement_segment_start
             }
             else if (payloadType == 17)
             {
-                size += ItuStream.CalculateClassSize<ProgressiveRefinementSegmentEnd>(progressive_refinement_segment_end); // progressive_refinement_segment_end
+                size += ItuStream.CalculateClassSize<ProgressiveRefinementSegmentEnd>(this.progressive_refinement_segment_end); // progressive_refinement_segment_end
             }
             else if (payloadType == 18)
             {
-                size += ItuStream.CalculateClassSize<MotionConstrainedSliceGroupSet>(motion_constrained_slice_group_set); // motion_constrained_slice_group_set
+                size += ItuStream.CalculateClassSize<MotionConstrainedSliceGroupSet>(this.motion_constrained_slice_group_set); // motion_constrained_slice_group_set
             }
             else if (payloadType == 19)
             {
-                size += ItuStream.CalculateClassSize<FilmGrainCharacteristics>(film_grain_characteristics); // film_grain_characteristics
+                size += ItuStream.CalculateClassSize<FilmGrainCharacteristics>(this.film_grain_characteristics); // film_grain_characteristics
             }
             else if (payloadType == 20)
             {
-                size += ItuStream.CalculateClassSize<DeblockingFilterDisplayPreference>(deblocking_filter_display_preference); // deblocking_filter_display_preference
+                size += ItuStream.CalculateClassSize<DeblockingFilterDisplayPreference>(this.deblocking_filter_display_preference); // deblocking_filter_display_preference
             }
             else if (payloadType == 21)
             {
-                size += ItuStream.CalculateClassSize<StereoVideoInfo>(stereo_video_info); // stereo_video_info
+                size += ItuStream.CalculateClassSize<StereoVideoInfo>(this.stereo_video_info); // stereo_video_info
             }
             else if (payloadType == 22)
             {
-                size += ItuStream.CalculateClassSize<PostFilterHint>(post_filter_hint); // post_filter_hint
+                size += ItuStream.CalculateClassSize<PostFilterHint>(this.post_filter_hint); // post_filter_hint
             }
             else if (payloadType == 23)
             {
-                size += ItuStream.CalculateClassSize<ToneMappingInfo>(tone_mapping_info); // tone_mapping_info
+                size += ItuStream.CalculateClassSize<ToneMappingInfo>(this.tone_mapping_info); // tone_mapping_info
             }
             else if (payloadType == 24)
             {
-                size += ItuStream.CalculateClassSize<ScalabilityInfo>(scalability_info); // scalability_info
+                size += ItuStream.CalculateClassSize<ScalabilityInfo>(this.scalability_info); // scalability_info
             }
             else if (payloadType == 25)
             {
-                size += ItuStream.CalculateClassSize<SubPicScalableLayer>(sub_pic_scalable_layer); // sub_pic_scalable_layer
+                size += ItuStream.CalculateClassSize<SubPicScalableLayer>(this.sub_pic_scalable_layer); // sub_pic_scalable_layer
             }
             else if (payloadType == 26)
             {
-                size += ItuStream.CalculateClassSize<NonRequiredLayerRep>(non_required_layer_rep); // non_required_layer_rep
+                size += ItuStream.CalculateClassSize<NonRequiredLayerRep>(this.non_required_layer_rep); // non_required_layer_rep
             }
             else if (payloadType == 27)
             {
-                size += ItuStream.CalculateClassSize<PriorityLayerInfo>(priority_layer_info); // priority_layer_info
+                size += ItuStream.CalculateClassSize<PriorityLayerInfo>(this.priority_layer_info); // priority_layer_info
             }
             else if (payloadType == 28)
             {
-                size += ItuStream.CalculateClassSize<LayersNotPresent>(layers_not_present); // layers_not_present
+                size += ItuStream.CalculateClassSize<LayersNotPresent>(this.layers_not_present); // layers_not_present
             }
             else if (payloadType == 29)
             {
-                size += ItuStream.CalculateClassSize<LayerDependencyChange>(layer_dependency_change); // layer_dependency_change
+                size += ItuStream.CalculateClassSize<LayerDependencyChange>(this.layer_dependency_change); // layer_dependency_change
             }
             else if (payloadType == 30)
             {
-                size += ItuStream.CalculateClassSize<ScalableNesting>(scalable_nesting); // scalable_nesting
+                size += ItuStream.CalculateClassSize<ScalableNesting>(this.scalable_nesting); // scalable_nesting
             }
             else if (payloadType == 31)
             {
-                size += ItuStream.CalculateClassSize<BaseLayerTemporalHrd>(base_layer_temporal_hrd); // base_layer_temporal_hrd
+                size += ItuStream.CalculateClassSize<BaseLayerTemporalHrd>(this.base_layer_temporal_hrd); // base_layer_temporal_hrd
             }
             else if (payloadType == 32)
             {
-                size += ItuStream.CalculateClassSize<QualityLayerIntegrityCheck>(quality_layer_integrity_check); // quality_layer_integrity_check
+                size += ItuStream.CalculateClassSize<QualityLayerIntegrityCheck>(this.quality_layer_integrity_check); // quality_layer_integrity_check
             }
             else if (payloadType == 33)
             {
-                size += ItuStream.CalculateClassSize<RedundantPicProperty>(redundant_pic_property); // redundant_pic_property
+                size += ItuStream.CalculateClassSize<RedundantPicProperty>(this.redundant_pic_property); // redundant_pic_property
             }
             else if (payloadType == 34)
             {
-                size += ItuStream.CalculateClassSize<Tl0DepRepIndex>(tl0_dep_rep_index); // tl0_dep_rep_index
+                size += ItuStream.CalculateClassSize<Tl0DepRepIndex>(this.tl0_dep_rep_index); // tl0_dep_rep_index
             }
             else if (payloadType == 35)
             {
-                size += ItuStream.CalculateClassSize<TlSwitchingPoint>(tl_switching_point); // tl_switching_point
+                size += ItuStream.CalculateClassSize<TlSwitchingPoint>(this.tl_switching_point); // tl_switching_point
             }
             else if (payloadType == 36)
             {
-                size += ItuStream.CalculateClassSize<ParallelDecodingInfo>(parallel_decoding_info); // parallel_decoding_info
+                size += ItuStream.CalculateClassSize<ParallelDecodingInfo>(this.parallel_decoding_info); // parallel_decoding_info
             }
             else if (payloadType == 37)
             {
-                size += ItuStream.CalculateClassSize<MvcScalableNesting>(mvc_scalable_nesting); // mvc_scalable_nesting
+                size += ItuStream.CalculateClassSize<MvcScalableNesting>(this.mvc_scalable_nesting); // mvc_scalable_nesting
             }
             else if (payloadType == 38)
             {
-                size += ItuStream.CalculateClassSize<ViewScalabilityInfo>(view_scalability_info); // view_scalability_info
+                size += ItuStream.CalculateClassSize<ViewScalabilityInfo>(this.view_scalability_info); // view_scalability_info
             }
             else if (payloadType == 39)
             {
-                size += ItuStream.CalculateClassSize<MultiviewSceneInfo>(multiview_scene_info); // multiview_scene_info
+                size += ItuStream.CalculateClassSize<MultiviewSceneInfo>(this.multiview_scene_info); // multiview_scene_info
             }
             else if (payloadType == 40)
             {
-                size += ItuStream.CalculateClassSize<MultiviewAcquisitionInfo>(multiview_acquisition_info); // multiview_acquisition_info
+                size += ItuStream.CalculateClassSize<MultiviewAcquisitionInfo>(this.multiview_acquisition_info); // multiview_acquisition_info
             }
             else if (payloadType == 41)
             {
-                size += ItuStream.CalculateClassSize<NonRequiredViewComponent>(non_required_view_component); // non_required_view_component
+                size += ItuStream.CalculateClassSize<NonRequiredViewComponent>(this.non_required_view_component); // non_required_view_component
             }
             else if (payloadType == 42)
             {
-                size += ItuStream.CalculateClassSize<ViewDependencyChange>(view_dependency_change); // view_dependency_change
+                size += ItuStream.CalculateClassSize<ViewDependencyChange>(this.view_dependency_change); // view_dependency_change
             }
             else if (payloadType == 43)
             {
-                size += ItuStream.CalculateClassSize<OperationPointNotPresent>(operation_point_not_present); // operation_point_not_present
+                size += ItuStream.CalculateClassSize<OperationPointNotPresent>(this.operation_point_not_present); // operation_point_not_present
             }
             else if (payloadType == 44)
             {
-                size += ItuStream.CalculateClassSize<BaseViewTemporalHrd>(base_view_temporal_hrd); // base_view_temporal_hrd
+                size += ItuStream.CalculateClassSize<BaseViewTemporalHrd>(this.base_view_temporal_hrd); // base_view_temporal_hrd
             }
             else if (payloadType == 45)
             {
-                size += ItuStream.CalculateClassSize<FramePackingArrangement>(frame_packing_arrangement); // frame_packing_arrangement
+                size += ItuStream.CalculateClassSize<FramePackingArrangement>(this.frame_packing_arrangement); // frame_packing_arrangement
             }
             else if (payloadType == 46)
             {
-                size += ItuStream.CalculateClassSize<MultiviewViewPosition>(multiview_view_position); // multiview_view_position
+                size += ItuStream.CalculateClassSize<MultiviewViewPosition>(this.multiview_view_position); // multiview_view_position
             }
             else if (payloadType == 47)
             {
-                size += ItuStream.CalculateClassSize<DisplayOrientation>(display_orientation); // display_orientation
+                size += ItuStream.CalculateClassSize<DisplayOrientation>(this.display_orientation); // display_orientation
             }
             else if (payloadType == 48)
             {
-                size += ItuStream.CalculateClassSize<MvcdScalableNesting>(mvcd_scalable_nesting); // mvcd_scalable_nesting
+                size += ItuStream.CalculateClassSize<MvcdScalableNesting>(this.mvcd_scalable_nesting); // mvcd_scalable_nesting
             }
             else if (payloadType == 49)
             {
-                size += ItuStream.CalculateClassSize<MvcdViewScalabilityInfo>(mvcd_view_scalability_info); // mvcd_view_scalability_info
+                size += ItuStream.CalculateClassSize<MvcdViewScalabilityInfo>(this.mvcd_view_scalability_info); // mvcd_view_scalability_info
             }
             else if (payloadType == 50)
             {
-                size += ItuStream.CalculateClassSize<DepthRepresentationInfo>(depth_representation_info); // depth_representation_info
+                size += ItuStream.CalculateClassSize<DepthRepresentationInfo>(this.depth_representation_info); // depth_representation_info
             }
             else if (payloadType == 51)
             {
-                size += ItuStream.CalculateClassSize<ThreeDimensionalReferenceDisplaysInfo>(three_dimensional_reference_displays_info); // three_dimensional_reference_displays_info
+                size += ItuStream.CalculateClassSize<ThreeDimensionalReferenceDisplaysInfo>(this.three_dimensional_reference_displays_info); // three_dimensional_reference_displays_info
             }
             else if (payloadType == 52)
             {
-                size += ItuStream.CalculateClassSize<DepthTiming>(depth_timing); // depth_timing
+                size += ItuStream.CalculateClassSize<DepthTiming>(this.depth_timing); // depth_timing
             }
             else if (payloadType == 53)
             {
-                size += ItuStream.CalculateClassSize<DepthSamplingInfo>(depth_sampling_info); // depth_sampling_info
+                size += ItuStream.CalculateClassSize<DepthSamplingInfo>(this.depth_sampling_info); // depth_sampling_info
             }
             else if (payloadType == 54)
             {
-                size += ItuStream.CalculateClassSize<ConstrainedDepthParameterSetIdentifier>(constrained_depth_parameter_set_identifier); // constrained_depth_parameter_set_identifier
+                size += ItuStream.CalculateClassSize<ConstrainedDepthParameterSetIdentifier>(this.constrained_depth_parameter_set_identifier); // constrained_depth_parameter_set_identifier
             }
             else if (payloadType == 56)
             {
-                size += ItuStream.CalculateClassSize<GreenMetadata>(green_metadata); // green_metadata
+                size += ItuStream.CalculateClassSize<GreenMetadata>(this.green_metadata); // green_metadata
             }
             else if (payloadType == 137)
             {
-                size += ItuStream.CalculateClassSize<MasteringDisplayColourVolume>(mastering_display_colour_volume); // mastering_display_colour_volume
+                size += ItuStream.CalculateClassSize<MasteringDisplayColourVolume>(this.mastering_display_colour_volume); // mastering_display_colour_volume
             }
             else if (payloadType == 142)
             {
-                size += ItuStream.CalculateClassSize<ColourRemappingInfo>(colour_remapping_info); // colour_remapping_info
+                size += ItuStream.CalculateClassSize<ColourRemappingInfo>(this.colour_remapping_info); // colour_remapping_info
             }
             else if (payloadType == 144)
             {
-                size += ItuStream.CalculateClassSize<ContentLightLevelInfo>(content_light_level_info); // content_light_level_info
+                size += ItuStream.CalculateClassSize<ContentLightLevelInfo>(this.content_light_level_info); // content_light_level_info
             }
             else if (payloadType == 147)
             {
-                size += ItuStream.CalculateClassSize<AlternativeTransferCharacteristics>(alternative_transfer_characteristics); // alternative_transfer_characteristics
+                size += ItuStream.CalculateClassSize<AlternativeTransferCharacteristics>(this.alternative_transfer_characteristics); // alternative_transfer_characteristics
             }
             else if (payloadType == 148)
             {
-                size += ItuStream.CalculateClassSize<AmbientViewingEnvironment>(ambient_viewing_environment); // ambient_viewing_environment
+                size += ItuStream.CalculateClassSize<AmbientViewingEnvironment>(this.ambient_viewing_environment); // ambient_viewing_environment
             }
             else if (payloadType == 149)
             {
-                size += ItuStream.CalculateClassSize<ContentColourVolume>(content_colour_volume); // content_colour_volume
+                size += ItuStream.CalculateClassSize<ContentColourVolume>(this.content_colour_volume); // content_colour_volume
             }
             else if (payloadType == 150)
             {
-                size += ItuStream.CalculateClassSize<EquirectangularProjection>(equirectangular_projection); // equirectangular_projection
+                size += ItuStream.CalculateClassSize<EquirectangularProjection>(this.equirectangular_projection); // equirectangular_projection
             }
             else if (payloadType == 151)
             {
-                size += ItuStream.CalculateClassSize<CubemapProjection>(cubemap_projection); // cubemap_projection
+                size += ItuStream.CalculateClassSize<CubemapProjection>(this.cubemap_projection); // cubemap_projection
             }
             else if (payloadType == 154)
             {
-                size += ItuStream.CalculateClassSize<SphereRotation>(sphere_rotation); // sphere_rotation
+                size += ItuStream.CalculateClassSize<SphereRotation>(this.sphere_rotation); // sphere_rotation
             }
             else if (payloadType == 155)
             {
-                size += ItuStream.CalculateClassSize<RegionwisePacking>(regionwise_packing); // regionwise_packing
+                size += ItuStream.CalculateClassSize<RegionwisePacking>(this.regionwise_packing); // regionwise_packing
             }
             else if (payloadType == 156)
             {
-                size += ItuStream.CalculateClassSize<OmniViewport>(omni_viewport); // omni_viewport
+                size += ItuStream.CalculateClassSize<OmniViewport>(this.omni_viewport); // omni_viewport
             }
             else if (payloadType == 181)
             {
-                size += ItuStream.CalculateClassSize<AlternativeDepthInfo>(alternative_depth_info); // alternative_depth_info
+                size += ItuStream.CalculateClassSize<AlternativeDepthInfo>(this.alternative_depth_info); // alternative_depth_info
             }
             else if (payloadType == 200)
             {
-                size += ItuStream.CalculateClassSize<SeiManifest>(sei_manifest); // sei_manifest
+                size += ItuStream.CalculateClassSize<SeiManifest>(this.sei_manifest); // sei_manifest
             }
             else if (payloadType == 201)
             {
-                size += ItuStream.CalculateClassSize<SeiPrefixIndication>(sei_prefix_indication); // sei_prefix_indication
+                size += ItuStream.CalculateClassSize<SeiPrefixIndication>(this.sei_prefix_indication); // sei_prefix_indication
             }
             else if (payloadType == 202)
             {
-                size += ItuStream.CalculateClassSize<AnnotatedRegions>(annotated_regions); // annotated_regions
+                size += ItuStream.CalculateClassSize<AnnotatedRegions>(this.annotated_regions); // annotated_regions
             }
             else if (payloadType == 205)
             {
-                size += ItuStream.CalculateClassSize<ShutterIntervalInfo>(shutter_interval_info); // shutter_interval_info
+                size += ItuStream.CalculateClassSize<ShutterIntervalInfo>(this.shutter_interval_info); // shutter_interval_info
             }
             else
             {
-                size += ItuStream.CalculateClassSize<ReservedSeiMessage>(reserved_sei_message); // reserved_sei_message
+                size += ItuStream.CalculateClassSize<ReservedSeiMessage>(this.reserved_sei_message); // reserved_sei_message
             }
 
             if (!stream.ByteAligned())
@@ -8928,7 +8928,7 @@ dec_ref_pic_marking_repetition( payloadSize ) {
                     size += 1; // original_bottom_field_flag
                 }
             }
-            size += ItuStream.CalculateClassSize<DecRefPicMarking>(dec_ref_pic_marking); // dec_ref_pic_marking
+            size += ItuStream.CalculateClassSize<DecRefPicMarking>(this.dec_ref_pic_marking); // dec_ref_pic_marking
 
             return size;
         }
@@ -12925,7 +12925,7 @@ annotated_regions( payloadSize ) {
             uint i = 0;
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
-            uint[] ObjectBoundingBoxAvail = null;
+            bool[] ObjectBoundingBoxAvail = null;
             size += stream.ReadUnsignedInt(size, 1, out this.ar_cancel_flag);
 
             if (ar_cancel_flag == 0)
@@ -13043,7 +13043,7 @@ annotated_regions( payloadSize ) {
             uint i = 0;
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
-            uint[] ObjectBoundingBoxAvail = null;
+            bool[] ObjectBoundingBoxAvail = null;
             size += stream.WriteUnsignedInt(1, this.ar_cancel_flag);
 
             if (ar_cancel_flag == 0)
@@ -13151,7 +13151,7 @@ annotated_regions( payloadSize ) {
             uint i = 0;
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
-            uint[] ObjectBoundingBoxAvail = null;
+            bool[] ObjectBoundingBoxAvail = null;
             size += 1; // ar_cancel_flag
 
             if (ar_cancel_flag == 0)
@@ -13833,13 +13833,13 @@ vui_parameters() {
 
             if (nal_hrd_parameters_present_flag != 0)
             {
-                size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
             }
             size += 1; // vcl_hrd_parameters_present_flag
 
             if (vcl_hrd_parameters_present_flag != 0)
             {
-                size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
             }
 
             if (nal_hrd_parameters_present_flag != 0 || vcl_hrd_parameters_present_flag != 0)
@@ -14404,7 +14404,7 @@ prefix_nal_unit_svc() {
                 if ((H264Helpers.GetValue("use_ref_base_pic_flag") != 0 || store_ref_base_pic_flag != 0) &&
        H264Helpers.GetValue("idr_flag") == 0)
                 {
-                    size += ItuStream.CalculateClassSize<DecRefBasePicMarking>(dec_ref_base_pic_marking); // dec_ref_base_pic_marking
+                    size += ItuStream.CalculateClassSize<DecRefBasePicMarking>(this.dec_ref_base_pic_marking); // dec_ref_base_pic_marking
                 }
                 size += 1; // additional_prefix_nal_unit_extension_flag
 
@@ -14416,7 +14416,7 @@ prefix_nal_unit_svc() {
                         size += 1; // additional_prefix_nal_unit_extension_data_flag
                     }
                 }
-                size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+                size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
             }
             else if (stream.MoreRbspData())
             {
@@ -14425,7 +14425,7 @@ prefix_nal_unit_svc() {
                 {
                     size += 1; // additional_prefix_nal_unit_extension_data_flag
                 }
-                size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+                size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
             }
 
             return size;
@@ -15164,7 +15164,7 @@ slice_header_in_scalable_extension() {
                         }
                     }
                 }
-                size += ItuStream.CalculateClassSize<RefPicListModification>(ref_pic_list_modification); // ref_pic_list_modification
+                size += ItuStream.CalculateClassSize<RefPicListModification>(this.ref_pic_list_modification); // ref_pic_list_modification
 
                 if ((H264Helpers.GetValue("weighted_pred_flag") != 0 && FrameTypes.IsP(slice_type)) ||
    (H264Helpers.GetValue("weighted_bipred_idc") == 1 && FrameTypes.IsB(slice_type)))
@@ -15177,13 +15177,13 @@ slice_header_in_scalable_extension() {
 
                     if (H264Helpers.GetValue("no_inter_layer_pred_flag") != 0 || base_pred_weight_table_flag == 0)
                     {
-                        size += ItuStream.CalculateClassSize<PredWeightTable>(pred_weight_table); // pred_weight_table
+                        size += ItuStream.CalculateClassSize<PredWeightTable>(this.pred_weight_table); // pred_weight_table
                     }
                 }
 
                 if (H264Helpers.GetValue("nal_ref_idc") != 0)
                 {
-                    size += ItuStream.CalculateClassSize<DecRefPicMarking>(dec_ref_pic_marking); // dec_ref_pic_marking
+                    size += ItuStream.CalculateClassSize<DecRefPicMarking>(this.dec_ref_pic_marking); // dec_ref_pic_marking
 
                     if (H264Helpers.GetValue("slice_header_restriction_flag") == 0)
                     {
@@ -15192,7 +15192,7 @@ slice_header_in_scalable_extension() {
                         if ((H264Helpers.GetValue("use_ref_base_pic_flag") != 0 || store_ref_base_pic_flag != 0) &&
           H264Helpers.GetValue("idr_flag") == 0)
                         {
-                            size += ItuStream.CalculateClassSize<DecRefBasePicMarking>(dec_ref_base_pic_marking); // dec_ref_base_pic_marking
+                            size += ItuStream.CalculateClassSize<DecRefBasePicMarking>(this.dec_ref_base_pic_marking); // dec_ref_base_pic_marking
                         }
                     }
                 }
@@ -15719,7 +15719,7 @@ slice_data_in_scalable_extension() {
                     {
                         size += 1; // mb_field_decoding_flag
                     }
-                    size += ItuStream.CalculateClassSize<MacroblockLayerInScalableExtension>(macroblock_layer_in_scalable_extension); // macroblock_layer_in_scalable_extension
+                    size += ItuStream.CalculateClassSize<MacroblockLayerInScalableExtension>(this.macroblock_layer_in_scalable_extension); // macroblock_layer_in_scalable_extension
                 }
 
                 if (H264Helpers.GetValue("entropy_coding_mode_flag") == 0)
@@ -16142,7 +16142,7 @@ macroblock_layer_in_scalable_extension() {
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     H264Helpers.NumMbPart(mb_type) == 4)
                     {
-                        size += ItuStream.CalculateClassSize<SubMbPredInScalableExtension>(sub_mb_pred_in_scalable_extension); // sub_mb_pred_in_scalable_extension
+                        size += ItuStream.CalculateClassSize<SubMbPredInScalableExtension>(this.sub_mb_pred_in_scalable_extension); // sub_mb_pred_in_scalable_extension
 
                         for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                         {
@@ -16168,7 +16168,7 @@ macroblock_layer_in_scalable_extension() {
                         {
                             size += 1; // transform_size_8x8_flag
                         }
-                        size += ItuStream.CalculateClassSize<MbPredInScalableExtension>(mb_pred_in_scalable_extension); // mb_pred_in_scalable_extension
+                        size += ItuStream.CalculateClassSize<MbPredInScalableExtension>(this.mb_pred_in_scalable_extension); // mb_pred_in_scalable_extension
                     }
                 }
 
@@ -16207,7 +16207,7 @@ macroblock_layer_in_scalable_extension() {
      MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
-                        size += ItuStream.CalculateClassSize<Residual>(residual); // residual
+                        size += ItuStream.CalculateClassSize<Residual>(this.residual); // residual
                     }
                 }
             }
@@ -18710,7 +18710,7 @@ scalable_nesting( payloadSize ) {
 
             do
             {
-                size += ItuStream.CalculateClassSize<SeiMessage>(sei_message); // sei_message
+                size += ItuStream.CalculateClassSize<SeiMessage>(this.sei_message); // sei_message
             } while (stream.MoreRbspData());
 
             return size;
@@ -18892,13 +18892,13 @@ base_layer_temporal_hrd( payloadSize ) {
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
                 size += 1; // sei_vcl_hrd_parameters_present_flag
 
                 if (sei_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -19478,13 +19478,13 @@ svc_vui_parameters_extension() {
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
                 size += 1; // vui_ext_vcl_hrd_parameters_present_flag
 
                 if (vui_ext_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -20602,7 +20602,7 @@ mvc_scalable_nesting( payloadSize ) {
             {
                 size += 1; // sei_nesting_zero_bit
             }
-            size += ItuStream.CalculateClassSize<SeiMessage>(sei_message); // sei_message
+            size += ItuStream.CalculateClassSize<SeiMessage>(this.sei_message); // sei_message
 
             return size;
         }
@@ -22061,13 +22061,13 @@ sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
                 size += 1; // sei_mvc_vcl_hrd_parameters_present_flag
 
                 if (sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -22363,13 +22363,13 @@ mvc_vui_parameters_extension() {
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
                 size += 1; // vui_mvc_vcl_hrd_parameters_present_flag
 
                 if (vui_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -22817,13 +22817,13 @@ seq_parameter_set_mvcd_extension() {
 
             if (mvcd_vui_parameters_present_flag == 1)
             {
-                size += ItuStream.CalculateClassSize<MvcdVuiParametersExtension>(mvcd_vui_parameters_extension); // mvcd_vui_parameters_extension
+                size += ItuStream.CalculateClassSize<MvcdVuiParametersExtension>(this.mvcd_vui_parameters_extension); // mvcd_vui_parameters_extension
             }
             size += 1; // texture_vui_parameters_present_flag
 
             if (texture_vui_parameters_present_flag == 1)
             {
-                size += ItuStream.CalculateClassSize<MvcVuiParametersExtension>(mvc_vui_parameters_extension); // mvc_vui_parameters_extension
+                size += ItuStream.CalculateClassSize<MvcVuiParametersExtension>(this.mvc_vui_parameters_extension); // mvc_vui_parameters_extension
             }
 
             return size;
@@ -23244,7 +23244,7 @@ priority_id[ i ] 5 u(5)
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(view_id[i][j]); // view_id
-                    size += ItuStream.CalculateClassSize<MvcdOpViewInfo>(mvcd_op_view_info); // mvcd_op_view_info
+                    size += ItuStream.CalculateClassSize<MvcdOpViewInfo>(this.mvcd_op_view_info); // mvcd_op_view_info
                 }
                 size += 1; // profile_level_info_present_flag
                 size += 1; // bitrate_info_present_flag
@@ -23282,7 +23282,7 @@ priority_id[ i ] 5 u(5)
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(directly_dependent_view_id[i][j]); // directly_dependent_view_id
-                        size += ItuStream.CalculateClassSize<MvcdOpViewInfo>(mvcd_op_view_info); // mvcd_op_view_info
+                        size += ItuStream.CalculateClassSize<MvcdOpViewInfo>(this.mvcd_op_view_info); // mvcd_op_view_info
                     }
                 }
                 else
@@ -23637,7 +23637,7 @@ mvcd_scalable_nesting( payloadSize ) {
             {
                 size += 1; // sei_nesting_zero_bit
             }
-            size += ItuStream.CalculateClassSize<SeiMessage>(sei_message); // sei_message
+            size += ItuStream.CalculateClassSize<SeiMessage>(this.sei_message); // sei_message
 
             return size;
         }
@@ -23949,22 +23949,22 @@ depth_representation_info( payloadSize ) {
 
                 if (z_near_flag != 0)
                 {
-                    size += ItuStream.CalculateClassSize<DepthRepresentationSeiElement>(depth_representation_sei_element); // depth_representation_sei_element
+                    size += ItuStream.CalculateClassSize<DepthRepresentationSeiElement>(this.depth_representation_sei_element); // depth_representation_sei_element
                 }
 
                 if (z_far_flag != 0)
                 {
-                    size += ItuStream.CalculateClassSize<DepthRepresentationSeiElement>(depth_representation_sei_element); // depth_representation_sei_element
+                    size += ItuStream.CalculateClassSize<DepthRepresentationSeiElement>(this.depth_representation_sei_element); // depth_representation_sei_element
                 }
 
                 if (d_min_flag != 0)
                 {
-                    size += ItuStream.CalculateClassSize<DepthRepresentationSeiElement>(depth_representation_sei_element); // depth_representation_sei_element
+                    size += ItuStream.CalculateClassSize<DepthRepresentationSeiElement>(this.depth_representation_sei_element); // depth_representation_sei_element
                 }
 
                 if (d_max_flag != 0)
                 {
-                    size += ItuStream.CalculateClassSize<DepthRepresentationSeiElement>(depth_representation_sei_element); // depth_representation_sei_element
+                    size += ItuStream.CalculateClassSize<DepthRepresentationSeiElement>(this.depth_representation_sei_element); // depth_representation_sei_element
                 }
             }
 
@@ -24341,12 +24341,12 @@ depth_timing( payloadSize ) {
 
                 for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
-                    size += ItuStream.CalculateClassSize<DepthTimingOffset>(depth_timing_offset); // depth_timing_offset
+                    size += ItuStream.CalculateClassSize<DepthTimingOffset>(this.depth_timing_offset); // depth_timing_offset
                 }
             }
             else
             {
-                size += ItuStream.CalculateClassSize<DepthTimingOffset>(depth_timing_offset); // depth_timing_offset
+                size += ItuStream.CalculateClassSize<DepthTimingOffset>(this.depth_timing_offset); // depth_timing_offset
             }
 
             return size;
@@ -25008,12 +25008,12 @@ depth_sampling_info( payloadSize ) {
                 for (i = 0; i <= num_video_plus_depth_views_minus1; i++)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(depth_grid_view_id[i]); // depth_grid_view_id
-                    size += ItuStream.CalculateClassSize<DepthGridPosition>(depth_grid_position); // depth_grid_position
+                    size += ItuStream.CalculateClassSize<DepthGridPosition>(this.depth_grid_position); // depth_grid_position
                 }
             }
             else
             {
-                size += ItuStream.CalculateClassSize<DepthGridPosition>(depth_grid_position); // depth_grid_position
+                size += ItuStream.CalculateClassSize<DepthGridPosition>(this.depth_grid_position); // depth_grid_position
             }
 
             return size;
@@ -25371,13 +25371,13 @@ mvcd_vui_parameters_extension() {
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
                 size += 1; // vui_mvcd_vcl_hrd_parameters_present_flag
 
                 if (vui_mvcd_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += ItuStream.CalculateClassSize<HrdParameters>(hrd_parameters); // hrd_parameters
+                    size += ItuStream.CalculateClassSize<HrdParameters>(this.hrd_parameters); // hrd_parameters
                 }
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -25840,8 +25840,8 @@ seq_parameter_set_3davc_extension() {
 
                 if (three_dv_acquisition_idc != 0)
                 {
-                    size += ItuStream.CalculateClassSize<DepthRanges>(depth_ranges); // depth_ranges
-                    size += ItuStream.CalculateClassSize<VspParam>(vsp_param); // vsp_param
+                    size += ItuStream.CalculateClassSize<DepthRanges>(this.depth_ranges); // depth_ranges
+                    size += ItuStream.CalculateClassSize<VspParam>(this.vsp_param); // vsp_param
                 }
                 size += 1; // reduced_resolution_flag
 
@@ -26119,12 +26119,12 @@ depth_parameter_set_rbsp() {
                 predWeight0 = pred_weight0;
             }
             size += ItuStream.CalculateUnsignedIntGolomb(num_depth_views_minus1); // num_depth_views_minus1
-            size += ItuStream.CalculateClassSize<DepthRanges>(depth_ranges); // depth_ranges
+            size += ItuStream.CalculateClassSize<DepthRanges>(this.depth_ranges); // depth_ranges
             size += 1; // vsp_param_flag
 
             if (vsp_param_flag != 0)
             {
-                size += ItuStream.CalculateClassSize<VspParam>(vsp_param); // vsp_param
+                size += ItuStream.CalculateClassSize<VspParam>(this.vsp_param); // vsp_param
             }
             size += 1; // depth_param_additional_extension_flag
             size += ItuStream.CalculateUnsignedIntGolomb(nonlinear_depth_representation_num); // nonlinear_depth_representation_num
@@ -26142,7 +26142,7 @@ depth_parameter_set_rbsp() {
                     size += 1; // depth_param_additional_extension_data_flag
                 }
             }
-            size += ItuStream.CalculateClassSize<RbspTrailingBits>(rbsp_trailing_bits); // rbsp_trailing_bits
+            size += ItuStream.CalculateClassSize<RbspTrailingBits>(this.rbsp_trailing_bits); // rbsp_trailing_bits
 
             return size;
         }
@@ -26236,12 +26236,12 @@ depth_ranges( numViews, predDirection, index ) {
 
             if (z_near_flag != 0)
             {
-                size += ItuStream.CalculateClassSize<ThreeDvAcquisitionElement>(three_dv_acquisition_element); // three_dv_acquisition_element
+                size += ItuStream.CalculateClassSize<ThreeDvAcquisitionElement>(this.three_dv_acquisition_element); // three_dv_acquisition_element
             }
 
             if (z_far_flag != 0)
             {
-                size += ItuStream.CalculateClassSize<ThreeDvAcquisitionElement>(three_dv_acquisition_element); // three_dv_acquisition_element
+                size += ItuStream.CalculateClassSize<ThreeDvAcquisitionElement>(this.three_dv_acquisition_element); // three_dv_acquisition_element
             }
 
             return size;
@@ -26433,7 +26433,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         {
                             mantissaPred = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
                         }
-                        outMantissa[index, i] = mantissaPred + mantissa_diff;
+                        outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff);
                         outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
                     }
                     else
@@ -26534,7 +26534,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         {
                             mantissaPred = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
                         }
-                        outMantissa[index, i] = mantissaPred + mantissa_diff;
+                        outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff);
                         outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
                     }
                     else
@@ -26635,7 +26635,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         {
                             mantissaPred = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
                         }
-                        outMantissa[index, i] = mantissaPred + mantissa_diff;
+                        outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff);
                         outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
                     }
                     else
@@ -27393,7 +27393,7 @@ slice_header_in_3davc_extension() {
                                 size += ItuStream.CalculateUnsignedIntGolomb(num_ref_idx_l1_active_minus1); // num_ref_idx_l1_active_minus1
                             }
                         }
-                        size += ItuStream.CalculateClassSize<RefPicListMvcModification>(ref_pic_list_mvc_modification); // ref_pic_list_mvc_modification
+                        size += ItuStream.CalculateClassSize<RefPicListMvcModification>(this.ref_pic_list_mvc_modification); // ref_pic_list_mvc_modification
                     }
                 }
 
@@ -27403,7 +27403,7 @@ slice_header_in_3davc_extension() {
 
                     if (pre_pred_weight_table_src == 0)
                     {
-                        size += ItuStream.CalculateClassSize<PredWeightTable>(pred_weight_table); // pred_weight_table
+                        size += ItuStream.CalculateClassSize<PredWeightTable>(this.pred_weight_table); // pred_weight_table
                     }
                 }
 
@@ -27413,7 +27413,7 @@ slice_header_in_3davc_extension() {
 
                     if (pre_dec_ref_pic_marking_src == 0)
                     {
-                        size += ItuStream.CalculateClassSize<DecRefPicMarking>(dec_ref_pic_marking); // dec_ref_pic_marking
+                        size += ItuStream.CalculateClassSize<DecRefPicMarking>(this.dec_ref_pic_marking); // dec_ref_pic_marking
                     }
                 }
                 size += ItuStream.CalculateSignedIntGolomb(slice_qp_delta); // slice_qp_delta
@@ -27489,21 +27489,21 @@ slice_header_in_3davc_extension() {
 
                 if (H264Helpers.GetValue("nal_unit_type") == 20 || H264Helpers.GetValue("nal_unit_type") == 21)
                 {
-                    size += ItuStream.CalculateClassSize<RefPicListMvcModification>(ref_pic_list_mvc_modification); // ref_pic_list_mvc_modification
+                    size += ItuStream.CalculateClassSize<RefPicListMvcModification>(this.ref_pic_list_mvc_modification); // ref_pic_list_mvc_modification
                 }
                 else
                 {
-                    size += ItuStream.CalculateClassSize<RefPicListModification>(ref_pic_list_modification); // ref_pic_list_modification
+                    size += ItuStream.CalculateClassSize<RefPicListModification>(this.ref_pic_list_modification); // ref_pic_list_modification
                 }
 
                 if ((H264Helpers.GetValue("weighted_pred_flag") != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (H264Helpers.GetValue("weighted_bipred_idc") == 1 && FrameTypes.IsB(slice_type)))
                 {
-                    size += ItuStream.CalculateClassSize<PredWeightTable>(pred_weight_table); // pred_weight_table
+                    size += ItuStream.CalculateClassSize<PredWeightTable>(this.pred_weight_table); // pred_weight_table
                 }
 
                 if (H264Helpers.GetValue("nal_ref_idc") != 0)
                 {
-                    size += ItuStream.CalculateClassSize<DecRefPicMarking>(dec_ref_pic_marking); // dec_ref_pic_marking
+                    size += ItuStream.CalculateClassSize<DecRefPicMarking>(this.dec_ref_pic_marking); // dec_ref_pic_marking
                 }
 
                 if (H264Helpers.GetValue("entropy_coding_mode_flag") != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
@@ -28080,7 +28080,7 @@ slice_data_in_3davc_extension() {
                     {
                         size += 1; // mb_field_decoding_flag
                     }
-                    size += ItuStream.CalculateClassSize<MacroblockLayerIn3davcExtension>(macroblock_layer_in_3davc_extension); // macroblock_layer_in_3davc_extension
+                    size += ItuStream.CalculateClassSize<MacroblockLayerIn3davcExtension>(this.macroblock_layer_in_3davc_extension); // macroblock_layer_in_3davc_extension
                 }
 
                 if (H264Helpers.GetValue("entropy_coding_mode_flag") == 0)
@@ -28476,7 +28476,7 @@ macroblock_layer_in_3davc_extension() {
    MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
    H264Helpers.NumMbPart(mb_type) == 4)
                 {
-                    size += ItuStream.CalculateClassSize<SubMbPredIn3davcExtension>(sub_mb_pred_in_3davc_extension); // sub_mb_pred_in_3davc_extension
+                    size += ItuStream.CalculateClassSize<SubMbPredIn3davcExtension>(this.sub_mb_pred_in_3davc_extension); // sub_mb_pred_in_3davc_extension
 
                     for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
                     {
@@ -28502,7 +28502,7 @@ macroblock_layer_in_3davc_extension() {
                     {
                         size += 1; // transform_size_8x8_flag
                     }
-                    size += ItuStream.CalculateClassSize<MbPredIn3davcExtension>(mb_pred_in_3davc_extension); // mb_pred_in_3davc_extension
+                    size += ItuStream.CalculateClassSize<MbPredIn3davcExtension>(this.mb_pred_in_3davc_extension); // mb_pred_in_3davc_extension
                 }
 
                 if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16)
@@ -28524,7 +28524,7 @@ macroblock_layer_in_3davc_extension() {
    MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
-                    size += ItuStream.CalculateClassSize<Residual>(residual); // residual
+                    size += ItuStream.CalculateClassSize<Residual>(this.residual); // residual
                 }
             }
 

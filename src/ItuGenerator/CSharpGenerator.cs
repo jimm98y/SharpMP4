@@ -308,6 +308,7 @@ namespace Sharp{type}
                 fieldValue = fieldValue.Replace("NextMbAddress", "H264Helpers.NextMbAddress");
                 fieldValue = fieldValue.Replace("RLESkipContext", "H264Helpers.RLESkipContext");
                 fieldValue = fieldValue.Replace("MbaffFrameFlag", "H264Helpers.GetMbaffFrameFlag()");
+                fieldValue = fieldValue.Replace("mantissaPred + mantissa_diff", "(uint)(mantissaPred + mantissa_diff)");
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith('!'))
@@ -418,7 +419,7 @@ namespace Sharp{type}
                     return "8";
                 default:
                     if (ituField.Type == null)
-                        return $"ItuStream.CalculateClassSize<{ituField.Name.ToPropertyCase()}>(value)";
+                        return $"ItuStream.CalculateClassSize<{ituField.Name.ToPropertyCase()}>(this.value)";
                     throw new NotImplementedException();
             }
         }
@@ -612,6 +613,10 @@ namespace Sharp{type}
                 { "u(32)[]",                    "uint[]" },
                 { "u(32)[][]",                  "int[][]" },
                 { "u(32)[,]",                   "uint[,]" },
+
+                // added
+                { "bool",                       "bool" },
+                { "i(64)",                      "long" },
             };
             return map;
         }
@@ -944,6 +949,7 @@ namespace Sharp{type}
             condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] == 0");
             condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3) != 0");
             condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2) != 0");
+            condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternLuma\") & ( 1 << (int) i8x8 )", "(H264Helpers.GetValue(\"CodedBlockPatternLuma\") & ( 1 << (int) i8x8 )) != 0");
 
             return condition;
         }
@@ -1247,11 +1253,6 @@ namespace Sharp{type}
 
         private void AddAndResolveDuplicates(ItuClass b, Dictionary<string, ItuField> ret, ItuField field)
         {
-            if(field.Name == "levelVal")
-            {
-
-            }
-
             if(string.IsNullOrEmpty(field.Type))
             {
                 if (!string.IsNullOrEmpty(field.Increment))
@@ -1266,10 +1267,21 @@ namespace Sharp{type}
                 {
                     if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                     {
-                        if (field.Value.TrimEnd().EndsWith("-1"))
-                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(32)", FieldArray = field.FieldArray });
+                        if (field.Name == "ObjectBoundingBoxAvail")
+                        {
+                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "bool", FieldArray = field.FieldArray });
+                        }
+                        else if(field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel")
+                        {
+                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(64)", FieldArray = field.FieldArray });
+                        }
                         else
-                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "u(32)", FieldArray = field.FieldArray });
+                        {
+                            if (field.Value.TrimEnd().EndsWith("-1"))
+                                b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(32)", FieldArray = field.FieldArray });
+                            else
+                                b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "u(32)", FieldArray = field.FieldArray });
+                        }
                     }
                     else
                     {
