@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Numerics;
 
 namespace SharpH264
@@ -10,14 +11,17 @@ namespace SharpH264
         ulong CalculateSize(ItuStream stream);
     }
 
-    public class ItuStream
+    public class ItuStream : IDisposable
     {
-        internal bool MoreRbspData()
+        private readonly MemoryStream _stream;
+        private bool _disposedValue;
+
+        public ItuStream(MemoryStream memoryStream)
         {
-            throw new NotImplementedException();
+            this._stream = memoryStream;
         }
 
-        internal bool MoreRbspTrailingData()
+        internal bool MoreRbspData()
         {
             throw new NotImplementedException();
         }
@@ -38,16 +42,6 @@ namespace SharpH264
         }
 
         internal ulong ReadFixed(ulong size, int count, out uint value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadFixed(ulong size, int count, out byte value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadUnsignedInt(ulong size, int count, out bool value)
         {
             throw new NotImplementedException();
         }
@@ -191,5 +185,31 @@ namespace SharpH264
         {
             throw new NotImplementedException();
         }
+
+        #region IDisposable 
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    if(_stream != null)
+                    {
+                        _stream.Dispose();
+                    }
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion // IDisposable
     }
 }

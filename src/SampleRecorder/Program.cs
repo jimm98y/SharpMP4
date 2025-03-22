@@ -1,7 +1,11 @@
 ﻿
 using SharpMP4;
+using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Xml;
 
 string[] files = Directory.GetFiles("C:\\_videoFingerprints\\").ToArray();
