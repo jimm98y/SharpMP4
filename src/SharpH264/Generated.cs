@@ -49,10 +49,10 @@ nal_unit( NumBytesInNALunit ) {
         public uint NalRefIdc { get { return nal_ref_idc; } set { nal_ref_idc = value; } }
         private uint nal_unit_type;
         public uint NalUnitType { get { return nal_unit_type; } set { nal_unit_type = value; } }
-        private uint svc_extension_flag;
-        public uint SvcExtensionFlag { get { return svc_extension_flag; } set { svc_extension_flag = value; } }
-        private uint avc_3d_extension_flag;
-        public uint Avc3dExtensionFlag { get { return avc_3d_extension_flag; } set { avc_3d_extension_flag = value; } }
+        private byte svc_extension_flag;
+        public byte SvcExtensionFlag { get { return svc_extension_flag; } set { svc_extension_flag = value; } }
+        private byte avc_3d_extension_flag;
+        public byte Avc3dExtensionFlag { get { return avc_3d_extension_flag; } set { avc_3d_extension_flag = value; } }
         private NalUnitHeaderSvcExtension nal_unit_header_svc_extension;
         public NalUnitHeaderSvcExtension NalUnitHeaderSvcExtension { get { return nal_unit_header_svc_extension; } set { nal_unit_header_svc_extension = value; } }
         private NalUnitHeader3davcExtension nal_unit_header_3davc_extension;
@@ -260,7 +260,6 @@ nal_unit( NumBytesInNALunit ) {
     /*
   
 
-
 seq_parameter_set_rbsp() { 
  seq_parameter_set_data() 0  
  rbsp_trailing_bits() 0  
@@ -312,7 +311,6 @@ seq_parameter_set_rbsp() {
 
     /*
  
-
 
 seq_parameter_set_data() { 
  profile_idc 0 u(8) 
@@ -385,18 +383,18 @@ seq_parameter_set_data() {
     {
         private uint profile_idc;
         public uint ProfileIdc { get { return profile_idc; } set { profile_idc = value; } }
-        private uint constraint_set0_flag;
-        public uint ConstraintSet0Flag { get { return constraint_set0_flag; } set { constraint_set0_flag = value; } }
-        private uint constraint_set1_flag;
-        public uint ConstraintSet1Flag { get { return constraint_set1_flag; } set { constraint_set1_flag = value; } }
-        private uint constraint_set2_flag;
-        public uint ConstraintSet2Flag { get { return constraint_set2_flag; } set { constraint_set2_flag = value; } }
-        private uint constraint_set3_flag;
-        public uint ConstraintSet3Flag { get { return constraint_set3_flag; } set { constraint_set3_flag = value; } }
-        private uint constraint_set4_flag;
-        public uint ConstraintSet4Flag { get { return constraint_set4_flag; } set { constraint_set4_flag = value; } }
-        private uint constraint_set5_flag;
-        public uint ConstraintSet5Flag { get { return constraint_set5_flag; } set { constraint_set5_flag = value; } }
+        private byte constraint_set0_flag;
+        public byte ConstraintSet0Flag { get { return constraint_set0_flag; } set { constraint_set0_flag = value; } }
+        private byte constraint_set1_flag;
+        public byte ConstraintSet1Flag { get { return constraint_set1_flag; } set { constraint_set1_flag = value; } }
+        private byte constraint_set2_flag;
+        public byte ConstraintSet2Flag { get { return constraint_set2_flag; } set { constraint_set2_flag = value; } }
+        private byte constraint_set3_flag;
+        public byte ConstraintSet3Flag { get { return constraint_set3_flag; } set { constraint_set3_flag = value; } }
+        private byte constraint_set4_flag;
+        public byte ConstraintSet4Flag { get { return constraint_set4_flag; } set { constraint_set4_flag = value; } }
+        private byte constraint_set5_flag;
+        public byte ConstraintSet5Flag { get { return constraint_set5_flag; } set { constraint_set5_flag = value; } }
         private uint reserved_zero_2bits;
         public uint ReservedZero2bits { get { return reserved_zero_2bits; } set { reserved_zero_2bits = value; } }
         private uint level_idc;
@@ -405,18 +403,18 @@ seq_parameter_set_data() {
         public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
         private uint chroma_format_idc;
         public uint ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
-        private uint separate_colour_plane_flag;
-        public uint SeparateColourPlaneFlag { get { return separate_colour_plane_flag; } set { separate_colour_plane_flag = value; } }
+        private byte separate_colour_plane_flag;
+        public byte SeparateColourPlaneFlag { get { return separate_colour_plane_flag; } set { separate_colour_plane_flag = value; } }
         private uint bit_depth_luma_minus8;
         public uint BitDepthLumaMinus8 { get { return bit_depth_luma_minus8; } set { bit_depth_luma_minus8 = value; } }
         private uint bit_depth_chroma_minus8;
         public uint BitDepthChromaMinus8 { get { return bit_depth_chroma_minus8; } set { bit_depth_chroma_minus8 = value; } }
-        private uint qpprime_y_zero_transform_bypass_flag;
-        public uint QpprimeyZeroTransformBypassFlag { get { return qpprime_y_zero_transform_bypass_flag; } set { qpprime_y_zero_transform_bypass_flag = value; } }
-        private uint seq_scaling_matrix_present_flag;
-        public uint SeqScalingMatrixPresentFlag { get { return seq_scaling_matrix_present_flag; } set { seq_scaling_matrix_present_flag = value; } }
-        private uint[] seq_scaling_list_present_flag;
-        public uint[] SeqScalingListPresentFlag { get { return seq_scaling_list_present_flag; } set { seq_scaling_list_present_flag = value; } }
+        private byte qpprime_y_zero_transform_bypass_flag;
+        public byte QpprimeyZeroTransformBypassFlag { get { return qpprime_y_zero_transform_bypass_flag; } set { qpprime_y_zero_transform_bypass_flag = value; } }
+        private byte seq_scaling_matrix_present_flag;
+        public byte SeqScalingMatrixPresentFlag { get { return seq_scaling_matrix_present_flag; } set { seq_scaling_matrix_present_flag = value; } }
+        private byte[] seq_scaling_list_present_flag;
+        public byte[] SeqScalingListPresentFlag { get { return seq_scaling_list_present_flag; } set { seq_scaling_list_present_flag = value; } }
         private ScalingList scaling_list;
         public ScalingList ScalingList { get { return scaling_list; } set { scaling_list = value; } }
         private uint log2_max_frame_num_minus4;
@@ -425,8 +423,8 @@ seq_parameter_set_data() {
         public uint PicOrderCntType { get { return pic_order_cnt_type; } set { pic_order_cnt_type = value; } }
         private uint log2_max_pic_order_cnt_lsb_minus4;
         public uint Log2MaxPicOrderCntLsbMinus4 { get { return log2_max_pic_order_cnt_lsb_minus4; } set { log2_max_pic_order_cnt_lsb_minus4 = value; } }
-        private uint delta_pic_order_always_zero_flag;
-        public uint DeltaPicOrderAlwaysZeroFlag { get { return delta_pic_order_always_zero_flag; } set { delta_pic_order_always_zero_flag = value; } }
+        private byte delta_pic_order_always_zero_flag;
+        public byte DeltaPicOrderAlwaysZeroFlag { get { return delta_pic_order_always_zero_flag; } set { delta_pic_order_always_zero_flag = value; } }
         private int offset_for_non_ref_pic;
         public int OffsetForNonRefPic { get { return offset_for_non_ref_pic; } set { offset_for_non_ref_pic = value; } }
         private int offset_for_top_to_bottom_field;
@@ -437,20 +435,20 @@ seq_parameter_set_data() {
         public int[] OffsetForRefFrame { get { return offset_for_ref_frame; } set { offset_for_ref_frame = value; } }
         private uint max_num_ref_frames;
         public uint MaxNumRefFrames { get { return max_num_ref_frames; } set { max_num_ref_frames = value; } }
-        private uint gaps_in_frame_num_value_allowed_flag;
-        public uint GapsInFrameNumValueAllowedFlag { get { return gaps_in_frame_num_value_allowed_flag; } set { gaps_in_frame_num_value_allowed_flag = value; } }
+        private byte gaps_in_frame_num_value_allowed_flag;
+        public byte GapsInFrameNumValueAllowedFlag { get { return gaps_in_frame_num_value_allowed_flag; } set { gaps_in_frame_num_value_allowed_flag = value; } }
         private uint pic_width_in_mbs_minus1;
         public uint PicWidthInMbsMinus1 { get { return pic_width_in_mbs_minus1; } set { pic_width_in_mbs_minus1 = value; } }
         private uint pic_height_in_map_units_minus1;
         public uint PicHeightInMapUnitsMinus1 { get { return pic_height_in_map_units_minus1; } set { pic_height_in_map_units_minus1 = value; } }
-        private uint frame_mbs_only_flag;
-        public uint FrameMbsOnlyFlag { get { return frame_mbs_only_flag; } set { frame_mbs_only_flag = value; } }
-        private uint mb_adaptive_frame_field_flag;
-        public uint MbAdaptiveFrameFieldFlag { get { return mb_adaptive_frame_field_flag; } set { mb_adaptive_frame_field_flag = value; } }
-        private uint direct_8x8_inference_flag;
-        public uint Direct8x8InferenceFlag { get { return direct_8x8_inference_flag; } set { direct_8x8_inference_flag = value; } }
-        private uint frame_cropping_flag;
-        public uint FrameCroppingFlag { get { return frame_cropping_flag; } set { frame_cropping_flag = value; } }
+        private byte frame_mbs_only_flag;
+        public byte FrameMbsOnlyFlag { get { return frame_mbs_only_flag; } set { frame_mbs_only_flag = value; } }
+        private byte mb_adaptive_frame_field_flag;
+        public byte MbAdaptiveFrameFieldFlag { get { return mb_adaptive_frame_field_flag; } set { mb_adaptive_frame_field_flag = value; } }
+        private byte direct_8x8_inference_flag;
+        public byte Direct8x8InferenceFlag { get { return direct_8x8_inference_flag; } set { direct_8x8_inference_flag = value; } }
+        private byte frame_cropping_flag;
+        public byte FrameCroppingFlag { get { return frame_cropping_flag; } set { frame_cropping_flag = value; } }
         private uint frame_crop_left_offset;
         public uint FrameCropLeftOffset { get { return frame_crop_left_offset; } set { frame_crop_left_offset = value; } }
         private uint frame_crop_right_offset;
@@ -459,8 +457,8 @@ seq_parameter_set_data() {
         public uint FrameCropTopOffset { get { return frame_crop_top_offset; } set { frame_crop_top_offset = value; } }
         private uint frame_crop_bottom_offset;
         public uint FrameCropBottomOffset { get { return frame_crop_bottom_offset; } set { frame_crop_bottom_offset = value; } }
-        private uint vui_parameters_present_flag;
-        public uint VuiParametersPresentFlag { get { return vui_parameters_present_flag; } set { vui_parameters_present_flag = value; } }
+        private byte vui_parameters_present_flag;
+        public byte VuiParametersPresentFlag { get { return vui_parameters_present_flag; } set { vui_parameters_present_flag = value; } }
         private VuiParameters vui_parameters;
         public VuiParameters VuiParameters { get { return vui_parameters; } set { vui_parameters = value; } }
 
@@ -505,7 +503,7 @@ seq_parameter_set_data() {
                 if (seq_scaling_matrix_present_flag != 0)
                 {
 
-                    this.seq_scaling_list_present_flag = new uint[((chroma_format_idc != 3) ? 8 : 12)];
+                    this.seq_scaling_list_present_flag = new byte[((chroma_format_idc != 3) ? 8 : 12)];
                     for (i = 0; i < ((chroma_format_idc != 3) ? 8 : 12); i++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.seq_scaling_list_present_flag[i]);
@@ -810,10 +808,10 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
         public uint[] ScalingLst { get { return scalingLst; } set { scalingLst = value; } }
         private uint sizeOfScalingList;
         public uint SizeOfScalingList { get { return sizeOfScalingList; } set { sizeOfScalingList = value; } }
-        private uint useDefaultScalingMatrixFlag;
-        public uint UseDefaultScalingMatrixFlag { get { return useDefaultScalingMatrixFlag; } set { useDefaultScalingMatrixFlag = value; } }
+        private byte useDefaultScalingMatrixFlag;
+        public byte UseDefaultScalingMatrixFlag { get { return useDefaultScalingMatrixFlag; } set { useDefaultScalingMatrixFlag = value; } }
 
-        public ScalingList(uint[] scalingLst, uint sizeOfScalingList, uint useDefaultScalingMatrixFlag)
+        public ScalingList(uint[] scalingLst, uint sizeOfScalingList, byte useDefaultScalingMatrixFlag)
         {
             this.scalingLst = scalingLst;
             this.sizeOfScalingList = sizeOfScalingList;
@@ -930,14 +928,14 @@ seq_parameter_set_extension_rbsp() {
         public uint AuxFormatIdc { get { return aux_format_idc; } set { aux_format_idc = value; } }
         private uint bit_depth_aux_minus8;
         public uint BitDepthAuxMinus8 { get { return bit_depth_aux_minus8; } set { bit_depth_aux_minus8 = value; } }
-        private uint alpha_incr_flag;
-        public uint AlphaIncrFlag { get { return alpha_incr_flag; } set { alpha_incr_flag = value; } }
+        private byte alpha_incr_flag;
+        public byte AlphaIncrFlag { get { return alpha_incr_flag; } set { alpha_incr_flag = value; } }
         private uint alpha_opaque_value;
         public uint AlphaOpaqueValue { get { return alpha_opaque_value; } set { alpha_opaque_value = value; } }
         private uint alpha_transparent_value;
         public uint AlphaTransparentValue { get { return alpha_transparent_value; } set { alpha_transparent_value = value; } }
-        private uint additional_extension_flag;
-        public uint AdditionalExtensionFlag { get { return additional_extension_flag; } set { additional_extension_flag = value; } }
+        private byte additional_extension_flag;
+        public byte AdditionalExtensionFlag { get { return additional_extension_flag; } set { additional_extension_flag = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1047,26 +1045,26 @@ subset_seq_parameter_set_rbsp() {
         public SeqParameterSetData SeqParameterSetData { get { return seq_parameter_set_data; } set { seq_parameter_set_data = value; } }
         private SeqParameterSetSvcExtension seq_parameter_set_svc_extension;
         public SeqParameterSetSvcExtension SeqParameterSetSvcExtension { get { return seq_parameter_set_svc_extension; } set { seq_parameter_set_svc_extension = value; } }
-        private uint svc_vui_parameters_present_flag;
-        public uint SvcVuiParametersPresentFlag { get { return svc_vui_parameters_present_flag; } set { svc_vui_parameters_present_flag = value; } }
+        private byte svc_vui_parameters_present_flag;
+        public byte SvcVuiParametersPresentFlag { get { return svc_vui_parameters_present_flag; } set { svc_vui_parameters_present_flag = value; } }
         private SvcVuiParametersExtension svc_vui_parameters_extension;
         public SvcVuiParametersExtension SvcVuiParametersExtension { get { return svc_vui_parameters_extension; } set { svc_vui_parameters_extension = value; } }
         private uint bit_equal_to_one;
         public uint BitEqualToOne { get { return bit_equal_to_one; } set { bit_equal_to_one = value; } }
         private SeqParameterSetMvcExtension seq_parameter_set_mvc_extension;
         public SeqParameterSetMvcExtension SeqParameterSetMvcExtension { get { return seq_parameter_set_mvc_extension; } set { seq_parameter_set_mvc_extension = value; } }
-        private uint mvc_vui_parameters_present_flag;
-        public uint MvcVuiParametersPresentFlag { get { return mvc_vui_parameters_present_flag; } set { mvc_vui_parameters_present_flag = value; } }
+        private byte mvc_vui_parameters_present_flag;
+        public byte MvcVuiParametersPresentFlag { get { return mvc_vui_parameters_present_flag; } set { mvc_vui_parameters_present_flag = value; } }
         private MvcVuiParametersExtension mvc_vui_parameters_extension;
         public MvcVuiParametersExtension MvcVuiParametersExtension { get { return mvc_vui_parameters_extension; } set { mvc_vui_parameters_extension = value; } }
         private SeqParameterSetMvcdExtension seq_parameter_set_mvcd_extension;
         public SeqParameterSetMvcdExtension SeqParameterSetMvcdExtension { get { return seq_parameter_set_mvcd_extension; } set { seq_parameter_set_mvcd_extension = value; } }
         private SeqParameterSet3davcExtension seq_parameter_set_3davc_extension;
         public SeqParameterSet3davcExtension SeqParameterSet3davcExtension { get { return seq_parameter_set_3davc_extension; } set { seq_parameter_set_3davc_extension = value; } }
-        private uint additional_extension2_flag;
-        public uint AdditionalExtension2Flag { get { return additional_extension2_flag; } set { additional_extension2_flag = value; } }
-        private uint additional_extension2_data_flag;
-        public uint AdditionalExtension2DataFlag { get { return additional_extension2_data_flag; } set { additional_extension2_data_flag = value; } }
+        private byte additional_extension2_flag;
+        public byte AdditionalExtension2Flag { get { return additional_extension2_flag; } set { additional_extension2_flag = value; } }
+        private byte additional_extension2_data_flag;
+        public byte AdditionalExtension2DataFlag { get { return additional_extension2_data_flag; } set { additional_extension2_data_flag = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1307,10 +1305,10 @@ pic_parameter_set_rbsp() {
         public uint PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
         private uint seq_parameter_set_id;
         public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
-        private uint entropy_coding_mode_flag;
-        public uint EntropyCodingModeFlag { get { return entropy_coding_mode_flag; } set { entropy_coding_mode_flag = value; } }
-        private uint bottom_field_pic_order_in_frame_present_flag;
-        public uint BottomFieldPicOrderInFramePresentFlag { get { return bottom_field_pic_order_in_frame_present_flag; } set { bottom_field_pic_order_in_frame_present_flag = value; } }
+        private byte entropy_coding_mode_flag;
+        public byte EntropyCodingModeFlag { get { return entropy_coding_mode_flag; } set { entropy_coding_mode_flag = value; } }
+        private byte bottom_field_pic_order_in_frame_present_flag;
+        public byte BottomFieldPicOrderInFramePresentFlag { get { return bottom_field_pic_order_in_frame_present_flag; } set { bottom_field_pic_order_in_frame_present_flag = value; } }
         private uint num_slice_groups_minus1;
         public uint NumSliceGroupsMinus1 { get { return num_slice_groups_minus1; } set { num_slice_groups_minus1 = value; } }
         private uint slice_group_map_type;
@@ -1321,8 +1319,8 @@ pic_parameter_set_rbsp() {
         public uint[] TopLeft { get { return top_left; } set { top_left = value; } }
         private uint[] bottom_right;
         public uint[] BottomRight { get { return bottom_right; } set { bottom_right = value; } }
-        private uint slice_group_change_direction_flag;
-        public uint SliceGroupChangeDirectionFlag { get { return slice_group_change_direction_flag; } set { slice_group_change_direction_flag = value; } }
+        private byte slice_group_change_direction_flag;
+        public byte SliceGroupChangeDirectionFlag { get { return slice_group_change_direction_flag; } set { slice_group_change_direction_flag = value; } }
         private uint slice_group_change_rate_minus1;
         public uint SliceGroupChangeRateMinus1 { get { return slice_group_change_rate_minus1; } set { slice_group_change_rate_minus1 = value; } }
         private uint pic_size_in_map_units_minus1;
@@ -1333,8 +1331,8 @@ pic_parameter_set_rbsp() {
         public uint NumRefIdxL0DefaultActiveMinus1 { get { return num_ref_idx_l0_default_active_minus1; } set { num_ref_idx_l0_default_active_minus1 = value; } }
         private uint num_ref_idx_l1_default_active_minus1;
         public uint NumRefIdxL1DefaultActiveMinus1 { get { return num_ref_idx_l1_default_active_minus1; } set { num_ref_idx_l1_default_active_minus1 = value; } }
-        private uint weighted_pred_flag;
-        public uint WeightedPredFlag { get { return weighted_pred_flag; } set { weighted_pred_flag = value; } }
+        private byte weighted_pred_flag;
+        public byte WeightedPredFlag { get { return weighted_pred_flag; } set { weighted_pred_flag = value; } }
         private uint weighted_bipred_idc;
         public uint WeightedBipredIdc { get { return weighted_bipred_idc; } set { weighted_bipred_idc = value; } }
         private int pic_init_qp_minus26;
@@ -1343,18 +1341,18 @@ pic_parameter_set_rbsp() {
         public int PicInitQsMinus26 { get { return pic_init_qs_minus26; } set { pic_init_qs_minus26 = value; } }
         private int chroma_qp_index_offset;
         public int ChromaQpIndexOffset { get { return chroma_qp_index_offset; } set { chroma_qp_index_offset = value; } }
-        private uint deblocking_filter_control_present_flag;
-        public uint DeblockingFilterControlPresentFlag { get { return deblocking_filter_control_present_flag; } set { deblocking_filter_control_present_flag = value; } }
-        private uint constrained_intra_pred_flag;
-        public uint ConstrainedIntraPredFlag { get { return constrained_intra_pred_flag; } set { constrained_intra_pred_flag = value; } }
-        private uint redundant_pic_cnt_present_flag;
-        public uint RedundantPicCntPresentFlag { get { return redundant_pic_cnt_present_flag; } set { redundant_pic_cnt_present_flag = value; } }
-        private uint transform_8x8_mode_flag;
-        public uint Transform8x8ModeFlag { get { return transform_8x8_mode_flag; } set { transform_8x8_mode_flag = value; } }
-        private uint pic_scaling_matrix_present_flag;
-        public uint PicScalingMatrixPresentFlag { get { return pic_scaling_matrix_present_flag; } set { pic_scaling_matrix_present_flag = value; } }
-        private uint[] pic_scaling_list_present_flag;
-        public uint[] PicScalingListPresentFlag { get { return pic_scaling_list_present_flag; } set { pic_scaling_list_present_flag = value; } }
+        private byte deblocking_filter_control_present_flag;
+        public byte DeblockingFilterControlPresentFlag { get { return deblocking_filter_control_present_flag; } set { deblocking_filter_control_present_flag = value; } }
+        private byte constrained_intra_pred_flag;
+        public byte ConstrainedIntraPredFlag { get { return constrained_intra_pred_flag; } set { constrained_intra_pred_flag = value; } }
+        private byte redundant_pic_cnt_present_flag;
+        public byte RedundantPicCntPresentFlag { get { return redundant_pic_cnt_present_flag; } set { redundant_pic_cnt_present_flag = value; } }
+        private byte transform_8x8_mode_flag;
+        public byte Transform8x8ModeFlag { get { return transform_8x8_mode_flag; } set { transform_8x8_mode_flag = value; } }
+        private byte pic_scaling_matrix_present_flag;
+        public byte PicScalingMatrixPresentFlag { get { return pic_scaling_matrix_present_flag; } set { pic_scaling_matrix_present_flag = value; } }
+        private byte[] pic_scaling_list_present_flag;
+        public byte[] PicScalingListPresentFlag { get { return pic_scaling_list_present_flag; } set { pic_scaling_list_present_flag = value; } }
         private ScalingList scaling_list;
         public ScalingList ScalingList { get { return scaling_list; } set { scaling_list = value; } }
         private int second_chroma_qp_index_offset;
@@ -1440,7 +1438,7 @@ pic_parameter_set_rbsp() {
                 if (pic_scaling_matrix_present_flag != 0)
                 {
 
-                    this.pic_scaling_list_present_flag = new uint[6 +
+                    this.pic_scaling_list_present_flag = new byte[6 +
      ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag];
                     for (i = 0; i < 6 +
      ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag;
@@ -2781,10 +2779,10 @@ slice_header() {
         public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
         private uint frame_num;
         public uint FrameNum { get { return frame_num; } set { frame_num = value; } }
-        private uint field_pic_flag;
-        public uint FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
-        private uint bottom_field_flag;
-        public uint BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
+        private byte field_pic_flag;
+        public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
+        private byte bottom_field_flag;
+        public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
         private uint idr_pic_id;
         public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
         private uint pic_order_cnt_lsb;
@@ -2795,10 +2793,10 @@ slice_header() {
         public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
         private uint redundant_pic_cnt;
         public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
-        private uint direct_spatial_mv_pred_flag;
-        public uint DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
-        private uint num_ref_idx_active_override_flag;
-        public uint NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
+        private byte direct_spatial_mv_pred_flag;
+        public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
+        private byte num_ref_idx_active_override_flag;
+        public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
         private uint num_ref_idx_l0_active_minus1;
         public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
         private uint num_ref_idx_l1_active_minus1;
@@ -2815,8 +2813,8 @@ slice_header() {
         public uint CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
         private int slice_qp_delta;
         public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
-        private uint sp_for_switch_flag;
-        public uint SpForSwitchFlag { get { return sp_for_switch_flag; } set { sp_for_switch_flag = value; } }
+        private byte sp_for_switch_flag;
+        public byte SpForSwitchFlag { get { return sp_for_switch_flag; } set { sp_for_switch_flag = value; } }
         private int slice_qs_delta;
         public int SliceQsDelta { get { return slice_qs_delta; } set { slice_qs_delta = value; } }
         private uint disable_deblocking_filter_idc;
@@ -3591,16 +3589,16 @@ ref_pic_list_modification() {
     */
     public class RefPicListModification : IItuSerializable
     {
-        private uint ref_pic_list_modification_flag_l0;
-        public uint RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
+        private byte ref_pic_list_modification_flag_l0;
+        public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
         private uint modification_of_pic_nums_idc;
         public uint ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
         private uint abs_diff_pic_num_minus1;
         public uint AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
         private uint long_term_pic_num;
         public uint LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
-        private uint ref_pic_list_modification_flag_l1;
-        public uint RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
+        private byte ref_pic_list_modification_flag_l1;
+        public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
 
         public RefPicListModification()
         {
@@ -3823,26 +3821,26 @@ pred_weight_table() {
         public uint LumaLog2WeightDenom { get { return luma_log2_weight_denom; } set { luma_log2_weight_denom = value; } }
         private uint chroma_log2_weight_denom;
         public uint ChromaLog2WeightDenom { get { return chroma_log2_weight_denom; } set { chroma_log2_weight_denom = value; } }
-        private uint luma_weight_l0_flag;
-        public uint LumaWeightL0Flag { get { return luma_weight_l0_flag; } set { luma_weight_l0_flag = value; } }
+        private byte luma_weight_l0_flag;
+        public byte LumaWeightL0Flag { get { return luma_weight_l0_flag; } set { luma_weight_l0_flag = value; } }
         private int[] luma_weight_l0;
         public int[] LumaWeightL0 { get { return luma_weight_l0; } set { luma_weight_l0 = value; } }
         private int[] luma_offset_l0;
         public int[] LumaOffsetL0 { get { return luma_offset_l0; } set { luma_offset_l0 = value; } }
-        private uint chroma_weight_l0_flag;
-        public uint ChromaWeightL0Flag { get { return chroma_weight_l0_flag; } set { chroma_weight_l0_flag = value; } }
+        private byte chroma_weight_l0_flag;
+        public byte ChromaWeightL0Flag { get { return chroma_weight_l0_flag; } set { chroma_weight_l0_flag = value; } }
         private int[][] chroma_weight_l0;
         public int[][] ChromaWeightL0 { get { return chroma_weight_l0; } set { chroma_weight_l0 = value; } }
         private int[][] chroma_offset_l0;
         public int[][] ChromaOffsetL0 { get { return chroma_offset_l0; } set { chroma_offset_l0 = value; } }
-        private uint luma_weight_l1_flag;
-        public uint LumaWeightL1Flag { get { return luma_weight_l1_flag; } set { luma_weight_l1_flag = value; } }
+        private byte luma_weight_l1_flag;
+        public byte LumaWeightL1Flag { get { return luma_weight_l1_flag; } set { luma_weight_l1_flag = value; } }
         private int[] luma_weight_l1;
         public int[] LumaWeightL1 { get { return luma_weight_l1; } set { luma_weight_l1 = value; } }
         private int[] luma_offset_l1;
         public int[] LumaOffsetL1 { get { return luma_offset_l1; } set { luma_offset_l1 = value; } }
-        private uint chroma_weight_l1_flag;
-        public uint ChromaWeightL1Flag { get { return chroma_weight_l1_flag; } set { chroma_weight_l1_flag = value; } }
+        private byte chroma_weight_l1_flag;
+        public byte ChromaWeightL1Flag { get { return chroma_weight_l1_flag; } set { chroma_weight_l1_flag = value; } }
         private int[][] chroma_weight_l1;
         public int[][] ChromaWeightL1 { get { return chroma_weight_l1; } set { chroma_weight_l1 = value; } }
         private int[][] chroma_offset_l1;
@@ -4113,12 +4111,12 @@ dec_ref_pic_marking() {
     */
     public class DecRefPicMarking : IItuSerializable
     {
-        private uint no_output_of_prior_pics_flag;
-        public uint NoOutputOfPriorPicsFlag { get { return no_output_of_prior_pics_flag; } set { no_output_of_prior_pics_flag = value; } }
-        private uint long_term_reference_flag;
-        public uint LongTermReferenceFlag { get { return long_term_reference_flag; } set { long_term_reference_flag = value; } }
-        private uint adaptive_ref_pic_marking_mode_flag;
-        public uint AdaptiveRefPicMarkingModeFlag { get { return adaptive_ref_pic_marking_mode_flag; } set { adaptive_ref_pic_marking_mode_flag = value; } }
+        private byte no_output_of_prior_pics_flag;
+        public byte NoOutputOfPriorPicsFlag { get { return no_output_of_prior_pics_flag; } set { no_output_of_prior_pics_flag = value; } }
+        private byte long_term_reference_flag;
+        public byte LongTermReferenceFlag { get { return long_term_reference_flag; } set { long_term_reference_flag = value; } }
+        private byte adaptive_ref_pic_marking_mode_flag;
+        public byte AdaptiveRefPicMarkingModeFlag { get { return adaptive_ref_pic_marking_mode_flag; } set { adaptive_ref_pic_marking_mode_flag = value; } }
         private uint memory_management_control_operation;
         public uint MemoryManagementControlOperation { get { return memory_management_control_operation; } set { memory_management_control_operation = value; } }
         private uint difference_of_pic_nums_minus1;
@@ -4386,8 +4384,8 @@ macroblock_layer() {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_luma[i]);
                 }
 
-                this.pcm_sample_chroma = new uint[2 * MbWidthC * MbHeightC];
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                this.pcm_sample_chroma = new uint[2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC")];
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_chroma[i]);
                 }
@@ -4433,7 +4431,7 @@ macroblock_layer() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.coded_block_pattern);
 
-                    if (CodedBlockPatternLuma > 0 &&
+                    if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 &&
      H264Helpers.GetValue("transform_8x8_mode_flag") != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 || H264Helpers.GetValue("direct_8x8_inference_flag") != 0))
@@ -4442,7 +4440,7 @@ macroblock_layer() {
                     }
                 }
 
-                if (CodedBlockPatternLuma > 0 || CodedBlockPatternChroma > 0 ||
+                if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 || H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
    MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.mb_qp_delta);
@@ -4475,7 +4473,7 @@ macroblock_layer() {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_luma[i]);
                 }
 
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_chroma[i]);
                 }
@@ -4521,7 +4519,7 @@ macroblock_layer() {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.coded_block_pattern);
 
-                    if (CodedBlockPatternLuma > 0 &&
+                    if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 &&
      H264Helpers.GetValue("transform_8x8_mode_flag") != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 || H264Helpers.GetValue("direct_8x8_inference_flag") != 0))
@@ -4530,7 +4528,7 @@ macroblock_layer() {
                     }
                 }
 
-                if (CodedBlockPatternLuma > 0 || CodedBlockPatternChroma > 0 ||
+                if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 || H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
    MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += stream.WriteSignedIntGolomb(this.mb_qp_delta);
@@ -4563,7 +4561,7 @@ macroblock_layer() {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_luma[i]); // pcm_sample_luma
                 }
 
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_chroma[i]); // pcm_sample_chroma
                 }
@@ -4609,7 +4607,7 @@ macroblock_layer() {
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(coded_block_pattern); // coded_block_pattern
 
-                    if (CodedBlockPatternLuma > 0 &&
+                    if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 &&
      H264Helpers.GetValue("transform_8x8_mode_flag") != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 || H264Helpers.GetValue("direct_8x8_inference_flag") != 0))
@@ -4618,7 +4616,7 @@ macroblock_layer() {
                     }
                 }
 
-                if (CodedBlockPatternLuma > 0 || CodedBlockPatternChroma > 0 ||
+                if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 || H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
    MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
@@ -5434,19 +5432,19 @@ residual( startIdx, endIdx ) {
                 residual_block = H264Helpers.GetValue("residual_block_cabac");
             }
             size += stream.ReadClass<ResidualLuma>(size, out this.residual_luma);
-            Intra16x16DCLevel = i16x16DClevel;
-            Intra16x16ACLevel = i16x16AClevel;
-            LumaLevel4x4 = level4x4;
-            LumaLevel8x8 = level8x8;
+
+
+
+
 
             if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
-                NumC8x8 = 4 / (SubWidthC * SubHeightC);
+                NumC8x8 = 4 / (H264Helpers.GetValue("SubWidthC") * H264Helpers.GetValue("SubHeightC"));
 
                 for (iCbCr = 0; iCbCr < 2; iCbCr++)
                 {
 
-                    if ((CodedBlockPatternChroma & 3 != 0) && startIdx == 0)
+                    if (((H264Helpers.GetValue("CodedBlockPatternChroma") & 3) != 0) && startIdx == 0)
                     {
                         size += stream.ReadClass<ResidualBlock>(size, out this.residual_block); // chroma DC residual present 
                     }
@@ -5469,7 +5467,7 @@ residual( startIdx, endIdx ) {
                         for (i4x4 = 0; i4x4 < 4; i4x4++)
                         {
 
-                            if (CodedBlockPatternChroma & 2 != 0)
+                            if ((H264Helpers.GetValue("CodedBlockPatternChroma") & 2) != 0)
                             {
                                 size += stream.ReadClass<ResidualBlock>(size, out this.residual_block); // chroma AC residual present 
                             }
@@ -5488,15 +5486,15 @@ residual( startIdx, endIdx ) {
             else if (H264Helpers.GetChromaArrayType() == 3)
             {
                 size += stream.ReadClass<ResidualLuma>(size, out this.residual_luma);
-                CbIntra16x16DCLevel = i16x16DClevel;
-                CbIntra16x16ACLevel = i16x16AClevel;
-                CbLevel4x4 = level4x4;
-                CbLevel8x8 = level8x8;
+
+
+
+
                 size += stream.ReadClass<ResidualLuma>(size, out this.residual_luma);
-                CrIntra16x16DCLevel = i16x16DClevel;
-                CrIntra16x16ACLevel = i16x16AClevel;
-                CrLevel4x4 = level4x4;
-                CrLevel8x8 = level8x8;
+
+
+
+
             }
 
             return size;
@@ -5536,19 +5534,19 @@ residual( startIdx, endIdx ) {
                 residual_block = H264Helpers.GetValue("residual_block_cabac");
             }
             size += stream.WriteClass<ResidualLuma>(this.residual_luma);
-            Intra16x16DCLevel = i16x16DClevel;
-            Intra16x16ACLevel = i16x16AClevel;
-            LumaLevel4x4 = level4x4;
-            LumaLevel8x8 = level8x8;
+
+
+
+
 
             if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
-                NumC8x8 = 4 / (SubWidthC * SubHeightC);
+                NumC8x8 = 4 / (H264Helpers.GetValue("SubWidthC") * H264Helpers.GetValue("SubHeightC"));
 
                 for (iCbCr = 0; iCbCr < 2; iCbCr++)
                 {
 
-                    if ((CodedBlockPatternChroma & 3 != 0) && startIdx == 0)
+                    if (((H264Helpers.GetValue("CodedBlockPatternChroma") & 3) != 0) && startIdx == 0)
                     {
                         size += stream.WriteClass<ResidualBlock>(this.residual_block); // chroma DC residual present 
                     }
@@ -5571,7 +5569,7 @@ residual( startIdx, endIdx ) {
                         for (i4x4 = 0; i4x4 < 4; i4x4++)
                         {
 
-                            if (CodedBlockPatternChroma & 2 != 0)
+                            if ((H264Helpers.GetValue("CodedBlockPatternChroma") & 2) != 0)
                             {
                                 size += stream.WriteClass<ResidualBlock>(this.residual_block); // chroma AC residual present 
                             }
@@ -5590,15 +5588,15 @@ residual( startIdx, endIdx ) {
             else if (H264Helpers.GetChromaArrayType() == 3)
             {
                 size += stream.WriteClass<ResidualLuma>(this.residual_luma);
-                CbIntra16x16DCLevel = i16x16DClevel;
-                CbIntra16x16ACLevel = i16x16AClevel;
-                CbLevel4x4 = level4x4;
-                CbLevel8x8 = level8x8;
+
+
+
+
                 size += stream.WriteClass<ResidualLuma>(this.residual_luma);
-                CrIntra16x16DCLevel = i16x16DClevel;
-                CrIntra16x16ACLevel = i16x16AClevel;
-                CrLevel4x4 = level4x4;
-                CrLevel8x8 = level8x8;
+
+
+
+
             }
 
             return size;
@@ -5638,19 +5636,19 @@ residual( startIdx, endIdx ) {
                 residual_block = H264Helpers.GetValue("residual_block_cabac");
             }
             size += ItuStream.CalculateClassSize<ResidualLuma>(residual_luma); // residual_luma
-            Intra16x16DCLevel = i16x16DClevel;
-            Intra16x16ACLevel = i16x16AClevel;
-            LumaLevel4x4 = level4x4;
-            LumaLevel8x8 = level8x8;
+
+
+
+
 
             if (H264Helpers.GetChromaArrayType() == 1 || H264Helpers.GetChromaArrayType() == 2)
             {
-                NumC8x8 = 4 / (SubWidthC * SubHeightC);
+                NumC8x8 = 4 / (H264Helpers.GetValue("SubWidthC") * H264Helpers.GetValue("SubHeightC"));
 
                 for (iCbCr = 0; iCbCr < 2; iCbCr++)
                 {
 
-                    if ((CodedBlockPatternChroma & 3 != 0) && startIdx == 0)
+                    if (((H264Helpers.GetValue("CodedBlockPatternChroma") & 3) != 0) && startIdx == 0)
                     {
                         size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                     }
@@ -5673,7 +5671,7 @@ residual( startIdx, endIdx ) {
                         for (i4x4 = 0; i4x4 < 4; i4x4++)
                         {
 
-                            if (CodedBlockPatternChroma & 2 != 0)
+                            if ((H264Helpers.GetValue("CodedBlockPatternChroma") & 2) != 0)
                             {
                                 size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                             }
@@ -5692,15 +5690,15 @@ residual( startIdx, endIdx ) {
             else if (H264Helpers.GetChromaArrayType() == 3)
             {
                 size += ItuStream.CalculateClassSize<ResidualLuma>(residual_luma); // residual_luma
-                CbIntra16x16DCLevel = i16x16DClevel;
-                CbIntra16x16ACLevel = i16x16AClevel;
-                CbLevel4x4 = level4x4;
-                CbLevel8x8 = level8x8;
+
+
+
+
                 size += ItuStream.CalculateClassSize<ResidualLuma>(residual_luma); // residual_luma
-                CrIntra16x16DCLevel = i16x16DClevel;
-                CrIntra16x16ACLevel = i16x16AClevel;
-                CrLevel4x4 = level4x4;
-                CrLevel8x8 = level8x8;
+
+
+
+
             }
 
             return size;
@@ -5791,7 +5789,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (CodedBlockPatternLuma & (1 << (int)i8x8))
+                        if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
                         {
 
                             if (MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
@@ -5825,12 +5823,12 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
 
                             for (i = 0; i < 16; i++)
                             {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
+
                             }
                         }
                     }
                 }
-                else if (CodedBlockPatternLuma & (1 << (int)i8x8))
+                else if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
                 {
                     size += stream.ReadClass<ResidualBlock>(size, out this.residual_block);
                 }
@@ -5872,7 +5870,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (CodedBlockPatternLuma & (1 << (int)i8x8))
+                        if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
                         {
 
                             if (MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
@@ -5906,12 +5904,12 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
 
                             for (i = 0; i < 16; i++)
                             {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
+
                             }
                         }
                     }
                 }
-                else if (CodedBlockPatternLuma & (1 << (int)i8x8))
+                else if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
                 {
                     size += stream.WriteClass<ResidualBlock>(this.residual_block);
                 }
@@ -5953,7 +5951,7 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
                     for (i4x4 = 0; i4x4 < 4; i4x4++)
                     {
 
-                        if (CodedBlockPatternLuma & (1 << (int)i8x8))
+                        if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
                         {
 
                             if (MbTypes.MbPartPredMode(H264Helpers.GetValue("mb_type"), 0) == MbPartPredModes.Intra_16x16)
@@ -5987,12 +5985,12 @@ residual_luma( i16x16DClevel, i16x16AClevel, level4x4, level8x8, startIdx, endId
 
                             for (i = 0; i < 16; i++)
                             {
-                                level8x8[i8x8][4 * i + i4x4] = level4x4[i8x8 * 4 + i4x4][i];
+
                             }
                         }
                     }
                 }
-                else if (CodedBlockPatternLuma & (1 << (int)i8x8))
+                else if (H264Helpers.GetValue("CodedBlockPatternLuma") & (1 << (int)i8x8))
                 {
                     size += ItuStream.CalculateClassSize<ResidualBlock>(residual_block); // residual_block
                 }
@@ -6079,8 +6077,8 @@ residual_block_cavlc( coeffLevel, startIdx, endIdx, maxNumCoeff ) {
     {
         private uint coeff_token;
         public uint CoeffToken { get { return coeff_token; } set { coeff_token = value; } }
-        private uint trailing_ones_sign_flag;
-        public uint TrailingOnesSignFlag { get { return trailing_ones_sign_flag; } set { trailing_ones_sign_flag = value; } }
+        private byte trailing_ones_sign_flag;
+        public byte TrailingOnesSignFlag { get { return trailing_ones_sign_flag; } set { trailing_ones_sign_flag = value; } }
         private uint level_prefix;
         public uint LevelPrefix { get { return level_prefix; } set { level_prefix = value; } }
         private uint level_suffix;
@@ -8013,7 +8011,7 @@ buffering_period( payloadSize ) {
             uint SchedSelIdx = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
-            if (NalHrdBpPresentFlag != 0)
+            if (H264Helpers.GetValue("NalHrdBpPresentFlag") != 0)
             {
 
                 this.initial_cpb_removal_delay = new uint[H264Helpers.GetValue("cpb_cnt_minus1")];
@@ -8025,7 +8023,7 @@ buffering_period( payloadSize ) {
                 }
             }
 
-            if (VclHrdBpPresentFlag != 0)
+            if (H264Helpers.GetValue("VclHrdBpPresentFlag") != 0)
             {
 
                 for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
@@ -8045,7 +8043,7 @@ buffering_period( payloadSize ) {
             uint SchedSelIdx = 0;
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
 
-            if (NalHrdBpPresentFlag != 0)
+            if (H264Helpers.GetValue("NalHrdBpPresentFlag") != 0)
             {
 
                 for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
@@ -8055,7 +8053,7 @@ buffering_period( payloadSize ) {
                 }
             }
 
-            if (VclHrdBpPresentFlag != 0)
+            if (H264Helpers.GetValue("VclHrdBpPresentFlag") != 0)
             {
 
                 for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
@@ -8075,7 +8073,7 @@ buffering_period( payloadSize ) {
             uint SchedSelIdx = 0;
             size += ItuStream.CalculateUnsignedIntGolomb(seq_parameter_set_id); // seq_parameter_set_id
 
-            if (NalHrdBpPresentFlag != 0)
+            if (H264Helpers.GetValue("NalHrdBpPresentFlag") != 0)
             {
 
                 for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
@@ -8085,7 +8083,7 @@ buffering_period( payloadSize ) {
                 }
             }
 
-            if (VclHrdBpPresentFlag != 0)
+            if (H264Helpers.GetValue("VclHrdBpPresentFlag") != 0)
             {
 
                 for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
@@ -8152,20 +8150,20 @@ pic_timing( payloadSize ) {
         public uint DpbOutputDelay { get { return dpb_output_delay; } set { dpb_output_delay = value; } }
         private uint pic_struct;
         public uint PicStruct { get { return pic_struct; } set { pic_struct = value; } }
-        private uint[] clock_timestamp_flag;
-        public uint[] ClockTimestampFlag { get { return clock_timestamp_flag; } set { clock_timestamp_flag = value; } }
+        private byte[] clock_timestamp_flag;
+        public byte[] ClockTimestampFlag { get { return clock_timestamp_flag; } set { clock_timestamp_flag = value; } }
         private uint ct_type;
         public uint CtType { get { return ct_type; } set { ct_type = value; } }
-        private uint nuit_field_based_flag;
-        public uint NuitFieldBasedFlag { get { return nuit_field_based_flag; } set { nuit_field_based_flag = value; } }
+        private byte nuit_field_based_flag;
+        public byte NuitFieldBasedFlag { get { return nuit_field_based_flag; } set { nuit_field_based_flag = value; } }
         private uint counting_type;
         public uint CountingType { get { return counting_type; } set { counting_type = value; } }
-        private uint full_timestamp_flag;
-        public uint FullTimestampFlag { get { return full_timestamp_flag; } set { full_timestamp_flag = value; } }
-        private uint discontinuity_flag;
-        public uint DiscontinuityFlag { get { return discontinuity_flag; } set { discontinuity_flag = value; } }
-        private uint cnt_dropped_flag;
-        public uint CntDroppedFlag { get { return cnt_dropped_flag; } set { cnt_dropped_flag = value; } }
+        private byte full_timestamp_flag;
+        public byte FullTimestampFlag { get { return full_timestamp_flag; } set { full_timestamp_flag = value; } }
+        private byte discontinuity_flag;
+        public byte DiscontinuityFlag { get { return discontinuity_flag; } set { discontinuity_flag = value; } }
+        private byte cnt_dropped_flag;
+        public byte CntDroppedFlag { get { return cnt_dropped_flag; } set { cnt_dropped_flag = value; } }
         private uint n_frames;
         public uint nFrames { get { return n_frames; } set { n_frames = value; } }
         private uint seconds_value;
@@ -8174,12 +8172,12 @@ pic_timing( payloadSize ) {
         public uint MinutesValue { get { return minutes_value; } set { minutes_value = value; } }
         private uint hours_value;
         public uint HoursValue { get { return hours_value; } set { hours_value = value; } }
-        private uint seconds_flag;
-        public uint SecondsFlag { get { return seconds_flag; } set { seconds_flag = value; } }
-        private uint minutes_flag;
-        public uint MinutesFlag { get { return minutes_flag; } set { minutes_flag = value; } }
-        private uint hours_flag;
-        public uint HoursFlag { get { return hours_flag; } set { hours_flag = value; } }
+        private byte seconds_flag;
+        public byte SecondsFlag { get { return seconds_flag; } set { seconds_flag = value; } }
+        private byte minutes_flag;
+        public byte MinutesFlag { get { return minutes_flag; } set { minutes_flag = value; } }
+        private byte hours_flag;
+        public byte HoursFlag { get { return hours_flag; } set { hours_flag = value; } }
         private int time_offset;
         public int TimeOffset { get { return time_offset; } set { time_offset = value; } }
         private uint payloadSize;
@@ -8196,7 +8194,7 @@ pic_timing( payloadSize ) {
 
             uint i = 0;
 
-            if (CpbDpbDelaysPresentFlag != 0)
+            if (H264Helpers.GetValue("CpbDpbDelaysPresentFlag") != 0)
             {
                 size += stream.ReadUnsignedIntVariable(size, out this.cpb_removal_delay);
                 size += stream.ReadUnsignedIntVariable(size, out this.dpb_output_delay);
@@ -8206,8 +8204,8 @@ pic_timing( payloadSize ) {
             {
                 size += stream.ReadUnsignedInt(size, 4, out this.pic_struct);
 
-                this.clock_timestamp_flag = new uint[NumClockTS];
-                for (i = 0; i < NumClockTS; i++)
+                this.clock_timestamp_flag = new byte[H264Helpers.GetValue("NumClockTS")];
+                for (i = 0; i < H264Helpers.GetValue("NumClockTS"); i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.clock_timestamp_flag[i]);
 
@@ -8266,7 +8264,7 @@ pic_timing( payloadSize ) {
 
             uint i = 0;
 
-            if (CpbDpbDelaysPresentFlag != 0)
+            if (H264Helpers.GetValue("CpbDpbDelaysPresentFlag") != 0)
             {
                 size += stream.WriteUnsignedIntVariable(this.cpb_removal_delay);
                 size += stream.WriteUnsignedIntVariable(this.dpb_output_delay);
@@ -8276,7 +8274,7 @@ pic_timing( payloadSize ) {
             {
                 size += stream.WriteUnsignedInt(4, this.pic_struct);
 
-                for (i = 0; i < NumClockTS; i++)
+                for (i = 0; i < H264Helpers.GetValue("NumClockTS"); i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.clock_timestamp_flag[i]);
 
@@ -8335,7 +8333,7 @@ pic_timing( payloadSize ) {
 
             uint i = 0;
 
-            if (CpbDpbDelaysPresentFlag != 0)
+            if (H264Helpers.GetValue("CpbDpbDelaysPresentFlag") != 0)
             {
                 size += ItuStream.CalculateUnsignedIntVariable(cpb_removal_delay); // cpb_removal_delay
                 size += ItuStream.CalculateUnsignedIntVariable(dpb_output_delay); // dpb_output_delay
@@ -8345,7 +8343,7 @@ pic_timing( payloadSize ) {
             {
                 size += 4; // pic_struct
 
-                for (i = 0; i < NumClockTS; i++)
+                for (i = 0; i < H264Helpers.GetValue("NumClockTS"); i++)
                 {
                     size += 1; // clock_timestamp_flag
 
@@ -8422,8 +8420,8 @@ if( !pan_scan_rect_cancel_flag ) {
     {
         private uint pan_scan_rect_id;
         public uint PanScanRectId { get { return pan_scan_rect_id; } set { pan_scan_rect_id = value; } }
-        private uint pan_scan_rect_cancel_flag;
-        public uint PanScanRectCancelFlag { get { return pan_scan_rect_cancel_flag; } set { pan_scan_rect_cancel_flag = value; } }
+        private byte pan_scan_rect_cancel_flag;
+        public byte PanScanRectCancelFlag { get { return pan_scan_rect_cancel_flag; } set { pan_scan_rect_cancel_flag = value; } }
         private uint pan_scan_cnt_minus1;
         public uint PanScanCntMinus1 { get { return pan_scan_cnt_minus1; } set { pan_scan_cnt_minus1 = value; } }
         private int[] pan_scan_rect_left_offset;
@@ -8786,10 +8784,10 @@ recovery_point( payloadSize ) {
     {
         private uint recovery_frame_cnt;
         public uint RecoveryFrameCnt { get { return recovery_frame_cnt; } set { recovery_frame_cnt = value; } }
-        private uint exact_match_flag;
-        public uint ExactMatchFlag { get { return exact_match_flag; } set { exact_match_flag = value; } }
-        private uint broken_link_flag;
-        public uint BrokenLinkFlag { get { return broken_link_flag; } set { broken_link_flag = value; } }
+        private byte exact_match_flag;
+        public byte ExactMatchFlag { get { return exact_match_flag; } set { exact_match_flag = value; } }
+        private byte broken_link_flag;
+        public byte BrokenLinkFlag { get { return broken_link_flag; } set { broken_link_flag = value; } }
         private uint changing_slice_group_idc;
         public uint ChangingSliceGroupIdc { get { return changing_slice_group_idc; } set { changing_slice_group_idc = value; } }
         private uint payloadSize;
@@ -8854,14 +8852,14 @@ dec_ref_pic_marking_repetition( payloadSize ) {
     */
     public class DecRefPicMarkingRepetition : IItuSerializable
     {
-        private uint original_idr_flag;
-        public uint OriginalIdrFlag { get { return original_idr_flag; } set { original_idr_flag = value; } }
+        private byte original_idr_flag;
+        public byte OriginalIdrFlag { get { return original_idr_flag; } set { original_idr_flag = value; } }
         private uint original_frame_num;
         public uint OriginalFrameNum { get { return original_frame_num; } set { original_frame_num = value; } }
-        private uint original_field_pic_flag;
-        public uint OriginalFieldPicFlag { get { return original_field_pic_flag; } set { original_field_pic_flag = value; } }
-        private uint original_bottom_field_flag;
-        public uint OriginalBottomFieldFlag { get { return original_bottom_field_flag; } set { original_bottom_field_flag = value; } }
+        private byte original_field_pic_flag;
+        public byte OriginalFieldPicFlag { get { return original_field_pic_flag; } set { original_field_pic_flag = value; } }
+        private byte original_bottom_field_flag;
+        public byte OriginalBottomFieldFlag { get { return original_bottom_field_flag; } set { original_bottom_field_flag = value; } }
         private DecRefPicMarking dec_ref_pic_marking;
         public DecRefPicMarking DecRefPicMarking { get { return dec_ref_pic_marking; } set { dec_ref_pic_marking = value; } }
         private uint payloadSize;
@@ -8968,20 +8966,20 @@ spare_pic( payloadSize ) {
     {
         private uint target_frame_num;
         public uint TargetFrameNum { get { return target_frame_num; } set { target_frame_num = value; } }
-        private uint spare_field_flag;
-        public uint SpareFieldFlag { get { return spare_field_flag; } set { spare_field_flag = value; } }
-        private uint target_bottom_field_flag;
-        public uint TargetBottomFieldFlag { get { return target_bottom_field_flag; } set { target_bottom_field_flag = value; } }
+        private byte spare_field_flag;
+        public byte SpareFieldFlag { get { return spare_field_flag; } set { spare_field_flag = value; } }
+        private byte target_bottom_field_flag;
+        public byte TargetBottomFieldFlag { get { return target_bottom_field_flag; } set { target_bottom_field_flag = value; } }
         private uint num_spare_pics_minus1;
         public uint NumSparePicsMinus1 { get { return num_spare_pics_minus1; } set { num_spare_pics_minus1 = value; } }
         private uint[] delta_spare_frame_num;
         public uint[] DeltaSpareFrameNum { get { return delta_spare_frame_num; } set { delta_spare_frame_num = value; } }
-        private uint[] spare_bottom_field_flag;
-        public uint[] SpareBottomFieldFlag { get { return spare_bottom_field_flag; } set { spare_bottom_field_flag = value; } }
+        private byte[] spare_bottom_field_flag;
+        public byte[] SpareBottomFieldFlag { get { return spare_bottom_field_flag; } set { spare_bottom_field_flag = value; } }
         private uint[] spare_area_idc;
         public uint[] SpareAreaIdc { get { return spare_area_idc; } set { spare_area_idc = value; } }
-        private uint[][] spare_unit_flag;
-        public uint[][] SpareUnitFlag { get { return spare_unit_flag; } set { spare_unit_flag = value; } }
+        private byte[][] spare_unit_flag;
+        public byte[][] SpareUnitFlag { get { return spare_unit_flag; } set { spare_unit_flag = value; } }
         private uint[][] zero_run_length;
         public uint[][] ZeroRunLength { get { return zero_run_length; } set { zero_run_length = value; } }
         private uint payloadSize;
@@ -9009,9 +9007,9 @@ spare_pic( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_spare_pics_minus1);
 
             this.delta_spare_frame_num = new uint[num_spare_pics_minus1 + 1];
-            this.spare_bottom_field_flag = new uint[num_spare_pics_minus1 + 1];
+            this.spare_bottom_field_flag = new byte[num_spare_pics_minus1 + 1];
             this.spare_area_idc = new uint[num_spare_pics_minus1 + 1];
-            this.spare_unit_flag = new uint[num_spare_pics_minus1 + 1][];
+            this.spare_unit_flag = new byte[num_spare_pics_minus1 + 1][];
             this.zero_run_length = new uint[num_spare_pics_minus1 + 1][];
             for (i = 0; i < num_spare_pics_minus1 + 1; i++)
             {
@@ -9026,8 +9024,8 @@ spare_pic( payloadSize ) {
                 if (spare_area_idc[i] == 1)
                 {
 
-                    this.spare_unit_flag[i] = new uint[PicSizeInMapUnits];
-                    for (j = 0; j < PicSizeInMapUnits; j++)
+                    this.spare_unit_flag[i] = new byte[H264Helpers.GetValue("PicSizeInMapUnits")];
+                    for (j = 0; j < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.spare_unit_flag[i][j]);
                     }
@@ -9036,8 +9034,8 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    this.zero_run_length[i] = new uint[PicSizeInMapUnits];
-                    for (j = 0; mapUnitCnt < PicSizeInMapUnits; j++)
+                    this.zero_run_length[i] = new uint[H264Helpers.GetValue("PicSizeInMapUnits")];
+                    for (j = 0; mapUnitCnt < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.zero_run_length[i][j]);
                         mapUnitCnt += zero_run_length[i][j] + 1;
@@ -9077,7 +9075,7 @@ spare_pic( payloadSize ) {
                 if (spare_area_idc[i] == 1)
                 {
 
-                    for (j = 0; j < PicSizeInMapUnits; j++)
+                    for (j = 0; j < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.spare_unit_flag[i][j]);
                     }
@@ -9086,7 +9084,7 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    for (j = 0; mapUnitCnt < PicSizeInMapUnits; j++)
+                    for (j = 0; mapUnitCnt < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.zero_run_length[i][j]);
                         mapUnitCnt += zero_run_length[i][j] + 1;
@@ -9126,7 +9124,7 @@ spare_pic( payloadSize ) {
                 if (spare_area_idc[i] == 1)
                 {
 
-                    for (j = 0; j < PicSizeInMapUnits; j++)
+                    for (j = 0; j < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
                     {
                         size += 1; // spare_unit_flag
                     }
@@ -9135,7 +9133,7 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    for (j = 0; mapUnitCnt < PicSizeInMapUnits; j++)
+                    for (j = 0; mapUnitCnt < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(zero_run_length[i][j]); // zero_run_length
                         mapUnitCnt += zero_run_length[i][j] + 1;
@@ -9163,8 +9161,8 @@ scene_info( payloadSize ) {
     */
     public class SceneInfo : IItuSerializable
     {
-        private uint scene_info_present_flag;
-        public uint SceneInfoPresentFlag { get { return scene_info_present_flag; } set { scene_info_present_flag = value; } }
+        private byte scene_info_present_flag;
+        public byte SceneInfoPresentFlag { get { return scene_info_present_flag; } set { scene_info_present_flag = value; } }
         private uint scene_id;
         public uint SceneId { get { return scene_id; } set { scene_id = value; } }
         private uint scene_transition_type;
@@ -9261,14 +9259,14 @@ sub_seq_info( payloadSize ) {
         public uint SubSeqLayerNum { get { return sub_seq_layer_num; } set { sub_seq_layer_num = value; } }
         private uint sub_seq_id;
         public uint SubSeqId { get { return sub_seq_id; } set { sub_seq_id = value; } }
-        private uint first_ref_pic_flag;
-        public uint FirstRefPicFlag { get { return first_ref_pic_flag; } set { first_ref_pic_flag = value; } }
-        private uint leading_non_ref_pic_flag;
-        public uint LeadingNonRefPicFlag { get { return leading_non_ref_pic_flag; } set { leading_non_ref_pic_flag = value; } }
-        private uint last_pic_flag;
-        public uint LastPicFlag { get { return last_pic_flag; } set { last_pic_flag = value; } }
-        private uint sub_seq_frame_num_flag;
-        public uint SubSeqFrameNumFlag { get { return sub_seq_frame_num_flag; } set { sub_seq_frame_num_flag = value; } }
+        private byte first_ref_pic_flag;
+        public byte FirstRefPicFlag { get { return first_ref_pic_flag; } set { first_ref_pic_flag = value; } }
+        private byte leading_non_ref_pic_flag;
+        public byte LeadingNonRefPicFlag { get { return leading_non_ref_pic_flag; } set { leading_non_ref_pic_flag = value; } }
+        private byte last_pic_flag;
+        public byte LastPicFlag { get { return last_pic_flag; } set { last_pic_flag = value; } }
+        private byte sub_seq_frame_num_flag;
+        public byte SubSeqFrameNumFlag { get { return sub_seq_frame_num_flag; } set { sub_seq_frame_num_flag = value; } }
         private uint sub_seq_frame_num;
         public uint SubSeqFrameNum { get { return sub_seq_frame_num; } set { sub_seq_frame_num = value; } }
         private uint payloadSize;
@@ -9354,8 +9352,8 @@ sub_seq_layer_characteristics( payloadSize ) {
     {
         private uint num_sub_seq_layers_minus1;
         public uint NumSubSeqLayersMinus1 { get { return num_sub_seq_layers_minus1; } set { num_sub_seq_layers_minus1 = value; } }
-        private uint accurate_statistics_flag;
-        public uint AccurateStatisticsFlag { get { return accurate_statistics_flag; } set { accurate_statistics_flag = value; } }
+        private byte accurate_statistics_flag;
+        public byte AccurateStatisticsFlag { get { return accurate_statistics_flag; } set { accurate_statistics_flag = value; } }
         private uint average_bit_rate;
         public uint AverageBitRate { get { return average_bit_rate; } set { average_bit_rate = value; } }
         private uint average_frame_rate;
@@ -9450,14 +9448,14 @@ sub_seq_characteristics( payloadSize ) {
         public uint SubSeqLayerNum { get { return sub_seq_layer_num; } set { sub_seq_layer_num = value; } }
         private uint sub_seq_id;
         public uint SubSeqId { get { return sub_seq_id; } set { sub_seq_id = value; } }
-        private uint duration_flag;
-        public uint DurationFlag { get { return duration_flag; } set { duration_flag = value; } }
+        private byte duration_flag;
+        public byte DurationFlag { get { return duration_flag; } set { duration_flag = value; } }
         private uint sub_seq_duration;
         public uint SubSeqDuration { get { return sub_seq_duration; } set { sub_seq_duration = value; } }
-        private uint average_rate_flag;
-        public uint AverageRateFlag { get { return average_rate_flag; } set { average_rate_flag = value; } }
-        private uint accurate_statistics_flag;
-        public uint AccurateStatisticsFlag { get { return accurate_statistics_flag; } set { accurate_statistics_flag = value; } }
+        private byte average_rate_flag;
+        public byte AverageRateFlag { get { return average_rate_flag; } set { average_rate_flag = value; } }
+        private byte accurate_statistics_flag;
+        public byte AccurateStatisticsFlag { get { return accurate_statistics_flag; } set { accurate_statistics_flag = value; } }
         private uint average_bit_rate;
         public uint AverageBitRate { get { return average_bit_rate; } set { average_bit_rate = value; } }
         private uint average_frame_rate;
@@ -9468,8 +9466,8 @@ sub_seq_characteristics( payloadSize ) {
         public uint RefSubSeqLayerNum { get { return ref_sub_seq_layer_num; } set { ref_sub_seq_layer_num = value; } }
         private uint ref_sub_seq_id;
         public uint RefSubSeqId { get { return ref_sub_seq_id; } set { ref_sub_seq_id = value; } }
-        private uint ref_sub_seq_direction;
-        public uint RefSubSeqDirection { get { return ref_sub_seq_direction; } set { ref_sub_seq_direction = value; } }
+        private byte ref_sub_seq_direction;
+        public byte RefSubSeqDirection { get { return ref_sub_seq_direction; } set { ref_sub_seq_direction = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -9840,10 +9838,10 @@ motion_constrained_slice_group_set( payloadSize ) {
         public uint NumSliceGroupsInSetMinus1 { get { return num_slice_groups_in_set_minus1; } set { num_slice_groups_in_set_minus1 = value; } }
         private uint[] slice_group_id;
         public uint[] SliceGroupId { get { return slice_group_id; } set { slice_group_id = value; } }
-        private uint exact_sample_value_match_flag;
-        public uint ExactSampleValueMatchFlag { get { return exact_sample_value_match_flag; } set { exact_sample_value_match_flag = value; } }
-        private uint pan_scan_rect_flag;
-        public uint PanScanRectFlag { get { return pan_scan_rect_flag; } set { pan_scan_rect_flag = value; } }
+        private byte exact_sample_value_match_flag;
+        public byte ExactSampleValueMatchFlag { get { return exact_sample_value_match_flag; } set { exact_sample_value_match_flag = value; } }
+        private byte pan_scan_rect_flag;
+        public byte PanScanRectFlag { get { return pan_scan_rect_flag; } set { pan_scan_rect_flag = value; } }
         private uint pan_scan_rect_id;
         public uint PanScanRectId { get { return pan_scan_rect_id; } set { pan_scan_rect_id = value; } }
         private uint payloadSize;
@@ -9972,18 +9970,18 @@ film_grain_characteristics( payloadSize ) {
     */
     public class FilmGrainCharacteristics : IItuSerializable
     {
-        private uint film_grain_characteristics_cancel_flag;
-        public uint FilmGrainCharacteristicsCancelFlag { get { return film_grain_characteristics_cancel_flag; } set { film_grain_characteristics_cancel_flag = value; } }
+        private byte film_grain_characteristics_cancel_flag;
+        public byte FilmGrainCharacteristicsCancelFlag { get { return film_grain_characteristics_cancel_flag; } set { film_grain_characteristics_cancel_flag = value; } }
         private uint film_grain_model_id;
         public uint FilmGrainModelId { get { return film_grain_model_id; } set { film_grain_model_id = value; } }
-        private uint separate_colour_description_present_flag;
-        public uint SeparateColourDescriptionPresentFlag { get { return separate_colour_description_present_flag; } set { separate_colour_description_present_flag = value; } }
+        private byte separate_colour_description_present_flag;
+        public byte SeparateColourDescriptionPresentFlag { get { return separate_colour_description_present_flag; } set { separate_colour_description_present_flag = value; } }
         private uint film_grain_bit_depth_luma_minus8;
         public uint FilmGrainBitDepthLumaMinus8 { get { return film_grain_bit_depth_luma_minus8; } set { film_grain_bit_depth_luma_minus8 = value; } }
         private uint film_grain_bit_depth_chroma_minus8;
         public uint FilmGrainBitDepthChromaMinus8 { get { return film_grain_bit_depth_chroma_minus8; } set { film_grain_bit_depth_chroma_minus8 = value; } }
-        private uint film_grain_full_range_flag;
-        public uint FilmGrainFullRangeFlag { get { return film_grain_full_range_flag; } set { film_grain_full_range_flag = value; } }
+        private byte film_grain_full_range_flag;
+        public byte FilmGrainFullRangeFlag { get { return film_grain_full_range_flag; } set { film_grain_full_range_flag = value; } }
         private uint film_grain_colour_primaries;
         public uint FilmGrainColourPrimaries { get { return film_grain_colour_primaries; } set { film_grain_colour_primaries = value; } }
         private uint film_grain_transfer_characteristics;
@@ -9994,8 +9992,8 @@ film_grain_characteristics( payloadSize ) {
         public uint BlendingModeId { get { return blending_mode_id; } set { blending_mode_id = value; } }
         private uint log2_scale_factor;
         public uint Log2ScaleFactor { get { return log2_scale_factor; } set { log2_scale_factor = value; } }
-        private uint[] comp_model_present_flag;
-        public uint[] CompModelPresentFlag { get { return comp_model_present_flag; } set { comp_model_present_flag = value; } }
+        private byte[] comp_model_present_flag;
+        public byte[] CompModelPresentFlag { get { return comp_model_present_flag; } set { comp_model_present_flag = value; } }
         private uint[] num_intensity_intervals_minus1;
         public uint[] NumIntensityIntervalsMinus1 { get { return num_intensity_intervals_minus1; } set { num_intensity_intervals_minus1 = value; } }
         private uint[] num_model_values_minus1;
@@ -10042,7 +10040,7 @@ film_grain_characteristics( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 2, out this.blending_mode_id);
                 size += stream.ReadUnsignedInt(size, 4, out this.log2_scale_factor);
 
-                this.comp_model_present_flag = new uint[3];
+                this.comp_model_present_flag = new byte[3];
                 for (c = 0; c < 3; c++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.comp_model_present_flag[c]);
@@ -10213,12 +10211,12 @@ deblocking_filter_display_preference( payloadSize ) {
     */
     public class DeblockingFilterDisplayPreference : IItuSerializable
     {
-        private uint deblocking_display_preference_cancel_flag;
-        public uint DeblockingDisplayPreferenceCancelFlag { get { return deblocking_display_preference_cancel_flag; } set { deblocking_display_preference_cancel_flag = value; } }
-        private uint display_prior_to_deblocking_preferred_flag;
-        public uint DisplayPriorToDeblockingPreferredFlag { get { return display_prior_to_deblocking_preferred_flag; } set { display_prior_to_deblocking_preferred_flag = value; } }
-        private uint dec_frame_buffering_constraint_flag;
-        public uint DecFrameBufferingConstraintFlag { get { return dec_frame_buffering_constraint_flag; } set { dec_frame_buffering_constraint_flag = value; } }
+        private byte deblocking_display_preference_cancel_flag;
+        public byte DeblockingDisplayPreferenceCancelFlag { get { return deblocking_display_preference_cancel_flag; } set { deblocking_display_preference_cancel_flag = value; } }
+        private byte display_prior_to_deblocking_preferred_flag;
+        public byte DisplayPriorToDeblockingPreferredFlag { get { return display_prior_to_deblocking_preferred_flag; } set { display_prior_to_deblocking_preferred_flag = value; } }
+        private byte dec_frame_buffering_constraint_flag;
+        public byte DecFrameBufferingConstraintFlag { get { return dec_frame_buffering_constraint_flag; } set { dec_frame_buffering_constraint_flag = value; } }
         private uint deblocking_display_preference_repetition_period;
         public uint DeblockingDisplayPreferenceRepetitionPeriod { get { return deblocking_display_preference_repetition_period; } set { deblocking_display_preference_repetition_period = value; } }
         private uint payloadSize;
@@ -10296,18 +10294,18 @@ stereo_video_info( payloadSize ) {
     */
     public class StereoVideoInfo : IItuSerializable
     {
-        private uint field_views_flag;
-        public uint FieldViewsFlag { get { return field_views_flag; } set { field_views_flag = value; } }
-        private uint top_field_is_left_view_flag;
-        public uint TopFieldIsLeftViewFlag { get { return top_field_is_left_view_flag; } set { top_field_is_left_view_flag = value; } }
-        private uint current_frame_is_left_view_flag;
-        public uint CurrentFrameIsLeftViewFlag { get { return current_frame_is_left_view_flag; } set { current_frame_is_left_view_flag = value; } }
-        private uint next_frame_is_second_view_flag;
-        public uint NextFrameIsSecondViewFlag { get { return next_frame_is_second_view_flag; } set { next_frame_is_second_view_flag = value; } }
-        private uint left_view_self_contained_flag;
-        public uint LeftViewSelfContainedFlag { get { return left_view_self_contained_flag; } set { left_view_self_contained_flag = value; } }
-        private uint right_view_self_contained_flag;
-        public uint RightViewSelfContainedFlag { get { return right_view_self_contained_flag; } set { right_view_self_contained_flag = value; } }
+        private byte field_views_flag;
+        public byte FieldViewsFlag { get { return field_views_flag; } set { field_views_flag = value; } }
+        private byte top_field_is_left_view_flag;
+        public byte TopFieldIsLeftViewFlag { get { return top_field_is_left_view_flag; } set { top_field_is_left_view_flag = value; } }
+        private byte current_frame_is_left_view_flag;
+        public byte CurrentFrameIsLeftViewFlag { get { return current_frame_is_left_view_flag; } set { current_frame_is_left_view_flag = value; } }
+        private byte next_frame_is_second_view_flag;
+        public byte NextFrameIsSecondViewFlag { get { return next_frame_is_second_view_flag; } set { next_frame_is_second_view_flag = value; } }
+        private byte left_view_self_contained_flag;
+        public byte LeftViewSelfContainedFlag { get { return left_view_self_contained_flag; } set { left_view_self_contained_flag = value; } }
+        private byte right_view_self_contained_flag;
+        public byte RightViewSelfContainedFlag { get { return right_view_self_contained_flag; } set { right_view_self_contained_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -10405,8 +10403,8 @@ post_filter_hint( payloadSize ) {
         public uint FilterHintType { get { return filter_hint_type; } set { filter_hint_type = value; } }
         private int[][][] filter_hint;
         public int[][][] FilterHint { get { return filter_hint; } set { filter_hint = value; } }
-        private uint additional_extension_flag;
-        public uint AdditionalExtensionFlag { get { return additional_extension_flag; } set { additional_extension_flag = value; } }
+        private byte additional_extension_flag;
+        public byte AdditionalExtensionFlag { get { return additional_extension_flag; } set { additional_extension_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -10556,8 +10554,8 @@ tone_mapping_info( payloadSize ) {
     {
         private uint tone_map_id;
         public uint ToneMapId { get { return tone_map_id; } set { tone_map_id = value; } }
-        private uint tone_map_cancel_flag;
-        public uint ToneMapCancelFlag { get { return tone_map_cancel_flag; } set { tone_map_cancel_flag = value; } }
+        private byte tone_map_cancel_flag;
+        public byte ToneMapCancelFlag { get { return tone_map_cancel_flag; } set { tone_map_cancel_flag = value; } }
         private uint tone_map_repetition_period;
         public uint ToneMapRepetitionPeriod { get { return tone_map_repetition_period; } set { tone_map_repetition_period = value; } }
         private uint coded_data_bit_depth;
@@ -10590,8 +10588,8 @@ tone_mapping_info( payloadSize ) {
         public uint ExposureIndexIdc { get { return exposure_index_idc; } set { exposure_index_idc = value; } }
         private uint exposure_index_value;
         public uint ExposureIndexValue { get { return exposure_index_value; } set { exposure_index_value = value; } }
-        private uint exposure_compensation_value_sign_flag;
-        public uint ExposureCompensationValueSignFlag { get { return exposure_compensation_value_sign_flag; } set { exposure_compensation_value_sign_flag = value; } }
+        private byte exposure_compensation_value_sign_flag;
+        public byte ExposureCompensationValueSignFlag { get { return exposure_compensation_value_sign_flag; } set { exposure_compensation_value_sign_flag = value; } }
         private uint exposure_compensation_value_numerator;
         public uint ExposureCompensationValueNumerator { get { return exposure_compensation_value_numerator; } set { exposure_compensation_value_numerator = value; } }
         private uint exposure_compensation_value_denom_idc;
@@ -10878,26 +10876,26 @@ frame_packing_arrangement( payloadSize ) {
     {
         private uint frame_packing_arrangement_id;
         public uint FramePackingArrangementId { get { return frame_packing_arrangement_id; } set { frame_packing_arrangement_id = value; } }
-        private uint frame_packing_arrangement_cancel_flag;
-        public uint FramePackingArrangementCancelFlag { get { return frame_packing_arrangement_cancel_flag; } set { frame_packing_arrangement_cancel_flag = value; } }
+        private byte frame_packing_arrangement_cancel_flag;
+        public byte FramePackingArrangementCancelFlag { get { return frame_packing_arrangement_cancel_flag; } set { frame_packing_arrangement_cancel_flag = value; } }
         private uint frame_packing_arrangement_type;
         public uint FramePackingArrangementType { get { return frame_packing_arrangement_type; } set { frame_packing_arrangement_type = value; } }
-        private uint quincunx_sampling_flag;
-        public uint QuincunxSamplingFlag { get { return quincunx_sampling_flag; } set { quincunx_sampling_flag = value; } }
+        private byte quincunx_sampling_flag;
+        public byte QuincunxSamplingFlag { get { return quincunx_sampling_flag; } set { quincunx_sampling_flag = value; } }
         private uint content_interpretation_type;
         public uint ContentInterpretationType { get { return content_interpretation_type; } set { content_interpretation_type = value; } }
-        private uint spatial_flipping_flag;
-        public uint SpatialFlippingFlag { get { return spatial_flipping_flag; } set { spatial_flipping_flag = value; } }
-        private uint frame0_flipped_flag;
-        public uint Frame0FlippedFlag { get { return frame0_flipped_flag; } set { frame0_flipped_flag = value; } }
-        private uint field_views_flag;
-        public uint FieldViewsFlag { get { return field_views_flag; } set { field_views_flag = value; } }
-        private uint current_frame_is_frame0_flag;
-        public uint CurrentFrameIsFrame0Flag { get { return current_frame_is_frame0_flag; } set { current_frame_is_frame0_flag = value; } }
-        private uint frame0_self_contained_flag;
-        public uint Frame0SelfContainedFlag { get { return frame0_self_contained_flag; } set { frame0_self_contained_flag = value; } }
-        private uint frame1_self_contained_flag;
-        public uint Frame1SelfContainedFlag { get { return frame1_self_contained_flag; } set { frame1_self_contained_flag = value; } }
+        private byte spatial_flipping_flag;
+        public byte SpatialFlippingFlag { get { return spatial_flipping_flag; } set { spatial_flipping_flag = value; } }
+        private byte frame0_flipped_flag;
+        public byte Frame0FlippedFlag { get { return frame0_flipped_flag; } set { frame0_flipped_flag = value; } }
+        private byte field_views_flag;
+        public byte FieldViewsFlag { get { return field_views_flag; } set { field_views_flag = value; } }
+        private byte current_frame_is_frame0_flag;
+        public byte CurrentFrameIsFrame0Flag { get { return current_frame_is_frame0_flag; } set { current_frame_is_frame0_flag = value; } }
+        private byte frame0_self_contained_flag;
+        public byte Frame0SelfContainedFlag { get { return frame0_self_contained_flag; } set { frame0_self_contained_flag = value; } }
+        private byte frame1_self_contained_flag;
+        public byte Frame1SelfContainedFlag { get { return frame1_self_contained_flag; } set { frame1_self_contained_flag = value; } }
         private uint frame0_grid_position_x;
         public uint Frame0GridPositionx { get { return frame0_grid_position_x; } set { frame0_grid_position_x = value; } }
         private uint frame0_grid_position_y;
@@ -10910,8 +10908,8 @@ frame_packing_arrangement( payloadSize ) {
         public uint FramePackingArrangementReservedByte { get { return frame_packing_arrangement_reserved_byte; } set { frame_packing_arrangement_reserved_byte = value; } }
         private uint frame_packing_arrangement_repetition_period;
         public uint FramePackingArrangementRepetitionPeriod { get { return frame_packing_arrangement_repetition_period; } set { frame_packing_arrangement_repetition_period = value; } }
-        private uint frame_packing_arrangement_extension_flag;
-        public uint FramePackingArrangementExtensionFlag { get { return frame_packing_arrangement_extension_flag; } set { frame_packing_arrangement_extension_flag = value; } }
+        private byte frame_packing_arrangement_extension_flag;
+        public byte FramePackingArrangementExtensionFlag { get { return frame_packing_arrangement_extension_flag; } set { frame_packing_arrangement_extension_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -11043,18 +11041,18 @@ display_orientation( payloadSize ) {
     */
     public class DisplayOrientation : IItuSerializable
     {
-        private uint display_orientation_cancel_flag;
-        public uint DisplayOrientationCancelFlag { get { return display_orientation_cancel_flag; } set { display_orientation_cancel_flag = value; } }
-        private uint hor_flip;
-        public uint HorFlip { get { return hor_flip; } set { hor_flip = value; } }
-        private uint ver_flip;
-        public uint VerFlip { get { return ver_flip; } set { ver_flip = value; } }
+        private byte display_orientation_cancel_flag;
+        public byte DisplayOrientationCancelFlag { get { return display_orientation_cancel_flag; } set { display_orientation_cancel_flag = value; } }
+        private byte hor_flip;
+        public byte HorFlip { get { return hor_flip; } set { hor_flip = value; } }
+        private byte ver_flip;
+        public byte VerFlip { get { return ver_flip; } set { ver_flip = value; } }
         private uint anticlockwise_rotation;
         public uint AnticlockwiseRotation { get { return anticlockwise_rotation; } set { anticlockwise_rotation = value; } }
         private uint display_orientation_repetition_period;
         public uint DisplayOrientationRepetitionPeriod { get { return display_orientation_repetition_period; } set { display_orientation_repetition_period = value; } }
-        private uint display_orientation_extension_flag;
-        public uint DisplayOrientationExtensionFlag { get { return display_orientation_extension_flag; } set { display_orientation_extension_flag = value; } }
+        private byte display_orientation_extension_flag;
+        public byte DisplayOrientationExtensionFlag { get { return display_orientation_extension_flag; } set { display_orientation_extension_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -11264,14 +11262,14 @@ colour_remapping_info( payloadSize ) {
     {
         private uint colour_remap_id;
         public uint ColourRemapId { get { return colour_remap_id; } set { colour_remap_id = value; } }
-        private uint colour_remap_cancel_flag;
-        public uint ColourRemapCancelFlag { get { return colour_remap_cancel_flag; } set { colour_remap_cancel_flag = value; } }
+        private byte colour_remap_cancel_flag;
+        public byte ColourRemapCancelFlag { get { return colour_remap_cancel_flag; } set { colour_remap_cancel_flag = value; } }
         private uint colour_remap_repetition_period;
         public uint ColourRemapRepetitionPeriod { get { return colour_remap_repetition_period; } set { colour_remap_repetition_period = value; } }
-        private uint colour_remap_video_signal_info_present_flag;
-        public uint ColourRemapVideoSignalInfoPresentFlag { get { return colour_remap_video_signal_info_present_flag; } set { colour_remap_video_signal_info_present_flag = value; } }
-        private uint colour_remap_full_range_flag;
-        public uint ColourRemapFullRangeFlag { get { return colour_remap_full_range_flag; } set { colour_remap_full_range_flag = value; } }
+        private byte colour_remap_video_signal_info_present_flag;
+        public byte ColourRemapVideoSignalInfoPresentFlag { get { return colour_remap_video_signal_info_present_flag; } set { colour_remap_video_signal_info_present_flag = value; } }
+        private byte colour_remap_full_range_flag;
+        public byte ColourRemapFullRangeFlag { get { return colour_remap_full_range_flag; } set { colour_remap_full_range_flag = value; } }
         private uint colour_remap_primaries;
         public uint ColourRemapPrimaries { get { return colour_remap_primaries; } set { colour_remap_primaries = value; } }
         private uint colour_remap_transfer_function;
@@ -11288,8 +11286,8 @@ colour_remapping_info( payloadSize ) {
         public uint[][] PreLutCodedValue { get { return pre_lut_coded_value; } set { pre_lut_coded_value = value; } }
         private uint[][] pre_lut_target_value;
         public uint[][] PreLutTargetValue { get { return pre_lut_target_value; } set { pre_lut_target_value = value; } }
-        private uint colour_remap_matrix_present_flag;
-        public uint ColourRemapMatrixPresentFlag { get { return colour_remap_matrix_present_flag; } set { colour_remap_matrix_present_flag = value; } }
+        private byte colour_remap_matrix_present_flag;
+        public byte ColourRemapMatrixPresentFlag { get { return colour_remap_matrix_present_flag; } set { colour_remap_matrix_present_flag = value; } }
         private uint log2_matrix_denom;
         public uint Log2MatrixDenom { get { return log2_matrix_denom; } set { log2_matrix_denom = value; } }
         private int[][] colour_remap_coeffs;
@@ -11671,18 +11669,18 @@ content_colour_volume( payloadSize ) {
     */
     public class ContentColourVolume : IItuSerializable
     {
-        private uint ccv_cancel_flag;
-        public uint CcvCancelFlag { get { return ccv_cancel_flag; } set { ccv_cancel_flag = value; } }
-        private uint ccv_persistence_flag;
-        public uint CcvPersistenceFlag { get { return ccv_persistence_flag; } set { ccv_persistence_flag = value; } }
-        private uint ccv_primaries_present_flag;
-        public uint CcvPrimariesPresentFlag { get { return ccv_primaries_present_flag; } set { ccv_primaries_present_flag = value; } }
-        private uint ccv_min_luminance_value_present_flag;
-        public uint CcvMinLuminanceValuePresentFlag { get { return ccv_min_luminance_value_present_flag; } set { ccv_min_luminance_value_present_flag = value; } }
-        private uint ccv_max_luminance_value_present_flag;
-        public uint CcvMaxLuminanceValuePresentFlag { get { return ccv_max_luminance_value_present_flag; } set { ccv_max_luminance_value_present_flag = value; } }
-        private uint ccv_avg_luminance_value_present_flag;
-        public uint CcvAvgLuminanceValuePresentFlag { get { return ccv_avg_luminance_value_present_flag; } set { ccv_avg_luminance_value_present_flag = value; } }
+        private byte ccv_cancel_flag;
+        public byte CcvCancelFlag { get { return ccv_cancel_flag; } set { ccv_cancel_flag = value; } }
+        private byte ccv_persistence_flag;
+        public byte CcvPersistenceFlag { get { return ccv_persistence_flag; } set { ccv_persistence_flag = value; } }
+        private byte ccv_primaries_present_flag;
+        public byte CcvPrimariesPresentFlag { get { return ccv_primaries_present_flag; } set { ccv_primaries_present_flag = value; } }
+        private byte ccv_min_luminance_value_present_flag;
+        public byte CcvMinLuminanceValuePresentFlag { get { return ccv_min_luminance_value_present_flag; } set { ccv_min_luminance_value_present_flag = value; } }
+        private byte ccv_max_luminance_value_present_flag;
+        public byte CcvMaxLuminanceValuePresentFlag { get { return ccv_max_luminance_value_present_flag; } set { ccv_max_luminance_value_present_flag = value; } }
+        private byte ccv_avg_luminance_value_present_flag;
+        public byte CcvAvgLuminanceValuePresentFlag { get { return ccv_avg_luminance_value_present_flag; } set { ccv_avg_luminance_value_present_flag = value; } }
         private uint ccv_reserved_zero_2bits;
         public uint CcvReservedZero2bits { get { return ccv_reserved_zero_2bits; } set { ccv_reserved_zero_2bits = value; } }
         private int[] ccv_primaries_x;
@@ -11921,12 +11919,12 @@ equirectangular_projection( payloadSize ) {
     */
     public class EquirectangularProjection : IItuSerializable
     {
-        private uint erp_cancel_flag;
-        public uint ErpCancelFlag { get { return erp_cancel_flag; } set { erp_cancel_flag = value; } }
-        private uint erp_persistence_flag;
-        public uint ErpPersistenceFlag { get { return erp_persistence_flag; } set { erp_persistence_flag = value; } }
-        private uint erp_padding_flag;
-        public uint ErpPaddingFlag { get { return erp_padding_flag; } set { erp_padding_flag = value; } }
+        private byte erp_cancel_flag;
+        public byte ErpCancelFlag { get { return erp_cancel_flag; } set { erp_cancel_flag = value; } }
+        private byte erp_persistence_flag;
+        public byte ErpPersistenceFlag { get { return erp_persistence_flag; } set { erp_persistence_flag = value; } }
+        private byte erp_padding_flag;
+        public byte ErpPaddingFlag { get { return erp_padding_flag; } set { erp_padding_flag = value; } }
         private uint erp_reserved_zero_2bits;
         public uint ErpReservedZero2bits { get { return erp_reserved_zero_2bits; } set { erp_reserved_zero_2bits = value; } }
         private uint gp_erp_type;
@@ -12025,10 +12023,10 @@ cubemap_projection( payloadSize ) {
     */
     public class CubemapProjection : IItuSerializable
     {
-        private uint cmp_cancel_flag;
-        public uint CmpCancelFlag { get { return cmp_cancel_flag; } set { cmp_cancel_flag = value; } }
-        private uint cmp_persistence_flag;
-        public uint CmpPersistenceFlag { get { return cmp_persistence_flag; } set { cmp_persistence_flag = value; } }
+        private byte cmp_cancel_flag;
+        public byte CmpCancelFlag { get { return cmp_cancel_flag; } set { cmp_cancel_flag = value; } }
+        private byte cmp_persistence_flag;
+        public byte CmpPersistenceFlag { get { return cmp_persistence_flag; } set { cmp_persistence_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -12097,10 +12095,10 @@ sphere_rotation( payloadSize ) {
     */
     public class SphereRotation : IItuSerializable
     {
-        private uint sphere_rotation_cancel_flag;
-        public uint SphereRotationCancelFlag { get { return sphere_rotation_cancel_flag; } set { sphere_rotation_cancel_flag = value; } }
-        private uint sphere_rotation_persistence_flag;
-        public uint SphereRotationPersistenceFlag { get { return sphere_rotation_persistence_flag; } set { sphere_rotation_persistence_flag = value; } }
+        private byte sphere_rotation_cancel_flag;
+        public byte SphereRotationCancelFlag { get { return sphere_rotation_cancel_flag; } set { sphere_rotation_cancel_flag = value; } }
+        private byte sphere_rotation_persistence_flag;
+        public byte SphereRotationPersistenceFlag { get { return sphere_rotation_persistence_flag; } set { sphere_rotation_persistence_flag = value; } }
         private uint sphere_rotation_reserved_zero_6bits;
         public uint SphereRotationReservedZero6bits { get { return sphere_rotation_reserved_zero_6bits; } set { sphere_rotation_reserved_zero_6bits = value; } }
         private int yaw_rotation;
@@ -12215,12 +12213,12 @@ regionwise_packing( payloadSize ) {
     */
     public class RegionwisePacking : IItuSerializable
     {
-        private uint rwp_cancel_flag;
-        public uint RwpCancelFlag { get { return rwp_cancel_flag; } set { rwp_cancel_flag = value; } }
-        private uint rwp_persistence_flag;
-        public uint RwpPersistenceFlag { get { return rwp_persistence_flag; } set { rwp_persistence_flag = value; } }
-        private uint constituent_picture_matching_flag;
-        public uint ConstituentPictureMatchingFlag { get { return constituent_picture_matching_flag; } set { constituent_picture_matching_flag = value; } }
+        private byte rwp_cancel_flag;
+        public byte RwpCancelFlag { get { return rwp_cancel_flag; } set { rwp_cancel_flag = value; } }
+        private byte rwp_persistence_flag;
+        public byte RwpPersistenceFlag { get { return rwp_persistence_flag; } set { rwp_persistence_flag = value; } }
+        private byte constituent_picture_matching_flag;
+        public byte ConstituentPictureMatchingFlag { get { return constituent_picture_matching_flag; } set { constituent_picture_matching_flag = value; } }
         private uint rwp_reserved_zero_5bits;
         public uint RwpReservedZero5bits { get { return rwp_reserved_zero_5bits; } set { rwp_reserved_zero_5bits = value; } }
         private uint num_packed_regions;
@@ -12237,8 +12235,8 @@ regionwise_packing( payloadSize ) {
         public uint[] RwpReservedZero4bits { get { return rwp_reserved_zero_4bits; } set { rwp_reserved_zero_4bits = value; } }
         private uint[] transform_type;
         public uint[] TransformType { get { return transform_type; } set { transform_type = value; } }
-        private uint[] guard_band_flag;
-        public uint[] GuardBandFlag { get { return guard_band_flag; } set { guard_band_flag = value; } }
+        private byte[] guard_band_flag;
+        public byte[] GuardBandFlag { get { return guard_band_flag; } set { guard_band_flag = value; } }
         private uint[] proj_region_width;
         public uint[] ProjRegionWidth { get { return proj_region_width; } set { proj_region_width = value; } }
         private uint[] proj_region_height;
@@ -12263,8 +12261,8 @@ regionwise_packing( payloadSize ) {
         public uint[] TopGbHeight { get { return top_gb_height; } set { top_gb_height = value; } }
         private uint[] bottom_gb_height;
         public uint[] BottomGbHeight { get { return bottom_gb_height; } set { bottom_gb_height = value; } }
-        private uint[] gb_not_used_for_pred_flag;
-        public uint[] GbNotUsedForPredFlag { get { return gb_not_used_for_pred_flag; } set { gb_not_used_for_pred_flag = value; } }
+        private byte[] gb_not_used_for_pred_flag;
+        public byte[] GbNotUsedForPredFlag { get { return gb_not_used_for_pred_flag; } set { gb_not_used_for_pred_flag = value; } }
         private uint[][] gb_type;
         public uint[][] GbType { get { return gb_type; } set { gb_type = value; } }
         private uint[] rwp_gb_reserved_zero_3bits;
@@ -12298,7 +12296,7 @@ regionwise_packing( payloadSize ) {
 
                 this.rwp_reserved_zero_4bits = new uint[num_packed_regions];
                 this.transform_type = new uint[num_packed_regions];
-                this.guard_band_flag = new uint[num_packed_regions];
+                this.guard_band_flag = new byte[num_packed_regions];
                 this.proj_region_width = new uint[num_packed_regions];
                 this.proj_region_height = new uint[num_packed_regions];
                 this.proj_region_top = new uint[num_packed_regions];
@@ -12311,7 +12309,7 @@ regionwise_packing( payloadSize ) {
                 this.right_gb_width = new uint[num_packed_regions];
                 this.top_gb_height = new uint[num_packed_regions];
                 this.bottom_gb_height = new uint[num_packed_regions];
-                this.gb_not_used_for_pred_flag = new uint[num_packed_regions];
+                this.gb_not_used_for_pred_flag = new byte[num_packed_regions];
                 this.gb_type = new uint[num_packed_regions][];
                 this.rwp_gb_reserved_zero_3bits = new uint[num_packed_regions];
                 for (i = 0; i < num_packed_regions; i++)
@@ -12480,10 +12478,10 @@ omni_viewport( payloadSize ) {
     {
         private uint omni_viewport_id;
         public uint OmniViewportId { get { return omni_viewport_id; } set { omni_viewport_id = value; } }
-        private uint omni_viewport_cancel_flag;
-        public uint OmniViewportCancelFlag { get { return omni_viewport_cancel_flag; } set { omni_viewport_cancel_flag = value; } }
-        private uint omni_viewport_persistence_flag;
-        public uint OmniViewportPersistenceFlag { get { return omni_viewport_persistence_flag; } set { omni_viewport_persistence_flag = value; } }
+        private byte omni_viewport_cancel_flag;
+        public byte OmniViewportCancelFlag { get { return omni_viewport_cancel_flag; } set { omni_viewport_cancel_flag = value; } }
+        private byte omni_viewport_persistence_flag;
+        public byte OmniViewportPersistenceFlag { get { return omni_viewport_persistence_flag; } set { omni_viewport_persistence_flag = value; } }
         private uint omni_viewport_cnt_minus1;
         public uint OmniViewportCntMinus1 { get { return omni_viewport_cnt_minus1; } set { omni_viewport_cnt_minus1 = value; } }
         private int[] omni_viewport_azimuth_centre;
@@ -12691,8 +12689,8 @@ sei_prefix_indication( payloadSize ) {
         public uint NumSeiPrefixIndicationsMinus1 { get { return num_sei_prefix_indications_minus1; } set { num_sei_prefix_indications_minus1 = value; } }
         private uint[] num_bits_in_prefix_indication_minus1;
         public uint[] NumBitsInPrefixIndicationMinus1 { get { return num_bits_in_prefix_indication_minus1; } set { num_bits_in_prefix_indication_minus1 = value; } }
-        private uint[][] sei_prefix_data_bit;
-        public uint[][] SeiPrefixDataBit { get { return sei_prefix_data_bit; } set { sei_prefix_data_bit = value; } }
+        private byte[][] sei_prefix_data_bit;
+        public byte[][] SeiPrefixDataBit { get { return sei_prefix_data_bit; } set { sei_prefix_data_bit = value; } }
         private uint byte_alignment_bit_equal_to_one;
         public uint ByteAlignmentBitEqualToOne { get { return byte_alignment_bit_equal_to_one; } set { byte_alignment_bit_equal_to_one = value; } }
         private uint payloadSize;
@@ -12713,12 +12711,12 @@ sei_prefix_indication( payloadSize ) {
             size += stream.ReadUnsignedInt(size, 8, out this.num_sei_prefix_indications_minus1);
 
             this.num_bits_in_prefix_indication_minus1 = new uint[num_sei_prefix_indications_minus1];
-            this.sei_prefix_data_bit = new uint[num_sei_prefix_indications_minus1][];
+            this.sei_prefix_data_bit = new byte[num_sei_prefix_indications_minus1][];
             for (i = 0; i <= num_sei_prefix_indications_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 16, out this.num_bits_in_prefix_indication_minus1[i]);
 
-                this.sei_prefix_data_bit[i] = new uint[num_bits_in_prefix_indication_minus1[i]];
+                this.sei_prefix_data_bit[i] = new byte[num_bits_in_prefix_indication_minus1[i]];
                 for (j = 0; j <= num_bits_in_prefix_indication_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sei_prefix_data_bit[i][j]);
@@ -12856,24 +12854,24 @@ annotated_regions( payloadSize ) {
     */
     public class AnnotatedRegions : IItuSerializable
     {
-        private uint ar_cancel_flag;
-        public uint ArCancelFlag { get { return ar_cancel_flag; } set { ar_cancel_flag = value; } }
-        private uint ar_not_optimized_for_viewing_flag;
-        public uint ArNotOptimizedForViewingFlag { get { return ar_not_optimized_for_viewing_flag; } set { ar_not_optimized_for_viewing_flag = value; } }
-        private uint ar_true_motion_flag;
-        public uint ArTrueMotionFlag { get { return ar_true_motion_flag; } set { ar_true_motion_flag = value; } }
-        private uint ar_occluded_object_flag;
-        public uint ArOccludedObjectFlag { get { return ar_occluded_object_flag; } set { ar_occluded_object_flag = value; } }
-        private uint ar_partial_object_flag_present_flag;
-        public uint ArPartialObjectFlagPresentFlag { get { return ar_partial_object_flag_present_flag; } set { ar_partial_object_flag_present_flag = value; } }
-        private uint ar_object_label_present_flag;
-        public uint ArObjectLabelPresentFlag { get { return ar_object_label_present_flag; } set { ar_object_label_present_flag = value; } }
-        private uint ar_object_confidence_info_present_flag;
-        public uint ArObjectConfidenceInfoPresentFlag { get { return ar_object_confidence_info_present_flag; } set { ar_object_confidence_info_present_flag = value; } }
+        private byte ar_cancel_flag;
+        public byte ArCancelFlag { get { return ar_cancel_flag; } set { ar_cancel_flag = value; } }
+        private byte ar_not_optimized_for_viewing_flag;
+        public byte ArNotOptimizedForViewingFlag { get { return ar_not_optimized_for_viewing_flag; } set { ar_not_optimized_for_viewing_flag = value; } }
+        private byte ar_true_motion_flag;
+        public byte ArTrueMotionFlag { get { return ar_true_motion_flag; } set { ar_true_motion_flag = value; } }
+        private byte ar_occluded_object_flag;
+        public byte ArOccludedObjectFlag { get { return ar_occluded_object_flag; } set { ar_occluded_object_flag = value; } }
+        private byte ar_partial_object_flag_present_flag;
+        public byte ArPartialObjectFlagPresentFlag { get { return ar_partial_object_flag_present_flag; } set { ar_partial_object_flag_present_flag = value; } }
+        private byte ar_object_label_present_flag;
+        public byte ArObjectLabelPresentFlag { get { return ar_object_label_present_flag; } set { ar_object_label_present_flag = value; } }
+        private byte ar_object_confidence_info_present_flag;
+        public byte ArObjectConfidenceInfoPresentFlag { get { return ar_object_confidence_info_present_flag; } set { ar_object_confidence_info_present_flag = value; } }
         private uint ar_object_confidence_length_minus1;
         public uint ArObjectConfidenceLengthMinus1 { get { return ar_object_confidence_length_minus1; } set { ar_object_confidence_length_minus1 = value; } }
-        private uint ar_object_label_language_present_flag;
-        public uint ArObjectLabelLanguagePresentFlag { get { return ar_object_label_language_present_flag; } set { ar_object_label_language_present_flag = value; } }
+        private byte ar_object_label_language_present_flag;
+        public byte ArObjectLabelLanguagePresentFlag { get { return ar_object_label_language_present_flag; } set { ar_object_label_language_present_flag = value; } }
         private uint ar_bit_equal_to_zero;
         public uint ArBitEqualToZero { get { return ar_bit_equal_to_zero; } set { ar_bit_equal_to_zero = value; } }
         private int ar_object_label_language;
@@ -12882,24 +12880,24 @@ annotated_regions( payloadSize ) {
         public uint ArNumLabelUpdates { get { return ar_num_label_updates; } set { ar_num_label_updates = value; } }
         private uint[] ar_label_idx;
         public uint[] ArLabelIdx { get { return ar_label_idx; } set { ar_label_idx = value; } }
-        private uint ar_label_cancel_flag;
-        public uint ArLabelCancelFlag { get { return ar_label_cancel_flag; } set { ar_label_cancel_flag = value; } }
+        private byte ar_label_cancel_flag;
+        public byte ArLabelCancelFlag { get { return ar_label_cancel_flag; } set { ar_label_cancel_flag = value; } }
         private int[] ar_label;
         public int[] ArLabel { get { return ar_label; } set { ar_label = value; } }
         private uint ar_num_object_updates;
         public uint ArNumObjectUpdates { get { return ar_num_object_updates; } set { ar_num_object_updates = value; } }
         private uint[] ar_object_idx;
         public uint[] ArObjectIdx { get { return ar_object_idx; } set { ar_object_idx = value; } }
-        private uint ar_object_cancel_flag;
-        public uint ArObjectCancelFlag { get { return ar_object_cancel_flag; } set { ar_object_cancel_flag = value; } }
-        private uint ar_object_label_update_flag;
-        public uint ArObjectLabelUpdateFlag { get { return ar_object_label_update_flag; } set { ar_object_label_update_flag = value; } }
+        private byte ar_object_cancel_flag;
+        public byte ArObjectCancelFlag { get { return ar_object_cancel_flag; } set { ar_object_cancel_flag = value; } }
+        private byte ar_object_label_update_flag;
+        public byte ArObjectLabelUpdateFlag { get { return ar_object_label_update_flag; } set { ar_object_label_update_flag = value; } }
         private uint[] ar_object_label_idx;
         public uint[] ArObjectLabelIdx { get { return ar_object_label_idx; } set { ar_object_label_idx = value; } }
-        private uint ar_bounding_box_update_flag;
-        public uint ArBoundingBoxUpdateFlag { get { return ar_bounding_box_update_flag; } set { ar_bounding_box_update_flag = value; } }
-        private uint ar_bounding_box_cancel_flag;
-        public uint ArBoundingBoxCancelFlag { get { return ar_bounding_box_cancel_flag; } set { ar_bounding_box_cancel_flag = value; } }
+        private byte ar_bounding_box_update_flag;
+        public byte ArBoundingBoxUpdateFlag { get { return ar_bounding_box_update_flag; } set { ar_bounding_box_update_flag = value; } }
+        private byte ar_bounding_box_cancel_flag;
+        public byte ArBoundingBoxCancelFlag { get { return ar_bounding_box_cancel_flag; } set { ar_bounding_box_cancel_flag = value; } }
         private uint[] ar_bounding_box_top;
         public uint[] ArBoundingBoxTop { get { return ar_bounding_box_top; } set { ar_bounding_box_top = value; } }
         private uint[] ar_bounding_box_left;
@@ -12908,8 +12906,8 @@ annotated_regions( payloadSize ) {
         public uint[] ArBoundingBoxWidth { get { return ar_bounding_box_width; } set { ar_bounding_box_width = value; } }
         private uint[] ar_bounding_box_height;
         public uint[] ArBoundingBoxHeight { get { return ar_bounding_box_height; } set { ar_bounding_box_height = value; } }
-        private uint[] ar_partial_object_flag;
-        public uint[] ArPartialObjectFlag { get { return ar_partial_object_flag; } set { ar_partial_object_flag = value; } }
+        private byte[] ar_partial_object_flag;
+        public byte[] ArPartialObjectFlag { get { return ar_partial_object_flag; } set { ar_partial_object_flag = value; } }
         private uint[] ar_object_confidence;
         public uint[] ArObjectConfidence { get { return ar_object_confidence; } set { ar_object_confidence = value; } }
         private uint payloadSize;
@@ -12986,7 +12984,7 @@ annotated_regions( payloadSize ) {
                 this.ar_bounding_box_left = new uint[ar_num_object_updates];
                 this.ar_bounding_box_width = new uint[ar_num_object_updates];
                 this.ar_bounding_box_height = new uint[ar_num_object_updates];
-                this.ar_partial_object_flag = new uint[ar_num_object_updates];
+                this.ar_partial_object_flag = new byte[ar_num_object_updates];
                 this.ar_object_confidence = new uint[ar_num_object_updates];
                 for (i = 0; i < ar_num_object_updates; i++)
                 {
@@ -13282,12 +13280,12 @@ shutter_interval_info( payloadSize ) {
     {
         private uint sii_sub_layer_idx;
         public uint SiiSubLayerIdx { get { return sii_sub_layer_idx; } set { sii_sub_layer_idx = value; } }
-        private uint shutter_interval_info_present_flag;
-        public uint ShutterIntervalInfoPresentFlag { get { return shutter_interval_info_present_flag; } set { shutter_interval_info_present_flag = value; } }
+        private byte shutter_interval_info_present_flag;
+        public byte ShutterIntervalInfoPresentFlag { get { return shutter_interval_info_present_flag; } set { shutter_interval_info_present_flag = value; } }
         private uint sii_time_scale;
         public uint SiiTimeScale { get { return sii_time_scale; } set { sii_time_scale = value; } }
-        private uint fixed_shutter_interval_within_cvs_flag;
-        public uint FixedShutterIntervalWithinCvsFlag { get { return fixed_shutter_interval_within_cvs_flag; } set { fixed_shutter_interval_within_cvs_flag = value; } }
+        private byte fixed_shutter_interval_within_cvs_flag;
+        public byte FixedShutterIntervalWithinCvsFlag { get { return fixed_shutter_interval_within_cvs_flag; } set { fixed_shutter_interval_within_cvs_flag = value; } }
         private uint sii_num_units_in_shutter_interval;
         public uint SiiNumUnitsInShutterInterval { get { return sii_num_units_in_shutter_interval; } set { sii_num_units_in_shutter_interval = value; } }
         private uint sii_max_sub_layers_minus1;
@@ -13535,60 +13533,60 @@ vui_parameters() {
     */
     public class VuiParameters : IItuSerializable
     {
-        private uint aspect_ratio_info_present_flag;
-        public uint AspectRatioInfoPresentFlag { get { return aspect_ratio_info_present_flag; } set { aspect_ratio_info_present_flag = value; } }
+        private byte aspect_ratio_info_present_flag;
+        public byte AspectRatioInfoPresentFlag { get { return aspect_ratio_info_present_flag; } set { aspect_ratio_info_present_flag = value; } }
         private uint aspect_ratio_idc;
         public uint AspectRatioIdc { get { return aspect_ratio_idc; } set { aspect_ratio_idc = value; } }
         private uint sar_width;
         public uint SarWidth { get { return sar_width; } set { sar_width = value; } }
         private uint sar_height;
         public uint SarHeight { get { return sar_height; } set { sar_height = value; } }
-        private uint overscan_info_present_flag;
-        public uint OverscanInfoPresentFlag { get { return overscan_info_present_flag; } set { overscan_info_present_flag = value; } }
-        private uint overscan_appropriate_flag;
-        public uint OverscanAppropriateFlag { get { return overscan_appropriate_flag; } set { overscan_appropriate_flag = value; } }
-        private uint video_signal_type_present_flag;
-        public uint VideoSignalTypePresentFlag { get { return video_signal_type_present_flag; } set { video_signal_type_present_flag = value; } }
+        private byte overscan_info_present_flag;
+        public byte OverscanInfoPresentFlag { get { return overscan_info_present_flag; } set { overscan_info_present_flag = value; } }
+        private byte overscan_appropriate_flag;
+        public byte OverscanAppropriateFlag { get { return overscan_appropriate_flag; } set { overscan_appropriate_flag = value; } }
+        private byte video_signal_type_present_flag;
+        public byte VideoSignalTypePresentFlag { get { return video_signal_type_present_flag; } set { video_signal_type_present_flag = value; } }
         private uint video_format;
         public uint VideoFormat { get { return video_format; } set { video_format = value; } }
-        private uint video_full_range_flag;
-        public uint VideoFullRangeFlag { get { return video_full_range_flag; } set { video_full_range_flag = value; } }
-        private uint colour_description_present_flag;
-        public uint ColourDescriptionPresentFlag { get { return colour_description_present_flag; } set { colour_description_present_flag = value; } }
+        private byte video_full_range_flag;
+        public byte VideoFullRangeFlag { get { return video_full_range_flag; } set { video_full_range_flag = value; } }
+        private byte colour_description_present_flag;
+        public byte ColourDescriptionPresentFlag { get { return colour_description_present_flag; } set { colour_description_present_flag = value; } }
         private uint colour_primaries;
         public uint ColourPrimaries { get { return colour_primaries; } set { colour_primaries = value; } }
         private uint transfer_characteristics;
         public uint TransferCharacteristics { get { return transfer_characteristics; } set { transfer_characteristics = value; } }
         private uint matrix_coefficients;
         public uint MatrixCoefficients { get { return matrix_coefficients; } set { matrix_coefficients = value; } }
-        private uint chroma_loc_info_present_flag;
-        public uint ChromaLocInfoPresentFlag { get { return chroma_loc_info_present_flag; } set { chroma_loc_info_present_flag = value; } }
+        private byte chroma_loc_info_present_flag;
+        public byte ChromaLocInfoPresentFlag { get { return chroma_loc_info_present_flag; } set { chroma_loc_info_present_flag = value; } }
         private uint chroma_sample_loc_type_top_field;
         public uint ChromaSampleLocTypeTopField { get { return chroma_sample_loc_type_top_field; } set { chroma_sample_loc_type_top_field = value; } }
         private uint chroma_sample_loc_type_bottom_field;
         public uint ChromaSampleLocTypeBottomField { get { return chroma_sample_loc_type_bottom_field; } set { chroma_sample_loc_type_bottom_field = value; } }
-        private uint timing_info_present_flag;
-        public uint TimingInfoPresentFlag { get { return timing_info_present_flag; } set { timing_info_present_flag = value; } }
+        private byte timing_info_present_flag;
+        public byte TimingInfoPresentFlag { get { return timing_info_present_flag; } set { timing_info_present_flag = value; } }
         private uint num_units_in_tick;
         public uint NumUnitsInTick { get { return num_units_in_tick; } set { num_units_in_tick = value; } }
         private uint time_scale;
         public uint TimeScale { get { return time_scale; } set { time_scale = value; } }
-        private uint fixed_frame_rate_flag;
-        public uint FixedFrameRateFlag { get { return fixed_frame_rate_flag; } set { fixed_frame_rate_flag = value; } }
-        private uint nal_hrd_parameters_present_flag;
-        public uint NalHrdParametersPresentFlag { get { return nal_hrd_parameters_present_flag; } set { nal_hrd_parameters_present_flag = value; } }
+        private byte fixed_frame_rate_flag;
+        public byte FixedFrameRateFlag { get { return fixed_frame_rate_flag; } set { fixed_frame_rate_flag = value; } }
+        private byte nal_hrd_parameters_present_flag;
+        public byte NalHrdParametersPresentFlag { get { return nal_hrd_parameters_present_flag; } set { nal_hrd_parameters_present_flag = value; } }
         private HrdParameters hrd_parameters;
         public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
-        private uint vcl_hrd_parameters_present_flag;
-        public uint VclHrdParametersPresentFlag { get { return vcl_hrd_parameters_present_flag; } set { vcl_hrd_parameters_present_flag = value; } }
-        private uint low_delay_hrd_flag;
-        public uint LowDelayHrdFlag { get { return low_delay_hrd_flag; } set { low_delay_hrd_flag = value; } }
-        private uint pic_struct_present_flag;
-        public uint PicStructPresentFlag { get { return pic_struct_present_flag; } set { pic_struct_present_flag = value; } }
-        private uint bitstream_restriction_flag;
-        public uint BitstreamRestrictionFlag { get { return bitstream_restriction_flag; } set { bitstream_restriction_flag = value; } }
-        private uint motion_vectors_over_pic_boundaries_flag;
-        public uint MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
+        private byte vcl_hrd_parameters_present_flag;
+        public byte VclHrdParametersPresentFlag { get { return vcl_hrd_parameters_present_flag; } set { vcl_hrd_parameters_present_flag = value; } }
+        private byte low_delay_hrd_flag;
+        public byte LowDelayHrdFlag { get { return low_delay_hrd_flag; } set { low_delay_hrd_flag = value; } }
+        private byte pic_struct_present_flag;
+        public byte PicStructPresentFlag { get { return pic_struct_present_flag; } set { pic_struct_present_flag = value; } }
+        private byte bitstream_restriction_flag;
+        public byte BitstreamRestrictionFlag { get { return bitstream_restriction_flag; } set { bitstream_restriction_flag = value; } }
+        private byte motion_vectors_over_pic_boundaries_flag;
+        public byte MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
         private uint max_bytes_per_pic_denom;
         public uint MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
         private uint max_bits_per_mb_denom;
@@ -13898,8 +13896,8 @@ hrd_parameters() {
         public uint[] BitRateValueMinus1 { get { return bit_rate_value_minus1; } set { bit_rate_value_minus1 = value; } }
         private uint[] cpb_size_value_minus1;
         public uint[] CpbSizeValueMinus1 { get { return cpb_size_value_minus1; } set { cpb_size_value_minus1 = value; } }
-        private uint[] cbr_flag;
-        public uint[] CbrFlag { get { return cbr_flag; } set { cbr_flag = value; } }
+        private byte[] cbr_flag;
+        public byte[] CbrFlag { get { return cbr_flag; } set { cbr_flag = value; } }
         private uint initial_cpb_removal_delay_length_minus1;
         public uint InitialCpbRemovalDelayLengthMinus1 { get { return initial_cpb_removal_delay_length_minus1; } set { initial_cpb_removal_delay_length_minus1 = value; } }
         private uint cpb_removal_delay_length_minus1;
@@ -13925,7 +13923,7 @@ hrd_parameters() {
 
             this.bit_rate_value_minus1 = new uint[cpb_cnt_minus1];
             this.cpb_size_value_minus1 = new uint[cpb_cnt_minus1];
-            this.cbr_flag = new uint[cpb_cnt_minus1];
+            this.cbr_flag = new byte[cpb_cnt_minus1];
             for (SchedSelIdx = 0; SchedSelIdx <= cpb_cnt_minus1; SchedSelIdx++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_value_minus1[SchedSelIdx]);
@@ -14008,24 +14006,24 @@ reserved_three_2bits All u(2)
     */
     public class NalUnitHeaderSvcExtension : IItuSerializable
     {
-        private uint idr_flag;
-        public uint IdrFlag { get { return idr_flag; } set { idr_flag = value; } }
+        private byte idr_flag;
+        public byte IdrFlag { get { return idr_flag; } set { idr_flag = value; } }
         private uint priority_id;
         public uint PriorityId { get { return priority_id; } set { priority_id = value; } }
-        private uint no_inter_layer_pred_flag;
-        public uint NoInterLayerPredFlag { get { return no_inter_layer_pred_flag; } set { no_inter_layer_pred_flag = value; } }
+        private byte no_inter_layer_pred_flag;
+        public byte NoInterLayerPredFlag { get { return no_inter_layer_pred_flag; } set { no_inter_layer_pred_flag = value; } }
         private uint dependency_id;
         public uint DependencyId { get { return dependency_id; } set { dependency_id = value; } }
         private uint quality_id;
         public uint QualityId { get { return quality_id; } set { quality_id = value; } }
         private uint temporal_id;
         public uint TemporalId { get { return temporal_id; } set { temporal_id = value; } }
-        private uint use_ref_base_pic_flag;
-        public uint UseRefBasePicFlag { get { return use_ref_base_pic_flag; } set { use_ref_base_pic_flag = value; } }
-        private uint discardable_flag;
-        public uint DiscardableFlag { get { return discardable_flag; } set { discardable_flag = value; } }
-        private uint output_flag;
-        public uint OutputFlag { get { return output_flag; } set { output_flag = value; } }
+        private byte use_ref_base_pic_flag;
+        public byte UseRefBasePicFlag { get { return use_ref_base_pic_flag; } set { use_ref_base_pic_flag = value; } }
+        private byte discardable_flag;
+        public byte DiscardableFlag { get { return discardable_flag; } set { discardable_flag = value; } }
+        private byte output_flag;
+        public byte OutputFlag { get { return output_flag; } set { output_flag = value; } }
         private uint reserved_three_2bits;
         public uint ReservedThree2bits { get { return reserved_three_2bits; } set { reserved_three_2bits = value; } }
 
@@ -14119,16 +14117,16 @@ seq_parameter_set_svc_extension() {
     */
     public class SeqParameterSetSvcExtension : IItuSerializable
     {
-        private uint inter_layer_deblocking_filter_control_present_flag;
-        public uint InterLayerDeblockingFilterControlPresentFlag { get { return inter_layer_deblocking_filter_control_present_flag; } set { inter_layer_deblocking_filter_control_present_flag = value; } }
+        private byte inter_layer_deblocking_filter_control_present_flag;
+        public byte InterLayerDeblockingFilterControlPresentFlag { get { return inter_layer_deblocking_filter_control_present_flag; } set { inter_layer_deblocking_filter_control_present_flag = value; } }
         private uint extended_spatial_scalability_idc;
         public uint ExtendedSpatialScalabilityIdc { get { return extended_spatial_scalability_idc; } set { extended_spatial_scalability_idc = value; } }
-        private uint chroma_phase_x_plus1_flag;
-        public uint ChromaPhasexPlus1Flag { get { return chroma_phase_x_plus1_flag; } set { chroma_phase_x_plus1_flag = value; } }
+        private byte chroma_phase_x_plus1_flag;
+        public byte ChromaPhasexPlus1Flag { get { return chroma_phase_x_plus1_flag; } set { chroma_phase_x_plus1_flag = value; } }
         private uint chroma_phase_y_plus1;
         public uint ChromaPhaseyPlus1 { get { return chroma_phase_y_plus1; } set { chroma_phase_y_plus1 = value; } }
-        private uint seq_ref_layer_chroma_phase_x_plus1_flag;
-        public uint SeqRefLayerChromaPhasexPlus1Flag { get { return seq_ref_layer_chroma_phase_x_plus1_flag; } set { seq_ref_layer_chroma_phase_x_plus1_flag = value; } }
+        private byte seq_ref_layer_chroma_phase_x_plus1_flag;
+        public byte SeqRefLayerChromaPhasexPlus1Flag { get { return seq_ref_layer_chroma_phase_x_plus1_flag; } set { seq_ref_layer_chroma_phase_x_plus1_flag = value; } }
         private uint seq_ref_layer_chroma_phase_y_plus1;
         public uint SeqRefLayerChromaPhaseyPlus1 { get { return seq_ref_layer_chroma_phase_y_plus1; } set { seq_ref_layer_chroma_phase_y_plus1 = value; } }
         private int seq_scaled_ref_layer_left_offset;
@@ -14139,12 +14137,12 @@ seq_parameter_set_svc_extension() {
         public int SeqScaledRefLayerRightOffset { get { return seq_scaled_ref_layer_right_offset; } set { seq_scaled_ref_layer_right_offset = value; } }
         private int seq_scaled_ref_layer_bottom_offset;
         public int SeqScaledRefLayerBottomOffset { get { return seq_scaled_ref_layer_bottom_offset; } set { seq_scaled_ref_layer_bottom_offset = value; } }
-        private uint seq_tcoeff_level_prediction_flag;
-        public uint SeqTcoeffLevelPredictionFlag { get { return seq_tcoeff_level_prediction_flag; } set { seq_tcoeff_level_prediction_flag = value; } }
-        private uint adaptive_tcoeff_level_prediction_flag;
-        public uint AdaptiveTcoeffLevelPredictionFlag { get { return adaptive_tcoeff_level_prediction_flag; } set { adaptive_tcoeff_level_prediction_flag = value; } }
-        private uint slice_header_restriction_flag;
-        public uint SliceHeaderRestrictionFlag { get { return slice_header_restriction_flag; } set { slice_header_restriction_flag = value; } }
+        private byte seq_tcoeff_level_prediction_flag;
+        public byte SeqTcoeffLevelPredictionFlag { get { return seq_tcoeff_level_prediction_flag; } set { seq_tcoeff_level_prediction_flag = value; } }
+        private byte adaptive_tcoeff_level_prediction_flag;
+        public byte AdaptiveTcoeffLevelPredictionFlag { get { return adaptive_tcoeff_level_prediction_flag; } set { adaptive_tcoeff_level_prediction_flag = value; } }
+        private byte slice_header_restriction_flag;
+        public byte SliceHeaderRestrictionFlag { get { return slice_header_restriction_flag; } set { slice_header_restriction_flag = value; } }
 
         public SeqParameterSetSvcExtension()
         {
@@ -14300,14 +14298,14 @@ prefix_nal_unit_svc() {
     */
     public class PrefixNalUnitSvc : IItuSerializable
     {
-        private uint store_ref_base_pic_flag;
-        public uint StoreRefBasePicFlag { get { return store_ref_base_pic_flag; } set { store_ref_base_pic_flag = value; } }
+        private byte store_ref_base_pic_flag;
+        public byte StoreRefBasePicFlag { get { return store_ref_base_pic_flag; } set { store_ref_base_pic_flag = value; } }
         private DecRefBasePicMarking dec_ref_base_pic_marking;
         public DecRefBasePicMarking DecRefBasePicMarking { get { return dec_ref_base_pic_marking; } set { dec_ref_base_pic_marking = value; } }
-        private uint additional_prefix_nal_unit_extension_flag;
-        public uint AdditionalPrefixNalUnitExtensionFlag { get { return additional_prefix_nal_unit_extension_flag; } set { additional_prefix_nal_unit_extension_flag = value; } }
-        private uint additional_prefix_nal_unit_extension_data_flag;
-        public uint AdditionalPrefixNalUnitExtensionDataFlag { get { return additional_prefix_nal_unit_extension_data_flag; } set { additional_prefix_nal_unit_extension_data_flag = value; } }
+        private byte additional_prefix_nal_unit_extension_flag;
+        public byte AdditionalPrefixNalUnitExtensionFlag { get { return additional_prefix_nal_unit_extension_flag; } set { additional_prefix_nal_unit_extension_flag = value; } }
+        private byte additional_prefix_nal_unit_extension_data_flag;
+        public byte AdditionalPrefixNalUnitExtensionDataFlag { get { return additional_prefix_nal_unit_extension_data_flag; } set { additional_prefix_nal_unit_extension_data_flag = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -14568,10 +14566,10 @@ slice_header_in_scalable_extension() {
         public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
         private uint frame_num;
         public uint FrameNum { get { return frame_num; } set { frame_num = value; } }
-        private uint field_pic_flag;
-        public uint FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
-        private uint bottom_field_flag;
-        public uint BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
+        private byte field_pic_flag;
+        public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
+        private byte bottom_field_flag;
+        public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
         private uint idr_pic_id;
         public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
         private uint pic_order_cnt_lsb;
@@ -14582,24 +14580,24 @@ slice_header_in_scalable_extension() {
         public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
         private uint redundant_pic_cnt;
         public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
-        private uint direct_spatial_mv_pred_flag;
-        public uint DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
-        private uint num_ref_idx_active_override_flag;
-        public uint NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
+        private byte direct_spatial_mv_pred_flag;
+        public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
+        private byte num_ref_idx_active_override_flag;
+        public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
         private uint num_ref_idx_l0_active_minus1;
         public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
         private uint num_ref_idx_l1_active_minus1;
         public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
         private RefPicListModification ref_pic_list_modification;
         public RefPicListModification RefPicListModification { get { return ref_pic_list_modification; } set { ref_pic_list_modification = value; } }
-        private uint base_pred_weight_table_flag;
-        public uint BasePredWeightTableFlag { get { return base_pred_weight_table_flag; } set { base_pred_weight_table_flag = value; } }
+        private byte base_pred_weight_table_flag;
+        public byte BasePredWeightTableFlag { get { return base_pred_weight_table_flag; } set { base_pred_weight_table_flag = value; } }
         private PredWeightTable pred_weight_table;
         public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
         private DecRefPicMarking dec_ref_pic_marking;
         public DecRefPicMarking DecRefPicMarking { get { return dec_ref_pic_marking; } set { dec_ref_pic_marking = value; } }
-        private uint store_ref_base_pic_flag;
-        public uint StoreRefBasePicFlag { get { return store_ref_base_pic_flag; } set { store_ref_base_pic_flag = value; } }
+        private byte store_ref_base_pic_flag;
+        public byte StoreRefBasePicFlag { get { return store_ref_base_pic_flag; } set { store_ref_base_pic_flag = value; } }
         private DecRefBasePicMarking dec_ref_base_pic_marking;
         public DecRefBasePicMarking DecRefBasePicMarking { get { return dec_ref_base_pic_marking; } set { dec_ref_base_pic_marking = value; } }
         private uint cabac_init_idc;
@@ -14622,10 +14620,10 @@ slice_header_in_scalable_extension() {
         public int InterLayerSliceAlphaC0OffsetDiv2 { get { return inter_layer_slice_alpha_c0_offset_div2; } set { inter_layer_slice_alpha_c0_offset_div2 = value; } }
         private int inter_layer_slice_beta_offset_div2;
         public int InterLayerSliceBetaOffsetDiv2 { get { return inter_layer_slice_beta_offset_div2; } set { inter_layer_slice_beta_offset_div2 = value; } }
-        private uint constrained_intra_resampling_flag;
-        public uint ConstrainedIntraResamplingFlag { get { return constrained_intra_resampling_flag; } set { constrained_intra_resampling_flag = value; } }
-        private uint ref_layer_chroma_phase_x_plus1_flag;
-        public uint RefLayerChromaPhasexPlus1Flag { get { return ref_layer_chroma_phase_x_plus1_flag; } set { ref_layer_chroma_phase_x_plus1_flag = value; } }
+        private byte constrained_intra_resampling_flag;
+        public byte ConstrainedIntraResamplingFlag { get { return constrained_intra_resampling_flag; } set { constrained_intra_resampling_flag = value; } }
+        private byte ref_layer_chroma_phase_x_plus1_flag;
+        public byte RefLayerChromaPhasexPlus1Flag { get { return ref_layer_chroma_phase_x_plus1_flag; } set { ref_layer_chroma_phase_x_plus1_flag = value; } }
         private uint ref_layer_chroma_phase_y_plus1;
         public uint RefLayerChromaPhaseyPlus1 { get { return ref_layer_chroma_phase_y_plus1; } set { ref_layer_chroma_phase_y_plus1 = value; } }
         private int scaled_ref_layer_left_offset;
@@ -14636,24 +14634,24 @@ slice_header_in_scalable_extension() {
         public int ScaledRefLayerRightOffset { get { return scaled_ref_layer_right_offset; } set { scaled_ref_layer_right_offset = value; } }
         private int scaled_ref_layer_bottom_offset;
         public int ScaledRefLayerBottomOffset { get { return scaled_ref_layer_bottom_offset; } set { scaled_ref_layer_bottom_offset = value; } }
-        private uint slice_skip_flag;
-        public uint SliceSkipFlag { get { return slice_skip_flag; } set { slice_skip_flag = value; } }
+        private byte slice_skip_flag;
+        public byte SliceSkipFlag { get { return slice_skip_flag; } set { slice_skip_flag = value; } }
         private uint num_mbs_in_slice_minus1;
         public uint NumMbsInSliceMinus1 { get { return num_mbs_in_slice_minus1; } set { num_mbs_in_slice_minus1 = value; } }
-        private uint adaptive_base_mode_flag;
-        public uint AdaptiveBaseModeFlag { get { return adaptive_base_mode_flag; } set { adaptive_base_mode_flag = value; } }
-        private uint default_base_mode_flag;
-        public uint DefaultBaseModeFlag { get { return default_base_mode_flag; } set { default_base_mode_flag = value; } }
-        private uint adaptive_motion_prediction_flag;
-        public uint AdaptiveMotionPredictionFlag { get { return adaptive_motion_prediction_flag; } set { adaptive_motion_prediction_flag = value; } }
-        private uint default_motion_prediction_flag;
-        public uint DefaultMotionPredictionFlag { get { return default_motion_prediction_flag; } set { default_motion_prediction_flag = value; } }
-        private uint adaptive_residual_prediction_flag;
-        public uint AdaptiveResidualPredictionFlag { get { return adaptive_residual_prediction_flag; } set { adaptive_residual_prediction_flag = value; } }
-        private uint default_residual_prediction_flag;
-        public uint DefaultResidualPredictionFlag { get { return default_residual_prediction_flag; } set { default_residual_prediction_flag = value; } }
-        private uint tcoeff_level_prediction_flag;
-        public uint TcoeffLevelPredictionFlag { get { return tcoeff_level_prediction_flag; } set { tcoeff_level_prediction_flag = value; } }
+        private byte adaptive_base_mode_flag;
+        public byte AdaptiveBaseModeFlag { get { return adaptive_base_mode_flag; } set { adaptive_base_mode_flag = value; } }
+        private byte default_base_mode_flag;
+        public byte DefaultBaseModeFlag { get { return default_base_mode_flag; } set { default_base_mode_flag = value; } }
+        private byte adaptive_motion_prediction_flag;
+        public byte AdaptiveMotionPredictionFlag { get { return adaptive_motion_prediction_flag; } set { adaptive_motion_prediction_flag = value; } }
+        private byte default_motion_prediction_flag;
+        public byte DefaultMotionPredictionFlag { get { return default_motion_prediction_flag; } set { default_motion_prediction_flag = value; } }
+        private byte adaptive_residual_prediction_flag;
+        public byte AdaptiveResidualPredictionFlag { get { return adaptive_residual_prediction_flag; } set { adaptive_residual_prediction_flag = value; } }
+        private byte default_residual_prediction_flag;
+        public byte DefaultResidualPredictionFlag { get { return default_residual_prediction_flag; } set { default_residual_prediction_flag = value; } }
+        private byte tcoeff_level_prediction_flag;
+        public byte TcoeffLevelPredictionFlag { get { return tcoeff_level_prediction_flag; } set { tcoeff_level_prediction_flag = value; } }
         private uint scan_idx_start;
         public uint ScanIdxStart { get { return scan_idx_start; } set { scan_idx_start = value; } }
         private uint scan_idx_end;
@@ -15322,8 +15320,8 @@ dec_ref_base_pic_marking() {
     */
     public class DecRefBasePicMarking : IItuSerializable
     {
-        private uint adaptive_ref_base_pic_marking_mode_flag;
-        public uint AdaptiveRefBasePicMarkingModeFlag { get { return adaptive_ref_base_pic_marking_mode_flag; } set { adaptive_ref_base_pic_marking_mode_flag = value; } }
+        private byte adaptive_ref_base_pic_marking_mode_flag;
+        public byte AdaptiveRefBasePicMarkingModeFlag { get { return adaptive_ref_base_pic_marking_mode_flag; } set { adaptive_ref_base_pic_marking_mode_flag = value; } }
         private uint memory_management_base_control_operation;
         public uint MemoryManagementBaseControlOperation { get { return memory_management_base_control_operation; } set { memory_management_base_control_operation = value; } }
         private uint difference_of_base_pic_nums_minus1;
@@ -15863,7 +15861,7 @@ macroblock_layer_in_scalable_extension() {
             uint noSubMbPartSizeLessThan8x8Flag = 0;
             uint mbPartIdx = 0;
 
-            if (H264Helpers.InCropWindow(CurrMbAddr) && H264Helpers.GetValue("adaptive_base_mode_flag") != 0)
+            if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) && H264Helpers.GetValue("adaptive_base_mode_flag") != 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.base_mode_flag);
             }
@@ -15887,8 +15885,8 @@ macroblock_layer_in_scalable_extension() {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_luma[i]);
                 }
 
-                this.pcm_sample_chroma = new uint[2 * MbWidthC * MbHeightC];
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                this.pcm_sample_chroma = new uint[2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC")];
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_chroma[i]);
                 }
@@ -15935,7 +15933,7 @@ macroblock_layer_in_scalable_extension() {
                 }
 
                 if (H264Helpers.GetValue("adaptive_residual_prediction_flag") != 0 && !FrameTypes.IsI(H264Helpers.GetValue("slice_type")) &&
-   H264Helpers.InCropWindow(CurrMbAddr) &&
+   H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) &&
    (base_mode_flag != 0 ||
      (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
@@ -15952,7 +15950,7 @@ macroblock_layer_in_scalable_extension() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.coded_block_pattern);
 
-                        if (CodedBlockPatternLuma > 0 &&
+                        if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 &&
       H264Helpers.GetValue("transform_8x8_mode_flag") != 0 &&
      (base_mode_flag != 0 ||
       (mb_type != MbTypes.I_NxN &&
@@ -15964,8 +15962,8 @@ macroblock_layer_in_scalable_extension() {
                         }
                     }
 
-                    if (CodedBlockPatternLuma > 0 ||
-     CodedBlockPatternChroma > 0 ||
+                    if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 ||
+     H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
      MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.mb_qp_delta);
@@ -15985,7 +15983,7 @@ macroblock_layer_in_scalable_extension() {
             uint noSubMbPartSizeLessThan8x8Flag = 0;
             uint mbPartIdx = 0;
 
-            if (H264Helpers.InCropWindow(CurrMbAddr) && H264Helpers.GetValue("adaptive_base_mode_flag") != 0)
+            if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) && H264Helpers.GetValue("adaptive_base_mode_flag") != 0)
             {
                 size += stream.WriteUnsignedInt(1, this.base_mode_flag);
             }
@@ -16008,7 +16006,7 @@ macroblock_layer_in_scalable_extension() {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_luma[i]);
                 }
 
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_chroma[i]);
                 }
@@ -16055,7 +16053,7 @@ macroblock_layer_in_scalable_extension() {
                 }
 
                 if (H264Helpers.GetValue("adaptive_residual_prediction_flag") != 0 && !FrameTypes.IsI(H264Helpers.GetValue("slice_type")) &&
-   H264Helpers.InCropWindow(CurrMbAddr) &&
+   H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) &&
    (base_mode_flag != 0 ||
      (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
@@ -16072,7 +16070,7 @@ macroblock_layer_in_scalable_extension() {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.coded_block_pattern);
 
-                        if (CodedBlockPatternLuma > 0 &&
+                        if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 &&
       H264Helpers.GetValue("transform_8x8_mode_flag") != 0 &&
      (base_mode_flag != 0 ||
       (mb_type != MbTypes.I_NxN &&
@@ -16084,8 +16082,8 @@ macroblock_layer_in_scalable_extension() {
                         }
                     }
 
-                    if (CodedBlockPatternLuma > 0 ||
-     CodedBlockPatternChroma > 0 ||
+                    if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 ||
+     H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
      MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                     {
                         size += stream.WriteSignedIntGolomb(this.mb_qp_delta);
@@ -16105,7 +16103,7 @@ macroblock_layer_in_scalable_extension() {
             uint noSubMbPartSizeLessThan8x8Flag = 0;
             uint mbPartIdx = 0;
 
-            if (H264Helpers.InCropWindow(CurrMbAddr) && H264Helpers.GetValue("adaptive_base_mode_flag") != 0)
+            if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) && H264Helpers.GetValue("adaptive_base_mode_flag") != 0)
             {
                 size += 1; // base_mode_flag
             }
@@ -16128,7 +16126,7 @@ macroblock_layer_in_scalable_extension() {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_luma[i]); // pcm_sample_luma
                 }
 
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_chroma[i]); // pcm_sample_chroma
                 }
@@ -16175,7 +16173,7 @@ macroblock_layer_in_scalable_extension() {
                 }
 
                 if (H264Helpers.GetValue("adaptive_residual_prediction_flag") != 0 && !FrameTypes.IsI(H264Helpers.GetValue("slice_type")) &&
-   H264Helpers.InCropWindow(CurrMbAddr) &&
+   H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) &&
    (base_mode_flag != 0 ||
      (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_16x16 &&
     MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Intra_8x8 &&
@@ -16192,7 +16190,7 @@ macroblock_layer_in_scalable_extension() {
                     {
                         size += ItuStream.CalculateUnsignedIntGolomb(coded_block_pattern); // coded_block_pattern
 
-                        if (CodedBlockPatternLuma > 0 &&
+                        if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 &&
       H264Helpers.GetValue("transform_8x8_mode_flag") != 0 &&
      (base_mode_flag != 0 ||
       (mb_type != MbTypes.I_NxN &&
@@ -16204,8 +16202,8 @@ macroblock_layer_in_scalable_extension() {
                         }
                     }
 
-                    if (CodedBlockPatternLuma > 0 ||
-     CodedBlockPatternChroma > 0 ||
+                    if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 ||
+     H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
      MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                     {
                         size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
@@ -16362,7 +16360,7 @@ mb_pred_in_scalable_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                if (H264Helpers.InCropWindow(CurrMbAddr) &&
+                if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) &&
               H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
                 {
 
@@ -16497,7 +16495,7 @@ mb_pred_in_scalable_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                if (H264Helpers.InCropWindow(CurrMbAddr) &&
+                if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) &&
               H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
                 {
 
@@ -16624,7 +16622,7 @@ mb_pred_in_scalable_extension( mb_type ) {
             else if (MbTypes.MbPartPredMode(mb_type, 0) != MbPartPredModes.Direct)
             {
 
-                if (H264Helpers.InCropWindow(CurrMbAddr) &&
+                if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) &&
               H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
                 {
 
@@ -16798,7 +16796,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.sub_mb_type[mbPartIdx]);
             }
 
-            if (H264Helpers.InCropWindow(CurrMbAddr) && H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
+            if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) && H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
             {
 
                 this.motion_prediction_flag_l0 = new uint[4];
@@ -16915,7 +16913,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 size += stream.WriteUnsignedIntGolomb(this.sub_mb_type[mbPartIdx]);
             }
 
-            if (H264Helpers.InCropWindow(CurrMbAddr) && H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
+            if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) && H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
@@ -17022,7 +17020,7 @@ sub_mb_pred_in_scalable_extension( mb_type ) {
                 size += ItuStream.CalculateUnsignedIntGolomb(sub_mb_type[mbPartIdx]); // sub_mb_type
             }
 
-            if (H264Helpers.InCropWindow(CurrMbAddr) && H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
+            if (H264Helpers.InCropWindow(H264Helpers.GetValue("CurrMbAddr")) && H264Helpers.GetValue("adaptive_motion_prediction_flag") != 0)
             {
 
                 for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
@@ -17254,54 +17252,54 @@ scalability_info( payloadSize ) {
     */
     public class ScalabilityInfo : IItuSerializable
     {
-        private uint temporal_id_nesting_flag;
-        public uint TemporalIdNestingFlag { get { return temporal_id_nesting_flag; } set { temporal_id_nesting_flag = value; } }
-        private uint priority_layer_info_present_flag;
-        public uint PriorityLayerInfoPresentFlag { get { return priority_layer_info_present_flag; } set { priority_layer_info_present_flag = value; } }
-        private uint priority_id_setting_flag;
-        public uint PriorityIdSettingFlag { get { return priority_id_setting_flag; } set { priority_id_setting_flag = value; } }
+        private byte temporal_id_nesting_flag;
+        public byte TemporalIdNestingFlag { get { return temporal_id_nesting_flag; } set { temporal_id_nesting_flag = value; } }
+        private byte priority_layer_info_present_flag;
+        public byte PriorityLayerInfoPresentFlag { get { return priority_layer_info_present_flag; } set { priority_layer_info_present_flag = value; } }
+        private byte priority_id_setting_flag;
+        public byte PriorityIdSettingFlag { get { return priority_id_setting_flag; } set { priority_id_setting_flag = value; } }
         private uint num_layers_minus1;
         public uint NumLayersMinus1 { get { return num_layers_minus1; } set { num_layers_minus1 = value; } }
         private uint[] layer_id;
         public uint[] LayerId { get { return layer_id; } set { layer_id = value; } }
         private uint[] priority_id;
         public uint[] PriorityId { get { return priority_id; } set { priority_id = value; } }
-        private uint[] discardable_flag;
-        public uint[] DiscardableFlag { get { return discardable_flag; } set { discardable_flag = value; } }
+        private byte[] discardable_flag;
+        public byte[] DiscardableFlag { get { return discardable_flag; } set { discardable_flag = value; } }
         private uint[] dependency_id;
         public uint[] DependencyId { get { return dependency_id; } set { dependency_id = value; } }
         private uint[] quality_id;
         public uint[] QualityId { get { return quality_id; } set { quality_id = value; } }
         private uint[] temporal_id;
         public uint[] TemporalId { get { return temporal_id; } set { temporal_id = value; } }
-        private uint[] sub_pic_layer_flag;
-        public uint[] SubPicLayerFlag { get { return sub_pic_layer_flag; } set { sub_pic_layer_flag = value; } }
-        private uint[] sub_region_layer_flag;
-        public uint[] SubRegionLayerFlag { get { return sub_region_layer_flag; } set { sub_region_layer_flag = value; } }
-        private uint[] iroi_division_info_present_flag;
-        public uint[] IroiDivisionInfoPresentFlag { get { return iroi_division_info_present_flag; } set { iroi_division_info_present_flag = value; } }
-        private uint[] profile_level_info_present_flag;
-        public uint[] ProfileLevelInfoPresentFlag { get { return profile_level_info_present_flag; } set { profile_level_info_present_flag = value; } }
-        private uint[] bitrate_info_present_flag;
-        public uint[] BitrateInfoPresentFlag { get { return bitrate_info_present_flag; } set { bitrate_info_present_flag = value; } }
-        private uint[] frm_rate_info_present_flag;
-        public uint[] FrmRateInfoPresentFlag { get { return frm_rate_info_present_flag; } set { frm_rate_info_present_flag = value; } }
-        private uint[] frm_size_info_present_flag;
-        public uint[] FrmSizeInfoPresentFlag { get { return frm_size_info_present_flag; } set { frm_size_info_present_flag = value; } }
-        private uint[] layer_dependency_info_present_flag;
-        public uint[] LayerDependencyInfoPresentFlag { get { return layer_dependency_info_present_flag; } set { layer_dependency_info_present_flag = value; } }
-        private uint[] parameter_sets_info_present_flag;
-        public uint[] ParameterSetsInfoPresentFlag { get { return parameter_sets_info_present_flag; } set { parameter_sets_info_present_flag = value; } }
-        private uint[] bitstream_restriction_info_present_flag;
-        public uint[] BitstreamRestrictionInfoPresentFlag { get { return bitstream_restriction_info_present_flag; } set { bitstream_restriction_info_present_flag = value; } }
-        private uint[] exact_inter_layer_pred_flag;
-        public uint[] ExactInterLayerPredFlag { get { return exact_inter_layer_pred_flag; } set { exact_inter_layer_pred_flag = value; } }
-        private uint[] exact_sample_value_match_flag;
-        public uint[] ExactSampleValueMatchFlag { get { return exact_sample_value_match_flag; } set { exact_sample_value_match_flag = value; } }
-        private uint[] layer_conversion_flag;
-        public uint[] LayerConversionFlag { get { return layer_conversion_flag; } set { layer_conversion_flag = value; } }
-        private uint[] layer_output_flag;
-        public uint[] LayerOutputFlag { get { return layer_output_flag; } set { layer_output_flag = value; } }
+        private byte[] sub_pic_layer_flag;
+        public byte[] SubPicLayerFlag { get { return sub_pic_layer_flag; } set { sub_pic_layer_flag = value; } }
+        private byte[] sub_region_layer_flag;
+        public byte[] SubRegionLayerFlag { get { return sub_region_layer_flag; } set { sub_region_layer_flag = value; } }
+        private byte[] iroi_division_info_present_flag;
+        public byte[] IroiDivisionInfoPresentFlag { get { return iroi_division_info_present_flag; } set { iroi_division_info_present_flag = value; } }
+        private byte[] profile_level_info_present_flag;
+        public byte[] ProfileLevelInfoPresentFlag { get { return profile_level_info_present_flag; } set { profile_level_info_present_flag = value; } }
+        private byte[] bitrate_info_present_flag;
+        public byte[] BitrateInfoPresentFlag { get { return bitrate_info_present_flag; } set { bitrate_info_present_flag = value; } }
+        private byte[] frm_rate_info_present_flag;
+        public byte[] FrmRateInfoPresentFlag { get { return frm_rate_info_present_flag; } set { frm_rate_info_present_flag = value; } }
+        private byte[] frm_size_info_present_flag;
+        public byte[] FrmSizeInfoPresentFlag { get { return frm_size_info_present_flag; } set { frm_size_info_present_flag = value; } }
+        private byte[] layer_dependency_info_present_flag;
+        public byte[] LayerDependencyInfoPresentFlag { get { return layer_dependency_info_present_flag; } set { layer_dependency_info_present_flag = value; } }
+        private byte[] parameter_sets_info_present_flag;
+        public byte[] ParameterSetsInfoPresentFlag { get { return parameter_sets_info_present_flag; } set { parameter_sets_info_present_flag = value; } }
+        private byte[] bitstream_restriction_info_present_flag;
+        public byte[] BitstreamRestrictionInfoPresentFlag { get { return bitstream_restriction_info_present_flag; } set { bitstream_restriction_info_present_flag = value; } }
+        private byte[] exact_inter_layer_pred_flag;
+        public byte[] ExactInterLayerPredFlag { get { return exact_inter_layer_pred_flag; } set { exact_inter_layer_pred_flag = value; } }
+        private byte[] exact_sample_value_match_flag;
+        public byte[] ExactSampleValueMatchFlag { get { return exact_sample_value_match_flag; } set { exact_sample_value_match_flag = value; } }
+        private byte[] layer_conversion_flag;
+        public byte[] LayerConversionFlag { get { return layer_conversion_flag; } set { layer_conversion_flag = value; } }
+        private byte[] layer_output_flag;
+        public byte[] LayerOutputFlag { get { return layer_output_flag; } set { layer_output_flag = value; } }
         private uint[] layer_profile_level_idc;
         public uint[] LayerProfileLevelIdc { get { return layer_profile_level_idc; } set { layer_profile_level_idc = value; } }
         private uint[] avg_bitrate;
@@ -17322,8 +17320,8 @@ scalability_info( payloadSize ) {
         public uint[] FrmHeightInMbsMinus1 { get { return frm_height_in_mbs_minus1; } set { frm_height_in_mbs_minus1 = value; } }
         private uint[] base_region_layer_id;
         public uint[] BaseRegionLayerId { get { return base_region_layer_id; } set { base_region_layer_id = value; } }
-        private uint[] dynamic_rect_flag;
-        public uint[] DynamicRectFlag { get { return dynamic_rect_flag; } set { dynamic_rect_flag = value; } }
+        private byte[] dynamic_rect_flag;
+        public byte[] DynamicRectFlag { get { return dynamic_rect_flag; } set { dynamic_rect_flag = value; } }
         private uint[] horizontal_offset;
         public uint[] HorizontalOffset { get { return horizontal_offset; } set { horizontal_offset = value; } }
         private uint[] vertical_offset;
@@ -17334,8 +17332,8 @@ scalability_info( payloadSize ) {
         public uint[] RegionHeight { get { return region_height; } set { region_height = value; } }
         private uint[] roi_id;
         public uint[] RoiId { get { return roi_id; } set { roi_id = value; } }
-        private uint[] iroi_grid_flag;
-        public uint[] IroiGridFlag { get { return iroi_grid_flag; } set { iroi_grid_flag = value; } }
+        private byte[] iroi_grid_flag;
+        public byte[] IroiGridFlag { get { return iroi_grid_flag; } set { iroi_grid_flag = value; } }
         private uint[] grid_width_in_mbs_minus1;
         public uint[] GridWidthInMbsMinus1 { get { return grid_width_in_mbs_minus1; } set { grid_width_in_mbs_minus1 = value; } }
         private uint[] grid_height_in_mbs_minus1;
@@ -17368,8 +17366,8 @@ scalability_info( payloadSize ) {
         public uint[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
         private uint[] parameter_sets_info_src_layer_id_delta;
         public uint[] ParameterSetsInfoSrcLayerIdDelta { get { return parameter_sets_info_src_layer_id_delta; } set { parameter_sets_info_src_layer_id_delta = value; } }
-        private uint[] motion_vectors_over_pic_boundaries_flag;
-        public uint[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
+        private byte[] motion_vectors_over_pic_boundaries_flag;
+        public byte[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
         private uint[] max_bytes_per_pic_denom;
         public uint[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
         private uint[] max_bits_per_mb_denom;
@@ -17384,8 +17382,8 @@ scalability_info( payloadSize ) {
         public uint[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
         private uint[] conversion_type_idc;
         public uint[] ConversionTypeIdc { get { return conversion_type_idc; } set { conversion_type_idc = value; } }
-        private uint[][] rewriting_info_flag;
-        public uint[][] RewritingInfoFlag { get { return rewriting_info_flag; } set { rewriting_info_flag = value; } }
+        private byte[][] rewriting_info_flag;
+        public byte[][] RewritingInfoFlag { get { return rewriting_info_flag; } set { rewriting_info_flag = value; } }
         private uint[][] rewriting_profile_level_idc;
         public uint[][] RewritingProfileLevelIdc { get { return rewriting_profile_level_idc; } set { rewriting_profile_level_idc = value; } }
         private uint[][] rewriting_avg_bitrate;
@@ -17430,24 +17428,24 @@ scalability_info( payloadSize ) {
 
             this.layer_id = new uint[num_layers_minus1];
             this.priority_id = new uint[num_layers_minus1];
-            this.discardable_flag = new uint[num_layers_minus1];
+            this.discardable_flag = new byte[num_layers_minus1];
             this.dependency_id = new uint[num_layers_minus1];
             this.quality_id = new uint[num_layers_minus1];
             this.temporal_id = new uint[num_layers_minus1];
-            this.sub_pic_layer_flag = new uint[num_layers_minus1];
-            this.sub_region_layer_flag = new uint[num_layers_minus1];
-            this.iroi_division_info_present_flag = new uint[num_layers_minus1];
-            this.profile_level_info_present_flag = new uint[num_layers_minus1];
-            this.bitrate_info_present_flag = new uint[num_layers_minus1];
-            this.frm_rate_info_present_flag = new uint[num_layers_minus1];
-            this.frm_size_info_present_flag = new uint[num_layers_minus1];
-            this.layer_dependency_info_present_flag = new uint[num_layers_minus1];
-            this.parameter_sets_info_present_flag = new uint[num_layers_minus1];
-            this.bitstream_restriction_info_present_flag = new uint[num_layers_minus1];
-            this.exact_inter_layer_pred_flag = new uint[num_layers_minus1];
-            this.exact_sample_value_match_flag = new uint[num_layers_minus1];
-            this.layer_conversion_flag = new uint[num_layers_minus1];
-            this.layer_output_flag = new uint[num_layers_minus1];
+            this.sub_pic_layer_flag = new byte[num_layers_minus1];
+            this.sub_region_layer_flag = new byte[num_layers_minus1];
+            this.iroi_division_info_present_flag = new byte[num_layers_minus1];
+            this.profile_level_info_present_flag = new byte[num_layers_minus1];
+            this.bitrate_info_present_flag = new byte[num_layers_minus1];
+            this.frm_rate_info_present_flag = new byte[num_layers_minus1];
+            this.frm_size_info_present_flag = new byte[num_layers_minus1];
+            this.layer_dependency_info_present_flag = new byte[num_layers_minus1];
+            this.parameter_sets_info_present_flag = new byte[num_layers_minus1];
+            this.bitstream_restriction_info_present_flag = new byte[num_layers_minus1];
+            this.exact_inter_layer_pred_flag = new byte[num_layers_minus1];
+            this.exact_sample_value_match_flag = new byte[num_layers_minus1];
+            this.layer_conversion_flag = new byte[num_layers_minus1];
+            this.layer_output_flag = new byte[num_layers_minus1];
             this.layer_profile_level_idc = new uint[num_layers_minus1];
             this.avg_bitrate = new uint[num_layers_minus1];
             this.max_bitrate_layer = new uint[num_layers_minus1];
@@ -17458,13 +17456,13 @@ scalability_info( payloadSize ) {
             this.frm_width_in_mbs_minus1 = new uint[num_layers_minus1];
             this.frm_height_in_mbs_minus1 = new uint[num_layers_minus1];
             this.base_region_layer_id = new uint[num_layers_minus1];
-            this.dynamic_rect_flag = new uint[num_layers_minus1];
+            this.dynamic_rect_flag = new byte[num_layers_minus1];
             this.horizontal_offset = new uint[num_layers_minus1];
             this.vertical_offset = new uint[num_layers_minus1];
             this.region_width = new uint[num_layers_minus1];
             this.region_height = new uint[num_layers_minus1];
             this.roi_id = new uint[num_layers_minus1];
-            this.iroi_grid_flag = new uint[num_layers_minus1];
+            this.iroi_grid_flag = new byte[num_layers_minus1];
             this.grid_width_in_mbs_minus1 = new uint[num_layers_minus1];
             this.grid_height_in_mbs_minus1 = new uint[num_layers_minus1];
             this.num_rois_minus1 = new uint[num_layers_minus1];
@@ -17481,7 +17479,7 @@ scalability_info( payloadSize ) {
             this.num_pic_parameter_sets_minus1 = new uint[num_layers_minus1];
             this.pic_parameter_set_id_delta = new uint[num_layers_minus1][];
             this.parameter_sets_info_src_layer_id_delta = new uint[num_layers_minus1];
-            this.motion_vectors_over_pic_boundaries_flag = new uint[num_layers_minus1];
+            this.motion_vectors_over_pic_boundaries_flag = new byte[num_layers_minus1];
             this.max_bytes_per_pic_denom = new uint[num_layers_minus1];
             this.max_bits_per_mb_denom = new uint[num_layers_minus1];
             this.log2_max_mv_length_horizontal = new uint[num_layers_minus1];
@@ -17489,7 +17487,7 @@ scalability_info( payloadSize ) {
             this.max_num_reorder_frames = new uint[num_layers_minus1];
             this.max_dec_frame_buffering = new uint[num_layers_minus1];
             this.conversion_type_idc = new uint[num_layers_minus1];
-            this.rewriting_info_flag = new uint[num_layers_minus1][];
+            this.rewriting_info_flag = new byte[num_layers_minus1][];
             this.rewriting_profile_level_idc = new uint[num_layers_minus1][];
             this.rewriting_avg_bitrate = new uint[num_layers_minus1][];
             this.rewriting_max_bitrate = new uint[num_layers_minus1][];
@@ -17649,7 +17647,7 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.conversion_type_idc[i]);
 
-                    this.rewriting_info_flag[i] = new uint[2];
+                    this.rewriting_info_flag[i] = new byte[2];
                     this.rewriting_profile_level_idc[i] = new uint[2];
                     this.rewriting_avg_bitrate[i] = new uint[2];
                     this.rewriting_max_bitrate[i] = new uint[2];
@@ -18459,8 +18457,8 @@ layer_dependency_change( payloadSize ) {
         public uint NumLayersMinus1 { get { return num_layers_minus1; } set { num_layers_minus1 = value; } }
         private uint[] layer_id;
         public uint[] LayerId { get { return layer_id; } set { layer_id = value; } }
-        private uint[] layer_dependency_info_present_flag;
-        public uint[] LayerDependencyInfoPresentFlag { get { return layer_dependency_info_present_flag; } set { layer_dependency_info_present_flag = value; } }
+        private byte[] layer_dependency_info_present_flag;
+        public byte[] LayerDependencyInfoPresentFlag { get { return layer_dependency_info_present_flag; } set { layer_dependency_info_present_flag = value; } }
         private uint[] num_directly_dependent_layers;
         public uint[] NumDirectlyDependentLayers { get { return num_directly_dependent_layers; } set { num_directly_dependent_layers = value; } }
         private uint[][] directly_dependent_layer_id_delta_minus1;
@@ -18484,7 +18482,7 @@ layer_dependency_change( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1);
 
             this.layer_id = new uint[num_layers_minus1];
-            this.layer_dependency_info_present_flag = new uint[num_layers_minus1];
+            this.layer_dependency_info_present_flag = new byte[num_layers_minus1];
             this.num_directly_dependent_layers = new uint[num_layers_minus1];
             this.directly_dependent_layer_id_delta_minus1 = new uint[num_layers_minus1][];
             this.layer_dependency_info_src_layer_id_delta_minus1 = new uint[num_layers_minus1];
@@ -18598,8 +18596,8 @@ scalable_nesting( payloadSize ) {
     */
     public class ScalableNesting : IItuSerializable
     {
-        private uint all_layer_representations_in_au_flag;
-        public uint AllLayerRepresentationsInAuFlag { get { return all_layer_representations_in_au_flag; } set { all_layer_representations_in_au_flag = value; } }
+        private byte all_layer_representations_in_au_flag;
+        public byte AllLayerRepresentationsInAuFlag { get { return all_layer_representations_in_au_flag; } set { all_layer_representations_in_au_flag = value; } }
         private uint num_layer_representations_minus1;
         public uint NumLayerRepresentationsMinus1 { get { return num_layer_representations_minus1; } set { num_layer_representations_minus1 = value; } }
         private uint[] sei_dependency_id;
@@ -18753,24 +18751,24 @@ base_layer_temporal_hrd( payloadSize ) {
         public uint NumOfTemporalLayersInBaseLayerMinus1 { get { return num_of_temporal_layers_in_base_layer_minus1; } set { num_of_temporal_layers_in_base_layer_minus1 = value; } }
         private uint[] sei_temporal_id;
         public uint[] SeiTemporalId { get { return sei_temporal_id; } set { sei_temporal_id = value; } }
-        private uint[] sei_timing_info_present_flag;
-        public uint[] SeiTimingInfoPresentFlag { get { return sei_timing_info_present_flag; } set { sei_timing_info_present_flag = value; } }
+        private byte[] sei_timing_info_present_flag;
+        public byte[] SeiTimingInfoPresentFlag { get { return sei_timing_info_present_flag; } set { sei_timing_info_present_flag = value; } }
         private uint[] sei_num_units_in_tick;
         public uint[] SeiNumUnitsInTick { get { return sei_num_units_in_tick; } set { sei_num_units_in_tick = value; } }
         private uint[] sei_time_scale;
         public uint[] SeiTimeScale { get { return sei_time_scale; } set { sei_time_scale = value; } }
-        private uint[] sei_fixed_frame_rate_flag;
-        public uint[] SeiFixedFrameRateFlag { get { return sei_fixed_frame_rate_flag; } set { sei_fixed_frame_rate_flag = value; } }
-        private uint[] sei_nal_hrd_parameters_present_flag;
-        public uint[] SeiNalHrdParametersPresentFlag { get { return sei_nal_hrd_parameters_present_flag; } set { sei_nal_hrd_parameters_present_flag = value; } }
+        private byte[] sei_fixed_frame_rate_flag;
+        public byte[] SeiFixedFrameRateFlag { get { return sei_fixed_frame_rate_flag; } set { sei_fixed_frame_rate_flag = value; } }
+        private byte[] sei_nal_hrd_parameters_present_flag;
+        public byte[] SeiNalHrdParametersPresentFlag { get { return sei_nal_hrd_parameters_present_flag; } set { sei_nal_hrd_parameters_present_flag = value; } }
         private HrdParameters hrd_parameters;
         public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
-        private uint[] sei_vcl_hrd_parameters_present_flag;
-        public uint[] SeiVclHrdParametersPresentFlag { get { return sei_vcl_hrd_parameters_present_flag; } set { sei_vcl_hrd_parameters_present_flag = value; } }
-        private uint[] sei_low_delay_hrd_flag;
-        public uint[] SeiLowDelayHrdFlag { get { return sei_low_delay_hrd_flag; } set { sei_low_delay_hrd_flag = value; } }
-        private uint[] sei_pic_struct_present_flag;
-        public uint[] SeiPicStructPresentFlag { get { return sei_pic_struct_present_flag; } set { sei_pic_struct_present_flag = value; } }
+        private byte[] sei_vcl_hrd_parameters_present_flag;
+        public byte[] SeiVclHrdParametersPresentFlag { get { return sei_vcl_hrd_parameters_present_flag; } set { sei_vcl_hrd_parameters_present_flag = value; } }
+        private byte[] sei_low_delay_hrd_flag;
+        public byte[] SeiLowDelayHrdFlag { get { return sei_low_delay_hrd_flag; } set { sei_low_delay_hrd_flag = value; } }
+        private byte[] sei_pic_struct_present_flag;
+        public byte[] SeiPicStructPresentFlag { get { return sei_pic_struct_present_flag; } set { sei_pic_struct_present_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -18787,14 +18785,14 @@ base_layer_temporal_hrd( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_of_temporal_layers_in_base_layer_minus1);
 
             this.sei_temporal_id = new uint[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_timing_info_present_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_timing_info_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_num_units_in_tick = new uint[num_of_temporal_layers_in_base_layer_minus1];
             this.sei_time_scale = new uint[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_fixed_frame_rate_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_nal_hrd_parameters_present_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_vcl_hrd_parameters_present_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_low_delay_hrd_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
-            this.sei_pic_struct_present_flag = new uint[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_fixed_frame_rate_flag = new byte[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_nal_hrd_parameters_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_vcl_hrd_parameters_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_low_delay_hrd_flag = new byte[num_of_temporal_layers_in_base_layer_minus1];
+            this.sei_pic_struct_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1];
             for (i = 0; i <= num_of_temporal_layers_in_base_layer_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.sei_temporal_id[i]);
@@ -19034,16 +19032,16 @@ redundant_pic_property( payloadSize ) {
         public uint[][] NumRedundantPicsMinus1 { get { return num_redundant_pics_minus1; } set { num_redundant_pics_minus1 = value; } }
         private uint[][][] redundant_pic_cnt_minus1;
         public uint[][][] RedundantPicCntMinus1 { get { return redundant_pic_cnt_minus1; } set { redundant_pic_cnt_minus1 = value; } }
-        private uint[][][] pic_match_flag;
-        public uint[][][] PicMatchFlag { get { return pic_match_flag; } set { pic_match_flag = value; } }
-        private uint[][][] mb_type_match_flag;
-        public uint[][][] MbTypeMatchFlag { get { return mb_type_match_flag; } set { mb_type_match_flag = value; } }
-        private uint[][][] motion_match_flag;
-        public uint[][][] MotionMatchFlag { get { return motion_match_flag; } set { motion_match_flag = value; } }
-        private uint[][][] residual_match_flag;
-        public uint[][][] ResidualMatchFlag { get { return residual_match_flag; } set { residual_match_flag = value; } }
-        private uint[][][] intra_samples_match_flag;
-        public uint[][][] IntraSamplesMatchFlag { get { return intra_samples_match_flag; } set { intra_samples_match_flag = value; } }
+        private byte[][][] pic_match_flag;
+        public byte[][][] PicMatchFlag { get { return pic_match_flag; } set { pic_match_flag = value; } }
+        private byte[][][] mb_type_match_flag;
+        public byte[][][] MbTypeMatchFlag { get { return mb_type_match_flag; } set { mb_type_match_flag = value; } }
+        private byte[][][] motion_match_flag;
+        public byte[][][] MotionMatchFlag { get { return motion_match_flag; } set { motion_match_flag = value; } }
+        private byte[][][] residual_match_flag;
+        public byte[][][] ResidualMatchFlag { get { return residual_match_flag; } set { residual_match_flag = value; } }
+        private byte[][][] intra_samples_match_flag;
+        public byte[][][] IntraSamplesMatchFlag { get { return intra_samples_match_flag; } set { intra_samples_match_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -19066,11 +19064,11 @@ redundant_pic_property( payloadSize ) {
             this.quality_id = new uint[num_dIds_minus1][];
             this.num_redundant_pics_minus1 = new uint[num_dIds_minus1][];
             this.redundant_pic_cnt_minus1 = new uint[num_dIds_minus1][][];
-            this.pic_match_flag = new uint[num_dIds_minus1][][];
-            this.mb_type_match_flag = new uint[num_dIds_minus1][][];
-            this.motion_match_flag = new uint[num_dIds_minus1][][];
-            this.residual_match_flag = new uint[num_dIds_minus1][][];
-            this.intra_samples_match_flag = new uint[num_dIds_minus1][][];
+            this.pic_match_flag = new byte[num_dIds_minus1][][];
+            this.mb_type_match_flag = new byte[num_dIds_minus1][][];
+            this.motion_match_flag = new byte[num_dIds_minus1][][];
+            this.residual_match_flag = new byte[num_dIds_minus1][][];
+            this.intra_samples_match_flag = new byte[num_dIds_minus1][][];
             for (i = 0; i <= num_dIds_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.dependency_id[i]);
@@ -19079,22 +19077,22 @@ redundant_pic_property( payloadSize ) {
                 this.quality_id[i] = new uint[num_qIds_minus1[i]];
                 this.num_redundant_pics_minus1[i] = new uint[num_qIds_minus1[i]];
                 this.redundant_pic_cnt_minus1[i] = new uint[num_qIds_minus1[i]][];
-                this.pic_match_flag[i] = new uint[num_qIds_minus1[i]][];
-                this.mb_type_match_flag[i] = new uint[num_qIds_minus1[i]][];
-                this.motion_match_flag[i] = new uint[num_qIds_minus1[i]][];
-                this.residual_match_flag[i] = new uint[num_qIds_minus1[i]][];
-                this.intra_samples_match_flag[i] = new uint[num_qIds_minus1[i]][];
+                this.pic_match_flag[i] = new byte[num_qIds_minus1[i]][];
+                this.mb_type_match_flag[i] = new byte[num_qIds_minus1[i]][];
+                this.motion_match_flag[i] = new byte[num_qIds_minus1[i]][];
+                this.residual_match_flag[i] = new byte[num_qIds_minus1[i]][];
+                this.intra_samples_match_flag[i] = new byte[num_qIds_minus1[i]][];
                 for (j = 0; j <= num_qIds_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedInt(size, 4, out this.quality_id[i][j]);
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_redundant_pics_minus1[i][j]);
 
                     this.redundant_pic_cnt_minus1[i][j] = new uint[num_redundant_pics_minus1[i][j]];
-                    this.pic_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
-                    this.mb_type_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
-                    this.motion_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
-                    this.residual_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
-                    this.intra_samples_match_flag[i][j] = new uint[num_redundant_pics_minus1[i][j]];
+                    this.pic_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j]];
+                    this.mb_type_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j]];
+                    this.motion_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j]];
+                    this.residual_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j]];
+                    this.intra_samples_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j]];
                     for (k = 0; k <= num_redundant_pics_minus1[i][j]; k++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt_minus1[i][j][k]);
@@ -19333,24 +19331,24 @@ svc_vui_parameters_extension() {
         public uint[] VuiExtQualityId { get { return vui_ext_quality_id; } set { vui_ext_quality_id = value; } }
         private uint[] vui_ext_temporal_id;
         public uint[] VuiExtTemporalId { get { return vui_ext_temporal_id; } set { vui_ext_temporal_id = value; } }
-        private uint[] vui_ext_timing_info_present_flag;
-        public uint[] VuiExtTimingInfoPresentFlag { get { return vui_ext_timing_info_present_flag; } set { vui_ext_timing_info_present_flag = value; } }
+        private byte[] vui_ext_timing_info_present_flag;
+        public byte[] VuiExtTimingInfoPresentFlag { get { return vui_ext_timing_info_present_flag; } set { vui_ext_timing_info_present_flag = value; } }
         private uint[] vui_ext_num_units_in_tick;
         public uint[] VuiExtNumUnitsInTick { get { return vui_ext_num_units_in_tick; } set { vui_ext_num_units_in_tick = value; } }
         private uint[] vui_ext_time_scale;
         public uint[] VuiExtTimeScale { get { return vui_ext_time_scale; } set { vui_ext_time_scale = value; } }
-        private uint[] vui_ext_fixed_frame_rate_flag;
-        public uint[] VuiExtFixedFrameRateFlag { get { return vui_ext_fixed_frame_rate_flag; } set { vui_ext_fixed_frame_rate_flag = value; } }
-        private uint[] vui_ext_nal_hrd_parameters_present_flag;
-        public uint[] VuiExtNalHrdParametersPresentFlag { get { return vui_ext_nal_hrd_parameters_present_flag; } set { vui_ext_nal_hrd_parameters_present_flag = value; } }
+        private byte[] vui_ext_fixed_frame_rate_flag;
+        public byte[] VuiExtFixedFrameRateFlag { get { return vui_ext_fixed_frame_rate_flag; } set { vui_ext_fixed_frame_rate_flag = value; } }
+        private byte[] vui_ext_nal_hrd_parameters_present_flag;
+        public byte[] VuiExtNalHrdParametersPresentFlag { get { return vui_ext_nal_hrd_parameters_present_flag; } set { vui_ext_nal_hrd_parameters_present_flag = value; } }
         private HrdParameters hrd_parameters;
         public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
-        private uint[] vui_ext_vcl_hrd_parameters_present_flag;
-        public uint[] VuiExtVclHrdParametersPresentFlag { get { return vui_ext_vcl_hrd_parameters_present_flag; } set { vui_ext_vcl_hrd_parameters_present_flag = value; } }
-        private uint[] vui_ext_low_delay_hrd_flag;
-        public uint[] VuiExtLowDelayHrdFlag { get { return vui_ext_low_delay_hrd_flag; } set { vui_ext_low_delay_hrd_flag = value; } }
-        private uint[] vui_ext_pic_struct_present_flag;
-        public uint[] VuiExtPicStructPresentFlag { get { return vui_ext_pic_struct_present_flag; } set { vui_ext_pic_struct_present_flag = value; } }
+        private byte[] vui_ext_vcl_hrd_parameters_present_flag;
+        public byte[] VuiExtVclHrdParametersPresentFlag { get { return vui_ext_vcl_hrd_parameters_present_flag; } set { vui_ext_vcl_hrd_parameters_present_flag = value; } }
+        private byte[] vui_ext_low_delay_hrd_flag;
+        public byte[] VuiExtLowDelayHrdFlag { get { return vui_ext_low_delay_hrd_flag; } set { vui_ext_low_delay_hrd_flag = value; } }
+        private byte[] vui_ext_pic_struct_present_flag;
+        public byte[] VuiExtPicStructPresentFlag { get { return vui_ext_pic_struct_present_flag; } set { vui_ext_pic_struct_present_flag = value; } }
 
         public SvcVuiParametersExtension()
         {
@@ -19367,14 +19365,14 @@ svc_vui_parameters_extension() {
             this.vui_ext_dependency_id = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_quality_id = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_temporal_id = new uint[vui_ext_num_entries_minus1];
-            this.vui_ext_timing_info_present_flag = new uint[vui_ext_num_entries_minus1];
+            this.vui_ext_timing_info_present_flag = new byte[vui_ext_num_entries_minus1];
             this.vui_ext_num_units_in_tick = new uint[vui_ext_num_entries_minus1];
             this.vui_ext_time_scale = new uint[vui_ext_num_entries_minus1];
-            this.vui_ext_fixed_frame_rate_flag = new uint[vui_ext_num_entries_minus1];
-            this.vui_ext_nal_hrd_parameters_present_flag = new uint[vui_ext_num_entries_minus1];
-            this.vui_ext_vcl_hrd_parameters_present_flag = new uint[vui_ext_num_entries_minus1];
-            this.vui_ext_low_delay_hrd_flag = new uint[vui_ext_num_entries_minus1];
-            this.vui_ext_pic_struct_present_flag = new uint[vui_ext_num_entries_minus1];
+            this.vui_ext_fixed_frame_rate_flag = new byte[vui_ext_num_entries_minus1];
+            this.vui_ext_nal_hrd_parameters_present_flag = new byte[vui_ext_num_entries_minus1];
+            this.vui_ext_vcl_hrd_parameters_present_flag = new byte[vui_ext_num_entries_minus1];
+            this.vui_ext_low_delay_hrd_flag = new byte[vui_ext_num_entries_minus1];
+            this.vui_ext_pic_struct_present_flag = new byte[vui_ext_num_entries_minus1];
             for (i = 0; i <= vui_ext_num_entries_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.vui_ext_dependency_id[i]);
@@ -19517,20 +19515,20 @@ reserved_one_bit All u(1)
     */
     public class NalUnitHeaderMvcExtension : IItuSerializable
     {
-        private uint non_idr_flag;
-        public uint NonIdrFlag { get { return non_idr_flag; } set { non_idr_flag = value; } }
+        private byte non_idr_flag;
+        public byte NonIdrFlag { get { return non_idr_flag; } set { non_idr_flag = value; } }
         private uint priority_id;
         public uint PriorityId { get { return priority_id; } set { priority_id = value; } }
         private uint view_id;
         public uint ViewId { get { return view_id; } set { view_id = value; } }
         private uint temporal_id;
         public uint TemporalId { get { return temporal_id; } set { temporal_id = value; } }
-        private uint anchor_pic_flag;
-        public uint AnchorPicFlag { get { return anchor_pic_flag; } set { anchor_pic_flag = value; } }
-        private uint inter_view_flag;
-        public uint InterViewFlag { get { return inter_view_flag; } set { inter_view_flag = value; } }
-        private uint reserved_one_bit;
-        public uint ReservedOneBit { get { return reserved_one_bit; } set { reserved_one_bit = value; } }
+        private byte anchor_pic_flag;
+        public byte AnchorPicFlag { get { return anchor_pic_flag; } set { anchor_pic_flag = value; } }
+        private byte inter_view_flag;
+        public byte InterViewFlag { get { return inter_view_flag; } set { inter_view_flag = value; } }
+        private byte reserved_one_bit;
+        public byte ReservedOneBit { get { return reserved_one_bit; } set { reserved_one_bit = value; } }
 
         public NalUnitHeaderMvcExtension()
         {
@@ -19674,8 +19672,8 @@ seq_parameter_set_mvc_extension() {
         public uint[][] ApplicableOpNumViewsMinus1 { get { return applicable_op_num_views_minus1; } set { applicable_op_num_views_minus1 = value; } }
         private uint mfc_format_idc;
         public uint MfcFormatIdc { get { return mfc_format_idc; } set { mfc_format_idc = value; } }
-        private uint default_grid_position_flag;
-        public uint DefaultGridPositionFlag { get { return default_grid_position_flag; } set { default_grid_position_flag = value; } }
+        private byte default_grid_position_flag;
+        public byte DefaultGridPositionFlag { get { return default_grid_position_flag; } set { default_grid_position_flag = value; } }
         private uint view0_grid_position_x;
         public uint View0GridPositionx { get { return view0_grid_position_x; } set { view0_grid_position_x = value; } }
         private uint view0_grid_position_y;
@@ -19684,10 +19682,10 @@ seq_parameter_set_mvc_extension() {
         public uint View1GridPositionx { get { return view1_grid_position_x; } set { view1_grid_position_x = value; } }
         private uint view1_grid_position_y;
         public uint View1GridPositiony { get { return view1_grid_position_y; } set { view1_grid_position_y = value; } }
-        private uint rpu_filter_enabled_flag;
-        public uint RpuFilterEnabledFlag { get { return rpu_filter_enabled_flag; } set { rpu_filter_enabled_flag = value; } }
-        private uint rpu_field_processing_flag;
-        public uint RpuFieldProcessingFlag { get { return rpu_field_processing_flag; } set { rpu_field_processing_flag = value; } }
+        private byte rpu_filter_enabled_flag;
+        public byte RpuFilterEnabledFlag { get { return rpu_filter_enabled_flag; } set { rpu_filter_enabled_flag = value; } }
+        private byte rpu_field_processing_flag;
+        public byte RpuFieldProcessingFlag { get { return rpu_field_processing_flag; } set { rpu_field_processing_flag = value; } }
 
         public SeqParameterSetMvcExtension()
         {
@@ -20038,8 +20036,8 @@ ref_pic_list_mvc_modification() {
     */
     public class RefPicListMvcModification : IItuSerializable
     {
-        private uint ref_pic_list_modification_flag_l0;
-        public uint RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
+        private byte ref_pic_list_modification_flag_l0;
+        public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
         private uint modification_of_pic_nums_idc;
         public uint ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
         private uint abs_diff_pic_num_minus1;
@@ -20048,8 +20046,8 @@ ref_pic_list_mvc_modification() {
         public uint LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
         private uint abs_diff_view_idx_minus1;
         public uint AbsDiffViewIdxMinus1 { get { return abs_diff_view_idx_minus1; } set { abs_diff_view_idx_minus1 = value; } }
-        private uint ref_pic_list_modification_flag_l1;
-        public uint RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
+        private byte ref_pic_list_modification_flag_l1;
+        public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
 
         public RefPicListMvcModification()
         {
@@ -20458,10 +20456,10 @@ mvc_scalable_nesting( payloadSize ) {
     */
     public class MvcScalableNesting : IItuSerializable
     {
-        private uint operation_point_flag;
-        public uint OperationPointFlag { get { return operation_point_flag; } set { operation_point_flag = value; } }
-        private uint all_view_components_in_au_flag;
-        public uint AllViewComponentsInAuFlag { get { return all_view_components_in_au_flag; } set { all_view_components_in_au_flag = value; } }
+        private byte operation_point_flag;
+        public byte OperationPointFlag { get { return operation_point_flag; } set { operation_point_flag = value; } }
+        private byte all_view_components_in_au_flag;
+        public byte AllViewComponentsInAuFlag { get { return all_view_components_in_au_flag; } set { all_view_components_in_au_flag = value; } }
         private uint num_view_components_minus1;
         public uint NumViewComponentsMinus1 { get { return num_view_components_minus1; } set { num_view_components_minus1 = value; } }
         private uint[] sei_view_id;
@@ -20686,18 +20684,18 @@ view_scalability_info( payloadSize ) {
         public uint[] NumTargetOutputViewsMinus1 { get { return num_target_output_views_minus1; } set { num_target_output_views_minus1 = value; } }
         private uint[][] view_id;
         public uint[][] ViewId { get { return view_id; } set { view_id = value; } }
-        private uint[] profile_level_info_present_flag;
-        public uint[] ProfileLevelInfoPresentFlag { get { return profile_level_info_present_flag; } set { profile_level_info_present_flag = value; } }
-        private uint[] bitrate_info_present_flag;
-        public uint[] BitrateInfoPresentFlag { get { return bitrate_info_present_flag; } set { bitrate_info_present_flag = value; } }
-        private uint[] frm_rate_info_present_flag;
-        public uint[] FrmRateInfoPresentFlag { get { return frm_rate_info_present_flag; } set { frm_rate_info_present_flag = value; } }
-        private uint[] view_dependency_info_present_flag;
-        public uint[] ViewDependencyInfoPresentFlag { get { return view_dependency_info_present_flag; } set { view_dependency_info_present_flag = value; } }
-        private uint[] parameter_sets_info_present_flag;
-        public uint[] ParameterSetsInfoPresentFlag { get { return parameter_sets_info_present_flag; } set { parameter_sets_info_present_flag = value; } }
-        private uint[] bitstream_restriction_info_present_flag;
-        public uint[] BitstreamRestrictionInfoPresentFlag { get { return bitstream_restriction_info_present_flag; } set { bitstream_restriction_info_present_flag = value; } }
+        private byte[] profile_level_info_present_flag;
+        public byte[] ProfileLevelInfoPresentFlag { get { return profile_level_info_present_flag; } set { profile_level_info_present_flag = value; } }
+        private byte[] bitrate_info_present_flag;
+        public byte[] BitrateInfoPresentFlag { get { return bitrate_info_present_flag; } set { bitrate_info_present_flag = value; } }
+        private byte[] frm_rate_info_present_flag;
+        public byte[] FrmRateInfoPresentFlag { get { return frm_rate_info_present_flag; } set { frm_rate_info_present_flag = value; } }
+        private byte[] view_dependency_info_present_flag;
+        public byte[] ViewDependencyInfoPresentFlag { get { return view_dependency_info_present_flag; } set { view_dependency_info_present_flag = value; } }
+        private byte[] parameter_sets_info_present_flag;
+        public byte[] ParameterSetsInfoPresentFlag { get { return parameter_sets_info_present_flag; } set { parameter_sets_info_present_flag = value; } }
+        private byte[] bitstream_restriction_info_present_flag;
+        public byte[] BitstreamRestrictionInfoPresentFlag { get { return bitstream_restriction_info_present_flag; } set { bitstream_restriction_info_present_flag = value; } }
         private uint[] op_profile_level_idc;
         public uint[] OpProfileLevelIdc { get { return op_profile_level_idc; } set { op_profile_level_idc = value; } }
         private uint[] avg_bitrate;
@@ -20730,8 +20728,8 @@ view_scalability_info( payloadSize ) {
         public uint[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
         private uint[] parameter_sets_info_src_op_id;
         public uint[] ParameterSetsInfoSrcOpId { get { return parameter_sets_info_src_op_id; } set { parameter_sets_info_src_op_id = value; } }
-        private uint[] motion_vectors_over_pic_boundaries_flag;
-        public uint[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
+        private byte[] motion_vectors_over_pic_boundaries_flag;
+        public byte[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
         private uint[] max_bytes_per_pic_denom;
         public uint[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
         private uint[] max_bits_per_mb_denom;
@@ -20765,12 +20763,12 @@ view_scalability_info( payloadSize ) {
             this.temporal_id = new uint[num_operation_points_minus1];
             this.num_target_output_views_minus1 = new uint[num_operation_points_minus1];
             this.view_id = new uint[num_operation_points_minus1][];
-            this.profile_level_info_present_flag = new uint[num_operation_points_minus1];
-            this.bitrate_info_present_flag = new uint[num_operation_points_minus1];
-            this.frm_rate_info_present_flag = new uint[num_operation_points_minus1];
-            this.view_dependency_info_present_flag = new uint[num_operation_points_minus1];
-            this.parameter_sets_info_present_flag = new uint[num_operation_points_minus1];
-            this.bitstream_restriction_info_present_flag = new uint[num_operation_points_minus1];
+            this.profile_level_info_present_flag = new byte[num_operation_points_minus1];
+            this.bitrate_info_present_flag = new byte[num_operation_points_minus1];
+            this.frm_rate_info_present_flag = new byte[num_operation_points_minus1];
+            this.view_dependency_info_present_flag = new byte[num_operation_points_minus1];
+            this.parameter_sets_info_present_flag = new byte[num_operation_points_minus1];
+            this.bitstream_restriction_info_present_flag = new byte[num_operation_points_minus1];
             this.op_profile_level_idc = new uint[num_operation_points_minus1];
             this.avg_bitrate = new uint[num_operation_points_minus1];
             this.max_bitrate = new uint[num_operation_points_minus1];
@@ -20787,7 +20785,7 @@ view_scalability_info( payloadSize ) {
             this.num_pic_parameter_sets_minus1 = new uint[num_operation_points_minus1];
             this.pic_parameter_set_id_delta = new uint[num_operation_points_minus1][];
             this.parameter_sets_info_src_op_id = new uint[num_operation_points_minus1];
-            this.motion_vectors_over_pic_boundaries_flag = new uint[num_operation_points_minus1];
+            this.motion_vectors_over_pic_boundaries_flag = new byte[num_operation_points_minus1];
             this.max_bytes_per_pic_denom = new uint[num_operation_points_minus1];
             this.max_bits_per_mb_denom = new uint[num_operation_points_minus1];
             this.log2_max_mv_length_horizontal = new uint[num_operation_points_minus1];
@@ -21204,44 +21202,44 @@ if (intrinsic_param_flag ) {
     {
         private uint num_views_minus1;
         public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
-        private uint intrinsic_param_flag;
-        public uint IntrinsicParamFlag { get { return intrinsic_param_flag; } set { intrinsic_param_flag = value; } }
-        private uint extrinsic_param_flag;
-        public uint ExtrinsicParamFlag { get { return extrinsic_param_flag; } set { extrinsic_param_flag = value; } }
-        private uint intrinsic_params_equal_flag;
-        public uint IntrinsicParamsEqualFlag { get { return intrinsic_params_equal_flag; } set { intrinsic_params_equal_flag = value; } }
+        private byte intrinsic_param_flag;
+        public byte IntrinsicParamFlag { get { return intrinsic_param_flag; } set { intrinsic_param_flag = value; } }
+        private byte extrinsic_param_flag;
+        public byte ExtrinsicParamFlag { get { return extrinsic_param_flag; } set { extrinsic_param_flag = value; } }
+        private byte intrinsic_params_equal_flag;
+        public byte IntrinsicParamsEqualFlag { get { return intrinsic_params_equal_flag; } set { intrinsic_params_equal_flag = value; } }
         private uint prec_focal_length;
         public uint PrecFocalLength { get { return prec_focal_length; } set { prec_focal_length = value; } }
         private uint prec_principal_point;
         public uint PrecPrincipalPoint { get { return prec_principal_point; } set { prec_principal_point = value; } }
         private uint prec_skew_factor;
         public uint PrecSkewFactor { get { return prec_skew_factor; } set { prec_skew_factor = value; } }
-        private uint[] sign_focal_length_x;
-        public uint[] SignFocalLengthx { get { return sign_focal_length_x; } set { sign_focal_length_x = value; } }
+        private byte[] sign_focal_length_x;
+        public byte[] SignFocalLengthx { get { return sign_focal_length_x; } set { sign_focal_length_x = value; } }
         private uint[] exponent_focal_length_x;
         public uint[] ExponentFocalLengthx { get { return exponent_focal_length_x; } set { exponent_focal_length_x = value; } }
         private uint[] mantissa_focal_length_x;
         public uint[] MantissaFocalLengthx { get { return mantissa_focal_length_x; } set { mantissa_focal_length_x = value; } }
-        private uint[] sign_focal_length_y;
-        public uint[] SignFocalLengthy { get { return sign_focal_length_y; } set { sign_focal_length_y = value; } }
+        private byte[] sign_focal_length_y;
+        public byte[] SignFocalLengthy { get { return sign_focal_length_y; } set { sign_focal_length_y = value; } }
         private uint[] exponent_focal_length_y;
         public uint[] ExponentFocalLengthy { get { return exponent_focal_length_y; } set { exponent_focal_length_y = value; } }
         private uint[] mantissa_focal_length_y;
         public uint[] MantissaFocalLengthy { get { return mantissa_focal_length_y; } set { mantissa_focal_length_y = value; } }
-        private uint[] sign_principal_point_x;
-        public uint[] SignPrincipalPointx { get { return sign_principal_point_x; } set { sign_principal_point_x = value; } }
+        private byte[] sign_principal_point_x;
+        public byte[] SignPrincipalPointx { get { return sign_principal_point_x; } set { sign_principal_point_x = value; } }
         private uint[] exponent_principal_point_x;
         public uint[] ExponentPrincipalPointx { get { return exponent_principal_point_x; } set { exponent_principal_point_x = value; } }
         private uint[] mantissa_principal_point_x;
         public uint[] MantissaPrincipalPointx { get { return mantissa_principal_point_x; } set { mantissa_principal_point_x = value; } }
-        private uint[] sign_principal_point_y;
-        public uint[] SignPrincipalPointy { get { return sign_principal_point_y; } set { sign_principal_point_y = value; } }
+        private byte[] sign_principal_point_y;
+        public byte[] SignPrincipalPointy { get { return sign_principal_point_y; } set { sign_principal_point_y = value; } }
         private uint[] exponent_principal_point_y;
         public uint[] ExponentPrincipalPointy { get { return exponent_principal_point_y; } set { exponent_principal_point_y = value; } }
         private uint[] mantissa_principal_point_y;
         public uint[] MantissaPrincipalPointy { get { return mantissa_principal_point_y; } set { mantissa_principal_point_y = value; } }
-        private uint[] sign_skew_factor;
-        public uint[] SignSkewFactor { get { return sign_skew_factor; } set { sign_skew_factor = value; } }
+        private byte[] sign_skew_factor;
+        public byte[] SignSkewFactor { get { return sign_skew_factor; } set { sign_skew_factor = value; } }
         private uint[] exponent_skew_factor;
         public uint[] ExponentSkewFactor { get { return exponent_skew_factor; } set { exponent_skew_factor = value; } }
         private uint[] mantissa_skew_factor;
@@ -21250,14 +21248,14 @@ if (intrinsic_param_flag ) {
         public uint PrecRotationParam { get { return prec_rotation_param; } set { prec_rotation_param = value; } }
         private uint prec_translation_param;
         public uint PrecTranslationParam { get { return prec_translation_param; } set { prec_translation_param = value; } }
-        private uint[][][] sign_r;
-        public uint[][][] Signr { get { return sign_r; } set { sign_r = value; } }
+        private byte[][][] sign_r;
+        public byte[][][] Signr { get { return sign_r; } set { sign_r = value; } }
         private uint[][][] exponent_r;
         public uint[][][] Exponentr { get { return exponent_r; } set { exponent_r = value; } }
         private uint[][][] mantissa_r;
         public uint[][][] Mantissar { get { return mantissa_r; } set { mantissa_r = value; } }
-        private uint[][] sign_t;
-        public uint[][] Signt { get { return sign_t; } set { sign_t = value; } }
+        private byte[][] sign_t;
+        public byte[][] Signt { get { return sign_t; } set { sign_t = value; } }
         private uint[][] exponent_t;
         public uint[][] Exponentt { get { return exponent_t; } set { exponent_t = value; } }
         private uint[][] mantissa_t;
@@ -21288,19 +21286,19 @@ if (intrinsic_param_flag ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_principal_point);
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_skew_factor);
 
-                this.sign_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_focal_length_x = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.exponent_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.mantissa_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
-                this.sign_focal_length_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_focal_length_y = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.exponent_focal_length_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.mantissa_focal_length_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
-                this.sign_principal_point_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_principal_point_x = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.exponent_principal_point_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.mantissa_principal_point_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
-                this.sign_principal_point_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_principal_point_y = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.exponent_principal_point_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.mantissa_principal_point_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
-                this.sign_skew_factor = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
+                this.sign_skew_factor = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.exponent_skew_factor = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 this.mantissa_skew_factor = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)];
                 for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1);
@@ -21329,19 +21327,19 @@ if (intrinsic_param_flag ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_rotation_param);
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_translation_param);
 
-                this.sign_r = new uint[num_views_minus1][][];
+                this.sign_r = new byte[num_views_minus1][][];
                 this.exponent_r = new uint[num_views_minus1][][];
                 this.mantissa_r = new uint[num_views_minus1][][];
-                this.sign_t = new uint[num_views_minus1][];
+                this.sign_t = new byte[num_views_minus1][];
                 this.exponent_t = new uint[num_views_minus1][];
                 this.mantissa_t = new uint[num_views_minus1][];
                 for (i = 0; i <= num_views_minus1; i++)
                 {
 
-                    this.sign_r[i] = new uint[3][];
+                    this.sign_r[i] = new byte[3][];
                     this.exponent_r[i] = new uint[3][];
                     this.mantissa_r[i] = new uint[3][];
-                    this.sign_t[i] = new uint[3];
+                    this.sign_t[i] = new byte[3];
                     this.exponent_t[i] = new uint[3];
                     this.mantissa_t[i] = new uint[3];
                     for (j = 1; j <= 3; j++)
@@ -21349,7 +21347,7 @@ if (intrinsic_param_flag ) {
                         /*  row  */
 
 
-                        this.sign_r[i][j] = new uint[3];
+                        this.sign_r[i][j] = new byte[3];
                         this.exponent_r[i][j] = new uint[3];
                         this.mantissa_r[i][j] = new uint[3];
                         for (k = 1; k <= 3; k++)
@@ -21642,18 +21640,18 @@ view_dependency_change( payloadSize ) {
     {
         private uint seq_parameter_set_id;
         public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
-        private uint anchor_update_flag;
-        public uint AnchorUpdateFlag { get { return anchor_update_flag; } set { anchor_update_flag = value; } }
-        private uint non_anchor_update_flag;
-        public uint NonAnchorUpdateFlag { get { return non_anchor_update_flag; } set { non_anchor_update_flag = value; } }
-        private uint[][] anchor_ref_l0_flag;
-        public uint[][] AnchorRefL0Flag { get { return anchor_ref_l0_flag; } set { anchor_ref_l0_flag = value; } }
-        private uint[][] anchor_ref_l1_flag;
-        public uint[][] AnchorRefL1Flag { get { return anchor_ref_l1_flag; } set { anchor_ref_l1_flag = value; } }
-        private uint[][] non_anchor_ref_l0_flag;
-        public uint[][] NonAnchorRefL0Flag { get { return non_anchor_ref_l0_flag; } set { non_anchor_ref_l0_flag = value; } }
-        private uint[][] non_anchor_ref_l1_flag;
-        public uint[][] NonAnchorRefL1Flag { get { return non_anchor_ref_l1_flag; } set { non_anchor_ref_l1_flag = value; } }
+        private byte anchor_update_flag;
+        public byte AnchorUpdateFlag { get { return anchor_update_flag; } set { anchor_update_flag = value; } }
+        private byte non_anchor_update_flag;
+        public byte NonAnchorUpdateFlag { get { return non_anchor_update_flag; } set { non_anchor_update_flag = value; } }
+        private byte[][] anchor_ref_l0_flag;
+        public byte[][] AnchorRefL0Flag { get { return anchor_ref_l0_flag; } set { anchor_ref_l0_flag = value; } }
+        private byte[][] anchor_ref_l1_flag;
+        public byte[][] AnchorRefL1Flag { get { return anchor_ref_l1_flag; } set { anchor_ref_l1_flag = value; } }
+        private byte[][] non_anchor_ref_l0_flag;
+        public byte[][] NonAnchorRefL0Flag { get { return non_anchor_ref_l0_flag; } set { non_anchor_ref_l0_flag = value; } }
+        private byte[][] non_anchor_ref_l1_flag;
+        public byte[][] NonAnchorRefL1Flag { get { return non_anchor_ref_l1_flag; } set { non_anchor_ref_l1_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -21675,18 +21673,18 @@ view_dependency_change( payloadSize ) {
             if (anchor_update_flag != 0)
             {
 
-                this.anchor_ref_l0_flag = new uint[H264Helpers.GetValue("num_views_minus1")][];
-                this.anchor_ref_l1_flag = new uint[H264Helpers.GetValue("num_views_minus1")][];
+                this.anchor_ref_l0_flag = new byte[H264Helpers.GetValue("num_views_minus1")][];
+                this.anchor_ref_l1_flag = new byte[H264Helpers.GetValue("num_views_minus1")][];
                 for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
                 {
 
-                    this.anchor_ref_l0_flag[i] = new uint[H264Helpers.GetArray("num_anchor_refs_l0")[i]];
+                    this.anchor_ref_l0_flag[i] = new byte[H264Helpers.GetArray("num_anchor_refs_l0")[i]];
                     for (j = 0; j < H264Helpers.GetArray("num_anchor_refs_l0")[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l0_flag[i][j]);
                     }
 
-                    this.anchor_ref_l1_flag[i] = new uint[H264Helpers.GetArray("num_anchor_refs_l1")[i]];
+                    this.anchor_ref_l1_flag[i] = new byte[H264Helpers.GetArray("num_anchor_refs_l1")[i]];
                     for (j = 0; j < H264Helpers.GetArray("num_anchor_refs_l1")[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l1_flag[i][j]);
@@ -21697,18 +21695,18 @@ view_dependency_change( payloadSize ) {
             if (non_anchor_update_flag != 0)
             {
 
-                this.non_anchor_ref_l0_flag = new uint[H264Helpers.GetValue("num_views_minus1")][];
-                this.non_anchor_ref_l1_flag = new uint[H264Helpers.GetValue("num_views_minus1")][];
+                this.non_anchor_ref_l0_flag = new byte[H264Helpers.GetValue("num_views_minus1")][];
+                this.non_anchor_ref_l1_flag = new byte[H264Helpers.GetValue("num_views_minus1")][];
                 for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
                 {
 
-                    this.non_anchor_ref_l0_flag[i] = new uint[H264Helpers.GetArray("num_non_anchor_refs_l0")[i]];
+                    this.non_anchor_ref_l0_flag[i] = new byte[H264Helpers.GetArray("num_non_anchor_refs_l0")[i]];
                     for (j = 0; j < H264Helpers.GetArray("num_non_anchor_refs_l0")[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l0_flag[i][j]);
                     }
 
-                    this.non_anchor_ref_l1_flag[i] = new uint[H264Helpers.GetArray("num_non_anchor_refs_l1")[i]];
+                    this.non_anchor_ref_l1_flag[i] = new byte[H264Helpers.GetArray("num_non_anchor_refs_l1")[i]];
                     for (j = 0; j < H264Helpers.GetArray("num_non_anchor_refs_l1")[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l1_flag[i][j]);
@@ -21922,24 +21920,24 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
         public uint NumOfTemporalLayersInBaseViewMinus1 { get { return num_of_temporal_layers_in_base_view_minus1; } set { num_of_temporal_layers_in_base_view_minus1 = value; } }
         private uint[] sei_mvc_temporal_id;
         public uint[] SeiMvcTemporalId { get { return sei_mvc_temporal_id; } set { sei_mvc_temporal_id = value; } }
-        private uint[] sei_mvc_timing_info_present_flag;
-        public uint[] SeiMvcTimingInfoPresentFlag { get { return sei_mvc_timing_info_present_flag; } set { sei_mvc_timing_info_present_flag = value; } }
+        private byte[] sei_mvc_timing_info_present_flag;
+        public byte[] SeiMvcTimingInfoPresentFlag { get { return sei_mvc_timing_info_present_flag; } set { sei_mvc_timing_info_present_flag = value; } }
         private uint[] sei_mvc_num_units_in_tick;
         public uint[] SeiMvcNumUnitsInTick { get { return sei_mvc_num_units_in_tick; } set { sei_mvc_num_units_in_tick = value; } }
         private uint[] sei_mvc_time_scale;
         public uint[] SeiMvcTimeScale { get { return sei_mvc_time_scale; } set { sei_mvc_time_scale = value; } }
-        private uint[] sei_mvc_fixed_frame_rate_flag;
-        public uint[] SeiMvcFixedFrameRateFlag { get { return sei_mvc_fixed_frame_rate_flag; } set { sei_mvc_fixed_frame_rate_flag = value; } }
-        private uint[] sei_mvc_nal_hrd_parameters_present_flag;
-        public uint[] SeiMvcNalHrdParametersPresentFlag { get { return sei_mvc_nal_hrd_parameters_present_flag; } set { sei_mvc_nal_hrd_parameters_present_flag = value; } }
+        private byte[] sei_mvc_fixed_frame_rate_flag;
+        public byte[] SeiMvcFixedFrameRateFlag { get { return sei_mvc_fixed_frame_rate_flag; } set { sei_mvc_fixed_frame_rate_flag = value; } }
+        private byte[] sei_mvc_nal_hrd_parameters_present_flag;
+        public byte[] SeiMvcNalHrdParametersPresentFlag { get { return sei_mvc_nal_hrd_parameters_present_flag; } set { sei_mvc_nal_hrd_parameters_present_flag = value; } }
         private HrdParameters hrd_parameters;
         public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
-        private uint[] sei_mvc_vcl_hrd_parameters_present_flag;
-        public uint[] SeiMvcVclHrdParametersPresentFlag { get { return sei_mvc_vcl_hrd_parameters_present_flag; } set { sei_mvc_vcl_hrd_parameters_present_flag = value; } }
-        private uint[] sei_mvc_low_delay_hrd_flag;
-        public uint[] SeiMvcLowDelayHrdFlag { get { return sei_mvc_low_delay_hrd_flag; } set { sei_mvc_low_delay_hrd_flag = value; } }
-        private uint[] sei_mvc_pic_struct_present_flag;
-        public uint[] SeiMvcPicStructPresentFlag { get { return sei_mvc_pic_struct_present_flag; } set { sei_mvc_pic_struct_present_flag = value; } }
+        private byte[] sei_mvc_vcl_hrd_parameters_present_flag;
+        public byte[] SeiMvcVclHrdParametersPresentFlag { get { return sei_mvc_vcl_hrd_parameters_present_flag; } set { sei_mvc_vcl_hrd_parameters_present_flag = value; } }
+        private byte[] sei_mvc_low_delay_hrd_flag;
+        public byte[] SeiMvcLowDelayHrdFlag { get { return sei_mvc_low_delay_hrd_flag; } set { sei_mvc_low_delay_hrd_flag = value; } }
+        private byte[] sei_mvc_pic_struct_present_flag;
+        public byte[] SeiMvcPicStructPresentFlag { get { return sei_mvc_pic_struct_present_flag; } set { sei_mvc_pic_struct_present_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -21956,14 +21954,14 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
             size += stream.ReadUnsignedIntGolomb(size, out this.num_of_temporal_layers_in_base_view_minus1);
 
             this.sei_mvc_temporal_id = new uint[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_timing_info_present_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_timing_info_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_num_units_in_tick = new uint[num_of_temporal_layers_in_base_view_minus1];
             this.sei_mvc_time_scale = new uint[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_fixed_frame_rate_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_nal_hrd_parameters_present_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_vcl_hrd_parameters_present_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_low_delay_hrd_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
-            this.sei_mvc_pic_struct_present_flag = new uint[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_fixed_frame_rate_flag = new byte[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_nal_hrd_parameters_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_vcl_hrd_parameters_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_low_delay_hrd_flag = new byte[num_of_temporal_layers_in_base_view_minus1];
+            this.sei_mvc_pic_struct_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1];
             for (i = 0; i <= num_of_temporal_layers_in_base_view_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.sei_mvc_temporal_id[i]);
@@ -22101,8 +22099,8 @@ multiview_view_position_extension_flag 5 u(1)
         public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
         private uint[] view_position;
         public uint[] ViewPosition { get { return view_position; } set { view_position = value; } }
-        private uint multiview_view_position_extension_flag;
-        public uint MultiviewViewPositionExtensionFlag { get { return multiview_view_position_extension_flag; } set { multiview_view_position_extension_flag = value; } }
+        private byte multiview_view_position_extension_flag;
+        public byte MultiviewViewPositionExtensionFlag { get { return multiview_view_position_extension_flag; } set { multiview_view_position_extension_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -22202,24 +22200,24 @@ mvc_vui_parameters_extension() {
         public uint[] VuiMvcNumTargetOutputViewsMinus1 { get { return vui_mvc_num_target_output_views_minus1; } set { vui_mvc_num_target_output_views_minus1 = value; } }
         private uint[][] vui_mvc_view_id;
         public uint[][] VuiMvcViewId { get { return vui_mvc_view_id; } set { vui_mvc_view_id = value; } }
-        private uint[] vui_mvc_timing_info_present_flag;
-        public uint[] VuiMvcTimingInfoPresentFlag { get { return vui_mvc_timing_info_present_flag; } set { vui_mvc_timing_info_present_flag = value; } }
+        private byte[] vui_mvc_timing_info_present_flag;
+        public byte[] VuiMvcTimingInfoPresentFlag { get { return vui_mvc_timing_info_present_flag; } set { vui_mvc_timing_info_present_flag = value; } }
         private uint[] vui_mvc_num_units_in_tick;
         public uint[] VuiMvcNumUnitsInTick { get { return vui_mvc_num_units_in_tick; } set { vui_mvc_num_units_in_tick = value; } }
         private uint[] vui_mvc_time_scale;
         public uint[] VuiMvcTimeScale { get { return vui_mvc_time_scale; } set { vui_mvc_time_scale = value; } }
-        private uint[] vui_mvc_fixed_frame_rate_flag;
-        public uint[] VuiMvcFixedFrameRateFlag { get { return vui_mvc_fixed_frame_rate_flag; } set { vui_mvc_fixed_frame_rate_flag = value; } }
-        private uint[] vui_mvc_nal_hrd_parameters_present_flag;
-        public uint[] VuiMvcNalHrdParametersPresentFlag { get { return vui_mvc_nal_hrd_parameters_present_flag; } set { vui_mvc_nal_hrd_parameters_present_flag = value; } }
+        private byte[] vui_mvc_fixed_frame_rate_flag;
+        public byte[] VuiMvcFixedFrameRateFlag { get { return vui_mvc_fixed_frame_rate_flag; } set { vui_mvc_fixed_frame_rate_flag = value; } }
+        private byte[] vui_mvc_nal_hrd_parameters_present_flag;
+        public byte[] VuiMvcNalHrdParametersPresentFlag { get { return vui_mvc_nal_hrd_parameters_present_flag; } set { vui_mvc_nal_hrd_parameters_present_flag = value; } }
         private HrdParameters hrd_parameters;
         public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
-        private uint[] vui_mvc_vcl_hrd_parameters_present_flag;
-        public uint[] VuiMvcVclHrdParametersPresentFlag { get { return vui_mvc_vcl_hrd_parameters_present_flag; } set { vui_mvc_vcl_hrd_parameters_present_flag = value; } }
-        private uint[] vui_mvc_low_delay_hrd_flag;
-        public uint[] VuiMvcLowDelayHrdFlag { get { return vui_mvc_low_delay_hrd_flag; } set { vui_mvc_low_delay_hrd_flag = value; } }
-        private uint[] vui_mvc_pic_struct_present_flag;
-        public uint[] VuiMvcPicStructPresentFlag { get { return vui_mvc_pic_struct_present_flag; } set { vui_mvc_pic_struct_present_flag = value; } }
+        private byte[] vui_mvc_vcl_hrd_parameters_present_flag;
+        public byte[] VuiMvcVclHrdParametersPresentFlag { get { return vui_mvc_vcl_hrd_parameters_present_flag; } set { vui_mvc_vcl_hrd_parameters_present_flag = value; } }
+        private byte[] vui_mvc_low_delay_hrd_flag;
+        public byte[] VuiMvcLowDelayHrdFlag { get { return vui_mvc_low_delay_hrd_flag; } set { vui_mvc_low_delay_hrd_flag = value; } }
+        private byte[] vui_mvc_pic_struct_present_flag;
+        public byte[] VuiMvcPicStructPresentFlag { get { return vui_mvc_pic_struct_present_flag; } set { vui_mvc_pic_struct_present_flag = value; } }
 
         public MvcVuiParametersExtension()
         {
@@ -22237,14 +22235,14 @@ mvc_vui_parameters_extension() {
             this.vui_mvc_temporal_id = new uint[vui_mvc_num_ops_minus1];
             this.vui_mvc_num_target_output_views_minus1 = new uint[vui_mvc_num_ops_minus1];
             this.vui_mvc_view_id = new uint[vui_mvc_num_ops_minus1][];
-            this.vui_mvc_timing_info_present_flag = new uint[vui_mvc_num_ops_minus1];
+            this.vui_mvc_timing_info_present_flag = new byte[vui_mvc_num_ops_minus1];
             this.vui_mvc_num_units_in_tick = new uint[vui_mvc_num_ops_minus1];
             this.vui_mvc_time_scale = new uint[vui_mvc_num_ops_minus1];
-            this.vui_mvc_fixed_frame_rate_flag = new uint[vui_mvc_num_ops_minus1];
-            this.vui_mvc_nal_hrd_parameters_present_flag = new uint[vui_mvc_num_ops_minus1];
-            this.vui_mvc_vcl_hrd_parameters_present_flag = new uint[vui_mvc_num_ops_minus1];
-            this.vui_mvc_low_delay_hrd_flag = new uint[vui_mvc_num_ops_minus1];
-            this.vui_mvc_pic_struct_present_flag = new uint[vui_mvc_num_ops_minus1];
+            this.vui_mvc_fixed_frame_rate_flag = new byte[vui_mvc_num_ops_minus1];
+            this.vui_mvc_nal_hrd_parameters_present_flag = new byte[vui_mvc_num_ops_minus1];
+            this.vui_mvc_vcl_hrd_parameters_present_flag = new byte[vui_mvc_num_ops_minus1];
+            this.vui_mvc_low_delay_hrd_flag = new byte[vui_mvc_num_ops_minus1];
+            this.vui_mvc_pic_struct_present_flag = new byte[vui_mvc_num_ops_minus1];
             for (i = 0; i <= vui_mvc_num_ops_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.vui_mvc_temporal_id[i]);
@@ -22449,10 +22447,10 @@ seq_parameter_set_mvcd_extension() {
         public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
         private uint[] view_id;
         public uint[] ViewId { get { return view_id; } set { view_id = value; } }
-        private uint[] depth_view_present_flag;
-        public uint[] DepthViewPresentFlag { get { return depth_view_present_flag; } set { depth_view_present_flag = value; } }
-        private uint[] texture_view_present_flag;
-        public uint[] TextureViewPresentFlag { get { return texture_view_present_flag; } set { texture_view_present_flag = value; } }
+        private byte[] depth_view_present_flag;
+        public byte[] DepthViewPresentFlag { get { return depth_view_present_flag; } set { depth_view_present_flag = value; } }
+        private byte[] texture_view_present_flag;
+        public byte[] TextureViewPresentFlag { get { return texture_view_present_flag; } set { texture_view_present_flag = value; } }
         private uint[] num_anchor_refs_l0;
         public uint[] NumAnchorRefsL0 { get { return num_anchor_refs_l0; } set { num_anchor_refs_l0 = value; } }
         private uint[][] anchor_ref_l0;
@@ -22481,20 +22479,20 @@ seq_parameter_set_mvcd_extension() {
         public uint[][] ApplicableOpNumTargetViewsMinus1 { get { return applicable_op_num_target_views_minus1; } set { applicable_op_num_target_views_minus1 = value; } }
         private uint[][][] applicable_op_target_view_id;
         public uint[][][] ApplicableOpTargetViewId { get { return applicable_op_target_view_id; } set { applicable_op_target_view_id = value; } }
-        private uint[][][] applicable_op_depth_flag;
-        public uint[][][] ApplicableOpDepthFlag { get { return applicable_op_depth_flag; } set { applicable_op_depth_flag = value; } }
-        private uint[][][] applicable_op_texture_flag;
-        public uint[][][] ApplicableOpTextureFlag { get { return applicable_op_texture_flag; } set { applicable_op_texture_flag = value; } }
+        private byte[][][] applicable_op_depth_flag;
+        public byte[][][] ApplicableOpDepthFlag { get { return applicable_op_depth_flag; } set { applicable_op_depth_flag = value; } }
+        private byte[][][] applicable_op_texture_flag;
+        public byte[][][] ApplicableOpTextureFlag { get { return applicable_op_texture_flag; } set { applicable_op_texture_flag = value; } }
         private uint[][] applicable_op_num_texture_views_minus1;
         public uint[][] ApplicableOpNumTextureViewsMinus1 { get { return applicable_op_num_texture_views_minus1; } set { applicable_op_num_texture_views_minus1 = value; } }
         private uint[][] applicable_op_num_depth_views;
         public uint[][] ApplicableOpNumDepthViews { get { return applicable_op_num_depth_views; } set { applicable_op_num_depth_views = value; } }
-        private uint mvcd_vui_parameters_present_flag;
-        public uint MvcdVuiParametersPresentFlag { get { return mvcd_vui_parameters_present_flag; } set { mvcd_vui_parameters_present_flag = value; } }
+        private byte mvcd_vui_parameters_present_flag;
+        public byte MvcdVuiParametersPresentFlag { get { return mvcd_vui_parameters_present_flag; } set { mvcd_vui_parameters_present_flag = value; } }
         private MvcdVuiParametersExtension mvcd_vui_parameters_extension;
         public MvcdVuiParametersExtension MvcdVuiParametersExtension { get { return mvcd_vui_parameters_extension; } set { mvcd_vui_parameters_extension = value; } }
-        private uint texture_vui_parameters_present_flag;
-        public uint TextureVuiParametersPresentFlag { get { return texture_vui_parameters_present_flag; } set { texture_vui_parameters_present_flag = value; } }
+        private byte texture_vui_parameters_present_flag;
+        public byte TextureVuiParametersPresentFlag { get { return texture_vui_parameters_present_flag; } set { texture_vui_parameters_present_flag = value; } }
         private MvcVuiParametersExtension mvc_vui_parameters_extension;
         public MvcVuiParametersExtension MvcVuiParametersExtension { get { return mvc_vui_parameters_extension; } set { mvc_vui_parameters_extension = value; } }
 
@@ -22515,8 +22513,8 @@ seq_parameter_set_mvcd_extension() {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1);
 
             this.view_id = new uint[num_views_minus1];
-            this.depth_view_present_flag = new uint[num_views_minus1];
-            this.texture_view_present_flag = new uint[num_views_minus1];
+            this.depth_view_present_flag = new byte[num_views_minus1];
+            this.texture_view_present_flag = new byte[num_views_minus1];
             for (i = 0, NumDepthViews = 0; i <= num_views_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i]);
@@ -22584,8 +22582,8 @@ seq_parameter_set_mvcd_extension() {
             this.applicable_op_temporal_id = new uint[num_level_values_signalled_minus1][];
             this.applicable_op_num_target_views_minus1 = new uint[num_level_values_signalled_minus1][];
             this.applicable_op_target_view_id = new uint[num_level_values_signalled_minus1][][];
-            this.applicable_op_depth_flag = new uint[num_level_values_signalled_minus1][][];
-            this.applicable_op_texture_flag = new uint[num_level_values_signalled_minus1][][];
+            this.applicable_op_depth_flag = new byte[num_level_values_signalled_minus1][][];
+            this.applicable_op_texture_flag = new byte[num_level_values_signalled_minus1][][];
             this.applicable_op_num_texture_views_minus1 = new uint[num_level_values_signalled_minus1][];
             this.applicable_op_num_depth_views = new uint[num_level_values_signalled_minus1][];
             for (i = 0; i <= num_level_values_signalled_minus1; i++)
@@ -22596,8 +22594,8 @@ seq_parameter_set_mvcd_extension() {
                 this.applicable_op_temporal_id[i] = new uint[num_applicable_ops_minus1[i]];
                 this.applicable_op_num_target_views_minus1[i] = new uint[num_applicable_ops_minus1[i]];
                 this.applicable_op_target_view_id[i] = new uint[num_applicable_ops_minus1[i]][];
-                this.applicable_op_depth_flag[i] = new uint[num_applicable_ops_minus1[i]][];
-                this.applicable_op_texture_flag[i] = new uint[num_applicable_ops_minus1[i]][];
+                this.applicable_op_depth_flag[i] = new byte[num_applicable_ops_minus1[i]][];
+                this.applicable_op_texture_flag[i] = new byte[num_applicable_ops_minus1[i]][];
                 this.applicable_op_num_texture_views_minus1[i] = new uint[num_applicable_ops_minus1[i]];
                 this.applicable_op_num_depth_views[i] = new uint[num_applicable_ops_minus1[i]];
                 for (j = 0; j <= num_applicable_ops_minus1[i]; j++)
@@ -22606,8 +22604,8 @@ seq_parameter_set_mvcd_extension() {
                     size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_target_views_minus1[i][j]);
 
                     this.applicable_op_target_view_id[i][j] = new uint[applicable_op_num_target_views_minus1[i][j]];
-                    this.applicable_op_depth_flag[i][j] = new uint[applicable_op_num_target_views_minus1[i][j]];
-                    this.applicable_op_texture_flag[i][j] = new uint[applicable_op_num_target_views_minus1[i][j]];
+                    this.applicable_op_depth_flag[i][j] = new byte[applicable_op_num_target_views_minus1[i][j]];
+                    this.applicable_op_texture_flag[i][j] = new byte[applicable_op_num_target_views_minus1[i][j]];
                     for (k = 0; k <= applicable_op_num_target_views_minus1[i][j];
     k++)
                     {
@@ -22913,18 +22911,18 @@ priority_id[ i ] 5 u(5)
         public uint[][] ViewId { get { return view_id; } set { view_id = value; } }
         private MvcdOpViewInfo mvcd_op_view_info;
         public MvcdOpViewInfo MvcdOpViewInfo { get { return mvcd_op_view_info; } set { mvcd_op_view_info = value; } }
-        private uint[] profile_level_info_present_flag;
-        public uint[] ProfileLevelInfoPresentFlag { get { return profile_level_info_present_flag; } set { profile_level_info_present_flag = value; } }
-        private uint[] bitrate_info_present_flag;
-        public uint[] BitrateInfoPresentFlag { get { return bitrate_info_present_flag; } set { bitrate_info_present_flag = value; } }
-        private uint[] frm_rate_info_present_flag;
-        public uint[] FrmRateInfoPresentFlag { get { return frm_rate_info_present_flag; } set { frm_rate_info_present_flag = value; } }
-        private uint[] view_dependency_info_present_flag;
-        public uint[] ViewDependencyInfoPresentFlag { get { return view_dependency_info_present_flag; } set { view_dependency_info_present_flag = value; } }
-        private uint[] parameter_sets_info_present_flag;
-        public uint[] ParameterSetsInfoPresentFlag { get { return parameter_sets_info_present_flag; } set { parameter_sets_info_present_flag = value; } }
-        private uint[] bitstream_restriction_info_present_flag;
-        public uint[] BitstreamRestrictionInfoPresentFlag { get { return bitstream_restriction_info_present_flag; } set { bitstream_restriction_info_present_flag = value; } }
+        private byte[] profile_level_info_present_flag;
+        public byte[] ProfileLevelInfoPresentFlag { get { return profile_level_info_present_flag; } set { profile_level_info_present_flag = value; } }
+        private byte[] bitrate_info_present_flag;
+        public byte[] BitrateInfoPresentFlag { get { return bitrate_info_present_flag; } set { bitrate_info_present_flag = value; } }
+        private byte[] frm_rate_info_present_flag;
+        public byte[] FrmRateInfoPresentFlag { get { return frm_rate_info_present_flag; } set { frm_rate_info_present_flag = value; } }
+        private byte[] view_dependency_info_present_flag;
+        public byte[] ViewDependencyInfoPresentFlag { get { return view_dependency_info_present_flag; } set { view_dependency_info_present_flag = value; } }
+        private byte[] parameter_sets_info_present_flag;
+        public byte[] ParameterSetsInfoPresentFlag { get { return parameter_sets_info_present_flag; } set { parameter_sets_info_present_flag = value; } }
+        private byte[] bitstream_restriction_info_present_flag;
+        public byte[] BitstreamRestrictionInfoPresentFlag { get { return bitstream_restriction_info_present_flag; } set { bitstream_restriction_info_present_flag = value; } }
         private uint[] op_profile_level_idc;
         public uint[] OpProfileLevelIdc { get { return op_profile_level_idc; } set { op_profile_level_idc = value; } }
         private uint[] avg_bitrate;
@@ -22957,8 +22955,8 @@ priority_id[ i ] 5 u(5)
         public uint[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
         private uint[] parameter_sets_info_src_op_id;
         public uint[] ParameterSetsInfoSrcOpId { get { return parameter_sets_info_src_op_id; } set { parameter_sets_info_src_op_id = value; } }
-        private uint[] motion_vectors_over_pic_boundaries_flag;
-        public uint[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
+        private byte[] motion_vectors_over_pic_boundaries_flag;
+        public byte[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
         private uint[] max_bytes_per_pic_denom;
         public uint[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
         private uint[] max_bits_per_mb_denom;
@@ -22992,12 +22990,12 @@ priority_id[ i ] 5 u(5)
             this.temporal_id = new uint[num_operation_points_minus1];
             this.num_target_output_views_minus1 = new uint[num_operation_points_minus1];
             this.view_id = new uint[num_operation_points_minus1][];
-            this.profile_level_info_present_flag = new uint[num_operation_points_minus1];
-            this.bitrate_info_present_flag = new uint[num_operation_points_minus1];
-            this.frm_rate_info_present_flag = new uint[num_operation_points_minus1];
-            this.view_dependency_info_present_flag = new uint[num_operation_points_minus1];
-            this.parameter_sets_info_present_flag = new uint[num_operation_points_minus1];
-            this.bitstream_restriction_info_present_flag = new uint[num_operation_points_minus1];
+            this.profile_level_info_present_flag = new byte[num_operation_points_minus1];
+            this.bitrate_info_present_flag = new byte[num_operation_points_minus1];
+            this.frm_rate_info_present_flag = new byte[num_operation_points_minus1];
+            this.view_dependency_info_present_flag = new byte[num_operation_points_minus1];
+            this.parameter_sets_info_present_flag = new byte[num_operation_points_minus1];
+            this.bitstream_restriction_info_present_flag = new byte[num_operation_points_minus1];
             this.op_profile_level_idc = new uint[num_operation_points_minus1];
             this.avg_bitrate = new uint[num_operation_points_minus1];
             this.max_bitrate = new uint[num_operation_points_minus1];
@@ -23014,7 +23012,7 @@ priority_id[ i ] 5 u(5)
             this.num_pic_parameter_set_minus1 = new uint[num_operation_points_minus1];
             this.pic_parameter_set_id_delta = new uint[num_operation_points_minus1][];
             this.parameter_sets_info_src_op_id = new uint[num_operation_points_minus1];
-            this.motion_vectors_over_pic_boundaries_flag = new uint[num_operation_points_minus1];
+            this.motion_vectors_over_pic_boundaries_flag = new byte[num_operation_points_minus1];
             this.max_bytes_per_pic_denom = new uint[num_operation_points_minus1];
             this.max_bits_per_mb_denom = new uint[num_operation_points_minus1];
             this.log2_max_mv_length_horizontal = new uint[num_operation_points_minus1];
@@ -23349,14 +23347,14 @@ mvcd_op_view_info() {
     */
     public class MvcdOpViewInfo : IItuSerializable
     {
-        private uint view_info_depth_view_present_flag;
-        public uint ViewInfoDepthViewPresentFlag { get { return view_info_depth_view_present_flag; } set { view_info_depth_view_present_flag = value; } }
-        private uint mvcd_depth_view_flag;
-        public uint MvcdDepthViewFlag { get { return mvcd_depth_view_flag; } set { mvcd_depth_view_flag = value; } }
-        private uint view_info_texture_view_present_flag;
-        public uint ViewInfoTextureViewPresentFlag { get { return view_info_texture_view_present_flag; } set { view_info_texture_view_present_flag = value; } }
-        private uint mvcd_texture_view_flag;
-        public uint MvcdTextureViewFlag { get { return mvcd_texture_view_flag; } set { mvcd_texture_view_flag = value; } }
+        private byte view_info_depth_view_present_flag;
+        public byte ViewInfoDepthViewPresentFlag { get { return view_info_depth_view_present_flag; } set { view_info_depth_view_present_flag = value; } }
+        private byte mvcd_depth_view_flag;
+        public byte MvcdDepthViewFlag { get { return mvcd_depth_view_flag; } set { mvcd_depth_view_flag = value; } }
+        private byte view_info_texture_view_present_flag;
+        public byte ViewInfoTextureViewPresentFlag { get { return view_info_texture_view_present_flag; } set { view_info_texture_view_present_flag = value; } }
+        private byte mvcd_texture_view_flag;
+        public byte MvcdTextureViewFlag { get { return mvcd_texture_view_flag; } set { mvcd_texture_view_flag = value; } }
 
         public MvcdOpViewInfo()
         {
@@ -23458,26 +23456,26 @@ mvcd_scalable_nesting( payloadSize ) {
     */
     public class MvcdScalableNesting : IItuSerializable
     {
-        private uint operation_point_flag;
-        public uint OperationPointFlag { get { return operation_point_flag; } set { operation_point_flag = value; } }
-        private uint all_view_components_in_au_flag;
-        public uint AllViewComponentsInAuFlag { get { return all_view_components_in_au_flag; } set { all_view_components_in_au_flag = value; } }
+        private byte operation_point_flag;
+        public byte OperationPointFlag { get { return operation_point_flag; } set { operation_point_flag = value; } }
+        private byte all_view_components_in_au_flag;
+        public byte AllViewComponentsInAuFlag { get { return all_view_components_in_au_flag; } set { all_view_components_in_au_flag = value; } }
         private uint num_view_components_minus1;
         public uint NumViewComponentsMinus1 { get { return num_view_components_minus1; } set { num_view_components_minus1 = value; } }
         private uint[] sei_view_id;
         public uint[] SeiViewId { get { return sei_view_id; } set { sei_view_id = value; } }
-        private uint[] sei_view_applicability_flag;
-        public uint[] SeiViewApplicabilityFlag { get { return sei_view_applicability_flag; } set { sei_view_applicability_flag = value; } }
-        private uint sei_op_texture_only_flag;
-        public uint SeiOpTextureOnlyFlag { get { return sei_op_texture_only_flag; } set { sei_op_texture_only_flag = value; } }
+        private byte[] sei_view_applicability_flag;
+        public byte[] SeiViewApplicabilityFlag { get { return sei_view_applicability_flag; } set { sei_view_applicability_flag = value; } }
+        private byte sei_op_texture_only_flag;
+        public byte SeiOpTextureOnlyFlag { get { return sei_op_texture_only_flag; } set { sei_op_texture_only_flag = value; } }
         private uint num_view_components_op_minus1;
         public uint NumViewComponentsOpMinus1 { get { return num_view_components_op_minus1; } set { num_view_components_op_minus1 = value; } }
         private uint[] sei_op_view_id;
         public uint[] SeiOpViewId { get { return sei_op_view_id; } set { sei_op_view_id = value; } }
-        private uint[] sei_op_depth_flag;
-        public uint[] SeiOpDepthFlag { get { return sei_op_depth_flag; } set { sei_op_depth_flag = value; } }
-        private uint[] sei_op_texture_flag;
-        public uint[] SeiOpTextureFlag { get { return sei_op_texture_flag; } set { sei_op_texture_flag = value; } }
+        private byte[] sei_op_depth_flag;
+        public byte[] SeiOpDepthFlag { get { return sei_op_depth_flag; } set { sei_op_depth_flag = value; } }
+        private byte[] sei_op_texture_flag;
+        public byte[] SeiOpTextureFlag { get { return sei_op_texture_flag; } set { sei_op_texture_flag = value; } }
         private uint sei_op_temporal_id;
         public uint SeiOpTemporalId { get { return sei_op_temporal_id; } set { sei_op_temporal_id = value; } }
         private uint sei_nesting_zero_bit;
@@ -23508,7 +23506,7 @@ mvcd_scalable_nesting( payloadSize ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_minus1);
 
                     this.sei_view_id = new uint[num_view_components_minus1];
-                    this.sei_view_applicability_flag = new uint[num_view_components_minus1];
+                    this.sei_view_applicability_flag = new byte[num_view_components_minus1];
                     for (i = 0; i <= num_view_components_minus1; i++)
                     {
                         size += stream.ReadUnsignedInt(size, 10, out this.sei_view_id[i]);
@@ -23522,8 +23520,8 @@ mvcd_scalable_nesting( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1);
 
                 this.sei_op_view_id = new uint[num_view_components_op_minus1];
-                this.sei_op_depth_flag = new uint[num_view_components_op_minus1];
-                this.sei_op_texture_flag = new uint[num_view_components_op_minus1];
+                this.sei_op_depth_flag = new byte[num_view_components_op_minus1];
+                this.sei_op_texture_flag = new byte[num_view_components_op_minus1];
                 for (i = 0; i <= num_view_components_op_minus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 10, out this.sei_op_view_id[i]);
@@ -23698,22 +23696,22 @@ depth_representation_info( payloadSize ) {
     */
     public class DepthRepresentationInfo : IItuSerializable
     {
-        private uint all_views_equal_flag;
-        public uint AllViewsEqualFlag { get { return all_views_equal_flag; } set { all_views_equal_flag = value; } }
+        private byte all_views_equal_flag;
+        public byte AllViewsEqualFlag { get { return all_views_equal_flag; } set { all_views_equal_flag = value; } }
         private uint num_views_minus1;
         public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
-        private uint z_near_flag;
-        public uint zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
-        private uint z_far_flag;
-        public uint zFarFlag { get { return z_far_flag; } set { z_far_flag = value; } }
-        private uint z_axis_equal_flag;
-        public uint zAxisEqualFlag { get { return z_axis_equal_flag; } set { z_axis_equal_flag = value; } }
+        private byte z_near_flag;
+        public byte zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
+        private byte z_far_flag;
+        public byte zFarFlag { get { return z_far_flag; } set { z_far_flag = value; } }
+        private byte z_axis_equal_flag;
+        public byte zAxisEqualFlag { get { return z_axis_equal_flag; } set { z_axis_equal_flag = value; } }
         private uint common_z_axis_reference_view;
         public uint CommonzAxisReferenceView { get { return common_z_axis_reference_view; } set { common_z_axis_reference_view = value; } }
-        private uint d_min_flag;
-        public uint dMinFlag { get { return d_min_flag; } set { d_min_flag = value; } }
-        private uint d_max_flag;
-        public uint dMaxFlag { get { return d_max_flag; } set { d_max_flag = value; } }
+        private byte d_min_flag;
+        public byte dMinFlag { get { return d_min_flag; } set { d_min_flag = value; } }
+        private byte d_max_flag;
+        public byte dMaxFlag { get { return d_max_flag; } set { d_max_flag = value; } }
         private uint depth_representation_type;
         public uint DepthRepresentationType { get { return depth_representation_type; } set { depth_representation_type = value; } }
         private uint[] depth_info_view_id;
@@ -23998,8 +23996,8 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
     */
     public class DepthRepresentationSeiElement : IItuSerializable
     {
-        private uint da_sign_flag;
-        public uint DaSignFlag { get { return da_sign_flag; } set { da_sign_flag = value; } }
+        private byte da_sign_flag;
+        public byte DaSignFlag { get { return da_sign_flag; } set { da_sign_flag = value; } }
         private uint da_exponent;
         public uint DaExponent { get { return da_exponent; } set { da_exponent = value; } }
         private uint da_mantissa_len_minus1;
@@ -24094,8 +24092,8 @@ three_dimensional_reference_displays_info( payloadSize ) {
         public uint PrecRefBaseline { get { return prec_ref_baseline; } set { prec_ref_baseline = value; } }
         private uint prec_ref_display_width;
         public uint PrecRefDisplayWidth { get { return prec_ref_display_width; } set { prec_ref_display_width = value; } }
-        private uint ref_viewing_distance_flag;
-        public uint RefViewingDistanceFlag { get { return ref_viewing_distance_flag; } set { ref_viewing_distance_flag = value; } }
+        private byte ref_viewing_distance_flag;
+        public byte RefViewingDistanceFlag { get { return ref_viewing_distance_flag; } set { ref_viewing_distance_flag = value; } }
         private uint prec_ref_viewing_dist;
         public uint PrecRefViewingDist { get { return prec_ref_viewing_dist; } set { prec_ref_viewing_dist = value; } }
         private uint num_ref_displays_minus1;
@@ -24112,12 +24110,12 @@ three_dimensional_reference_displays_info( payloadSize ) {
         public uint[] ExponentRefViewingDistance { get { return exponent_ref_viewing_distance; } set { exponent_ref_viewing_distance = value; } }
         private uint[] mantissa_ref_viewing_distance;
         public uint[] MantissaRefViewingDistance { get { return mantissa_ref_viewing_distance; } set { mantissa_ref_viewing_distance = value; } }
-        private uint[] additional_shift_present_flag;
-        public uint[] AdditionalShiftPresentFlag { get { return additional_shift_present_flag; } set { additional_shift_present_flag = value; } }
+        private byte[] additional_shift_present_flag;
+        public byte[] AdditionalShiftPresentFlag { get { return additional_shift_present_flag; } set { additional_shift_present_flag = value; } }
         private uint[] num_sample_shift_plus512;
         public uint[] NumSampleShiftPlus512 { get { return num_sample_shift_plus512; } set { num_sample_shift_plus512 = value; } }
-        private uint three_dimensional_reference_displays_extension_flag;
-        public uint ThreeDimensionalReferenceDisplaysExtensionFlag { get { return three_dimensional_reference_displays_extension_flag; } set { three_dimensional_reference_displays_extension_flag = value; } }
+        private byte three_dimensional_reference_displays_extension_flag;
+        public byte ThreeDimensionalReferenceDisplaysExtensionFlag { get { return three_dimensional_reference_displays_extension_flag; } set { three_dimensional_reference_displays_extension_flag = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
@@ -24149,7 +24147,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
             this.mantissa_ref_display_width = new uint[numRefDisplays];
             this.exponent_ref_viewing_distance = new uint[numRefDisplays];
             this.mantissa_ref_viewing_distance = new uint[numRefDisplays];
-            this.additional_shift_present_flag = new uint[numRefDisplays];
+            this.additional_shift_present_flag = new byte[numRefDisplays];
             this.num_sample_shift_plus512 = new uint[numRefDisplays];
             for (i = 0; i < numRefDisplays; i++)
             {
@@ -24273,8 +24271,8 @@ depth_timing( payloadSize ) {
     */
     public class DepthTiming : IItuSerializable
     {
-        private uint per_view_depth_timing_flag;
-        public uint PerViewDepthTimingFlag { get { return per_view_depth_timing_flag; } set { per_view_depth_timing_flag = value; } }
+        private byte per_view_depth_timing_flag;
+        public byte PerViewDepthTimingFlag { get { return per_view_depth_timing_flag; } set { per_view_depth_timing_flag = value; } }
         private DepthTimingOffset depth_timing_offset;
         public DepthTimingOffset DepthTimingOffset { get { return depth_timing_offset; } set { depth_timing_offset = value; } }
         private uint payloadSize;
@@ -24295,7 +24293,7 @@ depth_timing( payloadSize ) {
             if (per_view_depth_timing_flag != 0)
             {
 
-                for (i = 0; i < NumDepthViews; i++)
+                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
                     size += stream.ReadClass<DepthTimingOffset>(size, out this.depth_timing_offset);
                 }
@@ -24318,7 +24316,7 @@ depth_timing( payloadSize ) {
             if (per_view_depth_timing_flag != 0)
             {
 
-                for (i = 0; i < NumDepthViews; i++)
+                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
                     size += stream.WriteClass<DepthTimingOffset>(this.depth_timing_offset);
                 }
@@ -24341,7 +24339,7 @@ depth_timing( payloadSize ) {
             if (per_view_depth_timing_flag != 0)
             {
 
-                for (i = 0; i < NumDepthViews; i++)
+                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
                     size += ItuStream.CalculateClassSize<DepthTimingOffset>(depth_timing_offset); // depth_timing_offset
                 }
@@ -24482,26 +24480,26 @@ alternative_depth_info( payloadSize ) {
         public uint DepthType { get { return depth_type; } set { depth_type = value; } }
         private uint num_constituent_views_gvd_minus1;
         public uint NumConstituentViewsGvdMinus1 { get { return num_constituent_views_gvd_minus1; } set { num_constituent_views_gvd_minus1 = value; } }
-        private uint depth_present_gvd_flag;
-        public uint DepthPresentGvdFlag { get { return depth_present_gvd_flag; } set { depth_present_gvd_flag = value; } }
-        private uint z_gvd_flag;
-        public uint zGvdFlag { get { return z_gvd_flag; } set { z_gvd_flag = value; } }
-        private uint intrinsic_param_gvd_flag;
-        public uint IntrinsicParamGvdFlag { get { return intrinsic_param_gvd_flag; } set { intrinsic_param_gvd_flag = value; } }
-        private uint rotation_gvd_flag;
-        public uint RotationGvdFlag { get { return rotation_gvd_flag; } set { rotation_gvd_flag = value; } }
-        private uint translation_gvd_flag;
-        public uint TranslationGvdFlag { get { return translation_gvd_flag; } set { translation_gvd_flag = value; } }
-        private uint[] sign_gvd_z_near_flag;
-        public uint[] SignGvdzNearFlag { get { return sign_gvd_z_near_flag; } set { sign_gvd_z_near_flag = value; } }
+        private byte depth_present_gvd_flag;
+        public byte DepthPresentGvdFlag { get { return depth_present_gvd_flag; } set { depth_present_gvd_flag = value; } }
+        private byte z_gvd_flag;
+        public byte zGvdFlag { get { return z_gvd_flag; } set { z_gvd_flag = value; } }
+        private byte intrinsic_param_gvd_flag;
+        public byte IntrinsicParamGvdFlag { get { return intrinsic_param_gvd_flag; } set { intrinsic_param_gvd_flag = value; } }
+        private byte rotation_gvd_flag;
+        public byte RotationGvdFlag { get { return rotation_gvd_flag; } set { rotation_gvd_flag = value; } }
+        private byte translation_gvd_flag;
+        public byte TranslationGvdFlag { get { return translation_gvd_flag; } set { translation_gvd_flag = value; } }
+        private byte[] sign_gvd_z_near_flag;
+        public byte[] SignGvdzNearFlag { get { return sign_gvd_z_near_flag; } set { sign_gvd_z_near_flag = value; } }
         private uint[] exp_gvd_z_near;
         public uint[] ExpGvdzNear { get { return exp_gvd_z_near; } set { exp_gvd_z_near = value; } }
         private uint[] man_len_gvd_z_near_minus1;
         public uint[] ManLenGvdzNearMinus1 { get { return man_len_gvd_z_near_minus1; } set { man_len_gvd_z_near_minus1 = value; } }
         private uint[] man_gvd_z_near;
         public uint[] ManGvdzNear { get { return man_gvd_z_near; } set { man_gvd_z_near = value; } }
-        private uint[] sign_gvd_z_far_flag;
-        public uint[] SignGvdzFarFlag { get { return sign_gvd_z_far_flag; } set { sign_gvd_z_far_flag = value; } }
+        private byte[] sign_gvd_z_far_flag;
+        public byte[] SignGvdzFarFlag { get { return sign_gvd_z_far_flag; } set { sign_gvd_z_far_flag = value; } }
         private uint[] exp_gvd_z_far;
         public uint[] ExpGvdzFar { get { return exp_gvd_z_far; } set { exp_gvd_z_far = value; } }
         private uint[] man_len_gvd_z_far_minus1;
@@ -24516,38 +24514,38 @@ alternative_depth_info( payloadSize ) {
         public uint PrecGvdRotationParam { get { return prec_gvd_rotation_param; } set { prec_gvd_rotation_param = value; } }
         private uint prec_gvd_translation_param;
         public uint PrecGvdTranslationParam { get { return prec_gvd_translation_param; } set { prec_gvd_translation_param = value; } }
-        private uint[] sign_gvd_focal_length_x;
-        public uint[] SignGvdFocalLengthx { get { return sign_gvd_focal_length_x; } set { sign_gvd_focal_length_x = value; } }
+        private byte[] sign_gvd_focal_length_x;
+        public byte[] SignGvdFocalLengthx { get { return sign_gvd_focal_length_x; } set { sign_gvd_focal_length_x = value; } }
         private uint[] exp_gvd_focal_length_x;
         public uint[] ExpGvdFocalLengthx { get { return exp_gvd_focal_length_x; } set { exp_gvd_focal_length_x = value; } }
         private uint[] man_gvd_focal_length_x;
         public uint[] ManGvdFocalLengthx { get { return man_gvd_focal_length_x; } set { man_gvd_focal_length_x = value; } }
-        private uint[] sign_gvd_focal_length_y;
-        public uint[] SignGvdFocalLengthy { get { return sign_gvd_focal_length_y; } set { sign_gvd_focal_length_y = value; } }
+        private byte[] sign_gvd_focal_length_y;
+        public byte[] SignGvdFocalLengthy { get { return sign_gvd_focal_length_y; } set { sign_gvd_focal_length_y = value; } }
         private uint[] exp_gvd_focal_length_y;
         public uint[] ExpGvdFocalLengthy { get { return exp_gvd_focal_length_y; } set { exp_gvd_focal_length_y = value; } }
         private uint[] man_gvd_focal_length_y;
         public uint[] ManGvdFocalLengthy { get { return man_gvd_focal_length_y; } set { man_gvd_focal_length_y = value; } }
-        private uint[] sign_gvd_principal_point_x;
-        public uint[] SignGvdPrincipalPointx { get { return sign_gvd_principal_point_x; } set { sign_gvd_principal_point_x = value; } }
+        private byte[] sign_gvd_principal_point_x;
+        public byte[] SignGvdPrincipalPointx { get { return sign_gvd_principal_point_x; } set { sign_gvd_principal_point_x = value; } }
         private uint[] exp_gvd_principal_point_x;
         public uint[] ExpGvdPrincipalPointx { get { return exp_gvd_principal_point_x; } set { exp_gvd_principal_point_x = value; } }
         private uint[] man_gvd_principal_point_x;
         public uint[] ManGvdPrincipalPointx { get { return man_gvd_principal_point_x; } set { man_gvd_principal_point_x = value; } }
-        private uint[] sign_gvd_principal_point_y;
-        public uint[] SignGvdPrincipalPointy { get { return sign_gvd_principal_point_y; } set { sign_gvd_principal_point_y = value; } }
+        private byte[] sign_gvd_principal_point_y;
+        public byte[] SignGvdPrincipalPointy { get { return sign_gvd_principal_point_y; } set { sign_gvd_principal_point_y = value; } }
         private uint[] exp_gvd_principal_point_y;
         public uint[] ExpGvdPrincipalPointy { get { return exp_gvd_principal_point_y; } set { exp_gvd_principal_point_y = value; } }
         private uint[] man_gvd_principal_point_y;
         public uint[] ManGvdPrincipalPointy { get { return man_gvd_principal_point_y; } set { man_gvd_principal_point_y = value; } }
-        private uint[][][] sign_gvd_r;
-        public uint[][][] SignGvdr { get { return sign_gvd_r; } set { sign_gvd_r = value; } }
+        private byte[][][] sign_gvd_r;
+        public byte[][][] SignGvdr { get { return sign_gvd_r; } set { sign_gvd_r = value; } }
         private uint[][][] exp_gvd_r;
         public uint[][][] ExpGvdr { get { return exp_gvd_r; } set { exp_gvd_r = value; } }
         private uint[][][] man_gvd_r;
         public uint[][][] ManGvdr { get { return man_gvd_r; } set { man_gvd_r = value; } }
-        private uint[] sign_gvd_t_x;
-        public uint[] SignGvdtx { get { return sign_gvd_t_x; } set { sign_gvd_t_x = value; } }
+        private byte[] sign_gvd_t_x;
+        public byte[] SignGvdtx { get { return sign_gvd_t_x; } set { sign_gvd_t_x = value; } }
         private uint[] exp_gvd_t_x;
         public uint[] ExpGvdtx { get { return exp_gvd_t_x; } set { exp_gvd_t_x = value; } }
         private uint[] man_gvd_t_x;
@@ -24581,11 +24579,11 @@ alternative_depth_info( payloadSize ) {
                 if (z_gvd_flag != 0)
                 {
 
-                    this.sign_gvd_z_near_flag = new uint[num_constituent_views_gvd_minus1 + 1];
+                    this.sign_gvd_z_near_flag = new byte[num_constituent_views_gvd_minus1 + 1];
                     this.exp_gvd_z_near = new uint[num_constituent_views_gvd_minus1 + 1];
                     this.man_len_gvd_z_near_minus1 = new uint[num_constituent_views_gvd_minus1 + 1];
                     this.man_gvd_z_near = new uint[num_constituent_views_gvd_minus1 + 1];
-                    this.sign_gvd_z_far_flag = new uint[num_constituent_views_gvd_minus1 + 1];
+                    this.sign_gvd_z_far_flag = new byte[num_constituent_views_gvd_minus1 + 1];
                     this.exp_gvd_z_far = new uint[num_constituent_views_gvd_minus1 + 1];
                     this.man_len_gvd_z_far_minus1 = new uint[num_constituent_views_gvd_minus1 + 1];
                     this.man_gvd_z_far = new uint[num_constituent_views_gvd_minus1 + 1];
@@ -24618,22 +24616,22 @@ alternative_depth_info( payloadSize ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_translation_param);
                 }
 
-                this.sign_gvd_focal_length_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_focal_length_x = new byte[num_constituent_views_gvd_minus1 + 1];
                 this.exp_gvd_focal_length_x = new uint[num_constituent_views_gvd_minus1 + 1];
                 this.man_gvd_focal_length_x = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.sign_gvd_focal_length_y = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_focal_length_y = new byte[num_constituent_views_gvd_minus1 + 1];
                 this.exp_gvd_focal_length_y = new uint[num_constituent_views_gvd_minus1 + 1];
                 this.man_gvd_focal_length_y = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.sign_gvd_principal_point_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_principal_point_x = new byte[num_constituent_views_gvd_minus1 + 1];
                 this.exp_gvd_principal_point_x = new uint[num_constituent_views_gvd_minus1 + 1];
                 this.man_gvd_principal_point_x = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.sign_gvd_principal_point_y = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_principal_point_y = new byte[num_constituent_views_gvd_minus1 + 1];
                 this.exp_gvd_principal_point_y = new uint[num_constituent_views_gvd_minus1 + 1];
                 this.man_gvd_principal_point_y = new uint[num_constituent_views_gvd_minus1 + 1];
-                this.sign_gvd_r = new uint[num_constituent_views_gvd_minus1 + 1][][];
+                this.sign_gvd_r = new byte[num_constituent_views_gvd_minus1 + 1][][];
                 this.exp_gvd_r = new uint[num_constituent_views_gvd_minus1 + 1][][];
                 this.man_gvd_r = new uint[num_constituent_views_gvd_minus1 + 1][][];
-                this.sign_gvd_t_x = new uint[num_constituent_views_gvd_minus1 + 1];
+                this.sign_gvd_t_x = new byte[num_constituent_views_gvd_minus1 + 1];
                 this.exp_gvd_t_x = new uint[num_constituent_views_gvd_minus1 + 1];
                 this.man_gvd_t_x = new uint[num_constituent_views_gvd_minus1 + 1];
                 for (i = 0; i <= num_constituent_views_gvd_minus1 + 1; i++)
@@ -24658,13 +24656,13 @@ alternative_depth_info( payloadSize ) {
                     if (rotation_gvd_flag != 0)
                     {
 
-                        this.sign_gvd_r[i] = new uint[3][];
+                        this.sign_gvd_r[i] = new byte[3][];
                         this.exp_gvd_r[i] = new uint[3][];
                         this.man_gvd_r[i] = new uint[3][];
                         for (j = 0; j < 3; j++)
                         {
 
-                            this.sign_gvd_r[i][j] = new uint[3];
+                            this.sign_gvd_r[i][j] = new byte[3];
                             this.exp_gvd_r[i][j] = new uint[3];
                             this.man_gvd_r[i][j] = new uint[3];
                             for (k = 0; k < 3; k++)
@@ -24917,8 +24915,8 @@ depth_sampling_info( payloadSize ) {
         public uint DttsryMul { get { return dttsr_y_mul; } set { dttsr_y_mul = value; } }
         private uint dttsr_y_dp;
         public uint DttsryDp { get { return dttsr_y_dp; } set { dttsr_y_dp = value; } }
-        private uint per_view_depth_grid_pos_flag;
-        public uint PerViewDepthGridPosFlag { get { return per_view_depth_grid_pos_flag; } set { per_view_depth_grid_pos_flag = value; } }
+        private byte per_view_depth_grid_pos_flag;
+        public byte PerViewDepthGridPosFlag { get { return per_view_depth_grid_pos_flag; } set { per_view_depth_grid_pos_flag = value; } }
         private uint num_video_plus_depth_views_minus1;
         public uint NumVideoPlusDepthViewsMinus1 { get { return num_video_plus_depth_views_minus1; } set { num_video_plus_depth_views_minus1 = value; } }
         private uint[] depth_grid_view_id;
@@ -25095,14 +25093,14 @@ depth_grid_pos_y_sign_flag 5 u(1)
         public uint DepthGridPosxFp { get { return depth_grid_pos_x_fp; } set { depth_grid_pos_x_fp = value; } }
         private uint depth_grid_pos_x_dp;
         public uint DepthGridPosxDp { get { return depth_grid_pos_x_dp; } set { depth_grid_pos_x_dp = value; } }
-        private uint depth_grid_pos_x_sign_flag;
-        public uint DepthGridPosxSignFlag { get { return depth_grid_pos_x_sign_flag; } set { depth_grid_pos_x_sign_flag = value; } }
+        private byte depth_grid_pos_x_sign_flag;
+        public byte DepthGridPosxSignFlag { get { return depth_grid_pos_x_sign_flag; } set { depth_grid_pos_x_sign_flag = value; } }
         private uint depth_grid_pos_y_fp;
         public uint DepthGridPosyFp { get { return depth_grid_pos_y_fp; } set { depth_grid_pos_y_fp = value; } }
         private uint depth_grid_pos_y_dp;
         public uint DepthGridPosyDp { get { return depth_grid_pos_y_dp; } set { depth_grid_pos_y_dp = value; } }
-        private uint depth_grid_pos_y_sign_flag;
-        public uint DepthGridPosySignFlag { get { return depth_grid_pos_y_sign_flag; } set { depth_grid_pos_y_sign_flag = value; } }
+        private byte depth_grid_pos_y_sign_flag;
+        public byte DepthGridPosySignFlag { get { return depth_grid_pos_y_sign_flag; } set { depth_grid_pos_y_sign_flag = value; } }
 
         public DepthGridPosition()
         {
@@ -25196,28 +25194,28 @@ mvcd_vui_parameters_extension() {
         public uint[] VuiMvcdNumTargetOutputViewsMinus1 { get { return vui_mvcd_num_target_output_views_minus1; } set { vui_mvcd_num_target_output_views_minus1 = value; } }
         private uint[][] vui_mvcd_view_id;
         public uint[][] VuiMvcdViewId { get { return vui_mvcd_view_id; } set { vui_mvcd_view_id = value; } }
-        private uint[][] vui_mvcd_depth_flag;
-        public uint[][] VuiMvcdDepthFlag { get { return vui_mvcd_depth_flag; } set { vui_mvcd_depth_flag = value; } }
-        private uint[][] vui_mvcd_texture_flag;
-        public uint[][] VuiMvcdTextureFlag { get { return vui_mvcd_texture_flag; } set { vui_mvcd_texture_flag = value; } }
-        private uint[] vui_mvcd_timing_info_present_flag;
-        public uint[] VuiMvcdTimingInfoPresentFlag { get { return vui_mvcd_timing_info_present_flag; } set { vui_mvcd_timing_info_present_flag = value; } }
+        private byte[][] vui_mvcd_depth_flag;
+        public byte[][] VuiMvcdDepthFlag { get { return vui_mvcd_depth_flag; } set { vui_mvcd_depth_flag = value; } }
+        private byte[][] vui_mvcd_texture_flag;
+        public byte[][] VuiMvcdTextureFlag { get { return vui_mvcd_texture_flag; } set { vui_mvcd_texture_flag = value; } }
+        private byte[] vui_mvcd_timing_info_present_flag;
+        public byte[] VuiMvcdTimingInfoPresentFlag { get { return vui_mvcd_timing_info_present_flag; } set { vui_mvcd_timing_info_present_flag = value; } }
         private uint[] vui_mvcd_num_units_in_tick;
         public uint[] VuiMvcdNumUnitsInTick { get { return vui_mvcd_num_units_in_tick; } set { vui_mvcd_num_units_in_tick = value; } }
         private uint[] vui_mvcd_time_scale;
         public uint[] VuiMvcdTimeScale { get { return vui_mvcd_time_scale; } set { vui_mvcd_time_scale = value; } }
-        private uint[] vui_mvcd_fixed_frame_rate_flag;
-        public uint[] VuiMvcdFixedFrameRateFlag { get { return vui_mvcd_fixed_frame_rate_flag; } set { vui_mvcd_fixed_frame_rate_flag = value; } }
-        private uint[] vui_mvcd_nal_hrd_parameters_present_flag;
-        public uint[] VuiMvcdNalHrdParametersPresentFlag { get { return vui_mvcd_nal_hrd_parameters_present_flag; } set { vui_mvcd_nal_hrd_parameters_present_flag = value; } }
+        private byte[] vui_mvcd_fixed_frame_rate_flag;
+        public byte[] VuiMvcdFixedFrameRateFlag { get { return vui_mvcd_fixed_frame_rate_flag; } set { vui_mvcd_fixed_frame_rate_flag = value; } }
+        private byte[] vui_mvcd_nal_hrd_parameters_present_flag;
+        public byte[] VuiMvcdNalHrdParametersPresentFlag { get { return vui_mvcd_nal_hrd_parameters_present_flag; } set { vui_mvcd_nal_hrd_parameters_present_flag = value; } }
         private HrdParameters hrd_parameters;
         public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
-        private uint[] vui_mvcd_vcl_hrd_parameters_present_flag;
-        public uint[] VuiMvcdVclHrdParametersPresentFlag { get { return vui_mvcd_vcl_hrd_parameters_present_flag; } set { vui_mvcd_vcl_hrd_parameters_present_flag = value; } }
-        private uint[] vui_mvcd_low_delay_hrd_flag;
-        public uint[] VuiMvcdLowDelayHrdFlag { get { return vui_mvcd_low_delay_hrd_flag; } set { vui_mvcd_low_delay_hrd_flag = value; } }
-        private uint[] vui_mvcd_pic_struct_present_flag;
-        public uint[] VuiMvcdPicStructPresentFlag { get { return vui_mvcd_pic_struct_present_flag; } set { vui_mvcd_pic_struct_present_flag = value; } }
+        private byte[] vui_mvcd_vcl_hrd_parameters_present_flag;
+        public byte[] VuiMvcdVclHrdParametersPresentFlag { get { return vui_mvcd_vcl_hrd_parameters_present_flag; } set { vui_mvcd_vcl_hrd_parameters_present_flag = value; } }
+        private byte[] vui_mvcd_low_delay_hrd_flag;
+        public byte[] VuiMvcdLowDelayHrdFlag { get { return vui_mvcd_low_delay_hrd_flag; } set { vui_mvcd_low_delay_hrd_flag = value; } }
+        private byte[] vui_mvcd_pic_struct_present_flag;
+        public byte[] VuiMvcdPicStructPresentFlag { get { return vui_mvcd_pic_struct_present_flag; } set { vui_mvcd_pic_struct_present_flag = value; } }
 
         public MvcdVuiParametersExtension()
         {
@@ -25235,24 +25233,24 @@ mvcd_vui_parameters_extension() {
             this.vui_mvcd_temporal_id = new uint[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_num_target_output_views_minus1 = new uint[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_view_id = new uint[vui_mvcd_num_ops_minus1][];
-            this.vui_mvcd_depth_flag = new uint[vui_mvcd_num_ops_minus1][];
-            this.vui_mvcd_texture_flag = new uint[vui_mvcd_num_ops_minus1][];
-            this.vui_mvcd_timing_info_present_flag = new uint[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_depth_flag = new byte[vui_mvcd_num_ops_minus1][];
+            this.vui_mvcd_texture_flag = new byte[vui_mvcd_num_ops_minus1][];
+            this.vui_mvcd_timing_info_present_flag = new byte[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_num_units_in_tick = new uint[vui_mvcd_num_ops_minus1];
             this.vui_mvcd_time_scale = new uint[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_fixed_frame_rate_flag = new uint[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_nal_hrd_parameters_present_flag = new uint[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_vcl_hrd_parameters_present_flag = new uint[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_low_delay_hrd_flag = new uint[vui_mvcd_num_ops_minus1];
-            this.vui_mvcd_pic_struct_present_flag = new uint[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_fixed_frame_rate_flag = new byte[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_nal_hrd_parameters_present_flag = new byte[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_vcl_hrd_parameters_present_flag = new byte[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_low_delay_hrd_flag = new byte[vui_mvcd_num_ops_minus1];
+            this.vui_mvcd_pic_struct_present_flag = new byte[vui_mvcd_num_ops_minus1];
             for (i = 0; i <= vui_mvcd_num_ops_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.vui_mvcd_temporal_id[i]);
                 size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_num_target_output_views_minus1[i]);
 
                 this.vui_mvcd_view_id[i] = new uint[vui_mvcd_num_target_output_views_minus1[i]];
-                this.vui_mvcd_depth_flag[i] = new uint[vui_mvcd_num_target_output_views_minus1[i]];
-                this.vui_mvcd_texture_flag[i] = new uint[vui_mvcd_num_target_output_views_minus1[i]];
+                this.vui_mvcd_depth_flag[i] = new byte[vui_mvcd_num_target_output_views_minus1[i]];
+                this.vui_mvcd_texture_flag[i] = new byte[vui_mvcd_num_target_output_views_minus1[i]];
                 for (j = 0; j <= vui_mvcd_num_target_output_views_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_view_id[i][j]);
@@ -25411,16 +25409,16 @@ nal_unit_header_3davc_extension() {
     {
         private uint view_idx;
         public uint ViewIdx { get { return view_idx; } set { view_idx = value; } }
-        private uint depth_flag;
-        public uint DepthFlag { get { return depth_flag; } set { depth_flag = value; } }
-        private uint non_idr_flag;
-        public uint NonIdrFlag { get { return non_idr_flag; } set { non_idr_flag = value; } }
+        private byte depth_flag;
+        public byte DepthFlag { get { return depth_flag; } set { depth_flag = value; } }
+        private byte non_idr_flag;
+        public byte NonIdrFlag { get { return non_idr_flag; } set { non_idr_flag = value; } }
         private uint temporal_id;
         public uint TemporalId { get { return temporal_id; } set { temporal_id = value; } }
-        private uint anchor_pic_flag;
-        public uint AnchorPicFlag { get { return anchor_pic_flag; } set { anchor_pic_flag = value; } }
-        private uint inter_view_flag;
-        public uint InterViewFlag { get { return inter_view_flag; } set { inter_view_flag = value; } }
+        private byte anchor_pic_flag;
+        public byte AnchorPicFlag { get { return anchor_pic_flag; } set { anchor_pic_flag = value; } }
+        private byte inter_view_flag;
+        public byte InterViewFlag { get { return inter_view_flag; } set { inter_view_flag = value; } }
 
         public NalUnitHeader3davcExtension()
         {
@@ -25542,8 +25540,8 @@ seq_parameter_set_3davc_extension() {
         public DepthRanges DepthRanges { get { return depth_ranges; } set { depth_ranges = value; } }
         private VspParam vsp_param;
         public VspParam VspParam { get { return vsp_param; } set { vsp_param = value; } }
-        private uint reduced_resolution_flag;
-        public uint ReducedResolutionFlag { get { return reduced_resolution_flag; } set { reduced_resolution_flag = value; } }
+        private byte reduced_resolution_flag;
+        public byte ReducedResolutionFlag { get { return reduced_resolution_flag; } set { reduced_resolution_flag = value; } }
         private uint depth_pic_width_in_mbs_minus1;
         public uint DepthPicWidthInMbsMinus1 { get { return depth_pic_width_in_mbs_minus1; } set { depth_pic_width_in_mbs_minus1 = value; } }
         private uint depth_pic_height_in_map_units_minus1;
@@ -25556,8 +25554,8 @@ seq_parameter_set_3davc_extension() {
         public uint DepthHorRsh { get { return depth_hor_rsh; } set { depth_hor_rsh = value; } }
         private uint depth_ver_rsh;
         public uint DepthVerRsh { get { return depth_ver_rsh; } set { depth_ver_rsh = value; } }
-        private uint depth_frame_cropping_flag;
-        public uint DepthFrameCroppingFlag { get { return depth_frame_cropping_flag; } set { depth_frame_cropping_flag = value; } }
+        private byte depth_frame_cropping_flag;
+        public byte DepthFrameCroppingFlag { get { return depth_frame_cropping_flag; } set { depth_frame_cropping_flag = value; } }
         private uint depth_frame_crop_left_offset;
         public uint DepthFrameCropLeftOffset { get { return depth_frame_crop_left_offset; } set { depth_frame_crop_left_offset = value; } }
         private uint depth_frame_crop_right_offset;
@@ -25574,14 +25572,14 @@ seq_parameter_set_3davc_extension() {
         public int[] GridPosx { get { return grid_pos_x; } set { grid_pos_x = value; } }
         private int[] grid_pos_y;
         public int[] GridPosy { get { return grid_pos_y; } set { grid_pos_y = value; } }
-        private uint slice_header_prediction_flag;
-        public uint SliceHeaderPredictionFlag { get { return slice_header_prediction_flag; } set { slice_header_prediction_flag = value; } }
-        private uint seq_view_synthesis_flag;
-        public uint SeqViewSynthesisFlag { get { return seq_view_synthesis_flag; } set { seq_view_synthesis_flag = value; } }
-        private uint alc_sps_enable_flag;
-        public uint AlcSpsEnableFlag { get { return alc_sps_enable_flag; } set { alc_sps_enable_flag = value; } }
-        private uint enable_rle_skip_flag;
-        public uint EnableRleSkipFlag { get { return enable_rle_skip_flag; } set { enable_rle_skip_flag = value; } }
+        private byte slice_header_prediction_flag;
+        public byte SliceHeaderPredictionFlag { get { return slice_header_prediction_flag; } set { slice_header_prediction_flag = value; } }
+        private byte seq_view_synthesis_flag;
+        public byte SeqViewSynthesisFlag { get { return seq_view_synthesis_flag; } set { seq_view_synthesis_flag = value; } }
+        private byte alc_sps_enable_flag;
+        public byte AlcSpsEnableFlag { get { return alc_sps_enable_flag; } set { alc_sps_enable_flag = value; } }
+        private byte enable_rle_skip_flag;
+        public byte EnableRleSkipFlag { get { return enable_rle_skip_flag; } set { enable_rle_skip_flag = value; } }
         private uint[] num_anchor_refs_l0;
         public uint[] NumAnchorRefsL0 { get { return num_anchor_refs_l0; } set { num_anchor_refs_l0 = value; } }
         private uint[][] anchor_ref_l0;
@@ -25611,12 +25609,12 @@ seq_parameter_set_3davc_extension() {
             uint i = 0;
             uint j = 0;
 
-            if (NumDepthViews > 0)
+            if (H264Helpers.GetValue("NumDepthViews") > 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.three_dv_acquisition_idc);
 
-                this.view_id_3dv = new uint[NumDepthViews];
-                for (i = 0; i < NumDepthViews; i++)
+                this.view_id_3dv = new uint[H264Helpers.GetValue("NumDepthViews")];
+                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_id_3dv[i]);
                 }
@@ -25729,11 +25727,11 @@ seq_parameter_set_3davc_extension() {
             uint i = 0;
             uint j = 0;
 
-            if (NumDepthViews > 0)
+            if (H264Helpers.GetValue("NumDepthViews") > 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.three_dv_acquisition_idc);
 
-                for (i = 0; i < NumDepthViews; i++)
+                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.view_id_3dv[i]);
                 }
@@ -25831,11 +25829,11 @@ seq_parameter_set_3davc_extension() {
             uint i = 0;
             uint j = 0;
 
-            if (NumDepthViews > 0)
+            if (H264Helpers.GetValue("NumDepthViews") > 0)
             {
                 size += ItuStream.CalculateUnsignedIntGolomb(three_dv_acquisition_idc); // three_dv_acquisition_idc
 
-                for (i = 0; i < NumDepthViews; i++)
+                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(view_id_3dv[i]); // view_id_3dv
                 }
@@ -25978,18 +25976,18 @@ depth_parameter_set_rbsp() {
         public uint NumDepthViewsMinus1 { get { return num_depth_views_minus1; } set { num_depth_views_minus1 = value; } }
         private DepthRanges depth_ranges;
         public DepthRanges DepthRanges { get { return depth_ranges; } set { depth_ranges = value; } }
-        private uint vsp_param_flag;
-        public uint VspParamFlag { get { return vsp_param_flag; } set { vsp_param_flag = value; } }
+        private byte vsp_param_flag;
+        public byte VspParamFlag { get { return vsp_param_flag; } set { vsp_param_flag = value; } }
         private VspParam vsp_param;
         public VspParam VspParam { get { return vsp_param; } set { vsp_param = value; } }
-        private uint depth_param_additional_extension_flag;
-        public uint DepthParamAdditionalExtensionFlag { get { return depth_param_additional_extension_flag; } set { depth_param_additional_extension_flag = value; } }
+        private byte depth_param_additional_extension_flag;
+        public byte DepthParamAdditionalExtensionFlag { get { return depth_param_additional_extension_flag; } set { depth_param_additional_extension_flag = value; } }
         private uint nonlinear_depth_representation_num;
         public uint NonlinearDepthRepresentationNum { get { return nonlinear_depth_representation_num; } set { nonlinear_depth_representation_num = value; } }
         private uint[] nonlinear_depth_representation_model;
         public uint[] NonlinearDepthRepresentationModel { get { return nonlinear_depth_representation_model; } set { nonlinear_depth_representation_model = value; } }
-        private uint depth_param_additional_extension_data_flag;
-        public uint DepthParamAdditionalExtensionDataFlag { get { return depth_param_additional_extension_data_flag; } set { depth_param_additional_extension_data_flag = value; } }
+        private byte depth_param_additional_extension_data_flag;
+        public byte DepthParamAdditionalExtensionDataFlag { get { return depth_param_additional_extension_data_flag; } set { depth_param_additional_extension_data_flag = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -26169,10 +26167,10 @@ depth_ranges( numViews, predDirection, index ) {
     */
     public class DepthRanges : IItuSerializable
     {
-        private uint z_near_flag;
-        public uint zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
-        private uint z_far_flag;
-        public uint zFarFlag { get { return z_far_flag; } set { z_far_flag = value; } }
+        private byte z_near_flag;
+        public byte zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
+        private byte z_far_flag;
+        public byte zFarFlag { get { return z_far_flag; } set { z_far_flag = value; } }
         private ThreeDvAcquisitionElement three_dv_acquisition_element;
         public ThreeDvAcquisitionElement ThreeDvAcquisitionElement { get { return three_dv_acquisition_element; } set { three_dv_acquisition_element = value; } }
         private uint numViews;
@@ -26266,7 +26264,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
  for( i = 0; i < numValues; i++ ) {   
   if( predDirection  ==  2  &&  i  ==  0 ) {   
    mantissa_len_minus1 11 u(5) 
-   outManLen[ index, i ] = manLen = mantissa_len_minus1 + 1   
+   outManLen[ index, i ] = mantissa_len_minus1 + 1   
   }   
   if( predDirection  ==  2 ) {   
    sign0 11 u(1) 
@@ -26313,22 +26311,22 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
     */
     public class ThreeDvAcquisitionElement : IItuSerializable
     {
-        private uint element_equal_flag;
-        public uint ElementEqualFlag { get { return element_equal_flag; } set { element_equal_flag = value; } }
+        private byte element_equal_flag;
+        public byte ElementEqualFlag { get { return element_equal_flag; } set { element_equal_flag = value; } }
         private uint mantissa_len_minus1;
         public uint MantissaLenMinus1 { get { return mantissa_len_minus1; } set { mantissa_len_minus1 = value; } }
-        private uint sign0;
-        public uint Sign0 { get { return sign0; } set { sign0 = value; } }
+        private byte sign0;
+        public byte Sign0 { get { return sign0; } set { sign0 = value; } }
         private uint exponent0;
         public uint Exponent0 { get { return exponent0; } set { exponent0 = value; } }
         private uint mantissa0;
         public uint Mantissa0 { get { return mantissa0; } set { mantissa0 = value; } }
-        private uint skip_flag;
-        public uint SkipFlag { get { return skip_flag; } set { skip_flag = value; } }
-        private uint sign1;
-        public uint Sign1 { get { return sign1; } set { sign1 = value; } }
-        private uint exponent_skip_flag;
-        public uint ExponentSkipFlag { get { return exponent_skip_flag; } set { exponent_skip_flag = value; } }
+        private byte skip_flag;
+        public byte SkipFlag { get { return skip_flag; } set { skip_flag = value; } }
+        private byte sign1;
+        public byte Sign1 { get { return sign1; } set { sign1 = value; } }
+        private byte exponent_skip_flag;
+        public byte ExponentSkipFlag { get { return exponent_skip_flag; } set { exponent_skip_flag = value; } }
         private uint exponent1;
         public uint Exponent1 { get { return exponent1; } set { exponent1 = value; } }
         private int mantissa_diff;
@@ -26394,7 +26392,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                 if (predDirection == 2 && i == 0)
                 {
                     size += stream.ReadUnsignedInt(size, 5, out this.mantissa_len_minus1);
-                    outManLen[index, i] = manLen = mantissa_len_minus1 + 1;
+                    outManLen[index, i] = mantissa_len_minus1 + 1;
                 }
 
                 if (predDirection == 2)
@@ -26429,7 +26427,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
                         if (predDirection == 0)
                         {
-                            mantissaPred = ((OutMantissa[H264Helpers.GetValue("ref_dps_id0"), i] * predWeight0 + outMantissa[H264Helpers.GetValue("ref_dps_id1"), i] * (64 - predWeight0) + 32) >> 6);
+                            mantissaPred = ((OutMantissa[H264Helpers.GetValue("ref_dps_id0"), i] * H264Helpers.GetValue("predWeight0") + outMantissa[H264Helpers.GetValue("ref_dps_id1"), i] * (64 - H264Helpers.GetValue("predWeight0")) + 32) >> 6);
                         }
                         else
                         {
@@ -26451,7 +26449,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < H264Helpers.GetValue("num_views_minus1") + 1 - deltaFlag; i++)
+                for (i = 1; i < H264Helpers.GetValue("num_views_minus1") + 1 - H264Helpers.GetValue("deltaFlag"); i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
@@ -26495,7 +26493,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                 if (predDirection == 2 && i == 0)
                 {
                     size += stream.WriteUnsignedInt(5, this.mantissa_len_minus1);
-                    outManLen[index, i] = manLen = mantissa_len_minus1 + 1;
+                    outManLen[index, i] = mantissa_len_minus1 + 1;
                 }
 
                 if (predDirection == 2)
@@ -26530,7 +26528,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
                         if (predDirection == 0)
                         {
-                            mantissaPred = ((OutMantissa[H264Helpers.GetValue("ref_dps_id0"), i] * predWeight0 + outMantissa[H264Helpers.GetValue("ref_dps_id1"), i] * (64 - predWeight0) + 32) >> 6);
+                            mantissaPred = ((OutMantissa[H264Helpers.GetValue("ref_dps_id0"), i] * H264Helpers.GetValue("predWeight0") + outMantissa[H264Helpers.GetValue("ref_dps_id1"), i] * (64 - H264Helpers.GetValue("predWeight0")) + 32) >> 6);
                         }
                         else
                         {
@@ -26552,7 +26550,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < H264Helpers.GetValue("num_views_minus1") + 1 - deltaFlag; i++)
+                for (i = 1; i < H264Helpers.GetValue("num_views_minus1") + 1 - H264Helpers.GetValue("deltaFlag"); i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
@@ -26596,7 +26594,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                 if (predDirection == 2 && i == 0)
                 {
                     size += 5; // mantissa_len_minus1
-                    outManLen[index, i] = manLen = mantissa_len_minus1 + 1;
+                    outManLen[index, i] = mantissa_len_minus1 + 1;
                 }
 
                 if (predDirection == 2)
@@ -26631,7 +26629,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
                         if (predDirection == 0)
                         {
-                            mantissaPred = ((OutMantissa[H264Helpers.GetValue("ref_dps_id0"), i] * predWeight0 + outMantissa[H264Helpers.GetValue("ref_dps_id1"), i] * (64 - predWeight0) + 32) >> 6);
+                            mantissaPred = ((OutMantissa[H264Helpers.GetValue("ref_dps_id0"), i] * H264Helpers.GetValue("predWeight0") + outMantissa[H264Helpers.GetValue("ref_dps_id1"), i] * (64 - H264Helpers.GetValue("predWeight0")) + 32) >> 6);
                         }
                         else
                         {
@@ -26653,7 +26651,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < H264Helpers.GetValue("num_views_minus1") + 1 - deltaFlag; i++)
+                for (i = 1; i < H264Helpers.GetValue("num_views_minus1") + 1 - H264Helpers.GetValue("deltaFlag"); i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
@@ -26896,8 +26894,8 @@ slice_header_in_3davc_extension() {
         public uint PreSliceHeaderSrc { get { return pre_slice_header_src; } set { pre_slice_header_src = value; } }
         private uint pre_ref_lists_src;
         public uint PreRefListsSrc { get { return pre_ref_lists_src; } set { pre_ref_lists_src = value; } }
-        private uint num_ref_idx_active_override_flag;
-        public uint NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
+        private byte num_ref_idx_active_override_flag;
+        public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
         private uint num_ref_idx_l0_active_minus1;
         public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
         private uint num_ref_idx_l1_active_minus1;
@@ -26918,10 +26916,10 @@ slice_header_in_3davc_extension() {
         public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
         private uint frame_num;
         public uint FrameNum { get { return frame_num; } set { frame_num = value; } }
-        private uint field_pic_flag;
-        public uint FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
-        private uint bottom_field_flag;
-        public uint BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
+        private byte field_pic_flag;
+        public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
+        private byte bottom_field_flag;
+        public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
         private uint idr_pic_id;
         public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
         private uint pic_order_cnt_lsb;
@@ -26932,14 +26930,14 @@ slice_header_in_3davc_extension() {
         public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
         private uint redundant_pic_cnt;
         public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
-        private uint direct_spatial_mv_pred_flag;
-        public uint DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
+        private byte direct_spatial_mv_pred_flag;
+        public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
         private RefPicListModification ref_pic_list_modification;
         public RefPicListModification RefPicListModification { get { return ref_pic_list_modification; } set { ref_pic_list_modification = value; } }
         private uint cabac_init_idc;
         public uint CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
-        private uint sp_for_switch_flag;
-        public uint SpForSwitchFlag { get { return sp_for_switch_flag; } set { sp_for_switch_flag = value; } }
+        private byte sp_for_switch_flag;
+        public byte SpForSwitchFlag { get { return sp_for_switch_flag; } set { sp_for_switch_flag = value; } }
         private int slice_qs_delta;
         public int SliceQsDelta { get { return slice_qs_delta; } set { slice_qs_delta = value; } }
         private uint disable_deblocking_filter_idc;
@@ -26950,12 +26948,12 @@ slice_header_in_3davc_extension() {
         public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
         private uint slice_group_change_cycle;
         public uint SliceGroupChangeCycle { get { return slice_group_change_cycle; } set { slice_group_change_cycle = value; } }
-        private uint depth_weighted_pred_flag;
-        public uint DepthWeightedPredFlag { get { return depth_weighted_pred_flag; } set { depth_weighted_pred_flag = value; } }
-        private uint dmvp_flag;
-        public uint DmvpFlag { get { return dmvp_flag; } set { dmvp_flag = value; } }
-        private uint slice_vsp_flag;
-        public uint SliceVspFlag { get { return slice_vsp_flag; } set { slice_vsp_flag = value; } }
+        private byte depth_weighted_pred_flag;
+        public byte DepthWeightedPredFlag { get { return depth_weighted_pred_flag; } set { depth_weighted_pred_flag = value; } }
+        private byte dmvp_flag;
+        public byte DmvpFlag { get { return dmvp_flag; } set { dmvp_flag = value; } }
+        private byte slice_vsp_flag;
+        public byte SliceVspFlag { get { return slice_vsp_flag; } set { slice_vsp_flag = value; } }
         private uint dps_id;
         public uint DpsId { get { return dps_id; } set { dps_id = value; } }
 
@@ -27650,8 +27648,8 @@ slice_data_in_3davc_extension() {
         public uint CabacAlignmentOneBit { get { return cabac_alignment_one_bit; } set { cabac_alignment_one_bit = value; } }
         private uint mb_skip_run;
         public uint MbSkipRun { get { return mb_skip_run; } set { mb_skip_run = value; } }
-        private uint mb_skip_type_flag;
-        public uint MbSkipTypeFlag { get { return mb_skip_type_flag; } set { mb_skip_type_flag = value; } }
+        private byte mb_skip_type_flag;
+        public byte MbSkipTypeFlag { get { return mb_skip_type_flag; } set { mb_skip_type_flag = value; } }
         private uint mb_vsskip_flag;
         public uint MbVsskipFlag { get { return mb_vsskip_flag; } set { mb_vsskip_flag = value; } }
         private uint mb_skip_flag;
@@ -27726,7 +27724,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
 
-                        if (H264Helpers.GetValue("nal_unit_type") == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
+                        if (H264Helpers.GetValue("nal_unit_type") == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && H264Helpers.GetValue("leftMbVSSkipped") != 0 && H264Helpers.GetValue("upMbVSSkipped") != 0)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.mb_vsskip_flag);
                             moreDataFlag = mb_vsskip_flag;
@@ -27873,7 +27871,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
 
-                        if (H264Helpers.GetValue("nal_unit_type") == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
+                        if (H264Helpers.GetValue("nal_unit_type") == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && H264Helpers.GetValue("leftMbVSSkipped") != 0 && H264Helpers.GetValue("upMbVSSkipped") != 0)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.mb_vsskip_flag);
                             moreDataFlag = mb_vsskip_flag;
@@ -28020,7 +28018,7 @@ slice_data_in_3davc_extension() {
                     else
                     {
 
-                        if (H264Helpers.GetValue("nal_unit_type") == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && leftMbVSSkipped != 0 && upMbVSSkipped != 0)
+                        if (H264Helpers.GetValue("nal_unit_type") == 21 && H264Helpers.GetDepthFlag() == 0 && H264Helpers.GetVspRefExist() != 0 && H264Helpers.GetValue("leftMbVSSkipped") != 0 && H264Helpers.GetValue("upMbVSSkipped") != 0)
                         {
                             size += ItuStream.CalculateUnsignedIntGolomb(mb_vsskip_flag); // mb_vsskip_flag
                             moreDataFlag = mb_vsskip_flag;
@@ -28250,8 +28248,8 @@ macroblock_layer_in_3davc_extension() {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_luma[i]);
                 }
 
-                this.pcm_sample_chroma = new uint[2 * MbWidthC * MbHeightC];
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                this.pcm_sample_chroma = new uint[2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC")];
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, out this.pcm_sample_chroma[i]);
                 }
@@ -28297,7 +28295,7 @@ macroblock_layer_in_3davc_extension() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.coded_block_pattern);
 
-                    if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
+                    if ((H264Helpers.GetValue("CodedBlockPatternLuma") > 0 || mb_alc_flag == 1) &&
      H264Helpers.GetValue("transform_8x8_mode_flag") != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 ||
@@ -28307,8 +28305,8 @@ macroblock_layer_in_3davc_extension() {
                     }
                 }
 
-                if (CodedBlockPatternLuma > 0 ||
-   CodedBlockPatternChroma > 0 ||
+                if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 ||
+   H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
    MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.mb_qp_delta);
@@ -28358,7 +28356,7 @@ macroblock_layer_in_3davc_extension() {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_luma[i]);
                 }
 
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += stream.WriteUnsignedIntVariable(this.pcm_sample_chroma[i]);
                 }
@@ -28404,7 +28402,7 @@ macroblock_layer_in_3davc_extension() {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.coded_block_pattern);
 
-                    if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
+                    if ((H264Helpers.GetValue("CodedBlockPatternLuma") > 0 || mb_alc_flag == 1) &&
      H264Helpers.GetValue("transform_8x8_mode_flag") != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 ||
@@ -28414,8 +28412,8 @@ macroblock_layer_in_3davc_extension() {
                     }
                 }
 
-                if (CodedBlockPatternLuma > 0 ||
-   CodedBlockPatternChroma > 0 ||
+                if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 ||
+   H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
    MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += stream.WriteSignedIntGolomb(this.mb_qp_delta);
@@ -28465,7 +28463,7 @@ macroblock_layer_in_3davc_extension() {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_luma[i]); // pcm_sample_luma
                 }
 
-                for (i = 0; i < 2 * MbWidthC * MbHeightC; i++)
+                for (i = 0; i < 2 * H264Helpers.GetValue("MbWidthC") * H264Helpers.GetValue("MbHeightC"); i++)
                 {
                     size += ItuStream.CalculateUnsignedIntVariable(pcm_sample_chroma[i]); // pcm_sample_chroma
                 }
@@ -28511,7 +28509,7 @@ macroblock_layer_in_3davc_extension() {
                 {
                     size += ItuStream.CalculateUnsignedIntGolomb(coded_block_pattern); // coded_block_pattern
 
-                    if ((CodedBlockPatternLuma > 0 || mb_alc_flag == 1) &&
+                    if ((H264Helpers.GetValue("CodedBlockPatternLuma") > 0 || mb_alc_flag == 1) &&
      H264Helpers.GetValue("transform_8x8_mode_flag") != 0 && mb_type != MbTypes.I_NxN &&
      noSubMbPartSizeLessThan8x8Flag != 0 &&
      (mb_type != MbTypes.B_Direct_16x16 ||
@@ -28521,8 +28519,8 @@ macroblock_layer_in_3davc_extension() {
                     }
                 }
 
-                if (CodedBlockPatternLuma > 0 ||
-   CodedBlockPatternChroma > 0 ||
+                if (H264Helpers.GetValue("CodedBlockPatternLuma") > 0 ||
+   H264Helpers.GetValue("CodedBlockPatternChroma") > 0 ||
    MbTypes.MbPartPredMode(mb_type, 0) == MbPartPredModes.Intra_16x16)
                 {
                     size += ItuStream.CalculateSignedIntGolomb(mb_qp_delta); // mb_qp_delta
@@ -28690,7 +28688,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
 
-                        if (VspRefL0Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                        if (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.bvsp_flag_l0[mbPartIdx]);
                         }
@@ -28708,7 +28706,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
 
-                        if (VspRefL1Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                        if (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.bvsp_flag_l1[mbPartIdx]);
                         }
@@ -28720,7 +28718,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
-    (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+    (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] == 0 || bvsp_flag_l0[mbPartIdx] == 0))
                     {
 
                         this.mvd_l0[mbPartIdx][0] = new int[2];
@@ -28736,7 +28734,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
-    (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+    (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] == 0 || bvsp_flag_l1[mbPartIdx] == 0))
                     {
 
                         this.mvd_l1[mbPartIdx][0] = new int[2];
@@ -28811,7 +28809,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     {
                         size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
 
-                        if (VspRefL0Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                        if (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                         {
                             size += stream.WriteUnsignedInt(1, this.bvsp_flag_l0[mbPartIdx]);
                         }
@@ -28827,7 +28825,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     {
                         size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
 
-                        if (VspRefL1Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                        if (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                         {
                             size += stream.WriteUnsignedInt(1, this.bvsp_flag_l1[mbPartIdx]);
                         }
@@ -28838,7 +28836,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
-    (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+    (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] == 0 || bvsp_flag_l0[mbPartIdx] == 0))
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -28852,7 +28850,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
-    (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+    (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] == 0 || bvsp_flag_l1[mbPartIdx] == 0))
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -28926,7 +28924,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     {
                         size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
 
-                        if (VspRefL0Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                        if (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                         {
                             size += 1; // bvsp_flag_l0
                         }
@@ -28942,7 +28940,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                     {
                         size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
 
-                        if (VspRefL1Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                        if (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                         {
                             size += 1; // bvsp_flag_l1
                         }
@@ -28953,7 +28951,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L1 &&
-    (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+    (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] == 0 || bvsp_flag_l0[mbPartIdx] == 0))
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -28967,7 +28965,7 @@ mb_pred_in_3davc_extension( mb_type ) {
                 {
 
                     if (MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.Pred_L0 &&
-    (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+    (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] == 0 || bvsp_flag_l1[mbPartIdx] == 0))
                     {
 
                         for (compIdx = 0; compIdx < 2; compIdx++)
@@ -29064,7 +29062,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l0[mbPartIdx]);
 
-                    if (VspRefL0Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                    if (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.bvsp_flag_l0[mbPartIdx]);
                     }
@@ -29083,7 +29081,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.ref_idx_l1[mbPartIdx]);
 
-                    if (VspRefL1Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                    if (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.bvsp_flag_l1[mbPartIdx]);
                     }
@@ -29094,7 +29092,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] == 0 || bvsp_flag_l0[mbPartIdx] == 0))
                 {
 
                     this.mvd_l0[mbPartIdx] = new int[H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -29114,7 +29112,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] == 0 || bvsp_flag_l1[mbPartIdx] == 0))
                 {
 
                     this.mvd_l1[mbPartIdx] = new int[H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx])][];
@@ -29153,7 +29151,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l0[mbPartIdx]);
 
-                    if (VspRefL0Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                    if (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.bvsp_flag_l0[mbPartIdx]);
                     }
@@ -29170,7 +29168,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 {
                     size += stream.WriteSignedIntGolomb(this.ref_idx_l1[mbPartIdx]);
 
-                    if (VspRefL1Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                    if (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.bvsp_flag_l1[mbPartIdx]);
                     }
@@ -29180,7 +29178,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] == 0 || bvsp_flag_l0[mbPartIdx] == 0))
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -29197,7 +29195,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] == 0 || bvsp_flag_l1[mbPartIdx] == 0))
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -29234,7 +29232,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l0[mbPartIdx]); // ref_idx_l0
 
-                    if (VspRefL0Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                    if (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                     {
                         size += 1; // bvsp_flag_l0
                     }
@@ -29251,7 +29249,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
                 {
                     size += ItuStream.CalculateSignedIntGolomb(ref_idx_l1[mbPartIdx]); // ref_idx_l1
 
-                    if (VspRefL1Flag[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
+                    if (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] != 0 && H264Helpers.GetValue("slice_vsp_flag") != 0)
                     {
                         size += 1; // bvsp_flag_l1
                     }
@@ -29261,7 +29259,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (!VspRefL0Flag[mbPartIdx] != 0 || bvsp_flag_l0[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L1 && (H264Helpers.GetArray("VspRefL0Flag")[mbPartIdx] == 0 || bvsp_flag_l0[mbPartIdx] == 0))
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)
@@ -29278,7 +29276,7 @@ sub_mb_pred_in_3davc_extension( mb_type ) {
             for (mbPartIdx = 0; mbPartIdx < 4; mbPartIdx++)
             {
 
-                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (!VspRefL1Flag[mbPartIdx] != 0 || bvsp_flag_l1[mbPartIdx]) == 0)
+                if (sub_mb_type[mbPartIdx] != MbTypes.B_Direct_8x8 && MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.Pred_L0 && (H264Helpers.GetArray("VspRefL1Flag")[mbPartIdx] == 0 || bvsp_flag_l1[mbPartIdx] == 0))
                 {
 
                     for (subMbPartIdx = 0; subMbPartIdx < H264Helpers.NumSubMbPart(sub_mb_type[mbPartIdx]); subMbPartIdx++)

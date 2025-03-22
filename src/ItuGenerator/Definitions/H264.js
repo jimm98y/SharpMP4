@@ -32,12 +32,10 @@
  }   
 }  
 
-
 seq_parameter_set_rbsp() { 
  seq_parameter_set_data() 0  
  rbsp_trailing_bits() 0  
 } 
-
 
 seq_parameter_set_data() { 
  profile_idc 0 u(8) 
@@ -3206,7 +3204,7 @@ depth_ranges( numViews, predDirection, index ) {
  for( i = 0; i < numValues; i++ ) {   
   if( predDirection  ==  2  &&  i  ==  0 ) {   
    mantissa_len_minus1 11 u(5) 
-   outManLen[ index, i ] = manLen = mantissa_len_minus1 + 1   
+   outManLen[ index, i ] = mantissa_len_minus1 + 1   
   }   
   if( predDirection  ==  2 ) {   
    sign0 11 u(1) 

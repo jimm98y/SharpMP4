@@ -284,6 +284,19 @@ namespace Sharp{type}
 
             if (!string.IsNullOrEmpty(fieldValue))
             {
+                string[] ignored = new string[]
+                {
+                    "i16x16DClevel",
+                    "i16x16AClevel",
+                    "level4x4",
+                    "level8x8"
+                };
+                foreach (var ignore in ignored)
+                {
+                    if (fieldValue.Contains(ignore))
+                        return "";
+                }
+
                 fieldValue = fieldValue.Replace("<<", "<< (int)");
                 fieldValue = fieldValue.Replace("more_rbsp_data()", "stream.MoreRbspData() ? (uint)1 : (uint)0");
 
@@ -567,7 +580,7 @@ namespace Sharp{type}
                 { "f(1)",                       "uint" },
                 { "f(8)",                       "uint" },
                 { "f(16)",                      "uint" },
-                { "u(1)",                       "uint" },
+                { "u(1)",                       "byte" },
                 { "u(1) | ae(v)",               "uint" },
                 { "u(2)",                       "uint" },
                 { "u(3)",                       "uint" },
@@ -814,7 +827,7 @@ namespace Sharp{type}
                     if (!trimmed.Contains("(") && !parts[i].Contains("()")) // if (more_rbsp_data())
                     {
                         // we don't have bool anymore, so in this case it's easy fix
-                        condition = condition.Replace(parts[i], parts[i].Substring(1, parts[i].Length - 1) + "== 0");
+                        condition = condition.Replace(parts[i].TrimEnd(')'), parts[i].TrimEnd(')').Substring(1, parts[i].TrimEnd(')').Length - 1) + "== 0");
                     }
                 }
                 else if (!parts[i].Contains('=') && !parts[i].Contains('>') && !parts[i].Contains('<'))
@@ -883,7 +896,8 @@ namespace Sharp{type}
                 if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null && 
                     b.AddedFields.FirstOrDefault(x => x.Name == match) == null && 
                     b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null && 
-                    match.Contains("_"))
+                    match.Contains("_")
+                    )
                 {
                     if(condition.Substring(condition.IndexOf(match) + match.Length).Trim().StartsWith("["))
                         condition = condition.Replace(match, $"H264Helpers.GetArray(\"{match}\")");
@@ -891,6 +905,45 @@ namespace Sharp{type}
                         condition = condition.Replace(match, $"H264Helpers.GetValue(\"{match}\")");
                 }
             }
+
+            string[] replacementsValue = new string[]
+            {
+                "CodedBlockPatternLuma", "CodedBlockPatternChroma", "MbWidthC", "MbHeightC", "SubWidthC", "SubHeightC",
+                "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "NumClockTS", "PicSizeInMapUnits",
+                "CurrMbAddr", "leftMbVSSkipped", "upMbVSSkipped", "predWeight0", "deltaFlag", "NumDepthViews"
+            };
+
+            foreach (var match in replacementsValue)
+            {
+                if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null &&
+                    b.AddedFields.FirstOrDefault(x => x.Name == match) == null &&
+                    b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null
+                    )
+                {
+                    condition = condition.Replace(match, $"H264Helpers.GetValue(\"{match}\")");
+                }
+            }
+
+            string[] replacementsArray = new string[]
+            {
+                "VspRefL1Flag","VspRefL0Flag"
+            };
+
+            foreach (var match in replacementsArray)
+            {
+                if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null &&
+                    b.AddedFields.FirstOrDefault(x => x.Name == match) == null &&
+                    b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null
+                    )
+                {
+                    condition = condition.Replace(match, $"H264Helpers.GetArray(\"{match}\")");
+                }
+            }
+
+            condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] == 0");
+            condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] == 0");
+            condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3) != 0");
+            condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2) != 0");
 
             return condition;
         }

@@ -114,7 +114,7 @@ AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFl
             throw new NotImplementedException();
         }
 
-        public static uint InCropWindow(uint value)
+        public static bool InCropWindow(uint value)
         {
             throw new NotImplementedException();
         }
