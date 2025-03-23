@@ -236,11 +236,6 @@ AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFl
         {
             return 0;
         }
-
-        public ulong CalculateSize(ItuStream stream)
-        {
-            return 0;
-        }
     }
 
     public class GreenMetadata : IItuSerializable
@@ -258,11 +253,6 @@ AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFl
         }
 
         public ulong Write(ItuStream stream)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ulong CalculateSize(ItuStream stream)
         {
             throw new NotImplementedException();
         }

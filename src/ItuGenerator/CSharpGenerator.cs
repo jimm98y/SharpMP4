@@ -1,20 +1,14 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Markup;
 
 namespace ItuGenerator
 {
     public enum MethodType
     {
         Read,
-        Write,
-        Size
+        Write
     }
 
     public class CSharpGenerator
@@ -83,24 +77,6 @@ namespace Sharp{type}
             foreach (var field in ituClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Write);
-            }
-            ituClass.AddedFields.Clear();
-            resultCode += $@"
-
-             return size;
-         }}
-";
-
-            resultCode += $@"
-         public ulong CalculateSize(ItuStream stream)
-         {{
-             ulong size = 0;
-"; 
-            resultCode += BuildRequiredVariables(ituClass);
-            
-            foreach (var field in ituClass.Fields)
-            {
-                resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Size);
             }
             ituClass.AddedFields.Clear();
             resultCode += $@"
@@ -231,7 +207,7 @@ namespace Sharp{type}
             }
            
             string name = GetFieldName(field as ItuField);
-            string m = methodType == MethodType.Read ? GetReadMethod(b, field as ItuField) : (methodType == MethodType.Write ? GetWriteMethod(field as ItuField) : GetCalculateSizeMethod(field as ItuField));
+            string m = methodType == MethodType.Read ? GetReadMethod(b, field as ItuField) : GetWriteMethod(field as ItuField);
             string typedef = (field as ItuField).FieldArray;
 
             string fieldComment = "";
@@ -241,11 +217,6 @@ namespace Sharp{type}
             }
 
             string boxSize = "size += ";
-
-            if (methodType == MethodType.Size)
-            {
-                m = m.Replace("value", name + typedef);
-            }
 
             if (GetLoopNestingLevel(field) > 0)
             {
@@ -349,82 +320,6 @@ namespace Sharp{type}
                 }
             }
         }
-
-        private string GetCalculateSizeMethod(ItuField ituField)
-        {
-            switch (ituField.Type)
-            {
-                case "f(1)":
-                    return "1";
-                case "f(8)":
-                    return "8";
-                case "f(16)":
-                    return "16";
-                case "u(1)":
-                    return "1";
-                case "u(1) | ae(v)":
-                    return "1";
-                case "u(2)":
-                    return "2";
-                case "u(3)":
-                    return "3";
-                case "u(3) | ae(v)":
-                    return "3";
-                case "u(4)":
-                    return "4";
-                case "u(5)":
-                    return "5";
-                case "u(6)":
-                    return "6";
-                case "u(7)":
-                    return "7";
-                case "u(8)":
-                    return "8";
-                case "u(10)":
-                    return "10";
-                case "u(16)":
-                    return "16";
-                case "u(20)":
-                    return "20";
-                case "u(24)":
-                    return "24";
-                case "u(32)":
-                    return "32";                
-                case "u(128)":
-                    return "128";                
-                case "i(32)":
-                    return "32";
-                case "u(v)":
-                    return "ItuStream.CalculateUnsignedIntVariable(value)";
-                case "i(v)":
-                    return "ItuStream.CalculateSignedIntVariable(value)";
-                case "ue(v)":
-                    return "ItuStream.CalculateUnsignedIntGolomb(value)";
-                case "ae(v)":
-                    return "ItuStream.CalculateUnsignedIntGolomb(value)";
-                case "ce(v)":
-                    return "ItuStream.CalculateUnsignedIntGolomb(value)";
-                case "ue(v) | ae(v)":
-                    return "ItuStream.CalculateUnsignedIntGolomb(value)";
-                case "me(v) | ae(v)":
-                    return "ItuStream.CalculateUnsignedIntGolomb(value)";
-                case "se(v)":
-                    return "ItuStream.CalculateSignedIntGolomb(value)";
-                case "st(v)":
-                    return "ItuStream.CalculateSignedIntT(value)";
-                case "se(v) | ae(v)":
-                    return "ItuStream.CalculateSignedIntGolomb(value)";
-                case "te(v) | ae(v)":
-                    return "ItuStream.CalculateSignedIntGolomb(value)";
-                case "b(8)":
-                    return "8";
-                default:
-                    if (ituField.Type == null)
-                        return $"ItuStream.CalculateClassSize<{ituField.Name.ToPropertyCase()}>(this.value)";
-                    throw new NotImplementedException();
-            }
-        }
-
         private string GetWriteMethod(ItuField ituField)
         {
             switch (ituField.Type)
@@ -824,6 +719,15 @@ namespace Sharp{type}
                                     if(appendType == "[]")
                                         appendType += "[]";
                                 }
+
+                                if(variableType.Contains("_minus1[ c ]"))
+                                    variableType = variableType.Replace("_minus1[ c ]", "_minus1[ c ] + 1");
+                                else if(variableType.Contains("_minus1[ i ][ j ]"))
+                                    variableType = variableType.Replace("_minus1[ i ][ j ]", "_minus1[ i ][ j ] + 1");
+                                else if(variableType.Contains("_minus1[ i ]"))
+                                    variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
+                                else if (variableType.Contains("_minus1"))
+                                    variableType = variableType.Replace("_minus1", "_minus1 + 1");
 
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                             }
