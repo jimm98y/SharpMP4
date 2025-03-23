@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Numerics;
 
 namespace SharpH264
@@ -8,6 +10,7 @@ namespace SharpH264
     {
         ulong Read(ItuStream stream);
         ulong Write(ItuStream stream);
+        int HasMoreRbspData { get; set; }
     }
 
     public class ItuStream : IDisposable
@@ -20,6 +23,9 @@ namespace SharpH264
         private int _prevPrevByte = -1;
 
         private readonly Stream _stream;
+
+        private int _rbspDataCounter = 0;
+
         private bool _disposedValue;
 
         public ItuStream(Stream stream)
@@ -37,10 +43,6 @@ namespace SharpH264
 
         private long WriteByte(byte value)
         {
-            if(value == 95)
-            {
-
-            }
             _stream.WriteByte(value);
             return 8;
         }
@@ -276,18 +278,54 @@ namespace SharpH264
 
         internal ulong WriteSignedIntGolomb(int value)
         {
-            throw new NotImplementedException();
+            uint mapped = (uint)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
+            return WriteUnsignedIntGolomb(mapped);
         }
 
-
-
-
-
-
-
-        internal bool MoreRbspData()
+        internal bool ReadMoreRbspData(IItuSerializable serializable)
         {
-            throw new NotImplementedException();
+            if (_stream.Position == _stream.Length && _bitsPosition % 8 == 0)
+                return false;
+
+            // now we have to look ahead - TODO
+            var bytes = (_stream as MemoryStream).ToArray().Skip(_bitsPosition / 8).ToArray();
+            using (var ituStream = new ItuStream(new MemoryStream(bytes)))
+            {
+                ituStream.ReadBits(_bitsPosition % 8);
+                
+                int one = ituStream.ReadBit();
+                if (one == 0)
+                {
+                    serializable.HasMoreRbspData++;
+                    return true;
+                }
+
+                int lastBit = ituStream.ReadBit();
+                while (lastBit == 0)
+                {
+                    lastBit = ituStream.ReadBit();
+                }
+
+                // -1 means that up until the end there are zeros
+                if (lastBit < 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    serializable.HasMoreRbspData++;
+                    return true;
+                }
+            }
+        }
+
+        internal bool WriteMoreRbspData(IItuSerializable serializable)
+        {
+            if (serializable.HasMoreRbspData == 0)
+                return false;
+            else if(_rbspDataCounter == 0)
+                _rbspDataCounter = serializable.HasMoreRbspData;
+            return _rbspDataCounter-- != 0;
         }
 
         internal int NextBits(int count)

@@ -227,6 +227,7 @@ AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFl
 
     public class ResidualBlock : IItuSerializable
     {
+        public int HasMoreRbspData { get; set; }
         public ulong Read(ItuStream stream)
         {
             return 0;
@@ -241,6 +242,7 @@ AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFl
     public class GreenMetadata : IItuSerializable
     {
         private uint payloadSize;
+        public int HasMoreRbspData { get; set; }
 
         public GreenMetadata(uint payloadSize)
         {

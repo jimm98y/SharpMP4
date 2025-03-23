@@ -47,6 +47,10 @@ namespace Sharp{type}
 ";
             resultCode += GenerateFields(ituClass);
 
+            resultCode += @"
+         public int HasMoreRbspData { get; set; }
+";
+
             resultCode += GenerateCtor(ituClass);
 
             resultCode += $@"
@@ -646,7 +650,7 @@ namespace Sharp{type}
 
                 if(blockType == "if" || blockType == "else if" || blockType == "while" || blockType == "do")
                 {
-                    condition = FixCondition(b, condition);
+                    condition = FixCondition(b, condition, methodType);
                 }
             }
 
@@ -758,7 +762,7 @@ namespace Sharp{type}
             return ret;
         }
 
-        private string FixCondition(ItuClass b, string condition)
+        private string FixCondition(ItuClass b, string condition, MethodType methodType)
         {
             string[] parts = condition.Substring(1, condition.Length - 2).Split(new string[] { "||", "&&" }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
@@ -806,7 +810,10 @@ namespace Sharp{type}
             condition = condition.Replace("Min(", "Math.Min(");
             condition = condition.Replace("Max(", "Math.Max(");
             condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
-            condition = condition.Replace("more_rbsp_data()", "stream.MoreRbspData()");
+
+            string prefix = methodType == MethodType.Read ? "Read" : "Write";
+            condition = condition.Replace("more_rbsp_data()", $"stream.{prefix}MoreRbspData(this)");
+
             condition = condition.Replace("more_rbsp_trailing_data()", "stream.MoreRbspTrailingData()");
 
             condition = condition.Replace("MbPartPredMode( mb_type, 0 )  ==  ", "MbTypes.MbPartPredMode( mb_type, 0 )  ==  MbPartPredModes.");
