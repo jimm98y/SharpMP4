@@ -730,6 +730,10 @@ namespace Sharp{type}
                                     variableType = variableType.Replace("_minus1[ i ][ j ]", "_minus1[ i ][ j ] + 1");
                                 else if(variableType.Contains("_minus1[ i ]"))
                                     variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
+                                else if (variableType.Contains("_minus1\")[ i ]"))
+                                    variableType = variableType.Replace("_minus1\")[ i ]", "_minus1\")[ i ] + 1");
+                                else if (variableType.Contains("_minus1\")"))
+                                    variableType = variableType.Replace("_minus1\")", "_minus1\") + 1");
                                 else if (variableType.Contains("_minus1"))
                                     variableType = variableType.Replace("_minus1", "_minus1 + 1");
 

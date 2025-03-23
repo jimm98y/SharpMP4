@@ -2688,8 +2688,8 @@ buffering_period( payloadSize ) {
             if (H264Helpers.GetValue("NalHrdBpPresentFlag") != 0)
             {
 
-                this.initial_cpb_removal_delay = new uint[H264Helpers.GetValue("cpb_cnt_minus1 + 1")];
-                this.initial_cpb_removal_delay_offset = new uint[H264Helpers.GetValue("cpb_cnt_minus1 + 1")];
+                this.initial_cpb_removal_delay = new uint[H264Helpers.GetValue("cpb_cnt_minus1") + 1];
+                this.initial_cpb_removal_delay_offset = new uint[H264Helpers.GetValue("cpb_cnt_minus1") + 1];
                 for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, out this.initial_cpb_removal_delay[SchedSelIdx]);
@@ -10058,10 +10058,10 @@ parallel_decoding_info( payloadSize ) {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
-            this.pdi_init_delay_anchor_minus2_l0 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")][];
-            this.pdi_init_delay_anchor_minus2_l1 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")][];
-            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")][];
-            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")][];
+            this.pdi_init_delay_anchor_minus2_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
+            this.pdi_init_delay_anchor_minus2_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
+            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
+            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
             for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
             {
 
@@ -11153,8 +11153,8 @@ view_dependency_change( payloadSize ) {
             if (anchor_update_flag != 0)
             {
 
-                this.anchor_ref_l0_flag = new byte[H264Helpers.GetValue("num_views_minus1 + 1")][];
-                this.anchor_ref_l1_flag = new byte[H264Helpers.GetValue("num_views_minus1 + 1")][];
+                this.anchor_ref_l0_flag = new byte[H264Helpers.GetValue("num_views_minus1") + 1][];
+                this.anchor_ref_l1_flag = new byte[H264Helpers.GetValue("num_views_minus1") + 1][];
                 for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
                 {
 
@@ -11175,8 +11175,8 @@ view_dependency_change( payloadSize ) {
             if (non_anchor_update_flag != 0)
             {
 
-                this.non_anchor_ref_l0_flag = new byte[H264Helpers.GetValue("num_views_minus1 + 1")][];
-                this.non_anchor_ref_l1_flag = new byte[H264Helpers.GetValue("num_views_minus1 + 1")][];
+                this.non_anchor_ref_l0_flag = new byte[H264Helpers.GetValue("num_views_minus1") + 1][];
+                this.non_anchor_ref_l1_flag = new byte[H264Helpers.GetValue("num_views_minus1") + 1][];
                 for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
                 {
 
@@ -12318,7 +12318,7 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i]);
 
-                    this.pic_parameter_set_id_delta[i] = new uint[H264Helpers.GetArray("num_init_pic_parameter_set_minus1 + 1")[i]];
+                    this.pic_parameter_set_id_delta[i] = new uint[H264Helpers.GetArray("num_init_pic_parameter_set_minus1")[i] + 1];
                     for (j = 0; j <= H264Helpers.GetArray("num_init_pic_parameter_set_minus1")[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
@@ -14361,10 +14361,10 @@ seq_parameter_set_3davc_extension() {
             if (H264Helpers.GetAllViewsPairedFlag() == 0)
             {
 
-                this.num_anchor_refs_l0 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")];
-                this.anchor_ref_l0 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")][];
-                this.num_anchor_refs_l1 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")];
-                this.anchor_ref_l1 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")][];
+                this.num_anchor_refs_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1];
+                this.anchor_ref_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
+                this.num_anchor_refs_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1];
+                this.anchor_ref_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
                 for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
                 {
 
@@ -14387,10 +14387,10 @@ seq_parameter_set_3davc_extension() {
                     }
                 }
 
-                this.num_non_anchor_refs_l0 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")];
-                this.non_anchor_ref_l0 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")][];
-                this.num_non_anchor_refs_l1 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")];
-                this.non_anchor_ref_l1 = new uint[H264Helpers.GetValue("num_views_minus1 + 1")][];
+                this.num_non_anchor_refs_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1];
+                this.non_anchor_ref_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
+                this.num_non_anchor_refs_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1];
+                this.non_anchor_ref_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
                 for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
                 {
 
