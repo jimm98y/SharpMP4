@@ -2242,11 +2242,11 @@ depth_ranges( numViews, predDirection, index ) {
  z_near_flag 11 u(1) 
  z_far_flag 11 u(1) 
  if( z_near_flag )   
-  3dv_acquisition_element( numViews, 0, predDirection, 7, index, 
+  3dv_acquisition_element( numViews, predDirection, 7, index, 
    ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen ) 
   
  if( z_far_flag )   
-  3dv_acquisition_element( numViews, 0, predDirection, 7, index, 
+  3dv_acquisition_element( numViews, predDirection, 7, index, 
    ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen ) 
   
 }  

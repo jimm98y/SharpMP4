@@ -98,17 +98,17 @@ nal_unit( NumBytesInNALunit ) {
 
                 if (svc_extension_flag != 0)
                 {
-                    size += stream.ReadClass<NalUnitHeaderSvcExtension>(size, out this.nal_unit_header_svc_extension); // specified in Annex G 
+                    size += stream.ReadClass<NalUnitHeaderSvcExtension>(size, () => new NalUnitHeaderSvcExtension(), out this.nal_unit_header_svc_extension); // specified in Annex G 
                     nalUnitHeaderBytes += 3;
                 }
                 else if (avc_3d_extension_flag != 0)
                 {
-                    size += stream.ReadClass<NalUnitHeader3davcExtension>(size, out this.nal_unit_header_3davc_extension); // specified in Annex J 
+                    size += stream.ReadClass<NalUnitHeader3davcExtension>(size, () => new NalUnitHeader3davcExtension(), out this.nal_unit_header_3davc_extension); // specified in Annex J 
                     nalUnitHeaderBytes += 2;
                 }
                 else
                 {
-                    size += stream.ReadClass<NalUnitHeaderMvcExtension>(size, out this.nal_unit_header_mvc_extension); // specified in Annex H 
+                    size += stream.ReadClass<NalUnitHeaderMvcExtension>(size, () => new NalUnitHeaderMvcExtension(), out this.nal_unit_header_mvc_extension); // specified in Annex H 
                     nalUnitHeaderBytes += 3;
                 }
             }
@@ -281,8 +281,8 @@ seq_parameter_set_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.ReadClass<SeqParameterSetData>(size, out this.seq_parameter_set_data);
-            size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
+            size += stream.ReadClass<SeqParameterSetData>(size, () => new SeqParameterSetData(), out this.seq_parameter_set_data);
+            size += stream.ReadClass<RbspTrailingBits>(size, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
 
             return size;
         }
@@ -513,11 +513,11 @@ seq_parameter_set_data() {
 
                             if (i < 6)
                             {
-                                size += stream.ReadClass<ScalingList>(size, out this.scaling_list);
+                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 16], 16, 0), out this.scaling_list);
                             }
                             else
                             {
-                                size += stream.ReadClass<ScalingList>(size, out this.scaling_list);
+                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 64], 64, 0), out this.scaling_list);
                             }
                         }
                     }
@@ -567,7 +567,7 @@ seq_parameter_set_data() {
 
             if (vui_parameters_present_flag != 0)
             {
-                size += stream.ReadClass<VuiParameters>(size, out this.vui_parameters);
+                size += stream.ReadClass<VuiParameters>(size, () => new VuiParameters(), out this.vui_parameters);
             }
 
             return size;
@@ -959,7 +959,7 @@ seq_parameter_set_extension_rbsp() {
                 size += stream.ReadUnsignedIntVariable(size, out this.alpha_transparent_value);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.additional_extension_flag);
-            size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
 
             return size;
         }
@@ -1077,40 +1077,40 @@ subset_seq_parameter_set_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.ReadClass<SeqParameterSetData>(size, out this.seq_parameter_set_data);
+            size += stream.ReadClass<SeqParameterSetData>(size, () => new SeqParameterSetData(), out this.seq_parameter_set_data);
 
             if (H264Helpers.GetValue("profile_idc") == 83 || H264Helpers.GetValue("profile_idc") == 86)
             {
-                size += stream.ReadClass<SeqParameterSetSvcExtension>(size, out this.seq_parameter_set_svc_extension); // specified in Annex G 
+                size += stream.ReadClass<SeqParameterSetSvcExtension>(size, () => new SeqParameterSetSvcExtension(), out this.seq_parameter_set_svc_extension); // specified in Annex G 
                 size += stream.ReadUnsignedInt(size, 1, out this.svc_vui_parameters_present_flag);
 
                 if (svc_vui_parameters_present_flag == 1)
                 {
-                    size += stream.ReadClass<SvcVuiParametersExtension>(size, out this.svc_vui_parameters_extension); // specified in Annex G 
+                    size += stream.ReadClass<SvcVuiParametersExtension>(size, () => new SvcVuiParametersExtension(), out this.svc_vui_parameters_extension); // specified in Annex G 
                 }
             }
             else if (H264Helpers.GetValue("profile_idc") == 118 || H264Helpers.GetValue("profile_idc") == 128 ||
   H264Helpers.GetValue("profile_idc") == 134)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
-                size += stream.ReadClass<SeqParameterSetMvcExtension>(size, out this.seq_parameter_set_mvc_extension); // specified in Annex H 
+                size += stream.ReadClass<SeqParameterSetMvcExtension>(size, () => new SeqParameterSetMvcExtension(), out this.seq_parameter_set_mvc_extension); // specified in Annex H 
                 size += stream.ReadUnsignedInt(size, 1, out this.mvc_vui_parameters_present_flag);
 
                 if (mvc_vui_parameters_present_flag == 1)
                 {
-                    size += stream.ReadClass<MvcVuiParametersExtension>(size, out this.mvc_vui_parameters_extension); // specified in Annex H 
+                    size += stream.ReadClass<MvcVuiParametersExtension>(size, () => new MvcVuiParametersExtension(), out this.mvc_vui_parameters_extension); // specified in Annex H 
                 }
             }
             else if (H264Helpers.GetValue("profile_idc") == 138 || H264Helpers.GetValue("profile_idc") == 135)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
-                size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, out this.seq_parameter_set_mvcd_extension); // specified in Annex I 
+                size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, () => new SeqParameterSetMvcdExtension(), out this.seq_parameter_set_mvcd_extension); // specified in Annex I 
             }
             else if (H264Helpers.GetValue("profile_idc") == 139)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
-                size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, out this.seq_parameter_set_mvcd_extension); // specified in Annex I 
-                size += stream.ReadClass<SeqParameterSet3davcExtension>(size, out this.seq_parameter_set_3davc_extension); // specified in Annex J 
+                size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, () => new SeqParameterSetMvcdExtension(), out this.seq_parameter_set_mvcd_extension); // specified in Annex I 
+                size += stream.ReadClass<SeqParameterSet3davcExtension>(size, () => new SeqParameterSet3davcExtension(), out this.seq_parameter_set_3davc_extension); // specified in Annex J 
             }
             size += stream.ReadUnsignedInt(size, 1, out this.additional_extension2_flag);
 
@@ -1122,7 +1122,7 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.ReadUnsignedInt(size, 1, out this.additional_extension2_data_flag);
                 }
             }
-            size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
 
             return size;
         }
@@ -1451,18 +1451,18 @@ pic_parameter_set_rbsp() {
 
                             if (i < 6)
                             {
-                                size += stream.ReadClass<ScalingList>(size, out this.scaling_list);
+                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 16], 16, 0), out this.scaling_list);
                             }
                             else
                             {
-                                size += stream.ReadClass<ScalingList>(size, out this.scaling_list);
+                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 64], 64, 0), out this.scaling_list);
                             }
                         }
                     }
                 }
                 size += stream.ReadSignedIntGolomb(size, out this.second_chroma_qp_index_offset);
             }
-            size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
 
             return size;
         }
@@ -1691,9 +1691,9 @@ sei_rbsp() {
 
             do
             {
-                size += stream.ReadClass<SeiMessage>(size, out this.sei_message);
+                size += stream.ReadClass<SeiMessage>(size, () => new SeiMessage(), out this.sei_message);
             } while (stream.MoreRbspData());
-            size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
 
             return size;
         }
@@ -1789,7 +1789,7 @@ sei_message() {
             }
             size += stream.ReadUnsignedInt(size, 8, out this.last_payload_size_byte);
             payloadSize += last_payload_size_byte;
-            size += stream.ReadClass<SeiPayload>(size, out this.sei_payload);
+            size += stream.ReadClass<SeiPayload>(size, () => new SeiPayload(payloadType, payloadSize), out this.sei_payload);
 
             return size;
         }
@@ -1879,7 +1879,7 @@ access_unit_delimiter_rbsp() {
             ulong size = 0;
 
             size += stream.ReadUnsignedInt(size, 3, out this.primary_pic_type);
-            size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
 
             return size;
         }
@@ -2500,295 +2500,295 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
 
             if (payloadType == 0)
             {
-                size += stream.ReadClass<BufferingPeriod>(size, out this.buffering_period);
+                size += stream.ReadClass<BufferingPeriod>(size, () => new BufferingPeriod(payloadSize), out this.buffering_period);
             }
             else if (payloadType == 1)
             {
-                size += stream.ReadClass<PicTiming>(size, out this.pic_timing);
+                size += stream.ReadClass<PicTiming>(size, () => new PicTiming(payloadSize), out this.pic_timing);
             }
             else if (payloadType == 2)
             {
-                size += stream.ReadClass<PanScanRect>(size, out this.pan_scan_rect);
+                size += stream.ReadClass<PanScanRect>(size, () => new PanScanRect(payloadSize), out this.pan_scan_rect);
             }
             else if (payloadType == 3)
             {
-                size += stream.ReadClass<FillerPayload>(size, out this.filler_payload);
+                size += stream.ReadClass<FillerPayload>(size, () => new FillerPayload(payloadSize), out this.filler_payload);
             }
             else if (payloadType == 4)
             {
-                size += stream.ReadClass<UserDataRegisteredItutT35>(size, out this.user_data_registered_itu_t_t35);
+                size += stream.ReadClass<UserDataRegisteredItutT35>(size, () => new UserDataRegisteredItutT35(payloadSize), out this.user_data_registered_itu_t_t35);
             }
             else if (payloadType == 5)
             {
-                size += stream.ReadClass<UserDataUnregistered>(size, out this.user_data_unregistered);
+                size += stream.ReadClass<UserDataUnregistered>(size, () => new UserDataUnregistered(payloadSize), out this.user_data_unregistered);
             }
             else if (payloadType == 6)
             {
-                size += stream.ReadClass<RecoveryPoint>(size, out this.recovery_point);
+                size += stream.ReadClass<RecoveryPoint>(size, () => new RecoveryPoint(payloadSize), out this.recovery_point);
             }
             else if (payloadType == 7)
             {
-                size += stream.ReadClass<DecRefPicMarkingRepetition>(size, out this.dec_ref_pic_marking_repetition);
+                size += stream.ReadClass<DecRefPicMarkingRepetition>(size, () => new DecRefPicMarkingRepetition(payloadSize), out this.dec_ref_pic_marking_repetition);
             }
             else if (payloadType == 8)
             {
-                size += stream.ReadClass<SparePic>(size, out this.spare_pic);
+                size += stream.ReadClass<SparePic>(size, () => new SparePic(payloadSize), out this.spare_pic);
             }
             else if (payloadType == 9)
             {
-                size += stream.ReadClass<SceneInfo>(size, out this.scene_info);
+                size += stream.ReadClass<SceneInfo>(size, () => new SceneInfo(payloadSize), out this.scene_info);
             }
             else if (payloadType == 10)
             {
-                size += stream.ReadClass<SubSeqInfo>(size, out this.sub_seq_info);
+                size += stream.ReadClass<SubSeqInfo>(size, () => new SubSeqInfo(payloadSize), out this.sub_seq_info);
             }
             else if (payloadType == 11)
             {
-                size += stream.ReadClass<SubSeqLayerCharacteristics>(size, out this.sub_seq_layer_characteristics);
+                size += stream.ReadClass<SubSeqLayerCharacteristics>(size, () => new SubSeqLayerCharacteristics(payloadSize), out this.sub_seq_layer_characteristics);
             }
             else if (payloadType == 12)
             {
-                size += stream.ReadClass<SubSeqCharacteristics>(size, out this.sub_seq_characteristics);
+                size += stream.ReadClass<SubSeqCharacteristics>(size, () => new SubSeqCharacteristics(payloadSize), out this.sub_seq_characteristics);
             }
             else if (payloadType == 13)
             {
-                size += stream.ReadClass<FullFrameFreeze>(size, out this.full_frame_freeze);
+                size += stream.ReadClass<FullFrameFreeze>(size, () => new FullFrameFreeze(payloadSize), out this.full_frame_freeze);
             }
             else if (payloadType == 14)
             {
-                size += stream.ReadClass<FullFrameFreezeRelease>(size, out this.full_frame_freeze_release);
+                size += stream.ReadClass<FullFrameFreezeRelease>(size, () => new FullFrameFreezeRelease(payloadSize), out this.full_frame_freeze_release);
             }
             else if (payloadType == 15)
             {
-                size += stream.ReadClass<FullFrameSnapshot>(size, out this.full_frame_snapshot);
+                size += stream.ReadClass<FullFrameSnapshot>(size, () => new FullFrameSnapshot(payloadSize), out this.full_frame_snapshot);
             }
             else if (payloadType == 16)
             {
-                size += stream.ReadClass<ProgressiveRefinementSegmentStart>(size, out this.progressive_refinement_segment_start);
+                size += stream.ReadClass<ProgressiveRefinementSegmentStart>(size, () => new ProgressiveRefinementSegmentStart(payloadSize), out this.progressive_refinement_segment_start);
             }
             else if (payloadType == 17)
             {
-                size += stream.ReadClass<ProgressiveRefinementSegmentEnd>(size, out this.progressive_refinement_segment_end);
+                size += stream.ReadClass<ProgressiveRefinementSegmentEnd>(size, () => new ProgressiveRefinementSegmentEnd(payloadSize), out this.progressive_refinement_segment_end);
             }
             else if (payloadType == 18)
             {
-                size += stream.ReadClass<MotionConstrainedSliceGroupSet>(size, out this.motion_constrained_slice_group_set);
+                size += stream.ReadClass<MotionConstrainedSliceGroupSet>(size, () => new MotionConstrainedSliceGroupSet(payloadSize), out this.motion_constrained_slice_group_set);
             }
             else if (payloadType == 19)
             {
-                size += stream.ReadClass<FilmGrainCharacteristics>(size, out this.film_grain_characteristics);
+                size += stream.ReadClass<FilmGrainCharacteristics>(size, () => new FilmGrainCharacteristics(payloadSize), out this.film_grain_characteristics);
             }
             else if (payloadType == 20)
             {
-                size += stream.ReadClass<DeblockingFilterDisplayPreference>(size, out this.deblocking_filter_display_preference);
+                size += stream.ReadClass<DeblockingFilterDisplayPreference>(size, () => new DeblockingFilterDisplayPreference(payloadSize), out this.deblocking_filter_display_preference);
             }
             else if (payloadType == 21)
             {
-                size += stream.ReadClass<StereoVideoInfo>(size, out this.stereo_video_info);
+                size += stream.ReadClass<StereoVideoInfo>(size, () => new StereoVideoInfo(payloadSize), out this.stereo_video_info);
             }
             else if (payloadType == 22)
             {
-                size += stream.ReadClass<PostFilterHint>(size, out this.post_filter_hint);
+                size += stream.ReadClass<PostFilterHint>(size, () => new PostFilterHint(payloadSize), out this.post_filter_hint);
             }
             else if (payloadType == 23)
             {
-                size += stream.ReadClass<ToneMappingInfo>(size, out this.tone_mapping_info);
+                size += stream.ReadClass<ToneMappingInfo>(size, () => new ToneMappingInfo(payloadSize), out this.tone_mapping_info);
             }
             else if (payloadType == 24)
             {
-                size += stream.ReadClass<ScalabilityInfo>(size, out this.scalability_info); // specified in Annex G 
+                size += stream.ReadClass<ScalabilityInfo>(size, () => new ScalabilityInfo(payloadSize), out this.scalability_info); // specified in Annex G 
             }
             else if (payloadType == 25)
             {
-                size += stream.ReadClass<SubPicScalableLayer>(size, out this.sub_pic_scalable_layer); // specified in Annex G 
+                size += stream.ReadClass<SubPicScalableLayer>(size, () => new SubPicScalableLayer(payloadSize), out this.sub_pic_scalable_layer); // specified in Annex G 
             }
             else if (payloadType == 26)
             {
-                size += stream.ReadClass<NonRequiredLayerRep>(size, out this.non_required_layer_rep); // specified in Annex G 
+                size += stream.ReadClass<NonRequiredLayerRep>(size, () => new NonRequiredLayerRep(payloadSize), out this.non_required_layer_rep); // specified in Annex G 
             }
             else if (payloadType == 27)
             {
-                size += stream.ReadClass<PriorityLayerInfo>(size, out this.priority_layer_info); // specified in Annex G 
+                size += stream.ReadClass<PriorityLayerInfo>(size, () => new PriorityLayerInfo(payloadSize), out this.priority_layer_info); // specified in Annex G 
             }
             else if (payloadType == 28)
             {
-                size += stream.ReadClass<LayersNotPresent>(size, out this.layers_not_present); // specified in Annex G 
+                size += stream.ReadClass<LayersNotPresent>(size, () => new LayersNotPresent(payloadSize), out this.layers_not_present); // specified in Annex G 
             }
             else if (payloadType == 29)
             {
-                size += stream.ReadClass<LayerDependencyChange>(size, out this.layer_dependency_change); // specified in Annex G 
+                size += stream.ReadClass<LayerDependencyChange>(size, () => new LayerDependencyChange(payloadSize), out this.layer_dependency_change); // specified in Annex G 
             }
             else if (payloadType == 30)
             {
-                size += stream.ReadClass<ScalableNesting>(size, out this.scalable_nesting); // specified in Annex G 
+                size += stream.ReadClass<ScalableNesting>(size, () => new ScalableNesting(payloadSize), out this.scalable_nesting); // specified in Annex G 
             }
             else if (payloadType == 31)
             {
-                size += stream.ReadClass<BaseLayerTemporalHrd>(size, out this.base_layer_temporal_hrd); // specified in Annex G 
+                size += stream.ReadClass<BaseLayerTemporalHrd>(size, () => new BaseLayerTemporalHrd(payloadSize), out this.base_layer_temporal_hrd); // specified in Annex G 
             }
             else if (payloadType == 32)
             {
-                size += stream.ReadClass<QualityLayerIntegrityCheck>(size, out this.quality_layer_integrity_check); // specified in Annex G 
+                size += stream.ReadClass<QualityLayerIntegrityCheck>(size, () => new QualityLayerIntegrityCheck(payloadSize), out this.quality_layer_integrity_check); // specified in Annex G 
             }
             else if (payloadType == 33)
             {
-                size += stream.ReadClass<RedundantPicProperty>(size, out this.redundant_pic_property); // specified in Annex G 
+                size += stream.ReadClass<RedundantPicProperty>(size, () => new RedundantPicProperty(payloadSize), out this.redundant_pic_property); // specified in Annex G 
             }
             else if (payloadType == 34)
             {
-                size += stream.ReadClass<Tl0DepRepIndex>(size, out this.tl0_dep_rep_index); // specified in Annex G 
+                size += stream.ReadClass<Tl0DepRepIndex>(size, () => new Tl0DepRepIndex(payloadSize), out this.tl0_dep_rep_index); // specified in Annex G 
             }
             else if (payloadType == 35)
             {
-                size += stream.ReadClass<TlSwitchingPoint>(size, out this.tl_switching_point); // specified in Annex G 
+                size += stream.ReadClass<TlSwitchingPoint>(size, () => new TlSwitchingPoint(payloadSize), out this.tl_switching_point); // specified in Annex G 
             }
             else if (payloadType == 36)
             {
-                size += stream.ReadClass<ParallelDecodingInfo>(size, out this.parallel_decoding_info); // specified in Annex H 
+                size += stream.ReadClass<ParallelDecodingInfo>(size, () => new ParallelDecodingInfo(payloadSize), out this.parallel_decoding_info); // specified in Annex H 
             }
             else if (payloadType == 37)
             {
-                size += stream.ReadClass<MvcScalableNesting>(size, out this.mvc_scalable_nesting); // specified in Annex H 
+                size += stream.ReadClass<MvcScalableNesting>(size, () => new MvcScalableNesting(payloadSize), out this.mvc_scalable_nesting); // specified in Annex H 
             }
             else if (payloadType == 38)
             {
-                size += stream.ReadClass<ViewScalabilityInfo>(size, out this.view_scalability_info); // specified in Annex H 
+                size += stream.ReadClass<ViewScalabilityInfo>(size, () => new ViewScalabilityInfo(payloadSize), out this.view_scalability_info); // specified in Annex H 
             }
             else if (payloadType == 39)
             {
-                size += stream.ReadClass<MultiviewSceneInfo>(size, out this.multiview_scene_info); // specified in Annex H 
+                size += stream.ReadClass<MultiviewSceneInfo>(size, () => new MultiviewSceneInfo(payloadSize), out this.multiview_scene_info); // specified in Annex H 
             }
             else if (payloadType == 40)
             {
-                size += stream.ReadClass<MultiviewAcquisitionInfo>(size, out this.multiview_acquisition_info); // specified in Annex H 
+                size += stream.ReadClass<MultiviewAcquisitionInfo>(size, () => new MultiviewAcquisitionInfo(payloadSize), out this.multiview_acquisition_info); // specified in Annex H 
             }
             else if (payloadType == 41)
             {
-                size += stream.ReadClass<NonRequiredViewComponent>(size, out this.non_required_view_component); // specified in Annex H 
+                size += stream.ReadClass<NonRequiredViewComponent>(size, () => new NonRequiredViewComponent(payloadSize), out this.non_required_view_component); // specified in Annex H 
             }
             else if (payloadType == 42)
             {
-                size += stream.ReadClass<ViewDependencyChange>(size, out this.view_dependency_change); // specified in Annex H 
+                size += stream.ReadClass<ViewDependencyChange>(size, () => new ViewDependencyChange(payloadSize), out this.view_dependency_change); // specified in Annex H 
             }
             else if (payloadType == 43)
             {
-                size += stream.ReadClass<OperationPointNotPresent>(size, out this.operation_point_not_present); // specified in Annex H 
+                size += stream.ReadClass<OperationPointNotPresent>(size, () => new OperationPointNotPresent(payloadSize), out this.operation_point_not_present); // specified in Annex H 
             }
             else if (payloadType == 44)
             {
-                size += stream.ReadClass<BaseViewTemporalHrd>(size, out this.base_view_temporal_hrd); // specified in Annex H 
+                size += stream.ReadClass<BaseViewTemporalHrd>(size, () => new BaseViewTemporalHrd(payloadSize), out this.base_view_temporal_hrd); // specified in Annex H 
             }
             else if (payloadType == 45)
             {
-                size += stream.ReadClass<FramePackingArrangement>(size, out this.frame_packing_arrangement);
+                size += stream.ReadClass<FramePackingArrangement>(size, () => new FramePackingArrangement(payloadSize), out this.frame_packing_arrangement);
             }
             else if (payloadType == 46)
             {
-                size += stream.ReadClass<MultiviewViewPosition>(size, out this.multiview_view_position); // specified in Annex H 
+                size += stream.ReadClass<MultiviewViewPosition>(size, () => new MultiviewViewPosition(payloadSize), out this.multiview_view_position); // specified in Annex H 
             }
             else if (payloadType == 47)
             {
-                size += stream.ReadClass<DisplayOrientation>(size, out this.display_orientation);
+                size += stream.ReadClass<DisplayOrientation>(size, () => new DisplayOrientation(payloadSize), out this.display_orientation);
             }
             else if (payloadType == 48)
             {
-                size += stream.ReadClass<MvcdScalableNesting>(size, out this.mvcd_scalable_nesting); // specified in Annex I 
+                size += stream.ReadClass<MvcdScalableNesting>(size, () => new MvcdScalableNesting(payloadSize), out this.mvcd_scalable_nesting); // specified in Annex I 
             }
             else if (payloadType == 49)
             {
-                size += stream.ReadClass<MvcdViewScalabilityInfo>(size, out this.mvcd_view_scalability_info); // specified in Annex I 
+                size += stream.ReadClass<MvcdViewScalabilityInfo>(size, () => new MvcdViewScalabilityInfo(payloadSize), out this.mvcd_view_scalability_info); // specified in Annex I 
             }
             else if (payloadType == 50)
             {
-                size += stream.ReadClass<DepthRepresentationInfo>(size, out this.depth_representation_info); // specified in Annex I 
+                size += stream.ReadClass<DepthRepresentationInfo>(size, () => new DepthRepresentationInfo(payloadSize), out this.depth_representation_info); // specified in Annex I 
             }
             else if (payloadType == 51)
             {
-                size += stream.ReadClass<ThreeDimensionalReferenceDisplaysInfo>(size, out this.three_dimensional_reference_displays_info); // specified in Annex I 
+                size += stream.ReadClass<ThreeDimensionalReferenceDisplaysInfo>(size, () => new ThreeDimensionalReferenceDisplaysInfo(payloadSize), out this.three_dimensional_reference_displays_info); // specified in Annex I 
             }
             else if (payloadType == 52)
             {
-                size += stream.ReadClass<DepthTiming>(size, out this.depth_timing); // specified in Annex I 
+                size += stream.ReadClass<DepthTiming>(size, () => new DepthTiming(payloadSize), out this.depth_timing); // specified in Annex I 
             }
             else if (payloadType == 53)
             {
-                size += stream.ReadClass<DepthSamplingInfo>(size, out this.depth_sampling_info); // specified in Annex I 
+                size += stream.ReadClass<DepthSamplingInfo>(size, () => new DepthSamplingInfo(payloadSize), out this.depth_sampling_info); // specified in Annex I 
             }
             else if (payloadType == 54)
             {
-                size += stream.ReadClass<ConstrainedDepthParameterSetIdentifier>(size, out this.constrained_depth_parameter_set_identifier); // specified in Annex J 
+                size += stream.ReadClass<ConstrainedDepthParameterSetIdentifier>(size, () => new ConstrainedDepthParameterSetIdentifier(payloadSize), out this.constrained_depth_parameter_set_identifier); // specified in Annex J 
             }
             else if (payloadType == 56)
             {
-                size += stream.ReadClass<GreenMetadata>(size, out this.green_metadata); // specified in ISO/IEC 23001-11 
+                size += stream.ReadClass<GreenMetadata>(size, () => new GreenMetadata(payloadSize), out this.green_metadata); // specified in ISO/IEC 23001-11 
             }
             else if (payloadType == 137)
             {
-                size += stream.ReadClass<MasteringDisplayColourVolume>(size, out this.mastering_display_colour_volume);
+                size += stream.ReadClass<MasteringDisplayColourVolume>(size, () => new MasteringDisplayColourVolume(payloadSize), out this.mastering_display_colour_volume);
             }
             else if (payloadType == 142)
             {
-                size += stream.ReadClass<ColourRemappingInfo>(size, out this.colour_remapping_info);
+                size += stream.ReadClass<ColourRemappingInfo>(size, () => new ColourRemappingInfo(payloadSize), out this.colour_remapping_info);
             }
             else if (payloadType == 144)
             {
-                size += stream.ReadClass<ContentLightLevelInfo>(size, out this.content_light_level_info);
+                size += stream.ReadClass<ContentLightLevelInfo>(size, () => new ContentLightLevelInfo(payloadSize), out this.content_light_level_info);
             }
             else if (payloadType == 147)
             {
-                size += stream.ReadClass<AlternativeTransferCharacteristics>(size, out this.alternative_transfer_characteristics);
+                size += stream.ReadClass<AlternativeTransferCharacteristics>(size, () => new AlternativeTransferCharacteristics(payloadSize), out this.alternative_transfer_characteristics);
             }
             else if (payloadType == 148)
             {
-                size += stream.ReadClass<AmbientViewingEnvironment>(size, out this.ambient_viewing_environment);
+                size += stream.ReadClass<AmbientViewingEnvironment>(size, () => new AmbientViewingEnvironment(payloadSize), out this.ambient_viewing_environment);
             }
             else if (payloadType == 149)
             {
-                size += stream.ReadClass<ContentColourVolume>(size, out this.content_colour_volume);
+                size += stream.ReadClass<ContentColourVolume>(size, () => new ContentColourVolume(payloadSize), out this.content_colour_volume);
             }
             else if (payloadType == 150)
             {
-                size += stream.ReadClass<EquirectangularProjection>(size, out this.equirectangular_projection);
+                size += stream.ReadClass<EquirectangularProjection>(size, () => new EquirectangularProjection(payloadSize), out this.equirectangular_projection);
             }
             else if (payloadType == 151)
             {
-                size += stream.ReadClass<CubemapProjection>(size, out this.cubemap_projection);
+                size += stream.ReadClass<CubemapProjection>(size, () => new CubemapProjection(payloadSize), out this.cubemap_projection);
             }
             else if (payloadType == 154)
             {
-                size += stream.ReadClass<SphereRotation>(size, out this.sphere_rotation);
+                size += stream.ReadClass<SphereRotation>(size, () => new SphereRotation(payloadSize), out this.sphere_rotation);
             }
             else if (payloadType == 155)
             {
-                size += stream.ReadClass<RegionwisePacking>(size, out this.regionwise_packing);
+                size += stream.ReadClass<RegionwisePacking>(size, () => new RegionwisePacking(payloadSize), out this.regionwise_packing);
             }
             else if (payloadType == 156)
             {
-                size += stream.ReadClass<OmniViewport>(size, out this.omni_viewport);
+                size += stream.ReadClass<OmniViewport>(size, () => new OmniViewport(payloadSize), out this.omni_viewport);
             }
             else if (payloadType == 181)
             {
-                size += stream.ReadClass<AlternativeDepthInfo>(size, out this.alternative_depth_info); // specified in Annex I 
+                size += stream.ReadClass<AlternativeDepthInfo>(size, () => new AlternativeDepthInfo(payloadSize), out this.alternative_depth_info); // specified in Annex I 
             }
             else if (payloadType == 200)
             {
-                size += stream.ReadClass<SeiManifest>(size, out this.sei_manifest);
+                size += stream.ReadClass<SeiManifest>(size, () => new SeiManifest(payloadSize), out this.sei_manifest);
             }
             else if (payloadType == 201)
             {
-                size += stream.ReadClass<SeiPrefixIndication>(size, out this.sei_prefix_indication);
+                size += stream.ReadClass<SeiPrefixIndication>(size, () => new SeiPrefixIndication(payloadSize), out this.sei_prefix_indication);
             }
             else if (payloadType == 202)
             {
-                size += stream.ReadClass<AnnotatedRegions>(size, out this.annotated_regions);
+                size += stream.ReadClass<AnnotatedRegions>(size, () => new AnnotatedRegions(payloadSize), out this.annotated_regions);
             }
             else if (payloadType == 205)
             {
-                size += stream.ReadClass<ShutterIntervalInfo>(size, out this.shutter_interval_info);
+                size += stream.ReadClass<ShutterIntervalInfo>(size, () => new ShutterIntervalInfo(payloadSize), out this.shutter_interval_info);
             }
             else
             {
-                size += stream.ReadClass<ReservedSeiMessage>(size, out this.reserved_sei_message);
+                size += stream.ReadClass<ReservedSeiMessage>(size, () => new ReservedSeiMessage(payloadSize), out this.reserved_sei_message);
             }
 
             if (!stream.ByteAligned())
@@ -4343,7 +4343,7 @@ dec_ref_pic_marking_repetition( payloadSize ) {
                     size += stream.ReadUnsignedInt(size, 1, out this.original_bottom_field_flag);
                 }
             }
-            size += stream.ReadClass<DecRefPicMarking>(size, out this.dec_ref_pic_marking);
+            size += stream.ReadClass<DecRefPicMarking>(size, () => new DecRefPicMarking(), out this.dec_ref_pic_marking);
 
             return size;
         }
@@ -9118,13 +9118,13 @@ vui_parameters() {
 
             if (nal_hrd_parameters_present_flag != 0)
             {
-                size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.vcl_hrd_parameters_present_flag);
 
             if (vcl_hrd_parameters_present_flag != 0)
             {
-                size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
             }
 
             if (nal_hrd_parameters_present_flag != 0 || vcl_hrd_parameters_present_flag != 0)
@@ -11261,7 +11261,7 @@ scalable_nesting( payloadSize ) {
 
             do
             {
-                size += stream.ReadClass<SeiMessage>(size, out this.sei_message);
+                size += stream.ReadClass<SeiMessage>(size, () => new SeiMessage(), out this.sei_message);
             } while (stream.MoreRbspData());
 
             return size;
@@ -11423,13 +11423,13 @@ base_layer_temporal_hrd( payloadSize ) {
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.sei_vcl_hrd_parameters_present_flag[i]);
 
                 if (sei_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -12005,13 +12005,13 @@ svc_vui_parameters_extension() {
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_ext_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -12875,7 +12875,7 @@ mvc_scalable_nesting( payloadSize ) {
             {
                 size += stream.ReadFixed(size, 1, out this.sei_nesting_zero_bit); // equal to 0 
             }
-            size += stream.ReadClass<SeiMessage>(size, out this.sei_message);
+            size += stream.ReadClass<SeiMessage>(size, () => new SeiMessage(), out this.sei_message);
 
             return size;
         }
@@ -14332,13 +14332,13 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_vcl_hrd_parameters_present_flag[i]);
 
                 if (sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -14620,13 +14620,13 @@ mvc_vui_parameters_extension() {
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -14976,13 +14976,13 @@ seq_parameter_set_mvcd_extension() {
 
             if (mvcd_vui_parameters_present_flag == 1)
             {
-                size += stream.ReadClass<MvcdVuiParametersExtension>(size, out this.mvcd_vui_parameters_extension);
+                size += stream.ReadClass<MvcdVuiParametersExtension>(size, () => new MvcdVuiParametersExtension(), out this.mvcd_vui_parameters_extension);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.texture_vui_parameters_present_flag);
 
             if (texture_vui_parameters_present_flag == 1)
             {
-                size += stream.ReadClass<MvcVuiParametersExtension>(size, out this.mvc_vui_parameters_extension);
+                size += stream.ReadClass<MvcVuiParametersExtension>(size, () => new MvcVuiParametersExtension(), out this.mvc_vui_parameters_extension);
             }
 
             return size;
@@ -15385,7 +15385,7 @@ priority_id[ i ] 5 u(5)
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i][j]);
-                    size += stream.ReadClass<MvcdOpViewInfo>(size, out this.mvcd_op_view_info);
+                    size += stream.ReadClass<MvcdOpViewInfo>(size, () => new MvcdOpViewInfo(), out this.mvcd_op_view_info);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.profile_level_info_present_flag[i]);
                 size += stream.ReadUnsignedInt(size, 1, out this.bitrate_info_present_flag[i]);
@@ -15424,7 +15424,7 @@ priority_id[ i ] 5 u(5)
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j]);
-                        size += stream.ReadClass<MvcdOpViewInfo>(size, out this.mvcd_op_view_info);
+                        size += stream.ReadClass<MvcdOpViewInfo>(size, () => new MvcdOpViewInfo(), out this.mvcd_op_view_info);
                     }
                 }
                 else
@@ -15894,7 +15894,7 @@ mvcd_scalable_nesting( payloadSize ) {
             {
                 size += stream.ReadFixed(size, 1, out this.sei_nesting_zero_bit); // equal to 0 
             }
-            size += stream.ReadClass<SeiMessage>(size, out this.sei_message);
+            size += stream.ReadClass<SeiMessage>(size, () => new SeiMessage(), out this.sei_message);
 
             return size;
         }
@@ -16141,22 +16141,26 @@ depth_representation_info( payloadSize ) {
 
                 if (z_near_flag != 0)
                 {
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, out this.depth_representation_sei_element);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("ZNearSign"), H264Helpers.GetArray2("ZNearExp"),
+             H264Helpers.GetArray2("ZNearMantissa"), H264Helpers.GetArray2("ZNearManLen")), out this.depth_representation_sei_element);
                 }
 
                 if (z_far_flag != 0)
                 {
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, out this.depth_representation_sei_element);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("ZFarSign"), H264Helpers.GetArray2("ZFarExp"),
+             H264Helpers.GetArray2("ZFarMantissa"), H264Helpers.GetArray2("ZFarManLen")), out this.depth_representation_sei_element);
                 }
 
                 if (d_min_flag != 0)
                 {
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, out this.depth_representation_sei_element);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("DMinSign"), H264Helpers.GetArray2("DMinExp"),
+             H264Helpers.GetArray2("DMinMantissa"), H264Helpers.GetArray2("DMinManLen")), out this.depth_representation_sei_element);
                 }
 
                 if (d_max_flag != 0)
                 {
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, out this.depth_representation_sei_element);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("DMaxSign"), H264Helpers.GetArray2("DMaxExp"),
+             H264Helpers.GetArray2("DMaxMantissa"), H264Helpers.GetArray2("DMaxManLen")), out this.depth_representation_sei_element);
                 }
             }
 
@@ -16650,12 +16654,12 @@ depth_timing( payloadSize ) {
 
                 for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
-                    size += stream.ReadClass<DepthTimingOffset>(size, out this.depth_timing_offset);
+                    size += stream.ReadClass<DepthTimingOffset>(size, () => new DepthTimingOffset(), out this.depth_timing_offset);
                 }
             }
             else
             {
-                size += stream.ReadClass<DepthTimingOffset>(size, out this.depth_timing_offset);
+                size += stream.ReadClass<DepthTimingOffset>(size, () => new DepthTimingOffset(), out this.depth_timing_offset);
             }
 
             return size;
@@ -17305,12 +17309,12 @@ depth_sampling_info( payloadSize ) {
                 for (i = 0; i <= num_video_plus_depth_views_minus1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.depth_grid_view_id[i]);
-                    size += stream.ReadClass<DepthGridPosition>(size, out this.depth_grid_position);
+                    size += stream.ReadClass<DepthGridPosition>(size, () => new DepthGridPosition(), out this.depth_grid_position);
                 }
             }
             else
             {
-                size += stream.ReadClass<DepthGridPosition>(size, out this.depth_grid_position);
+                size += stream.ReadClass<DepthGridPosition>(size, () => new DepthGridPosition(), out this.depth_grid_position);
             }
 
             return size;
@@ -17624,13 +17628,13 @@ mvcd_vui_parameters_extension() {
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_mvcd_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
                 }
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -17976,8 +17980,8 @@ seq_parameter_set_3davc_extension() {
 
                 if (three_dv_acquisition_idc != 0)
                 {
-                    size += stream.ReadClass<DepthRanges>(size, out this.depth_ranges);
-                    size += stream.ReadClass<VspParam>(size, out this.vsp_param);
+                    size += stream.ReadClass<DepthRanges>(size, () => new DepthRanges(H264Helpers.GetValue("NumDepthViews"), 2, 0), out this.depth_ranges);
+                    size += stream.ReadClass<VspParam>(size, () => new VspParam(H264Helpers.GetValue("NumDepthViews"), 2, 0), out this.vsp_param);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.reduced_resolution_flag);
 
@@ -18373,12 +18377,14 @@ depth_parameter_set_rbsp() {
                 predWeight0 = pred_weight0;
             }
             size += stream.ReadUnsignedIntGolomb(size, out this.num_depth_views_minus1);
-            size += stream.ReadClass<DepthRanges>(size, out this.depth_ranges);
+            size += stream.ReadClass<DepthRanges>(size, () => new DepthRanges(num_depth_views_minus1 + 1, pred_direction,
+  depth_parameter_set_id), out this.depth_ranges);
             size += stream.ReadUnsignedInt(size, 1, out this.vsp_param_flag);
 
             if (vsp_param_flag != 0)
             {
-                size += stream.ReadClass<VspParam>(size, out this.vsp_param);
+                size += stream.ReadClass<VspParam>(size, () => new VspParam(num_depth_views_minus1 + 1, pred_direction,
+  depth_parameter_set_id), out this.vsp_param);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_flag);
             size += stream.ReadUnsignedIntGolomb(size, out this.nonlinear_depth_representation_num);
@@ -18397,7 +18403,7 @@ depth_parameter_set_rbsp() {
                     size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_data_flag);
                 }
             }
-            size += stream.ReadClass<RbspTrailingBits>(size, out this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
 
             return size;
         }
@@ -18511,11 +18517,11 @@ depth_ranges( numViews, predDirection, index ) {
  z_near_flag 11 u(1) 
  z_far_flag 11 u(1) 
  if( z_near_flag )   
-  three_dv_acquisition_element( numViews, 0, predDirection, 7, index, 
+  three_dv_acquisition_element( numViews, predDirection, 7, index, 
    ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen ) 
   
  if( z_far_flag )   
-  three_dv_acquisition_element( numViews, 0, predDirection, 7, index, 
+  three_dv_acquisition_element( numViews, predDirection, 7, index, 
    ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen ) 
   
 }
@@ -18551,12 +18557,14 @@ depth_ranges( numViews, predDirection, index ) {
 
             if (z_near_flag != 0)
             {
-                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, out this.three_dv_acquisition_element);
+                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, () => new ThreeDvAcquisitionElement(numViews, predDirection, 7, index,
+   H264Helpers.GetArray2("ZNearSign"), H264Helpers.GetArray2("ZNearExp"), H264Helpers.GetArray2("ZNearMantissa"), H264Helpers.GetArray2("ZNearManLen")), out this.three_dv_acquisition_element);
             }
 
             if (z_far_flag != 0)
             {
-                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, out this.three_dv_acquisition_element);
+                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, () => new ThreeDvAcquisitionElement(numViews, predDirection, 7, index,
+   H264Helpers.GetArray2("ZFarSign"), H264Helpers.GetArray2("ZFarExp"), H264Helpers.GetArray2("ZFarMantissa"), H264Helpers.GetArray2("ZFarManLen")), out this.three_dv_acquisition_element);
             }
 
             return size;

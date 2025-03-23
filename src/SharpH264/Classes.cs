@@ -74,6 +74,11 @@ Depending on the value of separate_colour_plane_flag, the value of the variable 
             throw new NotImplementedException();
         }
 
+        public static uint[,] GetArray2(string field)
+        {
+            throw new NotImplementedException();
+        }
+
         public static uint GetAllViewsPairedFlag()
         {
             /*
@@ -240,6 +245,13 @@ AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFl
 
     public class GreenMetadata : IItuSerializable
     {
+        private uint payloadSize;
+
+        public GreenMetadata(uint payloadSize)
+        {
+            this.payloadSize = payloadSize;
+        }
+
         public ulong Read(ItuStream stream)
         {
             throw new NotImplementedException();

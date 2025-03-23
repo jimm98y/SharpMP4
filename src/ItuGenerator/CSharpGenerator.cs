@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 namespace ItuGenerator
 {
@@ -230,7 +231,7 @@ namespace Sharp{type}
             }
            
             string name = GetFieldName(field as ItuField);
-            string m = methodType == MethodType.Read ? GetReadMethod(field as ItuField) : (methodType == MethodType.Write ? GetWriteMethod(field as ItuField) : GetCalculateSizeMethod(field as ItuField));
+            string m = methodType == MethodType.Read ? GetReadMethod(b, field as ItuField) : (methodType == MethodType.Write ? GetWriteMethod(field as ItuField) : GetCalculateSizeMethod(field as ItuField));
             string typedef = (field as ItuField).FieldArray;
 
             string fieldComment = "";
@@ -499,7 +500,7 @@ namespace Sharp{type}
             }
         }
 
-        private string GetReadMethod(ItuField ituField)
+        private string GetReadMethod(ItuClass b, ItuField ituField)
         {
             switch(ituField.Type)
             {
@@ -569,9 +570,42 @@ namespace Sharp{type}
                     return "stream.ReadBits(size, 8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"stream.ReadClass<{ituField.Name.ToPropertyCase()}>(size, ";
+                        return $"stream.ReadClass<{ituField.Name.ToPropertyCase()}>(size, () => new {ituField.Name.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter)}, ";
                     throw new NotImplementedException();
             }
+        }
+
+        private string FixMissingParameters(ItuClass b, string parameter)
+        {
+            parameter = parameter.Replace("ZNearSign", $"H264Helpers.GetArray2(\"ZNearSign\")");
+            parameter = parameter.Replace("ZNearExp", $"H264Helpers.GetArray2(\"ZNearExp\")");
+            parameter = parameter.Replace("ZNearMantissa", $"H264Helpers.GetArray2(\"ZNearMantissa\")");
+            parameter = parameter.Replace("ZNearManLen", $"H264Helpers.GetArray2(\"ZNearManLen\")");
+
+            parameter = parameter.Replace("ZFarSign", $"H264Helpers.GetArray2(\"ZFarSign\")");
+            parameter = parameter.Replace("ZFarExp", $"H264Helpers.GetArray2(\"ZFarExp\")");
+            parameter = parameter.Replace("ZFarMantissa", $"H264Helpers.GetArray2(\"ZFarMantissa\")");
+            parameter = parameter.Replace("ZFarManLen", $"H264Helpers.GetArray2(\"ZFarManLen\")");
+
+            parameter = parameter.Replace("DMinSign", $"H264Helpers.GetArray2(\"DMinSign\")");
+            parameter = parameter.Replace("DMinExp", $"H264Helpers.GetArray2(\"DMinExp\")");
+            parameter = parameter.Replace("DMinMantissa", $"H264Helpers.GetArray2(\"DMinMantissa\")");
+            parameter = parameter.Replace("DMinManLen", $"H264Helpers.GetArray2(\"DMinManLen\")");
+
+            parameter = parameter.Replace("DMaxSign", $"H264Helpers.GetArray2(\"DMaxSign\")");
+            parameter = parameter.Replace("DMaxExp", $"H264Helpers.GetArray2(\"DMaxExp\")");
+            parameter = parameter.Replace("DMaxMantissa", $"H264Helpers.GetArray2(\"DMaxMantissa\")");
+            parameter = parameter.Replace("DMaxManLen", $"H264Helpers.GetArray2(\"DMaxManLen\")");
+            
+            parameter = parameter.Replace("NumDepthViews", $"H264Helpers.GetValue(\"NumDepthViews\")");
+
+            parameter = parameter.Replace("ScalingList4x4[ i ]", "new uint[6 * 16]");
+            parameter = parameter.Replace("UseDefaultScalingMatrix4x4Flag[ i ]", "0");
+
+            parameter = parameter.Replace("ScalingList8x8[ i - 6 ]", "new uint[6 * 64]");
+            parameter = parameter.Replace("UseDefaultScalingMatrix8x8Flag[ i - 6 ]", $"0");
+
+            return parameter;
         }
 
         private static Dictionary<string, string> GetCSharpTypeMapping()

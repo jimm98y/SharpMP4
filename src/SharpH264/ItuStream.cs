@@ -76,9 +76,12 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
-        internal ulong ReadClass<T>(ulong size, out T value)
+        internal ulong ReadClass<T>(ulong size, Func<T> factory, out T value) where T : IItuSerializable
         {
-            throw new NotImplementedException();
+            T c = factory();
+            ulong read = c.Read(this);
+            value = c;
+            return read;
         }
 
         internal ulong WriteBits(int count, byte value)
