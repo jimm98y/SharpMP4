@@ -37,6 +37,10 @@ namespace SharpH264
 
         private long WriteByte(byte value)
         {
+            if(value == 95)
+            {
+
+            }
             _stream.WriteByte(value);
             return 8;
         }
@@ -149,7 +153,7 @@ namespace SharpH264
 
         internal bool ByteAligned()
         {
-            return _currentBytePosition % 8 == 0;
+            return _bitsPosition % 8 == 0;
         }
 
         internal ulong ReadClass<T>(ulong size, Func<T> factory, out T value) where T : IItuSerializable
@@ -340,15 +344,6 @@ namespace SharpH264
         internal ulong WriteSignedIntVariable(int value)
         {
             throw new NotImplementedException();
-        }
-
-        public void Flush()
-        {
-            if (_currentBytePosition != 0)
-            {
-                WriteByte(_currentByte);
-                _currentBytePosition = 0;
-            }
         }
 
         #region IDisposable 

@@ -21,15 +21,15 @@
    nalUnitHeaderBytes += 3   
   }   
  }   
- for( i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++ ) {   
+ /*for( i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++ ) {   
   if( i + 2 < NumBytesInNALunit && next_bits( 24 )  ==  0x000003 ) {   
    rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
    rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
    i += 2   
-   emulation_prevention_three_byte  /* equal to 0x03 */ All f(8) 
+   emulation_prevention_three_byte  *//* equal to 0x03 *//* All f(8) 
   } else   
    rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
- }   
+ }*/ 
 }  
 
 seq_parameter_set_rbsp() { 

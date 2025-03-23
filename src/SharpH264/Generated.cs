@@ -30,15 +30,15 @@ nal_unit( NumBytesInNALunit ) {
    nalUnitHeaderBytes += 3   
   }   
  }   
- for( i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++ ) {   
+ /*for( i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++ ) {   
   if( i + 2 < NumBytesInNALunit && next_bits( 24 )  ==  0x000003 ) {   
    rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
    rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
    i += 2   
-   emulation_prevention_three_byte  /* equal to 0x03 *//* All f(8) 
+   emulation_prevention_three_byte  *//*/* equal to 0x03 *//*/* All f(8) 
   } else   
    rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
- }   
+ }*//* 
 }
     */
     public class NalUnit : IItuSerializable
@@ -59,10 +59,6 @@ nal_unit( NumBytesInNALunit ) {
         public NalUnitHeader3davcExtension NalUnitHeader3davcExtension { get { return nal_unit_header_3davc_extension; } set { nal_unit_header_3davc_extension = value; } }
         private NalUnitHeaderMvcExtension nal_unit_header_mvc_extension;
         public NalUnitHeaderMvcExtension NalUnitHeaderMvcExtension { get { return nal_unit_header_mvc_extension; } set { nal_unit_header_mvc_extension = value; } }
-        private byte[] rbsp_byte;
-        public byte[] RbspByte { get { return rbsp_byte; } set { rbsp_byte = value; } }
-        private uint emulation_prevention_three_byte;
-        public uint EmulationPreventionThreeByte { get { return emulation_prevention_three_byte; } set { emulation_prevention_three_byte = value; } }
         private uint numBytesInNALunit;
         public uint NumBytesInNALunit { get { return numBytesInNALunit; } set { numBytesInNALunit = value; } }
 
@@ -77,7 +73,6 @@ nal_unit( NumBytesInNALunit ) {
 
             uint NumBytesInRBSP = 0;
             uint nalUnitHeaderBytes = 0;
-            uint i = 0;
             size += stream.ReadFixed(size, 1, out this.forbidden_zero_bit);
             size += stream.ReadUnsignedInt(size, 2, out this.nal_ref_idc);
             size += stream.ReadUnsignedInt(size, 5, out this.nal_unit_type);
@@ -112,23 +107,20 @@ nal_unit( NumBytesInNALunit ) {
                     nalUnitHeaderBytes += 3;
                 }
             }
+            /* for( i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++ ) {   
+              if( i + 2 < NumBytesInNALunit && next_bits( 24 )  ==  0x000003 ) {   
+               rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
+               rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
+               i += 2   
+               emulation_prevention_three_byte   */
 
-            this.rbsp_byte = new byte[NumBytesInNALunit];
-            for (i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++)
-            {
+            /*  equal to 0x03  */
 
-                if (i + 2 < NumBytesInNALunit && stream.NextBits(24) == 0x000003)
-                {
-                    size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRBSP++]);
-                    size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRBSP++]);
-                    i += 2;
-                    size += stream.ReadFixed(size, 8, out this.emulation_prevention_three_byte); // equal to 0x03 
-                }
-                else
-                {
-                    size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRBSP++]);
-                }
-            }
+            /*  All f(8) 
+              } else   
+               rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
+             } */
+
 
             return size;
         }
@@ -139,7 +131,6 @@ nal_unit( NumBytesInNALunit ) {
 
             uint NumBytesInRBSP = 0;
             uint nalUnitHeaderBytes = 0;
-            uint i = 0;
             size += stream.WriteFixed(1, this.forbidden_zero_bit);
             size += stream.WriteUnsignedInt(2, this.nal_ref_idc);
             size += stream.WriteUnsignedInt(5, this.nal_unit_type);
@@ -174,22 +165,20 @@ nal_unit( NumBytesInNALunit ) {
                     nalUnitHeaderBytes += 3;
                 }
             }
+            /* for( i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++ ) {   
+              if( i + 2 < NumBytesInNALunit && next_bits( 24 )  ==  0x000003 ) {   
+               rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
+               rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
+               i += 2   
+               emulation_prevention_three_byte   */
 
-            for (i = nalUnitHeaderBytes; i < NumBytesInNALunit; i++)
-            {
+            /*  equal to 0x03  */
 
-                if (i + 2 < NumBytesInNALunit && stream.NextBits(24) == 0x000003)
-                {
-                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRBSP++]);
-                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRBSP++]);
-                    i += 2;
-                    size += stream.WriteFixed(8, this.emulation_prevention_three_byte); // equal to 0x03 
-                }
-                else
-                {
-                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRBSP++]);
-                }
-            }
+            /*  All f(8) 
+              } else   
+               rbsp_byte[ NumBytesInRBSP++ ] All b(8) 
+             } */
+
 
             return size;
         }
