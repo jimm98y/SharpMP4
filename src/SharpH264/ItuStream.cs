@@ -11,6 +11,7 @@ namespace SharpH264
         ulong Read(ItuStream stream);
         ulong Write(ItuStream stream);
         int HasMoreRbspData { get; set; }
+        int ReadNextBits { get; set; }
     }
 
     public class ItuStream : IDisposable
@@ -25,6 +26,7 @@ namespace SharpH264
         private readonly Stream _stream;
 
         private int _rbspDataCounter = 0;
+        private int _readNextBitsCounter = 0;
 
         private bool _disposedValue;
 
@@ -334,14 +336,20 @@ namespace SharpH264
             using (var ituStream = new ItuStream(new MemoryStream(bytes)))
             {
                 ituStream.ReadBits(_bitsPosition % 8);
-                return (int)ituStream.ReadBits(8);
+                int ret = (int)ituStream.ReadBits(8);
+                if (ret == 0xFF)
+                    serializable.ReadNextBits++;
+                return ret;
             }
         }
 
         internal int WriteNextBits(IItuSerializable serializable, int count)
         {
-            // TODO: same trick as in WriteMoreRbspData
-            return 0xFF; // 0xFF;
+            if (serializable.ReadNextBits == 0)
+                return 0;
+            else if (_readNextBitsCounter == 0)
+                _readNextBitsCounter = serializable.ReadNextBits;
+            return _readNextBitsCounter-- != 0 ? 0xFF : 0;
         }
 
         internal ulong ReadBits(ulong size, int count, out byte value)

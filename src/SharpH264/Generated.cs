@@ -63,6 +63,7 @@ nal_unit( NumBytesInNALunit ) {
         public uint NumBytesInNALunit { get { return numBytesInNALunit; } set { numBytesInNALunit = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public NalUnit(uint NumBytesInNALunit)
         {
@@ -203,6 +204,7 @@ seq_parameter_set_rbsp() {
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeqParameterSetRbsp()
         {
@@ -385,6 +387,7 @@ seq_parameter_set_data() {
         public VuiParameters VuiParameters { get { return vui_parameters; } set { vui_parameters = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeqParameterSetData()
         {
@@ -632,6 +635,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
         public byte UseDefaultScalingMatrixFlag { get { return useDefaultScalingMatrixFlag; } set { useDefaultScalingMatrixFlag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ScalingList(uint[] scalingLst, uint sizeOfScalingList, byte useDefaultScalingMatrixFlag)
         {
@@ -734,6 +738,7 @@ seq_parameter_set_extension_rbsp() {
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeqParameterSetExtensionRbsp()
         {
@@ -845,6 +850,7 @@ subset_seq_parameter_set_rbsp() {
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SubsetSeqParameterSetRbsp()
         {
@@ -1085,6 +1091,7 @@ pic_parameter_set_rbsp() {
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public PicParameterSetRbsp()
         {
@@ -1310,6 +1317,7 @@ sei_rbsp() {
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeiRbsp()
         {
@@ -1379,6 +1387,7 @@ sei_message() {
         public SeiPayload SeiPayload { get { return sei_payload; } set { sei_payload = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeiMessage()
         {
@@ -1461,6 +1470,7 @@ access_unit_delimiter_rbsp() {
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public AccessUnitDelimiterRbsp()
         {
@@ -1506,6 +1516,7 @@ rbsp_trailing_bits() {
         public uint RbspAlignmentZeroBit { get { return rbsp_alignment_zero_bit; } set { rbsp_alignment_zero_bit = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public RbspTrailingBits()
         {
@@ -1590,6 +1601,7 @@ dec_ref_pic_marking() {
         public uint MaxLongTermFrameIdxPlus1 { get { return max_long_term_frame_idx_plus1; } set { max_long_term_frame_idx_plus1 = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DecRefPicMarking()
         {
@@ -2012,6 +2024,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeiPayload(uint payloadType, uint payloadSize)
         {
@@ -2672,6 +2685,7 @@ buffering_period( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public BufferingPeriod(uint payloadSize)
         {
@@ -2828,6 +2842,7 @@ pic_timing( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public PicTiming(uint payloadSize)
         {
@@ -3015,6 +3030,7 @@ if( !pan_scan_rect_cancel_flag ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public PanScanRect(uint payloadSize)
         {
@@ -3093,6 +3109,7 @@ filler_payload( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public FillerPayload(uint payloadSize)
         {
@@ -3158,6 +3175,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public UserDataRegisteredItutT35(uint payloadSize)
         {
@@ -3237,6 +3255,7 @@ user_data_unregistered( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public UserDataUnregistered(uint payloadSize)
         {
@@ -3299,6 +3318,7 @@ recovery_point( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public RecoveryPoint(uint payloadSize)
         {
@@ -3361,6 +3381,7 @@ dec_ref_pic_marking_repetition( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DecRefPicMarkingRepetition(uint payloadSize)
         {
@@ -3462,6 +3483,7 @@ spare_pic( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SparePic(uint payloadSize)
         {
@@ -3602,6 +3624,7 @@ scene_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SceneInfo(uint payloadSize)
         {
@@ -3684,6 +3707,7 @@ sub_seq_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SubSeqInfo(uint payloadSize)
         {
@@ -3756,6 +3780,7 @@ sub_seq_layer_characteristics( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SubSeqLayerCharacteristics(uint payloadSize)
         {
@@ -3851,6 +3876,7 @@ sub_seq_characteristics( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SubSeqCharacteristics(uint payloadSize)
         {
@@ -3940,6 +3966,7 @@ full_frame_freeze( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public FullFrameFreeze(uint payloadSize)
         {
@@ -3978,6 +4005,7 @@ full_frame_freeze_release( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public FullFrameFreezeRelease(uint payloadSize)
         {
@@ -4017,6 +4045,7 @@ full_frame_snapshot( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public FullFrameSnapshot(uint payloadSize)
         {
@@ -4061,6 +4090,7 @@ progressive_refinement_segment_start( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ProgressiveRefinementSegmentStart(uint payloadSize)
         {
@@ -4104,6 +4134,7 @@ progressive_refinement_segment_end( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ProgressiveRefinementSegmentEnd(uint payloadSize)
         {
@@ -4161,6 +4192,7 @@ motion_constrained_slice_group_set( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MotionConstrainedSliceGroupSet(uint payloadSize)
         {
@@ -4299,6 +4331,7 @@ film_grain_characteristics( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public FilmGrainCharacteristics(uint payloadSize)
         {
@@ -4457,6 +4490,7 @@ deblocking_filter_display_preference( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DeblockingFilterDisplayPreference(uint payloadSize)
         {
@@ -4530,6 +4564,7 @@ stereo_video_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public StereoVideoInfo(uint payloadSize)
         {
@@ -4610,6 +4645,7 @@ post_filter_hint( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public PostFilterHint(uint payloadSize)
         {
@@ -4783,6 +4819,7 @@ tone_mapping_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ToneMappingInfo(uint payloadSize)
         {
@@ -5016,6 +5053,7 @@ frame_packing_arrangement( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public FramePackingArrangement(uint payloadSize)
         {
@@ -5126,6 +5164,7 @@ display_orientation( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DisplayOrientation(uint payloadSize)
         {
@@ -5203,6 +5242,7 @@ display_orientation( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MasteringDisplayColourVolume(uint payloadSize)
         {
@@ -5338,6 +5378,7 @@ colour_remapping_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ColourRemappingInfo(uint payloadSize)
         {
@@ -5522,6 +5563,7 @@ content_light_level_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ContentLightLevelInfo(uint payloadSize)
         {
@@ -5565,6 +5607,7 @@ alternative_transfer_characteristics( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public AlternativeTransferCharacteristics(uint payloadSize)
         {
@@ -5647,6 +5690,7 @@ content_colour_volume( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ContentColourVolume(uint payloadSize)
         {
@@ -5768,6 +5812,7 @@ ambient_viewing_environment( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public AmbientViewingEnvironment(uint payloadSize)
         {
@@ -5835,6 +5880,7 @@ equirectangular_projection( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public EquirectangularProjection(uint payloadSize)
         {
@@ -5908,6 +5954,7 @@ cubemap_projection( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public CubemapProjection(uint payloadSize)
         {
@@ -5976,6 +6023,7 @@ sphere_rotation( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SphereRotation(uint payloadSize)
         {
@@ -6120,6 +6168,7 @@ regionwise_packing( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public RegionwisePacking(uint payloadSize)
         {
@@ -6296,6 +6345,7 @@ omni_viewport( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public OmniViewport(uint payloadSize)
         {
@@ -6384,6 +6434,7 @@ sei_manifest( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeiManifest(uint payloadSize)
         {
@@ -6457,6 +6508,7 @@ sei_prefix_indication( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeiPrefixIndication(uint payloadSize)
         {
@@ -6649,6 +6701,7 @@ annotated_regions( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public AnnotatedRegions(uint payloadSize)
         {
@@ -6925,6 +6978,7 @@ shutter_interval_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ShutterIntervalInfo(uint payloadSize)
         {
@@ -7020,6 +7074,7 @@ reserved_sei_message( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ReservedSeiMessage(uint payloadSize)
         {
@@ -7185,6 +7240,7 @@ vui_parameters() {
         public uint MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public VuiParameters()
         {
@@ -7408,6 +7464,7 @@ hrd_parameters() {
         public uint TimeOffsetLength { get { return time_offset_length; } set { time_offset_length = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public HrdParameters()
         {
@@ -7507,6 +7564,7 @@ reserved_three_2bits All u(2)
         public uint ReservedThree2bits { get { return reserved_three_2bits; } set { reserved_three_2bits = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public NalUnitHeaderSvcExtension()
         {
@@ -7608,6 +7666,7 @@ seq_parameter_set_svc_extension() {
         public byte SliceHeaderRestrictionFlag { get { return slice_header_restriction_flag; } set { slice_header_restriction_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeqParameterSetSvcExtension()
         {
@@ -7992,6 +8051,7 @@ scalability_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ScalabilityInfo(uint payloadSize)
         {
@@ -8515,6 +8575,7 @@ sub_pic_scalable_layer( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SubPicScalableLayer(uint payloadSize)
         {
@@ -8572,6 +8633,7 @@ non_required_layer_rep( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public NonRequiredLayerRep(uint payloadSize)
         {
@@ -8655,6 +8717,7 @@ priority_layer_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public PriorityLayerInfo(uint payloadSize)
         {
@@ -8716,6 +8779,7 @@ layers_not_present( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public LayersNotPresent(uint payloadSize)
         {
@@ -8791,6 +8855,7 @@ layer_dependency_change( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public LayerDependencyChange(uint payloadSize)
         {
@@ -8907,6 +8972,7 @@ scalable_nesting( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ScalableNesting(uint payloadSize)
         {
@@ -9036,6 +9102,7 @@ base_layer_temporal_hrd( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public BaseLayerTemporalHrd(uint payloadSize)
         {
@@ -9160,6 +9227,7 @@ quality_layer_integrity_check( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public QualityLayerIntegrityCheck(uint payloadSize)
         {
@@ -9255,6 +9323,7 @@ redundant_pic_property( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public RedundantPicProperty(uint payloadSize)
         {
@@ -9381,6 +9450,7 @@ tl0_dep_rep_index( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public Tl0DepRepIndex(uint payloadSize)
         {
@@ -9424,6 +9494,7 @@ delta_frame_num 5 se(v)
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public TlSwitchingPoint(uint payloadSize)
         {
@@ -9509,6 +9580,7 @@ svc_vui_parameters_extension() {
         public byte[] VuiExtPicStructPresentFlag { get { return vui_ext_pic_struct_present_flag; } set { vui_ext_pic_struct_present_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SvcVuiParametersExtension()
         {
@@ -9647,6 +9719,7 @@ reserved_one_bit All u(1)
         public byte ReservedOneBit { get { return reserved_one_bit; } set { reserved_one_bit = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public NalUnitHeaderMvcExtension()
         {
@@ -9791,6 +9864,7 @@ seq_parameter_set_mvc_extension() {
         public byte RpuFieldProcessingFlag { get { return rpu_field_processing_flag; } set { rpu_field_processing_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeqParameterSetMvcExtension()
         {
@@ -10044,6 +10118,7 @@ parallel_decoding_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ParallelDecodingInfo(uint payloadSize)
         {
@@ -10191,6 +10266,7 @@ mvc_scalable_nesting( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MvcScalableNesting(uint payloadSize)
         {
@@ -10420,6 +10496,7 @@ view_scalability_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ViewScalabilityInfo(uint payloadSize)
         {
@@ -10688,6 +10765,7 @@ multiview_scene_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MultiviewSceneInfo(uint payloadSize)
         {
@@ -10830,6 +10908,7 @@ if (intrinsic_param_flag ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MultiviewAcquisitionInfo(uint payloadSize)
         {
@@ -11035,6 +11114,7 @@ non_required_view_component( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public NonRequiredViewComponent(uint payloadSize)
         {
@@ -11134,6 +11214,7 @@ view_dependency_change( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ViewDependencyChange(uint payloadSize)
         {
@@ -11267,6 +11348,7 @@ operation_point_not_present( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public OperationPointNotPresent(uint payloadSize)
         {
@@ -11360,6 +11442,7 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public BaseViewTemporalHrd(uint payloadSize)
         {
@@ -11483,6 +11566,7 @@ multiview_view_position_extension_flag 5 u(1)
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MultiviewViewPosition(uint payloadSize)
         {
@@ -11584,6 +11668,7 @@ mvc_vui_parameters_extension() {
         public byte[] VuiMvcPicStructPresentFlag { get { return vui_mvc_pic_struct_present_flag; } set { vui_mvc_pic_struct_present_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MvcVuiParametersExtension()
         {
@@ -11814,6 +11899,7 @@ seq_parameter_set_mvcd_extension() {
         public MvcVuiParametersExtension MvcVuiParametersExtension { get { return mvc_vui_parameters_extension; } set { mvc_vui_parameters_extension = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeqParameterSetMvcdExtension()
         {
@@ -12194,6 +12280,7 @@ priority_id[ i ] 5 u(5)
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MvcdViewScalabilityInfo(uint payloadSize)
         {
@@ -12475,6 +12562,7 @@ mvcd_op_view_info() {
         public byte MvcdTextureViewFlag { get { return mvcd_texture_view_flag; } set { mvcd_texture_view_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MvcdOpViewInfo()
         {
@@ -12586,6 +12674,7 @@ mvcd_scalable_nesting( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MvcdScalableNesting(uint payloadSize)
         {
@@ -12783,6 +12872,7 @@ depth_representation_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DepthRepresentationInfo(uint payloadSize)
         {
@@ -12992,6 +13082,7 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
         public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DepthRepresentationSeiElement(uint[,] outSign, uint[,] outExp, uint[,] outMantissa, uint[,] outManLen)
         {
@@ -13088,6 +13179,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ThreeDimensionalReferenceDisplaysInfo(uint payloadSize)
         {
@@ -13208,6 +13300,7 @@ depth_timing( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DepthTiming(uint payloadSize)
         {
@@ -13281,6 +13374,7 @@ depth_timing_offset() {
         public uint DepthDispDelayOffsetDp { get { return depth_disp_delay_offset_dp; } set { depth_disp_delay_offset_dp = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DepthTimingOffset()
         {
@@ -13453,6 +13547,7 @@ alternative_depth_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public AlternativeDepthInfo(uint payloadSize)
         {
@@ -13730,6 +13825,7 @@ depth_sampling_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DepthSamplingInfo(uint payloadSize)
         {
@@ -13815,6 +13911,7 @@ constrained_depth_parameter_set_identifier(payloadSize) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ConstrainedDepthParameterSetIdentifier(uint payloadSize)
         {
@@ -13871,6 +13968,7 @@ depth_grid_pos_y_sign_flag 5 u(1)
         public byte DepthGridPosySignFlag { get { return depth_grid_pos_y_sign_flag; } set { depth_grid_pos_y_sign_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DepthGridPosition()
         {
@@ -13974,6 +14072,7 @@ mvcd_vui_parameters_extension() {
         public byte[] VuiMvcdPicStructPresentFlag { get { return vui_mvcd_pic_struct_present_flag; } set { vui_mvcd_pic_struct_present_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public MvcdVuiParametersExtension()
         {
@@ -14128,6 +14227,7 @@ nal_unit_header_3davc_extension() {
         public byte InterViewFlag { get { return inter_view_flag; } set { inter_view_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public NalUnitHeader3davcExtension()
         {
@@ -14293,6 +14393,7 @@ seq_parameter_set_3davc_extension() {
         public uint[][] NonAnchorRefL1 { get { return non_anchor_ref_l1; } set { non_anchor_ref_l1 = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public SeqParameterSet3davcExtension()
         {
@@ -14587,6 +14688,7 @@ depth_parameter_set_rbsp() {
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DepthParameterSetRbsp()
         {
@@ -14730,6 +14832,7 @@ depth_ranges( numViews, predDirection, index ) {
         public uint Index { get { return index; } set { index = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public DepthRanges(uint numViews, uint predDirection, uint index)
         {
@@ -14882,6 +14985,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
         public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public ThreeDvAcquisitionElement(uint numViews, uint predDirection, uint expLen, uint index, uint[,] outSign, uint[,] outExp, uint[,] outMantissa, uint[,] outManLen)
         {
@@ -15130,6 +15234,7 @@ vsp_param( numViews, predDirection, index ) {
         public uint Index { get { return index; } set { index = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public VspParam(uint numViews, uint predDirection, uint index)
         {
@@ -15244,6 +15349,7 @@ green_metadata(payloadSize) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
+        public int ReadNextBits { get; set; }
 
         public GreenMetadata(uint payloadSize)
         {

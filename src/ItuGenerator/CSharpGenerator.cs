@@ -49,6 +49,7 @@ namespace Sharp{type}
 
             resultCode += @"
          public int HasMoreRbspData { get; set; }
+         public int ReadNextBits { get; set; }
 ";
 
             resultCode += GenerateCtor(ituClass);
