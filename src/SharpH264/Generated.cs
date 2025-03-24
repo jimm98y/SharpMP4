@@ -11,7 +11,7 @@ nal_unit( NumBytesInNALunit ) {
  forbidden_zero_bit All f(1) 
  nal_ref_idc All u(2) 
  nal_unit_type All u(5) 
- NumBytesInRBSP = 0   
+ /* NumBytesInRBSP = 0 *//*
  nalUnitHeaderBytes = 1   
  if( nal_unit_type  ==  14  ||  nal_unit_type  ==  20  ||  nal_unit_type  ==  21 ) { 
   
@@ -73,12 +73,12 @@ nal_unit( NumBytesInNALunit ) {
         {
             ulong size = 0;
 
-            uint NumBytesInRBSP = 0;
             uint nalUnitHeaderBytes = 0;
             size += stream.ReadFixed(size, 1, out this.forbidden_zero_bit);
             size += stream.ReadUnsignedInt(size, 2, out this.nal_ref_idc);
             size += stream.ReadUnsignedInt(size, 5, out this.nal_unit_type);
-            NumBytesInRBSP = 0;
+            /*  NumBytesInRBSP = 0  */
+
             nalUnitHeaderBytes = 1;
 
             if (nal_unit_type == 14 || nal_unit_type == 20 || nal_unit_type == 21)
@@ -131,12 +131,12 @@ nal_unit( NumBytesInNALunit ) {
         {
             ulong size = 0;
 
-            uint NumBytesInRBSP = 0;
             uint nalUnitHeaderBytes = 0;
             size += stream.WriteFixed(1, this.forbidden_zero_bit);
             size += stream.WriteUnsignedInt(2, this.nal_ref_idc);
             size += stream.WriteUnsignedInt(5, this.nal_unit_type);
-            NumBytesInRBSP = 0;
+            /*  NumBytesInRBSP = 0  */
+
             nalUnitHeaderBytes = 1;
 
             if (nal_unit_type == 14 || nal_unit_type == 20 || nal_unit_type == 21)
@@ -15185,6 +15185,130 @@ vsp_param( numViews, predDirection, index ) {
                     size += stream.WriteUnsignedIntGolomb(this.disparity_diff_wij[i][j]);
                     size += stream.WriteUnsignedIntGolomb(this.disparity_diff_oij[i][j]);
                 }
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+   
+
+green_metadata(payloadSize) {
+    green_metadata_type 5 u(8)
+    if (green_metadata_type == 0) {
+        period_type 5 u(8)
+
+        if (period_type == 2) {
+            num_seconds 5 u(16)
+        }
+        else if (period_type == 3) {
+            num_pictures 5 u(16)
+        }
+
+        percent_non_zero_macroblocks 5 u(8)
+        percent_intra_coded_macroblocks 5 u(8)
+        percent_six_tap_filtering 5 u(8)
+        percent_alpha_point_deblocking_instance 5 u(8)
+    }
+    else if (green_metadata_type == 1) {
+        xsd_metric_type 5 u(8)
+        xsd_metric_value 5 u(16)
+    }
+}
+    */
+    public class GreenMetadata : IItuSerializable
+    {
+        private uint green_metadata_type;
+        public uint GreenMetadataType { get { return green_metadata_type; } set { green_metadata_type = value; } }
+        private uint period_type;
+        public uint PeriodType { get { return period_type; } set { period_type = value; } }
+        private uint num_seconds;
+        public uint NumSeconds { get { return num_seconds; } set { num_seconds = value; } }
+        private uint num_pictures;
+        public uint NumPictures { get { return num_pictures; } set { num_pictures = value; } }
+        private uint percent_non_zero_macroblocks;
+        public uint PercentNonZeroMacroblocks { get { return percent_non_zero_macroblocks; } set { percent_non_zero_macroblocks = value; } }
+        private uint percent_intra_coded_macroblocks;
+        public uint PercentIntraCodedMacroblocks { get { return percent_intra_coded_macroblocks; } set { percent_intra_coded_macroblocks = value; } }
+        private uint percent_six_tap_filtering;
+        public uint PercentSixTapFiltering { get { return percent_six_tap_filtering; } set { percent_six_tap_filtering = value; } }
+        private uint percent_alpha_point_deblocking_instance;
+        public uint PercentAlphaPointDeblockingInstance { get { return percent_alpha_point_deblocking_instance; } set { percent_alpha_point_deblocking_instance = value; } }
+        private uint xsd_metric_type;
+        public uint XsdMetricType { get { return xsd_metric_type; } set { xsd_metric_type = value; } }
+        private uint xsd_metric_value;
+        public uint XsdMetricValue { get { return xsd_metric_value; } set { xsd_metric_value = value; } }
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+
+        public int HasMoreRbspData { get; set; }
+
+        public GreenMetadata(uint payloadSize)
+        {
+            this.payloadSize = payloadSize;
+        }
+
+        public ulong Read(ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedInt(size, 8, out this.green_metadata_type);
+
+            if (green_metadata_type == 0)
+            {
+                size += stream.ReadUnsignedInt(size, 8, out this.period_type);
+
+                if (period_type == 2)
+                {
+                    size += stream.ReadUnsignedInt(size, 16, out this.num_seconds);
+                }
+                else if (period_type == 3)
+                {
+                    size += stream.ReadUnsignedInt(size, 16, out this.num_pictures);
+                }
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_non_zero_macroblocks);
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_intra_coded_macroblocks);
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_six_tap_filtering);
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_alpha_point_deblocking_instance);
+            }
+            else if (green_metadata_type == 1)
+            {
+                size += stream.ReadUnsignedInt(size, 8, out this.xsd_metric_type);
+                size += stream.ReadUnsignedInt(size, 16, out this.xsd_metric_value);
+            }
+
+            return size;
+        }
+
+        public ulong Write(ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedInt(8, this.green_metadata_type);
+
+            if (green_metadata_type == 0)
+            {
+                size += stream.WriteUnsignedInt(8, this.period_type);
+
+                if (period_type == 2)
+                {
+                    size += stream.WriteUnsignedInt(16, this.num_seconds);
+                }
+                else if (period_type == 3)
+                {
+                    size += stream.WriteUnsignedInt(16, this.num_pictures);
+                }
+                size += stream.WriteUnsignedInt(8, this.percent_non_zero_macroblocks);
+                size += stream.WriteUnsignedInt(8, this.percent_intra_coded_macroblocks);
+                size += stream.WriteUnsignedInt(8, this.percent_six_tap_filtering);
+                size += stream.WriteUnsignedInt(8, this.percent_alpha_point_deblocking_instance);
+            }
+            else if (green_metadata_type == 1)
+            {
+                size += stream.WriteUnsignedInt(8, this.xsd_metric_type);
+                size += stream.WriteUnsignedInt(16, this.xsd_metric_value);
             }
 
             return size;

@@ -2,7 +2,7 @@
  forbidden_zero_bit All f(1) 
  nal_ref_idc All u(2) 
  nal_unit_type All u(5) 
- NumBytesInRBSP = 0   
+ /* NumBytesInRBSP = 0 */
  nalUnitHeaderBytes = 1   
  if( nal_unit_type  ==  14  ||  nal_unit_type  ==  20  ||  nal_unit_type  ==  21 ) { 
   
@@ -2316,4 +2316,27 @@ vsp_param( numViews, predDirection, index ) {
    disparity_diff_wij[ i ][ j ] 0 ue(v) 
    disparity_diff_oij[ i ][ j ] 0 ue(v) 
   }   
+}   
+
+green_metadata(payloadSize) {
+    green_metadata_type 5 u(8)
+    if (green_metadata_type == 0) {
+        period_type 5 u(8)
+
+        if (period_type == 2) {
+            num_seconds 5 u(16)
+        }
+        else if (period_type == 3) {
+            num_pictures 5 u(16)
+        }
+
+        percent_non_zero_macroblocks 5 u(8)
+        percent_intra_coded_macroblocks 5 u(8)
+        percent_six_tap_filtering 5 u(8)
+        percent_alpha_point_deblocking_instance 5 u(8)
+    }
+    else if (green_metadata_type == 1) {
+        xsd_metric_type 5 u(8)
+        xsd_metric_value 5 u(16)
+    }
 }   
