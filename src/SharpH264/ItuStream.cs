@@ -328,9 +328,20 @@ namespace SharpH264
             return _rbspDataCounter-- != 0;
         }
 
-        internal int NextBits(int count)
+        internal int ReadNextBits(IItuSerializable serializable, int count)
         {
-            throw new NotImplementedException();
+            var bytes = (_stream as MemoryStream).ToArray().Skip(_bitsPosition / 8).ToArray();
+            using (var ituStream = new ItuStream(new MemoryStream(bytes)))
+            {
+                ituStream.ReadBits(_bitsPosition % 8);
+                return (int)ituStream.ReadBits(8);
+            }
+        }
+
+        internal int WriteNextBits(IItuSerializable serializable, int count)
+        {
+            // TODO: same trick as in WriteMoreRbspData
+            return 0xFF; // 0xFF;
         }
 
         internal ulong ReadBits(ulong size, int count, out byte value)

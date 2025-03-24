@@ -1393,7 +1393,7 @@ sei_message() {
             uint payloadSize = 0;
             payloadType = 0;
 
-            while (stream.NextBits(8) == 0xFF)
+            while (stream.ReadNextBits(this, 8) == 0xFF)
             {
                 size += stream.ReadFixed(size, 8, out this.ff_byte); // equal to 0xFF 
                 payloadType += 255;
@@ -1402,7 +1402,7 @@ sei_message() {
             payloadType += last_payload_type_byte;
             payloadSize = 0;
 
-            while (stream.NextBits(8) == 0xFF)
+            while (stream.ReadNextBits(this, 8) == 0xFF)
             {
                 size += stream.ReadFixed(size, 8, out this.ff_byte); // equal to 0xFF 
                 payloadSize += 255;
@@ -1422,7 +1422,7 @@ sei_message() {
             uint payloadSize = 0;
             payloadType = 0;
 
-            while (stream.NextBits(8) == 0xFF)
+            while (stream.WriteNextBits(this, 8) == 0xFF)
             {
                 size += stream.WriteFixed(8, this.ff_byte); // equal to 0xFF 
                 payloadType += 255;
@@ -1431,7 +1431,7 @@ sei_message() {
             payloadType += last_payload_type_byte;
             payloadSize = 0;
 
-            while (stream.NextBits(8) == 0xFF)
+            while (stream.WriteNextBits(this, 8) == 0xFF)
             {
                 size += stream.WriteFixed(8, this.ff_byte); // equal to 0xFF 
                 payloadSize += 255;

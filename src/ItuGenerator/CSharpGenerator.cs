@@ -643,7 +643,6 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(condition))
             {
                 condition = condition
-                    .Replace("next_bits(", "stream.NextBits(")
                     .Replace("NumSubMbPart", "H264Helpers.NumSubMbPart")
                     .Replace("TotalCoeff", "H264Helpers.TotalCoeff")
                     .Replace("NumMbPart", "H264Helpers.NumMbPart");
@@ -817,6 +816,7 @@ namespace Sharp{type}
 
             string prefix = methodType == MethodType.Read ? "Read" : "Write";
             condition = condition.Replace("more_rbsp_data()", $"stream.{prefix}MoreRbspData(this)");
+            condition = condition.Replace("next_bits(", $"stream.{prefix}NextBits(this, ");
 
             condition = condition.Replace("more_rbsp_trailing_data()", "stream.MoreRbspTrailingData()");
 
