@@ -370,9 +370,9 @@ namespace Sharp{type}
                 case "i(32)":
                     return "stream.WriteSignedInt(32, ";
                 case "u(v)":
-                    return "stream.WriteUnsignedIntVariable(";
+                    return $"stream.WriteUnsignedIntVariable(\"{ituField.Name}\", ";
                 case "i(v)":
-                    return "stream.WriteSignedIntVariable(";
+                    return $"stream.WriteSignedIntVariable(\"{ituField.Name}\", ";
                 case "ue(v)":
                     return "stream.WriteUnsignedIntGolomb(";
                 case "ae(v)":
@@ -445,9 +445,9 @@ namespace Sharp{type}
                 case "i(32)":
                     return "stream.ReadSignedInt(size, 32, ";
                 case "u(v)":
-                    return "stream.ReadUnsignedIntVariable(size, ";
+                    return $"stream.ReadUnsignedIntVariable(size, \"{ituField.Name}\", ";
                 case "i(v)":
-                    return "stream.ReadSignedIntVariable(size, ";
+                    return $"stream.ReadSignedIntVariable(size, \"{ituField.Name}\", ";
                 case "ue(v)":
                     return "stream.ReadUnsignedIntGolomb(size, ";
                 case "ae(v)":

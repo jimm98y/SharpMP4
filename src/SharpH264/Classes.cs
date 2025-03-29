@@ -45,21 +45,26 @@ Depending on the value of separate_colour_plane_flag, the value of the variable 
 
         public static uint GetValue(string field)
         {
-            switch(field)
+            SeqParameterSetRbsp sps = null;
+
+            switch (field)
             {
                 case "NalHrdBpPresentFlag":
-                    {
-                        // TODO from vui: nal_hrd_parameters_present_flag
-                        return 0;
-                    }
-                    break;
+                    // TODO from vui: nal_hrd_parameters_present_flag
+                    //return sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag;
+                    return 1;
                 
                 case "VclHrdBpPresentFlag":
-                    {
-                        // TODO from vui: vcl_hrd_parameters_present_flag
-                        return 0;
-                    }
-                    break;
+                    // TODO from vui: vcl_hrd_parameters_present_flag
+                    //return sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag;
+                    return 0;
+
+                case "cpb_cnt_minus1":
+                    // TODO from vui: cpb_cnt_minus1
+                    return 0;
+
+                case "initial_cpb_removal_delay_length_minus1":
+                    return 23;
             }
 
             throw new NotImplementedException();

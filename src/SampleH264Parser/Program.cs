@@ -5,13 +5,63 @@ using System;
 using System.IO;
 using System.Linq;
 
+byte[] spsBinary = Convert.FromHexString("2742E01EA9181405FF2E00D418041ADB0AD7BDF010");
+SeqParameterSetRbsp sps;
+using (ItuStream stream = new ItuStream(new MemoryStream(spsBinary)))
+{
+    NalUnit nu = new NalUnit((uint)spsBinary.Length);
+    nu.Read(stream);
+
+    sps = new SeqParameterSetRbsp();
+    sps.Read(stream);
+
+    var ms = new MemoryStream();
+    using (ItuStream wstream = new ItuStream(ms))
+    {
+        nu.Write(wstream);
+        sps.Write(wstream);
+
+        byte[] wbytes = ms.ToArray();
+        if (!wbytes.SequenceEqual(spsBinary))
+        {
+            throw new Exception("Failed to write SPS");
+        }
+    }
+}
+
+byte[] ppsBinary = Convert.FromHexString("28DE09C8");
+PicParameterSetRbsp pps;
+using (ItuStream stream = new ItuStream(new MemoryStream(ppsBinary)))
+{
+    NalUnit nu = new NalUnit((uint)ppsBinary.Length);
+    nu.Read(stream);
+
+    pps = new PicParameterSetRbsp();
+    pps.Read(stream);
+
+    var ms = new MemoryStream();
+    using (ItuStream wstream = new ItuStream(ms))
+    {
+        nu.Write(wstream);
+        pps.Write(wstream);
+
+        byte[] wbytes = ms.ToArray();
+        if (!wbytes.SequenceEqual(ppsBinary))
+        {
+            throw new Exception("Failed to write PPS");
+        }
+    }
+}
+
 byte[] seiBinary = Convert.FromHexString("0600078B71B0000003004080");
+byte[] seiBinary2 = Convert.FromHexString("0605110387F44ECD0A4BDCA1943AC3D49B171F0080");
+SeiMessage sei;
 using (ItuStream stream = new ItuStream(new MemoryStream(seiBinary)))
 {
     NalUnit nu = new NalUnit((uint)seiBinary.Length);
     nu.Read(stream);
 
-    SeiMessage sei = new SeiMessage();
+    sei = new SeiMessage();
     sei.Read(stream);
 
     var ms = new MemoryStream();

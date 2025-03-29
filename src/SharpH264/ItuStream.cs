@@ -55,13 +55,24 @@ namespace SharpH264
 
             if (_currentBytePosition != bytePos)
             {
-                byte b = (byte)ReadByte();
+                int bb = ReadByte();
+                if (bb == -1)
+                {
+                    return -1;
+                }
+
+                byte b = (byte)bb;
 
                 // remove emulation prevention byte
                 if (_shouldEscapeNals && _prevByte == 0 && _currentByte == 0 && b == 0x03)
                 {
                     _prevByte = b;
-                    b = (byte)ReadByte();
+                    bb = ReadByte();
+                    if(bb == -1)
+                    {
+                        return -1;
+                    }
+                    b = (byte)bb;
                     _bitsPosition += 8;
                     bytePos++;
                 }
@@ -92,7 +103,7 @@ namespace SharpH264
                 int u1 = ReadBit();
 
                 if (u1 == -1)
-                    return u1;
+                    return -1;
 
                 res |= (byte)u1;
                 count--;
@@ -296,6 +307,9 @@ namespace SharpH264
                 ituStream.ReadBits(_bitsPosition % 8);
                 
                 int one = ituStream.ReadBit();
+                if (one == -1)
+                    return false;
+
                 if (one == 0)
                 {
                     serializable.HasMoreRbspData++;
@@ -303,6 +317,9 @@ namespace SharpH264
                 }
 
                 int lastBit = ituStream.ReadBit();
+                if (lastBit == -1)
+                    return false;
+
                 while (lastBit == 0)
                 {
                     lastBit = ituStream.ReadBit();
@@ -352,6 +369,42 @@ namespace SharpH264
             return _readNextBitsCounter-- != 0 ? 0xFF : 0;
         }
 
+        internal ulong ReadUnsignedIntVariable(ulong size, string fieldName, out uint value)
+        {
+            uint count = 0;
+
+            // H264 specific:
+            if (fieldName == "initial_cpb_removal_delay" || fieldName == "initial_cpb_removal_delay_offset")
+            {
+                count = H264Helpers.GetValue("initial_cpb_removal_delay_length_minus1") + 1;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            return ReadUnsignedInt(size, (int)count, out value);
+        }
+
+        internal ulong WriteUnsignedIntVariable(string fieldName, uint value)
+        {
+            uint count = 0;
+
+            // H264 specific:
+            if (fieldName == "initial_cpb_removal_delay" || fieldName == "initial_cpb_removal_delay_offset")
+            {
+                count = H264Helpers.GetValue("initial_cpb_removal_delay_length_minus1") + 1;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+            return WriteUnsignedInt((int)count, value);
+        }
+
+
+
         internal ulong ReadBits(ulong size, int count, out byte value)
         {
             throw new NotImplementedException();
@@ -362,12 +415,7 @@ namespace SharpH264
             throw new NotImplementedException();
         }     
 
-        internal ulong ReadUnsignedIntVariable(ulong size, out uint value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong ReadSignedIntVariable(ulong size, out int value)
+        internal ulong ReadSignedIntVariable(ulong size, string fieldName, out int value)
         {
             throw new NotImplementedException();
         }
@@ -393,12 +441,7 @@ namespace SharpH264
             throw new NotImplementedException();
         }
 
-        internal ulong WriteUnsignedIntVariable(uint value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteSignedIntVariable(int value)
+        internal ulong WriteSignedIntVariable(string fieldName, int value)
         {
             throw new NotImplementedException();
         }
