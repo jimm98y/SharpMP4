@@ -56,7 +56,7 @@ using (ItuStream stream = new ItuStream(new MemoryStream(ppsBinary)))
 byte[] seiBinary = Convert.FromHexString("0600078B71B0000003004080");
 byte[] seiBinary2 = Convert.FromHexString("0605110387F44ECD0A4BDCA1943AC3D49B171F0080");
 SeiMessage sei;
-using (ItuStream stream = new ItuStream(new MemoryStream(seiBinary)))
+using (ItuStream stream = new ItuStream(new MemoryStream(seiBinary2)))
 {
     NalUnit nu = new NalUnit((uint)seiBinary.Length);
     nu.Read(stream);
@@ -71,7 +71,7 @@ using (ItuStream stream = new ItuStream(new MemoryStream(seiBinary)))
         sei.Write(wstream);
 
         byte[] wbytes = ms.ToArray();
-        if(!wbytes.SequenceEqual(seiBinary))
+        if(!wbytes.SequenceEqual(seiBinary2))
         {
             throw new Exception("Failed to write SEI");
         }

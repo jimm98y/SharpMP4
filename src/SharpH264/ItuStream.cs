@@ -403,17 +403,47 @@ namespace SharpH264
             return WriteUnsignedInt((int)count, value);
         }
 
-
-
         internal ulong ReadBits(ulong size, int count, out byte value)
         {
-            throw new NotImplementedException();
+            value = (byte)ReadBits(count);
+            return (ulong)count;
+        }
+
+        internal ulong WriteBits(int count, byte value)
+        {
+            WriteBits(count, (long)value);
+            return (ulong)count;
         }
 
         internal ulong ReadUnsignedInt(ulong size, int count, out BigInteger value)
         {
-            throw new NotImplementedException();
-        }     
+            if (count % 8 > 0)
+                throw new NotSupportedException();
+
+            byte[] bytes = new byte[count / 8];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                int bb = ReadByte();
+                if (bb == -1)
+                    throw new EndOfStreamException();
+
+                bytes[i] = (byte)bb;
+            }
+
+            value = new BigInteger(bytes);
+            return (ulong)count;
+        }
+
+        internal ulong WriteUnsignedInt(int count, BigInteger value)
+        {
+            long size = 0;
+            byte[] bytes = value.ToByteArray();
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                size += WriteByte(bytes[i]);
+            }
+            return (ulong)size;
+        }
 
         internal ulong ReadSignedIntVariable(ulong size, string fieldName, out int value)
         {
@@ -424,18 +454,7 @@ namespace SharpH264
         {
             throw new NotImplementedException();
         }
-
-        internal ulong WriteBits(int count, byte value)
-        {
-            WriteBits(count, (long)value);
-            return (ulong)count;
-        }
         
-        internal ulong WriteUnsignedInt(int count, BigInteger value)
-        {
-            throw new NotImplementedException();
-        }
-
         internal ulong WriteSignedIntT(int value)
         {
             throw new NotImplementedException();
