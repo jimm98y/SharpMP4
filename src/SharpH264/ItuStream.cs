@@ -423,7 +423,7 @@ namespace SharpH264
             byte[] bytes = new byte[count / 8];
             for (int i = 0; i < bytes.Length; i++)
             {
-                int bb = ReadByte();
+                long bb = ReadBits(8);
                 if (bb == -1)
                     throw new EndOfStreamException();
 
