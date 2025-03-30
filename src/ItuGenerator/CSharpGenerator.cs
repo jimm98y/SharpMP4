@@ -370,9 +370,9 @@ namespace Sharp{type}
                 case "i(32)":
                     return "stream.WriteSignedInt(32, ";
                 case "u(v)":
-                    return $"stream.WriteUnsignedIntVariable(\"{ituField.Name}\", ";
+                    return $"stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount(\"{ituField.Name}\"), ";
                 case "i(v)":
-                    return $"stream.WriteSignedIntVariable(\"{ituField.Name}\", ";
+                    return $"stream.WriteSignedIntVariable(H264Helpers.GetVariableCount(\"{ituField.Name}\"), ";
                 case "ue(v)":
                     return "stream.WriteUnsignedIntGolomb(";
                 case "ae(v)":
@@ -445,9 +445,9 @@ namespace Sharp{type}
                 case "i(32)":
                     return "stream.ReadSignedInt(size, 32, ";
                 case "u(v)":
-                    return $"stream.ReadUnsignedIntVariable(size, \"{ituField.Name}\", ";
+                    return $"stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount(\"{ituField.Name}\"), ";
                 case "i(v)":
-                    return $"stream.ReadSignedIntVariable(size, \"{ituField.Name}\", ";
+                    return $"stream.ReadSignedIntVariable(size, H264Helpers.GetVariableCount(\"{ituField.Name}\"), ";
                 case "ue(v)":
                     return "stream.ReadUnsignedIntGolomb(size, ";
                 case "ae(v)":
@@ -831,13 +831,7 @@ namespace Sharp{type}
             condition = condition.Replace("sub_mb_type[ mbPartIdx ]  !=  ", "sub_mb_type[ mbPartIdx ]  !=  MbTypes.");
 
             // TODO
-            condition = condition.Replace("ChromaArrayType", "H264Helpers.GetChromaArrayType()");
-            condition = condition.Replace("DepthFlag", "H264Helpers.GetDepthFlag()");
             condition = condition.Replace("InCropWindow", "H264Helpers.InCropWindow");
-            condition = condition.Replace("AllViewsPairedFlag", "H264Helpers.GetAllViewsPairedFlag()");
-            condition = condition.Replace("MbaffFrameFlag", "H264Helpers.GetMbaffFrameFlag()");
-            condition = condition.Replace("VspRefExist", "H264Helpers.GetVspRefExist()");
-            condition = condition.Replace("IdrPicFlag", "H264Helpers.GetIdrPicFlag()");
 
             return condition;
         }
@@ -865,7 +859,8 @@ namespace Sharp{type}
             {
                 "CodedBlockPatternLuma", "CodedBlockPatternChroma", "MbWidthC", "MbHeightC", "SubWidthC", "SubHeightC",
                 "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "NumClockTS", "PicSizeInMapUnits",
-                "CurrMbAddr", "leftMbVSSkipped", "upMbVSSkipped", "predWeight0", "deltaFlag", "NumDepthViews"
+                "CurrMbAddr", "leftMbVSSkipped", "upMbVSSkipped", "predWeight0", "deltaFlag", "NumDepthViews", "IdrPicFlag",
+                "ChromaArrayType", "AllViewsPairedFlag"
             };
 
             foreach (var match in replacementsValue)

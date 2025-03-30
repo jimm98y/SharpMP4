@@ -369,38 +369,24 @@ namespace SharpH264
             return _readNextBitsCounter-- != 0 ? 0xFF : 0;
         }
 
-        internal ulong ReadUnsignedIntVariable(ulong size, string fieldName, out uint value)
+        internal ulong ReadUnsignedIntVariable(ulong size, uint count, out uint value)
         {
-            uint count = 0;
-
-            // H264 specific:
-            if (fieldName == "initial_cpb_removal_delay" || fieldName == "initial_cpb_removal_delay_offset")
-            {
-                count = H264Helpers.GetValue("initial_cpb_removal_delay_length_minus1") + 1;
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-
             return ReadUnsignedInt(size, (int)count, out value);
         }
 
-        internal ulong WriteUnsignedIntVariable(string fieldName, uint value)
+        internal ulong WriteUnsignedIntVariable(uint count, uint value)
         {
-            uint count = 0;
-
-            // H264 specific:
-            if (fieldName == "initial_cpb_removal_delay" || fieldName == "initial_cpb_removal_delay_offset")
-            {
-                count = H264Helpers.GetValue("initial_cpb_removal_delay_length_minus1") + 1;
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-
             return WriteUnsignedInt((int)count, value);
+        }
+
+        internal ulong ReadSignedIntVariable(ulong size, uint count, out int value)
+        {
+            return ReadSignedInt(size, (int)count, out value);
+        }
+
+        internal ulong WriteSignedIntVariable(uint count, int value)
+        {
+            return WriteSignedInt((int)count, value);
         }
 
         internal ulong ReadBits(ulong size, int count, out byte value)
@@ -445,22 +431,12 @@ namespace SharpH264
             return (ulong)size;
         }
 
-        internal ulong ReadSignedIntVariable(ulong size, string fieldName, out int value)
-        {
-            throw new NotImplementedException();
-        }
-
         internal ulong ReadSignedIntT(ulong size, out int value)
         {
             throw new NotImplementedException();
         }
         
         internal ulong WriteSignedIntT(int value)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteSignedIntVariable(string fieldName, int value)
         {
             throw new NotImplementedException();
         }
