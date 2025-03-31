@@ -28,12 +28,13 @@ namespace SharpH264
 
     public class H264Helpers
     {
+        private static NalUnit _nalHeader;
         private static SeqParameterSetRbsp _sps;
         private static PicParameterSetRbsp _pps;
-        private static SubsetSeqParameterSetRbsp _ssps;
-        private static SeqParameterSetExtensionRbsp _spsex;
-        private static NalUnit _nal;
-        private static DepthParameterSetRbsp _dpps;
+        private static SubsetSeqParameterSetRbsp _subsetSps;
+        private static SeqParameterSetExtensionRbsp _spsExtension;
+        private static DepthParameterSetRbsp _dps;
+        private static AccessUnitDelimiterRbsp _au;
         private static SeiRbsp _sei;
 
         public static void SetSeqParameterSet(SeqParameterSetRbsp sps)
@@ -48,17 +49,17 @@ namespace SharpH264
 
         public static void SetSubsetSeqParameterSet(SubsetSeqParameterSetRbsp ssps)
         {
-            _ssps = ssps;
+            _subsetSps = ssps;
         }
 
         public static void SetDepthParameterSet(DepthParameterSetRbsp dpps)
         {
-            _dpps = dpps;
+            _dps = dpps;
         }
 
         public static void SetNalUnit(NalUnit nal)
         {
-            _nal = nal;
+            _nalHeader = nal;
         }
 
         public static void SetSei(SeiRbsp sei)
@@ -68,7 +69,12 @@ namespace SharpH264
 
         public static void SetSeqParameterSetExtension(SeqParameterSetExtensionRbsp spsex)
         {
-            _spsex = spsex;
+            _spsExtension = spsex;
+        }
+
+        public static void SetAccessUnitDelimiter(AccessUnitDelimiterRbsp au)
+        {
+            _au = au;
         }
 
         public static uint GetValue(string field)
@@ -91,7 +97,7 @@ namespace SharpH264
                     return _sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? _sps.SeqParameterSetData.ChromaFormatIdc : 0;
                 case "IdrPicFlag":
                     // IdrPicFlag = ( ( nal_unit_type  ==  5 )  ?  1  :  0 ) 
-                    return (uint)((_nal.NalUnitType == 5) ? 1 : 0);                    
+                    return (uint)((_nalHeader.NalUnitType == 5) ? 1 : 0);                    
                 case "NalHrdBpPresentFlag":
                     return _sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag;                
                 case "VclHrdBpPresentFlag":
@@ -135,27 +141,33 @@ namespace SharpH264
                 case "num_slice_groups_minus1":
                     return _pps.NumSliceGroupsMinus1;
                 case "num_views_minus1":
-                    return _ssps.SeqParameterSetMvcExtension.NumViewsMinus1;
+                    return _subsetSps.SeqParameterSetMvcExtension.NumViewsMinus1;
                 case "anchor_pic_flag":
-                    return _nal.NalUnitHeaderMvcExtension.AnchorPicFlag;
+                    return _nalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag;
                 case "ref_dps_id0":
-                    return _dpps.RefDpsId0;
+                    return _dps.RefDpsId0;
                 case "predWeight0":
-                    return _dpps.PredWeight0;
+                    return _dps.PredWeight0;
                 case "deltaFlag":
                     return 0; // TODO: unknown
                 case "ref_dps_id1":
-                    return _dpps.RefDpsId1;
+                    return _dps.RefDpsId1;
 
                 // variable bit values
                 case "bit_depth_aux_minus8":
-                    return _spsex.BitDepthAuxMinus8;
+                    return _spsExtension.BitDepthAuxMinus8;
                 case "cpb_removal_delay_length_minus1":
                     return _sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1;
                 case "dpb_output_delay_length_minus1":
                     return _sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1;
                 case "coded_data_bit_depth":
                     return _sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth;
+                case "colour_remap_input_bit_depth":
+                    return _sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth;
+                case "colour_remap_output_bit_depth":
+                    return _sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth;
+                case "ar_object_confidence_length_minus1":
+                    return _sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1;
             }
 
             throw new NotImplementedException();
@@ -166,19 +178,19 @@ namespace SharpH264
             switch(field)
             {
                 case "num_anchor_refs_l0":
-                    return _ssps.SeqParameterSetMvcExtension.NumAnchorRefsL0;
+                    return _subsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0;
                 case "num_anchor_refs_l1":
-                    return _ssps.SeqParameterSetMvcExtension.NumAnchorRefsL1;
+                    return _subsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1;
                 case "num_non_anchor_refs_l0":
-                    return _ssps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0;
+                    return _subsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0;
                 case "num_non_anchor_refs_l1":
-                    return _ssps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1;
+                    return _subsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1;
                 case "num_init_pic_parameter_set_minus1":
                     return _sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1; // looks like there is a typo...
                 case "additional_shift_present":
                     return _sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray(); // TODO: looks like a typo
                 case "texture_view_present_flag":
-                    return _ssps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray();
+                    return _subsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray();
                 default:
                     throw new NotImplementedException();
             }
@@ -207,16 +219,19 @@ namespace SharpH264
                 case "target_pivot_value":
                     return ((GetValue("coded_data_bit_depth") + 7) >> 3) << 3;
                 case "pre_lut_coded_value":
-                    throw new NotSupportedException();
                 case "pre_lut_target_value":
-                    throw new NotSupportedException();
+                    return ((GetValue("colour_remap_input_bit_depth") + 7) >> 3) << 3;
                 case "post_lut_coded_value":
-                    throw new NotSupportedException();
                 case "post_lut_target_value":
-                    throw new NotSupportedException();
+                    return ((GetValue("colour_remap_output_bit_depth") + 7) >> 3) << 3;
                 case "ar_object_confidence":
-                    throw new NotSupportedException();
+                    return GetValue("ar_object_confidence_length_minus1") + 1;
                 case "mantissa_focal_length_x":
+                    /*
+                    The length of the mantissa_focal_length_x[ i ] syntax element in units of bits is variable and determined as follows: 
+                    – If exponent_focal_length_x[ i ] == 0, the length is Max( 0, prec_focal_length − 30 ). 
+                    – Otherwise (0 < exponent_focal_length_x[ i ] < 63), the length is Max( 0, exponent_focal_length_x[ i ] + prec_focal_length − 31 ).
+                     */
                     throw new NotSupportedException();
                 case "mantissa_focal_length_y":
                     throw new NotSupportedException();
