@@ -11,8 +11,11 @@ using (ItuStream stream = new ItuStream(new MemoryStream(spsBinary)))
 {
     NalUnit nu = new NalUnit((uint)spsBinary.Length);
     nu.Read(stream);
+    H264Helpers.SetNalUnit(nu);
 
     sps = new SeqParameterSetRbsp();
+    H264Helpers.SetSeqParameterSet(sps);
+
     sps.Read(stream);
 
     var ms = new MemoryStream();
@@ -35,8 +38,11 @@ using (ItuStream stream = new ItuStream(new MemoryStream(ppsBinary)))
 {
     NalUnit nu = new NalUnit((uint)ppsBinary.Length);
     nu.Read(stream);
+    H264Helpers.SetNalUnit(nu);
 
     pps = new PicParameterSetRbsp();
+    H264Helpers.SetPicParameterSet(pps);
+
     pps.Read(stream);
 
     var ms = new MemoryStream();
@@ -61,8 +67,11 @@ using (ItuStream stream = new ItuStream(new MemoryStream(seiBinary)))
     ulong size = 0;
     NalUnit nu = new NalUnit((uint)seiBinary.Length);
     size += nu.Read(stream);
+    H264Helpers.SetNalUnit(nu);
 
     sei = new SeiRbsp();
+    H264Helpers.SetSei(sei);
+
     size += sei.Read(stream);
 
     var ms = new MemoryStream();

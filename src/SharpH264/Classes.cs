@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Linq;
 
 namespace SharpH264
 {
@@ -27,97 +28,157 @@ namespace SharpH264
 
     public class H264Helpers
     {
+        private static SeqParameterSetRbsp _sps;
+        private static PicParameterSetRbsp _pps;
+        private static SubsetSeqParameterSetRbsp _ssps;
+        private static SeqParameterSetExtensionRbsp _spsex;
+        private static NalUnit _nal;
+        private static DepthParameterSetRbsp _dpps;
+        private static SeiRbsp _sei;
+
+        public static void SetSeqParameterSet(SeqParameterSetRbsp sps)
+        {
+            _sps = sps;
+        }
+        
+        public static void SetPicParameterSet(PicParameterSetRbsp pps)
+        {
+            _pps = pps;
+        }
+
+        public static void SetSubsetSeqParameterSet(SubsetSeqParameterSetRbsp ssps)
+        {
+            _ssps = ssps;
+        }
+
+        public static void SetDepthParameterSet(DepthParameterSetRbsp dpps)
+        {
+            _dpps = dpps;
+        }
+
+        public static void SetNalUnit(NalUnit nal)
+        {
+            _nal = nal;
+        }
+
+        public static void SetSei(SeiRbsp sei)
+        {
+            _sei = sei;
+        }
+
+        public static void SetSeqParameterSetExtension(SeqParameterSetExtensionRbsp spsex)
+        {
+            _spsex = spsex;
+        }
+
         public static uint GetValue(string field)
         {
-            //SeqParameterSetRbsp sps = null;
-
             switch (field)
             {
                 case "AllViewsPairedFlag":
-                    // The variable AllViewsPairedFlag is derived as follows:
-                    // AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFlag = ( AllViewsPairedFlag && depth_view_present_flag[ i ] && (J-9) texture_view_present_flag[ i ] )
-                    return 1;
-
+                    {
+                        // The variable AllViewsPairedFlag is derived as follows:
+                        // AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFlag = ( AllViewsPairedFlag && depth_view_present_flag[ i ] && texture_view_present_flag[ i ] )
+                        uint allViewsPairedFlag = 1;
+                        for (int i = 1; i <= GetValue("num_views_minus1"); i++)
+                            allViewsPairedFlag = (uint)((allViewsPairedFlag != 0 && GetArray("depth_view_present_flag")[i] != 0 && GetArray("texture_view_present_flag")[i] != 0) ? 1 : 0);
+                        return allViewsPairedFlag;
+                    }
                 case "ChromaArrayType":
                     // Depending on the value of separate_colour_plane_flag, the value of the variable ChromaArrayType is assigned as follows:
                     // – If separate_colour_plane_flag is equal to 0, ChromaArrayType is set equal to chroma_format_idc.
                     //– Otherwise (separate_colour_plane_flag is equal to 1), ChromaArrayType is set equal to 0. */
-                    return 1;
-
+                    return _sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? _sps.SeqParameterSetData.ChromaFormatIdc : 0;
                 case "IdrPicFlag":
-                    return 1;
-
+                    // IdrPicFlag = ( ( nal_unit_type  ==  5 )  ?  1  :  0 ) 
+                    return (uint)((_nal.NalUnitType == 5) ? 1 : 0);                    
                 case "NalHrdBpPresentFlag":
-                    // TODO from vui: nal_hrd_parameters_present_flag
-                    //return sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag;
-                    return 1;
-                
+                    return _sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag;                
                 case "VclHrdBpPresentFlag":
-                    // TODO from vui: vcl_hrd_parameters_present_flag
-                    //return sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag;
-                    return 0;
-
+                    return _sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag;
                 case "cpb_cnt_minus1":
-                    // TODO from vui: cpb_cnt_minus1
-                    return 0;
-
+                    return _sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1;
                 case "initial_cpb_removal_delay_length_minus1":
-                    return 23;
-
+                    return _sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1;
                 case "profile_idc":
-                    throw new NotSupportedException();
+                    return _sps.SeqParameterSetData.ProfileIdc;
                 case "chroma_format_idc":
-                    throw new NotSupportedException();
+                    return _sps.SeqParameterSetData.ChromaFormatIdc;
                 case "CpbDpbDelaysPresentFlag":
-                    throw new NotSupportedException();
+                    return (uint)(_sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || _sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0);
                 case "pic_struct_present_flag":
-                    throw new NotSupportedException();
+                    return _sps.SeqParameterSetData.VuiParameters.PicStructPresentFlag;
+
                 case "NumClockTS":
-                    throw new NotSupportedException();
-                case "time_offset_length":
-                    throw new NotSupportedException();
-                case "frame_mbs_only_flag":
-                    throw new NotSupportedException();
-                case "PicSizeInMapUnits":
-                    throw new NotSupportedException();
-                case "num_slice_groups_minus1":
-                    throw new NotSupportedException();
-                case "num_views_minus1":
-                    throw new NotSupportedException();
-                case "anchor_pic_flag":
-                    throw new NotSupportedException();
+                    {
+                        // this needs the context - the element that is being decoded to retrieve the value - pic_struct
+                        throw new NotSupportedException();
+                    }
+                    
                 case "NumDepthViews":
-                    throw new NotSupportedException();
+                    {
+                        // this needs the context - NumDepthViews is defined in seq_parameter_set_mvcd_extension
+                        throw new NotSupportedException();
+                    }
+
+                case "PicSizeInMapUnits":
+                    {
+                        uint picWidthInMbs = _sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1;
+                        uint picHeightInMapUnits = _sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1;
+                        return picWidthInMbs * picHeightInMapUnits;
+                    }
+
+                case "time_offset_length":
+                    return _sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength;
+                case "frame_mbs_only_flag":
+                    return _sps.SeqParameterSetData.FrameMbsOnlyFlag;
+                case "num_slice_groups_minus1":
+                    return _pps.NumSliceGroupsMinus1;
+                case "num_views_minus1":
+                    return _ssps.SeqParameterSetMvcExtension.NumViewsMinus1;
+                case "anchor_pic_flag":
+                    return _nal.NalUnitHeaderMvcExtension.AnchorPicFlag;
                 case "ref_dps_id0":
-                    throw new NotSupportedException();
+                    return _dpps.RefDpsId0;
                 case "predWeight0":
-                    throw new NotSupportedException();
+                    return _dpps.PredWeight0;
                 case "deltaFlag":
-                    throw new NotSupportedException();
+                    return 0; // TODO: unknown
                 case "ref_dps_id1":
-                    throw new NotSupportedException();
+                    return _dpps.RefDpsId1;
+
+                // variable bit values
+                case "bit_depth_aux_minus8":
+                    return _spsex.BitDepthAuxMinus8;
+                case "cpb_removal_delay_length_minus1":
+                    return _sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1;
+                case "dpb_output_delay_length_minus1":
+                    return _sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1;
+                case "coded_data_bit_depth":
+                    return _sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth;
             }
 
             throw new NotImplementedException();
         }
+
         public static uint[] GetArray(string field)
         {
             switch(field)
             {
                 case "num_anchor_refs_l0":
-                    throw new NotSupportedException();
+                    return _ssps.SeqParameterSetMvcExtension.NumAnchorRefsL0;
                 case "num_anchor_refs_l1":
-                    throw new NotSupportedException();
+                    return _ssps.SeqParameterSetMvcExtension.NumAnchorRefsL1;
                 case "num_non_anchor_refs_l0":
-                    throw new NotSupportedException();
+                    return _ssps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0;
                 case "num_non_anchor_refs_l1":
-                    throw new NotSupportedException();
+                    return _ssps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1;
                 case "num_init_pic_parameter_set_minus1":
-                    throw new NotSupportedException();
+                    return _sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1; // looks like there is a typo...
                 case "additional_shift_present":
-                    throw new NotSupportedException();
+                    return _sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray(); // TODO: looks like a typo
                 case "texture_view_present_flag":
-                    throw new NotSupportedException();
+                    return _ssps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray();
                 default:
                     throw new NotImplementedException();
             }
@@ -130,25 +191,21 @@ namespace SharpH264
                 case "initial_cpb_removal_delay":
                 case "initial_cpb_removal_delay_offset":
                     return GetValue("initial_cpb_removal_delay_length_minus1") + 1;
-
                 case "alpha_opaque_value":
-                    throw new NotSupportedException();
                 case "alpha_transparent_value":
-                    throw new NotSupportedException();
+                    return GetValue("bit_depth_aux_minus8") + 9;
                 case "slice_group_id":
-                    throw new NotSupportedException();
+                    return (uint)Math.Ceiling(Math.Log2(GetValue("num_slice_groups_minus1") + 1));
                 case "cpb_removal_delay":
-                    throw new NotSupportedException();
+                    return GetValue("cpb_removal_delay_length_minus1") + 1;
                 case "dpb_output_delay":
-                    throw new NotSupportedException();
+                    return GetValue("dpb_output_delay_length_minus1") + 1;
                 case "time_offset":
-                    throw new NotSupportedException();
+                    return GetValue("time_offset_length");
                 case "start_of_coded_interval":
-                    throw new NotSupportedException();
                 case "coded_pivot_value":
-                    throw new NotSupportedException();
                 case "target_pivot_value":
-                    throw new NotSupportedException();
+                    return ((GetValue("coded_data_bit_depth") + 7) >> 3) << 3;
                 case "pre_lut_coded_value":
                     throw new NotSupportedException();
                 case "pre_lut_target_value":
