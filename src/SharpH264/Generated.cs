@@ -11847,6 +11847,8 @@ seq_parameter_set_mvcd_extension() {
     {
         private uint num_views_minus1;
         public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
+        private uint numDepthViews;
+        public uint NumDepthViews { get { return NumDepthViews; } set { NumDepthViews = value; } }
         private uint[] view_id;
         public uint[] ViewId { get { return view_id; } set { view_id = value; } }
         private byte[] depth_view_present_flag;
@@ -11911,7 +11913,6 @@ seq_parameter_set_mvcd_extension() {
             ulong size = 0;
 
             uint i = 0;
-            uint NumDepthViews = 0;
             uint[] DepthViewId = null;
             uint j = 0;
             uint k = 0;
@@ -12043,7 +12044,6 @@ seq_parameter_set_mvcd_extension() {
             ulong size = 0;
 
             uint i = 0;
-            uint NumDepthViews = 0;
             uint[] DepthViewId = null;
             uint j = 0;
             uint k = 0;

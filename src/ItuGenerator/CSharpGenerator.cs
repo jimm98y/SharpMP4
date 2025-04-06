@@ -1121,7 +1121,13 @@ namespace Sharp{type}
                         {
                             int variableIndex = part.IndexOfAny(conditionChars);
                             string variable = part.Substring(0, variableIndex).TrimStart(conditionChars).Trim();
-                            if (b.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null)
+                            if(variable == "NumDepthViews")
+                            {
+                                var f = new ItuField() { Name = variable, Type = "u(32)" };
+                                AddAndResolveDuplicates(b, ret, f);
+                                b.AddedFields.Add(f);
+                            }
+                            else if (b.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null && b.AddedFields.FirstOrDefault(x => x.Name == variable) == null)
                             {
                                 b.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "u(32)" });
                             }
@@ -1208,7 +1214,7 @@ namespace Sharp{type}
                     }
                     return;
                 }
-                else if(!string.IsNullOrEmpty(field.Value))
+                else if(!string.IsNullOrEmpty(field.Value) && b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
                     if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                     {

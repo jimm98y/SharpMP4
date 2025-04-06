@@ -114,26 +114,32 @@ namespace SharpH264
                     return (uint)(_sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || _sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0);
                 case "pic_struct_present_flag":
                     return _sps.SeqParameterSetData.VuiParameters.PicStructPresentFlag;
-
                 case "NumClockTS":
+                    switch(_sei.SeiMessage.SeiPayload.PicTiming.PicStruct)
                     {
-                        // this needs the context - the element that is being decoded to retrieve the value - pic_struct
-                        throw new NotSupportedException();
+                        case 0:
+                        case 1:
+                        case 2:
+                            return 1;
+                        case 3:
+                        case 4:
+                            return 2;
+                        case 5:
+                        case 6:
+                            return 3;
+                        case 7:
+                            return 2;
+                        case 8:
+                            return 3;
+                        default:
+                            throw new NotSupportedException();
                     }
-                    
                 case "NumDepthViews":
-                    {
-                        // this needs the context - NumDepthViews is defined in seq_parameter_set_mvcd_extension
-                        throw new NotSupportedException();
-                    }
-
+                    return _subsetSps.SeqParameterSetMvcdExtension.NumDepthViews;
                 case "PicSizeInMapUnits":
-                    {
-                        uint picWidthInMbs = _sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1;
-                        uint picHeightInMapUnits = _sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1;
-                        return picWidthInMbs * picHeightInMapUnits;
-                    }
-
+                    uint picWidthInMbs = _sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1;
+                    uint picHeightInMapUnits = _sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1;
+                    return picWidthInMbs * picHeightInMapUnits;
                 case "time_offset_length":
                     return _sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength;
                 case "frame_mbs_only_flag":
