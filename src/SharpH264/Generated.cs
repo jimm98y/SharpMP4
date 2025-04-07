@@ -10953,19 +10953,19 @@ if (intrinsic_param_flag ) {
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_x[i]);
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_x[i]);
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_focal_length_x"), out this.mantissa_focal_length_x[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_focal_length_x[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_x[i] + prec_focal_length - 31)), out this.mantissa_focal_length_x[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_y[i]);
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_y[i]);
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_focal_length_y"), out this.mantissa_focal_length_y[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_focal_length_y[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_y[i] + prec_focal_length - 31)), out this.mantissa_focal_length_y[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.sign_principal_point_x[i]);
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_principal_point_x[i]);
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_principal_point_x"), out this.mantissa_principal_point_x[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_principal_point_x[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_x[i] + prec_principal_point - 31)), out this.mantissa_principal_point_x[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.sign_principal_point_y[i]);
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_principal_point_y[i]);
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_principal_point_y"), out this.mantissa_principal_point_y[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_principal_point_y[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_y[i] + prec_principal_point - 31)), out this.mantissa_principal_point_y[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.sign_skew_factor[i]);
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_skew_factor[i]);
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_skew_factor"), out this.mantissa_skew_factor[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_skew_factor[i] == 0) ? (Math.Max(0, prec_skew_factor - 30)) : (Math.Max(0, exponent_skew_factor[i] + prec_skew_factor - 31)), out this.mantissa_skew_factor[i]);
                 }
             }
 
@@ -11003,11 +11003,11 @@ if (intrinsic_param_flag ) {
 
                             size += stream.ReadUnsignedInt(size, 1, out this.sign_r[i][j][k]);
                             size += stream.ReadUnsignedInt(size, 6, out this.exponent_r[i][j][k]);
-                            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_r"), out this.mantissa_r[i][j][k]);
+                            size += stream.ReadUnsignedIntVariable(size, (exponent_r[i][j][k] == 0) ? (Math.Max(0, prec_rotation_param - 30)) : (Math.Max(0, exponent_r[i][j][k] + prec_rotation_param - 31)), out this.mantissa_r[i][j][k]);
                         }
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_t[i][j]);
                         size += stream.ReadUnsignedInt(size, 6, out this.exponent_t[i][j]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_t"), out this.mantissa_t[i][j]);
+                        size += stream.ReadUnsignedIntVariable(size, (exponent_t[i][j] == 0) ? (Math.Max(0, prec_translation_param - 30)) : (Math.Max(0, exponent_t[i][j] + prec_translation_param - 31)), out this.mantissa_t[i][j]);
                     }
                 }
             }
@@ -11038,19 +11038,19 @@ if (intrinsic_param_flag ) {
                 {
                     size += stream.WriteUnsignedInt(1, this.sign_focal_length_x[i]);
                     size += stream.WriteUnsignedInt(6, this.exponent_focal_length_x[i]);
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_focal_length_x"), this.mantissa_focal_length_x[i]);
+                    size += stream.WriteUnsignedIntVariable((exponent_focal_length_x[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_x[i] + prec_focal_length - 31)), this.mantissa_focal_length_x[i]);
                     size += stream.WriteUnsignedInt(1, this.sign_focal_length_y[i]);
                     size += stream.WriteUnsignedInt(6, this.exponent_focal_length_y[i]);
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_focal_length_y"), this.mantissa_focal_length_y[i]);
+                    size += stream.WriteUnsignedIntVariable((exponent_focal_length_y[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_y[i] + prec_focal_length - 31)), this.mantissa_focal_length_y[i]);
                     size += stream.WriteUnsignedInt(1, this.sign_principal_point_x[i]);
                     size += stream.WriteUnsignedInt(6, this.exponent_principal_point_x[i]);
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_principal_point_x"), this.mantissa_principal_point_x[i]);
+                    size += stream.WriteUnsignedIntVariable((exponent_principal_point_x[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_x[i] + prec_principal_point - 31)), this.mantissa_principal_point_x[i]);
                     size += stream.WriteUnsignedInt(1, this.sign_principal_point_y[i]);
                     size += stream.WriteUnsignedInt(6, this.exponent_principal_point_y[i]);
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_principal_point_y"), this.mantissa_principal_point_y[i]);
+                    size += stream.WriteUnsignedIntVariable((exponent_principal_point_y[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_y[i] + prec_principal_point - 31)), this.mantissa_principal_point_y[i]);
                     size += stream.WriteUnsignedInt(1, this.sign_skew_factor[i]);
                     size += stream.WriteUnsignedInt(6, this.exponent_skew_factor[i]);
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_skew_factor"), this.mantissa_skew_factor[i]);
+                    size += stream.WriteUnsignedIntVariable((exponent_skew_factor[i] == 0) ? (Math.Max(0, prec_skew_factor - 30)) : (Math.Max(0, exponent_skew_factor[i] + prec_skew_factor - 31)), this.mantissa_skew_factor[i]);
                 }
             }
 
@@ -11073,11 +11073,11 @@ if (intrinsic_param_flag ) {
 
                             size += stream.WriteUnsignedInt(1, this.sign_r[i][j][k]);
                             size += stream.WriteUnsignedInt(6, this.exponent_r[i][j][k]);
-                            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_r"), this.mantissa_r[i][j][k]);
+                            size += stream.WriteUnsignedIntVariable((exponent_r[i][j][k] == 0) ? (Math.Max(0, prec_rotation_param - 30)) : (Math.Max(0, exponent_r[i][j][k] + prec_rotation_param - 31)), this.mantissa_r[i][j][k]);
                         }
                         size += stream.WriteUnsignedInt(1, this.sign_t[i][j]);
                         size += stream.WriteUnsignedInt(6, this.exponent_t[i][j]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_t"), this.mantissa_t[i][j]);
+                        size += stream.WriteUnsignedIntVariable((exponent_t[i][j] == 0) ? (Math.Max(0, prec_translation_param - 30)) : (Math.Max(0, exponent_t[i][j] + prec_translation_param - 31)), this.mantissa_t[i][j]);
                     }
                 }
             }
@@ -13214,14 +13214,14 @@ three_dimensional_reference_displays_info( payloadSize ) {
             for (i = 0; i < numRefDisplays; i++)
             {
                 size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_baseline[i]);
-                size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_ref_baseline"), out this.mantissa_ref_baseline[i]);
+                size += stream.ReadUnsignedIntVariable(size, (exponent_ref_baseline[i] == 0) ? (Math.Max(0, prec_ref_baseline - 30)) : (Math.Max(0, exponent_ref_baseline[i] + prec_ref_baseline - 31)), out this.mantissa_ref_baseline[i]);
                 size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_display_width[i]);
-                size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_ref_display_width"), out this.mantissa_ref_display_width[i]);
+                size += stream.ReadUnsignedIntVariable(size, (exponent_ref_display_width[i] == 0) ? (Math.Max(0, prec_ref_display_width - 30)) : (Math.Max(0, exponent_ref_display_width[i] + prec_ref_display_width - 31)), out this.mantissa_ref_display_width[i]);
 
                 if (ref_viewing_distance_flag != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_viewing_distance[i]);
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa_ref_viewing_distance"), out this.mantissa_ref_viewing_distance[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_ref_viewing_distance[i] == 0) ? (Math.Max(0, prec_ref_viewing_dist - 30)) : (Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_dist - 31)), out this.mantissa_ref_viewing_distance[i]);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.additional_shift_present_flag[i]);
 
@@ -13255,14 +13255,14 @@ three_dimensional_reference_displays_info( payloadSize ) {
             for (i = 0; i < numRefDisplays; i++)
             {
                 size += stream.WriteUnsignedInt(6, this.exponent_ref_baseline[i]);
-                size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_ref_baseline"), this.mantissa_ref_baseline[i]);
+                size += stream.WriteUnsignedIntVariable((exponent_ref_baseline[i] == 0) ? (Math.Max(0, prec_ref_baseline - 30)) : (Math.Max(0, exponent_ref_baseline[i] + prec_ref_baseline - 31)), this.mantissa_ref_baseline[i]);
                 size += stream.WriteUnsignedInt(6, this.exponent_ref_display_width[i]);
-                size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_ref_display_width"), this.mantissa_ref_display_width[i]);
+                size += stream.WriteUnsignedIntVariable((exponent_ref_display_width[i] == 0) ? (Math.Max(0, prec_ref_display_width - 30)) : (Math.Max(0, exponent_ref_display_width[i] + prec_ref_display_width - 31)), this.mantissa_ref_display_width[i]);
 
                 if (ref_viewing_distance_flag != 0)
                 {
                     size += stream.WriteUnsignedInt(6, this.exponent_ref_viewing_distance[i]);
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa_ref_viewing_distance"), this.mantissa_ref_viewing_distance[i]);
+                    size += stream.WriteUnsignedIntVariable((exponent_ref_viewing_distance[i] == 0) ? (Math.Max(0, prec_ref_viewing_dist - 30)) : (Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_dist - 31)), this.mantissa_ref_viewing_distance[i]);
                 }
                 size += stream.WriteUnsignedInt(1, this.additional_shift_present_flag[i]);
 
@@ -13588,11 +13588,11 @@ alternative_depth_info( payloadSize ) {
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_z_near_flag[i]);
                         size += stream.ReadUnsignedInt(size, 7, out this.exp_gvd_z_near[i]);
                         size += stream.ReadUnsignedInt(size, 5, out this.man_len_gvd_z_near_minus1[i]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("man_gvd_z_near"), out this.man_gvd_z_near[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (man_len_gvd_z_near_minus1[i] + 1), out this.man_gvd_z_near[i]);
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_z_far_flag[i]);
                         size += stream.ReadUnsignedInt(size, 7, out this.exp_gvd_z_far[i]);
                         size += stream.ReadUnsignedInt(size, 5, out this.man_len_gvd_z_far_minus1[i]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("man_gvd_z_far"), out this.man_gvd_z_far[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (man_len_gvd_z_far_minus1[i] + 1), out this.man_gvd_z_far[i]);
                     }
                 }
 
@@ -13637,16 +13637,16 @@ alternative_depth_info( payloadSize ) {
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_focal_length_x[i]);
                         size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_focal_length_x[i]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("man_gvd_focal_length_x"), out this.man_gvd_focal_length_x[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_focal_length_x[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_x[i] + prec_gvd_focal_length - 31)), out this.man_gvd_focal_length_x[i]);
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_focal_length_y[i]);
                         size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_focal_length_y[i]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("man_gvd_focal_length_y"), out this.man_gvd_focal_length_y[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_focal_length_y[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_y[i] + prec_gvd_focal_length - 31)), out this.man_gvd_focal_length_y[i]);
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_principal_point_x[i]);
                         size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_principal_point_x[i]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("man_gvd_principal_point_x"), out this.man_gvd_principal_point_x[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_principal_point_x[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_x[i] + prec_gvd_principal_point - 31)), out this.man_gvd_principal_point_x[i]);
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_principal_point_y[i]);
                         size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_principal_point_y[i]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("man_gvd_principal_point_y"), out this.man_gvd_principal_point_y[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_principal_point_y[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_y[i] + prec_gvd_principal_point - 31)), out this.man_gvd_principal_point_y[i]);
                     }
 
                     if (rotation_gvd_flag != 0)
@@ -13667,7 +13667,7 @@ alternative_depth_info( payloadSize ) {
 
                                 size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_r[i][j][k]);
                                 size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_r[i][j][k]);
-                                size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("man_gvd_r"), out this.man_gvd_r[i][j][k]);
+                                size += stream.ReadUnsignedIntVariable(size, (exp_gvd_r[i][j][k] == 0) ? (Math.Max(0, prec_gvd_rotation_param - 30)) : (Math.Max(0, exp_gvd_r[i][j][k] + prec_gvd_rotation_param - 31)), out this.man_gvd_r[i][j][k]);
                             }
                         }
                     }
@@ -13676,7 +13676,7 @@ alternative_depth_info( payloadSize ) {
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_t_x[i]);
                         size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_t_x[i]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("man_gvd_t_x"), out this.man_gvd_t_x[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_t_x[i] == 0) ? (Math.Max(0, prec_gvd_translation_param - 30)) : (Math.Max(0, exp_gvd_t_x[i] + prec_gvd_translation_param - 31)), out this.man_gvd_t_x[i]);
                     }
                 }
             }
@@ -13710,11 +13710,11 @@ alternative_depth_info( payloadSize ) {
                         size += stream.WriteUnsignedInt(1, this.sign_gvd_z_near_flag[i]);
                         size += stream.WriteUnsignedInt(7, this.exp_gvd_z_near[i]);
                         size += stream.WriteUnsignedInt(5, this.man_len_gvd_z_near_minus1[i]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("man_gvd_z_near"), this.man_gvd_z_near[i]);
+                        size += stream.WriteUnsignedIntVariable((man_len_gvd_z_near_minus1[i] + 1), this.man_gvd_z_near[i]);
                         size += stream.WriteUnsignedInt(1, this.sign_gvd_z_far_flag[i]);
                         size += stream.WriteUnsignedInt(7, this.exp_gvd_z_far[i]);
                         size += stream.WriteUnsignedInt(5, this.man_len_gvd_z_far_minus1[i]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("man_gvd_z_far"), this.man_gvd_z_far[i]);
+                        size += stream.WriteUnsignedIntVariable((man_len_gvd_z_far_minus1[i] + 1), this.man_gvd_z_far[i]);
                     }
                 }
 
@@ -13741,16 +13741,16 @@ alternative_depth_info( payloadSize ) {
                     {
                         size += stream.WriteUnsignedInt(1, this.sign_gvd_focal_length_x[i]);
                         size += stream.WriteUnsignedInt(6, this.exp_gvd_focal_length_x[i]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("man_gvd_focal_length_x"), this.man_gvd_focal_length_x[i]);
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_focal_length_x[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_x[i] + prec_gvd_focal_length - 31)), this.man_gvd_focal_length_x[i]);
                         size += stream.WriteUnsignedInt(1, this.sign_gvd_focal_length_y[i]);
                         size += stream.WriteUnsignedInt(6, this.exp_gvd_focal_length_y[i]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("man_gvd_focal_length_y"), this.man_gvd_focal_length_y[i]);
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_focal_length_y[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_y[i] + prec_gvd_focal_length - 31)), this.man_gvd_focal_length_y[i]);
                         size += stream.WriteUnsignedInt(1, this.sign_gvd_principal_point_x[i]);
                         size += stream.WriteUnsignedInt(6, this.exp_gvd_principal_point_x[i]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("man_gvd_principal_point_x"), this.man_gvd_principal_point_x[i]);
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_principal_point_x[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_x[i] + prec_gvd_principal_point - 31)), this.man_gvd_principal_point_x[i]);
                         size += stream.WriteUnsignedInt(1, this.sign_gvd_principal_point_y[i]);
                         size += stream.WriteUnsignedInt(6, this.exp_gvd_principal_point_y[i]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("man_gvd_principal_point_y"), this.man_gvd_principal_point_y[i]);
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_principal_point_y[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_y[i] + prec_gvd_principal_point - 31)), this.man_gvd_principal_point_y[i]);
                     }
 
                     if (rotation_gvd_flag != 0)
@@ -13765,7 +13765,7 @@ alternative_depth_info( payloadSize ) {
 
                                 size += stream.WriteUnsignedInt(1, this.sign_gvd_r[i][j][k]);
                                 size += stream.WriteUnsignedInt(6, this.exp_gvd_r[i][j][k]);
-                                size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("man_gvd_r"), this.man_gvd_r[i][j][k]);
+                                size += stream.WriteUnsignedIntVariable((exp_gvd_r[i][j][k] == 0) ? (Math.Max(0, prec_gvd_rotation_param - 30)) : (Math.Max(0, exp_gvd_r[i][j][k] + prec_gvd_rotation_param - 31)), this.man_gvd_r[i][j][k]);
                             }
                         }
                     }
@@ -13774,7 +13774,7 @@ alternative_depth_info( payloadSize ) {
                     {
                         size += stream.WriteUnsignedInt(1, this.sign_gvd_t_x[i]);
                         size += stream.WriteUnsignedInt(6, this.exp_gvd_t_x[i]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("man_gvd_t_x"), this.man_gvd_t_x[i]);
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_t_x[i] == 0) ? (Math.Max(0, prec_gvd_translation_param - 30)) : (Math.Max(0, exp_gvd_t_x[i] + prec_gvd_translation_param - 31)), this.man_gvd_t_x[i]);
                     }
                 }
             }

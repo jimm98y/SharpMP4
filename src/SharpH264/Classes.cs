@@ -174,6 +174,14 @@ namespace SharpH264
                     return _sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth;
                 case "ar_object_confidence_length_minus1":
                     return _sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1;
+                case "da_mantissa_len_minus1":
+                    return _sei.SeiMessage.SeiPayload.DepthRepresentationInfo.DepthRepresentationSeiElement.DaMantissaLenMinus1;
+                case "offset_len_minus1":
+                    return _sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.OffsetLenMinus1;
+                case "expLen":
+                    return _subsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen;
+                case "mantissa_len_minus1":
+                    return _subsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1;
             }
 
             throw new NotImplementedException();
@@ -234,56 +242,51 @@ namespace SharpH264
                 case "ar_object_confidence":
                     return GetValue("ar_object_confidence_length_minus1") + 1;
                 case "mantissa_focal_length_x":
-                    /*
-                    The length of the mantissa_focal_length_x[ i ] syntax element in units of bits is variable and determined as follows: 
-                    – If exponent_focal_length_x[ i ] == 0, the length is Max( 0, prec_focal_length − 30 ). 
-                    – Otherwise (0 < exponent_focal_length_x[ i ] < 63), the length is Max( 0, exponent_focal_length_x[ i ] + prec_focal_length − 31 ).
-                     */
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "mantissa_focal_length_y":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "mantissa_principal_point_x":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "mantissa_principal_point_y":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "mantissa_skew_factor":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "mantissa_r":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "mantissa_t":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "da_mantissa":
-                    throw new NotSupportedException();
+                    return GetValue("da_mantissa_len_minus1") + 1;
                 case "mantissa_ref_baseline":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "mantissa_ref_display_width":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "mantissa_ref_viewing_distance":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "depth_disp_delay_offset_fp":
-                    throw new NotSupportedException();
+                    return GetValue("offset_len_minus1") + 1;
                 case "man_gvd_z_near":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "man_gvd_z_far":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "man_gvd_focal_length_x":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "man_gvd_focal_length_y":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "man_gvd_principal_point_x":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "man_gvd_principal_point_y":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "man_gvd_r":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "man_gvd_t_x":
-                    throw new NotSupportedException();
+                    throw new InvalidOperationException();
                 case "exponent0":
-                    throw new NotSupportedException();
+                    return GetValue("expLen");
                 case "mantissa0":
-                    throw new NotSupportedException();
+                    return GetValue("mantissa_len_minus1") + 1;
                 case "exponent1":
-                    throw new NotSupportedException();
+                    return GetValue("expLen");
                 default:
                     throw new NotImplementedException();
             }
