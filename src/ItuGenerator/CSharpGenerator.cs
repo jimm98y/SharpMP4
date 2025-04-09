@@ -624,7 +624,7 @@ namespace Sharp{type}
                 { "NumBytesInNALunit",             "u(32)" },
                 { "scalingLst",                    "u(32)[]" }, // TODO: remove this temporary fix
                 { "sizeOfScalingList",             "u(32)" },
-                { "useDefaultScalingMatrixFlag",   "u(1)" },
+                { "useDefaultScalingMatrixFlag",   "u(32)" },
                 { "mb_type",                       "ue(v) | ae(v)" },
                 { "startIdx",                      "u(32)" },
                 { "endIdx",                        "u(32)" },
@@ -1117,8 +1117,24 @@ namespace Sharp{type}
 
         private List<ItuField> FlattenFields(ItuClass b, IEnumerable<ItuCode> fields, ItuBlock parent = null)
         {
-
             Dictionary<string, ItuField> ret = new Dictionary<string, ItuField>();
+
+            if (parent == null)
+            {
+                // add also ctor params as fields
+                string[] ctorParams = GetCtorParameters(b);
+                for (int i = 0; i < ctorParams.Length; i++)
+                {
+                    var f = new ItuField()
+                    {
+                        Name = ctorParams[i].ToFirstLower(),
+                        Type = GetCtorParameterType(ctorParams[i])
+                    };
+                    b.AddedFields.Add(f);
+                    AddAndResolveDuplicates(b, ret, f);
+                }
+            }
+
             foreach (var code in fields)
             {
                 if (code is ItuField field)
@@ -1205,31 +1221,16 @@ namespace Sharp{type}
                 }
             }
 
-            if (parent == null)
-            {
-                // add also ctor params as fields
-                string[] ctorParams = GetCtorParameters(b);
-                for (int i = 0; i < ctorParams.Length; i++)
-                {
-                    AddAndResolveDuplicates(b, ret,
-                        new ItuField()
-                        {
-                            Name = ctorParams[i].ToFirstLower(),
-                            Type = GetCtorParameterType(ctorParams[i])
-                        });
-                }
-            }
-
             return ret.Values.ToList();
         }
 
         private void AddAndResolveDuplicates(ItuClass b, Dictionary<string, ItuField> ret, ItuField field)
         {
-            if(string.IsNullOrEmpty(field.Type))
+            if (string.IsNullOrEmpty(field.Type))
             {
                 if (!string.IsNullOrEmpty(field.Increment))
                 {
-                    if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
+                    if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null && b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
                     {
                         b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "u(32)", FieldArray = field.FieldArray });
                     }
@@ -1265,7 +1266,7 @@ namespace Sharp{type}
             }            
 
             string name = field.Name;
-            int index = 0;
+            //int index = 0;
             if (!ret.TryAdd(name, field))
             {
                 //while (!ret.TryAdd($"{name}{index}", field))

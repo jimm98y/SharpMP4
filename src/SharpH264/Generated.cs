@@ -43,6 +43,8 @@ nal_unit( NumBytesInNALunit ) {
     */
     public class NalUnit : IItuSerializable
     {
+        private uint numBytesInNALunit;
+        public uint NumBytesInNALunit { get { return numBytesInNALunit; } set { numBytesInNALunit = value; } }
         private uint forbidden_zero_bit;
         public uint ForbiddenZeroBit { get { return forbidden_zero_bit; } set { forbidden_zero_bit = value; } }
         private uint nal_ref_idc;
@@ -59,8 +61,6 @@ nal_unit( NumBytesInNALunit ) {
         public NalUnitHeader3davcExtension NalUnitHeader3davcExtension { get { return nal_unit_header_3davc_extension; } set { nal_unit_header_3davc_extension = value; } }
         private NalUnitHeaderMvcExtension nal_unit_header_mvc_extension;
         public NalUnitHeaderMvcExtension NalUnitHeaderMvcExtension { get { return nal_unit_header_mvc_extension; } set { nal_unit_header_mvc_extension = value; } }
-        private uint numBytesInNALunit;
-        public uint NumBytesInNALunit { get { return numBytesInNALunit; } set { numBytesInNALunit = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -625,19 +625,19 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
     */
     public class ScalingList : IItuSerializable
     {
-        private int delta_scale;
-        public int DeltaScale { get { return delta_scale; } set { delta_scale = value; } }
         private uint[] scalingLst;
         public uint[] ScalingLst { get { return scalingLst; } set { scalingLst = value; } }
         private uint sizeOfScalingList;
         public uint SizeOfScalingList { get { return sizeOfScalingList; } set { sizeOfScalingList = value; } }
-        private byte useDefaultScalingMatrixFlag;
-        public byte UseDefaultScalingMatrixFlag { get { return useDefaultScalingMatrixFlag; } set { useDefaultScalingMatrixFlag = value; } }
+        private uint useDefaultScalingMatrixFlag;
+        public uint UseDefaultScalingMatrixFlag { get { return useDefaultScalingMatrixFlag; } set { useDefaultScalingMatrixFlag = value; } }
+        private int delta_scale;
+        public int DeltaScale { get { return delta_scale; } set { delta_scale = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
 
-        public ScalingList(uint[] scalingLst, uint sizeOfScalingList, byte useDefaultScalingMatrixFlag)
+        public ScalingList(uint[] scalingLst, uint sizeOfScalingList, uint useDefaultScalingMatrixFlag)
         {
             this.scalingLst = scalingLst;
             this.sizeOfScalingList = sizeOfScalingList;
@@ -651,8 +651,6 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
             uint lastScale = 0;
             uint nextScale = 0;
             uint j = 0;
-            uint useDefaultScalingMatrixFlag = 0;
-            uint[] scalingLst = null;
             lastScale = 8;
             nextScale = 8;
 
@@ -679,8 +677,6 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
             uint lastScale = 0;
             uint nextScale = 0;
             uint j = 0;
-            uint useDefaultScalingMatrixFlag = 0;
-            uint[] scalingLst = null;
             lastScale = 8;
             nextScale = 8;
 
@@ -1868,6 +1864,10 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
     */
     public class SeiPayload : IItuSerializable
     {
+        private uint payloadType;
+        public uint PayloadType { get { return payloadType; } set { payloadType = value; } }
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private BufferingPeriod buffering_period;
         public BufferingPeriod BufferingPeriod { get { return buffering_period; } set { buffering_period = value; } }
         private PicTiming pic_timing;
@@ -2018,10 +2018,6 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
         public uint BitEqualToOne { get { return bit_equal_to_one; } set { bit_equal_to_one = value; } }
         private uint bit_equal_to_zero;
         public uint BitEqualToZero { get { return bit_equal_to_zero; } set { bit_equal_to_zero = value; } }
-        private uint payloadType;
-        public uint PayloadType { get { return payloadType; } set { payloadType = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -2675,14 +2671,14 @@ buffering_period( payloadSize ) {
     */
     public class BufferingPeriod : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint seq_parameter_set_id;
         public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
         private uint[] initial_cpb_removal_delay;
         public uint[] InitialCpbRemovalDelay { get { return initial_cpb_removal_delay; } set { initial_cpb_removal_delay = value; } }
         private uint[] initial_cpb_removal_delay_offset;
         public uint[] InitialCpbRemovalDelayOffset { get { return initial_cpb_removal_delay_offset; } set { initial_cpb_removal_delay_offset = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -2802,6 +2798,8 @@ pic_timing( payloadSize ) {
     */
     public class PicTiming : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint cpb_removal_delay;
         public uint CpbRemovalDelay { get { return cpb_removal_delay; } set { cpb_removal_delay = value; } }
         private uint dpb_output_delay;
@@ -2838,8 +2836,6 @@ pic_timing( payloadSize ) {
         public byte HoursFlag { get { return hours_flag; } set { hours_flag = value; } }
         private int time_offset;
         public int TimeOffset { get { return time_offset; } set { time_offset = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3010,6 +3006,8 @@ if( !pan_scan_rect_cancel_flag ) {
     */
     public class PanScanRect : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint pan_scan_rect_id;
         public uint PanScanRectId { get { return pan_scan_rect_id; } set { pan_scan_rect_id = value; } }
         private byte pan_scan_rect_cancel_flag;
@@ -3026,8 +3024,6 @@ if( !pan_scan_rect_cancel_flag ) {
         public int[] PanScanRectBottomOffset { get { return pan_scan_rect_bottom_offset; } set { pan_scan_rect_bottom_offset = value; } }
         private uint pan_scan_rect_repetition_period;
         public uint PanScanRectRepetitionPeriod { get { return pan_scan_rect_repetition_period; } set { pan_scan_rect_repetition_period = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3103,10 +3099,10 @@ filler_payload( payloadSize ) {
     */
     public class FillerPayload : IItuSerializable
     {
-        private uint ff_byte;
-        public uint FfByte { get { return ff_byte; } set { ff_byte = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private uint ff_byte;
+        public uint FfByte { get { return ff_byte; } set { ff_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3165,14 +3161,14 @@ user_data_registered_itu_t_t35( payloadSize ) {
     */
     public class UserDataRegisteredItutT35 : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte itu_t_t35_country_code;
         public byte ItutT35CountryCode { get { return itu_t_t35_country_code; } set { itu_t_t35_country_code = value; } }
         private byte itu_t_t35_country_code_extension_byte;
         public byte ItutT35CountryCodeExtensionByte { get { return itu_t_t35_country_code_extension_byte; } set { itu_t_t35_country_code_extension_byte = value; } }
         private byte itu_t_t35_payload_byte;
         public byte ItutT35PayloadByte { get { return itu_t_t35_payload_byte; } set { itu_t_t35_payload_byte = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3247,12 +3243,12 @@ user_data_unregistered( payloadSize ) {
     */
     public class UserDataUnregistered : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private BigInteger uuid_iso_iec_11578;
         public BigInteger UuidIsoIec11578 { get { return uuid_iso_iec_11578; } set { uuid_iso_iec_11578 = value; } }
         private byte user_data_payload_byte;
         public byte UserDataPayloadByte { get { return user_data_payload_byte; } set { user_data_payload_byte = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3306,6 +3302,8 @@ recovery_point( payloadSize ) {
     */
     public class RecoveryPoint : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint recovery_frame_cnt;
         public uint RecoveryFrameCnt { get { return recovery_frame_cnt; } set { recovery_frame_cnt = value; } }
         private byte exact_match_flag;
@@ -3314,8 +3312,6 @@ recovery_point( payloadSize ) {
         public byte BrokenLinkFlag { get { return broken_link_flag; } set { broken_link_flag = value; } }
         private uint changing_slice_group_idc;
         public uint ChangingSliceGroupIdc { get { return changing_slice_group_idc; } set { changing_slice_group_idc = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3367,6 +3363,8 @@ dec_ref_pic_marking_repetition( payloadSize ) {
     */
     public class DecRefPicMarkingRepetition : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte original_idr_flag;
         public byte OriginalIdrFlag { get { return original_idr_flag; } set { original_idr_flag = value; } }
         private uint original_frame_num;
@@ -3377,8 +3375,6 @@ dec_ref_pic_marking_repetition( payloadSize ) {
         public byte OriginalBottomFieldFlag { get { return original_bottom_field_flag; } set { original_bottom_field_flag = value; } }
         private DecRefPicMarking dec_ref_pic_marking;
         public DecRefPicMarking DecRefPicMarking { get { return dec_ref_pic_marking; } set { dec_ref_pic_marking = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3461,6 +3457,8 @@ spare_pic( payloadSize ) {
     */
     public class SparePic : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint target_frame_num;
         public uint TargetFrameNum { get { return target_frame_num; } set { target_frame_num = value; } }
         private byte spare_field_flag;
@@ -3479,8 +3477,6 @@ spare_pic( payloadSize ) {
         public byte[][] SpareUnitFlag { get { return spare_unit_flag; } set { spare_unit_flag = value; } }
         private uint[][] zero_run_length;
         public uint[][] ZeroRunLength { get { return zero_run_length; } set { zero_run_length = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3612,6 +3608,8 @@ scene_info( payloadSize ) {
     */
     public class SceneInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte scene_info_present_flag;
         public byte SceneInfoPresentFlag { get { return scene_info_present_flag; } set { scene_info_present_flag = value; } }
         private uint scene_id;
@@ -3620,8 +3618,6 @@ scene_info( payloadSize ) {
         public uint SceneTransitionType { get { return scene_transition_type; } set { scene_transition_type = value; } }
         private uint second_scene_id;
         public uint SecondSceneId { get { return second_scene_id; } set { second_scene_id = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3689,6 +3685,8 @@ sub_seq_info( payloadSize ) {
     */
     public class SubSeqInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint sub_seq_layer_num;
         public uint SubSeqLayerNum { get { return sub_seq_layer_num; } set { sub_seq_layer_num = value; } }
         private uint sub_seq_id;
@@ -3703,8 +3701,6 @@ sub_seq_info( payloadSize ) {
         public byte SubSeqFrameNumFlag { get { return sub_seq_frame_num_flag; } set { sub_seq_frame_num_flag = value; } }
         private uint sub_seq_frame_num;
         public uint SubSeqFrameNum { get { return sub_seq_frame_num; } set { sub_seq_frame_num = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3768,6 +3764,8 @@ sub_seq_layer_characteristics( payloadSize ) {
     */
     public class SubSeqLayerCharacteristics : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_sub_seq_layers_minus1;
         public uint NumSubSeqLayersMinus1 { get { return num_sub_seq_layers_minus1; } set { num_sub_seq_layers_minus1 = value; } }
         private byte accurate_statistics_flag;
@@ -3776,8 +3774,6 @@ sub_seq_layer_characteristics( payloadSize ) {
         public uint AverageBitRate { get { return average_bit_rate; } set { average_bit_rate = value; } }
         private uint average_frame_rate;
         public uint AverageFrameRate { get { return average_frame_rate; } set { average_frame_rate = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3848,6 +3844,8 @@ sub_seq_characteristics( payloadSize ) {
     */
     public class SubSeqCharacteristics : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint sub_seq_layer_num;
         public uint SubSeqLayerNum { get { return sub_seq_layer_num; } set { sub_seq_layer_num = value; } }
         private uint sub_seq_id;
@@ -3872,8 +3870,6 @@ sub_seq_characteristics( payloadSize ) {
         public uint RefSubSeqId { get { return ref_sub_seq_id; } set { ref_sub_seq_id = value; } }
         private byte ref_sub_seq_direction;
         public byte RefSubSeqDirection { get { return ref_sub_seq_direction; } set { ref_sub_seq_direction = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3960,10 +3956,10 @@ full_frame_freeze( payloadSize ) {
     */
     public class FullFrameFreeze : IItuSerializable
     {
-        private uint full_frame_freeze_repetition_period;
-        public uint FullFrameFreezeRepetitionPeriod { get { return full_frame_freeze_repetition_period; } set { full_frame_freeze_repetition_period = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private uint full_frame_freeze_repetition_period;
+        public uint FullFrameFreezeRepetitionPeriod { get { return full_frame_freeze_repetition_period; } set { full_frame_freeze_repetition_period = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4039,10 +4035,10 @@ full_frame_snapshot( payloadSize ) {
     */
     public class FullFrameSnapshot : IItuSerializable
     {
-        private uint snapshot_id;
-        public uint SnapshotId { get { return snapshot_id; } set { snapshot_id = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private uint snapshot_id;
+        public uint SnapshotId { get { return snapshot_id; } set { snapshot_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4082,12 +4078,12 @@ progressive_refinement_segment_start( payloadSize ) {
     */
     public class ProgressiveRefinementSegmentStart : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint progressive_refinement_id;
         public uint ProgressiveRefinementId { get { return progressive_refinement_id; } set { progressive_refinement_id = value; } }
         private uint num_refinement_steps_minus1;
         public uint NumRefinementStepsMinus1 { get { return num_refinement_steps_minus1; } set { num_refinement_steps_minus1 = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4128,10 +4124,10 @@ progressive_refinement_segment_end( payloadSize ) {
     */
     public class ProgressiveRefinementSegmentEnd : IItuSerializable
     {
-        private uint progressive_refinement_id;
-        public uint ProgressiveRefinementId { get { return progressive_refinement_id; } set { progressive_refinement_id = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private uint progressive_refinement_id;
+        public uint ProgressiveRefinementId { get { return progressive_refinement_id; } set { progressive_refinement_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4178,6 +4174,8 @@ motion_constrained_slice_group_set( payloadSize ) {
     */
     public class MotionConstrainedSliceGroupSet : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_slice_groups_in_set_minus1;
         public uint NumSliceGroupsInSetMinus1 { get { return num_slice_groups_in_set_minus1; } set { num_slice_groups_in_set_minus1 = value; } }
         private uint[] slice_group_id;
@@ -4188,8 +4186,6 @@ motion_constrained_slice_group_set( payloadSize ) {
         public byte PanScanRectFlag { get { return pan_scan_rect_flag; } set { pan_scan_rect_flag = value; } }
         private uint pan_scan_rect_id;
         public uint PanScanRectId { get { return pan_scan_rect_id; } set { pan_scan_rect_id = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4291,6 +4287,8 @@ film_grain_characteristics( payloadSize ) {
     */
     public class FilmGrainCharacteristics : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte film_grain_characteristics_cancel_flag;
         public byte FilmGrainCharacteristicsCancelFlag { get { return film_grain_characteristics_cancel_flag; } set { film_grain_characteristics_cancel_flag = value; } }
         private uint film_grain_model_id;
@@ -4327,8 +4325,6 @@ film_grain_characteristics( payloadSize ) {
         public int[][][] CompModelValue { get { return comp_model_value; } set { comp_model_value = value; } }
         private uint film_grain_characteristics_repetition_period;
         public uint FilmGrainCharacteristicsRepetitionPeriod { get { return film_grain_characteristics_repetition_period; } set { film_grain_characteristics_repetition_period = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4478,6 +4474,8 @@ deblocking_filter_display_preference( payloadSize ) {
     */
     public class DeblockingFilterDisplayPreference : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte deblocking_display_preference_cancel_flag;
         public byte DeblockingDisplayPreferenceCancelFlag { get { return deblocking_display_preference_cancel_flag; } set { deblocking_display_preference_cancel_flag = value; } }
         private byte display_prior_to_deblocking_preferred_flag;
@@ -4486,8 +4484,6 @@ deblocking_filter_display_preference( payloadSize ) {
         public byte DecFrameBufferingConstraintFlag { get { return dec_frame_buffering_constraint_flag; } set { dec_frame_buffering_constraint_flag = value; } }
         private uint deblocking_display_preference_repetition_period;
         public uint DeblockingDisplayPreferenceRepetitionPeriod { get { return deblocking_display_preference_repetition_period; } set { deblocking_display_preference_repetition_period = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4548,6 +4544,8 @@ stereo_video_info( payloadSize ) {
     */
     public class StereoVideoInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte field_views_flag;
         public byte FieldViewsFlag { get { return field_views_flag; } set { field_views_flag = value; } }
         private byte top_field_is_left_view_flag;
@@ -4560,8 +4558,6 @@ stereo_video_info( payloadSize ) {
         public byte LeftViewSelfContainedFlag { get { return left_view_self_contained_flag; } set { left_view_self_contained_flag = value; } }
         private byte right_view_self_contained_flag;
         public byte RightViewSelfContainedFlag { get { return right_view_self_contained_flag; } set { right_view_self_contained_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4631,6 +4627,8 @@ post_filter_hint( payloadSize ) {
     */
     public class PostFilterHint : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint filter_hint_size_y;
         public uint FilterHintSizey { get { return filter_hint_size_y; } set { filter_hint_size_y = value; } }
         private uint filter_hint_size_x;
@@ -4641,8 +4639,6 @@ post_filter_hint( payloadSize ) {
         public int[][][] FilterHint { get { return filter_hint; } set { filter_hint = value; } }
         private byte additional_extension_flag;
         public byte AdditionalExtensionFlag { get { return additional_extension_flag; } set { additional_extension_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -4763,6 +4759,8 @@ tone_mapping_info( payloadSize ) {
     */
     public class ToneMappingInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint tone_map_id;
         public uint ToneMapId { get { return tone_map_id; } set { tone_map_id = value; } }
         private byte tone_map_cancel_flag;
@@ -4815,8 +4813,6 @@ tone_mapping_info( payloadSize ) {
         public uint NominalWhiteLevelLumaCodeValue { get { return nominal_white_level_luma_code_value; } set { nominal_white_level_luma_code_value = value; } }
         private uint extended_white_level_luma_code_value;
         public uint ExtendedWhiteLevelLumaCodeValue { get { return extended_white_level_luma_code_value; } set { extended_white_level_luma_code_value = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5013,6 +5009,8 @@ frame_packing_arrangement( payloadSize ) {
     */
     public class FramePackingArrangement : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint frame_packing_arrangement_id;
         public uint FramePackingArrangementId { get { return frame_packing_arrangement_id; } set { frame_packing_arrangement_id = value; } }
         private byte frame_packing_arrangement_cancel_flag;
@@ -5049,8 +5047,6 @@ frame_packing_arrangement( payloadSize ) {
         public uint FramePackingArrangementRepetitionPeriod { get { return frame_packing_arrangement_repetition_period; } set { frame_packing_arrangement_repetition_period = value; } }
         private byte frame_packing_arrangement_extension_flag;
         public byte FramePackingArrangementExtensionFlag { get { return frame_packing_arrangement_extension_flag; } set { frame_packing_arrangement_extension_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5148,6 +5144,8 @@ display_orientation( payloadSize ) {
     */
     public class DisplayOrientation : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte display_orientation_cancel_flag;
         public byte DisplayOrientationCancelFlag { get { return display_orientation_cancel_flag; } set { display_orientation_cancel_flag = value; } }
         private byte hor_flip;
@@ -5160,8 +5158,6 @@ display_orientation( payloadSize ) {
         public uint DisplayOrientationRepetitionPeriod { get { return display_orientation_repetition_period; } set { display_orientation_repetition_period = value; } }
         private byte display_orientation_extension_flag;
         public byte DisplayOrientationExtensionFlag { get { return display_orientation_extension_flag; } set { display_orientation_extension_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5226,6 +5222,8 @@ display_orientation( payloadSize ) {
     */
     public class MasteringDisplayColourVolume : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint[] display_primaries_x;
         public uint[] DisplayPrimariesx { get { return display_primaries_x; } set { display_primaries_x = value; } }
         private uint[] display_primaries_y;
@@ -5238,8 +5236,6 @@ display_orientation( payloadSize ) {
         public uint MaxDisplayMasteringLuminance { get { return max_display_mastering_luminance; } set { max_display_mastering_luminance = value; } }
         private uint min_display_mastering_luminance;
         public uint MinDisplayMasteringLuminance { get { return min_display_mastering_luminance; } set { min_display_mastering_luminance = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5336,6 +5332,8 @@ colour_remapping_info( payloadSize ) {
     */
     public class ColourRemappingInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint colour_remap_id;
         public uint ColourRemapId { get { return colour_remap_id; } set { colour_remap_id = value; } }
         private byte colour_remap_cancel_flag;
@@ -5374,8 +5372,6 @@ colour_remapping_info( payloadSize ) {
         public uint[][] PostLutCodedValue { get { return post_lut_coded_value; } set { post_lut_coded_value = value; } }
         private uint[][] post_lut_target_value;
         public uint[][] PostLutTargetValue { get { return post_lut_target_value; } set { post_lut_target_value = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5555,12 +5551,12 @@ content_light_level_info( payloadSize ) {
     */
     public class ContentLightLevelInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint max_content_light_level;
         public uint MaxContentLightLevel { get { return max_content_light_level; } set { max_content_light_level = value; } }
         private uint max_pic_average_light_level;
         public uint MaxPicAverageLightLevel { get { return max_pic_average_light_level; } set { max_pic_average_light_level = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5601,10 +5597,10 @@ alternative_transfer_characteristics( payloadSize ) {
     */
     public class AlternativeTransferCharacteristics : IItuSerializable
     {
-        private uint preferred_transfer_characteristics;
-        public uint PreferredTransferCharacteristics { get { return preferred_transfer_characteristics; } set { preferred_transfer_characteristics = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private uint preferred_transfer_characteristics;
+        public uint PreferredTransferCharacteristics { get { return preferred_transfer_characteristics; } set { preferred_transfer_characteristics = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5662,6 +5658,8 @@ content_colour_volume( payloadSize ) {
     */
     public class ContentColourVolume : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte ccv_cancel_flag;
         public byte CcvCancelFlag { get { return ccv_cancel_flag; } set { ccv_cancel_flag = value; } }
         private byte ccv_persistence_flag;
@@ -5686,8 +5684,6 @@ content_colour_volume( payloadSize ) {
         public uint CcvMaxLuminanceValue { get { return ccv_max_luminance_value; } set { ccv_max_luminance_value = value; } }
         private uint ccv_avg_luminance_value;
         public uint CcvAvgLuminanceValue { get { return ccv_avg_luminance_value; } set { ccv_avg_luminance_value = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5802,14 +5798,14 @@ ambient_viewing_environment( payloadSize ) {
     */
     public class AmbientViewingEnvironment : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint ambient_illuminance;
         public uint AmbientIlluminance { get { return ambient_illuminance; } set { ambient_illuminance = value; } }
         private uint ambient_light_x;
         public uint AmbientLightx { get { return ambient_light_x; } set { ambient_light_x = value; } }
         private uint ambient_light_y;
         public uint AmbientLighty { get { return ambient_light_y; } set { ambient_light_y = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5862,6 +5858,8 @@ equirectangular_projection( payloadSize ) {
     */
     public class EquirectangularProjection : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte erp_cancel_flag;
         public byte ErpCancelFlag { get { return erp_cancel_flag; } set { erp_cancel_flag = value; } }
         private byte erp_persistence_flag;
@@ -5876,8 +5874,6 @@ equirectangular_projection( payloadSize ) {
         public uint LeftGbErpWidth { get { return left_gb_erp_width; } set { left_gb_erp_width = value; } }
         private uint right_gb_erp_width;
         public uint RightGbErpWidth { get { return right_gb_erp_width; } set { right_gb_erp_width = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -5946,12 +5942,12 @@ cubemap_projection( payloadSize ) {
     */
     public class CubemapProjection : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte cmp_cancel_flag;
         public byte CmpCancelFlag { get { return cmp_cancel_flag; } set { cmp_cancel_flag = value; } }
         private byte cmp_persistence_flag;
         public byte CmpPersistenceFlag { get { return cmp_persistence_flag; } set { cmp_persistence_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -6007,6 +6003,8 @@ sphere_rotation( payloadSize ) {
     */
     public class SphereRotation : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte sphere_rotation_cancel_flag;
         public byte SphereRotationCancelFlag { get { return sphere_rotation_cancel_flag; } set { sphere_rotation_cancel_flag = value; } }
         private byte sphere_rotation_persistence_flag;
@@ -6019,8 +6017,6 @@ sphere_rotation( payloadSize ) {
         public int PitchRotation { get { return pitch_rotation; } set { pitch_rotation = value; } }
         private int roll_rotation;
         public int RollRotation { get { return roll_rotation; } set { roll_rotation = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -6110,6 +6106,8 @@ regionwise_packing( payloadSize ) {
     */
     public class RegionwisePacking : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte rwp_cancel_flag;
         public byte RwpCancelFlag { get { return rwp_cancel_flag; } set { rwp_cancel_flag = value; } }
         private byte rwp_persistence_flag;
@@ -6164,8 +6162,6 @@ regionwise_packing( payloadSize ) {
         public uint[][] GbType { get { return gb_type; } set { gb_type = value; } }
         private uint[] rwp_gb_reserved_zero_3bits;
         public uint[] RwpGbReservedZero3bits { get { return rwp_gb_reserved_zero_3bits; } set { rwp_gb_reserved_zero_3bits = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -6323,6 +6319,8 @@ omni_viewport( payloadSize ) {
     */
     public class OmniViewport : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint omni_viewport_id;
         public uint OmniViewportId { get { return omni_viewport_id; } set { omni_viewport_id = value; } }
         private byte omni_viewport_cancel_flag;
@@ -6341,8 +6339,6 @@ omni_viewport( payloadSize ) {
         public uint[] OmniViewportHorRange { get { return omni_viewport_hor_range; } set { omni_viewport_hor_range = value; } }
         private uint[] omni_viewport_ver_range;
         public uint[] OmniViewportVerRange { get { return omni_viewport_ver_range; } set { omni_viewport_ver_range = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -6424,14 +6420,14 @@ sei_manifest( payloadSize ) {
     */
     public class SeiManifest : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint manifest_num_sei_msg_types;
         public uint ManifestNumSeiMsgTypes { get { return manifest_num_sei_msg_types; } set { manifest_num_sei_msg_types = value; } }
         private uint[] manifest_sei_payload_type;
         public uint[] ManifestSeiPayloadType { get { return manifest_sei_payload_type; } set { manifest_sei_payload_type = value; } }
         private uint[] manifest_sei_description;
         public uint[] ManifestSeiDescription { get { return manifest_sei_description; } set { manifest_sei_description = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -6494,6 +6490,8 @@ sei_prefix_indication( payloadSize ) {
     */
     public class SeiPrefixIndication : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint prefix_sei_payload_type;
         public uint PrefixSeiPayloadType { get { return prefix_sei_payload_type; } set { prefix_sei_payload_type = value; } }
         private uint num_sei_prefix_indications_minus1;
@@ -6504,8 +6502,6 @@ sei_prefix_indication( payloadSize ) {
         public byte[][] SeiPrefixDataBit { get { return sei_prefix_data_bit; } set { sei_prefix_data_bit = value; } }
         private uint byte_alignment_bit_equal_to_one;
         public uint ByteAlignmentBitEqualToOne { get { return byte_alignment_bit_equal_to_one; } set { byte_alignment_bit_equal_to_one = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -6641,6 +6637,8 @@ annotated_regions( payloadSize ) {
     */
     public class AnnotatedRegions : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte ar_cancel_flag;
         public byte ArCancelFlag { get { return ar_cancel_flag; } set { ar_cancel_flag = value; } }
         private byte ar_not_optimized_for_viewing_flag;
@@ -6697,8 +6695,6 @@ annotated_regions( payloadSize ) {
         public byte[] ArPartialObjectFlag { get { return ar_partial_object_flag; } set { ar_partial_object_flag = value; } }
         private uint[] ar_object_confidence;
         public uint[] ArObjectConfidence { get { return ar_object_confidence; } set { ar_object_confidence = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -6960,6 +6956,8 @@ shutter_interval_info( payloadSize ) {
     */
     public class ShutterIntervalInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint sii_sub_layer_idx;
         public uint SiiSubLayerIdx { get { return sii_sub_layer_idx; } set { sii_sub_layer_idx = value; } }
         private byte shutter_interval_info_present_flag;
@@ -6974,8 +6972,6 @@ shutter_interval_info( payloadSize ) {
         public uint SiiMaxSubLayersMinus1 { get { return sii_max_sub_layers_minus1; } set { sii_max_sub_layers_minus1 = value; } }
         private uint[] sub_layer_num_units_in_shutter_interval;
         public uint[] SubLayerNumUnitsInShutterInterval { get { return sub_layer_num_units_in_shutter_interval; } set { sub_layer_num_units_in_shutter_interval = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -7068,10 +7064,10 @@ reserved_sei_message( payloadSize ) {
     */
     public class ReservedSeiMessage : IItuSerializable
     {
-        private byte reserved_sei_message_payload_byte;
-        public byte ReservedSeiMessagePayloadByte { get { return reserved_sei_message_payload_byte; } set { reserved_sei_message_payload_byte = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private byte reserved_sei_message_payload_byte;
+        public byte ReservedSeiMessagePayloadByte { get { return reserved_sei_message_payload_byte; } set { reserved_sei_message_payload_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -7893,6 +7889,8 @@ scalability_info( payloadSize ) {
     */
     public class ScalabilityInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte temporal_id_nesting_flag;
         public byte TemporalIdNestingFlag { get { return temporal_id_nesting_flag; } set { temporal_id_nesting_flag = value; } }
         private byte priority_layer_info_present_flag;
@@ -8047,8 +8045,6 @@ scalability_info( payloadSize ) {
         public uint[][] PrMaxBitrate { get { return pr_max_bitrate; } set { pr_max_bitrate = value; } }
         private byte[] priority_id_setting_uri;
         public byte[] PriorityIdSettingUri { get { return priority_id_setting_uri; } set { priority_id_setting_uri = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -8569,10 +8565,10 @@ sub_pic_scalable_layer( payloadSize ) {
     */
     public class SubPicScalableLayer : IItuSerializable
     {
-        private uint layer_id;
-        public uint LayerId { get { return layer_id; } set { layer_id = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private uint layer_id;
+        public uint LayerId { get { return layer_id; } set { layer_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -8619,6 +8615,8 @@ non_required_layer_rep( payloadSize ) {
     */
     public class NonRequiredLayerRep : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_info_entries_minus1;
         public uint NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
         private uint[] entry_dependency_id;
@@ -8629,8 +8627,6 @@ non_required_layer_rep( payloadSize ) {
         public uint[][] NonRequiredLayerRepDependencyId { get { return non_required_layer_rep_dependency_id; } set { non_required_layer_rep_dependency_id = value; } }
         private uint[][] non_required_layer_rep_quality_id;
         public uint[][] NonRequiredLayerRepQualityId { get { return non_required_layer_rep_quality_id; } set { non_required_layer_rep_quality_id = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -8707,14 +8703,14 @@ priority_layer_info( payloadSize ) {
     */
     public class PriorityLayerInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint pr_dependency_id;
         public uint PrDependencyId { get { return pr_dependency_id; } set { pr_dependency_id = value; } }
         private uint num_priority_ids;
         public uint NumPriorityIds { get { return num_priority_ids; } set { num_priority_ids = value; } }
         private uint[] alt_priority_id;
         public uint[] AltPriorityId { get { return alt_priority_id; } set { alt_priority_id = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -8771,12 +8767,12 @@ layers_not_present( payloadSize ) {
     */
     public class LayersNotPresent : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_layers;
         public uint NumLayers { get { return num_layers; } set { num_layers = value; } }
         private uint[] layer_id;
         public uint[] LayerId { get { return layer_id; } set { layer_id = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -8839,6 +8835,8 @@ layer_dependency_change( payloadSize ) {
     */
     public class LayerDependencyChange : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_layers_minus1;
         public uint NumLayersMinus1 { get { return num_layers_minus1; } set { num_layers_minus1 = value; } }
         private uint[] layer_id;
@@ -8851,8 +8849,6 @@ layer_dependency_change( payloadSize ) {
         public uint[][] DirectlyDependentLayerIdDeltaMinus1 { get { return directly_dependent_layer_id_delta_minus1; } set { directly_dependent_layer_id_delta_minus1 = value; } }
         private uint[] layer_dependency_info_src_layer_id_delta_minus1;
         public uint[] LayerDependencyInfoSrcLayerIdDeltaMinus1 { get { return layer_dependency_info_src_layer_id_delta_minus1; } set { layer_dependency_info_src_layer_id_delta_minus1 = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -8954,6 +8950,8 @@ scalable_nesting( payloadSize ) {
     */
     public class ScalableNesting : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte all_layer_representations_in_au_flag;
         public byte AllLayerRepresentationsInAuFlag { get { return all_layer_representations_in_au_flag; } set { all_layer_representations_in_au_flag = value; } }
         private uint num_layer_representations_minus1;
@@ -8968,8 +8966,6 @@ scalable_nesting( payloadSize ) {
         public uint SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
         private SeiMessage sei_message;
         public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -9076,6 +9072,8 @@ base_layer_temporal_hrd( payloadSize ) {
     */
     public class BaseLayerTemporalHrd : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_of_temporal_layers_in_base_layer_minus1;
         public uint NumOfTemporalLayersInBaseLayerMinus1 { get { return num_of_temporal_layers_in_base_layer_minus1; } set { num_of_temporal_layers_in_base_layer_minus1 = value; } }
         private uint[] sei_temporal_id;
@@ -9098,8 +9096,6 @@ base_layer_temporal_hrd( payloadSize ) {
         public byte[] SeiLowDelayHrdFlag { get { return sei_low_delay_hrd_flag; } set { sei_low_delay_hrd_flag = value; } }
         private byte[] sei_pic_struct_present_flag;
         public byte[] SeiPicStructPresentFlag { get { return sei_pic_struct_present_flag; } set { sei_pic_struct_present_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -9217,14 +9213,14 @@ quality_layer_integrity_check( payloadSize ) {
     */
     public class QualityLayerIntegrityCheck : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_info_entries_minus1;
         public uint NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
         private uint[] entry_dependency_id;
         public uint[] EntryDependencyId { get { return entry_dependency_id; } set { entry_dependency_id = value; } }
         private uint[] quality_layer_crc;
         public uint[] QualityLayerCrc { get { return quality_layer_crc; } set { quality_layer_crc = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -9297,6 +9293,8 @@ redundant_pic_property( payloadSize ) {
     */
     public class RedundantPicProperty : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_dIds_minus1;
         public uint NumDIdsMinus1 { get { return num_dIds_minus1; } set { num_dIds_minus1 = value; } }
         private uint[] dependency_id;
@@ -9319,8 +9317,6 @@ redundant_pic_property( payloadSize ) {
         public byte[][][] ResidualMatchFlag { get { return residual_match_flag; } set { residual_match_flag = value; } }
         private byte[][][] intra_samples_match_flag;
         public byte[][][] IntraSamplesMatchFlag { get { return intra_samples_match_flag; } set { intra_samples_match_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -9442,12 +9438,12 @@ tl0_dep_rep_index( payloadSize ) {
     */
     public class Tl0DepRepIndex : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint tl0_dep_rep_idx;
         public uint Tl0DepRepIdx { get { return tl0_dep_rep_idx; } set { tl0_dep_rep_idx = value; } }
         private uint effective_idr_pic_id;
         public uint EffectiveIdrPicId { get { return effective_idr_pic_id; } set { effective_idr_pic_id = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -9488,10 +9484,10 @@ delta_frame_num 5 se(v)
     */
     public class TlSwitchingPoint : IItuSerializable
     {
-        private int delta_frame_num;
-        public int DeltaFrameNum { get { return delta_frame_num; } set { delta_frame_num = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private int delta_frame_num;
+        public int DeltaFrameNum { get { return delta_frame_num; } set { delta_frame_num = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -10104,6 +10100,8 @@ parallel_decoding_info( payloadSize ) {
     */
     public class ParallelDecodingInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint seq_parameter_set_id;
         public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
         private uint[][] pdi_init_delay_anchor_minus2_l0;
@@ -10114,8 +10112,6 @@ parallel_decoding_info( payloadSize ) {
         public uint[][] PdiInitDelayNonAnchorMinus2L0 { get { return pdi_init_delay_non_anchor_minus2_l0; } set { pdi_init_delay_non_anchor_minus2_l0 = value; } }
         private uint[][] pdi_init_delay_non_anchor_minus2_l1;
         public uint[][] PdiInitDelayNonAnchorMinus2L1 { get { return pdi_init_delay_non_anchor_minus2_l1; } set { pdi_init_delay_non_anchor_minus2_l1 = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -10244,6 +10240,8 @@ mvc_scalable_nesting( payloadSize ) {
     */
     public class MvcScalableNesting : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte operation_point_flag;
         public byte OperationPointFlag { get { return operation_point_flag; } set { operation_point_flag = value; } }
         private byte all_view_components_in_au_flag;
@@ -10262,8 +10260,6 @@ mvc_scalable_nesting( payloadSize ) {
         public uint SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
         private SeiMessage sei_message;
         public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -10422,6 +10418,8 @@ view_scalability_info( payloadSize ) {
     */
     public class ViewScalabilityInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_operation_points_minus1;
         public uint NumOperationPointsMinus1 { get { return num_operation_points_minus1; } set { num_operation_points_minus1 = value; } }
         private uint[] operation_point_id;
@@ -10492,8 +10490,6 @@ view_scalability_info( payloadSize ) {
         public uint[] MaxNumReorderFrames { get { return max_num_reorder_frames; } set { max_num_reorder_frames = value; } }
         private uint[] max_dec_frame_buffering;
         public uint[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -10759,10 +10755,10 @@ multiview_scene_info( payloadSize ) {
     */
     public class MultiviewSceneInfo : IItuSerializable
     {
-        private uint max_disparity;
-        public uint MaxDisparity { get { return max_disparity; } set { max_disparity = value; } }
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private uint max_disparity;
+        public uint MaxDisparity { get { return max_disparity; } set { max_disparity = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -10844,6 +10840,8 @@ if (intrinsic_param_flag ) {
     */
     public class MultiviewAcquisitionInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_views_minus1;
         public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
         private byte intrinsic_param_flag;
@@ -10904,8 +10902,6 @@ if (intrinsic_param_flag ) {
         public uint[][] Exponentt { get { return exponent_t; } set { exponent_t = value; } }
         private uint[][] mantissa_t;
         public uint[][] Mantissat { get { return mantissa_t; } set { mantissa_t = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -11102,6 +11098,8 @@ non_required_view_component( payloadSize ) {
     */
     public class NonRequiredViewComponent : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_info_entries_minus1;
         public uint NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
         private uint[] view_order_index;
@@ -11110,8 +11108,6 @@ non_required_view_component( payloadSize ) {
         public uint[] NumNonRequiredViewComponentsMinus1 { get { return num_non_required_view_components_minus1; } set { num_non_required_view_components_minus1 = value; } }
         private uint[][] index_delta_minus1;
         public uint[][] IndexDeltaMinus1 { get { return index_delta_minus1; } set { index_delta_minus1 = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -11196,6 +11192,8 @@ view_dependency_change( payloadSize ) {
     */
     public class ViewDependencyChange : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint seq_parameter_set_id;
         public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
         private byte anchor_update_flag;
@@ -11210,8 +11208,6 @@ view_dependency_change( payloadSize ) {
         public byte[][] NonAnchorRefL0Flag { get { return non_anchor_ref_l0_flag; } set { non_anchor_ref_l0_flag = value; } }
         private byte[][] non_anchor_ref_l1_flag;
         public byte[][] NonAnchorRefL1Flag { get { return non_anchor_ref_l1_flag; } set { non_anchor_ref_l1_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -11340,12 +11336,12 @@ operation_point_not_present( payloadSize ) {
     */
     public class OperationPointNotPresent : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_operation_points;
         public uint NumOperationPoints { get { return num_operation_points; } set { num_operation_points = value; } }
         private uint[] operation_point_not_present_id;
         public uint[] OperationPointNotPresentId { get { return operation_point_not_present_id; } set { operation_point_not_present_id = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -11416,6 +11412,8 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
     */
     public class BaseViewTemporalHrd : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_of_temporal_layers_in_base_view_minus1;
         public uint NumOfTemporalLayersInBaseViewMinus1 { get { return num_of_temporal_layers_in_base_view_minus1; } set { num_of_temporal_layers_in_base_view_minus1 = value; } }
         private uint[] sei_mvc_temporal_id;
@@ -11438,8 +11436,6 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
         public byte[] SeiMvcLowDelayHrdFlag { get { return sei_mvc_low_delay_hrd_flag; } set { sei_mvc_low_delay_hrd_flag = value; } }
         private byte[] sei_mvc_pic_struct_present_flag;
         public byte[] SeiMvcPicStructPresentFlag { get { return sei_mvc_pic_struct_present_flag; } set { sei_mvc_pic_struct_present_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -11556,14 +11552,14 @@ multiview_view_position_extension_flag 5 u(1)
     */
     public class MultiviewViewPosition : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_views_minus1;
         public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
         private uint[] view_position;
         public uint[] ViewPosition { get { return view_position; } set { view_position = value; } }
         private byte multiview_view_position_extension_flag;
         public byte MultiviewViewPositionExtensionFlag { get { return multiview_view_position_extension_flag; } set { multiview_view_position_extension_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -12204,6 +12200,8 @@ priority_id[ i ] 5 u(5)
     */
     public class MvcdViewScalabilityInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_operation_points_minus1;
         public uint NumOperationPointsMinus1 { get { return num_operation_points_minus1; } set { num_operation_points_minus1 = value; } }
         private uint[] operation_point_id;
@@ -12276,8 +12274,6 @@ priority_id[ i ] 5 u(5)
         public uint[] NumReorderFrames { get { return num_reorder_frames; } set { num_reorder_frames = value; } }
         private uint[] max_dec_frame_buffering;
         public uint[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -12644,6 +12640,8 @@ mvcd_scalable_nesting( payloadSize ) {
     */
     public class MvcdScalableNesting : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte operation_point_flag;
         public byte OperationPointFlag { get { return operation_point_flag; } set { operation_point_flag = value; } }
         private byte all_view_components_in_au_flag;
@@ -12670,8 +12668,6 @@ mvcd_scalable_nesting( payloadSize ) {
         public uint SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
         private SeiMessage sei_message;
         public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -12838,6 +12834,8 @@ depth_representation_info( payloadSize ) {
     */
     public class DepthRepresentationInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte all_views_equal_flag;
         public byte AllViewsEqualFlag { get { return all_views_equal_flag; } set { all_views_equal_flag = value; } }
         private uint num_views_minus1;
@@ -12868,8 +12866,6 @@ depth_representation_info( payloadSize ) {
         public uint DepthNonlinearRepresentationNumMinus1 { get { return depth_nonlinear_representation_num_minus1; } set { depth_nonlinear_representation_num_minus1 = value; } }
         private uint[] depth_nonlinear_representation_model;
         public uint[] DepthNonlinearRepresentationModel { get { return depth_nonlinear_representation_model; } set { depth_nonlinear_representation_model = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -13064,14 +13060,6 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
     */
     public class DepthRepresentationSeiElement : IItuSerializable
     {
-        private byte da_sign_flag;
-        public byte DaSignFlag { get { return da_sign_flag; } set { da_sign_flag = value; } }
-        private uint da_exponent;
-        public uint DaExponent { get { return da_exponent; } set { da_exponent = value; } }
-        private uint da_mantissa_len_minus1;
-        public uint DaMantissaLenMinus1 { get { return da_mantissa_len_minus1; } set { da_mantissa_len_minus1 = value; } }
-        private uint da_mantissa;
-        public uint DaMantissa { get { return da_mantissa; } set { da_mantissa = value; } }
         private uint[,] outSign;
         public uint[,] OutSign { get { return outSign; } set { outSign = value; } }
         private uint[,] outExp;
@@ -13080,6 +13068,14 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
         public uint[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
         private uint[,] outManLen;
         public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
+        private byte da_sign_flag;
+        public byte DaSignFlag { get { return da_sign_flag; } set { da_sign_flag = value; } }
+        private uint da_exponent;
+        public uint DaExponent { get { return da_exponent; } set { da_exponent = value; } }
+        private uint da_mantissa_len_minus1;
+        public uint DaMantissaLenMinus1 { get { return da_mantissa_len_minus1; } set { da_mantissa_len_minus1 = value; } }
+        private uint da_mantissa;
+        public uint DaMantissa { get { return da_mantissa; } set { da_mantissa = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -13147,6 +13143,8 @@ three_dimensional_reference_displays_info( payloadSize ) {
     */
     public class ThreeDimensionalReferenceDisplaysInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint prec_ref_baseline;
         public uint PrecRefBaseline { get { return prec_ref_baseline; } set { prec_ref_baseline = value; } }
         private uint prec_ref_display_width;
@@ -13175,8 +13173,6 @@ three_dimensional_reference_displays_info( payloadSize ) {
         public uint[] NumSampleShiftPlus512 { get { return num_sample_shift_plus512; } set { num_sample_shift_plus512 = value; } }
         private byte three_dimensional_reference_displays_extension_flag;
         public byte ThreeDimensionalReferenceDisplaysExtensionFlag { get { return three_dimensional_reference_displays_extension_flag; } set { three_dimensional_reference_displays_extension_flag = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -13292,12 +13288,12 @@ depth_timing( payloadSize ) {
     */
     public class DepthTiming : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte per_view_depth_timing_flag;
         public byte PerViewDepthTimingFlag { get { return per_view_depth_timing_flag; } set { per_view_depth_timing_flag = value; } }
         private DepthTimingOffset depth_timing_offset;
         public DepthTimingOffset DepthTimingOffset { get { return depth_timing_offset; } set { depth_timing_offset = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -13469,6 +13465,8 @@ alternative_depth_info( payloadSize ) {
     */
     public class AlternativeDepthInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint depth_type;
         public uint DepthType { get { return depth_type; } set { depth_type = value; } }
         private uint num_constituent_views_gvd_minus1;
@@ -13543,8 +13541,6 @@ alternative_depth_info( payloadSize ) {
         public uint[] ExpGvdtx { get { return exp_gvd_t_x; } set { exp_gvd_t_x = value; } }
         private uint[] man_gvd_t_x;
         public uint[] ManGvdtx { get { return man_gvd_t_x; } set { man_gvd_t_x = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -13805,6 +13801,8 @@ depth_sampling_info( payloadSize ) {
     */
     public class DepthSamplingInfo : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint dttsr_x_mul;
         public uint DttsrxMul { get { return dttsr_x_mul; } set { dttsr_x_mul = value; } }
         private uint dttsr_x_dp;
@@ -13821,8 +13819,6 @@ depth_sampling_info( payloadSize ) {
         public uint[] DepthGridViewId { get { return depth_grid_view_id; } set { depth_grid_view_id = value; } }
         private DepthGridPosition depth_grid_position;
         public DepthGridPosition DepthGridPosition { get { return depth_grid_position; } set { depth_grid_position = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -13903,12 +13899,12 @@ constrained_depth_parameter_set_identifier(payloadSize) {
     */
     public class ConstrainedDepthParameterSetIdentifier : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint max_dps_id;
         public uint MaxDpsId { get { return max_dps_id; } set { max_dps_id = value; } }
         private uint max_dps_id_diff;
         public uint MaxDpsIdDiff { get { return max_dps_id_diff; } set { max_dps_id_diff = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -14818,18 +14814,18 @@ depth_ranges( numViews, predDirection, index ) {
     */
     public class DepthRanges : IItuSerializable
     {
-        private byte z_near_flag;
-        public byte zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
-        private byte z_far_flag;
-        public byte zFarFlag { get { return z_far_flag; } set { z_far_flag = value; } }
-        private ThreeDvAcquisitionElement three_dv_acquisition_element;
-        public ThreeDvAcquisitionElement ThreeDvAcquisitionElement { get { return three_dv_acquisition_element; } set { three_dv_acquisition_element = value; } }
         private uint numViews;
         public uint NumViews { get { return numViews; } set { numViews = value; } }
         private uint predDirection;
         public uint PredDirection { get { return predDirection; } set { predDirection = value; } }
         private uint index;
         public uint Index { get { return index; } set { index = value; } }
+        private byte z_near_flag;
+        public byte zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
+        private byte z_far_flag;
+        public byte zFarFlag { get { return z_far_flag; } set { z_far_flag = value; } }
+        private ThreeDvAcquisitionElement three_dv_acquisition_element;
+        public ThreeDvAcquisitionElement ThreeDvAcquisitionElement { get { return three_dv_acquisition_element; } set { three_dv_acquisition_element = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -14947,6 +14943,22 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
     */
     public class ThreeDvAcquisitionElement : IItuSerializable
     {
+        private uint numViews;
+        public uint NumViews { get { return numViews; } set { numViews = value; } }
+        private uint predDirection;
+        public uint PredDirection { get { return predDirection; } set { predDirection = value; } }
+        private uint expLen;
+        public uint ExpLen { get { return expLen; } set { expLen = value; } }
+        private uint index;
+        public uint Index { get { return index; } set { index = value; } }
+        private uint[,] outSign;
+        public uint[,] OutSign { get { return outSign; } set { outSign = value; } }
+        private uint[,] outExp;
+        public uint[,] OutExp { get { return outExp; } set { outExp = value; } }
+        private uint[,] outMantissa;
+        public uint[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
+        private uint[,] outManLen;
+        public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
         private byte element_equal_flag;
         public byte ElementEqualFlag { get { return element_equal_flag; } set { element_equal_flag = value; } }
         private uint mantissa_len_minus1;
@@ -14967,22 +14979,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
         public uint Exponent1 { get { return exponent1; } set { exponent1 = value; } }
         private int mantissa_diff;
         public int MantissaDiff { get { return mantissa_diff; } set { mantissa_diff = value; } }
-        private uint numViews;
-        public uint NumViews { get { return numViews; } set { numViews = value; } }
-        private uint predDirection;
-        public uint PredDirection { get { return predDirection; } set { predDirection = value; } }
-        private uint expLen;
-        public uint ExpLen { get { return expLen; } set { expLen = value; } }
-        private uint index;
-        public uint Index { get { return index; } set { index = value; } }
-        private uint[,] outSign;
-        public uint[,] OutSign { get { return outSign; } set { outSign = value; } }
-        private uint[,] outExp;
-        public uint[,] OutExp { get { return outExp; } set { outExp = value; } }
-        private uint[,] outMantissa;
-        public uint[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
-        private uint[,] outManLen;
-        public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -15005,10 +15001,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
             uint numValues = 0;
             uint i = 0;
-            uint[,] outManLen = null;
-            uint[,] outSign = null;
-            uint[,] outExp = null;
-            uint[,] outMantissa = null;
             uint mantissaPred = 0;
 
             if (numViews > 1)
@@ -15106,10 +15098,6 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
             uint numValues = 0;
             uint i = 0;
-            uint[,] outManLen = null;
-            uint[,] outSign = null;
-            uint[,] outExp = null;
-            uint[,] outMantissa = null;
             uint mantissaPred = 0;
 
             if (numViews > 1)
@@ -15218,6 +15206,12 @@ vsp_param( numViews, predDirection, index ) {
     */
     public class VspParam : IItuSerializable
     {
+        private uint numViews;
+        public uint NumViews { get { return numViews; } set { numViews = value; } }
+        private uint predDirection;
+        public uint PredDirection { get { return predDirection; } set { predDirection = value; } }
+        private uint index;
+        public uint Index { get { return index; } set { index = value; } }
         private uint[][] disparity_diff_wji;
         public uint[][] DisparityDiffWji { get { return disparity_diff_wji; } set { disparity_diff_wji = value; } }
         private uint[][] disparity_diff_oji;
@@ -15226,12 +15220,6 @@ vsp_param( numViews, predDirection, index ) {
         public uint[][] DisparityDiffWij { get { return disparity_diff_wij; } set { disparity_diff_wij = value; } }
         private uint[][] disparity_diff_oij;
         public uint[][] DisparityDiffOij { get { return disparity_diff_oij; } set { disparity_diff_oij = value; } }
-        private uint numViews;
-        public uint NumViews { get { return numViews; } set { numViews = value; } }
-        private uint predDirection;
-        public uint PredDirection { get { return predDirection; } set { predDirection = value; } }
-        private uint index;
-        public uint Index { get { return index; } set { index = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -15325,6 +15313,8 @@ green_metadata(payloadSize) {
     */
     public class GreenMetadata : IItuSerializable
     {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint green_metadata_type;
         public uint GreenMetadataType { get { return green_metadata_type; } set { green_metadata_type = value; } }
         private uint period_type;
@@ -15345,8 +15335,6 @@ green_metadata(payloadSize) {
         public uint XsdMetricType { get { return xsd_metric_type; } set { xsd_metric_type = value; } }
         private uint xsd_metric_value;
         public uint XsdMetricValue { get { return xsd_metric_value; } set { xsd_metric_value = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
