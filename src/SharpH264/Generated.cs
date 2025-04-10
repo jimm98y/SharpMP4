@@ -14826,6 +14826,8 @@ depth_ranges( numViews, predDirection, index ) {
         public byte zFarFlag { get { return z_far_flag; } set { z_far_flag = value; } }
         private ThreeDvAcquisitionElement three_dv_acquisition_element;
         public ThreeDvAcquisitionElement ThreeDvAcquisitionElement { get { return three_dv_acquisition_element; } set { three_dv_acquisition_element = value; } }
+        private ThreeDvAcquisitionElement three_dv_acquisition_element0;
+        public ThreeDvAcquisitionElement ThreeDvAcquisitionElement0 { get { return three_dv_acquisition_element0; } set { three_dv_acquisition_element0 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -14853,7 +14855,7 @@ depth_ranges( numViews, predDirection, index ) {
             if (z_far_flag != 0)
             {
                 size += stream.ReadClass<ThreeDvAcquisitionElement>(size, () => new ThreeDvAcquisitionElement(numViews, predDirection, 7, index,
-   H264Helpers.GetArray2("ZFarSign"), H264Helpers.GetArray2("ZFarExp"), H264Helpers.GetArray2("ZFarMantissa"), H264Helpers.GetArray2("ZFarManLen")), out this.three_dv_acquisition_element);
+   H264Helpers.GetArray2("ZFarSign"), H264Helpers.GetArray2("ZFarExp"), H264Helpers.GetArray2("ZFarMantissa"), H264Helpers.GetArray2("ZFarManLen")), out this.three_dv_acquisition_element0);
             }
 
             return size;
@@ -14873,7 +14875,7 @@ depth_ranges( numViews, predDirection, index ) {
 
             if (z_far_flag != 0)
             {
-                size += stream.WriteClass<ThreeDvAcquisitionElement>(this.three_dv_acquisition_element);
+                size += stream.WriteClass<ThreeDvAcquisitionElement>(this.three_dv_acquisition_element0);
             }
 
             return size;

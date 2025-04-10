@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -416,7 +417,7 @@ namespace Sharp{type}
                     return "stream.WriteBits(8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"stream.WriteClass<{ituField.Name.ToPropertyCase()}>(";
+                        return $"stream.WriteClass<{ituField.ClassType.ToPropertyCase()}>(";
                     throw new NotImplementedException();
             }
         }
@@ -491,7 +492,7 @@ namespace Sharp{type}
                     return "stream.ReadBits(size, 8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"stream.ReadClass<{ituField.Name.ToPropertyCase()}>(size, () => new {ituField.Name.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter)}, ";
+                        return $"stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, () => new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter)}, ";
                     throw new NotImplementedException();
             }
         }
@@ -579,7 +580,12 @@ namespace Sharp{type}
         private string GetCSharpType(ItuField field)
         {
             if (string.IsNullOrWhiteSpace(field.Type))
-                return field.Name.ToPropertyCase(); // type is a class
+            {
+                if (!string.IsNullOrEmpty(field.ClassType))
+                    return field.ClassType.ToPropertyCase();
+                else
+                    return field.Name.ToPropertyCase();
+            }
 
             Dictionary<string, string> map = GetCSharpTypeMapping();
 
@@ -1266,15 +1272,27 @@ namespace Sharp{type}
             }            
 
             string name = field.Name;
-            //int index = 0;
+            int index = 0;
             if (!ret.TryAdd(name, field))
             {
-                //while (!ret.TryAdd($"{name}{index}", field))
-                //{
-                //    index++;
-                //}
+                if (string.IsNullOrEmpty(field.Type))
+                {
+                    if (name == "three_dv_acquisition_element") // we have to duplicate these
+                    {
+                        while (!ret.TryAdd($"{name}{index}", field))
+                        {
+                            index++;
+                        }
 
-                //field.Name = $"{name}{index}";
+                        field.ClassType = field.Name;
+                        field.Name = $"{name}{index}";
+                    }
+                    else if(!name.StartsWith("out") && name != "NumDepthViews")
+                    {
+                        // just log a warning for now
+                        Debug.WriteLine($"--Field {field.Name} already exists in {b.ClassName} class. Type: {field.Type}, Value: {field.Value}");
+                    }
+                }
             }
         }
     }

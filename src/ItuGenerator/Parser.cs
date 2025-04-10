@@ -203,7 +203,7 @@ namespace ItuGenerator
 
         public ItuField(string name, Maybe<string> parameter, Maybe<string> array, Maybe<string> increment, Maybe<string> value, Maybe<string> comment, Maybe<string> category, Maybe<string> type)
         {
-            Name = name;
+            Name = ClassType = name;
             Increment = increment.GetValueOrDefault();
             Parameter = parameter.GetValueOrDefault();
             FieldArray = array.GetValueOrDefault();
@@ -215,6 +215,7 @@ namespace ItuGenerator
 
         public string Name { get; set; }
         public string Type { get; set; }
+        public string ClassType { get; set; }
         public string Value { get; set; }
         public string Parameter { get; set; }
         public string Increment { get; set; }
