@@ -33,7 +33,7 @@ namespace SharpMP4
 
         #region Stream operations
 
-        internal bool HasMoreData(ulong boxSize, ulong readSize)
+        public bool HasMoreData(ulong boxSize, ulong readSize)
         {
             if (readSize == ulong.MaxValue)
             {
@@ -44,12 +44,12 @@ namespace SharpMP4
             return remaining > 0;
         }
 
-        internal bool CanStreamSeek()
+        public bool CanStreamSeek()
         {
             return _stream.CanStreamSeek();
         }
 
-        internal long GetCurrentOffset()
+        public long GetCurrentOffset()
         {
             try
             {
@@ -65,7 +65,7 @@ namespace SharpMP4
             }
         }
 
-        internal long GetStreamLength()
+        public long GetStreamLength()
         {
             try
             {
@@ -81,17 +81,17 @@ namespace SharpMP4
             }
         }
 
-        private void SeekFromEnd(long offset)
+        public void SeekFromEnd(long offset)
         {
             _stream.SeekFromEnd(offset);
         }
 
-        private void SeekFromCurrent(long offset)
+        public void SeekFromCurrent(long offset)
         {
             _stream.SeekFromCurrent(offset);
         }
 
-        private void SeekFromBeginning(long offset)
+        public void SeekFromBeginning(long offset)
         {
             _stream.SeekFromBeginning(offset);
         }
@@ -154,7 +154,7 @@ namespace SharpMP4
             return 8;
         }
 
-        internal ulong ReadBytes(ulong length, out byte[] value)
+        public ulong ReadBytes(ulong length, out byte[] value)
         {
             ulong correctedLength = length;
             if (CanStreamSeek())
@@ -214,23 +214,23 @@ namespace SharpMP4
 
         #region Bits
 
-        internal static int BitsToDecode(ulong boxSize, ulong readSize)
+        public static int BitsToDecode(ulong boxSize, ulong readSize)
         {
             return (int)(readSize - boxSize);
         }
 
-        internal static int BitsToDecode()
+        public static int BitsToDecode()
         {
             return int.MaxValue;
         }
 
-        internal ulong ReadBit(ulong boxSize, ulong readSize, out bool value)
+        public ulong ReadBit(ulong boxSize, ulong readSize, out bool value)
         {
             value = ReadBit() != 0;
             return 1;
         }
 
-        internal ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte value)
         {
             if (count > 8) throw new ArgumentException();
             ulong ret = ReadBits(boxSize, readSize, count, out uint v);
@@ -238,7 +238,7 @@ namespace SharpMP4
             return ret;
         }
 
-        internal ulong ReadBits(ulong boxSize, ulong readSize, uint count, out sbyte value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out sbyte value)
         {
             if (count > 8) throw new ArgumentException();
             ulong ret = ReadBits(boxSize, readSize, count, out uint v);
@@ -246,7 +246,7 @@ namespace SharpMP4
             return ret;
         }
 
-        internal ulong ReadBits(ulong boxSize, ulong readSize, uint count, out ushort value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out ushort value)
         {
             if (count > 16) throw new ArgumentException();
             ulong ret = ReadBits(boxSize, readSize, count, out uint v);
@@ -254,7 +254,7 @@ namespace SharpMP4
             return ret;
         }
 
-        internal ulong ReadBits(ulong boxSize, ulong readSize, uint count, out short value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out short value)
         {
             if (count > 16) throw new ArgumentException();
             uint originalCount = count;
@@ -281,7 +281,7 @@ namespace SharpMP4
             return originalCount;
         }
 
-        internal ulong ReadBits(ulong boxSize, ulong readSize, uint count, out uint value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out uint value)
         {
             if (count > 32) throw new ArgumentException();
             uint originalCount = count;
@@ -304,34 +304,34 @@ namespace SharpMP4
             return originalCount;
         }
 
-        internal ulong WriteBit(bool value)
+        public ulong WriteBit(bool value)
         {
             WriteBit(value ? 1 : 0);
             return 1;
         }
 
-        internal ulong WriteBits(uint count, byte value)
+        public ulong WriteBits(uint count, byte value)
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
             return WriteBits(count, (uint)value);
         }
 
-        internal ulong WriteBits(uint count, ushort value)
+        public ulong WriteBits(uint count, ushort value)
         {
             if (count > 16)
                 throw new ArgumentOutOfRangeException(nameof(count));
             return WriteBits(count, (uint)value);
         }
 
-        internal ulong WriteBits(uint count, short value)
+        public ulong WriteBits(uint count, short value)
         {
             if (count > 16)
                 throw new ArgumentOutOfRangeException(nameof(count));
             return WriteBits(count, unchecked((ushort)value));
         }
 
-        internal ulong WriteBits(uint count, uint value)
+        public ulong WriteBits(uint count, uint value)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -346,7 +346,7 @@ namespace SharpMP4
             return originalCount;
         }
 
-        internal ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte[] value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte[] value)
         {
             value = new byte[(count >> 3) + (count % 8)];
             int i = 0;
@@ -361,7 +361,7 @@ namespace SharpMP4
             return count;
         }
 
-        internal ulong WriteBits(uint count, byte[] value)
+        public ulong WriteBits(uint count, byte[] value)
         {
             int c = (int)count;
             int i = 0;
@@ -373,7 +373,7 @@ namespace SharpMP4
             return count;
         }
 
-        internal ulong ReadByteAlignment(ulong boxSize, ulong readSize, out byte value)
+        public ulong ReadByteAlignment(ulong boxSize, ulong readSize, out byte value)
         {
             int bytePos = _bitsPosition >> 3;
             int currentBytePos = bytePos << 3;
@@ -381,7 +381,7 @@ namespace SharpMP4
             return ReadBits(boxSize, readSize, bitsToRead, out value);
         }
 
-        internal ulong WriteByteAlignment(byte value)
+        public ulong WriteByteAlignment(byte value)
         {
             int bytePos = _bitsPosition >> 3;
             int currentBytePos = bytePos << 3;
@@ -389,7 +389,7 @@ namespace SharpMP4
             return WriteBits(bitsToWrite, value);
         }
 
-        internal static ulong CalculateByteAlignmentSize(ulong boxSize, byte value)
+        public static ulong CalculateByteAlignmentSize(ulong boxSize, byte value)
         {
             return 8 - (boxSize % 8);
         }
@@ -398,7 +398,7 @@ namespace SharpMP4
 
         #region Strings
 
-        internal ulong ReadStringZeroTerminatedArray(ulong boxSize, ulong readSize, uint count, out BinaryUTF8String[] value)
+        public ulong ReadStringZeroTerminatedArray(ulong boxSize, ulong readSize, uint count, out BinaryUTF8String[] value)
         {
             ulong size = 0;
             BinaryUTF8String[] strings = new BinaryUTF8String[count];
@@ -411,7 +411,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteStringZeroTerminatedArray(uint count, BinaryUTF8String[] values)
+        public ulong WriteStringZeroTerminatedArray(uint count, BinaryUTF8String[] values)
         {
             ulong size = 0;
             for (int i = 0; i < count && i < values.Length; i++)
@@ -421,7 +421,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteString(BinaryUTF8String value)
+        public ulong WriteString(BinaryUTF8String value)
         {
             if (value.Length == 0)
                 return 0;
@@ -434,12 +434,12 @@ namespace SharpMP4
             return (ulong)value.Length << 3;
         }
 
-        internal ulong WriteStringZeroTerminated(BinaryUTF8String value)
+        public ulong WriteStringZeroTerminated(BinaryUTF8String value)
         {
             return WriteString(value);
         }
 
-        internal ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value)
+        public ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
@@ -466,7 +466,7 @@ namespace SharpMP4
             return (ulong)buffer.Count * 8;
         }
 
-        internal ulong ReadStringSizeLangPrefixed(ulong boxSize, ulong readSize, out MultiLanguageString[] value)
+        public ulong ReadStringSizeLangPrefixed(ulong boxSize, ulong readSize, out MultiLanguageString[] value)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
@@ -500,7 +500,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteStringSizeLangPrefixed(MultiLanguageString[] value)
+        public ulong WriteStringSizeLangPrefixed(MultiLanguageString[] value)
         {
             if (value == null || value.Length == 0)
                 return 0;
@@ -516,7 +516,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal static ulong CalculateStringSizeLangPrefixed(MultiLanguageString[] value)
+        public static ulong CalculateStringSizeLangPrefixed(MultiLanguageString[] value)
         {
             ulong size = 0;
             foreach (var str in value)
@@ -528,13 +528,13 @@ namespace SharpMP4
             return size;
         }
 
-        internal static ulong CalculateStringSize(BinaryUTF8String value)
+        public static ulong CalculateStringSize(BinaryUTF8String value)
         {
             ulong count = (ulong)value.Length;
             return count << 3;
         }
 
-        internal static ulong CalculateStringSize(BinaryUTF8String[] value)
+        public static ulong CalculateStringSize(BinaryUTF8String[] value)
         {
             ulong size = 0;
             foreach (var str in value)
@@ -548,7 +548,7 @@ namespace SharpMP4
 
         #region FourCC
 
-        internal static uint FromFourCC(string input)
+        public static uint FromFourCC(string input)
         {
             if (string.IsNullOrEmpty(input))
                 return 0;
@@ -563,7 +563,7 @@ namespace SharpMP4
             );
         }
 
-        internal static string ToFourCC(uint value)
+        public static string ToFourCC(uint value)
         {
             byte[] buffer = {
                 (byte)(value >> 24 & 0xFF),
@@ -651,7 +651,7 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T value) where T : Box
+        public ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T value) where T : Box
         {
             SafeBoxHeader header;
             long headerOffset = this.GetCurrentOffset();
@@ -720,7 +720,7 @@ namespace SharpMP4
             return BoxFactory.CreateBox(ToFourCC(header.Type), parentFourCC, header.Usertype);
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value) where T : Box
+        public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value) where T : Box
         {
             return ReadBox(boxSize, readSize, 
                 (header) => DefaultBoxFactory(parent, header),
@@ -728,7 +728,7 @@ namespace SharpMP4
                 out value);    
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] value) where T : Box
+        public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] value) where T : Box
         {
             return ReadBox<T>(boxSize, readSize,
                 (header) => DefaultBoxFactory(parent, header),
@@ -736,7 +736,7 @@ namespace SharpMP4
                 out value);
         }
 
-        internal ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T[] value) where T : Box
+        public ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T[] value) where T : Box
         {
             var boxes = new List<T>();
 
@@ -775,7 +775,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong WriteBox(Box[] value)
+        public ulong WriteBox(Box[] value)
         {
             ulong size = 0;
             foreach (var box in value)
@@ -785,7 +785,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, IHasBoxChildren box)
+        public ulong ReadBoxArrayTillEnd(ulong boxSize, ulong readSize, IHasBoxChildren box)
         {
             if (box.Children != null)
             {
@@ -838,7 +838,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong WriteBoxArrayTillEnd(IHasBoxChildren box)
+        public ulong WriteBoxArrayTillEnd(IHasBoxChildren box)
         {
             if (box.Children == null)
                 return 0;
@@ -926,7 +926,7 @@ namespace SharpMP4
             return indent;
         }
 
-        internal static ulong CalculateBoxSize(IEnumerable<IHasBoxChildren> boxes)
+        public static ulong CalculateBoxSize(IEnumerable<IHasBoxChildren> boxes)
         {
             ulong size = 0;
             if (boxes == null)
@@ -943,7 +943,7 @@ namespace SharpMP4
 
         #region Classes
 
-        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, Func<T> factory, out T value) where T : IMp4Serializable
+        public ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, Func<T> factory, out T value) where T : IMp4Serializable
         {
             T c = factory();
             c.SetParent(parent);
@@ -953,7 +953,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, uint count, Func<T> factory, out T[] value) where T : IMp4Serializable
+        public ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, uint count, Func<T> factory, out T[] value) where T : IMp4Serializable
         {
             ulong consumed = 0;
             ulong remaining = readSize - boxSize;
@@ -973,7 +973,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong WriteClass(IMp4Serializable value)
+        public ulong WriteClass(IMp4Serializable value)
         {
             ulong writtenSize = 0;
             writtenSize += value.Write(this);
@@ -984,7 +984,7 @@ namespace SharpMP4
             return writtenSize;
         }
 
-        internal ulong WriteClass(IMp4Serializable[] value)
+        public ulong WriteClass(IMp4Serializable[] value)
         {
             ulong size = 0;
             foreach (var cls in value)
@@ -994,7 +994,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal static ulong CalculateClassSize(IMp4Serializable[] value)
+        public static ulong CalculateClassSize(IMp4Serializable[] value)
         {
             ulong size = 0;
             foreach (IMp4Serializable c in value)
@@ -1008,7 +1008,7 @@ namespace SharpMP4
 
         #region Descriptors
 
-        internal ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T descriptor) where T : Descriptor
+        public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T descriptor) where T : Descriptor
         {
             long availableSize = (long)readSize - (long)boxSize;
             if(availableSize == 0)
@@ -1069,7 +1069,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] descriptor) where T : Descriptor
+        public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] descriptor) where T : Descriptor
         {
             ulong consumed = 0;
 
@@ -1108,7 +1108,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong ReadDescriptorsTillEnd(ulong boxSize, ulong readSize, Descriptor descriptor, int objectTypeIndication = -1)
+        public ulong ReadDescriptorsTillEnd(ulong boxSize, ulong readSize, Descriptor descriptor, int objectTypeIndication = -1)
         {
             if (descriptor.Children != null)
             {
@@ -1148,7 +1148,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal static ulong CalculateDescriptors(Descriptor descriptor, int objectTypeIndication = -1)
+        public static ulong CalculateDescriptors(Descriptor descriptor, int objectTypeIndication = -1)
         {
             ulong size = 0;
 
@@ -1163,7 +1163,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal static ulong CalculateDescriptorSize(Descriptor descriptor)
+        public static ulong CalculateDescriptorSize(Descriptor descriptor)
         {
             if (descriptor == null)
                 return 8;
@@ -1173,7 +1173,7 @@ namespace SharpMP4
             return 8 * (1 + descriptorSizeLength) + descriptorContentSize + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
         }
 
-        internal static ulong CalculateDescriptorSize(Descriptor[] descriptor)
+        public static ulong CalculateDescriptorSize(Descriptor[] descriptor)
         {
             if (descriptor == null || descriptor.Length == 0)
                 return 0;
@@ -1187,7 +1187,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
+        public ulong WriteDescriptorsTillEnd(Descriptor descriptor, int objectTypeIndication = -1)
         {
             ulong size = 0;
             foreach (var d in descriptor.Children)
@@ -1197,7 +1197,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteDescriptor(Descriptor descriptor)
+        public ulong WriteDescriptor(Descriptor descriptor)
         {
             ulong size = 0;
             if (descriptor == null || descriptor.Tag == 0)
@@ -1216,7 +1216,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteDescriptor(Descriptor[] descriptor)
+        public ulong WriteDescriptor(Descriptor[] descriptor)
         {
             ulong size = 0;
             if (descriptor == null || descriptor.Length == 0)
@@ -1298,7 +1298,7 @@ namespace SharpMP4
 
         #region Long number arrays
 
-        internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value)
+        public ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value)
         {
             StreamMarker marker;
             if (CanStreamSeek())
@@ -1350,7 +1350,7 @@ namespace SharpMP4
             }
         }
 
-        internal ulong WriteUInt8ArrayTillEnd(StreamMarker data)
+        public ulong WriteUInt8ArrayTillEnd(StreamMarker data)
         {
             IsoStream readStream = data.Stream;
             long originalPosition = readStream.GetCurrentOffset();
@@ -1364,7 +1364,7 @@ namespace SharpMP4
 
         #region Number arrays
 
-        internal static ulong CalculateSize<T>(ulong entry_count, T[] entries, int entrySize)
+        public static ulong CalculateSize<T>(ulong entry_count, T[] entries, int entrySize)
         {
             // there might be no entries at all, even though the size says 1 (e.g. sync box)
             if (entries == null || entries.Length == 0)
@@ -1374,7 +1374,7 @@ namespace SharpMP4
             return Math.Max(entry_count, (ulong)entries.Length) * (ulong)entrySize;
         }
 
-        internal ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
+        public ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
         {
             if (readSize == ulong.MaxValue)
             {
@@ -1386,7 +1386,7 @@ namespace SharpMP4
             return ReadBytes(count, out value);
         }
 
-        internal ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
+        public ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
         {
             ulong consumed = 0;
 
@@ -1420,7 +1420,7 @@ namespace SharpMP4
             return consumed;
         }
 
-        internal ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out ushort[] value)
+        public ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out ushort[] value)
         {
             ulong size = 0;
             value = new ushort[count];
@@ -1431,7 +1431,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteUInt16Array(uint count, ushort[] value)
+        public ulong WriteUInt16Array(uint count, ushort[] value)
         {
             ulong size = 0;
             for (uint i = 0; i < count; i++)
@@ -1441,7 +1441,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out uint[] value)
+        public ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out uint[] value)
         {
             ulong size = 0;
             value = new uint[count];
@@ -1452,7 +1452,7 @@ namespace SharpMP4
             return size;
         }
         
-        internal ulong WriteUInt16Array(uint count, uint[] value)
+        public ulong WriteUInt16Array(uint count, uint[] value)
         {
             ulong size = 0;
             for (uint i = 0; i < count; i++)
@@ -1462,7 +1462,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out uint[] value)
+        public ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out uint[] value)
         {
             ulong size = 0;
             value = new uint[count];
@@ -1473,7 +1473,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadInt32Array(ulong boxSize, ulong readSize, uint count, out int[] value)
+        public ulong ReadInt32Array(ulong boxSize, ulong readSize, uint count, out int[] value)
         {
             ulong size = 0;
             value = new int[count];
@@ -1484,7 +1484,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteUInt32Array(uint count, uint[] value)
+        public ulong WriteUInt32Array(uint count, uint[] value)
         {
             ulong size = 0;
 
@@ -1498,7 +1498,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteInt32Array(uint count, int[] value)
+        public ulong WriteInt32Array(uint count, int[] value)
         {
             ulong size = 0;
 
@@ -1512,7 +1512,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out ulong[] value)
+        public ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out ulong[] value)
         {
             ulong size = 0;
             value = new ulong[count];
@@ -1523,7 +1523,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteUInt32Array(uint count, ulong[] value)
+        public ulong WriteUInt32Array(uint count, ulong[] value)
         {
             ulong size = 0;
             for (uint i = 0; i < count; i++)
@@ -1533,7 +1533,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong ReadUInt64Array(ulong boxSize, ulong readSize, uint count, out ulong[] value)
+        public ulong ReadUInt64Array(ulong boxSize, ulong readSize, uint count, out ulong[] value)
         {
             ulong size = 0;
             value = new ulong[count];
@@ -1544,7 +1544,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteUInt64Array(uint count, ulong[] value)
+        public ulong WriteUInt64Array(uint count, ulong[] value)
         {
             ulong size = 0;
             for (uint i = 0; i < count; i++)
@@ -1558,54 +1558,54 @@ namespace SharpMP4
 
         #region Numbers 
 
-        internal ulong ReadInt8(ulong boxSize, ulong readSize, out sbyte value)
+        public ulong ReadInt8(ulong boxSize, ulong readSize, out sbyte value)
         {
             ulong count = unchecked(ReadUInt8(boxSize, readSize, out byte v));
             value = unchecked((sbyte)v);
             return count;
         }
 
-        internal ulong WriteInt8(sbyte value)
+        public ulong WriteInt8(sbyte value)
         {
             return WriteUInt8(unchecked((byte)value));
         }
 
-        internal ulong ReadUInt8(ulong boxSize, ulong readSize, out byte value)
+        public ulong ReadUInt8(ulong boxSize, ulong readSize, out byte value)
         {
             value = ReadByte();
             return 8;
         }
 
-        internal ulong WriteUInt8(byte value)
+        public ulong WriteUInt8(byte value)
         {
             WriteByte(value);
             return 8;
         }
 
-        internal ulong ReadUInt8(ulong boxSize, ulong readSize, out ushort value)
+        public ulong ReadUInt8(ulong boxSize, ulong readSize, out ushort value)
         {
             value = ReadByte();
             return 8;
         }
 
-        internal ulong WriteUInt8(ushort value)
+        public ulong WriteUInt8(ushort value)
         {
             return WriteByte((byte)value);
         }
 
-        internal ulong ReadInt16(ulong boxSize, ulong readSize, out short value)
+        public ulong ReadInt16(ulong boxSize, ulong readSize, out short value)
         {
             ulong count = ReadUInt16(boxSize, readSize, out ushort v);
             value = unchecked((short)v);
             return count;
         }
 
-        internal ulong WriteInt16(short value)
+        public ulong WriteInt16(short value)
         {
             return WriteUInt16(unchecked((ushort)value));
         }
 
-        internal ulong ReadUInt16(ulong boxSize, ulong readSize, out ushort value)
+        public ulong ReadUInt16(ulong boxSize, ulong readSize, out ushort value)
         {
             int b1 = ReadByteInternal();
             if(b1 == -1)
@@ -1626,14 +1626,14 @@ namespace SharpMP4
             return 16;
         }
 
-        internal ulong WriteUInt16(ushort value)
+        public ulong WriteUInt16(ushort value)
         {
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
             return 16;
         }
 
-        internal ulong ReadUInt16(ulong boxSize, ulong readSize, out uint value)
+        public ulong ReadUInt16(ulong boxSize, ulong readSize, out uint value)
         {
             ushort v;
             ulong size = ReadUInt16(boxSize, readSize, out v);
@@ -1641,14 +1641,14 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteUInt16(uint value)
+        public ulong WriteUInt16(uint value)
         {
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
             return 16;
         }
 
-        internal ulong ReadUInt24(ulong boxSize, ulong readSize, out uint value)
+        public ulong ReadUInt24(ulong boxSize, ulong readSize, out uint value)
         {
             int b1 = ReadByteInternal();
             if(b1 == -1)
@@ -1676,7 +1676,7 @@ namespace SharpMP4
             return 24;
         }
 
-        internal ulong WriteUInt24(uint value)
+        public ulong WriteUInt24(uint value)
         {
             value = value & 0xFFFFFF;
             WriteByte((byte)(value >> 16 & 0xFF));
@@ -1685,38 +1685,38 @@ namespace SharpMP4
             return 24;
         }
 
-        internal ulong ReadInt32(ulong boxSize, ulong readSize, out int value)
+        public ulong ReadInt32(ulong boxSize, ulong readSize, out int value)
         {
             ulong count = ReadUInt32(boxSize, readSize, out uint v);
             value = unchecked((int)v);
             return count;
         }
 
-        internal ulong ReadInt32(ulong boxSize, ulong readSize, out byte value)
+        public ulong ReadInt32(ulong boxSize, ulong readSize, out byte value)
         {
             ulong count = ReadUInt32(boxSize, readSize, out uint v);
             value = (byte)v;
             return count;
         }
 
-        internal ulong WriteInt32(int value)
+        public ulong WriteInt32(int value)
         {
             return WriteUInt32(unchecked((uint)value));
         }
 
-        internal ulong ReadInt32(ulong boxSize, ulong readSize, out long value)
+        public ulong ReadInt32(ulong boxSize, ulong readSize, out long value)
         {
             ulong count = unchecked(ReadUInt32(boxSize, readSize, out uint v));
             value = unchecked((int)v);
             return count;
         }
 
-        internal ulong WriteInt32(long value)
+        public ulong WriteInt32(long value)
         {
             return WriteUInt32(unchecked((uint)value));
         }
 
-        internal ulong ReadUInt32(ulong boxSize, ulong readSize, out uint value)
+        public ulong ReadUInt32(ulong boxSize, ulong readSize, out uint value)
         {
             int b1 = ReadByteInternal();
             if(b1 == -1) 
@@ -1751,7 +1751,7 @@ namespace SharpMP4
             return 32;
         }
 
-        internal ulong WriteUInt32(uint value)
+        public ulong WriteUInt32(uint value)
         {
             WriteByte((byte)(value >> 24 & 0xFF));
             WriteByte((byte)(value >> 16 & 0xFF));
@@ -1760,7 +1760,7 @@ namespace SharpMP4
             return 32;
         }
 
-        internal ulong ReadUInt32(ulong boxSize, ulong readSize, out ulong value)
+        public ulong ReadUInt32(ulong boxSize, ulong readSize, out ulong value)
         {
             uint v;
             ulong size = ReadUInt32(boxSize, readSize, out v);
@@ -1768,7 +1768,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal ulong WriteUInt32(ulong value)
+        public ulong WriteUInt32(ulong value)
         {
             WriteByte((byte)(value >> 24 & 0xFF));
             WriteByte((byte)(value >> 16 & 0xFF));
@@ -1777,7 +1777,7 @@ namespace SharpMP4
             return 32;
         }
 
-        internal ulong ReadUInt48(ulong boxSize, ulong readSize, out ulong value)
+        public ulong ReadUInt48(ulong boxSize, ulong readSize, out ulong value)
         {
             int b1 = ReadByteInternal();
             if (b1 == -1)
@@ -1826,7 +1826,7 @@ namespace SharpMP4
             return 48;
         }
 
-        internal ulong WriteUInt48(ulong value)
+        public ulong WriteUInt48(ulong value)
         {
             WriteByte((byte)(value >> 40 & 0xFF));
             WriteByte((byte)(value >> 32 & 0xFF));
@@ -1837,19 +1837,19 @@ namespace SharpMP4
             return 48;
         }
 
-        internal ulong ReadInt64(ulong boxSize, ulong readSize, out long value)
+        public ulong ReadInt64(ulong boxSize, ulong readSize, out long value)
         {
             ulong count = unchecked(ReadUInt64(boxSize, readSize, out ulong v));
             value = unchecked((long)v);
             return count;
         }
 
-        internal ulong WriteInt64(long value)
+        public ulong WriteInt64(long value)
         {
             return WriteUInt64(unchecked((ulong)value));
         }
 
-        internal ulong ReadUInt64(ulong boxSize, ulong readSize, out ulong value)
+        public ulong ReadUInt64(ulong boxSize, ulong readSize, out ulong value)
         {
             int b1 = ReadByteInternal();
             if (b1 == -1)
@@ -1912,7 +1912,7 @@ namespace SharpMP4
             return 64;
         }
 
-        internal ulong WriteUInt64(ulong value)
+        public ulong WriteUInt64(ulong value)
         {
             WriteByte((byte)(value >> 56 & 0xFF));
             WriteByte((byte)(value >> 48 & 0xFF));
@@ -1925,7 +1925,7 @@ namespace SharpMP4
             return 64;
         }
 
-        internal ulong ReadFixedPoint1616(ulong boxSize, ulong readSize, out double value)
+        public ulong ReadFixedPoint1616(ulong boxSize, ulong readSize, out double value)
         {
             int b1 = ReadByteInternal();
             if (b1 == -1)
@@ -1960,7 +1960,7 @@ namespace SharpMP4
             return 32;
         }
 
-        internal ulong WriteFixedPoint1616(double value)
+        public ulong WriteFixedPoint1616(double value)
         {
             ulong size = 0;
             int result = (int)(value * 65536);
@@ -1971,7 +1971,7 @@ namespace SharpMP4
             return size;
         }
 
-        internal static int GetInt(byte[] bytes)
+        public static int GetInt(byte[] bytes)
         {
             if (bytes.Length == 1)
                 return bytes[0];
@@ -1983,17 +1983,17 @@ namespace SharpMP4
                 throw new NotSupportedException();
         }
 
-        internal static int GetInt(int size)
+        public static int GetInt(int size)
         {
             return size;
         }
 
-        internal static int GetInt(uint size)
+        public static int GetInt(uint size)
         {
             return (int)size;
         }
 
-        internal static int GetInt(long size)
+        public static int GetInt(long size)
         {
             return (int)size;
         }
@@ -2002,7 +2002,7 @@ namespace SharpMP4
 
         #region Iso639
 
-        internal ulong ReadIso639(ulong boxSize, ulong readSize, out string value)
+        public ulong ReadIso639(ulong boxSize, ulong readSize, out string value)
         {
             ushort bits;
             ulong read = ReadBits(boxSize, readSize, 15, out bits);
@@ -2016,7 +2016,7 @@ namespace SharpMP4
             return read;
         }
 
-        internal ulong WriteIso639(string value)
+        public ulong WriteIso639(string value)
         {
             if (Encoding.UTF8.GetBytes(value).Length != 3)
             {
@@ -2036,19 +2036,19 @@ namespace SharpMP4
 
         #region Proxy
 
-        internal ulong ReadDouble32(ulong boxSize, ulong readSize, out double value)
+        public ulong ReadDouble32(ulong boxSize, ulong readSize, out double value)
         {
             // TODO?
             return ReadFixedPoint1616(boxSize, readSize, out value);
         }
 
-        internal ulong WriteDouble32(double value)
+        public ulong WriteDouble32(double value)
         {
             // TODO?
             return WriteFixedPoint1616(value);
         }
 
-        internal ulong ReadPadding(ulong size, ulong availableSize, out StreamMarker padding)
+        public ulong ReadPadding(ulong size, ulong availableSize, out StreamMarker padding)
         {
             return ReadUInt8ArrayTillEnd(size, availableSize, out padding);
         }
@@ -2058,32 +2058,32 @@ namespace SharpMP4
             return WriteUInt8ArrayTillEnd(padding);
         }
 
-        internal static ulong CalculateClassSize(IMp4Serializable value)
+        public static ulong CalculateClassSize(IMp4Serializable value)
         {
             return value.CalculateSize();
         }
 
-        internal static ulong CalculateBoxArray(IHasBoxChildren value)
+        public static ulong CalculateBoxArray(IHasBoxChildren value)
         {
             return CalculateBoxSize(value.Children);
         }
 
-        internal ulong WriteUInt8ArrayTillEnd(byte[] value)
+        public ulong WriteUInt8ArrayTillEnd(byte[] value)
         {
             return WriteUInt8Array((uint)value.Length, value);
         }
 
-        internal ulong WriteUInt32ArrayTillEnd(uint[] value)
+        public ulong WriteUInt32ArrayTillEnd(uint[] value)
         {
             return WriteUInt32Array((uint)value.Length, value);
         }
 
-        internal ulong ReadUInt8Array(ulong boxSize, ulong readSize, uint count, out byte[] value)
+        public ulong ReadUInt8Array(ulong boxSize, ulong readSize, uint count, out byte[] value)
         {
             return ReadBytes(count, out value);
         }
 
-        internal ulong WriteUInt8Array(uint count, byte[] value)
+        public ulong WriteUInt8Array(uint count, byte[] value)
         {
             return WriteBytes(count, value);
         }
