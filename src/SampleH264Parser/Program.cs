@@ -1,9 +1,6 @@
-﻿
-// try parse SPS
-using SharpH264;
+﻿using SharpH264;
 using SharpMP4;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -162,30 +159,47 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                 SampleSizeBox sample_size_box = sample_table_box.Children.OfType<SampleSizeBox>().Single();
                 uint[] sampleSizes = sample_size_box.SampleSize > 0 ? Enumerable.Repeat(sample_size_box.SampleSize, (int)sample_size_box.SampleCount).ToArray() : sample_size_box.EntrySize;
                 ulong[] chunkOffsets = chunk_offsets_box != null ? chunk_offsets_box.ChunkOffset.Select(x => (ulong)x).ToArray() : chunk_offsets_large_box.ChunkOffset;
-                
-                
-                uint[] firstChunk = sample_to_chunks.FirstChunk;
-                uint[] samplesPerChunk = sample_to_chunks.SamplesPerChunk;
-
-                for (int k = 0; k < chunkOffsets.Length; k++)
+                                
+                int s2c_index = 0;
+                uint next_run = 0;
+                int sample_idx = 0;
+                uint samples_per_chunk = 0;
+                for (int k = 1; k < chunkOffsets.Length; k++)
                 {
+                    if (k >= next_run)
+                    {
+                        samples_per_chunk = sample_to_chunks.SamplesPerChunk[s2c_index];
+                        s2c_index += 1;
+                        next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
+                    }
+                    
                     ulong size = 0;
-                    long chunkOffset = (long)chunkOffsets[k];
-                    uint sampleSize = sampleSizes[k];
+                    long chunkOffset = (long)chunkOffsets[k - 1];
 
+                    // seek to the chunk offset
                     mdat.Data.Stream.SeekFromBeginning(chunkOffset);
 
-                    // AU begin
-                    uint nalUnitLength = 0;
-                    long offset = 0;
-                    do
+                    // read samples in this chunk
+                    for (int l = 0; l < samples_per_chunk; l++)
                     {
-                        size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
-                        offset += 4;
-                        size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
-                        offset += sampleData.Length;
-                        ReadNALu(sampleData);
-                    } while (offset < sampleSize);
+                        uint sampleSize = sampleSizes[sample_idx++];
+
+                        // AU begin
+                        long offset = 0;
+                        do
+                        {
+                            uint nalUnitLength = 0;
+                            size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                            offset += 4;
+
+                            if (nalUnitLength > sampleSize)
+                                throw new Exception();
+
+                            size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
+                            offset += sampleData.Length;
+                            ReadNALu(sampleData);
+                        } while (offset < sampleSize);
+                    }
                 }
             }
 
