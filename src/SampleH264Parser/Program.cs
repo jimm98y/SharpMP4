@@ -93,6 +93,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
 
     MovieBox moov = null;
     MovieFragmentBox moof = null;
+    MediaDataBox mdat = null;
     for (int i = 0; i < inputMp4.Children.Count; i++)
     {
         if (inputMp4.Children[i] is MovieBox)
@@ -103,7 +104,12 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
         {
             moof = (MovieFragmentBox)inputMp4.Children[i];
         }
-        else if (inputMp4.Children[i] is MediaDataBox mdat)
+        else if (inputMp4.Children[i] is MediaDataBox)
+        {
+            mdat = (MediaDataBox)inputMp4.Children[i];
+        }
+
+        if(moov != null && mdat != null)
         {
             mdat.Data.Stream.SeekFromBeginning(mdat.Data.Position);
 
@@ -125,9 +131,15 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                         if (isVideo)
                         {
                             uint nalUnitLength = 0;
-                            size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
-                            size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
-                            ReadNALu(sampleData);
+                            long offset = 0;
+                            do
+                            {
+                                size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                offset += 4;
+                                size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
+                                offset += sampleData.Length;
+                                ReadNALu(sampleData);
+                            } while (offset < sampleSize);
                         }
                         else
                         {
@@ -143,34 +155,41 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                     .Children.OfType<TrackBox>().First(x => x.Children.OfType<TrackHeaderBox>().Single().TrackID == videoTrackId)
                     .Children.OfType<MediaBox>().Single()
                     .Children.OfType<MediaInformationBox>().Single()
-                    .Children.OfType<SampleTableBox>().Single(); 
+                    .Children.OfType<SampleTableBox>().Single();
                 ChunkOffsetBox chunk_offsets_box = sample_table_box.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
                 ChunkLargeOffsetBox chunk_offsets_large_box = sample_table_box.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
                 SampleToChunkBox sample_to_chunks = sample_table_box.Children.OfType<SampleToChunkBox>().Single();
                 SampleSizeBox sample_size_box = sample_table_box.Children.OfType<SampleSizeBox>().Single();
-                uint[] sampleSizes =  sample_size_box.SampleSize > 0 ? Enumerable.Repeat(sample_size_box.SampleSize, (int)sample_size_box.SampleCount).ToArray() : sample_size_box.EntrySize;
+                uint[] sampleSizes = sample_size_box.SampleSize > 0 ? Enumerable.Repeat(sample_size_box.SampleSize, (int)sample_size_box.SampleCount).ToArray() : sample_size_box.EntrySize;
                 ulong[] chunkOffsets = chunk_offsets_box != null ? chunk_offsets_box.ChunkOffset.Select(x => (ulong)x).ToArray() : chunk_offsets_large_box.ChunkOffset;
+                
+                
+                uint[] firstChunk = sample_to_chunks.FirstChunk;
+                uint[] samplesPerChunk = sample_to_chunks.SamplesPerChunk;
 
-                ulong size = 0;
-                for(int k = 0; k < chunkOffsets.Length; k++)
+                for (int k = 0; k < chunkOffsets.Length; k++)
                 {
+                    ulong size = 0;
                     long chunkOffset = (long)chunkOffsets[k];
                     uint sampleSize = sampleSizes[k];
 
-                    uint nalUnitLength = 0;
                     mdat.Data.Stream.SeekFromBeginning(chunkOffset);
 
                     // AU begin
+                    uint nalUnitLength = 0;
                     long offset = 0;
                     do
                     {
                         size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                        offset += 4;
                         size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
-                        offset += 4 + sampleData.Length;
+                        offset += sampleData.Length;
                         ReadNALu(sampleData);
                     } while (offset < sampleSize);
                 }
             }
+
+            mdat = null;
         }
     }
 }
@@ -190,7 +209,14 @@ static void ReadNALu(byte[] sampleData)
 
             SeiRbsp sei = new SeiRbsp();
             H264Helpers.SetSei(sei);
-            ituSize += sei.Read(stream);
+            try
+            {
+                ituSize += sei.Read(stream);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error reading SEI: {ex.Message}");
+            }
         }
         else if (nu.NalUnitType == 9)
         {
