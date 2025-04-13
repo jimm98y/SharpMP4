@@ -227,13 +227,19 @@ static void ReadNALu(byte[] sampleData)
 
             SeiRbsp sei = new SeiRbsp();
             H264Helpers.SetSei(sei);
-            try
+            ituSize += sei.Read(stream);
+
+            var ms = new MemoryStream();
+            using (ItuStream wstream = new ItuStream(ms))
             {
-                ituSize += sei.Read(stream);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error reading SEI: {ex.Message}");
+                nu.Write(wstream);
+                sei.Write(wstream);
+
+                byte[] wbytes = ms.ToArray();
+                if (!wbytes.SequenceEqual(sampleData))
+                {
+                    throw new Exception("Failed to write SEI");
+                }
             }
         }
         else if (nu.NalUnitType == 9)
