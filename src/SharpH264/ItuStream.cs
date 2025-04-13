@@ -380,7 +380,7 @@ namespace SharpH264
                 return 0;
             else if (_readNextBitsCounter == 0)
                 _readNextBitsCounter = serializable.ReadNextBits;
-            return _readNextBitsCounter-- != 0 ? 0xFF : 0;
+            return --_readNextBitsCounter != 0 ? 0xFF : 0;
         }
 
         internal ulong ReadUnsignedIntVariable(ulong size, uint count, out uint value)
