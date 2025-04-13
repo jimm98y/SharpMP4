@@ -247,21 +247,18 @@ namespace Sharp{type}
 
             if (GetLoopNestingLevel(field) > 0)
             {
-                //string suffix;
-                //GetNestedInLoopSuffix(field, typedef, out suffix);
-                //typedef += suffix;
+                if (name != "ar_bit_equal_to_zero")
+                {
+                    string suffix;
+                    GetNestedInLoopSuffix(field, typedef, out suffix);
+                    typedef += suffix;
 
-                //if (methodType != MethodType.Size)
-                //{
-                //    m = FixNestedInLoopVariables(field, m, "(", ",");
-                //    m = FixNestedInLoopVariables(field, m, ")", ","); // when casting
-                //    m = FixNestedInLoopVariables(field, m, "", " ");
-                //}
-                //else
-                //{
-                //    m = FixNestedInLoopVariables(field, m, "", " ");
-                //}
+                    m = FixNestedInLoopVariables(field, m, "(", ",");
+                    m = FixNestedInLoopVariables(field, m, ")", ","); // when casting
+                    m = FixNestedInLoopVariables(field, m, "", " ");
+                }
             }
+
             if (methodType == MethodType.Read)
                 return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
             else if (methodType == MethodType.Write)
@@ -308,6 +305,7 @@ namespace Sharp{type}
                 fieldValue = fieldValue.Replace("RLESkipContext", "H264Helpers.RLESkipContext");
                 fieldValue = fieldValue.Replace("MbaffFrameFlag", "H264Helpers.GetMbaffFrameFlag()");
                 fieldValue = fieldValue.Replace("mantissaPred + mantissa_diff", "(uint)(mantissaPred + mantissa_diff)");
+                fieldValue = fieldValue.Replace("delta_scale", "delta_scale[j]");
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith('!'))
@@ -328,6 +326,8 @@ namespace Sharp{type}
                     fieldValue = "= (uint)" + fieldValue.TrimStart(' ', '=');
 
                 fieldValue = FixMissingFields(b, fieldValue);
+
+                fieldValue = FixNestedInLoopVariables(field, fieldValue);
             }
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
@@ -686,6 +686,17 @@ namespace Sharp{type}
                 condition = condition.Replace("<<", "<< (int)");
 
                 condition = FixMissingFields(b, condition);
+
+                int nestedLevel = GetLoopNestingLevel(block);
+                if (nestedLevel > 0)
+                {
+                    // patch condition
+                    condition = FixNestedInLoopVariables(block, condition, "", ";");
+                    condition = FixNestedInLoopVariables(block, condition, "", "=");
+                    condition = FixNestedInLoopVariables(block, condition, "", " ");
+                    condition = FixNestedInLoopVariables(block, condition, "", ")");
+                    condition = FixNestedInLoopVariables(block, condition, "", ",");
+                }
             }
 
             if (methodType == MethodType.Read)
@@ -948,6 +959,26 @@ namespace Sharp{type}
                 {
                     if (parent.Condition.Contains("i =") || parent.Condition.Contains("i=") || parent.Condition.Contains("i ="))
                         ret.Insert(0, "[i]");
+                    else if (parent.Condition.Contains("j =") || parent.Condition.Contains("j=") || parent.Condition.Contains("j ="))
+                        ret.Insert(0, "[j]");
+                    else if (parent.Condition.Contains("k =") || parent.Condition.Contains("k=") || parent.Condition.Contains("k ="))
+                        ret.Insert(0, "[k]");
+                    else if (parent.Condition.Contains("n =") || parent.Condition.Contains("n=") || parent.Condition.Contains("n ="))
+                        ret.Insert(0, "[n]");
+                    else if (parent.Condition.Contains("c =") || parent.Condition.Contains("c=") || parent.Condition.Contains("c ="))
+                        ret.Insert(0, "[c]");
+                    else if (parent.Condition.Contains("cx =") || parent.Condition.Contains("cx=") || parent.Condition.Contains("cx ="))
+                        ret.Insert(0, "[cx]");
+                    else if (parent.Condition.Contains("cy =") || parent.Condition.Contains("cy=") || parent.Condition.Contains("cy ="))
+                        ret.Insert(0, "[cy]");
+                    else if (parent.Condition.Contains("iGroup =") || parent.Condition.Contains("iGroup=") || parent.Condition.Contains("iGroup ="))
+                        ret.Insert(0, "[iGroup]");
+                    else if (parent.Condition.Contains("SchedSelIdx =") || parent.Condition.Contains("SchedSelIdx=") || parent.Condition.Contains("SchedSelIdx ="))
+                        ret.Insert(0, "[SchedSelIdx]");
+                    else if (parent.Condition.Contains("layer =") || parent.Condition.Contains("layer=") || parent.Condition.Contains("layer ="))
+                        ret.Insert(0, "[layer]");
+                    else if (parent.Condition.Contains("colour_component =") || parent.Condition.Contains("colour_component=") || parent.Condition.Contains("colour_component ="))
+                        ret.Insert(0, "[colour_component]");
                     else
                         throw new Exception();
                 }
@@ -1026,7 +1057,7 @@ namespace Sharp{type}
 
             foreach (var suffix in ret.ToArray())
             {
-                if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Replace(" ", "").Contains(suffix))
+                if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Replace(" ", "").Contains(suffix.Replace(" ", "")))
                     ret.Remove(suffix);
             }
 
@@ -1092,7 +1123,18 @@ namespace Sharp{type}
             int nestingLevel = GetLoopNestingLevel(field);
             if (nestingLevel > 0)
             {
+                nestingLevel = GetNestedInLoopSuffix(field, field.FieldArray, out _);
+
                 AddRequiresAllocation(field);
+
+                if (nestingLevel > 0)
+                {
+                    // change the type
+                    for (int i = 0; i < nestingLevel; i++)
+                    {
+                        type += "[]";
+                    }
+                }
             }
 
             string propertyName = GetFieldName(field).ToPropertyCase();
@@ -1107,11 +1149,8 @@ namespace Sharp{type}
             {
                 if (parent.Type == "for")
                 {
-                    if (!string.IsNullOrEmpty(field.FieldArray))
-                    {
-                        // add the allocation above the first for in the hierarchy
-                        parent.RequiresAllocation.Add(field);
-                    }
+                    // add the allocation above the first for in the hierarchy
+                    parent.RequiresAllocation.Add(field);
                 }
 
                 parent = parent.Parent;

@@ -179,9 +179,23 @@ namespace SharpH264
             return read;
         }
 
+        internal ulong ReadClass<T>(ulong size, Func<T> factory, out T[] value) where T : IItuSerializable
+        {
+            T c;
+            ulong read = ReadClass(size, factory, out c);
+            value = new T[] { c };
+            return read;
+        }
+
         internal ulong WriteClass<T>(T value) where T : IItuSerializable
         {
             ulong size = value.Write(this);
+            return size;
+        }
+
+        internal ulong WriteClass<T>(T[] value) where T : IItuSerializable
+        {
+            ulong size = value.Single().Write(this);
             return size;
         }
 

@@ -154,14 +154,15 @@ namespace SharpH264
                     return _sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth;
                 case "ar_object_confidence_length_minus1":
                     return _sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1;
+                    // TODO: !!!
                 case "da_mantissa_len_minus1":
-                    return _sei.SeiMessage.SeiPayload.DepthRepresentationInfo.DepthRepresentationSeiElement.DaMantissaLenMinus1;
+                    return _sei.SeiMessage.SeiPayload.DepthRepresentationInfo.DepthRepresentationSeiElement.First().DaMantissaLenMinus1;
                 case "offset_len_minus1":
-                    return _sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.OffsetLenMinus1;
+                    return _sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1;
                 case "expLen":
                     return _subsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen;
                 case "mantissa_len_minus1":
-                    return _subsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1;
+                    return _subsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1.First();
             }
 
             throw new NotImplementedException();

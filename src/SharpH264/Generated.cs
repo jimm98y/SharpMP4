@@ -339,8 +339,8 @@ seq_parameter_set_data() {
         public byte SeqScalingMatrixPresentFlag { get { return seq_scaling_matrix_present_flag; } set { seq_scaling_matrix_present_flag = value; } }
         private byte[] seq_scaling_list_present_flag;
         public byte[] SeqScalingListPresentFlag { get { return seq_scaling_list_present_flag; } set { seq_scaling_list_present_flag = value; } }
-        private ScalingList scaling_list;
-        public ScalingList ScalingList { get { return scaling_list; } set { scaling_list = value; } }
+        private ScalingList[] scaling_list;
+        public ScalingList[] ScalingList { get { return scaling_list; } set { scaling_list = value; } }
         private uint log2_max_frame_num_minus4;
         public uint Log2MaxFrameNumMinus4 { get { return log2_max_frame_num_minus4; } set { log2_max_frame_num_minus4 = value; } }
         private uint pic_order_cnt_type;
@@ -431,6 +431,7 @@ seq_parameter_set_data() {
                 {
 
                     this.seq_scaling_list_present_flag = new byte[((chroma_format_idc != 3) ? 8 : 12)];
+                    this.scaling_list = new ScalingList[((chroma_format_idc != 3) ? 8 : 12)];
                     for (i = 0; i < ((chroma_format_idc != 3) ? 8 : 12); i++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.seq_scaling_list_present_flag[i]);
@@ -440,11 +441,11 @@ seq_parameter_set_data() {
 
                             if (i < 6)
                             {
-                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 16], 16, 0), out this.scaling_list);
+                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 16], 16, 0), out this.scaling_list[i]);
                             }
                             else
                             {
-                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 64], 64, 0), out this.scaling_list);
+                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 64], 64, 0), out this.scaling_list[i]);
                             }
                         }
                     }
@@ -545,11 +546,11 @@ seq_parameter_set_data() {
 
                             if (i < 6)
                             {
-                                size += stream.WriteClass<ScalingList>(this.scaling_list);
+                                size += stream.WriteClass<ScalingList>(this.scaling_list[i]);
                             }
                             else
                             {
-                                size += stream.WriteClass<ScalingList>(this.scaling_list);
+                                size += stream.WriteClass<ScalingList>(this.scaling_list[i]);
                             }
                         }
                     }
@@ -631,8 +632,8 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
         public uint SizeOfScalingList { get { return sizeOfScalingList; } set { sizeOfScalingList = value; } }
         private uint useDefaultScalingMatrixFlag;
         public uint UseDefaultScalingMatrixFlag { get { return useDefaultScalingMatrixFlag; } set { useDefaultScalingMatrixFlag = value; } }
-        private int delta_scale;
-        public int DeltaScale { get { return delta_scale; } set { delta_scale = value; } }
+        private int[] delta_scale;
+        public int[] DeltaScale { get { return delta_scale; } set { delta_scale = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -654,13 +655,14 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
             lastScale = 8;
             nextScale = 8;
 
+            this.delta_scale = new int[sizeOfScalingList];
             for (j = 0; j < sizeOfScalingList; j++)
             {
 
                 if (nextScale != 0)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.delta_scale);
-                    nextScale = (uint)(lastScale + delta_scale + 256) % 256;
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_scale[j]);
+                    nextScale = (uint)(lastScale + delta_scale[j] + 256) % 256;
                     useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? (uint)1 : (uint)0;
                 }
                 scalingLst[j] = (nextScale == 0) ? lastScale : nextScale;
@@ -685,8 +687,8 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
 
                 if (nextScale != 0)
                 {
-                    size += stream.WriteSignedIntGolomb(this.delta_scale);
-                    nextScale = (uint)(lastScale + delta_scale + 256) % 256;
+                    size += stream.WriteSignedIntGolomb(this.delta_scale[j]);
+                    nextScale = (uint)(lastScale + delta_scale[j] + 256) % 256;
                     useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? (uint)1 : (uint)0;
                 }
                 scalingLst[j] = (nextScale == 0) ? lastScale : nextScale;
@@ -1079,8 +1081,8 @@ pic_parameter_set_rbsp() {
         public byte PicScalingMatrixPresentFlag { get { return pic_scaling_matrix_present_flag; } set { pic_scaling_matrix_present_flag = value; } }
         private byte[] pic_scaling_list_present_flag;
         public byte[] PicScalingListPresentFlag { get { return pic_scaling_list_present_flag; } set { pic_scaling_list_present_flag = value; } }
-        private ScalingList scaling_list;
-        public ScalingList ScalingList { get { return scaling_list; } set { scaling_list = value; } }
+        private ScalingList[] scaling_list;
+        public ScalingList[] ScalingList { get { return scaling_list; } set { scaling_list = value; } }
         private int second_chroma_qp_index_offset;
         public int SecondChromaQpIndexOffset { get { return second_chroma_qp_index_offset; } set { second_chroma_qp_index_offset = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
@@ -1169,6 +1171,8 @@ pic_parameter_set_rbsp() {
 
                     this.pic_scaling_list_present_flag = new byte[6 +
      ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag];
+                    this.scaling_list = new ScalingList[6 +
+     ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag];
                     for (i = 0; i < 6 +
      ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag;
      i++)
@@ -1180,11 +1184,11 @@ pic_parameter_set_rbsp() {
 
                             if (i < 6)
                             {
-                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 16], 16, 0), out this.scaling_list);
+                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 16], 16, 0), out this.scaling_list[i]);
                             }
                             else
                             {
-                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 64], 64, 0), out this.scaling_list);
+                                size += stream.ReadClass<ScalingList>(size, () => new ScalingList(new uint[6 * 64], 64, 0), out this.scaling_list[i]);
                             }
                         }
                     }
@@ -1276,11 +1280,11 @@ pic_parameter_set_rbsp() {
 
                             if (i < 6)
                             {
-                                size += stream.WriteClass<ScalingList>(this.scaling_list);
+                                size += stream.WriteClass<ScalingList>(this.scaling_list[i]);
                             }
                             else
                             {
-                                size += stream.WriteClass<ScalingList>(this.scaling_list);
+                                size += stream.WriteClass<ScalingList>(this.scaling_list[i]);
                             }
                         }
                     }
@@ -2808,34 +2812,34 @@ pic_timing( payloadSize ) {
         public uint PicStruct { get { return pic_struct; } set { pic_struct = value; } }
         private byte[] clock_timestamp_flag;
         public byte[] ClockTimestampFlag { get { return clock_timestamp_flag; } set { clock_timestamp_flag = value; } }
-        private uint ct_type;
-        public uint CtType { get { return ct_type; } set { ct_type = value; } }
-        private byte nuit_field_based_flag;
-        public byte NuitFieldBasedFlag { get { return nuit_field_based_flag; } set { nuit_field_based_flag = value; } }
-        private uint counting_type;
-        public uint CountingType { get { return counting_type; } set { counting_type = value; } }
-        private byte full_timestamp_flag;
-        public byte FullTimestampFlag { get { return full_timestamp_flag; } set { full_timestamp_flag = value; } }
-        private byte discontinuity_flag;
-        public byte DiscontinuityFlag { get { return discontinuity_flag; } set { discontinuity_flag = value; } }
-        private byte cnt_dropped_flag;
-        public byte CntDroppedFlag { get { return cnt_dropped_flag; } set { cnt_dropped_flag = value; } }
-        private uint n_frames;
-        public uint nFrames { get { return n_frames; } set { n_frames = value; } }
-        private uint seconds_value;
-        public uint SecondsValue { get { return seconds_value; } set { seconds_value = value; } }
-        private uint minutes_value;
-        public uint MinutesValue { get { return minutes_value; } set { minutes_value = value; } }
-        private uint hours_value;
-        public uint HoursValue { get { return hours_value; } set { hours_value = value; } }
-        private byte seconds_flag;
-        public byte SecondsFlag { get { return seconds_flag; } set { seconds_flag = value; } }
-        private byte minutes_flag;
-        public byte MinutesFlag { get { return minutes_flag; } set { minutes_flag = value; } }
-        private byte hours_flag;
-        public byte HoursFlag { get { return hours_flag; } set { hours_flag = value; } }
-        private int time_offset;
-        public int TimeOffset { get { return time_offset; } set { time_offset = value; } }
+        private uint[] ct_type;
+        public uint[] CtType { get { return ct_type; } set { ct_type = value; } }
+        private byte[] nuit_field_based_flag;
+        public byte[] NuitFieldBasedFlag { get { return nuit_field_based_flag; } set { nuit_field_based_flag = value; } }
+        private uint[] counting_type;
+        public uint[] CountingType { get { return counting_type; } set { counting_type = value; } }
+        private byte[] full_timestamp_flag;
+        public byte[] FullTimestampFlag { get { return full_timestamp_flag; } set { full_timestamp_flag = value; } }
+        private byte[] discontinuity_flag;
+        public byte[] DiscontinuityFlag { get { return discontinuity_flag; } set { discontinuity_flag = value; } }
+        private byte[] cnt_dropped_flag;
+        public byte[] CntDroppedFlag { get { return cnt_dropped_flag; } set { cnt_dropped_flag = value; } }
+        private uint[] n_frames;
+        public uint[] nFrames { get { return n_frames; } set { n_frames = value; } }
+        private uint[] seconds_value;
+        public uint[] SecondsValue { get { return seconds_value; } set { seconds_value = value; } }
+        private uint[] minutes_value;
+        public uint[] MinutesValue { get { return minutes_value; } set { minutes_value = value; } }
+        private uint[] hours_value;
+        public uint[] HoursValue { get { return hours_value; } set { hours_value = value; } }
+        private byte[] seconds_flag;
+        public byte[] SecondsFlag { get { return seconds_flag; } set { seconds_flag = value; } }
+        private byte[] minutes_flag;
+        public byte[] MinutesFlag { get { return minutes_flag; } set { minutes_flag = value; } }
+        private byte[] hours_flag;
+        public byte[] HoursFlag { get { return hours_flag; } set { hours_flag = value; } }
+        private int[] time_offset;
+        public int[] TimeOffset { get { return time_offset; } set { time_offset = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -2874,6 +2878,188 @@ pic_timing( payloadSize ) {
                     8u => 3,
                     _ => throw new NotSupportedException()
                 }];
+                this.ct_type = new uint[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.nuit_field_based_flag = new byte[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.counting_type = new uint[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.full_timestamp_flag = new byte[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.discontinuity_flag = new byte[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.cnt_dropped_flag = new byte[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.n_frames = new uint[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.seconds_value = new uint[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.minutes_value = new uint[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.hours_value = new uint[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.seconds_flag = new byte[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.minutes_flag = new byte[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.hours_flag = new byte[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                this.time_offset = new int[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
                 for (i = 0; i < this.pic_struct switch
                 {
                     0u => 1,
@@ -2892,37 +3078,37 @@ pic_timing( payloadSize ) {
 
                     if (clock_timestamp_flag[i] != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 2, out this.ct_type);
-                        size += stream.ReadUnsignedInt(size, 1, out this.nuit_field_based_flag);
-                        size += stream.ReadUnsignedInt(size, 5, out this.counting_type);
-                        size += stream.ReadUnsignedInt(size, 1, out this.full_timestamp_flag);
-                        size += stream.ReadUnsignedInt(size, 1, out this.discontinuity_flag);
-                        size += stream.ReadUnsignedInt(size, 1, out this.cnt_dropped_flag);
-                        size += stream.ReadUnsignedInt(size, 8, out this.n_frames);
+                        size += stream.ReadUnsignedInt(size, 2, out this.ct_type[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.nuit_field_based_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 5, out this.counting_type[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.full_timestamp_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.discontinuity_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.cnt_dropped_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 8, out this.n_frames[i]);
 
-                        if (full_timestamp_flag != 0)
+                        if (full_timestamp_flag[i] != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 6, out this.seconds_value); // 0..59 
-                            size += stream.ReadUnsignedInt(size, 6, out this.minutes_value); // 0..59 
-                            size += stream.ReadUnsignedInt(size, 5, out this.hours_value); // 0..23 
+                            size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i]); // 0..59 
+                            size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i]); // 0..59 
+                            size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i]); // 0..23 
                         }
                         else
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.seconds_flag);
+                            size += stream.ReadUnsignedInt(size, 1, out this.seconds_flag[i]);
 
-                            if (seconds_flag != 0)
+                            if (seconds_flag[i] != 0)
                             {
-                                size += stream.ReadUnsignedInt(size, 6, out this.seconds_value); // range 0..59 
-                                size += stream.ReadUnsignedInt(size, 1, out this.minutes_flag);
+                                size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i]); // range 0..59 
+                                size += stream.ReadUnsignedInt(size, 1, out this.minutes_flag[i]);
 
-                                if (minutes_flag != 0)
+                                if (minutes_flag[i] != 0)
                                 {
-                                    size += stream.ReadUnsignedInt(size, 6, out this.minutes_value); // 0..59 
-                                    size += stream.ReadUnsignedInt(size, 1, out this.hours_flag);
+                                    size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i]); // 0..59 
+                                    size += stream.ReadUnsignedInt(size, 1, out this.hours_flag[i]);
 
-                                    if (hours_flag != 0)
+                                    if (hours_flag[i] != 0)
                                     {
-                                        size += stream.ReadUnsignedInt(size, 5, out this.hours_value); // 0..23 
+                                        size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i]); // 0..23 
                                     }
                                 }
                             }
@@ -2930,7 +3116,7 @@ pic_timing( payloadSize ) {
 
                         if (H264Helpers.GetValue("time_offset_length") > 0)
                         {
-                            size += stream.ReadSignedIntVariable(size, H264Helpers.GetVariableCount("time_offset"), out this.time_offset);
+                            size += stream.ReadSignedIntVariable(size, H264Helpers.GetVariableCount("time_offset"), out this.time_offset[i]);
                         }
                     }
                 }
@@ -2973,37 +3159,37 @@ pic_timing( payloadSize ) {
 
                     if (clock_timestamp_flag[i] != 0)
                     {
-                        size += stream.WriteUnsignedInt(2, this.ct_type);
-                        size += stream.WriteUnsignedInt(1, this.nuit_field_based_flag);
-                        size += stream.WriteUnsignedInt(5, this.counting_type);
-                        size += stream.WriteUnsignedInt(1, this.full_timestamp_flag);
-                        size += stream.WriteUnsignedInt(1, this.discontinuity_flag);
-                        size += stream.WriteUnsignedInt(1, this.cnt_dropped_flag);
-                        size += stream.WriteUnsignedInt(8, this.n_frames);
+                        size += stream.WriteUnsignedInt(2, this.ct_type[i]);
+                        size += stream.WriteUnsignedInt(1, this.nuit_field_based_flag[i]);
+                        size += stream.WriteUnsignedInt(5, this.counting_type[i]);
+                        size += stream.WriteUnsignedInt(1, this.full_timestamp_flag[i]);
+                        size += stream.WriteUnsignedInt(1, this.discontinuity_flag[i]);
+                        size += stream.WriteUnsignedInt(1, this.cnt_dropped_flag[i]);
+                        size += stream.WriteUnsignedInt(8, this.n_frames[i]);
 
-                        if (full_timestamp_flag != 0)
+                        if (full_timestamp_flag[i] != 0)
                         {
-                            size += stream.WriteUnsignedInt(6, this.seconds_value); // 0..59 
-                            size += stream.WriteUnsignedInt(6, this.minutes_value); // 0..59 
-                            size += stream.WriteUnsignedInt(5, this.hours_value); // 0..23 
+                            size += stream.WriteUnsignedInt(6, this.seconds_value[i]); // 0..59 
+                            size += stream.WriteUnsignedInt(6, this.minutes_value[i]); // 0..59 
+                            size += stream.WriteUnsignedInt(5, this.hours_value[i]); // 0..23 
                         }
                         else
                         {
-                            size += stream.WriteUnsignedInt(1, this.seconds_flag);
+                            size += stream.WriteUnsignedInt(1, this.seconds_flag[i]);
 
-                            if (seconds_flag != 0)
+                            if (seconds_flag[i] != 0)
                             {
-                                size += stream.WriteUnsignedInt(6, this.seconds_value); // range 0..59 
-                                size += stream.WriteUnsignedInt(1, this.minutes_flag);
+                                size += stream.WriteUnsignedInt(6, this.seconds_value[i]); // range 0..59 
+                                size += stream.WriteUnsignedInt(1, this.minutes_flag[i]);
 
-                                if (minutes_flag != 0)
+                                if (minutes_flag[i] != 0)
                                 {
-                                    size += stream.WriteUnsignedInt(6, this.minutes_value); // 0..59 
-                                    size += stream.WriteUnsignedInt(1, this.hours_flag);
+                                    size += stream.WriteUnsignedInt(6, this.minutes_value[i]); // 0..59 
+                                    size += stream.WriteUnsignedInt(1, this.hours_flag[i]);
 
-                                    if (hours_flag != 0)
+                                    if (hours_flag[i] != 0)
                                     {
-                                        size += stream.WriteUnsignedInt(5, this.hours_value); // 0..23 
+                                        size += stream.WriteUnsignedInt(5, this.hours_value[i]); // 0..23 
                                     }
                                 }
                             }
@@ -3011,7 +3197,7 @@ pic_timing( payloadSize ) {
 
                         if (H264Helpers.GetValue("time_offset_length") > 0)
                         {
-                            size += stream.WriteSignedIntVariable(H264Helpers.GetVariableCount("time_offset"), this.time_offset);
+                            size += stream.WriteSignedIntVariable(H264Helpers.GetVariableCount("time_offset"), this.time_offset[i]);
                         }
                     }
                 }
@@ -3137,8 +3323,8 @@ filler_payload( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint ff_byte;
-        public uint FfByte { get { return ff_byte; } set { ff_byte = value; } }
+        private uint[] ff_byte;
+        public uint[] FfByte { get { return ff_byte; } set { ff_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3154,9 +3340,10 @@ filler_payload( payloadSize ) {
 
             uint k = 0;
 
+            this.ff_byte = new uint[payloadSize];
             for (k = 0; k < payloadSize; k++)
             {
-                size += stream.ReadFixed(size, 8, out this.ff_byte); // equal to 0xFF 
+                size += stream.ReadFixed(size, 8, out this.ff_byte[k]); // equal to 0xFF 
             }
 
             return size;
@@ -3170,7 +3357,7 @@ filler_payload( payloadSize ) {
 
             for (k = 0; k < payloadSize; k++)
             {
-                size += stream.WriteFixed(8, this.ff_byte); // equal to 0xFF 
+                size += stream.WriteFixed(8, this.ff_byte[k]); // equal to 0xFF 
             }
 
             return size;
@@ -3283,8 +3470,8 @@ user_data_unregistered( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private BigInteger uuid_iso_iec_11578;
         public BigInteger UuidIsoIec11578 { get { return uuid_iso_iec_11578; } set { uuid_iso_iec_11578 = value; } }
-        private byte user_data_payload_byte;
-        public byte UserDataPayloadByte { get { return user_data_payload_byte; } set { user_data_payload_byte = value; } }
+        private byte[] user_data_payload_byte;
+        public byte[] UserDataPayloadByte { get { return user_data_payload_byte; } set { user_data_payload_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3301,9 +3488,10 @@ user_data_unregistered( payloadSize ) {
             uint i = 0;
             size += stream.ReadUnsignedInt(size, 128, out this.uuid_iso_iec_11578);
 
+            this.user_data_payload_byte = new byte[payloadSize];
             for (i = 16; i < payloadSize; i++)
             {
-                size += stream.ReadBits(size, 8, out this.user_data_payload_byte);
+                size += stream.ReadBits(size, 8, out this.user_data_payload_byte[i]);
             }
 
             return size;
@@ -3318,7 +3506,7 @@ user_data_unregistered( payloadSize ) {
 
             for (i = 16; i < payloadSize; i++)
             {
-                size += stream.WriteBits(8, this.user_data_payload_byte);
+                size += stream.WriteBits(8, this.user_data_payload_byte[i]);
             }
 
             return size;
@@ -3804,12 +3992,12 @@ sub_seq_layer_characteristics( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint num_sub_seq_layers_minus1;
         public uint NumSubSeqLayersMinus1 { get { return num_sub_seq_layers_minus1; } set { num_sub_seq_layers_minus1 = value; } }
-        private byte accurate_statistics_flag;
-        public byte AccurateStatisticsFlag { get { return accurate_statistics_flag; } set { accurate_statistics_flag = value; } }
-        private uint average_bit_rate;
-        public uint AverageBitRate { get { return average_bit_rate; } set { average_bit_rate = value; } }
-        private uint average_frame_rate;
-        public uint AverageFrameRate { get { return average_frame_rate; } set { average_frame_rate = value; } }
+        private byte[] accurate_statistics_flag;
+        public byte[] AccurateStatisticsFlag { get { return accurate_statistics_flag; } set { accurate_statistics_flag = value; } }
+        private uint[] average_bit_rate;
+        public uint[] AverageBitRate { get { return average_bit_rate; } set { average_bit_rate = value; } }
+        private uint[] average_frame_rate;
+        public uint[] AverageFrameRate { get { return average_frame_rate; } set { average_frame_rate = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3826,11 +4014,14 @@ sub_seq_layer_characteristics( payloadSize ) {
             uint layer = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_sub_seq_layers_minus1);
 
+            this.accurate_statistics_flag = new byte[num_sub_seq_layers_minus1 + 1];
+            this.average_bit_rate = new uint[num_sub_seq_layers_minus1 + 1];
+            this.average_frame_rate = new uint[num_sub_seq_layers_minus1 + 1];
             for (layer = 0; layer <= num_sub_seq_layers_minus1; layer++)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.accurate_statistics_flag);
-                size += stream.ReadUnsignedInt(size, 16, out this.average_bit_rate);
-                size += stream.ReadUnsignedInt(size, 16, out this.average_frame_rate);
+                size += stream.ReadUnsignedInt(size, 1, out this.accurate_statistics_flag[layer]);
+                size += stream.ReadUnsignedInt(size, 16, out this.average_bit_rate[layer]);
+                size += stream.ReadUnsignedInt(size, 16, out this.average_frame_rate[layer]);
             }
 
             return size;
@@ -3845,9 +4036,9 @@ sub_seq_layer_characteristics( payloadSize ) {
 
             for (layer = 0; layer <= num_sub_seq_layers_minus1; layer++)
             {
-                size += stream.WriteUnsignedInt(1, this.accurate_statistics_flag);
-                size += stream.WriteUnsignedInt(16, this.average_bit_rate);
-                size += stream.WriteUnsignedInt(16, this.average_frame_rate);
+                size += stream.WriteUnsignedInt(1, this.accurate_statistics_flag[layer]);
+                size += stream.WriteUnsignedInt(16, this.average_bit_rate[layer]);
+                size += stream.WriteUnsignedInt(16, this.average_frame_rate[layer]);
             }
 
             return size;
@@ -3900,12 +4091,12 @@ sub_seq_characteristics( payloadSize ) {
         public uint AverageFrameRate { get { return average_frame_rate; } set { average_frame_rate = value; } }
         private uint num_referenced_subseqs;
         public uint NumReferencedSubseqs { get { return num_referenced_subseqs; } set { num_referenced_subseqs = value; } }
-        private uint ref_sub_seq_layer_num;
-        public uint RefSubSeqLayerNum { get { return ref_sub_seq_layer_num; } set { ref_sub_seq_layer_num = value; } }
-        private uint ref_sub_seq_id;
-        public uint RefSubSeqId { get { return ref_sub_seq_id; } set { ref_sub_seq_id = value; } }
-        private byte ref_sub_seq_direction;
-        public byte RefSubSeqDirection { get { return ref_sub_seq_direction; } set { ref_sub_seq_direction = value; } }
+        private uint[] ref_sub_seq_layer_num;
+        public uint[] RefSubSeqLayerNum { get { return ref_sub_seq_layer_num; } set { ref_sub_seq_layer_num = value; } }
+        private uint[] ref_sub_seq_id;
+        public uint[] RefSubSeqId { get { return ref_sub_seq_id; } set { ref_sub_seq_id = value; } }
+        private byte[] ref_sub_seq_direction;
+        public byte[] RefSubSeqDirection { get { return ref_sub_seq_direction; } set { ref_sub_seq_direction = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -3938,11 +4129,14 @@ sub_seq_characteristics( payloadSize ) {
             }
             size += stream.ReadUnsignedIntGolomb(size, out this.num_referenced_subseqs);
 
+            this.ref_sub_seq_layer_num = new uint[num_referenced_subseqs];
+            this.ref_sub_seq_id = new uint[num_referenced_subseqs];
+            this.ref_sub_seq_direction = new byte[num_referenced_subseqs];
             for (n = 0; n < num_referenced_subseqs; n++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.ref_sub_seq_layer_num);
-                size += stream.ReadUnsignedIntGolomb(size, out this.ref_sub_seq_id);
-                size += stream.ReadUnsignedInt(size, 1, out this.ref_sub_seq_direction);
+                size += stream.ReadUnsignedIntGolomb(size, out this.ref_sub_seq_layer_num[n]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.ref_sub_seq_id[n]);
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_sub_seq_direction[n]);
             }
 
             return size;
@@ -3973,9 +4167,9 @@ sub_seq_characteristics( payloadSize ) {
 
             for (n = 0; n < num_referenced_subseqs; n++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.ref_sub_seq_layer_num);
-                size += stream.WriteUnsignedIntGolomb(this.ref_sub_seq_id);
-                size += stream.WriteUnsignedInt(1, this.ref_sub_seq_direction);
+                size += stream.WriteUnsignedIntGolomb(this.ref_sub_seq_layer_num[n]);
+                size += stream.WriteUnsignedIntGolomb(this.ref_sub_seq_id[n]);
+                size += stream.WriteUnsignedInt(1, this.ref_sub_seq_direction[n]);
             }
 
             return size;
@@ -6536,8 +6730,8 @@ sei_prefix_indication( payloadSize ) {
         public uint[] NumBitsInPrefixIndicationMinus1 { get { return num_bits_in_prefix_indication_minus1; } set { num_bits_in_prefix_indication_minus1 = value; } }
         private byte[][] sei_prefix_data_bit;
         public byte[][] SeiPrefixDataBit { get { return sei_prefix_data_bit; } set { sei_prefix_data_bit = value; } }
-        private uint byte_alignment_bit_equal_to_one;
-        public uint ByteAlignmentBitEqualToOne { get { return byte_alignment_bit_equal_to_one; } set { byte_alignment_bit_equal_to_one = value; } }
+        private uint[] byte_alignment_bit_equal_to_one;
+        public uint[] ByteAlignmentBitEqualToOne { get { return byte_alignment_bit_equal_to_one; } set { byte_alignment_bit_equal_to_one = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -6558,6 +6752,7 @@ sei_prefix_indication( payloadSize ) {
 
             this.num_bits_in_prefix_indication_minus1 = new uint[num_sei_prefix_indications_minus1 + 1];
             this.sei_prefix_data_bit = new byte[num_sei_prefix_indications_minus1 + 1][];
+            this.byte_alignment_bit_equal_to_one = new uint[num_sei_prefix_indications_minus1 + 1];
             for (i = 0; i <= num_sei_prefix_indications_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 16, out this.num_bits_in_prefix_indication_minus1[i]);
@@ -6570,7 +6765,7 @@ sei_prefix_indication( payloadSize ) {
 
                 while (!stream.ByteAligned())
                 {
-                    size += stream.ReadFixed(size, 1, out this.byte_alignment_bit_equal_to_one); // equal to 1 
+                    size += stream.ReadFixed(size, 1, out this.byte_alignment_bit_equal_to_one[i]); // equal to 1 
                 }
             }
 
@@ -6597,7 +6792,7 @@ sei_prefix_indication( payloadSize ) {
 
                 while (!stream.ByteAligned())
                 {
-                    size += stream.WriteFixed(1, this.byte_alignment_bit_equal_to_one); // equal to 1 
+                    size += stream.WriteFixed(1, this.byte_alignment_bit_equal_to_one[i]); // equal to 1 
                 }
             }
 
@@ -6701,24 +6896,24 @@ annotated_regions( payloadSize ) {
         public uint ArNumLabelUpdates { get { return ar_num_label_updates; } set { ar_num_label_updates = value; } }
         private uint[] ar_label_idx;
         public uint[] ArLabelIdx { get { return ar_label_idx; } set { ar_label_idx = value; } }
-        private byte ar_label_cancel_flag;
-        public byte ArLabelCancelFlag { get { return ar_label_cancel_flag; } set { ar_label_cancel_flag = value; } }
+        private byte[] ar_label_cancel_flag;
+        public byte[] ArLabelCancelFlag { get { return ar_label_cancel_flag; } set { ar_label_cancel_flag = value; } }
         private int[] ar_label;
         public int[] ArLabel { get { return ar_label; } set { ar_label = value; } }
         private uint ar_num_object_updates;
         public uint ArNumObjectUpdates { get { return ar_num_object_updates; } set { ar_num_object_updates = value; } }
         private uint[] ar_object_idx;
         public uint[] ArObjectIdx { get { return ar_object_idx; } set { ar_object_idx = value; } }
-        private byte ar_object_cancel_flag;
-        public byte ArObjectCancelFlag { get { return ar_object_cancel_flag; } set { ar_object_cancel_flag = value; } }
-        private byte ar_object_label_update_flag;
-        public byte ArObjectLabelUpdateFlag { get { return ar_object_label_update_flag; } set { ar_object_label_update_flag = value; } }
+        private byte[] ar_object_cancel_flag;
+        public byte[] ArObjectCancelFlag { get { return ar_object_cancel_flag; } set { ar_object_cancel_flag = value; } }
+        private byte[] ar_object_label_update_flag;
+        public byte[] ArObjectLabelUpdateFlag { get { return ar_object_label_update_flag; } set { ar_object_label_update_flag = value; } }
         private uint[] ar_object_label_idx;
         public uint[] ArObjectLabelIdx { get { return ar_object_label_idx; } set { ar_object_label_idx = value; } }
-        private byte ar_bounding_box_update_flag;
-        public byte ArBoundingBoxUpdateFlag { get { return ar_bounding_box_update_flag; } set { ar_bounding_box_update_flag = value; } }
-        private byte ar_bounding_box_cancel_flag;
-        public byte ArBoundingBoxCancelFlag { get { return ar_bounding_box_cancel_flag; } set { ar_bounding_box_cancel_flag = value; } }
+        private byte[] ar_bounding_box_update_flag;
+        public byte[] ArBoundingBoxUpdateFlag { get { return ar_bounding_box_update_flag; } set { ar_bounding_box_update_flag = value; } }
+        private byte[] ar_bounding_box_cancel_flag;
+        public byte[] ArBoundingBoxCancelFlag { get { return ar_bounding_box_cancel_flag; } set { ar_bounding_box_cancel_flag = value; } }
         private uint[] ar_bounding_box_top;
         public uint[] ArBoundingBoxTop { get { return ar_bounding_box_top; } set { ar_bounding_box_top = value; } }
         private uint[] ar_bounding_box_left;
@@ -6780,14 +6975,15 @@ annotated_regions( payloadSize ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates);
 
                     this.ar_label_idx = new uint[ar_num_label_updates];
+                    this.ar_label_cancel_flag = new byte[ar_num_label_updates];
                     this.ar_label = new int[ar_num_label_updates];
                     for (i = 0; i < ar_num_label_updates; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.ar_label_cancel_flag);
-                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag;
+                        size += stream.ReadUnsignedInt(size, 1, out this.ar_label_cancel_flag[i]);
+                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag[i];
 
-                        if (ar_label_cancel_flag == 0)
+                        if (ar_label_cancel_flag[i] == 0)
                         {
 
                             while (!stream.ByteAligned())
@@ -6801,7 +6997,11 @@ annotated_regions( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_object_updates);
 
                 this.ar_object_idx = new uint[ar_num_object_updates];
+                this.ar_object_cancel_flag = new byte[ar_num_object_updates];
+                this.ar_object_label_update_flag = new byte[ar_num_object_updates];
                 this.ar_object_label_idx = new uint[ar_num_object_updates];
+                this.ar_bounding_box_update_flag = new byte[ar_num_object_updates];
+                this.ar_bounding_box_cancel_flag = new byte[ar_num_object_updates];
                 this.ar_bounding_box_top = new uint[ar_num_object_updates];
                 this.ar_bounding_box_left = new uint[ar_num_object_updates];
                 this.ar_bounding_box_width = new uint[ar_num_object_updates];
@@ -6811,29 +7011,29 @@ annotated_regions( payloadSize ) {
                 for (i = 0; i < ar_num_object_updates; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_idx[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.ar_object_cancel_flag);
-                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag;
+                    size += stream.ReadUnsignedInt(size, 1, out this.ar_object_cancel_flag[i]);
+                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag[i];
 
-                    if (ar_object_cancel_flag == 0)
+                    if (ar_object_cancel_flag[i] == 0)
                     {
 
                         if (ar_object_label_present_flag != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.ar_object_label_update_flag);
+                            size += stream.ReadUnsignedInt(size, 1, out this.ar_object_label_update_flag[i]);
 
-                            if (ar_object_label_update_flag != 0)
+                            if (ar_object_label_update_flag[i] != 0)
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_label_idx[ar_object_idx[i]]);
                             }
                         }
-                        size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_update_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_update_flag[i]);
 
-                        if (ar_bounding_box_update_flag != 0)
+                        if (ar_bounding_box_update_flag[i] != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_cancel_flag);
-                            ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag != 0;
+                            size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_cancel_flag[i]);
+                            ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag[i] != 0;
 
-                            if (ar_bounding_box_cancel_flag == 0)
+                            if (ar_bounding_box_cancel_flag[i] == 0)
                             {
                                 size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_top[ar_object_idx[i]]);
                                 size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_left[ar_object_idx[i]]);
@@ -6900,10 +7100,10 @@ annotated_regions( payloadSize ) {
                     for (i = 0; i < ar_num_label_updates; i++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.ar_label_idx[i]);
-                        size += stream.WriteUnsignedInt(1, this.ar_label_cancel_flag);
-                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag;
+                        size += stream.WriteUnsignedInt(1, this.ar_label_cancel_flag[i]);
+                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag[i];
 
-                        if (ar_label_cancel_flag == 0)
+                        if (ar_label_cancel_flag[i] == 0)
                         {
 
                             while (!stream.ByteAligned())
@@ -6919,29 +7119,29 @@ annotated_regions( payloadSize ) {
                 for (i = 0; i < ar_num_object_updates; i++)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.ar_object_idx[i]);
-                    size += stream.WriteUnsignedInt(1, this.ar_object_cancel_flag);
-                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag;
+                    size += stream.WriteUnsignedInt(1, this.ar_object_cancel_flag[i]);
+                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag[i];
 
-                    if (ar_object_cancel_flag == 0)
+                    if (ar_object_cancel_flag[i] == 0)
                     {
 
                         if (ar_object_label_present_flag != 0)
                         {
-                            size += stream.WriteUnsignedInt(1, this.ar_object_label_update_flag);
+                            size += stream.WriteUnsignedInt(1, this.ar_object_label_update_flag[i]);
 
-                            if (ar_object_label_update_flag != 0)
+                            if (ar_object_label_update_flag[i] != 0)
                             {
                                 size += stream.WriteUnsignedIntGolomb(this.ar_object_label_idx[ar_object_idx[i]]);
                             }
                         }
-                        size += stream.WriteUnsignedInt(1, this.ar_bounding_box_update_flag);
+                        size += stream.WriteUnsignedInt(1, this.ar_bounding_box_update_flag[i]);
 
-                        if (ar_bounding_box_update_flag != 0)
+                        if (ar_bounding_box_update_flag[i] != 0)
                         {
-                            size += stream.WriteUnsignedInt(1, this.ar_bounding_box_cancel_flag);
-                            ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag != 0;
+                            size += stream.WriteUnsignedInt(1, this.ar_bounding_box_cancel_flag[i]);
+                            ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag[i] != 0;
 
-                            if (ar_bounding_box_cancel_flag == 0)
+                            if (ar_bounding_box_cancel_flag[i] == 0)
                             {
                                 size += stream.WriteUnsignedInt(16, this.ar_bounding_box_top[ar_object_idx[i]]);
                                 size += stream.WriteUnsignedInt(16, this.ar_bounding_box_left[ar_object_idx[i]]);
@@ -7102,8 +7302,8 @@ reserved_sei_message( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private byte reserved_sei_message_payload_byte;
-        public byte ReservedSeiMessagePayloadByte { get { return reserved_sei_message_payload_byte; } set { reserved_sei_message_payload_byte = value; } }
+        private byte[] reserved_sei_message_payload_byte;
+        public byte[] ReservedSeiMessagePayloadByte { get { return reserved_sei_message_payload_byte; } set { reserved_sei_message_payload_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -7119,9 +7319,10 @@ reserved_sei_message( payloadSize ) {
 
             uint i = 0;
 
+            this.reserved_sei_message_payload_byte = new byte[payloadSize];
             for (i = 0; i < payloadSize; i++)
             {
-                size += stream.ReadBits(size, 8, out this.reserved_sei_message_payload_byte);
+                size += stream.ReadBits(size, 8, out this.reserved_sei_message_payload_byte[i]);
             }
 
             return size;
@@ -7135,7 +7336,7 @@ reserved_sei_message( payloadSize ) {
 
             for (i = 0; i < payloadSize; i++)
             {
-                size += stream.WriteBits(8, this.reserved_sei_message_payload_byte);
+                size += stream.WriteBits(8, this.reserved_sei_message_payload_byte[i]);
             }
 
             return size;
@@ -9124,8 +9325,8 @@ base_layer_temporal_hrd( payloadSize ) {
         public byte[] SeiFixedFrameRateFlag { get { return sei_fixed_frame_rate_flag; } set { sei_fixed_frame_rate_flag = value; } }
         private byte[] sei_nal_hrd_parameters_present_flag;
         public byte[] SeiNalHrdParametersPresentFlag { get { return sei_nal_hrd_parameters_present_flag; } set { sei_nal_hrd_parameters_present_flag = value; } }
-        private HrdParameters hrd_parameters;
-        public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
+        private HrdParameters[] hrd_parameters;
+        public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
         private byte[] sei_vcl_hrd_parameters_present_flag;
         public byte[] SeiVclHrdParametersPresentFlag { get { return sei_vcl_hrd_parameters_present_flag; } set { sei_vcl_hrd_parameters_present_flag = value; } }
         private byte[] sei_low_delay_hrd_flag;
@@ -9154,6 +9355,7 @@ base_layer_temporal_hrd( payloadSize ) {
             this.sei_time_scale = new uint[num_of_temporal_layers_in_base_layer_minus1 + 1];
             this.sei_fixed_frame_rate_flag = new byte[num_of_temporal_layers_in_base_layer_minus1 + 1];
             this.sei_nal_hrd_parameters_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1 + 1];
+            this.hrd_parameters = new HrdParameters[num_of_temporal_layers_in_base_layer_minus1 + 1];
             this.sei_vcl_hrd_parameters_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1 + 1];
             this.sei_low_delay_hrd_flag = new byte[num_of_temporal_layers_in_base_layer_minus1 + 1];
             this.sei_pic_struct_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1 + 1];
@@ -9172,13 +9374,13 @@ base_layer_temporal_hrd( payloadSize ) {
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.sei_vcl_hrd_parameters_present_flag[i]);
 
                 if (sei_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -9214,13 +9416,13 @@ base_layer_temporal_hrd( payloadSize ) {
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
                 size += stream.WriteUnsignedInt(1, this.sei_vcl_hrd_parameters_present_flag[i]);
 
                 if (sei_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -9602,8 +9804,8 @@ svc_vui_parameters_extension() {
         public byte[] VuiExtFixedFrameRateFlag { get { return vui_ext_fixed_frame_rate_flag; } set { vui_ext_fixed_frame_rate_flag = value; } }
         private byte[] vui_ext_nal_hrd_parameters_present_flag;
         public byte[] VuiExtNalHrdParametersPresentFlag { get { return vui_ext_nal_hrd_parameters_present_flag; } set { vui_ext_nal_hrd_parameters_present_flag = value; } }
-        private HrdParameters hrd_parameters;
-        public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
+        private HrdParameters[] hrd_parameters;
+        public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
         private byte[] vui_ext_vcl_hrd_parameters_present_flag;
         public byte[] VuiExtVclHrdParametersPresentFlag { get { return vui_ext_vcl_hrd_parameters_present_flag; } set { vui_ext_vcl_hrd_parameters_present_flag = value; } }
         private byte[] vui_ext_low_delay_hrd_flag;
@@ -9634,6 +9836,7 @@ svc_vui_parameters_extension() {
             this.vui_ext_time_scale = new uint[vui_ext_num_entries_minus1 + 1];
             this.vui_ext_fixed_frame_rate_flag = new byte[vui_ext_num_entries_minus1 + 1];
             this.vui_ext_nal_hrd_parameters_present_flag = new byte[vui_ext_num_entries_minus1 + 1];
+            this.hrd_parameters = new HrdParameters[vui_ext_num_entries_minus1 + 1];
             this.vui_ext_vcl_hrd_parameters_present_flag = new byte[vui_ext_num_entries_minus1 + 1];
             this.vui_ext_low_delay_hrd_flag = new byte[vui_ext_num_entries_minus1 + 1];
             this.vui_ext_pic_struct_present_flag = new byte[vui_ext_num_entries_minus1 + 1];
@@ -9654,13 +9857,13 @@ svc_vui_parameters_extension() {
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_ext_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -9698,13 +9901,13 @@ svc_vui_parameters_extension() {
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
                 size += stream.WriteUnsignedInt(1, this.vui_ext_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_ext_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -11464,8 +11667,8 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
         public byte[] SeiMvcFixedFrameRateFlag { get { return sei_mvc_fixed_frame_rate_flag; } set { sei_mvc_fixed_frame_rate_flag = value; } }
         private byte[] sei_mvc_nal_hrd_parameters_present_flag;
         public byte[] SeiMvcNalHrdParametersPresentFlag { get { return sei_mvc_nal_hrd_parameters_present_flag; } set { sei_mvc_nal_hrd_parameters_present_flag = value; } }
-        private HrdParameters hrd_parameters;
-        public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
+        private HrdParameters[] hrd_parameters;
+        public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
         private byte[] sei_mvc_vcl_hrd_parameters_present_flag;
         public byte[] SeiMvcVclHrdParametersPresentFlag { get { return sei_mvc_vcl_hrd_parameters_present_flag; } set { sei_mvc_vcl_hrd_parameters_present_flag = value; } }
         private byte[] sei_mvc_low_delay_hrd_flag;
@@ -11494,6 +11697,7 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
             this.sei_mvc_time_scale = new uint[num_of_temporal_layers_in_base_view_minus1 + 1];
             this.sei_mvc_fixed_frame_rate_flag = new byte[num_of_temporal_layers_in_base_view_minus1 + 1];
             this.sei_mvc_nal_hrd_parameters_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1 + 1];
+            this.hrd_parameters = new HrdParameters[num_of_temporal_layers_in_base_view_minus1 + 1];
             this.sei_mvc_vcl_hrd_parameters_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1 + 1];
             this.sei_mvc_low_delay_hrd_flag = new byte[num_of_temporal_layers_in_base_view_minus1 + 1];
             this.sei_mvc_pic_struct_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1 + 1];
@@ -11512,13 +11716,13 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_vcl_hrd_parameters_present_flag[i]);
 
                 if (sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -11554,13 +11758,13 @@ sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
                 size += stream.WriteUnsignedInt(1, this.sei_mvc_vcl_hrd_parameters_present_flag[i]);
 
                 if (sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -11690,8 +11894,8 @@ mvc_vui_parameters_extension() {
         public byte[] VuiMvcFixedFrameRateFlag { get { return vui_mvc_fixed_frame_rate_flag; } set { vui_mvc_fixed_frame_rate_flag = value; } }
         private byte[] vui_mvc_nal_hrd_parameters_present_flag;
         public byte[] VuiMvcNalHrdParametersPresentFlag { get { return vui_mvc_nal_hrd_parameters_present_flag; } set { vui_mvc_nal_hrd_parameters_present_flag = value; } }
-        private HrdParameters hrd_parameters;
-        public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
+        private HrdParameters[] hrd_parameters;
+        public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
         private byte[] vui_mvc_vcl_hrd_parameters_present_flag;
         public byte[] VuiMvcVclHrdParametersPresentFlag { get { return vui_mvc_vcl_hrd_parameters_present_flag; } set { vui_mvc_vcl_hrd_parameters_present_flag = value; } }
         private byte[] vui_mvc_low_delay_hrd_flag;
@@ -11723,6 +11927,7 @@ mvc_vui_parameters_extension() {
             this.vui_mvc_time_scale = new uint[vui_mvc_num_ops_minus1 + 1];
             this.vui_mvc_fixed_frame_rate_flag = new byte[vui_mvc_num_ops_minus1 + 1];
             this.vui_mvc_nal_hrd_parameters_present_flag = new byte[vui_mvc_num_ops_minus1 + 1];
+            this.hrd_parameters = new HrdParameters[vui_mvc_num_ops_minus1 + 1];
             this.vui_mvc_vcl_hrd_parameters_present_flag = new byte[vui_mvc_num_ops_minus1 + 1];
             this.vui_mvc_low_delay_hrd_flag = new byte[vui_mvc_num_ops_minus1 + 1];
             this.vui_mvc_pic_struct_present_flag = new byte[vui_mvc_num_ops_minus1 + 1];
@@ -11748,13 +11953,13 @@ mvc_vui_parameters_extension() {
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -11797,13 +12002,13 @@ mvc_vui_parameters_extension() {
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
                 size += stream.WriteUnsignedInt(1, this.vui_mvc_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -12250,8 +12455,8 @@ priority_id[ i ] 5 u(5)
         public uint[] NumTargetOutputViewsMinus1 { get { return num_target_output_views_minus1; } set { num_target_output_views_minus1 = value; } }
         private uint[][] view_id;
         public uint[][] ViewId { get { return view_id; } set { view_id = value; } }
-        private MvcdOpViewInfo mvcd_op_view_info;
-        public MvcdOpViewInfo MvcdOpViewInfo { get { return mvcd_op_view_info; } set { mvcd_op_view_info = value; } }
+        private MvcdOpViewInfo[][] mvcd_op_view_info;
+        public MvcdOpViewInfo[][] MvcdOpViewInfo { get { return mvcd_op_view_info; } set { mvcd_op_view_info = value; } }
         private byte[] profile_level_info_present_flag;
         public byte[] ProfileLevelInfoPresentFlag { get { return profile_level_info_present_flag; } set { profile_level_info_present_flag = value; } }
         private byte[] bitrate_info_present_flag;
@@ -12332,6 +12537,7 @@ priority_id[ i ] 5 u(5)
             this.temporal_id = new uint[num_operation_points_minus1 + 1];
             this.num_target_output_views_minus1 = new uint[num_operation_points_minus1 + 1];
             this.view_id = new uint[num_operation_points_minus1 + 1][];
+            this.mvcd_op_view_info = new MvcdOpViewInfo[num_operation_points_minus1 + 1][];
             this.profile_level_info_present_flag = new byte[num_operation_points_minus1 + 1];
             this.bitrate_info_present_flag = new byte[num_operation_points_minus1 + 1];
             this.frm_rate_info_present_flag = new byte[num_operation_points_minus1 + 1];
@@ -12369,10 +12575,11 @@ priority_id[ i ] 5 u(5)
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_target_output_views_minus1[i]);
 
                 this.view_id[i] = new uint[num_target_output_views_minus1[i] + 1];
+                this.mvcd_op_view_info[i] = new MvcdOpViewInfo[num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i][j]);
-                    size += stream.ReadClass<MvcdOpViewInfo>(size, () => new MvcdOpViewInfo(), out this.mvcd_op_view_info);
+                    size += stream.ReadClass<MvcdOpViewInfo>(size, () => new MvcdOpViewInfo(), out this.mvcd_op_view_info[i][j]);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.profile_level_info_present_flag[i]);
                 size += stream.ReadUnsignedInt(size, 1, out this.bitrate_info_present_flag[i]);
@@ -12411,7 +12618,7 @@ priority_id[ i ] 5 u(5)
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j]);
-                        size += stream.ReadClass<MvcdOpViewInfo>(size, () => new MvcdOpViewInfo(), out this.mvcd_op_view_info);
+                        size += stream.ReadClass<MvcdOpViewInfo>(size, () => new MvcdOpViewInfo(), out this.mvcd_op_view_info[i][j]);
                     }
                 }
                 else
@@ -12481,7 +12688,7 @@ priority_id[ i ] 5 u(5)
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.view_id[i][j]);
-                    size += stream.WriteClass<MvcdOpViewInfo>(this.mvcd_op_view_info);
+                    size += stream.WriteClass<MvcdOpViewInfo>(this.mvcd_op_view_info[i][j]);
                 }
                 size += stream.WriteUnsignedInt(1, this.profile_level_info_present_flag[i]);
                 size += stream.WriteUnsignedInt(1, this.bitrate_info_present_flag[i]);
@@ -12519,7 +12726,7 @@ priority_id[ i ] 5 u(5)
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.directly_dependent_view_id[i][j]);
-                        size += stream.WriteClass<MvcdOpViewInfo>(this.mvcd_op_view_info);
+                        size += stream.WriteClass<MvcdOpViewInfo>(this.mvcd_op_view_info[i][j]);
                     }
                 }
                 else
@@ -12896,8 +13103,8 @@ depth_representation_info( payloadSize ) {
         public uint[] zAxisReferenceView { get { return z_axis_reference_view; } set { z_axis_reference_view = value; } }
         private uint[] disparity_reference_view;
         public uint[] DisparityReferenceView { get { return disparity_reference_view; } set { disparity_reference_view = value; } }
-        private DepthRepresentationSeiElement depth_representation_sei_element;
-        public DepthRepresentationSeiElement DepthRepresentationSeiElement { get { return depth_representation_sei_element; } set { depth_representation_sei_element = value; } }
+        private DepthRepresentationSeiElement[] depth_representation_sei_element;
+        public DepthRepresentationSeiElement[] DepthRepresentationSeiElement { get { return depth_representation_sei_element; } set { depth_representation_sei_element = value; } }
         private uint depth_nonlinear_representation_num_minus1;
         public uint DepthNonlinearRepresentationNumMinus1 { get { return depth_nonlinear_representation_num_minus1; } set { depth_nonlinear_representation_num_minus1 = value; } }
         private uint[] depth_nonlinear_representation_model;
@@ -12947,6 +13154,7 @@ depth_representation_info( payloadSize ) {
             this.depth_info_view_id = new uint[numViews];
             this.z_axis_reference_view = new uint[numViews];
             this.disparity_reference_view = new uint[numViews];
+            this.depth_representation_sei_element = new DepthRepresentationSeiElement[numViews];
             for (i = 0; i < numViews; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.depth_info_view_id[i]);
@@ -12964,25 +13172,25 @@ depth_representation_info( payloadSize ) {
                 if (z_near_flag != 0)
                 {
                     size += stream.ReadClass<DepthRepresentationSeiElement>(size, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("ZNearSign"), H264Helpers.GetArray2("ZNearExp"),
-             H264Helpers.GetArray2("ZNearMantissa"), H264Helpers.GetArray2("ZNearManLen")), out this.depth_representation_sei_element);
+             H264Helpers.GetArray2("ZNearMantissa"), H264Helpers.GetArray2("ZNearManLen")), out this.depth_representation_sei_element[i]);
                 }
 
                 if (z_far_flag != 0)
                 {
                     size += stream.ReadClass<DepthRepresentationSeiElement>(size, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("ZFarSign"), H264Helpers.GetArray2("ZFarExp"),
-             H264Helpers.GetArray2("ZFarMantissa"), H264Helpers.GetArray2("ZFarManLen")), out this.depth_representation_sei_element);
+             H264Helpers.GetArray2("ZFarMantissa"), H264Helpers.GetArray2("ZFarManLen")), out this.depth_representation_sei_element[i]);
                 }
 
                 if (d_min_flag != 0)
                 {
                     size += stream.ReadClass<DepthRepresentationSeiElement>(size, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("DMinSign"), H264Helpers.GetArray2("DMinExp"),
-             H264Helpers.GetArray2("DMinMantissa"), H264Helpers.GetArray2("DMinManLen")), out this.depth_representation_sei_element);
+             H264Helpers.GetArray2("DMinMantissa"), H264Helpers.GetArray2("DMinManLen")), out this.depth_representation_sei_element[i]);
                 }
 
                 if (d_max_flag != 0)
                 {
                     size += stream.ReadClass<DepthRepresentationSeiElement>(size, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("DMaxSign"), H264Helpers.GetArray2("DMaxExp"),
-             H264Helpers.GetArray2("DMaxMantissa"), H264Helpers.GetArray2("DMaxManLen")), out this.depth_representation_sei_element);
+             H264Helpers.GetArray2("DMaxMantissa"), H264Helpers.GetArray2("DMaxManLen")), out this.depth_representation_sei_element[i]);
                 }
             }
 
@@ -13049,22 +13257,22 @@ depth_representation_info( payloadSize ) {
 
                 if (z_near_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(this.depth_representation_sei_element);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(this.depth_representation_sei_element[i]);
                 }
 
                 if (z_far_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(this.depth_representation_sei_element);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(this.depth_representation_sei_element[i]);
                 }
 
                 if (d_min_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(this.depth_representation_sei_element);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(this.depth_representation_sei_element[i]);
                 }
 
                 if (d_max_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(this.depth_representation_sei_element);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(this.depth_representation_sei_element[i]);
                 }
             }
 
@@ -13328,8 +13536,8 @@ depth_timing( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte per_view_depth_timing_flag;
         public byte PerViewDepthTimingFlag { get { return per_view_depth_timing_flag; } set { per_view_depth_timing_flag = value; } }
-        private DepthTimingOffset depth_timing_offset;
-        public DepthTimingOffset DepthTimingOffset { get { return depth_timing_offset; } set { depth_timing_offset = value; } }
+        private DepthTimingOffset[] depth_timing_offset;
+        public DepthTimingOffset[] DepthTimingOffset { get { return depth_timing_offset; } set { depth_timing_offset = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -13349,9 +13557,10 @@ depth_timing( payloadSize ) {
             if (per_view_depth_timing_flag != 0)
             {
 
+                this.depth_timing_offset = new DepthTimingOffset[H264Helpers.GetValue("NumDepthViews")];
                 for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
-                    size += stream.ReadClass<DepthTimingOffset>(size, () => new DepthTimingOffset(), out this.depth_timing_offset);
+                    size += stream.ReadClass<DepthTimingOffset>(size, () => new DepthTimingOffset(), out this.depth_timing_offset[i]);
                 }
             }
             else
@@ -13374,7 +13583,7 @@ depth_timing( payloadSize ) {
 
                 for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
                 {
-                    size += stream.WriteClass<DepthTimingOffset>(this.depth_timing_offset);
+                    size += stream.WriteClass<DepthTimingOffset>(this.depth_timing_offset[i]);
                 }
             }
             else
@@ -13853,8 +14062,8 @@ depth_sampling_info( payloadSize ) {
         public uint NumVideoPlusDepthViewsMinus1 { get { return num_video_plus_depth_views_minus1; } set { num_video_plus_depth_views_minus1 = value; } }
         private uint[] depth_grid_view_id;
         public uint[] DepthGridViewId { get { return depth_grid_view_id; } set { depth_grid_view_id = value; } }
-        private DepthGridPosition depth_grid_position;
-        public DepthGridPosition DepthGridPosition { get { return depth_grid_position; } set { depth_grid_position = value; } }
+        private DepthGridPosition[] depth_grid_position;
+        public DepthGridPosition[] DepthGridPosition { get { return depth_grid_position; } set { depth_grid_position = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -13880,10 +14089,11 @@ depth_sampling_info( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_video_plus_depth_views_minus1);
 
                 this.depth_grid_view_id = new uint[num_video_plus_depth_views_minus1 + 1];
+                this.depth_grid_position = new DepthGridPosition[num_video_plus_depth_views_minus1 + 1];
                 for (i = 0; i <= num_video_plus_depth_views_minus1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.depth_grid_view_id[i]);
-                    size += stream.ReadClass<DepthGridPosition>(size, () => new DepthGridPosition(), out this.depth_grid_position);
+                    size += stream.ReadClass<DepthGridPosition>(size, () => new DepthGridPosition(), out this.depth_grid_position[i]);
                 }
             }
             else
@@ -13912,7 +14122,7 @@ depth_sampling_info( payloadSize ) {
                 for (i = 0; i <= num_video_plus_depth_views_minus1; i++)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.depth_grid_view_id[i]);
-                    size += stream.WriteClass<DepthGridPosition>(this.depth_grid_position);
+                    size += stream.WriteClass<DepthGridPosition>(this.depth_grid_position[i]);
                 }
             }
             else
@@ -14094,8 +14304,8 @@ mvcd_vui_parameters_extension() {
         public byte[] VuiMvcdFixedFrameRateFlag { get { return vui_mvcd_fixed_frame_rate_flag; } set { vui_mvcd_fixed_frame_rate_flag = value; } }
         private byte[] vui_mvcd_nal_hrd_parameters_present_flag;
         public byte[] VuiMvcdNalHrdParametersPresentFlag { get { return vui_mvcd_nal_hrd_parameters_present_flag; } set { vui_mvcd_nal_hrd_parameters_present_flag = value; } }
-        private HrdParameters hrd_parameters;
-        public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
+        private HrdParameters[] hrd_parameters;
+        public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
         private byte[] vui_mvcd_vcl_hrd_parameters_present_flag;
         public byte[] VuiMvcdVclHrdParametersPresentFlag { get { return vui_mvcd_vcl_hrd_parameters_present_flag; } set { vui_mvcd_vcl_hrd_parameters_present_flag = value; } }
         private byte[] vui_mvcd_low_delay_hrd_flag;
@@ -14129,6 +14339,7 @@ mvcd_vui_parameters_extension() {
             this.vui_mvcd_time_scale = new uint[vui_mvcd_num_ops_minus1 + 1];
             this.vui_mvcd_fixed_frame_rate_flag = new byte[vui_mvcd_num_ops_minus1 + 1];
             this.vui_mvcd_nal_hrd_parameters_present_flag = new byte[vui_mvcd_num_ops_minus1 + 1];
+            this.hrd_parameters = new HrdParameters[vui_mvcd_num_ops_minus1 + 1];
             this.vui_mvcd_vcl_hrd_parameters_present_flag = new byte[vui_mvcd_num_ops_minus1 + 1];
             this.vui_mvcd_low_delay_hrd_flag = new byte[vui_mvcd_num_ops_minus1 + 1];
             this.vui_mvcd_pic_struct_present_flag = new byte[vui_mvcd_num_ops_minus1 + 1];
@@ -14158,13 +14369,13 @@ mvcd_vui_parameters_extension() {
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_mvcd_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters);
+                    size += stream.ReadClass<HrdParameters>(size, () => new HrdParameters(), out this.hrd_parameters[i]);
                 }
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -14209,13 +14420,13 @@ mvcd_vui_parameters_extension() {
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
                 size += stream.WriteUnsignedInt(1, this.vui_mvcd_vcl_hrd_parameters_present_flag[i]);
 
                 if (vui_mvcd_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters);
+                    size += stream.WriteClass<HrdParameters>(this.hrd_parameters[i]);
                 }
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0 ||
@@ -14999,24 +15210,24 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
         public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
         private byte element_equal_flag;
         public byte ElementEqualFlag { get { return element_equal_flag; } set { element_equal_flag = value; } }
-        private uint mantissa_len_minus1;
-        public uint MantissaLenMinus1 { get { return mantissa_len_minus1; } set { mantissa_len_minus1 = value; } }
-        private byte sign0;
-        public byte Sign0 { get { return sign0; } set { sign0 = value; } }
-        private uint exponent0;
-        public uint Exponent0 { get { return exponent0; } set { exponent0 = value; } }
-        private uint mantissa0;
-        public uint Mantissa0 { get { return mantissa0; } set { mantissa0 = value; } }
-        private byte skip_flag;
-        public byte SkipFlag { get { return skip_flag; } set { skip_flag = value; } }
-        private byte sign1;
-        public byte Sign1 { get { return sign1; } set { sign1 = value; } }
-        private byte exponent_skip_flag;
-        public byte ExponentSkipFlag { get { return exponent_skip_flag; } set { exponent_skip_flag = value; } }
-        private uint exponent1;
-        public uint Exponent1 { get { return exponent1; } set { exponent1 = value; } }
-        private int mantissa_diff;
-        public int MantissaDiff { get { return mantissa_diff; } set { mantissa_diff = value; } }
+        private uint[] mantissa_len_minus1;
+        public uint[] MantissaLenMinus1 { get { return mantissa_len_minus1; } set { mantissa_len_minus1 = value; } }
+        private byte[] sign0;
+        public byte[] Sign0 { get { return sign0; } set { sign0 = value; } }
+        private uint[] exponent0;
+        public uint[] Exponent0 { get { return exponent0; } set { exponent0 = value; } }
+        private uint[] mantissa0;
+        public uint[] Mantissa0 { get { return mantissa0; } set { mantissa0 = value; } }
+        private byte[] skip_flag;
+        public byte[] SkipFlag { get { return skip_flag; } set { skip_flag = value; } }
+        private byte[] sign1;
+        public byte[] Sign1 { get { return sign1; } set { sign1 = value; } }
+        private byte[] exponent_skip_flag;
+        public byte[] ExponentSkipFlag { get { return exponent_skip_flag; } set { exponent_skip_flag = value; } }
+        private uint[] exponent1;
+        public uint[] Exponent1 { get { return exponent1; } set { exponent1 = value; } }
+        private int[] mantissa_diff;
+        public int[] MantissaDiff { get { return mantissa_diff; } set { mantissa_diff = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int ReadNextBits { get; set; }
@@ -15055,44 +15266,53 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                 numValues = 1;
             }
 
+            this.mantissa_len_minus1 = new uint[numValues];
+            this.sign0 = new byte[numValues];
+            this.exponent0 = new uint[numValues];
+            this.mantissa0 = new uint[numValues];
+            this.skip_flag = new byte[numValues];
+            this.sign1 = new byte[numValues];
+            this.exponent_skip_flag = new byte[numValues];
+            this.exponent1 = new uint[numValues];
+            this.mantissa_diff = new int[numValues];
             for (i = 0; i < numValues; i++)
             {
 
                 if (predDirection == 2 && i == 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 5, out this.mantissa_len_minus1);
-                    outManLen[index, i] = mantissa_len_minus1 + 1;
+                    size += stream.ReadUnsignedInt(size, 5, out this.mantissa_len_minus1[i]);
+                    outManLen[index, i] = mantissa_len_minus1[i] + 1;
                 }
 
                 if (predDirection == 2)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.sign0);
-                    outSign[index, i] = sign0;
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("exponent0"), out this.exponent0);
-                    outExp[index, i] = exponent0;
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa0"), out this.mantissa0);
-                    outMantissa[index, i] = mantissa0;
+                    size += stream.ReadUnsignedInt(size, 1, out this.sign0[i]);
+                    outSign[index, i] = sign0[i];
+                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("exponent0"), out this.exponent0[i]);
+                    outExp[index, i] = exponent0[i];
+                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa0"), out this.mantissa0[i]);
+                    outMantissa[index, i] = mantissa0[i];
                 }
                 else
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.skip_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.skip_flag[i]);
 
-                    if (skip_flag == 0)
+                    if (skip_flag[i] == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign1);
-                        outSign[index, i] = sign1;
-                        size += stream.ReadUnsignedInt(size, 1, out this.exponent_skip_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign1[i]);
+                        outSign[index, i] = sign1[i];
+                        size += stream.ReadUnsignedInt(size, 1, out this.exponent_skip_flag[i]);
 
-                        if (exponent_skip_flag == 0)
+                        if (exponent_skip_flag[i] == 0)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("exponent1"), out this.exponent1);
-                            outExp[index, i] = exponent1;
+                            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("exponent1"), out this.exponent1[i]);
+                            outExp[index, i] = exponent1[i];
                         }
                         else
                         {
                             outExp[index, i] = outExp[H264Helpers.GetValue("ref_dps_id0"), i];
                         }
-                        size += stream.ReadSignedIntGolomb(size, out this.mantissa_diff);
+                        size += stream.ReadSignedIntGolomb(size, out this.mantissa_diff[i]);
 
                         if (predDirection == 0)
                         {
@@ -15102,7 +15322,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         {
                             mantissaPred = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
                         }
-                        outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff);
+                        outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff[i]);
                         outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
                     }
                     else
@@ -15157,39 +15377,39 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
                 if (predDirection == 2 && i == 0)
                 {
-                    size += stream.WriteUnsignedInt(5, this.mantissa_len_minus1);
-                    outManLen[index, i] = mantissa_len_minus1 + 1;
+                    size += stream.WriteUnsignedInt(5, this.mantissa_len_minus1[i]);
+                    outManLen[index, i] = mantissa_len_minus1[i] + 1;
                 }
 
                 if (predDirection == 2)
                 {
-                    size += stream.WriteUnsignedInt(1, this.sign0);
-                    outSign[index, i] = sign0;
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("exponent0"), this.exponent0);
-                    outExp[index, i] = exponent0;
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa0"), this.mantissa0);
-                    outMantissa[index, i] = mantissa0;
+                    size += stream.WriteUnsignedInt(1, this.sign0[i]);
+                    outSign[index, i] = sign0[i];
+                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("exponent0"), this.exponent0[i]);
+                    outExp[index, i] = exponent0[i];
+                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa0"), this.mantissa0[i]);
+                    outMantissa[index, i] = mantissa0[i];
                 }
                 else
                 {
-                    size += stream.WriteUnsignedInt(1, this.skip_flag);
+                    size += stream.WriteUnsignedInt(1, this.skip_flag[i]);
 
-                    if (skip_flag == 0)
+                    if (skip_flag[i] == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.sign1);
-                        outSign[index, i] = sign1;
-                        size += stream.WriteUnsignedInt(1, this.exponent_skip_flag);
+                        size += stream.WriteUnsignedInt(1, this.sign1[i]);
+                        outSign[index, i] = sign1[i];
+                        size += stream.WriteUnsignedInt(1, this.exponent_skip_flag[i]);
 
-                        if (exponent_skip_flag == 0)
+                        if (exponent_skip_flag[i] == 0)
                         {
-                            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("exponent1"), this.exponent1);
-                            outExp[index, i] = exponent1;
+                            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("exponent1"), this.exponent1[i]);
+                            outExp[index, i] = exponent1[i];
                         }
                         else
                         {
                             outExp[index, i] = outExp[H264Helpers.GetValue("ref_dps_id0"), i];
                         }
-                        size += stream.WriteSignedIntGolomb(this.mantissa_diff);
+                        size += stream.WriteSignedIntGolomb(this.mantissa_diff[i]);
 
                         if (predDirection == 0)
                         {
@@ -15199,7 +15419,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                         {
                             mantissaPred = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
                         }
-                        outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff);
+                        outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff[i]);
                         outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
                     }
                     else
