@@ -114,26 +114,6 @@ namespace SharpH264
                     return (uint)(_sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || _sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0);
                 case "pic_struct_present_flag":
                     return _sps.SeqParameterSetData.VuiParameters.PicStructPresentFlag;
-                case "NumClockTS":
-                    switch(_sei.SeiMessage.SeiPayload.PicTiming.PicStruct)
-                    {
-                        case 0:
-                        case 1:
-                        case 2:
-                            return 1;
-                        case 3:
-                        case 4:
-                            return 2;
-                        case 5:
-                        case 6:
-                            return 3;
-                        case 7:
-                            return 2;
-                        case 8:
-                            return 3;
-                        default:
-                            throw new NotSupportedException();
-                    }
                 case "NumDepthViews":
                     return _subsetSps.SeqParameterSetMvcdExtension.NumDepthViews;
                 case "PicSizeInMapUnits":

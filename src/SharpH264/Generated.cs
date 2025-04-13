@@ -2861,8 +2861,32 @@ pic_timing( payloadSize ) {
             {
                 size += stream.ReadUnsignedInt(size, 4, out this.pic_struct);
 
-                this.clock_timestamp_flag = new byte[H264Helpers.GetValue("NumClockTS")];
-                for (i = 0; i < H264Helpers.GetValue("NumClockTS"); i++)
+                this.clock_timestamp_flag = new byte[this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }];
+                for (i = 0; i < this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.clock_timestamp_flag[i]);
 
@@ -2931,7 +2955,19 @@ pic_timing( payloadSize ) {
             {
                 size += stream.WriteUnsignedInt(4, this.pic_struct);
 
-                for (i = 0; i < H264Helpers.GetValue("NumClockTS"); i++)
+                for (i = 0; i < this.pic_struct switch
+                {
+                    0u => 1,
+                    1u => 1,
+                    2u => 1,
+                    3u => 2,
+                    4u => 2,
+                    5u => 3,
+                    6u => 3,
+                    7u => 2,
+                    8u => 3,
+                    _ => throw new NotSupportedException()
+                }; i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.clock_timestamp_flag[i]);
 

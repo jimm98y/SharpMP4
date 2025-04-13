@@ -885,7 +885,7 @@ namespace Sharp{type}
             string[] replacementsValue = new string[]
             {
                 "CodedBlockPatternLuma", "CodedBlockPatternChroma", "MbWidthC", "MbHeightC", "SubWidthC", "SubHeightC",
-                "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "NumClockTS", "PicSizeInMapUnits",
+                "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "PicSizeInMapUnits",
                 "CurrMbAddr", "leftMbVSSkipped", "upMbVSSkipped", "predWeight0", "deltaFlag", "NumDepthViews", "IdrPicFlag",
                 "ChromaArrayType", "AllViewsPairedFlag"
             };
@@ -916,6 +916,8 @@ namespace Sharp{type}
                     condition = condition.Replace(match, $"H264Helpers.GetArray(\"{match}\")");
                 }
             }
+
+            condition = condition.Replace("NumClockTS", "this.pic_struct switch\r\n{\r\n0u => 1,\r\n1u => 1,\r\n2u => 1,\r\n3u => 2,\r\n4u => 2,\r\n5u => 3,\r\n6u => 3,\r\n7u => 2,\r\n8u => 3,\r\n_ => throw new NotSupportedException()\r\n}");
 
             condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] == 0");
             condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] == 0");

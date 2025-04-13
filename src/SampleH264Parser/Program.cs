@@ -27,65 +27,72 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
         .Children.OfType<SampleDescriptionBox>().Single()
         .Children.OfType<VisualSampleEntry>().Single();
 
-    var avcC = h264VisualSample.Children.OfType<AVCConfigurationBox>().Single();
-    int nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // 4 bytes
-
-    SeqParameterSetRbsp sps;
-    foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
+    var avcC = h264VisualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
+    if (avcC != null)
     {
-        using (ItuStream stream = new ItuStream(new MemoryStream(spsBinary)))
+        int nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // 4 bytes
+
+        SeqParameterSetRbsp sps;
+        foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
         {
-            NalUnit nu = new NalUnit((uint)spsBinary.Length);
-            nu.Read(stream);
-            H264Helpers.SetNalUnit(nu);
-
-            sps = new SeqParameterSetRbsp();
-            H264Helpers.SetSeqParameterSet(sps);
-
-            sps.Read(stream);
-
-            var ms = new MemoryStream();
-            using (ItuStream wstream = new ItuStream(ms))
+            using (ItuStream stream = new ItuStream(new MemoryStream(spsBinary)))
             {
-                nu.Write(wstream);
-                sps.Write(wstream);
+                NalUnit nu = new NalUnit((uint)spsBinary.Length);
+                nu.Read(stream);
+                H264Helpers.SetNalUnit(nu);
 
-                byte[] wbytes = ms.ToArray();
-                if (!wbytes.SequenceEqual(spsBinary))
+                sps = new SeqParameterSetRbsp();
+                H264Helpers.SetSeqParameterSet(sps);
+
+                sps.Read(stream);
+
+                var ms = new MemoryStream();
+                using (ItuStream wstream = new ItuStream(ms))
                 {
-                    throw new Exception("Failed to write SPS");
+                    nu.Write(wstream);
+                    sps.Write(wstream);
+
+                    byte[] wbytes = ms.ToArray();
+                    if (!wbytes.SequenceEqual(spsBinary))
+                    {
+                        throw new Exception("Failed to write SPS");
+                    }
+                }
+            }
+        }
+
+        PicParameterSetRbsp pps;
+        foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
+        {
+            using (ItuStream stream = new ItuStream(new MemoryStream(ppsBinary)))
+            {
+                NalUnit nu = new NalUnit((uint)ppsBinary.Length);
+                nu.Read(stream);
+                H264Helpers.SetNalUnit(nu);
+
+                pps = new PicParameterSetRbsp();
+                H264Helpers.SetPicParameterSet(pps);
+
+                pps.Read(stream);
+
+                var ms = new MemoryStream();
+                using (ItuStream wstream = new ItuStream(ms))
+                {
+                    nu.Write(wstream);
+                    pps.Write(wstream);
+
+                    byte[] wbytes = ms.ToArray();
+                    if (!wbytes.SequenceEqual(ppsBinary))
+                    {
+                        throw new Exception("Failed to write PPS");
+                    }
                 }
             }
         }
     }
-
-    PicParameterSetRbsp pps;
-    foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
+    else
     {
-        using (ItuStream stream = new ItuStream(new MemoryStream(ppsBinary)))
-        {
-            NalUnit nu = new NalUnit((uint)ppsBinary.Length);
-            nu.Read(stream);
-            H264Helpers.SetNalUnit(nu);
-
-            pps = new PicParameterSetRbsp();
-            H264Helpers.SetPicParameterSet(pps);
-
-            pps.Read(stream);
-
-            var ms = new MemoryStream();
-            using (ItuStream wstream = new ItuStream(ms))
-            {
-                nu.Write(wstream);
-                pps.Write(wstream);
-
-                byte[] wbytes = ms.ToArray();
-                if (!wbytes.SequenceEqual(ppsBinary))
-                {
-                    throw new Exception("Failed to write PPS");
-                }
-            }
-        }
+        throw new NotSupportedException();
     }
 
     MovieBox moov = null;
@@ -159,7 +166,8 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                 SampleSizeBox sample_size_box = sample_table_box.Children.OfType<SampleSizeBox>().Single();
                 uint[] sampleSizes = sample_size_box.SampleSize > 0 ? Enumerable.Repeat(sample_size_box.SampleSize, (int)sample_size_box.SampleCount).ToArray() : sample_size_box.EntrySize;
                 ulong[] chunkOffsets = chunk_offsets_box != null ? chunk_offsets_box.ChunkOffset.Select(x => (ulong)x).ToArray() : chunk_offsets_large_box.ChunkOffset;
-                                
+
+                // https://developer.apple.com/documentation/quicktime-file-format/sample-to-chunk_atom/sample-to-chunk_table
                 int s2c_index = 0;
                 uint next_run = 0;
                 int sample_idx = 0;
@@ -191,10 +199,6 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                             uint nalUnitLength = 0;
                             size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
                             offset += 4;
-
-                            if (nalUnitLength > sampleSize)
-                                throw new Exception();
-
                             size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                             offset += sampleData.Length;
                             ReadNALu(sampleData);
