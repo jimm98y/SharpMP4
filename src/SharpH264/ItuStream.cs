@@ -11,7 +11,7 @@ namespace SharpH264
         ulong Read(ItuStream stream);
         ulong Write(ItuStream stream);
         int HasMoreRbspData { get; set; }
-        int ReadNextBits { get; set; }
+        int[] ReadNextBits { get; set; }
     }
 
     public class ItuStream : IDisposable
@@ -27,6 +27,7 @@ namespace SharpH264
 
         private int _rbspDataCounter = 0;
         private int _readNextBitsCounter = 0;
+        private int _readNextBitsIndex = 0;
 
         private bool _disposedValue;
 
@@ -368,19 +369,47 @@ namespace SharpH264
             {
                 ituStream.ReadBits(_bitsPosition % 8);
                 int ret = (int)ituStream.ReadBits(8);
+
+                if (serializable.ReadNextBits == null)
+                {
+                    serializable.ReadNextBits = new int[1];
+                }
+
                 if (ret == 0xFF)
-                    serializable.ReadNextBits++;
+                {
+                    serializable.ReadNextBits[serializable.ReadNextBits.Length - 1]++;
+                }
+                else
+                {
+                    var old = serializable.ReadNextBits;
+                    serializable.ReadNextBits = new int[old.Length + 1];
+                    Array.Copy(old, serializable.ReadNextBits, old.Length);
+                }
                 return ret;
             }
         }
 
         internal int WriteNextBits(IItuSerializable serializable, int count)
         {
-            if (serializable.ReadNextBits == 0)
+            if (serializable.ReadNextBits == null)
                 return 0;
-            else if (_readNextBitsCounter == 0)
-                _readNextBitsCounter = serializable.ReadNextBits;
-            return --_readNextBitsCounter != 0 ? 0xFF : 0;
+
+            if (_readNextBitsCounter == 0 && _readNextBitsIndex == 0)
+            {
+                _readNextBitsCounter = serializable.ReadNextBits[_readNextBitsIndex];
+            }
+
+            if (_readNextBitsCounter != 0)
+            {
+                _readNextBitsCounter--;
+                return 0xFF;
+            }
+            else
+            {
+                _readNextBitsIndex++;
+                _readNextBitsCounter = serializable.ReadNextBits[_readNextBitsIndex];
+                return 0;
+            }
         }
 
         internal ulong ReadUnsignedIntVariable(ulong size, uint count, out uint value)
