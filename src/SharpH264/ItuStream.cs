@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -8,8 +7,8 @@ namespace SharpH264
 {
     public interface IItuSerializable
     {
-        ulong Read(ItuStream stream);
-        ulong Write(ItuStream stream);
+        ulong Read(H264Context context, ItuStream stream);
+        ulong Write(H264Context context, ItuStream stream);
         int HasMoreRbspData { get; set; }
         int[] ReadNextBits { get; set; }
     }
@@ -172,31 +171,31 @@ namespace SharpH264
             return _bitsPosition % 8 == 0;
         }
 
-        internal ulong ReadClass<T>(ulong size, Func<T> factory, out T value) where T : IItuSerializable
+        internal ulong ReadClass<T>(ulong size, H264Context context, Func<T> factory, out T value) where T : IItuSerializable
         {
             T c = factory();
-            ulong read = c.Read(this);
+            ulong read = c.Read(context, this);
             value = c;
             return read;
         }
 
-        internal ulong ReadClass<T>(ulong size, Func<T> factory, out T[] value) where T : IItuSerializable
+        internal ulong ReadClass<T>(ulong size, H264Context context, Func<T> factory, out T[] value) where T : IItuSerializable
         {
             T c;
-            ulong read = ReadClass(size, factory, out c);
+            ulong read = ReadClass(size, context, factory, out c);
             value = new T[] { c };
             return read;
         }
 
-        internal ulong WriteClass<T>(T value) where T : IItuSerializable
+        internal ulong WriteClass<T>(H264Context context, T value) where T : IItuSerializable
         {
-            ulong size = value.Write(this);
+            ulong size = value.Write(context, this);
             return size;
         }
 
-        internal ulong WriteClass<T>(T[] value) where T : IItuSerializable
+        internal ulong WriteClass<T>(H264Context context, T[] value) where T : IItuSerializable
         {
-            ulong size = value.Single().Write(this);
+            ulong size = value.Single().Write(context, this);
             return size;
         }
 

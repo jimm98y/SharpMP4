@@ -26,6 +26,18 @@ namespace SharpH264
         public const uint Extended_SAR = 255;
     }
 
+    public class H264Context
+    {
+        public NalUnit NalHeader { get; set; }
+        public SeqParameterSetRbsp Sps { get; set; }
+        public PicParameterSetRbsp Pps { get; set; }
+        public SubsetSeqParameterSetRbsp SubsetSps { get; set; }
+        public SeqParameterSetExtensionRbsp SpsExtension { get; set; }
+        public DepthParameterSetRbsp Dps { get; set; }
+        public AccessUnitDelimiterRbsp Au { get; set; }
+        public SeiRbsp Sei { get; set; }
+    }
+
     public class H264Helpers
     {
         private static NalUnit _nalHeader;
@@ -86,8 +98,7 @@ namespace SharpH264
                         // The variable AllViewsPairedFlag is derived as follows:
                         // AllViewsPairedFlag = 1 for( i = 1; i <= num_views_minus1; i++ ) AllViewsPairedFlag = ( AllViewsPairedFlag && depth_view_present_flag[ i ] && texture_view_present_flag[ i ] )
                         uint allViewsPairedFlag = 1;
-                        for (int i = 1; i <= GetValue("num_views_minus1"); i++)
-                            allViewsPairedFlag = (uint)((allViewsPairedFlag != 0 && GetArray("depth_view_present_flag")[i] != 0 && GetArray("texture_view_present_flag")[i] != 0) ? 1 : 0);
+                        for (int i = 1; i <= GetValue("num_views_minus1"); i++) allViewsPairedFlag = (uint)((allViewsPairedFlag != 0 && GetArray("depth_view_present_flag")[i] != 0 && GetArray("texture_view_present_flag")[i] != 0) ? 1 : 0);
                         return allViewsPairedFlag;
                     }
                 case "ChromaArrayType":
@@ -117,9 +128,7 @@ namespace SharpH264
                 case "NumDepthViews":
                     return _subsetSps.SeqParameterSetMvcdExtension.NumDepthViews;
                 case "PicSizeInMapUnits":
-                    uint picWidthInMbs = _sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1;
-                    uint picHeightInMapUnits = _sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1;
-                    return picWidthInMbs * picHeightInMapUnits;
+                    return (_sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (_sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1);
                 case "time_offset_length":
                     return _sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength;
                 case "frame_mbs_only_flag":

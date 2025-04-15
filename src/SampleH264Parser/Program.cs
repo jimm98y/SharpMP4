@@ -27,67 +27,22 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
         .Children.OfType<SampleDescriptionBox>().Single()
         .Children.OfType<VisualSampleEntry>().Single();
 
+    H264Context readContext = new H264Context();
+    H264Context writeContext = new H264Context();
+
     var avcC = h264VisualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
     if (avcC != null)
     {
         int nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // 4 bytes
 
-        SeqParameterSetRbsp sps;
         foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
         {
-            using (ItuStream stream = new ItuStream(new MemoryStream(spsBinary)))
-            {
-                NalUnit nu = new NalUnit((uint)spsBinary.Length);
-                nu.Read(stream);
-                H264Helpers.SetNalUnit(nu);
-
-                sps = new SeqParameterSetRbsp();
-                H264Helpers.SetSeqParameterSet(sps);
-
-                sps.Read(stream);
-
-                var ms = new MemoryStream();
-                using (ItuStream wstream = new ItuStream(ms))
-                {
-                    nu.Write(wstream);
-                    sps.Write(wstream);
-
-                    byte[] wbytes = ms.ToArray();
-                    if (!wbytes.SequenceEqual(spsBinary))
-                    {
-                        throw new Exception("Failed to write SPS");
-                    }
-                }
-            }
+            ReadNALu(readContext, writeContext, spsBinary);
         }
 
-        PicParameterSetRbsp pps;
         foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
         {
-            using (ItuStream stream = new ItuStream(new MemoryStream(ppsBinary)))
-            {
-                NalUnit nu = new NalUnit((uint)ppsBinary.Length);
-                nu.Read(stream);
-                H264Helpers.SetNalUnit(nu);
-
-                pps = new PicParameterSetRbsp();
-                H264Helpers.SetPicParameterSet(pps);
-
-                pps.Read(stream);
-
-                var ms = new MemoryStream();
-                using (ItuStream wstream = new ItuStream(ms))
-                {
-                    nu.Write(wstream);
-                    pps.Write(wstream);
-
-                    byte[] wbytes = ms.ToArray();
-                    if (!wbytes.SequenceEqual(ppsBinary))
-                    {
-                        throw new Exception("Failed to write PPS");
-                    }
-                }
-            }
+            ReadNALu(readContext, writeContext, ppsBinary);
         }
     }
     else
@@ -142,7 +97,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                                 offset += 4;
                                 size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                                 offset += sampleData.Length;
-                                ReadNALu(sampleData);
+                                ReadNALu(readContext, writeContext, sampleData);
                             } while (offset < sampleSize);
                         }
                         else
@@ -201,7 +156,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                             offset += 4;
                             size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                             offset += sampleData.Length;
-                            ReadNALu(sampleData);
+                            ReadNALu(readContext, writeContext, sampleData);
                         } while (offset < sampleSize);
                     }
                 }
@@ -212,32 +167,74 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
     }
 }
 
-static void ReadNALu(byte[] sampleData)
+static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] sampleData)
 {
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
     {
         ulong ituSize = 0;
         NalUnit nu = new NalUnit((uint)sampleData.Length);
-        ituSize += nu.Read(stream);
+        ituSize += nu.Read(readContext, stream);
         H264Helpers.SetNalUnit(nu);
 
-        if (nu.NalUnitType == 6)
+        if(nu.NalUnitType == 7)
+        {
+            SeqParameterSetRbsp sps = new SeqParameterSetRbsp();
+            H264Helpers.SetSeqParameterSet(sps);
+
+            sps.Read(readContext, stream);
+
+            var ms = new MemoryStream();
+            using (ItuStream wstream = new ItuStream(ms))
+            {
+                nu.Write(readContext, wstream);
+                sps.Write(readContext, wstream);
+
+                byte[] wbytes = ms.ToArray();
+                if (!wbytes.SequenceEqual(sampleData))
+                {
+                    throw new Exception("Failed to write SPS");
+                }
+            }
+        }
+        else if(nu.NalUnitType == 8)
+        {
+            PicParameterSetRbsp pps = new PicParameterSetRbsp();
+            H264Helpers.SetPicParameterSet(pps);
+
+            pps.Read(readContext, stream);
+
+            var ms = new MemoryStream();
+            using (ItuStream wstream = new ItuStream(ms))
+            {
+                nu.Write(readContext, wstream);
+                pps.Write(readContext, wstream);
+
+                byte[] wbytes = ms.ToArray();
+                if (!wbytes.SequenceEqual(sampleData))
+                {
+                    throw new Exception("Failed to write PPS");
+                }
+            }
+        }
+        else if (nu.NalUnitType == 6)
         {
             Debug.WriteLine("NALU: SEI");
 
             SeiRbsp sei = new SeiRbsp();
             H264Helpers.SetSei(sei);
-            ituSize += sei.Read(stream);
+            ituSize += sei.Read(readContext, stream);
 
             var ms = new MemoryStream();
             using (ItuStream wstream = new ItuStream(ms))
             {
-                nu.Write(wstream);
-                sei.Write(wstream);
+                nu.Write(readContext, wstream);
+                sei.Write(readContext, wstream);
 
                 byte[] wbytes = ms.ToArray();
                 if (!wbytes.SequenceEqual(sampleData))
                 {
+                    Debug.WriteLine(Convert.ToHexString(wbytes));
+                    Debug.WriteLine(Convert.ToHexString(sampleData));
                     throw new Exception("Failed to write SEI");
                 }
             }

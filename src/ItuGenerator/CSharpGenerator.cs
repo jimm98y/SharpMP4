@@ -56,7 +56,7 @@ namespace Sharp{type}
             resultCode += GenerateCtor(ituClass);
 
             resultCode += $@"
-         public ulong Read(ItuStream stream)
+         public ulong Read(H264Context context, ItuStream stream)
          {{
              ulong size = 0;
 ";
@@ -74,7 +74,7 @@ namespace Sharp{type}
 ";
 
             resultCode += $@"
-         public ulong Write(ItuStream stream)
+         public ulong Write(H264Context context, ItuStream stream)
          {{
              ulong size = 0;
 ";
@@ -301,9 +301,6 @@ namespace Sharp{type}
                 fieldValue = fieldValue.Replace("Max(", "Math.Max(");
 
                 // TODO
-                fieldValue = fieldValue.Replace("NextMbAddress", "H264Helpers.NextMbAddress");
-                fieldValue = fieldValue.Replace("RLESkipContext", "H264Helpers.RLESkipContext");
-                fieldValue = fieldValue.Replace("MbaffFrameFlag", "H264Helpers.GetMbaffFrameFlag()");
                 fieldValue = fieldValue.Replace("mantissaPred + mantissa_diff", "(uint)(mantissaPred + mantissa_diff)");
                 fieldValue = fieldValue.Replace("delta_scale", "delta_scale[j]");
 
@@ -417,7 +414,7 @@ namespace Sharp{type}
                     return "stream.WriteBits(8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"stream.WriteClass<{ituField.ClassType.ToPropertyCase()}>(";
+                        return $"stream.WriteClass<{ituField.ClassType.ToPropertyCase()}>(context, ";
                     throw new NotImplementedException();
             }
         }
@@ -492,7 +489,7 @@ namespace Sharp{type}
                     return "stream.ReadBits(size, 8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, () => new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter)}, ";
+                        return $"stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, () => new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter)}, ";
                     throw new NotImplementedException();
             }
         }
