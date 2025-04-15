@@ -968,7 +968,6 @@ subset_seq_parameter_set_rbsp() {
     /*
 
 
-
 pic_parameter_set_rbsp() { 
  pic_parameter_set_id 1 ue(v) 
  seq_parameter_set_id 1 ue(v) 
@@ -1502,6 +1501,127 @@ access_unit_delimiter_rbsp() {
     /*
     
 
+slice_layer_without_partitioning_rbsp() {
+    slice_header() 2
+    /*slice_data()*//*  /* all categories of slice_data() syntax *//* /*2 | 3 | 4*//*
+    /*rbsp_slice_trailing_bits() 2*//*
+}
+    */
+    public class SliceLayerWithoutPartitioningRbsp : IItuSerializable
+    {
+        private SliceHeader slice_header;
+        public SliceHeader SliceHeader { get { return slice_header; } set { slice_header = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceLayerWithoutPartitioningRbsp()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadClass<SliceHeader>(size, context, () => new SliceHeader(), out this.slice_header);
+            /* slice_data() */
+
+            /*  all categories of slice_data() syntax  */
+
+            /* 2 | 3 | 4 */
+
+            /* rbsp_slice_trailing_bits() 2 */
+
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteClass<SliceHeader>(context, this.slice_header);
+            /* slice_data() */
+
+            /*  all categories of slice_data() syntax  */
+
+            /* 2 | 3 | 4 */
+
+            /* rbsp_slice_trailing_bits() 2 */
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+rbsp_slice_trailing_bits() {
+    rbsp_trailing_bits() All
+    if (entropy_coding_mode_flag)
+        while (more_rbsp_trailing_data())   
+   cabac_zero_word  /* equal to 0x0000 *//* All f(16)
+}
+    */
+    public class RbspSliceTrailingBits : IItuSerializable
+    {
+        private RbspTrailingBits rbsp_trailing_bits;
+        public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
+        private uint cabac_zero_word;
+        public uint CabacZeroWord { get { return cabac_zero_word; } set { cabac_zero_word = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public RbspSliceTrailingBits()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadClass<RbspTrailingBits>(size, context, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
+
+            if (context.Pps.EntropyCodingModeFlag != 0)
+            {
+
+                while (stream.MoreRbspTrailingData())
+                {
+                    size += stream.ReadFixed(size, 16, out this.cabac_zero_word); // equal to 0x0000 
+                }
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+
+            if (context.Pps.EntropyCodingModeFlag != 0)
+            {
+
+                while (stream.MoreRbspTrailingData())
+                {
+                    size += stream.WriteFixed(16, this.cabac_zero_word); // equal to 0x0000 
+                }
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+   
+
 rbsp_trailing_bits() { 
  rbsp_stop_one_bit  /* equal to 1 *//* All f(1) 
  while( !byte_aligned() )   
@@ -1555,6 +1675,977 @@ rbsp_trailing_bits() {
 
     /*
    
+
+prefix_nal_unit_rbsp() {
+    if (svc_extension_flag)
+        prefix_nal_unit_svc()  /* specified in Annex G *//* 2
+}
+    */
+    public class PrefixNalUnitRbsp : IItuSerializable
+    {
+        private PrefixNalUnitSvc prefix_nal_unit_svc;
+        public PrefixNalUnitSvc PrefixNalUnitSvc { get { return prefix_nal_unit_svc; } set { prefix_nal_unit_svc = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public PrefixNalUnitRbsp()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.NalHeader.SvcExtensionFlag != 0)
+            {
+                size += stream.ReadClass<PrefixNalUnitSvc>(size, context, () => new PrefixNalUnitSvc(), out this.prefix_nal_unit_svc); // specified in Annex G 
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.NalHeader.SvcExtensionFlag != 0)
+            {
+                size += stream.WriteClass<PrefixNalUnitSvc>(context, this.prefix_nal_unit_svc); // specified in Annex G 
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+  
+
+slice_layer_extension_rbsp() {
+    if (svc_extension_flag) {
+        slice_header_in_scalable_extension()  /* specified in Annex G *//* 2
+        /*if (!slice_skip_flag)*//*
+            /*slice_data_in_scalable_extension()*//*  /* specified in Annex G *//* /*2 | 3 | 4*//*
+    } else if (avc_3d_extension_flag) {
+        slice_header_in_3davc_extension()  /* specified in Annex J *//* 2
+        /*slice_data_in_3davc_extension()*//*  /* specified in Annex J *//* /*2 | 3 | 4*//*
+    } else {
+        slice_header() 2
+        /*slice_data() 2 | 3 | 4*//*
+    }
+    /*rbsp_slice_trailing_bits() 2*//*
+}
+    */
+    public class SliceLayerExtensionRbsp : IItuSerializable
+    {
+        private SliceHeaderInScalableExtension slice_header_in_scalable_extension;
+        public SliceHeaderInScalableExtension SliceHeaderInScalableExtension { get { return slice_header_in_scalable_extension; } set { slice_header_in_scalable_extension = value; } }
+        private SliceHeaderIn3davcExtension slice_header_in_3davc_extension;
+        public SliceHeaderIn3davcExtension SliceHeaderIn3davcExtension { get { return slice_header_in_3davc_extension; } set { slice_header_in_3davc_extension = value; } }
+        private SliceHeader slice_header;
+        public SliceHeader SliceHeader { get { return slice_header; } set { slice_header = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceLayerExtensionRbsp()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.NalHeader.SvcExtensionFlag != 0)
+            {
+                size += stream.ReadClass<SliceHeaderInScalableExtension>(size, context, () => new SliceHeaderInScalableExtension(), out this.slice_header_in_scalable_extension); // specified in Annex G 
+                /* if (!slice_skip_flag) */
+
+                /* slice_data_in_scalable_extension() */
+
+                /*  specified in Annex G  */
+
+                /* 2 | 3 | 4 */
+
+            }
+            else if (context.NalHeader.Avc3dExtensionFlag != 0)
+            {
+                size += stream.ReadClass<SliceHeaderIn3davcExtension>(size, context, () => new SliceHeaderIn3davcExtension(), out this.slice_header_in_3davc_extension); // specified in Annex J 
+                /* slice_data_in_3davc_extension() */
+
+                /*  specified in Annex J  */
+
+                /* 2 | 3 | 4 */
+
+            }
+            else
+            {
+                size += stream.ReadClass<SliceHeader>(size, context, () => new SliceHeader(), out this.slice_header);
+                /* slice_data() 2 | 3 | 4 */
+
+            }
+            /* rbsp_slice_trailing_bits() 2 */
+
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.NalHeader.SvcExtensionFlag != 0)
+            {
+                size += stream.WriteClass<SliceHeaderInScalableExtension>(context, this.slice_header_in_scalable_extension); // specified in Annex G 
+                /* if (!slice_skip_flag) */
+
+                /* slice_data_in_scalable_extension() */
+
+                /*  specified in Annex G  */
+
+                /* 2 | 3 | 4 */
+
+            }
+            else if (context.NalHeader.Avc3dExtensionFlag != 0)
+            {
+                size += stream.WriteClass<SliceHeaderIn3davcExtension>(context, this.slice_header_in_3davc_extension); // specified in Annex J 
+                /* slice_data_in_3davc_extension() */
+
+                /*  specified in Annex J  */
+
+                /* 2 | 3 | 4 */
+
+            }
+            else
+            {
+                size += stream.WriteClass<SliceHeader>(context, this.slice_header);
+                /* slice_data() 2 | 3 | 4 */
+
+            }
+            /* rbsp_slice_trailing_bits() 2 */
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+slice_header() { 
+ first_mb_in_slice 2 ue(v) 
+ slice_type 2 ue(v) 
+ pic_parameter_set_id 2 ue(v)
+    if (separate_colour_plane_flag == 1)   
+  colour_plane_id 2 u(2) 
+ frame_num 2 u(v)
+    if (!frame_mbs_only_flag) {   
+  field_pic_flag 2 u(1)
+        if (field_pic_flag)   
+   bottom_field_flag 2 u(1)
+    }
+    if (IdrPicFlag)   
+  idr_pic_id 2 ue(v)
+    if (pic_order_cnt_type == 0) {   
+  pic_order_cnt_lsb 2 u(v)
+        if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)   
+   delta_pic_order_cnt_bottom 2 se(v)
+    }
+    if (pic_order_cnt_type == 1 && !delta_pic_order_always_zero_flag) {
+        delta_pic_order_cnt[0] 2 se(v)
+        if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)
+            delta_pic_order_cnt[1] 2 se(v)
+    }
+    if (redundant_pic_cnt_present_flag)   
+  redundant_pic_cnt 2 ue(v)
+    if (slice_type == B)   
+  direct_spatial_mv_pred_flag 2 u(1)
+    if (slice_type == P || slice_type == SP || slice_type == B) {   
+  num_ref_idx_active_override_flag 2 u(1)
+        if (num_ref_idx_active_override_flag) {   
+   num_ref_idx_l0_active_minus1 2 ue(v)
+            if (slice_type == B)   
+    num_ref_idx_l1_active_minus1 2 ue(v)
+        }
+    }
+    if (nal_unit_type == 20 || nal_unit_type == 21)
+        ref_pic_list_mvc_modification()  /* specified in Annex H *//* 2  
+ else
+    ref_pic_list_modification() 2
+    if ((weighted_pred_flag && (slice_type == P || slice_type == SP)) ||
+        (weighted_bipred_idc == 1 && slice_type == B))
+
+        pred_weight_table() 2
+    if (nal_ref_idc != 0)
+        dec_ref_pic_marking() 2
+    if (entropy_coding_mode_flag && slice_type != I && slice_type != SI)   
+  cabac_init_idc 2 ue(v) 
+ slice_qp_delta 2 se(v)
+    if (slice_type == SP || slice_type == SI) {
+        if (slice_type == SP)   
+   sp_for_switch_flag 2 u(1) 
+  slice_qs_delta 2 se(v)
+    }
+    if (deblocking_filter_control_present_flag) {   
+  disable_deblocking_filter_idc 2 ue(v)
+        if (disable_deblocking_filter_idc != 1) {   
+   slice_alpha_c0_offset_div2 2 se(v) 
+   slice_beta_offset_div2 2 se(v)
+        }
+    }
+    if (num_slice_groups_minus1 > 0 &&
+        slice_group_map_type >= 3 && slice_group_map_type <= 5) 
+  
+  slice_group_change_cycle 2 u(v)
+}
+    */
+    public class SliceHeader : IItuSerializable
+    {
+        private uint first_mb_in_slice;
+        public uint FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
+        private uint slice_type;
+        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
+        private uint pic_parameter_set_id;
+        public uint PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
+        private uint colour_plane_id;
+        public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
+        private uint frame_num;
+        public uint FrameNum { get { return frame_num; } set { frame_num = value; } }
+        private byte field_pic_flag;
+        public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
+        private byte bottom_field_flag;
+        public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
+        private uint idr_pic_id;
+        public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
+        private uint pic_order_cnt_lsb;
+        public uint PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
+        private int delta_pic_order_cnt_bottom;
+        public int DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
+        private int[] delta_pic_order_cnt;
+        public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
+        private uint redundant_pic_cnt;
+        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+        private byte direct_spatial_mv_pred_flag;
+        public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
+        private byte num_ref_idx_active_override_flag;
+        public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
+        private uint num_ref_idx_l0_active_minus1;
+        public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
+        private uint num_ref_idx_l1_active_minus1;
+        public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
+        private RefPicListMvcModification ref_pic_list_mvc_modification;
+        public RefPicListMvcModification RefPicListMvcModification { get { return ref_pic_list_mvc_modification; } set { ref_pic_list_mvc_modification = value; } }
+        private RefPicListModification ref_pic_list_modification;
+        public RefPicListModification RefPicListModification { get { return ref_pic_list_modification; } set { ref_pic_list_modification = value; } }
+        private PredWeightTable pred_weight_table;
+        public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
+        private DecRefPicMarking dec_ref_pic_marking;
+        public DecRefPicMarking DecRefPicMarking { get { return dec_ref_pic_marking; } set { dec_ref_pic_marking = value; } }
+        private uint cabac_init_idc;
+        public uint CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
+        private int slice_qp_delta;
+        public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
+        private byte sp_for_switch_flag;
+        public byte SpForSwitchFlag { get { return sp_for_switch_flag; } set { sp_for_switch_flag = value; } }
+        private int slice_qs_delta;
+        public int SliceQsDelta { get { return slice_qs_delta; } set { slice_qs_delta = value; } }
+        private uint disable_deblocking_filter_idc;
+        public uint DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
+        private int slice_alpha_c0_offset_div2;
+        public int SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
+        private int slice_beta_offset_div2;
+        public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
+        private uint slice_group_change_cycle;
+        public uint SliceGroupChangeCycle { get { return slice_group_change_cycle; } set { slice_group_change_cycle = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceHeader()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice);
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
+
+            if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            {
+                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+            }
+            size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.FrameNum, out this.frame_num);
+
+            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
+
+                if (field_pic_flag != 0)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag);
+                }
+            }
+
+            if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
+            }
+
+            if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+            {
+                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.PicOrderCntLsb, out this.pic_order_cnt_lsb);
+
+                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                {
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
+                }
+            }
+
+            if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+            {
+                size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
+
+                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                {
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
+                }
+            }
+
+            if (context.Pps.RedundantPicCntPresentFlag != 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+            }
+
+            if (slice_type == B)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
+            }
+
+            if (slice_type == P || slice_type == SP || slice_type == B)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
+
+                if (num_ref_idx_active_override_flag != 0)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
+
+                    if (slice_type == B)
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
+                    }
+                }
+            }
+
+            if (context.NalHeader.NalUnitType == 20 || context.NalHeader.NalUnitType == 21)
+            {
+                size += stream.ReadClass<RefPicListMvcModification>(size, context, () => new RefPicListMvcModification(), out this.ref_pic_list_mvc_modification); // specified in Annex H 
+            }
+            else
+            {
+                size += stream.ReadClass<RefPicListModification>(size, context, () => new RefPicListModification(), out this.ref_pic_list_modification);
+            }
+
+            if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) ||
+        (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+            {
+                size += stream.ReadClass<PredWeightTable>(size, context, () => new PredWeightTable(), out this.pred_weight_table);
+            }
+
+            if (context.NalHeader.NalRefIdc != 0)
+            {
+                size += stream.ReadClass<DecRefPicMarking>(size, context, () => new DecRefPicMarking(), out this.dec_ref_pic_marking);
+            }
+
+            if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != I && slice_type != SI)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
+            }
+            size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
+
+            if (slice_type == SP || slice_type == SI)
+            {
+
+                if (slice_type == SP)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag);
+                }
+                size += stream.ReadSignedIntGolomb(size, out this.slice_qs_delta);
+            }
+
+            if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
+
+                if (disable_deblocking_filter_idc != 1)
+                {
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2);
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2);
+                }
+            }
+
+            if (context.Pps.NumSliceGroupsMinus1 > 0 &&
+        context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+            {
+                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice);
+            size += stream.WriteUnsignedIntGolomb(this.slice_type);
+            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
+
+            if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            {
+                size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+            }
+            size += stream.WriteUnsignedIntVariable(context.SliceHeader.FrameNum, this.frame_num);
+
+            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            {
+                size += stream.WriteUnsignedInt(1, this.field_pic_flag);
+
+                if (field_pic_flag != 0)
+                {
+                    size += stream.WriteUnsignedInt(1, this.bottom_field_flag);
+                }
+            }
+
+            if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
+            }
+
+            if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+            {
+                size += stream.WriteUnsignedIntVariable(context.SliceHeader.PicOrderCntLsb, this.pic_order_cnt_lsb);
+
+                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                {
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
+                }
+            }
+
+            if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+            {
+                size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
+
+                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                {
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
+                }
+            }
+
+            if (context.Pps.RedundantPicCntPresentFlag != 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+            }
+
+            if (slice_type == B)
+            {
+                size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
+            }
+
+            if (slice_type == P || slice_type == SP || slice_type == B)
+            {
+                size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
+
+                if (num_ref_idx_active_override_flag != 0)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
+
+                    if (slice_type == B)
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
+                    }
+                }
+            }
+
+            if (context.NalHeader.NalUnitType == 20 || context.NalHeader.NalUnitType == 21)
+            {
+                size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+            }
+            else
+            {
+                size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
+            }
+
+            if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) ||
+        (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+            {
+                size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
+            }
+
+            if (context.NalHeader.NalRefIdc != 0)
+            {
+                size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+            }
+
+            if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != I && slice_type != SI)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
+            }
+            size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
+
+            if (slice_type == SP || slice_type == SI)
+            {
+
+                if (slice_type == SP)
+                {
+                    size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag);
+                }
+                size += stream.WriteSignedIntGolomb(this.slice_qs_delta);
+            }
+
+            if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
+
+                if (disable_deblocking_filter_idc != 1)
+                {
+                    size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2);
+                    size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2);
+                }
+            }
+
+            if (context.Pps.NumSliceGroupsMinus1 > 0 &&
+        context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+            {
+                size += stream.WriteUnsignedIntVariable(context.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+   
+
+ref_pic_list_modification() {
+    if (slice_type % 5 != 2 && slice_type % 5 != 4) {    
+  ref_pic_list_modification_flag_l0 2 u(1)
+        if (ref_pic_list_modification_flag_l0)
+            do {   
+    modification_of_pic_nums_idc 2 ue(v)
+                if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1) 
+  
+     abs_diff_pic_num_minus1 2 ue(v) 
+    else if (modification_of_pic_nums_idc == 2)   
+     long_term_pic_num 2 ue(v)
+            } while (modification_of_pic_nums_idc != 3)
+    }
+    if (slice_type % 5 == 1) {    
+  ref_pic_list_modification_flag_l1 2 u(1)
+        if (ref_pic_list_modification_flag_l1)
+            do {   
+    modification_of_pic_nums_idc 2 ue(v)
+                if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1) 
+  
+     abs_diff_pic_num_minus1 2 ue(v) 
+    else if (modification_of_pic_nums_idc == 2)   
+     long_term_pic_num 2 ue(v)
+            } while (modification_of_pic_nums_idc != 3)
+    }
+}
+    */
+    public class RefPicListModification : IItuSerializable
+    {
+        private byte ref_pic_list_modification_flag_l0;
+        public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
+        private uint modification_of_pic_nums_idc;
+        public uint ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
+        private uint abs_diff_pic_num_minus1;
+        public uint AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
+        private uint long_term_pic_num;
+        public uint LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+        private byte ref_pic_list_modification_flag_l1;
+        public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public RefPicListModification()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.SliceHeader.SliceType % 5 != 2 && context.SliceHeader.SliceType % 5 != 4)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0);
+
+                if (ref_pic_list_modification_flag_l0 != 0)
+                {
+
+                    do
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
+                        }
+                        else if (modification_of_pic_nums_idc == 2)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                        }
+                    } while (modification_of_pic_nums_idc != 3);
+                }
+            }
+
+            if (context.SliceHeader.SliceType % 5 == 1)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
+
+                if (ref_pic_list_modification_flag_l1 != 0)
+                {
+
+                    do
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
+                        }
+                        else if (modification_of_pic_nums_idc == 2)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                        }
+                    } while (modification_of_pic_nums_idc != 3);
+                }
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.SliceHeader.SliceType % 5 != 2 && context.SliceHeader.SliceType % 5 != 4)
+            {
+                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0);
+
+                if (ref_pic_list_modification_flag_l0 != 0)
+                {
+
+                    do
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
+                        }
+                        else if (modification_of_pic_nums_idc == 2)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                        }
+                    } while (modification_of_pic_nums_idc != 3);
+                }
+            }
+
+            if (context.SliceHeader.SliceType % 5 == 1)
+            {
+                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
+
+                if (ref_pic_list_modification_flag_l1 != 0)
+                {
+
+                    do
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
+                        }
+                        else if (modification_of_pic_nums_idc == 2)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                        }
+                    } while (modification_of_pic_nums_idc != 3);
+                }
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+pred_weight_table() { 
+ luma_log2_weight_denom 2 ue(v)
+    if (ChromaArrayType != 0)   
+  chroma_log2_weight_denom 2 ue(v)
+    for (i = 0; i <= num_ref_idx_l0_active_minus1; i++) {   
+  luma_weight_l0_flag 2 u(1)
+        if (luma_weight_l0_flag) {
+            luma_weight_l0[i] 2 se(v)
+            luma_offset_l0[i] 2 se(v)
+        }
+        if (ChromaArrayType != 0) {   
+   chroma_weight_l0_flag 2 u(1)
+            if (chroma_weight_l0_flag)
+                for (j = 0; j < 2; j++) {
+                    chroma_weight_l0[i][j] 2 se(v)
+                    chroma_offset_l0[i][j] 2 se(v)
+                }
+        }
+    }
+    if (slice_type % 5 == 1)
+        for (i = 0; i <= num_ref_idx_l1_active_minus1; i++) {   
+   luma_weight_l1_flag 2 u(1)
+            if (luma_weight_l1_flag) {
+                luma_weight_l1[i] 2 se(v)
+                luma_offset_l1[i] 2 se(v)
+            }
+            if (ChromaArrayType != 0) {   
+    chroma_weight_l1_flag 2 u(1)
+                if (chroma_weight_l1_flag)
+                    for (j = 0; j < 2; j++) {
+                        chroma_weight_l1[i][j] 2 se(v)
+                        chroma_offset_l1[i][j] 2 se(v)
+                    }
+            }
+        }
+}
+    */
+    public class PredWeightTable : IItuSerializable
+    {
+        private uint luma_log2_weight_denom;
+        public uint LumaLog2WeightDenom { get { return luma_log2_weight_denom; } set { luma_log2_weight_denom = value; } }
+        private uint chroma_log2_weight_denom;
+        public uint ChromaLog2WeightDenom { get { return chroma_log2_weight_denom; } set { chroma_log2_weight_denom = value; } }
+        private byte[] luma_weight_l0_flag;
+        public byte[] LumaWeightL0Flag { get { return luma_weight_l0_flag; } set { luma_weight_l0_flag = value; } }
+        private int[] luma_weight_l0;
+        public int[] LumaWeightL0 { get { return luma_weight_l0; } set { luma_weight_l0 = value; } }
+        private int[] luma_offset_l0;
+        public int[] LumaOffsetL0 { get { return luma_offset_l0; } set { luma_offset_l0 = value; } }
+        private byte[] chroma_weight_l0_flag;
+        public byte[] ChromaWeightL0Flag { get { return chroma_weight_l0_flag; } set { chroma_weight_l0_flag = value; } }
+        private int[][] chroma_weight_l0;
+        public int[][] ChromaWeightL0 { get { return chroma_weight_l0; } set { chroma_weight_l0 = value; } }
+        private int[][] chroma_offset_l0;
+        public int[][] ChromaOffsetL0 { get { return chroma_offset_l0; } set { chroma_offset_l0 = value; } }
+        private byte[] luma_weight_l1_flag;
+        public byte[] LumaWeightL1Flag { get { return luma_weight_l1_flag; } set { luma_weight_l1_flag = value; } }
+        private int[] luma_weight_l1;
+        public int[] LumaWeightL1 { get { return luma_weight_l1; } set { luma_weight_l1 = value; } }
+        private int[] luma_offset_l1;
+        public int[] LumaOffsetL1 { get { return luma_offset_l1; } set { luma_offset_l1 = value; } }
+        private byte[] chroma_weight_l1_flag;
+        public byte[] ChromaWeightL1Flag { get { return chroma_weight_l1_flag; } set { chroma_weight_l1_flag = value; } }
+        private int[][] chroma_weight_l1;
+        public int[][] ChromaWeightL1 { get { return chroma_weight_l1; } set { chroma_weight_l1 = value; } }
+        private int[][] chroma_offset_l1;
+        public int[][] ChromaOffsetL1 { get { return chroma_offset_l1; } set { chroma_offset_l1 = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public PredWeightTable()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            uint i = 0;
+            uint j = 0;
+            size += stream.ReadUnsignedIntGolomb(size, out this.luma_log2_weight_denom);
+
+            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom);
+            }
+
+            this.luma_weight_l0_flag = new byte[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.luma_weight_l0 = new int[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.luma_offset_l0 = new int[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.chroma_weight_l0_flag = new byte[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.chroma_weight_l0 = new int[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
+            this.chroma_offset_l0 = new int[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
+            for (i = 0; i <= context.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i]);
+
+                if (luma_weight_l0_flag[i] != 0)
+                {
+                    size += stream.ReadSignedIntGolomb(size, out this.luma_weight_l0[i]);
+                    size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l0[i]);
+                }
+
+                if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l0_flag[i]);
+
+                    if (chroma_weight_l0_flag[i] != 0)
+                    {
+
+                        this.chroma_weight_l0[i] = new int[2];
+                        this.chroma_offset_l0[i] = new int[2];
+                        for (j = 0; j < 2; j++)
+                        {
+                            size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l0[i][j]);
+                            size += stream.ReadSignedIntGolomb(size, out this.chroma_offset_l0[i][j]);
+                        }
+                    }
+                }
+            }
+
+            if (context.SliceHeader.SliceType % 5 == 1)
+            {
+
+                this.luma_weight_l1_flag = new byte[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.luma_weight_l1 = new int[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.luma_offset_l1 = new int[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.chroma_weight_l1_flag = new byte[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.chroma_weight_l1 = new int[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
+                this.chroma_offset_l1 = new int[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
+                for (i = 0; i <= context.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i]);
+
+                    if (luma_weight_l1_flag[i] != 0)
+                    {
+                        size += stream.ReadSignedIntGolomb(size, out this.luma_weight_l1[i]);
+                        size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l1[i]);
+                    }
+
+                    if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l1_flag[i]);
+
+                        if (chroma_weight_l1_flag[i] != 0)
+                        {
+
+                            this.chroma_weight_l1[i] = new int[2];
+                            this.chroma_offset_l1[i] = new int[2];
+                            for (j = 0; j < 2; j++)
+                            {
+                                size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l1[i][j]);
+                                size += stream.ReadSignedIntGolomb(size, out this.chroma_offset_l1[i][j]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            uint i = 0;
+            uint j = 0;
+            size += stream.WriteUnsignedIntGolomb(this.luma_log2_weight_denom);
+
+            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.chroma_log2_weight_denom);
+            }
+
+            for (i = 0; i <= context.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
+            {
+                size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i]);
+
+                if (luma_weight_l0_flag[i] != 0)
+                {
+                    size += stream.WriteSignedIntGolomb(this.luma_weight_l0[i]);
+                    size += stream.WriteSignedIntGolomb(this.luma_offset_l0[i]);
+                }
+
+                if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+                {
+                    size += stream.WriteUnsignedInt(1, this.chroma_weight_l0_flag[i]);
+
+                    if (chroma_weight_l0_flag[i] != 0)
+                    {
+
+                        for (j = 0; j < 2; j++)
+                        {
+                            size += stream.WriteSignedIntGolomb(this.chroma_weight_l0[i][j]);
+                            size += stream.WriteSignedIntGolomb(this.chroma_offset_l0[i][j]);
+                        }
+                    }
+                }
+            }
+
+            if (context.SliceHeader.SliceType % 5 == 1)
+            {
+
+                for (i = 0; i <= context.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
+                {
+                    size += stream.WriteUnsignedInt(1, this.luma_weight_l1_flag[i]);
+
+                    if (luma_weight_l1_flag[i] != 0)
+                    {
+                        size += stream.WriteSignedIntGolomb(this.luma_weight_l1[i]);
+                        size += stream.WriteSignedIntGolomb(this.luma_offset_l1[i]);
+                    }
+
+                    if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.chroma_weight_l1_flag[i]);
+
+                        if (chroma_weight_l1_flag[i] != 0)
+                        {
+
+                            for (j = 0; j < 2; j++)
+                            {
+                                size += stream.WriteSignedIntGolomb(this.chroma_weight_l1[i][j]);
+                                size += stream.WriteSignedIntGolomb(this.chroma_offset_l1[i][j]);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+  
 
 dec_ref_pic_marking() { 
  if( IdrPicFlag ) {    
@@ -7991,7 +9082,882 @@ seq_parameter_set_svc_extension() {
     }
 
     /*
-   
+  
+
+prefix_nal_unit_svc() {
+    if (nal_ref_idc != 0) {   
+  store_ref_base_pic_flag 2 u(1)
+        if ((use_ref_base_pic_flag || store_ref_base_pic_flag) &&
+            !idr_flag)
+
+            dec_ref_base_pic_marking() 2  
+  additional_prefix_nal_unit_extension_flag 2 u(1)
+        if (additional_prefix_nal_unit_extension_flag == 1)
+            while (more_rbsp_data())   
+    additional_prefix_nal_unit_extension_data_flag 2 u(1)
+        rbsp_trailing_bits() 2
+    } else if (more_rbsp_data()) {
+        while (more_rbsp_data())   
+   additional_prefix_nal_unit_extension_data_flag 2 u(1)
+        rbsp_trailing_bits() 2
+    }
+}
+    */
+    public class PrefixNalUnitSvc : IItuSerializable
+    {
+        private byte store_ref_base_pic_flag;
+        public byte StoreRefBasePicFlag { get { return store_ref_base_pic_flag; } set { store_ref_base_pic_flag = value; } }
+        private DecRefBasePicMarking dec_ref_base_pic_marking;
+        public DecRefBasePicMarking DecRefBasePicMarking { get { return dec_ref_base_pic_marking; } set { dec_ref_base_pic_marking = value; } }
+        private byte additional_prefix_nal_unit_extension_flag;
+        public byte AdditionalPrefixNalUnitExtensionFlag { get { return additional_prefix_nal_unit_extension_flag; } set { additional_prefix_nal_unit_extension_flag = value; } }
+        private byte additional_prefix_nal_unit_extension_data_flag;
+        public byte AdditionalPrefixNalUnitExtensionDataFlag { get { return additional_prefix_nal_unit_extension_data_flag; } set { additional_prefix_nal_unit_extension_data_flag = value; } }
+        private RbspTrailingBits rbsp_trailing_bits;
+        public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public PrefixNalUnitSvc()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.NalHeader.NalRefIdc != 0)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.store_ref_base_pic_flag);
+
+                if ((context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
+            context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
+                {
+                    size += stream.ReadClass<DecRefBasePicMarking>(size, context, () => new DecRefBasePicMarking(), out this.dec_ref_base_pic_marking);
+                }
+                size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_flag);
+
+                if (additional_prefix_nal_unit_extension_flag == 1)
+                {
+
+                    while (stream.ReadMoreRbspData(this))
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_data_flag);
+                    }
+                }
+                size += stream.ReadClass<RbspTrailingBits>(size, context, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
+            }
+            else if (stream.ReadMoreRbspData(this))
+            {
+
+                while (stream.ReadMoreRbspData(this))
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_data_flag);
+                }
+                size += stream.ReadClass<RbspTrailingBits>(size, context, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.NalHeader.NalRefIdc != 0)
+            {
+                size += stream.WriteUnsignedInt(1, this.store_ref_base_pic_flag);
+
+                if ((context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
+            context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
+                {
+                    size += stream.WriteClass<DecRefBasePicMarking>(context, this.dec_ref_base_pic_marking);
+                }
+                size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_flag);
+
+                if (additional_prefix_nal_unit_extension_flag == 1)
+                {
+
+                    while (stream.WriteMoreRbspData(this))
+                    {
+                        size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_data_flag);
+                    }
+                }
+                size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            }
+            else if (stream.WriteMoreRbspData(this))
+            {
+
+                while (stream.WriteMoreRbspData(this))
+                {
+                    size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_data_flag);
+                }
+                size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+slice_header_in_scalable_extension() {  
+ first_mb_in_slice 2 ue(v) 
+ slice_type 2 ue(v) 
+ pic_parameter_set_id 2 ue(v)
+    if (separate_colour_plane_flag == 1)   
+  colour_plane_id 2 u(2) 
+ frame_num 2 u(v)
+    if (!frame_mbs_only_flag) {   
+  field_pic_flag 2 u(1)
+        if (field_pic_flag)   
+   bottom_field_flag 2 u(1)
+    }
+    if (idr_flag == 1)   
+  idr_pic_id 2 ue(v)
+    if (pic_order_cnt_type == 0) {   
+  pic_order_cnt_lsb 2 u(v)
+        if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)   
+   delta_pic_order_cnt_bottom 2 se(v)
+    }
+    if (pic_order_cnt_type == 1 && !delta_pic_order_always_zero_flag) {
+        delta_pic_order_cnt[0] 2 se(v)
+        if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)
+            delta_pic_order_cnt[1] 2 se(v)
+    }
+    if (redundant_pic_cnt_present_flag)   
+  redundant_pic_cnt 2 ue(v)
+    if (quality_id == 0) {
+        if (slice_type == EB)   
+   direct_spatial_mv_pred_flag 2 u(1)
+        if (slice_type == EP || slice_type == EB) {   
+   num_ref_idx_active_override_flag 2 u(1)
+            if (num_ref_idx_active_override_flag) {   
+    num_ref_idx_l0_active_minus1 2 ue(v)
+                if (slice_type == EB)   
+     num_ref_idx_l1_active_minus1 2 ue(v)
+            }
+        }
+        ref_pic_list_modification() 2
+        if ((weighted_pred_flag && slice_type == EP) ||
+            (weighted_bipred_idc == 1 && slice_type == EB)) {
+
+            if (!no_inter_layer_pred_flag)   
+    base_pred_weight_table_flag 2 u(1)
+            if (no_inter_layer_pred_flag || !base_pred_weight_table_flag)
+                pred_weight_table() 2
+        }
+        if (nal_ref_idc != 0) {
+            dec_ref_pic_marking() 2
+            if (!slice_header_restriction_flag) {   
+    store_ref_base_pic_flag 2 u(1)
+                if ((use_ref_base_pic_flag || store_ref_base_pic_flag) &&
+                    !idr_flag)
+
+                    dec_ref_base_pic_marking() 2
+            }
+        }
+    }
+    if (entropy_coding_mode_flag && slice_type != EI)  
+   cabac_init_idc 2 ue(v) 
+ slice_qp_delta 2 se(v)
+    if (deblocking_filter_control_present_flag) {   
+  disable_deblocking_filter_idc 2 ue(v)
+        if (disable_deblocking_filter_idc != 1) {   
+   slice_alpha_c0_offset_div2 2 se(v) 
+   slice_beta_offset_div2 2 se(v)
+        }
+    }
+    if (num_slice_groups_minus1 > 0 &&
+        slice_group_map_type >= 3 && slice_group_map_type <= 5) 
+  
+  slice_group_change_cycle 2 u(v)
+    if (!no_inter_layer_pred_flag && quality_id == 0) {   
+  ref_layer_dq_id 2 ue(v)
+        if (inter_layer_deblocking_filter_control_present_flag) {   
+   disable_inter_layer_deblocking_filter_idc 2 ue(v)
+            if (disable_inter_layer_deblocking_filter_idc != 1) {   
+    inter_layer_slice_alpha_c0_offset_div2 2 se(v) 
+    inter_layer_slice_beta_offset_div2 2 se(v)
+            }
+        }   
+  constrained_intra_resampling_flag 2 u(1)
+        if (extended_spatial_scalability_idc == 2) {
+            if (ChromaArrayType > 0) {   
+    ref_layer_chroma_phase_x_plus1_flag 2 u(1) 
+    ref_layer_chroma_phase_y_plus1 2 u(2)
+            }   
+   scaled_ref_layer_left_offset 2 se(v) 
+   scaled_ref_layer_top_offset 2 se(v) 
+   scaled_ref_layer_right_offset 2 se(v) 
+   scaled_ref_layer_bottom_offset 2 se(v)
+        }
+    }
+    if (!no_inter_layer_pred_flag) {   
+  slice_skip_flag 2 u(1)
+        if (slice_skip_flag)   
+   num_mbs_in_slice_minus1 2 ue(v) 
+  else {   
+   adaptive_base_mode_flag 2 u(1)
+            if (!adaptive_base_mode_flag)   
+    default_base_mode_flag 2 u(1)
+            if (!default_base_mode_flag) {   
+    adaptive_motion_prediction_flag 2 u(1)
+                if (!adaptive_motion_prediction_flag)   
+     default_motion_prediction_flag 2 u(1)
+            }   
+   adaptive_residual_prediction_flag 2 u(1)
+            if (!adaptive_residual_prediction_flag)   
+    default_residual_prediction_flag 2 u(1)
+        }
+        if (adaptive_tcoeff_level_prediction_flag)   
+   tcoeff_level_prediction_flag 2 u(1)
+    }
+    if (!slice_header_restriction_flag && !slice_skip_flag) {   
+  scan_idx_start 2 u(4) 
+  scan_idx_end 2 u(4)
+    }
+}
+    */
+    public class SliceHeaderInScalableExtension : IItuSerializable
+    {
+        private uint first_mb_in_slice;
+        public uint FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
+        private uint slice_type;
+        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
+        private uint pic_parameter_set_id;
+        public uint PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
+        private uint colour_plane_id;
+        public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
+        private uint frame_num;
+        public uint FrameNum { get { return frame_num; } set { frame_num = value; } }
+        private byte field_pic_flag;
+        public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
+        private byte bottom_field_flag;
+        public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
+        private uint idr_pic_id;
+        public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
+        private uint pic_order_cnt_lsb;
+        public uint PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
+        private int delta_pic_order_cnt_bottom;
+        public int DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
+        private int[] delta_pic_order_cnt;
+        public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
+        private uint redundant_pic_cnt;
+        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+        private byte direct_spatial_mv_pred_flag;
+        public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
+        private byte num_ref_idx_active_override_flag;
+        public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
+        private uint num_ref_idx_l0_active_minus1;
+        public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
+        private uint num_ref_idx_l1_active_minus1;
+        public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
+        private RefPicListModification ref_pic_list_modification;
+        public RefPicListModification RefPicListModification { get { return ref_pic_list_modification; } set { ref_pic_list_modification = value; } }
+        private byte base_pred_weight_table_flag;
+        public byte BasePredWeightTableFlag { get { return base_pred_weight_table_flag; } set { base_pred_weight_table_flag = value; } }
+        private PredWeightTable pred_weight_table;
+        public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
+        private DecRefPicMarking dec_ref_pic_marking;
+        public DecRefPicMarking DecRefPicMarking { get { return dec_ref_pic_marking; } set { dec_ref_pic_marking = value; } }
+        private byte store_ref_base_pic_flag;
+        public byte StoreRefBasePicFlag { get { return store_ref_base_pic_flag; } set { store_ref_base_pic_flag = value; } }
+        private DecRefBasePicMarking dec_ref_base_pic_marking;
+        public DecRefBasePicMarking DecRefBasePicMarking { get { return dec_ref_base_pic_marking; } set { dec_ref_base_pic_marking = value; } }
+        private uint cabac_init_idc;
+        public uint CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
+        private int slice_qp_delta;
+        public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
+        private uint disable_deblocking_filter_idc;
+        public uint DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
+        private int slice_alpha_c0_offset_div2;
+        public int SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
+        private int slice_beta_offset_div2;
+        public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
+        private uint slice_group_change_cycle;
+        public uint SliceGroupChangeCycle { get { return slice_group_change_cycle; } set { slice_group_change_cycle = value; } }
+        private uint ref_layer_dq_id;
+        public uint RefLayerDqId { get { return ref_layer_dq_id; } set { ref_layer_dq_id = value; } }
+        private uint disable_inter_layer_deblocking_filter_idc;
+        public uint DisableInterLayerDeblockingFilterIdc { get { return disable_inter_layer_deblocking_filter_idc; } set { disable_inter_layer_deblocking_filter_idc = value; } }
+        private int inter_layer_slice_alpha_c0_offset_div2;
+        public int InterLayerSliceAlphaC0OffsetDiv2 { get { return inter_layer_slice_alpha_c0_offset_div2; } set { inter_layer_slice_alpha_c0_offset_div2 = value; } }
+        private int inter_layer_slice_beta_offset_div2;
+        public int InterLayerSliceBetaOffsetDiv2 { get { return inter_layer_slice_beta_offset_div2; } set { inter_layer_slice_beta_offset_div2 = value; } }
+        private byte constrained_intra_resampling_flag;
+        public byte ConstrainedIntraResamplingFlag { get { return constrained_intra_resampling_flag; } set { constrained_intra_resampling_flag = value; } }
+        private byte ref_layer_chroma_phase_x_plus1_flag;
+        public byte RefLayerChromaPhasexPlus1Flag { get { return ref_layer_chroma_phase_x_plus1_flag; } set { ref_layer_chroma_phase_x_plus1_flag = value; } }
+        private uint ref_layer_chroma_phase_y_plus1;
+        public uint RefLayerChromaPhaseyPlus1 { get { return ref_layer_chroma_phase_y_plus1; } set { ref_layer_chroma_phase_y_plus1 = value; } }
+        private int scaled_ref_layer_left_offset;
+        public int ScaledRefLayerLeftOffset { get { return scaled_ref_layer_left_offset; } set { scaled_ref_layer_left_offset = value; } }
+        private int scaled_ref_layer_top_offset;
+        public int ScaledRefLayerTopOffset { get { return scaled_ref_layer_top_offset; } set { scaled_ref_layer_top_offset = value; } }
+        private int scaled_ref_layer_right_offset;
+        public int ScaledRefLayerRightOffset { get { return scaled_ref_layer_right_offset; } set { scaled_ref_layer_right_offset = value; } }
+        private int scaled_ref_layer_bottom_offset;
+        public int ScaledRefLayerBottomOffset { get { return scaled_ref_layer_bottom_offset; } set { scaled_ref_layer_bottom_offset = value; } }
+        private byte slice_skip_flag;
+        public byte SliceSkipFlag { get { return slice_skip_flag; } set { slice_skip_flag = value; } }
+        private uint num_mbs_in_slice_minus1;
+        public uint NumMbsInSliceMinus1 { get { return num_mbs_in_slice_minus1; } set { num_mbs_in_slice_minus1 = value; } }
+        private byte adaptive_base_mode_flag;
+        public byte AdaptiveBaseModeFlag { get { return adaptive_base_mode_flag; } set { adaptive_base_mode_flag = value; } }
+        private byte default_base_mode_flag;
+        public byte DefaultBaseModeFlag { get { return default_base_mode_flag; } set { default_base_mode_flag = value; } }
+        private byte adaptive_motion_prediction_flag;
+        public byte AdaptiveMotionPredictionFlag { get { return adaptive_motion_prediction_flag; } set { adaptive_motion_prediction_flag = value; } }
+        private byte default_motion_prediction_flag;
+        public byte DefaultMotionPredictionFlag { get { return default_motion_prediction_flag; } set { default_motion_prediction_flag = value; } }
+        private byte adaptive_residual_prediction_flag;
+        public byte AdaptiveResidualPredictionFlag { get { return adaptive_residual_prediction_flag; } set { adaptive_residual_prediction_flag = value; } }
+        private byte default_residual_prediction_flag;
+        public byte DefaultResidualPredictionFlag { get { return default_residual_prediction_flag; } set { default_residual_prediction_flag = value; } }
+        private byte tcoeff_level_prediction_flag;
+        public byte TcoeffLevelPredictionFlag { get { return tcoeff_level_prediction_flag; } set { tcoeff_level_prediction_flag = value; } }
+        private uint scan_idx_start;
+        public uint ScanIdxStart { get { return scan_idx_start; } set { scan_idx_start = value; } }
+        private uint scan_idx_end;
+        public uint ScanIdxEnd { get { return scan_idx_end; } set { scan_idx_end = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceHeaderInScalableExtension()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice);
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
+
+            if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            {
+                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+            }
+            size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.FrameNum, out this.frame_num);
+
+            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
+
+                if (field_pic_flag != 0)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag);
+                }
+            }
+
+            if (context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 1)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
+            }
+
+            if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+            {
+                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.PicOrderCntLsb, out this.pic_order_cnt_lsb);
+
+                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                {
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
+                }
+            }
+
+            if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+            {
+                size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
+
+                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                {
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
+                }
+            }
+
+            if (context.Pps.RedundantPicCntPresentFlag != 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+            }
+
+            if (context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
+            {
+
+                if (slice_type == EB)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
+                }
+
+                if (slice_type == EP || slice_type == EB)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
+
+                    if (num_ref_idx_active_override_flag != 0)
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
+
+                        if (slice_type == EB)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
+                        }
+                    }
+                }
+                size += stream.ReadClass<RefPicListModification>(size, context, () => new RefPicListModification(), out this.ref_pic_list_modification);
+
+                if ((context.Pps.WeightedPredFlag != 0 && slice_type == EP) ||
+            (context.Pps.WeightedBipredIdc == 1 && slice_type == EB))
+                {
+
+                    if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.base_pred_weight_table_flag);
+                    }
+
+                    if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag != 0 || base_pred_weight_table_flag == 0)
+                    {
+                        size += stream.ReadClass<PredWeightTable>(size, context, () => new PredWeightTable(), out this.pred_weight_table);
+                    }
+                }
+
+                if (context.NalHeader.NalRefIdc != 0)
+                {
+                    size += stream.ReadClass<DecRefPicMarking>(size, context, () => new DecRefPicMarking(), out this.dec_ref_pic_marking);
+
+                    if (context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.store_ref_base_pic_flag);
+
+                        if ((context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
+                    context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
+                        {
+                            size += stream.ReadClass<DecRefBasePicMarking>(size, context, () => new DecRefBasePicMarking(), out this.dec_ref_base_pic_marking);
+                        }
+                    }
+                }
+            }
+
+            if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != EI)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
+            }
+            size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
+
+            if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
+
+                if (disable_deblocking_filter_idc != 1)
+                {
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2);
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2);
+                }
+            }
+
+            if (context.Pps.NumSliceGroupsMinus1 > 0 &&
+        context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+            {
+                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+            }
+
+            if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.ref_layer_dq_id);
+
+                if (context.SubsetSps.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag != 0)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disable_inter_layer_deblocking_filter_idc);
+
+                    if (disable_inter_layer_deblocking_filter_idc != 1)
+                    {
+                        size += stream.ReadSignedIntGolomb(size, out this.inter_layer_slice_alpha_c0_offset_div2);
+                        size += stream.ReadSignedIntGolomb(size, out this.inter_layer_slice_beta_offset_div2);
+                    }
+                }
+                size += stream.ReadUnsignedInt(size, 1, out this.constrained_intra_resampling_flag);
+
+                if (context.SubsetSps.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc == 2)
+                {
+
+                    if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.ref_layer_chroma_phase_x_plus1_flag);
+                        size += stream.ReadUnsignedInt(size, 2, out this.ref_layer_chroma_phase_y_plus1);
+                    }
+                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_left_offset);
+                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_top_offset);
+                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_right_offset);
+                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_bottom_offset);
+                }
+            }
+
+            if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.slice_skip_flag);
+
+                if (slice_skip_flag != 0)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_mbs_in_slice_minus1);
+                }
+                else
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.adaptive_base_mode_flag);
+
+                    if (adaptive_base_mode_flag == 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.default_base_mode_flag);
+                    }
+
+                    if (default_base_mode_flag == 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.adaptive_motion_prediction_flag);
+
+                        if (adaptive_motion_prediction_flag == 0)
+                        {
+                            size += stream.ReadUnsignedInt(size, 1, out this.default_motion_prediction_flag);
+                        }
+                    }
+                    size += stream.ReadUnsignedInt(size, 1, out this.adaptive_residual_prediction_flag);
+
+                    if (adaptive_residual_prediction_flag == 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.default_residual_prediction_flag);
+                    }
+                }
+
+                if (context.SubsetSps.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag != 0)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.tcoeff_level_prediction_flag);
+                }
+            }
+
+            if (context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0 && slice_skip_flag == 0)
+            {
+                size += stream.ReadUnsignedInt(size, 4, out this.scan_idx_start);
+                size += stream.ReadUnsignedInt(size, 4, out this.scan_idx_end);
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice);
+            size += stream.WriteUnsignedIntGolomb(this.slice_type);
+            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
+
+            if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            {
+                size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+            }
+            size += stream.WriteUnsignedIntVariable(context.SliceHeader.FrameNum, this.frame_num);
+
+            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            {
+                size += stream.WriteUnsignedInt(1, this.field_pic_flag);
+
+                if (field_pic_flag != 0)
+                {
+                    size += stream.WriteUnsignedInt(1, this.bottom_field_flag);
+                }
+            }
+
+            if (context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 1)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
+            }
+
+            if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+            {
+                size += stream.WriteUnsignedIntVariable(context.SliceHeader.PicOrderCntLsb, this.pic_order_cnt_lsb);
+
+                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                {
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
+                }
+            }
+
+            if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+            {
+                size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
+
+                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                {
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
+                }
+            }
+
+            if (context.Pps.RedundantPicCntPresentFlag != 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+            }
+
+            if (context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
+            {
+
+                if (slice_type == EB)
+                {
+                    size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
+                }
+
+                if (slice_type == EP || slice_type == EB)
+                {
+                    size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
+
+                    if (num_ref_idx_active_override_flag != 0)
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
+
+                        if (slice_type == EB)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
+                        }
+                    }
+                }
+                size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
+
+                if ((context.Pps.WeightedPredFlag != 0 && slice_type == EP) ||
+            (context.Pps.WeightedBipredIdc == 1 && slice_type == EB))
+                {
+
+                    if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.base_pred_weight_table_flag);
+                    }
+
+                    if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag != 0 || base_pred_weight_table_flag == 0)
+                    {
+                        size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
+                    }
+                }
+
+                if (context.NalHeader.NalRefIdc != 0)
+                {
+                    size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+
+                    if (context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.store_ref_base_pic_flag);
+
+                        if ((context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
+                    context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
+                        {
+                            size += stream.WriteClass<DecRefBasePicMarking>(context, this.dec_ref_base_pic_marking);
+                        }
+                    }
+                }
+            }
+
+            if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != EI)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
+            }
+            size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
+
+            if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
+
+                if (disable_deblocking_filter_idc != 1)
+                {
+                    size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2);
+                    size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2);
+                }
+            }
+
+            if (context.Pps.NumSliceGroupsMinus1 > 0 &&
+        context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+            {
+                size += stream.WriteUnsignedIntVariable(context.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+            }
+
+            if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.ref_layer_dq_id);
+
+                if (context.SubsetSps.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag != 0)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.disable_inter_layer_deblocking_filter_idc);
+
+                    if (disable_inter_layer_deblocking_filter_idc != 1)
+                    {
+                        size += stream.WriteSignedIntGolomb(this.inter_layer_slice_alpha_c0_offset_div2);
+                        size += stream.WriteSignedIntGolomb(this.inter_layer_slice_beta_offset_div2);
+                    }
+                }
+                size += stream.WriteUnsignedInt(1, this.constrained_intra_resampling_flag);
+
+                if (context.SubsetSps.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc == 2)
+                {
+
+                    if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.ref_layer_chroma_phase_x_plus1_flag);
+                        size += stream.WriteUnsignedInt(2, this.ref_layer_chroma_phase_y_plus1);
+                    }
+                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_left_offset);
+                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_top_offset);
+                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_right_offset);
+                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_bottom_offset);
+                }
+            }
+
+            if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
+            {
+                size += stream.WriteUnsignedInt(1, this.slice_skip_flag);
+
+                if (slice_skip_flag != 0)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.num_mbs_in_slice_minus1);
+                }
+                else
+                {
+                    size += stream.WriteUnsignedInt(1, this.adaptive_base_mode_flag);
+
+                    if (adaptive_base_mode_flag == 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.default_base_mode_flag);
+                    }
+
+                    if (default_base_mode_flag == 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.adaptive_motion_prediction_flag);
+
+                        if (adaptive_motion_prediction_flag == 0)
+                        {
+                            size += stream.WriteUnsignedInt(1, this.default_motion_prediction_flag);
+                        }
+                    }
+                    size += stream.WriteUnsignedInt(1, this.adaptive_residual_prediction_flag);
+
+                    if (adaptive_residual_prediction_flag == 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.default_residual_prediction_flag);
+                    }
+                }
+
+                if (context.SubsetSps.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag != 0)
+                {
+                    size += stream.WriteUnsignedInt(1, this.tcoeff_level_prediction_flag);
+                }
+            }
+
+            if (context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0 && slice_skip_flag == 0)
+            {
+                size += stream.WriteUnsignedInt(4, this.scan_idx_start);
+                size += stream.WriteUnsignedInt(4, this.scan_idx_end);
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+dec_ref_base_pic_marking() {  
+ adaptive_ref_base_pic_marking_mode_flag 2 u(1)
+    if (adaptive_ref_base_pic_marking_mode_flag)
+        do {   
+   memory_management_base_control_operation 2 ue(v)
+            if (memory_management_base_control_operation == 1)   
+    difference_of_base_pic_nums_minus1 2 ue(v)
+            if (memory_management_base_control_operation == 2)   
+    long_term_base_pic_num 2 ue(v)
+        } while (memory_management_base_control_operation != 0)
+}
+    */
+    public class DecRefBasePicMarking : IItuSerializable
+    {
+        private byte adaptive_ref_base_pic_marking_mode_flag;
+        public byte AdaptiveRefBasePicMarkingModeFlag { get { return adaptive_ref_base_pic_marking_mode_flag; } set { adaptive_ref_base_pic_marking_mode_flag = value; } }
+        private uint memory_management_base_control_operation;
+        public uint MemoryManagementBaseControlOperation { get { return memory_management_base_control_operation; } set { memory_management_base_control_operation = value; } }
+        private uint difference_of_base_pic_nums_minus1;
+        public uint DifferenceOfBasePicNumsMinus1 { get { return difference_of_base_pic_nums_minus1; } set { difference_of_base_pic_nums_minus1 = value; } }
+        private uint long_term_base_pic_num;
+        public uint LongTermBasePicNum { get { return long_term_base_pic_num; } set { long_term_base_pic_num = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public DecRefBasePicMarking()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedInt(size, 1, out this.adaptive_ref_base_pic_marking_mode_flag);
+
+            if (adaptive_ref_base_pic_marking_mode_flag != 0)
+            {
+
+                do
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.memory_management_base_control_operation);
+
+                    if (memory_management_base_control_operation == 1)
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.difference_of_base_pic_nums_minus1);
+                    }
+
+                    if (memory_management_base_control_operation == 2)
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.long_term_base_pic_num);
+                    }
+                } while (memory_management_base_control_operation != 0);
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedInt(1, this.adaptive_ref_base_pic_marking_mode_flag);
+
+            if (adaptive_ref_base_pic_marking_mode_flag != 0)
+            {
+
+                do
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.memory_management_base_control_operation);
+
+                    if (memory_management_base_control_operation == 1)
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.difference_of_base_pic_nums_minus1);
+                    }
+
+                    if (memory_management_base_control_operation == 2)
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.long_term_base_pic_num);
+                    }
+                } while (memory_management_base_control_operation != 0);
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+  
 
 scalability_info( payloadSize ) {  
  temporal_id_nesting_flag 5 u(1) 
@@ -10318,6 +12284,203 @@ seq_parameter_set_mvc_extension() {
 
     /*
   
+
+ref_pic_list_mvc_modification() {
+    if (slice_type % 5 != 2 && slice_type % 5 != 4) {    
+  ref_pic_list_modification_flag_l0 2 u(1)
+        if (ref_pic_list_modification_flag_l0)
+            do {   
+    modification_of_pic_nums_idc 2 ue(v)
+                if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1) 
+  
+     abs_diff_pic_num_minus1 2 ue(v) 
+    else if (modification_of_pic_nums_idc == 2)   
+     long_term_pic_num 2 ue(v) 
+    else if (modification_of_pic_nums_idc == 4 ||
+                    modification_of_pic_nums_idc == 5) 
+  
+      abs_diff_view_idx_minus1 2 ue(v)
+            } while (modification_of_pic_nums_idc != 3)
+    }
+    if (slice_type % 5 == 1) {    
+  ref_pic_list_modification_flag_l1 2 u(1)
+        if (ref_pic_list_modification_flag_l1)
+            do {   
+    modification_of_pic_nums_idc 2 ue(v)
+                if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1) 
+  
+     abs_diff_pic_num_minus1 2 ue(v) 
+    else if (modification_of_pic_nums_idc == 2)   
+     long_term_pic_num 2 ue(v) 
+    else if (modification_of_pic_nums_idc == 4 ||
+                    modification_of_pic_nums_idc == 5) 
+  
+     abs_diff_view_idx_minus1 2 ue(v)
+            } while (modification_of_pic_nums_idc != 3)
+    }
+}
+    */
+    public class RefPicListMvcModification : IItuSerializable
+    {
+        private byte ref_pic_list_modification_flag_l0;
+        public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
+        private uint modification_of_pic_nums_idc;
+        public uint ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
+        private uint abs_diff_pic_num_minus1;
+        public uint AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
+        private uint long_term_pic_num;
+        public uint LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+        private uint abs_diff_view_idx_minus1;
+        public uint AbsDiffViewIdxMinus1 { get { return abs_diff_view_idx_minus1; } set { abs_diff_view_idx_minus1 = value; } }
+        private byte ref_pic_list_modification_flag_l1;
+        public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public RefPicListMvcModification()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.SliceHeader.SliceType % 5 != 2 && context.SliceHeader.SliceType % 5 != 4)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0);
+
+                if (ref_pic_list_modification_flag_l0 != 0)
+                {
+
+                    do
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
+                        }
+                        else if (modification_of_pic_nums_idc == 2)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                        }
+                        else if (modification_of_pic_nums_idc == 4 ||
+                    modification_of_pic_nums_idc == 5)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_view_idx_minus1);
+                        }
+                    } while (modification_of_pic_nums_idc != 3);
+                }
+            }
+
+            if (context.SliceHeader.SliceType % 5 == 1)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
+
+                if (ref_pic_list_modification_flag_l1 != 0)
+                {
+
+                    do
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
+                        }
+                        else if (modification_of_pic_nums_idc == 2)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                        }
+                        else if (modification_of_pic_nums_idc == 4 ||
+                    modification_of_pic_nums_idc == 5)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_view_idx_minus1);
+                        }
+                    } while (modification_of_pic_nums_idc != 3);
+                }
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            if (context.SliceHeader.SliceType % 5 != 2 && context.SliceHeader.SliceType % 5 != 4)
+            {
+                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0);
+
+                if (ref_pic_list_modification_flag_l0 != 0)
+                {
+
+                    do
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
+                        }
+                        else if (modification_of_pic_nums_idc == 2)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                        }
+                        else if (modification_of_pic_nums_idc == 4 ||
+                    modification_of_pic_nums_idc == 5)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_view_idx_minus1);
+                        }
+                    } while (modification_of_pic_nums_idc != 3);
+                }
+            }
+
+            if (context.SliceHeader.SliceType % 5 == 1)
+            {
+                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
+
+                if (ref_pic_list_modification_flag_l1 != 0)
+                {
+
+                    do
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc == 0 ||
+                    modification_of_pic_nums_idc == 1)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
+                        }
+                        else if (modification_of_pic_nums_idc == 2)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                        }
+                        else if (modification_of_pic_nums_idc == 4 ||
+                    modification_of_pic_nums_idc == 5)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_view_idx_minus1);
+                        }
+                    } while (modification_of_pic_nums_idc != 3);
+                }
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+   
 
 parallel_decoding_info( payloadSize ) {  
  seq_parameter_set_id 5 ue(v) 
@@ -15532,6 +17695,597 @@ vsp_param( numViews, predDirection, index ) {
 
     /*
    
+
+slice_header_in_3davc_extension() {  
+ first_mb_in_slice 2 ue(v) 
+ slice_type 2 ue(v) 
+ pic_parameter_set_id 2 ue(v)
+    if (avc_3d_extension_flag && slice_header_prediction_flag != 0) {   
+  pre_slice_header_src 2 u(2)
+        if (slice_type == P || slice_type == SP || slice_type == B) { 
+   pre_ref_lists_src 2 u(2)
+            if (!pre_ref_lists_src) {   
+    num_ref_idx_active_override_flag 2 u(1)
+                if (num_ref_idx_active_override_flag) {   
+    num_ref_idx_l0_active_minus1 2 ue(v)
+                    if (slice_type == B) 
+     num_ref_idx_l1_active_minus1 2 ue(v)
+                }
+                ref_pic_list_mvc_modification()  /* specified in Annex H *//* 2
+            }
+        }
+        if ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || (weighted_bipred_idc == 1 && slice_type == B)) { 
+   pre_pred_weight_table_src 2 u(2)
+            if (!pre_pred_weight_table_src)
+                pred_weight_table() 2
+        }
+        if (nal_ref_idc != 0) {   
+   pre_dec_ref_pic_marking_src 2 u(2)
+            if (!pre_dec_ref_pic_marking_src)
+                dec_ref_pic_marking() 2
+        }   
+  slice_qp_delta 2 se(v)
+    } else {
+        if (separate_colour_plane_flag == 1)   
+   colour_plane_id 2 u(2) 
+  frame_num 2 u(v)
+        if (!frame_mbs_only_flag) {   
+   field_pic_flag 2 u(1)
+            if (field_pic_flag)   
+    bottom_field_flag 2 u(1)
+        }
+        if (IdrPicFlag)   
+   idr_pic_id 2 ue(v)
+        if (pic_order_cnt_type == 0) {   
+   pic_order_cnt_lsb 2 u(v)
+            if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)   
+    delta_pic_order_cnt_bottom 2 se(v)
+        }
+        if (pic_order_cnt_type == 1 && !delta_pic_order_always_zero_flag) {
+            delta_pic_order_cnt[0] 2 se(v)
+            if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)
+                delta_pic_order_cnt[1] 2 se(v)
+        }
+        if (redundant_pic_cnt_present_flag)   
+   redundant_pic_cnt 2 ue(v)
+        if (slice_type == B)   
+   direct_spatial_mv_pred_flag 2 u(1)
+        if (slice_type == P || slice_type == SP || slice_type == B) {   
+   num_ref_idx_active_override_flag 2 u(1)
+            if (num_ref_idx_active_override_flag) {   
+    num_ref_idx_l0_active_minus1 2 ue(v)
+                if (slice_type == B)   
+     num_ref_idx_l1_active_minus1 2 ue(v)
+            }
+        }
+        if (nal_unit_type == 20 || nal_unit_type == 21)
+            ref_pic_list_mvc_modification()  /* specified in Annex H *//* 2  
+  else
+        ref_pic_list_modification() 2
+        if ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || (weighted_bipred_idc == 1 && slice_type == B))
+            pred_weight_table() 2
+        if (nal_ref_idc != 0)
+            dec_ref_pic_marking() 2
+        if (entropy_coding_mode_flag && slice_type != I && slice_type != SI) 
+   cabac_init_idc 2 ue(v) 
+  slice_qp_delta 2 se(v)
+        if (slice_type == SP || slice_type == SI) {
+            if (slice_type == SP)   
+    sp_for_switch_flag 2 u(1) 
+   slice_qs_delta 2 se(v)
+        }
+        if (deblocking_filter_control_present_flag) {   
+   disable_deblocking_filter_idc 2 ue(v)
+            if (disable_deblocking_filter_idc != 1) {   
+    slice_alpha_c0_offset_div2 2 se(v) 
+    slice_beta_offset_div2 2 se(v)
+            }
+        }
+        if (num_slice_groups_minus1 > 0 && slice_group_map_type >= 3 && slice_group_map_type <= 5) 
+     slice_group_change_cycle 2 u(v)
+        if (nal_unit_type == 21 && (slice_type != I && slice_type != SI)) {
+            if (DepthFlag)   
+    depth_weighted_pred_flag 2 u(1) 
+   else if (avc_3d_extension_flag) {   
+    dmvp_flag 2 u(1)
+                if (seq_view_synthesis_flag)   
+     slice_vsp_flag 2 u(1)
+            }
+            if (three_dv_acquisition_idc != 1 && (depth_weighted_pred_flag || dmvp_flag) ) 
+    dps_id 2 ue(v)
+        }
+    }
+}
+    */
+    public class SliceHeaderIn3davcExtension : IItuSerializable
+    {
+        private uint first_mb_in_slice;
+        public uint FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
+        private uint slice_type;
+        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
+        private uint pic_parameter_set_id;
+        public uint PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
+        private uint pre_slice_header_src;
+        public uint PreSliceHeaderSrc { get { return pre_slice_header_src; } set { pre_slice_header_src = value; } }
+        private uint pre_ref_lists_src;
+        public uint PreRefListsSrc { get { return pre_ref_lists_src; } set { pre_ref_lists_src = value; } }
+        private byte num_ref_idx_active_override_flag;
+        public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
+        private uint num_ref_idx_l0_active_minus1;
+        public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
+        private uint num_ref_idx_l1_active_minus1;
+        public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
+        private RefPicListMvcModification ref_pic_list_mvc_modification;
+        public RefPicListMvcModification RefPicListMvcModification { get { return ref_pic_list_mvc_modification; } set { ref_pic_list_mvc_modification = value; } }
+        private uint pre_pred_weight_table_src;
+        public uint PrePredWeightTableSrc { get { return pre_pred_weight_table_src; } set { pre_pred_weight_table_src = value; } }
+        private PredWeightTable pred_weight_table;
+        public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
+        private uint pre_dec_ref_pic_marking_src;
+        public uint PreDecRefPicMarkingSrc { get { return pre_dec_ref_pic_marking_src; } set { pre_dec_ref_pic_marking_src = value; } }
+        private DecRefPicMarking dec_ref_pic_marking;
+        public DecRefPicMarking DecRefPicMarking { get { return dec_ref_pic_marking; } set { dec_ref_pic_marking = value; } }
+        private int slice_qp_delta;
+        public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
+        private uint colour_plane_id;
+        public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
+        private uint frame_num;
+        public uint FrameNum { get { return frame_num; } set { frame_num = value; } }
+        private byte field_pic_flag;
+        public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
+        private byte bottom_field_flag;
+        public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
+        private uint idr_pic_id;
+        public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
+        private uint pic_order_cnt_lsb;
+        public uint PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
+        private int delta_pic_order_cnt_bottom;
+        public int DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
+        private int[] delta_pic_order_cnt;
+        public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
+        private uint redundant_pic_cnt;
+        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+        private byte direct_spatial_mv_pred_flag;
+        public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
+        private RefPicListModification ref_pic_list_modification;
+        public RefPicListModification RefPicListModification { get { return ref_pic_list_modification; } set { ref_pic_list_modification = value; } }
+        private uint cabac_init_idc;
+        public uint CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
+        private byte sp_for_switch_flag;
+        public byte SpForSwitchFlag { get { return sp_for_switch_flag; } set { sp_for_switch_flag = value; } }
+        private int slice_qs_delta;
+        public int SliceQsDelta { get { return slice_qs_delta; } set { slice_qs_delta = value; } }
+        private uint disable_deblocking_filter_idc;
+        public uint DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
+        private int slice_alpha_c0_offset_div2;
+        public int SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
+        private int slice_beta_offset_div2;
+        public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
+        private uint slice_group_change_cycle;
+        public uint SliceGroupChangeCycle { get { return slice_group_change_cycle; } set { slice_group_change_cycle = value; } }
+        private byte depth_weighted_pred_flag;
+        public byte DepthWeightedPredFlag { get { return depth_weighted_pred_flag; } set { depth_weighted_pred_flag = value; } }
+        private byte dmvp_flag;
+        public byte DmvpFlag { get { return dmvp_flag; } set { dmvp_flag = value; } }
+        private byte slice_vsp_flag;
+        public byte SliceVspFlag { get { return slice_vsp_flag; } set { slice_vsp_flag = value; } }
+        private uint dps_id;
+        public uint DpsId { get { return dps_id; } set { dps_id = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceHeaderIn3davcExtension()
+        {
+
+        }
+
+        public ulong Read(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice);
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
+
+            if (context.NalHeader.Avc3dExtensionFlag != 0 && context.SubsetSps.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
+            {
+                size += stream.ReadUnsignedInt(size, 2, out this.pre_slice_header_src);
+
+                if (slice_type == P || slice_type == SP || slice_type == B)
+                {
+                    size += stream.ReadUnsignedInt(size, 2, out this.pre_ref_lists_src);
+
+                    if (pre_ref_lists_src == 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
+
+                        if (num_ref_idx_active_override_flag != 0)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
+
+                            if (slice_type == B)
+                            {
+                                size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
+                            }
+                        }
+                        size += stream.ReadClass<RefPicListMvcModification>(size, context, () => new RefPicListMvcModification(), out this.ref_pic_list_mvc_modification); // specified in Annex H 
+                    }
+                }
+
+                if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) || (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+                {
+                    size += stream.ReadUnsignedInt(size, 2, out this.pre_pred_weight_table_src);
+
+                    if (pre_pred_weight_table_src == 0)
+                    {
+                        size += stream.ReadClass<PredWeightTable>(size, context, () => new PredWeightTable(), out this.pred_weight_table);
+                    }
+                }
+
+                if (context.NalHeader.NalRefIdc != 0)
+                {
+                    size += stream.ReadUnsignedInt(size, 2, out this.pre_dec_ref_pic_marking_src);
+
+                    if (pre_dec_ref_pic_marking_src == 0)
+                    {
+                        size += stream.ReadClass<DecRefPicMarking>(size, context, () => new DecRefPicMarking(), out this.dec_ref_pic_marking);
+                    }
+                }
+                size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
+            }
+            else
+            {
+
+                if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+                {
+                    size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+                }
+                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.FrameNum, out this.frame_num);
+
+                if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
+
+                    if (field_pic_flag != 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag);
+                    }
+                }
+
+                if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
+                }
+
+                if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+                {
+                    size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.PicOrderCntLsb, out this.pic_order_cnt_lsb);
+
+                    if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                    {
+                        size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
+                    }
+                }
+
+                if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+                {
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
+
+                    if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                    {
+                        size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
+                    }
+                }
+
+                if (context.Pps.RedundantPicCntPresentFlag != 0)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+                }
+
+                if (slice_type == B)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
+                }
+
+                if (slice_type == P || slice_type == SP || slice_type == B)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
+
+                    if (num_ref_idx_active_override_flag != 0)
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
+
+                        if (slice_type == B)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
+                        }
+                    }
+                }
+
+                if (context.NalHeader.NalUnitType == 20 || context.NalHeader.NalUnitType == 21)
+                {
+                    size += stream.ReadClass<RefPicListMvcModification>(size, context, () => new RefPicListMvcModification(), out this.ref_pic_list_mvc_modification); // specified in Annex H 
+                }
+                else
+                {
+                    size += stream.ReadClass<RefPicListModification>(size, context, () => new RefPicListModification(), out this.ref_pic_list_modification);
+                }
+
+                if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) || (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+                {
+                    size += stream.ReadClass<PredWeightTable>(size, context, () => new PredWeightTable(), out this.pred_weight_table);
+                }
+
+                if (context.NalHeader.NalRefIdc != 0)
+                {
+                    size += stream.ReadClass<DecRefPicMarking>(size, context, () => new DecRefPicMarking(), out this.dec_ref_pic_marking);
+                }
+
+                if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != I && slice_type != SI)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
+                }
+                size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
+
+                if (slice_type == SP || slice_type == SI)
+                {
+
+                    if (slice_type == SP)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag);
+                    }
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_qs_delta);
+                }
+
+                if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
+
+                    if (disable_deblocking_filter_idc != 1)
+                    {
+                        size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2);
+                        size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2);
+                    }
+                }
+
+                if (context.Pps.NumSliceGroupsMinus1 > 0 && context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+                {
+                    size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                }
+
+                if (context.NalHeader.NalUnitType == 21 && (slice_type != I && slice_type != SI))
+                {
+
+                    if (DepthFlag != 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.depth_weighted_pred_flag);
+                    }
+                    else if (context.NalHeader.Avc3dExtensionFlag != 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.dmvp_flag);
+
+                        if (context.SubsetSps.SeqParameterSet3davcExtension.SeqViewSynthesisFlag != 0)
+                        {
+                            size += stream.ReadUnsignedInt(size, 1, out this.slice_vsp_flag);
+                        }
+                    }
+
+                    if (context.SubsetSps.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc != 1 && (depth_weighted_pred_flag != 0 || dmvp_flag != 0))
+                    {
+                        size += stream.ReadUnsignedIntGolomb(size, out this.dps_id);
+                    }
+                }
+            }
+
+            return size;
+        }
+
+        public ulong Write(H264Context context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice);
+            size += stream.WriteUnsignedIntGolomb(this.slice_type);
+            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
+
+            if (context.NalHeader.Avc3dExtensionFlag != 0 && context.SubsetSps.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
+            {
+                size += stream.WriteUnsignedInt(2, this.pre_slice_header_src);
+
+                if (slice_type == P || slice_type == SP || slice_type == B)
+                {
+                    size += stream.WriteUnsignedInt(2, this.pre_ref_lists_src);
+
+                    if (pre_ref_lists_src == 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
+
+                        if (num_ref_idx_active_override_flag != 0)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
+
+                            if (slice_type == B)
+                            {
+                                size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
+                            }
+                        }
+                        size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+                    }
+                }
+
+                if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) || (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+                {
+                    size += stream.WriteUnsignedInt(2, this.pre_pred_weight_table_src);
+
+                    if (pre_pred_weight_table_src == 0)
+                    {
+                        size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
+                    }
+                }
+
+                if (context.NalHeader.NalRefIdc != 0)
+                {
+                    size += stream.WriteUnsignedInt(2, this.pre_dec_ref_pic_marking_src);
+
+                    if (pre_dec_ref_pic_marking_src == 0)
+                    {
+                        size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+                    }
+                }
+                size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
+            }
+            else
+            {
+
+                if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+                {
+                    size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+                }
+                size += stream.WriteUnsignedIntVariable(context.SliceHeader.FrameNum, this.frame_num);
+
+                if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+                {
+                    size += stream.WriteUnsignedInt(1, this.field_pic_flag);
+
+                    if (field_pic_flag != 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.bottom_field_flag);
+                    }
+                }
+
+                if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
+                }
+
+                if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+                {
+                    size += stream.WriteUnsignedIntVariable(context.SliceHeader.PicOrderCntLsb, this.pic_order_cnt_lsb);
+
+                    if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                    {
+                        size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
+                    }
+                }
+
+                if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+                {
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
+
+                    if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                    {
+                        size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
+                    }
+                }
+
+                if (context.Pps.RedundantPicCntPresentFlag != 0)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+                }
+
+                if (slice_type == B)
+                {
+                    size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
+                }
+
+                if (slice_type == P || slice_type == SP || slice_type == B)
+                {
+                    size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
+
+                    if (num_ref_idx_active_override_flag != 0)
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
+
+                        if (slice_type == B)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
+                        }
+                    }
+                }
+
+                if (context.NalHeader.NalUnitType == 20 || context.NalHeader.NalUnitType == 21)
+                {
+                    size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+                }
+                else
+                {
+                    size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
+                }
+
+                if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) || (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+                {
+                    size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
+                }
+
+                if (context.NalHeader.NalRefIdc != 0)
+                {
+                    size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+                }
+
+                if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != I && slice_type != SI)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
+                }
+                size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
+
+                if (slice_type == SP || slice_type == SI)
+                {
+
+                    if (slice_type == SP)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag);
+                    }
+                    size += stream.WriteSignedIntGolomb(this.slice_qs_delta);
+                }
+
+                if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
+
+                    if (disable_deblocking_filter_idc != 1)
+                    {
+                        size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2);
+                        size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2);
+                    }
+                }
+
+                if (context.Pps.NumSliceGroupsMinus1 > 0 && context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+                {
+                    size += stream.WriteUnsignedIntVariable(context.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                }
+
+                if (context.NalHeader.NalUnitType == 21 && (slice_type != I && slice_type != SI))
+                {
+
+                    if (DepthFlag != 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.depth_weighted_pred_flag);
+                    }
+                    else if (context.NalHeader.Avc3dExtensionFlag != 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.dmvp_flag);
+
+                        if (context.SubsetSps.SeqParameterSet3davcExtension.SeqViewSynthesisFlag != 0)
+                        {
+                            size += stream.WriteUnsignedInt(1, this.slice_vsp_flag);
+                        }
+                    }
+
+                    if (context.SubsetSps.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc != 1 && (depth_weighted_pred_flag != 0 || dmvp_flag != 0))
+                    {
+                        size += stream.WriteUnsignedIntGolomb(this.dps_id);
+                    }
+                }
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+  
 
 green_metadata(payloadSize) {
     green_metadata_type 5 u(8)

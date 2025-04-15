@@ -671,8 +671,72 @@ namespace Sharp{type}
                 case "SubHeightC":
                     return "((context.Sps.SeqParameterSetData.ChromaFormatIdc == 2 || context.Sps.SeqParameterSetData.ChromaFormatIdc == 3) ? 1 : 2)";
 
+                // TODO: slice_header
+                case "separate_colour_plane_flag":
+                    return "context.Sps.SeqParameterSetData.SeparateColourPlaneFlag";
+                case "redundant_pic_cnt_present_flag":
+                    return "context.Pps.RedundantPicCntPresentFlag";
+                case "entropy_coding_mode_flag":
+                    return "context.Pps.EntropyCodingModeFlag";
+                case "svc_extension_flag":
+                    return "context.NalHeader.SvcExtensionFlag";
+                case "avc_3d_extension_flag":
+                    return "context.NalHeader.Avc3dExtensionFlag";
+                case "frame_num":
+                    return "context.SliceHeader.FrameNum";
+                case "pic_order_cnt_type":
+                    return "context.Sps.SeqParameterSetData.PicOrderCntType";
+                case "pic_order_cnt_lsb":
+                    return "context.SliceHeader.PicOrderCntLsb";
+                case "bottom_field_pic_order_in_frame_present_flag":
+                    return "context.Pps.BottomFieldPicOrderInFramePresentFlag";
+                case "delta_pic_order_always_zero_flag":
+                    return "context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag";
+                case "nal_unit_type":
+                    return "context.NalHeader.NalUnitType";
+                case "weighted_pred_flag":
+                    return "context.Pps.WeightedPredFlag";
+                case "weighted_bipred_idc":
+                    return "context.Pps.WeightedBipredIdc";
+                case "nal_ref_idc":
+                    return "context.NalHeader.NalRefIdc";
+                case "deblocking_filter_control_present_flag":
+                    return "context.Pps.DeblockingFilterControlPresentFlag";
+                case "slice_group_map_type":
+                    return "context.Pps.SliceGroupMapType";
+                case "slice_group_change_cycle":
+                    return "context.SliceHeader.SliceGroupChangeCycle";
+                case "slice_type":
+                    return "context.SliceHeader.SliceType";
+                case "num_ref_idx_l0_active_minus1":
+                    return "context.SliceHeader.NumRefIdxL0ActiveMinus1";
+                case "num_ref_idx_l1_active_minus1":
+                    return "context.SliceHeader.NumRefIdxL1ActiveMinus1";
+                case "use_ref_base_pic_flag":
+                    return "context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag";
+                case "idr_flag":
+                    return "context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag";
+                case "quality_id":
+                    return "context.NalHeader.NalUnitHeaderSvcExtension.QualityId";
+                case "no_inter_layer_pred_flag":
+                    return "context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag";
+                case "slice_header_restriction_flag":
+                    return "context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag";
+                case "inter_layer_deblocking_filter_control_present_flag":
+                    return "context.SubsetSps.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag";
+                case "extended_spatial_scalability_idc":
+                    return "context.SubsetSps.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc";
+                case "adaptive_tcoeff_level_prediction_flag":
+                    return "context.SubsetSps.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag";
+                case "slice_header_prediction_flag":
+                    return "context.SubsetSps.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag";
+                case "seq_view_synthesis_flag":
+                    return "context.SubsetSps.SeqParameterSet3davcExtension.SeqViewSynthesisFlag";
+                case "three_dv_acquisition_idc":
+                    return "context.SubsetSps.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc";
+
                 default:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException(parameter);
             }
         }
 
