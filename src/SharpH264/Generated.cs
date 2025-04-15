@@ -13052,20 +13052,16 @@ depth_representation_info( payloadSize ) {
   if( d_min_flag  ||  d_max_flag )   
    disparity_reference_view[ i ] 5 ue(v) 
   if( z_near_flag )   
-   depth_representation_sei_element( ZNearSign, ZNearExp, 
-             ZNearMantissa, ZNearManLen ) 
+   depth_representation_sei_element( ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen ) 
   
   if( z_far_flag )   
-   depth_representation_sei_element( ZFarSign, ZFarExp, 
-             ZFarMantissa, ZFarManLen ) 
+   depth_representation_sei_element( ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen ) 
   
   if( d_min_flag )   
-   depth_representation_sei_element( DMinSign, DMinExp, 
-             DMinMantissa, DMinManLen ) 
+   depth_representation_sei_element( DMinSign, DMinExp, DMinMantissa, DMinManLen ) 
   
   if( d_max_flag )   
-   depth_representation_sei_element( DMaxSign, DMaxExp, 
-             DMaxMantissa, DMaxManLen ) 
+   depth_representation_sei_element( DMaxSign, DMaxExp, DMaxMantissa, DMaxManLen ) 
   
  }   
  if( depth_representation_type  ==  3 ) {   
@@ -13171,26 +13167,22 @@ depth_representation_info( payloadSize ) {
 
                 if (z_near_flag != 0)
                 {
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("ZNearSign"), H264Helpers.GetArray2("ZNearExp"),
-             H264Helpers.GetArray2("ZNearMantissa"), H264Helpers.GetArray2("ZNearManLen")), out this.depth_representation_sei_element[i]);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, () => new DepthRepresentationSeiElement(), out this.depth_representation_sei_element[i]);
                 }
 
                 if (z_far_flag != 0)
                 {
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("ZFarSign"), H264Helpers.GetArray2("ZFarExp"),
-             H264Helpers.GetArray2("ZFarMantissa"), H264Helpers.GetArray2("ZFarManLen")), out this.depth_representation_sei_element[i]);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, () => new DepthRepresentationSeiElement(), out this.depth_representation_sei_element[i]);
                 }
 
                 if (d_min_flag != 0)
                 {
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("DMinSign"), H264Helpers.GetArray2("DMinExp"),
-             H264Helpers.GetArray2("DMinMantissa"), H264Helpers.GetArray2("DMinManLen")), out this.depth_representation_sei_element[i]);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, () => new DepthRepresentationSeiElement(), out this.depth_representation_sei_element[i]);
                 }
 
                 if (d_max_flag != 0)
                 {
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, () => new DepthRepresentationSeiElement(H264Helpers.GetArray2("DMaxSign"), H264Helpers.GetArray2("DMaxExp"),
-             H264Helpers.GetArray2("DMaxMantissa"), H264Helpers.GetArray2("DMaxManLen")), out this.depth_representation_sei_element[i]);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, () => new DepthRepresentationSeiElement(), out this.depth_representation_sei_element[i]);
                 }
             }
 
@@ -13294,8 +13286,7 @@ depth_representation_info( payloadSize ) {
     /*
    
 
-depth_representation_sei_element( outSign, outExp, outMantissa, 
- outManLen ) { 
+depth_representation_sei_element( outSign, outExp, outMantissa, outManLen ) { 
  da_sign_flag 5 u(1) 
  da_exponent 5 u(7) 
  da_mantissa_len_minus1 5 u(5) 
@@ -13304,14 +13295,6 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
     */
     public class DepthRepresentationSeiElement : IItuSerializable
     {
-        private uint[,] outSign;
-        public uint[,] OutSign { get { return outSign; } set { outSign = value; } }
-        private uint[,] outExp;
-        public uint[,] OutExp { get { return outExp; } set { outExp = value; } }
-        private uint[,] outMantissa;
-        public uint[,] OutMantissa { get { return outMantissa; } set { outMantissa = value; } }
-        private uint[,] outManLen;
-        public uint[,] OutManLen { get { return outManLen; } set { outManLen = value; } }
         private byte da_sign_flag;
         public byte DaSignFlag { get { return da_sign_flag; } set { da_sign_flag = value; } }
         private uint da_exponent;
@@ -13324,12 +13307,9 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public DepthRepresentationSeiElement(uint[,] outSign, uint[,] outExp, uint[,] outMantissa, uint[,] outManLen)
+        public DepthRepresentationSeiElement()
         {
-            this.outSign = outSign;
-            this.outExp = outExp;
-            this.outMantissa = outMantissa;
-            this.outManLen = outManLen;
+
         }
 
         public ulong Read(H264Context context, ItuStream stream)
@@ -15062,12 +15042,10 @@ depth_ranges( numViews, predDirection, index ) {
  z_near_flag 11 u(1) 
  z_far_flag 11 u(1) 
  if( z_near_flag )   
-  three_dv_acquisition_element( numViews, predDirection, 7, index, 
-   ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen ) 
+  three_dv_acquisition_element( numViews, predDirection, 7, index, ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen ) 
   
  if( z_far_flag )   
-  three_dv_acquisition_element( numViews, predDirection, 7, index, 
-   ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen ) 
+  three_dv_acquisition_element( numViews, predDirection, 7, index, ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen ) 
   
 }
     */
@@ -15107,14 +15085,12 @@ depth_ranges( numViews, predDirection, index ) {
 
             if (z_near_flag != 0)
             {
-                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, context, () => new ThreeDvAcquisitionElement(numViews, predDirection, 7, index,
-   H264Helpers.GetArray2("ZNearSign"), H264Helpers.GetArray2("ZNearExp"), H264Helpers.GetArray2("ZNearMantissa"), H264Helpers.GetArray2("ZNearManLen")), out this.three_dv_acquisition_element);
+                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, context, () => new ThreeDvAcquisitionElement(numViews, predDirection, 7, index, new uint[index, numViews], new uint[index, numViews], new uint[index, numViews], new uint[index, numViews]), out this.three_dv_acquisition_element);
             }
 
             if (z_far_flag != 0)
             {
-                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, context, () => new ThreeDvAcquisitionElement(numViews, predDirection, 7, index,
-   H264Helpers.GetArray2("ZFarSign"), H264Helpers.GetArray2("ZFarExp"), H264Helpers.GetArray2("ZFarMantissa"), H264Helpers.GetArray2("ZFarManLen")), out this.three_dv_acquisition_element0);
+                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, context, () => new ThreeDvAcquisitionElement(numViews, predDirection, 7, index, new uint[index, numViews], new uint[index, numViews], new uint[index, numViews], new uint[index, numViews]), out this.three_dv_acquisition_element0);
             }
 
             return size;
@@ -15145,8 +15121,7 @@ depth_ranges( numViews, predDirection, index ) {
     /*
   
 
-three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, 
- outExp, outMantissa, outManLen ) { 
+three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, outExp, outMantissa, outManLen ) { 
  
  if( numViews > 1 )   
   element_equal_flag 11 u(1) 

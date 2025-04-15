@@ -1951,20 +1951,16 @@ depth_representation_info( payloadSize ) {
   if( d_min_flag  ||  d_max_flag )   
    disparity_reference_view[ i ] 5 ue(v) 
   if( z_near_flag )   
-   depth_representation_sei_element( ZNearSign, ZNearExp, 
-             ZNearMantissa, ZNearManLen ) 
+   depth_representation_sei_element( ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen ) 
   
   if( z_far_flag )   
-   depth_representation_sei_element( ZFarSign, ZFarExp, 
-             ZFarMantissa, ZFarManLen ) 
+   depth_representation_sei_element( ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen ) 
   
   if( d_min_flag )   
-   depth_representation_sei_element( DMinSign, DMinExp, 
-             DMinMantissa, DMinManLen ) 
+   depth_representation_sei_element( DMinSign, DMinExp, DMinMantissa, DMinManLen ) 
   
   if( d_max_flag )   
-   depth_representation_sei_element( DMaxSign, DMaxExp, 
-             DMaxMantissa, DMaxManLen ) 
+   depth_representation_sei_element( DMaxSign, DMaxExp, DMaxMantissa, DMaxManLen ) 
   
  }   
  if( depth_representation_type  ==  3 ) {   
@@ -1974,8 +1970,7 @@ depth_representation_info( payloadSize ) {
  }   
 }   
 
-depth_representation_sei_element( outSign, outExp, outMantissa, 
- outManLen ) { 
+depth_representation_sei_element( outSign, outExp, outMantissa, outManLen ) { 
  da_sign_flag 5 u(1) 
  da_exponent 5 u(7) 
  da_mantissa_len_minus1 5 u(5) 
@@ -2242,17 +2237,14 @@ depth_ranges( numViews, predDirection, index ) {
  z_near_flag 11 u(1) 
  z_far_flag 11 u(1) 
  if( z_near_flag )   
-  3dv_acquisition_element( numViews, predDirection, 7, index, 
-   ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen ) 
+  3dv_acquisition_element( numViews, predDirection, 7, index, ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen ) 
   
  if( z_far_flag )   
-  3dv_acquisition_element( numViews, predDirection, 7, index, 
-   ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen ) 
+  3dv_acquisition_element( numViews, predDirection, 7, index, ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen ) 
   
 }  
 
-3dv_acquisition_element( numViews, predDirection, expLen, index, outSign, 
- outExp, outMantissa, outManLen ) { 
+3dv_acquisition_element( numViews, predDirection, expLen, index, outSign, outExp, outMantissa, outManLen ) { 
  
  if( numViews > 1 )   
   element_equal_flag 11 u(1) 

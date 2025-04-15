@@ -237,7 +237,7 @@ namespace ItuGenerator
         }
 
         public string ClassName { get; }
-        public string ClassParameter { get; }
+        public string ClassParameter { get; set; }
         public IEnumerable<ItuCode> Fields { get; }
         public int EndOffset { get; }
 

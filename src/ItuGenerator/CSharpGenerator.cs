@@ -39,6 +39,11 @@ namespace Sharp{type}
 
         private string GenerateClass(ItuClass ituClass)
         {
+            if(ituClass.ClassName == "depth_representation_sei_element")
+            {
+                ituClass.ClassParameter = "()"; // remove all "out" parameters
+            }
+
             string resultCode = @$"
     /*
 {ituClass.Syntax.Replace("*/", "*//*")}
@@ -483,7 +488,7 @@ namespace Sharp{type}
                     return "stream.ReadBits(size, 8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, () => new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter)}, ";
+                        return $"stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, () => new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter, ituField.ClassType)}, ";
                     throw new NotImplementedException();
             }
         }
@@ -671,28 +676,8 @@ namespace Sharp{type}
             }
         }
 
-        private string FixMissingParameters(ItuClass b, string parameter)
+        private string FixMissingParameters(ItuClass b, string parameter, string classType)
         {
-            parameter = parameter.Replace("ZNearSign", $"H264Helpers.GetArray2(\"ZNearSign\")");
-            parameter = parameter.Replace("ZNearExp", $"H264Helpers.GetArray2(\"ZNearExp\")");
-            parameter = parameter.Replace("ZNearMantissa", $"H264Helpers.GetArray2(\"ZNearMantissa\")");
-            parameter = parameter.Replace("ZNearManLen", $"H264Helpers.GetArray2(\"ZNearManLen\")");
-
-            parameter = parameter.Replace("ZFarSign", $"H264Helpers.GetArray2(\"ZFarSign\")");
-            parameter = parameter.Replace("ZFarExp", $"H264Helpers.GetArray2(\"ZFarExp\")");
-            parameter = parameter.Replace("ZFarMantissa", $"H264Helpers.GetArray2(\"ZFarMantissa\")");
-            parameter = parameter.Replace("ZFarManLen", $"H264Helpers.GetArray2(\"ZFarManLen\")");
-
-            parameter = parameter.Replace("DMinSign", $"H264Helpers.GetArray2(\"DMinSign\")");
-            parameter = parameter.Replace("DMinExp", $"H264Helpers.GetArray2(\"DMinExp\")");
-            parameter = parameter.Replace("DMinMantissa", $"H264Helpers.GetArray2(\"DMinMantissa\")");
-            parameter = parameter.Replace("DMinManLen", $"H264Helpers.GetArray2(\"DMinManLen\")");
-
-            parameter = parameter.Replace("DMaxSign", $"H264Helpers.GetArray2(\"DMaxSign\")");
-            parameter = parameter.Replace("DMaxExp", $"H264Helpers.GetArray2(\"DMaxExp\")");
-            parameter = parameter.Replace("DMaxMantissa", $"H264Helpers.GetArray2(\"DMaxMantissa\")");
-            parameter = parameter.Replace("DMaxManLen", $"H264Helpers.GetArray2(\"DMaxManLen\")");
-            
             parameter = parameter.Replace("NumDepthViews", ReplaceParameter("NumDepthViews"));
 
             parameter = parameter.Replace("ScalingList4x4[ i ]", "new uint[6 * 16]");
@@ -700,6 +685,12 @@ namespace Sharp{type}
 
             parameter = parameter.Replace("ScalingList8x8[ i - 6 ]", "new uint[6 * 64]");
             parameter = parameter.Replace("UseDefaultScalingMatrix8x8Flag[ i - 6 ]", $"0");
+
+            if (classType == "depth_representation_sei_element")
+                parameter = "()";
+
+            parameter = parameter.Replace("ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen", "new uint[index, numViews], new uint[index, numViews], new uint[index, numViews], new uint[index, numViews]");
+            parameter = parameter.Replace("ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen", "new uint[index, numViews], new uint[index, numViews], new uint[index, numViews], new uint[index, numViews]");
 
             return parameter;
         }
@@ -1079,12 +1070,6 @@ namespace Sharp{type}
 
             condition = condition.Replace("NumClockTS", "this.pic_struct switch\r\n{\r\n0u => 1,\r\n1u => 1,\r\n2u => 1,\r\n3u => 2,\r\n4u => 2,\r\n5u => 3,\r\n6u => 3,\r\n7u => 2,\r\n8u => 3,\r\n_ => throw new NotSupportedException()\r\n}");
 
-            //condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] == 0");
-            //condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] == 0");
-            //condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3) != 0");
-            //condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2) != 0");
-            //condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternLuma\") & ( 1 << (int) i8x8 )", "(H264Helpers.GetValue(\"CodedBlockPatternLuma\") & ( 1 << (int) i8x8 )) != 0");
-
             return condition;
         }
 
@@ -1245,7 +1230,7 @@ namespace Sharp{type}
         private string[] GetCtorParameters(ItuClass ituClass)
         {
             var parameters = ituClass.ClassParameter.Substring(1, ituClass.ClassParameter.Length - 2).Split(',').Select(x => x.Trim()).ToArray();
-            if(parameters.Length == 1 && string.IsNullOrEmpty(parameters[0]))
+            if (parameters.Length == 1 && string.IsNullOrEmpty(parameters[0]))
             {
                 return new string[] { };
             }

@@ -37,49 +37,4 @@ namespace SharpH264
         public AccessUnitDelimiterRbsp Au { get; set; }
         public SeiRbsp Sei { get; set; }
     }
-
-    public class H264Helpers
-    {
-        public static uint[,] GetArray2(string field)
-        {
-            switch(field)
-            {
-                case "ZNearSign":
-                    throw new NotImplementedException();
-                case "ZNearExp":
-                    throw new NotImplementedException();
-                case "ZNearMantissa":
-                    throw new NotImplementedException();
-                case "ZNearManLen":
-                    throw new NotImplementedException();
-                case "ZFarSign":
-                    throw new NotImplementedException();
-                case "ZFarExp":
-                    throw new NotImplementedException();
-                case "ZFarMantissa":
-                    throw new NotImplementedException();
-                case "ZFarManLen":
-                    throw new NotImplementedException();
-                case "DMinSign":
-                    throw new NotImplementedException();
-                case "DMinExp":
-                    throw new NotImplementedException();
-                case "DMinMantissa":
-                    throw new NotImplementedException();
-                case "DMinManLen":
-                    throw new NotImplementedException();
-                case "DMaxSign":
-                    throw new NotImplementedException();
-                case "DMaxExp":
-                    throw new NotImplementedException();
-                case "DMaxMantissa":
-                    throw new NotImplementedException();
-                case "DMaxManLen":
-                    throw new NotImplementedException();
-
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-    }
 }
