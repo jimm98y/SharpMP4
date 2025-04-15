@@ -174,12 +174,12 @@ static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] s
         ulong ituSize = 0;
         NalUnit nu = new NalUnit((uint)sampleData.Length);
         ituSize += nu.Read(readContext, stream);
-        H264Helpers.SetNalUnit(nu);
+        readContext.NalHeader = nu;
 
         if(nu.NalUnitType == 7)
         {
             SeqParameterSetRbsp sps = new SeqParameterSetRbsp();
-            H264Helpers.SetSeqParameterSet(sps);
+            readContext.Sps = sps;
 
             sps.Read(readContext, stream);
 
@@ -199,7 +199,7 @@ static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] s
         else if(nu.NalUnitType == 8)
         {
             PicParameterSetRbsp pps = new PicParameterSetRbsp();
-            H264Helpers.SetPicParameterSet(pps);
+            readContext.Pps = pps;
 
             pps.Read(readContext, stream);
 
@@ -221,7 +221,7 @@ static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] s
             Debug.WriteLine("NALU: SEI");
 
             SeiRbsp sei = new SeiRbsp();
-            H264Helpers.SetSei(sei);
+            readContext.Sei = sei;
             ituSize += sei.Read(readContext, stream);
 
             var ms = new MemoryStream();

@@ -272,12 +272,6 @@ namespace Sharp{type}
             string fieldValue = field.Value;
             string fieldArray = field.FieldArray;
 
-            if(!string.IsNullOrEmpty(fieldArray))
-            {
-                fieldArray = fieldArray.Replace("TotalCoeff", "H264Helpers.TotalCoeff");
-                fieldArray = FixMissingFields(b, fieldArray);
-            }
-
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 string[] ignored = new string[]
@@ -389,9 +383,9 @@ namespace Sharp{type}
                 case "i(32)":
                     return "stream.WriteSignedInt(32, ";
                 case "u(v)":
-                    return $"stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount(\"{ituField.Name}\"), ";
+                    return $"stream.WriteUnsignedIntVariable({ReplaceParameter(ituField.Name)}, ";
                 case "i(v)":
-                    return $"stream.WriteSignedIntVariable(H264Helpers.GetVariableCount(\"{ituField.Name}\"), ";
+                    return $"stream.WriteSignedIntVariable({ReplaceParameter(ituField.Name)}, ";
                 case "ue(v)":
                     return "stream.WriteUnsignedIntGolomb(";
                 case "ae(v)":
@@ -464,9 +458,9 @@ namespace Sharp{type}
                 case "i(32)":
                     return "stream.ReadSignedInt(size, 32, ";
                 case "u(v)":
-                    return $"stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount(\"{ituField.Name}\"), ";
+                    return $"stream.ReadUnsignedIntVariable(size, {ReplaceParameter(ituField.Name)}, ";
                 case "i(v)":
-                    return $"stream.ReadSignedIntVariable(size, H264Helpers.GetVariableCount(\"{ituField.Name}\"), ";
+                    return $"stream.ReadSignedIntVariable(size, {ReplaceParameter(ituField.Name)}, ";
                 case "ue(v)":
                     return "stream.ReadUnsignedIntGolomb(size, ";
                 case "ae(v)":
@@ -494,6 +488,189 @@ namespace Sharp{type}
             }
         }
 
+        private string ReplaceParameter(string parameter)
+        {
+            switch(parameter)
+            {
+                case "AllViewsPairedFlag":
+                    return "((Func<uint>)(() =>\r\n            {\r\n                uint AllViewsPairedFlag = 1;\r\n                for (int i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)\r\n                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);\r\n                return AllViewsPairedFlag;\r\n            })).Invoke()";
+                case "cpb_cnt_minus1":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1";
+                case "ChromaArrayType":
+                    return "(context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0)";
+                case "IdrPicFlag":
+                    return "(uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0)";
+                case "NalHrdBpPresentFlag":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag";
+                case "VclHrdBpPresentFlag":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag";
+                case "initial_cpb_removal_delay_length_minus1":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1";
+                case "profile_idc":
+                    return "context.Sps.SeqParameterSetData.ProfileIdc";
+                case "chroma_format_idc":
+                    return "context.Sps.SeqParameterSetData.ChromaFormatIdc";
+                case "CpbDpbDelaysPresentFlag":
+                    return "(uint)(context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0)";
+                case "pic_struct_present_flag":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.PicStructPresentFlag";
+                case "NumDepthViews":
+                    return "context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews";
+                case "PicSizeInMapUnits":
+                    return "(context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1)";
+                case "time_offset_length":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength";
+                case "frame_mbs_only_flag":
+                    return "context.Sps.SeqParameterSetData.FrameMbsOnlyFlag";
+                case "num_slice_groups_minus1":
+                    return "context.Pps.NumSliceGroupsMinus1";
+                case "num_views_minus1":
+                    return "context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1";
+                case "anchor_pic_flag":
+                    return "context.NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag";
+                case "ref_dps_id0":
+                    return "context.Dps.RefDpsId0";
+                case "predWeight0":
+                    return "context.Dps.PredWeight0";
+                case "deltaFlag":
+                    return "0"; 
+                case "ref_dps_id1":
+                    return "context.Dps.RefDpsId1";
+                    // bit depth
+                case "bit_depth_aux_minus8":
+                    return "context.SpsExtension.BitDepthAuxMinus8";
+                case "cpb_removal_delay_length_minus1":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1";
+                case "dpb_output_delay_length_minus1":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1";
+                case "coded_data_bit_depth":
+                    return "context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth";
+                case "colour_remap_input_bit_depth":
+                    return "context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth";
+                case "colour_remap_output_bit_depth":
+                    return "context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth";
+                case "ar_object_confidence_length_minus1":
+                    return "context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1";
+                // TODO: !!!
+                case "da_mantissa_len_minus1":
+                    return "context.Sei.SeiMessage.SeiPayload.DepthRepresentationInfo.DepthRepresentationSeiElement.First().DaMantissaLenMinus1";
+                case "offset_len_minus1":
+                    return "context.Sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1";
+                case "expLen":
+                    return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
+                case "mantissa_len_minus1":
+                    return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1.First()";
+
+                // get array
+                case "num_anchor_refs_l0":
+                    return "context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0";
+                case "num_anchor_refs_l1":
+                    return "context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1";
+                case "num_non_anchor_refs_l0":
+                    return "context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0";
+                case "num_non_anchor_refs_l1":
+                    return "context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1";
+                case "num_init_pic_parameter_set_minus1":
+                    return "context.Sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1"; // looks like there is a typo...
+                case "additional_shift_present":
+                    return "context.Sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()"; // TODO: looks like a typo
+                case "texture_view_present_flag":
+                    return "context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()";
+
+                // get variable count
+                case "initial_cpb_removal_delay":
+                case "initial_cpb_removal_delay_offset":
+                    return "(context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1)";
+                case "alpha_opaque_value":
+                case "alpha_transparent_value":
+                    return "(context.SpsExtension.BitDepthAuxMinus8 + 9)";
+                case "slice_group_id":
+                    return "(uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1))";
+                case "cpb_removal_delay":
+                    return "(context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 + 1)";
+                case "dpb_output_delay":
+                    return "(context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1)";
+                case "time_offset":
+                    return "context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength";
+                case "start_of_coded_interval":
+                case "coded_pivot_value":
+                case "target_pivot_value":
+                    return "(((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3)";
+                case "pre_lut_coded_value":
+                case "pre_lut_target_value":
+                    return "(((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3)";
+                case "post_lut_coded_value":
+                case "post_lut_target_value":
+                    return "(((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3)";
+                case "ar_object_confidence":
+                    return "(context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1)";
+                case "da_mantissa":
+                    return "(this.da_mantissa_len_minus1 + 1)";
+                case "depth_disp_delay_offset_fp":
+                    return "(context.Sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1 + 1)";
+                case "exponent0":
+                    return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
+                case "mantissa0":
+                    return "(context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1)";
+                case "exponent1":
+                    return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
+
+                case "mantissa_focal_length_x":
+                    return "(exponent_focal_length_x[ i ] == 0) ? (Math.Max( 0, prec_focal_length - 30 )) : (Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31))";
+                case "mantissa_focal_length_y":
+                    return "(exponent_focal_length_y[ i ] == 0) ? (Math.Max( 0, prec_focal_length - 30 )) : (Math.Max( 0, exponent_focal_length_y[ i ] + prec_focal_length - 31))";
+                case "mantissa_principal_point_x": 
+                    return "(exponent_principal_point_x[ i ] == 0) ? (Math.Max( 0, prec_principal_point - 30 )) : (Math.Max( 0, exponent_principal_point_x[ i ] + prec_principal_point - 31))";
+                case "mantissa_principal_point_y": 
+                    return "(exponent_principal_point_y[ i ] == 0) ? (Math.Max( 0, prec_principal_point - 30 )) : (Math.Max( 0, exponent_principal_point_y[ i ] + prec_principal_point - 31))";
+                case "mantissa_skew_factor": 
+                    return "(exponent_skew_factor[ i ] == 0) ? (Math.Max( 0, prec_skew_factor - 30 )) : (Math.Max( 0, exponent_skew_factor[ i ] + prec_skew_factor - 31))";
+                case "mantissa_r": 
+                    return "(exponent_r[ i ][ j ][ k ]  == 0) ? (Math.Max( 0, prec_rotation_param - 30 )) : (Math.Max( 0, exponent_r[ i ][ j ][ k ] + prec_rotation_param - 31))";
+                case "mantissa_t": 
+                    return "(exponent_t[ i ][ j ] == 0) ? (Math.Max( 0, prec_translation_param - 30 )) : (Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31))";
+                case "mantissa_ref_baseline": 
+                    return "(exponent_ref_baseline[ i ] == 0) ? (Math.Max( 0, prec_ref_baseline - 30 )) : (Math.Max( 0, exponent_ref_baseline[ i ] + prec_ref_baseline - 31))";
+                case "mantissa_ref_display_width": 
+                    return "(exponent_ref_display_width[ i ] == 0) ? (Math.Max( 0, prec_ref_display_width - 30 )) : (Math.Max( 0, exponent_ref_display_width[ i ] + prec_ref_display_width - 31))";
+                case "mantissa_ref_viewing_distance": 
+                    return "(exponent_ref_viewing_distance[ i ] == 0) ? (Math.Max( 0, prec_ref_viewing_dist - 30 )) : (Math.Max( 0, exponent_ref_viewing_distance[ i ] + prec_ref_viewing_dist - 31))";
+
+                case "man_gvd_z_near": 
+                    return "(man_len_gvd_z_near_minus1[ i ] + 1)";
+                case "man_gvd_z_far": 
+                    return "(man_len_gvd_z_far_minus1[ i ] + 1)";
+                case "man_gvd_focal_length_x": 
+                    return "(exp_gvd_focal_length_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_focal_length - 30 )) : (Math.Max( 0, exp_gvd_focal_length_x[ i ] + prec_gvd_focal_length - 31))";
+                case "man_gvd_focal_length_y": 
+                    return "(exp_gvd_focal_length_y[ i ] == 0) ? (Math.Max( 0, prec_gvd_focal_length - 30 )) : (Math.Max( 0, exp_gvd_focal_length_y[ i ] + prec_gvd_focal_length - 31))";
+                case "man_gvd_principal_point_x": 
+                    return "(exp_gvd_principal_point_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_principal_point - 30 )) : (Math.Max( 0, exp_gvd_principal_point_x[ i ] + prec_gvd_principal_point - 31))";
+                case "man_gvd_principal_point_y": 
+                    return "(exp_gvd_principal_point_y[ i ] == 0) ? (Math.Max( 0, prec_gvd_principal_point - 30 )) : (Math.Max( 0, exp_gvd_principal_point_y[ i ] + prec_gvd_principal_point - 31))";
+                case "man_gvd_r": 
+                    return "(exp_gvd_r[ i ][ j ][ k ] == 0) ? (Math.Max( 0, prec_gvd_rotation_param - 30 )) : (Math.Max( 0,  exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31))";
+                case "man_gvd_t_x": 
+                    return "(exp_gvd_t_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_translation_param - 30 )) : (Math.Max( 0,  exp_gvd_t_x[ i ] + prec_gvd_translation_param - 31))";
+
+                case "CodedBlockPatternLuma":
+                    return "/* CodedBlockPatternLuma */";
+                case "CodedBlockPatternChroma":
+                    return "/* CodedBlockPatternChroma */";
+                case "MbWidthC":
+                    return "(context.Sps.SeqParameterSetData.ChromaFormatIdc == 0 ? 0 : 16 / ((context.Sps.SeqParameterSetData.ChromaFormatIdc == 1 || context.Sps.SeqParameterSetData.ChromaFormatIdc == 2) ? 2 : 1))";
+                case "MbHeightC":
+                    return "(context.Sps.SeqParameterSetData.ChromaFormatIdc == 0 ? 0 : 16 / ((context.Sps.SeqParameterSetData.ChromaFormatIdc == 2 || context.Sps.SeqParameterSetData.ChromaFormatIdc == 3) ? 1 : 2))";
+                case "SubWidthC":
+                    return "((context.Sps.SeqParameterSetData.ChromaFormatIdc == 1 || context.Sps.SeqParameterSetData.ChromaFormatIdc == 2) ? 2 : 1)";
+                case "SubHeightC":
+                    return "((context.Sps.SeqParameterSetData.ChromaFormatIdc == 2 || context.Sps.SeqParameterSetData.ChromaFormatIdc == 3) ? 1 : 2)";
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         private string FixMissingParameters(ItuClass b, string parameter)
         {
             parameter = parameter.Replace("ZNearSign", $"H264Helpers.GetArray2(\"ZNearSign\")");
@@ -516,7 +693,7 @@ namespace Sharp{type}
             parameter = parameter.Replace("DMaxMantissa", $"H264Helpers.GetArray2(\"DMaxMantissa\")");
             parameter = parameter.Replace("DMaxManLen", $"H264Helpers.GetArray2(\"DMaxManLen\")");
             
-            parameter = parameter.Replace("NumDepthViews", $"H264Helpers.GetValue(\"NumDepthViews\")");
+            parameter = parameter.Replace("NumDepthViews", ReplaceParameter("NumDepthViews"));
 
             parameter = parameter.Replace("ScalingList4x4[ i ]", "new uint[6 * 16]");
             parameter = parameter.Replace("UseDefaultScalingMatrix4x4Flag[ i ]", "0");
@@ -667,11 +844,6 @@ namespace Sharp{type}
 
             if (!string.IsNullOrEmpty(condition))
             {
-                condition = condition
-                    .Replace("NumSubMbPart", "H264Helpers.NumSubMbPart")
-                    .Replace("TotalCoeff", "H264Helpers.TotalCoeff")
-                    .Replace("NumMbPart", "H264Helpers.NumMbPart");
-
                 if(blockType == "if" || blockType == "else if" || blockType == "while" || blockType == "do")
                 {
                     condition = FixCondition(b, condition, methodType);
@@ -771,6 +943,10 @@ namespace Sharp{type}
                                     variableType = variableType.Replace("_minus1\")", "_minus1\") + 1");
                                 else if (variableType.Contains("_minus1"))
                                     variableType = variableType.Replace("_minus1", "_minus1 + 1");
+                                else if (variableType.Contains("Minus1[ i ]"))
+                                    variableType = variableType.Replace("Minus1[ i ]", "Minus1[ i ] + 1");
+                                else if (variableType.Contains("Minus1"))
+                                    variableType = variableType.Replace("Minus1", "Minus1 + 1");
 
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                             }
@@ -843,8 +1019,6 @@ namespace Sharp{type}
             condition = condition.Replace("Extended_ISO", "H264Constants.Extended_ISO");
             condition = condition.Replace("Extended_SAR", "H264Constants.Extended_SAR");
 
-            condition = condition.Replace("TrailingOnes", "H264Helpers.TrailingOnes");
-
             condition = condition.Replace("Abs(", "Math.Abs(");
             condition = condition.Replace("Min(", "Math.Min(");
             condition = condition.Replace("Max(", "Math.Max(");
@@ -865,13 +1039,10 @@ namespace Sharp{type}
             condition = condition.Replace("mb_type  !=  ", "mb_type  !=  MbTypes.");
             condition = condition.Replace("sub_mb_type[ mbPartIdx ]  !=  ", "sub_mb_type[ mbPartIdx ]  !=  MbTypes.");
 
-            // TODO
-            condition = condition.Replace("InCropWindow", "H264Helpers.InCropWindow");
-
             return condition;
         }
 
-        private static string FixMissingFields(ItuClass b, string condition)
+        private string FixMissingFields(ItuClass b, string condition)
         {
             Regex r = new Regex("\\b[a-z_][\\w_]+");
             var matches = r.Matches(condition).Select(x => x.Value).Distinct().ToArray();
@@ -883,10 +1054,7 @@ namespace Sharp{type}
                     match.Contains("_")
                     )
                 {
-                    if(condition.Substring(condition.IndexOf(match) + match.Length).Trim().StartsWith("["))
-                        condition = condition.Replace(match, $"H264Helpers.GetArray(\"{match}\")");
-                    else
-                        condition = condition.Replace(match, $"H264Helpers.GetValue(\"{match}\")");
+                    condition = condition.Replace(match, ReplaceParameter(match.ToString()));
                 }
             }
 
@@ -894,7 +1062,7 @@ namespace Sharp{type}
             {
                 "CodedBlockPatternLuma", "CodedBlockPatternChroma", "MbWidthC", "MbHeightC", "SubWidthC", "SubHeightC",
                 "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "PicSizeInMapUnits",
-                "CurrMbAddr", "leftMbVSSkipped", "upMbVSSkipped", "predWeight0", "deltaFlag", "NumDepthViews", "IdrPicFlag",
+                "predWeight0", "deltaFlag", "NumDepthViews", "IdrPicFlag",
                 "ChromaArrayType", "AllViewsPairedFlag"
             };
 
@@ -905,33 +1073,17 @@ namespace Sharp{type}
                     b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null
                     )
                 {
-                    condition = condition.Replace(match, $"H264Helpers.GetValue(\"{match}\")");
-                }
-            }
-
-            string[] replacementsArray = new string[]
-            {
-                "VspRefL1Flag","VspRefL0Flag"
-            };
-
-            foreach (var match in replacementsArray)
-            {
-                if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null &&
-                    b.AddedFields.FirstOrDefault(x => x.Name == match) == null &&
-                    b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null
-                    )
-                {
-                    condition = condition.Replace(match, $"H264Helpers.GetArray(\"{match}\")");
+                    condition = condition.Replace(match, ReplaceParameter(match.ToString()));
                 }
             }
 
             condition = condition.Replace("NumClockTS", "this.pic_struct switch\r\n{\r\n0u => 1,\r\n1u => 1,\r\n2u => 1,\r\n3u => 2,\r\n4u => 2,\r\n5u => 3,\r\n6u => 3,\r\n7u => 2,\r\n8u => 3,\r\n_ => throw new NotSupportedException()\r\n}");
 
-            condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] == 0");
-            condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] == 0");
-            condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3) != 0");
-            condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2) != 0");
-            condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternLuma\") & ( 1 << (int) i8x8 )", "(H264Helpers.GetValue(\"CodedBlockPatternLuma\") & ( 1 << (int) i8x8 )) != 0");
+            //condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL1Flag\")[ mbPartIdx ] == 0");
+            //condition = condition.Replace($"!H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] != 0", "H264Helpers.GetArray(\"VspRefL0Flag\")[ mbPartIdx ] == 0");
+            //condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 3) != 0");
+            //condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2 != 0", "(H264Helpers.GetValue(\"CodedBlockPatternChroma\") & 2) != 0");
+            //condition = condition.Replace($"H264Helpers.GetValue(\"CodedBlockPatternLuma\") & ( 1 << (int) i8x8 )", "(H264Helpers.GetValue(\"CodedBlockPatternLuma\") & ( 1 << (int) i8x8 )) != 0");
 
             return condition;
         }

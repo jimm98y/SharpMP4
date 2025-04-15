@@ -754,8 +754,8 @@ seq_parameter_set_extension_rbsp() {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.bit_depth_aux_minus8);
                 size += stream.ReadUnsignedInt(size, 1, out this.alpha_incr_flag);
-                size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("alpha_opaque_value"), out this.alpha_opaque_value);
-                size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("alpha_transparent_value"), out this.alpha_transparent_value);
+                size += stream.ReadUnsignedIntVariable(size, (context.SpsExtension.BitDepthAuxMinus8 + 9), out this.alpha_opaque_value);
+                size += stream.ReadUnsignedIntVariable(size, (context.SpsExtension.BitDepthAuxMinus8 + 9), out this.alpha_transparent_value);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.additional_extension_flag);
             size += stream.ReadClass<RbspTrailingBits>(size, context, () => new RbspTrailingBits(), out this.rbsp_trailing_bits);
@@ -774,8 +774,8 @@ seq_parameter_set_extension_rbsp() {
             {
                 size += stream.WriteUnsignedIntGolomb(this.bit_depth_aux_minus8);
                 size += stream.WriteUnsignedInt(1, this.alpha_incr_flag);
-                size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("alpha_opaque_value"), this.alpha_opaque_value);
-                size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("alpha_transparent_value"), this.alpha_transparent_value);
+                size += stream.WriteUnsignedIntVariable((context.SpsExtension.BitDepthAuxMinus8 + 9), this.alpha_opaque_value);
+                size += stream.WriteUnsignedIntVariable((context.SpsExtension.BitDepthAuxMinus8 + 9), this.alpha_transparent_value);
             }
             size += stream.WriteUnsignedInt(1, this.additional_extension_flag);
             size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
@@ -861,7 +861,7 @@ subset_seq_parameter_set_rbsp() {
 
             size += stream.ReadClass<SeqParameterSetData>(size, context, () => new SeqParameterSetData(), out this.seq_parameter_set_data);
 
-            if (H264Helpers.GetValue("profile_idc") == 83 || H264Helpers.GetValue("profile_idc") == 86)
+            if (context.Sps.SeqParameterSetData.ProfileIdc == 83 || context.Sps.SeqParameterSetData.ProfileIdc == 86)
             {
                 size += stream.ReadClass<SeqParameterSetSvcExtension>(size, context, () => new SeqParameterSetSvcExtension(), out this.seq_parameter_set_svc_extension); // specified in Annex G 
                 size += stream.ReadUnsignedInt(size, 1, out this.svc_vui_parameters_present_flag);
@@ -871,8 +871,8 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.ReadClass<SvcVuiParametersExtension>(size, context, () => new SvcVuiParametersExtension(), out this.svc_vui_parameters_extension); // specified in Annex G 
                 }
             }
-            else if (H264Helpers.GetValue("profile_idc") == 118 || H264Helpers.GetValue("profile_idc") == 128 ||
-  H264Helpers.GetValue("profile_idc") == 134)
+            else if (context.Sps.SeqParameterSetData.ProfileIdc == 118 || context.Sps.SeqParameterSetData.ProfileIdc == 128 ||
+  context.Sps.SeqParameterSetData.ProfileIdc == 134)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
                 size += stream.ReadClass<SeqParameterSetMvcExtension>(size, context, () => new SeqParameterSetMvcExtension(), out this.seq_parameter_set_mvc_extension); // specified in Annex H 
@@ -883,12 +883,12 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.ReadClass<MvcVuiParametersExtension>(size, context, () => new MvcVuiParametersExtension(), out this.mvc_vui_parameters_extension); // specified in Annex H 
                 }
             }
-            else if (H264Helpers.GetValue("profile_idc") == 138 || H264Helpers.GetValue("profile_idc") == 135)
+            else if (context.Sps.SeqParameterSetData.ProfileIdc == 138 || context.Sps.SeqParameterSetData.ProfileIdc == 135)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
                 size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, context, () => new SeqParameterSetMvcdExtension(), out this.seq_parameter_set_mvcd_extension); // specified in Annex I 
             }
-            else if (H264Helpers.GetValue("profile_idc") == 139)
+            else if (context.Sps.SeqParameterSetData.ProfileIdc == 139)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
                 size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, context, () => new SeqParameterSetMvcdExtension(), out this.seq_parameter_set_mvcd_extension); // specified in Annex I 
@@ -915,7 +915,7 @@ subset_seq_parameter_set_rbsp() {
 
             size += stream.WriteClass<SeqParameterSetData>(context, this.seq_parameter_set_data);
 
-            if (H264Helpers.GetValue("profile_idc") == 83 || H264Helpers.GetValue("profile_idc") == 86)
+            if (context.Sps.SeqParameterSetData.ProfileIdc == 83 || context.Sps.SeqParameterSetData.ProfileIdc == 86)
             {
                 size += stream.WriteClass<SeqParameterSetSvcExtension>(context, this.seq_parameter_set_svc_extension); // specified in Annex G 
                 size += stream.WriteUnsignedInt(1, this.svc_vui_parameters_present_flag);
@@ -925,8 +925,8 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.WriteClass<SvcVuiParametersExtension>(context, this.svc_vui_parameters_extension); // specified in Annex G 
                 }
             }
-            else if (H264Helpers.GetValue("profile_idc") == 118 || H264Helpers.GetValue("profile_idc") == 128 ||
-  H264Helpers.GetValue("profile_idc") == 134)
+            else if (context.Sps.SeqParameterSetData.ProfileIdc == 118 || context.Sps.SeqParameterSetData.ProfileIdc == 128 ||
+  context.Sps.SeqParameterSetData.ProfileIdc == 134)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
                 size += stream.WriteClass<SeqParameterSetMvcExtension>(context, this.seq_parameter_set_mvc_extension); // specified in Annex H 
@@ -937,12 +937,12 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.WriteClass<MvcVuiParametersExtension>(context, this.mvc_vui_parameters_extension); // specified in Annex H 
                 }
             }
-            else if (H264Helpers.GetValue("profile_idc") == 138 || H264Helpers.GetValue("profile_idc") == 135)
+            else if (context.Sps.SeqParameterSetData.ProfileIdc == 138 || context.Sps.SeqParameterSetData.ProfileIdc == 135)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
                 size += stream.WriteClass<SeqParameterSetMvcdExtension>(context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
             }
-            else if (H264Helpers.GetValue("profile_idc") == 139)
+            else if (context.Sps.SeqParameterSetData.ProfileIdc == 139)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
                 size += stream.WriteClass<SeqParameterSetMvcdExtension>(context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
@@ -1146,7 +1146,7 @@ pic_parameter_set_rbsp() {
                     this.slice_group_id = new uint[pic_size_in_map_units_minus1 + 1];
                     for (i = 0; i <= pic_size_in_map_units_minus1; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("slice_group_id"), out this.slice_group_id[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i]);
                     }
                 }
             }
@@ -1170,11 +1170,11 @@ pic_parameter_set_rbsp() {
                 {
 
                     this.pic_scaling_list_present_flag = new byte[6 +
-     ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag];
+     ((context.Sps.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
                     this.scaling_list = new ScalingList[6 +
-     ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag];
+     ((context.Sps.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
                     for (i = 0; i < 6 +
-     ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag;
+     ((context.Sps.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
      i++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.pic_scaling_list_present_flag[i]);
@@ -1246,7 +1246,7 @@ pic_parameter_set_rbsp() {
 
                     for (i = 0; i <= pic_size_in_map_units_minus1; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("slice_group_id"), this.slice_group_id[i]);
+                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i]);
                     }
                 }
             }
@@ -1270,7 +1270,7 @@ pic_parameter_set_rbsp() {
                 {
 
                     for (i = 0; i < 6 +
-     ((H264Helpers.GetValue("chroma_format_idc") != 3) ? 2 : 6) * transform_8x8_mode_flag;
+     ((context.Sps.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
      i++)
                     {
                         size += stream.WriteUnsignedInt(1, this.pic_scaling_list_present_flag[i]);
@@ -1613,7 +1613,7 @@ dec_ref_pic_marking() {
             ulong size = 0;
 
 
-            if (H264Helpers.GetValue("IdrPicFlag") != 0)
+            if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag);
                 size += stream.ReadUnsignedInt(size, 1, out this.long_term_reference_flag);
@@ -1662,7 +1662,7 @@ dec_ref_pic_marking() {
             ulong size = 0;
 
 
-            if (H264Helpers.GetValue("IdrPicFlag") != 0)
+            if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
                 size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag);
                 size += stream.WriteUnsignedInt(1, this.long_term_reference_flag);
@@ -2699,25 +2699,25 @@ buffering_period( payloadSize ) {
             uint SchedSelIdx = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
-            if (H264Helpers.GetValue("NalHrdBpPresentFlag") != 0)
+            if (context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0)
             {
 
-                this.initial_cpb_removal_delay = new uint[H264Helpers.GetValue("cpb_cnt_minus1") + 1];
-                this.initial_cpb_removal_delay_offset = new uint[H264Helpers.GetValue("cpb_cnt_minus1") + 1];
-                for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
+                this.initial_cpb_removal_delay = new uint[context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
+                this.initial_cpb_removal_delay_offset = new uint[context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
+                for (SchedSelIdx = 0; SchedSelIdx <= context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("initial_cpb_removal_delay"), out this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("initial_cpb_removal_delay_offset"), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
                 }
             }
 
-            if (H264Helpers.GetValue("VclHrdBpPresentFlag") != 0)
+            if (context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag != 0)
             {
 
-                for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
+                for (SchedSelIdx = 0; SchedSelIdx <= context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("initial_cpb_removal_delay"), out this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("initial_cpb_removal_delay_offset"), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
                 }
             }
 
@@ -2731,23 +2731,23 @@ buffering_period( payloadSize ) {
             uint SchedSelIdx = 0;
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
 
-            if (H264Helpers.GetValue("NalHrdBpPresentFlag") != 0)
+            if (context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0)
             {
 
-                for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
+                for (SchedSelIdx = 0; SchedSelIdx <= context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("initial_cpb_removal_delay"), this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("initial_cpb_removal_delay_offset"), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
                 }
             }
 
-            if (H264Helpers.GetValue("VclHrdBpPresentFlag") != 0)
+            if (context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag != 0)
             {
 
-                for (SchedSelIdx = 0; SchedSelIdx <= H264Helpers.GetValue("cpb_cnt_minus1"); SchedSelIdx++)
+                for (SchedSelIdx = 0; SchedSelIdx <= context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("initial_cpb_removal_delay"), this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("initial_cpb_removal_delay_offset"), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
                 }
             }
 
@@ -2855,13 +2855,13 @@ pic_timing( payloadSize ) {
 
             uint i = 0;
 
-            if (H264Helpers.GetValue("CpbDpbDelaysPresentFlag") != 0)
+            if ((uint)(context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("cpb_removal_delay"), out this.cpb_removal_delay);
-                size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("dpb_output_delay"), out this.dpb_output_delay);
+                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 + 1), out this.cpb_removal_delay);
+                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1), out this.dpb_output_delay);
             }
 
-            if (H264Helpers.GetValue("pic_struct_present_flag") != 0)
+            if (context.Sps.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0)
             {
                 size += stream.ReadUnsignedInt(size, 4, out this.pic_struct);
 
@@ -3114,9 +3114,9 @@ pic_timing( payloadSize ) {
                             }
                         }
 
-                        if (H264Helpers.GetValue("time_offset_length") > 0)
+                        if (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength > 0)
                         {
-                            size += stream.ReadSignedIntVariable(size, H264Helpers.GetVariableCount("time_offset"), out this.time_offset[i]);
+                            size += stream.ReadSignedIntVariable(size, context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength, out this.time_offset[i]);
                         }
                     }
                 }
@@ -3131,13 +3131,13 @@ pic_timing( payloadSize ) {
 
             uint i = 0;
 
-            if (H264Helpers.GetValue("CpbDpbDelaysPresentFlag") != 0)
+            if ((uint)(context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
             {
-                size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("cpb_removal_delay"), this.cpb_removal_delay);
-                size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("dpb_output_delay"), this.dpb_output_delay);
+                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 + 1), this.cpb_removal_delay);
+                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1), this.dpb_output_delay);
             }
 
-            if (H264Helpers.GetValue("pic_struct_present_flag") != 0)
+            if (context.Sps.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0)
             {
                 size += stream.WriteUnsignedInt(4, this.pic_struct);
 
@@ -3195,9 +3195,9 @@ pic_timing( payloadSize ) {
                             }
                         }
 
-                        if (H264Helpers.GetValue("time_offset_length") > 0)
+                        if (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength > 0)
                         {
-                            size += stream.WriteSignedIntVariable(H264Helpers.GetVariableCount("time_offset"), this.time_offset[i]);
+                            size += stream.WriteSignedIntVariable(context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength, this.time_offset[i]);
                         }
                     }
                 }
@@ -3615,7 +3615,7 @@ dec_ref_pic_marking_repetition( payloadSize ) {
             size += stream.ReadUnsignedInt(size, 1, out this.original_idr_flag);
             size += stream.ReadUnsignedIntGolomb(size, out this.original_frame_num);
 
-            if (H264Helpers.GetValue("frame_mbs_only_flag") == 0)
+            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.original_field_pic_flag);
 
@@ -3636,7 +3636,7 @@ dec_ref_pic_marking_repetition( payloadSize ) {
             size += stream.WriteUnsignedInt(1, this.original_idr_flag);
             size += stream.WriteUnsignedIntGolomb(this.original_frame_num);
 
-            if (H264Helpers.GetValue("frame_mbs_only_flag") == 0)
+            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
                 size += stream.WriteUnsignedInt(1, this.original_field_pic_flag);
 
@@ -3744,8 +3744,8 @@ spare_pic( payloadSize ) {
                 if (spare_area_idc[i] == 1)
                 {
 
-                    this.spare_unit_flag[i] = new byte[H264Helpers.GetValue("PicSizeInMapUnits")];
-                    for (j = 0; j < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
+                    this.spare_unit_flag[i] = new byte[(context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
+                    for (j = 0; j < (context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.spare_unit_flag[i][j]);
                     }
@@ -3754,8 +3754,8 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    this.zero_run_length[i] = new uint[H264Helpers.GetValue("PicSizeInMapUnits")];
-                    for (j = 0; mapUnitCnt < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
+                    this.zero_run_length[i] = new uint[(context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
+                    for (j = 0; mapUnitCnt < (context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.zero_run_length[i][j]);
                         mapUnitCnt += zero_run_length[i][j] + 1;
@@ -3795,7 +3795,7 @@ spare_pic( payloadSize ) {
                 if (spare_area_idc[i] == 1)
                 {
 
-                    for (j = 0; j < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
+                    for (j = 0; j < (context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.spare_unit_flag[i][j]);
                     }
@@ -3804,7 +3804,7 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    for (j = 0; mapUnitCnt < H264Helpers.GetValue("PicSizeInMapUnits"); j++)
+                    for (j = 0; mapUnitCnt < (context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.zero_run_length[i][j]);
                         mapUnitCnt += zero_run_length[i][j] + 1;
@@ -4432,13 +4432,13 @@ motion_constrained_slice_group_set( payloadSize ) {
             uint i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_slice_groups_in_set_minus1);
 
-            if (H264Helpers.GetValue("num_slice_groups_minus1") > 0)
+            if (context.Pps.NumSliceGroupsMinus1 > 0)
             {
 
                 this.slice_group_id = new uint[num_slice_groups_in_set_minus1 + 1];
                 for (i = 0; i <= num_slice_groups_in_set_minus1; i++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("slice_group_id"), out this.slice_group_id[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i]);
                 }
             }
             size += stream.ReadUnsignedInt(size, 1, out this.exact_sample_value_match_flag);
@@ -4459,12 +4459,12 @@ motion_constrained_slice_group_set( payloadSize ) {
             uint i = 0;
             size += stream.WriteUnsignedIntGolomb(this.num_slice_groups_in_set_minus1);
 
-            if (H264Helpers.GetValue("num_slice_groups_minus1") > 0)
+            if (context.Pps.NumSliceGroupsMinus1 > 0)
             {
 
                 for (i = 0; i <= num_slice_groups_in_set_minus1; i++)
                 {
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("slice_group_id"), this.slice_group_id[i]);
+                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i]);
                 }
             }
             size += stream.WriteUnsignedInt(1, this.exact_sample_value_match_flag);
@@ -5085,7 +5085,7 @@ tone_mapping_info( payloadSize ) {
                     this.start_of_coded_interval = new uint[(1 << (int)target_bit_depth)];
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("start_of_coded_interval"), out this.start_of_coded_interval[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i]);
                     }
                 }
 
@@ -5097,8 +5097,8 @@ tone_mapping_info( payloadSize ) {
                     this.target_pivot_value = new uint[num_pivots];
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("coded_pivot_value"), out this.coded_pivot_value[i]);
-                        size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("target_pivot_value"), out this.target_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i]);
                     }
                 }
 
@@ -5162,7 +5162,7 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("start_of_coded_interval"), this.start_of_coded_interval[i]);
+                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i]);
                     }
                 }
 
@@ -5172,8 +5172,8 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("coded_pivot_value"), this.coded_pivot_value[i]);
-                        size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("target_pivot_value"), this.target_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i]);
                     }
                 }
 
@@ -5649,8 +5649,8 @@ colour_remapping_info( payloadSize ) {
                         this.pre_lut_target_value[c] = new uint[pre_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("pre_lut_coded_value"), out this.pre_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("pre_lut_target_value"), out this.pre_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -5686,8 +5686,8 @@ colour_remapping_info( payloadSize ) {
                         this.post_lut_target_value[c] = new uint[post_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("post_lut_coded_value"), out this.post_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("post_lut_target_value"), out this.post_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -5729,8 +5729,8 @@ colour_remapping_info( payloadSize ) {
 
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("pre_lut_coded_value"), this.pre_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("pre_lut_target_value"), this.pre_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -5759,8 +5759,8 @@ colour_remapping_info( payloadSize ) {
 
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("post_lut_coded_value"), this.post_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("post_lut_target_value"), this.post_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -7047,7 +7047,7 @@ annotated_regions( payloadSize ) {
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("ar_object_confidence"), out this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.ReadUnsignedIntVariable(size, (context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]]);
                                 }
                             }
                         }
@@ -7155,7 +7155,7 @@ annotated_regions( payloadSize ) {
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("ar_object_confidence"), this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.WriteUnsignedIntVariable((context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]]);
                                 }
                             }
                         }
@@ -7913,12 +7913,12 @@ seq_parameter_set_svc_extension() {
             size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_deblocking_filter_control_present_flag);
             size += stream.ReadUnsignedInt(size, 2, out this.extended_spatial_scalability_idc);
 
-            if (H264Helpers.GetValue("ChromaArrayType") == 1 || H264Helpers.GetValue("ChromaArrayType") == 2)
+            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 1 || (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 2)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.chroma_phase_x_plus1_flag);
             }
 
-            if (H264Helpers.GetValue("ChromaArrayType") == 1)
+            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 1)
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.chroma_phase_y_plus1);
             }
@@ -7926,7 +7926,7 @@ seq_parameter_set_svc_extension() {
             if (extended_spatial_scalability_idc == 1)
             {
 
-                if (H264Helpers.GetValue("ChromaArrayType") > 0)
+                if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.seq_ref_layer_chroma_phase_x_plus1_flag);
                     size += stream.ReadUnsignedInt(size, 2, out this.seq_ref_layer_chroma_phase_y_plus1);
@@ -7954,12 +7954,12 @@ seq_parameter_set_svc_extension() {
             size += stream.WriteUnsignedInt(1, this.inter_layer_deblocking_filter_control_present_flag);
             size += stream.WriteUnsignedInt(2, this.extended_spatial_scalability_idc);
 
-            if (H264Helpers.GetValue("ChromaArrayType") == 1 || H264Helpers.GetValue("ChromaArrayType") == 2)
+            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 1 || (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 2)
             {
                 size += stream.WriteUnsignedInt(1, this.chroma_phase_x_plus1_flag);
             }
 
-            if (H264Helpers.GetValue("ChromaArrayType") == 1)
+            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 1)
             {
                 size += stream.WriteUnsignedInt(2, this.chroma_phase_y_plus1);
             }
@@ -7967,7 +7967,7 @@ seq_parameter_set_svc_extension() {
             if (extended_spatial_scalability_idc == 1)
             {
 
-                if (H264Helpers.GetValue("ChromaArrayType") > 0)
+                if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.seq_ref_layer_chroma_phase_x_plus1_flag);
                     size += stream.WriteUnsignedInt(2, this.seq_ref_layer_chroma_phase_y_plus1);
@@ -10195,7 +10195,7 @@ seq_parameter_set_mvc_extension() {
                 }
             }
 
-            if (H264Helpers.GetValue("profile_idc") == 134)
+            if (context.Sps.SeqParameterSetData.ProfileIdc == 134)
             {
                 size += stream.ReadUnsignedInt(size, 6, out this.mfc_format_idc);
 
@@ -10213,7 +10213,7 @@ seq_parameter_set_mvc_extension() {
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.rpu_filter_enabled_flag);
 
-                if (H264Helpers.GetValue("frame_mbs_only_flag") == 0)
+                if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.rpu_field_processing_flag);
                 }
@@ -10287,7 +10287,7 @@ seq_parameter_set_mvc_extension() {
                 }
             }
 
-            if (H264Helpers.GetValue("profile_idc") == 134)
+            if (context.Sps.SeqParameterSetData.ProfileIdc == 134)
             {
                 size += stream.WriteUnsignedInt(6, this.mfc_format_idc);
 
@@ -10305,7 +10305,7 @@ seq_parameter_set_mvc_extension() {
                 }
                 size += stream.WriteUnsignedInt(1, this.rpu_filter_enabled_flag);
 
-                if (H264Helpers.GetValue("frame_mbs_only_flag") == 0)
+                if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.rpu_field_processing_flag);
                 }
@@ -10368,24 +10368,24 @@ parallel_decoding_info( payloadSize ) {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
-            this.pdi_init_delay_anchor_minus2_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
-            this.pdi_init_delay_anchor_minus2_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
-            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
-            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
-            for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+            this.pdi_init_delay_anchor_minus2_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_anchor_minus2_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
             {
 
-                if (H264Helpers.GetValue("anchor_pic_flag") != 0)
+                if (context.NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag != 0)
                 {
 
-                    this.pdi_init_delay_anchor_minus2_l0[i] = new uint[H264Helpers.GetArray("num_anchor_refs_l0")[i]];
-                    for (j = 0; j <= H264Helpers.GetArray("num_anchor_refs_l0")[i]; j++)
+                    this.pdi_init_delay_anchor_minus2_l0[i] = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
+                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l0[i][j]);
                     }
 
-                    this.pdi_init_delay_anchor_minus2_l1[i] = new uint[H264Helpers.GetArray("num_anchor_refs_l1")[i]];
-                    for (j = 0; j <= H264Helpers.GetArray("num_anchor_refs_l1")[i]; j++)
+                    this.pdi_init_delay_anchor_minus2_l1[i] = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
+                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l1[i][j]);
                     }
@@ -10393,14 +10393,14 @@ parallel_decoding_info( payloadSize ) {
                 else
                 {
 
-                    this.pdi_init_delay_non_anchor_minus2_l0[i] = new uint[H264Helpers.GetArray("num_non_anchor_refs_l0")[i]];
-                    for (j = 0; j <= H264Helpers.GetArray("num_non_anchor_refs_l0")[i]; j++)
+                    this.pdi_init_delay_non_anchor_minus2_l0[i] = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
+                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l0[i][j]);
                     }
 
-                    this.pdi_init_delay_non_anchor_minus2_l1[i] = new uint[H264Helpers.GetArray("num_non_anchor_refs_l1")[i]];
-                    for (j = 0; j <= H264Helpers.GetArray("num_non_anchor_refs_l1")[i]; j++)
+                    this.pdi_init_delay_non_anchor_minus2_l1[i] = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
+                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l1[i][j]);
                     }
@@ -10418,18 +10418,18 @@ parallel_decoding_info( payloadSize ) {
             uint j = 0;
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
 
-            for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+            for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
             {
 
-                if (H264Helpers.GetValue("anchor_pic_flag") != 0)
+                if (context.NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag != 0)
                 {
 
-                    for (j = 0; j <= H264Helpers.GetArray("num_anchor_refs_l0")[i]; j++)
+                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l0[i][j]);
                     }
 
-                    for (j = 0; j <= H264Helpers.GetArray("num_anchor_refs_l1")[i]; j++)
+                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l1[i][j]);
                     }
@@ -10437,12 +10437,12 @@ parallel_decoding_info( payloadSize ) {
                 else
                 {
 
-                    for (j = 0; j <= H264Helpers.GetArray("num_non_anchor_refs_l0")[i]; j++)
+                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_non_anchor_minus2_l0[i][j]);
                     }
 
-                    for (j = 0; j <= H264Helpers.GetArray("num_non_anchor_refs_l1")[i]; j++)
+                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_non_anchor_minus2_l1[i][j]);
                     }
@@ -11469,19 +11469,19 @@ view_dependency_change( payloadSize ) {
             if (anchor_update_flag != 0)
             {
 
-                this.anchor_ref_l0_flag = new byte[H264Helpers.GetValue("num_views_minus1") + 1][];
-                this.anchor_ref_l1_flag = new byte[H264Helpers.GetValue("num_views_minus1") + 1][];
-                for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+                this.anchor_ref_l0_flag = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.anchor_ref_l1_flag = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    this.anchor_ref_l0_flag[i] = new byte[H264Helpers.GetArray("num_anchor_refs_l0")[i]];
-                    for (j = 0; j < H264Helpers.GetArray("num_anchor_refs_l0")[i]; j++)
+                    this.anchor_ref_l0_flag[i] = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
+                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l0_flag[i][j]);
                     }
 
-                    this.anchor_ref_l1_flag[i] = new byte[H264Helpers.GetArray("num_anchor_refs_l1")[i]];
-                    for (j = 0; j < H264Helpers.GetArray("num_anchor_refs_l1")[i]; j++)
+                    this.anchor_ref_l1_flag[i] = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
+                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l1_flag[i][j]);
                     }
@@ -11491,19 +11491,19 @@ view_dependency_change( payloadSize ) {
             if (non_anchor_update_flag != 0)
             {
 
-                this.non_anchor_ref_l0_flag = new byte[H264Helpers.GetValue("num_views_minus1") + 1][];
-                this.non_anchor_ref_l1_flag = new byte[H264Helpers.GetValue("num_views_minus1") + 1][];
-                for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+                this.non_anchor_ref_l0_flag = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.non_anchor_ref_l1_flag = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    this.non_anchor_ref_l0_flag[i] = new byte[H264Helpers.GetArray("num_non_anchor_refs_l0")[i]];
-                    for (j = 0; j < H264Helpers.GetArray("num_non_anchor_refs_l0")[i]; j++)
+                    this.non_anchor_ref_l0_flag[i] = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
+                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l0_flag[i][j]);
                     }
 
-                    this.non_anchor_ref_l1_flag[i] = new byte[H264Helpers.GetArray("num_non_anchor_refs_l1")[i]];
-                    for (j = 0; j < H264Helpers.GetArray("num_non_anchor_refs_l1")[i]; j++)
+                    this.non_anchor_ref_l1_flag[i] = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
+                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l1_flag[i][j]);
                     }
@@ -11526,15 +11526,15 @@ view_dependency_change( payloadSize ) {
             if (anchor_update_flag != 0)
             {
 
-                for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    for (j = 0; j < H264Helpers.GetArray("num_anchor_refs_l0")[i]; j++)
+                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.anchor_ref_l0_flag[i][j]);
                     }
 
-                    for (j = 0; j < H264Helpers.GetArray("num_anchor_refs_l1")[i]; j++)
+                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.anchor_ref_l1_flag[i][j]);
                     }
@@ -11544,15 +11544,15 @@ view_dependency_change( payloadSize ) {
             if (non_anchor_update_flag != 0)
             {
 
-                for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    for (j = 0; j < H264Helpers.GetArray("num_non_anchor_refs_l0")[i]; j++)
+                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.non_anchor_ref_l0_flag[i][j]);
                     }
 
-                    for (j = 0; j < H264Helpers.GetArray("num_non_anchor_refs_l1")[i]; j++)
+                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.non_anchor_ref_l1_flag[i][j]);
                     }
@@ -12644,8 +12644,8 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i]);
 
-                    this.pic_parameter_set_id_delta[i] = new uint[H264Helpers.GetArray("num_init_pic_parameter_set_minus1")[i] + 1];
-                    for (j = 0; j <= H264Helpers.GetArray("num_init_pic_parameter_set_minus1")[i]; j++)
+                    this.pic_parameter_set_id_delta[i] = new uint[context.Sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
+                    for (j = 0; j <= context.Sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
                     }
@@ -12750,7 +12750,7 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_set_minus1[i]);
 
-                    for (j = 0; j <= H264Helpers.GetArray("num_init_pic_parameter_set_minus1")[i]; j++)
+                    for (j = 0; j <= context.Sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
                     }
@@ -13339,7 +13339,7 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
             size += stream.ReadUnsignedInt(size, 1, out this.da_sign_flag);
             size += stream.ReadUnsignedInt(size, 7, out this.da_exponent);
             size += stream.ReadUnsignedInt(size, 5, out this.da_mantissa_len_minus1);
-            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("da_mantissa"), out this.da_mantissa);
+            size += stream.ReadUnsignedIntVariable(size, (this.da_mantissa_len_minus1 + 1), out this.da_mantissa);
 
             return size;
         }
@@ -13351,7 +13351,7 @@ depth_representation_sei_element( outSign, outExp, outMantissa,
             size += stream.WriteUnsignedInt(1, this.da_sign_flag);
             size += stream.WriteUnsignedInt(7, this.da_exponent);
             size += stream.WriteUnsignedInt(5, this.da_mantissa_len_minus1);
-            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("da_mantissa"), this.da_mantissa);
+            size += stream.WriteUnsignedIntVariable((this.da_mantissa_len_minus1 + 1), this.da_mantissa);
 
             return size;
         }
@@ -13465,7 +13465,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.additional_shift_present_flag[i]);
 
-                if (H264Helpers.GetArray("additional_shift_present")[i] != 0)
+                if (context.Sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 10, out this.num_sample_shift_plus512[i]);
                 }
@@ -13506,7 +13506,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
                 }
                 size += stream.WriteUnsignedInt(1, this.additional_shift_present_flag[i]);
 
-                if (H264Helpers.GetArray("additional_shift_present")[i] != 0)
+                if (context.Sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
                     size += stream.WriteUnsignedInt(10, this.num_sample_shift_plus512[i]);
                 }
@@ -13557,8 +13557,8 @@ depth_timing( payloadSize ) {
             if (per_view_depth_timing_flag != 0)
             {
 
-                this.depth_timing_offset = new DepthTimingOffset[H264Helpers.GetValue("NumDepthViews")];
-                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
+                this.depth_timing_offset = new DepthTimingOffset[context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews];
+                for (i = 0; i < context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     size += stream.ReadClass<DepthTimingOffset>(size, context, () => new DepthTimingOffset(), out this.depth_timing_offset[i]);
                 }
@@ -13581,7 +13581,7 @@ depth_timing( payloadSize ) {
             if (per_view_depth_timing_flag != 0)
             {
 
-                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
+                for (i = 0; i < context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     size += stream.WriteClass<DepthTimingOffset>(context, this.depth_timing_offset[i]);
                 }
@@ -13627,7 +13627,7 @@ depth_timing_offset() {
             ulong size = 0;
 
             size += stream.ReadUnsignedInt(size, 5, out this.offset_len_minus1);
-            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("depth_disp_delay_offset_fp"), out this.depth_disp_delay_offset_fp);
+            size += stream.ReadUnsignedIntVariable(size, (context.Sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1 + 1), out this.depth_disp_delay_offset_fp);
             size += stream.ReadUnsignedInt(size, 6, out this.depth_disp_delay_offset_dp);
 
             return size;
@@ -13638,7 +13638,7 @@ depth_timing_offset() {
             ulong size = 0;
 
             size += stream.WriteUnsignedInt(5, this.offset_len_minus1);
-            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("depth_disp_delay_offset_fp"), this.depth_disp_delay_offset_fp);
+            size += stream.WriteUnsignedIntVariable((context.Sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1 + 1), this.depth_disp_delay_offset_fp);
             size += stream.WriteUnsignedInt(6, this.depth_disp_delay_offset_dp);
 
             return size;
@@ -14650,20 +14650,20 @@ seq_parameter_set_3davc_extension() {
             uint i = 0;
             uint j = 0;
 
-            if (H264Helpers.GetValue("NumDepthViews") > 0)
+            if (context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews > 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.three_dv_acquisition_idc);
 
-                this.view_id_3dv = new uint[H264Helpers.GetValue("NumDepthViews")];
-                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
+                this.view_id_3dv = new uint[context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews];
+                for (i = 0; i < context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_id_3dv[i]);
                 }
 
                 if (three_dv_acquisition_idc != 0)
                 {
-                    size += stream.ReadClass<DepthRanges>(size, context, () => new DepthRanges(H264Helpers.GetValue("NumDepthViews"), 2, 0), out this.depth_ranges);
-                    size += stream.ReadClass<VspParam>(size, context, () => new VspParam(H264Helpers.GetValue("NumDepthViews"), 2, 0), out this.vsp_param);
+                    size += stream.ReadClass<DepthRanges>(size, context, () => new DepthRanges(context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews, 2, 0), out this.depth_ranges);
+                    size += stream.ReadClass<VspParam>(size, context, () => new VspParam(context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews, 2, 0), out this.vsp_param);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.reduced_resolution_flag);
 
@@ -14702,17 +14702,23 @@ seq_parameter_set_3davc_extension() {
             size += stream.ReadUnsignedInt(size, 1, out this.alc_sps_enable_flag);
             size += stream.ReadUnsignedInt(size, 1, out this.enable_rle_skip_flag);
 
-            if (H264Helpers.GetValue("AllViewsPairedFlag") == 0)
+            if (((Func<uint>)(() =>
+            {
+                uint AllViewsPairedFlag = 1;
+                for (int i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
+                return AllViewsPairedFlag;
+            })).Invoke() == 0)
             {
 
-                this.num_anchor_refs_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1];
-                this.anchor_ref_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
-                this.num_anchor_refs_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1];
-                this.anchor_ref_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
-                for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+                this.num_anchor_refs_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.anchor_ref_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.num_anchor_refs_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.anchor_ref_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    if (H264Helpers.GetArray("texture_view_present_flag")[i] != 0)
+                    if (context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i]);
 
@@ -14731,14 +14737,14 @@ seq_parameter_set_3davc_extension() {
                     }
                 }
 
-                this.num_non_anchor_refs_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1];
-                this.non_anchor_ref_l0 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
-                this.num_non_anchor_refs_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1];
-                this.non_anchor_ref_l1 = new uint[H264Helpers.GetValue("num_views_minus1") + 1][];
-                for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+                this.num_non_anchor_refs_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.non_anchor_ref_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.num_non_anchor_refs_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.non_anchor_ref_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    if (H264Helpers.GetArray("texture_view_present_flag")[i] != 0)
+                    if (context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i]);
 
@@ -14768,11 +14774,11 @@ seq_parameter_set_3davc_extension() {
             uint i = 0;
             uint j = 0;
 
-            if (H264Helpers.GetValue("NumDepthViews") > 0)
+            if (context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews > 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.three_dv_acquisition_idc);
 
-                for (i = 0; i < H264Helpers.GetValue("NumDepthViews"); i++)
+                for (i = 0; i < context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.view_id_3dv[i]);
                 }
@@ -14816,13 +14822,19 @@ seq_parameter_set_3davc_extension() {
             size += stream.WriteUnsignedInt(1, this.alc_sps_enable_flag);
             size += stream.WriteUnsignedInt(1, this.enable_rle_skip_flag);
 
-            if (H264Helpers.GetValue("AllViewsPairedFlag") == 0)
+            if (((Func<uint>)(() =>
+            {
+                uint AllViewsPairedFlag = 1;
+                for (int i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
+                return AllViewsPairedFlag;
+            })).Invoke() == 0)
             {
 
-                for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    if (H264Helpers.GetArray("texture_view_present_flag")[i] != 0)
+                    if (context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l0[i]);
 
@@ -14839,10 +14851,10 @@ seq_parameter_set_3davc_extension() {
                     }
                 }
 
-                for (i = 1; i <= H264Helpers.GetValue("num_views_minus1"); i++)
+                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    if (H264Helpers.GetArray("texture_view_present_flag")[i] != 0)
+                    if (context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l0[i]);
 
@@ -15288,9 +15300,9 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sign0[i]);
                     outSign[index, i] = sign0[i];
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("exponent0"), out this.exponent0[i]);
+                    size += stream.ReadUnsignedIntVariable(size, context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent0[i]);
                     outExp[index, i] = exponent0[i];
-                    size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("mantissa0"), out this.mantissa0[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), out this.mantissa0[i]);
                     outMantissa[index, i] = mantissa0[i];
                 }
                 else
@@ -15305,32 +15317,32 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
                         if (exponent_skip_flag[i] == 0)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, H264Helpers.GetVariableCount("exponent1"), out this.exponent1[i]);
+                            size += stream.ReadUnsignedIntVariable(size, context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent1[i]);
                             outExp[index, i] = exponent1[i];
                         }
                         else
                         {
-                            outExp[index, i] = outExp[H264Helpers.GetValue("ref_dps_id0"), i];
+                            outExp[index, i] = outExp[context.Dps.RefDpsId0, i];
                         }
                         size += stream.ReadSignedIntGolomb(size, out this.mantissa_diff[i]);
 
                         if (predDirection == 0)
                         {
-                            mantissaPred = ((OutMantissa[H264Helpers.GetValue("ref_dps_id0"), i] * H264Helpers.GetValue("predWeight0") + outMantissa[H264Helpers.GetValue("ref_dps_id1"), i] * (64 - H264Helpers.GetValue("predWeight0")) + 32) >> 6);
+                            mantissaPred = ((OutMantissa[context.Dps.RefDpsId0, i] * context.Dps.PredWeight0 + outMantissa[context.Dps.RefDpsId1, i] * (64 - context.Dps.PredWeight0) + 32) >> 6);
                         }
                         else
                         {
-                            mantissaPred = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
+                            mantissaPred = outMantissa[context.Dps.RefDpsId0, i];
                         }
                         outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff[i]);
-                        outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
+                        outManLen[index, i] = outManLen[context.Dps.RefDpsId0, i];
                     }
                     else
                     {
-                        outSign[index, i] = outSign[H264Helpers.GetValue("ref_dps_id0"), i];
-                        outExp[index, i] = outExp[H264Helpers.GetValue("ref_dps_id0"), i];
-                        outMantissa[index, i] = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
-                        outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
+                        outSign[index, i] = outSign[context.Dps.RefDpsId0, i];
+                        outExp[index, i] = outExp[context.Dps.RefDpsId0, i];
+                        outMantissa[index, i] = outMantissa[context.Dps.RefDpsId0, i];
+                        outManLen[index, i] = outManLen[context.Dps.RefDpsId0, i];
                     }
                 }
             }
@@ -15338,7 +15350,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < H264Helpers.GetValue("num_views_minus1") + 1 - H264Helpers.GetValue("deltaFlag"); i++)
+                for (i = 1; i < context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
@@ -15385,9 +15397,9 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
                 {
                     size += stream.WriteUnsignedInt(1, this.sign0[i]);
                     outSign[index, i] = sign0[i];
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("exponent0"), this.exponent0[i]);
+                    size += stream.WriteUnsignedIntVariable(context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent0[i]);
                     outExp[index, i] = exponent0[i];
-                    size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("mantissa0"), this.mantissa0[i]);
+                    size += stream.WriteUnsignedIntVariable((context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), this.mantissa0[i]);
                     outMantissa[index, i] = mantissa0[i];
                 }
                 else
@@ -15402,32 +15414,32 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
 
                         if (exponent_skip_flag[i] == 0)
                         {
-                            size += stream.WriteUnsignedIntVariable(H264Helpers.GetVariableCount("exponent1"), this.exponent1[i]);
+                            size += stream.WriteUnsignedIntVariable(context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent1[i]);
                             outExp[index, i] = exponent1[i];
                         }
                         else
                         {
-                            outExp[index, i] = outExp[H264Helpers.GetValue("ref_dps_id0"), i];
+                            outExp[index, i] = outExp[context.Dps.RefDpsId0, i];
                         }
                         size += stream.WriteSignedIntGolomb(this.mantissa_diff[i]);
 
                         if (predDirection == 0)
                         {
-                            mantissaPred = ((OutMantissa[H264Helpers.GetValue("ref_dps_id0"), i] * H264Helpers.GetValue("predWeight0") + outMantissa[H264Helpers.GetValue("ref_dps_id1"), i] * (64 - H264Helpers.GetValue("predWeight0")) + 32) >> 6);
+                            mantissaPred = ((OutMantissa[context.Dps.RefDpsId0, i] * context.Dps.PredWeight0 + outMantissa[context.Dps.RefDpsId1, i] * (64 - context.Dps.PredWeight0) + 32) >> 6);
                         }
                         else
                         {
-                            mantissaPred = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
+                            mantissaPred = outMantissa[context.Dps.RefDpsId0, i];
                         }
                         outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff[i]);
-                        outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
+                        outManLen[index, i] = outManLen[context.Dps.RefDpsId0, i];
                     }
                     else
                     {
-                        outSign[index, i] = outSign[H264Helpers.GetValue("ref_dps_id0"), i];
-                        outExp[index, i] = outExp[H264Helpers.GetValue("ref_dps_id0"), i];
-                        outMantissa[index, i] = outMantissa[H264Helpers.GetValue("ref_dps_id0"), i];
-                        outManLen[index, i] = outManLen[H264Helpers.GetValue("ref_dps_id0"), i];
+                        outSign[index, i] = outSign[context.Dps.RefDpsId0, i];
+                        outExp[index, i] = outExp[context.Dps.RefDpsId0, i];
+                        outMantissa[index, i] = outMantissa[context.Dps.RefDpsId0, i];
+                        outManLen[index, i] = outManLen[context.Dps.RefDpsId0, i];
                     }
                 }
             }
@@ -15435,7 +15447,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign,
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < H264Helpers.GetValue("num_views_minus1") + 1 - H264Helpers.GetValue("deltaFlag"); i++)
+                for (i = 1; i < context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
