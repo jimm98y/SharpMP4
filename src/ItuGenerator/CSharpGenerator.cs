@@ -1061,17 +1061,17 @@ namespace Sharp{type}
 
             //Debug.WriteLine($"---Condition parts: {string.Join(" ##### ", parts)}");
 
-            condition = condition.Replace("slice_type  ==  B", "FrameTypes.IsB(slice_type)");
-            condition = condition.Replace("slice_type  ==  P", "FrameTypes.IsP(slice_type)");
-            condition = condition.Replace("slice_type  ==  I", "FrameTypes.IsI(slice_type)");
-            condition = condition.Replace("slice_type  !=  I", "!FrameTypes.IsI(slice_type)");
-            condition = condition.Replace("slice_type  ==  SP", "FrameTypes.IsSP(slice_type)");
-            condition = condition.Replace("slice_type  ==  SI", "FrameTypes.IsSI(slice_type)");
-            condition = condition.Replace("slice_type  !=  SI", "!FrameTypes.IsSI(slice_type)");
-            condition = condition.Replace("slice_type  ==  EP", "FrameTypes.IsP(slice_type)");
-            condition = condition.Replace("slice_type  ==  EB", "FrameTypes.IsB(slice_type)");
-            condition = condition.Replace("slice_type  ==  EI", "FrameTypes.IsI(slice_type)");
-            condition = condition.Replace("slice_type  !=  EI", "!FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type == B", "FrameTypes.IsB(slice_type)");
+            condition = condition.Replace("slice_type == P", "FrameTypes.IsP(slice_type)");
+            condition = condition.Replace("slice_type == I", "FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type != I", "!FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type == SP", "FrameTypes.IsSP(slice_type)");
+            condition = condition.Replace("slice_type == SI", "FrameTypes.IsSI(slice_type)");
+            condition = condition.Replace("slice_type != SI", "!FrameTypes.IsSI(slice_type)");
+            condition = condition.Replace("slice_type == EP", "FrameTypes.IsP(slice_type)");
+            condition = condition.Replace("slice_type == EB", "FrameTypes.IsB(slice_type)");
+            condition = condition.Replace("slice_type == EI", "FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type != EI", "!FrameTypes.IsI(slice_type)");
 
             condition = condition.Replace("Extended_ISO", "H264Constants.Extended_ISO");
             condition = condition.Replace("Extended_SAR", "H264Constants.Extended_SAR");

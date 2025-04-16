@@ -2028,12 +2028,12 @@ slice_header() {
                 size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
             }
 
-            if (slice_type == B)
+            if (FrameTypes.IsB(slice_type))
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
             }
 
-            if (slice_type == P || slice_type == SP || slice_type == B)
+            if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
 
@@ -2041,7 +2041,7 @@ slice_header() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                    if (slice_type == B)
+                    if (FrameTypes.IsB(slice_type))
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                     }
@@ -2057,8 +2057,8 @@ slice_header() {
                 size += stream.ReadClass<RefPicListModification>(size, context, () => new RefPicListModification(), out this.ref_pic_list_modification);
             }
 
-            if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) ||
-        (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+            if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) ||
+        (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
             {
                 size += stream.ReadClass<PredWeightTable>(size, context, () => new PredWeightTable(), out this.pred_weight_table);
             }
@@ -2068,16 +2068,16 @@ slice_header() {
                 size += stream.ReadClass<DecRefPicMarking>(size, context, () => new DecRefPicMarking(), out this.dec_ref_pic_marking);
             }
 
-            if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != I && slice_type != SI)
+            if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
             }
             size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
 
-            if (slice_type == SP || slice_type == SI)
+            if (FrameTypes.IsSP(slice_type) || FrameTypes.IsSI(slice_type))
             {
 
-                if (slice_type == SP)
+                if (FrameTypes.IsSP(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag);
                 }
@@ -2158,12 +2158,12 @@ slice_header() {
                 size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
             }
 
-            if (slice_type == B)
+            if (FrameTypes.IsB(slice_type))
             {
                 size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
             }
 
-            if (slice_type == P || slice_type == SP || slice_type == B)
+            if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
             {
                 size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
 
@@ -2171,7 +2171,7 @@ slice_header() {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                    if (slice_type == B)
+                    if (FrameTypes.IsB(slice_type))
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                     }
@@ -2187,8 +2187,8 @@ slice_header() {
                 size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
             }
 
-            if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) ||
-        (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+            if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) ||
+        (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
             {
                 size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
             }
@@ -2198,16 +2198,16 @@ slice_header() {
                 size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
             }
 
-            if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != I && slice_type != SI)
+            if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
             {
                 size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
             }
             size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
 
-            if (slice_type == SP || slice_type == SI)
+            if (FrameTypes.IsSP(slice_type) || FrameTypes.IsSI(slice_type))
             {
 
-                if (slice_type == SP)
+                if (FrameTypes.IsSP(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag);
                 }
@@ -9493,12 +9493,12 @@ slice_header_in_scalable_extension() {
             if (context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
             {
 
-                if (slice_type == EB)
+                if (FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
                 }
 
-                if (slice_type == EP || slice_type == EB)
+                if (FrameTypes.IsP(slice_type) || FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
 
@@ -9506,7 +9506,7 @@ slice_header_in_scalable_extension() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                        if (slice_type == EB)
+                        if (FrameTypes.IsB(slice_type))
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                         }
@@ -9514,8 +9514,8 @@ slice_header_in_scalable_extension() {
                 }
                 size += stream.ReadClass<RefPicListModification>(size, context, () => new RefPicListModification(), out this.ref_pic_list_modification);
 
-                if ((context.Pps.WeightedPredFlag != 0 && slice_type == EP) ||
-            (context.Pps.WeightedBipredIdc == 1 && slice_type == EB))
+                if ((context.Pps.WeightedPredFlag != 0 && FrameTypes.IsP(slice_type)) ||
+            (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
                 {
 
                     if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
@@ -9546,7 +9546,7 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != EI)
+            if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type))
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
             }
@@ -9706,12 +9706,12 @@ slice_header_in_scalable_extension() {
             if (context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
             {
 
-                if (slice_type == EB)
+                if (FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
                 }
 
-                if (slice_type == EP || slice_type == EB)
+                if (FrameTypes.IsP(slice_type) || FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
 
@@ -9719,7 +9719,7 @@ slice_header_in_scalable_extension() {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                        if (slice_type == EB)
+                        if (FrameTypes.IsB(slice_type))
                         {
                             size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                         }
@@ -9727,8 +9727,8 @@ slice_header_in_scalable_extension() {
                 }
                 size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
 
-                if ((context.Pps.WeightedPredFlag != 0 && slice_type == EP) ||
-            (context.Pps.WeightedBipredIdc == 1 && slice_type == EB))
+                if ((context.Pps.WeightedPredFlag != 0 && FrameTypes.IsP(slice_type)) ||
+            (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
                 {
 
                     if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
@@ -9759,7 +9759,7 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != EI)
+            if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type))
             {
                 size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
             }
@@ -17892,7 +17892,7 @@ slice_header_in_3davc_extension() {
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.pre_slice_header_src);
 
-                if (slice_type == P || slice_type == SP || slice_type == B)
+                if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 2, out this.pre_ref_lists_src);
 
@@ -17904,7 +17904,7 @@ slice_header_in_3davc_extension() {
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                            if (slice_type == B)
+                            if (FrameTypes.IsB(slice_type))
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                             }
@@ -17913,7 +17913,7 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) || (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+                if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
                 {
                     size += stream.ReadUnsignedInt(size, 2, out this.pre_pred_weight_table_src);
 
@@ -17983,12 +17983,12 @@ slice_header_in_3davc_extension() {
                     size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
                 }
 
-                if (slice_type == B)
+                if (FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
                 }
 
-                if (slice_type == P || slice_type == SP || slice_type == B)
+                if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
 
@@ -17996,7 +17996,7 @@ slice_header_in_3davc_extension() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                        if (slice_type == B)
+                        if (FrameTypes.IsB(slice_type))
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                         }
@@ -18012,7 +18012,7 @@ slice_header_in_3davc_extension() {
                     size += stream.ReadClass<RefPicListModification>(size, context, () => new RefPicListModification(), out this.ref_pic_list_modification);
                 }
 
-                if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) || (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+                if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
                 {
                     size += stream.ReadClass<PredWeightTable>(size, context, () => new PredWeightTable(), out this.pred_weight_table);
                 }
@@ -18022,16 +18022,16 @@ slice_header_in_3davc_extension() {
                     size += stream.ReadClass<DecRefPicMarking>(size, context, () => new DecRefPicMarking(), out this.dec_ref_pic_marking);
                 }
 
-                if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != I && slice_type != SI)
+                if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
                 }
                 size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
 
-                if (slice_type == SP || slice_type == SI)
+                if (FrameTypes.IsSP(slice_type) || FrameTypes.IsSI(slice_type))
                 {
 
-                    if (slice_type == SP)
+                    if (FrameTypes.IsSP(slice_type))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag);
                     }
@@ -18054,7 +18054,7 @@ slice_header_in_3davc_extension() {
                     size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
                 }
 
-                if (context.NalHeader.NalUnitType == 21 && (slice_type != I && slice_type != SI))
+                if (context.NalHeader.NalUnitType == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))
                 {
 
                     if ((context.NalHeader.NalUnitType != 21) ? false : (context.NalHeader.Avc3dExtensionFlag != 0 ? context.NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
@@ -18093,7 +18093,7 @@ slice_header_in_3davc_extension() {
             {
                 size += stream.WriteUnsignedInt(2, this.pre_slice_header_src);
 
-                if (slice_type == P || slice_type == SP || slice_type == B)
+                if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(2, this.pre_ref_lists_src);
 
@@ -18105,7 +18105,7 @@ slice_header_in_3davc_extension() {
                         {
                             size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                            if (slice_type == B)
+                            if (FrameTypes.IsB(slice_type))
                             {
                                 size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                             }
@@ -18114,7 +18114,7 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) || (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+                if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
                 {
                     size += stream.WriteUnsignedInt(2, this.pre_pred_weight_table_src);
 
@@ -18184,12 +18184,12 @@ slice_header_in_3davc_extension() {
                     size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
                 }
 
-                if (slice_type == B)
+                if (FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
                 }
 
-                if (slice_type == P || slice_type == SP || slice_type == B)
+                if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
 
@@ -18197,7 +18197,7 @@ slice_header_in_3davc_extension() {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                        if (slice_type == B)
+                        if (FrameTypes.IsB(slice_type))
                         {
                             size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                         }
@@ -18213,7 +18213,7 @@ slice_header_in_3davc_extension() {
                     size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
                 }
 
-                if ((context.Pps.WeightedPredFlag != 0 && (slice_type == P || slice_type == SP)) || (context.Pps.WeightedBipredIdc == 1 && slice_type == B))
+                if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
                 {
                     size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
                 }
@@ -18223,16 +18223,16 @@ slice_header_in_3davc_extension() {
                     size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
                 }
 
-                if (context.Pps.EntropyCodingModeFlag != 0 && slice_type != I && slice_type != SI)
+                if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
                 {
                     size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
                 }
                 size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
 
-                if (slice_type == SP || slice_type == SI)
+                if (FrameTypes.IsSP(slice_type) || FrameTypes.IsSI(slice_type))
                 {
 
-                    if (slice_type == SP)
+                    if (FrameTypes.IsSP(slice_type))
                     {
                         size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag);
                     }
@@ -18255,7 +18255,7 @@ slice_header_in_3davc_extension() {
                     size += stream.WriteUnsignedIntVariable(context.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
                 }
 
-                if (context.NalHeader.NalUnitType == 21 && (slice_type != I && slice_type != SI))
+                if (context.NalHeader.NalUnitType == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))
                 {
 
                     if ((context.NalHeader.NalUnitType != 21) ? false : (context.NalHeader.Avc3dExtensionFlag != 0 ? context.NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
