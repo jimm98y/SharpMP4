@@ -36,6 +36,6 @@ namespace SharpH264
         public DepthParameterSetRbsp Dps { get; set; }
         public AccessUnitDelimiterRbsp Au { get; set; }
         public SeiRbsp Sei { get; set; }
-        public SliceHeader SliceHeader { get; set; }
+        public SliceLayerWithoutPartitioningRbsp Slice { get; set; }
     }
 }

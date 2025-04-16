@@ -1986,7 +1986,7 @@ slice_header() {
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
             }
-            size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.FrameNum, out this.frame_num);
+            size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
 
             if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
@@ -2005,7 +2005,7 @@ slice_header() {
 
             if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.PicOrderCntLsb, out this.pic_order_cnt_lsb);
+                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
 
                 if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
@@ -2098,7 +2098,7 @@ slice_header() {
             if (context.Pps.NumSliceGroupsMinus1 > 0 &&
         context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
             {
-                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                size += stream.ReadUnsignedIntVariable(size, context.Slice.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
             }
 
             return size;
@@ -2116,7 +2116,7 @@ slice_header() {
             {
                 size += stream.WriteUnsignedInt(2, this.colour_plane_id);
             }
-            size += stream.WriteUnsignedIntVariable(context.SliceHeader.FrameNum, this.frame_num);
+            size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
 
             if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
@@ -2135,7 +2135,7 @@ slice_header() {
 
             if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.WriteUnsignedIntVariable(context.SliceHeader.PicOrderCntLsb, this.pic_order_cnt_lsb);
+                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
 
                 if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
@@ -2228,7 +2228,7 @@ slice_header() {
             if (context.Pps.NumSliceGroupsMinus1 > 0 &&
         context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
             {
-                size += stream.WriteUnsignedIntVariable(context.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                size += stream.WriteUnsignedIntVariable(context.Slice.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
             }
 
             return size;
@@ -2294,7 +2294,7 @@ ref_pic_list_modification() {
             ulong size = 0;
 
 
-            if (context.SliceHeader.SliceType % 5 != 2 && context.SliceHeader.SliceType % 5 != 4)
+            if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0);
 
@@ -2318,7 +2318,7 @@ ref_pic_list_modification() {
                 }
             }
 
-            if (context.SliceHeader.SliceType % 5 == 1)
+            if (context.Slice.SliceHeader.SliceType % 5 == 1)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
 
@@ -2350,7 +2350,7 @@ ref_pic_list_modification() {
             ulong size = 0;
 
 
-            if (context.SliceHeader.SliceType % 5 != 2 && context.SliceHeader.SliceType % 5 != 4)
+            if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0);
 
@@ -2374,7 +2374,7 @@ ref_pic_list_modification() {
                 }
             }
 
-            if (context.SliceHeader.SliceType % 5 == 1)
+            if (context.Slice.SliceHeader.SliceType % 5 == 1)
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
 
@@ -2495,13 +2495,13 @@ pred_weight_table() {
                 size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom);
             }
 
-            this.luma_weight_l0_flag = new byte[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.luma_weight_l0 = new int[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.luma_offset_l0 = new int[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.chroma_weight_l0_flag = new byte[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.chroma_weight_l0 = new int[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
-            this.chroma_offset_l0 = new int[context.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
-            for (i = 0; i <= context.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
+            this.luma_weight_l0_flag = new byte[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.luma_weight_l0 = new int[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.luma_offset_l0 = new int[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.chroma_weight_l0_flag = new byte[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.chroma_weight_l0 = new int[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
+            this.chroma_offset_l0 = new int[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
+            for (i = 0; i <= context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i]);
 
@@ -2529,16 +2529,16 @@ pred_weight_table() {
                 }
             }
 
-            if (context.SliceHeader.SliceType % 5 == 1)
+            if (context.Slice.SliceHeader.SliceType % 5 == 1)
             {
 
-                this.luma_weight_l1_flag = new byte[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.luma_weight_l1 = new int[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.luma_offset_l1 = new int[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.chroma_weight_l1_flag = new byte[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.chroma_weight_l1 = new int[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
-                this.chroma_offset_l1 = new int[context.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
-                for (i = 0; i <= context.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
+                this.luma_weight_l1_flag = new byte[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.luma_weight_l1 = new int[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.luma_offset_l1 = new int[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.chroma_weight_l1_flag = new byte[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.chroma_weight_l1 = new int[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
+                this.chroma_offset_l1 = new int[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
+                for (i = 0; i <= context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i]);
 
@@ -2583,7 +2583,7 @@ pred_weight_table() {
                 size += stream.WriteUnsignedIntGolomb(this.chroma_log2_weight_denom);
             }
 
-            for (i = 0; i <= context.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
+            for (i = 0; i <= context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
             {
                 size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i]);
 
@@ -2609,10 +2609,10 @@ pred_weight_table() {
                 }
             }
 
-            if (context.SliceHeader.SliceType % 5 == 1)
+            if (context.Slice.SliceHeader.SliceType % 5 == 1)
             {
 
-                for (i = 0; i <= context.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
+                for (i = 0; i <= context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.luma_weight_l1_flag[i]);
 
@@ -9448,7 +9448,7 @@ slice_header_in_scalable_extension() {
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
             }
-            size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.FrameNum, out this.frame_num);
+            size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
 
             if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
@@ -9467,7 +9467,7 @@ slice_header_in_scalable_extension() {
 
             if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.PicOrderCntLsb, out this.pic_order_cnt_lsb);
+                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
 
                 if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
@@ -9566,7 +9566,7 @@ slice_header_in_scalable_extension() {
             if (context.Pps.NumSliceGroupsMinus1 > 0 &&
         context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
             {
-                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                size += stream.ReadUnsignedIntVariable(size, context.Slice.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
             }
 
             if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
@@ -9661,7 +9661,7 @@ slice_header_in_scalable_extension() {
             {
                 size += stream.WriteUnsignedInt(2, this.colour_plane_id);
             }
-            size += stream.WriteUnsignedIntVariable(context.SliceHeader.FrameNum, this.frame_num);
+            size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
 
             if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
@@ -9680,7 +9680,7 @@ slice_header_in_scalable_extension() {
 
             if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.WriteUnsignedIntVariable(context.SliceHeader.PicOrderCntLsb, this.pic_order_cnt_lsb);
+                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
 
                 if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
@@ -9779,7 +9779,7 @@ slice_header_in_scalable_extension() {
             if (context.Pps.NumSliceGroupsMinus1 > 0 &&
         context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
             {
-                size += stream.WriteUnsignedIntVariable(context.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                size += stream.WriteUnsignedIntVariable(context.Slice.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
             }
 
             if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
@@ -12350,7 +12350,7 @@ ref_pic_list_mvc_modification() {
             ulong size = 0;
 
 
-            if (context.SliceHeader.SliceType % 5 != 2 && context.SliceHeader.SliceType % 5 != 4)
+            if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0);
 
@@ -12379,7 +12379,7 @@ ref_pic_list_mvc_modification() {
                 }
             }
 
-            if (context.SliceHeader.SliceType % 5 == 1)
+            if (context.Slice.SliceHeader.SliceType % 5 == 1)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
 
@@ -12416,7 +12416,7 @@ ref_pic_list_mvc_modification() {
             ulong size = 0;
 
 
-            if (context.SliceHeader.SliceType % 5 != 2 && context.SliceHeader.SliceType % 5 != 4)
+            if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0);
 
@@ -12445,7 +12445,7 @@ ref_pic_list_mvc_modification() {
                 }
             }
 
-            if (context.SliceHeader.SliceType % 5 == 1)
+            if (context.Slice.SliceHeader.SliceType % 5 == 1)
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
 
@@ -17941,7 +17941,7 @@ slice_header_in_3davc_extension() {
                 {
                     size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
                 }
-                size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.FrameNum, out this.frame_num);
+                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
 
                 if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
@@ -17960,7 +17960,7 @@ slice_header_in_3davc_extension() {
 
                 if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.PicOrderCntLsb, out this.pic_order_cnt_lsb);
+                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
 
                     if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
@@ -18051,7 +18051,7 @@ slice_header_in_3davc_extension() {
 
                 if (context.Pps.NumSliceGroupsMinus1 > 0 && context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, context.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                    size += stream.ReadUnsignedIntVariable(size, context.Slice.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
                 }
 
                 if (context.NalHeader.NalUnitType == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))
@@ -18142,7 +18142,7 @@ slice_header_in_3davc_extension() {
                 {
                     size += stream.WriteUnsignedInt(2, this.colour_plane_id);
                 }
-                size += stream.WriteUnsignedIntVariable(context.SliceHeader.FrameNum, this.frame_num);
+                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
 
                 if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
@@ -18161,7 +18161,7 @@ slice_header_in_3davc_extension() {
 
                 if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
                 {
-                    size += stream.WriteUnsignedIntVariable(context.SliceHeader.PicOrderCntLsb, this.pic_order_cnt_lsb);
+                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
 
                     if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
@@ -18252,7 +18252,7 @@ slice_header_in_3davc_extension() {
 
                 if (context.Pps.NumSliceGroupsMinus1 > 0 && context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
                 {
-                    size += stream.WriteUnsignedIntVariable(context.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                    size += stream.WriteUnsignedIntVariable(context.Slice.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
                 }
 
                 if (context.NalHeader.NalUnitType == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))

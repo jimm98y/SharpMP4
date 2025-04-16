@@ -683,11 +683,11 @@ namespace Sharp{type}
                 case "avc_3d_extension_flag":
                     return "context.NalHeader.Avc3dExtensionFlag";
                 case "frame_num":
-                    return "context.SliceHeader.FrameNum";
+                    return "(context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4)";
                 case "pic_order_cnt_type":
                     return "context.Sps.SeqParameterSetData.PicOrderCntType";
                 case "pic_order_cnt_lsb":
-                    return "context.SliceHeader.PicOrderCntLsb";
+                    return "(context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "bottom_field_pic_order_in_frame_present_flag":
                     return "context.Pps.BottomFieldPicOrderInFramePresentFlag";
                 case "delta_pic_order_always_zero_flag":
@@ -705,13 +705,13 @@ namespace Sharp{type}
                 case "slice_group_map_type":
                     return "context.Pps.SliceGroupMapType";
                 case "slice_group_change_cycle":
-                    return "context.SliceHeader.SliceGroupChangeCycle";
+                    return "context.Slice.SliceHeader.SliceGroupChangeCycle";
                 case "slice_type":
-                    return "context.SliceHeader.SliceType";
+                    return "context.Slice.SliceHeader.SliceType";
                 case "num_ref_idx_l0_active_minus1":
-                    return "context.SliceHeader.NumRefIdxL0ActiveMinus1";
+                    return "context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1";
                 case "num_ref_idx_l1_active_minus1":
-                    return "context.SliceHeader.NumRefIdxL1ActiveMinus1";
+                    return "context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1";
                 case "use_ref_base_pic_flag":
                     return "context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag";
                 case "idr_flag":

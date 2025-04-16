@@ -263,10 +263,14 @@ namespace SharpH264
         internal ulong ReadUnsignedIntGolomb(ulong size, out uint value)
         {
             int cnt = 0;
-            while (ReadBit() == 0)
+            int bit = -1;
+            while ((bit = ReadBit()) == 0)
             {
                 cnt++;
             }
+
+            if(bit == -1)
+                throw new EndOfStreamException();
 
             if (cnt > 0)
             {

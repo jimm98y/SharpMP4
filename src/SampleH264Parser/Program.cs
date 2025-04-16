@@ -243,6 +243,28 @@ static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] s
         {
             Debug.WriteLine($"NALU: AU Delimiter");
         }
+        else if(nu.NalUnitType == 1 || nu.NalUnitType == 5)
+        {
+            Debug.WriteLine($"NALU: {nu.NalUnitType}");
+
+            SliceLayerWithoutPartitioningRbsp slice = new SliceLayerWithoutPartitioningRbsp();
+            readContext.Slice = slice;
+
+            slice.Read(readContext, stream);
+
+            var ms = new MemoryStream();
+            using (ItuStream wstream = new ItuStream(ms))
+            {
+                nu.Write(readContext, wstream);
+                slice.Write(readContext, wstream);
+
+                byte[] wbytes = ms.ToArray();
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(wbytes)))
+                {
+                    throw new Exception("Failed to write Slice");
+                }
+            }
+        }
         else
         {
             Debug.WriteLine($"NALU: {nu.NalUnitType}");
