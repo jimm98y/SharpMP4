@@ -734,6 +734,8 @@ namespace Sharp{type}
                     return "context.SubsetSps.SeqParameterSet3davcExtension.SeqViewSynthesisFlag";
                 case "three_dv_acquisition_idc":
                     return "context.SubsetSps.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc";
+                case "DepthFlag":
+                    return "( context.NalHeader.NalUnitType  !=  21 ) ? false : ( context.NalHeader.Avc3dExtensionFlag != 0 ? context.NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1 )";
 
                 default:
                     throw new NotImplementedException(parameter);
@@ -1118,7 +1120,7 @@ namespace Sharp{type}
                 "CodedBlockPatternLuma", "CodedBlockPatternChroma", "MbWidthC", "MbHeightC", "SubWidthC", "SubHeightC",
                 "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "PicSizeInMapUnits",
                 "predWeight0", "deltaFlag", "NumDepthViews", "IdrPicFlag",
-                "ChromaArrayType", "AllViewsPairedFlag"
+                "ChromaArrayType", "AllViewsPairedFlag", "DepthFlag"
             };
 
             foreach (var match in replacementsValue)

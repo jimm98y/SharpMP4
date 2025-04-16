@@ -18057,7 +18057,7 @@ slice_header_in_3davc_extension() {
                 if (context.NalHeader.NalUnitType == 21 && (slice_type != I && slice_type != SI))
                 {
 
-                    if (DepthFlag != 0)
+                    if ((context.NalHeader.NalUnitType != 21) ? false : (context.NalHeader.Avc3dExtensionFlag != 0 ? context.NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.depth_weighted_pred_flag);
                     }
@@ -18258,7 +18258,7 @@ slice_header_in_3davc_extension() {
                 if (context.NalHeader.NalUnitType == 21 && (slice_type != I && slice_type != SI))
                 {
 
-                    if (DepthFlag != 0)
+                    if ((context.NalHeader.NalUnitType != 21) ? false : (context.NalHeader.Avc3dExtensionFlag != 0 ? context.NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.depth_weighted_pred_flag);
                     }
