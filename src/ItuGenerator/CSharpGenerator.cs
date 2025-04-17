@@ -220,26 +220,6 @@ namespace Sharp{type}
             string name = GetFieldName(field as ItuField);
             string m = methodType == MethodType.Read ? GetReadMethod(b, field as ItuField) : GetWriteMethod(field as ItuField);
 
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_focal_length_x\")", "(exponent_focal_length_x[ i ] == 0) ? (Math.Max( 0, prec_focal_length - 30 )) : (Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_focal_length_y\")", "(exponent_focal_length_y[ i ] == 0) ? (Math.Max( 0, prec_focal_length - 30 )) : (Math.Max( 0, exponent_focal_length_y[ i ] + prec_focal_length - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_principal_point_x\")", "(exponent_principal_point_x[ i ] == 0) ? (Math.Max( 0, prec_principal_point - 30 )) : (Math.Max( 0, exponent_principal_point_x[ i ] + prec_principal_point - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_principal_point_y\")", "(exponent_principal_point_y[ i ] == 0) ? (Math.Max( 0, prec_principal_point - 30 )) : (Math.Max( 0, exponent_principal_point_y[ i ] + prec_principal_point - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_skew_factor\")", "(exponent_skew_factor[ i ] == 0) ? (Math.Max( 0, prec_skew_factor - 30 )) : (Math.Max( 0, exponent_skew_factor[ i ] + prec_skew_factor - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_r\")", "(exponent_r[ i ][ j ][ k ]  == 0) ? (Math.Max( 0, prec_rotation_param - 30 )) : (Math.Max( 0, exponent_r[ i ][ j ][ k ] + prec_rotation_param - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_t\")", "(exponent_t[ i ][ j ] == 0) ? (Math.Max( 0, prec_translation_param - 30 )) : (Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_ref_baseline\")", "(exponent_ref_baseline[ i ] == 0) ? (Math.Max( 0, prec_ref_baseline - 30 )) : (Math.Max( 0, exponent_ref_baseline[ i ] + prec_ref_baseline - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_ref_display_width\")", "(exponent_ref_display_width[ i ] == 0) ? (Math.Max( 0, prec_ref_display_width - 30 )) : (Math.Max( 0, exponent_ref_display_width[ i ] + prec_ref_display_width - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"mantissa_ref_viewing_distance\")", "(exponent_ref_viewing_distance[ i ] == 0) ? (Math.Max( 0, prec_ref_viewing_dist - 30 )) : (Math.Max( 0, exponent_ref_viewing_distance[ i ] + prec_ref_viewing_dist - 31))");
-            
-            m = m.Replace("H264Helpers.GetVariableCount(\"man_gvd_z_near\")", "(man_len_gvd_z_near_minus1[ i ] + 1)");
-            m = m.Replace("H264Helpers.GetVariableCount(\"man_gvd_z_far\")", "(man_len_gvd_z_far_minus1[ i ] + 1)");
-            m = m.Replace("H264Helpers.GetVariableCount(\"man_gvd_focal_length_x\")", "(exp_gvd_focal_length_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_focal_length - 30 )) : (Math.Max( 0, exp_gvd_focal_length_x[ i ] + prec_gvd_focal_length - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"man_gvd_focal_length_y\")", "(exp_gvd_focal_length_y[ i ] == 0) ? (Math.Max( 0, prec_gvd_focal_length - 30 )) : (Math.Max( 0, exp_gvd_focal_length_y[ i ] + prec_gvd_focal_length - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"man_gvd_principal_point_x\")", "(exp_gvd_principal_point_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_principal_point - 30 )) : (Math.Max( 0, exp_gvd_principal_point_x[ i ] + prec_gvd_principal_point - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"man_gvd_principal_point_y\")", "(exp_gvd_principal_point_y[ i ] == 0) ? (Math.Max( 0, prec_gvd_principal_point - 30 )) : (Math.Max( 0, exp_gvd_principal_point_y[ i ] + prec_gvd_principal_point - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"man_gvd_r\")", "(exp_gvd_r[ i ][ j ][ k ] == 0) ? (Math.Max( 0, prec_gvd_rotation_param - 30 )) : (Math.Max( 0,  exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31))");
-            m = m.Replace("H264Helpers.GetVariableCount(\"man_gvd_t_x\")", "(exp_gvd_t_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_translation_param - 30 )) : (Math.Max( 0,  exp_gvd_t_x[ i ] + prec_gvd_translation_param - 31))");
-
             string typedef = (field as ItuField).FieldArray;
 
             string fieldComment = "";
@@ -264,12 +244,33 @@ namespace Sharp{type}
                 }
             }
 
-            if (methodType == MethodType.Read)
-                return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
-            else if (methodType == MethodType.Write)
-                return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
+            if (m.Contains("###value###") && methodType == MethodType.Read)
+            {
+                if(name == "depth_timing_offset" && string.IsNullOrWhiteSpace(typedef))
+                {
+                    m = $"this.depth_timing_offset = new DepthTimingOffset[1];\r\n" + m;
+                    typedef = "[ 0 ]";
+                }
+                else if(name == "depth_grid_position" && string.IsNullOrWhiteSpace(typedef))
+                {
+                    m = $"this.depth_grid_position = new DepthGridPosition[1];\r\n" + m;
+                    typedef = "[ 0 ]";
+                }
+
+                // special case, create class first, then read it
+                m = m.Replace("###value###", $"{spacing}this.{name}{typedef}");
+                m = m.Replace("###size###", $"{spacing}{boxSize}");
+                return $"{m} this.{name}{typedef}); {fieldComment}";
+            }
             else
-                return $"{spacing}{boxSize}{m}; // {name}";
+            {
+                if (methodType == MethodType.Read)
+                    return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
+                else if (methodType == MethodType.Write)
+                    return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
+                else
+                    return $"{spacing}{boxSize}{m}; // {name}";
+            }
         }
 
         private string BuildStatement(ItuClass b, ItuBlock parent, ItuField field, int level, MethodType methodType)
@@ -488,7 +489,7 @@ namespace Sharp{type}
                     return "stream.ReadBits(size, 8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, () => new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter, ituField.ClassType)}, ";
+                        return $"###value### = new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter, ituField.ClassType)};\r\n ###size### stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, ";
                     throw new NotImplementedException();
             }
         }

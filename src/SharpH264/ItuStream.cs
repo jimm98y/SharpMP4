@@ -176,20 +176,9 @@ namespace SharpH264
             return _bitsPosition % 8 == 0;
         }
 
-        internal ulong ReadClass<T>(ulong size, H264Context context, Func<T> factory, out T value) where T : IItuSerializable
+        internal ulong ReadClass<T>(ulong size, H264Context context, T value) where T : IItuSerializable
         {
-            T c = factory();
-            ulong read = c.Read(context, this);
-            value = c;
-            return read;
-        }
-
-        internal ulong ReadClass<T>(ulong size, H264Context context, Func<T> factory, out T[] value) where T : IItuSerializable
-        {
-            T c;
-            ulong read = ReadClass(size, context, factory, out c);
-            value = new T[] { c };
-            return read;
+            return value.Read(context, this);
         }
 
         internal ulong WriteClass<T>(H264Context context, T value) where T : IItuSerializable
