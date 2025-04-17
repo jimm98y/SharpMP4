@@ -91,6 +91,9 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                         {
                             uint nalUnitLength = 0;
                             long offset = 0;
+
+                            Debug.WriteLine("AU begin");
+
                             do
                             {
                                 size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
@@ -99,6 +102,8 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                                 offset += sampleData.Length;
                                 ReadNALu(readContext, writeContext, sampleData);
                             } while (offset < sampleSize);
+
+                            Debug.WriteLine("AU end");
                         }
                         else
                         {
@@ -147,7 +152,8 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                     {
                         uint sampleSize = sampleSizes[sample_idx++];
 
-                        // AU begin
+                        Debug.WriteLine("AU begin");
+
                         long offset = 0;
                         do
                         {
@@ -158,6 +164,8 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                             offset += sampleData.Length;
                             ReadNALu(readContext, writeContext, sampleData);
                         } while (offset < sampleSize);
+
+                        Debug.WriteLine("AU end");
                     }
                 }
             }
