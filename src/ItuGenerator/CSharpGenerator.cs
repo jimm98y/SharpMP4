@@ -641,10 +641,6 @@ namespace Sharp{type}
                     return "(exp_gvd_r[ i ][ j ][ k ] == 0) ? (Math.Max( 0, prec_gvd_rotation_param - 30 )) : (Math.Max( 0,  exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31))";
                 case "man_gvd_t_x": 
                     return "(exp_gvd_t_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_translation_param - 30 )) : (Math.Max( 0,  exp_gvd_t_x[ i ] + prec_gvd_translation_param - 31))";
-                case "CodedBlockPatternLuma":
-                    return "/* CodedBlockPatternLuma */";
-                case "CodedBlockPatternChroma":
-                    return "/* CodedBlockPatternChroma */";
                 case "MbWidthC":
                     return "(context.Sps.SeqParameterSetData.ChromaFormatIdc == 0 ? 0 : 16 / ((context.Sps.SeqParameterSetData.ChromaFormatIdc == 1 || context.Sps.SeqParameterSetData.ChromaFormatIdc == 2) ? 2 : 1))";
                 case "MbHeightC":
@@ -1100,7 +1096,7 @@ namespace Sharp{type}
 
             string[] replacementsValue = new string[]
             {
-                "CodedBlockPatternLuma", "CodedBlockPatternChroma", "MbWidthC", "MbHeightC", "SubWidthC", "SubHeightC",
+                "MbWidthC", "MbHeightC", "SubWidthC", "SubHeightC",
                 "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "PicSizeInMapUnits",
                 "predWeight0", "deltaFlag", "NumDepthViews", "IdrPicFlag",
                 "ChromaArrayType", "AllViewsPairedFlag", "DepthFlag"
