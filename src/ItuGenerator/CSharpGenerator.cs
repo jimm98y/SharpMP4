@@ -280,7 +280,6 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 fieldValue = fieldValue.Replace("<<", "<< (int)");
-                fieldValue = fieldValue.Replace("more_rbsp_data()", "stream.MoreRbspData() ? (uint)1 : (uint)0");
 
                 fieldValue = fieldValue.Replace("Abs(", "Math.Abs(");
                 fieldValue = fieldValue.Replace("Min(", "Math.Min(");
@@ -288,7 +287,6 @@ namespace Sharp{type}
 
                 // TODO
                 fieldValue = fieldValue.Replace("mantissaPred + mantissa_diff", "(uint)(mantissaPred + mantissa_diff)");
-                fieldValue = fieldValue.Replace("delta_scale", "delta_scale[j]");
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith('!'))
@@ -786,8 +784,6 @@ namespace Sharp{type}
 
             Dictionary<string, string> map = GetCSharpTypeMapping();
 
-            //Debug.WriteLine($"Field type: {field.Type}, opt: array: {field.FieldArray}");
-
             int arrayDimensions = 0;
             if (!string.IsNullOrEmpty(field.FieldArray))
             {
@@ -931,18 +927,6 @@ namespace Sharp{type}
                                 else
                                 {
                                     variableType = variableType + $"[{variable}]";
-                                }
-
-                                // TODO: Fix this workaround
-                                if (req.FieldArray.Contains("[ 0 ]") && variableName.Contains("["))
-                                {
-                                    variableName += "[0]";
-                                }
-
-                                if(variableName == "mvd_l1" || variableName == "mvd_l0")
-                                {
-                                    if(appendType == "[]")
-                                        appendType += "[]";
                                 }
 
                                 if(variableType.Contains("_minus1[ c ]"))
