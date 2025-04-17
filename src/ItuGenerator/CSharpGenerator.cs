@@ -541,7 +541,6 @@ namespace Sharp{type}
                     return "0"; 
                 case "ref_dps_id1":
                     return "context.Dps.RefDpsId1";
-                    // bit depth
                 case "bit_depth_aux_minus8":
                     return "context.SpsExtension.BitDepthAuxMinus8";
                 case "cpb_removal_delay_length_minus1":
@@ -556,17 +555,8 @@ namespace Sharp{type}
                     return "context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth";
                 case "ar_object_confidence_length_minus1":
                     return "context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1";
-                // TODO: !!!
-                case "da_mantissa_len_minus1":
-                    return "context.Sei.SeiMessage.SeiPayload.DepthRepresentationInfo.DepthRepresentationSeiElement.First().DaMantissaLenMinus1";
-                case "offset_len_minus1":
-                    return "context.Sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1";
                 case "expLen":
                     return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
-                case "mantissa_len_minus1":
-                    return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1.First()";
-
-                // get array
                 case "num_anchor_refs_l0":
                     return "context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0";
                 case "num_anchor_refs_l1":
@@ -581,8 +571,6 @@ namespace Sharp{type}
                     return "context.Sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()"; // TODO: looks like a typo
                 case "texture_view_present_flag":
                     return "context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()";
-
-                // get variable count
                 case "initial_cpb_removal_delay":
                 case "initial_cpb_removal_delay_offset":
                     return "(context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1)";
@@ -611,15 +599,12 @@ namespace Sharp{type}
                     return "(context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1)";
                 case "da_mantissa":
                     return "(this.da_mantissa_len_minus1 + 1)";
-                case "depth_disp_delay_offset_fp":
-                    return "(context.Sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1 + 1)";
                 case "exponent0":
                     return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
                 case "mantissa0":
                     return "(context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1)";
                 case "exponent1":
                     return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
-
                 case "mantissa_focal_length_x":
                     return "(exponent_focal_length_x[ i ] == 0) ? (Math.Max( 0, prec_focal_length - 30 )) : (Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31))";
                 case "mantissa_focal_length_y":
@@ -640,7 +625,6 @@ namespace Sharp{type}
                     return "(exponent_ref_display_width[ i ] == 0) ? (Math.Max( 0, prec_ref_display_width - 30 )) : (Math.Max( 0, exponent_ref_display_width[ i ] + prec_ref_display_width - 31))";
                 case "mantissa_ref_viewing_distance": 
                     return "(exponent_ref_viewing_distance[ i ] == 0) ? (Math.Max( 0, prec_ref_viewing_dist - 30 )) : (Math.Max( 0, exponent_ref_viewing_distance[ i ] + prec_ref_viewing_dist - 31))";
-
                 case "man_gvd_z_near": 
                     return "(man_len_gvd_z_near_minus1[ i ] + 1)";
                 case "man_gvd_z_far": 
@@ -657,7 +641,6 @@ namespace Sharp{type}
                     return "(exp_gvd_r[ i ][ j ][ k ] == 0) ? (Math.Max( 0, prec_gvd_rotation_param - 30 )) : (Math.Max( 0,  exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31))";
                 case "man_gvd_t_x": 
                     return "(exp_gvd_t_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_translation_param - 30 )) : (Math.Max( 0,  exp_gvd_t_x[ i ] + prec_gvd_translation_param - 31))";
-
                 case "CodedBlockPatternLuma":
                     return "/* CodedBlockPatternLuma */";
                 case "CodedBlockPatternChroma":
@@ -670,8 +653,6 @@ namespace Sharp{type}
                     return "((context.Sps.SeqParameterSetData.ChromaFormatIdc == 1 || context.Sps.SeqParameterSetData.ChromaFormatIdc == 2) ? 2 : 1)";
                 case "SubHeightC":
                     return "((context.Sps.SeqParameterSetData.ChromaFormatIdc == 2 || context.Sps.SeqParameterSetData.ChromaFormatIdc == 3) ? 1 : 2)";
-
-                // TODO: slice_header
                 case "separate_colour_plane_flag":
                     return "context.Sps.SeqParameterSetData.SeparateColourPlaneFlag";
                 case "redundant_pic_cnt_present_flag":
@@ -736,6 +717,8 @@ namespace Sharp{type}
                     return "context.SubsetSps.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc";
                 case "DepthFlag":
                     return "( context.NalHeader.NalUnitType  !=  21 ) ? false : ( context.NalHeader.Avc3dExtensionFlag != 0 ? context.NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1 )";
+                case "depth_disp_delay_offset_fp":
+                    return "(this.offset_len_minus1 + 1)";
 
                 default:
                     throw new NotImplementedException(parameter);

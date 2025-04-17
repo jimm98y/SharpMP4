@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Linq;
-
-namespace SharpH264
+﻿namespace SharpH264
 {
     public class FrameTypes
     {

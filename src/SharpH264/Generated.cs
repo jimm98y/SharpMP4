@@ -15909,7 +15909,7 @@ depth_timing_offset() {
             ulong size = 0;
 
             size += stream.ReadUnsignedInt(size, 5, out this.offset_len_minus1);
-            size += stream.ReadUnsignedIntVariable(size, (context.Sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1 + 1), out this.depth_disp_delay_offset_fp);
+            size += stream.ReadUnsignedIntVariable(size, (this.offset_len_minus1 + 1), out this.depth_disp_delay_offset_fp);
             size += stream.ReadUnsignedInt(size, 6, out this.depth_disp_delay_offset_dp);
 
             return size;
@@ -15920,7 +15920,7 @@ depth_timing_offset() {
             ulong size = 0;
 
             size += stream.WriteUnsignedInt(5, this.offset_len_minus1);
-            size += stream.WriteUnsignedIntVariable((context.Sei.SeiMessage.SeiPayload.DepthTiming.DepthTimingOffset.First().OffsetLenMinus1 + 1), this.depth_disp_delay_offset_fp);
+            size += stream.WriteUnsignedIntVariable((this.offset_len_minus1 + 1), this.depth_disp_delay_offset_fp);
             size += stream.WriteUnsignedInt(6, this.depth_disp_delay_offset_dp);
 
             return size;
