@@ -279,19 +279,6 @@ namespace Sharp{type}
 
             if (!string.IsNullOrEmpty(fieldValue))
             {
-                string[] ignored = new string[]
-                {
-                    "i16x16DClevel",
-                    "i16x16AClevel",
-                    "level4x4",
-                    "level8x8"
-                };
-                foreach (var ignore in ignored)
-                {
-                    if (fieldValue.Contains(ignore))
-                        return "";
-                }
-
                 fieldValue = fieldValue.Replace("<<", "<< (int)");
                 fieldValue = fieldValue.Replace("more_rbsp_data()", "stream.MoreRbspData() ? (uint)1 : (uint)0");
 
@@ -841,11 +828,6 @@ namespace Sharp{type}
                 { "scalingLst",                    "u(32)[]" }, // TODO: remove this temporary fix
                 { "sizeOfScalingList",             "u(32)" },
                 { "useDefaultScalingMatrixFlag",   "u(32)" },
-                { "mb_type",                       "ue(v) | ae(v)" },
-                { "startIdx",                      "u(32)" },
-                { "endIdx",                        "u(32)" },
-                { "coeffLevel",                    "u(32)[]" },
-                { "maxNumCoeff",                   "u(32)" },
                 { "payloadType",                   "u(32)" },
                 { "payloadSize",                   "u(32)" },
                 { "outSign",                       "u(32)[,]" },
@@ -856,10 +838,6 @@ namespace Sharp{type}
                 { "predDirection",                 "u(32)" },
                 { "index",                         "u(32)" },
                 { "expLen",                        "u(32)" },
-                { "i16x16DClevel",                 "u(32)[][]" },
-                { "i16x16AClevel",                 "u(32)[][]" },
-                { "level4x4",                      "u(32)[][]" },
-                { "level8x8",                      "u(32)[][]" },
             };
 
             return map[parameter];
@@ -973,10 +951,6 @@ namespace Sharp{type}
                                     variableType = variableType.Replace("_minus1[ i ][ j ]", "_minus1[ i ][ j ] + 1");
                                 else if(variableType.Contains("_minus1[ i ]"))
                                     variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
-                                else if (variableType.Contains("_minus1\")[ i ]"))
-                                    variableType = variableType.Replace("_minus1\")[ i ]", "_minus1\")[ i ] + 1");
-                                else if (variableType.Contains("_minus1\")"))
-                                    variableType = variableType.Replace("_minus1\")", "_minus1\") + 1");
                                 else if (variableType.Contains("_minus1"))
                                     variableType = variableType.Replace("_minus1", "_minus1 + 1");
                                 else if (variableType.Contains("Minus1[ i ]"))
@@ -1038,8 +1012,6 @@ namespace Sharp{type}
                 }
             }
 
-            //Debug.WriteLine($"---Condition parts: {string.Join(" ##### ", parts)}");
-
             condition = condition.Replace("slice_type == B", "FrameTypes.IsB(slice_type)");
             condition = condition.Replace("slice_type == P", "FrameTypes.IsP(slice_type)");
             condition = condition.Replace("slice_type == I", "FrameTypes.IsI(slice_type)");
@@ -1066,15 +1038,6 @@ namespace Sharp{type}
 
             condition = condition.Replace("more_rbsp_trailing_data()", "stream.MoreRbspTrailingData()");
 
-            condition = condition.Replace("MbPartPredMode( mb_type, 0 )  ==  ", "MbTypes.MbPartPredMode( mb_type, 0 )  ==  MbPartPredModes.");
-            condition = condition.Replace("MbPartPredMode( mb_type, 0 )  !=  ", "MbTypes.MbPartPredMode( mb_type, 0 )  !=  MbPartPredModes.");
-            condition = condition.Replace("MbPartPredMode( mb_type, mbPartIdx )  !=  ", "MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.");
-            condition = condition.Replace("MbPartPredMode ( mb_type, mbPartIdx )  !=  ", "MbTypes.MbPartPredMode(mb_type, mbPartIdx) != MbPartPredModes.");
-            condition = condition.Replace("SubMbPredMode( sub_mb_type[ mbPartIdx ] )  !=  ", "MbTypes.SubMbPredMode(sub_mb_type[mbPartIdx]) != MbPartPredModes.");
-            condition = condition.Replace("mb_type  ==  ", "mb_type  ==  MbTypes.");
-            condition = condition.Replace("mb_type  !=  ", "mb_type  !=  MbTypes.");
-            condition = condition.Replace("sub_mb_type[ mbPartIdx ]  !=  ", "sub_mb_type[ mbPartIdx ]  !=  MbTypes.");
-
             return condition;
         }
 
@@ -1096,7 +1059,6 @@ namespace Sharp{type}
 
             string[] replacementsValue = new string[]
             {
-                "MbWidthC", "MbHeightC", "SubWidthC", "SubHeightC",
                 "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "PicSizeInMapUnits",
                 "predWeight0", "deltaFlag", "NumDepthViews", "IdrPicFlag",
                 "ChromaArrayType", "AllViewsPairedFlag", "DepthFlag"
