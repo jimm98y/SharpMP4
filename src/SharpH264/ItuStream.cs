@@ -35,11 +35,6 @@ namespace SharpH264
             this._stream = stream;
         }
 
-        public bool MoreRbspTrailingData()
-        {
-            throw new NotImplementedException();
-        }
-
         #region Bit read/write
 
         private int ReadByte()
