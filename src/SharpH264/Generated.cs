@@ -8025,16 +8025,16 @@ annotated_regions( payloadSize ) {
         public byte ArObjectLabelLanguagePresentFlag { get { return ar_object_label_language_present_flag; } set { ar_object_label_language_present_flag = value; } }
         private uint ar_bit_equal_to_zero;
         public uint ArBitEqualToZero { get { return ar_bit_equal_to_zero; } set { ar_bit_equal_to_zero = value; } }
-        private int ar_object_label_language;
-        public int ArObjectLabelLanguage { get { return ar_object_label_language; } set { ar_object_label_language = value; } }
+        private byte[] ar_object_label_language;
+        public byte[] ArObjectLabelLanguage { get { return ar_object_label_language; } set { ar_object_label_language = value; } }
         private uint ar_num_label_updates;
         public uint ArNumLabelUpdates { get { return ar_num_label_updates; } set { ar_num_label_updates = value; } }
         private uint[] ar_label_idx;
         public uint[] ArLabelIdx { get { return ar_label_idx; } set { ar_label_idx = value; } }
         private byte[] ar_label_cancel_flag;
         public byte[] ArLabelCancelFlag { get { return ar_label_cancel_flag; } set { ar_label_cancel_flag = value; } }
-        private int[] ar_label;
-        public int[] ArLabel { get { return ar_label; } set { ar_label = value; } }
+        private byte[][] ar_label;
+        public byte[][] ArLabel { get { return ar_label; } set { ar_label = value; } }
         private uint ar_num_object_updates;
         public uint ArNumObjectUpdates { get { return ar_num_object_updates; } set { ar_num_object_updates = value; } }
         private uint[] ar_object_idx;
@@ -8105,13 +8105,13 @@ annotated_regions( payloadSize ) {
                         {
                             size += stream.ReadFixed(size, 1, out this.ar_bit_equal_to_zero); // equal to 0 
                         }
-                        size += stream.ReadSignedIntT(size, out this.ar_object_label_language);
+                        size += stream.ReadUtf8String(size, out this.ar_object_label_language);
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates);
 
                     this.ar_label_idx = new uint[ar_num_label_updates];
                     this.ar_label_cancel_flag = new byte[ar_num_label_updates];
-                    this.ar_label = new int[ar_num_label_updates];
+                    this.ar_label = new byte[ar_num_label_updates];
                     for (i = 0; i < ar_num_label_updates; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i]);
@@ -8125,7 +8125,7 @@ annotated_regions( payloadSize ) {
                             {
                                 size += stream.ReadFixed(size, 1, out this.ar_bit_equal_to_zero); // equal to 0 
                             }
-                            size += stream.ReadSignedIntT(size, out this.ar_label[ar_label_idx[i]]);
+                            size += stream.ReadUtf8String(size, out this.ar_label[ar_label_idx[i]]);
                         }
                     }
                 }
@@ -8228,7 +8228,7 @@ annotated_regions( payloadSize ) {
                         {
                             size += stream.WriteFixed(1, this.ar_bit_equal_to_zero); // equal to 0 
                         }
-                        size += stream.WriteSignedIntT(this.ar_object_label_language);
+                        size += stream.WriteUtf8String(this.ar_object_label_language);
                     }
                     size += stream.WriteUnsignedIntGolomb(this.ar_num_label_updates);
 
@@ -8245,7 +8245,7 @@ annotated_regions( payloadSize ) {
                             {
                                 size += stream.WriteFixed(1, this.ar_bit_equal_to_zero); // equal to 0 
                             }
-                            size += stream.WriteSignedIntT(this.ar_label[ar_label_idx[i]]);
+                            size += stream.WriteUtf8String(this.ar_label[ar_label_idx[i]]);
                         }
                     }
                 }

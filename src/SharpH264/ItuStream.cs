@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -43,7 +44,7 @@ namespace SharpH264
             return ret;
         }
 
-        private long WriteByte(byte value)
+        private ulong WriteByte(byte value)
         {
             _stream.WriteByte(value);
             return 8;
@@ -166,29 +167,29 @@ namespace SharpH264
 
         #endregion // Bit read/write
 
-        internal bool ByteAligned()
+        public bool ByteAligned()
         {
             return _bitsPosition % 8 == 0;
         }
 
-        internal ulong ReadClass<T>(ulong size, H264Context context, T value) where T : IItuSerializable
+        public ulong ReadClass<T>(ulong size, H264Context context, T value) where T : IItuSerializable
         {
             return value.Read(context, this);
         }
 
-        internal ulong WriteClass<T>(H264Context context, T value) where T : IItuSerializable
+        public ulong WriteClass<T>(H264Context context, T value) where T : IItuSerializable
         {
             ulong size = value.Write(context, this);
             return size;
         }
 
-        internal ulong WriteClass<T>(H264Context context, T[] value) where T : IItuSerializable
+        public ulong WriteClass<T>(H264Context context, T[] value) where T : IItuSerializable
         {
             ulong size = value.Single().Write(context, this);
             return size;
         }
 
-        internal ulong ReadUnsignedInt(ulong size, int count, out byte value)
+        public ulong ReadUnsignedInt(ulong size, int count, out byte value)
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -197,7 +198,7 @@ namespace SharpH264
             return read;
         }
 
-        internal ulong WriteUnsignedInt(int count, byte value)
+        public ulong WriteUnsignedInt(int count, byte value)
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -205,17 +206,17 @@ namespace SharpH264
             return size;
         }
 
-        internal ulong ReadFixed(ulong size, int count, out uint value)
+        public ulong ReadFixed(ulong size, int count, out uint value)
         {
             return ReadUnsignedInt(size, count, out value);
         }
 
-        internal ulong WriteFixed(int count, uint value)
+        public ulong WriteFixed(int count, uint value)
         {
             return WriteUnsignedInt(count, value);
         }
 
-        internal ulong ReadUnsignedInt(ulong size, int count, out uint value)
+        public ulong ReadUnsignedInt(ulong size, int count, out uint value)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -224,13 +225,13 @@ namespace SharpH264
             return (ulong)count;
         }
 
-        internal ulong WriteUnsignedInt(int count, uint value)
+        public ulong WriteUnsignedInt(int count, uint value)
         {
             WriteBits(count, value);
             return (ulong)count;
         }
 
-        internal ulong ReadSignedInt(ulong size, int count, out int value)
+        public ulong ReadSignedInt(ulong size, int count, out int value)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -239,12 +240,12 @@ namespace SharpH264
             return (ulong)count;
         }
 
-        internal ulong WriteSignedInt(int count, int value)
+        public ulong WriteSignedInt(int count, int value)
         {
             throw new NotImplementedException();
         }
 
-        internal ulong ReadUnsignedIntGolomb(ulong size, out uint value)
+        public ulong ReadUnsignedIntGolomb(ulong size, out uint value)
         {
             int cnt = 0;
             int bit = -1;
@@ -268,7 +269,7 @@ namespace SharpH264
             return (ulong)(cnt + 1 + cnt);
         }
 
-        internal ulong WriteUnsignedIntGolomb(uint value)
+        public ulong WriteUnsignedIntGolomb(uint value)
         {
             int bits = 0;
             int cumul = 0;
@@ -287,7 +288,7 @@ namespace SharpH264
             return (ulong)(bits + 1 + bits);
         }
 
-        internal ulong ReadSignedIntGolomb(ulong size, out int value)
+        public ulong ReadSignedIntGolomb(ulong size, out int value)
         {
             uint val;
             ulong read = ReadUnsignedIntGolomb(size, out val);
@@ -296,13 +297,13 @@ namespace SharpH264
             return read;
         }
 
-        internal ulong WriteSignedIntGolomb(int value)
+        public ulong WriteSignedIntGolomb(int value)
         {
             uint mapped = (uint)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
             return WriteUnsignedIntGolomb(mapped);
         }
 
-        internal bool ReadMoreRbspData(IItuSerializable serializable)
+        public bool ReadMoreRbspData(IItuSerializable serializable)
         {
             if (_stream.Position == _stream.Length && _bitsPosition % 8 == 0)
                 return false;
@@ -345,7 +346,7 @@ namespace SharpH264
             }
         }
 
-        internal bool WriteMoreRbspData(IItuSerializable serializable)
+        public bool WriteMoreRbspData(IItuSerializable serializable)
         {
             if (serializable.HasMoreRbspData == 0)
                 return false;
@@ -354,7 +355,7 @@ namespace SharpH264
             return _rbspDataCounter-- != 0;
         }
 
-        internal int ReadNextBits(IItuSerializable serializable, int count)
+        public int ReadNextBits(IItuSerializable serializable, int count)
         {
             var bytes = (_stream as MemoryStream).ToArray().Skip(_bitsPosition / 8).ToArray();
             using (var ituStream = new ItuStream(new MemoryStream(bytes)))
@@ -381,7 +382,7 @@ namespace SharpH264
             }
         }
 
-        internal int WriteNextBits(IItuSerializable serializable, int count)
+        public int WriteNextBits(IItuSerializable serializable, int count)
         {
             if (serializable.ReadNextBits == null)
                 return 0;
@@ -404,39 +405,39 @@ namespace SharpH264
             }
         }
 
-        internal ulong ReadUnsignedIntVariable(ulong size, uint count, out uint value)
+        public ulong ReadUnsignedIntVariable(ulong size, uint count, out uint value)
         {
             return ReadUnsignedInt(size, (int)count, out value);
         }
 
-        internal ulong WriteUnsignedIntVariable(uint count, uint value)
+        public ulong WriteUnsignedIntVariable(uint count, uint value)
         {
             return WriteUnsignedInt((int)count, value);
         }
 
-        internal ulong ReadSignedIntVariable(ulong size, uint count, out int value)
+        public ulong ReadSignedIntVariable(ulong size, uint count, out int value)
         {
             return ReadSignedInt(size, (int)count, out value);
         }
 
-        internal ulong WriteSignedIntVariable(uint count, int value)
+        public ulong WriteSignedIntVariable(uint count, int value)
         {
             return WriteSignedInt((int)count, value);
         }
 
-        internal ulong ReadBits(ulong size, int count, out byte value)
+        public ulong ReadBits(ulong size, int count, out byte value)
         {
             value = (byte)ReadBits(count);
             return (ulong)count;
         }
 
-        internal ulong WriteBits(int count, byte value)
+        public ulong WriteBits(int count, byte value)
         {
             WriteBits(count, (long)value);
             return (ulong)count;
         }
 
-        internal ulong ReadUnsignedInt(ulong size, int count, out BigInteger value)
+        public ulong ReadUnsignedInt(ulong size, int count, out BigInteger value)
         {
             if (count % 8 > 0)
                 throw new NotSupportedException();
@@ -455,25 +456,40 @@ namespace SharpH264
             return (ulong)count;
         }
 
-        internal ulong WriteUnsignedInt(int count, BigInteger value)
+        public ulong WriteUnsignedInt(int count, BigInteger value)
         {
-            long size = 0;
+            ulong size = 0;
             byte[] bytes = value.ToByteArray();
             for (int i = 0; i < bytes.Length; i++)
             {
                 size += WriteByte(bytes[i]);
             }
-            return (ulong)size;
+            return size;
         }
 
-        internal ulong ReadSignedIntT(ulong size, out int value)
+        public ulong ReadUtf8String(ulong size, out byte[] value)
         {
-            throw new NotImplementedException();
+            List<byte> bytes = new List<byte>();
+            int b = -1;
+            while((b = ReadByte()) != -1)
+            {
+                if (b == 0)
+                    break;
+                bytes.Add((byte)b);
+            }
+            value = bytes.ToArray();
+            return (ulong)((bytes.Count + 1) * 8);
         }
-        
-        internal ulong WriteSignedIntT(int value)
+
+        public ulong WriteUtf8String(byte[] value)
         {
-            throw new NotImplementedException();
+            ulong size = 0;
+            for (int i = 0; i < value.Length; i++)
+            {
+                size += WriteByte(value[i]);
+            }
+            size += WriteByte(0); // null terminator
+            return size;
         }
 
         #region IDisposable 

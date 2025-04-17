@@ -389,7 +389,7 @@ namespace Sharp{type}
                 case "se(v)":
                     return "stream.WriteSignedIntGolomb(";
                 case "st(v)":
-                    return "stream.WriteSignedIntT(";
+                    return "stream.WriteUtf8String(";
                 case "se(v) | ae(v)":
                     return "stream.WriteSignedIntGolomb(";
                 case "te(v) | ae(v)":
@@ -464,7 +464,7 @@ namespace Sharp{type}
                 case "se(v)":
                     return "stream.ReadSignedIntGolomb(size, ";
                 case "st(v)":
-                    return "stream.ReadSignedIntT(size, ";
+                    return "stream.ReadUtf8String(size, ";
                 case "se(v) | ae(v)":
                     return "stream.ReadSignedIntGolomb(size, ";
                 case "te(v) | ae(v)":
@@ -757,7 +757,7 @@ namespace Sharp{type}
                 { "i(32)",                      "int" },
                 { "i(v)",                       "int" },
                 { "se(v)",                      "int" },
-                { "st(v)",                      "int" },
+                { "st(v)",                      "byte[]" },
                 { "se(v) | ae(v)",              "int" },
                 { "te(v) | ae(v)",              "int" },
                 { "b(8)",                       "byte" },
