@@ -869,7 +869,6 @@ namespace Sharp{type}
                 int nestedLevel = GetLoopNestingLevel(block);
                 if (nestedLevel > 0)
                 {
-                    // patch condition
                     condition = FixNestedInLoopVariables(block, condition, "", ";");
                     condition = FixNestedInLoopVariables(block, condition, "", "=");
                     condition = FixNestedInLoopVariables(block, condition, "", " ");
@@ -1043,9 +1042,17 @@ namespace Sharp{type}
 
             string[] replacementsValue = new string[]
             {
-                "NalHrdBpPresentFlag", "VclHrdBpPresentFlag", "CpbDpbDelaysPresentFlag", "PicSizeInMapUnits",
-                "predWeight0", "deltaFlag", "NumDepthViews", "IdrPicFlag",
-                "ChromaArrayType", "AllViewsPairedFlag", "DepthFlag"
+                "NalHrdBpPresentFlag",
+                "VclHrdBpPresentFlag",
+                "CpbDpbDelaysPresentFlag",
+                "PicSizeInMapUnits",
+                "predWeight0",
+                "deltaFlag",
+                "NumDepthViews",
+                "IdrPicFlag",
+                "ChromaArrayType",
+                "AllViewsPairedFlag", 
+                "DepthFlag"
             };
 
             foreach (var match in replacementsValue)

@@ -1582,71 +1582,7 @@ slice_layer_without_partitioning_rbsp() {
     }
 
     /*
-
-
-rbsp_slice_trailing_bits() {
-    rbsp_trailing_bits() All
-    if (entropy_coding_mode_flag)
-        while (more_rbsp_trailing_data())   
-   cabac_zero_word  /* equal to 0x0000 *//* All f(16)
-}
-    */
-    public class RbspSliceTrailingBits : IItuSerializable
-    {
-        private RbspTrailingBits rbsp_trailing_bits;
-        public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
-        private uint cabac_zero_word;
-        public uint CabacZeroWord { get { return cabac_zero_word; } set { cabac_zero_word = value; } }
-
-        public int HasMoreRbspData { get; set; }
-        public int[] ReadNextBits { get; set; }
-
-        public RbspSliceTrailingBits()
-        {
-
-        }
-
-        public ulong Read(H264Context context, ItuStream stream)
-        {
-            ulong size = 0;
-
-            this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
-
-            if (context.Pps.EntropyCodingModeFlag != 0)
-            {
-
-                while (stream.MoreRbspTrailingData())
-                {
-                    size += stream.ReadFixed(size, 16, out this.cabac_zero_word); // equal to 0x0000 
-                }
-            }
-
-            return size;
-        }
-
-        public ulong Write(H264Context context, ItuStream stream)
-        {
-            ulong size = 0;
-
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
-
-            if (context.Pps.EntropyCodingModeFlag != 0)
-            {
-
-                while (stream.MoreRbspTrailingData())
-                {
-                    size += stream.WriteFixed(16, this.cabac_zero_word); // equal to 0x0000 
-                }
-            }
-
-            return size;
-        }
-
-    }
-
-    /*
-   
+ 
 
 rbsp_trailing_bits() { 
  rbsp_stop_one_bit  /* equal to 1 *//* All f(1) 

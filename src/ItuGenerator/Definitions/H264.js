@@ -254,14 +254,7 @@ slice_layer_without_partitioning_rbsp() {
     slice_header() 2
     /*slice_data()*/  /* all categories of slice_data() syntax */ /*2 | 3 | 4*/
     /*rbsp_slice_trailing_bits() 2*/
-}
-
-rbsp_slice_trailing_bits() {
-    rbsp_trailing_bits() All
-    if (entropy_coding_mode_flag)
-        while (more_rbsp_trailing_data())   
-   cabac_zero_word  /* equal to 0x0000 */ All f(16)
-}   
+} 
 
 rbsp_trailing_bits() { 
  rbsp_stop_one_bit  /* equal to 1 */ All f(1) 
