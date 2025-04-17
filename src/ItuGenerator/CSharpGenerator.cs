@@ -941,6 +941,11 @@ namespace Sharp{type}
                                 else if (variableType.Contains("Minus1"))
                                     variableType = variableType.Replace("Minus1", "Minus1 + 1");
 
+                                if (variableName == "ar_label")
+                                {
+                                    appendType += "[]"; // TODO fix this workaround
+                                }
+
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                             }
                         }

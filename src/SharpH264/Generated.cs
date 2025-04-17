@@ -8111,7 +8111,7 @@ annotated_regions( payloadSize ) {
 
                     this.ar_label_idx = new uint[ar_num_label_updates];
                     this.ar_label_cancel_flag = new byte[ar_num_label_updates];
-                    this.ar_label = new byte[ar_num_label_updates];
+                    this.ar_label = new byte[ar_num_label_updates][];
                     for (i = 0; i < ar_num_label_updates; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i]);
