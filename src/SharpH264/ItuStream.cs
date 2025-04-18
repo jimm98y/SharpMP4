@@ -8,8 +8,8 @@ namespace SharpH264
 {
     public interface IItuSerializable
     {
-        ulong Read(H264Context context, ItuStream stream);
-        ulong Write(H264Context context, ItuStream stream);
+        ulong Read(IItuContext context, ItuStream stream);
+        ulong Write(IItuContext context, ItuStream stream);
         int HasMoreRbspData { get; set; }
         int[] ReadNextBits { get; set; }
     }
@@ -172,18 +172,18 @@ namespace SharpH264
             return _bitsPosition % 8 == 0;
         }
 
-        public ulong ReadClass<T>(ulong size, H264Context context, T value) where T : IItuSerializable
+        public ulong ReadClass<T>(ulong size, IItuContext context, T value) where T : IItuSerializable
         {
             return value.Read(context, this);
         }
 
-        public ulong WriteClass<T>(H264Context context, T value) where T : IItuSerializable
+        public ulong WriteClass<T>(IItuContext context, T value) where T : IItuSerializable
         {
             ulong size = value.Write(context, this);
             return size;
         }
 
-        public ulong WriteClass<T>(H264Context context, T[] value) where T : IItuSerializable
+        public ulong WriteClass<T>(IItuContext context, T[] value) where T : IItuSerializable
         {
             ulong size = value.Single().Write(context, this);
             return size;
@@ -582,7 +582,7 @@ namespace SharpH264
             return size;
         }
 
-        internal ulong WriteClass<T>(H264Context context, int whileIndex, Dictionary<int, T> list) where T : IItuSerializable
+        internal ulong WriteClass<T>(IItuContext context, int whileIndex, Dictionary<int, T> list) where T : IItuSerializable
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));

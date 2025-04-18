@@ -183,10 +183,10 @@ static void ReadNALu(H264Context context, byte[] sampleData)
         ituSize += nu.Read(context, stream);
         context.NalHeader = nu;
 
-        if(nu.NalUnitType == 7)
+        if(nu.NalUnitType == H264NALTypes.SPS)
         {
             SeqParameterSetRbsp sps = new SeqParameterSetRbsp();
-            context.Sps = sps;
+            context.SeqParameterSetRbsp = sps;
 
             sps.Read(context, stream);
 
@@ -203,10 +203,10 @@ static void ReadNALu(H264Context context, byte[] sampleData)
                 }
             }
         }
-        else if(nu.NalUnitType == 8)
+        else if(nu.NalUnitType == H264NALTypes.PPS)
         {
             PicParameterSetRbsp pps = new PicParameterSetRbsp();
-            context.Pps = pps;
+            context.PicParameterSetRbsp = pps;
 
             pps.Read(context, stream);
 
@@ -223,12 +223,12 @@ static void ReadNALu(H264Context context, byte[] sampleData)
                 }
             }
         }
-        else if (nu.NalUnitType == 6)
+        else if (nu.NalUnitType == H264NALTypes.SEI)
         {
             Debug.WriteLine("NALU: SEI");
 
             SeiRbsp sei = new SeiRbsp();
-            context.Sei = sei;
+            context.SeiRbsp = sei;
             ituSize += sei.Read(context, stream);
 
             var ms = new MemoryStream();
@@ -246,12 +246,12 @@ static void ReadNALu(H264Context context, byte[] sampleData)
                 }
             }
         }
-        else if (nu.NalUnitType == 9)
+        else if (nu.NalUnitType == H264NALTypes.AUD)
         {
             Debug.WriteLine($"NALU: AU Delimiter");
 
             AccessUnitDelimiterRbsp au = new AccessUnitDelimiterRbsp();
-            context.Au = au;
+            context.AccessUnitDelimiterRbsp = au;
 
             au.Read(context, stream);
 
@@ -268,12 +268,12 @@ static void ReadNALu(H264Context context, byte[] sampleData)
                 }
             }
         }
-        else if(nu.NalUnitType == 1 || nu.NalUnitType == 5)
+        else if(nu.NalUnitType == H264NALTypes.SLICE || nu.NalUnitType == H264NALTypes.IDR_SLICE)
         {
             Debug.WriteLine($"NALU: {nu.NalUnitType}");
 
             SliceLayerWithoutPartitioningRbsp slice = new SliceLayerWithoutPartitioningRbsp();
-            context.Slice = slice;
+            context.SliceLayerWithoutPartitioningRbsp = slice;
 
             slice.Read(context, stream);
 

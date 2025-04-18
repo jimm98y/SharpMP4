@@ -6,6 +6,22 @@ using System.Numerics;
 namespace SharpH264
 {
 
+    public class H264Context : IItuContext
+    {
+        public NalUnit NalHeader { get; set; }
+        public SeqParameterSetRbsp SeqParameterSetRbsp { get; set; }
+        public SeqParameterSetExtensionRbsp SeqParameterSetExtensionRbsp { get; set; }
+        public SubsetSeqParameterSetRbsp SubsetSeqParameterSetRbsp { get; set; }
+        public PicParameterSetRbsp PicParameterSetRbsp { get; set; }
+        public SeiRbsp SeiRbsp { get; set; }
+        public AccessUnitDelimiterRbsp AccessUnitDelimiterRbsp { get; set; }
+        public SliceLayerWithoutPartitioningRbsp SliceLayerWithoutPartitioningRbsp { get; set; }
+        public PrefixNalUnitRbsp PrefixNalUnitRbsp { get; set; }
+        public SliceLayerExtensionRbsp SliceLayerExtensionRbsp { get; set; }
+        public DepthParameterSetRbsp DepthParameterSetRbsp { get; set; }
+
+    }
+
     /*
 nal_unit( NumBytesInNALunit ) { 
  forbidden_zero_bit All f(1) 
@@ -70,7 +86,7 @@ nal_unit( NumBytesInNALunit ) {
             this.numBytesInNALunit = NumBytesInNALunit;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -131,7 +147,7 @@ nal_unit( NumBytesInNALunit ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -214,7 +230,7 @@ seq_parameter_set_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -226,7 +242,7 @@ seq_parameter_set_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -399,7 +415,7 @@ seq_parameter_set_data() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -509,7 +525,7 @@ seq_parameter_set_data() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -653,7 +669,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
             this.useDefaultScalingMatrixFlag = useDefaultScalingMatrixFlag;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -680,7 +696,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -751,7 +767,7 @@ seq_parameter_set_extension_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -762,8 +778,8 @@ seq_parameter_set_extension_rbsp() {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.bit_depth_aux_minus8);
                 size += stream.ReadUnsignedInt(size, 1, out this.alpha_incr_flag);
-                size += stream.ReadUnsignedIntVariable(size, (context.SpsExtension.BitDepthAuxMinus8 + 9), out this.alpha_opaque_value);
-                size += stream.ReadUnsignedIntVariable(size, (context.SpsExtension.BitDepthAuxMinus8 + 9), out this.alpha_transparent_value);
+                size += stream.ReadUnsignedIntVariable(size, (this.bit_depth_aux_minus8 + 9), out this.alpha_opaque_value);
+                size += stream.ReadUnsignedIntVariable(size, (this.bit_depth_aux_minus8 + 9), out this.alpha_transparent_value);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.additional_extension_flag);
             this.rbsp_trailing_bits = new RbspTrailingBits();
@@ -772,7 +788,7 @@ seq_parameter_set_extension_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -783,8 +799,8 @@ seq_parameter_set_extension_rbsp() {
             {
                 size += stream.WriteUnsignedIntGolomb(this.bit_depth_aux_minus8);
                 size += stream.WriteUnsignedInt(1, this.alpha_incr_flag);
-                size += stream.WriteUnsignedIntVariable((context.SpsExtension.BitDepthAuxMinus8 + 9), this.alpha_opaque_value);
-                size += stream.WriteUnsignedIntVariable((context.SpsExtension.BitDepthAuxMinus8 + 9), this.alpha_transparent_value);
+                size += stream.WriteUnsignedIntVariable((this.bit_depth_aux_minus8 + 9), this.alpha_opaque_value);
+                size += stream.WriteUnsignedIntVariable((this.bit_depth_aux_minus8 + 9), this.alpha_transparent_value);
             }
             size += stream.WriteUnsignedInt(1, this.additional_extension_flag);
             size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
@@ -864,7 +880,7 @@ subset_seq_parameter_set_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -872,7 +888,7 @@ subset_seq_parameter_set_rbsp() {
             this.seq_parameter_set_data = new SeqParameterSetData();
             size += stream.ReadClass<SeqParameterSetData>(size, context, this.seq_parameter_set_data);
 
-            if (context.Sps.SeqParameterSetData.ProfileIdc == 83 || context.Sps.SeqParameterSetData.ProfileIdc == 86)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 83 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 86)
             {
                 this.seq_parameter_set_svc_extension = new SeqParameterSetSvcExtension();
                 size += stream.ReadClass<SeqParameterSetSvcExtension>(size, context, this.seq_parameter_set_svc_extension); // specified in Annex G 
@@ -884,8 +900,8 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.ReadClass<SvcVuiParametersExtension>(size, context, this.svc_vui_parameters_extension); // specified in Annex G 
                 }
             }
-            else if (context.Sps.SeqParameterSetData.ProfileIdc == 118 || context.Sps.SeqParameterSetData.ProfileIdc == 128 ||
-  context.Sps.SeqParameterSetData.ProfileIdc == 134)
+            else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 118 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 128 ||
+  ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 134)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
                 this.seq_parameter_set_mvc_extension = new SeqParameterSetMvcExtension();
@@ -898,13 +914,13 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.ReadClass<MvcVuiParametersExtension>(size, context, this.mvc_vui_parameters_extension); // specified in Annex H 
                 }
             }
-            else if (context.Sps.SeqParameterSetData.ProfileIdc == 138 || context.Sps.SeqParameterSetData.ProfileIdc == 135)
+            else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 138 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 135)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
                 this.seq_parameter_set_mvcd_extension = new SeqParameterSetMvcdExtension();
                 size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
             }
-            else if (context.Sps.SeqParameterSetData.ProfileIdc == 139)
+            else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 139)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
                 this.seq_parameter_set_mvcd_extension = new SeqParameterSetMvcdExtension();
@@ -932,14 +948,14 @@ subset_seq_parameter_set_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
             size += stream.WriteClass<SeqParameterSetData>(context, this.seq_parameter_set_data);
 
-            if (context.Sps.SeqParameterSetData.ProfileIdc == 83 || context.Sps.SeqParameterSetData.ProfileIdc == 86)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 83 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 86)
             {
                 size += stream.WriteClass<SeqParameterSetSvcExtension>(context, this.seq_parameter_set_svc_extension); // specified in Annex G 
                 size += stream.WriteUnsignedInt(1, this.svc_vui_parameters_present_flag);
@@ -949,8 +965,8 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.WriteClass<SvcVuiParametersExtension>(context, this.svc_vui_parameters_extension); // specified in Annex G 
                 }
             }
-            else if (context.Sps.SeqParameterSetData.ProfileIdc == 118 || context.Sps.SeqParameterSetData.ProfileIdc == 128 ||
-  context.Sps.SeqParameterSetData.ProfileIdc == 134)
+            else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 118 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 128 ||
+  ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 134)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
                 size += stream.WriteClass<SeqParameterSetMvcExtension>(context, this.seq_parameter_set_mvc_extension); // specified in Annex H 
@@ -961,12 +977,12 @@ subset_seq_parameter_set_rbsp() {
                     size += stream.WriteClass<MvcVuiParametersExtension>(context, this.mvc_vui_parameters_extension); // specified in Annex H 
                 }
             }
-            else if (context.Sps.SeqParameterSetData.ProfileIdc == 138 || context.Sps.SeqParameterSetData.ProfileIdc == 135)
+            else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 138 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 135)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
                 size += stream.WriteClass<SeqParameterSetMvcdExtension>(context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
             }
-            else if (context.Sps.SeqParameterSetData.ProfileIdc == 139)
+            else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 139)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
                 size += stream.WriteClass<SeqParameterSetMvcdExtension>(context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
@@ -1123,7 +1139,7 @@ pic_parameter_set_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1173,7 +1189,7 @@ pic_parameter_set_rbsp() {
                     this.slice_group_id = new uint[pic_size_in_map_units_minus1 + 1];
                     for (i = 0; i <= pic_size_in_map_units_minus1; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i]);
                     }
                 }
             }
@@ -1197,11 +1213,11 @@ pic_parameter_set_rbsp() {
                 {
 
                     this.pic_scaling_list_present_flag = new byte[6 +
-     ((context.Sps.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
+     ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
                     this.scaling_list = new ScalingList[6 +
-     ((context.Sps.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
+     ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
                     for (i = 0; i < 6 +
-     ((context.Sps.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
+     ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
      i++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.pic_scaling_list_present_flag[i]);
@@ -1230,7 +1246,7 @@ pic_parameter_set_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1276,7 +1292,7 @@ pic_parameter_set_rbsp() {
 
                     for (i = 0; i <= pic_size_in_map_units_minus1; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i]);
+                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i]);
                     }
                 }
             }
@@ -1300,7 +1316,7 @@ pic_parameter_set_rbsp() {
                 {
 
                     for (i = 0; i < 6 +
-     ((context.Sps.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
+     ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
      i++)
                     {
                         size += stream.WriteUnsignedInt(1, this.pic_scaling_list_present_flag[i]);
@@ -1354,7 +1370,7 @@ sei_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1375,7 +1391,7 @@ sei_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1436,7 +1452,7 @@ sei_message() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1475,7 +1491,7 @@ sei_message() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1538,7 +1554,7 @@ access_unit_delimiter_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1549,7 +1565,7 @@ access_unit_delimiter_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1583,7 +1599,7 @@ slice_layer_without_partitioning_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1601,7 +1617,7 @@ slice_layer_without_partitioning_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1644,7 +1660,7 @@ rbsp_trailing_bits() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1663,7 +1679,7 @@ rbsp_trailing_bits() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1705,12 +1721,12 @@ prefix_nal_unit_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
 
-            if (context.NalHeader.SvcExtensionFlag != 0)
+            if (((H264Context)context).NalHeader.SvcExtensionFlag != 0)
             {
                 this.prefix_nal_unit_svc = new PrefixNalUnitSvc();
                 size += stream.ReadClass<PrefixNalUnitSvc>(size, context, this.prefix_nal_unit_svc); // specified in Annex G 
@@ -1719,12 +1735,12 @@ prefix_nal_unit_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
 
-            if (context.NalHeader.SvcExtensionFlag != 0)
+            if (((H264Context)context).NalHeader.SvcExtensionFlag != 0)
             {
                 size += stream.WriteClass<PrefixNalUnitSvc>(context, this.prefix_nal_unit_svc); // specified in Annex G 
             }
@@ -1769,12 +1785,12 @@ slice_layer_extension_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
 
-            if (context.NalHeader.SvcExtensionFlag != 0)
+            if (((H264Context)context).NalHeader.SvcExtensionFlag != 0)
             {
                 this.slice_header_in_scalable_extension = new SliceHeaderInScalableExtension();
                 size += stream.ReadClass<SliceHeaderInScalableExtension>(size, context, this.slice_header_in_scalable_extension); // specified in Annex G 
@@ -1787,7 +1803,7 @@ slice_layer_extension_rbsp() {
                 /* 2 | 3 | 4 */
 
             }
-            else if (context.NalHeader.Avc3dExtensionFlag != 0)
+            else if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0)
             {
                 this.slice_header_in_3davc_extension = new SliceHeaderIn3davcExtension();
                 size += stream.ReadClass<SliceHeaderIn3davcExtension>(size, context, this.slice_header_in_3davc_extension); // specified in Annex J 
@@ -1811,12 +1827,12 @@ slice_layer_extension_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
 
-            if (context.NalHeader.SvcExtensionFlag != 0)
+            if (((H264Context)context).NalHeader.SvcExtensionFlag != 0)
             {
                 size += stream.WriteClass<SliceHeaderInScalableExtension>(context, this.slice_header_in_scalable_extension); // specified in Annex G 
                 /* if (!slice_skip_flag) */
@@ -1828,7 +1844,7 @@ slice_layer_extension_rbsp() {
                 /* 2 | 3 | 4 */
 
             }
-            else if (context.NalHeader.Avc3dExtensionFlag != 0)
+            else if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0)
             {
                 size += stream.WriteClass<SliceHeaderIn3davcExtension>(context, this.slice_header_in_3davc_extension); // specified in Annex J 
                 /* slice_data_in_3davc_extension() */
@@ -1989,7 +2005,7 @@ slice_header() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -1997,13 +2013,13 @@ slice_header() {
             size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
             size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
 
-            if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
             }
-            size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
+            size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
 
-            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
 
@@ -2013,42 +2029,42 @@ slice_header() {
                 }
             }
 
-            if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+            if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
             }
 
-            if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
+                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
 
-                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
                 }
             }
 
-            if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
             {
                 size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
 
-                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
                 }
             }
 
-            if (context.Pps.RedundantPicCntPresentFlag != 0)
+            if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
             }
 
-            if (FrameTypes.IsB(slice_type))
+            if (H264FrameTypes.IsB(slice_type))
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
             }
 
-            if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
+            if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
 
@@ -2056,14 +2072,14 @@ slice_header() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                    if (FrameTypes.IsB(slice_type))
+                    if (H264FrameTypes.IsB(slice_type))
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                     }
                 }
             }
 
-            if (context.NalHeader.NalUnitType == 20 || context.NalHeader.NalUnitType == 21)
+            if (((H264Context)context).NalHeader.NalUnitType == 20 || ((H264Context)context).NalHeader.NalUnitType == 21)
             {
                 this.ref_pic_list_mvc_modification = new RefPicListMvcModification();
                 size += stream.ReadClass<RefPicListMvcModification>(size, context, this.ref_pic_list_mvc_modification); // specified in Annex H 
@@ -2074,36 +2090,36 @@ slice_header() {
                 size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification);
             }
 
-            if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) ||
-        (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
+            if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) ||
+        (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
             {
                 this.pred_weight_table = new PredWeightTable();
                 size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
             }
 
-            if (context.NalHeader.NalRefIdc != 0)
+            if (((H264Context)context).NalHeader.NalRefIdc != 0)
             {
                 this.dec_ref_pic_marking = new DecRefPicMarking();
                 size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking);
             }
 
-            if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
+            if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type))
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
             }
             size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
 
-            if (FrameTypes.IsSP(slice_type) || FrameTypes.IsSI(slice_type))
+            if (H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsSI(slice_type))
             {
 
-                if (FrameTypes.IsSP(slice_type))
+                if (H264FrameTypes.IsSP(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag);
                 }
                 size += stream.ReadSignedIntGolomb(size, out this.slice_qs_delta);
             }
 
-            if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+            if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
 
@@ -2114,16 +2130,16 @@ slice_header() {
                 }
             }
 
-            if (context.Pps.NumSliceGroupsMinus1 > 0 &&
-        context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+            if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 &&
+        ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
             {
-                size += stream.ReadUnsignedIntVariable(size, context.Slice.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
             }
 
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -2131,13 +2147,13 @@ slice_header() {
             size += stream.WriteUnsignedIntGolomb(this.slice_type);
             size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
 
-            if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
                 size += stream.WriteUnsignedInt(2, this.colour_plane_id);
             }
-            size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
+            size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
 
-            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
                 size += stream.WriteUnsignedInt(1, this.field_pic_flag);
 
@@ -2147,42 +2163,42 @@ slice_header() {
                 }
             }
 
-            if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+            if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
             }
 
-            if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
+                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
 
-                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
                 }
             }
 
-            if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
             {
                 size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
 
-                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
                 }
             }
 
-            if (context.Pps.RedundantPicCntPresentFlag != 0)
+            if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
             }
 
-            if (FrameTypes.IsB(slice_type))
+            if (H264FrameTypes.IsB(slice_type))
             {
                 size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
             }
 
-            if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
+            if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
             {
                 size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
 
@@ -2190,14 +2206,14 @@ slice_header() {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                    if (FrameTypes.IsB(slice_type))
+                    if (H264FrameTypes.IsB(slice_type))
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                     }
                 }
             }
 
-            if (context.NalHeader.NalUnitType == 20 || context.NalHeader.NalUnitType == 21)
+            if (((H264Context)context).NalHeader.NalUnitType == 20 || ((H264Context)context).NalHeader.NalUnitType == 21)
             {
                 size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification); // specified in Annex H 
             }
@@ -2206,34 +2222,34 @@ slice_header() {
                 size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
             }
 
-            if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) ||
-        (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
+            if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) ||
+        (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
             {
                 size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
             }
 
-            if (context.NalHeader.NalRefIdc != 0)
+            if (((H264Context)context).NalHeader.NalRefIdc != 0)
             {
                 size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
             }
 
-            if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
+            if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type))
             {
                 size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
             }
             size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
 
-            if (FrameTypes.IsSP(slice_type) || FrameTypes.IsSI(slice_type))
+            if (H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsSI(slice_type))
             {
 
-                if (FrameTypes.IsSP(slice_type))
+                if (H264FrameTypes.IsSP(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag);
                 }
                 size += stream.WriteSignedIntGolomb(this.slice_qs_delta);
             }
 
-            if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+            if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
 
@@ -2244,10 +2260,10 @@ slice_header() {
                 }
             }
 
-            if (context.Pps.NumSliceGroupsMinus1 > 0 &&
-        context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+            if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 &&
+        ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
             {
-                size += stream.WriteUnsignedIntVariable(context.Slice.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
             }
 
             return size;
@@ -2308,13 +2324,13 @@ ref_pic_list_modification() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
 
-            if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 2 && ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 4)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0);
 
@@ -2342,7 +2358,7 @@ ref_pic_list_modification() {
                 }
             }
 
-            if (context.Slice.SliceHeader.SliceType % 5 == 1)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
 
@@ -2373,13 +2389,13 @@ ref_pic_list_modification() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
 
-            if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 2 && ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 4)
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0);
 
@@ -2407,7 +2423,7 @@ ref_pic_list_modification() {
                 }
             }
 
-            if (context.Slice.SliceHeader.SliceType % 5 == 1)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
 
@@ -2519,7 +2535,7 @@ pred_weight_table() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -2527,18 +2543,18 @@ pred_weight_table() {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.luma_log2_weight_denom);
 
-            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+            if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom);
             }
 
-            this.luma_weight_l0_flag = new byte[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.luma_weight_l0 = new int[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.luma_offset_l0 = new int[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.chroma_weight_l0_flag = new byte[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.chroma_weight_l0 = new int[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
-            this.chroma_offset_l0 = new int[context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
-            for (i = 0; i <= context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
+            this.luma_weight_l0_flag = new byte[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.luma_weight_l0 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.luma_offset_l0 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.chroma_weight_l0_flag = new byte[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
+            this.chroma_weight_l0 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
+            this.chroma_offset_l0 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
+            for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i]);
 
@@ -2548,7 +2564,7 @@ pred_weight_table() {
                     size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l0[i]);
                 }
 
-                if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+                if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l0_flag[i]);
 
@@ -2566,16 +2582,16 @@ pred_weight_table() {
                 }
             }
 
-            if (context.Slice.SliceHeader.SliceType % 5 == 1)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
 
-                this.luma_weight_l1_flag = new byte[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.luma_weight_l1 = new int[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.luma_offset_l1 = new int[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.chroma_weight_l1_flag = new byte[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.chroma_weight_l1 = new int[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
-                this.chroma_offset_l1 = new int[context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
-                for (i = 0; i <= context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
+                this.luma_weight_l1_flag = new byte[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.luma_weight_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.luma_offset_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.chroma_weight_l1_flag = new byte[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.chroma_weight_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
+                this.chroma_offset_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
+                for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i]);
 
@@ -2585,7 +2601,7 @@ pred_weight_table() {
                         size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l1[i]);
                     }
 
-                    if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+                    if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l1_flag[i]);
 
@@ -2607,7 +2623,7 @@ pred_weight_table() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -2615,12 +2631,12 @@ pred_weight_table() {
             uint j = 0;
             size += stream.WriteUnsignedIntGolomb(this.luma_log2_weight_denom);
 
-            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+            if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.chroma_log2_weight_denom);
             }
 
-            for (i = 0; i <= context.Slice.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
+            for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
             {
                 size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i]);
 
@@ -2630,7 +2646,7 @@ pred_weight_table() {
                     size += stream.WriteSignedIntGolomb(this.luma_offset_l0[i]);
                 }
 
-                if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+                if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.chroma_weight_l0_flag[i]);
 
@@ -2646,10 +2662,10 @@ pred_weight_table() {
                 }
             }
 
-            if (context.Slice.SliceHeader.SliceType % 5 == 1)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
 
-                for (i = 0; i <= context.Slice.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
+                for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.luma_weight_l1_flag[i]);
 
@@ -2659,7 +2675,7 @@ pred_weight_table() {
                         size += stream.WriteSignedIntGolomb(this.luma_offset_l1[i]);
                     }
 
-                    if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
+                    if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.chroma_weight_l1_flag[i]);
 
@@ -2736,13 +2752,13 @@ dec_ref_pic_marking() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
 
-            if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+            if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag);
                 size += stream.ReadUnsignedInt(size, 1, out this.long_term_reference_flag);
@@ -2790,13 +2806,13 @@ dec_ref_pic_marking() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
 
-            if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+            if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
                 size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag);
                 size += stream.WriteUnsignedInt(1, this.long_term_reference_flag);
@@ -3170,7 +3186,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -3559,7 +3575,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -3913,62 +3929,62 @@ buffering_period( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             uint SchedSelIdx = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
-            if (context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0)
             {
 
-                this.initial_cpb_removal_delay = new uint[context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
-                this.initial_cpb_removal_delay_offset = new uint[context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
-                for (SchedSelIdx = 0; SchedSelIdx <= context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
+                this.initial_cpb_removal_delay = new uint[((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
+                this.initial_cpb_removal_delay_offset = new uint[((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
+                for (SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
                 }
             }
 
-            if (context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag != 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag != 0)
             {
 
-                for (SchedSelIdx = 0; SchedSelIdx <= context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
+                for (SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
                 }
             }
 
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             uint SchedSelIdx = 0;
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
 
-            if (context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0)
             {
 
-                for (SchedSelIdx = 0; SchedSelIdx <= context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
+                for (SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
                 }
             }
 
-            if (context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag != 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag != 0)
             {
 
-                for (SchedSelIdx = 0; SchedSelIdx <= context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
+                for (SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
                 }
             }
 
@@ -4070,19 +4086,19 @@ pic_timing( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             uint i = 0;
 
-            if ((uint)(context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
+            if ((uint)(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 + 1), out this.cpb_removal_delay);
-                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1), out this.dpb_output_delay);
+                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 + 1), out this.cpb_removal_delay);
+                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1), out this.dpb_output_delay);
             }
 
-            if (context.Sps.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0)
             {
                 size += stream.ReadUnsignedInt(size, 4, out this.pic_struct);
 
@@ -4335,9 +4351,9 @@ pic_timing( payloadSize ) {
                             }
                         }
 
-                        if (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength > 0)
+                        if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength > 0)
                         {
-                            size += stream.ReadSignedIntVariable(size, context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength, out this.time_offset[i]);
+                            size += stream.ReadSignedIntVariable(size, ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength, out this.time_offset[i]);
                         }
                     }
                 }
@@ -4346,19 +4362,19 @@ pic_timing( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             uint i = 0;
 
-            if ((uint)(context.Sps.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || context.Sps.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
+            if ((uint)(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
             {
-                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 + 1), this.cpb_removal_delay);
-                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1), this.dpb_output_delay);
+                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 + 1), this.cpb_removal_delay);
+                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1), this.dpb_output_delay);
             }
 
-            if (context.Sps.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0)
             {
                 size += stream.WriteUnsignedInt(4, this.pic_struct);
 
@@ -4416,9 +4432,9 @@ pic_timing( payloadSize ) {
                             }
                         }
 
-                        if (context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength > 0)
+                        if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength > 0)
                         {
-                            size += stream.WriteSignedIntVariable(context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength, this.time_offset[i]);
+                            size += stream.WriteSignedIntVariable(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength, this.time_offset[i]);
                         }
                     }
                 }
@@ -4476,7 +4492,7 @@ if( !pan_scan_rect_cancel_flag ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4505,7 +4521,7 @@ if( !pan_scan_rect_cancel_flag ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4555,7 +4571,7 @@ filler_payload( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4570,7 +4586,7 @@ filler_payload( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4622,7 +4638,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4653,7 +4669,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4712,7 +4728,7 @@ user_data_unregistered( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4728,7 +4744,7 @@ user_data_unregistered( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4776,7 +4792,7 @@ recovery_point( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4788,7 +4804,7 @@ recovery_point( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4839,14 +4855,14 @@ dec_ref_pic_marking_repetition( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             size += stream.ReadUnsignedInt(size, 1, out this.original_idr_flag);
             size += stream.ReadUnsignedIntGolomb(size, out this.original_frame_num);
 
-            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.original_field_pic_flag);
 
@@ -4861,14 +4877,14 @@ dec_ref_pic_marking_repetition( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             size += stream.WriteUnsignedInt(1, this.original_idr_flag);
             size += stream.WriteUnsignedIntGolomb(this.original_frame_num);
 
-            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
                 size += stream.WriteUnsignedInt(1, this.original_field_pic_flag);
 
@@ -4942,7 +4958,7 @@ spare_pic( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -4976,8 +4992,8 @@ spare_pic( payloadSize ) {
                 if (spare_area_idc[i] == 1)
                 {
 
-                    this.spare_unit_flag[i] = new byte[(context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
-                    for (j = 0; j < (context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
+                    this.spare_unit_flag[i] = new byte[(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
+                    for (j = 0; j < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.spare_unit_flag[i][j]);
                     }
@@ -4986,8 +5002,8 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    this.zero_run_length[i] = new uint[(context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
-                    for (j = 0; mapUnitCnt < (context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
+                    this.zero_run_length[i] = new uint[(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
+                    for (j = 0; mapUnitCnt < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.zero_run_length[i][j]);
                         mapUnitCnt += zero_run_length[i][j] + 1;
@@ -4998,7 +5014,7 @@ spare_pic( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5027,7 +5043,7 @@ spare_pic( payloadSize ) {
                 if (spare_area_idc[i] == 1)
                 {
 
-                    for (j = 0; j < (context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
+                    for (j = 0; j < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.spare_unit_flag[i][j]);
                     }
@@ -5036,7 +5052,7 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    for (j = 0; mapUnitCnt < (context.Sps.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (context.Sps.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
+                    for (j = 0; mapUnitCnt < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.zero_run_length[i][j]);
                         mapUnitCnt += zero_run_length[i][j] + 1;
@@ -5083,7 +5099,7 @@ scene_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5103,7 +5119,7 @@ scene_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5166,7 +5182,7 @@ sub_seq_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5185,7 +5201,7 @@ sub_seq_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5239,7 +5255,7 @@ sub_seq_layer_characteristics( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5259,7 +5275,7 @@ sub_seq_layer_characteristics( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5338,7 +5354,7 @@ sub_seq_characteristics( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5374,7 +5390,7 @@ sub_seq_characteristics( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5431,7 +5447,7 @@ full_frame_freeze( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5440,7 +5456,7 @@ full_frame_freeze( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5470,7 +5486,7 @@ full_frame_freeze_release( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5478,7 +5494,7 @@ full_frame_freeze_release( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5510,7 +5526,7 @@ full_frame_snapshot( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5519,7 +5535,7 @@ full_frame_snapshot( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5555,7 +5571,7 @@ progressive_refinement_segment_start( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5565,7 +5581,7 @@ progressive_refinement_segment_start( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5599,7 +5615,7 @@ progressive_refinement_segment_end( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5608,7 +5624,7 @@ progressive_refinement_segment_end( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5657,20 +5673,20 @@ motion_constrained_slice_group_set( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             uint i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_slice_groups_in_set_minus1);
 
-            if (context.Pps.NumSliceGroupsMinus1 > 0)
+            if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0)
             {
 
                 this.slice_group_id = new uint[num_slice_groups_in_set_minus1 + 1];
                 for (i = 0; i <= num_slice_groups_in_set_minus1; i++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i]);
                 }
             }
             size += stream.ReadUnsignedInt(size, 1, out this.exact_sample_value_match_flag);
@@ -5684,19 +5700,19 @@ motion_constrained_slice_group_set( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             uint i = 0;
             size += stream.WriteUnsignedIntGolomb(this.num_slice_groups_in_set_minus1);
 
-            if (context.Pps.NumSliceGroupsMinus1 > 0)
+            if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0)
             {
 
                 for (i = 0; i <= num_slice_groups_in_set_minus1; i++)
                 {
-                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(context.Pps.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i]);
+                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i]);
                 }
             }
             size += stream.WriteUnsignedInt(1, this.exact_sample_value_match_flag);
@@ -5796,7 +5812,7 @@ film_grain_characteristics( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5863,7 +5879,7 @@ film_grain_characteristics( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5955,7 +5971,7 @@ deblocking_filter_display_preference( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -5971,7 +5987,7 @@ deblocking_filter_display_preference( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6029,7 +6045,7 @@ stereo_video_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6050,7 +6066,7 @@ stereo_video_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6110,7 +6126,7 @@ post_filter_hint( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6141,7 +6157,7 @@ post_filter_hint( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6284,7 +6300,7 @@ tone_mapping_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6317,7 +6333,7 @@ tone_mapping_info( payloadSize ) {
                     this.start_of_coded_interval = new uint[(1 << (int)target_bit_depth)];
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i]);
                     }
                 }
 
@@ -6329,8 +6345,8 @@ tone_mapping_info( payloadSize ) {
                     this.target_pivot_value = new uint[num_pivots];
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i]);
                     }
                 }
 
@@ -6362,7 +6378,7 @@ tone_mapping_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6394,7 +6410,7 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i]);
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i]);
                     }
                 }
 
@@ -6404,8 +6420,8 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i]);
-                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i]);
                     }
                 }
 
@@ -6518,7 +6534,7 @@ frame_packing_arrangement( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6553,7 +6569,7 @@ frame_packing_arrangement( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6629,7 +6645,7 @@ display_orientation( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6647,7 +6663,7 @@ display_orientation( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6707,7 +6723,7 @@ display_orientation( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6728,7 +6744,7 @@ display_orientation( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6843,7 +6859,7 @@ colour_remapping_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6881,8 +6897,8 @@ colour_remapping_info( payloadSize ) {
                         this.pre_lut_target_value[c] = new uint[pre_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -6918,8 +6934,8 @@ colour_remapping_info( payloadSize ) {
                         this.post_lut_target_value[c] = new uint[post_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -6928,7 +6944,7 @@ colour_remapping_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -6961,8 +6977,8 @@ colour_remapping_info( payloadSize ) {
 
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -6991,8 +7007,8 @@ colour_remapping_info( payloadSize ) {
 
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -7028,7 +7044,7 @@ content_light_level_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7038,7 +7054,7 @@ content_light_level_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7072,7 +7088,7 @@ alternative_transfer_characteristics( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7081,7 +7097,7 @@ alternative_transfer_characteristics( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7155,7 +7171,7 @@ content_colour_volume( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7202,7 +7218,7 @@ content_colour_volume( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7277,7 +7293,7 @@ ambient_viewing_environment( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7288,7 +7304,7 @@ ambient_viewing_environment( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7345,7 +7361,7 @@ equirectangular_projection( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7368,7 +7384,7 @@ equirectangular_projection( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7419,7 +7435,7 @@ cubemap_projection( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7433,7 +7449,7 @@ cubemap_projection( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7488,7 +7504,7 @@ sphere_rotation( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7506,7 +7522,7 @@ sphere_rotation( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7633,7 +7649,7 @@ regionwise_packing( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7705,7 +7721,7 @@ regionwise_packing( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7810,7 +7826,7 @@ omni_viewport( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7841,7 +7857,7 @@ omni_viewport( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7899,7 +7915,7 @@ sei_manifest( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7917,7 +7933,7 @@ sei_manifest( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -7973,7 +7989,7 @@ sei_prefix_indication( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8008,7 +8024,7 @@ sei_prefix_indication( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8176,7 +8192,7 @@ annotated_regions( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8297,7 +8313,7 @@ annotated_regions( payloadSize ) {
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.ReadUnsignedIntVariable(size, (context.Sei.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]]);
                                 }
                             }
                         }
@@ -8308,7 +8324,7 @@ annotated_regions( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8414,7 +8430,7 @@ annotated_regions( payloadSize ) {
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.WriteUnsignedIntVariable((context.Sei.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]]);
                                 }
                             }
                         }
@@ -8476,7 +8492,7 @@ shutter_interval_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8512,7 +8528,7 @@ shutter_interval_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8572,7 +8588,7 @@ reserved_sei_message( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8587,7 +8603,7 @@ reserved_sei_message( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8739,7 +8755,7 @@ vui_parameters() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8827,7 +8843,7 @@ vui_parameters() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8965,7 +8981,7 @@ hrd_parameters() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -8991,7 +9007,7 @@ hrd_parameters() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -9065,7 +9081,7 @@ reserved_three_2bits All u(2)
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -9083,7 +9099,7 @@ reserved_three_2bits All u(2)
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -9167,19 +9183,19 @@ seq_parameter_set_svc_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_deblocking_filter_control_present_flag);
             size += stream.ReadUnsignedInt(size, 2, out this.extended_spatial_scalability_idc);
 
-            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 1 || (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 2)
+            if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 1 || (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 2)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.chroma_phase_x_plus1_flag);
             }
 
-            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 1)
+            if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 1)
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.chroma_phase_y_plus1);
             }
@@ -9187,7 +9203,7 @@ seq_parameter_set_svc_extension() {
             if (extended_spatial_scalability_idc == 1)
             {
 
-                if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
+                if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.seq_ref_layer_chroma_phase_x_plus1_flag);
                     size += stream.ReadUnsignedInt(size, 2, out this.seq_ref_layer_chroma_phase_y_plus1);
@@ -9208,19 +9224,19 @@ seq_parameter_set_svc_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             size += stream.WriteUnsignedInt(1, this.inter_layer_deblocking_filter_control_present_flag);
             size += stream.WriteUnsignedInt(2, this.extended_spatial_scalability_idc);
 
-            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 1 || (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 2)
+            if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 1 || (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 2)
             {
                 size += stream.WriteUnsignedInt(1, this.chroma_phase_x_plus1_flag);
             }
 
-            if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) == 1)
+            if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 1)
             {
                 size += stream.WriteUnsignedInt(2, this.chroma_phase_y_plus1);
             }
@@ -9228,7 +9244,7 @@ seq_parameter_set_svc_extension() {
             if (extended_spatial_scalability_idc == 1)
             {
 
-                if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
+                if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.seq_ref_layer_chroma_phase_x_plus1_flag);
                     size += stream.WriteUnsignedInt(2, this.seq_ref_layer_chroma_phase_y_plus1);
@@ -9294,18 +9310,18 @@ prefix_nal_unit_svc() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
 
-            if (context.NalHeader.NalRefIdc != 0)
+            if (((H264Context)context).NalHeader.NalRefIdc != 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.store_ref_base_pic_flag);
 
-                if ((context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
-            context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
+                if ((((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
+            ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
                 {
                     this.dec_ref_base_pic_marking = new DecRefBasePicMarking();
                     size += stream.ReadClass<DecRefBasePicMarking>(size, context, this.dec_ref_base_pic_marking);
@@ -9345,18 +9361,18 @@ prefix_nal_unit_svc() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
 
-            if (context.NalHeader.NalRefIdc != 0)
+            if (((H264Context)context).NalHeader.NalRefIdc != 0)
             {
                 size += stream.WriteUnsignedInt(1, this.store_ref_base_pic_flag);
 
-                if ((context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
-            context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
+                if ((((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
+            ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
                 {
                     size += stream.WriteClass<DecRefBasePicMarking>(context, this.dec_ref_base_pic_marking);
                 }
@@ -9627,7 +9643,7 @@ slice_header_in_scalable_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -9635,13 +9651,13 @@ slice_header_in_scalable_extension() {
             size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
             size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
 
-            if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
             }
-            size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
+            size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
 
-            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
 
@@ -9651,45 +9667,45 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 1)
+            if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 1)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
             }
 
-            if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
+                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
 
-                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
                 }
             }
 
-            if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
             {
                 size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
 
-                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
                 }
             }
 
-            if (context.Pps.RedundantPicCntPresentFlag != 0)
+            if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
             }
 
-            if (context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
+            if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
             {
 
-                if (FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
                 }
 
-                if (FrameTypes.IsP(slice_type) || FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
 
@@ -9697,7 +9713,7 @@ slice_header_in_scalable_extension() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                        if (FrameTypes.IsB(slice_type))
+                        if (H264FrameTypes.IsB(slice_type))
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                         }
@@ -9706,33 +9722,33 @@ slice_header_in_scalable_extension() {
                 this.ref_pic_list_modification = new RefPicListModification();
                 size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification);
 
-                if ((context.Pps.WeightedPredFlag != 0 && FrameTypes.IsP(slice_type)) ||
-            (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
+                if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && H264FrameTypes.IsP(slice_type)) ||
+            (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
 
-                    if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
+                    if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.base_pred_weight_table_flag);
                     }
 
-                    if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag != 0 || base_pred_weight_table_flag == 0)
+                    if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag != 0 || base_pred_weight_table_flag == 0)
                     {
                         this.pred_weight_table = new PredWeightTable();
                         size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
                     }
                 }
 
-                if (context.NalHeader.NalRefIdc != 0)
+                if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
                     this.dec_ref_pic_marking = new DecRefPicMarking();
                     size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking);
 
-                    if (context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0)
+                    if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.store_ref_base_pic_flag);
 
-                        if ((context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
-                    context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
+                        if ((((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
+                    ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
                         {
                             this.dec_ref_base_pic_marking = new DecRefBasePicMarking();
                             size += stream.ReadClass<DecRefBasePicMarking>(size, context, this.dec_ref_base_pic_marking);
@@ -9741,13 +9757,13 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type))
+            if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type))
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
             }
             size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
 
-            if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+            if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
 
@@ -9758,17 +9774,17 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.Pps.NumSliceGroupsMinus1 > 0 &&
-        context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+            if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 &&
+        ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
             {
-                size += stream.ReadUnsignedIntVariable(size, context.Slice.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
             }
 
-            if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
+            if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.ref_layer_dq_id);
 
-                if (context.SubsetSps.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag != 0)
+                if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag != 0)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.disable_inter_layer_deblocking_filter_idc);
 
@@ -9780,10 +9796,10 @@ slice_header_in_scalable_extension() {
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.constrained_intra_resampling_flag);
 
-                if (context.SubsetSps.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc == 2)
+                if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc == 2)
                 {
 
-                    if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
+                    if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.ref_layer_chroma_phase_x_plus1_flag);
                         size += stream.ReadUnsignedInt(size, 2, out this.ref_layer_chroma_phase_y_plus1);
@@ -9795,7 +9811,7 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
+            if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.slice_skip_flag);
 
@@ -9829,13 +9845,13 @@ slice_header_in_scalable_extension() {
                     }
                 }
 
-                if (context.SubsetSps.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag != 0)
+                if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.tcoeff_level_prediction_flag);
                 }
             }
 
-            if (context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0 && slice_skip_flag == 0)
+            if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0 && slice_skip_flag == 0)
             {
                 size += stream.ReadUnsignedInt(size, 4, out this.scan_idx_start);
                 size += stream.ReadUnsignedInt(size, 4, out this.scan_idx_end);
@@ -9844,7 +9860,7 @@ slice_header_in_scalable_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -9852,13 +9868,13 @@ slice_header_in_scalable_extension() {
             size += stream.WriteUnsignedIntGolomb(this.slice_type);
             size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
 
-            if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
                 size += stream.WriteUnsignedInt(2, this.colour_plane_id);
             }
-            size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
+            size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
 
-            if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
                 size += stream.WriteUnsignedInt(1, this.field_pic_flag);
 
@@ -9868,45 +9884,45 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 1)
+            if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 1)
             {
                 size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
             }
 
-            if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
+                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
 
-                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
                 }
             }
 
-            if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
             {
                 size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
 
-                if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
                 }
             }
 
-            if (context.Pps.RedundantPicCntPresentFlag != 0)
+            if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
             }
 
-            if (context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
+            if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
             {
 
-                if (FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
                 }
 
-                if (FrameTypes.IsP(slice_type) || FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
 
@@ -9914,7 +9930,7 @@ slice_header_in_scalable_extension() {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                        if (FrameTypes.IsB(slice_type))
+                        if (H264FrameTypes.IsB(slice_type))
                         {
                             size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                         }
@@ -9922,31 +9938,31 @@ slice_header_in_scalable_extension() {
                 }
                 size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
 
-                if ((context.Pps.WeightedPredFlag != 0 && FrameTypes.IsP(slice_type)) ||
-            (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
+                if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && H264FrameTypes.IsP(slice_type)) ||
+            (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
 
-                    if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
+                    if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.base_pred_weight_table_flag);
                     }
 
-                    if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag != 0 || base_pred_weight_table_flag == 0)
+                    if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag != 0 || base_pred_weight_table_flag == 0)
                     {
                         size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
                     }
                 }
 
-                if (context.NalHeader.NalRefIdc != 0)
+                if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
                     size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
 
-                    if (context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0)
+                    if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.store_ref_base_pic_flag);
 
-                        if ((context.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
-                    context.NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
+                        if ((((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
+                    ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
                         {
                             size += stream.WriteClass<DecRefBasePicMarking>(context, this.dec_ref_base_pic_marking);
                         }
@@ -9954,13 +9970,13 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type))
+            if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type))
             {
                 size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
             }
             size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
 
-            if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+            if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
 
@@ -9971,17 +9987,17 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.Pps.NumSliceGroupsMinus1 > 0 &&
-        context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+            if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 &&
+        ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
             {
-                size += stream.WriteUnsignedIntVariable(context.Slice.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
             }
 
-            if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && context.NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
+            if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.ref_layer_dq_id);
 
-                if (context.SubsetSps.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag != 0)
+                if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag != 0)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.disable_inter_layer_deblocking_filter_idc);
 
@@ -9993,10 +10009,10 @@ slice_header_in_scalable_extension() {
                 }
                 size += stream.WriteUnsignedInt(1, this.constrained_intra_resampling_flag);
 
-                if (context.SubsetSps.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc == 2)
+                if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc == 2)
                 {
 
-                    if ((context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? context.Sps.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
+                    if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.ref_layer_chroma_phase_x_plus1_flag);
                         size += stream.WriteUnsignedInt(2, this.ref_layer_chroma_phase_y_plus1);
@@ -10008,7 +10024,7 @@ slice_header_in_scalable_extension() {
                 }
             }
 
-            if (context.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
+            if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
             {
                 size += stream.WriteUnsignedInt(1, this.slice_skip_flag);
 
@@ -10042,13 +10058,13 @@ slice_header_in_scalable_extension() {
                     }
                 }
 
-                if (context.SubsetSps.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag != 0)
+                if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag != 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.tcoeff_level_prediction_flag);
                 }
             }
 
-            if (context.SubsetSps.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0 && slice_skip_flag == 0)
+            if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0 && slice_skip_flag == 0)
             {
                 size += stream.WriteUnsignedInt(4, this.scan_idx_start);
                 size += stream.WriteUnsignedInt(4, this.scan_idx_end);
@@ -10093,7 +10109,7 @@ dec_ref_base_pic_marking() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -10126,7 +10142,7 @@ dec_ref_base_pic_marking() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -10461,7 +10477,7 @@ scalability_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -10757,7 +10773,7 @@ scalability_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -10991,7 +11007,7 @@ sub_pic_scalable_layer( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11000,7 +11016,7 @@ sub_pic_scalable_layer( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11049,7 +11065,7 @@ non_required_layer_rep( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11078,7 +11094,7 @@ non_required_layer_rep( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11133,7 +11149,7 @@ priority_layer_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11150,7 +11166,7 @@ priority_layer_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11195,7 +11211,7 @@ layers_not_present( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11211,7 +11227,7 @@ layers_not_present( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11271,7 +11287,7 @@ layer_dependency_change( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11308,7 +11324,7 @@ layer_dependency_change( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11388,7 +11404,7 @@ scalable_nesting( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11432,7 +11448,7 @@ scalable_nesting( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11537,7 +11553,7 @@ base_layer_temporal_hrd( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11591,7 +11607,7 @@ base_layer_temporal_hrd( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11665,7 +11681,7 @@ quality_layer_integrity_check( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11683,7 +11699,7 @@ quality_layer_integrity_check( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11761,7 +11777,7 @@ redundant_pic_property( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11823,7 +11839,7 @@ redundant_pic_property( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11888,7 +11904,7 @@ tl0_dep_rep_index( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11898,7 +11914,7 @@ tl0_dep_rep_index( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11932,7 +11948,7 @@ delta_frame_num 5 se(v)
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -11941,7 +11957,7 @@ delta_frame_num 5 se(v)
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12018,7 +12034,7 @@ svc_vui_parameters_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12076,7 +12092,7 @@ svc_vui_parameters_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12160,7 +12176,7 @@ reserved_one_bit All u(1)
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12175,7 +12191,7 @@ reserved_one_bit All u(1)
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12305,7 +12321,7 @@ seq_parameter_set_mvc_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12394,7 +12410,7 @@ seq_parameter_set_mvc_extension() {
                 }
             }
 
-            if (context.Sps.SeqParameterSetData.ProfileIdc == 134)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 134)
             {
                 size += stream.ReadUnsignedInt(size, 6, out this.mfc_format_idc);
 
@@ -12412,7 +12428,7 @@ seq_parameter_set_mvc_extension() {
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.rpu_filter_enabled_flag);
 
-                if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.rpu_field_processing_flag);
                 }
@@ -12421,7 +12437,7 @@ seq_parameter_set_mvc_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12486,7 +12502,7 @@ seq_parameter_set_mvc_extension() {
                 }
             }
 
-            if (context.Sps.SeqParameterSetData.ProfileIdc == 134)
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 134)
             {
                 size += stream.WriteUnsignedInt(6, this.mfc_format_idc);
 
@@ -12504,7 +12520,7 @@ seq_parameter_set_mvc_extension() {
                 }
                 size += stream.WriteUnsignedInt(1, this.rpu_filter_enabled_flag);
 
-                if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.rpu_field_processing_flag);
                 }
@@ -12578,13 +12594,13 @@ ref_pic_list_mvc_modification() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
 
-            if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 2 && ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 4)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0);
 
@@ -12617,7 +12633,7 @@ ref_pic_list_mvc_modification() {
                 }
             }
 
-            if (context.Slice.SliceHeader.SliceType % 5 == 1)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
 
@@ -12653,13 +12669,13 @@ ref_pic_list_mvc_modification() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             int whileIndex = -1;
 
-            if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 2 && ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 4)
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0);
 
@@ -12692,7 +12708,7 @@ ref_pic_list_mvc_modification() {
                 }
             }
 
-            if (context.Slice.SliceHeader.SliceType % 5 == 1)
+            if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
 
@@ -12774,7 +12790,7 @@ parallel_decoding_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12782,24 +12798,24 @@ parallel_decoding_info( payloadSize ) {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
 
-            this.pdi_init_delay_anchor_minus2_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-            this.pdi_init_delay_anchor_minus2_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-            for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+            this.pdi_init_delay_anchor_minus2_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_anchor_minus2_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
             {
 
-                if (context.NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag != 0)
+                if (((H264Context)context).NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag != 0)
                 {
 
-                    this.pdi_init_delay_anchor_minus2_l0[i] = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
-                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
+                    this.pdi_init_delay_anchor_minus2_l0[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
+                    for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l0[i][j]);
                     }
 
-                    this.pdi_init_delay_anchor_minus2_l1[i] = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
-                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
+                    this.pdi_init_delay_anchor_minus2_l1[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
+                    for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l1[i][j]);
                     }
@@ -12807,14 +12823,14 @@ parallel_decoding_info( payloadSize ) {
                 else
                 {
 
-                    this.pdi_init_delay_non_anchor_minus2_l0[i] = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
-                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
+                    this.pdi_init_delay_non_anchor_minus2_l0[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
+                    for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l0[i][j]);
                     }
 
-                    this.pdi_init_delay_non_anchor_minus2_l1[i] = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
-                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
+                    this.pdi_init_delay_non_anchor_minus2_l1[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
+                    for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l1[i][j]);
                     }
@@ -12824,7 +12840,7 @@ parallel_decoding_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12832,18 +12848,18 @@ parallel_decoding_info( payloadSize ) {
             uint j = 0;
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
 
-            for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+            for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
             {
 
-                if (context.NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag != 0)
+                if (((H264Context)context).NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag != 0)
                 {
 
-                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
+                    for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l0[i][j]);
                     }
 
-                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
+                    for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l1[i][j]);
                     }
@@ -12851,12 +12867,12 @@ parallel_decoding_info( payloadSize ) {
                 else
                 {
 
-                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
+                    for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_non_anchor_minus2_l0[i][j]);
                     }
 
-                    for (j = 0; j <= context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
+                    for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_non_anchor_minus2_l1[i][j]);
                     }
@@ -12922,7 +12938,7 @@ mvc_scalable_nesting( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -12971,7 +12987,7 @@ mvc_scalable_nesting( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13163,7 +13179,7 @@ view_scalability_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13305,7 +13321,7 @@ view_scalability_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13432,7 +13448,7 @@ multiview_scene_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13441,7 +13457,7 @@ multiview_scene_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13575,7 +13591,7 @@ if (intrinsic_param_flag ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13675,7 +13691,7 @@ if (intrinsic_param_flag ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13781,7 +13797,7 @@ non_required_view_component( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13807,7 +13823,7 @@ non_required_view_component( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13881,7 +13897,7 @@ view_dependency_change( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13894,19 +13910,19 @@ view_dependency_change( payloadSize ) {
             if (anchor_update_flag != 0)
             {
 
-                this.anchor_ref_l0_flag = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                this.anchor_ref_l1_flag = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                this.anchor_ref_l0_flag = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.anchor_ref_l1_flag = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    this.anchor_ref_l0_flag[i] = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
-                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
+                    this.anchor_ref_l0_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
+                    for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l0_flag[i][j]);
                     }
 
-                    this.anchor_ref_l1_flag[i] = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
-                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
+                    this.anchor_ref_l1_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
+                    for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l1_flag[i][j]);
                     }
@@ -13916,19 +13932,19 @@ view_dependency_change( payloadSize ) {
             if (non_anchor_update_flag != 0)
             {
 
-                this.non_anchor_ref_l0_flag = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                this.non_anchor_ref_l1_flag = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                this.non_anchor_ref_l0_flag = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.non_anchor_ref_l1_flag = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    this.non_anchor_ref_l0_flag[i] = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
-                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
+                    this.non_anchor_ref_l0_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
+                    for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l0_flag[i][j]);
                     }
 
-                    this.non_anchor_ref_l1_flag[i] = new byte[context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
-                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
+                    this.non_anchor_ref_l1_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
+                    for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l1_flag[i][j]);
                     }
@@ -13938,7 +13954,7 @@ view_dependency_change( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -13951,15 +13967,15 @@ view_dependency_change( payloadSize ) {
             if (anchor_update_flag != 0)
             {
 
-                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
+                    for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.anchor_ref_l0_flag[i][j]);
                     }
 
-                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
+                    for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.anchor_ref_l1_flag[i][j]);
                     }
@@ -13969,15 +13985,15 @@ view_dependency_change( payloadSize ) {
             if (non_anchor_update_flag != 0)
             {
 
-                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
+                    for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.non_anchor_ref_l0_flag[i][j]);
                     }
 
-                    for (j = 0; j < context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
+                    for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.non_anchor_ref_l1_flag[i][j]);
                     }
@@ -14015,7 +14031,7 @@ operation_point_not_present( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14031,7 +14047,7 @@ operation_point_not_present( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14109,7 +14125,7 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14163,7 +14179,7 @@ sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14236,7 +14252,7 @@ multiview_view_position_extension_flag 5 u(1)
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14253,7 +14269,7 @@ multiview_view_position_extension_flag 5 u(1)
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14338,7 +14354,7 @@ mvc_vui_parameters_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14402,7 +14418,7 @@ mvc_vui_parameters_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14574,7 +14590,7 @@ seq_parameter_set_mvcd_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14707,7 +14723,7 @@ seq_parameter_set_mvcd_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -14955,7 +14971,7 @@ priority_id[ i ] 5 u(5)
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15077,8 +15093,8 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i]);
 
-                    this.pic_parameter_set_id_delta[i] = new uint[context.Sei.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
-                    for (j = 0; j <= context.Sei.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
+                    this.pic_parameter_set_id_delta[i] = new uint[((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
+                    for (j = 0; j <= ((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
                     }
@@ -15103,7 +15119,7 @@ priority_id[ i ] 5 u(5)
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15183,7 +15199,7 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_set_minus1[i]);
 
-                    for (j = 0; j <= context.Sei.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
+                    for (j = 0; j <= ((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
                     }
@@ -15241,7 +15257,7 @@ mvcd_op_view_info() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15261,7 +15277,7 @@ mvcd_op_view_info() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15353,7 +15369,7 @@ mvcd_scalable_nesting( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15413,7 +15429,7 @@ mvcd_scalable_nesting( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15558,7 +15574,7 @@ depth_representation_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15648,7 +15664,7 @@ depth_representation_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15760,7 +15776,7 @@ depth_representation_sei_element( outSign, outExp, outMantissa, outManLen ) {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15772,7 +15788,7 @@ depth_representation_sei_element( outSign, outExp, outMantissa, outManLen ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15854,7 +15870,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15893,7 +15909,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.additional_shift_present_flag[i]);
 
-                if (context.Sei.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                if (((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 10, out this.num_sample_shift_plus512[i]);
                 }
@@ -15903,7 +15919,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15934,7 +15950,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
                 }
                 size += stream.WriteUnsignedInt(1, this.additional_shift_present_flag[i]);
 
-                if (context.Sei.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                if (((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
                     size += stream.WriteUnsignedInt(10, this.num_sample_shift_plus512[i]);
                 }
@@ -15975,7 +15991,7 @@ depth_timing( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -15985,8 +16001,8 @@ depth_timing( payloadSize ) {
             if (per_view_depth_timing_flag != 0)
             {
 
-                this.depth_timing_offset = new DepthTimingOffset[context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews];
-                for (i = 0; i < context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews; i++)
+                this.depth_timing_offset = new DepthTimingOffset[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews];
+                for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     this.depth_timing_offset[i] = new DepthTimingOffset();
                     size += stream.ReadClass<DepthTimingOffset>(size, context, this.depth_timing_offset[i]);
@@ -16002,7 +16018,7 @@ depth_timing( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16012,7 +16028,7 @@ depth_timing( payloadSize ) {
             if (per_view_depth_timing_flag != 0)
             {
 
-                for (i = 0; i < context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews; i++)
+                for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     size += stream.WriteClass<DepthTimingOffset>(context, this.depth_timing_offset[i]);
                 }
@@ -16053,7 +16069,7 @@ depth_timing_offset() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16064,7 +16080,7 @@ depth_timing_offset() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16226,7 +16242,7 @@ alternative_depth_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16356,7 +16372,7 @@ alternative_depth_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16504,7 +16520,7 @@ depth_sampling_info( payloadSize ) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16538,7 +16554,7 @@ depth_sampling_info( payloadSize ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16594,7 +16610,7 @@ constrained_depth_parameter_set_identifier(payloadSize) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16604,7 +16620,7 @@ constrained_depth_parameter_set_identifier(payloadSize) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16651,7 +16667,7 @@ depth_grid_pos_y_sign_flag 5 u(1)
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16665,7 +16681,7 @@ depth_grid_pos_y_sign_flag 5 u(1)
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16755,7 +16771,7 @@ mvcd_vui_parameters_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16825,7 +16841,7 @@ mvcd_vui_parameters_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16913,7 +16929,7 @@ nal_unit_header_3davc_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -16927,7 +16943,7 @@ nal_unit_header_3davc_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -17079,28 +17095,28 @@ seq_parameter_set_3davc_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             uint i = 0;
             uint j = 0;
 
-            if (context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews > 0)
+            if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews > 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.three_dv_acquisition_idc);
 
-                this.view_id_3dv = new uint[context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews];
-                for (i = 0; i < context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews; i++)
+                this.view_id_3dv = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews];
+                for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_id_3dv[i]);
                 }
 
                 if (three_dv_acquisition_idc != 0)
                 {
-                    this.depth_ranges = new DepthRanges(context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews, 2, 0);
+                    this.depth_ranges = new DepthRanges(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews, 2, 0);
                     size += stream.ReadClass<DepthRanges>(size, context, this.depth_ranges);
-                    this.vsp_param = new VspParam(context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews, 2, 0);
+                    this.vsp_param = new VspParam(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews, 2, 0);
                     size += stream.ReadClass<VspParam>(size, context, this.vsp_param);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.reduced_resolution_flag);
@@ -17143,20 +17159,20 @@ seq_parameter_set_3davc_extension() {
             if (((Func<uint>)(() =>
             {
                 uint AllViewsPairedFlag = 1;
-                for (int i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
-                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
+                for (int i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
                 return AllViewsPairedFlag;
             })).Invoke() == 0)
             {
 
-                this.num_anchor_refs_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
-                this.anchor_ref_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                this.num_anchor_refs_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
-                this.anchor_ref_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                this.num_anchor_refs_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.anchor_ref_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.num_anchor_refs_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.anchor_ref_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    if (context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                    if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i]);
 
@@ -17175,14 +17191,14 @@ seq_parameter_set_3davc_extension() {
                     }
                 }
 
-                this.num_non_anchor_refs_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
-                this.non_anchor_ref_l0 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                this.num_non_anchor_refs_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
-                this.non_anchor_ref_l1 = new uint[context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                this.num_non_anchor_refs_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.non_anchor_ref_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.num_non_anchor_refs_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.non_anchor_ref_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    if (context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                    if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i]);
 
@@ -17205,18 +17221,18 @@ seq_parameter_set_3davc_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
             uint i = 0;
             uint j = 0;
 
-            if (context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews > 0)
+            if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews > 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.three_dv_acquisition_idc);
 
-                for (i = 0; i < context.SubsetSps.SeqParameterSetMvcdExtension.NumDepthViews; i++)
+                for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.view_id_3dv[i]);
                 }
@@ -17263,16 +17279,16 @@ seq_parameter_set_3davc_extension() {
             if (((Func<uint>)(() =>
             {
                 uint AllViewsPairedFlag = 1;
-                for (int i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
-                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
+                for (int i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
                 return AllViewsPairedFlag;
             })).Invoke() == 0)
             {
 
-                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    if (context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                    if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l0[i]);
 
@@ -17289,10 +17305,10 @@ seq_parameter_set_3davc_extension() {
                     }
                 }
 
-                for (i = 1; i <= context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
-                    if (context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                    if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l0[i]);
 
@@ -17388,7 +17404,7 @@ depth_parameter_set_rbsp() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -17449,7 +17465,7 @@ depth_parameter_set_rbsp() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -17547,7 +17563,7 @@ depth_ranges( numViews, predDirection, index ) {
             this.index = index;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -17569,7 +17585,7 @@ depth_ranges( numViews, predDirection, index ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -17704,7 +17720,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
             this.outManLen = outManLen;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -17748,9 +17764,9 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sign0[i]);
                     outSign[index, i] = sign0[i];
-                    size += stream.ReadUnsignedIntVariable(size, context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent0[i]);
+                    size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent0[i]);
                     outExp[index, i] = exponent0[i];
-                    size += stream.ReadUnsignedIntVariable(size, (context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), out this.mantissa0[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), out this.mantissa0[i]);
                     outMantissa[index, i] = mantissa0[i];
                 }
                 else
@@ -17765,32 +17781,32 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
 
                         if (exponent_skip_flag[i] == 0)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent1[i]);
+                            size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent1[i]);
                             outExp[index, i] = exponent1[i];
                         }
                         else
                         {
-                            outExp[index, i] = outExp[context.Dps.RefDpsId0, i];
+                            outExp[index, i] = outExp[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                         }
                         size += stream.ReadSignedIntGolomb(size, out this.mantissa_diff[i]);
 
                         if (predDirection == 0)
                         {
-                            mantissaPred = ((OutMantissa[context.Dps.RefDpsId0, i] * context.Dps.PredWeight0 + outMantissa[context.Dps.RefDpsId1, i] * (64 - context.Dps.PredWeight0) + 32) >> 6);
+                            mantissaPred = ((OutMantissa[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i] * ((H264Context)context).DepthParameterSetRbsp.PredWeight0 + outMantissa[((H264Context)context).DepthParameterSetRbsp.RefDpsId1, i] * (64 - ((H264Context)context).DepthParameterSetRbsp.PredWeight0) + 32) >> 6);
                         }
                         else
                         {
-                            mantissaPred = outMantissa[context.Dps.RefDpsId0, i];
+                            mantissaPred = outMantissa[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                         }
                         outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff[i]);
-                        outManLen[index, i] = outManLen[context.Dps.RefDpsId0, i];
+                        outManLen[index, i] = outManLen[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                     }
                     else
                     {
-                        outSign[index, i] = outSign[context.Dps.RefDpsId0, i];
-                        outExp[index, i] = outExp[context.Dps.RefDpsId0, i];
-                        outMantissa[index, i] = outMantissa[context.Dps.RefDpsId0, i];
-                        outManLen[index, i] = outManLen[context.Dps.RefDpsId0, i];
+                        outSign[index, i] = outSign[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
+                        outExp[index, i] = outExp[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
+                        outMantissa[index, i] = outMantissa[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
+                        outManLen[index, i] = outManLen[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                     }
                 }
             }
@@ -17798,7 +17814,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
+                for (i = 1; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
@@ -17810,7 +17826,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -17845,9 +17861,9 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
                 {
                     size += stream.WriteUnsignedInt(1, this.sign0[i]);
                     outSign[index, i] = sign0[i];
-                    size += stream.WriteUnsignedIntVariable(context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent0[i]);
+                    size += stream.WriteUnsignedIntVariable(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent0[i]);
                     outExp[index, i] = exponent0[i];
-                    size += stream.WriteUnsignedIntVariable((context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), this.mantissa0[i]);
+                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), this.mantissa0[i]);
                     outMantissa[index, i] = mantissa0[i];
                 }
                 else
@@ -17862,32 +17878,32 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
 
                         if (exponent_skip_flag[i] == 0)
                         {
-                            size += stream.WriteUnsignedIntVariable(context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent1[i]);
+                            size += stream.WriteUnsignedIntVariable(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent1[i]);
                             outExp[index, i] = exponent1[i];
                         }
                         else
                         {
-                            outExp[index, i] = outExp[context.Dps.RefDpsId0, i];
+                            outExp[index, i] = outExp[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                         }
                         size += stream.WriteSignedIntGolomb(this.mantissa_diff[i]);
 
                         if (predDirection == 0)
                         {
-                            mantissaPred = ((OutMantissa[context.Dps.RefDpsId0, i] * context.Dps.PredWeight0 + outMantissa[context.Dps.RefDpsId1, i] * (64 - context.Dps.PredWeight0) + 32) >> 6);
+                            mantissaPred = ((OutMantissa[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i] * ((H264Context)context).DepthParameterSetRbsp.PredWeight0 + outMantissa[((H264Context)context).DepthParameterSetRbsp.RefDpsId1, i] * (64 - ((H264Context)context).DepthParameterSetRbsp.PredWeight0) + 32) >> 6);
                         }
                         else
                         {
-                            mantissaPred = outMantissa[context.Dps.RefDpsId0, i];
+                            mantissaPred = outMantissa[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                         }
                         outMantissa[index, i] = (uint)(mantissaPred + mantissa_diff[i]);
-                        outManLen[index, i] = outManLen[context.Dps.RefDpsId0, i];
+                        outManLen[index, i] = outManLen[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                     }
                     else
                     {
-                        outSign[index, i] = outSign[context.Dps.RefDpsId0, i];
-                        outExp[index, i] = outExp[context.Dps.RefDpsId0, i];
-                        outMantissa[index, i] = outMantissa[context.Dps.RefDpsId0, i];
-                        outManLen[index, i] = outManLen[context.Dps.RefDpsId0, i];
+                        outSign[index, i] = outSign[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
+                        outExp[index, i] = outExp[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
+                        outMantissa[index, i] = outMantissa[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
+                        outManLen[index, i] = outManLen[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                     }
                 }
             }
@@ -17895,7 +17911,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < context.SubsetSps.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
+                for (i = 1; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
@@ -17949,7 +17965,7 @@ vsp_param( numViews, predDirection, index ) {
             this.index = index;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -17979,7 +17995,7 @@ vsp_param( numViews, predDirection, index ) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -18190,7 +18206,7 @@ slice_header_in_3davc_extension() {
 
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -18198,11 +18214,11 @@ slice_header_in_3davc_extension() {
             size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
             size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
 
-            if (context.NalHeader.Avc3dExtensionFlag != 0 && context.SubsetSps.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
+            if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
             {
                 size += stream.ReadUnsignedInt(size, 2, out this.pre_slice_header_src);
 
-                if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 2, out this.pre_ref_lists_src);
 
@@ -18214,7 +18230,7 @@ slice_header_in_3davc_extension() {
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                            if (FrameTypes.IsB(slice_type))
+                            if (H264FrameTypes.IsB(slice_type))
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                             }
@@ -18224,7 +18240,7 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
+                if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) || (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
                     size += stream.ReadUnsignedInt(size, 2, out this.pre_pred_weight_table_src);
 
@@ -18235,7 +18251,7 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if (context.NalHeader.NalRefIdc != 0)
+                if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 2, out this.pre_dec_ref_pic_marking_src);
 
@@ -18250,13 +18266,13 @@ slice_header_in_3davc_extension() {
             else
             {
 
-                if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
                 {
                     size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
                 }
-                size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
+                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
 
-                if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
 
@@ -18266,42 +18282,42 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+                if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
                 }
 
-                if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, (context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
+                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
 
-                    if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                    if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
                     }
                 }
 
-                if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
 
-                    if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                    if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
                     }
                 }
 
-                if (context.Pps.RedundantPicCntPresentFlag != 0)
+                if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
                 }
 
-                if (FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
                 }
 
-                if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
 
@@ -18309,14 +18325,14 @@ slice_header_in_3davc_extension() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                        if (FrameTypes.IsB(slice_type))
+                        if (H264FrameTypes.IsB(slice_type))
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                         }
                     }
                 }
 
-                if (context.NalHeader.NalUnitType == 20 || context.NalHeader.NalUnitType == 21)
+                if (((H264Context)context).NalHeader.NalUnitType == 20 || ((H264Context)context).NalHeader.NalUnitType == 21)
                 {
                     this.ref_pic_list_mvc_modification = new RefPicListMvcModification();
                     size += stream.ReadClass<RefPicListMvcModification>(size, context, this.ref_pic_list_mvc_modification); // specified in Annex H 
@@ -18327,35 +18343,35 @@ slice_header_in_3davc_extension() {
                     size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification);
                 }
 
-                if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
+                if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) || (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
                     this.pred_weight_table = new PredWeightTable();
                     size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
                 }
 
-                if (context.NalHeader.NalRefIdc != 0)
+                if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
                     this.dec_ref_pic_marking = new DecRefPicMarking();
                     size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking);
                 }
 
-                if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
+                if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type))
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
                 }
                 size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
 
-                if (FrameTypes.IsSP(slice_type) || FrameTypes.IsSI(slice_type))
+                if (H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsSI(slice_type))
                 {
 
-                    if (FrameTypes.IsSP(slice_type))
+                    if (H264FrameTypes.IsSP(slice_type))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag);
                     }
                     size += stream.ReadSignedIntGolomb(size, out this.slice_qs_delta);
                 }
 
-                if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+                if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
 
@@ -18366,29 +18382,29 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if (context.Pps.NumSliceGroupsMinus1 > 0 && context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+                if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, context.Slice.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                    size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
                 }
 
-                if (context.NalHeader.NalUnitType == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))
+                if (((H264Context)context).NalHeader.NalUnitType == 21 && (!H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type)))
                 {
 
-                    if ((context.NalHeader.NalUnitType != 21) ? false : (context.NalHeader.Avc3dExtensionFlag != 0 ? context.NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
+                    if ((((H264Context)context).NalHeader.NalUnitType != 21) ? false : (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 ? ((H264Context)context).NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.depth_weighted_pred_flag);
                     }
-                    else if (context.NalHeader.Avc3dExtensionFlag != 0)
+                    else if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.dmvp_flag);
 
-                        if (context.SubsetSps.SeqParameterSet3davcExtension.SeqViewSynthesisFlag != 0)
+                        if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SeqViewSynthesisFlag != 0)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.slice_vsp_flag);
                         }
                     }
 
-                    if (context.SubsetSps.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc != 1 && (depth_weighted_pred_flag != 0 || dmvp_flag != 0))
+                    if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc != 1 && (depth_weighted_pred_flag != 0 || dmvp_flag != 0))
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.dps_id);
                     }
@@ -18398,7 +18414,7 @@ slice_header_in_3davc_extension() {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -18406,11 +18422,11 @@ slice_header_in_3davc_extension() {
             size += stream.WriteUnsignedIntGolomb(this.slice_type);
             size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
 
-            if (context.NalHeader.Avc3dExtensionFlag != 0 && context.SubsetSps.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
+            if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
             {
                 size += stream.WriteUnsignedInt(2, this.pre_slice_header_src);
 
-                if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(2, this.pre_ref_lists_src);
 
@@ -18422,7 +18438,7 @@ slice_header_in_3davc_extension() {
                         {
                             size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                            if (FrameTypes.IsB(slice_type))
+                            if (H264FrameTypes.IsB(slice_type))
                             {
                                 size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                             }
@@ -18431,7 +18447,7 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
+                if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) || (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
                     size += stream.WriteUnsignedInt(2, this.pre_pred_weight_table_src);
 
@@ -18441,7 +18457,7 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if (context.NalHeader.NalRefIdc != 0)
+                if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
                     size += stream.WriteUnsignedInt(2, this.pre_dec_ref_pic_marking_src);
 
@@ -18455,13 +18471,13 @@ slice_header_in_3davc_extension() {
             else
             {
 
-                if (context.Sps.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
                 {
                     size += stream.WriteUnsignedInt(2, this.colour_plane_id);
                 }
-                size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
+                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
 
-                if (context.Sps.SeqParameterSetData.FrameMbsOnlyFlag == 0)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.field_pic_flag);
 
@@ -18471,42 +18487,42 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
+                if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
                 }
 
-                if (context.Sps.SeqParameterSetData.PicOrderCntType == 0)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
                 {
-                    size += stream.WriteUnsignedIntVariable((context.Sps.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
+                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
 
-                    if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                    if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
                         size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
                     }
                 }
 
-                if (context.Sps.SeqParameterSetData.PicOrderCntType == 1 && context.Sps.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
+                if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
                 {
                     size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
 
-                    if (context.Pps.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
+                    if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
                         size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
                     }
                 }
 
-                if (context.Pps.RedundantPicCntPresentFlag != 0)
+                if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
                 }
 
-                if (FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
                 }
 
-                if (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type) || FrameTypes.IsB(slice_type))
+                if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
 
@@ -18514,14 +18530,14 @@ slice_header_in_3davc_extension() {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                        if (FrameTypes.IsB(slice_type))
+                        if (H264FrameTypes.IsB(slice_type))
                         {
                             size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                         }
                     }
                 }
 
-                if (context.NalHeader.NalUnitType == 20 || context.NalHeader.NalUnitType == 21)
+                if (((H264Context)context).NalHeader.NalUnitType == 20 || ((H264Context)context).NalHeader.NalUnitType == 21)
                 {
                     size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification); // specified in Annex H 
                 }
@@ -18530,33 +18546,33 @@ slice_header_in_3davc_extension() {
                     size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
                 }
 
-                if ((context.Pps.WeightedPredFlag != 0 && (FrameTypes.IsP(slice_type) || FrameTypes.IsSP(slice_type))) || (context.Pps.WeightedBipredIdc == 1 && FrameTypes.IsB(slice_type)))
+                if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) || (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
                     size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
                 }
 
-                if (context.NalHeader.NalRefIdc != 0)
+                if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
                     size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
                 }
 
-                if (context.Pps.EntropyCodingModeFlag != 0 && !FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type))
+                if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type))
                 {
                     size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
                 }
                 size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
 
-                if (FrameTypes.IsSP(slice_type) || FrameTypes.IsSI(slice_type))
+                if (H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsSI(slice_type))
                 {
 
-                    if (FrameTypes.IsSP(slice_type))
+                    if (H264FrameTypes.IsSP(slice_type))
                     {
                         size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag);
                     }
                     size += stream.WriteSignedIntGolomb(this.slice_qs_delta);
                 }
 
-                if (context.Pps.DeblockingFilterControlPresentFlag != 0)
+                if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
 
@@ -18567,29 +18583,29 @@ slice_header_in_3davc_extension() {
                     }
                 }
 
-                if (context.Pps.NumSliceGroupsMinus1 > 0 && context.Pps.SliceGroupMapType >= 3 && context.Pps.SliceGroupMapType <= 5)
+                if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
                 {
-                    size += stream.WriteUnsignedIntVariable(context.Slice.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                    size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
                 }
 
-                if (context.NalHeader.NalUnitType == 21 && (!FrameTypes.IsI(slice_type) && !FrameTypes.IsSI(slice_type)))
+                if (((H264Context)context).NalHeader.NalUnitType == 21 && (!H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type)))
                 {
 
-                    if ((context.NalHeader.NalUnitType != 21) ? false : (context.NalHeader.Avc3dExtensionFlag != 0 ? context.NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
+                    if ((((H264Context)context).NalHeader.NalUnitType != 21) ? false : (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 ? ((H264Context)context).NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.depth_weighted_pred_flag);
                     }
-                    else if (context.NalHeader.Avc3dExtensionFlag != 0)
+                    else if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.dmvp_flag);
 
-                        if (context.SubsetSps.SeqParameterSet3davcExtension.SeqViewSynthesisFlag != 0)
+                        if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SeqViewSynthesisFlag != 0)
                         {
                             size += stream.WriteUnsignedInt(1, this.slice_vsp_flag);
                         }
                     }
 
-                    if (context.SubsetSps.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc != 1 && (depth_weighted_pred_flag != 0 || dmvp_flag != 0))
+                    if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc != 1 && (depth_weighted_pred_flag != 0 || dmvp_flag != 0))
                     {
                         size += stream.WriteUnsignedIntGolomb(this.dps_id);
                     }
@@ -18660,7 +18676,7 @@ green_metadata(payloadSize) {
             this.payloadSize = payloadSize;
         }
 
-        public ulong Read(H264Context context, ItuStream stream)
+        public ulong Read(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
@@ -18692,7 +18708,7 @@ green_metadata(payloadSize) {
             return size;
         }
 
-        public ulong Write(H264Context context, ItuStream stream)
+        public ulong Write(IItuContext context, ItuStream stream)
         {
             ulong size = 0;
 
