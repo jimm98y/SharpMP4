@@ -18,7 +18,7 @@ namespace SharpH264
         private readonly Stream _stream;
 
         private int _rbspDataCounter = -1;
-        private int _readNextBitsCounter = 0;
+        private int _readNextBitsCounter = -1;
         private int _readNextBitsIndex = 0;
 
         private bool _disposedValue;
@@ -380,7 +380,7 @@ namespace SharpH264
             if (serializable.ReadNextBits == null)
                 return 0;
 
-            if (_readNextBitsCounter == 0 && _readNextBitsIndex == 0)
+            if (_readNextBitsCounter == -1 && _readNextBitsIndex == 0)
             {
                 _readNextBitsCounter = serializable.ReadNextBits[_readNextBitsIndex];
             }

@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-//Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
+Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
 
-//var files = File.ReadAllLines("C:\\Temp\\testFiles3.txt");
-var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
+var files = File.ReadAllLines("C:\\Temp\\testFiles3.txt");
+//var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
 
 foreach (var file in files)
 {
