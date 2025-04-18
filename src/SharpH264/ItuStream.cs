@@ -17,7 +17,7 @@ namespace SharpH264
 
         private readonly Stream _stream;
 
-        private int _rbspDataCounter = 0;
+        private int _rbspDataCounter = -1;
         private int _readNextBitsCounter = 0;
         private int _readNextBitsIndex = 0;
 
@@ -234,7 +234,8 @@ namespace SharpH264
 
         public ulong WriteSignedInt(int count, int value)
         {
-            throw new NotImplementedException();
+            WriteBits(count, value);
+            return (ulong)count;
         }
 
         public ulong ReadUnsignedIntGolomb(ulong size, out uint value)
@@ -340,9 +341,9 @@ namespace SharpH264
 
         public bool WriteMoreRbspData(IItuSerializable serializable)
         {
-            if (serializable.HasMoreRbspData == 0)
+            if (serializable.HasMoreRbspData == 0 || _rbspDataCounter == 0)
                 return false;
-            else if(_rbspDataCounter == 0)
+            else if(_rbspDataCounter == -1)
                 _rbspDataCounter = serializable.HasMoreRbspData;
             return _rbspDataCounter-- != 0;
         }
@@ -392,6 +393,12 @@ namespace SharpH264
             else
             {
                 _readNextBitsIndex++;
+
+                if(_readNextBitsIndex >= serializable.ReadNextBits.Length)
+                {
+                    _readNextBitsIndex = 0;
+                }
+
                 _readNextBitsCounter = serializable.ReadNextBits[_readNextBitsIndex];
                 return 0;
             }
