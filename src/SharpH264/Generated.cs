@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
@@ -850,8 +851,8 @@ subset_seq_parameter_set_rbsp() {
         public SeqParameterSet3davcExtension SeqParameterSet3davcExtension { get { return seq_parameter_set_3davc_extension; } set { seq_parameter_set_3davc_extension = value; } }
         private byte additional_extension2_flag;
         public byte AdditionalExtension2Flag { get { return additional_extension2_flag; } set { additional_extension2_flag = value; } }
-        private byte additional_extension2_data_flag;
-        public byte AdditionalExtension2DataFlag { get { return additional_extension2_data_flag; } set { additional_extension2_data_flag = value; } }
+        private Dictionary<int, byte> additional_extension2_data_flag = new Dictionary<int, byte>();
+        public Dictionary<int, byte> AdditionalExtension2DataFlag { get { return additional_extension2_data_flag; } set { additional_extension2_data_flag = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -867,6 +868,7 @@ subset_seq_parameter_set_rbsp() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
             this.seq_parameter_set_data = new SeqParameterSetData();
             size += stream.ReadClass<SeqParameterSetData>(size, context, this.seq_parameter_set_data);
 
@@ -915,9 +917,13 @@ subset_seq_parameter_set_rbsp() {
             if (additional_extension2_flag == 1)
             {
 
+                whileIndex = -1;
+
                 while (stream.ReadMoreRbspData(this))
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.additional_extension2_data_flag);
+                    whileIndex++;
+
+                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_extension2_data_flag);
                 }
             }
             this.rbsp_trailing_bits = new RbspTrailingBits();
@@ -930,6 +936,7 @@ subset_seq_parameter_set_rbsp() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
             size += stream.WriteClass<SeqParameterSetData>(context, this.seq_parameter_set_data);
 
             if (context.Sps.SeqParameterSetData.ProfileIdc == 83 || context.Sps.SeqParameterSetData.ProfileIdc == 86)
@@ -970,9 +977,13 @@ subset_seq_parameter_set_rbsp() {
             if (additional_extension2_flag == 1)
             {
 
+                whileIndex = -1;
+
                 while (stream.WriteMoreRbspData(this))
                 {
-                    size += stream.WriteUnsignedInt(1, this.additional_extension2_data_flag);
+                    whileIndex++;
+
+                    size += stream.WriteUnsignedInt(1, whileIndex, this.additional_extension2_data_flag);
                 }
             }
             size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
@@ -1330,8 +1341,8 @@ sei_rbsp() {
     */
     public class SeiRbsp : IItuSerializable
     {
-        private SeiMessage sei_message;
-        public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
+        private Dictionary<int, SeiMessage> sei_message = new Dictionary<int, SeiMessage>();
+        public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message; } set { sei_message = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1347,11 +1358,16 @@ sei_rbsp() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
+
+            whileIndex = -1;
 
             do
             {
-                this.sei_message = new SeiMessage();
-                size += stream.ReadClass<SeiMessage>(size, context, this.sei_message);
+                whileIndex++;
+
+                this.sei_message.Add(whileIndex, new SeiMessage());
+                size += stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex]);
             } while (stream.ReadMoreRbspData(this));
             this.rbsp_trailing_bits = new RbspTrailingBits();
             size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
@@ -1363,10 +1379,15 @@ sei_rbsp() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
+
+            whileIndex = -1;
 
             do
             {
-                size += stream.WriteClass<SeiMessage>(context, this.sei_message);
+                whileIndex++;
+
+                size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message);
             } while (stream.WriteMoreRbspData(this));
             size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
 
@@ -1398,8 +1419,8 @@ sei_message() {
     */
     public class SeiMessage : IItuSerializable
     {
-        private uint ff_byte;
-        public uint FfByte { get { return ff_byte; } set { ff_byte = value; } }
+        private Dictionary<int, uint> ff_byte = new Dictionary<int, uint>();
+        public Dictionary<int, uint> FfByte { get { return ff_byte; } set { ff_byte = value; } }
         private uint last_payload_type_byte;
         public uint LastPayloadTypeByte { get { return last_payload_type_byte; } set { last_payload_type_byte = value; } }
         private uint last_payload_size_byte;
@@ -1420,21 +1441,30 @@ sei_message() {
             ulong size = 0;
 
             uint payloadType = 0;
+            int whileIndex = -1;
             uint payloadSize = 0;
             payloadType = 0;
 
+            whileIndex = -1;
+
             while (stream.ReadNextBits(this, 8) == 0xFF)
             {
-                size += stream.ReadFixed(size, 8, out this.ff_byte); // equal to 0xFF 
+                whileIndex++;
+
+                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte); // equal to 0xFF 
                 payloadType += 255;
             }
             size += stream.ReadUnsignedInt(size, 8, out this.last_payload_type_byte);
             payloadType += last_payload_type_byte;
             payloadSize = 0;
 
+            whileIndex = -1;
+
             while (stream.ReadNextBits(this, 8) == 0xFF)
             {
-                size += stream.ReadFixed(size, 8, out this.ff_byte); // equal to 0xFF 
+                whileIndex++;
+
+                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte); // equal to 0xFF 
                 payloadSize += 255;
             }
             size += stream.ReadUnsignedInt(size, 8, out this.last_payload_size_byte);
@@ -1450,21 +1480,30 @@ sei_message() {
             ulong size = 0;
 
             uint payloadType = 0;
+            int whileIndex = -1;
             uint payloadSize = 0;
             payloadType = 0;
 
+            whileIndex = -1;
+
             while (stream.WriteNextBits(this, 8) == 0xFF)
             {
-                size += stream.WriteFixed(8, this.ff_byte); // equal to 0xFF 
+                whileIndex++;
+
+                size += stream.WriteFixed(8, whileIndex, this.ff_byte); // equal to 0xFF 
                 payloadType += 255;
             }
             size += stream.WriteUnsignedInt(8, this.last_payload_type_byte);
             payloadType += last_payload_type_byte;
             payloadSize = 0;
 
+            whileIndex = -1;
+
             while (stream.WriteNextBits(this, 8) == 0xFF)
             {
-                size += stream.WriteFixed(8, this.ff_byte); // equal to 0xFF 
+                whileIndex++;
+
+                size += stream.WriteFixed(8, whileIndex, this.ff_byte); // equal to 0xFF 
                 payloadSize += 255;
             }
             size += stream.WriteUnsignedInt(8, this.last_payload_size_byte);
@@ -1594,8 +1633,8 @@ rbsp_trailing_bits() {
     {
         private uint rbsp_stop_one_bit;
         public uint RbspStopOneBit { get { return rbsp_stop_one_bit; } set { rbsp_stop_one_bit = value; } }
-        private uint rbsp_alignment_zero_bit;
-        public uint RbspAlignmentZeroBit { get { return rbsp_alignment_zero_bit; } set { rbsp_alignment_zero_bit = value; } }
+        private Dictionary<int, uint> rbsp_alignment_zero_bit = new Dictionary<int, uint>();
+        public Dictionary<int, uint> RbspAlignmentZeroBit { get { return rbsp_alignment_zero_bit; } set { rbsp_alignment_zero_bit = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -1609,11 +1648,16 @@ rbsp_trailing_bits() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
             size += stream.ReadFixed(size, 1, out this.rbsp_stop_one_bit); // equal to 1 
+
+            whileIndex = -1;
 
             while (!stream.ByteAligned())
             {
-                size += stream.ReadFixed(size, 1, out this.rbsp_alignment_zero_bit); // equal to 0 
+                whileIndex++;
+
+                size += stream.ReadFixed(size, 1, whileIndex, this.rbsp_alignment_zero_bit); // equal to 0 
             }
 
             return size;
@@ -1623,11 +1667,16 @@ rbsp_trailing_bits() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
             size += stream.WriteFixed(1, this.rbsp_stop_one_bit); // equal to 1 
+
+            whileIndex = -1;
 
             while (!stream.ByteAligned())
             {
-                size += stream.WriteFixed(1, this.rbsp_alignment_zero_bit); // equal to 0 
+                whileIndex++;
+
+                size += stream.WriteFixed(1, whileIndex, this.rbsp_alignment_zero_bit); // equal to 0 
             }
 
             return size;
@@ -2242,12 +2291,12 @@ ref_pic_list_modification() {
     {
         private byte ref_pic_list_modification_flag_l0;
         public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
-        private uint modification_of_pic_nums_idc;
-        public uint ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
-        private uint abs_diff_pic_num_minus1;
-        public uint AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
-        private uint long_term_pic_num;
-        public uint LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+        private Dictionary<int, uint> modification_of_pic_nums_idc = new Dictionary<int, uint>();
+        public Dictionary<int, uint> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
+        private Dictionary<int, uint> abs_diff_pic_num_minus1 = new Dictionary<int, uint>();
+        public Dictionary<int, uint> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
+        private Dictionary<int, uint> long_term_pic_num = new Dictionary<int, uint>();
+        public Dictionary<int, uint> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
         private byte ref_pic_list_modification_flag_l1;
         public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
 
@@ -2263,6 +2312,7 @@ ref_pic_list_modification() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
             {
@@ -2271,20 +2321,24 @@ ref_pic_list_modification() {
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.modification_of_pic_nums_idc);
+                        whileIndex++;
 
-                        if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1)
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc[whileIndex] == 0 ||
+                    modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1);
                         }
-                        else if (modification_of_pic_nums_idc == 2)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
                         }
-                    } while (modification_of_pic_nums_idc != 3);
+                    } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
             }
 
@@ -2295,20 +2349,24 @@ ref_pic_list_modification() {
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.modification_of_pic_nums_idc);
+                        whileIndex++;
 
-                        if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1)
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc[whileIndex] == 0 ||
+                    modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1);
                         }
-                        else if (modification_of_pic_nums_idc == 2)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
                         }
-                    } while (modification_of_pic_nums_idc != 3);
+                    } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
             }
 
@@ -2319,6 +2377,7 @@ ref_pic_list_modification() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
             {
@@ -2327,20 +2386,24 @@ ref_pic_list_modification() {
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.modification_of_pic_nums_idc);
+                        whileIndex++;
 
-                        if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1)
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc[whileIndex] == 0 ||
+                    modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1);
                         }
-                        else if (modification_of_pic_nums_idc == 2)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
                         }
-                    } while (modification_of_pic_nums_idc != 3);
+                    } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
             }
 
@@ -2351,20 +2414,24 @@ ref_pic_list_modification() {
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.modification_of_pic_nums_idc);
+                        whileIndex++;
 
-                        if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1)
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc[whileIndex] == 0 ||
+                    modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1);
                         }
-                        else if (modification_of_pic_nums_idc == 2)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
                         }
-                    } while (modification_of_pic_nums_idc != 3);
+                    } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
             }
 
@@ -2650,16 +2717,16 @@ dec_ref_pic_marking() {
         public byte LongTermReferenceFlag { get { return long_term_reference_flag; } set { long_term_reference_flag = value; } }
         private byte adaptive_ref_pic_marking_mode_flag;
         public byte AdaptiveRefPicMarkingModeFlag { get { return adaptive_ref_pic_marking_mode_flag; } set { adaptive_ref_pic_marking_mode_flag = value; } }
-        private uint memory_management_control_operation;
-        public uint MemoryManagementControlOperation { get { return memory_management_control_operation; } set { memory_management_control_operation = value; } }
-        private uint difference_of_pic_nums_minus1;
-        public uint DifferenceOfPicNumsMinus1 { get { return difference_of_pic_nums_minus1; } set { difference_of_pic_nums_minus1 = value; } }
-        private uint long_term_pic_num;
-        public uint LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
-        private uint long_term_frame_idx;
-        public uint LongTermFrameIdx { get { return long_term_frame_idx; } set { long_term_frame_idx = value; } }
-        private uint max_long_term_frame_idx_plus1;
-        public uint MaxLongTermFrameIdxPlus1 { get { return max_long_term_frame_idx_plus1; } set { max_long_term_frame_idx_plus1 = value; } }
+        private Dictionary<int, uint> memory_management_control_operation = new Dictionary<int, uint>();
+        public Dictionary<int, uint> MemoryManagementControlOperation { get { return memory_management_control_operation; } set { memory_management_control_operation = value; } }
+        private Dictionary<int, uint> difference_of_pic_nums_minus1 = new Dictionary<int, uint>();
+        public Dictionary<int, uint> DifferenceOfPicNumsMinus1 { get { return difference_of_pic_nums_minus1; } set { difference_of_pic_nums_minus1 = value; } }
+        private Dictionary<int, uint> long_term_pic_num = new Dictionary<int, uint>();
+        public Dictionary<int, uint> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+        private Dictionary<int, uint> long_term_frame_idx = new Dictionary<int, uint>();
+        public Dictionary<int, uint> LongTermFrameIdx { get { return long_term_frame_idx; } set { long_term_frame_idx = value; } }
+        private Dictionary<int, uint> max_long_term_frame_idx_plus1 = new Dictionary<int, uint>();
+        public Dictionary<int, uint> MaxLongTermFrameIdxPlus1 { get { return max_long_term_frame_idx_plus1; } set { max_long_term_frame_idx_plus1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -2673,6 +2740,7 @@ dec_ref_pic_marking() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
@@ -2686,32 +2754,36 @@ dec_ref_pic_marking() {
                 if (adaptive_ref_pic_marking_mode_flag != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.memory_management_control_operation);
+                        whileIndex++;
 
-                        if (memory_management_control_operation == 1 ||
-     memory_management_control_operation == 3)
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.memory_management_control_operation);
+
+                        if (memory_management_control_operation[whileIndex] == 1 ||
+     memory_management_control_operation[whileIndex] == 3)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.difference_of_pic_nums_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.difference_of_pic_nums_minus1);
                         }
 
-                        if (memory_management_control_operation == 2)
+                        if (memory_management_control_operation[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
                         }
 
-                        if (memory_management_control_operation == 3 ||
-     memory_management_control_operation == 6)
+                        if (memory_management_control_operation[whileIndex] == 3 ||
+     memory_management_control_operation[whileIndex] == 6)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_frame_idx);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_frame_idx);
                         }
 
-                        if (memory_management_control_operation == 4)
+                        if (memory_management_control_operation[whileIndex] == 4)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.max_long_term_frame_idx_plus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.max_long_term_frame_idx_plus1);
                         }
-                    } while (memory_management_control_operation != 0);
+                    } while (memory_management_control_operation[whileIndex] != 0);
                 }
             }
 
@@ -2722,6 +2794,7 @@ dec_ref_pic_marking() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if ((uint)((context.NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
@@ -2735,32 +2808,36 @@ dec_ref_pic_marking() {
                 if (adaptive_ref_pic_marking_mode_flag != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.memory_management_control_operation);
+                        whileIndex++;
 
-                        if (memory_management_control_operation == 1 ||
-     memory_management_control_operation == 3)
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.memory_management_control_operation);
+
+                        if (memory_management_control_operation[whileIndex] == 1 ||
+     memory_management_control_operation[whileIndex] == 3)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.difference_of_pic_nums_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.difference_of_pic_nums_minus1);
                         }
 
-                        if (memory_management_control_operation == 2)
+                        if (memory_management_control_operation[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
                         }
 
-                        if (memory_management_control_operation == 3 ||
-     memory_management_control_operation == 6)
+                        if (memory_management_control_operation[whileIndex] == 3 ||
+     memory_management_control_operation[whileIndex] == 6)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.long_term_frame_idx);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_frame_idx);
                         }
 
-                        if (memory_management_control_operation == 4)
+                        if (memory_management_control_operation[whileIndex] == 4)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.max_long_term_frame_idx_plus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.max_long_term_frame_idx_plus1);
                         }
-                    } while (memory_management_control_operation != 0);
+                    } while (memory_management_control_operation[whileIndex] != 0);
                 }
             }
 
@@ -3081,8 +3158,8 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
         public ReservedSeiMessage ReservedSeiMessage { get { return reserved_sei_message; } set { reserved_sei_message = value; } }
         private uint bit_equal_to_one;
         public uint BitEqualToOne { get { return bit_equal_to_one; } set { bit_equal_to_one = value; } }
-        private uint bit_equal_to_zero;
-        public uint BitEqualToZero { get { return bit_equal_to_zero; } set { bit_equal_to_zero = value; } }
+        private Dictionary<int, uint> bit_equal_to_zero = new Dictionary<int, uint>();
+        public Dictionary<int, uint> BitEqualToZero { get { return bit_equal_to_zero; } set { bit_equal_to_zero = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -3097,6 +3174,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if (payloadType == 0)
             {
@@ -3468,9 +3546,13 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
 
+                whileIndex = -1;
+
                 while (!stream.ByteAligned())
                 {
-                    size += stream.ReadFixed(size, 1, out this.bit_equal_to_zero); // equal to 0 
+                    whileIndex++;
+
+                    size += stream.ReadFixed(size, 1, whileIndex, this.bit_equal_to_zero); // equal to 0 
                 }
             }
 
@@ -3481,6 +3563,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if (payloadType == 0)
             {
@@ -3779,9 +3862,13 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
 
+                whileIndex = -1;
+
                 while (!stream.ByteAligned())
                 {
-                    size += stream.WriteFixed(1, this.bit_equal_to_zero); // equal to 0 
+                    whileIndex++;
+
+                    size += stream.WriteFixed(1, whileIndex, this.bit_equal_to_zero); // equal to 0 
                 }
             }
 
@@ -4524,8 +4611,8 @@ user_data_registered_itu_t_t35( payloadSize ) {
         public byte ItutT35CountryCode { get { return itu_t_t35_country_code; } set { itu_t_t35_country_code = value; } }
         private byte itu_t_t35_country_code_extension_byte;
         public byte ItutT35CountryCodeExtensionByte { get { return itu_t_t35_country_code_extension_byte; } set { itu_t_t35_country_code_extension_byte = value; } }
-        private byte itu_t_t35_payload_byte;
-        public byte ItutT35PayloadByte { get { return itu_t_t35_payload_byte; } set { itu_t_t35_payload_byte = value; } }
+        private Dictionary<int, byte> itu_t_t35_payload_byte = new Dictionary<int, byte>();
+        public Dictionary<int, byte> ItutT35PayloadByte { get { return itu_t_t35_payload_byte; } set { itu_t_t35_payload_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -4540,6 +4627,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
+            int whileIndex = -1;
             size += stream.ReadBits(size, 8, out this.itu_t_t35_country_code);
 
             if (itu_t_t35_country_code != 0xFF)
@@ -4552,9 +4640,13 @@ user_data_registered_itu_t_t35( payloadSize ) {
                 i = 2;
             }
 
+            whileIndex = -1;
+
             do
             {
-                size += stream.ReadBits(size, 8, out this.itu_t_t35_payload_byte);
+                whileIndex++;
+
+                size += stream.ReadBits(size, 8, whileIndex, this.itu_t_t35_payload_byte);
                 i++;
             } while (i < payloadSize);
 
@@ -4566,6 +4658,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
+            int whileIndex = -1;
             size += stream.WriteBits(8, this.itu_t_t35_country_code);
 
             if (itu_t_t35_country_code != 0xFF)
@@ -4578,9 +4671,13 @@ user_data_registered_itu_t_t35( payloadSize ) {
                 i = 2;
             }
 
+            whileIndex = -1;
+
             do
             {
-                size += stream.WriteBits(8, this.itu_t_t35_payload_byte);
+                whileIndex++;
+
+                size += stream.WriteBits(8, whileIndex, this.itu_t_t35_payload_byte);
                 i++;
             } while (i < payloadSize);
 
@@ -6220,7 +6317,7 @@ tone_mapping_info( payloadSize ) {
                     this.start_of_coded_interval = new uint[(1 << (int)target_bit_depth)];
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i]);
                     }
                 }
 
@@ -6232,8 +6329,8 @@ tone_mapping_info( payloadSize ) {
                     this.target_pivot_value = new uint[num_pivots];
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i]);
                     }
                 }
 
@@ -6297,7 +6394,7 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i]);
+                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i]);
                     }
                 }
 
@@ -6307,8 +6404,8 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i]);
-                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i]);
                     }
                 }
 
@@ -6784,8 +6881,8 @@ colour_remapping_info( payloadSize ) {
                         this.pre_lut_target_value[c] = new uint[pre_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -6821,8 +6918,8 @@ colour_remapping_info( payloadSize ) {
                         this.post_lut_target_value[c] = new uint[post_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -6864,8 +6961,8 @@ colour_remapping_info( payloadSize ) {
 
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -6894,8 +6991,8 @@ colour_remapping_info( payloadSize ) {
 
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -7865,8 +7962,8 @@ sei_prefix_indication( payloadSize ) {
         public uint[] NumBitsInPrefixIndicationMinus1 { get { return num_bits_in_prefix_indication_minus1; } set { num_bits_in_prefix_indication_minus1 = value; } }
         private byte[][] sei_prefix_data_bit;
         public byte[][] SeiPrefixDataBit { get { return sei_prefix_data_bit; } set { sei_prefix_data_bit = value; } }
-        private uint[] byte_alignment_bit_equal_to_one;
-        public uint[] ByteAlignmentBitEqualToOne { get { return byte_alignment_bit_equal_to_one; } set { byte_alignment_bit_equal_to_one = value; } }
+        private Dictionary<int, uint> byte_alignment_bit_equal_to_one = new Dictionary<int, uint>();
+        public Dictionary<int, uint> ByteAlignmentBitEqualToOne { get { return byte_alignment_bit_equal_to_one; } set { byte_alignment_bit_equal_to_one = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -7882,12 +7979,12 @@ sei_prefix_indication( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
+            int whileIndex = -1;
             size += stream.ReadUnsignedInt(size, 16, out this.prefix_sei_payload_type);
             size += stream.ReadUnsignedInt(size, 8, out this.num_sei_prefix_indications_minus1);
 
             this.num_bits_in_prefix_indication_minus1 = new uint[num_sei_prefix_indications_minus1 + 1];
             this.sei_prefix_data_bit = new byte[num_sei_prefix_indications_minus1 + 1][];
-            this.byte_alignment_bit_equal_to_one = new uint[num_sei_prefix_indications_minus1 + 1];
             for (i = 0; i <= num_sei_prefix_indications_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 16, out this.num_bits_in_prefix_indication_minus1[i]);
@@ -7898,9 +7995,13 @@ sei_prefix_indication( payloadSize ) {
                     size += stream.ReadUnsignedInt(size, 1, out this.sei_prefix_data_bit[i][j]);
                 }
 
+                whileIndex = -1;
+
                 while (!stream.ByteAligned())
                 {
-                    size += stream.ReadFixed(size, 1, out this.byte_alignment_bit_equal_to_one[i]); // equal to 1 
+                    whileIndex++;
+
+                    size += stream.ReadFixed(size, 1, whileIndex, this.byte_alignment_bit_equal_to_one); // equal to 1 
                 }
             }
 
@@ -7913,6 +8014,7 @@ sei_prefix_indication( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
+            int whileIndex = -1;
             size += stream.WriteUnsignedInt(16, this.prefix_sei_payload_type);
             size += stream.WriteUnsignedInt(8, this.num_sei_prefix_indications_minus1);
 
@@ -7925,9 +8027,13 @@ sei_prefix_indication( payloadSize ) {
                     size += stream.WriteUnsignedInt(1, this.sei_prefix_data_bit[i][j]);
                 }
 
+                whileIndex = -1;
+
                 while (!stream.ByteAligned())
                 {
-                    size += stream.WriteFixed(1, this.byte_alignment_bit_equal_to_one[i]); // equal to 1 
+                    whileIndex++;
+
+                    size += stream.WriteFixed(1, whileIndex, this.byte_alignment_bit_equal_to_one); // equal to 1 
                 }
             }
 
@@ -8023,8 +8129,8 @@ annotated_regions( payloadSize ) {
         public uint ArObjectConfidenceLengthMinus1 { get { return ar_object_confidence_length_minus1; } set { ar_object_confidence_length_minus1 = value; } }
         private byte ar_object_label_language_present_flag;
         public byte ArObjectLabelLanguagePresentFlag { get { return ar_object_label_language_present_flag; } set { ar_object_label_language_present_flag = value; } }
-        private uint ar_bit_equal_to_zero;
-        public uint ArBitEqualToZero { get { return ar_bit_equal_to_zero; } set { ar_bit_equal_to_zero = value; } }
+        private Dictionary<int, uint> ar_bit_equal_to_zero = new Dictionary<int, uint>();
+        public Dictionary<int, uint> ArBitEqualToZero { get { return ar_bit_equal_to_zero; } set { ar_bit_equal_to_zero = value; } }
         private byte[] ar_object_label_language;
         public byte[] ArObjectLabelLanguage { get { return ar_object_label_language; } set { ar_object_label_language = value; } }
         private uint ar_num_label_updates;
@@ -8074,6 +8180,7 @@ annotated_regions( payloadSize ) {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
             uint i = 0;
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
@@ -8101,9 +8208,13 @@ annotated_regions( payloadSize ) {
                     if (ar_object_label_language_present_flag != 0)
                     {
 
+                        whileIndex = -1;
+
                         while (!stream.ByteAligned())
                         {
-                            size += stream.ReadFixed(size, 1, out this.ar_bit_equal_to_zero); // equal to 0 
+                            whileIndex++;
+
+                            size += stream.ReadFixed(size, 1, whileIndex, this.ar_bit_equal_to_zero); // equal to 0 
                         }
                         size += stream.ReadUtf8String(size, out this.ar_object_label_language);
                     }
@@ -8121,9 +8232,13 @@ annotated_regions( payloadSize ) {
                         if (ar_label_cancel_flag[i] == 0)
                         {
 
+                            whileIndex = -1;
+
                             while (!stream.ByteAligned())
                             {
-                                size += stream.ReadFixed(size, 1, out this.ar_bit_equal_to_zero); // equal to 0 
+                                whileIndex++;
+
+                                size += stream.ReadFixed(size, 1, whileIndex, this.ar_bit_equal_to_zero); // equal to 0 
                             }
                             size += stream.ReadUtf8String(size, out this.ar_label[ar_label_idx[i]]);
                         }
@@ -8182,7 +8297,7 @@ annotated_regions( payloadSize ) {
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.ReadUnsignedIntVariable(size, (context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.ReadUnsignedIntVariable(size, (context.Sei.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]]);
                                 }
                             }
                         }
@@ -8197,6 +8312,7 @@ annotated_regions( payloadSize ) {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
             uint i = 0;
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
@@ -8224,9 +8340,13 @@ annotated_regions( payloadSize ) {
                     if (ar_object_label_language_present_flag != 0)
                     {
 
+                        whileIndex = -1;
+
                         while (!stream.ByteAligned())
                         {
-                            size += stream.WriteFixed(1, this.ar_bit_equal_to_zero); // equal to 0 
+                            whileIndex++;
+
+                            size += stream.WriteFixed(1, whileIndex, this.ar_bit_equal_to_zero); // equal to 0 
                         }
                         size += stream.WriteUtf8String(this.ar_object_label_language);
                     }
@@ -8241,9 +8361,13 @@ annotated_regions( payloadSize ) {
                         if (ar_label_cancel_flag[i] == 0)
                         {
 
+                            whileIndex = -1;
+
                             while (!stream.ByteAligned())
                             {
-                                size += stream.WriteFixed(1, this.ar_bit_equal_to_zero); // equal to 0 
+                                whileIndex++;
+
+                                size += stream.WriteFixed(1, whileIndex, this.ar_bit_equal_to_zero); // equal to 0 
                             }
                             size += stream.WriteUtf8String(this.ar_label[ar_label_idx[i]]);
                         }
@@ -8290,7 +8414,7 @@ annotated_regions( payloadSize ) {
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.WriteUnsignedIntVariable((context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.WriteUnsignedIntVariable((context.Sei.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]]);
                                 }
                             }
                         }
@@ -9157,8 +9281,8 @@ prefix_nal_unit_svc() {
         public DecRefBasePicMarking DecRefBasePicMarking { get { return dec_ref_base_pic_marking; } set { dec_ref_base_pic_marking = value; } }
         private byte additional_prefix_nal_unit_extension_flag;
         public byte AdditionalPrefixNalUnitExtensionFlag { get { return additional_prefix_nal_unit_extension_flag; } set { additional_prefix_nal_unit_extension_flag = value; } }
-        private byte additional_prefix_nal_unit_extension_data_flag;
-        public byte AdditionalPrefixNalUnitExtensionDataFlag { get { return additional_prefix_nal_unit_extension_data_flag; } set { additional_prefix_nal_unit_extension_data_flag = value; } }
+        private Dictionary<int, byte> additional_prefix_nal_unit_extension_data_flag = new Dictionary<int, byte>();
+        public Dictionary<int, byte> AdditionalPrefixNalUnitExtensionDataFlag { get { return additional_prefix_nal_unit_extension_data_flag; } set { additional_prefix_nal_unit_extension_data_flag = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -9174,6 +9298,7 @@ prefix_nal_unit_svc() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if (context.NalHeader.NalRefIdc != 0)
             {
@@ -9190,9 +9315,13 @@ prefix_nal_unit_svc() {
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
 
+                    whileIndex = -1;
+
                     while (stream.ReadMoreRbspData(this))
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_data_flag);
+                        whileIndex++;
+
+                        size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag);
                     }
                 }
                 this.rbsp_trailing_bits = new RbspTrailingBits();
@@ -9201,9 +9330,13 @@ prefix_nal_unit_svc() {
             else if (stream.ReadMoreRbspData(this))
             {
 
+                whileIndex = -1;
+
                 while (stream.ReadMoreRbspData(this))
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_data_flag);
+                    whileIndex++;
+
+                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag);
                 }
                 this.rbsp_trailing_bits = new RbspTrailingBits();
                 size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
@@ -9216,6 +9349,7 @@ prefix_nal_unit_svc() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if (context.NalHeader.NalRefIdc != 0)
             {
@@ -9231,9 +9365,13 @@ prefix_nal_unit_svc() {
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
 
+                    whileIndex = -1;
+
                     while (stream.WriteMoreRbspData(this))
                     {
-                        size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_data_flag);
+                        whileIndex++;
+
+                        size += stream.WriteUnsignedInt(1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag);
                     }
                 }
                 size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
@@ -9241,9 +9379,13 @@ prefix_nal_unit_svc() {
             else if (stream.WriteMoreRbspData(this))
             {
 
+                whileIndex = -1;
+
                 while (stream.WriteMoreRbspData(this))
                 {
-                    size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_data_flag);
+                    whileIndex++;
+
+                    size += stream.WriteUnsignedInt(1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag);
                 }
                 size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
             }
@@ -9936,12 +10078,12 @@ dec_ref_base_pic_marking() {
     {
         private byte adaptive_ref_base_pic_marking_mode_flag;
         public byte AdaptiveRefBasePicMarkingModeFlag { get { return adaptive_ref_base_pic_marking_mode_flag; } set { adaptive_ref_base_pic_marking_mode_flag = value; } }
-        private uint memory_management_base_control_operation;
-        public uint MemoryManagementBaseControlOperation { get { return memory_management_base_control_operation; } set { memory_management_base_control_operation = value; } }
-        private uint difference_of_base_pic_nums_minus1;
-        public uint DifferenceOfBasePicNumsMinus1 { get { return difference_of_base_pic_nums_minus1; } set { difference_of_base_pic_nums_minus1 = value; } }
-        private uint long_term_base_pic_num;
-        public uint LongTermBasePicNum { get { return long_term_base_pic_num; } set { long_term_base_pic_num = value; } }
+        private Dictionary<int, uint> memory_management_base_control_operation = new Dictionary<int, uint>();
+        public Dictionary<int, uint> MemoryManagementBaseControlOperation { get { return memory_management_base_control_operation; } set { memory_management_base_control_operation = value; } }
+        private Dictionary<int, uint> difference_of_base_pic_nums_minus1 = new Dictionary<int, uint>();
+        public Dictionary<int, uint> DifferenceOfBasePicNumsMinus1 { get { return difference_of_base_pic_nums_minus1; } set { difference_of_base_pic_nums_minus1 = value; } }
+        private Dictionary<int, uint> long_term_base_pic_num = new Dictionary<int, uint>();
+        public Dictionary<int, uint> LongTermBasePicNum { get { return long_term_base_pic_num; } set { long_term_base_pic_num = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -9955,25 +10097,30 @@ dec_ref_base_pic_marking() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
             size += stream.ReadUnsignedInt(size, 1, out this.adaptive_ref_base_pic_marking_mode_flag);
 
             if (adaptive_ref_base_pic_marking_mode_flag != 0)
             {
 
+                whileIndex = -1;
+
                 do
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.memory_management_base_control_operation);
+                    whileIndex++;
 
-                    if (memory_management_base_control_operation == 1)
+                    size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.memory_management_base_control_operation);
+
+                    if (memory_management_base_control_operation[whileIndex] == 1)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.difference_of_base_pic_nums_minus1);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.difference_of_base_pic_nums_minus1);
                     }
 
-                    if (memory_management_base_control_operation == 2)
+                    if (memory_management_base_control_operation[whileIndex] == 2)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.long_term_base_pic_num);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_base_pic_num);
                     }
-                } while (memory_management_base_control_operation != 0);
+                } while (memory_management_base_control_operation[whileIndex] != 0);
             }
 
             return size;
@@ -9983,25 +10130,30 @@ dec_ref_base_pic_marking() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
             size += stream.WriteUnsignedInt(1, this.adaptive_ref_base_pic_marking_mode_flag);
 
             if (adaptive_ref_base_pic_marking_mode_flag != 0)
             {
 
+                whileIndex = -1;
+
                 do
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.memory_management_base_control_operation);
+                    whileIndex++;
 
-                    if (memory_management_base_control_operation == 1)
+                    size += stream.WriteUnsignedIntGolomb(whileIndex, this.memory_management_base_control_operation);
+
+                    if (memory_management_base_control_operation[whileIndex] == 1)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.difference_of_base_pic_nums_minus1);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.difference_of_base_pic_nums_minus1);
                     }
 
-                    if (memory_management_base_control_operation == 2)
+                    if (memory_management_base_control_operation[whileIndex] == 2)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.long_term_base_pic_num);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_base_pic_num);
                     }
-                } while (memory_management_base_control_operation != 0);
+                } while (memory_management_base_control_operation[whileIndex] != 0);
             }
 
             return size;
@@ -10135,11 +10287,10 @@ scalability_info( payloadSize ) {
    }   
   }   
  }   
- if( priority_id_setting_flag ) {   
-  PriorityIdSettingUriIdx = 0   
+ if( priority_id_setting_flag ) {    
   do    
-   priority_id_setting_uri[ PriorityIdSettingUriIdx ] 5 b(8) 
-  while( priority_id_setting_uri[ PriorityIdSettingUriIdx++ ]  !=  0 )   
+   priority_id_setting_uri 5 b(8) 
+  while( priority_id_setting_uri !=  0 )   
  }   
 }
     */
@@ -10299,8 +10450,8 @@ scalability_info( payloadSize ) {
         public uint[][] PrAvgBitrate { get { return pr_avg_bitrate; } set { pr_avg_bitrate = value; } }
         private uint[][] pr_max_bitrate;
         public uint[][] PrMaxBitrate { get { return pr_max_bitrate; } set { pr_max_bitrate = value; } }
-        private byte[] priority_id_setting_uri;
-        public byte[] PriorityIdSettingUri { get { return priority_id_setting_uri; } set { priority_id_setting_uri = value; } }
+        private Dictionary<int, byte> priority_id_setting_uri = new Dictionary<int, byte>();
+        public Dictionary<int, byte> PriorityIdSettingUri { get { return priority_id_setting_uri; } set { priority_id_setting_uri = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -10316,7 +10467,7 @@ scalability_info( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            uint PriorityIdSettingUriIdx = 0;
+            int whileIndex = -1;
             size += stream.ReadUnsignedInt(size, 1, out this.temporal_id_nesting_flag);
             size += stream.ReadUnsignedInt(size, 1, out this.priority_layer_info_present_flag);
             size += stream.ReadUnsignedInt(size, 1, out this.priority_id_setting_flag);
@@ -10592,12 +10743,15 @@ scalability_info( payloadSize ) {
 
             if (priority_id_setting_flag != 0)
             {
-                PriorityIdSettingUriIdx = 0;
+
+                whileIndex = -1;
 
                 do
                 {
-                    size += stream.ReadBits(size, 8, out this.priority_id_setting_uri[PriorityIdSettingUriIdx]);
-                } while (priority_id_setting_uri[PriorityIdSettingUriIdx++] != 0);
+                    whileIndex++;
+
+                    size += stream.ReadBits(size, 8, whileIndex, this.priority_id_setting_uri);
+                } while (priority_id_setting_uri[whileIndex] != 0);
             }
 
             return size;
@@ -10609,7 +10763,7 @@ scalability_info( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            uint PriorityIdSettingUriIdx = 0;
+            int whileIndex = -1;
             size += stream.WriteUnsignedInt(1, this.temporal_id_nesting_flag);
             size += stream.WriteUnsignedInt(1, this.priority_layer_info_present_flag);
             size += stream.WriteUnsignedInt(1, this.priority_id_setting_flag);
@@ -10799,12 +10953,15 @@ scalability_info( payloadSize ) {
 
             if (priority_id_setting_flag != 0)
             {
-                PriorityIdSettingUriIdx = 0;
+
+                whileIndex = -1;
 
                 do
                 {
-                    size += stream.WriteBits(8, this.priority_id_setting_uri[PriorityIdSettingUriIdx]);
-                } while (priority_id_setting_uri[PriorityIdSettingUriIdx++] != 0);
+                    whileIndex++;
+
+                    size += stream.WriteBits(8, whileIndex, this.priority_id_setting_uri);
+                } while (priority_id_setting_uri[whileIndex] != 0);
             }
 
             return size;
@@ -11218,10 +11375,10 @@ scalable_nesting( payloadSize ) {
         public uint[] SeiQualityId { get { return sei_quality_id; } set { sei_quality_id = value; } }
         private uint sei_temporal_id;
         public uint SeiTemporalId { get { return sei_temporal_id; } set { sei_temporal_id = value; } }
-        private uint sei_nesting_zero_bit;
-        public uint SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
-        private SeiMessage sei_message;
-        public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
+        private Dictionary<int, uint> sei_nesting_zero_bit = new Dictionary<int, uint>();
+        public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
+        private Dictionary<int, SeiMessage> sei_message = new Dictionary<int, SeiMessage>();
+        public Dictionary<int, SeiMessage> SeiMessage { get { return sei_message; } set { sei_message = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -11236,6 +11393,7 @@ scalable_nesting( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
+            int whileIndex = -1;
             size += stream.ReadUnsignedInt(size, 1, out this.all_layer_representations_in_au_flag);
 
             if (all_layer_representations_in_au_flag == 0)
@@ -11252,15 +11410,23 @@ scalable_nesting( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 3, out this.sei_temporal_id);
             }
 
+            whileIndex = -1;
+
             while (!stream.ByteAligned())
             {
-                size += stream.ReadFixed(size, 1, out this.sei_nesting_zero_bit); // equal to 0 
+                whileIndex++;
+
+                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
             }
+
+            whileIndex = -1;
 
             do
             {
-                this.sei_message = new SeiMessage();
-                size += stream.ReadClass<SeiMessage>(size, context, this.sei_message);
+                whileIndex++;
+
+                this.sei_message.Add(whileIndex, new SeiMessage());
+                size += stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex]);
             } while (stream.ReadMoreRbspData(this));
 
             return size;
@@ -11271,6 +11437,7 @@ scalable_nesting( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
+            int whileIndex = -1;
             size += stream.WriteUnsignedInt(1, this.all_layer_representations_in_au_flag);
 
             if (all_layer_representations_in_au_flag == 0)
@@ -11285,14 +11452,22 @@ scalable_nesting( payloadSize ) {
                 size += stream.WriteUnsignedInt(3, this.sei_temporal_id);
             }
 
+            whileIndex = -1;
+
             while (!stream.ByteAligned())
             {
-                size += stream.WriteFixed(1, this.sei_nesting_zero_bit); // equal to 0 
+                whileIndex++;
+
+                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
             }
+
+            whileIndex = -1;
 
             do
             {
-                size += stream.WriteClass<SeiMessage>(context, this.sei_message);
+                whileIndex++;
+
+                size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message);
             } while (stream.WriteMoreRbspData(this));
 
             return size;
@@ -12384,14 +12559,14 @@ ref_pic_list_mvc_modification() {
     {
         private byte ref_pic_list_modification_flag_l0;
         public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
-        private uint modification_of_pic_nums_idc;
-        public uint ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
-        private uint abs_diff_pic_num_minus1;
-        public uint AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
-        private uint long_term_pic_num;
-        public uint LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
-        private uint abs_diff_view_idx_minus1;
-        public uint AbsDiffViewIdxMinus1 { get { return abs_diff_view_idx_minus1; } set { abs_diff_view_idx_minus1 = value; } }
+        private Dictionary<int, uint> modification_of_pic_nums_idc = new Dictionary<int, uint>();
+        public Dictionary<int, uint> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
+        private Dictionary<int, uint> abs_diff_pic_num_minus1 = new Dictionary<int, uint>();
+        public Dictionary<int, uint> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
+        private Dictionary<int, uint> long_term_pic_num = new Dictionary<int, uint>();
+        public Dictionary<int, uint> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+        private Dictionary<int, uint> abs_diff_view_idx_minus1 = new Dictionary<int, uint>();
+        public Dictionary<int, uint> AbsDiffViewIdxMinus1 { get { return abs_diff_view_idx_minus1; } set { abs_diff_view_idx_minus1 = value; } }
         private byte ref_pic_list_modification_flag_l1;
         public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
 
@@ -12407,6 +12582,7 @@ ref_pic_list_mvc_modification() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
             {
@@ -12415,25 +12591,29 @@ ref_pic_list_mvc_modification() {
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.modification_of_pic_nums_idc);
+                        whileIndex++;
 
-                        if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1)
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc[whileIndex] == 0 ||
+                    modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1);
                         }
-                        else if (modification_of_pic_nums_idc == 2)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
                         }
-                        else if (modification_of_pic_nums_idc == 4 ||
-                    modification_of_pic_nums_idc == 5)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
+                    modification_of_pic_nums_idc[whileIndex] == 5)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_view_idx_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_view_idx_minus1);
                         }
-                    } while (modification_of_pic_nums_idc != 3);
+                    } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
             }
 
@@ -12444,25 +12624,29 @@ ref_pic_list_mvc_modification() {
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.modification_of_pic_nums_idc);
+                        whileIndex++;
 
-                        if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1)
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc[whileIndex] == 0 ||
+                    modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_pic_num_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1);
                         }
-                        else if (modification_of_pic_nums_idc == 2)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
                         }
-                        else if (modification_of_pic_nums_idc == 4 ||
-                    modification_of_pic_nums_idc == 5)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
+                    modification_of_pic_nums_idc[whileIndex] == 5)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.abs_diff_view_idx_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_view_idx_minus1);
                         }
-                    } while (modification_of_pic_nums_idc != 3);
+                    } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
             }
 
@@ -12473,6 +12657,7 @@ ref_pic_list_mvc_modification() {
         {
             ulong size = 0;
 
+            int whileIndex = -1;
 
             if (context.Slice.SliceHeader.SliceType % 5 != 2 && context.Slice.SliceHeader.SliceType % 5 != 4)
             {
@@ -12481,25 +12666,29 @@ ref_pic_list_mvc_modification() {
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.modification_of_pic_nums_idc);
+                        whileIndex++;
 
-                        if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1)
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc[whileIndex] == 0 ||
+                    modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1);
                         }
-                        else if (modification_of_pic_nums_idc == 2)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
                         }
-                        else if (modification_of_pic_nums_idc == 4 ||
-                    modification_of_pic_nums_idc == 5)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
+                    modification_of_pic_nums_idc[whileIndex] == 5)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_view_idx_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_view_idx_minus1);
                         }
-                    } while (modification_of_pic_nums_idc != 3);
+                    } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
             }
 
@@ -12510,25 +12699,29 @@ ref_pic_list_mvc_modification() {
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
 
+                    whileIndex = -1;
+
                     do
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.modification_of_pic_nums_idc);
+                        whileIndex++;
 
-                        if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1)
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc);
+
+                        if (modification_of_pic_nums_idc[whileIndex] == 0 ||
+                    modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_pic_num_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1);
                         }
-                        else if (modification_of_pic_nums_idc == 2)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
                         }
-                        else if (modification_of_pic_nums_idc == 4 ||
-                    modification_of_pic_nums_idc == 5)
+                        else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
+                    modification_of_pic_nums_idc[whileIndex] == 5)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.abs_diff_view_idx_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_view_idx_minus1);
                         }
-                    } while (modification_of_pic_nums_idc != 3);
+                    } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
             }
 
@@ -12716,8 +12909,8 @@ mvc_scalable_nesting( payloadSize ) {
         public uint[] SeiOpViewId { get { return sei_op_view_id; } set { sei_op_view_id = value; } }
         private uint sei_op_temporal_id;
         public uint SeiOpTemporalId { get { return sei_op_temporal_id; } set { sei_op_temporal_id = value; } }
-        private uint sei_nesting_zero_bit;
-        public uint SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
+        private Dictionary<int, uint> sei_nesting_zero_bit = new Dictionary<int, uint>();
+        public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
         private SeiMessage sei_message;
         public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
 
@@ -12734,6 +12927,7 @@ mvc_scalable_nesting( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
+            int whileIndex = -1;
             size += stream.ReadUnsignedInt(size, 1, out this.operation_point_flag);
 
             if (operation_point_flag == 0)
@@ -12763,9 +12957,13 @@ mvc_scalable_nesting( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 3, out this.sei_op_temporal_id);
             }
 
+            whileIndex = -1;
+
             while (!stream.ByteAligned())
             {
-                size += stream.ReadFixed(size, 1, out this.sei_nesting_zero_bit); // equal to 0 
+                whileIndex++;
+
+                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
             }
             this.sei_message = new SeiMessage();
             size += stream.ReadClass<SeiMessage>(size, context, this.sei_message);
@@ -12778,6 +12976,7 @@ mvc_scalable_nesting( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
+            int whileIndex = -1;
             size += stream.WriteUnsignedInt(1, this.operation_point_flag);
 
             if (operation_point_flag == 0)
@@ -12805,9 +13004,13 @@ mvc_scalable_nesting( payloadSize ) {
                 size += stream.WriteUnsignedInt(3, this.sei_op_temporal_id);
             }
 
+            whileIndex = -1;
+
             while (!stream.ByteAligned())
             {
-                size += stream.WriteFixed(1, this.sei_nesting_zero_bit); // equal to 0 
+                whileIndex++;
+
+                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
             }
             size += stream.WriteClass<SeiMessage>(context, this.sei_message);
 
@@ -14874,8 +15077,8 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i]);
 
-                    this.pic_parameter_set_id_delta[i] = new uint[context.Sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
-                    for (j = 0; j <= context.Sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
+                    this.pic_parameter_set_id_delta[i] = new uint[context.Sei.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
+                    for (j = 0; j <= context.Sei.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
                     }
@@ -14980,7 +15183,7 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_set_minus1[i]);
 
-                    for (j = 0; j <= context.Sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
+                    for (j = 0; j <= context.Sei.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
                     }
@@ -15137,8 +15340,8 @@ mvcd_scalable_nesting( payloadSize ) {
         public byte[] SeiOpTextureFlag { get { return sei_op_texture_flag; } set { sei_op_texture_flag = value; } }
         private uint sei_op_temporal_id;
         public uint SeiOpTemporalId { get { return sei_op_temporal_id; } set { sei_op_temporal_id = value; } }
-        private uint sei_nesting_zero_bit;
-        public uint SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
+        private Dictionary<int, uint> sei_nesting_zero_bit = new Dictionary<int, uint>();
+        public Dictionary<int, uint> SeiNestingZeroBit { get { return sei_nesting_zero_bit; } set { sei_nesting_zero_bit = value; } }
         private SeiMessage sei_message;
         public SeiMessage SeiMessage { get { return sei_message; } set { sei_message = value; } }
 
@@ -15155,6 +15358,7 @@ mvcd_scalable_nesting( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
+            int whileIndex = -1;
             size += stream.ReadUnsignedInt(size, 1, out this.operation_point_flag);
 
             if (operation_point_flag == 0)
@@ -15195,9 +15399,13 @@ mvcd_scalable_nesting( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 3, out this.sei_op_temporal_id);
             }
 
+            whileIndex = -1;
+
             while (!stream.ByteAligned())
             {
-                size += stream.ReadFixed(size, 1, out this.sei_nesting_zero_bit); // equal to 0 
+                whileIndex++;
+
+                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
             }
             this.sei_message = new SeiMessage();
             size += stream.ReadClass<SeiMessage>(size, context, this.sei_message);
@@ -15210,6 +15418,7 @@ mvcd_scalable_nesting( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
+            int whileIndex = -1;
             size += stream.WriteUnsignedInt(1, this.operation_point_flag);
 
             if (operation_point_flag == 0)
@@ -15245,9 +15454,13 @@ mvcd_scalable_nesting( payloadSize ) {
                 size += stream.WriteUnsignedInt(3, this.sei_op_temporal_id);
             }
 
+            whileIndex = -1;
+
             while (!stream.ByteAligned())
             {
-                size += stream.WriteFixed(1, this.sei_nesting_zero_bit); // equal to 0 
+                whileIndex++;
+
+                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
             }
             size += stream.WriteClass<SeiMessage>(context, this.sei_message);
 
@@ -15680,7 +15893,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.additional_shift_present_flag[i]);
 
-                if (context.Sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                if (context.Sei.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 10, out this.num_sample_shift_plus512[i]);
                 }
@@ -15721,7 +15934,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
                 }
                 size += stream.WriteUnsignedInt(1, this.additional_shift_present_flag[i]);
 
-                if (context.Sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                if (context.Sei.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
                     size += stream.WriteUnsignedInt(10, this.num_sample_shift_plus512[i]);
                 }
@@ -17162,8 +17375,8 @@ depth_parameter_set_rbsp() {
         public uint NonlinearDepthRepresentationNum { get { return nonlinear_depth_representation_num; } set { nonlinear_depth_representation_num = value; } }
         private uint[] nonlinear_depth_representation_model;
         public uint[] NonlinearDepthRepresentationModel { get { return nonlinear_depth_representation_model; } set { nonlinear_depth_representation_model = value; } }
-        private byte depth_param_additional_extension_data_flag;
-        public byte DepthParamAdditionalExtensionDataFlag { get { return depth_param_additional_extension_data_flag; } set { depth_param_additional_extension_data_flag = value; } }
+        private Dictionary<int, byte> depth_param_additional_extension_data_flag = new Dictionary<int, byte>();
+        public Dictionary<int, byte> DepthParamAdditionalExtensionDataFlag { get { return depth_param_additional_extension_data_flag; } set { depth_param_additional_extension_data_flag = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -17181,6 +17394,7 @@ depth_parameter_set_rbsp() {
 
             uint predWeight0 = 0;
             uint i = 0;
+            int whileIndex = -1;
             size += stream.ReadUnsignedIntGolomb(size, out this.depth_parameter_set_id);
             size += stream.ReadUnsignedIntGolomb(size, out this.pred_direction);
 
@@ -17220,9 +17434,13 @@ depth_parameter_set_rbsp() {
             if (depth_param_additional_extension_flag == 1)
             {
 
+                whileIndex = -1;
+
                 while (stream.ReadMoreRbspData(this))
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_data_flag);
+                    whileIndex++;
+
+                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.depth_param_additional_extension_data_flag);
                 }
             }
             this.rbsp_trailing_bits = new RbspTrailingBits();
@@ -17237,6 +17455,7 @@ depth_parameter_set_rbsp() {
 
             uint predWeight0 = 0;
             uint i = 0;
+            int whileIndex = -1;
             size += stream.WriteUnsignedIntGolomb(this.depth_parameter_set_id);
             size += stream.WriteUnsignedIntGolomb(this.pred_direction);
 
@@ -17271,9 +17490,13 @@ depth_parameter_set_rbsp() {
             if (depth_param_additional_extension_flag == 1)
             {
 
+                whileIndex = -1;
+
                 while (stream.WriteMoreRbspData(this))
                 {
-                    size += stream.WriteUnsignedInt(1, this.depth_param_additional_extension_data_flag);
+                    whileIndex++;
+
+                    size += stream.WriteUnsignedInt(1, whileIndex, this.depth_param_additional_extension_data_flag);
                 }
             }
             size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);

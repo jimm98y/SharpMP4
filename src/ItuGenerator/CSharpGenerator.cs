@@ -18,6 +18,7 @@ namespace ItuGenerator
         {
             string resultCode =
             $@"using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
@@ -109,7 +110,15 @@ namespace Sharp{type}
             {
                 string type = GetCSharpTypeMapping()[v.Type];
                 if (string.IsNullOrEmpty(v.FieldArray))
-                    resultCode += $"\r\n{type} {v.Name} = 0;";
+                {
+                    string value = "= 0";
+                    if(!string.IsNullOrWhiteSpace(v.Value))
+                    {
+                        value = v.Value;
+                    }
+
+                    resultCode += $"\r\n{type} {v.Name} {value};";
+                }
                 else
                 {
                     int arrayDimensions = 0;
@@ -128,7 +137,7 @@ namespace Sharp{type}
                         {
                             level--;
                         }
-                        else if(v.FieldArray[i] == ',')
+                        else if (v.FieldArray[i] == ',')
                         {
                             indicesArrayDimensions++;
                         }
@@ -173,7 +182,7 @@ namespace Sharp{type}
 
             while (parent != null)
             {
-                if (parent.Type == "for")
+                if (parent.Type == "for" || parent.Type == "do" || parent.Type == "while")
                     ret++;
                 parent = parent.Parent;
             }
@@ -231,7 +240,7 @@ namespace Sharp{type}
 
             if (GetLoopNestingLevel(field) > 0)
             {
-                if (name != "ar_bit_equal_to_zero")
+                if (name != "ar_bit_equal_to_zero" && !(field as ItuField).MakeList)
                 {
                     string suffix;
                     GetNestedInLoopSuffix(field, typedef, out suffix);
@@ -256,19 +265,41 @@ namespace Sharp{type}
                     typedef = "[ 0 ]";
                 }
 
-                // special case, create class first, then read it
-                m = m.Replace("###value###", $"{spacing}this.{name}{typedef}");
-                m = m.Replace("###size###", $"{spacing}{boxSize}");
-                return $"{m} this.{name}{typedef}); {fieldComment}";
+                if ((field as ItuField).MakeList)
+                {
+                    // special case, create class first, then read it
+                    m = m.Replace("###value###", $"{spacing}this.{name}{typedef}.Add(whileIndex, ");
+                    m = m.Replace("###size###", $");\r\n{spacing}{boxSize}");
+                    return $"{m} this.{name}{typedef}[whileIndex]); {fieldComment}";
+                }
+                else
+                {
+                    // special case, create class first, then read it
+                    m = m.Replace("###value###", $"{spacing}this.{name}{typedef} = ");
+                    m = m.Replace("###size###", $";\r\n{spacing}{boxSize}");
+                    return $"{m} this.{name}{typedef}); {fieldComment}";
+                }
             }
             else
             {
-                if (methodType == MethodType.Read)
-                    return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
-                else if (methodType == MethodType.Write)
-                    return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
+                if ((field as ItuField).MakeList)
+                {
+                    if (methodType == MethodType.Read)
+                        return $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}); {fieldComment}";
+                    else if (methodType == MethodType.Write)
+                        return $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}); {fieldComment}";
+                    else
+                        throw new NotSupportedException();
+                }
                 else
-                    return $"{spacing}{boxSize}{m}; // {name}";
+                {
+                    if (methodType == MethodType.Read)
+                        return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
+                    else if (methodType == MethodType.Write)
+                        return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
+                    else
+                        throw new NotSupportedException();
+                }
             }
         }
 
@@ -473,7 +504,7 @@ namespace Sharp{type}
                     return "stream.ReadBits(size, 8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"###value### = new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter, ituField.ClassType)};\r\n ###size### stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, ";
+                        return $"###value### new {ituField.ClassType.ToPropertyCase()}{FixMissingParameters(b, ituField.Parameter, ituField.ClassType)} ###size### stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, ";
                     throw new NotImplementedException();
             }
         }
@@ -533,13 +564,13 @@ namespace Sharp{type}
                 case "dpb_output_delay_length_minus1":
                     return "context.Sps.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1";
                 case "coded_data_bit_depth":
-                    return "context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth";
+                    return "context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth";
                 case "colour_remap_input_bit_depth":
-                    return "context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth";
+                    return "context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth";
                 case "colour_remap_output_bit_depth":
-                    return "context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth";
+                    return "context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth";
                 case "ar_object_confidence_length_minus1":
-                    return "context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1";
+                    return "context.Sei.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1";
                 case "expLen":
                     return "context.SubsetSps.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
                 case "num_anchor_refs_l0":
@@ -551,9 +582,9 @@ namespace Sharp{type}
                 case "num_non_anchor_refs_l1":
                     return "context.SubsetSps.SeqParameterSetMvcExtension.NumNonAnchorRefsL1";
                 case "num_init_pic_parameter_set_minus1":
-                    return "context.Sei.SeiMessage.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1"; // looks like there is a typo...
+                    return "context.Sei.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1"; // looks like there is a typo...
                 case "additional_shift_present":
-                    return "context.Sei.SeiMessage.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()"; // TODO: looks like a typo
+                    return "context.Sei.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()"; // TODO: looks like a typo
                 case "texture_view_present_flag":
                     return "context.SubsetSps.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()";
                 case "initial_cpb_removal_delay":
@@ -573,15 +604,15 @@ namespace Sharp{type}
                 case "start_of_coded_interval":
                 case "coded_pivot_value":
                 case "target_pivot_value":
-                    return "(((context.Sei.SeiMessage.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3)";
+                    return "(((context.Sei.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3)";
                 case "pre_lut_coded_value":
                 case "pre_lut_target_value":
-                    return "(((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3)";
+                    return "(((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3)";
                 case "post_lut_coded_value":
                 case "post_lut_target_value":
-                    return "(((context.Sei.SeiMessage.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3)";
+                    return "(((context.Sei.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3)";
                 case "ar_object_confidence":
-                    return "(context.Sei.SeiMessage.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1)";
+                    return "(context.Sei.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1)";
                 case "da_mantissa":
                     return "(this.da_mantissa_len_minus1 + 1)";
                 case "exponent0":
@@ -867,14 +898,11 @@ namespace Sharp{type}
                 condition = FixMissingFields(b, condition);
 
                 int nestedLevel = GetLoopNestingLevel(block);
-                if (nestedLevel > 0)
-                {
-                    condition = FixNestedInLoopVariables(block, condition, "", ";");
-                    condition = FixNestedInLoopVariables(block, condition, "", "=");
-                    condition = FixNestedInLoopVariables(block, condition, "", " ");
-                    condition = FixNestedInLoopVariables(block, condition, "", ")");
-                    condition = FixNestedInLoopVariables(block, condition, "", ",");
-                }
+                condition = FixNestedInLoopVariables(block, condition, "", ";");
+                condition = FixNestedInLoopVariables(block, condition, "", "=");
+                condition = FixNestedInLoopVariables(block, condition, "", " ");
+                condition = FixNestedInLoopVariables(block, condition, "", ")");
+                condition = FixNestedInLoopVariables(block, condition, "", ",");
             }
 
             if (methodType == MethodType.Read)
@@ -957,10 +985,16 @@ namespace Sharp{type}
                 }
             }
 
+            if (blockType == "do" || blockType == "while")
+                ret += $"\r\n{spacing}whileIndex = -1;\r\n";
+
             if (block.Type == "do")
                 ret += $"\r\n{spacing}{blockType}\r\n{spacing}{{";
             else
                 ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
+
+            if (blockType == "do" || blockType == "while")
+                ret += $"{spacing}whileIndex++;\r\n";
 
             foreach (var field in block.Content)
             {
@@ -1119,8 +1153,17 @@ namespace Sharp{type}
                     else
                         throw new Exception();
                 }
+                else if (parent.Type == "do" || parent.Type == "while")
+                {
+                    ret.Insert(0, "[whileIndex]");
+                }
 
                 parent = parent.Parent;
+            }
+
+            if (block != null && (block.Type == "do" || block.Type == "while"))
+            {
+                ret.Insert(0, "[whileIndex]");
             }
 
             if (field != null)
@@ -1134,6 +1177,10 @@ namespace Sharp{type}
                 string str = string.Concat(ret.Skip(level));
 
                 if (parent.Type == "for")
+                {
+                    level++;
+                }
+                else if(parent.Type == "do" || parent.Type == "while")
                 {
                     level++;
                 }
@@ -1189,6 +1236,11 @@ namespace Sharp{type}
                 {
                     ret.Insert(0, $"[{parent.Condition.Substring(1, parent.Condition.Length - 2).Split(';').First().Split('=').First()}]");
                 }
+                else if(parent.Type == "do" || parent.Type == "while")
+                {
+                    ret.Insert(0, $"[whileIndex]");
+                }
+                
                 parent = parent.Parent;
             }
 
@@ -1256,26 +1308,37 @@ namespace Sharp{type}
         private string BuildField(ItuField field)
         {
             string type = GetCSharpType(field);
+            string initializer = "";
+
+            if (field.MakeList)
+            {
+                type = $"Dictionary<int, {type}>";
+                initializer = $" = new {type}()";
+            }
 
             int nestingLevel = GetLoopNestingLevel(field);
             if (nestingLevel > 0)
             {
                 nestingLevel = GetNestedInLoopSuffix(field, field.FieldArray, out _);
 
-                AddRequiresAllocation(field);
-
-                if (nestingLevel > 0)
+                if (!field.MakeList)
                 {
-                    // change the type
-                    for (int i = 0; i < nestingLevel; i++)
+                    AddRequiresAllocation(field);
+
+                    if (nestingLevel > 0)
                     {
-                        type += "[]";
+                        // change the type
+                        for (int i = 0; i < nestingLevel; i++)
+                        {
+                            type += "[]";
+                            initializer = "";
+                        }
                     }
                 }
             }
 
             string propertyName = GetFieldName(field).ToPropertyCase();
-            return $"\t\tprivate {type} {field.Name.ToFirstLower()};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
+            return $"\t\tprivate {type} {field.Name.ToFirstLower()}{initializer};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
         }
 
         public void AddRequiresAllocation(ItuField field)
@@ -1325,7 +1388,17 @@ namespace Sharp{type}
                 {
                     field.Parent = parent; // keep track of parent blocks
 
-                    string value = field.Value;
+                    var p = parent;
+                    while (p != null)
+                    {
+                        if (p.Type == "do" || p.Type == "while")
+                        {
+                            field.MakeList = true;
+                            Debug.WriteLine($"Field {field.Name} is a list");
+                        }
+                        p = p.Parent;
+                    }
+
                     AddAndResolveDuplicates(b, ret, field);
                 }
                 else if (code is ItuBlock block)
@@ -1357,12 +1430,10 @@ namespace Sharp{type}
 
                     if(block.Type == "do" || block.Type == "while")
                     {
-                        if (block.Condition.Contains("i "))
+                        if (b.RequiresDefinition.FirstOrDefault(x => x.Name == "whileIndex") == null)
                         {
-                            if (b.RequiresDefinition.FirstOrDefault(x => x.Name == "i") == null)
-                            {
-                                b.RequiresDefinition.Add(new ItuField() { Name = "i", Type = "u(32)" });
-                            }
+                            var f = new ItuField() { Name = "whileIndex", Type = "i(32)", Value = "= -1" };
+                            b.RequiresDefinition.Add(f);
                         }
                     }
 
@@ -1375,22 +1446,23 @@ namespace Sharp{type}
                 else if (code is ItuBlockIfThenElse blockifThenElse)
                 {
                     blockifThenElse.Parent = parent; // keep track of parent blocks
+                    ((ItuBlock)blockifThenElse.BlockIf).Parent = parent;
+                    if((ItuBlock)blockifThenElse.BlockElse != null) ((ItuBlock)blockifThenElse.BlockElse).Parent = parent;
 
                     var blockFields = FlattenFields(b, ((ItuBlock)blockifThenElse.BlockIf).Content, (ItuBlock)blockifThenElse.BlockIf);
                     foreach (var blockField in blockFields)
                     {
                         AddAndResolveDuplicates(b, ret, blockField);
                     }
-                    ((ItuBlock)blockifThenElse.BlockIf).Parent = parent;
 
                     foreach (var blockelseif in blockifThenElse.BlockElseIf)
                     {
+                        ((ItuBlock)blockelseif).Parent = parent;
                         var blockElseIfFields = FlattenFields(b, ((ItuBlock)blockelseif).Content, (ItuBlock)blockelseif);
                         foreach (var blockField in blockElseIfFields)
                         {
                             AddAndResolveDuplicates(b, ret, blockField);
                         }
-                        ((ItuBlock)blockelseif).Parent = parent;
                     }
 
                     if(blockifThenElse.BlockElse != null)
@@ -1400,7 +1472,6 @@ namespace Sharp{type}
                         {
                             AddAndResolveDuplicates(b, ret, blockElseField);
                         }
-                        ((ItuBlock)blockifThenElse.BlockElse).Parent = parent;
                     }
                 }
             }

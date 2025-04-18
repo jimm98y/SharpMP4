@@ -224,6 +224,7 @@ namespace ItuGenerator
         public string Category { get; set; }
 
         public ItuBlock Parent { get; internal set; }
+        public bool MakeList { get; internal set; }
     }
 
     public class ItuClass : ItuCode

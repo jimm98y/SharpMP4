@@ -1624,11 +1624,10 @@ scalability_info( payloadSize ) {
    }   
   }   
  }   
- if( priority_id_setting_flag ) {   
-  PriorityIdSettingUriIdx = 0   
+ if( priority_id_setting_flag ) {    
   do    
-   priority_id_setting_uri[ PriorityIdSettingUriIdx ] 5 b(8) 
-  while( priority_id_setting_uri[ PriorityIdSettingUriIdx++ ]  !=  0 )   
+   priority_id_setting_uri 5 b(8) 
+  while( priority_id_setting_uri !=  0 )   
  }   
 }  
 

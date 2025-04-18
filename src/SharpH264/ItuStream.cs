@@ -492,6 +492,110 @@ namespace SharpH264
             return size;
         }
 
+        #region Lists in do/while loops
+
+        internal ulong ReadFixed(ulong size, int count, int whileIndex, Dictionary<int, uint> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            ulong read = ReadFixed(size, count, out var value);
+            list.Add(whileIndex, value);
+            return read;
+        }
+
+        internal ulong ReadUnsignedIntGolomb(ulong size, int whileIndex, Dictionary<int, uint> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            ulong read = ReadUnsignedIntGolomb(size, out var value);
+            list.Add(whileIndex, value);
+            return read;
+        }
+
+        internal ulong ReadUnsignedInt(ulong size, int count, int whileIndex, Dictionary<int, byte> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            ulong read = ReadUnsignedInt(size, count, out byte value);
+            list.Add(whileIndex, value);
+            return read;
+        }
+
+        internal ulong ReadBits(ulong size, int count, int whileIndex, Dictionary<int, byte> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            ulong read = ReadBits(size, count, out byte value);
+            list.Add(whileIndex, value);
+            return read;
+        }
+
+        internal ulong WriteFixed(int count, int whileIndex, Dictionary<int, uint> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            if (!list.ContainsKey(whileIndex))
+                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+
+            ulong size = WriteFixed(count, list[whileIndex]);
+            return size;
+        }
+
+        internal ulong WriteUnsignedInt(int count, int whileIndex, Dictionary<int, byte> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            if (!list.ContainsKey(whileIndex))
+                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+
+            ulong size = WriteUnsignedInt(count, list[whileIndex]);
+            return size;
+        }
+
+        internal ulong WriteUnsignedIntGolomb(int whileIndex, Dictionary<int, uint> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            if (!list.ContainsKey(whileIndex))
+                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+
+            ulong size = WriteUnsignedIntGolomb(list[whileIndex]);
+            return size;
+        }
+
+        internal ulong WriteBits(int count, int whileIndex, Dictionary<int, byte> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            if (!list.ContainsKey(whileIndex))
+                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+
+            ulong size = WriteBits(count, list[whileIndex]);
+            return size;
+        }
+
+        internal ulong WriteClass<T>(H264Context context, int whileIndex, Dictionary<int, T> list) where T : IItuSerializable
+        {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
+            if (!list.ContainsKey(whileIndex))
+                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+
+            ulong size = WriteClass(context, list[whileIndex]);
+            return size;
+        }
+
+        #endregion // Lists in do/while loops
+
         #region IDisposable 
 
         protected virtual void Dispose(bool disposing)
