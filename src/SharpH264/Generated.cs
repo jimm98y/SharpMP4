@@ -15,7 +15,13 @@ namespace SharpH264
         public PicParameterSetRbsp PicParameterSetRbsp { get; set; }
         public SeiRbsp SeiRbsp { get; set; }
         public AccessUnitDelimiterRbsp AccessUnitDelimiterRbsp { get; set; }
+        public EndOfSeqRbsp EndOfSeqRbsp { get; set; }
+        public EndOfStreamRbsp EndOfStreamRbsp { get; set; }
+        public FillerDataRbsp FillerDataRbsp { get; set; }
         public SliceLayerWithoutPartitioningRbsp SliceLayerWithoutPartitioningRbsp { get; set; }
+        public SliceDataPartitionaLayerRbsp SliceDataPartitionaLayerRbsp { get; set; }
+        public SliceDataPartitionbLayerRbsp SliceDataPartitionbLayerRbsp { get; set; }
+        public SliceDataPartitioncLayerRbsp SliceDataPartitioncLayerRbsp { get; set; }
         public PrefixNalUnitRbsp PrefixNalUnitRbsp { get; set; }
         public SliceLayerExtensionRbsp SliceLayerExtensionRbsp { get; set; }
         public DepthParameterSetRbsp DepthParameterSetRbsp { get; set; }
@@ -1580,6 +1586,141 @@ access_unit_delimiter_rbsp() {
     /*
     
 
+end_of_seq_rbsp() {
+}
+    */
+    public class EndOfSeqRbsp : IItuSerializable
+    {
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public EndOfSeqRbsp()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+end_of_stream_rbsp() {
+}
+    */
+    public class EndOfStreamRbsp : IItuSerializable
+    {
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public EndOfStreamRbsp()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+filler_data_rbsp() {
+    while (next_bits(8) == 0xFF)   
+    ff_byte  /* equal to 0xFF *//* 9 f(8)
+    rbsp_trailing_bits() 9
+}
+    */
+    public class FillerDataRbsp : IItuSerializable
+    {
+        private Dictionary<int, uint> ff_byte = new Dictionary<int, uint>();
+        public Dictionary<int, uint> FfByte { get { return ff_byte; } set { ff_byte = value; } }
+        private RbspTrailingBits rbsp_trailing_bits;
+        public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public FillerDataRbsp()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            int whileIndex = -1;
+
+            whileIndex = -1;
+
+            while (stream.ReadNextBits(this, 8) == 0xFF)
+            {
+                whileIndex++;
+
+                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte); // equal to 0xFF 
+            }
+            this.rbsp_trailing_bits = new RbspTrailingBits();
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            int whileIndex = -1;
+
+            whileIndex = -1;
+
+            while (stream.WriteNextBits(this, 8) == 0xFF)
+            {
+                whileIndex++;
+
+                size += stream.WriteFixed(8, whileIndex, this.ff_byte); // equal to 0xFF 
+            }
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
 slice_layer_without_partitioning_rbsp() {
     slice_header() 2
     /*slice_data()*//*  /* all categories of slice_data() syntax *//* /*2 | 3 | 4*//*
@@ -1638,6 +1779,242 @@ slice_layer_without_partitioning_rbsp() {
 
     /*
  
+
+slice_data_partition_a_layer_rbsp() {
+    slice_header() 2
+  slice_id All ue(v)
+    /*slice_data()*//*  /* only category 2 parts of slice_data() syntax *//* /*2*//*
+    /*rbsp_slice_trailing_bits() 2*//*
+}
+    */
+    public class SliceDataPartitionaLayerRbsp : IItuSerializable
+    {
+        private SliceHeader slice_header;
+        public SliceHeader SliceHeader { get { return slice_header; } set { slice_header = value; } }
+        private uint slice_id;
+        public uint SliceId { get { return slice_id; } set { slice_id = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceDataPartitionaLayerRbsp()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            this.slice_header = new SliceHeader();
+            size += stream.ReadClass<SliceHeader>(size, context, this.slice_header);
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id);
+            /* slice_data() */
+
+            /*  only category 2 parts of slice_data() syntax  */
+
+            /* 2 */
+
+            /* rbsp_slice_trailing_bits() 2 */
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteClass<SliceHeader>(context, this.slice_header);
+            size += stream.WriteUnsignedIntGolomb(this.slice_id);
+            /* slice_data() */
+
+            /*  only category 2 parts of slice_data() syntax  */
+
+            /* 2 */
+
+            /* rbsp_slice_trailing_bits() 2 */
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+slice_data_partition_b_layer_rbsp() {
+ slice_id All ue(v)
+    if (separate_colour_plane_flag == 1)   
+  colour_plane_id All u(2)
+    if (redundant_pic_cnt_present_flag)   
+  redundant_pic_cnt All ue(v)
+    /*slice_data()*//*  /* only category 3 parts of slice_data() syntax *//* /*3*//*
+    /*rbsp_slice_trailing_bits() 3*//*
+}
+    */
+    public class SliceDataPartitionbLayerRbsp : IItuSerializable
+    {
+        private uint slice_id;
+        public uint SliceId { get { return slice_id; } set { slice_id = value; } }
+        private uint colour_plane_id;
+        public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
+        private uint redundant_pic_cnt;
+        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceDataPartitionbLayerRbsp()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id);
+
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            {
+                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+            }
+
+            if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+            }
+            /* slice_data() */
+
+            /*  only category 3 parts of slice_data() syntax  */
+
+            /* 3 */
+
+            /* rbsp_slice_trailing_bits() 3 */
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedIntGolomb(this.slice_id);
+
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            {
+                size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+            }
+
+            if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+            }
+            /* slice_data() */
+
+            /*  only category 3 parts of slice_data() syntax  */
+
+            /* 3 */
+
+            /* rbsp_slice_trailing_bits() 3 */
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+slice_data_partition_c_layer_rbsp() { 
+ slice_id All ue(v)
+    if (separate_colour_plane_flag == 1)   
+  colour_plane_id All u(2)
+    if (redundant_pic_cnt_present_flag)   
+  redundant_pic_cnt All ue(v)
+    /*slice_data()*//*  /* only category 4 parts of slice_data() syntax *//* /*4*//*
+    /*rbsp_slice_trailing_bits() 4*//*
+}
+    */
+    public class SliceDataPartitioncLayerRbsp : IItuSerializable
+    {
+        private uint slice_id;
+        public uint SliceId { get { return slice_id; } set { slice_id = value; } }
+        private uint colour_plane_id;
+        public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
+        private uint redundant_pic_cnt;
+        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceDataPartitioncLayerRbsp()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id);
+
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            {
+                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+            }
+
+            if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
+            {
+                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+            }
+            /* slice_data() */
+
+            /*  only category 4 parts of slice_data() syntax  */
+
+            /* 4 */
+
+            /* rbsp_slice_trailing_bits() 4 */
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedIntGolomb(this.slice_id);
+
+            if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
+            {
+                size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+            }
+
+            if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
+            {
+                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+            }
+            /* slice_data() */
+
+            /*  only category 4 parts of slice_data() syntax  */
+
+            /* 4 */
+
+            /* rbsp_slice_trailing_bits() 4 */
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
 
 rbsp_trailing_bits() { 
  rbsp_stop_one_bit  /* equal to 1 *//* All f(1) 

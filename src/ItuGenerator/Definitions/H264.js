@@ -250,11 +250,50 @@ access_unit_delimiter_rbsp() {
  rbsp_trailing_bits() 6  
 }    
 
+end_of_seq_rbsp() {
+}
+
+end_of_stream_rbsp() {
+}
+
+filler_data_rbsp() {
+    while (next_bits(8) == 0xFF)   
+    ff_byte  /* equal to 0xFF */ 9 f(8)
+    rbsp_trailing_bits() 9
+}
+
 slice_layer_without_partitioning_rbsp() {
     slice_header() 2
     /*slice_data()*/  /* all categories of slice_data() syntax */ /*2 | 3 | 4*/
     /*rbsp_slice_trailing_bits() 2*/
 } 
+
+slice_data_partition_a_layer_rbsp() {
+    slice_header() 2
+  slice_id All ue(v)
+    /*slice_data()*/  /* only category 2 parts of slice_data() syntax */ /*2*/
+    /*rbsp_slice_trailing_bits() 2*/
+}
+
+slice_data_partition_b_layer_rbsp() {
+ slice_id All ue(v)
+    if (separate_colour_plane_flag == 1)   
+  colour_plane_id All u(2)
+    if (redundant_pic_cnt_present_flag)   
+  redundant_pic_cnt All ue(v)
+    /*slice_data()*/  /* only category 3 parts of slice_data() syntax */ /*3*/
+    /*rbsp_slice_trailing_bits() 3*/
+}
+
+slice_data_partition_c_layer_rbsp() { 
+ slice_id All ue(v)
+    if (separate_colour_plane_flag == 1)   
+  colour_plane_id All u(2)
+    if (redundant_pic_cnt_present_flag)   
+  redundant_pic_cnt All ue(v)
+    /*slice_data()*/  /* only category 4 parts of slice_data() syntax */ /*4*/
+    /*rbsp_slice_trailing_bits() 4*/
+}
 
 rbsp_trailing_bits() { 
  rbsp_stop_one_bit  /* equal to 1 */ All f(1) 

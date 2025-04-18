@@ -612,6 +612,11 @@ namespace SharpH264
             GC.SuppressFinalize(this);
         }
 
+        internal bool MoreRbspTrailingData()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion // IDisposable
     }
 }

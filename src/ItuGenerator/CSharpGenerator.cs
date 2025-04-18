@@ -359,7 +359,6 @@ namespace Sharp{type}
                     fieldValue = "= (uint)" + fieldValue.TrimStart(' ', '=');
 
                 fieldValue = FixMissingFields(b, fieldValue);
-
                 fieldValue = FixNestedInLoopVariables(field, fieldValue);
             }
 
@@ -546,8 +545,6 @@ namespace Sharp{type}
                     return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag";
                 case "VclHrdBpPresentFlag":
                     return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag";
-                case "initial_cpb_removal_delay_length_minus1":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1";
                 case "profile_idc":
                     return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc";
                 case "chroma_format_idc":
@@ -578,22 +575,6 @@ namespace Sharp{type}
                     return "0"; 
                 case "ref_dps_id1":
                     return "((H264Context)context).DepthParameterSetRbsp.RefDpsId1";
-                case "bit_depth_aux_minus8":
-                    return "((H264Context)context).SpsExtension.BitDepthAuxMinus8";
-                case "cpb_removal_delay_length_minus1":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1";
-                case "dpb_output_delay_length_minus1":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1";
-                case "coded_data_bit_depth":
-                    return "((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth";
-                case "colour_remap_input_bit_depth":
-                    return "((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth";
-                case "colour_remap_output_bit_depth":
-                    return "((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth";
-                case "ar_object_confidence_length_minus1":
-                    return "((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1";
-                case "expLen":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
                 case "num_anchor_refs_l0":
                     return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0";
                 case "num_anchor_refs_l1":
@@ -678,14 +659,6 @@ namespace Sharp{type}
                     return "(exp_gvd_r[ i ][ j ][ k ] == 0) ? (Math.Max( 0, prec_gvd_rotation_param - 30 )) : (Math.Max( 0,  exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31))";
                 case "man_gvd_t_x": 
                     return "(exp_gvd_t_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_translation_param - 30 )) : (Math.Max( 0,  exp_gvd_t_x[ i ] + prec_gvd_translation_param - 31))";
-                case "MbWidthC":
-                    return "(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 0 ? 0 : 16 / ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 1 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 2) ? 2 : 1))";
-                case "MbHeightC":
-                    return "(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 0 ? 0 : 16 / ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 2 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 3) ? 1 : 2))";
-                case "SubWidthC":
-                    return "((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 1 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 2) ? 2 : 1)";
-                case "SubHeightC":
-                    return "((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 2 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc == 3) ? 1 : 2)";
                 case "separate_colour_plane_flag":
                     return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag";
                 case "redundant_pic_cnt_present_flag":

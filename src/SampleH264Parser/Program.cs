@@ -36,12 +36,12 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
 
         foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
         {
-            ReadNALu(context, spsBinary);
+            ReadH264NALU(context, spsBinary);
         }
 
         foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
         {
-            ReadNALu(context, ppsBinary);
+            ReadH264NALU(context, ppsBinary);
         }
     }
     else
@@ -99,7 +99,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                                 offset += 4;
                                 size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                                 offset += sampleData.Length;
-                                ReadNALu(context, sampleData);
+                                ReadH264NALU(context, sampleData);
                             } while (offset < sampleSize);
 
                             Debug.WriteLine("AU end");
@@ -161,7 +161,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                             offset += 4;
                             size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                             offset += sampleData.Length;
-                            ReadNALu(context, sampleData);
+                            ReadH264NALU(context, sampleData);
                         } while (offset < sampleSize);
 
                         Debug.WriteLine("AU end");
@@ -174,7 +174,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
     }
 }
 
-static void ReadNALu(H264Context context, byte[] sampleData)
+static void ReadH264NALU(H264Context context, byte[] sampleData)
 {
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
     {
@@ -183,116 +183,212 @@ static void ReadNALu(H264Context context, byte[] sampleData)
         ituSize += nu.Read(context, stream);
         context.NalHeader = nu;
 
-        if(nu.NalUnitType == H264NALTypes.SPS)
+        var ms = new MemoryStream();
+        using (ItuStream wstream = new ItuStream(ms))
         {
-            SeqParameterSetRbsp sps = new SeqParameterSetRbsp();
-            context.SeqParameterSetRbsp = sps;
+            nu.Write(context, wstream);
 
-            sps.Read(context, stream);
-
-            var ms = new MemoryStream();
-            using (ItuStream wstream = new ItuStream(ms))
+            if(nu.NalUnitType == H264NALTypes.UNSPECIFIED0) // 0
             {
-                nu.Write(context, wstream);
-                sps.Write(context, wstream);
-
-                byte[] wbytes = ms.ToArray();
-                if (!wbytes.SequenceEqual(sampleData))
-                {
-                    throw new Exception("Failed to write SPS");
-                }
+                Debug.WriteLine($"NALU: Unspecified {nu.NalUnitType}");
+                throw new InvalidOperationException();
             }
-        }
-        else if(nu.NalUnitType == H264NALTypes.PPS)
-        {
-            PicParameterSetRbsp pps = new PicParameterSetRbsp();
-            context.PicParameterSetRbsp = pps;
-
-            pps.Read(context, stream);
-
-            var ms = new MemoryStream();
-            using (ItuStream wstream = new ItuStream(ms))
+            else if (nu.NalUnitType == H264NALTypes.SLICE) // 1
             {
-                nu.Write(context, wstream);
-                pps.Write(context, wstream);
-
-                byte[] wbytes = ms.ToArray();
-                if (!wbytes.SequenceEqual(sampleData))
-                {
-                    throw new Exception("Failed to write PPS");
-                }
+                Debug.WriteLine("NALU: 1, slice of non-IDR picture");
+                context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
+                context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
+                context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
             }
-        }
-        else if (nu.NalUnitType == H264NALTypes.SEI)
-        {
-            Debug.WriteLine("NALU: SEI");
-
-            SeiRbsp sei = new SeiRbsp();
-            context.SeiRbsp = sei;
-            ituSize += sei.Read(context, stream);
-
-            var ms = new MemoryStream();
-            using (ItuStream wstream = new ItuStream(ms))
+            else if (nu.NalUnitType == H264NALTypes.DPA) // 2
             {
-                nu.Write(context, wstream);
-                sei.Write(context, wstream);
-
-                byte[] wbytes = ms.ToArray();
-                if (!wbytes.SequenceEqual(sampleData))
-                {
-                    Debug.WriteLine(Convert.ToHexString(wbytes));
-                    Debug.WriteLine(Convert.ToHexString(sampleData));
-                    throw new Exception("Failed to write SEI");
-                }
+                Debug.WriteLine("NALU: 2, coded slice data partition A");
+                context.SliceDataPartitionaLayerRbsp = new SliceDataPartitionaLayerRbsp();
+                context.SliceDataPartitionaLayerRbsp.Read(context, stream);
+                context.SliceDataPartitionaLayerRbsp.Write(context, wstream);
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
             }
-        }
-        else if (nu.NalUnitType == H264NALTypes.AUD)
-        {
-            Debug.WriteLine($"NALU: AU Delimiter");
-
-            AccessUnitDelimiterRbsp au = new AccessUnitDelimiterRbsp();
-            context.AccessUnitDelimiterRbsp = au;
-
-            au.Read(context, stream);
-
-            var ms = new MemoryStream();
-            using (ItuStream wstream = new ItuStream(ms))
+            else if (nu.NalUnitType == H264NALTypes.DPB) // 3
             {
-                nu.Write(context, wstream);
-                au.Write(context, wstream);
-
-                byte[] wbytes = ms.ToArray();
-                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(wbytes)))
-                {
-                    throw new Exception("Failed to write Slice");
-                }
+                Debug.WriteLine("NALU: 3, coded slice data partition B");
+                context.SliceDataPartitionbLayerRbsp = new SliceDataPartitionbLayerRbsp();
+                context.SliceDataPartitionbLayerRbsp.Read(context, stream);
+                context.SliceDataPartitionbLayerRbsp.Write(context, wstream);
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
             }
-        }
-        else if(nu.NalUnitType == H264NALTypes.SLICE || nu.NalUnitType == H264NALTypes.IDR_SLICE)
-        {
-            Debug.WriteLine($"NALU: {nu.NalUnitType}");
-
-            SliceLayerWithoutPartitioningRbsp slice = new SliceLayerWithoutPartitioningRbsp();
-            context.SliceLayerWithoutPartitioningRbsp = slice;
-
-            slice.Read(context, stream);
-
-            var ms = new MemoryStream();
-            using (ItuStream wstream = new ItuStream(ms))
+            else if (nu.NalUnitType == H264NALTypes.DPB) // 4
             {
-                nu.Write(context, wstream);
-                slice.Write(context, wstream);
-
-                byte[] wbytes = ms.ToArray();
-                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(wbytes)))
-                {
-                    throw new Exception("Failed to write Slice");
-                }
+                Debug.WriteLine("NALU: 4, coded slice data partition C");
+                context.SliceDataPartitioncLayerRbsp = new SliceDataPartitioncLayerRbsp();
+                context.SliceDataPartitioncLayerRbsp.Read(context, stream);
+                context.SliceDataPartitioncLayerRbsp.Write(context, wstream);
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
             }
-        }
-        else
-        {
-            Debug.WriteLine($"NALU: {nu.NalUnitType}");
+            else if (nu.NalUnitType == H264NALTypes.IDR_SLICE) // 5
+            {
+                Debug.WriteLine("NALU: 5, slice of non-IDR picture");
+                context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
+                context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
+                context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.SEI) // 6
+            {
+                Debug.WriteLine("NALU: 6, SEI");
+                context.SeiRbsp = new SeiRbsp();
+                context.SeiRbsp.Read(context, stream);
+                context.SeiRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.SPS) // 7
+            {
+                Debug.WriteLine("NALU: 7, SPS");
+                context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
+                context.SeqParameterSetRbsp.Read(context, stream);
+                context.SeqParameterSetRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.PPS) // 8
+            {
+                Debug.WriteLine("NALU: 8, PPS");
+                context.PicParameterSetRbsp = new PicParameterSetRbsp();
+                context.PicParameterSetRbsp.Read(context, stream);
+                context.PicParameterSetRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.AUD) // 9
+            {
+                Debug.WriteLine($"NALU: 9, AU Delimiter");
+                context.AccessUnitDelimiterRbsp = new AccessUnitDelimiterRbsp();
+                context.AccessUnitDelimiterRbsp.Read(context, stream);
+                context.AccessUnitDelimiterRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.END_OF_SEQUENCE) // 10
+            {
+                Debug.WriteLine($"NALU: 10, End of Sequence");
+                context.EndOfSeqRbsp = new EndOfSeqRbsp();
+                context.EndOfSeqRbsp.Read(context, stream);
+                context.EndOfSeqRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.END_OF_STREAM) // 11
+            {
+                Debug.WriteLine($"NALU: 11, End of Stream");
+                context.EndOfStreamRbsp = new EndOfStreamRbsp();
+                context.EndOfStreamRbsp.Read(context, stream);
+                context.EndOfStreamRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.FILLER_DATA) // 12
+            {
+                Debug.WriteLine($"NALU: 12, Filler Data");
+                context.FillerDataRbsp = new FillerDataRbsp();
+                context.FillerDataRbsp.Read(context, stream);
+                context.FillerDataRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.SPS_EXT) // 13
+            {
+                Debug.WriteLine($"NALU: 13, SPS Extension");
+                context.SeqParameterSetExtensionRbsp = new SeqParameterSetExtensionRbsp();
+                context.SeqParameterSetExtensionRbsp.Read(context, stream);
+                context.SeqParameterSetExtensionRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.PREFIX_NAL) // 14
+            {
+                Debug.WriteLine($"NALU: 14, Prefix NAL");
+                context.PrefixNalUnitRbsp = new PrefixNalUnitRbsp();
+                context.PrefixNalUnitRbsp.Read(context, stream);
+                context.PrefixNalUnitRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.SUBSET_SPS) // 15
+            {
+                Debug.WriteLine($"NALU: 15, Subset SPS");
+                context.SubsetSeqParameterSetRbsp = new SubsetSeqParameterSetRbsp();
+                context.SubsetSeqParameterSetRbsp.Read(context, stream);
+                context.SubsetSeqParameterSetRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.DPS) // 16
+            {
+                Debug.WriteLine($"NALU: 16, DPS");
+                context.DepthParameterSetRbsp = new DepthParameterSetRbsp();
+                context.DepthParameterSetRbsp.Read(context, stream);
+                context.DepthParameterSetRbsp.Write(context, wstream);
+                if (!ms.ToArray().SequenceEqual(sampleData))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if(nu.NalUnitType == H264NALTypes.RESERVED0) // 17
+            {
+                Debug.WriteLine($"NALU: Reserved {nu.NalUnitType}");
+                throw new InvalidOperationException(); 
+            }
+            else if (nu.NalUnitType == H264NALTypes.RESERVED1) // 18
+            {
+                Debug.WriteLine($"NALU: Reserved {nu.NalUnitType}");
+                throw new InvalidOperationException();
+            }
+            else if (nu.NalUnitType == H264NALTypes.SLICE_NOPARTITIONING) // 19
+            {
+                Debug.WriteLine($"NALU: 19, Auxiliary coded picture without partitioning");
+                context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
+                context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
+                context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.SLICE_EXT) // 20
+            {
+                Debug.WriteLine($"NALU: Slice Layer Extension");
+                context.SliceLayerExtensionRbsp = new SliceLayerExtensionRbsp();
+                context.SliceLayerExtensionRbsp.Read(context, stream);
+                context.SliceLayerExtensionRbsp.Write(context, wstream);
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.SLICE_EXT_VIEW_COMPONENT) // 21
+            {
+                Debug.WriteLine($"NALU: Slice Extension for Depth View or a 3D AVC texture view component");
+                context.SliceLayerExtensionRbsp = new SliceLayerExtensionRbsp();
+                context.SliceLayerExtensionRbsp.Read(context, stream);
+                context.SliceLayerExtensionRbsp.Write(context, wstream);
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                    throw new Exception($"Failed to write NALu {nu.NalUnitType}");
+            }
+            else if (nu.NalUnitType == H264NALTypes.RESERVED2) // 22
+            {
+                Debug.WriteLine($"NALU: Reserved {nu.NalUnitType}");
+                throw new InvalidOperationException();
+            }
+            else if (nu.NalUnitType == H264NALTypes.RESERVED3) // 23
+            {
+                Debug.WriteLine($"NALU: Reserved {nu.NalUnitType}");
+                throw new InvalidOperationException();
+            }
+            else
+            {
+                Debug.WriteLine($"NALU: Unspecified {nu.NalUnitType}");
+                throw new InvalidOperationException();
+            }
         }
     }
 }
