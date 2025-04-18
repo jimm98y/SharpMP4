@@ -6,14 +6,6 @@ using System.Numerics;
 
 namespace SharpH264
 {
-    public interface IItuSerializable
-    {
-        ulong Read(IItuContext context, ItuStream stream);
-        ulong Write(IItuContext context, ItuStream stream);
-        int HasMoreRbspData { get; set; }
-        int[] ReadNextBits { get; set; }
-    }
-
     public class ItuStream : IDisposable
     {
         private bool _shouldEscapeNals = true;
@@ -494,7 +486,7 @@ namespace SharpH264
 
         #region Lists in do/while loops
 
-        internal ulong ReadFixed(ulong size, int count, int whileIndex, Dictionary<int, uint> list)
+        public ulong ReadFixed(ulong size, int count, int whileIndex, Dictionary<int, uint> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -504,7 +496,7 @@ namespace SharpH264
             return read;
         }
 
-        internal ulong ReadUnsignedIntGolomb(ulong size, int whileIndex, Dictionary<int, uint> list)
+        public ulong ReadUnsignedIntGolomb(ulong size, int whileIndex, Dictionary<int, uint> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -514,7 +506,7 @@ namespace SharpH264
             return read;
         }
 
-        internal ulong ReadUnsignedInt(ulong size, int count, int whileIndex, Dictionary<int, byte> list)
+        public ulong ReadUnsignedInt(ulong size, int count, int whileIndex, Dictionary<int, byte> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -524,7 +516,7 @@ namespace SharpH264
             return read;
         }
 
-        internal ulong ReadBits(ulong size, int count, int whileIndex, Dictionary<int, byte> list)
+        public ulong ReadBits(ulong size, int count, int whileIndex, Dictionary<int, byte> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -534,7 +526,7 @@ namespace SharpH264
             return read;
         }
 
-        internal ulong WriteFixed(int count, int whileIndex, Dictionary<int, uint> list)
+        public ulong WriteFixed(int count, int whileIndex, Dictionary<int, uint> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -546,7 +538,7 @@ namespace SharpH264
             return size;
         }
 
-        internal ulong WriteUnsignedInt(int count, int whileIndex, Dictionary<int, byte> list)
+        public ulong WriteUnsignedInt(int count, int whileIndex, Dictionary<int, byte> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -558,7 +550,7 @@ namespace SharpH264
             return size;
         }
 
-        internal ulong WriteUnsignedIntGolomb(int whileIndex, Dictionary<int, uint> list)
+        public ulong WriteUnsignedIntGolomb(int whileIndex, Dictionary<int, uint> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -570,7 +562,7 @@ namespace SharpH264
             return size;
         }
 
-        internal ulong WriteBits(int count, int whileIndex, Dictionary<int, byte> list)
+        public ulong WriteBits(int count, int whileIndex, Dictionary<int, byte> list)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -582,7 +574,7 @@ namespace SharpH264
             return size;
         }
 
-        internal ulong WriteClass<T>(IItuContext context, int whileIndex, Dictionary<int, T> list) where T : IItuSerializable
+        public ulong WriteClass<T>(IItuContext context, int whileIndex, Dictionary<int, T> list) where T : IItuSerializable
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
