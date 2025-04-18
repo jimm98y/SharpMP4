@@ -27,8 +27,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
         .Children.OfType<SampleDescriptionBox>().Single()
         .Children.OfType<VisualSampleEntry>().Single();
 
-    H264Context readContext = new H264Context();
-    H264Context writeContext = new H264Context();
+    H264Context context = new H264Context();
 
     var avcC = h264VisualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
     if (avcC != null)
@@ -37,12 +36,12 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
 
         foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
         {
-            ReadNALu(readContext, writeContext, spsBinary);
+            ReadNALu(context, spsBinary);
         }
 
         foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
         {
-            ReadNALu(readContext, writeContext, ppsBinary);
+            ReadNALu(context, ppsBinary);
         }
     }
     else
@@ -100,7 +99,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                                 offset += 4;
                                 size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                                 offset += sampleData.Length;
-                                ReadNALu(readContext, writeContext, sampleData);
+                                ReadNALu(context, sampleData);
                             } while (offset < sampleSize);
 
                             Debug.WriteLine("AU end");
@@ -162,7 +161,7 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
                             offset += 4;
                             size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                             offset += sampleData.Length;
-                            ReadNALu(readContext, writeContext, sampleData);
+                            ReadNALu(context, sampleData);
                         } while (offset < sampleSize);
 
                         Debug.WriteLine("AU end");
@@ -175,27 +174,27 @@ using (Stream inputFileStream = new FileStream("C:\\Git\\SharpMP4\\src\\Fragment
     }
 }
 
-static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] sampleData)
+static void ReadNALu(H264Context context, byte[] sampleData)
 {
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
     {
         ulong ituSize = 0;
         NalUnit nu = new NalUnit((uint)sampleData.Length);
-        ituSize += nu.Read(readContext, stream);
-        readContext.NalHeader = nu;
+        ituSize += nu.Read(context, stream);
+        context.NalHeader = nu;
 
         if(nu.NalUnitType == 7)
         {
             SeqParameterSetRbsp sps = new SeqParameterSetRbsp();
-            readContext.Sps = sps;
+            context.Sps = sps;
 
-            sps.Read(readContext, stream);
+            sps.Read(context, stream);
 
             var ms = new MemoryStream();
             using (ItuStream wstream = new ItuStream(ms))
             {
-                nu.Write(readContext, wstream);
-                sps.Write(readContext, wstream);
+                nu.Write(context, wstream);
+                sps.Write(context, wstream);
 
                 byte[] wbytes = ms.ToArray();
                 if (!wbytes.SequenceEqual(sampleData))
@@ -207,15 +206,15 @@ static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] s
         else if(nu.NalUnitType == 8)
         {
             PicParameterSetRbsp pps = new PicParameterSetRbsp();
-            readContext.Pps = pps;
+            context.Pps = pps;
 
-            pps.Read(readContext, stream);
+            pps.Read(context, stream);
 
             var ms = new MemoryStream();
             using (ItuStream wstream = new ItuStream(ms))
             {
-                nu.Write(readContext, wstream);
-                pps.Write(readContext, wstream);
+                nu.Write(context, wstream);
+                pps.Write(context, wstream);
 
                 byte[] wbytes = ms.ToArray();
                 if (!wbytes.SequenceEqual(sampleData))
@@ -229,14 +228,14 @@ static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] s
             Debug.WriteLine("NALU: SEI");
 
             SeiRbsp sei = new SeiRbsp();
-            readContext.Sei = sei;
-            ituSize += sei.Read(readContext, stream);
+            context.Sei = sei;
+            ituSize += sei.Read(context, stream);
 
             var ms = new MemoryStream();
             using (ItuStream wstream = new ItuStream(ms))
             {
-                nu.Write(readContext, wstream);
-                sei.Write(readContext, wstream);
+                nu.Write(context, wstream);
+                sei.Write(context, wstream);
 
                 byte[] wbytes = ms.ToArray();
                 if (!wbytes.SequenceEqual(sampleData))
@@ -250,21 +249,39 @@ static void ReadNALu(H264Context readContext, H264Context writeContext, byte[] s
         else if (nu.NalUnitType == 9)
         {
             Debug.WriteLine($"NALU: AU Delimiter");
+
+            AccessUnitDelimiterRbsp au = new AccessUnitDelimiterRbsp();
+            context.Au = au;
+
+            au.Read(context, stream);
+
+            var ms = new MemoryStream();
+            using (ItuStream wstream = new ItuStream(ms))
+            {
+                nu.Write(context, wstream);
+                au.Write(context, wstream);
+
+                byte[] wbytes = ms.ToArray();
+                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(wbytes)))
+                {
+                    throw new Exception("Failed to write Slice");
+                }
+            }
         }
         else if(nu.NalUnitType == 1 || nu.NalUnitType == 5)
         {
             Debug.WriteLine($"NALU: {nu.NalUnitType}");
 
             SliceLayerWithoutPartitioningRbsp slice = new SliceLayerWithoutPartitioningRbsp();
-            readContext.Slice = slice;
+            context.Slice = slice;
 
-            slice.Read(readContext, stream);
+            slice.Read(context, stream);
 
             var ms = new MemoryStream();
             using (ItuStream wstream = new ItuStream(ms))
             {
-                nu.Write(readContext, wstream);
-                slice.Write(readContext, wstream);
+                nu.Write(context, wstream);
+                slice.Write(context, wstream);
 
                 byte[] wbytes = ms.ToArray();
                 if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(wbytes)))
