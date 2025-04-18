@@ -106,10 +106,23 @@ foreach (var file in files)
                                 {
                                     size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
                                     offset += 4;
+
+                                    if (nalUnitLength > (sampleSize - offset))
+                                    {
+                                        Log.Error($"Invalid NALU size: {nalUnitLength}");
+                                        nalUnitLength = (uint)(sampleSize - offset);
+                                        size += nalUnitLength;
+                                        offset += nalUnitLength;
+                                        break;
+                                    }
+
                                     size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                                     offset += sampleData.Length;
                                     ReadH264NALU(context, sampleData);
                                 } while (offset < sampleSize);
+
+                                if (offset != sampleSize)
+                                    throw new Exception("Mismatch!");
 
                                 Log.Debug("AU end");
                             }
@@ -168,10 +181,23 @@ foreach (var file in files)
                                 uint nalUnitLength = 0;
                                 size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
                                 offset += 4;
+
+                                if (nalUnitLength > (sampleSize - offset))
+                                {
+                                    Log.Error($"Invalid NALU size: {nalUnitLength}");
+                                    nalUnitLength = (uint)(sampleSize - offset);
+                                    size += nalUnitLength;
+                                    offset += nalUnitLength;
+                                    break;
+                                }
+
                                 size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
                                 offset += sampleData.Length;
                                 ReadH264NALU(context, sampleData);
                             } while (offset < sampleSize);
+
+                            if (offset != sampleSize)
+                                throw new Exception("Mismatch!");
 
                             Log.Debug("AU end");
                         }
