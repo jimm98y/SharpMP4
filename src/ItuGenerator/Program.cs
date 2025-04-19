@@ -1,4 +1,5 @@
 ﻿using Pidgin;
+using System;
 using System.IO;
 
 namespace ItuGenerator;
@@ -11,12 +12,18 @@ partial class Program
 
         foreach (var file in jsonFiles)
         {
+            ICustomGenerator customGenerator = null;
+            if(file.Contains("H264"))
+            {
+                customGenerator = new CSharpGeneratorH264();
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+
             string definitions = File.ReadAllText(file);
-            definitions = definitions
-                .Replace("3dv_acquisition_idc", "three_dv_acquisition_idc")
-                .Replace("3dv_acquisition_element", "three_dv_acquisition_element")
-                .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
-                .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
+            definitions = customGenerator.PreprocessDefinitionsFile(definitions);
 
             var parsed = Parser.ItuClasses.ParseOrThrow(definitions);
             //Debug.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(parsed, Newtonsoft.Json.Formatting.Indented));
@@ -28,12 +35,14 @@ partial class Program
                 startOffset = c.EndOffset;
             }
 
-            CSharpGenerator generator = new CSharpGenerator();
+            CSharpGenerator generator = new CSharpGenerator(customGenerator);
             string code = generator.GenerateParser(Path.GetFileNameWithoutExtension(file), parsed);
             //Debug.WriteLine(code);
             break;
         }
     }
+
+    
 
     private static string GetSampleCode(string sample, long startOffset, long endOffset)
     {

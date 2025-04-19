@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ItuGenerator
 {
-    public class CSharpGeneratorH264
+    public class CSharpGeneratorH264 : ICustomGenerator
     {
+        public string PreprocessDefinitionsFile(string definitions)
+        {
+            definitions = definitions
+                            .Replace("3dv_acquisition_idc", "three_dv_acquisition_idc")
+                            .Replace("3dv_acquisition_element", "three_dv_acquisition_element")
+                            .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
+                            .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
+            return definitions;
+        }
+
         public string GetFieldDefaultValue(ItuField field)
         {
             switch (field.Name)
@@ -32,6 +38,8 @@ namespace ItuGenerator
         {
             switch (parameter)
             {
+                case "NumClockTS":
+                    return "this.pic_struct switch\r\n{\r\n0u => 1,\r\n1u => 1,\r\n2u => 1,\r\n3u => 2,\r\n4u => 2,\r\n5u => 3,\r\n6u => 3,\r\n7u => 2,\r\n8u => 3,\r\n_ => throw new NotSupportedException()\r\n}";
                 case "AllViewsPairedFlag":
                     return "((Func<uint>)(() =>\r\n            {\r\n                uint AllViewsPairedFlag = 1;\r\n                for (int i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)\r\n                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);\r\n                return AllViewsPairedFlag;\r\n            })).Invoke()";
                 case "cpb_cnt_minus1":
@@ -225,7 +233,8 @@ namespace ItuGenerator
                     return "(this.offset_len_minus1 + 1)";
 
                 default:
-                    throw new NotImplementedException(parameter);
+                    //throw new NotImplementedException(parameter);
+                    return parameter;
             }
         }
 
@@ -243,6 +252,78 @@ namespace ItuGenerator
                 parameter = "()";
 
             return parameter;
+        }
+
+        public string FixCondition(string condition, MethodType methodType)
+        {
+            condition = condition.Replace("slice_type == B", "H264FrameTypes.IsB(slice_type)");
+            condition = condition.Replace("slice_type == P", "H264FrameTypes.IsP(slice_type)");
+            condition = condition.Replace("slice_type == I", "H264FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type != I", "!H264FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type == SP", "H264FrameTypes.IsSP(slice_type)");
+            condition = condition.Replace("slice_type == SI", "H264FrameTypes.IsSI(slice_type)");
+            condition = condition.Replace("slice_type != SI", "!H264FrameTypes.IsSI(slice_type)");
+            condition = condition.Replace("slice_type == EP", "H264FrameTypes.IsP(slice_type)");
+            condition = condition.Replace("slice_type == EB", "H264FrameTypes.IsB(slice_type)");
+            condition = condition.Replace("slice_type == EI", "H264FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type != EI", "!H264FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("Extended_ISO", "H264Constants.Extended_ISO");
+            condition = condition.Replace("Extended_SAR", "H264Constants.Extended_SAR");
+            condition = condition.Replace("Abs(", "Math.Abs(");
+            condition = condition.Replace("Min(", "Math.Min(");
+            condition = condition.Replace("Max(", "Math.Max(");
+            condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
+            condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
+            condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");
+            condition = condition.Replace("more_rbsp_trailing_data()", "stream.MoreRbspTrailingData()");
+            return condition;
+        }
+
+        public string GetCtorParameterType(string parameter)
+        {
+            if (string.IsNullOrWhiteSpace(parameter))
+                return "";
+
+            Dictionary<string, string> map = new Dictionary<string, string>()
+            {
+                { "NumBytesInNALunit",             "u(32)" },
+                { "scalingLst",                    "u(32)[]" }, // TODO: remove this temporary fix
+                { "sizeOfScalingList",             "u(32)" },
+                { "useDefaultScalingMatrixFlag",   "u(32)" },
+                { "payloadType",                   "u(32)" },
+                { "payloadSize",                   "u(32)" },
+                { "outSign",                       "u(32)[,]" },
+                { "outExp",                        "u(32)[,]" },
+                { "outMantissa",                   "u(32)[,]" },
+                { "outManLen",                     "u(32)[,]" },
+                { "numViews",                      "u(32)" },
+                { "predDirection",                 "u(32)" },
+                { "index",                         "u(32)" },
+                { "expLen",                        "u(32)" },
+            };
+
+            return map[parameter];
+        }
+
+        public string FixFieldValue(string fieldValue)
+        {
+            fieldValue = fieldValue.Replace("<<", "<< (int)");
+            fieldValue = fieldValue.Replace("mantissaPred + mantissa_diff", "(uint)(mantissaPred + mantissa_diff)");
+            return fieldValue;
+        }
+
+        public void FixMethodAllocation(string name, ref string method, ref string typedef)
+        {
+            if (name == "depth_timing_offset" && string.IsNullOrWhiteSpace(typedef))
+            {
+                method = $"this.depth_timing_offset = new DepthTimingOffset[1];\r\n" + method;
+                typedef = "[ 0 ]";
+            }
+            else if (name == "depth_grid_position" && string.IsNullOrWhiteSpace(typedef))
+            {
+                method = $"this.depth_grid_position = new DepthGridPosition[1];\r\n" + method;
+                typedef = "[ 0 ]";
+            }
         }
     }
 }

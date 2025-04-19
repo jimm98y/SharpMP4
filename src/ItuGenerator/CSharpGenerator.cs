@@ -12,9 +12,27 @@ namespace ItuGenerator
         Write
     }
 
+    public interface ICustomGenerator
+    {
+        string PreprocessDefinitionsFile(string definitions);
+        string GetFieldDefaultValue(ItuField field);
+        void FixClassParameters(ItuClass ituClass);
+        string ReplaceParameter(string parameter);
+        string FixMissingParameters(ItuClass b, string parameter, string classType);
+        string FixCondition(string condition, MethodType methodType);
+        string GetCtorParameterType(string parameter);
+        string FixFieldValue(string fieldValue);
+        void FixMethodAllocation(string name, ref string method, ref string typedef);
+    }
+
     public class CSharpGenerator
     {
-        private CSharpGeneratorH264 specificGenerator = new CSharpGeneratorH264();
+        private ICustomGenerator specificGenerator = null;
+
+        public CSharpGenerator(ICustomGenerator specificGenerator)
+        {
+            this.specificGenerator = specificGenerator ?? throw new ArgumentNullException(nameof(specificGenerator));
+        }
 
         public string GenerateParser(string type, IEnumerable<ItuClass> ituClasses)
         {
@@ -274,16 +292,7 @@ namespace Sharp{type}
 
             if (m.Contains("###value###") && methodType == MethodType.Read)
             {
-                if(name == "depth_timing_offset" && string.IsNullOrWhiteSpace(typedef))
-                {
-                    m = $"this.depth_timing_offset = new DepthTimingOffset[1];\r\n" + m;
-                    typedef = "[ 0 ]";
-                }
-                else if(name == "depth_grid_position" && string.IsNullOrWhiteSpace(typedef))
-                {
-                    m = $"this.depth_grid_position = new DepthGridPosition[1];\r\n" + m;
-                    typedef = "[ 0 ]";
-                }
+                specificGenerator.FixMethodAllocation(name, ref m, ref typedef);
 
                 if ((field as ItuField).MakeList)
                 {
@@ -330,11 +339,10 @@ namespace Sharp{type}
 
             if (!string.IsNullOrEmpty(fieldValue))
             {
-                fieldValue = fieldValue.Replace("<<", "<< (int)");
                 fieldValue = fieldValue.Replace("Abs(", "Math.Abs(");
                 fieldValue = fieldValue.Replace("Min(", "Math.Min(");
                 fieldValue = fieldValue.Replace("Max(", "Math.Max(");
-                fieldValue = fieldValue.Replace("mantissaPred + mantissa_diff", "(uint)(mantissaPred + mantissa_diff)");
+                fieldValue = specificGenerator.FixFieldValue(fieldValue);
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith('!'))
@@ -344,10 +352,10 @@ namespace Sharp{type}
 
                 if (!fieldValue.Contains("||") && !fieldValue.Contains("&&"))
                     fieldValue = fieldValue.Replace("_flag    != 0", "_flag");
-                
+
                 if (fieldValue.Contains("flag") && !fieldValue.Contains(")"))
                     fieldValue = fieldValue.Replace("||", "|").Replace("&&", "&");
-                
+
                 if ((fieldValue.Contains("==") || fieldValue.Contains(">") || fieldValue.Contains("<")) && !fieldValue.Contains("?") && !fieldValue.Contains("<<") && !fieldValue.Contains(">>"))
                     fieldValue += " ? (uint)1 : (uint)0";
 
@@ -375,8 +383,6 @@ namespace Sharp{type}
                 }
             }
         }
-
-        
 
         private string GetWriteMethod(ItuField ituField)
         {
@@ -616,32 +622,6 @@ namespace Sharp{type}
             return map[field.Type] + arraySuffix;
         }
 
-        private string GetCtorParameterType(string parameter)
-        {
-            if (string.IsNullOrWhiteSpace(parameter))
-                return "";
-
-            Dictionary<string, string> map = new Dictionary<string, string>()
-            {
-                { "NumBytesInNALunit",             "u(32)" },
-                { "scalingLst",                    "u(32)[]" }, // TODO: remove this temporary fix
-                { "sizeOfScalingList",             "u(32)" },
-                { "useDefaultScalingMatrixFlag",   "u(32)" },
-                { "payloadType",                   "u(32)" },
-                { "payloadSize",                   "u(32)" },
-                { "outSign",                       "u(32)[,]" },
-                { "outExp",                        "u(32)[,]" },
-                { "outMantissa",                   "u(32)[,]" },
-                { "outManLen",                     "u(32)[,]" },
-                { "numViews",                      "u(32)" },
-                { "predDirection",                 "u(32)" },
-                { "index",                         "u(32)" },
-                { "expLen",                        "u(32)" },
-            };
-
-            return map[parameter];
-        }
-
         private string BuildComment(ItuClass b, ItuComment comment, int level, MethodType methodType)
         {
             return $"/* {comment.Comment} */\r\n";
@@ -807,73 +787,25 @@ namespace Sharp{type}
                 }
             }
 
-            condition = condition.Replace("slice_type == B", "H264FrameTypes.IsB(slice_type)");
-            condition = condition.Replace("slice_type == P", "H264FrameTypes.IsP(slice_type)");
-            condition = condition.Replace("slice_type == I", "H264FrameTypes.IsI(slice_type)");
-            condition = condition.Replace("slice_type != I", "!H264FrameTypes.IsI(slice_type)");
-            condition = condition.Replace("slice_type == SP", "H264FrameTypes.IsSP(slice_type)");
-            condition = condition.Replace("slice_type == SI", "H264FrameTypes.IsSI(slice_type)");
-            condition = condition.Replace("slice_type != SI", "!H264FrameTypes.IsSI(slice_type)");
-            condition = condition.Replace("slice_type == EP", "H264FrameTypes.IsP(slice_type)");
-            condition = condition.Replace("slice_type == EB", "H264FrameTypes.IsB(slice_type)");
-            condition = condition.Replace("slice_type == EI", "H264FrameTypes.IsI(slice_type)");
-            condition = condition.Replace("slice_type != EI", "!H264FrameTypes.IsI(slice_type)");
-            condition = condition.Replace("Extended_ISO", "H264Constants.Extended_ISO");
-            condition = condition.Replace("Extended_SAR", "H264Constants.Extended_SAR");
-            condition = condition.Replace("Abs(", "Math.Abs(");
-            condition = condition.Replace("Min(", "Math.Min(");
-            condition = condition.Replace("Max(", "Math.Max(");
-            condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
-            condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
-            condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");
-            condition = condition.Replace("more_rbsp_trailing_data()", "stream.MoreRbspTrailingData()");
+            condition = specificGenerator.FixCondition(condition, methodType);
 
             return condition;
         }
 
         private string FixMissingFields(ItuClass b, string condition)
         {
-            Regex r = new Regex("\\b[a-z_][\\w_]+");
+            Regex r = new Regex("\\b[a-zA-Z_][\\w_]+");
             var matches = r.Matches(condition).Select(x => x.Value).Distinct().ToArray();
             foreach (var match in matches)
-            {
-                if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null && 
-                    b.AddedFields.FirstOrDefault(x => x.Name == match) == null && 
-                    b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null && 
-                    match.Contains("_")
-                    )
-                {
-                    condition = condition.Replace(match, specificGenerator.ReplaceParameter(match.ToString()));
-                }
-            }
-
-            string[] replacementsValue = new string[]
-            {
-                "NalHrdBpPresentFlag",
-                "VclHrdBpPresentFlag",
-                "CpbDpbDelaysPresentFlag",
-                "PicSizeInMapUnits",
-                "predWeight0",
-                "deltaFlag",
-                "NumDepthViews",
-                "IdrPicFlag",
-                "ChromaArrayType",
-                "AllViewsPairedFlag", 
-                "DepthFlag"
-            };
-
-            foreach (var match in replacementsValue)
             {
                 if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null &&
                     b.AddedFields.FirstOrDefault(x => x.Name == match) == null &&
                     b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null
                     )
                 {
-                    condition = condition.Replace(match, specificGenerator.ReplaceParameter(match.ToString()));
+                    condition = condition.Replace(match, specificGenerator.ReplaceParameter(match));
                 }
             }
-
-            condition = condition.Replace("NumClockTS", "this.pic_struct switch\r\n{\r\n0u => 1,\r\n1u => 1,\r\n2u => 1,\r\n3u => 2,\r\n4u => 2,\r\n5u => 3,\r\n6u => 3,\r\n7u => 2,\r\n8u => 3,\r\n_ => throw new NotSupportedException()\r\n}");
 
             return condition;
         }
@@ -1036,7 +968,7 @@ namespace Sharp{type}
         {
             string[] ctorParameters = GetCtorParameters(ituClass);
             var typeMappings = GetCSharpTypeMapping();
-            string[] ctorParameterDefs = ctorParameters.Select(x => $"{(typeMappings.ContainsKey(GetCtorParameterType(x)) ? typeMappings[GetCtorParameterType(x)] : "")} {x}").ToArray();
+            string[] ctorParameterDefs = ctorParameters.Select(x => $"{(typeMappings.ContainsKey(specificGenerator.GetCtorParameterType(x)) ? typeMappings[specificGenerator.GetCtorParameterType(x)] : "")} {x}").ToArray();
             string ituClassParameters = $"({string.Join(", ", ctorParameterDefs)})";
 
             string ctorInitializer = string.Join("\r\n", ctorParameters.Select(x => $"\t\t\tthis.{x.ToFirstLower()} = {x};"));
@@ -1143,7 +1075,7 @@ namespace Sharp{type}
                     var f = new ItuField()
                     {
                         Name = ctorParams[i].ToFirstLower(),
-                        Type = GetCtorParameterType(ctorParams[i])
+                        Type = specificGenerator.GetCtorParameterType(ctorParams[i])
                     };
                     b.AddedFields.Add(f);
                     AddAndResolveDuplicates(b, ret, f);
