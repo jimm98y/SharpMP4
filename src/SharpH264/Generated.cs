@@ -368,6 +368,8 @@ seq_parameter_set_data() {
         public byte[] SeqScalingListPresentFlag { get { return seq_scaling_list_present_flag; } set { seq_scaling_list_present_flag = value; } }
         private ScalingList[] scaling_list;
         public ScalingList[] ScalingList { get { return scaling_list; } set { scaling_list = value; } }
+        private ScalingList[] scaling_list0;
+        public ScalingList[] ScalingList0 { get { return scaling_list0; } set { scaling_list0 = value; } }
         private uint log2_max_frame_num_minus4;
         public uint Log2MaxFrameNumMinus4 { get { return log2_max_frame_num_minus4; } set { log2_max_frame_num_minus4 = value; } }
         private uint pic_order_cnt_type;
@@ -459,6 +461,7 @@ seq_parameter_set_data() {
 
                     this.seq_scaling_list_present_flag = new byte[((chroma_format_idc != 3) ? 8 : 12)];
                     this.scaling_list = new ScalingList[((chroma_format_idc != 3) ? 8 : 12)];
+                    this.scaling_list0 = new ScalingList[((chroma_format_idc != 3) ? 8 : 12)];
                     for (i = 0; i < ((chroma_format_idc != 3) ? 8 : 12); i++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.seq_scaling_list_present_flag[i]);
@@ -473,8 +476,8 @@ seq_parameter_set_data() {
                             }
                             else
                             {
-                                this.scaling_list[i] = new ScalingList(new uint[6 * 64], 64, 0);
-                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list[i]);
+                                this.scaling_list0[i] = new ScalingList(new uint[6 * 64], 64, 0);
+                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list0[i]);
                             }
                         }
                     }
@@ -580,7 +583,7 @@ seq_parameter_set_data() {
                             }
                             else
                             {
-                                size += stream.WriteClass<ScalingList>(context, this.scaling_list[i]);
+                                size += stream.WriteClass<ScalingList>(context, this.scaling_list0[i]);
                             }
                         }
                     }
@@ -1128,6 +1131,8 @@ pic_parameter_set_rbsp() {
         public byte[] PicScalingListPresentFlag { get { return pic_scaling_list_present_flag; } set { pic_scaling_list_present_flag = value; } }
         private ScalingList[] scaling_list;
         public ScalingList[] ScalingList { get { return scaling_list; } set { scaling_list = value; } }
+        private ScalingList[] scaling_list0;
+        public ScalingList[] ScalingList0 { get { return scaling_list0; } set { scaling_list0 = value; } }
         private int second_chroma_qp_index_offset;
         public int SecondChromaQpIndexOffset { get { return second_chroma_qp_index_offset; } set { second_chroma_qp_index_offset = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
@@ -1218,6 +1223,8 @@ pic_parameter_set_rbsp() {
      ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
                     this.scaling_list = new ScalingList[6 +
      ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
+                    this.scaling_list0 = new ScalingList[6 +
+     ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag];
                     for (i = 0; i < 6 +
      ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
      i++)
@@ -1234,8 +1241,8 @@ pic_parameter_set_rbsp() {
                             }
                             else
                             {
-                                this.scaling_list[i] = new ScalingList(new uint[6 * 64], 64, 0);
-                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list[i]);
+                                this.scaling_list0[i] = new ScalingList(new uint[6 * 64], 64, 0);
+                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list0[i]);
                             }
                         }
                     }
@@ -1332,7 +1339,7 @@ pic_parameter_set_rbsp() {
                             }
                             else
                             {
-                                size += stream.WriteClass<ScalingList>(context, this.scaling_list[i]);
+                                size += stream.WriteClass<ScalingList>(context, this.scaling_list0[i]);
                             }
                         }
                     }
@@ -2893,13 +2900,13 @@ pred_weight_table() {
                 size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom);
             }
 
-            this.luma_weight_l0_flag = new byte[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.luma_weight_l0 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.luma_offset_l0 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.chroma_weight_l0_flag = new byte[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1];
-            this.chroma_weight_l0 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
-            this.chroma_offset_l0 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1][];
-            for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
+            this.luma_weight_l0_flag = new byte[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
+            this.luma_weight_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
+            this.luma_offset_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
+            this.chroma_weight_l0_flag = new byte[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
+            this.chroma_weight_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)][];
+            this.chroma_offset_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)][];
+            for (i = 0; i <= (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1); i++)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i]);
 
@@ -2981,7 +2988,7 @@ pred_weight_table() {
                 size += stream.WriteUnsignedIntGolomb(this.chroma_log2_weight_denom);
             }
 
-            for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1; i++)
+            for (i = 0; i <= (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1); i++)
             {
                 size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i]);
 
@@ -15842,6 +15849,12 @@ depth_representation_info( payloadSize ) {
         public uint[] DisparityReferenceView { get { return disparity_reference_view; } set { disparity_reference_view = value; } }
         private DepthRepresentationSeiElement[] depth_representation_sei_element;
         public DepthRepresentationSeiElement[] DepthRepresentationSeiElement { get { return depth_representation_sei_element; } set { depth_representation_sei_element = value; } }
+        private DepthRepresentationSeiElement[] depth_representation_sei_element0;
+        public DepthRepresentationSeiElement[] DepthRepresentationSeiElement0 { get { return depth_representation_sei_element0; } set { depth_representation_sei_element0 = value; } }
+        private DepthRepresentationSeiElement[] depth_representation_sei_element1;
+        public DepthRepresentationSeiElement[] DepthRepresentationSeiElement1 { get { return depth_representation_sei_element1; } set { depth_representation_sei_element1 = value; } }
+        private DepthRepresentationSeiElement[] depth_representation_sei_element2;
+        public DepthRepresentationSeiElement[] DepthRepresentationSeiElement2 { get { return depth_representation_sei_element2; } set { depth_representation_sei_element2 = value; } }
         private uint depth_nonlinear_representation_num_minus1;
         public uint DepthNonlinearRepresentationNumMinus1 { get { return depth_nonlinear_representation_num_minus1; } set { depth_nonlinear_representation_num_minus1 = value; } }
         private uint[] depth_nonlinear_representation_model;
@@ -15892,6 +15905,9 @@ depth_representation_info( payloadSize ) {
             this.z_axis_reference_view = new uint[numViews];
             this.disparity_reference_view = new uint[numViews];
             this.depth_representation_sei_element = new DepthRepresentationSeiElement[numViews];
+            this.depth_representation_sei_element0 = new DepthRepresentationSeiElement[numViews];
+            this.depth_representation_sei_element1 = new DepthRepresentationSeiElement[numViews];
+            this.depth_representation_sei_element2 = new DepthRepresentationSeiElement[numViews];
             for (i = 0; i < numViews; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.depth_info_view_id[i]);
@@ -15914,20 +15930,20 @@ depth_representation_info( payloadSize ) {
 
                 if (z_far_flag != 0)
                 {
-                    this.depth_representation_sei_element[i] = new DepthRepresentationSeiElement();
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element[i]);
+                    this.depth_representation_sei_element0[i] = new DepthRepresentationSeiElement();
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element0[i]);
                 }
 
                 if (d_min_flag != 0)
                 {
-                    this.depth_representation_sei_element[i] = new DepthRepresentationSeiElement();
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element[i]);
+                    this.depth_representation_sei_element1[i] = new DepthRepresentationSeiElement();
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element1[i]);
                 }
 
                 if (d_max_flag != 0)
                 {
-                    this.depth_representation_sei_element[i] = new DepthRepresentationSeiElement();
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element[i]);
+                    this.depth_representation_sei_element2[i] = new DepthRepresentationSeiElement();
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element2[i]);
                 }
             }
 
@@ -15999,17 +16015,17 @@ depth_representation_info( payloadSize ) {
 
                 if (z_far_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element[i]);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element0[i]);
                 }
 
                 if (d_min_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element[i]);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element1[i]);
                 }
 
                 if (d_max_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element[i]);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element2[i]);
                 }
             }
 
