@@ -352,7 +352,7 @@ seq_parameter_set_data() {
         public uint LevelIdc { get { return level_idc; } set { level_idc = value; } }
         private uint seq_parameter_set_id;
         public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
-        private uint chroma_format_idc;
+        private uint chroma_format_idc = 1;
         public uint ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
         private byte separate_colour_plane_flag;
         public byte SeparateColourPlaneFlag { get { return separate_colour_plane_flag; } set { separate_colour_plane_flag = value; } }
@@ -939,8 +939,6 @@ subset_seq_parameter_set_rbsp() {
             if (additional_extension2_flag == 1)
             {
 
-                whileIndex = -1;
-
                 while (stream.ReadMoreRbspData(this))
                 {
                     whileIndex++;
@@ -998,8 +996,6 @@ subset_seq_parameter_set_rbsp() {
 
             if (additional_extension2_flag == 1)
             {
-
-                whileIndex = -1;
 
                 while (stream.WriteMoreRbspData(this))
                 {
@@ -1382,8 +1378,6 @@ sei_rbsp() {
 
             int whileIndex = -1;
 
-            whileIndex = -1;
-
             do
             {
                 whileIndex++;
@@ -1402,8 +1396,6 @@ sei_rbsp() {
             ulong size = 0;
 
             int whileIndex = -1;
-
-            whileIndex = -1;
 
             do
             {
@@ -1467,8 +1459,6 @@ sei_message() {
             uint payloadSize = 0;
             payloadType = 0;
 
-            whileIndex = -1;
-
             while (stream.ReadNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
@@ -1479,8 +1469,6 @@ sei_message() {
             size += stream.ReadUnsignedInt(size, 8, out this.last_payload_type_byte);
             payloadType += last_payload_type_byte;
             payloadSize = 0;
-
-            whileIndex = -1;
 
             while (stream.ReadNextBits(this, 8) == 0xFF)
             {
@@ -1506,8 +1494,6 @@ sei_message() {
             uint payloadSize = 0;
             payloadType = 0;
 
-            whileIndex = -1;
-
             while (stream.WriteNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
@@ -1518,8 +1504,6 @@ sei_message() {
             size += stream.WriteUnsignedInt(8, this.last_payload_type_byte);
             payloadType += last_payload_type_byte;
             payloadSize = 0;
-
-            whileIndex = -1;
 
             while (stream.WriteNextBits(this, 8) == 0xFF)
             {
@@ -1683,8 +1667,6 @@ filler_data_rbsp() {
 
             int whileIndex = -1;
 
-            whileIndex = -1;
-
             while (stream.ReadNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
@@ -1702,8 +1684,6 @@ filler_data_rbsp() {
             ulong size = 0;
 
             int whileIndex = -1;
-
-            whileIndex = -1;
 
             while (stream.WriteNextBits(this, 8) == 0xFF)
             {
@@ -2044,8 +2024,6 @@ rbsp_trailing_bits() {
             int whileIndex = -1;
             size += stream.ReadFixed(size, 1, out this.rbsp_stop_one_bit); // equal to 1 
 
-            whileIndex = -1;
-
             while (!stream.ByteAligned())
             {
                 whileIndex++;
@@ -2062,8 +2040,6 @@ rbsp_trailing_bits() {
 
             int whileIndex = -1;
             size += stream.WriteFixed(1, this.rbsp_stop_one_bit); // equal to 1 
-
-            whileIndex = -1;
 
             while (!stream.ByteAligned())
             {
@@ -2714,8 +2690,6 @@ ref_pic_list_modification() {
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
 
-                    whileIndex = -1;
-
                     do
                     {
                         whileIndex++;
@@ -2741,8 +2715,6 @@ ref_pic_list_modification() {
 
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
-
-                    whileIndex = -1;
 
                     do
                     {
@@ -2779,8 +2751,6 @@ ref_pic_list_modification() {
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
 
-                    whileIndex = -1;
-
                     do
                     {
                         whileIndex++;
@@ -2806,8 +2776,6 @@ ref_pic_list_modification() {
 
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
-
-                    whileIndex = -1;
 
                     do
                     {
@@ -3147,8 +3115,6 @@ dec_ref_pic_marking() {
                 if (adaptive_ref_pic_marking_mode_flag != 0)
                 {
 
-                    whileIndex = -1;
-
                     do
                     {
                         whileIndex++;
@@ -3200,8 +3166,6 @@ dec_ref_pic_marking() {
 
                 if (adaptive_ref_pic_marking_mode_flag != 0)
                 {
-
-                    whileIndex = -1;
 
                     do
                     {
@@ -3939,8 +3903,6 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             {
                 size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
 
-                whileIndex = -1;
-
                 while (!stream.ByteAligned())
                 {
                     whileIndex++;
@@ -4254,8 +4216,6 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             if (!stream.ByteAligned())
             {
                 size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
-
-                whileIndex = -1;
 
                 while (!stream.ByteAligned())
                 {
@@ -5033,8 +4993,6 @@ user_data_registered_itu_t_t35( payloadSize ) {
                 i = 2;
             }
 
-            whileIndex = -1;
-
             do
             {
                 whileIndex++;
@@ -5063,8 +5021,6 @@ user_data_registered_itu_t_t35( payloadSize ) {
                 size += stream.WriteBits(8, this.itu_t_t35_country_code_extension_byte);
                 i = 2;
             }
-
-            whileIndex = -1;
 
             do
             {
@@ -8388,8 +8344,6 @@ sei_prefix_indication( payloadSize ) {
                     size += stream.ReadUnsignedInt(size, 1, out this.sei_prefix_data_bit[i][j]);
                 }
 
-                whileIndex = -1;
-
                 while (!stream.ByteAligned())
                 {
                     whileIndex++;
@@ -8419,8 +8373,6 @@ sei_prefix_indication( payloadSize ) {
                 {
                     size += stream.WriteUnsignedInt(1, this.sei_prefix_data_bit[i][j]);
                 }
-
-                whileIndex = -1;
 
                 while (!stream.ByteAligned())
                 {
@@ -8601,8 +8553,6 @@ annotated_regions( payloadSize ) {
                     if (ar_object_label_language_present_flag != 0)
                     {
 
-                        whileIndex = -1;
-
                         while (!stream.ByteAligned())
                         {
                             whileIndex++;
@@ -8624,8 +8574,6 @@ annotated_regions( payloadSize ) {
 
                         if (ar_label_cancel_flag[i] == 0)
                         {
-
-                            whileIndex = -1;
 
                             while (!stream.ByteAligned())
                             {
@@ -8733,8 +8681,6 @@ annotated_regions( payloadSize ) {
                     if (ar_object_label_language_present_flag != 0)
                     {
 
-                        whileIndex = -1;
-
                         while (!stream.ByteAligned())
                         {
                             whileIndex++;
@@ -8753,8 +8699,6 @@ annotated_regions( payloadSize ) {
 
                         if (ar_label_cancel_flag[i] == 0)
                         {
-
-                            whileIndex = -1;
 
                             while (!stream.ByteAligned())
                             {
@@ -9708,8 +9652,6 @@ prefix_nal_unit_svc() {
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
 
-                    whileIndex = -1;
-
                     while (stream.ReadMoreRbspData(this))
                     {
                         whileIndex++;
@@ -9722,8 +9664,6 @@ prefix_nal_unit_svc() {
             }
             else if (stream.ReadMoreRbspData(this))
             {
-
-                whileIndex = -1;
 
                 while (stream.ReadMoreRbspData(this))
                 {
@@ -9758,8 +9698,6 @@ prefix_nal_unit_svc() {
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
 
-                    whileIndex = -1;
-
                     while (stream.WriteMoreRbspData(this))
                     {
                         whileIndex++;
@@ -9771,8 +9709,6 @@ prefix_nal_unit_svc() {
             }
             else if (stream.WriteMoreRbspData(this))
             {
-
-                whileIndex = -1;
 
                 while (stream.WriteMoreRbspData(this))
                 {
@@ -10496,8 +10432,6 @@ dec_ref_base_pic_marking() {
             if (adaptive_ref_base_pic_marking_mode_flag != 0)
             {
 
-                whileIndex = -1;
-
                 do
                 {
                     whileIndex++;
@@ -10528,8 +10462,6 @@ dec_ref_base_pic_marking() {
 
             if (adaptive_ref_base_pic_marking_mode_flag != 0)
             {
-
-                whileIndex = -1;
 
                 do
                 {
@@ -11137,8 +11069,6 @@ scalability_info( payloadSize ) {
             if (priority_id_setting_flag != 0)
             {
 
-                whileIndex = -1;
-
                 do
                 {
                     whileIndex++;
@@ -11346,8 +11276,6 @@ scalability_info( payloadSize ) {
 
             if (priority_id_setting_flag != 0)
             {
-
-                whileIndex = -1;
 
                 do
                 {
@@ -11803,16 +11731,12 @@ scalable_nesting( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 3, out this.sei_temporal_id);
             }
 
-            whileIndex = -1;
-
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
                 size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
             }
-
-            whileIndex = -1;
 
             do
             {
@@ -11845,16 +11769,12 @@ scalable_nesting( payloadSize ) {
                 size += stream.WriteUnsignedInt(3, this.sei_temporal_id);
             }
 
-            whileIndex = -1;
-
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
                 size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
             }
-
-            whileIndex = -1;
 
             do
             {
@@ -12984,8 +12904,6 @@ ref_pic_list_mvc_modification() {
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
 
-                    whileIndex = -1;
-
                     do
                     {
                         whileIndex++;
@@ -13016,8 +12934,6 @@ ref_pic_list_mvc_modification() {
 
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
-
-                    whileIndex = -1;
 
                     do
                     {
@@ -13059,8 +12975,6 @@ ref_pic_list_mvc_modification() {
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
 
-                    whileIndex = -1;
-
                     do
                     {
                         whileIndex++;
@@ -13091,8 +13005,6 @@ ref_pic_list_mvc_modification() {
 
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
-
-                    whileIndex = -1;
 
                     do
                     {
@@ -13350,8 +13262,6 @@ mvc_scalable_nesting( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 3, out this.sei_op_temporal_id);
             }
 
-            whileIndex = -1;
-
             while (!stream.ByteAligned())
             {
                 whileIndex++;
@@ -13396,8 +13306,6 @@ mvc_scalable_nesting( payloadSize ) {
                 }
                 size += stream.WriteUnsignedInt(3, this.sei_op_temporal_id);
             }
-
-            whileIndex = -1;
 
             while (!stream.ByteAligned())
             {
@@ -15792,8 +15700,6 @@ mvcd_scalable_nesting( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 3, out this.sei_op_temporal_id);
             }
 
-            whileIndex = -1;
-
             while (!stream.ByteAligned())
             {
                 whileIndex++;
@@ -15846,8 +15752,6 @@ mvcd_scalable_nesting( payloadSize ) {
                 }
                 size += stream.WriteUnsignedInt(3, this.sei_op_temporal_id);
             }
-
-            whileIndex = -1;
 
             while (!stream.ByteAligned())
             {
@@ -17827,8 +17731,6 @@ depth_parameter_set_rbsp() {
             if (depth_param_additional_extension_flag == 1)
             {
 
-                whileIndex = -1;
-
                 while (stream.ReadMoreRbspData(this))
                 {
                     whileIndex++;
@@ -17882,8 +17784,6 @@ depth_parameter_set_rbsp() {
 
             if (depth_param_additional_extension_flag == 1)
             {
-
-                whileIndex = -1;
 
                 while (stream.WriteMoreRbspData(this))
                 {

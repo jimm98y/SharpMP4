@@ -978,8 +978,9 @@ namespace Sharp{type}
                 }
             }
 
-            if (blockType == "do" || blockType == "while")
-                ret += $"\r\n{spacing}whileIndex = -1;\r\n";
+            // TODO: for now, this makes sure we have no collisions in case 2 do/while loops modify the same variable
+            //if (blockType == "do" || blockType == "while")
+            //    ret += $"\r\n{spacing}whileIndex = -1;\r\n";
 
             if (block.Type == "do")
                 ret += $"\r\n{spacing}{blockType}\r\n{spacing}{{";
@@ -1301,21 +1302,21 @@ namespace Sharp{type}
         private string BuildField(ItuField field)
         {
             string type = GetCSharpType(field);
-            string initializer = "";
+            string defaultInitializer = GetFieldDefaultValue(field);
+            string initializer = string.IsNullOrEmpty(defaultInitializer) ? "" : $"= {defaultInitializer}";
 
             if (field.MakeList)
             {
                 type = $"Dictionary<int, {type}>";
                 initializer = $" = new {type}()";
             }
-
-            int nestingLevel = GetLoopNestingLevel(field);
-            if (nestingLevel > 0)
+            else
             {
-                nestingLevel = GetNestedInLoopSuffix(field, field.FieldArray, out _);
-
-                if (!field.MakeList)
+                int nestingLevel = GetLoopNestingLevel(field);
+                if (nestingLevel > 0)
                 {
+                    nestingLevel = GetNestedInLoopSuffix(field, field.FieldArray, out _);
+
                     AddRequiresAllocation(field);
 
                     if (nestingLevel > 0)
@@ -1332,6 +1333,18 @@ namespace Sharp{type}
 
             string propertyName = GetFieldName(field).ToPropertyCase();
             return $"\t\tprivate {type} {field.Name.ToFirstLower()}{initializer};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
+        }
+
+        private string GetFieldDefaultValue(ItuField field)
+        {
+            switch(field.Name)
+            {
+                case "chroma_format_idc":
+                    return "1";
+
+                default:
+                    return "";
+            }
         }
 
         public void AddRequiresAllocation(ItuField field)
