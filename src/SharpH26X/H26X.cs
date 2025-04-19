@@ -1,4 +1,4 @@
-﻿namespace SharpH264
+﻿namespace SharpH26X
 {
     public interface IItuContext { }
 

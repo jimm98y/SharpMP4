@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleMP4Parser", "SampleMP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildGenerator", "BuildGenerator\BuildGenerator.csproj", "{546139D8-A30F-67D8-D8D8-14C55CB76CB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpH265", "SharpH265\SharpH265.csproj", "{8353D931-5AE8-4AE6-9C66-5C8486AE712A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpH26X", "SharpH26X\SharpH26X.csproj", "{AECE4B6D-FEE8-4805-B24E-141D803548A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,14 @@ Global
 		{546139D8-A30F-67D8-D8D8-14C55CB76CB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{546139D8-A30F-67D8-D8D8-14C55CB76CB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{546139D8-A30F-67D8-D8D8-14C55CB76CB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8353D931-5AE8-4AE6-9C66-5C8486AE712A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8353D931-5AE8-4AE6-9C66-5C8486AE712A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8353D931-5AE8-4AE6-9C66-5C8486AE712A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8353D931-5AE8-4AE6-9C66-5C8486AE712A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECE4B6D-FEE8-4805-B24E-141D803548A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECE4B6D-FEE8-4805-B24E-141D803548A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECE4B6D-FEE8-4805-B24E-141D803548A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECE4B6D-FEE8-4805-B24E-141D803548A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

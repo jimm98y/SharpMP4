@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Numerics;
 
-namespace SharpH264
+namespace SharpH26X
 {
     public class ItuStream : IDisposable
     {
