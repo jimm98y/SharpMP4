@@ -28,6 +28,15 @@ namespace SharpH264
             this._stream = stream;
         }
 
+        public ItuStream(Stream stream, int bitsPosition, int currentBytePosition, byte currentByte, int prevByte, int prevPrevByte) : this(stream)
+        {
+            this._bitsPosition = bitsPosition;
+            this._currentBytePosition = currentBytePosition;
+            this._currentByte = currentByte;
+            this._prevByte = prevByte;
+            this._prevPrevByte = prevPrevByte;
+        }
+
         #region Bit read/write
 
         private int ReadByte()
@@ -213,6 +222,8 @@ namespace SharpH264
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
             long ret = ReadBits(count);
+            if(ret == -1)
+                throw new EndOfStreamException();
             value = (uint)ret;
             return (ulong)count;
         }
@@ -228,6 +239,8 @@ namespace SharpH264
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
             long ret = ReadBits(count);
+            if (ret == -1)
+                throw new EndOfStreamException();
             value = unchecked((int)ret);
             return (ulong)count;
         }
@@ -252,7 +265,10 @@ namespace SharpH264
 
             if (cnt > 0)
             {
-                value = (uint)((1 << cnt) - 1 + ReadBits(cnt));
+                long bits = ReadBits(cnt);
+                if (bits == -1)
+                    throw new EndOfStreamException();
+                value = (uint)((1 << cnt) - 1 + bits);
             }
             else
             {
@@ -302,11 +318,11 @@ namespace SharpH264
                 return false;
 
             // now we have to look ahead - TODO
-            var bytes = (_stream as MemoryStream).ToArray().Skip(_bitsPosition / 8).ToArray();
-            using (var ituStream = new ItuStream(new MemoryStream(bytes)))
-            {
-                ituStream.ReadBits(_bitsPosition % 8);
-                
+            var bytes = (_stream as MemoryStream).ToArray();
+            var msstream = new MemoryStream(bytes);
+            msstream.Seek(_stream.Position, SeekOrigin.Begin);
+            using (var ituStream = new ItuStream(msstream, _bitsPosition, _currentBytePosition, _currentByte, _prevByte, _prevPrevByte))
+            {               
                 int one = ituStream.ReadBit();
                 if (one == -1)
                     return false;
@@ -327,7 +343,7 @@ namespace SharpH264
                 }
 
                 // -1 means that up until the end there are zeros
-                if (lastBit < 0)
+                if (lastBit == -1)
                 {
                     return false;
                 }
@@ -350,16 +366,17 @@ namespace SharpH264
 
         public int ReadNextBits(IItuSerializable serializable, int count)
         {
-            var bytes = (_stream as MemoryStream).ToArray().Skip(_bitsPosition / 8).ToArray();
-            using (var ituStream = new ItuStream(new MemoryStream(bytes)))
+            var bytes = (_stream as MemoryStream).ToArray();
+            var msstream = new MemoryStream(bytes);
+            msstream.Seek(_stream.Position, SeekOrigin.Begin);
+            using (var ituStream = new ItuStream(msstream, _bitsPosition, _currentBytePosition, _currentByte, _prevByte, _prevPrevByte))
             {
-                ituStream.ReadBits(_bitsPosition % 8);
-                int ret = (int)ituStream.ReadBits(8);
-
                 if (serializable.ReadNextBits == null)
                 {
                     serializable.ReadNextBits = new int[1];
                 }
+
+                int ret = (int)ituStream.ReadBits(8);
 
                 if (ret == 0xFF)
                 {
@@ -426,7 +443,10 @@ namespace SharpH264
 
         public ulong ReadBits(ulong size, int count, out byte value)
         {
-            value = (byte)ReadBits(count);
+            long bits = ReadBits(count);
+            if(bits == -1)
+                throw new EndOfStreamException();
+            value = (byte)bits;
             return (ulong)count;
         }
 
