@@ -1593,6 +1593,12 @@ namespace SharpMP4
             return WriteByte((byte)value);
         }
 
+        public ulong ReadUInt8(ulong boxSize, ulong readSize, out uint value)
+        {
+            value = ReadByte();
+            return 8;
+        }
+
         public ulong ReadInt16(ulong boxSize, ulong readSize, out short value)
         {
             ulong count = ReadUInt16(boxSize, readSize, out ushort v);

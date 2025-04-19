@@ -7,14 +7,25 @@ using System.Linq;
 
 // .\ffmpeg.exe - i "frag_bunny.mp4" - c:v copy -bsf:v trace_headers -f null -  > log.txt 2>&1
 
-Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
+Log.SinkDebug = (o, e) => { /*Console.WriteLine(o);*/ };
+Log.SinkInfo = (o, e) => { Console.WriteLine(o); };
+Log.SinkError = (o, e) => { 
+    try
+    {
+        File.AppendAllText("C:\\Temp\\_decoding_errors.txt", o + "\r\n");
+    }
+    catch
+    {
+
+    }
+};
 
 var files = File.ReadAllLines("C:\\Temp\\testFiles3.txt");
 //var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
 
 foreach (var file in files)
 {
-    Log.Debug($"----Reading: {file}");
+    Log.Info($"----Reading: {file}");
 
     using (Stream inputFileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
     {
@@ -38,12 +49,13 @@ foreach (var file in files)
             .Children.OfType<SampleDescriptionBox>().Single()
             .Children.OfType<VisualSampleEntry>().Single();
 
+        int nalLengthSize = 4;
         H264Context context = new H264Context();
 
         var avcC = h264VisualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
         if (avcC != null)
         {
-            int nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // 4 bytes
+            nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
 
             foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
             {
@@ -57,7 +69,9 @@ foreach (var file in files)
         }
         else
         {
-            throw new NotSupportedException();
+            //throw new NotSupportedException();
+            Log.Error($"{file}");
+            continue;
         }
 
         MovieBox moov = null;
@@ -99,15 +113,32 @@ foreach (var file in files)
 
                             if (isVideo)
                             {
-                                uint nalUnitLength = 0;
                                 long offset = 0;
 
                                 Log.Debug("AU begin");
 
                                 do
                                 {
-                                    size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
-                                    offset += 4;
+                                    uint nalUnitLength = 0;
+                                    switch (nalLengthSize)
+                                    {
+                                        case 1:
+                                            mdat.Data.Stream.ReadUInt8(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                            break;
+                                        case 2:
+                                            mdat.Data.Stream.ReadUInt16(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                            break;
+                                        case 3:
+                                            mdat.Data.Stream.ReadUInt24(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                            break;
+                                        case 4:
+                                            mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                            break;
+
+                                        default:
+                                            throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                                    }
+                                    offset += nalLengthSize;
 
                                     if (nalUnitLength > (sampleSize - offset))
                                     {
@@ -181,8 +212,25 @@ foreach (var file in files)
                             do
                             {
                                 uint nalUnitLength = 0;
-                                size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
-                                offset += 4;
+                                switch (nalLengthSize)
+                                {
+                                    case 1:
+                                        mdat.Data.Stream.ReadUInt8(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                        break;
+                                    case 2:
+                                        mdat.Data.Stream.ReadUInt16(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                        break;
+                                    case 3:
+                                        mdat.Data.Stream.ReadUInt24(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                        break;
+                                    case 4:
+                                        mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                                        break;
+
+                                    default:
+                                        throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                                }
+                                offset += nalLengthSize;
 
                                 if (nalUnitLength > (sampleSize - offset))
                                 {
