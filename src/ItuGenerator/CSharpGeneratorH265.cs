@@ -9,6 +9,7 @@ namespace ItuGenerator
             definitions = definitions
                             .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
                             .Replace("delta_dlt( i )", "delta_dlt()")
+                            .Replace("_flag ?", "_flag != 0 ? ")
                             .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
             return definitions;
         }
@@ -30,6 +31,15 @@ namespace ItuGenerator
         {
             switch (parameter)
             {
+                case "chroma_format_idc":
+                    return "((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc";
+                case "sps_palette_predictor_initializer":
+                    return "(((H265Context)context).SeqParameterSetRbsp.BitDepthChromaMinus8 + 8)";
+                case "transform_skip_enabled_flag":
+                    return "((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag";
+                case "pps_palette_predictor_initializer":
+                    return "comp == 0 ? (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8)";
+
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;

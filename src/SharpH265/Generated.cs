@@ -25,15 +25,15 @@ namespace SharpH265
     /*
 nal_unit( NumBytesInNalUnit ) { 
   nal_unit_header()  
-  NumBytesInRbsp = 0  
-  for( i = 2; i < NumBytesInNalUnit; i++ )  
-    if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 ) == 0x000003 ) {  
-     rbsp_byte[ NumBytesInRbsp++ ] b(8)
-     rbsp_byte[ NumBytesInRbsp++ ] b(8) 
-     i +=  2  
-     emulation_prevention_three_byte  /* equal to 0x03 *//* f(8) 
-    } else  
-      rbsp_byte[ NumBytesInRbsp++ ] b(8) 
+  /*NumBytesInRbsp = 0 *//* 
+  /*for( i = 2; i < NumBytesInNalUnit; i++ )  *//*
+  /* if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 ) == 0x000003 ) {  *//*
+  /*   rbsp_byte[ NumBytesInRbsp++ ] b(8) *//*
+  /*   rbsp_byte[ NumBytesInRbsp++ ] b(8) *//*
+  /*   i +=  2  *//*
+  /*   emulation_prevention_three_byte  *//*/* equal to 0x03 *//*/* f(8) *//*
+  /*  } else  *//*
+  /*    rbsp_byte[ NumBytesInRbsp++ ] b(8) *//*
 }
     */
     public class NalUnit : IItuSerializable
@@ -42,10 +42,6 @@ nal_unit( NumBytesInNalUnit ) {
         public uint NumBytesInNalUnit { get { return numBytesInNalUnit; } set { numBytesInNalUnit = value; } }
         private NalUnitHeader nal_unit_header;
         public NalUnitHeader NalUnitHeader { get { return nal_unit_header; } set { nal_unit_header = value; } }
-        private byte[][] rbsp_byte;
-        public byte[][] RbspByte { get { return rbsp_byte; } set { rbsp_byte = value; } }
-        private uint[] emulation_prevention_three_byte;
-        public uint[] EmulationPreventionThreeByte { get { return emulation_prevention_three_byte; } set { emulation_prevention_three_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -59,29 +55,28 @@ nal_unit( NumBytesInNalUnit ) {
         {
             ulong size = 0;
 
-            uint NumBytesInRbsp = 0;
-            uint i = 0;
             this.nal_unit_header = new NalUnitHeader();
-            size += stream.ReadClass<NalUnitHeader>(size, context, this.nal_unit_header);
-            NumBytesInRbsp = 0;
+            size += stream.ReadClass<NalUnitHeader>(size, context, this.nal_unit_header); //NumBytesInRbsp = 0 
+            /* for( i = 2; i < NumBytesInNalUnit; i++ )   */
 
-            this.rbsp_byte = new byte[NumBytesInNalUnit];
-            this.emulation_prevention_three_byte = new uint[NumBytesInNalUnit];
-            for (i = 2; i < NumBytesInNalUnit; i++)
-            {
+            /*  if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 ) == 0x000003 ) {   */
 
-                if (i + 2 < NumBytesInNalUnit && stream.ReadNextBits(this, 24) == 0x000003)
-                {
-                    size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRbsp++][i]);
-                    size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRbsp++][i]);
-                    i += 2;
-                    size += stream.ReadFixed(size, 8, out this.emulation_prevention_three_byte[i]); // equal to 0x03 
-                }
-                else
-                {
-                    size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRbsp++][i]);
-                }
-            }
+            /*    rbsp_byte[ NumBytesInRbsp++ ] b(8)  */
+
+            /*    rbsp_byte[ NumBytesInRbsp++ ] b(8)  */
+
+            /*    i +=  2   */
+
+            /*    emulation_prevention_three_byte   */
+
+            /*  equal to 0x03  */
+
+            /*  f(8)  */
+
+            /*   } else   */
+
+            /*     rbsp_byte[ NumBytesInRbsp++ ] b(8)  */
+
 
             return size;
         }
@@ -90,26 +85,27 @@ nal_unit( NumBytesInNalUnit ) {
         {
             ulong size = 0;
 
-            uint NumBytesInRbsp = 0;
-            uint i = 0;
-            size += stream.WriteClass<NalUnitHeader>(context, this.nal_unit_header);
-            NumBytesInRbsp = 0;
+            size += stream.WriteClass<NalUnitHeader>(context, this.nal_unit_header); //NumBytesInRbsp = 0 
+            /* for( i = 2; i < NumBytesInNalUnit; i++ )   */
 
-            for (i = 2; i < NumBytesInNalUnit; i++)
-            {
+            /*  if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 ) == 0x000003 ) {   */
 
-                if (i + 2 < NumBytesInNalUnit && stream.WriteNextBits(this, 24) == 0x000003)
-                {
-                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRbsp++][i]);
-                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRbsp++][i]);
-                    i += 2;
-                    size += stream.WriteFixed(8, this.emulation_prevention_three_byte[i]); // equal to 0x03 
-                }
-                else
-                {
-                    size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRbsp++][i]);
-                }
-            }
+            /*    rbsp_byte[ NumBytesInRbsp++ ] b(8)  */
+
+            /*    rbsp_byte[ NumBytesInRbsp++ ] b(8)  */
+
+            /*    i +=  2   */
+
+            /*    emulation_prevention_three_byte   */
+
+            /*  equal to 0x03  */
+
+            /*  f(8)  */
+
+            /*   } else   */
+
+            /*     rbsp_byte[ NumBytesInRbsp++ ] b(8)  */
+
 
             return size;
         }
@@ -306,7 +302,7 @@ sps_scc_extension() {
         {
             ulong size = 0;
 
-            uint numComps = 0;
+            long numComps = 0;
             uint comp = 0;
             uint i = 0;
             size += stream.ReadUnsignedInt(size, 1, out this.sps_curr_pic_ref_enabled_flag);
@@ -321,7 +317,7 @@ sps_scc_extension() {
                 if (sps_palette_predictor_initializers_present_flag != 0)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_palette_predictor_initializers_minus1);
-                    numComps = (chroma_format_idc == 0) ? 1 : 3;
+                    numComps = (((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0) ? 1 : 3;
 
                     this.sps_palette_predictor_initializer = new uint[numComps][];
                     for (comp = 0; comp < numComps; comp++)
@@ -330,7 +326,7 @@ sps_scc_extension() {
                         this.sps_palette_predictor_initializer[comp] = new uint[sps_num_palette_predictor_initializers_minus1 + 1];
                         for (i = 0; i <= sps_num_palette_predictor_initializers_minus1; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, sps_palette_predictor_initializer, out this.sps_palette_predictor_initializer[comp][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.BitDepthChromaMinus8 + 8), out this.sps_palette_predictor_initializer[comp][i]);
                         }
                     }
                 }
@@ -345,7 +341,7 @@ sps_scc_extension() {
         {
             ulong size = 0;
 
-            uint numComps = 0;
+            long numComps = 0;
             uint comp = 0;
             uint i = 0;
             size += stream.WriteUnsignedInt(1, this.sps_curr_pic_ref_enabled_flag);
@@ -360,14 +356,14 @@ sps_scc_extension() {
                 if (sps_palette_predictor_initializers_present_flag != 0)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.sps_num_palette_predictor_initializers_minus1);
-                    numComps = (chroma_format_idc == 0) ? 1 : 3;
+                    numComps = (((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0) ? 1 : 3;
 
                     for (comp = 0; comp < numComps; comp++)
                     {
 
                         for (i = 0; i <= sps_num_palette_predictor_initializers_minus1; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable(sps_palette_predictor_initializer[comp][i], this.sps_palette_predictor_initializer[comp][i]);
+                            size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.BitDepthChromaMinus8 + 8), this.sps_palette_predictor_initializer[comp][i]);
                         }
                     }
                 }
@@ -881,7 +877,7 @@ pps_range_extension() {
 
             uint i = 0;
 
-            if (transform_skip_enabled_flag != 0)
+            if (((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_transform_skip_block_size_minus2);
             }
@@ -913,7 +909,7 @@ pps_range_extension() {
 
             uint i = 0;
 
-            if (transform_skip_enabled_flag != 0)
+            if (((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.log2_max_transform_skip_block_size_minus2);
             }
@@ -959,7 +955,7 @@ pps_scc_extension() {
    luma_bit_depth_entry_minus8 ue(v) 
    if( !monochrome_palette_flag )  
     chroma_bit_depth_entry_minus8 ue(v) 
-   numComps = monochrome_palette_flag ? 1 : 3  
+   numComps = monochrome_palette_flag != 0 ?  1 : 3  
    for( comp = 0; comp < numComps; comp++ )  
     for( i = 0; i < pps_num_palette_predictor_initializers; i++ )  
      pps_palette_predictor_initializer[ comp ][ i ] u(v) 
@@ -1006,7 +1002,7 @@ pps_scc_extension() {
         {
             ulong size = 0;
 
-            uint numComps = 0;
+            long numComps = 0;
             uint comp = 0;
             uint i = 0;
             size += stream.ReadUnsignedInt(size, 1, out this.pps_curr_pic_ref_enabled_flag);
@@ -1034,7 +1030,7 @@ pps_scc_extension() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.chroma_bit_depth_entry_minus8);
                     }
-                    numComps = monochrome_palette_flag ? 1 : 3;
+                    numComps = monochrome_palette_flag != 0 ? 1 : 3;
 
                     this.pps_palette_predictor_initializer = new uint[numComps][];
                     for (comp = 0; comp < numComps; comp++)
@@ -1043,7 +1039,7 @@ pps_scc_extension() {
                         this.pps_palette_predictor_initializer[comp] = new uint[pps_num_palette_predictor_initializers];
                         for (i = 0; i < pps_num_palette_predictor_initializers; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, pps_palette_predictor_initializer, out this.pps_palette_predictor_initializer[comp][i]);
+                            size += stream.ReadUnsignedIntVariable(size, comp == 0 ? (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8), out this.pps_palette_predictor_initializer[comp][i]);
                         }
                     }
                 }
@@ -1056,7 +1052,7 @@ pps_scc_extension() {
         {
             ulong size = 0;
 
-            uint numComps = 0;
+            long numComps = 0;
             uint comp = 0;
             uint i = 0;
             size += stream.WriteUnsignedInt(1, this.pps_curr_pic_ref_enabled_flag);
@@ -1084,14 +1080,14 @@ pps_scc_extension() {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.chroma_bit_depth_entry_minus8);
                     }
-                    numComps = monochrome_palette_flag ? 1 : 3;
+                    numComps = monochrome_palette_flag != 0 ? 1 : 3;
 
                     for (comp = 0; comp < numComps; comp++)
                     {
 
                         for (i = 0; i < pps_num_palette_predictor_initializers; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable(pps_palette_predictor_initializer[comp][i], this.pps_palette_predictor_initializer[comp][i]);
+                            size += stream.WriteUnsignedIntVariable(comp == 0 ? (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8), this.pps_palette_predictor_initializer[comp][i]);
                         }
                     }
                 }
@@ -5247,8 +5243,8 @@ post_filter_hint( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_x);
             size += stream.ReadUnsignedInt(size, 2, out this.filter_hint_type);
 
-            this.filter_hint_value = new int[(chroma_format_idc == 0 ? 1 : 3)][][];
-            for (cIdx = 0; cIdx < (chroma_format_idc == 0 ? 1 : 3); cIdx++)
+            this.filter_hint_value = new int[(((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3)][][];
+            for (cIdx = 0; cIdx < (((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3); cIdx++)
             {
 
                 this.filter_hint_value[cIdx] = new int[filter_hint_size_y][];
@@ -5277,7 +5273,7 @@ post_filter_hint( payloadSize ) {
             size += stream.WriteUnsignedIntGolomb(this.filter_hint_size_x);
             size += stream.WriteUnsignedInt(2, this.filter_hint_type);
 
-            for (cIdx = 0; cIdx < (chroma_format_idc == 0 ? 1 : 3); cIdx++)
+            for (cIdx = 0; cIdx < (((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3); cIdx++)
             {
 
                 for (cy = 0; cy < filter_hint_size_y; cy++)
@@ -5916,10 +5912,10 @@ decoded_picture_hash( payloadSize ) {
             uint i = 0;
             size += stream.ReadUnsignedInt(size, 8, out this.hash_type);
 
-            this.picture_md5 = new byte[(chroma_format_idc == 0 ? 1 : 3)][];
-            this.picture_crc = new uint[(chroma_format_idc == 0 ? 1 : 3)];
-            this.picture_checksum = new uint[(chroma_format_idc == 0 ? 1 : 3)];
-            for (cIdx = 0; cIdx < (chroma_format_idc == 0 ? 1 : 3); cIdx++)
+            this.picture_md5 = new byte[(((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3)][];
+            this.picture_crc = new uint[(((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3)];
+            this.picture_checksum = new uint[(((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3)];
+            for (cIdx = 0; cIdx < (((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3); cIdx++)
             {
 
                 if (hash_type == 0)
@@ -5952,7 +5948,7 @@ decoded_picture_hash( payloadSize ) {
             uint i = 0;
             size += stream.WriteUnsignedInt(8, this.hash_type);
 
-            for (cIdx = 0; cIdx < (chroma_format_idc == 0 ? 1 : 3); cIdx++)
+            for (cIdx = 0; cIdx < (((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc == 0 ? 1 : 3); cIdx++)
             {
 
                 if (hash_type == 0)
@@ -9907,7 +9903,7 @@ vps_extension() {
      max_tid_il_ref_pics_plus1[ i ][ j ] u(3) 
  default_ref_layers_active_flag u(1) 
  vps_num_profile_tier_level_minus1 ue(v) 
- for( i = vps_base_layer_internal_flag ? 2 : 1; 
+ for( i = vps_base_layer_internal_flag != 0 ?  2 : 1; 
           i  <=  vps_num_profile_tier_level_minus1; i++ ) { 
  
   vps_profile_present_flag[ i ] u(1) 
@@ -9938,7 +9934,7 @@ vps_extension() {
  if( vps_num_rep_formats_minus1 > 0 )  
   rep_format_idx_present_flag u(1) 
  if( rep_format_idx_present_flag )   
-  for( i = vps_base_layer_internal_flag ? 1 : 0; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag != 0 ?  1 : 0; i  <=  MaxLayersMinus1; i++ )  
    vps_rep_format_idx[ i ] u(v) 
  max_one_active_ref_layer_flag u(1) 
  vps_poc_lsb_aligned_flag u(1) 
@@ -9951,8 +9947,8 @@ vps_extension() {
  if( direct_dependency_all_layers_flag )  
   direct_dependency_all_layers_type u(v) 
  else {  
-  for( i = vps_base_layer_internal_flag ? 1 : 2; i  <=  MaxLayersMinus1; i++ )  
-   for( j = vps_base_layer_internal_flag ? 0 : 1; j < i; j++ )  
+  for( i = vps_base_layer_internal_flag != 0 ?  1 : 2; i  <=  MaxLayersMinus1; i++ )  
+   for( j = vps_base_layer_internal_flag != 0 ?  0 : 1; j < i; j++ )  
     if( direct_dependency_flag[ i ][ j ] )  
      direct_dependency_type[ i ][ j ] u(v) 
  }  
@@ -10189,7 +10185,7 @@ vps_extension() {
 
             this.vps_profile_present_flag = new byte[vps_num_profile_tier_level_minus1 + 1];
             this.profile_tier_level0 = new ProfileTierLevel[vps_num_profile_tier_level_minus1 + 1];
-            for (i = vps_base_layer_internal_flag ? 2 : 1;
+            for (i = vps_base_layer_internal_flag != 0 ? 2 : 1;
           i <= vps_num_profile_tier_level_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.vps_profile_present_flag[i]);
@@ -10260,7 +10256,7 @@ vps_extension() {
             {
 
                 this.vps_rep_format_idx = new uint[MaxLayersMinus1 + 1];
-                for (i = vps_base_layer_internal_flag ? 1 : 0; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 1 : 0; i <= MaxLayersMinus1; i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, vps_rep_format_idx, out this.vps_rep_format_idx[i]);
                 }
@@ -10290,11 +10286,11 @@ vps_extension() {
             {
 
                 this.direct_dependency_type = new uint[MaxLayersMinus1 + 1][];
-                for (i = vps_base_layer_internal_flag ? 1 : 2; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 1 : 2; i <= MaxLayersMinus1; i++)
                 {
 
                     this.direct_dependency_type[i] = new uint[i];
-                    for (j = vps_base_layer_internal_flag ? 0 : 1; j < i; j++)
+                    for (j = vps_base_layer_internal_flag != 0 ? 0 : 1; j < i; j++)
                     {
 
                         if (direct_dependency_flag[i][j] != 0)
@@ -10438,7 +10434,7 @@ vps_extension() {
             size += stream.WriteUnsignedInt(1, this.default_ref_layers_active_flag);
             size += stream.WriteUnsignedIntGolomb(this.vps_num_profile_tier_level_minus1);
 
-            for (i = vps_base_layer_internal_flag ? 2 : 1;
+            for (i = vps_base_layer_internal_flag != 0 ? 2 : 1;
           i <= vps_num_profile_tier_level_minus1; i++)
             {
                 size += stream.WriteUnsignedInt(1, this.vps_profile_present_flag[i]);
@@ -10499,7 +10495,7 @@ vps_extension() {
             if (rep_format_idx_present_flag != 0)
             {
 
-                for (i = vps_base_layer_internal_flag ? 1 : 0; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 1 : 0; i <= MaxLayersMinus1; i++)
                 {
                     size += stream.WriteUnsignedIntVariable(vps_rep_format_idx[i], this.vps_rep_format_idx[i]);
                 }
@@ -10526,10 +10522,10 @@ vps_extension() {
             else
             {
 
-                for (i = vps_base_layer_internal_flag ? 1 : 2; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 1 : 2; i <= MaxLayersMinus1; i++)
                 {
 
-                    for (j = vps_base_layer_internal_flag ? 0 : 1; j < i; j++)
+                    for (j = vps_base_layer_internal_flag != 0 ? 0 : 1; j < i; j++)
                     {
 
                         if (direct_dependency_flag[i][j] != 0)
@@ -10842,7 +10838,7 @@ vps_vui() {
  bit_rate_present_vps_flag u(1) 
  pic_rate_present_vps_flag u(1) 
  if( bit_rate_present_vps_flag  ||  pic_rate_present_vps_flag )  
-  for( i = vps_base_layer_internal_flag ? 0 : 1; i < NumLayerSets; i++ )  
+  for( i = vps_base_layer_internal_flag != 0 ?  0 : 1; i < NumLayerSets; i++ )  
    for( j = 0; j  <=  MaxSubLayersInLayerSetMinus1[ i ]; j++ ) {  
     if( bit_rate_present_vps_flag )  
      bit_rate_present_flag[ i ][ j ] u(1) 
@@ -10863,16 +10859,16 @@ vps_vui() {
  for( i = 0; i  <=  vps_num_video_signal_info_minus1; i++ )  
   video_signal_info()  
  if( video_signal_info_idx_present_flag  &&  vps_num_video_signal_info_minus1 > 0 )  
-  for( i = vps_base_layer_internal_flag ? 0 : 1; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag != 0 ?  0 : 1; i  <=  MaxLayersMinus1; i++ )  
    vps_video_signal_info_idx[ i ] u(4) 
  tiles_not_in_use_flag u(1) 
  if( !tiles_not_in_use_flag ) {  
-  for( i = vps_base_layer_internal_flag ? 0 : 1; i  <=  MaxLayersMinus1; i++ ) {  
+  for( i = vps_base_layer_internal_flag != 0 ?  0 : 1; i  <=  MaxLayersMinus1; i++ ) {  
    tiles_in_use_flag[ i ] u(1) 
    if( tiles_in_use_flag[ i ] )  
     loop_filter_not_across_tiles_flag[ i ] u(1) 
   }  
-  for( i = vps_base_layer_internal_flag ? 1 : 2; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag != 0 ?  1 : 2; i  <=  MaxLayersMinus1; i++ )  
    for( j = 0; j < NumDirectRefLayers[ layer_id_in_nuh[ i ] ]; j++ ) {  
     layerIdx = LayerIdxInVps[ IdDirectRefLayer[ layer_id_in_nuh[ i ] ][ j ] ]  
     if( tiles_in_use_flag[ i ]  &&  tiles_in_use_flag[ layerIdx ] )  
@@ -10881,7 +10877,7 @@ vps_vui() {
  }  
  wpp_not_in_use_flag u(1) 
  if( !wpp_not_in_use_flag )  
-  for( i = vps_base_layer_internal_flag ? 0 : 1; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag != 0 ?  0 : 1; i  <=  MaxLayersMinus1; i++ )  
    wpp_in_use_flag[ i ] u(1) 
  single_layer_for_non_irap_flag u(1)
   higher_layer_irap_skip_flag u(1) 
@@ -11008,7 +11004,7 @@ vps_vui() {
                 this.max_bit_rate = new uint[NumLayerSets][];
                 this.constant_pic_rate_idc = new uint[NumLayerSets][];
                 this.avg_pic_rate = new uint[NumLayerSets][];
-                for (i = vps_base_layer_internal_flag ? 0 : 1; i < NumLayerSets; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 0 : 1; i < NumLayerSets; i++)
                 {
 
                     this.bit_rate_present_flag[i] = new byte[MaxSubLayersInLayerSetMinus1[i] + 1];
@@ -11062,7 +11058,7 @@ vps_vui() {
             {
 
                 this.vps_video_signal_info_idx = new uint[MaxLayersMinus1 + 1];
-                for (i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 0 : 1; i <= MaxLayersMinus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 4, out this.vps_video_signal_info_idx[i]);
                 }
@@ -11074,7 +11070,7 @@ vps_vui() {
 
                 this.tiles_in_use_flag = new byte[MaxLayersMinus1 + 1];
                 this.loop_filter_not_across_tiles_flag = new byte[MaxLayersMinus1 + 1];
-                for (i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 0 : 1; i <= MaxLayersMinus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.tiles_in_use_flag[i]);
 
@@ -11085,7 +11081,7 @@ vps_vui() {
                 }
 
                 this.tile_boundaries_aligned_flag = new byte[MaxLayersMinus1 + 1][];
-                for (i = vps_base_layer_internal_flag ? 1 : 2; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 1 : 2; i <= MaxLayersMinus1; i++)
                 {
 
                     this.tile_boundaries_aligned_flag[i] = new byte[NumDirectRefLayers[layer_id_in_nuh[i]]];
@@ -11106,7 +11102,7 @@ vps_vui() {
             {
 
                 this.wpp_in_use_flag = new byte[MaxLayersMinus1 + 1];
-                for (i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 0 : 1; i <= MaxLayersMinus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.wpp_in_use_flag[i]);
                 }
@@ -11193,7 +11189,7 @@ vps_vui() {
             if (bit_rate_present_vps_flag != 0 || pic_rate_present_vps_flag != 0)
             {
 
-                for (i = vps_base_layer_internal_flag ? 0 : 1; i < NumLayerSets; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 0 : 1; i < NumLayerSets; i++)
                 {
 
                     for (j = 0; j <= MaxSubLayersInLayerSetMinus1[i]; j++)
@@ -11238,7 +11234,7 @@ vps_vui() {
             if (video_signal_info_idx_present_flag != 0 && vps_num_video_signal_info_minus1 > 0)
             {
 
-                for (i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 0 : 1; i <= MaxLayersMinus1; i++)
                 {
                     size += stream.WriteUnsignedInt(4, this.vps_video_signal_info_idx[i]);
                 }
@@ -11248,7 +11244,7 @@ vps_vui() {
             if (tiles_not_in_use_flag == 0)
             {
 
-                for (i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 0 : 1; i <= MaxLayersMinus1; i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.tiles_in_use_flag[i]);
 
@@ -11258,7 +11254,7 @@ vps_vui() {
                     }
                 }
 
-                for (i = vps_base_layer_internal_flag ? 1 : 2; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 1 : 2; i <= MaxLayersMinus1; i++)
                 {
 
                     for (j = 0; j < NumDirectRefLayers[layer_id_in_nuh[i]]; j++)
@@ -11277,7 +11273,7 @@ vps_vui() {
             if (wpp_not_in_use_flag == 0)
             {
 
-                for (i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++)
+                for (i = vps_base_layer_internal_flag != 0 ? 0 : 1; i <= MaxLayersMinus1; i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.wpp_in_use_flag[i]);
                 }
@@ -11673,7 +11669,7 @@ seq_parameter_set_rbsp() {
  log2_max_pic_order_cnt_lsb_minus4 ue(v) 
  if( !MultiLayerExtSpsFlag ) {  
   sps_sub_layer_ordering_info_present_flag u(1) 
-  for( i = ( sps_sub_layer_ordering_info_present_flag ? 0 : sps_max_sub_layers_minus1 ); 
+  for( i = ( sps_sub_layer_ordering_info_present_flag != 0 ?  0 : sps_max_sub_layers_minus1 ); 
     i  <=  sps_max_sub_layers_minus1; i++ ) { 
  
    sps_max_dec_pic_buffering_minus1[ i ] ue(v) 
@@ -11955,7 +11951,7 @@ seq_parameter_set_rbsp() {
                 this.sps_max_dec_pic_buffering_minus1 = new uint[sps_max_sub_layers_minus1 + 1];
                 this.sps_max_num_reorder_pics = new uint[sps_max_sub_layers_minus1 + 1];
                 this.sps_max_latency_increase_plus1 = new uint[sps_max_sub_layers_minus1 + 1];
-                for (i = (sps_sub_layer_ordering_info_present_flag ? 0 : sps_max_sub_layers_minus1);
+                for (i = (sps_sub_layer_ordering_info_present_flag != 0 ? 0 : sps_max_sub_layers_minus1);
     i <= sps_max_sub_layers_minus1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.sps_max_dec_pic_buffering_minus1[i]);
@@ -12151,7 +12147,7 @@ seq_parameter_set_rbsp() {
             {
                 size += stream.WriteUnsignedInt(1, this.sps_sub_layer_ordering_info_present_flag);
 
-                for (i = (sps_sub_layer_ordering_info_present_flag ? 0 : sps_max_sub_layers_minus1);
+                for (i = (sps_sub_layer_ordering_info_present_flag != 0 ? 0 : sps_max_sub_layers_minus1);
     i <= sps_max_sub_layers_minus1; i++)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.sps_max_dec_pic_buffering_minus1[i]);
@@ -14292,7 +14288,7 @@ multiview_acquisition_info( payloadSize ) {
   prec_focal_length ue(v) 
   prec_principal_point ue(v) 
   prec_skew_factor ue(v) 
-  for( i = 0; i  <=  intrinsic_params_equal_flag ? 0 : numViewsMinus1; i++ ) {  
+  for( i = 0; i  <=  intrinsic_params_equal_flag != 0 ?  0 : numViewsMinus1; i++ ) {  
    sign_focal_length_x[ i ] u(1) 
    exponent_focal_length_x[ i ] u(6) 
    mantissa_focal_length_x[ i ] u(v) 
@@ -14415,22 +14411,22 @@ multiview_acquisition_info( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_principal_point);
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_skew_factor);
 
-                this.sign_focal_length_x = new byte[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.exponent_focal_length_x = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.mantissa_focal_length_x = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.sign_focal_length_y = new byte[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.exponent_focal_length_y = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.mantissa_focal_length_y = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.sign_principal_point_x = new byte[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.exponent_principal_point_x = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.mantissa_principal_point_x = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.sign_principal_point_y = new byte[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.exponent_principal_point_y = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.mantissa_principal_point_y = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.sign_skew_factor = new byte[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.exponent_skew_factor = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                this.mantissa_skew_factor = new uint[intrinsic_params_equal_flag ? 0 : numViewsMinus1 + 1];
-                for (i = 0; i <= intrinsic_params_equal_flag ? 0 : numViewsMinus1; i++)
+                this.sign_focal_length_x = new byte[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.exponent_focal_length_x = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.mantissa_focal_length_x = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.sign_focal_length_y = new byte[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.exponent_focal_length_y = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.mantissa_focal_length_y = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.sign_principal_point_x = new byte[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.exponent_principal_point_x = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.mantissa_principal_point_x = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.sign_principal_point_y = new byte[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.exponent_principal_point_y = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.mantissa_principal_point_y = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.sign_skew_factor = new byte[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.exponent_skew_factor = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                this.mantissa_skew_factor = new uint[intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1 + 1];
+                for (i = 0; i <= intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_x[i]);
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_x[i]);
@@ -14513,7 +14509,7 @@ multiview_acquisition_info( payloadSize ) {
                 size += stream.WriteUnsignedIntGolomb(this.prec_principal_point);
                 size += stream.WriteUnsignedIntGolomb(this.prec_skew_factor);
 
-                for (i = 0; i <= intrinsic_params_equal_flag ? 0 : numViewsMinus1; i++)
+                for (i = 0; i <= intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1; i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.sign_focal_length_x[i]);
                     size += stream.WriteUnsignedInt(6, this.exponent_focal_length_x[i]);
@@ -14638,7 +14634,7 @@ vps_temporal_id_nesting_flag u(1)
 vps_reserved_0xffff_16bits u(16) 
 profile_tier_level( 1, vps_max_sub_layers_minus1 )  
 vps_sub_layer_ordering_info_present_flag  u(1)
-for( i = ( vps_sub_layer_ordering_info_present_flag ? 0 : vps_max_sub_layers_minus1 ); i <=  vps_max_sub_layers_minus1; i++ ) { 
+for( i = ( vps_sub_layer_ordering_info_present_flag != 0 ?  0 : vps_max_sub_layers_minus1 ); i <=  vps_max_sub_layers_minus1; i++ ) { 
 vps_max_dec_pic_buffering_minus1[ i ] ue(v) 
 vps_max_num_reorder_pics[ i ] ue(v) 
 vps_max_latency_increase_plus1[ i ] ue(v) 
@@ -14785,7 +14781,7 @@ layer_id_included_flag[ i ][ j ] u(1)
             this.vps_max_dec_pic_buffering_minus1 = new uint[vps_max_sub_layers_minus1 + 1];
             this.vps_max_num_reorder_pics = new uint[vps_max_sub_layers_minus1 + 1];
             this.vps_max_latency_increase_plus1 = new uint[vps_max_sub_layers_minus1 + 1];
-            for (i = (vps_sub_layer_ordering_info_present_flag ? 0 : vps_max_sub_layers_minus1); i <= vps_max_sub_layers_minus1; i++)
+            for (i = (vps_sub_layer_ordering_info_present_flag != 0 ? 0 : vps_max_sub_layers_minus1); i <= vps_max_sub_layers_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.vps_max_dec_pic_buffering_minus1[i]);
                 size += stream.ReadUnsignedIntGolomb(size, out this.vps_max_num_reorder_pics[i]);
@@ -14901,7 +14897,7 @@ layer_id_included_flag[ i ][ j ] u(1)
             size += stream.WriteClass<ProfileTierLevel>(context, this.profile_tier_level);
             size += stream.WriteUnsignedInt(1, this.vps_sub_layer_ordering_info_present_flag);
 
-            for (i = (vps_sub_layer_ordering_info_present_flag ? 0 : vps_max_sub_layers_minus1); i <= vps_max_sub_layers_minus1; i++)
+            for (i = (vps_sub_layer_ordering_info_present_flag != 0 ? 0 : vps_max_sub_layers_minus1); i <= vps_max_sub_layers_minus1; i++)
             {
                 size += stream.WriteUnsignedIntGolomb(this.vps_max_dec_pic_buffering_minus1[i]);
                 size += stream.WriteUnsignedIntGolomb(this.vps_max_num_reorder_pics[i]);

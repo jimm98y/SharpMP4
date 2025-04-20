@@ -1,14 +1,14 @@
 ﻿nal_unit( NumBytesInNalUnit ) { 
   nal_unit_header()  
-  NumBytesInRbsp = 0  
-  for( i = 2; i < NumBytesInNalUnit; i++ )  
-    if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 ) == 0x000003 ) {  
-     rbsp_byte[ NumBytesInRbsp++ ] b(8)
-     rbsp_byte[ NumBytesInRbsp++ ] b(8) 
-     i +=  2  
-     emulation_prevention_three_byte  /* equal to 0x03 */ f(8) 
-    } else  
-      rbsp_byte[ NumBytesInRbsp++ ] b(8) 
+  /*NumBytesInRbsp = 0 */ 
+  /*for( i = 2; i < NumBytesInNalUnit; i++ )  */
+  /* if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 ) == 0x000003 ) {  */
+  /*   rbsp_byte[ NumBytesInRbsp++ ] b(8) */
+  /*   rbsp_byte[ NumBytesInRbsp++ ] b(8) */
+  /*   i +=  2  */
+  /*   emulation_prevention_three_byte  *//* equal to 0x03 *//* f(8) */
+  /*  } else  */
+  /*    rbsp_byte[ NumBytesInRbsp++ ] b(8) */
 } 
 
 nal_unit_header() { 

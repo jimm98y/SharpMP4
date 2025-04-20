@@ -1245,7 +1245,7 @@ namespace Sharp{type}
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "bool", FieldArray = field.FieldArray });
                         }
-                        else if(field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel")
+                        else if(field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel" || field.Name == "numComps")
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(64)", FieldArray = field.FieldArray });
                         }

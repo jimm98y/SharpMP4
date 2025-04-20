@@ -152,7 +152,7 @@ namespace SharpH26X
             }
         }
 
-        private void WriteBits(int count, long value)
+        private void WriteBits(int count, ulong value)
         {
             if (count > 64)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -160,7 +160,7 @@ namespace SharpH26X
             while (count > 0)
             {
                 int bits = count - 1;
-                long mask = 0x1 << bits;
+                ulong mask = 0x1u << bits;
                 WriteBit((int)((value & mask) >> bits));
                 count--;
             }
@@ -221,14 +221,23 @@ namespace SharpH26X
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
+            ulong read = ReadUnsignedInt(size, count, out ulong v);
+            value = (uint)v;
+            return read;
+        }
+
+        public ulong ReadUnsignedInt(ulong size, int count, out ulong value)
+        {
+            if (count > 64)
+                throw new ArgumentOutOfRangeException(nameof(count));
             long ret = ReadBits(count);
-            if(ret == -1)
+            if (ret == -1)
                 throw new EndOfStreamException();
-            value = (uint)ret;
+            value = (ulong)ret;
             return (ulong)count;
         }
 
-        public ulong WriteUnsignedInt(int count, uint value)
+        public ulong WriteUnsignedInt(int count, ulong value)
         {
             WriteBits(count, value);
             return (ulong)count;
@@ -247,7 +256,7 @@ namespace SharpH26X
 
         public ulong WriteSignedInt(int count, int value)
         {
-            WriteBits(count, value);
+            WriteBits(count, unchecked((ulong)value));
             return (ulong)count;
         }
 
@@ -293,7 +302,7 @@ namespace SharpH26X
             }
             WriteBits(bits, 0);
             WriteBit(1);
-            WriteBits(bits, (int)(value - cumul));
+            WriteBits(bits, (ulong)(value - cumul));
             return (ulong)(bits + 1 + bits);
         }
 
@@ -452,7 +461,7 @@ namespace SharpH26X
 
         public ulong WriteBits(int count, byte value)
         {
-            WriteBits(count, (long)value);
+            WriteBits(count, (ulong)value);
             return (ulong)count;
         }
 
