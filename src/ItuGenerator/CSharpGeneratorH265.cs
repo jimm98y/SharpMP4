@@ -61,6 +61,9 @@ namespace ItuGenerator
             condition = condition.Replace("slice_type != I", "!H265FrameTypes.IsI(slice_type)");
             condition = condition.Replace("nal_unit_type != ", "nal_unit_type != H265NALTypes.");
             condition = condition.Replace("nal_unit_type == ", "nal_unit_type == H265NALTypes.");
+            condition = condition.Replace("nal_unit_type >= ", "nal_unit_type >= H265NALTypes.");
+            condition = condition.Replace("nal_unit_type <= ", "nal_unit_type <= H265NALTypes.");
+            condition = condition.Replace("sop_vcl_nut[ i ] != ", "sop_vcl_nut[i] != H265NALTypes.");
             condition = condition.Replace("EXTENDED_ISO", "H265Constants.EXTENDED_ISO");
             condition = condition.Replace("EXTENDED_SAR", "H265Constants.EXTENDED_SAR");
             condition = condition.Replace("Abs(", "(uint)Math.Abs(");
@@ -77,6 +80,7 @@ namespace ItuGenerator
             fieldValue = fieldValue.Replace("Abs(", "(uint)Math.Abs(");
             fieldValue = fieldValue.Replace("Min(", "(uint)Math.Min(");
             fieldValue = fieldValue.Replace("Max(", "(uint)Math.Max(");
+            fieldValue = fieldValue.Replace("= scaling_list_dc_coef_minus8", "= (uint)scaling_list_dc_coef_minus8");
             return fieldValue;
         }
 

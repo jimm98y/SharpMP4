@@ -41,7 +41,7 @@ sps_scc_extension() {
    sps_num_palette_predictor_initializers_minus1 ue(v) 
    numComps = ( chroma_format_idc == 0 ) ? 1 : 3  
    for( comp = 0; comp < numComps; comp++ )  
-    for( i = 0; i  <=  sps_num_palette_predictor_initializers_minus1; i++ )  
+    for( i = 0; i <= sps_num_palette_predictor_initializers_minus1; i++ )  
      sps_palette_predictor_initializer[ comp ][ i ] u(v) 
   }  
  }  
@@ -131,7 +131,7 @@ pps_range_extension() {
  if( chroma_qp_offset_list_enabled_flag ) {  
   diff_cu_chroma_qp_offset_depth ue(v) 
   chroma_qp_offset_list_len_minus1 ue(v) 
-  for( i = 0; i  <=  chroma_qp_offset_list_len_minus1; i++ ) {  
+  for( i = 0; i <= chroma_qp_offset_list_len_minus1; i++ ) {  
    cb_qp_offset_list[ i ] se(v) 
    cr_qp_offset_list[ i ] se(v) 
   }  
@@ -250,7 +250,7 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
    general_reserved_zero_35bits u(35) 
   } else  
      general_reserved_zero_43bits u(43) 
-  if( ( general_profile_idc  >=  1  &&  general_profile_idc  <=  5 )  || 
+  if( ( general_profile_idc >= 1  &&  general_profile_idc <= 5 )  || 
     general_profile_idc == 9  || 
     general_profile_compatibility_flag[ 1 ]  ||  general_profile_compatibility_flag[ 2 ]  || 
     general_profile_compatibility_flag[ 3 ]  ||  general_profile_compatibility_flag[ 4 ]  || 
@@ -313,7 +313,7 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
     sub_layer_reserved_zero_35bits[ i ] u(35) 
    } else  
     sub_layer_reserved_zero_43bits[ i ] u(43) 
-   if( ( sub_layer_profile_idc[ i ]  >=  1  &&  sub_layer_profile_idc[ i ]  <=  5 )  || 
+   if( ( sub_layer_profile_idc[ i ] >= 1  &&  sub_layer_profile_idc[ i ] <= 5 )  || 
      sub_layer_profile_idc[ i ] == 9  || 
      sub_layer_profile_compatibility_flag[ i ][ 1 ]  || 
      sub_layer_profile_compatibility_flag[ i ][ 2 ]  || 
@@ -375,12 +375,12 @@ sei_message() {
 ref_pic_lists_modification() { 
 ref_pic_list_modification_flag_l0  u(1)
 if( ref_pic_list_modification_flag_l0 )  
-for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
+for( i = 0; i <= num_ref_idx_l0_active_minus1; i++ )  
 list_entry_l0[ i ] u(v) 
 if( slice_type == B ) {   
 ref_pic_list_modification_flag_l1 u(1)
 if( ref_pic_list_modification_flag_l1 )  
-for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
+for( i = 0; i <= num_ref_idx_l1_active_minus1; i++ )  
 list_entry_l1[ i ] u(v) 
 }  
 } 
@@ -389,18 +389,18 @@ pred_weight_table() {
  luma_log2_weight_denom ue(v) 
  if( ChromaArrayType != 0 )  
   delta_chroma_log2_weight_denom se(v) 
- for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
+ for( i = 0; i <= num_ref_idx_l0_active_minus1; i++ )  
   if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
    ( PicOrderCnt( RefPicList0[ i ] ) != PicOrderCnt( CurrPic ) ) ) 
  
    luma_weight_l0_flag[ i ] u(1) 
  if( ChromaArrayType != 0 )  
-  for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
+  for( i = 0; i <= num_ref_idx_l0_active_minus1; i++ )  
    if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
     ( PicOrderCnt(RefPicList0[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
     chroma_weight_l0_flag[ i ] u(1) 
- for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ ) {  
+ for( i = 0; i <= num_ref_idx_l0_active_minus1; i++ ) {  
   if( luma_weight_l0_flag[ i ] ) {  
    delta_luma_weight_l0[ i ] se(v) 
    luma_offset_l0[ i ] se(v) 
@@ -412,18 +412,18 @@ pred_weight_table() {
    }  
  }  
  if( slice_type == B ) {  
-  for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
+  for( i = 0; i <= num_ref_idx_l1_active_minus1; i++ )  
    if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
     ( PicOrderCnt(RefPicList1[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
     luma_weight_l1_flag[ i ] u(1) 
   if( ChromaArrayType != 0 )  
-   for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
+   for( i = 0; i <= num_ref_idx_l1_active_minus1; i++ )  
     if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
      ( PicOrderCnt(RefPicList1[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
      chroma_weight_l1_flag[ i ] u(1) 
-  for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ ) {  
+  for( i = 0; i <= num_ref_idx_l1_active_minus1; i++ ) {  
    if( luma_weight_l1_flag[ i ] ) {  
     delta_luma_weight_l1[ i ] se(v) 
     luma_offset_l1[ i ] se(v) 
@@ -445,7 +445,7 @@ st_ref_pic_set( stRpsIdx ) {
    delta_idx_minus1 ue(v) 
   delta_rps_sign u(1) 
   abs_delta_rps_minus1 ue(v) 
-  for( j = 0; j  <=  NumDeltaPocs[ RefRpsIdx ]; j++ ) {  
+  for( j = 0; j <= NumDeltaPocs[ RefRpsIdx ]; j++ ) {  
    used_by_curr_pic_flag[ j ] u(1) 
    if( !used_by_curr_pic_flag[ j ] )  
     use_delta_flag[ j ] u(1) 
@@ -668,7 +668,7 @@ pic_timing( payloadSize ) {
    du_common_cpb_removal_delay_flag u(1) 
    if( du_common_cpb_removal_delay_flag )  
     du_common_cpb_removal_delay_increment_minus1 u(v) 
-   for( i = 0; i  <=  num_decoding_units_minus1; i++ ) {  
+   for( i = 0; i <= num_decoding_units_minus1; i++ ) {  
     num_nalus_in_du_minus1[ i ] ue(v) 
     if( !du_common_cpb_removal_delay_flag  &&  i < num_decoding_units_minus1 )  
      du_cpb_removal_delay_increment_minus1[ i ] u(v) 
@@ -682,7 +682,7 @@ pan_scan_rect( payloadSize ) {
  pan_scan_rect_cancel_flag u(1) 
  if( !pan_scan_rect_cancel_flag ) {  
   pan_scan_cnt_minus1 ue(v) 
-  for( i = 0; i  <=  pan_scan_cnt_minus1; i++ ) {  
+  for( i = 0; i <= pan_scan_cnt_minus1; i++ ) {  
    pan_scan_rect_left_offset[ i ] se(v) 
    pan_scan_rect_right_offset[ i ] se(v) 
    pan_scan_rect_top_offset[ i ] se(v) 
@@ -768,10 +768,10 @@ film_grain_characteristics( payloadSize ) {
    if( comp_model_present_flag[ c ] ) {  
     num_intensity_intervals_minus1[ c ] u(8) 
     num_model_values_minus1[ c ] u(3) 
-    for( i = 0; i  <=  num_intensity_intervals_minus1[ c ]; i++ ) {  
+    for( i = 0; i <= num_intensity_intervals_minus1[ c ]; i++ ) {  
      intensity_interval_lower_bound[ c ][ i ] u(8) 
      intensity_interval_upper_bound[ c ][ i ] u(8) 
-     for( j = 0; j  <=  num_model_values_minus1[ c ]; j++ )  
+     for( j = 0; j <= num_model_values_minus1[ c ]; j++ )  
       comp_model_value[ c ][ i ][ j ] se(v) 
     }  
    }  
@@ -869,7 +869,7 @@ display_orientation( payloadSize ) {
 structure_of_pictures_info( payloadSize ) {  
  sop_seq_parameter_set_id ue(v) 
  num_entries_in_sop_minus1 ue(v) 
- for( i = 0; i  <=  num_entries_in_sop_minus1; i++ ) {  
+ for( i = 0; i <= num_entries_in_sop_minus1; i++ ) {  
   sop_vcl_nut[ i ] u(6) 
   sop_temporal_id[ i ] u(3) 
   if( sop_vcl_nut[ i ] != IDR_W_RADL  &&  sop_vcl_nut[ i ] != IDR_N_LP )  
@@ -896,9 +896,9 @@ active_parameter_sets( payloadSize ) {
  self_contained_cvs_flag u(1) 
  no_parameter_set_update_flag u(1) 
  num_sps_ids_minus1 ue(v) 
- for( i = 0; i  <=  num_sps_ids_minus1; i++ )  
+ for( i = 0; i <= num_sps_ids_minus1; i++ )  
   active_seq_parameter_set_id[ i ] ue(v) 
- for( i = vps_base_layer_internal_flag; i  <=  MaxLayersMinus1; i++ )  
+ for( i = vps_base_layer_internal_flag; i <= MaxLayersMinus1; i++ )  
   layer_sps_idx[ i ] ue(v) 
 } 
 
@@ -922,7 +922,7 @@ scalable_nesting( payloadSize ) {
  if( nesting_op_flag ) {  
   default_op_flag u(1) 
   nesting_num_ops_minus1 ue(v) 
-  for( i = default_op_flag; i  <=  nesting_num_ops_minus1; i++ ) {  
+  for( i = default_op_flag; i <= nesting_num_ops_minus1; i++ ) {  
    nesting_max_temporal_id_plus1[ i ] u(3) 
    nesting_op_idx[ i ] ue(v) 
   }  
@@ -931,7 +931,7 @@ scalable_nesting( payloadSize ) {
   if( !all_layers_flag ) {  
    nesting_no_op_max_temporal_id_plus1 u(3) 
    nesting_num_layers_minus1 ue(v) 
-   for( i = 0; i  <=  nesting_num_layers_minus1; i++ )  
+   for( i = 0; i <= nesting_num_layers_minus1; i++ )  
     nesting_layer_id[ i ] u(6) 
   }  
  }  
@@ -1009,12 +1009,12 @@ temporal_motion_constrained_tile_sets( payloadSize ) {
  if( !each_tile_one_tile_set_flag ) {  
   limited_tile_set_display_flag u(1) 
   num_sets_in_message_minus1 ue(v) 
-  for( i = 0; i  <=  num_sets_in_message_minus1; i++ ) {  
+  for( i = 0; i <= num_sets_in_message_minus1; i++ ) {  
    mcts_id[ i ] ue(v) 
    if( limited_tile_set_display_flag )  
     display_tile_set_flag[ i ] u(1) 
    num_tile_rects_in_set_minus1[ i ] ue(v) 
-   for( j = 0; j  <=  num_tile_rects_in_set_minus1[ i ]; j++ ) {  
+   for( j = 0; j <= num_tile_rects_in_set_minus1[ i ]; j++ ) {  
     top_left_tile_idx[ i ][ j ] ue(v) 
     bottom_right_tile_idx[ i ][ j ] ue(v) 
    }  
@@ -1045,7 +1045,7 @@ chroma_resampling_filter_hint( payloadSize ) {
    num_vertical_filters ue(v) 
    for( i = 0; i < num_vertical_filters; i++ ) {  
     ver_tap_length_minus1[ i ] ue(v) 
-    for( j = 0; j  <=  ver_tap_length_minus1[ i ]; j++ )  
+    for( j = 0; j <= ver_tap_length_minus1[ i ]; j++ )  
      ver_filter_coeff[ i ][ j ] se(v) 
    }  
   }  
@@ -1053,7 +1053,7 @@ chroma_resampling_filter_hint( payloadSize ) {
    num_horizontal_filters ue(v) 
    for( i = 0; i < num_horizontal_filters; i++ ) {  
     hor_tap_length_minus1[ i ] ue(v) 
-    for( j = 0; j  <=  hor_tap_length_minus1[ i ]; j++ )  
+    for( j = 0; j <= hor_tap_length_minus1[ i ]; j++ )  
      hor_filter_coeff[ i ][ j ] se(v) 
    }  
   }  
@@ -1070,7 +1070,7 @@ knee_function_info( payloadSize ) {
   output_d_range u(32) 
   output_disp_luminance u(32) 
   num_knee_points_minus1 ue(v) 
-  for( i = 0; i  <=  num_knee_points_minus1; i++ ) {  
+  for( i = 0; i <= num_knee_points_minus1; i++ ) {  
    input_knee_point[ i ] u(10) 
    output_knee_point[ i ] u(10) 
   }  
@@ -1094,7 +1094,7 @@ colour_remapping_info( payloadSize ) {
   for( c = 0; c < 3; c++ ) {  
    pre_lut_num_val_minus1[ c ] u(8) 
    if( pre_lut_num_val_minus1[ c ] > 0 )  
-    for( i = 0; i  <=  pre_lut_num_val_minus1[ c ]; i++ ) {  
+    for( i = 0; i <= pre_lut_num_val_minus1[ c ]; i++ ) {  
      pre_lut_coded_value[ c ][ i ] u(v) 
      pre_lut_target_value[ c ][ i ] u(v) 
     }  
@@ -1109,7 +1109,7 @@ colour_remapping_info( payloadSize ) {
   for( c = 0; c < 3; c++ ) {  
    post_lut_num_val_minus1[ c ] u(8) 
    if( post_lut_num_val_minus1[ c ] > 0 )  
-    for( i = 0; i  <=  post_lut_num_val_minus1[ c ]; i++ ) {  
+    for( i = 0; i <= post_lut_num_val_minus1[ c ]; i++ ) {  
      post_lut_coded_value[ c ][ i ] u(v) 
      post_lut_target_value[ c ][ i ] u(v) 
     }  
@@ -1242,7 +1242,7 @@ omni_viewport( payloadSize ) {
  if( !omni_viewport_cancel_flag ) {  
   omni_viewport_persistence_flag u(1) 
   omni_viewport_cnt_minus1 u(4) 
-  for( i = 0; i  <=  omni_viewport_cnt_minus1; i++ ) {  
+  for( i = 0; i <= omni_viewport_cnt_minus1; i++ ) {  
    omni_viewport_azimuth_centre[ i ] i(32) 
    omni_viewport_elevation_centre[ i ] i(32) 
    omni_viewport_tilt_centre[ i ] i(32) 
@@ -1263,7 +1263,7 @@ regional_nesting( payloadSize ) {
   regional_nesting_rect_bottom_offset[ i ] u(16) 
  }  
  num_sei_messages_in_regional_nesting_minus1 u(8) 
- for( i = 0; i  <=  num_sei_messages_in_regional_nesting_minus1; i++ ) {  
+ for( i = 0; i <= num_sei_messages_in_regional_nesting_minus1; i++ ) {  
   num_regions_for_sei_message[ i ] u(8) 
   for(j = 0; j < num_regions_for_sei_message[ i ]; j++ )  
    regional_nesting_sei_region_idx[ i ][ j ] u(8) 
@@ -1273,40 +1273,40 @@ regional_nesting( payloadSize ) {
 
 mcts_extraction_info_sets( payloadSize ) {  
  num_info_sets_minus1 ue(v) 
- for( i = 0; i  <=  num_info_sets_minus1; i++ ) {  
+ for( i = 0; i <= num_info_sets_minus1; i++ ) {  
   num_mcts_sets_minus1[ i ] ue(v) 
-  for( j = 0; j  <=  num_mcts_sets_minus1[ i ]; j++ ) {  
+  for( j = 0; j <= num_mcts_sets_minus1[ i ]; j++ ) {  
    num_mcts_in_set_minus1[ i ][ j ] ue(v) 
-   for( k = 0; k  <=  num_mcts_in_set_minus1[ i ][ j ]; k++ )  
+   for( k = 0; k <= num_mcts_in_set_minus1[ i ][ j ]; k++ )  
     idx_of_mcts_in_set[ i ][ j ][ k ] ue(v) 
   }  
   slice_reordering_enabled_flag[ i ] u(1) 
   if( slice_reordering_enabled_flag[ i ] ) {  
    num_slice_segments_minus1[ i ] ue(v) 
-   for( j = 0; j  <=  num_slice_segments_minus1[ i ]; j++ )  
+   for( j = 0; j <= num_slice_segments_minus1[ i ]; j++ )  
     output_slice_segment_address[ i ][ j ] u(v) 
   }  
   num_vps_in_info_set_minus1[ i ] ue(v) 
-  for( j = 0; j  <=  num_vps_in_info_set_minus1[ i ]; j++ )  
+  for( j = 0; j <= num_vps_in_info_set_minus1[ i ]; j++ )  
    vps_rbsp_data_length[ i ][ j ] ue(v) 
   num_sps_in_info_set_minus1[ i ] ue(v) 
-  for( j = 0; j  <=  num_sps_in_info_set_minus1[ i ]; j++ )  
+  for( j = 0; j <= num_sps_in_info_set_minus1[ i ]; j++ )  
    sps_rbsp_data_length[ i ][ j ] ue(v) 
   num_pps_in_info_set_minus1[ i ] ue(v) 
-  for( j = 0; j  <=  num_pps_in_info_set_minus1[ i ]; j++ ) {  
+  for( j = 0; j <= num_pps_in_info_set_minus1[ i ]; j++ ) {  
    pps_nuh_temporal_id_plus1[ i ][ j ] u(3) 
    pps_rbsp_data_length[ i ][ j ] ue(v) 
   }  
   while( !byte_aligned() )  
    mcts_alignment_bit_equal_to_zero f(1) 
-  for( j = 0; j  <=  num_vps_in_info_set_minus1[ i ]; j++ )  
-   for( k = 0; k  <=  vps_rbsp_data_length[ i ][ j ]; k++ )  
+  for( j = 0; j <= num_vps_in_info_set_minus1[ i ]; j++ )  
+   for( k = 0; k <= vps_rbsp_data_length[ i ][ j ]; k++ )  
     vps_rbsp_data_byte[ i ][ j ][ k ] u(8) 
-  for( j = 0; j  <=  num_sps_in_info_set_minus1[ i ]; j++ )  
-   for( k = 0; k  <=  sps_rbsp_data_length[ i ][ j ]; k++ )  
+  for( j = 0; j <= num_sps_in_info_set_minus1[ i ]; j++ )  
+   for( k = 0; k <= sps_rbsp_data_length[ i ][ j ]; k++ )  
     sps_rbsp_data_byte[ i ][ j ][ k ] u(8) 
-  for( j = 0; j  <=  num_pps_in_info_set_minus1[ i ]; j++ )  
-   for( k = 0; k  <=  pps_rbsp_data_length[ i ][ j ]; k++ )  
+  for( j = 0; j <= num_pps_in_info_set_minus1[ i ]; j++ )  
+   for( k = 0; k <= pps_rbsp_data_length[ i ][ j ]; k++ )  
     pps_rbsp_data_byte[ i ][ j ][ k ] u(8) 
  }  
 }  
@@ -1315,13 +1315,13 @@ mcts_extraction_info_nesting( payloadSize ) {
 all_mcts_flag  u(1) 
 if( !all_mcts_flag ) {  
 num_associated_mcts_minus1 ue(v) 
-for( i = 0; i  <=  num_associated_mcts_minus1; i++ )  
+for( i = 0; i <= num_associated_mcts_minus1; i++ )  
 idx_of_associated_mcts[ i ] ue(v) 
 }  
 num_sei_messages_in_mcts_extraction_nesting_minus1 ue(v) 
 while( !byte_aligned() )  
 mcts_nesting_zero_bit /* equal to 0 */ u(1)
-for( i = 0; i  <=  num_sei_messages_in_mcts_extraction_nesting_minus1; i++ )  
+for( i = 0; i <= num_sei_messages_in_mcts_extraction_nesting_minus1; i++ )  
 sei_message()  
 }  
 
@@ -1413,7 +1413,7 @@ hrd_parameters( commonInfPresentFlag, maxNumSubLayersMinus1 ) {
    dpb_output_delay_length_minus1 u(5) 
   }  
  }  
- for( i = 0; i  <=  maxNumSubLayersMinus1; i++ ) {  
+ for( i = 0; i <= maxNumSubLayersMinus1; i++ ) {  
   fixed_pic_rate_general_flag[ i ] u(1) 
   if( !fixed_pic_rate_general_flag[ i ] )  
    fixed_pic_rate_within_cvs_flag[ i ] u(1) 
@@ -1453,7 +1453,7 @@ vps_extension() {
  for( j = 0; j < ( NumScalabilityTypes - splitting_flag ); j++ )  
   dimension_id_len_minus1[ j ] u(3) 
  vps_nuh_layer_id_present_flag u(1) 
- for( i = 1; i  <=  MaxLayersMinus1; i++ ) {  
+ for( i = 1; i <= MaxLayersMinus1; i++ ) {  
   if( vps_nuh_layer_id_present_flag )   
    layer_id_in_nuh[ i ] u(6) 
   if( !splitting_flag )  
@@ -1464,7 +1464,7 @@ vps_extension() {
  if( view_id_len > 0 )  
   for( i = 0; i < NumViews; i++ )  
    view_id_val[ i ] u(v) 
- for( i = 1; i  <=  MaxLayersMinus1; i++ )  
+ for( i = 1; i <= MaxLayersMinus1; i++ )  
   for( j = 0; j < i; j++ )  
    direct_dependency_flag[ i ][ j ] u(1) 
  if( NumIndependentLayers > 1 )   
@@ -1474,18 +1474,18 @@ vps_extension() {
    highest_layer_idx_plus1[ i ][ j ] u(v) 
  vps_sub_layers_max_minus1_present_flag u(1) 
  if( vps_sub_layers_max_minus1_present_flag )  
-  for( i = 0; i  <=  MaxLayersMinus1; i++ )  
+  for( i = 0; i <= MaxLayersMinus1; i++ )  
    sub_layers_vps_max_minus1[ i ] u(3) 
  max_tid_ref_present_flag u(1) 
  if( max_tid_ref_present_flag )  
   for( i = 0; i < MaxLayersMinus1; i++ )  
-   for( j = i + 1; j  <=  MaxLayersMinus1; j++ )  
+   for( j = i + 1; j <= MaxLayersMinus1; j++ )  
     if( direct_dependency_flag[ j ][ i ] )  
      max_tid_il_ref_pics_plus1[ i ][ j ] u(3) 
  default_ref_layers_active_flag u(1) 
  vps_num_profile_tier_level_minus1 ue(v) 
  for( i = vps_base_layer_internal_flag ? 2 : 1; 
-          i  <=  vps_num_profile_tier_level_minus1; i++ ) { 
+          i <= vps_num_profile_tier_level_minus1; i++ ) { 
  
   vps_profile_present_flag[ i ] u(1) 
   profile_tier_level( vps_profile_present_flag[ i ], vps_max_sub_layers_minus1 )  
@@ -1496,7 +1496,7 @@ vps_extension() {
  }  
  NumOutputLayerSets = num_add_olss + NumLayerSets  
  for( i = 1; i < NumOutputLayerSets; i++ ) {  
-  if( NumLayerSets > 2  &&  i  >=  NumLayerSets )  
+  if( NumLayerSets > 2  &&  i >= NumLayerSets )  
    layer_set_idx_for_ols_minus1[ i ] u(v) 
   if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  
    for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  
@@ -1510,16 +1510,16 @@ vps_extension() {
    alt_output_layer_flag[ i ] u(1) 
     }  
  vps_num_rep_formats_minus1 ue(v) 
- for( i = 0; i  <=  vps_num_rep_formats_minus1; i++ )  
+ for( i = 0; i <= vps_num_rep_formats_minus1; i++ )  
   rep_format()  
  if( vps_num_rep_formats_minus1 > 0 )  
   rep_format_idx_present_flag u(1) 
  if( rep_format_idx_present_flag )   
-  for( i = vps_base_layer_internal_flag ? 1 : 0; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag ? 1 : 0; i <= MaxLayersMinus1; i++ )  
    vps_rep_format_idx[ i ] u(v) 
  max_one_active_ref_layer_flag u(1) 
  vps_poc_lsb_aligned_flag u(1) 
- for( i = 1; i  <=  MaxLayersMinus1; i++ )  
+ for( i = 1; i <= MaxLayersMinus1; i++ )  
   if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )  
    poc_lsb_not_present_flag[ i ] u(1) 
  dpb_size()  
@@ -1528,13 +1528,13 @@ vps_extension() {
  if( direct_dependency_all_layers_flag )  
   direct_dependency_all_layers_type u(v) 
  else {  
-  for( i = vps_base_layer_internal_flag ? 1 : 2; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag ? 1 : 2; i <= MaxLayersMinus1; i++ )  
    for( j = vps_base_layer_internal_flag ? 0 : 1; j < i; j++ )  
     if( direct_dependency_flag[ i ][ j ] )  
      direct_dependency_type[ i ][ j ] u(v) 
  }  
  vps_non_vui_extension_length ue(v) 
- for( i = 1; i  <=  vps_non_vui_extension_length; i++ )  
+ for( i = 1; i <= vps_non_vui_extension_length; i++ )  
   vps_non_vui_extension_data_byte u(8) 
  vps_vui_present_flag u(1) 
  if( vps_vui_present_flag ) {  
@@ -1568,7 +1568,7 @@ dpb_size() {
  for( i = 1; i < NumOutputLayerSets; i++ ) {  
   currLsIdx = OlsIdxToLsIdx[ i ]  
   sub_layer_flag_info_present_flag[ i ] u(1) 
-  for( j = 0; j  <=  MaxSubLayersInLayerSetMinus1[ currLsIdx ]; j++ ) {  
+  for( j = 0; j <= MaxSubLayersInLayerSetMinus1[ currLsIdx ]; j++ ) {  
    if( j > 0  &&  sub_layer_flag_info_present_flag[ i ] )  
     sub_layer_dpb_info_present_flag[ i ][ j ] u(1) 
    if( sub_layer_dpb_info_present_flag[ i ][ j ] ) {  
@@ -1594,7 +1594,7 @@ vps_vui() {
  pic_rate_present_vps_flag u(1) 
  if( bit_rate_present_vps_flag  ||  pic_rate_present_vps_flag )  
   for( i = vps_base_layer_internal_flag ? 0 : 1; i < NumLayerSets; i++ )  
-   for( j = 0; j  <=  MaxSubLayersInLayerSetMinus1[ i ]; j++ ) {  
+   for( j = 0; j <= MaxSubLayersInLayerSetMinus1[ i ]; j++ ) {  
     if( bit_rate_present_vps_flag )  
      bit_rate_present_flag[ i ][ j ] u(1) 
     if( pic_rate_present_vps_flag )  
@@ -1611,19 +1611,19 @@ vps_vui() {
  video_signal_info_idx_present_flag u(1) 
  if( video_signal_info_idx_present_flag )  
   vps_num_video_signal_info_minus1 u(4) 
- for( i = 0; i  <=  vps_num_video_signal_info_minus1; i++ )  
+ for( i = 0; i <= vps_num_video_signal_info_minus1; i++ )  
   video_signal_info()  
  if( video_signal_info_idx_present_flag  &&  vps_num_video_signal_info_minus1 > 0 )  
-  for( i = vps_base_layer_internal_flag ? 0 : 1; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++ )  
    vps_video_signal_info_idx[ i ] u(4) 
  tiles_not_in_use_flag u(1) 
  if( !tiles_not_in_use_flag ) {  
-  for( i = vps_base_layer_internal_flag ? 0 : 1; i  <=  MaxLayersMinus1; i++ ) {  
+  for( i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++ ) {  
    tiles_in_use_flag[ i ] u(1) 
    if( tiles_in_use_flag[ i ] )  
     loop_filter_not_across_tiles_flag[ i ] u(1) 
   }  
-  for( i = vps_base_layer_internal_flag ? 1 : 2; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag ? 1 : 2; i <= MaxLayersMinus1; i++ )  
    for( j = 0; j < NumDirectRefLayers[ layer_id_in_nuh[ i ] ]; j++ ) {  
     layerIdx = LayerIdxInVps[ IdDirectRefLayer[ layer_id_in_nuh[ i ] ][ j ] ]  
     if( tiles_in_use_flag[ i ]  &&  tiles_in_use_flag[ layerIdx ] )  
@@ -1632,13 +1632,13 @@ vps_vui() {
  }  
  wpp_not_in_use_flag u(1) 
  if( !wpp_not_in_use_flag )  
-  for( i = vps_base_layer_internal_flag ? 0 : 1; i  <=  MaxLayersMinus1; i++ )  
+  for( i = vps_base_layer_internal_flag ? 0 : 1; i <= MaxLayersMinus1; i++ )  
    wpp_in_use_flag[ i ] u(1) 
  single_layer_for_non_irap_flag u(1)
   higher_layer_irap_skip_flag u(1) 
  ilp_restricted_ref_layers_flag u(1) 
  if( ilp_restricted_ref_layers_flag )  
-  for( i = 1; i  <=  MaxLayersMinus1; i++ )  
+  for( i = 1; i <= MaxLayersMinus1; i++ )  
    for( j = 0; j < NumDirectRefLayers[ layer_id_in_nuh[ i ] ]; j++ )  
     if( vps_base_layer_internal_flag  || 
         IdDirectRefLayer[ layer_id_in_nuh[ i ] ][ j ] > 0 ) { 
@@ -1653,7 +1653,7 @@ vps_vui() {
  vps_vui_bsp_hrd_present_flag u(1) 
  if( vps_vui_bsp_hrd_present_flag )  
   vps_vui_bsp_hrd_params()  
- for( i = 1; i  <=  MaxLayersMinus1; i++ )  
+ for( i = 1; i <= MaxLayersMinus1; i++ )  
   if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )  
    base_layer_parameter_set_compatibility_flag[ i ] u(1) 
 }  
@@ -1681,15 +1681,15 @@ vps_vui_bsp_hrd_params() {
    num_signalled_partitioning_schemes[ h ] ue(v) 
    for( j = 1; j < num_signalled_partitioning_schemes[ h ] + 1; j++ ) {  
     num_partitions_in_scheme_minus1[ h ][ j ] ue(v) 
-    for( k = 0; k  <=  num_partitions_in_scheme_minus1[ h ][ j ]; k++ )  
+    for( k = 0; k <= num_partitions_in_scheme_minus1[ h ][ j ]; k++ )  
      for( r = 0; r < NumLayersInIdList[ OlsIdxToLsIdx[ h ] ]; r++ )  
       layer_included_in_partition_flag[ h ][ j ][ k ][ r ] u(1) 
    }  
    for( i = 0; i < num_signalled_partitioning_schemes[ h ] + 1; i++ )  
-    for( t = 0; t  <=  MaxSubLayersInLayerSetMinus1[ OlsIdxToLsIdx[ h ] ]; t++ ) {  
+    for( t = 0; t <= MaxSubLayersInLayerSetMinus1[ OlsIdxToLsIdx[ h ] ]; t++ ) {  
      num_bsp_schedules_minus1[ h ][ i ][ t ] ue(v) 
-     for( j = 0; j  <=  num_bsp_schedules_minus1[ h ][ i ][ t ]; j++ )  
-      for( k = 0; k  <=  num_partitions_in_scheme_minus1[ h ][ i ]; k++ ) {  
+     for( j = 0; j <= num_bsp_schedules_minus1[ h ][ i ][ t ]; j++ )  
+      for( k = 0; k <= num_partitions_in_scheme_minus1[ h ][ i ]; k++ ) {  
        if( vps_num_hrd_parameters + vps_num_add_hrd_params > 1 )  
         bsp_hrd_idx[ h ][ i ][ t ][ j ][ k ] u(v) 
        bsp_sched_idx[ h ][ i ][ t ][ j ][ k ] ue(v) 
@@ -1734,7 +1734,7 @@ seq_parameter_set_rbsp() {
  if( !MultiLayerExtSpsFlag ) {  
   sps_sub_layer_ordering_info_present_flag u(1) 
   for( i = ( sps_sub_layer_ordering_info_present_flag ? 0 : sps_max_sub_layers_minus1 ); 
-    i  <=  sps_max_sub_layers_minus1; i++ ) { 
+    i <= sps_max_sub_layers_minus1; i++ ) { 
  
    sps_max_dec_pic_buffering_minus1[ i ] ue(v) 
    sps_max_num_reorder_pics[ i ] ue(v) 
@@ -1848,7 +1848,7 @@ pps_multilayer_extension() {
 
 colour_mapping_table() {  
  num_cm_ref_layers_minus1 ue(v) 
- for( i = 0; i  <=  num_cm_ref_layers_minus1; i++ )  
+ for( i = 0; i <= num_cm_ref_layers_minus1; i++ )  
   cm_ref_layer_id[ i ] u(6) 
  cm_octant_depth u(2) 
  cm_y_part_num_log2 u(2) 
@@ -1895,7 +1895,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
 
 layers_not_present( payloadSize ) {  
  lnp_sei_active_vps_id u(4) 
- for( i = 0; i  <=  MaxLayersMinus1; i++ )   
+ for( i = 0; i <= MaxLayersMinus1; i++ )   
   layer_not_present_flag[ i ] u(1) 
 }   
 
@@ -1910,7 +1910,7 @@ inter_layer_constrained_tile_sets( payloadSize ) {
   for( i = 0; i < numSignificantSets; i++ ) {  
    ilcts_id[ i ] ue(v) 
    il_num_tile_rects_in_set_minus1[ i ] ue(v) 
-   for( j = 0; j  <=  il_num_tile_rects_in_set_minus1[ i ]; j++ ) {  
+   for( j = 0; j <= il_num_tile_rects_in_set_minus1[ i ]; j++ ) {  
     il_top_left_tile_idx[ i ][ j ] ue(v) 
     il_bottom_right_tile_idx[ i ][ j ] ue(v) 
    }  
@@ -1929,7 +1929,7 @@ bsp_nesting( payloadSize ) {
  num_seis_in_bsp_minus1 ue(v) 
  while( !byte_aligned() )  
   bsp_nesting_zero_bit /* equal to 0 */ u(1) 
- for( i = 0; i  <=  num_seis_in_bsp_minus1; i++ )  
+ for( i = 0; i <= num_seis_in_bsp_minus1; i++ )  
   sei_message()  
 }  
 
@@ -1946,7 +1946,7 @@ bsp_initial_arrival_time( payloadSize ) {
 sub_bitstream_property( payloadSize ) {  
  sb_property_active_vps_id u(4) 
  num_additional_sub_streams_minus1 ue(v) 
- for( i = 0; i  <=  num_additional_sub_streams_minus1; i++ ) {  
+ for( i = 0; i <= num_additional_sub_streams_minus1; i++ ) {  
   sub_bitstream_mode[ i ] u(2) 
   ols_idx_to_vps[ i ] ue(v) 
   highest_sublayer_id[ i ] u(3) 
@@ -1980,7 +1980,7 @@ overlay_info( payloadSize ) {
   overlay_alpha_aux_id_minus128 ue(v) 
   overlay_element_label_value_length_minus8 ue(v) 
   num_overlays_minus1 ue(v) 
-  for( i = 0; i  <=  num_overlays_minus1; i++ ) {  
+  for( i = 0; i <= num_overlays_minus1; i++ ) {  
    overlay_idx[ i ] ue(v) 
    language_overlay_present_flag[ i ] u(1) 
    overlay_content_layer_id[ i ] u(6) 
@@ -1992,7 +1992,7 @@ overlay_info( payloadSize ) {
     overlay_alpha_layer_id[ i ] u(6) 
    if( overlay_label_present_flag[ i ] ) {  
     num_overlay_elements_minus1[ i ] ue(v) 
-    for( j = 0; j  <=  num_overlay_elements_minus1[ i ]; j++ ) {  
+    for( j = 0; j <= num_overlay_elements_minus1[ i ]; j++ ) {  
      overlay_element_label_min[ i ][ j ] u(v) 
      overlay_element_label_max[ i ][ j ] u(v) 
     }  
@@ -2000,12 +2000,12 @@ overlay_info( payloadSize ) {
   }  
   while( !byte_aligned() )  
    overlay_zero_bit /* equal to 0 */ f(1) 
-  for( i = 0; i  <=  num_overlays_minus1; i++ ) {  
+  for( i = 0; i <= num_overlays_minus1; i++ ) {  
    if( language_overlay_present_flag[ i ] )  
     overlay_language[ i ] st(v) 
    overlay_name[ i ] st(v) 
    if( overlay_label_present_flag[ i ] )  
-    for( j = 0; j  <=  num_overlay_elements_minus1[ i ]; j++ )  
+    for( j = 0; j <= num_overlay_elements_minus1[ i ]; j++ )  
      overlay_element_name[ i ][ j ] st(v) 
   }  
   overlay_info_persistence_flag u(1) 
@@ -2033,7 +2033,7 @@ if( ref_viewing_distance_flag )
 prec_ref_viewing_dist ue(v) 
 num_ref_displays_minus1 ue(v) 
 
-for( i = 0; i  <=  num_ref_displays_minus1; i++ ) {  
+for( i = 0; i <= num_ref_displays_minus1; i++ ) {  
 left_view_id[ i ] ue(v) 
 right_view_id[ i ] ue(v) 
 exponent_ref_display_width[ i ] u(6) 
@@ -2067,7 +2067,7 @@ depth_representation_info( payloadSize ) {
   depth_rep_info_element( DMaxSign, DMaxExp, DMaxMantissa, DMaxManLen )  
  if( depth_representation_type == 3 ) {  
   depth_nonlinear_representation_num_minus1 ue(v) 
-  for( i = 1; i  <=  depth_nonlinear_representation_num_minus1 + 1; i++ )  
+  for( i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++ )  
    depth_nonlinear_representation_model[ i ] u(8)
  }  
 } 
@@ -2092,7 +2092,7 @@ multiview_acquisition_info( payloadSize ) {
   prec_focal_length ue(v) 
   prec_principal_point ue(v) 
   prec_skew_factor ue(v) 
-  for( i = 0; i  <=  intrinsic_params_equal_flag ? 0 : numViewsMinus1; i++ ) {  
+  for( i = 0; i <= intrinsic_params_equal_flag ? 0 : numViewsMinus1; i++ ) {  
    sign_focal_length_x[ i ] u(1) 
    exponent_focal_length_x[ i ] u(6) 
    mantissa_focal_length_x[ i ] u(v) 
@@ -2113,7 +2113,7 @@ multiview_acquisition_info( payloadSize ) {
  if( extrinsic_param_flag ) {  
   prec_rotation_param ue(v) 
   prec_translation_param ue(v) 
-  for( i = 0; i  <=  numViewsMinus1; i++ )  
+  for( i = 0; i <= numViewsMinus1; i++ )  
    for( j = 0; j < 3; j++ ) { /* row */  
     for( k = 0; k < 3; k++ ) { /* column */  
      sign_r[ i ][ j ][ k ] u(1) 
@@ -2129,7 +2129,7 @@ multiview_acquisition_info( payloadSize ) {
 
 multiview_view_position( payloadSize ) { 
 num_views_minus1  ue(v)
-for( i = 0; i  <=  num_views_minus1; i++ )  
+for( i = 0; i <= num_views_minus1; i++ )  
 view_position[ i ] ue(v) 
 }
 
@@ -2143,15 +2143,15 @@ vps_temporal_id_nesting_flag u(1)
 vps_reserved_0xffff_16bits u(16) 
 profile_tier_level( 1, vps_max_sub_layers_minus1 )  
 vps_sub_layer_ordering_info_present_flag  u(1)
-for( i = ( vps_sub_layer_ordering_info_present_flag ? 0 : vps_max_sub_layers_minus1 ); i <=  vps_max_sub_layers_minus1; i++ ) { 
+for( i = ( vps_sub_layer_ordering_info_present_flag ? 0 : vps_max_sub_layers_minus1 ); i<= vps_max_sub_layers_minus1; i++ ) { 
 vps_max_dec_pic_buffering_minus1[ i ] ue(v) 
 vps_max_num_reorder_pics[ i ] ue(v) 
 vps_max_latency_increase_plus1[ i ] ue(v) 
 }  
 vps_max_layer_id u(6)
 vps_num_layer_sets_minus1 ue(v) 
-for( i = 1; i  <=  vps_num_layer_sets_minus1; i++ )  
-for( j = 0; j  <=  vps_max_layer_id; j++ )  
+for( i = 1; i <= vps_num_layer_sets_minus1; i++ )  
+for( j = 0; j <= vps_max_layer_id; j++ )  
 layer_id_included_flag[ i ][ j ] u(1)
  vps_timing_info_present_flag u(1) 
  if( vps_timing_info_present_flag ) {  
@@ -2212,7 +2212,7 @@ vps_3d_extension() {
 }  
 
 sps_3d_extension() {  
- for( d = 0; d  <=  1; d++ ) {  
+ for( d = 0; d <= 1; d++ ) {  
   iv_di_mc_enabled_flag[ d ] u(1) 
   iv_mv_scal_enabled_flag[ d ] u(1) 
   if( d == 0 ) {  
@@ -2238,14 +2238,14 @@ pps_3d_extension() {
  if( dlts_present_flag ) {  
   pps_depth_layers_minus1 u(6) 
   pps_bit_depth_for_depth_layers_minus8 u(4) 
-  for( i = 0; i  <=  pps_depth_layers_minus1; i++ ) {  
+  for( i = 0; i <= pps_depth_layers_minus1; i++ ) {  
    dlt_flag[ i ] u(1) 
    if( dlt_flag[ i ] ) {  
     dlt_pred_flag[ i ] u(1) 
     if( !dlt_pred_flag[ i ] )  
      dlt_val_flags_present_flag[ i ] u(1) 
     if( dlt_val_flags_present_flag[ i ] )  
-     for( j = 0; j  <=  depthMaxValue; j++ )  
+     for( j = 0; j <= depthMaxValue; j++ )  
            dlt_value_flag[ i ][ j ] u(1) 
     else  
      delta_dlt( i )  
@@ -2270,7 +2270,7 @@ delta_dlt( i ) {
 
 slice_segment_header() {  
  first_slice_segment_in_pic_flag u(1) 
- if( nal_unit_type  >=  BLA_W_LP  &&  nal_unit_type  <=  RSV_IRAP_VCL23 )  
+ if( nal_unit_type >= BLA_W_LP  &&  nal_unit_type <= RSV_IRAP_VCL23 )  
   no_output_of_prior_pics_flag u(1) 
  slice_pic_parameter_set_id ue(v) 
  if( !first_slice_segment_in_pic_flag ) {  
@@ -2447,7 +2447,7 @@ alternative_depth_info( payloadSize ) {
    rotation_gvd_flag u(1) 
    translation_gvd_flag u(1) 
    if( z_gvd_flag )   
-    for( i = 0; i  <=  num_constituent_views_gvd_minus1 + 1; i++ ) {  
+    for( i = 0; i <= num_constituent_views_gvd_minus1 + 1; i++ ) {  
      sign_gvd_z_near_flag[ i ] u(1) 
      exp_gvd_z_near[ i ] u(7) 
           man_len_gvd_z_near_minus1[ i ] u(5) 
@@ -2465,7 +2465,7 @@ alternative_depth_info( payloadSize ) {
     prec_gvd_rotation_param ue(v) 
    if( translation_gvd_flag )  
     prec_gvd_translation_param ue(v) 
-   for( i = 0; i  <=  num_constituent_views_gvd_minus1 + 1; i++ ) {  
+   for( i = 0; i <= num_constituent_views_gvd_minus1 + 1; i++ ) {  
     if( intrinsic_param_gvd_flag ) {  
      sign_gvd_focal_length_x[ i ] u(1) 
      exp_gvd_focal_length_x[ i ] u(6) 

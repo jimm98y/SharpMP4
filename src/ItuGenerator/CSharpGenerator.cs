@@ -990,7 +990,7 @@ namespace Sharp{type}
 
             foreach (var suffix in ret.ToArray())
             {
-                if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Replace(" ", "").Contains(suffix.Replace(" ", "")))
+                if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Replace(" ", "").Replace("-2", "").Contains(suffix.Replace(" ", "")))
                     ret.Remove(suffix);
             }
 
@@ -1043,13 +1043,13 @@ namespace Sharp{type}
 
             foreach(var field in ituClass.FlattenedFields)
             {
-                resultCode += BuildField(field);
+                resultCode += BuildField(ituClass, field);
             }
 
             return resultCode;
         }
 
-        private string BuildField(ItuField field)
+        private string BuildField(ItuClass ituClass, ItuField field)
         {
             string type = GetCSharpType(field);
             string defaultInitializer = specificGenerator.GetFieldDefaultValue(field);
@@ -1082,6 +1082,11 @@ namespace Sharp{type}
             }
 
             string propertyName = GetFieldName(field).ToPropertyCase();
+            if(propertyName == ituClass.ClassName.ToPropertyCase())
+            {
+                propertyName = $"_{propertyName}";
+            }
+
             return $"\t\tprivate {type} {field.Name.ToFirstLower()}{initializer};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
         }
 
@@ -1169,7 +1174,15 @@ namespace Sharp{type}
                             }
                             else if (b.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null && b.AddedFields.FirstOrDefault(x => x.Name == variable) == null)
                             {
-                                b.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "u(32)" });
+                                // h265
+                                if (variable == "matrixId")
+                                {
+                                    b.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "i(32)" });
+                                }
+                                else
+                                {
+                                    b.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "u(32)" });
+                                }
                             }
                         }
                     }
@@ -1245,7 +1258,9 @@ namespace Sharp{type}
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "bool", FieldArray = field.FieldArray });
                         }
-                        else if(field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel" || field.Name == "numComps")
+                        else if(field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel" 
+                            // h265
+                            || field.Name == "numComps")
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(64)", FieldArray = field.FieldArray });
                         }
