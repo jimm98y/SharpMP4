@@ -2,7 +2,7 @@
   nal_unit_header()  
   NumBytesInRbsp = 0  
   for( i = 2; i < NumBytesInNalUnit; i++ )  
-    if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 )  ==  0x000003 ) {  
+    if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 ) == 0x000003 ) {  
      rbsp_byte[ NumBytesInRbsp++ ] b(8)
      rbsp_byte[ NumBytesInRbsp++ ] b(8) 
      i +=  2  
@@ -39,7 +39,7 @@ sps_scc_extension() {
   sps_palette_predictor_initializers_present_flag u(1) 
   if( sps_palette_predictor_initializers_present_flag ) {  
    sps_num_palette_predictor_initializers_minus1 ue(v) 
-   numComps = ( chroma_format_idc  ==  0 ) ? 1 : 3  
+   numComps = ( chroma_format_idc == 0 ) ? 1 : 3  
    for( comp = 0; comp < numComps; comp++ )  
     for( i = 0; i  <=  sps_num_palette_predictor_initializers_minus1; i++ )  
      sps_palette_predictor_initializer[ comp ][ i ] u(v) 
@@ -184,7 +184,7 @@ end_of_bitstream_rbsp() {
 }  
 
 filler_data_rbsp() { 
-while( next_bits( 8 )  ==  0xFF )  
+while( next_bits( 8 ) == 0xFF )  
 ff_byte  /* equal to 0xFF */ f(8) 
 rbsp_trailing_bits()  
 }  
@@ -218,13 +218,13 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
   general_interlaced_source_flag u(1) 
   general_non_packed_constraint_flag u(1) 
   general_frame_only_constraint_flag u(1) 
-  if( general_profile_idc  ==  4  ||  general_profile_compatibility_flag[ 4 ]  || 
-   general_profile_idc  ==  5  ||  general_profile_compatibility_flag[ 5 ]  || 
-   general_profile_idc  ==  6  ||  general_profile_compatibility_flag[ 6 ]  || 
-   general_profile_idc  ==  7  ||  general_profile_compatibility_flag[ 7 ]  || 
-   general_profile_idc  ==  8  ||  general_profile_compatibility_flag[ 8 ]  || 
-   general_profile_idc  ==  9  ||  general_profile_compatibility_flag[ 9 ]  || 
-   general_profile_idc  ==  10  ||  general_profile_compatibility_flag[ 10 ] ) { 
+  if( general_profile_idc == 4  ||  general_profile_compatibility_flag[ 4 ]  || 
+   general_profile_idc == 5  ||  general_profile_compatibility_flag[ 5 ]  || 
+   general_profile_idc == 6  ||  general_profile_compatibility_flag[ 6 ]  || 
+   general_profile_idc == 7  ||  general_profile_compatibility_flag[ 7 ]  || 
+   general_profile_idc == 8  ||  general_profile_compatibility_flag[ 8 ]  || 
+   general_profile_idc == 9  ||  general_profile_compatibility_flag[ 9 ]  || 
+   general_profile_idc == 10  ||  general_profile_compatibility_flag[ 10 ] ) { 
    /* The number of bits in this syntax structure is not affected by this condition */ 
  
    general_max_12bit_constraint_flag u(1) 
@@ -236,22 +236,22 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
    general_intra_constraint_flag u(1) 
    general_one_picture_only_constraint_flag u(1) 
    general_lower_bit_rate_constraint_flag u(1) 
-   if( general_profile_idc  ==  5 ||  general_profile_compatibility_flag[ 5 ]  || 
-    general_profile_idc  ==  9  ||  general_profile_compatibility_flag[ 9 ]  || 
-    general_profile_idc  ==  10  ||  general_profile_compatibility_flag[ 10 ] ) { 
+   if( general_profile_idc == 5 ||  general_profile_compatibility_flag[ 5 ]  || 
+    general_profile_idc == 9  ||  general_profile_compatibility_flag[ 9 ]  || 
+    general_profile_idc == 10  ||  general_profile_compatibility_flag[ 10 ] ) { 
  
     general_max_14bit_constraint_flag u(1) 
     general_reserved_zero_33bits u(33) 
    } else  
     general_reserved_zero_34bits u(34) 
-  } else if( general_profile_idc  ==  2  ||  general_profile_compatibility_flag[ 2 ] ) {  
+  } else if( general_profile_idc == 2  ||  general_profile_compatibility_flag[ 2 ] ) {  
    general_reserved_zero_7bits u(7) 
    general_one_picture_only_constraint_flag u(1) 
    general_reserved_zero_35bits u(35) 
   } else  
      general_reserved_zero_43bits u(43) 
   if( ( general_profile_idc  >=  1  &&  general_profile_idc  <=  5 )  || 
-    general_profile_idc  ==  9  || 
+    general_profile_idc == 9  || 
     general_profile_compatibility_flag[ 1 ]  ||  general_profile_compatibility_flag[ 2 ]  || 
     general_profile_compatibility_flag[ 3 ]  ||  general_profile_compatibility_flag[ 4 ]  || 
     general_profile_compatibility_flag[ 5 ]  ||  general_profile_compatibility_flag[ 9 ] ) 
@@ -279,13 +279,13 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
    sub_layer_interlaced_source_flag[ i ] u(1) 
    sub_layer_non_packed_constraint_flag[ i ] u(1) 
    sub_layer_frame_only_constraint_flag[ i ] u(1) 
-   if( sub_layer_profile_idc[ i ]  ==  4  ||  sub_layer_profile_compatibility_flag[ i ][ 4 ]  || 
-    sub_layer_profile_idc[ i ]  ==  5  ||  sub_layer_profile_compatibility_flag[ i ][ 5 ]  || 
-    sub_layer_profile_idc[ i ]  ==  6  ||  sub_layer_profile_compatibility_flag[ i ][ 6 ]  || 
-    sub_layer_profile_idc[ i ]  ==  7  ||  sub_layer_profile_compatibility_flag[ i ][ 7 ]  || 
-    sub_layer_profile_idc[ i ]  ==  8  ||  sub_layer_profile_compatibility_flag[ i ][ 8 ]  || 
-    sub_layer_profile_idc[ i ]  ==  9  ||  sub_layer_profile_compatibility_flag[ i ][ 9 ]  || 
-    sub_layer_profile_idc[ i ]  ==  10  ||  sub_layer_profile_compatibility_flag[ i ][ 10 ] 
+   if( sub_layer_profile_idc[ i ] == 4  ||  sub_layer_profile_compatibility_flag[ i ][ 4 ]  || 
+    sub_layer_profile_idc[ i ] == 5  ||  sub_layer_profile_compatibility_flag[ i ][ 5 ]  || 
+    sub_layer_profile_idc[ i ] == 6  ||  sub_layer_profile_compatibility_flag[ i ][ 6 ]  || 
+    sub_layer_profile_idc[ i ] == 7  ||  sub_layer_profile_compatibility_flag[ i ][ 7 ]  || 
+    sub_layer_profile_idc[ i ] == 8  ||  sub_layer_profile_compatibility_flag[ i ][ 8 ]  || 
+    sub_layer_profile_idc[ i ] == 9  ||  sub_layer_profile_compatibility_flag[ i ][ 9 ]  || 
+    sub_layer_profile_idc[ i ] == 10  ||  sub_layer_profile_compatibility_flag[ i ][ 10 ] 
     ) { 
     /* The number of bits in this syntax structure is not affected by this condition */ 
  
@@ -298,14 +298,14 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
     sub_layer_intra_constraint_flag[ i ] u(1) 
     sub_layer_one_picture_only_constraint_flag[ i ] u(1) 
     sub_layer_lower_bit_rate_constraint_flag[ i ] u(1)
-       if( sub_layer_profile_idc[ i ]  ==  5 || 
+       if( sub_layer_profile_idc[ i ] == 5 || 
      sub_layer_profile_compatibility_flag[ i ][ 5 ] ) { 
  
      sub_layer_max_14bit_constraint_flag[ i ] u(1) 
      sub_layer_reserved_zero_33bits[ i ] u(33) 
     } else  
      sub_layer_reserved_zero_34bits[ i ] u(34) 
-   } else if( sub_layer_profile_idc[ i ]  ==  2  || 
+   } else if( sub_layer_profile_idc[ i ] == 2  || 
        sub_layer_profile_compatibility_flag[ i ][ 2 ] ) { 
  
     sub_layer_reserved_zero_7bits[ i ] u(7) 
@@ -314,13 +314,13 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
    } else  
     sub_layer_reserved_zero_43bits[ i ] u(43) 
    if( ( sub_layer_profile_idc[ i ]  >=  1  &&  sub_layer_profile_idc[ i ]  <=  5 )  || 
-     sub_layer_profile_idc[ i ]  ==  9  || 
-     sub_layer_profile_compatibility_flag[ 1 ]  || 
-     sub_layer_profile_compatibility_flag[ 2 ]  || 
-     sub_layer_profile_compatibility_flag[ 3 ]  || 
-     sub_layer_profile_compatibility_flag[ 4 ]  || 
-     sub_layer_profile_compatibility_flag[ 5 ]  || 
-     sub_layer_profile_compatibility_flag[ 9 ] ) 
+     sub_layer_profile_idc[ i ] == 9  || 
+     sub_layer_profile_compatibility_flag[ i ][ 1 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 2 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 3 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 4 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 5 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 9 ] ) 
     /* The number of bits in this syntax structure is not affected by this condition */ 
  
     sub_layer_inbld_flag[ i ] u(1) 
@@ -334,7 +334,7 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
 
 scaling_list_data() { 
  for( sizeId = 0; sizeId < 4; sizeId++ )  
-  for( matrixId = 0; matrixId < 6; matrixId  +=  ( sizeId  ==  3 ) ? 3 : 1 ) {  
+  for( matrixId = 0; matrixId < 6; matrixId  +=  ( sizeId == 3 ) ? 3 : 1 ) {  
    scaling_list_pred_mode_flag[ sizeId ][ matrixId ] u(1) 
    if( !scaling_list_pred_mode_flag[ sizeId ][ matrixId ] )  
     scaling_list_pred_matrix_id_delta[ sizeId ][ matrixId ] ue(v) 
@@ -356,14 +356,14 @@ scaling_list_data() {
 
 sei_message() {  
  payloadType = 0  
- while( next_bits( 8 )  ==  0xFF ) {  
+ while( next_bits( 8 ) == 0xFF ) {  
   ff_byte  /* equal to 0xFF */ f(8) 
   payloadType  +=  255  
  }  
  last_payload_type_byte u(8) 
  payloadType  +=  last_payload_type_byte  
  payloadSize = 0  
- while( next_bits( 8 )  ==  0xFF ) {  
+ while( next_bits( 8 ) == 0xFF ) {  
   ff_byte  /* equal to 0xFF */ f(8) 
   payloadSize  +=  255  
  }  
@@ -372,134 +372,12 @@ sei_message() {
  sei_payload( payloadType, payloadSize )  
 }  
 
-slice_segment_header() {  
- first_slice_segment_in_pic_flag u(1) 
- if( nal_unit_type  >=  BLA_W_LP  &&  nal_unit_type  <=  RSV_IRAP_VCL23 )  
-  no_output_of_prior_pics_flag u(1) 
- slice_pic_parameter_set_id ue(v) 
- if( !first_slice_segment_in_pic_flag ) {  
-  if( dependent_slice_segments_enabled_flag )  
-   dependent_slice_segment_flag u(1) 
-  slice_segment_address u(v) 
- }  
- if( !dependent_slice_segment_flag ) {  
-  for( i = 0; i < num_extra_slice_header_bits; i++ )  
-   slice_reserved_flag[ i ] u(1) 
-  slice_type ue(v) 
-  if( output_flag_present_flag )  
-   pic_output_flag u(1) 
-  if( separate_colour_plane_flag  ==  1 )  
-   colour_plane_id u(2) 
-  if( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) {  
-   slice_pic_order_cnt_lsb u(v) 
-   short_term_ref_pic_set_sps_flag u(1) 
-   if( !short_term_ref_pic_set_sps_flag )  
-    st_ref_pic_set( num_short_term_ref_pic_sets )  
-   else if( num_short_term_ref_pic_sets > 1 )  
-    short_term_ref_pic_set_idx u(v) 
-   if( long_term_ref_pics_present_flag ) {  
-    if( num_long_term_ref_pics_sps > 0 )  
-     num_long_term_sps ue(v) 
-    num_long_term_pics ue(v) 
-    for( i = 0; i < num_long_term_sps + num_long_term_pics; i++ ) {  
-     if( i < num_long_term_sps ) {  
-      if( num_long_term_ref_pics_sps > 1 )  
-       lt_idx_sps[ i ] u(v) 
-     } else {  
-      poc_lsb_lt[ i ] u(v) 
-      used_by_curr_pic_lt_flag[ i ] u(1) 
-     }  
-     delta_poc_msb_present_flag[ i ] u(1) 
-     if( delta_poc_msb_present_flag[ i ] )  
-      delta_poc_msb_cycle_lt[ i ] ue(v) 
-    }  
-   }  
-   if( sps_temporal_mvp_enabled_flag )  
-    slice_temporal_mvp_enabled_flag u(1) 
-  }  
-   if( sample_adaptive_offset_enabled_flag ) {  
-   slice_sao_luma_flag u(1) 
-   if( ChromaArrayType  !=  0 )  
-    slice_sao_chroma_flag u(1) 
-  }  
-  if( slice_type  ==  P  ||  slice_type  ==  B ) {  
-   num_ref_idx_active_override_flag u(1) 
-   if( num_ref_idx_active_override_flag ) {  
-    num_ref_idx_l0_active_minus1 ue(v) 
-    if( slice_type  ==  B )  
-     num_ref_idx_l1_active_minus1 ue(v) 
-   }  
-   if( lists_modification_present_flag  &&  NumPicTotalCurr > 1 )  
-    ref_pic_lists_modification()  
-   if( slice_type  ==  B )  
-    mvd_l1_zero_flag u(1) 
-   if( cabac_init_present_flag )  
-    cabac_init_flag u(1) 
-   if( slice_temporal_mvp_enabled_flag ) {  
-    if( slice_type  ==  B )  
-     collocated_from_l0_flag u(1) 
-    if( ( collocated_from_l0_flag  &&  num_ref_idx_l0_active_minus1 > 0 )  || 
-     ( !collocated_from_l0_flag  &&  num_ref_idx_l1_active_minus1 > 0 ) ) 
- 
-     collocated_ref_idx ue(v) 
-   }  
-      if( ( weighted_pred_flag  &&  slice_type  ==  P )  || 
-     ( weighted_bipred_flag  &&  slice_type  ==  B ) ) 
- 
-    pred_weight_table()  
-   five_minus_max_num_merge_cand ue(v) 
-   if( motion_vector_resolution_control_idc  ==  2 )  
-    use_integer_mv_flag u(1) 
-  }  
-  slice_qp_delta se(v) 
-  if( pps_slice_chroma_qp_offsets_present_flag ) {  
-   slice_cb_qp_offset se(v) 
-   slice_cr_qp_offset se(v) 
-  }  
-  if( pps_slice_act_qp_offsets_present_flag ) {  
-   slice_act_y_qp_offset se(v) 
-   slice_act_cb_qp_offset se(v) 
-   slice_act_cr_qp_offset se(v) 
-  }  
-  if( chroma_qp_offset_list_enabled_flag )  
-   cu_chroma_qp_offset_enabled_flag u(1) 
-  if( deblocking_filter_override_enabled_flag )  
-   deblocking_filter_override_flag u(1) 
-  if( deblocking_filter_override_flag ) {  
-   slice_deblocking_filter_disabled_flag u(1) 
-   if( !slice_deblocking_filter_disabled_flag ) {  
-    slice_beta_offset_div2 se(v) 
-    slice_tc_offset_div2 se(v) 
-   }  
-  }  
-  if( pps_loop_filter_across_slices_enabled_flag  && 
-   ( slice_sao_luma_flag  ||  slice_sao_chroma_flag  || 
-    !slice_deblocking_filter_disabled_flag ) ) 
- 
-   slice_loop_filter_across_slices_enabled_flag u(1) 
- }  
- if( tiles_enabled_flag  ||  entropy_coding_sync_enabled_flag ) {  
-  num_entry_point_offsets ue(v) 
-  if( num_entry_point_offsets > 0 ) {  
-   offset_len_minus1 ue(v) 
-   for( i = 0; i < num_entry_point_offsets; i++ )  
-    entry_point_offset_minus1[ i ] u(v) 
-  }  
- }  
- if( slice_segment_header_extension_present_flag ) {  
-  slice_segment_header_extension_length ue(v) 
-  for( i = 0; i < slice_segment_header_extension_length; i++)   
-   slice_segment_header_extension_data_byte[ i ] u(8) 
- }  
- byte_alignment()  
-}  
-
 ref_pic_lists_modification() { 
 ref_pic_list_modification_flag_l0  u(1)
 if( ref_pic_list_modification_flag_l0 )  
 for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
 list_entry_l0[ i ] u(v) 
-if( slice_type  ==  B ) {   
+if( slice_type == B ) {   
 ref_pic_list_modification_flag_l1 u(1)
 if( ref_pic_list_modification_flag_l1 )  
 for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
@@ -509,17 +387,17 @@ list_entry_l1[ i ] u(v)
 
 pred_weight_table() {  
  luma_log2_weight_denom ue(v) 
- if( ChromaArrayType  !=  0 )  
+ if( ChromaArrayType != 0 )  
   delta_chroma_log2_weight_denom se(v) 
  for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
-  if( ( pic_layer_id( RefPicList0[ i ] )  !=  nuh_layer_id )  || 
-   ( PicOrderCnt( RefPicList0[ i ] )  !=  PicOrderCnt( CurrPic ) ) ) 
+  if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
+   ( PicOrderCnt( RefPicList0[ i ] ) != PicOrderCnt( CurrPic ) ) ) 
  
    luma_weight_l0_flag[ i ] u(1) 
- if( ChromaArrayType  !=  0 )  
+ if( ChromaArrayType != 0 )  
   for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
-   if( ( pic_layer_id( RefPicList0[ i ] )  !=  nuh_layer_id )  || 
-    ( PicOrderCnt(RefPicList0[ i ])  !=  PicOrderCnt( CurrPic ) ) ) 
+   if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
+    ( PicOrderCnt(RefPicList0[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
     chroma_weight_l0_flag[ i ] u(1) 
  for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ ) {  
@@ -533,16 +411,16 @@ pred_weight_table() {
     delta_chroma_offset_l0[ i ][ j ] se(v) 
    }  
  }  
- if( slice_type  ==  B ) {  
+ if( slice_type == B ) {  
   for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
-   if( ( pic_layer_id( RefPicList0[ i ] )  !=  nuh_layer_id )  || 
-    ( PicOrderCnt(RefPicList1[ i ])  !=  PicOrderCnt( CurrPic ) ) ) 
+   if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
+    ( PicOrderCnt(RefPicList1[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
     luma_weight_l1_flag[ i ] u(1) 
-  if( ChromaArrayType  !=  0 )  
+  if( ChromaArrayType != 0 )  
    for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
-    if( ( pic_layer_id( RefPicList0[ i ] )  !=  nuh_layer_id )  || 
-     ( PicOrderCnt(RefPicList1[ i ])  !=  PicOrderCnt( CurrPic ) ) ) 
+    if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
+     ( PicOrderCnt(RefPicList1[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
      chroma_weight_l1_flag[ i ] u(1) 
   for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ ) {  
@@ -560,10 +438,10 @@ pred_weight_table() {
 }  
 
 st_ref_pic_set( stRpsIdx ) {  
- if( stRpsIdx  !=  0 )  
+ if( stRpsIdx != 0 )  
   inter_ref_pic_set_prediction_flag u(1) 
  if( inter_ref_pic_set_prediction_flag ) {  
-  if( stRpsIdx  ==  num_short_term_ref_pic_sets )  
+  if( stRpsIdx == num_short_term_ref_pic_sets )  
    delta_idx_minus1 ue(v) 
   delta_rps_sign u(1) 
   abs_delta_rps_minus1 ue(v) 
@@ -587,145 +465,145 @@ st_ref_pic_set( stRpsIdx ) {
 }  
 
 sei_payload( payloadType, payloadSize ) {  
- if( nal_unit_type  ==  PREFIX_SEI_NUT )  
-  if( payloadType  ==  0 )  
+ if( nal_unit_type == PREFIX_SEI_NUT )  
+  if( payloadType == 0 )  
    buffering_period( payloadSize )  
-  else if( payloadType  ==  1 )  
+  else if( payloadType == 1 )  
    pic_timing( payloadSize )  
-  else if( payloadType  ==  2 )  
+  else if( payloadType == 2 )  
    pan_scan_rect( payloadSize )  
-  else if( payloadType  ==  3 )  
+  else if( payloadType == 3 )  
    filler_payload( payloadSize )  
-  else if( payloadType  ==  4 )  
+  else if( payloadType == 4 )  
    user_data_registered_itu_t_t35( payloadSize )  
-  else if( payloadType  ==  5 )  
+  else if( payloadType == 5 )  
    user_data_unregistered( payloadSize )  
-  else if( payloadType  ==  6 )  
+  else if( payloadType == 6 )  
    recovery_point( payloadSize )  
-  else if( payloadType  ==  9 )  
+  else if( payloadType == 9 )  
    scene_info( payloadSize )  
-  else if( payloadType  ==  15 )  
+  else if( payloadType == 15 )  
    picture_snapshot( payloadSize )  
-  else if( payloadType  ==  16 )  
+  else if( payloadType == 16 )  
    progressive_refinement_segment_start( payloadSize )  
-  else if( payloadType  ==  17 )  
+  else if( payloadType == 17 )  
    progressive_refinement_segment_end( payloadSize )  
-  else if( payloadType  ==  19 )  
+  else if( payloadType == 19 )  
    film_grain_characteristics( payloadSize )  
-  else if( payloadType  ==  22 )  
+  else if( payloadType == 22 )  
    post_filter_hint( payloadSize )  
-  else if( payloadType  ==  23 )  
+  else if( payloadType == 23 )  
    tone_mapping_info( payloadSize )  
-  else if( payloadType  ==  45 ) 
+  else if( payloadType == 45 ) 
      frame_packing_arrangement( payloadSize )  
-  else if( payloadType  ==  47 )  
+  else if( payloadType == 47 )  
    display_orientation( payloadSize )  
-  else if( payloadType  ==  56 )  
+  else if( payloadType == 56 )  
    green_metadata( payloadsize ) /* specified in ISO/IEC 23001-11 */  
-  else if( payloadType  ==  128 )  
+  else if( payloadType == 128 )  
    structure_of_pictures_info( payloadSize )  
-  else if( payloadType  ==  129 )  
+  else if( payloadType == 129 )  
    active_parameter_sets( payloadSize )  
-  else if( payloadType  ==  130 )  
+  else if( payloadType == 130 )  
    decoding_unit_info( payloadSize )  
-  else if( payloadType  ==  131 )  
+  else if( payloadType == 131 )  
    temporal_sub_layer_zero_idx( payloadSize )  
-  else if( payloadType  ==  133 )  
+  else if( payloadType == 133 )  
    scalable_nesting( payloadSize )  
-  else if( payloadType  ==  134 )  
+  else if( payloadType == 134 )  
    region_refresh_info( payloadSize )  
-  else if( payloadType  ==  135 )  
+  else if( payloadType == 135 )  
    no_display( payloadSize )  
-  else if( payloadType  ==  136 )  
+  else if( payloadType == 136 )  
    time_code( payloadSize )  
-  else if( payloadType  ==  137 )  
+  else if( payloadType == 137 )  
    mastering_display_colour_volume( payloadSize )  
-  else if( payloadType  ==  138 )  
+  else if( payloadType == 138 )  
    segmented_rect_frame_packing_arrangement( payloadSize )  
-  else if( payloadType  ==  139 )  
+  else if( payloadType == 139 )  
    temporal_motion_constrained_tile_sets( payloadSize )  
-  else if( payloadType  ==  140 )  
+  else if( payloadType == 140 )  
    chroma_resampling_filter_hint( payloadSize )  
-  else if( payloadType  ==  141 )  
+  else if( payloadType == 141 )  
    knee_function_info( payloadSize )  
-  else if( payloadType  ==  142 )  
+  else if( payloadType == 142 )  
    colour_remapping_info( payloadSize )  
-  else if( payloadType  ==  143 )  
+  else if( payloadType == 143 )  
    deinterlaced_field_identification( payloadSize )  
-  else if( payloadType  ==  144 )  
+  else if( payloadType == 144 )  
    content_light_level_info( payloadSize )  
-  else if( payloadType  ==  145 )  
+  else if( payloadType == 145 )  
    dependent_rap_indication( payloadSize )  
-  else if( payloadType  ==  146 )  
+  else if( payloadType == 146 )  
    coded_region_completion( payloadSize )  
-  else if( payloadType  ==  147 )  
+  else if( payloadType == 147 )  
    alternative_transfer_characteristics( payloadSize )  
-  else if( payloadType  ==  148 )  
+  else if( payloadType == 148 )  
    ambient_viewing_environment( payloadSize )  
-  else if( payloadType  ==  149 )  
+  else if( payloadType == 149 )  
    content_colour_volume( payloadSize )  
-  else if( payloadType  ==  150 )  
+  else if( payloadType == 150 )  
    equirectangular_projection( payloadSize )  
-  else if( payloadType  ==  151 )  
+  else if( payloadType == 151 )  
    cubemap_projection( payloadSize )  
-  else if( payloadType  ==  154 )  
+  else if( payloadType == 154 )  
    sphere_rotation( payloadSize ) 
-     else if( payloadType  ==  155 )  
+     else if( payloadType == 155 )  
    regionwise_packing( payloadSize )  
-  else if( payloadType  ==  156 )  
+  else if( payloadType == 156 )  
    omni_viewport( payloadSize )  
-  else if( payloadType  ==  157 )  
+  else if( payloadType == 157 )  
    regional_nesting( payloadSize )  
-  else if( payloadType  ==  158 )  
+  else if( payloadType == 158 )  
    mcts_extraction_info_sets( payloadSize )  
-  else if( payloadType  ==  159 )  
+  else if( payloadType == 159 )  
    mcts_extraction_info_nesting( payloadSize )  
-  else if( payloadType  ==  160 )  
+  else if( payloadType == 160 )  
    layers_not_present( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  161 )  
+  else if( payloadType == 161 )  
    inter_layer_constrained_tile_sets( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  162 )  
+  else if( payloadType == 162 )  
    bsp_nesting( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  163 )  
+  else if( payloadType == 163 )  
    bsp_initial_arrival_time( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  164 )  
+  else if( payloadType == 164 )  
    sub_bitstream_property( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  165 )  
+  else if( payloadType == 165 )  
    alpha_channel_info( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  166 )  
+  else if( payloadType == 166 )  
    overlay_info( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  167 )  
+  else if( payloadType == 167 )  
    temporal_mv_prediction_constraints( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  168 )  
+  else if( payloadType == 168 )  
    frame_field_info( payloadSize )  /* specified in Annex F */  
-  else if( payloadType  ==  176 )  
+  else if( payloadType == 176 )  
    three_dimensional_reference_displays_info( payloadSize )  /* specified in Annex G */  
-  else if( payloadType  ==  177 )  
+  else if( payloadType == 177 )  
    depth_representation_info( payloadSize )  /* specified in Annex G */  
-  else if( payloadType  ==  178 )  
+  else if( payloadType == 178 )  
    multiview_scene_info( payloadSize )  /* specified in Annex G */  
-  else if( payloadType  ==  179 )  
+  else if( payloadType == 179 )  
    multiview_acquisition_info( payloadSize )  /* specified in Annex G */  
-  else if( payloadType  ==  180 )  
+  else if( payloadType == 180 )  
    multiview_view_position( payloadSize )  /* specified in Annex G */  
-  else if( payloadType  ==  181 )  
+  else if( payloadType == 181 )  
    alternative_depth_info( payloadSize )  /* specified in Annex I */  
   else  
    reserved_sei_message( payloadSize )  
- else /* nal_unit_type  ==  SUFFIX_SEI_NUT */  
-  if( payloadType  ==  3 )  
+ else /* nal_unit_type == SUFFIX_SEI_NUT */  
+  if( payloadType == 3 )  
    filler_payload( payloadSize )  
-  else if( payloadType  ==  4 )  
+  else if( payloadType == 4 )  
    user_data_registered_itu_t_t35( payloadSize )  
-  else if( payloadType  ==  5 )  
+  else if( payloadType == 5 )  
    user_data_unregistered( payloadSize )  
-  else if( payloadType  ==  17 )  
+  else if( payloadType == 17 )  
    progressive_refinement_segment_end( payloadSize )  
-  else if( payloadType  ==  22 )  
+  else if( payloadType == 22 )  
    post_filter_hint( payloadSize ) 
-     else if( payloadType  ==  132 )  
+     else if( payloadType == 132 )  
    decoded_picture_hash( payloadSize )  
-  else if( payloadType  ==  146 )  
+  else if( payloadType == 146 )  
    coded_region_completion( payloadSize )  
   else  
    reserved_sei_message( payloadSize )  
@@ -821,7 +699,7 @@ filler_payload( payloadSize ) {
 
 user_data_registered_itu_t_t35( payloadSize ) {  
  itu_t_t35_country_code b(8) 
- if( itu_t_t35_country_code  !=  0xFF )  
+ if( itu_t_t35_country_code != 0xFF )  
   i = 1  
  else {  
   itu_t_t35_country_code_extension_byte b(8) 
@@ -905,7 +783,7 @@ post_filter_hint( payloadSize ) {
  filter_hint_size_y ue(v) 
  filter_hint_size_x ue(v) 
  filter_hint_type u(2) 
- for( cIdx = 0; cIdx < ( chroma_format_idc  ==  0 ? 1 : 3 ); cIdx++ )  
+ for( cIdx = 0; cIdx < ( chroma_format_idc == 0 ? 1 : 3 ); cIdx++ )  
   for( cy = 0; cy < filter_hint_size_y; cy++ )  
    for( cx = 0; cx < filter_hint_size_x; cx++ )  
     filter_hint_value[ cIdx ][ cy ][ cx ] se(v) 
@@ -919,27 +797,27 @@ tone_mapping_info( payloadSize ) {
   coded_data_bit_depth u(8) 
   target_bit_depth u(8) 
   tone_map_model_id ue(v) 
-  if( tone_map_model_id  ==  0 ) {  
+  if( tone_map_model_id == 0 ) {  
    min_value u(32) 
    max_value u(32) 
-  } else if( tone_map_model_id  ==  1 ) {  
+  } else if( tone_map_model_id == 1 ) {  
    sigmoid_midpoint u(32) 
    sigmoid_width u(32) 
-  } else if( tone_map_model_id  ==  2 )  
+  } else if( tone_map_model_id == 2 )  
    for( i = 0; i < ( 1  <<  target_bit_depth ); i++ )  
     start_of_coded_interval[ i ] u(v) 
-  else if( tone_map_model_id  ==  3 ) {  
+  else if( tone_map_model_id == 3 ) {  
    num_pivots u(16) 
    for( i = 0; i < num_pivots; i++ ) {  
     coded_pivot_value[ i ] u(v) 
     target_pivot_value[ i ] u(v) 
    }  
-  } else if( tone_map_model_id  ==  4 ) {  
+  } else if( tone_map_model_id == 4 ) {  
    camera_iso_speed_idc u(8) 
-   if( camera_iso_speed_idc  ==  EXTENDED_ISO )  
+   if( camera_iso_speed_idc == EXTENDED_ISO )  
     camera_iso_speed_value u(32) 
    exposure_idx_idc u(8) 
-   if( exposure_idx_idc  ==  EXTENDED_ISO )  
+   if( exposure_idx_idc == EXTENDED_ISO )  
     exposure_idx_value u(32) 
    exposure_compensation_value_sign_flag u(1) 
    exposure_compensation_value_numerator u(16) 
@@ -966,7 +844,7 @@ frame_packing_arrangement( payloadSize ) {
   current_frame_is_frame0_flag u(1) 
   frame0_self_contained_flag u(1) 
   frame1_self_contained_flag u(1) 
-  if( !quincunx_sampling_flag  &&  frame_packing_arrangement_type  !=  5 ) {  
+  if( !quincunx_sampling_flag  &&  frame_packing_arrangement_type != 5 ) {  
    frame0_grid_position_x u(4) 
    frame0_grid_position_y u(4) 
    frame1_grid_position_x u(4) 
@@ -994,7 +872,7 @@ structure_of_pictures_info( payloadSize ) {
  for( i = 0; i  <=  num_entries_in_sop_minus1; i++ ) {  
   sop_vcl_nut[ i ] u(6) 
   sop_temporal_id[ i ] u(3) 
-  if( sop_vcl_nut[ i ]  !=  IDR_W_RADL  &&  sop_vcl_nut[ i ]  !=  IDR_N_LP )  
+  if( sop_vcl_nut[ i ] != IDR_W_RADL  &&  sop_vcl_nut[ i ] != IDR_N_LP )  
    sop_short_term_rps_idx[ i ] ue(v) 
   if( i > 0 )  
    sop_poc_delta[ i ] se(v) 
@@ -1003,13 +881,13 @@ structure_of_pictures_info( payloadSize ) {
 
 decoded_picture_hash( payloadSize ) {  
  hash_type u(8) 
- for( cIdx = 0; cIdx < ( chroma_format_idc  ==  0 ? 1 : 3 ); cIdx++ )  
-  if( hash_type  ==  0 )  
+ for( cIdx = 0; cIdx < ( chroma_format_idc == 0 ? 1 : 3 ); cIdx++ )  
+  if( hash_type == 0 )  
    for( i = 0; i < 16; i++)  
     picture_md5[ cIdx ][ i ] b(8) 
-  else if( hash_type  ==  1 )  
+  else if( hash_type == 1 )  
    picture_crc[ cIdx ] u(16) 
-  else if( hash_type  ==  2 )  
+  else if( hash_type == 2 )  
    picture_checksum[ cIdx ] u(32) 
 } 
 
@@ -1083,19 +961,19 @@ time_code( payloadSize ) {
    cnt_dropped_flag[ i ] u(1) 
    n_frames[ i ] u(9) 
    if( full_timestamp_flag[ i ] ) {  
-    seconds_value[ i ] /* 0..59 */ u(6) 
-    minutes_value[ i ] /* 0..59 */ u(6) 
-    hours_value[ i ] /* 0..23 */ u(5) 
+    seconds_value[ i ] u(6) /* 0..59 */
+    minutes_value[ i ] u(6) /* 0..59 */
+    hours_value[ i ] u(5) /* 0..23 */
    } else {  
     seconds_flag[ i ] u(1) 
     if( seconds_flag[ i ] ) {  
-     seconds_value[ i ] /* 0..59 */ u(6) 
+     seconds_value[ i ] u(6) /* 0..59 */
      minutes_flag[ i ] u(1) 
      if( minutes_flag[ i ] ) {  
-      minutes_value[ i ] /* 0..59 */ u(6) 
+      minutes_value[ i ]  u(6) /* 0..59 */
       hours_flag[ i ] u(1) 
       if( hours_flag[ i ] )  
-       hours_value[ i ] /* 0..23 */ u(5) 
+       hours_value[ i ]  u(5) /* 0..23 */
      }  
     }  
    }  
@@ -1161,9 +1039,9 @@ chroma_resampling_filter_hint( payloadSize ) {
  ver_chroma_filter_idc u(8) 
  hor_chroma_filter_idc u(8) 
  ver_filtering_field_processing_flag u(1) 
- if( ver_chroma_filter_idc  ==  1  ||  hor_chroma_filter_idc  ==  1 ) {  
+ if( ver_chroma_filter_idc == 1  ||  hor_chroma_filter_idc == 1 ) {  
   target_format_idc ue(v) 
-  if( ver_chroma_filter_idc  ==  1 ) {  
+  if( ver_chroma_filter_idc == 1 ) {  
    num_vertical_filters ue(v) 
    for( i = 0; i < num_vertical_filters; i++ ) {  
     ver_tap_length_minus1[ i ] ue(v) 
@@ -1171,7 +1049,7 @@ chroma_resampling_filter_hint( payloadSize ) {
      ver_filter_coeff[ i ][ j ] se(v) 
    }  
   }  
-  if( hor_chroma_filter_idc  ==  1 ) {  
+  if( hor_chroma_filter_idc == 1 ) {  
    num_horizontal_filters ue(v) 
    for( i = 0; i < num_horizontal_filters; i++ ) {  
     hor_tap_length_minus1[ i ] ue(v) 
@@ -1296,7 +1174,7 @@ equirectangular_projection( payloadSize ) {
   erp_persistence_flag u(1) 
   erp_guard_band_flag u(1) 
   erp_reserved_zero_2bits u(2) 
-  if( erp_guard_band_flag  ==  1 ) {  
+  if( erp_guard_band_flag == 1 ) {  
    erp_guard_band_type u(3) 
    erp_left_guard_band_width u(8) 
    erp_right_guard_band_width u(8) 
@@ -1456,7 +1334,7 @@ vui_parameters() {
  aspect_ratio_info_present_flag u(1) 
  if( aspect_ratio_info_present_flag ) {  
   aspect_ratio_idc u(8) 
-  if( aspect_ratio_idc  ==  EXTENDED_SAR ) {  
+  if( aspect_ratio_idc == EXTENDED_SAR ) {  
    sar_width u(16) 
    sar_height u(16) 
   }  
@@ -1620,13 +1498,13 @@ vps_extension() {
  for( i = 1; i < NumOutputLayerSets; i++ ) {  
   if( NumLayerSets > 2  &&  i  >=  NumLayerSets )  
    layer_set_idx_for_ols_minus1[ i ] u(v) 
-  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc  ==  2 )  
+  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  
    for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  
     output_layer_flag[ i ][ j ] u(1) 
   for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  
    if( NecessaryLayerFlag[ i ][ j ]  &&  vps_num_profile_tier_level_minus1 > 0 )  
     profile_tier_level_idx[ i ][ j ] u(v) 
-  if( NumOutputLayersInOutputLayerSet[ i ]  ==  1 
+  if( NumOutputLayersInOutputLayerSet[ i ] == 1 
    &&  NumDirectRefLayers[ OlsHighestOutputLayerId[ i ] ] > 0 ) 
  
    alt_output_layer_flag[ i ] u(1) 
@@ -1642,7 +1520,7 @@ vps_extension() {
  max_one_active_ref_layer_flag u(1) 
  vps_poc_lsb_aligned_flag u(1) 
  for( i = 1; i  <=  MaxLayersMinus1; i++ )  
-  if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ]  ==  0 )  
+  if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )  
    poc_lsb_not_present_flag[ i ] u(1) 
  dpb_size()  
  direct_dep_type_len_minus2 ue(v) 
@@ -1672,7 +1550,7 @@ rep_format() {
  chroma_and_bit_depth_vps_present_flag u(1) 
  if( chroma_and_bit_depth_vps_present_flag ) {  
   chroma_format_vps_idc u(2) 
-  if( chroma_format_vps_idc  ==  3 )  
+  if( chroma_format_vps_idc == 3 )  
    separate_colour_plane_vps_flag u(1) 
   bit_depth_vps_luma_minus8 u(4) 
   bit_depth_vps_chroma_minus8 u(4) 
@@ -1696,7 +1574,7 @@ dpb_size() {
    if( sub_layer_dpb_info_present_flag[ i ][ j ] ) {  
     for( k = 0; k < NumLayersInIdList[ currLsIdx ]; k++ )  
      if( NecessaryLayerFlag[ i ][ k ]  &&  ( vps_base_layer_internal_flag  || 
-      ( LayerSetLayerIdList[ currLsIdx ][ k ]  !=  0 ) ) ) 
+      ( LayerSetLayerIdList[ currLsIdx ][ k ] != 0 ) ) ) 
  
       max_vps_dec_pic_buffering_minus1[ i ][ k ][ j ] ue(v) 
     max_vps_num_reorder_pics[ i ][ j ] ue(v) 
@@ -1776,7 +1654,7 @@ vps_vui() {
  if( vps_vui_bsp_hrd_present_flag )  
   vps_vui_bsp_hrd_params()  
  for( i = 1; i  <=  MaxLayersMinus1; i++ )  
-  if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ]  ==  0 )  
+  if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )  
    base_layer_parameter_set_compatibility_flag[ i ] u(1) 
 }  
 
@@ -1822,11 +1700,11 @@ vps_vui_bsp_hrd_params() {
 
 seq_parameter_set_rbsp() { 
  sps_video_parameter_set_id u(4) 
- if( nuh_layer_id  ==  0 )  
+ if( nuh_layer_id == 0 )  
   sps_max_sub_layers_minus1 u(3) 
  else  
   sps_ext_or_max_sub_layers_minus1 u(3) 
- MultiLayerExtSpsFlag =  ( nuh_layer_id  !=  0  &&  sps_ext_or_max_sub_layers_minus1  ==  7 ) 
+ MultiLayerExtSpsFlag =  ( nuh_layer_id != 0  &&  sps_ext_or_max_sub_layers_minus1 == 7 ) 
  if( !MultiLayerExtSpsFlag ) {  
   sps_temporal_id_nesting_flag u(1) 
   profile_tier_level( 1, sps_max_sub_layers_minus1 )  
@@ -1838,7 +1716,7 @@ seq_parameter_set_rbsp() {
    sps_rep_format_idx u(8) 
  } else {  
   chroma_format_idc ue(v) 
-  if( chroma_format_idc  ==  3 )  
+  if( chroma_format_idc == 3 )  
    separate_colour_plane_flag u(1) 
   pic_width_in_luma_samples ue(v) 
   pic_height_in_luma_samples ue(v) 
@@ -1980,7 +1858,7 @@ colour_mapping_table() {
  chroma_bit_depth_cm_output_minus8 ue(v) 
  cm_res_quant_bits u(2) 
  cm_delta_flc_bits_minus1 u(2) 
- if( cm_octant_depth  ==  1 ) {  
+ if( cm_octant_depth == 1 ) {  
   cm_adapt_threshold_u_delta se(v) 
   cm_adapt_threshold_v_delta se(v) 
  }  
@@ -2014,161 +1892,6 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
    }  
   }  
 }  
-
-slice_segment_header() { 
-first_slice_segment_in_pic_flag  u(1) 
-if( nal_unit_type  >=  BLA_W_LP  &&  nal_unit_type  <=  RSV_IRAP_VCL23 )  
-
-no_output_of_prior_pics_flag u(1) 
-slice_pic_parameter_set_id ue(v) 
-
-if( !first_slice_segment_in_pic_flag ) {  
-if( dependent_slice_segments_enabled_flag )  
-
-dependent_slice_segment_flag u(1) 
-slice_segment_address u(v) 
-}  
-if( !dependent_slice_segment_flag ) {  
-i = 0  
-if( num_extra_slice_header_bits > i ) {  
-   i++  
-   discardable_flag u(1) 
-  }  
-  if( num_extra_slice_header_bits > i ) {  
-   i++  
-   cross_layer_bla_flag u(1) 
-  }  
-  for( ; i < num_extra_slice_header_bits; i++ )  
-   slice_reserved_flag[ i ] u(1) 
-  slice_type ue(v) 
-  if( output_flag_present_flag )  
-   pic_output_flag u(1) 
-  if( separate_colour_plane_flag  ==  1 )  
-   colour_plane_id u(2) 
-  if( ( nuh_layer_id > 0  && 
-    !poc_lsb_not_present_flag[ LayerIdxInVps[ nuh_layer_id ] ] )  || 
-    ( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) ) 
- 
-   slice_pic_order_cnt_lsb u(v) 
-  if( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) {  
-   short_term_ref_pic_set_sps_flag u(1) 
-   if( !short_term_ref_pic_set_sps_flag )  
-    st_ref_pic_set( num_short_term_ref_pic_sets )  
-   else if( num_short_term_ref_pic_sets > 1 )  
-    short_term_ref_pic_set_idx u(v) 
-   if( long_term_ref_pics_present_flag ) {  
-    if( num_long_term_ref_pics_sps > 0 )  
-     num_long_term_sps ue(v) 
-    num_long_term_pics ue(v) 
-    for( i = 0; i < num_long_term_sps + num_long_term_pics; i++ ) {  
-     if( i < num_long_term_sps ) {  
-      if( num_long_term_ref_pics_sps > 1 )  
-       lt_idx_sps[ i ] u(v) 
-     } else {  
-      poc_lsb_lt[ i ] u(v) 
-      used_by_curr_pic_lt_flag[ i ] u(1) 
-     }  
-     delta_poc_msb_present_flag[ i ] u(1) 
-     if( delta_poc_msb_present_flag[ i ] )  
-      delta_poc_msb_cycle_lt[ i ] ue(v) 
-    }  
-   }  
-   if( sps_temporal_mvp_enabled_flag )  
-    slice_temporal_mvp_enabled_flag u(1) 
-  }  
-  if( nuh_layer_id > 0  &&  !default_ref_layers_active_flag  && 
-      NumDirectRefLayers[ nuh_layer_id ] > 0 ) {  
- 
-   inter_layer_pred_enabled_flag u(1) 
-   if( inter_layer_pred_enabled_flag  &&  NumDirectRefLayers[ nuh_layer_id ] > 1) {  
-    if( !max_one_active_ref_layer_flag )  
-         num_inter_layer_ref_pics_minus1 u(v) 
-    if( NumActiveRefLayerPics  !=  NumDirectRefLayers[ nuh_layer_id ] )  
-     for( i = 0; i < NumActiveRefLayerPics; i++ )   
-      inter_layer_pred_layer_idc[ i ] u(v) 
-   }  
-  }  
-  if( sample_adaptive_offset_enabled_flag ) {  
-   slice_sao_luma_flag u(1) 
-   if( ChromaArrayType  !=  0 )  
-    slice_sao_chroma_flag u(1) 
-  }  
-  if( slice_type  ==  P  ||  slice_type  ==  B ) {  
-   num_ref_idx_active_override_flag u(1) 
-   if( num_ref_idx_active_override_flag ) {  
-    num_ref_idx_l0_active_minus1 ue(v) 
-    if( slice_type  ==  B )  
-     num_ref_idx_l1_active_minus1 ue(v) 
-   }  
-   if( lists_modification_present_flag  &&  NumPicTotalCurr > 1 )  
-    ref_pic_lists_modification()  
-   if( slice_type  ==  B )  
-    mvd_l1_zero_flag u(1) 
-   if( cabac_init_present_flag )  
-    cabac_init_flag u(1) 
-   if( slice_temporal_mvp_enabled_flag ) {  
-    if( slice_type  ==  B )  
-     collocated_from_l0_flag u(1) 
-    if( ( collocated_from_l0_flag  &&  num_ref_idx_l0_active_minus1 > 0 )  || 
-     ( !collocated_from_l0_flag  &&  num_ref_idx_l1_active_minus1 > 0 ) ) 
- 
-     collocated_ref_idx ue(v) 
-   }  
-   if( ( weighted_pred_flag  &&  slice_type  ==  P )  || 
-    ( weighted_bipred_flag  &&  slice_type  ==  B ) ) 
- 
-    pred_weight_table()  
-   five_minus_max_num_merge_cand ue(v) 
-  }  
-  slice_qp_delta se(v) 
-  if( pps_slice_chroma_qp_offsets_present_flag ) {  
-   slice_cb_qp_offset se(v) 
-   slice_cr_qp_offset se(v) 
-  }  
-  if( chroma_qp_offset_list_enabled_flag )  
-   cu_chroma_qp_offset_enabled_flag u(1) 
-  if( deblocking_filter_override_enabled_flag )  
-   deblocking_filter_override_flag u(1) 
-  if( deblocking_filter_override_flag ) {  
-   slice_deblocking_filter_disabled_flag u(1) 
-   if( !slice_deblocking_filter_disabled_flag ) {  
-    slice_beta_offset_div2 se(v) 
-        slice_tc_offset_div2 se(v) 
-   }  
-  }  
-  if( pps_loop_filter_across_slices_enabled_flag  && 
-   ( slice_sao_luma_flag  ||  slice_sao_chroma_flag  || 
-    !slice_deblocking_filter_disabled_flag ) ) 
- 
-   slice_loop_filter_across_slices_enabled_flag u(1) 
- }  
- if( tiles_enabled_flag  ||  entropy_coding_sync_enabled_flag ) {  
-  num_entry_point_offsets ue(v) 
-  if( num_entry_point_offsets > 0 ) {  
-   offset_len_minus1 ue(v) 
-   for( i = 0; i < num_entry_point_offsets; i++ )  
-    entry_point_offset_minus1[ i ] u(v) 
-  }  
- }  
- if( slice_segment_header_extension_present_flag ) {  
-  slice_segment_header_extension_length ue(v) 
-  if( poc_reset_info_present_flag )  
-   poc_reset_idc u(2) 
-  if( poc_reset_idc  !=  0 )  
-   poc_reset_period_id u(6) 
-  if( poc_reset_idc  ==  3 ) {  
-   full_poc_reset_flag u(1) 
-   poc_lsb_val u(v) 
-  }  
-  if( !PocMsbValRequiredFlag  &&  vps_poc_lsb_aligned_flag )  
-   poc_msb_cycle_val_present_flag u(1) 
-  if( poc_msb_cycle_val_present_flag )  
-   poc_msb_cycle_val ue(v) 
-  while( more_data_in_slice_segment_header_extension() )  
-   slice_segment_header_extension_data_bit u(1) 
- }  
- byte_alignment()  
-} 
 
 layers_not_present( payloadSize ) {  
  lnp_sei_active_vps_id u(4) 
@@ -2342,10 +2065,10 @@ depth_representation_info( payloadSize ) {
   depth_rep_info_element( DMinSign, DMinExp, DMinMantissa, DMinManLen )  
  if( d_max_flag )  
   depth_rep_info_element( DMaxSign, DMaxExp, DMaxMantissa, DMaxManLen )  
- if( depth_representation_type  ==  3 ) {  
+ if( depth_representation_type == 3 ) {  
   depth_nonlinear_representation_num_minus1 ue(v) 
   for( i = 1; i  <=  depth_nonlinear_representation_num_minus1 + 1; i++ )  
-   depth_nonlinear_representation_model[ i ]  
+   depth_nonlinear_representation_model[ i ] u(8)
  }  
 } 
 
@@ -2492,7 +2215,7 @@ sps_3d_extension() {
  for( d = 0; d  <=  1; d++ ) {  
   iv_di_mc_enabled_flag[ d ] u(1) 
   iv_mv_scal_enabled_flag[ d ] u(1) 
-  if( d  ==  0 ) {  
+  if( d == 0 ) {  
    log2_ivmc_sub_pb_size_minus3[ d ] ue(v) 
       iv_res_pred_enabled_flag[ d ] u(1) 
    depth_ref_enabled_flag[ d ] u(1) 
@@ -2570,14 +2293,14 @@ slice_segment_header() {
   slice_type ue(v) 
   if( output_flag_present_flag )  
    pic_output_flag u(1) 
-  if( separate_colour_plane_flag  ==  1 )  
+  if( separate_colour_plane_flag == 1 )  
    colour_plane_id u(2) 
   if( ( nuh_layer_id > 0  &&   
     !poc_lsb_not_present_flag[ LayerIdxInVps[ nuh_layer_id ] ] )  || 
-    ( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) ) 
+    ( nal_unit_type != IDR_W_RADL  &&  nal_unit_type != IDR_N_LP ) ) 
  
    slice_pic_order_cnt_lsb u(v) 
-  if( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) {  
+  if( nal_unit_type != IDR_W_RADL  &&  nal_unit_type != IDR_N_LP ) {  
    short_term_ref_pic_set_sps_flag u(1) 
    if( !short_term_ref_pic_set_sps_flag )  
     st_ref_pic_set( num_short_term_ref_pic_sets )  
@@ -2610,7 +2333,7 @@ slice_segment_header() {
    if( inter_layer_pred_enabled_flag  &&  NumRefListLayers[ nuh_layer_id ] > 1) {  
     if( !max_one_active_ref_layer_flag )  
      num_inter_layer_ref_pics_minus1 u(v) 
-    if( NumActiveRefLayerPics  !=  NumRefListLayers[ nuh_layer_id ] )  
+    if( NumActiveRefLayerPics != NumRefListLayers[ nuh_layer_id ] )  
      for( i = 0; i < NumActiveRefLayerPics; i++ )   
       inter_layer_pred_layer_idc[ i ] u(v) 
    }  
@@ -2619,32 +2342,32 @@ slice_segment_header() {
    in_comp_pred_flag u(1) 
   if( sample_adaptive_offset_enabled_flag ) {  
    slice_sao_luma_flag u(1) 
-   if( ChromaArrayType  !=  0 )  
+   if( ChromaArrayType != 0 )  
     slice_sao_chroma_flag u(1) 
   }  
-  if( slice_type  ==  P  ||  slice_type  ==  B ) {  
+  if( slice_type == P  ||  slice_type == B ) {  
    num_ref_idx_active_override_flag u(1) 
    if( num_ref_idx_active_override_flag ) {  
     num_ref_idx_l0_active_minus1 ue(v) 
-    if( slice_type  ==  B )  
+    if( slice_type == B )  
      num_ref_idx_l1_active_minus1 ue(v) 
    }  
    if( lists_modification_present_flag  &&  NumPicTotalCurr > 1 )  
     ref_pic_lists_modification()  
-   if( slice_type  ==  B )  
+   if( slice_type == B )  
     mvd_l1_zero_flag u(1) 
    if( cabac_init_present_flag ) 
        cabac_init_flag u(1) 
    if( slice_temporal_mvp_enabled_flag ) {  
-    if( slice_type  ==  B )  
+    if( slice_type == B )  
      collocated_from_l0_flag u(1) 
     if( ( collocated_from_l0_flag  &&  num_ref_idx_l0_active_minus1 > 0 )  || 
      ( !collocated_from_l0_flag  &&  num_ref_idx_l1_active_minus1 > 0 ) ) 
  
      collocated_ref_idx ue(v) 
    }  
-   if( ( weighted_pred_flag  &&  slice_type  ==  P )  || 
-     ( weighted_bipred_flag  &&  slice_type  ==  B ) ) 
+   if( ( weighted_pred_flag  &&  slice_type == P )  || 
+     ( weighted_bipred_flag  &&  slice_type == B ) ) 
  
     pred_weight_table()  
    else if( !DepthFlag  &&  NumRefListLayers[ nuh_layer_id ] > 0 ) {  
@@ -2696,9 +2419,9 @@ slice_segment_header() {
   slice_segment_header_extension_length ue(v) 
   if( poc_reset_info_present_flag )  
    poc_reset_idc u(2) 
-  if( poc_reset_idc  !=  0 )  
+  if( poc_reset_idc != 0 )  
    poc_reset_period_id u(6) 
-  if( poc_reset_idc  ==  3 ) {  
+  if( poc_reset_idc == 3 ) {  
    full_poc_reset_flag u(1) 
    poc_lsb_val u(v) 
   }  
@@ -2714,9 +2437,9 @@ slice_segment_header() {
 
 alternative_depth_info( payloadSize ) {  
  alternative_depth_info_cancel_flag u(1) 
- if( alternative_depth_info_cancel_flag  ==  0 ) {  
+ if( alternative_depth_info_cancel_flag == 0 ) {  
   depth_type u(2) 
-  if( depth_type  ==  0 ) {  
+  if( depth_type == 0 ) {  
    num_constituent_views_gvd_minus1 ue(v) 
    depth_present_gvd_flag u(1) 
    z_gvd_flag u(1) 
@@ -2771,7 +2494,7 @@ alternative_depth_info( payloadSize ) {
     }  
    }  
   }  
-  if( depth_type  ==  1 ) {  
+  if( depth_type == 1 ) {  
    min_offset_x_int se(v) 
    min_offset_x_frac u(8) 
    max_offset_x_int se(v)
@@ -2792,3 +2515,25 @@ alternative_depth_info( payloadSize ) {
  }  
 }  
 
+green_metadata(payloadSize) {
+    green_metadata_type 5 u(8)
+    if (green_metadata_type == 0) {
+        period_type 5 u(8)
+
+        if (period_type == 2) {
+            num_seconds 5 u(16)
+        }
+        else if (period_type == 3) {
+            num_pictures 5 u(16)
+        }
+
+        percent_non_zero_macroblocks 5 u(8)
+        percent_intra_coded_macroblocks 5 u(8)
+        percent_six_tap_filtering 5 u(8)
+        percent_alpha_point_deblocking_instance 5 u(8)
+    }
+    else if (green_metadata_type == 1) {
+        xsd_metric_type 5 u(8)
+        xsd_metric_value 5 u(16)
+    }
+}   

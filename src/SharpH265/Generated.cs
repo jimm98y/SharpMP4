@@ -27,7 +27,7 @@ nal_unit( NumBytesInNalUnit ) {
   nal_unit_header()  
   NumBytesInRbsp = 0  
   for( i = 2; i < NumBytesInNalUnit; i++ )  
-    if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 )  ==  0x000003 ) {  
+    if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 ) == 0x000003 ) {  
      rbsp_byte[ NumBytesInRbsp++ ] b(8)
      rbsp_byte[ NumBytesInRbsp++ ] b(8) 
      i +=  2  
@@ -70,7 +70,7 @@ nal_unit( NumBytesInNalUnit ) {
             for (i = 2; i < NumBytesInNalUnit; i++)
             {
 
-                if (i + 2 < NumBytesInNalUnit && next_bits(24) == 0x000003)
+                if (i + 2 < NumBytesInNalUnit && stream.ReadNextBits(this, 24) == 0x000003)
                 {
                     size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRbsp++][i]);
                     size += stream.ReadBits(size, 8, out this.rbsp_byte[NumBytesInRbsp++][i]);
@@ -98,7 +98,7 @@ nal_unit( NumBytesInNalUnit ) {
             for (i = 2; i < NumBytesInNalUnit; i++)
             {
 
-                if (i + 2 < NumBytesInNalUnit && next_bits(24) == 0x000003)
+                if (i + 2 < NumBytesInNalUnit && stream.WriteNextBits(this, 24) == 0x000003)
                 {
                     size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRbsp++][i]);
                     size += stream.WriteBits(8, this.rbsp_byte[NumBytesInRbsp++][i]);
@@ -263,7 +263,7 @@ sps_scc_extension() {
   sps_palette_predictor_initializers_present_flag u(1) 
   if( sps_palette_predictor_initializers_present_flag ) {  
    sps_num_palette_predictor_initializers_minus1 ue(v) 
-   numComps = ( chroma_format_idc  ==  0 ) ? 1 : 3  
+   numComps = ( chroma_format_idc == 0 ) ? 1 : 3  
    for( comp = 0; comp < numComps; comp++ )  
     for( i = 0; i  <=  sps_num_palette_predictor_initializers_minus1; i++ )  
      sps_palette_predictor_initializer[ comp ][ i ] u(v) 
@@ -688,7 +688,7 @@ pic_parameter_set_rbsp() {
             if (pps_extension_4bits != 0)
             {
 
-                while (more_rbsp_data())
+                while (stream.ReadMoreRbspData(this))
                 {
                     whileIndex++;
 
@@ -812,7 +812,7 @@ pic_parameter_set_rbsp() {
             if (pps_extension_4bits != 0)
             {
 
-                while (more_rbsp_data())
+                while (stream.WriteMoreRbspData(this))
                 {
                     whileIndex++;
 
@@ -1139,7 +1139,7 @@ rbsp_trailing_bits()
 
                 this.sei_message.Add(whileIndex, new SeiMessage());
                 size += stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex]);
-            } while (more_rbsp_data());
+            } while (stream.ReadMoreRbspData(this));
             this.rbsp_trailing_bits = new RbspTrailingBits();
             size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
 
@@ -1157,7 +1157,7 @@ rbsp_trailing_bits()
                 whileIndex++;
 
                 size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message);
-            } while (more_rbsp_data());
+            } while (stream.WriteMoreRbspData(this));
             size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
 
             return size;
@@ -1285,7 +1285,7 @@ end_of_bitstream_rbsp() {
   
 
 filler_data_rbsp() { 
-while( next_bits( 8 )  ==  0xFF )  
+while( next_bits( 8 ) == 0xFF )  
 ff_byte  /* equal to 0xFF *//* f(8) 
 rbsp_trailing_bits()  
 }
@@ -1311,7 +1311,7 @@ rbsp_trailing_bits()
 
             int whileIndex = -1;
 
-            while (next_bits(8) == 0xFF)
+            while (stream.ReadNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
 
@@ -1329,7 +1329,7 @@ rbsp_trailing_bits()
 
             int whileIndex = -1;
 
-            while (next_bits(8) == 0xFF)
+            while (stream.WriteNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
 
@@ -1420,7 +1420,7 @@ rbsp_alignment_zero_bit  /* equal to 0 *//* f(1)
             int whileIndex = -1;
             size += stream.ReadFixed(size, 1, out this.rbsp_stop_one_bit); // equal to 1 
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -1437,7 +1437,7 @@ rbsp_alignment_zero_bit  /* equal to 0 *//* f(1)
             int whileIndex = -1;
             size += stream.WriteFixed(1, this.rbsp_stop_one_bit); // equal to 1 
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -1480,7 +1480,7 @@ byte_alignment() {
             int whileIndex = -1;
             size += stream.ReadFixed(size, 1, out this.alignment_bit_equal_to_one); // equal to 1 
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -1497,7 +1497,7 @@ byte_alignment() {
             int whileIndex = -1;
             size += stream.WriteFixed(1, this.alignment_bit_equal_to_one); // equal to 1 
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -1523,13 +1523,13 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
   general_interlaced_source_flag u(1) 
   general_non_packed_constraint_flag u(1) 
   general_frame_only_constraint_flag u(1) 
-  if( general_profile_idc  ==  4  ||  general_profile_compatibility_flag[ 4 ]  || 
-   general_profile_idc  ==  5  ||  general_profile_compatibility_flag[ 5 ]  || 
-   general_profile_idc  ==  6  ||  general_profile_compatibility_flag[ 6 ]  || 
-   general_profile_idc  ==  7  ||  general_profile_compatibility_flag[ 7 ]  || 
-   general_profile_idc  ==  8  ||  general_profile_compatibility_flag[ 8 ]  || 
-   general_profile_idc  ==  9  ||  general_profile_compatibility_flag[ 9 ]  || 
-   general_profile_idc  ==  10  ||  general_profile_compatibility_flag[ 10 ] ) { 
+  if( general_profile_idc == 4  ||  general_profile_compatibility_flag[ 4 ]  || 
+   general_profile_idc == 5  ||  general_profile_compatibility_flag[ 5 ]  || 
+   general_profile_idc == 6  ||  general_profile_compatibility_flag[ 6 ]  || 
+   general_profile_idc == 7  ||  general_profile_compatibility_flag[ 7 ]  || 
+   general_profile_idc == 8  ||  general_profile_compatibility_flag[ 8 ]  || 
+   general_profile_idc == 9  ||  general_profile_compatibility_flag[ 9 ]  || 
+   general_profile_idc == 10  ||  general_profile_compatibility_flag[ 10 ] ) { 
    /* The number of bits in this syntax structure is not affected by this condition *//* 
  
    general_max_12bit_constraint_flag u(1) 
@@ -1541,22 +1541,22 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
    general_intra_constraint_flag u(1) 
    general_one_picture_only_constraint_flag u(1) 
    general_lower_bit_rate_constraint_flag u(1) 
-   if( general_profile_idc  ==  5 ||  general_profile_compatibility_flag[ 5 ]  || 
-    general_profile_idc  ==  9  ||  general_profile_compatibility_flag[ 9 ]  || 
-    general_profile_idc  ==  10  ||  general_profile_compatibility_flag[ 10 ] ) { 
+   if( general_profile_idc == 5 ||  general_profile_compatibility_flag[ 5 ]  || 
+    general_profile_idc == 9  ||  general_profile_compatibility_flag[ 9 ]  || 
+    general_profile_idc == 10  ||  general_profile_compatibility_flag[ 10 ] ) { 
  
     general_max_14bit_constraint_flag u(1) 
     general_reserved_zero_33bits u(33) 
    } else  
     general_reserved_zero_34bits u(34) 
-  } else if( general_profile_idc  ==  2  ||  general_profile_compatibility_flag[ 2 ] ) {  
+  } else if( general_profile_idc == 2  ||  general_profile_compatibility_flag[ 2 ] ) {  
    general_reserved_zero_7bits u(7) 
    general_one_picture_only_constraint_flag u(1) 
    general_reserved_zero_35bits u(35) 
   } else  
      general_reserved_zero_43bits u(43) 
   if( ( general_profile_idc  >=  1  &&  general_profile_idc  <=  5 )  || 
-    general_profile_idc  ==  9  || 
+    general_profile_idc == 9  || 
     general_profile_compatibility_flag[ 1 ]  ||  general_profile_compatibility_flag[ 2 ]  || 
     general_profile_compatibility_flag[ 3 ]  ||  general_profile_compatibility_flag[ 4 ]  || 
     general_profile_compatibility_flag[ 5 ]  ||  general_profile_compatibility_flag[ 9 ] ) 
@@ -1584,13 +1584,13 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
    sub_layer_interlaced_source_flag[ i ] u(1) 
    sub_layer_non_packed_constraint_flag[ i ] u(1) 
    sub_layer_frame_only_constraint_flag[ i ] u(1) 
-   if( sub_layer_profile_idc[ i ]  ==  4  ||  sub_layer_profile_compatibility_flag[ i ][ 4 ]  || 
-    sub_layer_profile_idc[ i ]  ==  5  ||  sub_layer_profile_compatibility_flag[ i ][ 5 ]  || 
-    sub_layer_profile_idc[ i ]  ==  6  ||  sub_layer_profile_compatibility_flag[ i ][ 6 ]  || 
-    sub_layer_profile_idc[ i ]  ==  7  ||  sub_layer_profile_compatibility_flag[ i ][ 7 ]  || 
-    sub_layer_profile_idc[ i ]  ==  8  ||  sub_layer_profile_compatibility_flag[ i ][ 8 ]  || 
-    sub_layer_profile_idc[ i ]  ==  9  ||  sub_layer_profile_compatibility_flag[ i ][ 9 ]  || 
-    sub_layer_profile_idc[ i ]  ==  10  ||  sub_layer_profile_compatibility_flag[ i ][ 10 ] 
+   if( sub_layer_profile_idc[ i ] == 4  ||  sub_layer_profile_compatibility_flag[ i ][ 4 ]  || 
+    sub_layer_profile_idc[ i ] == 5  ||  sub_layer_profile_compatibility_flag[ i ][ 5 ]  || 
+    sub_layer_profile_idc[ i ] == 6  ||  sub_layer_profile_compatibility_flag[ i ][ 6 ]  || 
+    sub_layer_profile_idc[ i ] == 7  ||  sub_layer_profile_compatibility_flag[ i ][ 7 ]  || 
+    sub_layer_profile_idc[ i ] == 8  ||  sub_layer_profile_compatibility_flag[ i ][ 8 ]  || 
+    sub_layer_profile_idc[ i ] == 9  ||  sub_layer_profile_compatibility_flag[ i ][ 9 ]  || 
+    sub_layer_profile_idc[ i ] == 10  ||  sub_layer_profile_compatibility_flag[ i ][ 10 ] 
     ) { 
     /* The number of bits in this syntax structure is not affected by this condition *//* 
  
@@ -1603,14 +1603,14 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
     sub_layer_intra_constraint_flag[ i ] u(1) 
     sub_layer_one_picture_only_constraint_flag[ i ] u(1) 
     sub_layer_lower_bit_rate_constraint_flag[ i ] u(1)
-       if( sub_layer_profile_idc[ i ]  ==  5 || 
+       if( sub_layer_profile_idc[ i ] == 5 || 
      sub_layer_profile_compatibility_flag[ i ][ 5 ] ) { 
  
      sub_layer_max_14bit_constraint_flag[ i ] u(1) 
      sub_layer_reserved_zero_33bits[ i ] u(33) 
     } else  
      sub_layer_reserved_zero_34bits[ i ] u(34) 
-   } else if( sub_layer_profile_idc[ i ]  ==  2  || 
+   } else if( sub_layer_profile_idc[ i ] == 2  || 
        sub_layer_profile_compatibility_flag[ i ][ 2 ] ) { 
  
     sub_layer_reserved_zero_7bits[ i ] u(7) 
@@ -1619,13 +1619,13 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
    } else  
     sub_layer_reserved_zero_43bits[ i ] u(43) 
    if( ( sub_layer_profile_idc[ i ]  >=  1  &&  sub_layer_profile_idc[ i ]  <=  5 )  || 
-     sub_layer_profile_idc[ i ]  ==  9  || 
-     sub_layer_profile_compatibility_flag[ 1 ]  || 
-     sub_layer_profile_compatibility_flag[ 2 ]  || 
-     sub_layer_profile_compatibility_flag[ 3 ]  || 
-     sub_layer_profile_compatibility_flag[ 4 ]  || 
-     sub_layer_profile_compatibility_flag[ 5 ]  || 
-     sub_layer_profile_compatibility_flag[ 9 ] ) 
+     sub_layer_profile_idc[ i ] == 9  || 
+     sub_layer_profile_compatibility_flag[ i ][ 1 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 2 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 3 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 4 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 5 ]  || 
+     sub_layer_profile_compatibility_flag[ i ][ 9 ] ) 
     /* The number of bits in this syntax structure is not affected by this condition *//* 
  
     sub_layer_inbld_flag[ i ] u(1) 
@@ -1953,12 +1953,12 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
 
                     if ((sub_layer_profile_idc[i] >= 1 && sub_layer_profile_idc[i] <= 5) ||
      sub_layer_profile_idc[i] == 9 ||
-     sub_layer_profile_compatibility_flag[1] != 0 ||
-     sub_layer_profile_compatibility_flag[2] != 0 ||
-     sub_layer_profile_compatibility_flag[3] != 0 ||
-     sub_layer_profile_compatibility_flag[4] != 0 ||
-     sub_layer_profile_compatibility_flag[5] != 0 ||
-     sub_layer_profile_compatibility_flag[9] != 0)
+     sub_layer_profile_compatibility_flag[i][1] != 0 ||
+     sub_layer_profile_compatibility_flag[i][2] != 0 ||
+     sub_layer_profile_compatibility_flag[i][3] != 0 ||
+     sub_layer_profile_compatibility_flag[i][4] != 0 ||
+     sub_layer_profile_compatibility_flag[i][5] != 0 ||
+     sub_layer_profile_compatibility_flag[i][9] != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.sub_layer_inbld_flag[i]);
                     }
@@ -2136,12 +2136,12 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
 
                     if ((sub_layer_profile_idc[i] >= 1 && sub_layer_profile_idc[i] <= 5) ||
      sub_layer_profile_idc[i] == 9 ||
-     sub_layer_profile_compatibility_flag[1] != 0 ||
-     sub_layer_profile_compatibility_flag[2] != 0 ||
-     sub_layer_profile_compatibility_flag[3] != 0 ||
-     sub_layer_profile_compatibility_flag[4] != 0 ||
-     sub_layer_profile_compatibility_flag[5] != 0 ||
-     sub_layer_profile_compatibility_flag[9] != 0)
+     sub_layer_profile_compatibility_flag[i][1] != 0 ||
+     sub_layer_profile_compatibility_flag[i][2] != 0 ||
+     sub_layer_profile_compatibility_flag[i][3] != 0 ||
+     sub_layer_profile_compatibility_flag[i][4] != 0 ||
+     sub_layer_profile_compatibility_flag[i][5] != 0 ||
+     sub_layer_profile_compatibility_flag[i][9] != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.sub_layer_inbld_flag[i]);
                     }
@@ -2167,7 +2167,7 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
 
 scaling_list_data() { 
  for( sizeId = 0; sizeId < 4; sizeId++ )  
-  for( matrixId = 0; matrixId < 6; matrixId  +=  ( sizeId  ==  3 ) ? 3 : 1 ) {  
+  for( matrixId = 0; matrixId < 6; matrixId  +=  ( sizeId == 3 ) ? 3 : 1 ) {  
    scaling_list_pred_mode_flag[ sizeId ][ matrixId ] u(1) 
    if( !scaling_list_pred_mode_flag[ sizeId ][ matrixId ] )  
     scaling_list_pred_matrix_id_delta[ sizeId ][ matrixId ] ue(v) 
@@ -2251,7 +2251,7 @@ scaling_list_data() {
                         for (i = 0; i < coefNum; i++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.scaling_list_delta_coef[sizeId][matrixId][i]);
-                            nextCoef = (uint)(nextCoef + scaling_list_delta_coef[sizeId][matrixId][i] + 256) % 256;
+                            nextCoef = (uint)(nextCoef + scaling_list_delta_coef[sizeId][sizeId][i] + 256) % 256;
                             ScalingList[sizeId][matrixId][i] = nextCoef;
                         }
                     }
@@ -2297,7 +2297,7 @@ scaling_list_data() {
                         for (i = 0; i < coefNum; i++)
                         {
                             size += stream.WriteSignedIntGolomb(this.scaling_list_delta_coef[sizeId][matrixId][i]);
-                            nextCoef = (uint)(nextCoef + scaling_list_delta_coef[sizeId][matrixId][i] + 256) % 256;
+                            nextCoef = (uint)(nextCoef + scaling_list_delta_coef[sizeId][sizeId][i] + 256) % 256;
                             ScalingList[sizeId][matrixId][i] = nextCoef;
                         }
                     }
@@ -2314,14 +2314,14 @@ scaling_list_data() {
 
 sei_message() {  
  payloadType = 0  
- while( next_bits( 8 )  ==  0xFF ) {  
+ while( next_bits( 8 ) == 0xFF ) {  
   ff_byte  /* equal to 0xFF *//* f(8) 
   payloadType  +=  255  
  }  
  last_payload_type_byte u(8) 
  payloadType  +=  last_payload_type_byte  
  payloadSize = 0  
- while( next_bits( 8 )  ==  0xFF ) {  
+ while( next_bits( 8 ) == 0xFF ) {  
   ff_byte  /* equal to 0xFF *//* f(8) 
   payloadSize  +=  255  
  }  
@@ -2358,7 +2358,7 @@ sei_message() {
             uint payloadSize = 0;
             payloadType = 0;
 
-            while (next_bits(8) == 0xFF)
+            while (stream.ReadNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
 
@@ -2369,7 +2369,7 @@ sei_message() {
             payloadType += last_payload_type_byte;
             payloadSize = 0;
 
-            while (next_bits(8) == 0xFF)
+            while (stream.ReadNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
 
@@ -2393,7 +2393,7 @@ sei_message() {
             uint payloadSize = 0;
             payloadType = 0;
 
-            while (next_bits(8) == 0xFF)
+            while (stream.WriteNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
 
@@ -2404,7 +2404,7 @@ sei_message() {
             payloadType += last_payload_type_byte;
             payloadSize = 0;
 
-            while (next_bits(8) == 0xFF)
+            while (stream.WriteNextBits(this, 8) == 0xFF)
             {
                 whileIndex++;
 
@@ -2423,736 +2423,12 @@ sei_message() {
     /*
   
 
-slice_segment_header() {  
- first_slice_segment_in_pic_flag u(1) 
- if( nal_unit_type  >=  BLA_W_LP  &&  nal_unit_type  <=  RSV_IRAP_VCL23 )  
-  no_output_of_prior_pics_flag u(1) 
- slice_pic_parameter_set_id ue(v) 
- if( !first_slice_segment_in_pic_flag ) {  
-  if( dependent_slice_segments_enabled_flag )  
-   dependent_slice_segment_flag u(1) 
-  slice_segment_address u(v) 
- }  
- if( !dependent_slice_segment_flag ) {  
-  for( i = 0; i < num_extra_slice_header_bits; i++ )  
-   slice_reserved_flag[ i ] u(1) 
-  slice_type ue(v) 
-  if( output_flag_present_flag )  
-   pic_output_flag u(1) 
-  if( separate_colour_plane_flag  ==  1 )  
-   colour_plane_id u(2) 
-  if( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) {  
-   slice_pic_order_cnt_lsb u(v) 
-   short_term_ref_pic_set_sps_flag u(1) 
-   if( !short_term_ref_pic_set_sps_flag )  
-    st_ref_pic_set( num_short_term_ref_pic_sets )  
-   else if( num_short_term_ref_pic_sets > 1 )  
-    short_term_ref_pic_set_idx u(v) 
-   if( long_term_ref_pics_present_flag ) {  
-    if( num_long_term_ref_pics_sps > 0 )  
-     num_long_term_sps ue(v) 
-    num_long_term_pics ue(v) 
-    for( i = 0; i < num_long_term_sps + num_long_term_pics; i++ ) {  
-     if( i < num_long_term_sps ) {  
-      if( num_long_term_ref_pics_sps > 1 )  
-       lt_idx_sps[ i ] u(v) 
-     } else {  
-      poc_lsb_lt[ i ] u(v) 
-      used_by_curr_pic_lt_flag[ i ] u(1) 
-     }  
-     delta_poc_msb_present_flag[ i ] u(1) 
-     if( delta_poc_msb_present_flag[ i ] )  
-      delta_poc_msb_cycle_lt[ i ] ue(v) 
-    }  
-   }  
-   if( sps_temporal_mvp_enabled_flag )  
-    slice_temporal_mvp_enabled_flag u(1) 
-  }  
-   if( sample_adaptive_offset_enabled_flag ) {  
-   slice_sao_luma_flag u(1) 
-   if( ChromaArrayType  !=  0 )  
-    slice_sao_chroma_flag u(1) 
-  }  
-  if( slice_type  ==  P  ||  slice_type  ==  B ) {  
-   num_ref_idx_active_override_flag u(1) 
-   if( num_ref_idx_active_override_flag ) {  
-    num_ref_idx_l0_active_minus1 ue(v) 
-    if( slice_type  ==  B )  
-     num_ref_idx_l1_active_minus1 ue(v) 
-   }  
-   if( lists_modification_present_flag  &&  NumPicTotalCurr > 1 )  
-    ref_pic_lists_modification()  
-   if( slice_type  ==  B )  
-    mvd_l1_zero_flag u(1) 
-   if( cabac_init_present_flag )  
-    cabac_init_flag u(1) 
-   if( slice_temporal_mvp_enabled_flag ) {  
-    if( slice_type  ==  B )  
-     collocated_from_l0_flag u(1) 
-    if( ( collocated_from_l0_flag  &&  num_ref_idx_l0_active_minus1 > 0 )  || 
-     ( !collocated_from_l0_flag  &&  num_ref_idx_l1_active_minus1 > 0 ) ) 
- 
-     collocated_ref_idx ue(v) 
-   }  
-      if( ( weighted_pred_flag  &&  slice_type  ==  P )  || 
-     ( weighted_bipred_flag  &&  slice_type  ==  B ) ) 
- 
-    pred_weight_table()  
-   five_minus_max_num_merge_cand ue(v) 
-   if( motion_vector_resolution_control_idc  ==  2 )  
-    use_integer_mv_flag u(1) 
-  }  
-  slice_qp_delta se(v) 
-  if( pps_slice_chroma_qp_offsets_present_flag ) {  
-   slice_cb_qp_offset se(v) 
-   slice_cr_qp_offset se(v) 
-  }  
-  if( pps_slice_act_qp_offsets_present_flag ) {  
-   slice_act_y_qp_offset se(v) 
-   slice_act_cb_qp_offset se(v) 
-   slice_act_cr_qp_offset se(v) 
-  }  
-  if( chroma_qp_offset_list_enabled_flag )  
-   cu_chroma_qp_offset_enabled_flag u(1) 
-  if( deblocking_filter_override_enabled_flag )  
-   deblocking_filter_override_flag u(1) 
-  if( deblocking_filter_override_flag ) {  
-   slice_deblocking_filter_disabled_flag u(1) 
-   if( !slice_deblocking_filter_disabled_flag ) {  
-    slice_beta_offset_div2 se(v) 
-    slice_tc_offset_div2 se(v) 
-   }  
-  }  
-  if( pps_loop_filter_across_slices_enabled_flag  && 
-   ( slice_sao_luma_flag  ||  slice_sao_chroma_flag  || 
-    !slice_deblocking_filter_disabled_flag ) ) 
- 
-   slice_loop_filter_across_slices_enabled_flag u(1) 
- }  
- if( tiles_enabled_flag  ||  entropy_coding_sync_enabled_flag ) {  
-  num_entry_point_offsets ue(v) 
-  if( num_entry_point_offsets > 0 ) {  
-   offset_len_minus1 ue(v) 
-   for( i = 0; i < num_entry_point_offsets; i++ )  
-    entry_point_offset_minus1[ i ] u(v) 
-  }  
- }  
- if( slice_segment_header_extension_present_flag ) {  
-  slice_segment_header_extension_length ue(v) 
-  for( i = 0; i < slice_segment_header_extension_length; i++)   
-   slice_segment_header_extension_data_byte[ i ] u(8) 
- }  
- byte_alignment()  
-}
-    */
-    public class SliceSegmentHeader : IItuSerializable
-    {
-        private byte first_slice_segment_in_pic_flag;
-        public byte FirstSliceSegmentInPicFlag { get { return first_slice_segment_in_pic_flag; } set { first_slice_segment_in_pic_flag = value; } }
-        private byte no_output_of_prior_pics_flag;
-        public byte NoOutputOfPriorPicsFlag { get { return no_output_of_prior_pics_flag; } set { no_output_of_prior_pics_flag = value; } }
-        private uint slice_pic_parameter_set_id;
-        public uint SlicePicParameterSetId { get { return slice_pic_parameter_set_id; } set { slice_pic_parameter_set_id = value; } }
-        private byte dependent_slice_segment_flag;
-        public byte DependentSliceSegmentFlag { get { return dependent_slice_segment_flag; } set { dependent_slice_segment_flag = value; } }
-        private uint slice_segment_address;
-        public uint SliceSegmentAddress { get { return slice_segment_address; } set { slice_segment_address = value; } }
-        private byte[] slice_reserved_flag;
-        public byte[] SliceReservedFlag { get { return slice_reserved_flag; } set { slice_reserved_flag = value; } }
-        private uint slice_type;
-        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
-        private byte pic_output_flag;
-        public byte PicOutputFlag { get { return pic_output_flag; } set { pic_output_flag = value; } }
-        private uint colour_plane_id;
-        public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
-        private uint slice_pic_order_cnt_lsb;
-        public uint SlicePicOrderCntLsb { get { return slice_pic_order_cnt_lsb; } set { slice_pic_order_cnt_lsb = value; } }
-        private byte short_term_ref_pic_set_sps_flag;
-        public byte ShortTermRefPicSetSpsFlag { get { return short_term_ref_pic_set_sps_flag; } set { short_term_ref_pic_set_sps_flag = value; } }
-        private StRefPicSet st_ref_pic_set;
-        public StRefPicSet StRefPicSet { get { return st_ref_pic_set; } set { st_ref_pic_set = value; } }
-        private uint short_term_ref_pic_set_idx;
-        public uint ShortTermRefPicSetIdx { get { return short_term_ref_pic_set_idx; } set { short_term_ref_pic_set_idx = value; } }
-        private uint num_long_term_sps;
-        public uint NumLongTermSps { get { return num_long_term_sps; } set { num_long_term_sps = value; } }
-        private uint num_long_term_pics;
-        public uint NumLongTermPics { get { return num_long_term_pics; } set { num_long_term_pics = value; } }
-        private uint[] lt_idx_sps;
-        public uint[] LtIdxSps { get { return lt_idx_sps; } set { lt_idx_sps = value; } }
-        private uint[] poc_lsb_lt;
-        public uint[] PocLsbLt { get { return poc_lsb_lt; } set { poc_lsb_lt = value; } }
-        private byte[] used_by_curr_pic_lt_flag;
-        public byte[] UsedByCurrPicLtFlag { get { return used_by_curr_pic_lt_flag; } set { used_by_curr_pic_lt_flag = value; } }
-        private byte[] delta_poc_msb_present_flag;
-        public byte[] DeltaPocMsbPresentFlag { get { return delta_poc_msb_present_flag; } set { delta_poc_msb_present_flag = value; } }
-        private uint[] delta_poc_msb_cycle_lt;
-        public uint[] DeltaPocMsbCycleLt { get { return delta_poc_msb_cycle_lt; } set { delta_poc_msb_cycle_lt = value; } }
-        private byte slice_temporal_mvp_enabled_flag;
-        public byte SliceTemporalMvpEnabledFlag { get { return slice_temporal_mvp_enabled_flag; } set { slice_temporal_mvp_enabled_flag = value; } }
-        private byte slice_sao_luma_flag;
-        public byte SliceSaoLumaFlag { get { return slice_sao_luma_flag; } set { slice_sao_luma_flag = value; } }
-        private byte slice_sao_chroma_flag;
-        public byte SliceSaoChromaFlag { get { return slice_sao_chroma_flag; } set { slice_sao_chroma_flag = value; } }
-        private byte num_ref_idx_active_override_flag;
-        public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
-        private uint num_ref_idx_l0_active_minus1;
-        public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
-        private uint num_ref_idx_l1_active_minus1;
-        public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
-        private RefPicListsModification ref_pic_lists_modification;
-        public RefPicListsModification RefPicListsModification { get { return ref_pic_lists_modification; } set { ref_pic_lists_modification = value; } }
-        private byte mvd_l1_zero_flag;
-        public byte MvdL1ZeroFlag { get { return mvd_l1_zero_flag; } set { mvd_l1_zero_flag = value; } }
-        private byte cabac_init_flag;
-        public byte CabacInitFlag { get { return cabac_init_flag; } set { cabac_init_flag = value; } }
-        private byte collocated_from_l0_flag;
-        public byte CollocatedFromL0Flag { get { return collocated_from_l0_flag; } set { collocated_from_l0_flag = value; } }
-        private uint collocated_ref_idx;
-        public uint CollocatedRefIdx { get { return collocated_ref_idx; } set { collocated_ref_idx = value; } }
-        private PredWeightTable pred_weight_table;
-        public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
-        private uint five_minus_max_num_merge_cand;
-        public uint FiveMinusMaxNumMergeCand { get { return five_minus_max_num_merge_cand; } set { five_minus_max_num_merge_cand = value; } }
-        private byte use_integer_mv_flag;
-        public byte UseIntegerMvFlag { get { return use_integer_mv_flag; } set { use_integer_mv_flag = value; } }
-        private int slice_qp_delta;
-        public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
-        private int slice_cb_qp_offset;
-        public int SliceCbQpOffset { get { return slice_cb_qp_offset; } set { slice_cb_qp_offset = value; } }
-        private int slice_cr_qp_offset;
-        public int SliceCrQpOffset { get { return slice_cr_qp_offset; } set { slice_cr_qp_offset = value; } }
-        private int slice_act_y_qp_offset;
-        public int SliceActyQpOffset { get { return slice_act_y_qp_offset; } set { slice_act_y_qp_offset = value; } }
-        private int slice_act_cb_qp_offset;
-        public int SliceActCbQpOffset { get { return slice_act_cb_qp_offset; } set { slice_act_cb_qp_offset = value; } }
-        private int slice_act_cr_qp_offset;
-        public int SliceActCrQpOffset { get { return slice_act_cr_qp_offset; } set { slice_act_cr_qp_offset = value; } }
-        private byte cu_chroma_qp_offset_enabled_flag;
-        public byte CuChromaQpOffsetEnabledFlag { get { return cu_chroma_qp_offset_enabled_flag; } set { cu_chroma_qp_offset_enabled_flag = value; } }
-        private byte deblocking_filter_override_flag;
-        public byte DeblockingFilterOverrideFlag { get { return deblocking_filter_override_flag; } set { deblocking_filter_override_flag = value; } }
-        private byte slice_deblocking_filter_disabled_flag;
-        public byte SliceDeblockingFilterDisabledFlag { get { return slice_deblocking_filter_disabled_flag; } set { slice_deblocking_filter_disabled_flag = value; } }
-        private int slice_beta_offset_div2;
-        public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
-        private int slice_tc_offset_div2;
-        public int SliceTcOffsetDiv2 { get { return slice_tc_offset_div2; } set { slice_tc_offset_div2 = value; } }
-        private byte slice_loop_filter_across_slices_enabled_flag;
-        public byte SliceLoopFilterAcrossSlicesEnabledFlag { get { return slice_loop_filter_across_slices_enabled_flag; } set { slice_loop_filter_across_slices_enabled_flag = value; } }
-        private uint num_entry_point_offsets;
-        public uint NumEntryPointOffsets { get { return num_entry_point_offsets; } set { num_entry_point_offsets = value; } }
-        private uint offset_len_minus1;
-        public uint OffsetLenMinus1 { get { return offset_len_minus1; } set { offset_len_minus1 = value; } }
-        private uint[] entry_point_offset_minus1;
-        public uint[] EntryPointOffsetMinus1 { get { return entry_point_offset_minus1; } set { entry_point_offset_minus1 = value; } }
-        private uint slice_segment_header_extension_length;
-        public uint SliceSegmentHeaderExtensionLength { get { return slice_segment_header_extension_length; } set { slice_segment_header_extension_length = value; } }
-        private uint[] slice_segment_header_extension_data_byte;
-        public uint[] SliceSegmentHeaderExtensionDataByte { get { return slice_segment_header_extension_data_byte; } set { slice_segment_header_extension_data_byte = value; } }
-        private ByteAlignment byte_alignment;
-        public ByteAlignment ByteAlignment { get { return byte_alignment; } set { byte_alignment = value; } }
-
-        public int HasMoreRbspData { get; set; }
-        public int[] ReadNextBits { get; set; }
-
-        public SliceSegmentHeader()
-        {
-
-        }
-
-        public ulong Read(IItuContext context, ItuStream stream)
-        {
-            ulong size = 0;
-
-            uint i = 0;
-            size += stream.ReadUnsignedInt(size, 1, out this.first_slice_segment_in_pic_flag);
-
-            if (nal_unit_type >= BLA_W_LP && nal_unit_type <= RSV_IRAP_VCL23)
-            {
-                size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag);
-            }
-            size += stream.ReadUnsignedIntGolomb(size, out this.slice_pic_parameter_set_id);
-
-            if (first_slice_segment_in_pic_flag == 0)
-            {
-
-                if (dependent_slice_segments_enabled_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.dependent_slice_segment_flag);
-                }
-                size += stream.ReadUnsignedIntVariable(size, slice_segment_address, out this.slice_segment_address);
-            }
-
-            if (dependent_slice_segment_flag == 0)
-            {
-
-                this.slice_reserved_flag = new byte[num_extra_slice_header_bits];
-                for (i = 0; i < num_extra_slice_header_bits; i++)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_reserved_flag[i]);
-                }
-                size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
-
-                if (output_flag_present_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.pic_output_flag);
-                }
-
-                if (separate_colour_plane_flag == 1)
-                {
-                    size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
-                }
-
-                if (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP)
-                {
-                    size += stream.ReadUnsignedIntVariable(size, slice_pic_order_cnt_lsb, out this.slice_pic_order_cnt_lsb);
-                    size += stream.ReadUnsignedInt(size, 1, out this.short_term_ref_pic_set_sps_flag);
-
-                    if (short_term_ref_pic_set_sps_flag == 0)
-                    {
-                        this.st_ref_pic_set = new StRefPicSet(num_short_term_ref_pic_sets);
-                        size += stream.ReadClass<StRefPicSet>(size, context, this.st_ref_pic_set);
-                    }
-                    else if (num_short_term_ref_pic_sets > 1)
-                    {
-                        size += stream.ReadUnsignedIntVariable(size, short_term_ref_pic_set_idx, out this.short_term_ref_pic_set_idx);
-                    }
-
-                    if (long_term_ref_pics_present_flag != 0)
-                    {
-
-                        if (num_long_term_ref_pics_sps > 0)
-                        {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.num_long_term_sps);
-                        }
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_long_term_pics);
-
-                        this.lt_idx_sps = new uint[num_long_term_sps + num_long_term_pics];
-                        this.poc_lsb_lt = new uint[num_long_term_sps + num_long_term_pics];
-                        this.used_by_curr_pic_lt_flag = new byte[num_long_term_sps + num_long_term_pics];
-                        this.delta_poc_msb_present_flag = new byte[num_long_term_sps + num_long_term_pics];
-                        this.delta_poc_msb_cycle_lt = new uint[num_long_term_sps + num_long_term_pics];
-                        for (i = 0; i < num_long_term_sps + num_long_term_pics; i++)
-                        {
-
-                            if (i < num_long_term_sps)
-                            {
-
-                                if (num_long_term_ref_pics_sps > 1)
-                                {
-                                    size += stream.ReadUnsignedIntVariable(size, lt_idx_sps, out this.lt_idx_sps[i]);
-                                }
-                            }
-                            else
-                            {
-                                size += stream.ReadUnsignedIntVariable(size, poc_lsb_lt, out this.poc_lsb_lt[i]);
-                                size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_lt_flag[i]);
-                            }
-                            size += stream.ReadUnsignedInt(size, 1, out this.delta_poc_msb_present_flag[i]);
-
-                            if (delta_poc_msb_present_flag[i] != 0)
-                            {
-                                size += stream.ReadUnsignedIntGolomb(size, out this.delta_poc_msb_cycle_lt[i]);
-                            }
-                        }
-                    }
-
-                    if (sps_temporal_mvp_enabled_flag != 0)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.slice_temporal_mvp_enabled_flag);
-                    }
-                }
-
-                if (sample_adaptive_offset_enabled_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_sao_luma_flag);
-
-                    if (ChromaArrayType != 0)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.slice_sao_chroma_flag);
-                    }
-                }
-
-                if (slice_type == P || slice_type == B)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
-
-                    if (num_ref_idx_active_override_flag != 0)
-                    {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
-
-                        if (slice_type == B)
-                        {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
-                        }
-                    }
-
-                    if (lists_modification_present_flag != 0 && NumPicTotalCurr > 1)
-                    {
-                        this.ref_pic_lists_modification = new RefPicListsModification();
-                        size += stream.ReadClass<RefPicListsModification>(size, context, this.ref_pic_lists_modification);
-                    }
-
-                    if (slice_type == B)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.mvd_l1_zero_flag);
-                    }
-
-                    if (cabac_init_present_flag != 0)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.cabac_init_flag);
-                    }
-
-                    if (slice_temporal_mvp_enabled_flag != 0)
-                    {
-
-                        if (slice_type == B)
-                        {
-                            size += stream.ReadUnsignedInt(size, 1, out this.collocated_from_l0_flag);
-                        }
-
-                        if ((collocated_from_l0_flag != 0 && num_ref_idx_l0_active_minus1 > 0) ||
-     (!collocated_from_l0_flag != 0 != 0 && num_ref_idx_l1_active_minus1 > 0))
-                        {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.collocated_ref_idx);
-                        }
-                    }
-
-                    if ((weighted_pred_flag != 0 && slice_type == P) ||
-     (weighted_bipred_flag != 0 && slice_type == B))
-                    {
-                        this.pred_weight_table = new PredWeightTable();
-                        size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
-                    }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.five_minus_max_num_merge_cand);
-
-                    if (motion_vector_resolution_control_idc == 2)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.use_integer_mv_flag);
-                    }
-                }
-                size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
-
-                if (pps_slice_chroma_qp_offsets_present_flag != 0)
-                {
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_cb_qp_offset);
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_cr_qp_offset);
-                }
-
-                if (pps_slice_act_qp_offsets_present_flag != 0)
-                {
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_act_y_qp_offset);
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_act_cb_qp_offset);
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_act_cr_qp_offset);
-                }
-
-                if (chroma_qp_offset_list_enabled_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.cu_chroma_qp_offset_enabled_flag);
-                }
-
-                if (deblocking_filter_override_enabled_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.deblocking_filter_override_flag);
-                }
-
-                if (deblocking_filter_override_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_deblocking_filter_disabled_flag);
-
-                    if (slice_deblocking_filter_disabled_flag == 0)
-                    {
-                        size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2);
-                        size += stream.ReadSignedIntGolomb(size, out this.slice_tc_offset_div2);
-                    }
-                }
-
-                if (pps_loop_filter_across_slices_enabled_flag != 0 &&
-   (slice_sao_luma_flag != 0 || slice_sao_chroma_flag != 0 ||
-    slice_deblocking_filter_disabled_flag == 0))
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_loop_filter_across_slices_enabled_flag);
-                }
-            }
-
-            if (tiles_enabled_flag != 0 || entropy_coding_sync_enabled_flag != 0)
-            {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_entry_point_offsets);
-
-                if (num_entry_point_offsets > 0)
-                {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.offset_len_minus1);
-
-                    this.entry_point_offset_minus1 = new uint[num_entry_point_offsets];
-                    for (i = 0; i < num_entry_point_offsets; i++)
-                    {
-                        size += stream.ReadUnsignedIntVariable(size, entry_point_offset_minus1, out this.entry_point_offset_minus1[i]);
-                    }
-                }
-            }
-
-            if (slice_segment_header_extension_present_flag != 0)
-            {
-                size += stream.ReadUnsignedIntGolomb(size, out this.slice_segment_header_extension_length);
-
-                this.slice_segment_header_extension_data_byte = new uint[slice_segment_header_extension_length];
-                for (i = 0; i < slice_segment_header_extension_length; i++)
-                {
-                    size += stream.ReadUnsignedInt(size, 8, out this.slice_segment_header_extension_data_byte[i]);
-                }
-            }
-            this.byte_alignment = new ByteAlignment();
-            size += stream.ReadClass<ByteAlignment>(size, context, this.byte_alignment);
-
-            return size;
-        }
-
-        public ulong Write(IItuContext context, ItuStream stream)
-        {
-            ulong size = 0;
-
-            uint i = 0;
-            size += stream.WriteUnsignedInt(1, this.first_slice_segment_in_pic_flag);
-
-            if (nal_unit_type >= BLA_W_LP && nal_unit_type <= RSV_IRAP_VCL23)
-            {
-                size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag);
-            }
-            size += stream.WriteUnsignedIntGolomb(this.slice_pic_parameter_set_id);
-
-            if (first_slice_segment_in_pic_flag == 0)
-            {
-
-                if (dependent_slice_segments_enabled_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.dependent_slice_segment_flag);
-                }
-                size += stream.WriteUnsignedIntVariable(slice_segment_address, this.slice_segment_address);
-            }
-
-            if (dependent_slice_segment_flag == 0)
-            {
-
-                for (i = 0; i < num_extra_slice_header_bits; i++)
-                {
-                    size += stream.WriteUnsignedInt(1, this.slice_reserved_flag[i]);
-                }
-                size += stream.WriteUnsignedIntGolomb(this.slice_type);
-
-                if (output_flag_present_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.pic_output_flag);
-                }
-
-                if (separate_colour_plane_flag == 1)
-                {
-                    size += stream.WriteUnsignedInt(2, this.colour_plane_id);
-                }
-
-                if (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP)
-                {
-                    size += stream.WriteUnsignedIntVariable(slice_pic_order_cnt_lsb, this.slice_pic_order_cnt_lsb);
-                    size += stream.WriteUnsignedInt(1, this.short_term_ref_pic_set_sps_flag);
-
-                    if (short_term_ref_pic_set_sps_flag == 0)
-                    {
-                        size += stream.WriteClass<StRefPicSet>(context, this.st_ref_pic_set);
-                    }
-                    else if (num_short_term_ref_pic_sets > 1)
-                    {
-                        size += stream.WriteUnsignedIntVariable(short_term_ref_pic_set_idx, this.short_term_ref_pic_set_idx);
-                    }
-
-                    if (long_term_ref_pics_present_flag != 0)
-                    {
-
-                        if (num_long_term_ref_pics_sps > 0)
-                        {
-                            size += stream.WriteUnsignedIntGolomb(this.num_long_term_sps);
-                        }
-                        size += stream.WriteUnsignedIntGolomb(this.num_long_term_pics);
-
-                        for (i = 0; i < num_long_term_sps + num_long_term_pics; i++)
-                        {
-
-                            if (i < num_long_term_sps)
-                            {
-
-                                if (num_long_term_ref_pics_sps > 1)
-                                {
-                                    size += stream.WriteUnsignedIntVariable(lt_idx_sps[i], this.lt_idx_sps[i]);
-                                }
-                            }
-                            else
-                            {
-                                size += stream.WriteUnsignedIntVariable(poc_lsb_lt[i], this.poc_lsb_lt[i]);
-                                size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_lt_flag[i]);
-                            }
-                            size += stream.WriteUnsignedInt(1, this.delta_poc_msb_present_flag[i]);
-
-                            if (delta_poc_msb_present_flag[i] != 0)
-                            {
-                                size += stream.WriteUnsignedIntGolomb(this.delta_poc_msb_cycle_lt[i]);
-                            }
-                        }
-                    }
-
-                    if (sps_temporal_mvp_enabled_flag != 0)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.slice_temporal_mvp_enabled_flag);
-                    }
-                }
-
-                if (sample_adaptive_offset_enabled_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.slice_sao_luma_flag);
-
-                    if (ChromaArrayType != 0)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.slice_sao_chroma_flag);
-                    }
-                }
-
-                if (slice_type == P || slice_type == B)
-                {
-                    size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
-
-                    if (num_ref_idx_active_override_flag != 0)
-                    {
-                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
-
-                        if (slice_type == B)
-                        {
-                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
-                        }
-                    }
-
-                    if (lists_modification_present_flag != 0 && NumPicTotalCurr > 1)
-                    {
-                        size += stream.WriteClass<RefPicListsModification>(context, this.ref_pic_lists_modification);
-                    }
-
-                    if (slice_type == B)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.mvd_l1_zero_flag);
-                    }
-
-                    if (cabac_init_present_flag != 0)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.cabac_init_flag);
-                    }
-
-                    if (slice_temporal_mvp_enabled_flag != 0)
-                    {
-
-                        if (slice_type == B)
-                        {
-                            size += stream.WriteUnsignedInt(1, this.collocated_from_l0_flag);
-                        }
-
-                        if ((collocated_from_l0_flag != 0 && num_ref_idx_l0_active_minus1 > 0) ||
-     (!collocated_from_l0_flag != 0 != 0 && num_ref_idx_l1_active_minus1 > 0))
-                        {
-                            size += stream.WriteUnsignedIntGolomb(this.collocated_ref_idx);
-                        }
-                    }
-
-                    if ((weighted_pred_flag != 0 && slice_type == P) ||
-     (weighted_bipred_flag != 0 && slice_type == B))
-                    {
-                        size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
-                    }
-                    size += stream.WriteUnsignedIntGolomb(this.five_minus_max_num_merge_cand);
-
-                    if (motion_vector_resolution_control_idc == 2)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.use_integer_mv_flag);
-                    }
-                }
-                size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
-
-                if (pps_slice_chroma_qp_offsets_present_flag != 0)
-                {
-                    size += stream.WriteSignedIntGolomb(this.slice_cb_qp_offset);
-                    size += stream.WriteSignedIntGolomb(this.slice_cr_qp_offset);
-                }
-
-                if (pps_slice_act_qp_offsets_present_flag != 0)
-                {
-                    size += stream.WriteSignedIntGolomb(this.slice_act_y_qp_offset);
-                    size += stream.WriteSignedIntGolomb(this.slice_act_cb_qp_offset);
-                    size += stream.WriteSignedIntGolomb(this.slice_act_cr_qp_offset);
-                }
-
-                if (chroma_qp_offset_list_enabled_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.cu_chroma_qp_offset_enabled_flag);
-                }
-
-                if (deblocking_filter_override_enabled_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.deblocking_filter_override_flag);
-                }
-
-                if (deblocking_filter_override_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.slice_deblocking_filter_disabled_flag);
-
-                    if (slice_deblocking_filter_disabled_flag == 0)
-                    {
-                        size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2);
-                        size += stream.WriteSignedIntGolomb(this.slice_tc_offset_div2);
-                    }
-                }
-
-                if (pps_loop_filter_across_slices_enabled_flag != 0 &&
-   (slice_sao_luma_flag != 0 || slice_sao_chroma_flag != 0 ||
-    slice_deblocking_filter_disabled_flag == 0))
-                {
-                    size += stream.WriteUnsignedInt(1, this.slice_loop_filter_across_slices_enabled_flag);
-                }
-            }
-
-            if (tiles_enabled_flag != 0 || entropy_coding_sync_enabled_flag != 0)
-            {
-                size += stream.WriteUnsignedIntGolomb(this.num_entry_point_offsets);
-
-                if (num_entry_point_offsets > 0)
-                {
-                    size += stream.WriteUnsignedIntGolomb(this.offset_len_minus1);
-
-                    for (i = 0; i < num_entry_point_offsets; i++)
-                    {
-                        size += stream.WriteUnsignedIntVariable(entry_point_offset_minus1[i], this.entry_point_offset_minus1[i]);
-                    }
-                }
-            }
-
-            if (slice_segment_header_extension_present_flag != 0)
-            {
-                size += stream.WriteUnsignedIntGolomb(this.slice_segment_header_extension_length);
-
-                for (i = 0; i < slice_segment_header_extension_length; i++)
-                {
-                    size += stream.WriteUnsignedInt(8, this.slice_segment_header_extension_data_byte[i]);
-                }
-            }
-            size += stream.WriteClass<ByteAlignment>(context, this.byte_alignment);
-
-            return size;
-        }
-
-    }
-
-    /*
-  
-
 ref_pic_lists_modification() { 
 ref_pic_list_modification_flag_l0  u(1)
 if( ref_pic_list_modification_flag_l0 )  
 for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
 list_entry_l0[ i ] u(v) 
-if( slice_type  ==  B ) {   
+if( slice_type == B ) {   
 ref_pic_list_modification_flag_l1 u(1)
 if( ref_pic_list_modification_flag_l1 )  
 for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
@@ -3196,7 +2472,7 @@ list_entry_l1[ i ] u(v)
                 }
             }
 
-            if (slice_type == B)
+            if (H265FrameTypes.IsB(slice_type))
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
 
@@ -3230,7 +2506,7 @@ list_entry_l1[ i ] u(v)
                 }
             }
 
-            if (slice_type == B)
+            if (H265FrameTypes.IsB(slice_type))
             {
                 size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
 
@@ -3254,17 +2530,17 @@ list_entry_l1[ i ] u(v)
 
 pred_weight_table() {  
  luma_log2_weight_denom ue(v) 
- if( ChromaArrayType  !=  0 )  
+ if( ChromaArrayType != 0 )  
   delta_chroma_log2_weight_denom se(v) 
  for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
-  if( ( pic_layer_id( RefPicList0[ i ] )  !=  nuh_layer_id )  || 
-   ( PicOrderCnt( RefPicList0[ i ] )  !=  PicOrderCnt( CurrPic ) ) ) 
+  if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
+   ( PicOrderCnt( RefPicList0[ i ] ) != PicOrderCnt( CurrPic ) ) ) 
  
    luma_weight_l0_flag[ i ] u(1) 
- if( ChromaArrayType  !=  0 )  
+ if( ChromaArrayType != 0 )  
   for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ )  
-   if( ( pic_layer_id( RefPicList0[ i ] )  !=  nuh_layer_id )  || 
-    ( PicOrderCnt(RefPicList0[ i ])  !=  PicOrderCnt( CurrPic ) ) ) 
+   if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
+    ( PicOrderCnt(RefPicList0[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
     chroma_weight_l0_flag[ i ] u(1) 
  for( i = 0; i  <=  num_ref_idx_l0_active_minus1; i++ ) {  
@@ -3278,16 +2554,16 @@ pred_weight_table() {
     delta_chroma_offset_l0[ i ][ j ] se(v) 
    }  
  }  
- if( slice_type  ==  B ) {  
+ if( slice_type == B ) {  
   for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
-   if( ( pic_layer_id( RefPicList0[ i ] )  !=  nuh_layer_id )  || 
-    ( PicOrderCnt(RefPicList1[ i ])  !=  PicOrderCnt( CurrPic ) ) ) 
+   if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
+    ( PicOrderCnt(RefPicList1[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
     luma_weight_l1_flag[ i ] u(1) 
-  if( ChromaArrayType  !=  0 )  
+  if( ChromaArrayType != 0 )  
    for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ )  
-    if( ( pic_layer_id( RefPicList0[ i ] )  !=  nuh_layer_id )  || 
-     ( PicOrderCnt(RefPicList1[ i ])  !=  PicOrderCnt( CurrPic ) ) ) 
+    if( ( pic_layer_id( RefPicList0[ i ] ) != nuh_layer_id )  || 
+     ( PicOrderCnt(RefPicList1[ i ]) != PicOrderCnt( CurrPic ) ) ) 
  
      chroma_weight_l1_flag[ i ] u(1) 
   for( i = 0; i  <=  num_ref_idx_l1_active_minus1; i++ ) {  
@@ -3408,7 +2684,7 @@ pred_weight_table() {
                 }
             }
 
-            if (slice_type == B)
+            if (H265FrameTypes.IsB(slice_type))
             {
 
                 this.luma_weight_l1_flag = new byte[num_ref_idx_l1_active_minus1 + 1];
@@ -3524,7 +2800,7 @@ pred_weight_table() {
                 }
             }
 
-            if (slice_type == B)
+            if (H265FrameTypes.IsB(slice_type))
             {
 
                 for (i = 0; i <= num_ref_idx_l1_active_minus1; i++)
@@ -3581,10 +2857,10 @@ pred_weight_table() {
   
 
 st_ref_pic_set( stRpsIdx ) {  
- if( stRpsIdx  !=  0 )  
+ if( stRpsIdx != 0 )  
   inter_ref_pic_set_prediction_flag u(1) 
  if( inter_ref_pic_set_prediction_flag ) {  
-  if( stRpsIdx  ==  num_short_term_ref_pic_sets )  
+  if( stRpsIdx == num_short_term_ref_pic_sets )  
    delta_idx_minus1 ue(v) 
   delta_rps_sign u(1) 
   abs_delta_rps_minus1 ue(v) 
@@ -3762,145 +3038,145 @@ st_ref_pic_set( stRpsIdx ) {
   
 
 sei_payload( payloadType, payloadSize ) {  
- if( nal_unit_type  ==  PREFIX_SEI_NUT )  
-  if( payloadType  ==  0 )  
+ if( nal_unit_type == PREFIX_SEI_NUT )  
+  if( payloadType == 0 )  
    buffering_period( payloadSize )  
-  else if( payloadType  ==  1 )  
+  else if( payloadType == 1 )  
    pic_timing( payloadSize )  
-  else if( payloadType  ==  2 )  
+  else if( payloadType == 2 )  
    pan_scan_rect( payloadSize )  
-  else if( payloadType  ==  3 )  
+  else if( payloadType == 3 )  
    filler_payload( payloadSize )  
-  else if( payloadType  ==  4 )  
+  else if( payloadType == 4 )  
    user_data_registered_itu_t_t35( payloadSize )  
-  else if( payloadType  ==  5 )  
+  else if( payloadType == 5 )  
    user_data_unregistered( payloadSize )  
-  else if( payloadType  ==  6 )  
+  else if( payloadType == 6 )  
    recovery_point( payloadSize )  
-  else if( payloadType  ==  9 )  
+  else if( payloadType == 9 )  
    scene_info( payloadSize )  
-  else if( payloadType  ==  15 )  
+  else if( payloadType == 15 )  
    picture_snapshot( payloadSize )  
-  else if( payloadType  ==  16 )  
+  else if( payloadType == 16 )  
    progressive_refinement_segment_start( payloadSize )  
-  else if( payloadType  ==  17 )  
+  else if( payloadType == 17 )  
    progressive_refinement_segment_end( payloadSize )  
-  else if( payloadType  ==  19 )  
+  else if( payloadType == 19 )  
    film_grain_characteristics( payloadSize )  
-  else if( payloadType  ==  22 )  
+  else if( payloadType == 22 )  
    post_filter_hint( payloadSize )  
-  else if( payloadType  ==  23 )  
+  else if( payloadType == 23 )  
    tone_mapping_info( payloadSize )  
-  else if( payloadType  ==  45 ) 
+  else if( payloadType == 45 ) 
      frame_packing_arrangement( payloadSize )  
-  else if( payloadType  ==  47 )  
+  else if( payloadType == 47 )  
    display_orientation( payloadSize )  
-  else if( payloadType  ==  56 )  
+  else if( payloadType == 56 )  
    green_metadata( payloadsize ) /* specified in ISO/IEC 23001-11 *//*  
-  else if( payloadType  ==  128 )  
+  else if( payloadType == 128 )  
    structure_of_pictures_info( payloadSize )  
-  else if( payloadType  ==  129 )  
+  else if( payloadType == 129 )  
    active_parameter_sets( payloadSize )  
-  else if( payloadType  ==  130 )  
+  else if( payloadType == 130 )  
    decoding_unit_info( payloadSize )  
-  else if( payloadType  ==  131 )  
+  else if( payloadType == 131 )  
    temporal_sub_layer_zero_idx( payloadSize )  
-  else if( payloadType  ==  133 )  
+  else if( payloadType == 133 )  
    scalable_nesting( payloadSize )  
-  else if( payloadType  ==  134 )  
+  else if( payloadType == 134 )  
    region_refresh_info( payloadSize )  
-  else if( payloadType  ==  135 )  
+  else if( payloadType == 135 )  
    no_display( payloadSize )  
-  else if( payloadType  ==  136 )  
+  else if( payloadType == 136 )  
    time_code( payloadSize )  
-  else if( payloadType  ==  137 )  
+  else if( payloadType == 137 )  
    mastering_display_colour_volume( payloadSize )  
-  else if( payloadType  ==  138 )  
+  else if( payloadType == 138 )  
    segmented_rect_frame_packing_arrangement( payloadSize )  
-  else if( payloadType  ==  139 )  
+  else if( payloadType == 139 )  
    temporal_motion_constrained_tile_sets( payloadSize )  
-  else if( payloadType  ==  140 )  
+  else if( payloadType == 140 )  
    chroma_resampling_filter_hint( payloadSize )  
-  else if( payloadType  ==  141 )  
+  else if( payloadType == 141 )  
    knee_function_info( payloadSize )  
-  else if( payloadType  ==  142 )  
+  else if( payloadType == 142 )  
    colour_remapping_info( payloadSize )  
-  else if( payloadType  ==  143 )  
+  else if( payloadType == 143 )  
    deinterlaced_field_identification( payloadSize )  
-  else if( payloadType  ==  144 )  
+  else if( payloadType == 144 )  
    content_light_level_info( payloadSize )  
-  else if( payloadType  ==  145 )  
+  else if( payloadType == 145 )  
    dependent_rap_indication( payloadSize )  
-  else if( payloadType  ==  146 )  
+  else if( payloadType == 146 )  
    coded_region_completion( payloadSize )  
-  else if( payloadType  ==  147 )  
+  else if( payloadType == 147 )  
    alternative_transfer_characteristics( payloadSize )  
-  else if( payloadType  ==  148 )  
+  else if( payloadType == 148 )  
    ambient_viewing_environment( payloadSize )  
-  else if( payloadType  ==  149 )  
+  else if( payloadType == 149 )  
    content_colour_volume( payloadSize )  
-  else if( payloadType  ==  150 )  
+  else if( payloadType == 150 )  
    equirectangular_projection( payloadSize )  
-  else if( payloadType  ==  151 )  
+  else if( payloadType == 151 )  
    cubemap_projection( payloadSize )  
-  else if( payloadType  ==  154 )  
+  else if( payloadType == 154 )  
    sphere_rotation( payloadSize ) 
-     else if( payloadType  ==  155 )  
+     else if( payloadType == 155 )  
    regionwise_packing( payloadSize )  
-  else if( payloadType  ==  156 )  
+  else if( payloadType == 156 )  
    omni_viewport( payloadSize )  
-  else if( payloadType  ==  157 )  
+  else if( payloadType == 157 )  
    regional_nesting( payloadSize )  
-  else if( payloadType  ==  158 )  
+  else if( payloadType == 158 )  
    mcts_extraction_info_sets( payloadSize )  
-  else if( payloadType  ==  159 )  
+  else if( payloadType == 159 )  
    mcts_extraction_info_nesting( payloadSize )  
-  else if( payloadType  ==  160 )  
+  else if( payloadType == 160 )  
    layers_not_present( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  161 )  
+  else if( payloadType == 161 )  
    inter_layer_constrained_tile_sets( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  162 )  
+  else if( payloadType == 162 )  
    bsp_nesting( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  163 )  
+  else if( payloadType == 163 )  
    bsp_initial_arrival_time( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  164 )  
+  else if( payloadType == 164 )  
    sub_bitstream_property( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  165 )  
+  else if( payloadType == 165 )  
    alpha_channel_info( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  166 )  
+  else if( payloadType == 166 )  
    overlay_info( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  167 )  
+  else if( payloadType == 167 )  
    temporal_mv_prediction_constraints( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  168 )  
+  else if( payloadType == 168 )  
    frame_field_info( payloadSize )  /* specified in Annex F *//*  
-  else if( payloadType  ==  176 )  
+  else if( payloadType == 176 )  
    three_dimensional_reference_displays_info( payloadSize )  /* specified in Annex G *//*  
-  else if( payloadType  ==  177 )  
+  else if( payloadType == 177 )  
    depth_representation_info( payloadSize )  /* specified in Annex G *//*  
-  else if( payloadType  ==  178 )  
+  else if( payloadType == 178 )  
    multiview_scene_info( payloadSize )  /* specified in Annex G *//*  
-  else if( payloadType  ==  179 )  
+  else if( payloadType == 179 )  
    multiview_acquisition_info( payloadSize )  /* specified in Annex G *//*  
-  else if( payloadType  ==  180 )  
+  else if( payloadType == 180 )  
    multiview_view_position( payloadSize )  /* specified in Annex G *//*  
-  else if( payloadType  ==  181 )  
+  else if( payloadType == 181 )  
    alternative_depth_info( payloadSize )  /* specified in Annex I *//*  
   else  
    reserved_sei_message( payloadSize )  
- else /* nal_unit_type  ==  SUFFIX_SEI_NUT *//*  
-  if( payloadType  ==  3 )  
+ else /* nal_unit_type == SUFFIX_SEI_NUT *//*  
+  if( payloadType == 3 )  
    filler_payload( payloadSize )  
-  else if( payloadType  ==  4 )  
+  else if( payloadType == 4 )  
    user_data_registered_itu_t_t35( payloadSize )  
-  else if( payloadType  ==  5 )  
+  else if( payloadType == 5 )  
    user_data_unregistered( payloadSize )  
-  else if( payloadType  ==  17 )  
+  else if( payloadType == 17 )  
    progressive_refinement_segment_end( payloadSize )  
-  else if( payloadType  ==  22 )  
+  else if( payloadType == 22 )  
    post_filter_hint( payloadSize ) 
-     else if( payloadType  ==  132 )  
+     else if( payloadType == 132 )  
    decoded_picture_hash( payloadSize )  
-  else if( payloadType  ==  146 )  
+  else if( payloadType == 146 )  
    coded_region_completion( payloadSize )  
   else  
    reserved_sei_message( payloadSize )  
@@ -4435,7 +3711,7 @@ sei_payload( payloadType, payloadSize ) {
                 }
                 size += stream.ReadFixed(size, 1, out this.payload_bit_equal_to_one); // equal to 1 
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -4750,7 +4026,7 @@ sei_payload( payloadType, payloadSize ) {
                 }
                 size += stream.WriteFixed(1, this.payload_bit_equal_to_one); // equal to 1 
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -5302,7 +4578,7 @@ filler_payload( payloadSize ) {
 
 user_data_registered_itu_t_t35( payloadSize ) {  
  itu_t_t35_country_code b(8) 
- if( itu_t_t35_country_code  !=  0xFF )  
+ if( itu_t_t35_country_code != 0xFF )  
   i = 1  
  else {  
   itu_t_t35_country_code_extension_byte b(8) 
@@ -5933,7 +5209,7 @@ post_filter_hint( payloadSize ) {
  filter_hint_size_y ue(v) 
  filter_hint_size_x ue(v) 
  filter_hint_type u(2) 
- for( cIdx = 0; cIdx < ( chroma_format_idc  ==  0 ? 1 : 3 ); cIdx++ )  
+ for( cIdx = 0; cIdx < ( chroma_format_idc == 0 ? 1 : 3 ); cIdx++ )  
   for( cy = 0; cy < filter_hint_size_y; cy++ )  
    for( cx = 0; cx < filter_hint_size_x; cx++ )  
     filter_hint_value[ cIdx ][ cy ][ cx ] se(v) 
@@ -6030,27 +5306,27 @@ tone_mapping_info( payloadSize ) {
   coded_data_bit_depth u(8) 
   target_bit_depth u(8) 
   tone_map_model_id ue(v) 
-  if( tone_map_model_id  ==  0 ) {  
+  if( tone_map_model_id == 0 ) {  
    min_value u(32) 
    max_value u(32) 
-  } else if( tone_map_model_id  ==  1 ) {  
+  } else if( tone_map_model_id == 1 ) {  
    sigmoid_midpoint u(32) 
    sigmoid_width u(32) 
-  } else if( tone_map_model_id  ==  2 )  
+  } else if( tone_map_model_id == 2 )  
    for( i = 0; i < ( 1  <<  target_bit_depth ); i++ )  
     start_of_coded_interval[ i ] u(v) 
-  else if( tone_map_model_id  ==  3 ) {  
+  else if( tone_map_model_id == 3 ) {  
    num_pivots u(16) 
    for( i = 0; i < num_pivots; i++ ) {  
     coded_pivot_value[ i ] u(v) 
     target_pivot_value[ i ] u(v) 
    }  
-  } else if( tone_map_model_id  ==  4 ) {  
+  } else if( tone_map_model_id == 4 ) {  
    camera_iso_speed_idc u(8) 
-   if( camera_iso_speed_idc  ==  EXTENDED_ISO )  
+   if( camera_iso_speed_idc == EXTENDED_ISO )  
     camera_iso_speed_value u(32) 
    exposure_idx_idc u(8) 
-   if( exposure_idx_idc  ==  EXTENDED_ISO )  
+   if( exposure_idx_idc == EXTENDED_ISO )  
     exposure_idx_value u(32) 
    exposure_compensation_value_sign_flag u(1) 
    exposure_compensation_value_numerator u(16) 
@@ -6179,13 +5455,13 @@ tone_mapping_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedInt(size, 8, out this.camera_iso_speed_idc);
 
-                    if (camera_iso_speed_idc == EXTENDED_ISO)
+                    if (camera_iso_speed_idc == H265Constants.EXTENDED_ISO)
                     {
                         size += stream.ReadUnsignedInt(size, 32, out this.camera_iso_speed_value);
                     }
                     size += stream.ReadUnsignedInt(size, 8, out this.exposure_idx_idc);
 
-                    if (exposure_idx_idc == EXTENDED_ISO)
+                    if (exposure_idx_idc == H265Constants.EXTENDED_ISO)
                     {
                         size += stream.ReadUnsignedInt(size, 32, out this.exposure_idx_value);
                     }
@@ -6250,13 +5526,13 @@ tone_mapping_info( payloadSize ) {
                 {
                     size += stream.WriteUnsignedInt(8, this.camera_iso_speed_idc);
 
-                    if (camera_iso_speed_idc == EXTENDED_ISO)
+                    if (camera_iso_speed_idc == H265Constants.EXTENDED_ISO)
                     {
                         size += stream.WriteUnsignedInt(32, this.camera_iso_speed_value);
                     }
                     size += stream.WriteUnsignedInt(8, this.exposure_idx_idc);
 
-                    if (exposure_idx_idc == EXTENDED_ISO)
+                    if (exposure_idx_idc == H265Constants.EXTENDED_ISO)
                     {
                         size += stream.WriteUnsignedInt(32, this.exposure_idx_value);
                     }
@@ -6292,7 +5568,7 @@ frame_packing_arrangement( payloadSize ) {
   current_frame_is_frame0_flag u(1) 
   frame0_self_contained_flag u(1) 
   frame1_self_contained_flag u(1) 
-  if( !quincunx_sampling_flag  &&  frame_packing_arrangement_type  !=  5 ) {  
+  if( !quincunx_sampling_flag  &&  frame_packing_arrangement_type != 5 ) {  
    frame0_grid_position_x u(4) 
    frame0_grid_position_y u(4) 
    frame1_grid_position_x u(4) 
@@ -6504,7 +5780,7 @@ structure_of_pictures_info( payloadSize ) {
  for( i = 0; i  <=  num_entries_in_sop_minus1; i++ ) {  
   sop_vcl_nut[ i ] u(6) 
   sop_temporal_id[ i ] u(3) 
-  if( sop_vcl_nut[ i ]  !=  IDR_W_RADL  &&  sop_vcl_nut[ i ]  !=  IDR_N_LP )  
+  if( sop_vcl_nut[ i ] != IDR_W_RADL  &&  sop_vcl_nut[ i ] != IDR_N_LP )  
    sop_short_term_rps_idx[ i ] ue(v) 
   if( i > 0 )  
    sop_poc_delta[ i ] se(v) 
@@ -6601,13 +5877,13 @@ structure_of_pictures_info( payloadSize ) {
 
 decoded_picture_hash( payloadSize ) {  
  hash_type u(8) 
- for( cIdx = 0; cIdx < ( chroma_format_idc  ==  0 ? 1 : 3 ); cIdx++ )  
-  if( hash_type  ==  0 )  
+ for( cIdx = 0; cIdx < ( chroma_format_idc == 0 ? 1 : 3 ); cIdx++ )  
+  if( hash_type == 0 )  
    for( i = 0; i < 16; i++)  
     picture_md5[ cIdx ][ i ] b(8) 
-  else if( hash_type  ==  1 )  
+  else if( hash_type == 1 )  
    picture_crc[ cIdx ] u(16) 
-  else if( hash_type  ==  2 )  
+  else if( hash_type == 2 )  
    picture_checksum[ cIdx ] u(32) 
 }
     */
@@ -7018,7 +6294,7 @@ scalable_nesting( payloadSize ) {
                 }
             }
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -7031,7 +6307,7 @@ scalable_nesting( payloadSize ) {
 
                 this.sei_message.Add(whileIndex, new SeiMessage());
                 size += stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex]);
-            } while (more_rbsp_data());
+            } while (stream.ReadMoreRbspData(this));
 
             return size;
         }
@@ -7072,7 +6348,7 @@ scalable_nesting( payloadSize ) {
                 }
             }
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -7084,7 +6360,7 @@ scalable_nesting( payloadSize ) {
                 whileIndex++;
 
                 size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message);
-            } while (more_rbsp_data());
+            } while (stream.WriteMoreRbspData(this));
 
             return size;
         }
@@ -7185,19 +6461,19 @@ time_code( payloadSize ) {
    cnt_dropped_flag[ i ] u(1) 
    n_frames[ i ] u(9) 
    if( full_timestamp_flag[ i ] ) {  
-    seconds_value[ i ] /* 0..59 *//* u(6) 
-    minutes_value[ i ] /* 0..59 *//* u(6) 
-    hours_value[ i ] /* 0..23 *//* u(5) 
+    seconds_value[ i ] u(6) /* 0..59 *//*
+    minutes_value[ i ] u(6) /* 0..59 *//*
+    hours_value[ i ] u(5) /* 0..23 *//*
    } else {  
     seconds_flag[ i ] u(1) 
     if( seconds_flag[ i ] ) {  
-     seconds_value[ i ] /* 0..59 *//* u(6) 
+     seconds_value[ i ] u(6) /* 0..59 *//*
      minutes_flag[ i ] u(1) 
      if( minutes_flag[ i ] ) {  
-      minutes_value[ i ] /* 0..59 *//* u(6) 
+      minutes_value[ i ]  u(6) /* 0..59 *//*
       hours_flag[ i ] u(1) 
       if( hours_flag[ i ] )  
-       hours_value[ i ] /* 0..23 *//* u(5) 
+       hours_value[ i ]  u(5) /* 0..23 *//*
      }  
     }  
    }  
@@ -7226,10 +6502,8 @@ time_code( payloadSize ) {
         public byte[] DiscontinuityFlag { get { return discontinuity_flag; } set { discontinuity_flag = value; } }
         private byte[] cnt_dropped_flag;
         public byte[] CntDroppedFlag { get { return cnt_dropped_flag; } set { cnt_dropped_flag = value; } }
-        private nFrames n_frames;
-        public nFrames nFrames { get { return n_frames; } set { n_frames = value; } }
-        private u[] u;
-        public u[] u { get { return u; } set { u = value; } }
+        private uint[] n_frames;
+        public uint[] nFrames { get { return n_frames; } set { n_frames = value; } }
         private uint[] seconds_value;
         public uint[] SecondsValue { get { return seconds_value; } set { seconds_value = value; } }
         private uint[] minutes_value;
@@ -7268,8 +6542,7 @@ time_code( payloadSize ) {
             this.full_timestamp_flag = new byte[num_clock_ts];
             this.discontinuity_flag = new byte[num_clock_ts];
             this.cnt_dropped_flag = new byte[num_clock_ts];
-            this.n_frames = new nFrames[num_clock_ts];
-            this.u = new u[num_clock_ts];
+            this.n_frames = new uint[num_clock_ts];
             this.seconds_value = new uint[num_clock_ts];
             this.minutes_value = new uint[num_clock_ts];
             this.hours_value = new uint[num_clock_ts];
@@ -7289,16 +6562,19 @@ time_code( payloadSize ) {
                     size += stream.ReadUnsignedInt(size, 1, out this.full_timestamp_flag[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.discontinuity_flag[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.cnt_dropped_flag[i]);
-                    this.n_frames[i] = new nFrames ;
-                    size += stream.ReadClass<nFrames>(size, context, this.n_frames[i]);
-                    this.u[i] = new u(9);
-                    size += stream.ReadClass<u>(size, context, this.u[i]);
+                    size += stream.ReadUnsignedInt(size, 9, out this.n_frames[i]);
 
                     if (full_timestamp_flag[i] != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i]); // 0..59 
-                        size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i]); // 0..59 
-                        size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i]); // 0..23 
+                        size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i]);
+                        /*  0..59  */
+
+                        size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i]);
+                        /*  0..59  */
+
+                        size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i]);
+                        /*  0..23  */
+
                     }
                     else
                     {
@@ -7306,18 +6582,24 @@ time_code( payloadSize ) {
 
                         if (seconds_flag[i] != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i]); // 0..59 
+                            size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i]);
+                            /*  0..59  */
+
                             size += stream.ReadUnsignedInt(size, 1, out this.minutes_flag[i]);
 
                             if (minutes_flag[i] != 0)
                             {
-                                size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i]); // 0..59 
+                                size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i]);
+                                /*  0..59  */
+
                                 size += stream.ReadUnsignedInt(size, 1, out this.hours_flag[i]);
 
                                 if (hours_flag[i] != 0)
                                 {
-                                    size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i]); // 0..23 
+                                    size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i]);
                                 }
+                                /*  0..23  */
+
                             }
                         }
                     }
@@ -7351,14 +6633,19 @@ time_code( payloadSize ) {
                     size += stream.WriteUnsignedInt(1, this.full_timestamp_flag[i]);
                     size += stream.WriteUnsignedInt(1, this.discontinuity_flag[i]);
                     size += stream.WriteUnsignedInt(1, this.cnt_dropped_flag[i]);
-                    size += stream.WriteClass<nFrames>(context, this.n_frames[i]);
-                    size += stream.WriteClass<u>(context, this.u[i]);
+                    size += stream.WriteUnsignedInt(9, this.n_frames[i]);
 
                     if (full_timestamp_flag[i] != 0)
                     {
-                        size += stream.WriteUnsignedInt(6, this.seconds_value[i]); // 0..59 
-                        size += stream.WriteUnsignedInt(6, this.minutes_value[i]); // 0..59 
-                        size += stream.WriteUnsignedInt(5, this.hours_value[i]); // 0..23 
+                        size += stream.WriteUnsignedInt(6, this.seconds_value[i]);
+                        /*  0..59  */
+
+                        size += stream.WriteUnsignedInt(6, this.minutes_value[i]);
+                        /*  0..59  */
+
+                        size += stream.WriteUnsignedInt(5, this.hours_value[i]);
+                        /*  0..23  */
+
                     }
                     else
                     {
@@ -7366,18 +6653,24 @@ time_code( payloadSize ) {
 
                         if (seconds_flag[i] != 0)
                         {
-                            size += stream.WriteUnsignedInt(6, this.seconds_value[i]); // 0..59 
+                            size += stream.WriteUnsignedInt(6, this.seconds_value[i]);
+                            /*  0..59  */
+
                             size += stream.WriteUnsignedInt(1, this.minutes_flag[i]);
 
                             if (minutes_flag[i] != 0)
                             {
-                                size += stream.WriteUnsignedInt(6, this.minutes_value[i]); // 0..59 
+                                size += stream.WriteUnsignedInt(6, this.minutes_value[i]);
+                                /*  0..59  */
+
                                 size += stream.WriteUnsignedInt(1, this.hours_flag[i]);
 
                                 if (hours_flag[i] != 0)
                                 {
-                                    size += stream.WriteUnsignedInt(5, this.hours_value[i]); // 0..23 
+                                    size += stream.WriteUnsignedInt(5, this.hours_value[i]);
                                 }
+                                /*  0..23  */
+
                             }
                         }
                     }
@@ -7752,9 +7045,9 @@ chroma_resampling_filter_hint( payloadSize ) {
  ver_chroma_filter_idc u(8) 
  hor_chroma_filter_idc u(8) 
  ver_filtering_field_processing_flag u(1) 
- if( ver_chroma_filter_idc  ==  1  ||  hor_chroma_filter_idc  ==  1 ) {  
+ if( ver_chroma_filter_idc == 1  ||  hor_chroma_filter_idc == 1 ) {  
   target_format_idc ue(v) 
-  if( ver_chroma_filter_idc  ==  1 ) {  
+  if( ver_chroma_filter_idc == 1 ) {  
    num_vertical_filters ue(v) 
    for( i = 0; i < num_vertical_filters; i++ ) {  
     ver_tap_length_minus1[ i ] ue(v) 
@@ -7762,7 +7055,7 @@ chroma_resampling_filter_hint( payloadSize ) {
      ver_filter_coeff[ i ][ j ] se(v) 
    }  
   }  
-  if( hor_chroma_filter_idc  ==  1 ) {  
+  if( hor_chroma_filter_idc == 1 ) {  
    num_horizontal_filters ue(v) 
    for( i = 0; i < num_horizontal_filters; i++ ) {  
     hor_tap_length_minus1[ i ] ue(v) 
@@ -8717,7 +8010,7 @@ equirectangular_projection( payloadSize ) {
   erp_persistence_flag u(1) 
   erp_guard_band_flag u(1) 
   erp_reserved_zero_2bits u(2) 
-  if( erp_guard_band_flag  ==  1 ) {  
+  if( erp_guard_band_flag == 1 ) {  
    erp_guard_band_type u(3) 
    erp_left_guard_band_width u(8) 
    erp_right_guard_band_width u(8) 
@@ -9581,7 +8874,7 @@ mcts_extraction_info_sets( payloadSize ) {
                     size += stream.ReadUnsignedIntGolomb(size, out this.pps_rbsp_data_length[i][j]);
                 }
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -9679,7 +8972,7 @@ mcts_extraction_info_sets( payloadSize ) {
                     size += stream.WriteUnsignedIntGolomb(this.pps_rbsp_data_length[i][j]);
                 }
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -9781,7 +9074,7 @@ sei_message()
             }
             size += stream.ReadUnsignedIntGolomb(size, out this.num_sei_messages_in_mcts_extraction_nesting_minus1);
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -9817,7 +9110,7 @@ sei_message()
             }
             size += stream.WriteUnsignedIntGolomb(this.num_sei_messages_in_mcts_extraction_nesting_minus1);
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -9895,7 +9188,7 @@ vui_parameters() {
  aspect_ratio_info_present_flag u(1) 
  if( aspect_ratio_info_present_flag ) {  
   aspect_ratio_idc u(8) 
-  if( aspect_ratio_idc  ==  EXTENDED_SAR ) {  
+  if( aspect_ratio_idc == EXTENDED_SAR ) {  
    sar_width u(16) 
    sar_height u(16) 
   }  
@@ -10054,7 +9347,7 @@ vui_parameters() {
             {
                 size += stream.ReadUnsignedInt(size, 8, out this.aspect_ratio_idc);
 
-                if (aspect_ratio_idc == EXTENDED_SAR)
+                if (aspect_ratio_idc == H265Constants.EXTENDED_SAR)
                 {
                     size += stream.ReadUnsignedInt(size, 16, out this.sar_width);
                     size += stream.ReadUnsignedInt(size, 16, out this.sar_height);
@@ -10147,7 +9440,7 @@ vui_parameters() {
             {
                 size += stream.WriteUnsignedInt(8, this.aspect_ratio_idc);
 
-                if (aspect_ratio_idc == EXTENDED_SAR)
+                if (aspect_ratio_idc == H265Constants.EXTENDED_SAR)
                 {
                     size += stream.WriteUnsignedInt(16, this.sar_width);
                     size += stream.WriteUnsignedInt(16, this.sar_height);
@@ -10628,13 +9921,13 @@ vps_extension() {
  for( i = 1; i < NumOutputLayerSets; i++ ) {  
   if( NumLayerSets > 2  &&  i  >=  NumLayerSets )  
    layer_set_idx_for_ols_minus1[ i ] u(v) 
-  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc  ==  2 )  
+  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  
    for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  
     output_layer_flag[ i ][ j ] u(1) 
   for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  
    if( NecessaryLayerFlag[ i ][ j ]  &&  vps_num_profile_tier_level_minus1 > 0 )  
     profile_tier_level_idx[ i ][ j ] u(v) 
-  if( NumOutputLayersInOutputLayerSet[ i ]  ==  1 
+  if( NumOutputLayersInOutputLayerSet[ i ] == 1 
    &&  NumDirectRefLayers[ OlsHighestOutputLayerId[ i ] ] > 0 ) 
  
    alt_output_layer_flag[ i ] u(1) 
@@ -10650,7 +9943,7 @@ vps_extension() {
  max_one_active_ref_layer_flag u(1) 
  vps_poc_lsb_aligned_flag u(1) 
  for( i = 1; i  <=  MaxLayersMinus1; i++ )  
-  if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ]  ==  0 )  
+  if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )  
    poc_lsb_not_present_flag[ i ] u(1) 
  dpb_size()  
  direct_dep_type_len_minus2 ue(v) 
@@ -11023,7 +10316,7 @@ vps_extension() {
             if (vps_vui_present_flag != 0)
             {
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -11257,7 +10550,7 @@ vps_extension() {
             if (vps_vui_present_flag != 0)
             {
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -11280,7 +10573,7 @@ rep_format() {
  chroma_and_bit_depth_vps_present_flag u(1) 
  if( chroma_and_bit_depth_vps_present_flag ) {  
   chroma_format_vps_idc u(2) 
-  if( chroma_format_vps_idc  ==  3 )  
+  if( chroma_format_vps_idc == 3 )  
    separate_colour_plane_vps_flag u(1) 
   bit_depth_vps_luma_minus8 u(4) 
   bit_depth_vps_chroma_minus8 u(4) 
@@ -11408,7 +10701,7 @@ dpb_size() {
    if( sub_layer_dpb_info_present_flag[ i ][ j ] ) {  
     for( k = 0; k < NumLayersInIdList[ currLsIdx ]; k++ )  
      if( NecessaryLayerFlag[ i ][ k ]  &&  ( vps_base_layer_internal_flag  || 
-      ( LayerSetLayerIdList[ currLsIdx ][ k ]  !=  0 ) ) ) 
+      ( LayerSetLayerIdList[ currLsIdx ][ k ] != 0 ) ) ) 
  
       max_vps_dec_pic_buffering_minus1[ i ][ k ][ j ] ue(v) 
     max_vps_num_reorder_pics[ i ][ j ] ue(v) 
@@ -11610,7 +10903,7 @@ vps_vui() {
  if( vps_vui_bsp_hrd_present_flag )  
   vps_vui_bsp_hrd_params()  
  for( i = 1; i  <=  MaxLayersMinus1; i++ )  
-  if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ]  ==  0 )  
+  if( NumDirectRefLayers[ layer_id_in_nuh[ i ] ] == 0 )  
    base_layer_parameter_set_compatibility_flag[ i ] u(1) 
 }
     */
@@ -12347,11 +11640,11 @@ vps_vui_bsp_hrd_params() {
 
 seq_parameter_set_rbsp() { 
  sps_video_parameter_set_id u(4) 
- if( nuh_layer_id  ==  0 )  
+ if( nuh_layer_id == 0 )  
   sps_max_sub_layers_minus1 u(3) 
  else  
   sps_ext_or_max_sub_layers_minus1 u(3) 
- MultiLayerExtSpsFlag =  ( nuh_layer_id  !=  0  &&  sps_ext_or_max_sub_layers_minus1  ==  7 ) 
+ MultiLayerExtSpsFlag =  ( nuh_layer_id != 0  &&  sps_ext_or_max_sub_layers_minus1 == 7 ) 
  if( !MultiLayerExtSpsFlag ) {  
   sps_temporal_id_nesting_flag u(1) 
   profile_tier_level( 1, sps_max_sub_layers_minus1 )  
@@ -12363,7 +11656,7 @@ seq_parameter_set_rbsp() {
    sps_rep_format_idx u(8) 
  } else {  
   chroma_format_idc ue(v) 
-  if( chroma_format_idc  ==  3 )  
+  if( chroma_format_idc == 3 )  
    separate_colour_plane_flag u(1) 
   pic_width_in_luma_samples ue(v) 
   pic_height_in_luma_samples ue(v) 
@@ -12782,7 +12075,7 @@ seq_parameter_set_rbsp() {
             if (sps_extension_4bits != 0)
             {
 
-                while (more_rbsp_data())
+                while (stream.ReadMoreRbspData(this))
                 {
                     whileIndex++;
 
@@ -12968,7 +12261,7 @@ seq_parameter_set_rbsp() {
             if (sps_extension_4bits != 0)
             {
 
-                while (more_rbsp_data())
+                while (stream.WriteMoreRbspData(this))
                 {
                     whileIndex++;
 
@@ -13259,7 +12552,7 @@ colour_mapping_table() {
  chroma_bit_depth_cm_output_minus8 ue(v) 
  cm_res_quant_bits u(2) 
  cm_delta_flc_bits_minus1 u(2) 
- if( cm_octant_depth  ==  1 ) {  
+ if( cm_octant_depth == 1 ) {  
   cm_adapt_threshold_u_delta se(v) 
   cm_adapt_threshold_v_delta se(v) 
  }  
@@ -13588,897 +12881,6 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
     /*
   
 
-slice_segment_header() { 
-first_slice_segment_in_pic_flag  u(1) 
-if( nal_unit_type  >=  BLA_W_LP  &&  nal_unit_type  <=  RSV_IRAP_VCL23 )  
-
-no_output_of_prior_pics_flag u(1) 
-slice_pic_parameter_set_id ue(v) 
-
-if( !first_slice_segment_in_pic_flag ) {  
-if( dependent_slice_segments_enabled_flag )  
-
-dependent_slice_segment_flag u(1) 
-slice_segment_address u(v) 
-}  
-if( !dependent_slice_segment_flag ) {  
-i = 0  
-if( num_extra_slice_header_bits > i ) {  
-   i++  
-   discardable_flag u(1) 
-  }  
-  if( num_extra_slice_header_bits > i ) {  
-   i++  
-   cross_layer_bla_flag u(1) 
-  }  
-  for( ; i < num_extra_slice_header_bits; i++ )  
-   slice_reserved_flag[ i ] u(1) 
-  slice_type ue(v) 
-  if( output_flag_present_flag )  
-   pic_output_flag u(1) 
-  if( separate_colour_plane_flag  ==  1 )  
-   colour_plane_id u(2) 
-  if( ( nuh_layer_id > 0  && 
-    !poc_lsb_not_present_flag[ LayerIdxInVps[ nuh_layer_id ] ] )  || 
-    ( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) ) 
- 
-   slice_pic_order_cnt_lsb u(v) 
-  if( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) {  
-   short_term_ref_pic_set_sps_flag u(1) 
-   if( !short_term_ref_pic_set_sps_flag )  
-    st_ref_pic_set( num_short_term_ref_pic_sets )  
-   else if( num_short_term_ref_pic_sets > 1 )  
-    short_term_ref_pic_set_idx u(v) 
-   if( long_term_ref_pics_present_flag ) {  
-    if( num_long_term_ref_pics_sps > 0 )  
-     num_long_term_sps ue(v) 
-    num_long_term_pics ue(v) 
-    for( i = 0; i < num_long_term_sps + num_long_term_pics; i++ ) {  
-     if( i < num_long_term_sps ) {  
-      if( num_long_term_ref_pics_sps > 1 )  
-       lt_idx_sps[ i ] u(v) 
-     } else {  
-      poc_lsb_lt[ i ] u(v) 
-      used_by_curr_pic_lt_flag[ i ] u(1) 
-     }  
-     delta_poc_msb_present_flag[ i ] u(1) 
-     if( delta_poc_msb_present_flag[ i ] )  
-      delta_poc_msb_cycle_lt[ i ] ue(v) 
-    }  
-   }  
-   if( sps_temporal_mvp_enabled_flag )  
-    slice_temporal_mvp_enabled_flag u(1) 
-  }  
-  if( nuh_layer_id > 0  &&  !default_ref_layers_active_flag  && 
-      NumDirectRefLayers[ nuh_layer_id ] > 0 ) {  
- 
-   inter_layer_pred_enabled_flag u(1) 
-   if( inter_layer_pred_enabled_flag  &&  NumDirectRefLayers[ nuh_layer_id ] > 1) {  
-    if( !max_one_active_ref_layer_flag )  
-         num_inter_layer_ref_pics_minus1 u(v) 
-    if( NumActiveRefLayerPics  !=  NumDirectRefLayers[ nuh_layer_id ] )  
-     for( i = 0; i < NumActiveRefLayerPics; i++ )   
-      inter_layer_pred_layer_idc[ i ] u(v) 
-   }  
-  }  
-  if( sample_adaptive_offset_enabled_flag ) {  
-   slice_sao_luma_flag u(1) 
-   if( ChromaArrayType  !=  0 )  
-    slice_sao_chroma_flag u(1) 
-  }  
-  if( slice_type  ==  P  ||  slice_type  ==  B ) {  
-   num_ref_idx_active_override_flag u(1) 
-   if( num_ref_idx_active_override_flag ) {  
-    num_ref_idx_l0_active_minus1 ue(v) 
-    if( slice_type  ==  B )  
-     num_ref_idx_l1_active_minus1 ue(v) 
-   }  
-   if( lists_modification_present_flag  &&  NumPicTotalCurr > 1 )  
-    ref_pic_lists_modification()  
-   if( slice_type  ==  B )  
-    mvd_l1_zero_flag u(1) 
-   if( cabac_init_present_flag )  
-    cabac_init_flag u(1) 
-   if( slice_temporal_mvp_enabled_flag ) {  
-    if( slice_type  ==  B )  
-     collocated_from_l0_flag u(1) 
-    if( ( collocated_from_l0_flag  &&  num_ref_idx_l0_active_minus1 > 0 )  || 
-     ( !collocated_from_l0_flag  &&  num_ref_idx_l1_active_minus1 > 0 ) ) 
- 
-     collocated_ref_idx ue(v) 
-   }  
-   if( ( weighted_pred_flag  &&  slice_type  ==  P )  || 
-    ( weighted_bipred_flag  &&  slice_type  ==  B ) ) 
- 
-    pred_weight_table()  
-   five_minus_max_num_merge_cand ue(v) 
-  }  
-  slice_qp_delta se(v) 
-  if( pps_slice_chroma_qp_offsets_present_flag ) {  
-   slice_cb_qp_offset se(v) 
-   slice_cr_qp_offset se(v) 
-  }  
-  if( chroma_qp_offset_list_enabled_flag )  
-   cu_chroma_qp_offset_enabled_flag u(1) 
-  if( deblocking_filter_override_enabled_flag )  
-   deblocking_filter_override_flag u(1) 
-  if( deblocking_filter_override_flag ) {  
-   slice_deblocking_filter_disabled_flag u(1) 
-   if( !slice_deblocking_filter_disabled_flag ) {  
-    slice_beta_offset_div2 se(v) 
-        slice_tc_offset_div2 se(v) 
-   }  
-  }  
-  if( pps_loop_filter_across_slices_enabled_flag  && 
-   ( slice_sao_luma_flag  ||  slice_sao_chroma_flag  || 
-    !slice_deblocking_filter_disabled_flag ) ) 
- 
-   slice_loop_filter_across_slices_enabled_flag u(1) 
- }  
- if( tiles_enabled_flag  ||  entropy_coding_sync_enabled_flag ) {  
-  num_entry_point_offsets ue(v) 
-  if( num_entry_point_offsets > 0 ) {  
-   offset_len_minus1 ue(v) 
-   for( i = 0; i < num_entry_point_offsets; i++ )  
-    entry_point_offset_minus1[ i ] u(v) 
-  }  
- }  
- if( slice_segment_header_extension_present_flag ) {  
-  slice_segment_header_extension_length ue(v) 
-  if( poc_reset_info_present_flag )  
-   poc_reset_idc u(2) 
-  if( poc_reset_idc  !=  0 )  
-   poc_reset_period_id u(6) 
-  if( poc_reset_idc  ==  3 ) {  
-   full_poc_reset_flag u(1) 
-   poc_lsb_val u(v) 
-  }  
-  if( !PocMsbValRequiredFlag  &&  vps_poc_lsb_aligned_flag )  
-   poc_msb_cycle_val_present_flag u(1) 
-  if( poc_msb_cycle_val_present_flag )  
-   poc_msb_cycle_val ue(v) 
-  while( more_data_in_slice_segment_header_extension() )  
-   slice_segment_header_extension_data_bit u(1) 
- }  
- byte_alignment()  
-}
-    */
-    public class SliceSegmentHeader : IItuSerializable
-    {
-        private byte first_slice_segment_in_pic_flag;
-        public byte FirstSliceSegmentInPicFlag { get { return first_slice_segment_in_pic_flag; } set { first_slice_segment_in_pic_flag = value; } }
-        private byte no_output_of_prior_pics_flag;
-        public byte NoOutputOfPriorPicsFlag { get { return no_output_of_prior_pics_flag; } set { no_output_of_prior_pics_flag = value; } }
-        private uint slice_pic_parameter_set_id;
-        public uint SlicePicParameterSetId { get { return slice_pic_parameter_set_id; } set { slice_pic_parameter_set_id = value; } }
-        private byte dependent_slice_segment_flag;
-        public byte DependentSliceSegmentFlag { get { return dependent_slice_segment_flag; } set { dependent_slice_segment_flag = value; } }
-        private uint slice_segment_address;
-        public uint SliceSegmentAddress { get { return slice_segment_address; } set { slice_segment_address = value; } }
-        private byte discardable_flag;
-        public byte DiscardableFlag { get { return discardable_flag; } set { discardable_flag = value; } }
-        private byte cross_layer_bla_flag;
-        public byte CrossLayerBlaFlag { get { return cross_layer_bla_flag; } set { cross_layer_bla_flag = value; } }
-        private byte[][] slice_reserved_flag;
-        public byte[][] SliceReservedFlag { get { return slice_reserved_flag; } set { slice_reserved_flag = value; } }
-        private uint slice_type;
-        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
-        private byte pic_output_flag;
-        public byte PicOutputFlag { get { return pic_output_flag; } set { pic_output_flag = value; } }
-        private uint colour_plane_id;
-        public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
-        private uint slice_pic_order_cnt_lsb;
-        public uint SlicePicOrderCntLsb { get { return slice_pic_order_cnt_lsb; } set { slice_pic_order_cnt_lsb = value; } }
-        private byte short_term_ref_pic_set_sps_flag;
-        public byte ShortTermRefPicSetSpsFlag { get { return short_term_ref_pic_set_sps_flag; } set { short_term_ref_pic_set_sps_flag = value; } }
-        private StRefPicSet st_ref_pic_set;
-        public StRefPicSet StRefPicSet { get { return st_ref_pic_set; } set { st_ref_pic_set = value; } }
-        private uint short_term_ref_pic_set_idx;
-        public uint ShortTermRefPicSetIdx { get { return short_term_ref_pic_set_idx; } set { short_term_ref_pic_set_idx = value; } }
-        private uint num_long_term_sps;
-        public uint NumLongTermSps { get { return num_long_term_sps; } set { num_long_term_sps = value; } }
-        private uint num_long_term_pics;
-        public uint NumLongTermPics { get { return num_long_term_pics; } set { num_long_term_pics = value; } }
-        private uint[] lt_idx_sps;
-        public uint[] LtIdxSps { get { return lt_idx_sps; } set { lt_idx_sps = value; } }
-        private uint[] poc_lsb_lt;
-        public uint[] PocLsbLt { get { return poc_lsb_lt; } set { poc_lsb_lt = value; } }
-        private byte[] used_by_curr_pic_lt_flag;
-        public byte[] UsedByCurrPicLtFlag { get { return used_by_curr_pic_lt_flag; } set { used_by_curr_pic_lt_flag = value; } }
-        private byte[] delta_poc_msb_present_flag;
-        public byte[] DeltaPocMsbPresentFlag { get { return delta_poc_msb_present_flag; } set { delta_poc_msb_present_flag = value; } }
-        private uint[] delta_poc_msb_cycle_lt;
-        public uint[] DeltaPocMsbCycleLt { get { return delta_poc_msb_cycle_lt; } set { delta_poc_msb_cycle_lt = value; } }
-        private byte slice_temporal_mvp_enabled_flag;
-        public byte SliceTemporalMvpEnabledFlag { get { return slice_temporal_mvp_enabled_flag; } set { slice_temporal_mvp_enabled_flag = value; } }
-        private byte inter_layer_pred_enabled_flag;
-        public byte InterLayerPredEnabledFlag { get { return inter_layer_pred_enabled_flag; } set { inter_layer_pred_enabled_flag = value; } }
-        private uint num_inter_layer_ref_pics_minus1;
-        public uint NumInterLayerRefPicsMinus1 { get { return num_inter_layer_ref_pics_minus1; } set { num_inter_layer_ref_pics_minus1 = value; } }
-        private uint[] inter_layer_pred_layer_idc;
-        public uint[] InterLayerPredLayerIdc { get { return inter_layer_pred_layer_idc; } set { inter_layer_pred_layer_idc = value; } }
-        private byte slice_sao_luma_flag;
-        public byte SliceSaoLumaFlag { get { return slice_sao_luma_flag; } set { slice_sao_luma_flag = value; } }
-        private byte slice_sao_chroma_flag;
-        public byte SliceSaoChromaFlag { get { return slice_sao_chroma_flag; } set { slice_sao_chroma_flag = value; } }
-        private byte num_ref_idx_active_override_flag;
-        public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
-        private uint num_ref_idx_l0_active_minus1;
-        public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
-        private uint num_ref_idx_l1_active_minus1;
-        public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
-        private RefPicListsModification ref_pic_lists_modification;
-        public RefPicListsModification RefPicListsModification { get { return ref_pic_lists_modification; } set { ref_pic_lists_modification = value; } }
-        private byte mvd_l1_zero_flag;
-        public byte MvdL1ZeroFlag { get { return mvd_l1_zero_flag; } set { mvd_l1_zero_flag = value; } }
-        private byte cabac_init_flag;
-        public byte CabacInitFlag { get { return cabac_init_flag; } set { cabac_init_flag = value; } }
-        private byte collocated_from_l0_flag;
-        public byte CollocatedFromL0Flag { get { return collocated_from_l0_flag; } set { collocated_from_l0_flag = value; } }
-        private uint collocated_ref_idx;
-        public uint CollocatedRefIdx { get { return collocated_ref_idx; } set { collocated_ref_idx = value; } }
-        private PredWeightTable pred_weight_table;
-        public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
-        private uint five_minus_max_num_merge_cand;
-        public uint FiveMinusMaxNumMergeCand { get { return five_minus_max_num_merge_cand; } set { five_minus_max_num_merge_cand = value; } }
-        private int slice_qp_delta;
-        public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
-        private int slice_cb_qp_offset;
-        public int SliceCbQpOffset { get { return slice_cb_qp_offset; } set { slice_cb_qp_offset = value; } }
-        private int slice_cr_qp_offset;
-        public int SliceCrQpOffset { get { return slice_cr_qp_offset; } set { slice_cr_qp_offset = value; } }
-        private byte cu_chroma_qp_offset_enabled_flag;
-        public byte CuChromaQpOffsetEnabledFlag { get { return cu_chroma_qp_offset_enabled_flag; } set { cu_chroma_qp_offset_enabled_flag = value; } }
-        private byte deblocking_filter_override_flag;
-        public byte DeblockingFilterOverrideFlag { get { return deblocking_filter_override_flag; } set { deblocking_filter_override_flag = value; } }
-        private byte slice_deblocking_filter_disabled_flag;
-        public byte SliceDeblockingFilterDisabledFlag { get { return slice_deblocking_filter_disabled_flag; } set { slice_deblocking_filter_disabled_flag = value; } }
-        private int slice_beta_offset_div2;
-        public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
-        private int slice_tc_offset_div2;
-        public int SliceTcOffsetDiv2 { get { return slice_tc_offset_div2; } set { slice_tc_offset_div2 = value; } }
-        private byte slice_loop_filter_across_slices_enabled_flag;
-        public byte SliceLoopFilterAcrossSlicesEnabledFlag { get { return slice_loop_filter_across_slices_enabled_flag; } set { slice_loop_filter_across_slices_enabled_flag = value; } }
-        private uint num_entry_point_offsets;
-        public uint NumEntryPointOffsets { get { return num_entry_point_offsets; } set { num_entry_point_offsets = value; } }
-        private uint offset_len_minus1;
-        public uint OffsetLenMinus1 { get { return offset_len_minus1; } set { offset_len_minus1 = value; } }
-        private uint[] entry_point_offset_minus1;
-        public uint[] EntryPointOffsetMinus1 { get { return entry_point_offset_minus1; } set { entry_point_offset_minus1 = value; } }
-        private uint slice_segment_header_extension_length;
-        public uint SliceSegmentHeaderExtensionLength { get { return slice_segment_header_extension_length; } set { slice_segment_header_extension_length = value; } }
-        private uint poc_reset_idc;
-        public uint PocResetIdc { get { return poc_reset_idc; } set { poc_reset_idc = value; } }
-        private uint poc_reset_period_id;
-        public uint PocResetPeriodId { get { return poc_reset_period_id; } set { poc_reset_period_id = value; } }
-        private byte full_poc_reset_flag;
-        public byte FullPocResetFlag { get { return full_poc_reset_flag; } set { full_poc_reset_flag = value; } }
-        private uint poc_lsb_val;
-        public uint PocLsbVal { get { return poc_lsb_val; } set { poc_lsb_val = value; } }
-        private byte poc_msb_cycle_val_present_flag;
-        public byte PocMsbCycleValPresentFlag { get { return poc_msb_cycle_val_present_flag; } set { poc_msb_cycle_val_present_flag = value; } }
-        private uint poc_msb_cycle_val;
-        public uint PocMsbCycleVal { get { return poc_msb_cycle_val; } set { poc_msb_cycle_val = value; } }
-        private Dictionary<int, byte> slice_segment_header_extension_data_bit = new Dictionary<int, byte>();
-        public Dictionary<int, byte> SliceSegmentHeaderExtensionDataBit { get { return slice_segment_header_extension_data_bit; } set { slice_segment_header_extension_data_bit = value; } }
-        private ByteAlignment byte_alignment;
-        public ByteAlignment ByteAlignment { get { return byte_alignment; } set { byte_alignment = value; } }
-
-        public int HasMoreRbspData { get; set; }
-        public int[] ReadNextBits { get; set; }
-
-        public SliceSegmentHeader()
-        {
-
-        }
-
-        public ulong Read(IItuContext context, ItuStream stream)
-        {
-            ulong size = 0;
-
-            uint i = 0;
-            int whileIndex = -1;
-            size += stream.ReadUnsignedInt(size, 1, out this.first_slice_segment_in_pic_flag);
-
-            if (nal_unit_type >= BLA_W_LP && nal_unit_type <= RSV_IRAP_VCL23)
-            {
-                size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag);
-            }
-            size += stream.ReadUnsignedIntGolomb(size, out this.slice_pic_parameter_set_id);
-
-            if (first_slice_segment_in_pic_flag == 0)
-            {
-
-                if (dependent_slice_segments_enabled_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.dependent_slice_segment_flag);
-                }
-                size += stream.ReadUnsignedIntVariable(size, slice_segment_address, out this.slice_segment_address);
-            }
-
-            if (dependent_slice_segment_flag == 0)
-            {
-                i = 0;
-
-                if (num_extra_slice_header_bits > i)
-                {
-                    i++;
-                    size += stream.ReadUnsignedInt(size, 1, out this.discardable_flag);
-                }
-
-                if (num_extra_slice_header_bits > i)
-                {
-                    i++;
-                    size += stream.ReadUnsignedInt(size, 1, out this.cross_layer_bla_flag);
-                }
-
-                this.slice_reserved_flag = new byte[num_extra_slice_header_bits];
-                for (; i < num_extra_slice_header_bits; i++)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_reserved_flag[i][ ]);
-                }
-                size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
-
-                if (output_flag_present_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.pic_output_flag);
-                }
-
-                if (separate_colour_plane_flag == 1)
-                {
-                    size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
-                }
-
-                if ((nuh_layer_id > 0 &&
-    poc_lsb_not_present_flag[LayerIdxInVps[nuh_layer_id]] == 0) ||
-    (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP))
-                {
-                    size += stream.ReadUnsignedIntVariable(size, slice_pic_order_cnt_lsb, out this.slice_pic_order_cnt_lsb);
-                }
-
-                if (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.short_term_ref_pic_set_sps_flag);
-
-                    if (short_term_ref_pic_set_sps_flag == 0)
-                    {
-                        this.st_ref_pic_set = new StRefPicSet(num_short_term_ref_pic_sets);
-                        size += stream.ReadClass<StRefPicSet>(size, context, this.st_ref_pic_set);
-                    }
-                    else if (num_short_term_ref_pic_sets > 1)
-                    {
-                        size += stream.ReadUnsignedIntVariable(size, short_term_ref_pic_set_idx, out this.short_term_ref_pic_set_idx);
-                    }
-
-                    if (long_term_ref_pics_present_flag != 0)
-                    {
-
-                        if (num_long_term_ref_pics_sps > 0)
-                        {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.num_long_term_sps);
-                        }
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_long_term_pics);
-
-                        this.lt_idx_sps = new uint[num_long_term_sps + num_long_term_pics];
-                        this.poc_lsb_lt = new uint[num_long_term_sps + num_long_term_pics];
-                        this.used_by_curr_pic_lt_flag = new byte[num_long_term_sps + num_long_term_pics];
-                        this.delta_poc_msb_present_flag = new byte[num_long_term_sps + num_long_term_pics];
-                        this.delta_poc_msb_cycle_lt = new uint[num_long_term_sps + num_long_term_pics];
-                        for (i = 0; i < num_long_term_sps + num_long_term_pics; i++)
-                        {
-
-                            if (i < num_long_term_sps)
-                            {
-
-                                if (num_long_term_ref_pics_sps > 1)
-                                {
-                                    size += stream.ReadUnsignedIntVariable(size, lt_idx_sps, out this.lt_idx_sps[i]);
-                                }
-                            }
-                            else
-                            {
-                                size += stream.ReadUnsignedIntVariable(size, poc_lsb_lt, out this.poc_lsb_lt[i]);
-                                size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_lt_flag[i]);
-                            }
-                            size += stream.ReadUnsignedInt(size, 1, out this.delta_poc_msb_present_flag[i]);
-
-                            if (delta_poc_msb_present_flag[i] != 0)
-                            {
-                                size += stream.ReadUnsignedIntGolomb(size, out this.delta_poc_msb_cycle_lt[i]);
-                            }
-                        }
-                    }
-
-                    if (sps_temporal_mvp_enabled_flag != 0)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.slice_temporal_mvp_enabled_flag);
-                    }
-                }
-
-                if (nuh_layer_id > 0 && default_ref_layers_active_flag == 0 &&
-      NumDirectRefLayers[nuh_layer_id] > 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_pred_enabled_flag);
-
-                    if (inter_layer_pred_enabled_flag != 0 && NumDirectRefLayers[nuh_layer_id] > 1)
-                    {
-
-                        if (max_one_active_ref_layer_flag == 0)
-                        {
-                            size += stream.ReadUnsignedIntVariable(size, num_inter_layer_ref_pics_minus1, out this.num_inter_layer_ref_pics_minus1);
-                        }
-
-                        if (NumActiveRefLayerPics != NumDirectRefLayers[nuh_layer_id])
-                        {
-
-                            this.inter_layer_pred_layer_idc = new uint[NumActiveRefLayerPics];
-                            for (i = 0; i < NumActiveRefLayerPics; i++)
-                            {
-                                size += stream.ReadUnsignedIntVariable(size, inter_layer_pred_layer_idc, out this.inter_layer_pred_layer_idc[i]);
-                            }
-                        }
-                    }
-                }
-
-                if (sample_adaptive_offset_enabled_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_sao_luma_flag);
-
-                    if (ChromaArrayType != 0)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.slice_sao_chroma_flag);
-                    }
-                }
-
-                if (slice_type == P || slice_type == B)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
-
-                    if (num_ref_idx_active_override_flag != 0)
-                    {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
-
-                        if (slice_type == B)
-                        {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
-                        }
-                    }
-
-                    if (lists_modification_present_flag != 0 && NumPicTotalCurr > 1)
-                    {
-                        this.ref_pic_lists_modification = new RefPicListsModification();
-                        size += stream.ReadClass<RefPicListsModification>(size, context, this.ref_pic_lists_modification);
-                    }
-
-                    if (slice_type == B)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.mvd_l1_zero_flag);
-                    }
-
-                    if (cabac_init_present_flag != 0)
-                    {
-                        size += stream.ReadUnsignedInt(size, 1, out this.cabac_init_flag);
-                    }
-
-                    if (slice_temporal_mvp_enabled_flag != 0)
-                    {
-
-                        if (slice_type == B)
-                        {
-                            size += stream.ReadUnsignedInt(size, 1, out this.collocated_from_l0_flag);
-                        }
-
-                        if ((collocated_from_l0_flag != 0 && num_ref_idx_l0_active_minus1 > 0) ||
-     (!collocated_from_l0_flag != 0 != 0 && num_ref_idx_l1_active_minus1 > 0))
-                        {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.collocated_ref_idx);
-                        }
-                    }
-
-                    if ((weighted_pred_flag != 0 && slice_type == P) ||
-    (weighted_bipred_flag != 0 && slice_type == B))
-                    {
-                        this.pred_weight_table = new PredWeightTable();
-                        size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
-                    }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.five_minus_max_num_merge_cand);
-                }
-                size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
-
-                if (pps_slice_chroma_qp_offsets_present_flag != 0)
-                {
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_cb_qp_offset);
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_cr_qp_offset);
-                }
-
-                if (chroma_qp_offset_list_enabled_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.cu_chroma_qp_offset_enabled_flag);
-                }
-
-                if (deblocking_filter_override_enabled_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.deblocking_filter_override_flag);
-                }
-
-                if (deblocking_filter_override_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_deblocking_filter_disabled_flag);
-
-                    if (slice_deblocking_filter_disabled_flag == 0)
-                    {
-                        size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2);
-                        size += stream.ReadSignedIntGolomb(size, out this.slice_tc_offset_div2);
-                    }
-                }
-
-                if (pps_loop_filter_across_slices_enabled_flag != 0 &&
-   (slice_sao_luma_flag != 0 || slice_sao_chroma_flag != 0 ||
-    slice_deblocking_filter_disabled_flag == 0))
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_loop_filter_across_slices_enabled_flag);
-                }
-            }
-
-            if (tiles_enabled_flag != 0 || entropy_coding_sync_enabled_flag != 0)
-            {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_entry_point_offsets);
-
-                if (num_entry_point_offsets > 0)
-                {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.offset_len_minus1);
-
-                    this.entry_point_offset_minus1 = new uint[num_entry_point_offsets];
-                    for (i = 0; i < num_entry_point_offsets; i++)
-                    {
-                        size += stream.ReadUnsignedIntVariable(size, entry_point_offset_minus1, out this.entry_point_offset_minus1[i]);
-                    }
-                }
-            }
-
-            if (slice_segment_header_extension_present_flag != 0)
-            {
-                size += stream.ReadUnsignedIntGolomb(size, out this.slice_segment_header_extension_length);
-
-                if (poc_reset_info_present_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 2, out this.poc_reset_idc);
-                }
-
-                if (poc_reset_idc != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 6, out this.poc_reset_period_id);
-                }
-
-                if (poc_reset_idc == 3)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.full_poc_reset_flag);
-                    size += stream.ReadUnsignedIntVariable(size, poc_lsb_val, out this.poc_lsb_val);
-                }
-
-                if (PocMsbValRequiredFlag == 0 && vps_poc_lsb_aligned_flag != 0)
-                {
-                    size += stream.ReadUnsignedInt(size, 1, out this.poc_msb_cycle_val_present_flag);
-                }
-
-                if (poc_msb_cycle_val_present_flag != 0)
-                {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.poc_msb_cycle_val);
-                }
-
-                while (more_data_in_slice_segment_header_extension())
-                {
-                    whileIndex++;
-
-                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.slice_segment_header_extension_data_bit);
-                }
-            }
-            this.byte_alignment = new ByteAlignment();
-            size += stream.ReadClass<ByteAlignment>(size, context, this.byte_alignment);
-
-            return size;
-        }
-
-        public ulong Write(IItuContext context, ItuStream stream)
-        {
-            ulong size = 0;
-
-            uint i = 0;
-            int whileIndex = -1;
-            size += stream.WriteUnsignedInt(1, this.first_slice_segment_in_pic_flag);
-
-            if (nal_unit_type >= BLA_W_LP && nal_unit_type <= RSV_IRAP_VCL23)
-            {
-                size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag);
-            }
-            size += stream.WriteUnsignedIntGolomb(this.slice_pic_parameter_set_id);
-
-            if (first_slice_segment_in_pic_flag == 0)
-            {
-
-                if (dependent_slice_segments_enabled_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.dependent_slice_segment_flag);
-                }
-                size += stream.WriteUnsignedIntVariable(slice_segment_address, this.slice_segment_address);
-            }
-
-            if (dependent_slice_segment_flag == 0)
-            {
-                i = 0;
-
-                if (num_extra_slice_header_bits > i)
-                {
-                    i++;
-                    size += stream.WriteUnsignedInt(1, this.discardable_flag);
-                }
-
-                if (num_extra_slice_header_bits > i)
-                {
-                    i++;
-                    size += stream.WriteUnsignedInt(1, this.cross_layer_bla_flag);
-                }
-
-                for (; i < num_extra_slice_header_bits; i++)
-                {
-                    size += stream.WriteUnsignedInt(1, this.slice_reserved_flag[i][ ]);
-                }
-                size += stream.WriteUnsignedIntGolomb(this.slice_type);
-
-                if (output_flag_present_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.pic_output_flag);
-                }
-
-                if (separate_colour_plane_flag == 1)
-                {
-                    size += stream.WriteUnsignedInt(2, this.colour_plane_id);
-                }
-
-                if ((nuh_layer_id > 0 &&
-    poc_lsb_not_present_flag[LayerIdxInVps[nuh_layer_id]] == 0) ||
-    (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP))
-                {
-                    size += stream.WriteUnsignedIntVariable(slice_pic_order_cnt_lsb, this.slice_pic_order_cnt_lsb);
-                }
-
-                if (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP)
-                {
-                    size += stream.WriteUnsignedInt(1, this.short_term_ref_pic_set_sps_flag);
-
-                    if (short_term_ref_pic_set_sps_flag == 0)
-                    {
-                        size += stream.WriteClass<StRefPicSet>(context, this.st_ref_pic_set);
-                    }
-                    else if (num_short_term_ref_pic_sets > 1)
-                    {
-                        size += stream.WriteUnsignedIntVariable(short_term_ref_pic_set_idx, this.short_term_ref_pic_set_idx);
-                    }
-
-                    if (long_term_ref_pics_present_flag != 0)
-                    {
-
-                        if (num_long_term_ref_pics_sps > 0)
-                        {
-                            size += stream.WriteUnsignedIntGolomb(this.num_long_term_sps);
-                        }
-                        size += stream.WriteUnsignedIntGolomb(this.num_long_term_pics);
-
-                        for (i = 0; i < num_long_term_sps + num_long_term_pics; i++)
-                        {
-
-                            if (i < num_long_term_sps)
-                            {
-
-                                if (num_long_term_ref_pics_sps > 1)
-                                {
-                                    size += stream.WriteUnsignedIntVariable(lt_idx_sps[i], this.lt_idx_sps[i]);
-                                }
-                            }
-                            else
-                            {
-                                size += stream.WriteUnsignedIntVariable(poc_lsb_lt[i], this.poc_lsb_lt[i]);
-                                size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_lt_flag[i]);
-                            }
-                            size += stream.WriteUnsignedInt(1, this.delta_poc_msb_present_flag[i]);
-
-                            if (delta_poc_msb_present_flag[i] != 0)
-                            {
-                                size += stream.WriteUnsignedIntGolomb(this.delta_poc_msb_cycle_lt[i]);
-                            }
-                        }
-                    }
-
-                    if (sps_temporal_mvp_enabled_flag != 0)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.slice_temporal_mvp_enabled_flag);
-                    }
-                }
-
-                if (nuh_layer_id > 0 && default_ref_layers_active_flag == 0 &&
-      NumDirectRefLayers[nuh_layer_id] > 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.inter_layer_pred_enabled_flag);
-
-                    if (inter_layer_pred_enabled_flag != 0 && NumDirectRefLayers[nuh_layer_id] > 1)
-                    {
-
-                        if (max_one_active_ref_layer_flag == 0)
-                        {
-                            size += stream.WriteUnsignedIntVariable(num_inter_layer_ref_pics_minus1, this.num_inter_layer_ref_pics_minus1);
-                        }
-
-                        if (NumActiveRefLayerPics != NumDirectRefLayers[nuh_layer_id])
-                        {
-
-                            for (i = 0; i < NumActiveRefLayerPics; i++)
-                            {
-                                size += stream.WriteUnsignedIntVariable(inter_layer_pred_layer_idc[i], this.inter_layer_pred_layer_idc[i]);
-                            }
-                        }
-                    }
-                }
-
-                if (sample_adaptive_offset_enabled_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.slice_sao_luma_flag);
-
-                    if (ChromaArrayType != 0)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.slice_sao_chroma_flag);
-                    }
-                }
-
-                if (slice_type == P || slice_type == B)
-                {
-                    size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
-
-                    if (num_ref_idx_active_override_flag != 0)
-                    {
-                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
-
-                        if (slice_type == B)
-                        {
-                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
-                        }
-                    }
-
-                    if (lists_modification_present_flag != 0 && NumPicTotalCurr > 1)
-                    {
-                        size += stream.WriteClass<RefPicListsModification>(context, this.ref_pic_lists_modification);
-                    }
-
-                    if (slice_type == B)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.mvd_l1_zero_flag);
-                    }
-
-                    if (cabac_init_present_flag != 0)
-                    {
-                        size += stream.WriteUnsignedInt(1, this.cabac_init_flag);
-                    }
-
-                    if (slice_temporal_mvp_enabled_flag != 0)
-                    {
-
-                        if (slice_type == B)
-                        {
-                            size += stream.WriteUnsignedInt(1, this.collocated_from_l0_flag);
-                        }
-
-                        if ((collocated_from_l0_flag != 0 && num_ref_idx_l0_active_minus1 > 0) ||
-     (!collocated_from_l0_flag != 0 != 0 && num_ref_idx_l1_active_minus1 > 0))
-                        {
-                            size += stream.WriteUnsignedIntGolomb(this.collocated_ref_idx);
-                        }
-                    }
-
-                    if ((weighted_pred_flag != 0 && slice_type == P) ||
-    (weighted_bipred_flag != 0 && slice_type == B))
-                    {
-                        size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
-                    }
-                    size += stream.WriteUnsignedIntGolomb(this.five_minus_max_num_merge_cand);
-                }
-                size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
-
-                if (pps_slice_chroma_qp_offsets_present_flag != 0)
-                {
-                    size += stream.WriteSignedIntGolomb(this.slice_cb_qp_offset);
-                    size += stream.WriteSignedIntGolomb(this.slice_cr_qp_offset);
-                }
-
-                if (chroma_qp_offset_list_enabled_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.cu_chroma_qp_offset_enabled_flag);
-                }
-
-                if (deblocking_filter_override_enabled_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.deblocking_filter_override_flag);
-                }
-
-                if (deblocking_filter_override_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.slice_deblocking_filter_disabled_flag);
-
-                    if (slice_deblocking_filter_disabled_flag == 0)
-                    {
-                        size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2);
-                        size += stream.WriteSignedIntGolomb(this.slice_tc_offset_div2);
-                    }
-                }
-
-                if (pps_loop_filter_across_slices_enabled_flag != 0 &&
-   (slice_sao_luma_flag != 0 || slice_sao_chroma_flag != 0 ||
-    slice_deblocking_filter_disabled_flag == 0))
-                {
-                    size += stream.WriteUnsignedInt(1, this.slice_loop_filter_across_slices_enabled_flag);
-                }
-            }
-
-            if (tiles_enabled_flag != 0 || entropy_coding_sync_enabled_flag != 0)
-            {
-                size += stream.WriteUnsignedIntGolomb(this.num_entry_point_offsets);
-
-                if (num_entry_point_offsets > 0)
-                {
-                    size += stream.WriteUnsignedIntGolomb(this.offset_len_minus1);
-
-                    for (i = 0; i < num_entry_point_offsets; i++)
-                    {
-                        size += stream.WriteUnsignedIntVariable(entry_point_offset_minus1[i], this.entry_point_offset_minus1[i]);
-                    }
-                }
-            }
-
-            if (slice_segment_header_extension_present_flag != 0)
-            {
-                size += stream.WriteUnsignedIntGolomb(this.slice_segment_header_extension_length);
-
-                if (poc_reset_info_present_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(2, this.poc_reset_idc);
-                }
-
-                if (poc_reset_idc != 0)
-                {
-                    size += stream.WriteUnsignedInt(6, this.poc_reset_period_id);
-                }
-
-                if (poc_reset_idc == 3)
-                {
-                    size += stream.WriteUnsignedInt(1, this.full_poc_reset_flag);
-                    size += stream.WriteUnsignedIntVariable(poc_lsb_val, this.poc_lsb_val);
-                }
-
-                if (PocMsbValRequiredFlag == 0 && vps_poc_lsb_aligned_flag != 0)
-                {
-                    size += stream.WriteUnsignedInt(1, this.poc_msb_cycle_val_present_flag);
-                }
-
-                if (poc_msb_cycle_val_present_flag != 0)
-                {
-                    size += stream.WriteUnsignedIntGolomb(this.poc_msb_cycle_val);
-                }
-
-                while (more_data_in_slice_segment_header_extension())
-                {
-                    whileIndex++;
-
-                    size += stream.WriteUnsignedInt(1, whileIndex, this.slice_segment_header_extension_data_bit);
-                }
-            }
-            size += stream.WriteClass<ByteAlignment>(context, this.byte_alignment);
-
-            return size;
-        }
-
-    }
-
-    /*
- 
-
 layers_not_present( payloadSize ) {  
  lnp_sei_active_vps_id u(4) 
  for( i = 0; i  <=  MaxLayersMinus1; i++ )   
@@ -14748,7 +13150,7 @@ bsp_nesting( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.bsp_idx);
             size += stream.ReadUnsignedIntGolomb(size, out this.num_seis_in_bsp_minus1);
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -14776,7 +13178,7 @@ bsp_nesting( payloadSize ) {
             size += stream.WriteUnsignedIntGolomb(this.bsp_idx);
             size += stream.WriteUnsignedIntGolomb(this.num_seis_in_bsp_minus1);
 
-            while (!byte_aligned())
+            while (!stream.ByteAligned())
             {
                 whileIndex++;
 
@@ -15230,7 +13632,7 @@ overlay_info( payloadSize ) {
                     }
                 }
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -15312,7 +13714,7 @@ overlay_info( payloadSize ) {
                     }
                 }
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -15617,10 +14019,10 @@ depth_representation_info( payloadSize ) {
   depth_rep_info_element( DMinSign, DMinExp, DMinMantissa, DMinManLen )  
  if( d_max_flag )  
   depth_rep_info_element( DMaxSign, DMaxExp, DMaxMantissa, DMaxManLen )  
- if( depth_representation_type  ==  3 ) {  
+ if( depth_representation_type == 3 ) {  
   depth_nonlinear_representation_num_minus1 ue(v) 
   for( i = 1; i  <=  depth_nonlinear_representation_num_minus1 + 1; i++ )  
-   depth_nonlinear_representation_model[ i ]  
+   depth_nonlinear_representation_model[ i ] u(8)
  }  
 }
     */
@@ -15650,8 +14052,8 @@ depth_representation_info( payloadSize ) {
         public DepthRepInfoElement DepthRepInfoElement2 { get { return depth_rep_info_element2; } set { depth_rep_info_element2 = value; } }
         private uint depth_nonlinear_representation_num_minus1;
         public uint DepthNonlinearRepresentationNumMinus1 { get { return depth_nonlinear_representation_num_minus1; } set { depth_nonlinear_representation_num_minus1 = value; } }
-        private DepthNonlinearRepresentationModel depth_nonlinear_representation_model;
-        public DepthNonlinearRepresentationModel DepthNonlinearRepresentationModel { get { return depth_nonlinear_representation_model; } set { depth_nonlinear_representation_model = value; } }
+        private uint[] depth_nonlinear_representation_model;
+        public uint[] DepthNonlinearRepresentationModel { get { return depth_nonlinear_representation_model; } set { depth_nonlinear_representation_model = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -15705,11 +14107,10 @@ depth_representation_info( payloadSize ) {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_num_minus1);
 
-                this.depth_nonlinear_representation_model = new DepthNonlinearRepresentationModel[depth_nonlinear_representation_num_minus1 + 1 + 1];
+                this.depth_nonlinear_representation_model = new uint[depth_nonlinear_representation_num_minus1 + 1 + 1];
                 for (i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++)
                 {
-                    this.depth_nonlinear_representation_model[i] = new DepthNonlinearRepresentationModel ;
-                    size += stream.ReadClass<DepthNonlinearRepresentationModel>(size, context, this.depth_nonlinear_representation_model[i]);
+                    size += stream.ReadUnsignedInt(size, 8, out this.depth_nonlinear_representation_model[i]);
                 }
             }
 
@@ -15758,7 +14159,7 @@ depth_representation_info( payloadSize ) {
 
                 for (i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++)
                 {
-                    size += stream.WriteClass<DepthNonlinearRepresentationModel>(context, this.depth_nonlinear_representation_model[i]);
+                    size += stream.WriteUnsignedInt(8, this.depth_nonlinear_representation_model[i]);
                 }
             }
 
@@ -16437,7 +14838,7 @@ layer_id_included_flag[ i ][ j ] u(1)
             if (vps_extension_flag != 0)
             {
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -16454,7 +14855,7 @@ layer_id_included_flag[ i ][ j ] u(1)
                     if (vps_3d_extension_flag != 0)
                     {
 
-                        while (!byte_aligned())
+                        while (!stream.ByteAligned())
                         {
                             whileIndex++;
 
@@ -16468,7 +14869,7 @@ layer_id_included_flag[ i ][ j ] u(1)
                     if (vps_extension3_flag != 0)
                     {
 
-                        while (more_rbsp_data())
+                        while (stream.ReadMoreRbspData(this))
                         {
                             whileIndex++;
 
@@ -16547,7 +14948,7 @@ layer_id_included_flag[ i ][ j ] u(1)
             if (vps_extension_flag != 0)
             {
 
-                while (!byte_aligned())
+                while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
@@ -16563,7 +14964,7 @@ layer_id_included_flag[ i ][ j ] u(1)
                     if (vps_3d_extension_flag != 0)
                     {
 
-                        while (!byte_aligned())
+                        while (!stream.ByteAligned())
                         {
                             whileIndex++;
 
@@ -16576,7 +14977,7 @@ layer_id_included_flag[ i ][ j ] u(1)
                     if (vps_extension3_flag != 0)
                     {
 
-                        while (more_rbsp_data())
+                        while (stream.WriteMoreRbspData(this))
                         {
                             whileIndex++;
 
@@ -16740,7 +15141,7 @@ sps_3d_extension() {
  for( d = 0; d  <=  1; d++ ) {  
   iv_di_mc_enabled_flag[ d ] u(1) 
   iv_mv_scal_enabled_flag[ d ] u(1) 
-  if( d  ==  0 ) {  
+  if( d == 0 ) {  
    log2_ivmc_sub_pb_size_minus3[ d ] ue(v) 
       iv_res_pred_enabled_flag[ d ] u(1) 
    depth_ref_enabled_flag[ d ] u(1) 
@@ -16899,7 +15300,7 @@ pps_3d_extension() {
      for( j = 0; j  <=  depthMaxValue; j++ )  
            dlt_value_flag[ i ][ j ] u(1) 
     else  
-     delta_dlt( i )  
+     delta_dlt()  
    }  
   }  
  }  
@@ -16974,7 +15375,7 @@ pps_3d_extension() {
                         }
                         else
                         {
-                            this.delta_dlt[i] = new DeltaDlt(i);
+                            this.delta_dlt[i] = new DeltaDlt();
                             size += stream.ReadClass<DeltaDlt>(size, context, this.delta_dlt[i]);
                         }
                     }
@@ -17034,7 +15435,7 @@ pps_3d_extension() {
     /*
   
 
-delta_dlt( i ) {  
+delta_dlt() {  
  num_val_delta_dlt u(v) 
  if( num_val_delta_dlt > 0 ) {  
   if( num_val_delta_dlt > 1 )  
@@ -17050,8 +15451,6 @@ delta_dlt( i ) {
     */
     public class DeltaDlt : IItuSerializable
     {
-        private uint i;
-        public uint i { get { return i; } set { i = value; } }
         private uint num_val_delta_dlt;
         public uint NumValDeltaDlt { get { return num_val_delta_dlt; } set { num_val_delta_dlt = value; } }
         private uint max_diff;
@@ -17066,9 +15465,9 @@ delta_dlt( i ) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public DeltaDlt(uint i)
+        public DeltaDlt()
         {
-            this.i = i;
+
         }
 
         public ulong Read(IItuContext context, ItuStream stream)
@@ -17170,14 +15569,14 @@ slice_segment_header() {
   slice_type ue(v) 
   if( output_flag_present_flag )  
    pic_output_flag u(1) 
-  if( separate_colour_plane_flag  ==  1 )  
+  if( separate_colour_plane_flag == 1 )  
    colour_plane_id u(2) 
   if( ( nuh_layer_id > 0  &&   
     !poc_lsb_not_present_flag[ LayerIdxInVps[ nuh_layer_id ] ] )  || 
-    ( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) ) 
+    ( nal_unit_type != IDR_W_RADL  &&  nal_unit_type != IDR_N_LP ) ) 
  
    slice_pic_order_cnt_lsb u(v) 
-  if( nal_unit_type  !=  IDR_W_RADL  &&  nal_unit_type  !=  IDR_N_LP ) {  
+  if( nal_unit_type != IDR_W_RADL  &&  nal_unit_type != IDR_N_LP ) {  
    short_term_ref_pic_set_sps_flag u(1) 
    if( !short_term_ref_pic_set_sps_flag )  
     st_ref_pic_set( num_short_term_ref_pic_sets )  
@@ -17210,7 +15609,7 @@ slice_segment_header() {
    if( inter_layer_pred_enabled_flag  &&  NumRefListLayers[ nuh_layer_id ] > 1) {  
     if( !max_one_active_ref_layer_flag )  
      num_inter_layer_ref_pics_minus1 u(v) 
-    if( NumActiveRefLayerPics  !=  NumRefListLayers[ nuh_layer_id ] )  
+    if( NumActiveRefLayerPics != NumRefListLayers[ nuh_layer_id ] )  
      for( i = 0; i < NumActiveRefLayerPics; i++ )   
       inter_layer_pred_layer_idc[ i ] u(v) 
    }  
@@ -17219,32 +15618,32 @@ slice_segment_header() {
    in_comp_pred_flag u(1) 
   if( sample_adaptive_offset_enabled_flag ) {  
    slice_sao_luma_flag u(1) 
-   if( ChromaArrayType  !=  0 )  
+   if( ChromaArrayType != 0 )  
     slice_sao_chroma_flag u(1) 
   }  
-  if( slice_type  ==  P  ||  slice_type  ==  B ) {  
+  if( slice_type == P  ||  slice_type == B ) {  
    num_ref_idx_active_override_flag u(1) 
    if( num_ref_idx_active_override_flag ) {  
     num_ref_idx_l0_active_minus1 ue(v) 
-    if( slice_type  ==  B )  
+    if( slice_type == B )  
      num_ref_idx_l1_active_minus1 ue(v) 
    }  
    if( lists_modification_present_flag  &&  NumPicTotalCurr > 1 )  
     ref_pic_lists_modification()  
-   if( slice_type  ==  B )  
+   if( slice_type == B )  
     mvd_l1_zero_flag u(1) 
    if( cabac_init_present_flag ) 
        cabac_init_flag u(1) 
    if( slice_temporal_mvp_enabled_flag ) {  
-    if( slice_type  ==  B )  
+    if( slice_type == B )  
      collocated_from_l0_flag u(1) 
     if( ( collocated_from_l0_flag  &&  num_ref_idx_l0_active_minus1 > 0 )  || 
      ( !collocated_from_l0_flag  &&  num_ref_idx_l1_active_minus1 > 0 ) ) 
  
      collocated_ref_idx ue(v) 
    }  
-   if( ( weighted_pred_flag  &&  slice_type  ==  P )  || 
-     ( weighted_bipred_flag  &&  slice_type  ==  B ) ) 
+   if( ( weighted_pred_flag  &&  slice_type == P )  || 
+     ( weighted_bipred_flag  &&  slice_type == B ) ) 
  
     pred_weight_table()  
    else if( !DepthFlag  &&  NumRefListLayers[ nuh_layer_id ] > 0 ) {  
@@ -17296,9 +15695,9 @@ slice_segment_header() {
   slice_segment_header_extension_length ue(v) 
   if( poc_reset_info_present_flag )  
    poc_reset_idc u(2) 
-  if( poc_reset_idc  !=  0 )  
+  if( poc_reset_idc != 0 )  
    poc_reset_period_id u(6) 
-  if( poc_reset_idc  ==  3 ) {  
+  if( poc_reset_idc == 3 ) {  
    full_poc_reset_flag u(1) 
    poc_lsb_val u(v) 
   }  
@@ -17620,7 +16019,7 @@ slice_segment_header() {
                     }
                 }
 
-                if (slice_type == P || slice_type == B)
+                if (H265FrameTypes.IsP(slice_type) || H265FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
 
@@ -17628,7 +16027,7 @@ slice_segment_header() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
 
-                        if (slice_type == B)
+                        if (H265FrameTypes.IsB(slice_type))
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
                         }
@@ -17640,7 +16039,7 @@ slice_segment_header() {
                         size += stream.ReadClass<RefPicListsModification>(size, context, this.ref_pic_lists_modification);
                     }
 
-                    if (slice_type == B)
+                    if (H265FrameTypes.IsB(slice_type))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.mvd_l1_zero_flag);
                     }
@@ -17653,7 +16052,7 @@ slice_segment_header() {
                     if (slice_temporal_mvp_enabled_flag != 0)
                     {
 
-                        if (slice_type == B)
+                        if (H265FrameTypes.IsB(slice_type))
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.collocated_from_l0_flag);
                         }
@@ -17665,8 +16064,8 @@ slice_segment_header() {
                         }
                     }
 
-                    if ((weighted_pred_flag != 0 && slice_type == P) ||
-     (weighted_bipred_flag != 0 && slice_type == B))
+                    if ((weighted_pred_flag != 0 && H265FrameTypes.IsP(slice_type)) ||
+     (weighted_bipred_flag != 0 && H265FrameTypes.IsB(slice_type)))
                     {
                         this.pred_weight_table = new PredWeightTable();
                         size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
@@ -17952,7 +16351,7 @@ slice_segment_header() {
                     }
                 }
 
-                if (slice_type == P || slice_type == B)
+                if (H265FrameTypes.IsP(slice_type) || H265FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
 
@@ -17960,7 +16359,7 @@ slice_segment_header() {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
 
-                        if (slice_type == B)
+                        if (H265FrameTypes.IsB(slice_type))
                         {
                             size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
                         }
@@ -17971,7 +16370,7 @@ slice_segment_header() {
                         size += stream.WriteClass<RefPicListsModification>(context, this.ref_pic_lists_modification);
                     }
 
-                    if (slice_type == B)
+                    if (H265FrameTypes.IsB(slice_type))
                     {
                         size += stream.WriteUnsignedInt(1, this.mvd_l1_zero_flag);
                     }
@@ -17984,7 +16383,7 @@ slice_segment_header() {
                     if (slice_temporal_mvp_enabled_flag != 0)
                     {
 
-                        if (slice_type == B)
+                        if (H265FrameTypes.IsB(slice_type))
                         {
                             size += stream.WriteUnsignedInt(1, this.collocated_from_l0_flag);
                         }
@@ -17996,8 +16395,8 @@ slice_segment_header() {
                         }
                     }
 
-                    if ((weighted_pred_flag != 0 && slice_type == P) ||
-     (weighted_bipred_flag != 0 && slice_type == B))
+                    if ((weighted_pred_flag != 0 && H265FrameTypes.IsP(slice_type)) ||
+     (weighted_bipred_flag != 0 && H265FrameTypes.IsB(slice_type)))
                     {
                         size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
                     }
@@ -18126,9 +16525,9 @@ slice_segment_header() {
 
 alternative_depth_info( payloadSize ) {  
  alternative_depth_info_cancel_flag u(1) 
- if( alternative_depth_info_cancel_flag  ==  0 ) {  
+ if( alternative_depth_info_cancel_flag == 0 ) {  
   depth_type u(2) 
-  if( depth_type  ==  0 ) {  
+  if( depth_type == 0 ) {  
    num_constituent_views_gvd_minus1 ue(v) 
    depth_present_gvd_flag u(1) 
    z_gvd_flag u(1) 
@@ -18183,7 +16582,7 @@ alternative_depth_info( payloadSize ) {
     }  
    }  
   }  
-  if( depth_type  ==  1 ) {  
+  if( depth_type == 1 ) {  
    min_offset_x_int se(v) 
    min_offset_x_frac u(8) 
    max_offset_x_int se(v)
@@ -18598,6 +16997,131 @@ alternative_depth_info( payloadSize ) {
                         size += stream.WriteUnsignedIntGolomb(this.warp_map_height_minus2);
                     }
                 }
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+  
+
+green_metadata(payloadSize) {
+    green_metadata_type 5 u(8)
+    if (green_metadata_type == 0) {
+        period_type 5 u(8)
+
+        if (period_type == 2) {
+            num_seconds 5 u(16)
+        }
+        else if (period_type == 3) {
+            num_pictures 5 u(16)
+        }
+
+        percent_non_zero_macroblocks 5 u(8)
+        percent_intra_coded_macroblocks 5 u(8)
+        percent_six_tap_filtering 5 u(8)
+        percent_alpha_point_deblocking_instance 5 u(8)
+    }
+    else if (green_metadata_type == 1) {
+        xsd_metric_type 5 u(8)
+        xsd_metric_value 5 u(16)
+    }
+}
+    */
+    public class GreenMetadata : IItuSerializable
+    {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private uint green_metadata_type;
+        public uint GreenMetadataType { get { return green_metadata_type; } set { green_metadata_type = value; } }
+        private uint period_type;
+        public uint PeriodType { get { return period_type; } set { period_type = value; } }
+        private uint num_seconds;
+        public uint NumSeconds { get { return num_seconds; } set { num_seconds = value; } }
+        private uint num_pictures;
+        public uint NumPictures { get { return num_pictures; } set { num_pictures = value; } }
+        private uint percent_non_zero_macroblocks;
+        public uint PercentNonZeroMacroblocks { get { return percent_non_zero_macroblocks; } set { percent_non_zero_macroblocks = value; } }
+        private uint percent_intra_coded_macroblocks;
+        public uint PercentIntraCodedMacroblocks { get { return percent_intra_coded_macroblocks; } set { percent_intra_coded_macroblocks = value; } }
+        private uint percent_six_tap_filtering;
+        public uint PercentSixTapFiltering { get { return percent_six_tap_filtering; } set { percent_six_tap_filtering = value; } }
+        private uint percent_alpha_point_deblocking_instance;
+        public uint PercentAlphaPointDeblockingInstance { get { return percent_alpha_point_deblocking_instance; } set { percent_alpha_point_deblocking_instance = value; } }
+        private uint xsd_metric_type;
+        public uint XsdMetricType { get { return xsd_metric_type; } set { xsd_metric_type = value; } }
+        private uint xsd_metric_value;
+        public uint XsdMetricValue { get { return xsd_metric_value; } set { xsd_metric_value = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public GreenMetadata(uint payloadSize)
+        {
+            this.payloadSize = payloadSize;
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedInt(size, 8, out this.green_metadata_type);
+
+            if (green_metadata_type == 0)
+            {
+                size += stream.ReadUnsignedInt(size, 8, out this.period_type);
+
+                if (period_type == 2)
+                {
+                    size += stream.ReadUnsignedInt(size, 16, out this.num_seconds);
+                }
+                else if (period_type == 3)
+                {
+                    size += stream.ReadUnsignedInt(size, 16, out this.num_pictures);
+                }
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_non_zero_macroblocks);
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_intra_coded_macroblocks);
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_six_tap_filtering);
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_alpha_point_deblocking_instance);
+            }
+            else if (green_metadata_type == 1)
+            {
+                size += stream.ReadUnsignedInt(size, 8, out this.xsd_metric_type);
+                size += stream.ReadUnsignedInt(size, 16, out this.xsd_metric_value);
+            }
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedInt(8, this.green_metadata_type);
+
+            if (green_metadata_type == 0)
+            {
+                size += stream.WriteUnsignedInt(8, this.period_type);
+
+                if (period_type == 2)
+                {
+                    size += stream.WriteUnsignedInt(16, this.num_seconds);
+                }
+                else if (period_type == 3)
+                {
+                    size += stream.WriteUnsignedInt(16, this.num_pictures);
+                }
+                size += stream.WriteUnsignedInt(8, this.percent_non_zero_macroblocks);
+                size += stream.WriteUnsignedInt(8, this.percent_intra_coded_macroblocks);
+                size += stream.WriteUnsignedInt(8, this.percent_six_tap_filtering);
+                size += stream.WriteUnsignedInt(8, this.percent_alpha_point_deblocking_instance);
+            }
+            else if (green_metadata_type == 1)
+            {
+                size += stream.WriteUnsignedInt(8, this.xsd_metric_type);
+                size += stream.WriteUnsignedInt(16, this.xsd_metric_value);
             }
 
             return size;

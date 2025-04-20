@@ -415,6 +415,8 @@ namespace Sharp{type}
                     return "stream.WriteUnsignedInt(7, ";
                 case "u(8)":
                     return "stream.WriteUnsignedInt(8, ";
+                case "u(9)":
+                    return "stream.WriteUnsignedInt(9, ";
                 case "u(10)":
                     return "stream.WriteUnsignedInt(10, ";
                 case "u(16)":
@@ -498,6 +500,8 @@ namespace Sharp{type}
                     return "stream.ReadUnsignedInt(size, 7, ";
                 case "u(8)":
                     return "stream.ReadUnsignedInt(size, 8, ";
+                case "u(9)":
+                    return "stream.ReadUnsignedInt(size, 9, ";
                 case "u(10)":
                     return "stream.ReadUnsignedInt(size, 10, ";
                 case "u(16)":
@@ -568,6 +572,7 @@ namespace Sharp{type}
                 { "u(6)",                       "uint" },
                 { "u(7)",                       "uint" },
                 { "u(8)",                       "uint" },
+                { "u(9)",                       "uint" },
                 { "u(10)",                      "uint" },
                 { "u(16)",                      "uint" },
                 { "u(20)",                      "uint" },

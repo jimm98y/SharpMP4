@@ -8,6 +8,7 @@ namespace ItuGenerator
         {
             definitions = definitions
                             .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
+                            .Replace("delta_dlt( i )", "delta_dlt()")
                             .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
             return definitions;
         }
@@ -16,7 +17,6 @@ namespace ItuGenerator
         {
             switch (field.Name)
             {
-                // TODO
                 default:
                     return "";
             }
@@ -24,7 +24,6 @@ namespace ItuGenerator
 
         public void FixClassParameters(ItuClass ituClass)
         { 
-            // TODO
         }
 
         public string ReplaceParameter(string parameter)
@@ -44,6 +43,20 @@ namespace ItuGenerator
 
         public string FixCondition(string condition, MethodType methodType)
         {
+            condition = condition.Replace("slice_type == B", "H265FrameTypes.IsB(slice_type)");
+            condition = condition.Replace("slice_type != B", "!H265FrameTypes.IsB(slice_type)");
+            condition = condition.Replace("slice_type == P", "H265FrameTypes.IsP(slice_type)");
+            condition = condition.Replace("slice_type != P", "!H265FrameTypes.IsP(slice_type)");
+            condition = condition.Replace("slice_type == I", "H265FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("slice_type != I", "!H265FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("EXTENDED_ISO", "H265Constants.EXTENDED_ISO");
+            condition = condition.Replace("EXTENDED_SAR", "H265Constants.EXTENDED_SAR");
+            condition = condition.Replace("Abs(", "Math.Abs(");
+            condition = condition.Replace("Min(", "Math.Min(");
+            condition = condition.Replace("Max(", "Math.Max(");
+            condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
+            condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
+            condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");
             return condition;
         }
 

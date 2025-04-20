@@ -31,7 +31,15 @@ foreach (var file in files)
     using (Stream inputFileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
     {
         var inputMp4 = new Mp4();
-        inputMp4.Read(new IsoStream(inputFileStream));
+        try
+        {
+            inputMp4.Read(new IsoStream(inputFileStream));
+        }
+        catch(SharpMP4.IsoEndOfStreamException)
+        {
+            Log.Error($"Invalid file: {file}");
+            continue;
+        }
 
         var tracks = inputMp4
             .Children.OfType<MovieBox>().Single()

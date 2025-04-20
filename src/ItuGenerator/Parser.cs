@@ -66,6 +66,7 @@ namespace ItuGenerator
             Try(String("u(6)")), 
             Try(String("u(7)")), 
             Try(String("u(8)")), 
+            Try(String("u(9)")), 
             Try(String("u(10)")), 
             Try(String("u(20)")), 
             Try(String("u(16)")), 
