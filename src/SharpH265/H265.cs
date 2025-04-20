@@ -1,4 +1,6 @@
-﻿namespace SharpH265
+﻿using SharpH26X;
+
+namespace SharpH265
 {
     public class H265Constants
     {
@@ -88,5 +90,48 @@
         public const uint UNSPEC61 = 61;               // Unspecified NAL unit types
         public const uint UNSPEC62 = 62;               // Unspecified NAL unit types
         public const uint UNSPEC63 = 63;               // Unspecified NAL unit types
+    }
+
+    public static class H265Helpers
+    {
+        public static int[] GetMaxSubLayersInLayerSetMinus1(IItuContext context)
+        {
+            int[] LayerIdxInVps = new int[Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];
+            for (int i = 0; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
+            {
+                LayerIdxInVps[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] = i;
+            }
+
+            int[] NumLayersInIdList = new int[((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
+            NumLayersInIdList[0] = 1;
+            int[][] MyLayerSetLayerIdList = new int[((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1][];
+            MyLayerSetLayerIdList[0] = new int[((H265Context)context).VideoParameterSetRbsp.VpsMaxLayerId + 1];
+            MyLayerSetLayerIdList[0][0] = 0;
+            int n = 0;
+            for (int i = 1; i <= ((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1; i++)
+            {
+                for (int m = 0; m <= ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayerId; m++)
+                {
+                    MyLayerSetLayerIdList[i] = new int[((H265Context)context).VideoParameterSetRbsp.VpsMaxLayerId + 1];
+                    if (((H265Context)context).VideoParameterSetRbsp.LayerIdIncludedFlag[i][m] != 0)
+                        MyLayerSetLayerIdList[i][n++] = m;
+                }
+                NumLayersInIdList[i] = n;
+            }
+
+            int[] MaxSubLayersInLayerSetMinus1 = new int[(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)];
+            for (int i = 0; i < (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++)
+            {
+                int maxSlMinus1 = 0;
+                for (int k = 0; k < NumLayersInIdList[i]; k++)
+                {
+                    int lId = MyLayerSetLayerIdList[i][k];
+                    maxSlMinus1 = (int)Math.Max(maxSlMinus1, ((H265Context)context).VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1[LayerIdxInVps[lId]]);
+                }
+                MaxSubLayersInLayerSetMinus1[i] = maxSlMinus1;
+            }
+
+            return MaxSubLayersInLayerSetMinus1;
+        }
     }
 }

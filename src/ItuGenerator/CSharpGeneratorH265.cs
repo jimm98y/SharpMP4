@@ -31,6 +31,8 @@ namespace ItuGenerator
         {
             switch (parameter)
             {
+                case "MaxSubLayersInLayerSetMinus1": // TODO: optimize/cache this
+                    return "H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)";
                 case "chroma_format_idc":
                     return "((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc";
                 case "sps_palette_predictor_initializer":
@@ -39,7 +41,10 @@ namespace ItuGenerator
                     return "((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag";
                 case "pps_palette_predictor_initializer":
                     return "comp == 0 ? (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8)";
-
+                case "MaxLayersMinus1":
+                    return "Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1)";
+                case "NumLayerSets":
+                    return "(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)";
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;
