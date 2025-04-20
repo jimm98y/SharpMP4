@@ -44,6 +44,7 @@ partial class Program
             CSharpGenerator generator = new CSharpGenerator(customGenerator);
             string code = generator.GenerateParser(Path.GetFileNameWithoutExtension(file), parsed);
             //Debug.WriteLine(code);
+            break;
         }
     }
 

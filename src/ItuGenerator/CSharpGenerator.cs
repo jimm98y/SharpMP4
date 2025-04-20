@@ -425,6 +425,14 @@ namespace Sharp{type}
                     return "stream.WriteUnsignedInt(24, ";
                 case "u(32)":
                     return "stream.WriteUnsignedInt(32, ";
+                case "u(33)":
+                    return "stream.WriteUnsignedInt(33, ";
+                case "u(34)":
+                    return "stream.WriteUnsignedInt(34, ";
+                case "u(35)":
+                    return "stream.WriteUnsignedInt(35, ";
+                case "u(43)":
+                    return "stream.WriteUnsignedInt(43, ";
                 case "u(128)":
                     return "stream.WriteUnsignedInt(128, ";
                 case "i(32)":
@@ -500,6 +508,14 @@ namespace Sharp{type}
                     return "stream.ReadUnsignedInt(size, 24, ";
                 case "u(32)":
                     return "stream.ReadUnsignedInt(size, 32, ";
+                case "u(33)":
+                    return "stream.ReadUnsignedInt(size, 33, ";
+                case "u(34)":
+                    return "stream.ReadUnsignedInt(size, 34, ";
+                case "u(35)":
+                    return "stream.ReadUnsignedInt(size, 35, ";
+                case "u(43)":
+                    return "stream.ReadUnsignedInt(size, 43, ";
                 case "u(128)":
                     return "stream.ReadUnsignedInt(size, 128, ";
                 case "i(32)":
@@ -557,6 +573,10 @@ namespace Sharp{type}
                 { "u(20)",                      "uint" },
                 { "u(24)",                      "uint" },
                 { "u(32)",                      "uint" },
+                { "u(33)",                      "ulong" },
+                { "u(34)",                      "ulong" },
+                { "u(35)",                      "ulong" },
+                { "u(43)",                      "ulong" },
                 { "u(128)",                     "BigInteger" },
                 { "u(v)",                       "uint" },
                 { "ue(v)",                      "uint" },
@@ -829,7 +849,7 @@ namespace Sharp{type}
             {
                 if (parent.Type == "for")
                 {
-                    if (parent.Condition.Contains("i =") || parent.Condition.Contains("i=") || parent.Condition.Contains("i ="))
+                    if (parent.Condition.Contains("i =") || parent.Condition.Contains("i=") || parent.Condition.Contains("i =") || parent.Condition.Contains("i++"))
                         ret.Insert(0, "[i]");
                     else if (parent.Condition.Contains("j =") || parent.Condition.Contains("j=") || parent.Condition.Contains("j ="))
                         ret.Insert(0, "[j]");
@@ -851,6 +871,25 @@ namespace Sharp{type}
                         ret.Insert(0, "[layer]");
                     else if (parent.Condition.Contains("colour_component =") || parent.Condition.Contains("colour_component=") || parent.Condition.Contains("colour_component ="))
                         ret.Insert(0, "[colour_component]");
+                    // H265:                   
+                    else if (parent.Condition.Contains("comp =") || parent.Condition.Contains("comp=") || parent.Condition.Contains("comp ="))
+                        ret.Insert(0, "[comp]");
+                    else if (parent.Condition.Contains("sizeId =") || parent.Condition.Contains("sizeId=") || parent.Condition.Contains("sizeId ="))
+                        ret.Insert(0, "[sizeId]");
+                    else if (parent.Condition.Contains("matrixId =") || parent.Condition.Contains("matrixId=") || parent.Condition.Contains("matrixId ="))
+                        ret.Insert(0, "[matrixId]");
+                    else if (parent.Condition.Contains("cIdx =") || parent.Condition.Contains("cIdx=") || parent.Condition.Contains("cIdx ="))
+                        ret.Insert(0, "[cIdx]");
+                    else if (parent.Condition.Contains("h =") || parent.Condition.Contains("h=") || parent.Condition.Contains("h ="))
+                        ret.Insert(0, "[h]");
+                    else if (parent.Condition.Contains("r =") || parent.Condition.Contains("r=") || parent.Condition.Contains("r ="))
+                        ret.Insert(0, "[r]");
+                    else if (parent.Condition.Contains("t =") || parent.Condition.Contains("t=") || parent.Condition.Contains("t ="))
+                        ret.Insert(0, "[t]");
+                    else if (parent.Condition.Contains("m =") || parent.Condition.Contains("m=") || parent.Condition.Contains("m ="))
+                        ret.Insert(0, "[m]");
+                    else if (parent.Condition.Contains("d =") || parent.Condition.Contains("d=") || parent.Condition.Contains("d ="))
+                        ret.Insert(0, "[d]");
                     else
                         throw new Exception();
                 }
@@ -1115,6 +1154,8 @@ namespace Sharp{type}
                         foreach (var part in parts)
                         {
                             int variableIndex = part.IndexOfAny(conditionChars);
+                            if (variableIndex == -1)
+                                continue;
                             string variable = part.Substring(0, variableIndex).TrimStart(conditionChars).Trim();
                             if(variable == "NumDepthViews")
                             {
