@@ -279,6 +279,14 @@ namespace ItuGenerator
             return condition;
         }
 
+        public string FixStatement(string fieldValue)
+        {
+            fieldValue = fieldValue.Replace("Abs(", "Math.Abs(");
+            fieldValue = fieldValue.Replace("Min(", "Math.Min(");
+            fieldValue = fieldValue.Replace("Max(", "Math.Max(");
+            return fieldValue;
+        }
+
         public string GetCtorParameterType(string parameter)
         {
             if (string.IsNullOrWhiteSpace(parameter))

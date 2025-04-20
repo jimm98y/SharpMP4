@@ -49,15 +49,25 @@ namespace ItuGenerator
             condition = condition.Replace("slice_type != P", "!H265FrameTypes.IsP(slice_type)");
             condition = condition.Replace("slice_type == I", "H265FrameTypes.IsI(slice_type)");
             condition = condition.Replace("slice_type != I", "!H265FrameTypes.IsI(slice_type)");
+            condition = condition.Replace("nal_unit_type != ", "nal_unit_type != H265NALTypes.");
+            condition = condition.Replace("nal_unit_type == ", "nal_unit_type == H265NALTypes.");
             condition = condition.Replace("EXTENDED_ISO", "H265Constants.EXTENDED_ISO");
             condition = condition.Replace("EXTENDED_SAR", "H265Constants.EXTENDED_SAR");
-            condition = condition.Replace("Abs(", "Math.Abs(");
-            condition = condition.Replace("Min(", "Math.Min(");
-            condition = condition.Replace("Max(", "Math.Max(");
+            condition = condition.Replace("Abs(", "(uint)Math.Abs(");
+            condition = condition.Replace("Min(", "(uint)Math.Min(");
+            condition = condition.Replace("Max(", "(uint)Math.Max(");
             condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
             condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
             condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");
             return condition;
+        }
+
+        public string FixStatement(string fieldValue)
+        {
+            fieldValue = fieldValue.Replace("Abs(", "(uint)Math.Abs(");
+            fieldValue = fieldValue.Replace("Min(", "(uint)Math.Min(");
+            fieldValue = fieldValue.Replace("Max(", "(uint)Math.Max(");
+            return fieldValue;
         }
 
         public string GetCtorParameterType(string parameter)

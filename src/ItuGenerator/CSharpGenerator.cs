@@ -20,6 +20,7 @@ namespace ItuGenerator
         string ReplaceParameter(string parameter);
         string FixMissingParameters(ItuClass b, string parameter, string classType);
         string FixCondition(string condition, MethodType methodType);
+        string FixStatement(string fieldValue);
         string GetCtorParameterType(string parameter);
         string FixFieldValue(string fieldValue);
         void FixMethodAllocation(string name, ref string method, ref string typedef);
@@ -340,9 +341,7 @@ namespace Sharp{type}
 
             if (!string.IsNullOrEmpty(fieldValue))
             {
-                fieldValue = fieldValue.Replace("Abs(", "Math.Abs(");
-                fieldValue = fieldValue.Replace("Min(", "Math.Min(");
-                fieldValue = fieldValue.Replace("Max(", "Math.Max(");
+                fieldValue = specificGenerator.FixStatement(fieldValue);
                 fieldValue = specificGenerator.FixFieldValue(fieldValue);
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });

@@ -2239,7 +2239,7 @@ scaling_list_data() {
                     else
                     {
                         nextCoef = 8;
-                        coefNum = Math.Min(64, (1 << (int)(4 + (sizeId << (int)1))));
+                        coefNum = (uint)Math.Min(64, (1 << (int)(4 + (sizeId << (int)1))));
 
                         if (sizeId > 1)
                         {
@@ -2286,7 +2286,7 @@ scaling_list_data() {
                     else
                     {
                         nextCoef = 8;
-                        coefNum = Math.Min(64, (1 << (int)(4 + (sizeId << (int)1))));
+                        coefNum = (uint)Math.Min(64, (1 << (int)(4 + (sizeId << (int)1))));
 
                         if (sizeId > 1)
                         {
@@ -3343,7 +3343,7 @@ sei_payload( payloadType, payloadSize ) {
 
             int whileIndex = -1;
 
-            if (nal_unit_type == PREFIX_SEI_NUT)
+            if (nal_unit_type == H265NALTypes.PREFIX_SEI_NUT)
             {
 
                 if (payloadType == 0)
@@ -3728,7 +3728,7 @@ sei_payload( payloadType, payloadSize ) {
 
             int whileIndex = -1;
 
-            if (nal_unit_type == PREFIX_SEI_NUT)
+            if (nal_unit_type == H265NALTypes.PREFIX_SEI_NUT)
             {
 
                 if (payloadType == 0)
@@ -15915,12 +15915,12 @@ slice_segment_header() {
 
                 if ((nuh_layer_id > 0 &&
     poc_lsb_not_present_flag[LayerIdxInVps[nuh_layer_id]] == 0) ||
-    (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP))
+    (nal_unit_type != H265NALTypes.IDR_W_RADL && nal_unit_type != H265NALTypes.IDR_N_LP))
                 {
                     size += stream.ReadUnsignedIntVariable(size, slice_pic_order_cnt_lsb, out this.slice_pic_order_cnt_lsb);
                 }
 
-                if (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP)
+                if (nal_unit_type != H265NALTypes.IDR_W_RADL && nal_unit_type != H265NALTypes.IDR_N_LP)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.short_term_ref_pic_set_sps_flag);
 
@@ -16254,12 +16254,12 @@ slice_segment_header() {
 
                 if ((nuh_layer_id > 0 &&
     poc_lsb_not_present_flag[LayerIdxInVps[nuh_layer_id]] == 0) ||
-    (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP))
+    (nal_unit_type != H265NALTypes.IDR_W_RADL && nal_unit_type != H265NALTypes.IDR_N_LP))
                 {
                     size += stream.WriteUnsignedIntVariable(slice_pic_order_cnt_lsb, this.slice_pic_order_cnt_lsb);
                 }
 
-                if (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP)
+                if (nal_unit_type != H265NALTypes.IDR_W_RADL && nal_unit_type != H265NALTypes.IDR_N_LP)
                 {
                     size += stream.WriteUnsignedInt(1, this.short_term_ref_pic_set_sps_flag);
 

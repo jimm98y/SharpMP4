@@ -1,19 +1,92 @@
 ﻿namespace SharpH265
 {
+    public class H265Constants
+    {
+        public const uint EXTENDED_ISO = 255;
+        public const uint EXTENDED_SAR = 255;
+    }
+
     public class H265FrameTypes
     {
-        public const uint P = 0; 
-        public const uint B = 1; 
-        public const uint I = 2; 
+        public const uint P = 0;
+        public const uint B = 1;
+        public const uint I = 2;
 
         public static bool IsP(uint value) { return value == P; }
         public static bool IsB(uint value) { return value == B; }
         public static bool IsI(uint value) { return value == I; }
     }
 
-    public class H265Constants
+    public class H265NALTypes
     {
-        public const uint EXTENDED_ISO = 255;
-        public const uint EXTENDED_SAR = 255;
+        public const uint TRAIL_N = 0;                 // Coded slice segment of a non-TSA, non-STSA trailing picture
+        public const uint TRAIL_R = 1;                 // Coded slice segment of a non-TSA, non-STSA trailing picture
+        public const uint TSA_N = 2;                   // Coded slice segment of a TSA picture
+        public const uint TSA_R = 3;                   // Coded slice segment of a TSA picture
+        public const uint STSA_N = 4;                  // Coded slice segment of a STSA picture
+        public const uint STSA_R = 5;                  // Coded slice segment of a STSA picture
+        public const uint RADL_N = 6;                  // Coded slice segment of a RADL picture
+        public const uint RADL_R = 7;                  // Coded slice segment of a RADL picture
+        public const uint RASL_N = 8;                  // Coded slice segment of a RASL picture
+        public const uint RASL_R = 9;                  // Coded slice segment of a RASL picture
+
+        public const uint RSV_VCL_N10 = 10;            // Reserved non-IRAP SLNR VCL NAL unit types
+        public const uint RSV_VCL_R11 = 11;            // Reserved non-IRAP sub-layer reference VCL NAL unit types
+        public const uint RSV_VCL_N12 = 12;            // Reserved non-IRAP SLNR VCL NAL unit types
+        public const uint RSV_VCL_R13 = 13;            // Reserved non-IRAP sub-layer reference VCL NAL unit types
+        public const uint RSV_VCL_N14 = 14;            // Reserved non-IRAP SLNR VCL NAL unit types
+        public const uint RSV_VCL_R15 = 15;            // Reserved non-IRAP sub-layer reference VCL NAL unit types
+
+        public const uint BLA_W_LP = 16;               // Coded slice segment of a BLA picture
+        public const uint BLA_W_RADL = 17;             // Coded slice segment of a BLA picture
+        public const uint BLA_N_LP = 18;               // Coded slice segment of a BLA picture
+        public const uint IDR_W_RADL = 19;             // Coded slice segment of an IDR picture
+        public const uint IDR_N_LP = 20;               // Coded slice segment of an IDR picture
+        public const uint CRA_NUT = 21;                // Coded slice segment of a CRA picture
+
+        public const uint RSV_IRAP_VCL22 = 22;         // Reserved IRAP VCL NAL unit types
+        public const uint RSV_IRAP_VCL23 = 23;         // Reserved IRAP VCL NAL unit types
+        public const uint RSV_VCL24 = 24;              // Reserved VCL NAL unit types
+        public const uint RSV_VCL25 = 25;              // Reserved VCL NAL unit types
+        public const uint RSV_VCL26 = 26;              // Reserved VCL NAL unit types
+        public const uint RSV_VCL27 = 27;              // Reserved VCL NAL unit types
+        public const uint RSV_VCL28 = 28;              // Reserved VCL NAL unit types
+        public const uint RSV_VCL29 = 29;              // Reserved VCL NAL unit types
+        public const uint RSV_VCL30 = 30;              // Reserved VCL NAL unit types
+        public const uint RSV_VCL31 = 31;              // Reserved VCL NAL unit types
+
+        public const uint VPS_NUT = 32;                // Video parameter set
+        public const uint SPS_NUT = 33;                // Sequence parameter set
+        public const uint PPS_NUT = 34;                // Picture parameter set
+        public const uint AUD_NUT = 35;                // Access unit delimiter
+        public const uint EOS_NUT = 36;                // End of sequence
+        public const uint EOB_NUT = 37;                // End of stream
+        public const uint FD_NUT = 38;                 // Filler data
+        public const uint PREFIX_SEI_NUT = 39;         // Prefix SEI
+        public const uint SUFFIX_SEI_NUT = 40;         // Suffix SEI
+
+        public const uint RSV_NVCL41 = 41;             // Reserved non-VCL NAL unit types
+        public const uint RSV_NVCL42 = 42;             // Reserved non-VCL NAL unit types
+        public const uint RSV_NVCL43 = 43;             // Reserved non-VCL NAL unit types
+        public const uint RSV_NVCL44 = 44;             // Reserved non-VCL NAL unit types
+        public const uint RSV_NVCL45 = 45;             // Reserved non-VCL NAL unit types
+        public const uint RSV_NVCL46 = 46;             // Reserved non-VCL NAL unit types
+        public const uint RSV_NVCL47 = 47;             // Reserved non-VCL NAL unit types
+        public const uint UNSPEC48 = 48;               // Unspecified NAL unit types
+        public const uint UNSPEC49 = 49;               // Unspecified NAL unit types
+        public const uint UNSPEC50 = 50;               // Unspecified NAL unit types
+        public const uint UNSPEC51 = 51;               // Unspecified NAL unit types
+        public const uint UNSPEC52 = 52;               // Unspecified NAL unit types
+        public const uint UNSPEC53 = 53;               // Unspecified NAL unit types
+        public const uint UNSPEC54 = 54;               // Unspecified NAL unit types
+        public const uint UNSPEC55 = 55;               // Unspecified NAL unit types
+        public const uint UNSPEC56 = 56;               // Unspecified NAL unit types
+        public const uint UNSPEC57 = 57;               // Unspecified NAL unit types
+        public const uint UNSPEC58 = 58;               // Unspecified NAL unit types
+        public const uint UNSPEC59 = 59;               // Unspecified NAL unit types
+        public const uint UNSPEC60 = 60;               // Unspecified NAL unit types
+        public const uint UNSPEC61 = 61;               // Unspecified NAL unit types
+        public const uint UNSPEC62 = 62;               // Unspecified NAL unit types
+        public const uint UNSPEC63 = 63;               // Unspecified NAL unit types
     }
 }
