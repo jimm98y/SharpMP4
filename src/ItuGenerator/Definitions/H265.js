@@ -1161,7 +1161,7 @@ temporal_motion_constrained_tile_sets( payloadSize ) {
   }  
  } else {  
   max_mcs_tier_level_idc_present_flag u(1) 
-  if( mcts_max_tier_level_idc_present_flag ) {  
+     if (max_mcs_tier_level_idc_present_flag ) {  
    mcts_max_tier_flag u(1) 
    mcts_max_level_idc u(8) 
   }  

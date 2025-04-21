@@ -33,6 +33,11 @@ namespace SharpH26X
             throw new NotImplementedException();
         }
 
+        public bool MoreDataInSliceSegmentHeaderExtension()
+        {
+            throw new NotImplementedException();
+        }
+
         public ItuStream(Stream stream)
         {
             this._stream = stream;

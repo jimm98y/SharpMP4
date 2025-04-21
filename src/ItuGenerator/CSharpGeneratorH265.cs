@@ -24,7 +24,11 @@ namespace ItuGenerator
         }
 
         public void FixClassParameters(ItuClass ituClass)
-        { 
+        {
+            if (ituClass.ClassName == "depth_rep_info_element")
+            {
+                ituClass.ClassParameter = "()"; // remove all "out" parameters
+            }
         }
 
         public string ReplaceParameter(string parameter)
@@ -71,6 +75,8 @@ namespace ItuGenerator
                     return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.LayerIdInNuh";
                 case "sub_pic_hrd_params_present_flag":
                     return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag";
+                case "frame_field_info_present_flag":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.FrameFieldInfoPresentFlag";
                 case "num_ref_idx_l1_active_minus1":
                     return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1";
                 case "num_short_term_ref_pic_sets":
@@ -84,7 +90,7 @@ namespace ItuGenerator
                 case "list_entry_l1":
                     return " (uint)Math.Ceiling( Math.Log2( H265Helpers.GetNumPicTotalCurr(context) ) ) ";
                 case "inter_layer_pred_layer_idc":
-                    return " (uint)Math.Ceiling( Math.Log2( H265Helpers.GetNumDirectRefLayers()[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ) ";
+                    return " (uint)Math.Ceiling( Math.Log2( H265Helpers.GetNumDirectRefLayers(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ) ";
                 case "ChromaArrayType":
                     return "(((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0)";
                 case "sei_ols_idx":
@@ -93,12 +99,16 @@ namespace ItuGenerator
                     return "((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiPartitioningSchemeIdx";
                 case "cm_octant_depth":
                     return "((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth";
+                case "lists_modification_present_flag":
+                    return "((H265Context)context).PicParameterSetRbsp.ListsModificationPresentFlag";
                 case "CpbCnt":
                     return "H265Helpers.GetCpbCnt(context)";
                 case "nal_initial_arrival_delay":
                     return "(((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1)";
                 case "cp_ref_voi":
                     return "((H265Context)context).VideoParameterSetAnnexfRbsp.Vps3dExtension.CpRefVoi";
+                case "cp_in_slice_segment_header_flag":
+                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag";
                 case "deblocking_filter_override_enabled_flag":
                     return "((H265Context)context).PicParameterSetRbsp.DeblockingFilterOverrideEnabledFlag";
                 case "pps_slice_chroma_qp_offsets_present_flag":
@@ -107,6 +117,8 @@ namespace ItuGenerator
                     return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.DefaultRefLayersActiveFlag";
                 case "max_one_active_ref_layer_flag":
                     return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.MaxOneActiveRefLayerFlag";
+                case "poc_lsb_not_present_flag":
+                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.PocLsbNotPresentFlag";
                 case "sample_adaptive_offset_enabled_flag":
                     return "((H265Context)context).SeqParameterSetRbsp.SampleAdaptiveOffsetEnabledFlag";
                 case "NumOutputLayerSets":
@@ -129,14 +141,48 @@ namespace ItuGenerator
                     return "((H265Context)context).PicParameterSetRbsp.WeightedBipredFlag";
                 case "pps_loop_filter_across_slices_enabled_flag":
                     return "((H265Context)context).PicParameterSetRbsp.PpsLoopFilterAcrossSlicesEnabledFlag";
+                case "entropy_coding_sync_enabled_flag":
+                    return "((H265Context)context).PicParameterSetRbsp.EntropyCodingSyncEnabledFlag";
                 case "poc_reset_info_present_flag":
                     return "((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.PocResetInfoPresentFlag";
+                case "output_flag_present_flag":
+                    return "((H265Context)context).PicParameterSetRbsp.OutputFlagPresentFlag";
                 case "sps_temporal_mvp_enabled_flag":
                     return "((H265Context)context).SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag";
                 case "sps_max_sub_layers_minus1":
                     return "((H265Context)context).SeqParameterSetRbsp.SpsMaxSubLayersMinus1";
                 case "separate_colour_plane_flag":
                     return "((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag";
+                case "long_term_ref_pics_present_flag":
+                    return "((H265Context)context).SeqParameterSetRbsp.LongTermRefPicsPresentFlag";
+                case "depthMaxValue":
+                    return "(( 1  <<  ( (int)((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8 ) ) - 1)";
+                case "NumViews":
+                    return "H265Helpers.GetNumViews(context)";
+                case "NumRefListLayers":
+                    return "H265Helpers.GetNumRefListLayers(context)";
+                case "NumDirectRefLayers":
+                    return "H265Helpers.GetNumDirectRefLayers(context)";
+                case "NumLayersInIdList":
+                    return "H265Helpers.GetNumLayersInIdList(context)";
+                case "NumIndependentLayers":
+                    return "H265Helpers.GetNumIndependentLayers(context)";
+                case "NumActiveRefLayerPics":
+                    return "H265Helpers.GetNumActiveRefLayerPics(context)";
+                case "NumDeltaPocs":
+                    return "H265Helpers.GetNumDeltaPocs(context)";
+                case "MaxTemporalId":
+                    return "H265Helpers.GetMaxTemporalId(context)";
+                case "OlsIdxToLsIdx":
+                    return "H265Helpers.GetOlsIdxToLsIdx(context)";
+                case "PicOrderCnt":
+                    return "H265Helpers.GetPicOrderCnt";
+                case "RefPicList0":
+                    return "H265Helpers.GetRefPicList0(context)";
+                case "RefPicList1":
+                    return "H265Helpers.GetRefPicList1(context)";
+                case "BspSchedCnt":
+                    return "H265Helpers.GetBspSchedCnt(context)";
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;
@@ -145,6 +191,9 @@ namespace ItuGenerator
 
         public string FixMissingParameters(ItuClass b, string parameter, string classType)
         {
+            if (classType == "depth_rep_info_element")
+                parameter = "()";
+
             return parameter;
         }
 
@@ -168,6 +217,7 @@ namespace ItuGenerator
             condition = condition.Replace("Max(", "(uint)Math.Max(");
             condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
             condition = condition.Replace("more_data_in_payload()", "stream.MoreDataInPayload()");
+            condition = condition.Replace("more_data_in_slice_segment_header_extension()", "stream.MoreDataInSliceSegmentHeaderExtension()");
             condition = condition.Replace("payload_extension_present()", "stream.PayloadExtensionPresent()");
             condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
             condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");

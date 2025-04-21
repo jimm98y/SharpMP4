@@ -94,9 +94,93 @@ namespace SharpH265
 
     public static class H265Helpers
     {
+        public static uint[][][] GetBspSchedCnt(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetGetRefPicList0(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetGetRefPicList1(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetPicOrderCnt(int picX)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetOlsIdxToLsIdx(IItuContext context)
+        {
+            // OlsIdxToLsIdx[ i ] =  ( i < NumLayerSets ) ? i : ( layer_set_idx_for_ols_minus1[ i ] + 1 ) 
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetMaxTemporalId(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetNumDeltaPocs(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetNumActiveRefLayerPics(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetNumIndependentLayers(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetNumLayersInIdList(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
         public static uint[] GetNumDirectRefLayers(IItuContext context)
         {
             throw new NotImplementedException();
+        }
+
+        public static uint[] GetNumRefListLayers(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetNumViews(IItuContext context)
+        {
+            throw new NotImplementedException();
+            /*
+            NumViews = 1 
+for( i = 0; i  <=  MaxLayersMinus1; i++ ) { 
+ lId = layer_id_in_nuh[ i ] 
+ for( smIdx= 0, j = 0; smIdx < 16; smIdx++ ) { 
+  if( scalability_mask_flag[ smIdx ] ) 
+   ScalabilityId[ i ][ smIdx ] = dimension_id[ i ][ j++ ] 
+  else 
+   ScalabilityId[ i ][ smIdx ] = 0 
+ } 
+ DepthLayerFlag[ lId ] = ScalabilityId[ i ][ 0 ] 
+ ViewOrderIdx[ lId ] = ScalabilityId[ i ][ 1 ] 
+ DependencyId[ lId ] = ScalabilityId[ i ][ 2 ]
+ AuxId[ lId ] = ScalabilityId[ i ][ 3 ] 
+ if( i > 0 ) { 
+  newViewFlag = 1 
+  for( j = 0; j < i; j++ ) 
+   if( ViewOrderIdx[ lId ]  = =  ViewOrderIdx[ layer_id_in_nuh[ j ] ] ) 
+    newViewFlag = 0 
+  NumViews  +=  newViewFlag 
+ } 
+} 
+             */
         }
 
         public static uint GetCpbCnt(IItuContext context)
