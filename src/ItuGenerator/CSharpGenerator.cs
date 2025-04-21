@@ -1054,6 +1054,13 @@ namespace Sharp{type}
         private string BuildField(ItuClass ituClass, ItuField field)
         {
             string type = GetCSharpType(field);
+            if(ituClass.AddedFields != null && ituClass.AddedFields.FirstOrDefault(x => x.Name == field.Name) != null)
+            {
+                // NumOutputLayerSets - adding a calculated field as a property
+                if (string.IsNullOrEmpty(field.Type))
+                    type = GetCSharpTypeMapping()[ituClass.AddedFields.FirstOrDefault(x => x.Name == field.Name).Type];
+            }
+
             string defaultInitializer = specificGenerator.GetFieldDefaultValue(field);
             string initializer = string.IsNullOrEmpty(defaultInitializer) ? "" : $"= {defaultInitializer}";
 
@@ -1170,6 +1177,7 @@ namespace Sharp{type}
                             string variable = part.Substring(0, variableIndex).TrimStart(conditionChars).Trim();
                             if(variable == "NumDepthViews")
                             {
+                                // h264
                                 var f = new ItuField() { Name = variable, Type = "u(32)" };
                                 AddAndResolveDuplicates(b, ret, f);
                                 b.AddedFields.Add(f);
@@ -1244,7 +1252,16 @@ namespace Sharp{type}
         {
             if (string.IsNullOrEmpty(field.Type))
             {
-                if (!string.IsNullOrEmpty(field.Increment))
+                if (field.Name == "NumOutputLayerSets")
+                {
+                    if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
+                    {
+                        // h265
+                        var f = new ItuField() { Name = field.Name, Type = "u(32)" };
+                        b.AddedFields.Add(f);
+                    }
+                }
+                else if (!string.IsNullOrEmpty(field.Increment))
                 {
                     if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null && b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
                     {
@@ -1252,7 +1269,7 @@ namespace Sharp{type}
                     }
                     return;
                 }
-                else if(!string.IsNullOrEmpty(field.Value) && b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
+                else if (!string.IsNullOrEmpty(field.Value) && b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
                     if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                     {
@@ -1260,7 +1277,7 @@ namespace Sharp{type}
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "bool", FieldArray = field.FieldArray });
                         }
-                        else if(field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel" 
+                        else if (field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel"
                             // h265
                             || field.Name == "numComps")
                         {
@@ -1299,7 +1316,7 @@ namespace Sharp{type}
                         field.ClassType = field.Name;
                         field.Name = $"{name}{index}";
                     }
-                    else if(!name.StartsWith("out") && name != "NumDepthViews")
+                    else if(!name.StartsWith("out") && name != "NumDepthViews" && name != "NumOutputLayerSets")
                     {
                         // just log a warning for now
                         Debug.WriteLine($"--Field {field.Name} already exists in {b.ClassName} class. Type: {field.Type}, Value: {field.Value}");

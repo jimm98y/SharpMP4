@@ -94,6 +94,107 @@ namespace SharpH265
 
     public static class H265Helpers
     {
+        public static uint[] GetNumDirectRefLayers(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetCpbCnt(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetNumPicTotalCurr(IItuContext context)
+        {
+            throw new NotImplementedException();
+            /*
+            StRefPicSet stRpsIdx;
+            if(((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.ShortTermRefPicSetSpsFlag == 0)
+            {
+                stRpsIdx = ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.StRefPicSet;
+            }
+            else
+            {
+                stRpsIdx = ((H265Context)context).SeqParameterSetRbsp.StRefPicSet[short_term_ref_pic_set_idx];
+            }
+
+            if (inter_ref_pic_set_prediction_flag == 0)
+            {
+                NumNegativePics[stRpsIdx] = num_negative_pics;
+            }
+            else
+            {
+                int RefRpsIdx = stRpsIdx - (delta_idx_minus1 + 1);
+                int deltaRps = (1 - 2 * delta_rps_sign) * (abs_delta_rps_minus1 + 1);
+
+                int i = 0;
+                for (int j = NumPositivePics[RefRpsIdx] - 1; j >= 0; j--)
+                {
+                    int dPoc = DeltaPocS1[RefRpsIdx][j] + deltaRps;
+                    if (dPoc < 0 && use_delta_flag[NumNegativePics[RefRpsIdx] + j])
+                    {
+                        DeltaPocS0[stRpsIdx][i] = dPoc;
+                        UsedByCurrPicS0[stRpsIdx][i++] = used_by_curr_pic_flag[NumNegativePics[RefRpsIdx] + j];
+                    }
+                }
+                if (deltaRps < 0 && use_delta_flag[NumDeltaPocs[RefRpsIdx]])
+                {
+                    DeltaPocS0[stRpsIdx][i] = deltaRps;
+                    UsedByCurrPicS0[stRpsIdx][i++] = used_by_curr_pic_flag[NumDeltaPocs[RefRpsIdx]];
+                }
+                for (int j = 0; j < NumNegativePics[RefRpsIdx]; j++)
+                {
+                    int dPoc = DeltaPocS0[RefRpsIdx][j] + deltaRps;
+                    if (dPoc < 0 && use_delta_flag[j])
+                    {
+                        DeltaPocS0[stRpsIdx][i] = dPoc;
+                        UsedByCurrPicS0[stRpsIdx][i++] = used_by_curr_pic_flag[j];
+                    }
+                }
+                NumNegativePics[stRpsIdx] = i;
+                i = 0;
+                for (int j = NumNegativePics[RefRpsIdx] - 1; j >= 0; j--)
+                {
+                    int dPoc = DeltaPocS0[RefRpsIdx][j] + deltaRps;
+                    if (dPoc > 0 && use_delta_flag[j])
+                    {
+                        DeltaPocS1[stRpsIdx][i] = dPoc;
+                        UsedByCurrPicS1[stRpsIdx][i++] = used_by_curr_pic_flag[j];
+                    }
+                }
+                if (deltaRps > 0 && use_delta_flag[NumDeltaPocs[RefRpsIdx]])
+                {
+                    DeltaPocS1[stRpsIdx][i] = deltaRps;
+                    UsedByCurrPicS1[stRpsIdx][i++] = used_by_curr_pic_flag[NumDeltaPocs[RefRpsIdx]];
+                }
+                for (int j = 0; j < NumPositivePics[RefRpsIdx]; j++)
+                {
+                    int dPoc = DeltaPocS1[RefRpsIdx][j] + deltaRps;
+                    if (dPoc > 0 && use_delta_flag[NumNegativePics[RefRpsIdx] + j])
+                    {
+                        DeltaPocS1[stRpsIdx][i] = dPoc;
+                        UsedByCurrPicS1[stRpsIdx][i++] = used_by_curr_pic_flag[NumNegativePics[RefRpsIdx] + j];
+                    }
+                }
+                NumPositivePics[stRpsIdx] = i;
+            }
+
+            uint NumPicTotalCurr = 0;
+            for (int i = 0; i < NumNegativePics[CurrRpsIdx]; i++)
+                if (UsedByCurrPicS0[CurrRpsIdx][i])
+                    NumPicTotalCurr++;
+            for (int i = 0; i < NumPositivePics[CurrRpsIdx]; i++)
+                if (UsedByCurrPicS1[CurrRpsIdx][i])
+                    NumPicTotalCurr++;
+            for (int i = 0; i < num_long_term_sps + num_long_term_pics; i++)
+                if (UsedByCurrPicLt[i])
+                    NumPicTotalCurr++;
+            if (pps_curr_pic_ref_enabled_flag)
+                NumPicTotalCurr++;
+            return NumPicTotalCurr;
+            */
+        }
+
         public static int[] GetMaxSubLayersInLayerSetMinus1(IItuContext context)
         {
             int[] LayerIdxInVps = new int[Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];

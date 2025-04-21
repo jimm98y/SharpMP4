@@ -23,6 +23,16 @@ namespace SharpH26X
 
         private bool _disposedValue;
 
+        public bool PayloadExtensionPresent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool MoreDataInPayload()
+        {
+            throw new NotImplementedException();
+        }
+
         public ItuStream(Stream stream)
         {
             this._stream = stream;
