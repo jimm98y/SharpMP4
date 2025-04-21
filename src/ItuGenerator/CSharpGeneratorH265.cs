@@ -7,7 +7,7 @@ namespace ItuGenerator
         public string PreprocessDefinitionsFile(string definitions)
         {
             definitions = definitions
-                            .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
+                            .Replace("intrinsic_params_equal_flag ? 0 : numViewsMinus1", "(intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1)")
                             .Replace("delta_dlt( i )", "delta_dlt()")
                             .Replace("_flag ?", "_flag != 0 ? ")
                             .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
@@ -61,6 +61,8 @@ namespace ItuGenerator
                     return "(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "num_ref_idx_l0_active_minus1":
                     return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1";
+                case "num_cp":
+                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.Vps3dExtension.NumCp";
                 case "slice_type":
                     return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType";
                 case "nuh_layer_id":
@@ -89,6 +91,10 @@ namespace ItuGenerator
                     return " (uint)Math.Ceiling( Math.Log2( H265Helpers.GetNumPicTotalCurr(context) ) ) ";
                 case "list_entry_l1":
                     return " (uint)Math.Ceiling( Math.Log2( H265Helpers.GetNumPicTotalCurr(context) ) ) ";
+                case "NumPicTotalCurr":
+                    return "H265Helpers.GetNumPicTotalCurr(context)";
+                case "NumOutputLayersInOutputLayerSet":
+                    return "H265Helpers.GetNumOutputLayersInOutputLayerSet(context)";
                 case "inter_layer_pred_layer_idc":
                     return " (uint)Math.Ceiling( Math.Log2( H265Helpers.GetNumDirectRefLayers(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ) ";
                 case "ChromaArrayType":
@@ -177,12 +183,54 @@ namespace ItuGenerator
                     return "H265Helpers.GetOlsIdxToLsIdx(context)";
                 case "PicOrderCnt":
                     return "H265Helpers.GetPicOrderCnt";
+                case "pic_layer_id":
+                    return "H265Helpers.GetPicLayerId";
                 case "RefPicList0":
                     return "H265Helpers.GetRefPicList0(context)";
                 case "RefPicList1":
                     return "H265Helpers.GetRefPicList1(context)";
                 case "BspSchedCnt":
                     return "H265Helpers.GetBspSchedCnt(context)";
+                case "NecessaryLayerFlag":
+                    return "H265Helpers.GetNecessaryLayerFlag(context)";
+                case "IdDirectRefLayer":
+                    return "H265Helpers.GetIdDirectRefLayer(context)";
+                case "vclInitialArrivalDelayPresent":
+                    return "H265Helpers.GetVclInitialArrivalDelayPresent(context)";
+                case "LayerSetLayerIdList":
+                    return "H265Helpers.GetLayerSetLayerIdList(context)";
+                case "LayerIdxInVps":
+                    return "H265Helpers.GetLayerIdxInVps(context)";
+                case "OlsHighestOutputLayerId":
+                    return "H265Helpers.GetOlsHighestOutputLayerId(context)";
+                case "ViewOIdxList":
+                    return "H265Helpers.GetViewOIdxList(context)";
+                case "inCmpPredAvailFlag":
+                    return "H265Helpers.GetInCmpPredAvailFlag(context)";
+                case "nalInitialArrivalDelayPresent":
+                    return "H265Helpers.GetNalInitialArrivalDelayPresent(context)";
+                case "ViewIdx":
+                    return "H265Helpers.GetViewOrderIdx(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]";
+                case "DepthFlag":
+                    return "H265Helpers.GetDepthLayerFlag(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]";
+                case "defaultOutputLayerIdc":
+                    return "Math.Min( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.DefaultOutputLayerIdc, 2 )";
+                case "PartNumY":
+                    return "(1  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)";
+                case "numViewsMinus1":
+                    return "(((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0)";
+                case "NalHrdBpPresentFlag":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag";
+                case "VclHrdBpPresentFlag":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag";
+                case "CpbDpbDelaysPresentFlag":
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0)";
+                case "PocMsbValRequiredFlag":
+                    return "((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && H265Helpers.GetNumDirectRefLayers(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ))";
+                case "CurrPic":
+                    return "H265Helpers.GetCurrPic(context)";
+                case "RefRpsIdx":
+                    return "H265Helpers.GetRefRpsIdx(context)";
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;

@@ -632,7 +632,7 @@ sei_payload( payloadType, payloadSize ) {
   else if( payloadType == 47 )  
    display_orientation( payloadSize )  
   else if( payloadType == 56 )  
-   green_metadata( payloadsize ) /* specified in ISO/IEC 23001-11 */  
+   green_metadata( payloadSize ) /* specified in ISO/IEC 23001-11 */  
   else if( payloadType == 128 )  
    structure_of_pictures_info( payloadSize )  
   else if( payloadType == 129 )  
@@ -1250,7 +1250,7 @@ colour_remapping_info( payloadSize ) {
  }  
 } 
 
-deinterlaced_field_indentification( payloadSize ) { 
+deinterlaced_field_identification( payloadSize ) { 
 deinterlaced_picture_source_parity_flag  u(1) 
 }
 

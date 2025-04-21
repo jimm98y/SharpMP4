@@ -99,7 +99,67 @@ namespace SharpH265
             throw new NotImplementedException();
         }
 
-        public static uint GetGetRefPicList0(IItuContext context)
+        public static uint[][] GetIdDirectRefLayer(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[][] GetNecessaryLayerFlag(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetLayerIdxInVps(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetRefPicList1(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetNumOutputLayersInOutputLayerSet(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetOlsHighestOutputLayerId(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetLayerSetLayerIdList(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetVclInitialArrivalDelayPresent(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetNalInitialArrivalDelayPresent(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetCurrPic(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetRefRpsIdx(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetPicLayerId(uint pic)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetRefPicList0(IItuContext context)
         {
             throw new NotImplementedException();
         }
@@ -109,7 +169,7 @@ namespace SharpH265
             throw new NotImplementedException();
         }
 
-        public static uint GetPicOrderCnt(int picX)
+        public static uint GetPicOrderCnt(uint picX)
         {
             throw new NotImplementedException();
         }
@@ -136,6 +196,26 @@ namespace SharpH265
         }
 
         public static uint GetNumIndependentLayers(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetInCmpPredAvailFlag(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetViewOrderIdx(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetViewOIdxList(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetDepthLayerFlag(IItuContext context)
         {
             throw new NotImplementedException();
         }

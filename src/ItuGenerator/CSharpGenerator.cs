@@ -549,7 +549,27 @@ namespace Sharp{type}
                     return "stream.ReadBits(size, 8, ";
                 default:
                     if (ituField.Type == null)
-                        return $"###value### new {ituField.ClassType.ToPropertyCase()}{specificGenerator.FixMissingParameters(b, ituField.Parameter, ituField.ClassType)} ###size### stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, ";
+                    {
+
+                        string par = specificGenerator.FixMissingParameters(b, ituField.Parameter, ituField.ClassType);
+                        string[] parameters = par.TrimStart('(').TrimEnd(')').Split(new char[] { ',' });
+                        for (int i = 0; i < parameters.Length; i++)
+                        {
+                            if (!parameters[i].Contains(' ') && !parameters[i].Contains('\"'))
+                                parameters[i] = specificGenerator.ReplaceParameter(parameters[i].Trim());
+                            else
+                            {
+                                string[] parts = parameters[i].Split(new char[] { ' ' });
+                                for (int j = 0; j < parts.Length; j++)
+                                {
+                                    parts[j] = specificGenerator.ReplaceParameter(parts[j].Trim());
+                                }
+                                parameters[i] = string.Join(' ', parts);
+                            }
+                        }
+                        par = $"({string.Join(", ", parameters)})";
+                        return $"###value### new {ituField.ClassType.ToPropertyCase()}{par} ###size### stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, ";
+                    }
                     throw new NotImplementedException();
             }
         }      
