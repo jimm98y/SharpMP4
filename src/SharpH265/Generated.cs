@@ -4947,13 +4947,13 @@ buffering_period( payloadSize ) {
                 this.nal_initial_alt_cpb_removal_offset = new uint[H265Helpers.GetCpbCnt(context)];
                 for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, nal_initial_cpb_removal_delay, out this.nal_initial_cpb_removal_delay[i]);
-                    size += stream.ReadUnsignedIntVariable(size, nal_initial_cpb_removal_offset, out this.nal_initial_cpb_removal_offset[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_cpb_removal_delay[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_cpb_removal_offset[i]);
 
                     if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 || irap_cpb_params_present_flag != 0)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, nal_initial_alt_cpb_removal_delay, out this.nal_initial_alt_cpb_removal_delay[i]);
-                        size += stream.ReadUnsignedIntVariable(size, nal_initial_alt_cpb_removal_offset, out this.nal_initial_alt_cpb_removal_offset[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_alt_cpb_removal_delay[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_alt_cpb_removal_offset[i]);
                     }
                 }
             }
@@ -4967,13 +4967,13 @@ buffering_period( payloadSize ) {
                 this.vcl_initial_alt_cpb_removal_offset = new uint[H265Helpers.GetCpbCnt(context)];
                 for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, vcl_initial_cpb_removal_delay, out this.vcl_initial_cpb_removal_delay[i]);
-                    size += stream.ReadUnsignedIntVariable(size, vcl_initial_cpb_removal_offset, out this.vcl_initial_cpb_removal_offset[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_cpb_removal_delay[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_cpb_removal_offset[i]);
 
                     if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 || irap_cpb_params_present_flag != 0)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, vcl_initial_alt_cpb_removal_delay, out this.vcl_initial_alt_cpb_removal_delay[i]);
-                        size += stream.ReadUnsignedIntVariable(size, vcl_initial_alt_cpb_removal_offset, out this.vcl_initial_alt_cpb_removal_offset[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_alt_cpb_removal_delay[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_alt_cpb_removal_offset[i]);
                     }
                 }
             }
@@ -5011,13 +5011,13 @@ buffering_period( payloadSize ) {
 
                 for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
                 {
-                    size += stream.WriteUnsignedIntVariable(nal_initial_cpb_removal_delay[i], this.nal_initial_cpb_removal_delay[i]);
-                    size += stream.WriteUnsignedIntVariable(nal_initial_cpb_removal_offset[i], this.nal_initial_cpb_removal_offset[i]);
+                    size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_cpb_removal_delay[i]);
+                    size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_cpb_removal_offset[i]);
 
                     if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 || irap_cpb_params_present_flag != 0)
                     {
-                        size += stream.WriteUnsignedIntVariable(nal_initial_alt_cpb_removal_delay[i], this.nal_initial_alt_cpb_removal_delay[i]);
-                        size += stream.WriteUnsignedIntVariable(nal_initial_alt_cpb_removal_offset[i], this.nal_initial_alt_cpb_removal_offset[i]);
+                        size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_alt_cpb_removal_delay[i]);
+                        size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_alt_cpb_removal_offset[i]);
                     }
                 }
             }
@@ -5027,13 +5027,13 @@ buffering_period( payloadSize ) {
 
                 for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
                 {
-                    size += stream.WriteUnsignedIntVariable(vcl_initial_cpb_removal_delay[i], this.vcl_initial_cpb_removal_delay[i]);
-                    size += stream.WriteUnsignedIntVariable(vcl_initial_cpb_removal_offset[i], this.vcl_initial_cpb_removal_offset[i]);
+                    size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_cpb_removal_delay[i]);
+                    size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_cpb_removal_offset[i]);
 
                     if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 || irap_cpb_params_present_flag != 0)
                     {
-                        size += stream.WriteUnsignedIntVariable(vcl_initial_alt_cpb_removal_delay[i], this.vcl_initial_alt_cpb_removal_delay[i]);
-                        size += stream.WriteUnsignedIntVariable(vcl_initial_alt_cpb_removal_offset[i], this.vcl_initial_alt_cpb_removal_offset[i]);
+                        size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_alt_cpb_removal_delay[i]);
+                        size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_alt_cpb_removal_offset[i]);
                     }
                 }
             }
@@ -5155,7 +5155,7 @@ pic_timing( payloadSize ) {
 
                         if (du_common_cpb_removal_delay_flag == 0 && i < num_decoding_units_minus1)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, du_cpb_removal_delay_increment_minus1, out this.du_cpb_removal_delay_increment_minus1[i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1), out this.du_cpb_removal_delay_increment_minus1[i]);
                         }
                     }
                 }
@@ -5204,7 +5204,7 @@ pic_timing( payloadSize ) {
 
                         if (du_common_cpb_removal_delay_flag == 0 && i < num_decoding_units_minus1)
                         {
-                            size += stream.WriteUnsignedIntVariable(du_cpb_removal_delay_increment_minus1[i], this.du_cpb_removal_delay_increment_minus1[i]);
+                            size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1), this.du_cpb_removal_delay_increment_minus1[i]);
                         }
                     }
                 }
@@ -6235,7 +6235,7 @@ tone_mapping_info( payloadSize ) {
                     this.start_of_coded_interval = new uint[(1 << (int)target_bit_depth)];
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, start_of_coded_interval, out this.start_of_coded_interval[i]);
+                        size += stream.ReadUnsignedIntVariable(size, ((coded_data_bit_depth + 7) >> 3) << 3, out this.start_of_coded_interval[i]);
                     }
                 }
                 else if (tone_map_model_id == 3)
@@ -6246,8 +6246,8 @@ tone_mapping_info( payloadSize ) {
                     this.target_pivot_value = new uint[num_pivots];
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, coded_pivot_value, out this.coded_pivot_value[i]);
-                        size += stream.ReadUnsignedIntVariable(size, target_pivot_value, out this.target_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, ((coded_data_bit_depth + 7) >> 3) << 3, out this.coded_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, ((target_bit_depth + 7) >> 3) << 3, out this.target_pivot_value[i]);
                     }
                 }
                 else if (tone_map_model_id == 4)
@@ -6308,7 +6308,7 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.WriteUnsignedIntVariable(start_of_coded_interval[i], this.start_of_coded_interval[i]);
+                        size += stream.WriteUnsignedIntVariable(((coded_data_bit_depth + 7) >> 3) << 3, this.start_of_coded_interval[i]);
                     }
                 }
                 else if (tone_map_model_id == 3)
@@ -6317,8 +6317,8 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable(coded_pivot_value[i], this.coded_pivot_value[i]);
-                        size += stream.WriteUnsignedIntVariable(target_pivot_value[i], this.target_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable(((coded_data_bit_depth + 7) >> 3) << 3, this.coded_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable(((target_bit_depth + 7) >> 3) << 3, this.target_pivot_value[i]);
                     }
                 }
                 else if (tone_map_model_id == 4)
@@ -7406,7 +7406,7 @@ time_code( payloadSize ) {
 
                     if (time_offset_length[i] > 0)
                     {
-                        size += stream.ReadSignedIntVariable(size, time_offset_value, out this.time_offset_value[i]);
+                        size += stream.ReadSignedIntVariable(size, time_offset_length[i], out this.time_offset_value[i]);
                     }
                 }
             }
@@ -7477,7 +7477,7 @@ time_code( payloadSize ) {
 
                     if (time_offset_length[i] > 0)
                     {
-                        size += stream.WriteSignedIntVariable(time_offset_value[i], this.time_offset_value[i]);
+                        size += stream.WriteSignedIntVariable(time_offset_length[i], this.time_offset_value[i]);
                     }
                 }
             }
@@ -10911,7 +10911,7 @@ vps_extension() {
                     this.dimension_id[i] = new uint[NumScalabilityTypes];
                     for (j = 0; j < NumScalabilityTypes; j++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, dimension_id, out this.dimension_id[i][j]);
+                        size += stream.ReadUnsignedIntVariable(size, (dimension_id_len_minus1 + 1), out this.dimension_id[i][j]);
                     }
                 }
             }
@@ -10923,7 +10923,7 @@ vps_extension() {
                 this.view_id_val = new uint[H265Helpers.GetNumViews(context)];
                 for (i = 0; i < H265Helpers.GetNumViews(context); i++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, view_id_val, out this.view_id_val[i]);
+                    size += stream.ReadUnsignedIntVariable(size, view_id_len, out this.view_id_val[i]);
                 }
             }
 
@@ -11169,7 +11169,7 @@ vps_extension() {
 
                     for (j = 0; j < NumScalabilityTypes; j++)
                     {
-                        size += stream.WriteUnsignedIntVariable(dimension_id[i][j], this.dimension_id[i][j]);
+                        size += stream.WriteUnsignedIntVariable((dimension_id_len_minus1 + 1), this.dimension_id[i][j]);
                     }
                 }
             }
@@ -11180,7 +11180,7 @@ vps_extension() {
 
                 for (i = 0; i < H265Helpers.GetNumViews(context); i++)
                 {
-                    size += stream.WriteUnsignedIntVariable(view_id_val[i], this.view_id_val[i]);
+                    size += stream.WriteUnsignedIntVariable(view_id_len, this.view_id_val[i]);
                 }
             }
 

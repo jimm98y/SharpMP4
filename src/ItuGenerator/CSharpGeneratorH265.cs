@@ -231,6 +231,28 @@ namespace ItuGenerator
                     return "H265Helpers.GetCurrPic(context)";
                 case "RefRpsIdx":
                     return "H265Helpers.GetRefRpsIdx(context)";
+                case "time_offset_value":
+                    return "time_offset_length[i]";
+                case "nal_initial_cpb_removal_delay":
+                case "nal_initial_cpb_removal_offset":
+                case "nal_initial_alt_cpb_removal_delay":
+                case "nal_initial_alt_cpb_removal_offset":
+                case "vcl_initial_cpb_removal_delay":
+                case "vcl_initial_cpb_removal_offset":
+                case "vcl_initial_alt_cpb_removal_delay":
+                case "vcl_initial_alt_cpb_removal_offset":
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1)";
+                case "du_cpb_removal_delay_increment_minus1":
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1)";
+                case "start_of_coded_interval":
+                case "coded_pivot_value":
+                    return "( ( coded_data_bit_depth + 7 )  >>  3 )  <<  3";
+                case "target_pivot_value":
+                    return "( ( target_bit_depth + 7 )  >>  3 )  <<  3";
+                case "view_id_val":
+                    return "view_id_len";
+                case "dimension_id":
+                    return "(dimension_id_len_minus1 + 1)";
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;
