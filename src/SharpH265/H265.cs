@@ -99,7 +99,7 @@ namespace SharpH265
             int[] LayerIdxInVps = new int[Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];
             for (int i = 0; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
             {
-                LayerIdxInVps[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] = i;
+                LayerIdxInVps[((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.LayerIdInNuh[i]] = i;
             }
 
             int[] NumLayersInIdList = new int[((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
@@ -119,14 +119,14 @@ namespace SharpH265
                 NumLayersInIdList[i] = n;
             }
 
-            int[] MaxSubLayersInLayerSetMinus1 = new int[(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)];
-            for (int i = 0; i < (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++)
+            int[] MaxSubLayersInLayerSetMinus1 = new int[(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets)];
+            for (int i = 0; i < (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets); i++)
             {
                 int maxSlMinus1 = 0;
                 for (int k = 0; k < NumLayersInIdList[i]; k++)
                 {
                     int lId = MyLayerSetLayerIdList[i][k];
-                    maxSlMinus1 = (int)Math.Max(maxSlMinus1, ((H265Context)context).VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1[LayerIdxInVps[lId]]);
+                    maxSlMinus1 = (int)Math.Max(maxSlMinus1, ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.SubLayersVpsMaxMinus1[LayerIdxInVps[lId]]);
                 }
                 MaxSubLayersInLayerSetMinus1[i] = maxSlMinus1;
             }

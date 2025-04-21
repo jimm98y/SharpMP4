@@ -39,12 +39,40 @@ namespace ItuGenerator
                     return "(((H265Context)context).SeqParameterSetRbsp.BitDepthChromaMinus8 + 8)";
                 case "transform_skip_enabled_flag":
                     return "((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag";
+                case "num_extra_slice_header_bits":
+                    return "((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits";
                 case "pps_palette_predictor_initializer":
                     return "comp == 0 ? (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8)";
                 case "MaxLayersMinus1":
                     return "Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1)";
                 case "NumLayerSets":
-                    return "(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)";
+                    return "(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets)";
+                case "lt_ref_pic_poc_lsb_sps":
+                    return "(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
+                case "num_ref_idx_l0_active_minus1":
+                    return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1";
+                case "slice_type":
+                    return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType";
+                case "nuh_layer_id":
+                    return "((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId";
+                case "nal_unit_type":
+                    return "((H265Context)context).NalHeader.NalUnitHeader.NalUnitType";
+                case "vps_base_layer_internal_flag":
+                    return "((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag";
+                case "vps_num_hrd_parameters":
+                    return "((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters";
+                case "layer_id_in_nuh":
+                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.LayerIdInNuh";
+                case "sub_pic_hrd_params_present_flag":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag";
+                case "num_ref_idx_l1_active_minus1":
+                    return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1";
+                case "num_short_term_ref_pic_sets":
+                    return "((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets";
+                case "num_long_term_ref_pics_sps":
+                    return "((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps";
+                case "sub_pic_cpb_params_in_pic_timing_sei_flag":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag";
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;
