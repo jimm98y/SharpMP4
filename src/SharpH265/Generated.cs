@@ -16672,7 +16672,7 @@ slice_segment_header() {
             if (first_slice_segment_in_pic_flag == 0)
             {
 
-                if (dependent_slice_segments_enabled_flag != 0)
+                if (((H265Context)context).PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.dependent_slice_segment_flag);
                 }
@@ -16843,7 +16843,7 @@ slice_segment_header() {
                         size += stream.ReadUnsignedInt(size, 1, out this.mvd_l1_zero_flag);
                     }
 
-                    if (cabac_init_present_flag != 0)
+                    if (((H265Context)context).PicParameterSetRbsp.CabacInitPresentFlag != 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.cabac_init_flag);
                     }
@@ -16888,7 +16888,7 @@ slice_segment_header() {
                     size += stream.ReadSignedIntGolomb(size, out this.slice_cr_qp_offset);
                 }
 
-                if (chroma_qp_offset_list_enabled_flag != 0)
+                if (((H265Context)context).PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.cu_chroma_qp_offset_enabled_flag);
                 }
@@ -17012,7 +17012,7 @@ slice_segment_header() {
             if (first_slice_segment_in_pic_flag == 0)
             {
 
-                if (dependent_slice_segments_enabled_flag != 0)
+                if (((H265Context)context).PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag != 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.dependent_slice_segment_flag);
                 }
@@ -17174,7 +17174,7 @@ slice_segment_header() {
                         size += stream.WriteUnsignedInt(1, this.mvd_l1_zero_flag);
                     }
 
-                    if (cabac_init_present_flag != 0)
+                    if (((H265Context)context).PicParameterSetRbsp.CabacInitPresentFlag != 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.cabac_init_flag);
                     }
@@ -17218,7 +17218,7 @@ slice_segment_header() {
                     size += stream.WriteSignedIntGolomb(this.slice_cr_qp_offset);
                 }
 
-                if (chroma_qp_offset_list_enabled_flag != 0)
+                if (((H265Context)context).PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag != 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.cu_chroma_qp_offset_enabled_flag);
                 }

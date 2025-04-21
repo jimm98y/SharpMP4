@@ -39,6 +39,12 @@ namespace ItuGenerator
                     return "(((H265Context)context).SeqParameterSetRbsp.BitDepthChromaMinus8 + 8)";
                 case "transform_skip_enabled_flag":
                     return "((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag";
+                case "cabac_init_present_flag":
+                    return "((H265Context)context).PicParameterSetRbsp.CabacInitPresentFlag";
+                case "dependent_slice_segments_enabled_flag":
+                    return "((H265Context)context).PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag";
+                case "chroma_qp_offset_list_enabled_flag":
+                    return "((H265Context)context).PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag";
                 case "num_extra_slice_header_bits":
                     return "((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits";
                 case "pps_palette_predictor_initializer":
