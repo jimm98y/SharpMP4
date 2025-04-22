@@ -13558,7 +13558,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
                         this.colour_mapping_octants[k][m] = new ColourMappingOctants[2];
                         for (n = 0; n < 2; n++)
                         {
-                            this.colour_mapping_octants[k][m][n] = new ColourMappingOctants(inpDepth + 1, idxY + (1 << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2) * k * inpLength / 2, idxCb + m * inpLength / 2, idxCr + n * inpLength / 2, inpLength / 2);
+                            this.colour_mapping_octants[k][m][n] = new ColourMappingOctants(inpDepth + 1, idxY + (1u << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2) * k * inpLength / 2, idxCb + m * inpLength / 2, idxCr + n * inpLength / 2, inpLength / 2);
                             size += stream.ReadClass<ColourMappingOctants>(size, context, this.colour_mapping_octants[k][m][n]);
                         }
                     }
@@ -13567,11 +13567,11 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
             else
             {
 
-                this.coded_res_flag = new byte[(1 << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][];
-                this.res_coeff_q = new uint[(1 << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][];
-                this.res_coeff_r = new uint[(1 << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][];
-                this.res_coeff_s = new byte[(1 << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][];
-                for (i = 0; i < (1 << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2); i++)
+                this.coded_res_flag = new byte[(1u << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][];
+                this.res_coeff_q = new uint[(1u << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][];
+                this.res_coeff_r = new uint[(1u << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][];
+                this.res_coeff_s = new byte[(1u << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)][][];
+                for (i = 0; i < (1u << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2); i++)
                 {
                     idxShiftY = idxY + (i << (int)(((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth - inpDepth));
 
@@ -13644,7 +13644,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
             else
             {
 
-                for (i = 0; i < (1 << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2); i++)
+                for (i = 0; i < (1u << (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2); i++)
                 {
                     idxShiftY = idxY + (i << (int)(((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmOctantDepth - inpDepth));
 

@@ -222,7 +222,7 @@ namespace ItuGenerator
                 case "defaultOutputLayerIdc":
                     return "Math.Min( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.DefaultOutputLayerIdc, 2 )";
                 case "PartNumY":
-                    return "(1  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)";
+                    return "(1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)";
                 case "numViewsMinus1":
                     return "(((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MultiviewAcquisitionInfo != null ? ((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ScalableNesting.NestingNumLayersMinus1 : 0)";
                 case "NalHrdBpPresentFlag":
