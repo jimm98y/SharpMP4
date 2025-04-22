@@ -10911,7 +10911,7 @@ vps_extension() {
                     this.dimension_id[i] = new uint[NumScalabilityTypes];
                     for (j = 0; j < NumScalabilityTypes; j++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (dimension_id_len_minus1 + 1), out this.dimension_id[i][j]);
+                        size += stream.ReadUnsignedIntVariable(size, (dimension_id_len_minus1[i] + 1), out this.dimension_id[i][j]);
                     }
                 }
             }
@@ -11169,7 +11169,7 @@ vps_extension() {
 
                     for (j = 0; j < NumScalabilityTypes; j++)
                     {
-                        size += stream.WriteUnsignedIntVariable((dimension_id_len_minus1 + 1), this.dimension_id[i][j]);
+                        size += stream.WriteUnsignedIntVariable((dimension_id_len_minus1[i] + 1), this.dimension_id[i][j]);
                     }
                 }
             }
@@ -12346,7 +12346,7 @@ vps_vui_bsp_hrd_params() {
 
                                     if (((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 1)
                                     {
-                                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(vps_num_hrd_parameters + vps_num_add_hrd_params)), out this.bsp_hrd_idx[h][i][t][j][k]);
+                                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params)), out this.bsp_hrd_idx[h][i][t][j][k]);
                                     }
                                     size += stream.ReadUnsignedIntGolomb(size, out this.bsp_sched_idx[h][i][t][j][k]);
                                 }
@@ -12419,7 +12419,7 @@ vps_vui_bsp_hrd_params() {
 
                                     if (((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params > 1)
                                     {
-                                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(vps_num_hrd_parameters + vps_num_add_hrd_params)), this.bsp_hrd_idx[h][i][t][j][k]);
+                                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params)), this.bsp_hrd_idx[h][i][t][j][k]);
                                     }
                                     size += stream.WriteUnsignedIntGolomb(this.bsp_sched_idx[h][i][t][j][k]);
                                 }
@@ -13592,7 +13592,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
                             for (c = 0; c < 3; c++)
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.res_coeff_q[idxShiftY][idxCb][idxCr][j][c][i]);
-                                size += stream.ReadUnsignedIntVariable(size, ((uint)Math.Max(0, (10 + (8 + luma_bit_depth_cm_input_minus8) - (8 + luma_bit_depth_cm_output_minus8) - cm_res_quant_bits - (cm_delta_flc_bits_minus1 + 1)))), out this.res_coeff_r[idxShiftY][idxCb][idxCr][j][c][i]);
+                                size += stream.ReadUnsignedIntVariable(size, ((uint)Math.Max(0, (10 + (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmInputMinus8) - (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmOutputMinus8) - ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmResQuantBits - (((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmDeltaFlcBitsMinus1 + 1)))), out this.res_coeff_r[idxShiftY][idxCb][idxCr][j][c][i]);
 
                                 if (res_coeff_q[idxShiftY][idxCb][idxCr][j][c] != 0 ||
         res_coeff_r[idxShiftY][idxCb][idxCr][j][c] != 0)
@@ -13658,7 +13658,7 @@ colour_mapping_octants( inpDepth, idxY, idxCb, idxCr, inpLength ) {
                             for (c = 0; c < 3; c++)
                             {
                                 size += stream.WriteUnsignedIntGolomb(this.res_coeff_q[idxShiftY][idxCb][idxCr][j][c][i]);
-                                size += stream.WriteUnsignedIntVariable(((uint)Math.Max(0, (10 + (8 + luma_bit_depth_cm_input_minus8) - (8 + luma_bit_depth_cm_output_minus8) - cm_res_quant_bits - (cm_delta_flc_bits_minus1 + 1)))), this.res_coeff_r[idxShiftY][idxCb][idxCr][j][c][i]);
+                                size += stream.WriteUnsignedIntVariable(((uint)Math.Max(0, (10 + (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmInputMinus8) - (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmOutputMinus8) - ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmResQuantBits - (((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmDeltaFlcBitsMinus1 + 1)))), this.res_coeff_r[idxShiftY][idxCb][idxCr][j][c][i]);
 
                                 if (res_coeff_q[idxShiftY][idxCb][idxCr][j][c] != 0 ||
         res_coeff_r[idxShiftY][idxCb][idxCr][j][c] != 0)
@@ -14424,8 +14424,8 @@ overlay_info( payloadSize ) {
                         this.overlay_element_label_max[i] = new uint[num_overlay_elements_minus1[i] + 1];
                         for (j = 0; j <= num_overlay_elements_minus1[i]; j++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (overlay_element_label_min_max_length_minus8 + 8), out this.overlay_element_label_min[i][j]);
-                            size += stream.ReadUnsignedIntVariable(size, (overlay_element_label_min_max_length_minus8 + 8), out this.overlay_element_label_max[i][j]);
+                            size += stream.ReadUnsignedIntVariable(size, (overlay_element_label_value_length_minus8 + 8), out this.overlay_element_label_min[i][j]);
+                            size += stream.ReadUnsignedIntVariable(size, (overlay_element_label_value_length_minus8 + 8), out this.overlay_element_label_max[i][j]);
                         }
                     }
                 }
@@ -14506,8 +14506,8 @@ overlay_info( payloadSize ) {
 
                         for (j = 0; j <= num_overlay_elements_minus1[i]; j++)
                         {
-                            size += stream.WriteUnsignedIntVariable((overlay_element_label_min_max_length_minus8 + 8), this.overlay_element_label_min[i][j]);
-                            size += stream.WriteUnsignedIntVariable((overlay_element_label_min_max_length_minus8 + 8), this.overlay_element_label_max[i][j]);
+                            size += stream.WriteUnsignedIntVariable((overlay_element_label_value_length_minus8 + 8), this.overlay_element_label_min[i][j]);
+                            size += stream.WriteUnsignedIntVariable((overlay_element_label_value_length_minus8 + 8), this.overlay_element_label_max[i][j]);
                         }
                     }
                 }
@@ -14744,7 +14744,7 @@ three_dimensional_reference_displays_extension_flag u(1)
                 if (ref_viewing_distance_flag != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_viewing_distance[i]);
-                    size += stream.ReadUnsignedIntVariable(size, (exponent_ref_viewing_distance[i] == 0 ? Math.Max(0, prec_ref_viewing_distance - 30) : Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_distance - 31)), out this.mantissa_ref_viewing_distance[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_ref_viewing_distance[i] == 0 ? Math.Max(0, prec_ref_viewing_dist - 30) : Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_dist - 31)), out this.mantissa_ref_viewing_distance[i]);
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.additional_shift_present_flag[i]);
 
@@ -14782,7 +14782,7 @@ three_dimensional_reference_displays_extension_flag u(1)
                 if (ref_viewing_distance_flag != 0)
                 {
                     size += stream.WriteUnsignedInt(6, this.exponent_ref_viewing_distance[i]);
-                    size += stream.WriteUnsignedIntVariable((exponent_ref_viewing_distance[i] == 0 ? Math.Max(0, prec_ref_viewing_distance - 30) : Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_distance - 31)), this.mantissa_ref_viewing_distance[i]);
+                    size += stream.WriteUnsignedIntVariable((exponent_ref_viewing_distance[i] == 0 ? Math.Max(0, prec_ref_viewing_dist - 30) : Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_dist - 31)), this.mantissa_ref_viewing_distance[i]);
                 }
                 size += stream.WriteUnsignedInt(1, this.additional_shift_present_flag[i]);
 
@@ -15271,11 +15271,11 @@ multiview_acquisition_info( payloadSize ) {
 
                             size += stream.ReadUnsignedInt(size, 1, out this.sign_r[i][j][k]);
                             size += stream.ReadUnsignedInt(size, 6, out this.exponent_r[i][j][k]);
-                            size += stream.ReadUnsignedIntVariable(size, (exponent_r[i] == 0 ? Math.Max(0, prec_rotation_param - 30) : Math.Max(0, exponent_r[i] + prec_rotation_param - 31)), out this.mantissa_r[i][j][k]);
+                            size += stream.ReadUnsignedIntVariable(size, (exponent_r[i][j][k] == 0 ? Math.Max(0, prec_rotation_param - 30) : Math.Max(0, exponent_r[i][j][k] + prec_rotation_param - 31)), out this.mantissa_r[i][j][k]);
                         }
                         size += stream.ReadUnsignedInt(size, 1, out this.sign_t[i][j]);
                         size += stream.ReadUnsignedInt(size, 6, out this.exponent_t[i][j]);
-                        size += stream.ReadUnsignedIntVariable(size, (exponent_t[i] == 0 ? Math.Max(0, prec_translation_param - 30) : Math.Max(0, exponent_t[i] + prec_translation_param - 31)), out this.mantissa_t[i][j]);
+                        size += stream.ReadUnsignedIntVariable(size, (exponent_t[i][j] == 0 ? Math.Max(0, prec_translation_param - 30) : Math.Max(0, exponent_t[i][j] + prec_translation_param - 31)), out this.mantissa_t[i][j]);
                     }
                 }
             }
@@ -15339,11 +15339,11 @@ multiview_acquisition_info( payloadSize ) {
 
                             size += stream.WriteUnsignedInt(1, this.sign_r[i][j][k]);
                             size += stream.WriteUnsignedInt(6, this.exponent_r[i][j][k]);
-                            size += stream.WriteUnsignedIntVariable((exponent_r[i] == 0 ? Math.Max(0, prec_rotation_param - 30) : Math.Max(0, exponent_r[i] + prec_rotation_param - 31)), this.mantissa_r[i][j][k]);
+                            size += stream.WriteUnsignedIntVariable((exponent_r[i][j][k] == 0 ? Math.Max(0, prec_rotation_param - 30) : Math.Max(0, exponent_r[i][j][k] + prec_rotation_param - 31)), this.mantissa_r[i][j][k]);
                         }
                         size += stream.WriteUnsignedInt(1, this.sign_t[i][j]);
                         size += stream.WriteUnsignedInt(6, this.exponent_t[i][j]);
-                        size += stream.WriteUnsignedIntVariable((exponent_t[i] == 0 ? Math.Max(0, prec_translation_param - 30) : Math.Max(0, exponent_t[i] + prec_translation_param - 31)), this.mantissa_t[i][j]);
+                        size += stream.WriteUnsignedIntVariable((exponent_t[i][j] == 0 ? Math.Max(0, prec_translation_param - 30) : Math.Max(0, exponent_t[i][j] + prec_translation_param - 31)), this.mantissa_t[i][j]);
                     }
                 }
             }
@@ -16743,12 +16743,12 @@ slice_segment_header() {
 
                                 if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 1)
                                 {
-                                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(num_long_term_ref_pics_sps)), out this.lt_idx_sps[i]);
+                                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps)), out this.lt_idx_sps[i]);
                                 }
                             }
                             else
                             {
-                                size += stream.ReadUnsignedIntVariable(size, (log2_max_pic_order_cnt_lsb_minus4 + 4), out this.poc_lsb_lt[i]);
+                                size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4), out this.poc_lsb_lt[i]);
                                 size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_lt_flag[i]);
                             }
                             size += stream.ReadUnsignedInt(size, 1, out this.delta_poc_msb_present_flag[i]);
@@ -17076,12 +17076,12 @@ slice_segment_header() {
 
                                 if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 1)
                                 {
-                                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(num_long_term_ref_pics_sps)), this.lt_idx_sps[i]);
+                                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps)), this.lt_idx_sps[i]);
                                 }
                             }
                             else
                             {
-                                size += stream.WriteUnsignedIntVariable((log2_max_pic_order_cnt_lsb_minus4 + 4), this.poc_lsb_lt[i]);
+                                size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4), this.poc_lsb_lt[i]);
                                 size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_lt_flag[i]);
                             }
                             size += stream.WriteUnsignedInt(1, this.delta_poc_msb_present_flag[i]);
@@ -17620,7 +17620,7 @@ alternative_depth_info( payloadSize ) {
 
                                     size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_r[i][j][k]);
                                     size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_r[i][j][k]);
-                                    size += stream.ReadUnsignedIntVariable(size, (exp_gvd_r[i] == 0 ? Math.Max(0, prec_gvd_rotation_param - 30) : Math.Max(0, exp_gvd_r[i] + prec_gvd_rotation_param - 31)), out this.man_gvd_r[i][j][k]);
+                                    size += stream.ReadUnsignedIntVariable(size, (exp_gvd_r[i][j][k] == 0 ? Math.Max(0, prec_gvd_rotation_param - 30) : Math.Max(0, exp_gvd_r[i][j][k] + prec_gvd_rotation_param - 31)), out this.man_gvd_r[i][j][k]);
                                 }
                             }
                         }
@@ -17747,7 +17747,7 @@ alternative_depth_info( payloadSize ) {
 
                                     size += stream.WriteUnsignedInt(1, this.sign_gvd_r[i][j][k]);
                                     size += stream.WriteUnsignedInt(6, this.exp_gvd_r[i][j][k]);
-                                    size += stream.WriteUnsignedIntVariable((exp_gvd_r[i] == 0 ? Math.Max(0, prec_gvd_rotation_param - 30) : Math.Max(0, exp_gvd_r[i] + prec_gvd_rotation_param - 31)), this.man_gvd_r[i][j][k]);
+                                    size += stream.WriteUnsignedIntVariable((exp_gvd_r[i][j][k] == 0 ? Math.Max(0, prec_gvd_rotation_param - 30) : Math.Max(0, exp_gvd_r[i][j][k] + prec_gvd_rotation_param - 31)), this.man_gvd_r[i][j][k]);
                                 }
                             }
                         }

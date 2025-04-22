@@ -256,15 +256,15 @@ namespace ItuGenerator
                 case "view_id_val":
                     return "view_id_len";
                 case "dimension_id":
-                    return "(dimension_id_len_minus1 + 1)";
+                    return "(dimension_id_len_minus1[i] + 1)";
                 case "delta_val_diff_minus_min":
                     return "(uint)Math.Ceiling( Math.Log2( max_diff - min_diff_minus1 + 1 ) )";
                 case "vps_rep_format_idx":
                     return "(uint)Math.Ceiling( Math.Log2( vps_num_rep_formats_minus1 + 1 ) )";
                 case "lt_idx_sps":
-                    return "(uint)Math.Ceiling( Math.Log2( num_long_term_ref_pics_sps ) )";
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) )";
                 case "poc_lsb_lt":
-                    return "(log2_max_pic_order_cnt_lsb_minus4 + 4)";
+                    return "( ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "man_gvd_z_near":
                     return "(man_len_gvd_z_near_minus1[ i ] + 1)";
                 case "man_gvd_z_far":
@@ -278,7 +278,7 @@ namespace ItuGenerator
                 case "man_gvd_principal_point_y":
                     return "(exp_gvd_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_y[ i ] + prec_gvd_principal_point - 31 ))";
                 case "mantissa_ref_viewing_distance":
-                    return "(exponent_ref_viewing_distance[ i ] == 0 ? Math.Max( 0, prec_ref_viewing_distance - 30 ) : Math.Max( 0, exponent_ref_viewing_distance[ i ] + prec_ref_viewing_distance - 31 ))";
+                    return "(exponent_ref_viewing_distance[ i ] == 0 ? Math.Max( 0, prec_ref_viewing_dist - 30 ) : Math.Max( 0, exponent_ref_viewing_distance[ i ] + prec_ref_viewing_dist - 31 ))";
                 case "mantissa_ref_display_width":
                     return "(exponent_ref_display_width[ i ] == 0 ? Math.Max( 0, prec_ref_display_width - 30 ) : Math.Max( 0, exponent_ref_display_width[ i ] + prec_ref_display_width - 31 ))";
                 case "mantissa_focal_length_x":
@@ -307,17 +307,17 @@ namespace ItuGenerator
                     return "(direct_dep_type_len_minus2 + 2)";
                 case "overlay_element_label_min":
                 case "overlay_element_label_max":
-                    return "(overlay_element_label_min_max_length_minus8 + 8)";
+                    return "(overlay_element_label_value_length_minus8 + 8)";
                 case "mantissa_r":
-                    return "(exponent_r[ i ]  == 0 ? Math.Max( 0, prec_rotation_param - 30 ) : Math.Max( 0, exponent_r[ i ] + prec_rotation_param - 31 ))";
+                    return "(exponent_r[ i ][ j ][ k ]  == 0 ? Math.Max( 0, prec_rotation_param - 30 ) : Math.Max( 0, exponent_r[ i ][ j ][ k ] + prec_rotation_param - 31 ))";
                 case "mantissa_t":
-                    return "(exponent_t[ i ]  == 0 ? Math.Max( 0, prec_translation_param - 30 ) : Math.Max( 0, exponent_t[ i ] + prec_translation_param - 31 ))";
+                    return "(exponent_t[ i ][ j ]  == 0 ? Math.Max( 0, prec_translation_param - 30 ) : Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31 ))";
                 case "bsp_hrd_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( vps_num_hrd_parameters + vps_num_add_hrd_params ) )";
+                    return "(uint)Math.Ceiling( Math.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) )";
                 case "res_coeff_r":
-                    return "((uint)Math.Max( 0, ( 10 + (8 + luma_bit_depth_cm_input_minus8) - (8 + luma_bit_depth_cm_output_minus8) - cm_res_quant_bits - ( cm_delta_flc_bits_minus1 + 1 ) ) ))";
+                    return "((uint)Math.Max( 0, ( 10 + (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmInputMinus8) - (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmOutputMinus8) - ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmResQuantBits - ( ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmDeltaFlcBitsMinus1 + 1 ) ) ))";
                 case "man_gvd_r":
-                    return "(exp_gvd_r[ i ] == 0 ? Math.Max( 0, prec_gvd_rotation_param - 30 ) : Math.Max( 0, exp_gvd_r[ i ] + prec_gvd_rotation_param - 31 ))";
+                    return "(exp_gvd_r[ i ][ j ][ k ] == 0 ? Math.Max( 0, prec_gvd_rotation_param - 30 ) : Math.Max( 0, exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31 ))";
                 case "entry_point_offset_minus1":
                     return "(offset_len_minus1 + 1)";
                 case "man_gvd_t_x":
