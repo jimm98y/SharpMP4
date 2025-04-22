@@ -2494,9 +2494,7 @@ slice_segment_header() {
    if( slice_temporal_mvp_enabled_flag ) {  
     if( slice_type == B )  
      collocated_from_l0_flag u(1) 
-    if( ( collocated_from_l0_flag  &&  num_ref_idx_l0_active_minus1 > 0 )  || 
-     ( !collocated_from_l0_flag  &&  num_ref_idx_l1_active_minus1 > 0 ) ) 
- 
+    if( ( collocated_from_l0_flag &&  num_ref_idx_l0_active_minus1 > 0 ) || ( !collocated_from_l0_flag && num_ref_idx_l1_active_minus1 > 0)) 
      collocated_ref_idx ue(v) 
    }  
    if( ( weighted_pred_flag  &&  slice_type == P )  || 

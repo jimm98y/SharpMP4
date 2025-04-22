@@ -14,6 +14,7 @@ namespace ItuGenerator
                             .Replace("j = vps_base_layer_internal_flag ? 0 : 1;", "j = (uint)(vps_base_layer_internal_flag != 0 ? 0 : 1);")
                             .Replace("i = vps_base_layer_internal_flag ? 0 : 1;", "i = (uint)(vps_base_layer_internal_flag != 0 ? 0 : 1);")
                             .Replace("delta_dlt( i )", "delta_dlt()")
+                            .Replace("1  <<  cm_octant_depth", "(uint)(1  <<  (int)cm_octant_depth)")
                             .Replace("_flag ?", "_flag != 0 ? ")
                             .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
             return definitions;
@@ -231,7 +232,7 @@ namespace ItuGenerator
                 case "CpbDpbDelaysPresentFlag":
                     return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0)";
                 case "PocMsbValRequiredFlag":
-                    return "((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && H265Helpers.GetNumDirectRefLayers(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ))";
+                    return "((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && H265Helpers.GetNumDirectRefLayers(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ) ? 1 : 0)";
                 case "CurrPic":
                     return "H265Helpers.GetCurrPic(context)";
                 case "RefRpsIdx":

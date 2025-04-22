@@ -767,10 +767,12 @@ namespace Sharp{type}
                                     variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
                                 else if (variableType.Contains("_minus1"))
                                     variableType = variableType.Replace("_minus1", "_minus1 + 1");
-                                else if (variableType.Contains("Minus1[ i ]"))
-                                    variableType = variableType.Replace("Minus1[ i ]", "Minus1[ i ] + 1");
                                 else if (variableType.Contains("Minus1(context)[ currLsIdx ]"))
                                     variableType = variableType.Replace("Minus1(context)[ currLsIdx ]", "Minus1(context)[ currLsIdx ] + 1");
+                                else if (variableType.Contains("Minus1(context)[ H265Helpers.GetOlsIdxToLsIdx(context)[ h ] ]]"))
+                                    variableType = variableType.Replace("Minus1(context)[ H265Helpers.GetOlsIdxToLsIdx(context)[ h ] ]", "Minus1(context)[ H265Helpers.GetOlsIdxToLsIdx(context)[ h ] ]+ 1");
+                                else if (variableType.Contains("Minus1[ i ]"))
+                                    variableType = variableType.Replace("Minus1[ i ]", "Minus1[ i ] + 1");
                                 else if (variableType.Contains("Minus1(context)[ i ]"))
                                     variableType = variableType.Replace("Minus1(context)[ i ]", "Minus1(context)[ i ] + 1");
                                 else if (variableType.Contains("Minus1(context)"))
@@ -839,7 +841,15 @@ namespace Sharp{type}
                     string trimmed = parts[i].Trim(new char[] { ' ', '(', ')' });
                     if (!trimmed.Contains("(") && !parts[i].Contains("()")) // if (more_rbsp_data())
                     {
-                        condition = condition.Replace(trimmed, trimmed + " != 0");
+                        if (trimmed.StartsWith("!"))
+                        {
+                            if (condition.Contains($"{trimmed} != 0"))
+                                condition = condition.Replace($"{trimmed} != 0", $"{trimmed.Substring(1)} == 0");
+                            else
+                                condition = condition.Replace(trimmed, trimmed.Substring(1) + " == 0");
+                        }
+                        else
+                            condition = condition.Replace(trimmed, trimmed + " != 0");
                     }
                 }
             }
