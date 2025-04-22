@@ -8,9 +8,11 @@ namespace ItuGenerator
         {
             definitions = definitions
                             .Replace("intrinsic_params_equal_flag ? 0 : numViewsMinus1", "(intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1)")
-                            .Replace("vps_base_layer_internal_flag != 0 ?  1 : 0", "(vps_base_layer_internal_flag != 0 ?  1 : 0)")
-                            .Replace("vps_base_layer_internal_flag != 0 ?  0 : 1", "(vps_base_layer_internal_flag != 0 ?  0 : 1)")
-                            .Replace("vps_base_layer_internal_flag != 0 ?  1 : 2", "(vps_base_layer_internal_flag != 0 ?  1 : 2)")
+                            .Replace("i = vps_base_layer_internal_flag ? 2 : 1;", "i = (uint)(vps_base_layer_internal_flag != 0 ? 2 : 1);")
+                            .Replace("i = vps_base_layer_internal_flag ? 1 : 0;", "i = (uint)(vps_base_layer_internal_flag != 0 ? 1 : 0);")
+                            .Replace("i = vps_base_layer_internal_flag ? 1 : 2;", "i = (uint)(vps_base_layer_internal_flag != 0 ? 1 : 2);")
+                            .Replace("j = vps_base_layer_internal_flag ? 0 : 1;", "j = (uint)(vps_base_layer_internal_flag != 0 ? 0 : 1);")
+                            .Replace("i = vps_base_layer_internal_flag ? 0 : 1;", "i = (uint)(vps_base_layer_internal_flag != 0 ? 0 : 1);")
                             .Replace("delta_dlt( i )", "delta_dlt()")
                             .Replace("_flag ?", "_flag != 0 ? ")
                             .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
