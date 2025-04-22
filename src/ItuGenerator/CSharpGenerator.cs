@@ -757,12 +757,22 @@ namespace Sharp{type}
                                     variableType = variableType.Replace("_minus1[ c ]", "_minus1[ c ] + 1");
                                 else if(variableType.Contains("_minus1[ i ][ j ]"))
                                     variableType = variableType.Replace("_minus1[ i ][ j ]", "_minus1[ i ][ j ] + 1");
+                                else if(variableType.Contains("_minus1[ h ][ i ][ t ]"))
+                                    variableType = variableType.Replace("_minus1[ h ][ i ][ t ]", "_minus1[ h ][ i ][ t ] + 1");
+                                else if(variableType.Contains("_minus1[ h ][ i ]"))
+                                    variableType = variableType.Replace("_minus1[ h ][ i ]", "_minus1[ h ][ i ] + 1");
+                                else if(variableType.Contains("_minus1[ h ][ j ]"))
+                                    variableType = variableType.Replace("_minus1[ h ][ j ]", "_minus1[ h ][ j ] + 1");
                                 else if(variableType.Contains("_minus1[ i ]"))
                                     variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
                                 else if (variableType.Contains("_minus1"))
                                     variableType = variableType.Replace("_minus1", "_minus1 + 1");
                                 else if (variableType.Contains("Minus1[ i ]"))
                                     variableType = variableType.Replace("Minus1[ i ]", "Minus1[ i ] + 1");
+                                else if (variableType.Contains("Minus1(context)[ currLsIdx ]"))
+                                    variableType = variableType.Replace("Minus1(context)[ currLsIdx ]", "Minus1(context)[ currLsIdx ] + 1");
+                                else if (variableType.Contains("Minus1(context)[ i ]"))
+                                    variableType = variableType.Replace("Minus1(context)[ i ]", "Minus1(context)[ i ] + 1");
                                 else if (variableType.Contains("Minus1(context)"))
                                     variableType = variableType.Replace("Minus1(context)", "Minus1(context) + 1");
                                 else if (variableType.Contains("Minus1"))

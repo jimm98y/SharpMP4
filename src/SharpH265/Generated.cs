@@ -11550,10 +11550,10 @@ dpb_size() {
                 currLsIdx = H265Helpers.GetOlsIdxToLsIdx(context)[i];
                 size += stream.ReadUnsignedInt(size, 1, out this.sub_layer_flag_info_present_flag[i]);
 
-                this.sub_layer_dpb_info_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[currLsIdx]];
-                this.max_vps_dec_pic_buffering_minus1[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[currLsIdx]][];
-                this.max_vps_num_reorder_pics[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[currLsIdx]];
-                this.max_vps_latency_increase_plus1[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[currLsIdx]];
+                this.sub_layer_dpb_info_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx] + 1];
+                this.max_vps_dec_pic_buffering_minus1[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx] + 1][];
+                this.max_vps_num_reorder_pics[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx] + 1];
+                this.max_vps_latency_increase_plus1[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx] + 1];
                 for (j = 0; j <= H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx]; j++)
                 {
 
@@ -11810,12 +11810,12 @@ vps_vui() {
                 for (i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i < (((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets); i++)
                 {
 
-                    this.bit_rate_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[i]];
-                    this.pic_rate_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[i]];
-                    this.avg_bit_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[i]];
-                    this.max_bit_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[i]];
-                    this.constant_pic_rate_idc[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[i]];
-                    this.avg_pic_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context) + 1[i]];
+                    this.bit_rate_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
+                    this.pic_rate_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
+                    this.avg_bit_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
+                    this.max_bit_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
+                    this.constant_pic_rate_idc[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
+                    this.avg_pic_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
                     for (j = 0; j <= H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i]; j++)
                     {
 
@@ -12309,7 +12309,7 @@ vps_vui_bsp_hrd_params() {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_partitions_in_scheme_minus1[h][j]);
 
-                        this.layer_included_in_partition_flag[h][j] = new byte[num_partitions_in_scheme_minus1 + 1[h][j]][];
+                        this.layer_included_in_partition_flag[h][j] = new byte[num_partitions_in_scheme_minus1[h][j] + 1][];
                         for (k = 0; k <= num_partitions_in_scheme_minus1[h][j]; k++)
                         {
 
@@ -12334,13 +12334,13 @@ vps_vui_bsp_hrd_params() {
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_bsp_schedules_minus1[h][i][t]);
 
-                            this.bsp_hrd_idx[h][i][t] = new uint[num_bsp_schedules_minus1 + 1[h][i][t]][];
-                            this.bsp_sched_idx[h][i][t] = new uint[num_bsp_schedules_minus1 + 1[h][i][t]][];
+                            this.bsp_hrd_idx[h][i][t] = new uint[num_bsp_schedules_minus1[h][i][t] + 1][];
+                            this.bsp_sched_idx[h][i][t] = new uint[num_bsp_schedules_minus1[h][i][t] + 1][];
                             for (j = 0; j <= num_bsp_schedules_minus1[h][i][t]; j++)
                             {
 
-                                this.bsp_hrd_idx[h][i][t][j] = new uint[num_partitions_in_scheme_minus1 + 1[h][i]];
-                                this.bsp_sched_idx[h][i][t][j] = new uint[num_partitions_in_scheme_minus1 + 1[h][i]];
+                                this.bsp_hrd_idx[h][i][t][j] = new uint[num_partitions_in_scheme_minus1[h][i] + 1];
+                                this.bsp_sched_idx[h][i][t][j] = new uint[num_partitions_in_scheme_minus1[h][i] + 1];
                                 for (k = 0; k <= num_partitions_in_scheme_minus1[h][i]; k++)
                                 {
 
