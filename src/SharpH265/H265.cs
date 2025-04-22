@@ -129,7 +129,7 @@ namespace SharpH265
             throw new NotImplementedException();
         }
 
-        public static uint[] GetLayerSetLayerIdList(IItuContext context)
+        public static uint[][] GetLayerSetLayerIdList(IItuContext context)
         {
             throw new NotImplementedException();
         }
@@ -185,13 +185,24 @@ namespace SharpH265
             throw new NotImplementedException();
         }
 
-        public static uint GetNumDeltaPocs(IItuContext context)
+        public static uint[] GetNumDeltaPocs(IItuContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static uint[] GetNumLayersInTreePartition(IItuContext context)
         {
             throw new NotImplementedException();
         }
 
         public static uint GetNumActiveRefLayerPics(IItuContext context)
         {
+            throw new NotImplementedException();
+        }
+
+        public static uint GetPicSizeInCtbsY(IItuContext context)
+        {
+            // PicSizeInCtbsY = PicWidthInCtbsY * PicHeightInCtbsY 
             throw new NotImplementedException();
         }
 
