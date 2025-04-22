@@ -11013,7 +11013,7 @@ vps_extension() {
 
                 if ((((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets) > 2 && i >= (((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets))
                 {
-                    size += stream.ReadUnsignedIntVariable(size, layer_set_idx_for_ols_minus1, out this.layer_set_idx_for_ols_minus1[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2((((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets) - 1)), out this.layer_set_idx_for_ols_minus1[i]);
                 }
 
                 if (i > ((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 || Math.Min(((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.DefaultOutputLayerIdc, 2) == 2)
@@ -11256,7 +11256,7 @@ vps_extension() {
 
                 if ((((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets) > 2 && i >= (((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets))
                 {
-                    size += stream.WriteUnsignedIntVariable(layer_set_idx_for_ols_minus1[i], this.layer_set_idx_for_ols_minus1[i]);
+                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2((((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets) - 1)), this.layer_set_idx_for_ols_minus1[i]);
                 }
 
                 if (i > ((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 || Math.Min(((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.DefaultOutputLayerIdc, 2) == 2)

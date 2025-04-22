@@ -8,6 +8,9 @@ namespace ItuGenerator
         {
             definitions = definitions
                             .Replace("intrinsic_params_equal_flag ? 0 : numViewsMinus1", "(intrinsic_params_equal_flag != 0 ? 0 : numViewsMinus1)")
+                            .Replace("vps_base_layer_internal_flag != 0 ?  1 : 0", "(vps_base_layer_internal_flag != 0 ?  1 : 0)")
+                            .Replace("vps_base_layer_internal_flag != 0 ?  0 : 1", "(vps_base_layer_internal_flag != 0 ?  0 : 1)")
+                            .Replace("vps_base_layer_internal_flag != 0 ?  1 : 2", "(vps_base_layer_internal_flag != 0 ?  1 : 2)")
                             .Replace("delta_dlt( i )", "delta_dlt()")
                             .Replace("_flag ?", "_flag != 0 ? ")
                             .Replace(" scalingList", " scalingLst"); // TODO remove this temporary fix
@@ -253,6 +256,8 @@ namespace ItuGenerator
                     return "view_id_len";
                 case "dimension_id":
                     return "(dimension_id_len_minus1 + 1)";
+                case "layer_set_idx_for_ols_minus1":
+                    return "(uint)Math.Ceiling( Math.Log2( (((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;
