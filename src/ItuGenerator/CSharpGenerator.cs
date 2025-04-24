@@ -780,9 +780,29 @@ namespace Sharp{type}
                                 else if (variableType.Contains("Minus1"))
                                     variableType = variableType.Replace("Minus1", "Minus1 + 1");
 
-                                if (variableName == "ar_label")
+                                if (variableName == "ar_label" || // h264
+                                    variableName == "cp_ref_voi" ||
+                                    variableName == "vps_cp_scale[ n ]" ||
+                                    variableName == "vps_cp_off[ n ]" ||
+                                    variableName == "vps_cp_inv_scale_plus_scale[ n ]" ||
+                                    variableName == "vps_cp_inv_off_plus_off[ n ]" ||
+                                    variableName == "cp_scale" ||
+                                    variableName == "cp_off" ||
+                                    variableName == "cp_scale" ||
+                                    variableName == "cp_inv_scale_plus_scale" ||
+                                    variableName == "cp_inv_off_plus_off" 
+                                    )
                                 {
                                     appendType += "[]"; // TODO fix this workaround
+                                }
+                                else if(
+                                    variableName == "vps_cp_scale" ||
+                                    variableName == "vps_cp_off" ||
+                                    variableName == "vps_cp_inv_scale_plus_scale" ||
+                                    variableName == "vps_cp_inv_off_plus_off"
+                                    )
+                                {
+                                    appendType += "[][]"; // TODO fix this workaround
                                 }
 
                                 ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
@@ -1006,7 +1026,7 @@ namespace Sharp{type}
         }
 
         private int GetNestedInLoopSuffix(ItuCode code, string currentSuffix, out string result)
-        {
+        {            
             List<string> ret = new List<string>();
             ItuBlock parent = null;
             var field = code as ItuField;
@@ -1028,6 +1048,39 @@ namespace Sharp{type}
                 }
                 
                 parent = parent.Parent;
+            }
+
+            if (field != null && (
+                field.Name == "coded_res_flag" ||
+                field.Name == "res_coeff_q" ||
+                field.Name == "res_coeff_r" ||
+                field.Name == "res_coeff_s"
+                ))
+            {
+                ret.Remove(ret[0]);
+                ret.Insert(0, "[ idxCr ]");
+                ret.Insert(0, "[ idxCb ]");
+                ret.Insert(0, "[ idxShiftY ]");
+            }
+
+            if(field != null && (
+                field.Name == "num_cp" ||
+                field.Name == "cp_in_slice_segment_header_flag" ||
+                field.Name == "cp_ref_voi" ||
+                field.Name == "vps_cp_scale" ||
+                field.Name == "vps_cp_off" ||
+                field.Name == "vps_cp_inv_scale_plus_scale" ||
+                field.Name == "vps_cp_inv_off_plus_off" 
+                ))
+            {
+                ret.Remove(ret[0]);
+            }
+
+            if( field != null && (
+                field.Name == "slice_reserved_flag"
+                ))
+            {
+                ret.Remove(ret[0]);
             }
 
             foreach (var suffix in ret.ToArray())
