@@ -1,4 +1,5 @@
 ﻿using SharpH264;
+using SharpH265;
 using SharpH26X;
 using SharpMP4;
 using System;
@@ -21,8 +22,8 @@ Log.SinkError = (o, e) => {
     }
 };
 
-var files = File.ReadAllLines("C:\\Temp\\testFiles3.txt");
-//var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
+//var files = File.ReadAllLines("C:\\Temp\\testFiles3.txt");
+var files = new string[] { "C:\\Temp\\Big_Buck_Bunny_720_10s_1MB.mp4" };
 
 foreach (var file in files)
 {
@@ -51,7 +52,7 @@ foreach (var file in files)
             .Children.OfType<VideoMediaHeaderBox>().FirstOrDefault() != null);
         uint videoTrackId = videoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
 
-        var h264VisualSample = videoTrack
+        var visualSample = videoTrack
             .Children.OfType<MediaBox>().Single()
             .Children.OfType<MediaInformationBox>().Single()
             .Children.OfType<SampleTableBox>().Single()
@@ -59,28 +60,51 @@ foreach (var file in files)
             .Children.OfType<VisualSampleEntry>().Single();
 
         int nalLengthSize = 4;
-        H264Context context = new H264Context();
+        IItuContext context = null;
+        VideoFormat format;
 
-        var avcC = h264VisualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
+        var avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
         if (avcC != null)
         {
+            context = new H264Context();
+            format = VideoFormat.H264;
+
             nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
 
             foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
             {
-                ParseH264NALU(context, spsBinary);
+                ParseNALU(context, format, spsBinary);
             }
 
             foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
             {
-                ParseH264NALU(context, ppsBinary);
+                ParseNALU(context, format, ppsBinary);
             }
         }
         else
         {
-            //throw new NotSupportedException();
-            Log.Error($"{file}");
-            continue;
+            var hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
+            if (hvcC != null)
+            {
+                context = new H265Context();
+                format = VideoFormat.H265;
+
+                nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+                foreach (var nalus in hvcC._HEVCConfig.NalUnit)
+                {
+                    foreach (var nalu in nalus)
+                    {
+                        ParseNALU(context, format, nalu);
+                    }
+                }
+            }
+            else
+            {
+                throw new NotSupportedException();
+                Log.Error($"{file}");
+                //continue;
+            }
         }
 
         MovieBox moov = null;
@@ -125,7 +149,7 @@ foreach (var file in files)
                             {
                                 try
                                 {
-                                    size += ReadAU(nalLengthSize, context, mdat, sampleSize);
+                                    size += ReadAU(nalLengthSize, context, format, mdat, sampleSize);
                                 }
                                 catch (Exception)
                                 {
@@ -180,7 +204,7 @@ foreach (var file in files)
 
                             try
                             {
-                                size += ReadAU(nalLengthSize, context, mdat, sampleSize);
+                                size += ReadAU(nalLengthSize, context, format, mdat, sampleSize);
                             }
                             catch (Exception)
                             {
@@ -194,10 +218,9 @@ foreach (var file in files)
             }
         }
     }
-
 }
 
-static ulong ReadAU(int nalLengthSize, H264Context context, MediaDataBox mdat, uint sampleSizeInBytes)
+static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, MediaDataBox mdat, uint sampleSizeInBytes)
 {
     ulong size = 0;
     long offsetInBytes = 0;
@@ -238,7 +261,7 @@ static ulong ReadAU(int nalLengthSize, H264Context context, MediaDataBox mdat, u
 
         size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
         offsetInBytes += sampleData.Length;
-        ParseH264NALU(context, sampleData);
+        ParseNALU(context, format, sampleData);
     } while (offsetInBytes < sampleSizeInBytes);
 
     if (offsetInBytes != sampleSizeInBytes)
@@ -249,12 +272,31 @@ static ulong ReadAU(int nalLengthSize, H264Context context, MediaDataBox mdat, u
     return size;
 }
 
+static void ParseNALU(IItuContext ctx, VideoFormat format, byte[] sampleData)
+{
+    using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
+    {
+        if(format == VideoFormat.H264)
+        {
+            ParseH264NALU((H264Context)ctx, sampleData);
+        }
+        else if(format == VideoFormat.H265)
+        {
+            ParseH265NALU((H265Context)ctx, sampleData);
+        }
+        else
+        {
+            throw new NotSupportedException();
+        }
+    }
+}
+
 static void ParseH264NALU(H264Context context, byte[] sampleData)
 {
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
     {
         ulong ituSize = 0;
-        NalUnit nu = new NalUnit((uint)sampleData.Length);
+        var nu = new SharpH264.NalUnit((uint)sampleData.Length);
         ituSize += nu.Read(context, stream);
         context.NalHeader = nu;
 
@@ -318,7 +360,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 else if (nu.NalUnitType == H264NALTypes.SEI) // 6
                 {
                     Log.Debug($"NALU: 6, SEI, {sampleData.Length} bytes");
-                    context.SeiRbsp = new SeiRbsp();
+                    context.SeiRbsp = new SharpH264.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
@@ -327,7 +369,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 else if (nu.NalUnitType == H264NALTypes.SPS) // 7
                 {
                     Log.Debug($"NALU: 7, SPS, {sampleData.Length} bytes");
-                    context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
+                    context.SeqParameterSetRbsp = new SharpH264.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
@@ -336,7 +378,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 else if (nu.NalUnitType == H264NALTypes.PPS) // 8
                 {
                     Log.Debug($"NALU: 8, PPS, {sampleData.Length} bytes");
-                    context.PicParameterSetRbsp = new PicParameterSetRbsp();
+                    context.PicParameterSetRbsp = new SharpH264.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
@@ -345,7 +387,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 else if (nu.NalUnitType == H264NALTypes.AUD) // 9
                 {
                     Log.Debug($"NALU: 9, AU Delimiter, {sampleData.Length} bytes");
-                    context.AccessUnitDelimiterRbsp = new AccessUnitDelimiterRbsp();
+                    context.AccessUnitDelimiterRbsp = new SharpH264.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
@@ -354,7 +396,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 else if (nu.NalUnitType == H264NALTypes.END_OF_SEQUENCE) // 10
                 {
                     Log.Debug($"NALU: 10, End of Sequence, {sampleData.Length} bytes");
-                    context.EndOfSeqRbsp = new EndOfSeqRbsp();
+                    context.EndOfSeqRbsp = new SharpH264.EndOfSeqRbsp();
                     context.EndOfSeqRbsp.Read(context, stream);
                     context.EndOfSeqRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
@@ -372,7 +414,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 else if (nu.NalUnitType == H264NALTypes.FILLER_DATA) // 12
                 {
                     Log.Debug($"NALU: 12, Filler Data, {sampleData.Length} bytes");
-                    context.FillerDataRbsp = new FillerDataRbsp();
+                    context.FillerDataRbsp = new SharpH264.FillerDataRbsp();
                     context.FillerDataRbsp.Read(context, stream);
                     context.FillerDataRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
@@ -467,7 +509,44 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                     throw new InvalidOperationException();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                Log.Error($"Error: {ex.Message}");
+                Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
+                Log.Error($"WriteData: {Convert.ToHexString(ms.ToArray())}");
+                throw;
+            }
+        }
+    }
+}
+
+static void ParseH265NALU(H265Context context, byte[] sampleData)
+{
+    using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
+    {
+        ulong ituSize = 0;
+        var nu = new SharpH265.NalUnit((uint)sampleData.Length);
+        ituSize += nu.Read(context, stream);
+        context.NalHeader = nu;
+
+        var ms = new MemoryStream();
+        using (ItuStream wstream = new ItuStream(ms))
+        {
+            nu.Write(context, wstream);
+
+            try
+            {
+                if (nu.NalUnitHeader.NalUnitType >= H265NALTypes.UNSPEC48) // unspecified
+                {
+                    Log.Debug($"NALU: 0, Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    throw new InvalidOperationException();
+                }
+                else
+                {
+                    // TODO
+                }
+            }
+            catch (Exception ex)
             {
                 Log.Error($"Error: {ex.Message}");
                 Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
@@ -508,3 +587,9 @@ static string[] DirSearch(string sDir)
     return files.ToArray();
 }
 
+public enum VideoFormat
+{
+    Unknown,
+    H264,
+    H265,
+}
