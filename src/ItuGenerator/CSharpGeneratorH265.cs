@@ -62,13 +62,13 @@ namespace ItuGenerator
                 case "MaxLayersMinus1":
                     return "Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1)";
                 case "NumLayerSets":
-                    return "(((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets)";
+                    return "(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)";
                 case "lt_ref_pic_poc_lsb_sps":
                     return "(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "num_ref_idx_l0_active_minus1":
                     return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1";
                 case "num_cp":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.Vps3dExtension.NumCp";
+                    return "((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp";
                 case "slice_type":
                     return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.SliceType";
                 case "nuh_layer_id":
@@ -80,7 +80,7 @@ namespace ItuGenerator
                 case "vps_num_hrd_parameters":
                     return "((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters";
                 case "layer_id_in_nuh":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.LayerIdInNuh";
+                    return "((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh";
                 case "sub_pic_hrd_params_present_flag":
                     return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag";
                 case "frame_field_info_present_flag":
@@ -118,25 +118,25 @@ namespace ItuGenerator
                 case "nal_initial_arrival_delay":
                     return "(((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1)";
                 case "cp_ref_voi":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.Vps3dExtension.CpRefVoi";
+                    return "((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi";
                 case "cp_in_slice_segment_header_flag":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag";
+                    return "((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag";
                 case "deblocking_filter_override_enabled_flag":
                     return "((H265Context)context).PicParameterSetRbsp.DeblockingFilterOverrideEnabledFlag";
                 case "pps_slice_chroma_qp_offsets_present_flag":
                     return "((H265Context)context).PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag";
                 case "default_ref_layers_active_flag":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.DefaultRefLayersActiveFlag";
+                    return "((H265Context)context).VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag";
                 case "max_one_active_ref_layer_flag":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.MaxOneActiveRefLayerFlag";
+                    return "((H265Context)context).VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag";
                 case "poc_lsb_not_present_flag":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.PocLsbNotPresentFlag";
+                    return "((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag";
                 case "sample_adaptive_offset_enabled_flag":
                     return "((H265Context)context).SeqParameterSetRbsp.SampleAdaptiveOffsetEnabledFlag";
                 case "NumOutputLayerSets":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumOutputLayerSets";
+                    return "((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets";
                 case "vps_poc_lsb_aligned_flag":
-                    return "((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag";
+                    return "((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag";
                 case "vps_num_layer_sets_minus1":
                     return "((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1";
                 case "vps_max_sub_layers_minus1":
@@ -220,7 +220,7 @@ namespace ItuGenerator
                 case "DepthFlag":
                     return "H265Helpers.GetDepthLayerFlag(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]";
                 case "defaultOutputLayerIdc":
-                    return "Math.Min( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.DefaultOutputLayerIdc, 2 )";
+                    return "Math.Min( ((H265Context)context).VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc, 2 )";
                 case "PartNumY":
                     return "(1u  <<  (int)((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmyPartNumLog2)";
                 case "numViewsMinus1":
@@ -232,7 +232,7 @@ namespace ItuGenerator
                 case "CpbDpbDelaysPresentFlag":
                     return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0)";
                 case "PocMsbValRequiredFlag":
-                    return "((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && H265Helpers.GetNumDirectRefLayers(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ) ? 1 : 0)";
+                    return "((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT)  &&  ( ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0  || ( ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0  && H265Helpers.GetNumDirectRefLayers(context)[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ]  ==  0 ) ) ? 1 : 0)";
                 case "CurrPic":
                     return "H265Helpers.GetCurrPic(context)";
                 case "RefRpsIdx":
@@ -295,7 +295,7 @@ namespace ItuGenerator
                 case "mantissa_skew_factor":
                     return "(exponent_skew_factor[ i ] == 0 ? Math.Max( 0, prec_skew_factor - 30 ) : Math.Max( 0, exponent_skew_factor[ i ] + prec_skew_factor - 31 ))";
                 case "layer_set_idx_for_ols_minus1":
-                    return "(uint)Math.Ceiling( Math.Log2( (((H265Context)context).VideoParameterSetAnnexfRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetAnnexfRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
+                    return "(uint)Math.Ceiling( Math.Log2( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
                 case "pre_lut_coded_value":
                     return "(( ( colour_remap_input_bit_depth + 7 )  >>  3 )  <<  3)";
                 case "pre_lut_target_value":

@@ -541,6 +541,33 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     Log.Debug($"NALU: 0, Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT) // 33
+                {
+                    Log.Debug($"NALU: 33, SPS, {sampleData.Length} bytes");
+                    context.SeqParameterSetRbsp = new SharpH265.SeqParameterSetRbsp();
+                    context.SeqParameterSetRbsp.Read(context, stream);
+                    context.SeqParameterSetRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT) // 34
+                {
+                    Log.Debug($"NALU: 34, PPS, {sampleData.Length} bytes");
+                    context.PicParameterSetRbsp = new SharpH265.PicParameterSetRbsp();
+                    context.PicParameterSetRbsp.Read(context, stream);
+                    context.PicParameterSetRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT) // 35
+                {
+                    Log.Debug($"NALU: 35, VPS, {sampleData.Length} bytes");
+                    context.VideoParameterSetRbsp = new SharpH265.VideoParameterSetRbsp();
+                    context.VideoParameterSetRbsp.Read(context, stream);
+                    context.VideoParameterSetRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
                 else
                 {
                     // TODO

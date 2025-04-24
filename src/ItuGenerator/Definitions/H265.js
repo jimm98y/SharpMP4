@@ -18,139 +18,6 @@ nal_unit_header() {
   nuh_temporal_id_plus1 u(3)
 } 
 
-video_parameter_set_rbsp() {  
- vps_video_parameter_set_id u(4) 
- vps_base_layer_internal_flag u(1) 
- vps_base_layer_available_flag u(1) 
- vps_max_layers_minus1 u(6) 
- vps_max_sub_layers_minus1 u(3) 
- vps_temporal_id_nesting_flag u(1) 
- vps_reserved_0xffff_16bits u(16)
-    profile_tier_level(1, vps_max_sub_layers_minus1)  
- vps_sub_layer_ordering_info_present_flag u(1)
-    for (i = (vps_sub_layer_ordering_info_present_flag ? 0 : vps_max_sub_layers_minus1);
-        i <= vps_max_sub_layers_minus1; i++) {
-
-        vps_max_dec_pic_buffering_minus1[i] ue(v)
-        vps_max_num_reorder_pics[i] ue(v)
-        vps_max_latency_increase_plus1[i] ue(v)
-    }  
- vps_max_layer_id u(6) 
- vps_num_layer_sets_minus1 ue(v)
-    for (i = 1; i <= vps_num_layer_sets_minus1; i++)
-        for (j = 0; j <= vps_max_layer_id; j++)
-            layer_id_included_flag[i][j] u(1) 
- vps_timing_info_present_flag u(1)
-    if (vps_timing_info_present_flag) {  
-  vps_num_units_in_tick u(32) 
-  vps_time_scale u(32) 
-  vps_poc_proportional_to_timing_flag u(1)
-        if (vps_poc_proportional_to_timing_flag)  
-   vps_num_ticks_poc_diff_one_minus1 ue(v) 
-  vps_num_hrd_parameters ue(v)
-        for (i = 0; i < vps_num_hrd_parameters; i++) {
-            hrd_layer_set_idx[i] ue(v)
-            if (i > 0)
-                cprms_present_flag[i] u(1)
-            hrd_parameters(cprms_present_flag[i], vps_max_sub_layers_minus1)
-        }
-    }  
- vps_extension_flag u(1)
-    if (vps_extension_flag)
-        while (more_rbsp_data())  
-   vps_extension_data_flag u(1)
-    rbsp_trailing_bits()
-}
-
-seq_parameter_set_rbsp() {  
- sps_video_parameter_set_id u(4) 
- sps_max_sub_layers_minus1 u(3) 
- sps_temporal_id_nesting_flag u(1)
-    profile_tier_level(1, sps_max_sub_layers_minus1)  
- sps_seq_parameter_set_id ue(v) 
- chroma_format_idc ue(v)
-    if (chroma_format_idc == 3)  
-  separate_colour_plane_flag u(1) 
- pic_width_in_luma_samples ue(v) 
- pic_height_in_luma_samples ue(v) 
- conformance_window_flag u(1)
-    if (conformance_window_flag) {  
-  conf_win_left_offset ue(v) 
-  conf_win_right_offset ue(v) 
-  conf_win_top_offset ue(v) 
-  conf_win_bottom_offset ue(v)
-    }  
- bit_depth_luma_minus8 ue(v) 
- bit_depth_chroma_minus8 ue(v) 
- log2_max_pic_order_cnt_lsb_minus4 ue(v) 
- sps_sub_layer_ordering_info_present_flag u(1)
-    for (i = (sps_sub_layer_ordering_info_present_flag ? 0 : sps_max_sub_layers_minus1);
-        i <= sps_max_sub_layers_minus1; i++) {
-
-        sps_max_dec_pic_buffering_minus1[i] ue(v)
-        sps_max_num_reorder_pics[i] ue(v)
-        sps_max_latency_increase_plus1[i] ue(v)
-    }  
- log2_min_luma_coding_block_size_minus3 ue(v) 
- log2_diff_max_min_luma_coding_block_size ue(v) 
- log2_min_luma_transform_block_size_minus2 ue(v) 
- log2_diff_max_min_luma_transform_block_size ue(v) 
- max_transform_hierarchy_depth_inter ue(v) 
- max_transform_hierarchy_depth_intra ue(v) 
- scaling_list_enabled_flag u(1)
-    if (scaling_list_enabled_flag) {  
-  sps_scaling_list_data_present_flag u(1)
-        if (sps_scaling_list_data_present_flag)
-            scaling_list_data()
-    }  
- amp_enabled_flag u(1) 
- sample_adaptive_offset_enabled_flag u(1) 
- pcm_enabled_flag u(1)
-    if (pcm_enabled_flag) {  
-  pcm_sample_bit_depth_luma_minus1 u(4) 
-  pcm_sample_bit_depth_chroma_minus1 u(4) 
-   log2_min_pcm_luma_coding_block_size_minus3 ue(v) 
-  log2_diff_max_min_pcm_luma_coding_block_size ue(v) 
-  pcm_loop_filter_disabled_flag u(1)
-    }  
- num_short_term_ref_pic_sets ue(v)
-    for (i = 0; i < num_short_term_ref_pic_sets; i++)
-        st_ref_pic_set(i)  
- long_term_ref_pics_present_flag u(1)
-    if (long_term_ref_pics_present_flag) {  
-  num_long_term_ref_pics_sps ue(v)
-        for (i = 0; i < num_long_term_ref_pics_sps; i++) {
-            lt_ref_pic_poc_lsb_sps[i] u(v)
-            used_by_curr_pic_lt_sps_flag[i] u(1)
-        }
-    }  
- sps_temporal_mvp_enabled_flag u(1) 
- strong_intra_smoothing_enabled_flag u(1) 
- vui_parameters_present_flag u(1)
-    if (vui_parameters_present_flag)
-        vui_parameters()  
- sps_extension_present_flag u(1)
-    if (sps_extension_present_flag) {  
-  sps_range_extension_flag u(1) 
-  sps_multilayer_extension_flag u(1) 
-  sps_3d_extension_flag u(1) 
-  sps_scc_extension_flag u(1) 
-  sps_extension_4bits u(4)
-    }
-    if (sps_range_extension_flag)
-        sps_range_extension()
-    if (sps_multilayer_extension_flag)
-        sps_multilayer_extension()  /* specified in Annex F */
-    if (sps_3d_extension_flag)
-        sps_3d_extension()  /* specified in Annex I */
-    if (sps_scc_extension_flag)
-        sps_scc_extension()
-    if (sps_extension_4bits)
-        while (more_rbsp_data())  
-   sps_extension_data_flag u(1)
-    rbsp_trailing_bits()
-}  
-
 sps_range_extension() {  
  transform_skip_rotation_enabled_flag u(1) 
  transform_skip_context_enabled_flag u(1) 
@@ -1831,7 +1698,7 @@ vps_vui_bsp_hrd_params() {
   }  
 } 
 
-seq_parameter_set_annex_f_rbsp() { 
+seq_parameter_set_rbsp() { 
  sps_video_parameter_set_id u(4) 
  if( nuh_layer_id == 0 )  
   sps_max_sub_layers_minus1 u(3) 
@@ -2266,7 +2133,7 @@ for( i = 0; i <= num_views_minus1; i++ )
 view_position[ i ] ue(v) 
 }
 
-video_parameter_set_annex_f_rbsp() { 
+video_parameter_set_rbsp() { 
 vps_video_parameter_set_id  u(4) 
 vps_base_layer_internal_flag u(1) 
 vps_base_layer_available_flag u(1) 
