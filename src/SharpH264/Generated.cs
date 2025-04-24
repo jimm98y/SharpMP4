@@ -7,7 +7,7 @@ using SharpH26X;
 namespace SharpH264
 {
 
-    public class H264Context : IItuContext
+    public partial class H264Context : IItuContext
     {
         public NalUnit NalHeader { get; set; }
         public SeqParameterSetRbsp SeqParameterSetRbsp { get; set; }
@@ -17725,15 +17725,13 @@ depth_parameter_set_rbsp() {
                 predWeight0 = pred_weight0;
             }
             size += stream.ReadUnsignedIntGolomb(size, out this.num_depth_views_minus1);
-            this.depth_ranges = new DepthRanges(num_depth_views_minus1 + 1, pred_direction,
-  depth_parameter_set_id);
+            this.depth_ranges = new DepthRanges(num_depth_views_minus1 + 1, pred_direction, depth_parameter_set_id);
             size += stream.ReadClass<DepthRanges>(size, context, this.depth_ranges);
             size += stream.ReadUnsignedInt(size, 1, out this.vsp_param_flag);
 
             if (vsp_param_flag != 0)
             {
-                this.vsp_param = new VspParam(num_depth_views_minus1 + 1, pred_direction,
-  depth_parameter_set_id);
+                this.vsp_param = new VspParam(num_depth_views_minus1 + 1, pred_direction, depth_parameter_set_id);
                 size += stream.ReadClass<VspParam>(size, context, this.vsp_param);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_flag);

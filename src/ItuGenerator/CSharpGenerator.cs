@@ -64,7 +64,7 @@ namespace Sharp{type}
         private string GenerateContext(string type, IEnumerable<ItuClass> ituClasses)
         {
             string ret = @$"
-    public class {type}Context : IItuContext
+    public partial class {type}Context : IItuContext
     {{
             public NalUnit NalHeader {{ get; set; }}
 ";

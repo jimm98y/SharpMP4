@@ -7,7 +7,7 @@ using SharpH26X;
 namespace SharpH265
 {
 
-    public class H265Context : IItuContext
+    public partial class H265Context : IItuContext
     {
         public NalUnit NalHeader { get; set; }
         public VideoParameterSetRbsp VideoParameterSetRbsp { get; set; }
