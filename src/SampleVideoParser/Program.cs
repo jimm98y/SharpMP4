@@ -559,12 +559,66 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     if (!ms.ToArray().SequenceEqual(sampleData))
                         throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
-                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT) // 35
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT) // 32
                 {
-                    Log.Debug($"NALU: 35, VPS, {sampleData.Length} bytes");
+                    Log.Debug($"NALU: 32, VPS, {sampleData.Length} bytes");
                     context.VideoParameterSetRbsp = new SharpH265.VideoParameterSetRbsp();
                     context.VideoParameterSetRbsp.Read(context, stream);
                     context.VideoParameterSetRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT) // 35
+                {
+                    Log.Debug($"NALU: 35, AUD, {sampleData.Length} bytes");
+                    context.AccessUnitDelimiterRbsp = new SharpH265.AccessUnitDelimiterRbsp();
+                    context.AccessUnitDelimiterRbsp.Read(context, stream);
+                    context.AccessUnitDelimiterRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.EOS_NUT) // 36
+                {
+                    Log.Debug($"NALU: 36, EOS, {sampleData.Length} bytes");
+                    context.EndOfSeqRbsp = new SharpH265.EndOfSeqRbsp();
+                    context.EndOfSeqRbsp.Read(context, stream);
+                    context.EndOfSeqRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.EOB_NUT) // 37
+                {
+                    Log.Debug($"NALU: 37, EOB, {sampleData.Length} bytes");
+                    context.EndOfBitstreamRbsp = new SharpH265.EndOfBitstreamRbsp();
+                    context.EndOfBitstreamRbsp.Read(context, stream);
+                    context.EndOfBitstreamRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.FD_NUT) // 38
+                {
+                    Log.Debug($"NALU: 38, FillerData, {sampleData.Length} bytes");
+                    context.FillerDataRbsp = new SharpH265.FillerDataRbsp();
+                    context.FillerDataRbsp.Read(context, stream);
+                    context.FillerDataRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT) // 39
+                {
+                    Log.Debug($"NALU: 39, Prefix SEI, {sampleData.Length} bytes");
+                    context.SeiRbsp = new SharpH265.SeiRbsp();
+                    context.SeiRbsp.Read(context, stream);
+                    context.SeiRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SUFFIX_SEI_NUT) // 40
+                {
+                    Log.Debug($"NALU: 40, Suffix SEI, {sampleData.Length} bytes");
+                    context.SeiRbsp = new SharpH265.SeiRbsp();
+                    context.SeiRbsp.Read(context, stream);
+                    context.SeiRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
                         throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
