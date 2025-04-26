@@ -622,9 +622,37 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     if (!ms.ToArray().SequenceEqual(sampleData))
                         throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
+                else if (
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.IDR_N_LP ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.IDR_W_RADL ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RASL_N ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RASL_R ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RADL_N ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RADL_R ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.STSA_N ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.STSA_R ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TSA_N ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TSA_R ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TRAIL_N ||
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TRAIL_R
+                    ) 
+                {
+                    Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    context.SliceSegmentLayerRbsp = new SharpH265.SliceSegmentLayerRbsp();
+                    context.SliceSegmentLayerRbsp.Read(context, stream);
+                    context.SliceSegmentLayerRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
                 else
                 {
-                    // TODO
+                    // 10-15, 22-31, 41-47
+                    Log.Debug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    throw new InvalidOperationException();
                 }
             }
             catch (Exception ex)
