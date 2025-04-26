@@ -2466,7 +2466,7 @@ list_entry_l1[ i ] u(v)
                 this.list_entry_l0 = new uint[((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1 + 1];
                 for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(H265Helpers.GetNumPicTotalCurr(context))), out this.list_entry_l0[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).NumPicTotalCurr)), out this.list_entry_l0[i]);
                 }
             }
 
@@ -2480,7 +2480,7 @@ list_entry_l1[ i ] u(v)
                     this.list_entry_l1 = new uint[((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1 + 1];
                     for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(H265Helpers.GetNumPicTotalCurr(context))), out this.list_entry_l1[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).NumPicTotalCurr)), out this.list_entry_l1[i]);
                     }
                 }
             }
@@ -2500,7 +2500,7 @@ list_entry_l1[ i ] u(v)
 
                 for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
                 {
-                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(H265Helpers.GetNumPicTotalCurr(context))), this.list_entry_l0[i]);
+                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).NumPicTotalCurr)), this.list_entry_l0[i]);
                 }
             }
 
@@ -2513,7 +2513,7 @@ list_entry_l1[ i ] u(v)
 
                     for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(H265Helpers.GetNumPicTotalCurr(context))), this.list_entry_l1[i]);
+                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).NumPicTotalCurr)), this.list_entry_l1[i]);
                     }
                 }
             }
@@ -2634,8 +2634,8 @@ pred_weight_table() {
             for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
             {
 
-                if ((H265Helpers.GetPicLayerId(H265Helpers.GetRefPicList0(context)[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
-   (H265Helpers.GetPicOrderCnt(H265Helpers.GetRefPicList0(context)[i]) != H265Helpers.GetPicOrderCnt(H265Helpers.GetCurrPic(context))))
+                if ((((H265Context)context).PicLayerId(((H265Context)context).RefPicList0[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
+   (((H265Context)context).PicOrderCnt(((H265Context)context).RefPicList0[i]) != ((H265Context)context).PicOrderCnt(((H265Context)context).CurrPic)))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i]);
                 }
@@ -2648,8 +2648,8 @@ pred_weight_table() {
                 for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
                 {
 
-                    if ((H265Helpers.GetPicLayerId(H265Helpers.GetRefPicList0(context)[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
-    (H265Helpers.GetPicOrderCnt(H265Helpers.GetRefPicList0(context)[i]) != H265Helpers.GetPicOrderCnt(H265Helpers.GetCurrPic(context))))
+                    if ((((H265Context)context).PicLayerId(((H265Context)context).RefPicList0[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
+    (((H265Context)context).PicOrderCnt(((H265Context)context).RefPicList0[i]) != ((H265Context)context).PicOrderCnt(((H265Context)context).CurrPic)))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l0_flag[i]);
                     }
@@ -2689,8 +2689,8 @@ pred_weight_table() {
                 for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
 
-                    if ((H265Helpers.GetPicLayerId(H265Helpers.GetRefPicList0(context)[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
-    (H265Helpers.GetPicOrderCnt(H265Helpers.GetRefPicList1(context)[i]) != H265Helpers.GetPicOrderCnt(H265Helpers.GetCurrPic(context))))
+                    if ((((H265Context)context).PicLayerId(((H265Context)context).RefPicList0[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
+    (((H265Context)context).PicOrderCnt(((H265Context)context).RefPicList1[i]) != ((H265Context)context).PicOrderCnt(((H265Context)context).CurrPic)))
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i]);
                     }
@@ -2703,8 +2703,8 @@ pred_weight_table() {
                     for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
                     {
 
-                        if ((H265Helpers.GetPicLayerId(H265Helpers.GetRefPicList0(context)[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
-     (H265Helpers.GetPicOrderCnt(H265Helpers.GetRefPicList1(context)[i]) != H265Helpers.GetPicOrderCnt(H265Helpers.GetCurrPic(context))))
+                        if ((((H265Context)context).PicLayerId(((H265Context)context).RefPicList0[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
+     (((H265Context)context).PicOrderCnt(((H265Context)context).RefPicList1[i]) != ((H265Context)context).PicOrderCnt(((H265Context)context).CurrPic)))
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l1_flag[i]);
                         }
@@ -2757,8 +2757,8 @@ pred_weight_table() {
             for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
             {
 
-                if ((H265Helpers.GetPicLayerId(H265Helpers.GetRefPicList0(context)[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
-   (H265Helpers.GetPicOrderCnt(H265Helpers.GetRefPicList0(context)[i]) != H265Helpers.GetPicOrderCnt(H265Helpers.GetCurrPic(context))))
+                if ((((H265Context)context).PicLayerId(((H265Context)context).RefPicList0[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
+   (((H265Context)context).PicOrderCnt(((H265Context)context).RefPicList0[i]) != ((H265Context)context).PicOrderCnt(((H265Context)context).CurrPic)))
                 {
                     size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i]);
                 }
@@ -2770,8 +2770,8 @@ pred_weight_table() {
                 for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1; i++)
                 {
 
-                    if ((H265Helpers.GetPicLayerId(H265Helpers.GetRefPicList0(context)[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
-    (H265Helpers.GetPicOrderCnt(H265Helpers.GetRefPicList0(context)[i]) != H265Helpers.GetPicOrderCnt(H265Helpers.GetCurrPic(context))))
+                    if ((((H265Context)context).PicLayerId(((H265Context)context).RefPicList0[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
+    (((H265Context)context).PicOrderCnt(((H265Context)context).RefPicList0[i]) != ((H265Context)context).PicOrderCnt(((H265Context)context).CurrPic)))
                     {
                         size += stream.WriteUnsignedInt(1, this.chroma_weight_l0_flag[i]);
                     }
@@ -2804,8 +2804,8 @@ pred_weight_table() {
                 for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
 
-                    if ((H265Helpers.GetPicLayerId(H265Helpers.GetRefPicList0(context)[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
-    (H265Helpers.GetPicOrderCnt(H265Helpers.GetRefPicList1(context)[i]) != H265Helpers.GetPicOrderCnt(H265Helpers.GetCurrPic(context))))
+                    if ((((H265Context)context).PicLayerId(((H265Context)context).RefPicList0[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
+    (((H265Context)context).PicOrderCnt(((H265Context)context).RefPicList1[i]) != ((H265Context)context).PicOrderCnt(((H265Context)context).CurrPic)))
                     {
                         size += stream.WriteUnsignedInt(1, this.luma_weight_l1_flag[i]);
                     }
@@ -2817,8 +2817,8 @@ pred_weight_table() {
                     for (i = 0; i <= ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL1ActiveMinus1; i++)
                     {
 
-                        if ((H265Helpers.GetPicLayerId(H265Helpers.GetRefPicList0(context)[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
-     (H265Helpers.GetPicOrderCnt(H265Helpers.GetRefPicList1(context)[i]) != H265Helpers.GetPicOrderCnt(H265Helpers.GetCurrPic(context))))
+                        if ((((H265Context)context).PicLayerId(((H265Context)context).RefPicList0[i]) != ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId) ||
+     (((H265Context)context).PicOrderCnt(((H265Context)context).RefPicList1[i]) != ((H265Context)context).PicOrderCnt(((H265Context)context).CurrPic)))
                         {
                             size += stream.WriteUnsignedInt(1, this.chroma_weight_l1_flag[i]);
                         }
@@ -2940,9 +2940,9 @@ st_ref_pic_set( stRpsIdx ) {
                 size += stream.ReadUnsignedInt(size, 1, out this.delta_rps_sign);
                 size += stream.ReadUnsignedIntGolomb(size, out this.abs_delta_rps_minus1);
 
-                this.used_by_curr_pic_flag = new byte[H265Helpers.GetNumDeltaPocs(context)[H265Helpers.GetRefRpsIdx(context)]];
-                this.use_delta_flag = new byte[H265Helpers.GetNumDeltaPocs(context)[H265Helpers.GetRefRpsIdx(context)]];
-                for (j = 0; j <= H265Helpers.GetNumDeltaPocs(context)[H265Helpers.GetRefRpsIdx(context)]; j++)
+                this.used_by_curr_pic_flag = new byte[((H265Context)context).NumDeltaPocs[((H265Context)context).RefRpsIdx]];
+                this.use_delta_flag = new byte[((H265Context)context).NumDeltaPocs[((H265Context)context).RefRpsIdx]];
+                for (j = 0; j <= ((H265Context)context).NumDeltaPocs[((H265Context)context).RefRpsIdx]; j++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_flag[j]);
 
@@ -2999,7 +2999,7 @@ st_ref_pic_set( stRpsIdx ) {
                 size += stream.WriteUnsignedInt(1, this.delta_rps_sign);
                 size += stream.WriteUnsignedIntGolomb(this.abs_delta_rps_minus1);
 
-                for (j = 0; j <= H265Helpers.GetNumDeltaPocs(context)[H265Helpers.GetRefRpsIdx(context)]; j++)
+                for (j = 0; j <= ((H265Context)context).NumDeltaPocs[((H265Context)context).RefRpsIdx]; j++)
                 {
                     size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_flag[j]);
 
@@ -3700,8 +3700,6 @@ sei_payload( payloadType, payloadSize ) {
                 }
             }
 
-            var aaa = stream.GetBitsPositionSinceLastMark();
-            var bbb = 8 * payloadSize;
             if ((!(stream.ByteAligned() && 8 * payloadSize == stream.GetBitsPositionSinceLastMark())))
             {
 
@@ -4017,9 +4015,6 @@ sei_payload( payloadType, payloadSize ) {
                 }
             }
 
-            var aaa = stream.GetBitsPositionSinceLastMark();
-            var bbb = 8 * payloadSize;
-
             if ((!(stream.ByteAligned() && 8 * payloadSize == stream.GetBitsPositionSinceLastMark())))
             {
 
@@ -4145,11 +4140,11 @@ buffering_period( payloadSize ) {
             if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag != 0)
             {
 
-                this.nal_initial_cpb_removal_delay = new uint[H265Helpers.GetCpbCnt(context)];
-                this.nal_initial_cpb_removal_offset = new uint[H265Helpers.GetCpbCnt(context)];
-                this.nal_initial_alt_cpb_removal_delay = new uint[H265Helpers.GetCpbCnt(context)];
-                this.nal_initial_alt_cpb_removal_offset = new uint[H265Helpers.GetCpbCnt(context)];
-                for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
+                this.nal_initial_cpb_removal_delay = new uint[((H265Context)context).CpbCnt];
+                this.nal_initial_cpb_removal_offset = new uint[((H265Context)context).CpbCnt];
+                this.nal_initial_alt_cpb_removal_delay = new uint[((H265Context)context).CpbCnt];
+                this.nal_initial_alt_cpb_removal_offset = new uint[((H265Context)context).CpbCnt];
+                for (i = 0; i < ((H265Context)context).CpbCnt; i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_cpb_removal_delay[i]);
                     size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_cpb_removal_offset[i]);
@@ -4165,11 +4160,11 @@ buffering_period( payloadSize ) {
             if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag != 0)
             {
 
-                this.vcl_initial_cpb_removal_delay = new uint[H265Helpers.GetCpbCnt(context)];
-                this.vcl_initial_cpb_removal_offset = new uint[H265Helpers.GetCpbCnt(context)];
-                this.vcl_initial_alt_cpb_removal_delay = new uint[H265Helpers.GetCpbCnt(context)];
-                this.vcl_initial_alt_cpb_removal_offset = new uint[H265Helpers.GetCpbCnt(context)];
-                for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
+                this.vcl_initial_cpb_removal_delay = new uint[((H265Context)context).CpbCnt];
+                this.vcl_initial_cpb_removal_offset = new uint[((H265Context)context).CpbCnt];
+                this.vcl_initial_alt_cpb_removal_delay = new uint[((H265Context)context).CpbCnt];
+                this.vcl_initial_alt_cpb_removal_offset = new uint[((H265Context)context).CpbCnt];
+                for (i = 0; i < ((H265Context)context).CpbCnt; i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_cpb_removal_delay[i]);
                     size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_cpb_removal_offset[i]);
@@ -4213,7 +4208,7 @@ buffering_period( payloadSize ) {
             if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag != 0)
             {
 
-                for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
+                for (i = 0; i < ((H265Context)context).CpbCnt; i++)
                 {
                     size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_cpb_removal_delay[i]);
                     size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_cpb_removal_offset[i]);
@@ -4229,7 +4224,7 @@ buffering_period( payloadSize ) {
             if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag != 0)
             {
 
-                for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
+                for (i = 0; i < ((H265Context)context).CpbCnt; i++)
                 {
                     size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_cpb_removal_delay[i]);
                     size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_cpb_removal_offset[i]);
@@ -8850,7 +8845,7 @@ mcts_extraction_info_sets( payloadSize ) {
                     this.output_slice_segment_address[i] = new uint[num_slice_segments_minus1[i] + 1];
                     for (j = 0; j <= num_slice_segments_minus1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(H265Helpers.GetPicSizeInCtbsY(context))), out this.output_slice_segment_address[i][j]);
+                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).PicSizeInCtbsY)), out this.output_slice_segment_address[i][j]);
                     }
                 }
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_vps_in_info_set_minus1[i]);
@@ -8952,7 +8947,7 @@ mcts_extraction_info_sets( payloadSize ) {
 
                     for (j = 0; j <= num_slice_segments_minus1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(H265Helpers.GetPicSizeInCtbsY(context))), this.output_slice_segment_address[i][j]);
+                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).PicSizeInCtbsY)), this.output_slice_segment_address[i][j]);
                     }
                 }
                 size += stream.WriteUnsignedIntGolomb(this.num_vps_in_info_set_minus1[i]);
@@ -9820,12 +9815,12 @@ cbr_flag[ i ] u(1)
 
             uint i = 0;
 
-            this.bit_rate_value_minus1 = new uint[H265Helpers.GetCpbCnt(context)];
-            this.cpb_size_value_minus1 = new uint[H265Helpers.GetCpbCnt(context)];
-            this.cpb_size_du_value_minus1 = new uint[H265Helpers.GetCpbCnt(context)];
-            this.bit_rate_du_value_minus1 = new uint[H265Helpers.GetCpbCnt(context)];
-            this.cbr_flag = new byte[H265Helpers.GetCpbCnt(context)];
-            for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
+            this.bit_rate_value_minus1 = new uint[((H265Context)context).CpbCnt];
+            this.cpb_size_value_minus1 = new uint[((H265Context)context).CpbCnt];
+            this.cpb_size_du_value_minus1 = new uint[((H265Context)context).CpbCnt];
+            this.bit_rate_du_value_minus1 = new uint[((H265Context)context).CpbCnt];
+            this.cbr_flag = new byte[((H265Context)context).CpbCnt];
+            for (i = 0; i < ((H265Context)context).CpbCnt; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_value_minus1[i]);
                 size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_value_minus1[i]);
@@ -9847,7 +9842,7 @@ cbr_flag[ i ] u(1)
 
             uint i = 0;
 
-            for (i = 0; i < H265Helpers.GetCpbCnt(context); i++)
+            for (i = 0; i < ((H265Context)context).CpbCnt; i++)
             {
                 size += stream.WriteUnsignedIntGolomb(this.bit_rate_value_minus1[i]);
                 size += stream.WriteUnsignedIntGolomb(this.cpb_size_value_minus1[i]);
@@ -10124,8 +10119,8 @@ vps_extension() {
             if (view_id_len > 0)
             {
 
-                this.view_id_val = new uint[H265Helpers.GetNumViews(context)];
-                for (i = 0; i < H265Helpers.GetNumViews(context); i++)
+                this.view_id_val = new uint[((H265Context)context).NumViews];
+                for (i = 0; i < ((H265Context)context).NumViews; i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, view_id_len, out this.view_id_val[i]);
                 }
@@ -10142,7 +10137,7 @@ vps_extension() {
                 }
             }
 
-            if (H265Helpers.GetNumIndependentLayers(context) > 1)
+            if (((H265Context)context).NumIndependentLayers > 1)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_add_layer_sets);
             }
@@ -10151,10 +10146,10 @@ vps_extension() {
             for (i = 0; i < num_add_layer_sets; i++)
             {
 
-                this.highest_layer_idx_plus1[i] = new uint[H265Helpers.GetNumIndependentLayers(context)];
-                for (j = 1; j < H265Helpers.GetNumIndependentLayers(context); j++)
+                this.highest_layer_idx_plus1[i] = new uint[((H265Context)context).NumIndependentLayers];
+                for (j = 1; j < ((H265Context)context).NumIndependentLayers; j++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(H265Helpers.GetNumLayersInTreePartition(context)[j] + 1)), out this.highest_layer_idx_plus1[i][j]);
+                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).NumLayersInTreePartition[j] + 1)), out this.highest_layer_idx_plus1[i][j]);
                 }
             }
             size += stream.ReadUnsignedInt(size, 1, out this.vps_sub_layers_max_minus1_present_flag);
@@ -10223,25 +10218,25 @@ vps_extension() {
                 if (i > ((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 || Math.Min(((H265Context)context).VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc, 2) == 2)
                 {
 
-                    this.output_layer_flag[i] = new byte[H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[i]]];
-                    for (j = 0; j < H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[i]]; j++)
+                    this.output_layer_flag[i] = new byte[((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[i]]];
+                    for (j = 0; j < ((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[i]]; j++)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.output_layer_flag[i][j]);
                     }
                 }
 
-                this.profile_tier_level_idx[i] = new uint[H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[i]]];
-                for (j = 0; j < H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[i]]; j++)
+                this.profile_tier_level_idx[i] = new uint[((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[i]]];
+                for (j = 0; j < ((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[i]]; j++)
                 {
 
-                    if (H265Helpers.GetNecessaryLayerFlag(context)[i][j] != 0 && vps_num_profile_tier_level_minus1 > 0)
+                    if (((H265Context)context).NecessaryLayerFlag[i][j] != 0 && vps_num_profile_tier_level_minus1 > 0)
                     {
                         size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(vps_num_profile_tier_level_minus1 + 1)), out this.profile_tier_level_idx[i][j]);
                     }
                 }
 
-                if (H265Helpers.GetNumOutputLayersInOutputLayerSet(context)[i] == 1
-   && H265Helpers.GetNumDirectRefLayers(context)[H265Helpers.GetOlsHighestOutputLayerId(context)[i]] > 0)
+                if (((H265Context)context).NumOutputLayersInOutputLayerSet[i] == 1
+   && ((H265Context)context).NumDirectRefLayers[((H265Context)context).OlsHighestOutputLayerId[i]] > 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.alt_output_layer_flag[i]);
                 }
@@ -10276,7 +10271,7 @@ vps_extension() {
             for (i = 1; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
             {
 
-                if (H265Helpers.GetNumDirectRefLayers(context)[layer_id_in_nuh[i]] == 0)
+                if (((H265Context)context).NumDirectRefLayers[layer_id_in_nuh[i]] == 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.poc_lsb_not_present_flag[i]);
                 }
@@ -10382,7 +10377,7 @@ vps_extension() {
             if (view_id_len > 0)
             {
 
-                for (i = 0; i < H265Helpers.GetNumViews(context); i++)
+                for (i = 0; i < ((H265Context)context).NumViews; i++)
                 {
                     size += stream.WriteUnsignedIntVariable(view_id_len, this.view_id_val[i]);
                 }
@@ -10397,7 +10392,7 @@ vps_extension() {
                 }
             }
 
-            if (H265Helpers.GetNumIndependentLayers(context) > 1)
+            if (((H265Context)context).NumIndependentLayers > 1)
             {
                 size += stream.WriteUnsignedIntGolomb(this.num_add_layer_sets);
             }
@@ -10405,9 +10400,9 @@ vps_extension() {
             for (i = 0; i < num_add_layer_sets; i++)
             {
 
-                for (j = 1; j < H265Helpers.GetNumIndependentLayers(context); j++)
+                for (j = 1; j < ((H265Context)context).NumIndependentLayers; j++)
                 {
-                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(H265Helpers.GetNumLayersInTreePartition(context)[j] + 1)), this.highest_layer_idx_plus1[i][j]);
+                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).NumLayersInTreePartition[j] + 1)), this.highest_layer_idx_plus1[i][j]);
                 }
             }
             size += stream.WriteUnsignedInt(1, this.vps_sub_layers_max_minus1_present_flag);
@@ -10466,23 +10461,23 @@ vps_extension() {
                 if (i > ((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 || Math.Min(((H265Context)context).VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc, 2) == 2)
                 {
 
-                    for (j = 0; j < H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[i]]; j++)
+                    for (j = 0; j < ((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[i]]; j++)
                     {
                         size += stream.WriteUnsignedInt(1, this.output_layer_flag[i][j]);
                     }
                 }
 
-                for (j = 0; j < H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[i]]; j++)
+                for (j = 0; j < ((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[i]]; j++)
                 {
 
-                    if (H265Helpers.GetNecessaryLayerFlag(context)[i][j] != 0 && vps_num_profile_tier_level_minus1 > 0)
+                    if (((H265Context)context).NecessaryLayerFlag[i][j] != 0 && vps_num_profile_tier_level_minus1 > 0)
                     {
                         size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(vps_num_profile_tier_level_minus1 + 1)), this.profile_tier_level_idx[i][j]);
                     }
                 }
 
-                if (H265Helpers.GetNumOutputLayersInOutputLayerSet(context)[i] == 1
-   && H265Helpers.GetNumDirectRefLayers(context)[H265Helpers.GetOlsHighestOutputLayerId(context)[i]] > 0)
+                if (((H265Context)context).NumOutputLayersInOutputLayerSet[i] == 1
+   && ((H265Context)context).NumDirectRefLayers[((H265Context)context).OlsHighestOutputLayerId[i]] > 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.alt_output_layer_flag[i]);
                 }
@@ -10513,7 +10508,7 @@ vps_extension() {
             for (i = 1; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
             {
 
-                if (H265Helpers.GetNumDirectRefLayers(context)[layer_id_in_nuh[i]] == 0)
+                if (((H265Context)context).NumDirectRefLayers[layer_id_in_nuh[i]] == 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.poc_lsb_not_present_flag[i]);
                 }
@@ -10751,14 +10746,14 @@ dpb_size() {
             this.max_vps_latency_increase_plus1 = new uint[((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets][];
             for (i = 1; i < ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; i++)
             {
-                currLsIdx = H265Helpers.GetOlsIdxToLsIdx(context)[i];
+                currLsIdx = ((H265Context)context).OlsIdxToLsIdx[i];
                 size += stream.ReadUnsignedInt(size, 1, out this.sub_layer_flag_info_present_flag[i]);
 
-                this.sub_layer_dpb_info_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx] + 1];
-                this.max_vps_dec_pic_buffering_minus1[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx] + 1][];
-                this.max_vps_num_reorder_pics[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx] + 1];
-                this.max_vps_latency_increase_plus1[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx] + 1];
-                for (j = 0; j <= H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx]; j++)
+                this.sub_layer_dpb_info_present_flag[i] = new byte[((H265Context)context).MaxSubLayersInLayerSetMinus1[currLsIdx] + 1];
+                this.max_vps_dec_pic_buffering_minus1[i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[currLsIdx] + 1][];
+                this.max_vps_num_reorder_pics[i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[currLsIdx] + 1];
+                this.max_vps_latency_increase_plus1[i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[currLsIdx] + 1];
+                for (j = 0; j <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[currLsIdx]; j++)
                 {
 
                     if (j > 0 && sub_layer_flag_info_present_flag[i] != 0)
@@ -10769,12 +10764,12 @@ dpb_size() {
                     if (sub_layer_dpb_info_present_flag[i][j] != 0)
                     {
 
-                        this.max_vps_dec_pic_buffering_minus1[i][j] = new uint[H265Helpers.GetNumLayersInIdList(context)[currLsIdx]];
-                        for (k = 0; k < H265Helpers.GetNumLayersInIdList(context)[currLsIdx]; k++)
+                        this.max_vps_dec_pic_buffering_minus1[i][j] = new uint[((H265Context)context).NumLayersInIdList[currLsIdx]];
+                        for (k = 0; k < ((H265Context)context).NumLayersInIdList[currLsIdx]; k++)
                         {
 
-                            if (H265Helpers.GetNecessaryLayerFlag(context)[i][k] != 0 && (((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ||
-      (H265Helpers.GetLayerSetLayerIdList(context)[currLsIdx][k] != 0)))
+                            if (((H265Context)context).NecessaryLayerFlag[i][k] != 0 && (((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ||
+      (((H265Context)context).LayerSetLayerIdList[currLsIdx][k] != 0)))
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.max_vps_dec_pic_buffering_minus1[i][k][j]);
                             }
@@ -10799,10 +10794,10 @@ dpb_size() {
 
             for (i = 1; i < ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets; i++)
             {
-                currLsIdx = H265Helpers.GetOlsIdxToLsIdx(context)[i];
+                currLsIdx = ((H265Context)context).OlsIdxToLsIdx[i];
                 size += stream.WriteUnsignedInt(1, this.sub_layer_flag_info_present_flag[i]);
 
-                for (j = 0; j <= H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[currLsIdx]; j++)
+                for (j = 0; j <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[currLsIdx]; j++)
                 {
 
                     if (j > 0 && sub_layer_flag_info_present_flag[i] != 0)
@@ -10813,11 +10808,11 @@ dpb_size() {
                     if (sub_layer_dpb_info_present_flag[i][j] != 0)
                     {
 
-                        for (k = 0; k < H265Helpers.GetNumLayersInIdList(context)[currLsIdx]; k++)
+                        for (k = 0; k < ((H265Context)context).NumLayersInIdList[currLsIdx]; k++)
                         {
 
-                            if (H265Helpers.GetNecessaryLayerFlag(context)[i][k] != 0 && (((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ||
-      (H265Helpers.GetLayerSetLayerIdList(context)[currLsIdx][k] != 0)))
+                            if (((H265Context)context).NecessaryLayerFlag[i][k] != 0 && (((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ||
+      (((H265Context)context).LayerSetLayerIdList[currLsIdx][k] != 0)))
                             {
                                 size += stream.WriteUnsignedIntGolomb(this.max_vps_dec_pic_buffering_minus1[i][k][j]);
                             }
@@ -11014,13 +11009,13 @@ vps_vui() {
                 for (i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i < (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++)
                 {
 
-                    this.bit_rate_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
-                    this.pic_rate_present_flag[i] = new byte[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
-                    this.avg_bit_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
-                    this.max_bit_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
-                    this.constant_pic_rate_idc[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
-                    this.avg_pic_rate[i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i] + 1];
-                    for (j = 0; j <= H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i]; j++)
+                    this.bit_rate_present_flag[i] = new byte[((H265Context)context).MaxSubLayersInLayerSetMinus1[i] + 1];
+                    this.pic_rate_present_flag[i] = new byte[((H265Context)context).MaxSubLayersInLayerSetMinus1[i] + 1];
+                    this.avg_bit_rate[i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[i] + 1];
+                    this.max_bit_rate[i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[i] + 1];
+                    this.constant_pic_rate_idc[i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[i] + 1];
+                    this.avg_pic_rate[i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[i] + 1];
+                    for (j = 0; j <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[i]; j++)
                     {
 
                         if (bit_rate_present_vps_flag != 0)
@@ -11091,10 +11086,10 @@ vps_vui() {
                 for (i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
                 {
 
-                    this.tile_boundaries_aligned_flag[i] = new byte[H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]];
-                    for (j = 0; j < H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]; j++)
+                    this.tile_boundaries_aligned_flag[i] = new byte[((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]];
+                    for (j = 0; j < ((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]; j++)
                     {
-                        layerIdx = H265Helpers.GetLayerIdxInVps(context)[H265Helpers.GetIdDirectRefLayer(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]][j]];
+                        layerIdx = ((H265Context)context).LayerIdxInVps[((H265Context)context).IdDirectRefLayer[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]][j]];
 
                         if (tiles_in_use_flag[i] != 0 && tiles_in_use_flag[layerIdx] != 0)
                         {
@@ -11127,14 +11122,14 @@ vps_vui() {
                 for (i = 1; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
                 {
 
-                    this.min_spatial_segment_offset_plus1[i] = new uint[H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]];
-                    this.ctu_based_offset_enabled_flag[i] = new byte[H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]];
-                    this.min_horizontal_ctu_offset_plus1[i] = new uint[H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]];
-                    for (j = 0; j < H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]; j++)
+                    this.min_spatial_segment_offset_plus1[i] = new uint[((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]];
+                    this.ctu_based_offset_enabled_flag[i] = new byte[((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]];
+                    this.min_horizontal_ctu_offset_plus1[i] = new uint[((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]];
+                    for (j = 0; j < ((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]; j++)
                     {
 
                         if (((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ||
-        H265Helpers.GetIdDirectRefLayer(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]][j] > 0)
+        ((H265Context)context).IdDirectRefLayer[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]][j] > 0)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.min_spatial_segment_offset_plus1[i][j]);
 
@@ -11163,7 +11158,7 @@ vps_vui() {
             for (i = 1; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
             {
 
-                if (H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] == 0)
+                if (((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] == 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.base_layer_parameter_set_compatibility_flag[i]);
                 }
@@ -11199,7 +11194,7 @@ vps_vui() {
                 for (i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 0 : 1); i < (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++)
                 {
 
-                    for (j = 0; j <= H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[i]; j++)
+                    for (j = 0; j <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[i]; j++)
                     {
 
                         if (bit_rate_present_vps_flag != 0)
@@ -11264,9 +11259,9 @@ vps_vui() {
                 for (i = (uint)(((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ? 1 : 2); i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
                 {
 
-                    for (j = 0; j < H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]; j++)
+                    for (j = 0; j < ((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]; j++)
                     {
-                        layerIdx = H265Helpers.GetLayerIdxInVps(context)[H265Helpers.GetIdDirectRefLayer(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]][j]];
+                        layerIdx = ((H265Context)context).LayerIdxInVps[((H265Context)context).IdDirectRefLayer[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]][j]];
 
                         if (tiles_in_use_flag[i] != 0 && tiles_in_use_flag[layerIdx] != 0)
                         {
@@ -11295,11 +11290,11 @@ vps_vui() {
                 for (i = 1; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
                 {
 
-                    for (j = 0; j < H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]; j++)
+                    for (j = 0; j < ((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]]; j++)
                     {
 
                         if (((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag != 0 ||
-        H265Helpers.GetIdDirectRefLayer(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]][j] > 0)
+        ((H265Context)context).IdDirectRefLayer[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]][j] > 0)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.min_spatial_segment_offset_plus1[i][j]);
 
@@ -11326,7 +11321,7 @@ vps_vui() {
             for (i = 1; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
             {
 
-                if (H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] == 0)
+                if (((H265Context)context).NumDirectRefLayers[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] == 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.base_layer_parameter_set_compatibility_flag[i]);
                 }
@@ -11517,8 +11512,8 @@ vps_vui_bsp_hrd_params() {
                         for (k = 0; k <= num_partitions_in_scheme_minus1[h][j]; k++)
                         {
 
-                            this.layer_included_in_partition_flag[h][j][k] = new byte[H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[h]]];
-                            for (r = 0; r < H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[h]]; r++)
+                            this.layer_included_in_partition_flag[h][j][k] = new byte[((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[h]]];
+                            for (r = 0; r < ((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[h]]; r++)
                             {
                                 size += stream.ReadUnsignedInt(size, 1, out this.layer_included_in_partition_flag[h][j][k][r]);
                             }
@@ -11531,10 +11526,10 @@ vps_vui_bsp_hrd_params() {
                     for (i = 0; i < num_signalled_partitioning_schemes[h] + 1; i++)
                     {
 
-                        this.num_bsp_schedules_minus1[h][i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[H265Helpers.GetOlsIdxToLsIdx(context)[h]] + 1];
-                        this.bsp_hrd_idx[h][i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[H265Helpers.GetOlsIdxToLsIdx(context)[h]] + 1][][];
-                        this.bsp_sched_idx[h][i] = new uint[H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[H265Helpers.GetOlsIdxToLsIdx(context)[h]] + 1][][];
-                        for (t = 0; t <= H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[H265Helpers.GetOlsIdxToLsIdx(context)[h]]; t++)
+                        this.num_bsp_schedules_minus1[h][i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[((H265Context)context).OlsIdxToLsIdx[h]] + 1];
+                        this.bsp_hrd_idx[h][i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[((H265Context)context).OlsIdxToLsIdx[h]] + 1][][];
+                        this.bsp_sched_idx[h][i] = new uint[((H265Context)context).MaxSubLayersInLayerSetMinus1[((H265Context)context).OlsIdxToLsIdx[h]] + 1][][];
+                        for (t = 0; t <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[((H265Context)context).OlsIdxToLsIdx[h]]; t++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.num_bsp_schedules_minus1[h][i][t]);
 
@@ -11601,7 +11596,7 @@ vps_vui_bsp_hrd_params() {
                         for (k = 0; k <= num_partitions_in_scheme_minus1[h][j]; k++)
                         {
 
-                            for (r = 0; r < H265Helpers.GetNumLayersInIdList(context)[H265Helpers.GetOlsIdxToLsIdx(context)[h]]; r++)
+                            for (r = 0; r < ((H265Context)context).NumLayersInIdList[((H265Context)context).OlsIdxToLsIdx[h]]; r++)
                             {
                                 size += stream.WriteUnsignedInt(1, this.layer_included_in_partition_flag[h][j][k][r]);
                             }
@@ -11611,7 +11606,7 @@ vps_vui_bsp_hrd_params() {
                     for (i = 0; i < num_signalled_partitioning_schemes[h] + 1; i++)
                     {
 
-                        for (t = 0; t <= H265Helpers.GetMaxSubLayersInLayerSetMinus1(context)[H265Helpers.GetOlsIdxToLsIdx(context)[h]]; t++)
+                        for (t = 0; t <= ((H265Context)context).MaxSubLayersInLayerSetMinus1[((H265Context)context).OlsIdxToLsIdx[h]]; t++)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.num_bsp_schedules_minus1[h][i][t]);
 
@@ -13235,21 +13230,21 @@ bsp_initial_arrival_time( payloadSize ) {
             uint i = 0;
             psIdx = ((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiPartitioningSchemeIdx;
 
-            if (H265Helpers.GetNalInitialArrivalDelayPresent(context) != 0)
+            if (((H265Context)context).NalInitialArrivalDelayPresent != 0)
             {
 
-                this.nal_initial_arrival_delay = new uint[H265Helpers.GetBspSchedCnt(context)[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][H265Helpers.GetMaxTemporalId(context)[0]]];
-                for (i = 0; i < H265Helpers.GetBspSchedCnt(context)[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][H265Helpers.GetMaxTemporalId(context)[0]]; i++)
+                this.nal_initial_arrival_delay = new uint[((H265Context)context).BspSchedCnt[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][((H265Context)context).MaxTemporalId[0]]];
+                for (i = 0; i < ((H265Context)context).BspSchedCnt[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][((H265Context)context).MaxTemporalId[0]]; i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1), out this.nal_initial_arrival_delay[i]);
                 }
             }
 
-            if (H265Helpers.GetVclInitialArrivalDelayPresent(context) != 0)
+            if (((H265Context)context).VclInitialArrivalDelayPresent != 0)
             {
 
-                this.vcl_initial_arrival_delay = new uint[H265Helpers.GetBspSchedCnt(context)[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][H265Helpers.GetMaxTemporalId(context)[0]]];
-                for (i = 0; i < H265Helpers.GetBspSchedCnt(context)[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][H265Helpers.GetMaxTemporalId(context)[0]]; i++)
+                this.vcl_initial_arrival_delay = new uint[((H265Context)context).BspSchedCnt[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][((H265Context)context).MaxTemporalId[0]]];
+                for (i = 0; i < ((H265Context)context).BspSchedCnt[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][((H265Context)context).MaxTemporalId[0]]; i++)
                 {
                     size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), out this.vcl_initial_arrival_delay[i]);
                 }
@@ -13266,19 +13261,19 @@ bsp_initial_arrival_time( payloadSize ) {
             uint i = 0;
             psIdx = ((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiPartitioningSchemeIdx;
 
-            if (H265Helpers.GetNalInitialArrivalDelayPresent(context) != 0)
+            if (((H265Context)context).NalInitialArrivalDelayPresent != 0)
             {
 
-                for (i = 0; i < H265Helpers.GetBspSchedCnt(context)[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][H265Helpers.GetMaxTemporalId(context)[0]]; i++)
+                for (i = 0; i < ((H265Context)context).BspSchedCnt[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][((H265Context)context).MaxTemporalId[0]]; i++)
                 {
                     size += stream.WriteUnsignedIntVariable((((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1), this.nal_initial_arrival_delay[i]);
                 }
             }
 
-            if (H265Helpers.GetVclInitialArrivalDelayPresent(context) != 0)
+            if (((H265Context)context).VclInitialArrivalDelayPresent != 0)
             {
 
-                for (i = 0; i < H265Helpers.GetBspSchedCnt(context)[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][H265Helpers.GetMaxTemporalId(context)[0]]; i++)
+                for (i = 0; i < ((H265Context)context).BspSchedCnt[((H265Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.BspNesting.SeiOlsIdx][psIdx][((H265Context)context).MaxTemporalId[0]]; i++)
                 {
                     size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1), this.vcl_initial_arrival_delay[i]);
                 }
@@ -15045,16 +15040,16 @@ vps_3d_extension() {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.cp_precision);
 
-            this.num_cp = new uint[H265Helpers.GetNumViews(context)];
-            this.cp_in_slice_segment_header_flag = new byte[H265Helpers.GetNumViews(context)];
-            this.cp_ref_voi = new uint[H265Helpers.GetNumViews(context)][];
-            this.vps_cp_scale = new int[H265Helpers.GetNumViews(context)][][];
-            this.vps_cp_off = new int[H265Helpers.GetNumViews(context)][][];
-            this.vps_cp_inv_scale_plus_scale = new int[H265Helpers.GetNumViews(context)][][];
-            this.vps_cp_inv_off_plus_off = new int[H265Helpers.GetNumViews(context)][][];
-            for (n = 1; n < H265Helpers.GetNumViews(context); n++)
+            this.num_cp = new uint[((H265Context)context).NumViews];
+            this.cp_in_slice_segment_header_flag = new byte[((H265Context)context).NumViews];
+            this.cp_ref_voi = new uint[((H265Context)context).NumViews][];
+            this.vps_cp_scale = new int[((H265Context)context).NumViews][][];
+            this.vps_cp_off = new int[((H265Context)context).NumViews][][];
+            this.vps_cp_inv_scale_plus_scale = new int[((H265Context)context).NumViews][][];
+            this.vps_cp_inv_off_plus_off = new int[((H265Context)context).NumViews][][];
+            for (n = 1; n < ((H265Context)context).NumViews; n++)
             {
-                i = H265Helpers.GetViewOIdxList(context)[n];
+                i = ((H265Context)context).ViewOIdxList[n];
                 size += stream.ReadUnsignedInt(size, 6, out this.num_cp[i]);
 
                 if (num_cp[i] > 0)
@@ -15095,9 +15090,9 @@ vps_3d_extension() {
             uint j = 0;
             size += stream.WriteUnsignedIntGolomb(this.cp_precision);
 
-            for (n = 1; n < H265Helpers.GetNumViews(context); n++)
+            for (n = 1; n < ((H265Context)context).NumViews; n++)
             {
-                i = H265Helpers.GetViewOIdxList(context)[n];
+                i = ((H265Context)context).ViewOIdxList[n];
                 size += stream.WriteUnsignedInt(6, this.num_cp[i]);
 
                 if (num_cp[i] > 0)
@@ -15903,7 +15898,7 @@ slice_segment_header() {
                 }
 
                 if ((((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 &&
-    ((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[H265Helpers.GetLayerIdxInVps(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] == 0) ||
+    ((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[((H265Context)context).LayerIdxInVps[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] == 0) ||
     (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP))
                 {
                     size += stream.ReadUnsignedIntVariable(size, slice_pic_order_cnt_lsb, out this.slice_pic_order_cnt_lsb);
@@ -15969,11 +15964,11 @@ slice_segment_header() {
                 }
 
                 if (((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag == 0 &&
-      H265Helpers.GetNumRefListLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
+      ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_pred_enabled_flag);
 
-                    if (inter_layer_pred_enabled_flag != 0 && H265Helpers.GetNumRefListLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 1)
+                    if (inter_layer_pred_enabled_flag != 0 && ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 1)
                     {
 
                         if (((H265Context)context).VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag == 0)
@@ -15981,19 +15976,19 @@ slice_segment_header() {
                             size += stream.ReadUnsignedIntVariable(size, num_inter_layer_ref_pics_minus1, out this.num_inter_layer_ref_pics_minus1);
                         }
 
-                        if (H265Helpers.GetNumActiveRefLayerPics(context) != H265Helpers.GetNumRefListLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])
+                        if (((H265Context)context).NumActiveRefLayerPics != ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])
                         {
 
-                            this.inter_layer_pred_layer_idc = new uint[H265Helpers.GetNumActiveRefLayerPics(context)];
-                            for (i = 0; i < H265Helpers.GetNumActiveRefLayerPics(context); i++)
+                            this.inter_layer_pred_layer_idc = new uint[((H265Context)context).NumActiveRefLayerPics];
+                            for (i = 0; i < ((H265Context)context).NumActiveRefLayerPics; i++)
                             {
-                                size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])), out this.inter_layer_pred_layer_idc[i]);
+                                size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).NumDirectRefLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])), out this.inter_layer_pred_layer_idc[i]);
                             }
                         }
                     }
                 }
 
-                if (H265Helpers.GetInCmpPredAvailFlag(context) != 0)
+                if (((H265Context)context).InCmpPredAvailFlag != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.in_comp_pred_flag);
                 }
@@ -16022,7 +16017,7 @@ slice_segment_header() {
                         }
                     }
 
-                    if (((H265Context)context).PicParameterSetRbsp.ListsModificationPresentFlag != 0 && H265Helpers.GetNumPicTotalCurr(context) > 1)
+                    if (((H265Context)context).PicParameterSetRbsp.ListsModificationPresentFlag != 0 && ((H265Context)context).NumPicTotalCurr > 1)
                     {
                         this.ref_pic_lists_modification = new RefPicListsModification();
                         size += stream.ReadClass<RefPicListsModification>(size, context, this.ref_pic_lists_modification);
@@ -16058,7 +16053,7 @@ slice_segment_header() {
                         this.pred_weight_table = new PredWeightTable();
                         size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
                     }
-                    else if (H265Helpers.GetDepthLayerFlag(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] == 0 && H265Helpers.GetNumRefListLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
+                    else if (((H265Context)context).DepthLayerFlag[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] == 0 && ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.slice_ic_enabled_flag);
 
@@ -16105,16 +16100,16 @@ slice_segment_header() {
                     size += stream.ReadUnsignedInt(size, 1, out this.slice_loop_filter_across_slices_enabled_flag);
                 }
 
-                if (((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] != 0)
+                if (((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] != 0)
                 {
 
-                    this.cp_scale = new int[((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]][];
-                    this.cp_off = new int[((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]][];
-                    this.cp_inv_scale_plus_scale = new int[((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]][];
-                    this.cp_inv_off_plus_off = new int[((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]][];
-                    for (m = 0; m < ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]; m++)
+                    this.cp_scale = new int[((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]][];
+                    this.cp_off = new int[((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]][];
+                    this.cp_inv_scale_plus_scale = new int[((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]][];
+                    this.cp_inv_off_plus_off = new int[((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]][];
+                    for (m = 0; m < ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]; m++)
                     {
-                        j = ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]][m];
+                        j = ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]][m];
                         size += stream.ReadSignedIntGolomb(size, out this.cp_scale[j][m]);
                         size += stream.ReadSignedIntGolomb(size, out this.cp_off[j][m]);
                         size += stream.ReadSignedIntGolomb(size, out this.cp_inv_scale_plus_scale[j][m]);
@@ -16160,7 +16155,7 @@ slice_segment_header() {
                     size += stream.ReadUnsignedIntVariable(size, poc_lsb_val, out this.poc_lsb_val);
                 }
 
-                if (((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT) && (((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0 || (((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0 && H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] == 0)) ? 1 : 0) == 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0)
+                if (((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT) && (((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0 || (((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0 && ((H265Context)context).NumDirectRefLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] == 0)) ? 1 : 0) == 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.poc_msb_cycle_val_present_flag);
                 }
@@ -16242,7 +16237,7 @@ slice_segment_header() {
                 }
 
                 if ((((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 &&
-    ((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[H265Helpers.GetLayerIdxInVps(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] == 0) ||
+    ((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[((H265Context)context).LayerIdxInVps[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] == 0) ||
     (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP))
                 {
                     size += stream.WriteUnsignedIntVariable(slice_pic_order_cnt_lsb, this.slice_pic_order_cnt_lsb);
@@ -16302,11 +16297,11 @@ slice_segment_header() {
                 }
 
                 if (((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag == 0 &&
-      H265Helpers.GetNumRefListLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
+      ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.inter_layer_pred_enabled_flag);
 
-                    if (inter_layer_pred_enabled_flag != 0 && H265Helpers.GetNumRefListLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 1)
+                    if (inter_layer_pred_enabled_flag != 0 && ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 1)
                     {
 
                         if (((H265Context)context).VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag == 0)
@@ -16314,18 +16309,18 @@ slice_segment_header() {
                             size += stream.WriteUnsignedIntVariable(num_inter_layer_ref_pics_minus1, this.num_inter_layer_ref_pics_minus1);
                         }
 
-                        if (H265Helpers.GetNumActiveRefLayerPics(context) != H265Helpers.GetNumRefListLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])
+                        if (((H265Context)context).NumActiveRefLayerPics != ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])
                         {
 
-                            for (i = 0; i < H265Helpers.GetNumActiveRefLayerPics(context); i++)
+                            for (i = 0; i < ((H265Context)context).NumActiveRefLayerPics; i++)
                             {
-                                size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])), this.inter_layer_pred_layer_idc[i]);
+                                size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).NumDirectRefLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])), this.inter_layer_pred_layer_idc[i]);
                             }
                         }
                     }
                 }
 
-                if (H265Helpers.GetInCmpPredAvailFlag(context) != 0)
+                if (((H265Context)context).InCmpPredAvailFlag != 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.in_comp_pred_flag);
                 }
@@ -16354,7 +16349,7 @@ slice_segment_header() {
                         }
                     }
 
-                    if (((H265Context)context).PicParameterSetRbsp.ListsModificationPresentFlag != 0 && H265Helpers.GetNumPicTotalCurr(context) > 1)
+                    if (((H265Context)context).PicParameterSetRbsp.ListsModificationPresentFlag != 0 && ((H265Context)context).NumPicTotalCurr > 1)
                     {
                         size += stream.WriteClass<RefPicListsModification>(context, this.ref_pic_lists_modification);
                     }
@@ -16388,7 +16383,7 @@ slice_segment_header() {
                     {
                         size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
                     }
-                    else if (H265Helpers.GetDepthLayerFlag(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] == 0 && H265Helpers.GetNumRefListLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
+                    else if (((H265Context)context).DepthLayerFlag[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] == 0 && ((H265Context)context).NumRefListLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] > 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.slice_ic_enabled_flag);
 
@@ -16435,12 +16430,12 @@ slice_segment_header() {
                     size += stream.WriteUnsignedInt(1, this.slice_loop_filter_across_slices_enabled_flag);
                 }
 
-                if (((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] != 0)
+                if (((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] != 0)
                 {
 
-                    for (m = 0; m < ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]; m++)
+                    for (m = 0; m < ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.NumCp[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]]; m++)
                     {
-                        j = ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi[H265Helpers.GetViewOrderIdx(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]][m];
+                        j = ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi[((H265Context)context).ViewOrderIdx[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]][m];
                         size += stream.WriteSignedIntGolomb(this.cp_scale[j][m]);
                         size += stream.WriteSignedIntGolomb(this.cp_off[j][m]);
                         size += stream.WriteSignedIntGolomb(this.cp_inv_scale_plus_scale[j][m]);
@@ -16485,7 +16480,7 @@ slice_segment_header() {
                     size += stream.WriteUnsignedIntVariable(poc_lsb_val, this.poc_lsb_val);
                 }
 
-                if (((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT) && (((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0 || (((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0 && H265Helpers.GetNumDirectRefLayers(context)[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] == 0)) ? 1 : 0) == 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0)
+                if (((((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL || ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT) && (((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag == 0 || (((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0 && ((H265Context)context).NumDirectRefLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId] == 0)) ? 1 : 0) == 0 && ((H265Context)context).VideoParameterSetRbsp.VpsExtension.VpsPocLsbAlignedFlag != 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.poc_msb_cycle_val_present_flag);
                 }

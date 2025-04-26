@@ -779,17 +779,13 @@ namespace Sharp{type}
                                     variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
                                 else if (variableType.Contains("_minus1"))
                                     variableType = variableType.Replace("_minus1", "_minus1 + 1");
-                                else if (variableType.Contains("Minus1(context)[ currLsIdx ]"))
-                                    variableType = variableType.Replace("Minus1(context)[ currLsIdx ]", "Minus1(context)[ currLsIdx ] + 1");
-                                else if (variableType.Contains("Minus1(context)[ H265Helpers.GetOlsIdxToLsIdx(context)[ h ] ]]"))
-                                    variableType = variableType.Replace("Minus1(context)[ H265Helpers.GetOlsIdxToLsIdx(context)[ h ] ]", "Minus1(context)[ H265Helpers.GetOlsIdxToLsIdx(context)[ h ] ]+ 1");
+                                else if (variableType.Contains("Minus1[ currLsIdx ]"))
+                                    variableType = variableType.Replace("Minus1[ currLsIdx ]", "Minus1[ currLsIdx ] + 1");
+                                else if (variableType.Contains("Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]]"))
+                                    variableType = variableType.Replace("Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]", "Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1");
                                 else if (variableType.Contains("Minus1[ i ]"))
                                     variableType = variableType.Replace("Minus1[ i ]", "Minus1[ i ] + 1");
-                                else if (variableType.Contains("Minus1(context)[ i ]"))
-                                    variableType = variableType.Replace("Minus1(context)[ i ]", "Minus1(context)[ i ] + 1");
-                                else if (variableType.Contains("Minus1(context)"))
-                                    variableType = variableType.Replace("Minus1(context)", "Minus1(context) + 1");
-                                else if (variableType.Contains("Minus1"))
+                                   else if (variableType.Contains("Minus1"))
                                     variableType = variableType.Replace("Minus1", "Minus1 + 1");
 
                                 if (variableName == "ar_label" || // h264

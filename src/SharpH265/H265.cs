@@ -92,322 +92,86 @@ namespace SharpH265
         public const uint UNSPEC63 = 63;               // Unspecified NAL unit types
     }
 
-    public static class H265Helpers
+    public partial class H265Context
     {
-        public static uint[][][] GetBspSchedCnt(IItuContext context)
+        public uint[][][] BspSchedCnt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[][] IdDirectRefLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[][] NecessaryLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] LayerIdxInVps { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] RefPicList1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumOutputLayersInOutputLayerSet { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] OlsHighestOutputLayerId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[][] LayerSetLayerIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint VclInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint NalInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint CurrPic { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint RefRpsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] RefPicList0 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] OlsIdxToLsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] MaxTemporalId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumDeltaPocs { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumLayersInTreePartition { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint NumActiveRefLayerPics { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint PicSizeInCtbsY { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint NumIndependentLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint InCmpPredAvailFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] ViewOrderIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] ViewOIdxList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] DepthLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumLayersInIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumDirectRefLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumRefListLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint NumViews { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint CpbCnt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint NumPicTotalCurr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public int[] MaxSubLayersInLayerSetMinus1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+
+        public uint PicOrderCnt(uint picID)
         {
             throw new NotImplementedException();
         }
 
-        public static uint[][] GetIdDirectRefLayer(IItuContext context)
+        public uint PicLayerId(uint picID)
         {
             throw new NotImplementedException();
         }
 
-        public static uint[][] GetNecessaryLayerFlag(IItuContext context)
+        public void Recalculate()
         {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetLayerIdxInVps(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetRefPicList1(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetNumOutputLayersInOutputLayerSet(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetOlsHighestOutputLayerId(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[][] GetLayerSetLayerIdList(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetVclInitialArrivalDelayPresent(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetNalInitialArrivalDelayPresent(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetCurrPic(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetRefRpsIdx(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetPicLayerId(uint pic)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetRefPicList0(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetGetRefPicList1(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetPicOrderCnt(uint picX)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetOlsIdxToLsIdx(IItuContext context)
-        {
-            // OlsIdxToLsIdx[ i ] =  ( i < NumLayerSets ) ? i : ( layer_set_idx_for_ols_minus1[ i ] + 1 ) 
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetMaxTemporalId(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetNumDeltaPocs(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetNumLayersInTreePartition(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetNumActiveRefLayerPics(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetPicSizeInCtbsY(IItuContext context)
-        {
-            // PicSizeInCtbsY = PicWidthInCtbsY * PicHeightInCtbsY 
-            throw new NotImplementedException();
-        }
-
-        public static uint GetNumIndependentLayers(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetInCmpPredAvailFlag(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetViewOrderIdx(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetViewOIdxList(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetDepthLayerFlag(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetNumLayersInIdList(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetNumDirectRefLayers(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint[] GetNumRefListLayers(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetNumViews(IItuContext context)
-        {
-            throw new NotImplementedException();
-            /*
-            NumViews = 1 
-for( i = 0; i  <=  MaxLayersMinus1; i++ ) { 
- lId = layer_id_in_nuh[ i ] 
- for( smIdx= 0, j = 0; smIdx < 16; smIdx++ ) { 
-  if( scalability_mask_flag[ smIdx ] ) 
-   ScalabilityId[ i ][ smIdx ] = dimension_id[ i ][ j++ ] 
-  else 
-   ScalabilityId[ i ][ smIdx ] = 0 
- } 
- DepthLayerFlag[ lId ] = ScalabilityId[ i ][ 0 ] 
- ViewOrderIdx[ lId ] = ScalabilityId[ i ][ 1 ] 
- DependencyId[ lId ] = ScalabilityId[ i ][ 2 ]
- AuxId[ lId ] = ScalabilityId[ i ][ 3 ] 
- if( i > 0 ) { 
-  newViewFlag = 1 
-  for( j = 0; j < i; j++ ) 
-   if( ViewOrderIdx[ lId ]  = =  ViewOrderIdx[ layer_id_in_nuh[ j ] ] ) 
-    newViewFlag = 0 
-  NumViews  +=  newViewFlag 
- } 
-} 
-             */
-        }
-
-        public static uint GetCpbCnt(IItuContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static uint GetNumPicTotalCurr(IItuContext context)
-        {
-            throw new NotImplementedException();
-            /*
-            StRefPicSet stRpsIdx;
-            if(((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.ShortTermRefPicSetSpsFlag == 0)
+            int[] LayerIdxInVps = new int[Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];
+            for (int i = 0; i <= Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
             {
-                stRpsIdx = ((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.StRefPicSet;
-            }
-            else
-            {
-                stRpsIdx = ((H265Context)context).SeqParameterSetRbsp.StRefPicSet[short_term_ref_pic_set_idx];
+                LayerIdxInVps[VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] = i;
             }
 
-            if (inter_ref_pic_set_prediction_flag == 0)
-            {
-                NumNegativePics[stRpsIdx] = num_negative_pics;
-            }
-            else
-            {
-                int RefRpsIdx = stRpsIdx - (delta_idx_minus1 + 1);
-                int deltaRps = (1 - 2 * delta_rps_sign) * (abs_delta_rps_minus1 + 1);
-
-                int i = 0;
-                for (int j = NumPositivePics[RefRpsIdx] - 1; j >= 0; j--)
-                {
-                    int dPoc = DeltaPocS1[RefRpsIdx][j] + deltaRps;
-                    if (dPoc < 0 && use_delta_flag[NumNegativePics[RefRpsIdx] + j])
-                    {
-                        DeltaPocS0[stRpsIdx][i] = dPoc;
-                        UsedByCurrPicS0[stRpsIdx][i++] = used_by_curr_pic_flag[NumNegativePics[RefRpsIdx] + j];
-                    }
-                }
-                if (deltaRps < 0 && use_delta_flag[NumDeltaPocs[RefRpsIdx]])
-                {
-                    DeltaPocS0[stRpsIdx][i] = deltaRps;
-                    UsedByCurrPicS0[stRpsIdx][i++] = used_by_curr_pic_flag[NumDeltaPocs[RefRpsIdx]];
-                }
-                for (int j = 0; j < NumNegativePics[RefRpsIdx]; j++)
-                {
-                    int dPoc = DeltaPocS0[RefRpsIdx][j] + deltaRps;
-                    if (dPoc < 0 && use_delta_flag[j])
-                    {
-                        DeltaPocS0[stRpsIdx][i] = dPoc;
-                        UsedByCurrPicS0[stRpsIdx][i++] = used_by_curr_pic_flag[j];
-                    }
-                }
-                NumNegativePics[stRpsIdx] = i;
-                i = 0;
-                for (int j = NumNegativePics[RefRpsIdx] - 1; j >= 0; j--)
-                {
-                    int dPoc = DeltaPocS0[RefRpsIdx][j] + deltaRps;
-                    if (dPoc > 0 && use_delta_flag[j])
-                    {
-                        DeltaPocS1[stRpsIdx][i] = dPoc;
-                        UsedByCurrPicS1[stRpsIdx][i++] = used_by_curr_pic_flag[j];
-                    }
-                }
-                if (deltaRps > 0 && use_delta_flag[NumDeltaPocs[RefRpsIdx]])
-                {
-                    DeltaPocS1[stRpsIdx][i] = deltaRps;
-                    UsedByCurrPicS1[stRpsIdx][i++] = used_by_curr_pic_flag[NumDeltaPocs[RefRpsIdx]];
-                }
-                for (int j = 0; j < NumPositivePics[RefRpsIdx]; j++)
-                {
-                    int dPoc = DeltaPocS1[RefRpsIdx][j] + deltaRps;
-                    if (dPoc > 0 && use_delta_flag[NumNegativePics[RefRpsIdx] + j])
-                    {
-                        DeltaPocS1[stRpsIdx][i] = dPoc;
-                        UsedByCurrPicS1[stRpsIdx][i++] = used_by_curr_pic_flag[NumNegativePics[RefRpsIdx] + j];
-                    }
-                }
-                NumPositivePics[stRpsIdx] = i;
-            }
-
-            uint NumPicTotalCurr = 0;
-            for (int i = 0; i < NumNegativePics[CurrRpsIdx]; i++)
-                if (UsedByCurrPicS0[CurrRpsIdx][i])
-                    NumPicTotalCurr++;
-            for (int i = 0; i < NumPositivePics[CurrRpsIdx]; i++)
-                if (UsedByCurrPicS1[CurrRpsIdx][i])
-                    NumPicTotalCurr++;
-            for (int i = 0; i < num_long_term_sps + num_long_term_pics; i++)
-                if (UsedByCurrPicLt[i])
-                    NumPicTotalCurr++;
-            if (pps_curr_pic_ref_enabled_flag)
-                NumPicTotalCurr++;
-            return NumPicTotalCurr;
-            */
-        }
-
-        public static int[] GetMaxSubLayersInLayerSetMinus1(IItuContext context)
-        {
-            int[] LayerIdxInVps = new int[Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];
-            for (int i = 0; i <= Math.Min(62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
-            {
-                LayerIdxInVps[((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] = i;
-            }
-
-            int[] NumLayersInIdList = new int[((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
+            int[] NumLayersInIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
             NumLayersInIdList[0] = 1;
-            int[][] MyLayerSetLayerIdList = new int[((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1][];
-            MyLayerSetLayerIdList[0] = new int[((H265Context)context).VideoParameterSetRbsp.VpsMaxLayerId + 1];
+            int[][] MyLayerSetLayerIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1][];
+            MyLayerSetLayerIdList[0] = new int[VideoParameterSetRbsp.VpsMaxLayerId + 1];
             MyLayerSetLayerIdList[0][0] = 0;
             int n = 0;
-            for (int i = 1; i <= ((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1; i++)
+            for (int i = 1; i <= VideoParameterSetRbsp.VpsNumLayerSetsMinus1; i++)
             {
-                for (int m = 0; m <= ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayerId; m++)
+                for (int m = 0; m <= VideoParameterSetRbsp.VpsMaxLayerId; m++)
                 {
-                    MyLayerSetLayerIdList[i] = new int[((H265Context)context).VideoParameterSetRbsp.VpsMaxLayerId + 1];
-                    if (((H265Context)context).VideoParameterSetRbsp.LayerIdIncludedFlag[i][m] != 0)
+                    MyLayerSetLayerIdList[i] = new int[VideoParameterSetRbsp.VpsMaxLayerId + 1];
+                    if (VideoParameterSetRbsp.LayerIdIncludedFlag[i][m] != 0)
                         MyLayerSetLayerIdList[i][n++] = m;
                 }
                 NumLayersInIdList[i] = n;
             }
 
-            int[] MaxSubLayersInLayerSetMinus1 = new int[(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)];
-            for (int i = 0; i < (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++)
+            int[] MaxSubLayersInLayerSetMinus1 = new int[(VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)];
+            for (int i = 0; i < (VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++)
             {
                 int maxSlMinus1 = 0;
                 for (int k = 0; k < NumLayersInIdList[i]; k++)
                 {
                     int lId = MyLayerSetLayerIdList[i][k];
-                    maxSlMinus1 = (int)Math.Max(maxSlMinus1, ((H265Context)context).VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1[LayerIdxInVps[lId]]);
+                    maxSlMinus1 = (int)Math.Max(maxSlMinus1, VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1[LayerIdxInVps[lId]]);
                 }
                 MaxSubLayersInLayerSetMinus1[i] = maxSlMinus1;
             }
-
-            return MaxSubLayersInLayerSetMinus1;
         }
     }
 }
