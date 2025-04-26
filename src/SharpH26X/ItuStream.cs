@@ -22,21 +22,7 @@ namespace SharpH26X
         private int _readNextBitsIndex = 0;
 
         private bool _disposedValue;
-
-        public bool PayloadExtensionPresent()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool MoreDataInPayload()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool MoreDataInSliceSegmentHeaderExtension()
-        {
-            throw new NotImplementedException();
-        }
+        private int _lastMarkBeginPosition;
 
         public ItuStream(Stream stream)
         {
@@ -183,9 +169,25 @@ namespace SharpH26X
 
         #endregion // Bit read/write
 
+        public void MarkCurrentBitsPosition()
+        {
+            _lastMarkBeginPosition = _bitsPosition;
+        }
+
+        public ulong GetBitsPositionSinceLastMark()
+        {
+            return (ulong)(_bitsPosition - _lastMarkBeginPosition);
+        }
+
         public bool ByteAligned()
         {
             return _bitsPosition % 8 == 0;
+        }
+
+        // H265
+        public bool PayloadExtensionPresent()
+        {
+            throw new NotImplementedException();
         }
 
         public ulong ReadClass<T>(ulong size, IItuContext context, T value) where T : IItuSerializable
@@ -336,7 +338,7 @@ namespace SharpH26X
             return WriteUnsignedIntGolomb(mapped);
         }
 
-        public bool ReadMoreRbspData(IItuSerializable serializable)
+        public bool ReadMoreRbspData(IItuSerializable serializable, uint maxPayloadSize = uint.MaxValue)
         {
             if (_stream.Position == _stream.Length && _bitsPosition % 8 == 0)
                 return false;
@@ -353,8 +355,16 @@ namespace SharpH26X
 
                 if (one == 0)
                 {
-                    serializable.HasMoreRbspData++;
-                    return true;
+                    
+                    if (GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
+                    {
+                        serializable.HasMoreRbspData++;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
 
                 int lastBit = ituStream.ReadBit();
@@ -373,8 +383,16 @@ namespace SharpH26X
                 }
                 else
                 {
-                    serializable.HasMoreRbspData++;
-                    return true;
+                    
+                    if (GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
+                    {
+                        serializable.HasMoreRbspData++;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
         }
@@ -505,7 +523,7 @@ namespace SharpH26X
             byte[] bytes = value.ToByteArray();
             for (int i = 0; i < bytes.Length; i++)
             {
-                size += WriteByte(bytes[i]);
+                size += WriteUnsignedInt(8, bytes[i]);
             }
             return size;
         }
@@ -529,9 +547,9 @@ namespace SharpH26X
             ulong size = 0;
             for (int i = 0; i < value.Length; i++)
             {
-                size += WriteByte(value[i]);
+                size += WriteBits(8, value[i]);
             }
-            size += WriteByte(0); // null terminator
+            size += WriteBits(8, 0); // null terminator
             return size;
         }
 

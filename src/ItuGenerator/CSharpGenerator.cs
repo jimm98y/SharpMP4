@@ -292,6 +292,7 @@ namespace Sharp{type}
                 }
             }
 
+            string retm = "";
             if (m.Contains("###value###") && methodType == MethodType.Read)
             {
                 specificGenerator.FixMethodAllocation(name, ref m, ref typedef);
@@ -301,14 +302,14 @@ namespace Sharp{type}
                     // special case, create class first, then read it
                     m = m.Replace("###value###", $"{spacing}this.{name}{typedef}.Add(whileIndex, ");
                     m = m.Replace("###size###", $");\r\n{spacing}{boxSize}");
-                    return $"{m} this.{name}{typedef}[whileIndex]); {fieldComment}";
+                    retm = $"{m} this.{name}{typedef}[whileIndex]); {fieldComment}";
                 }
                 else
                 {
                     // special case, create class first, then read it
                     m = m.Replace("###value###", $"{spacing}this.{name}{typedef} = ");
                     m = m.Replace("###size###", $";\r\n{spacing}{boxSize}");
-                    return $"{m} this.{name}{typedef}); {fieldComment}";
+                    retm = $"{m} this.{name}{typedef}); {fieldComment}";
                 }
             }
             else
@@ -316,22 +317,33 @@ namespace Sharp{type}
                 if ((field as ItuField).MakeList)
                 {
                     if (methodType == MethodType.Read)
-                        return $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}); {fieldComment}";
                     else if (methodType == MethodType.Write)
-                        return $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}); {fieldComment}";
                     else
                         throw new NotSupportedException();
                 }
                 else
                 {
                     if (methodType == MethodType.Read)
-                        return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
                     else if (methodType == MethodType.Write)
-                        return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
                     else
                         throw new NotSupportedException();
                 }
             }
+
+            if (name == "sei_payload") // H265
+            {
+                retm = $"{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}";
+            }
+            else if(name == "slice_segment_header_extension_length")
+            {
+                retm = $"{retm}\r\n{spacing}stream.MarkCurrentBitsPosition();";
+            }
+
+            return retm;
         }
 
         private string BuildStatement(ItuClass b, ItuBlock parent, ItuField field, int level, MethodType methodType)
@@ -999,7 +1011,8 @@ namespace Sharp{type}
                             continue;
                         if (condition.Contains(prefix + ff.Name + suffix) && !condition.Contains(prefix + ff.Name + "["))
                         {
-                            condition = condition.Replace(prefix + ff.Name + suffix, prefix + ff.Name + str + suffix);
+                            if(!condition.Contains("slice_segment_header_extension_length"))
+                                condition = condition.Replace(prefix + ff.Name + suffix, prefix + ff.Name + str + suffix);
                         }
                     }
                     else if (f is ItuBlock bb)

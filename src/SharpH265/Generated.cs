@@ -2374,6 +2374,7 @@ sei_message() {
             }
             size += stream.ReadUnsignedInt(size, 8, out this.last_payload_size_byte);
             payloadSize += last_payload_size_byte;
+            stream.MarkCurrentBitsPosition();
             this.sei_payload = new SeiPayload(payloadType, payloadSize);
             size += stream.ReadClass<SeiPayload>(size, context, this.sei_payload);
 
@@ -2409,6 +2410,7 @@ sei_message() {
             }
             size += stream.WriteUnsignedInt(8, this.last_payload_size_byte);
             payloadSize += last_payload_size_byte;
+            stream.MarkCurrentBitsPosition();
             size += stream.WriteClass<SeiPayload>(context, this.sei_payload);
 
             return size;
@@ -3698,10 +3700,12 @@ sei_payload( payloadType, payloadSize ) {
                 }
             }
 
-            if (stream.MoreDataInPayload())
+            var aaa = stream.GetBitsPositionSinceLastMark();
+            var bbb = 8 * payloadSize;
+            if ((!(stream.ByteAligned() && 8 * payloadSize == stream.GetBitsPositionSinceLastMark())))
             {
 
-                if (stream.PayloadExtensionPresent())
+                if (stream.ReadMoreRbspData(this, payloadSize))
                 {
                     size += stream.ReadUnsignedIntVariable(size, reserved_payload_extension_data, out this.reserved_payload_extension_data);
                 }
@@ -4013,10 +4017,13 @@ sei_payload( payloadType, payloadSize ) {
                 }
             }
 
-            if (stream.MoreDataInPayload())
+            var aaa = stream.GetBitsPositionSinceLastMark();
+            var bbb = 8 * payloadSize;
+
+            if ((!(stream.ByteAligned() && 8 * payloadSize == stream.GetBitsPositionSinceLastMark())))
             {
 
-                if (stream.PayloadExtensionPresent())
+                if (stream.ReadMoreRbspData(this, payloadSize))
                 {
                     size += stream.WriteUnsignedIntVariable(reserved_payload_extension_data, this.reserved_payload_extension_data);
                 }
@@ -4175,7 +4182,7 @@ buffering_period( payloadSize ) {
                 }
             }
 
-            if (stream.PayloadExtensionPresent())
+            if (stream.ReadMoreRbspData(this, payloadSize))
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.use_alt_cpb_params_flag);
             }
@@ -4235,7 +4242,7 @@ buffering_period( payloadSize ) {
                 }
             }
 
-            if (stream.PayloadExtensionPresent())
+            if (stream.ReadMoreRbspData(this, payloadSize))
             {
                 size += stream.WriteUnsignedInt(1, this.use_alt_cpb_params_flag);
             }
@@ -16135,6 +16142,7 @@ slice_segment_header() {
             if (((H265Context)context).PicParameterSetRbsp.SliceSegmentHeaderExtensionPresentFlag != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.slice_segment_header_extension_length);
+                stream.MarkCurrentBitsPosition();
 
                 if (((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.PocResetInfoPresentFlag != 0)
                 {
@@ -16162,7 +16170,7 @@ slice_segment_header() {
                     size += stream.ReadUnsignedIntGolomb(size, out this.poc_msb_cycle_val);
                 }
 
-                while (stream.MoreDataInSliceSegmentHeaderExtension())
+                while ((stream.GetBitsPositionSinceLastMark() < (slice_segment_header_extension_length * 8)))
                 {
                     whileIndex++;
 
@@ -16459,6 +16467,7 @@ slice_segment_header() {
             if (((H265Context)context).PicParameterSetRbsp.SliceSegmentHeaderExtensionPresentFlag != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.slice_segment_header_extension_length);
+                stream.MarkCurrentBitsPosition();
 
                 if (((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.PocResetInfoPresentFlag != 0)
                 {
@@ -16486,7 +16495,7 @@ slice_segment_header() {
                     size += stream.WriteUnsignedIntGolomb(this.poc_msb_cycle_val);
                 }
 
-                while (stream.MoreDataInSliceSegmentHeaderExtension())
+                while ((stream.GetBitsPositionSinceLastMark() < (slice_segment_header_extension_length * 8)))
                 {
                     whileIndex++;
 

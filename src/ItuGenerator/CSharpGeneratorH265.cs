@@ -362,9 +362,9 @@ namespace ItuGenerator
             condition = condition.Replace("Min(", "(uint)Math.Min(");
             condition = condition.Replace("Max(", "(uint)Math.Max(");
             condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
-            condition = condition.Replace("more_data_in_payload()", "stream.MoreDataInPayload()");
-            condition = condition.Replace("more_data_in_slice_segment_header_extension()", "stream.MoreDataInSliceSegmentHeaderExtension()");
-            condition = condition.Replace("payload_extension_present()", "stream.PayloadExtensionPresent()");
+            condition = condition.Replace("more_data_in_payload()", "(!(stream.ByteAligned() && 8 * payloadSize == stream.GetBitsPositionSinceLastMark()))");
+            condition = condition.Replace("more_data_in_slice_segment_header_extension()", "(stream.GetBitsPositionSinceLastMark() < ( slice_segment_header_extension_length * 8 ))");
+            condition = condition.Replace("payload_extension_present()", "stream.ReadMoreRbspData(this, payloadSize)");
             condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
             condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");
             return condition;
