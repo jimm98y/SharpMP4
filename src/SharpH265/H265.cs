@@ -94,14 +94,19 @@ namespace SharpH265
 
     public partial class H265Context
     {
+        // VPS
+        public int[] LayerIdxInVps { get; set; }
+        public int[] NumLayersInIdList { get; set; }
+        public int[][] LayerSetLayerIdList { get; set; }
+        public int[] MaxSubLayersInLayerSetMinus1 { get; set; }
+
+        // TODO
         public uint[][][] BspSchedCnt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[][] IdDirectRefLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[][] NecessaryLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] LayerIdxInVps { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] RefPicList1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] NumOutputLayersInOutputLayerSet { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] OlsHighestOutputLayerId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[][] LayerSetLayerIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint VclInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint NalInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint CurrPic { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
@@ -118,13 +123,11 @@ namespace SharpH265
         public uint[] ViewOrderIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] ViewOIdxList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] DepthLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumLayersInIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] NumDirectRefLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] NumRefListLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint NumViews { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint CpbCnt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint NumPicTotalCurr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] MaxSubLayersInLayerSetMinus1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
         public uint PicOrderCnt(uint picID)
         {
@@ -136,38 +139,38 @@ namespace SharpH265
             throw new NotImplementedException();
         }
 
-        public void Recalculate()
+        public void RecalculateVideoParameterSetRbsp()
         {
-            int[] LayerIdxInVps = new int[Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];
+            LayerIdxInVps = new int[Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];
             for (int i = 0; i <= Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1); i++)
             {
                 LayerIdxInVps[VideoParameterSetRbsp.VpsExtension.LayerIdInNuh[i]] = i;
             }
 
-            int[] NumLayersInIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
+            NumLayersInIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
             NumLayersInIdList[0] = 1;
-            int[][] MyLayerSetLayerIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1][];
-            MyLayerSetLayerIdList[0] = new int[VideoParameterSetRbsp.VpsMaxLayerId + 1];
-            MyLayerSetLayerIdList[0][0] = 0;
+            LayerSetLayerIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1][];
+            LayerSetLayerIdList[0] = new int[VideoParameterSetRbsp.VpsMaxLayerId + 1];
+            LayerSetLayerIdList[0][0] = 0;
             int n = 0;
             for (int i = 1; i <= VideoParameterSetRbsp.VpsNumLayerSetsMinus1; i++)
             {
                 for (int m = 0; m <= VideoParameterSetRbsp.VpsMaxLayerId; m++)
                 {
-                    MyLayerSetLayerIdList[i] = new int[VideoParameterSetRbsp.VpsMaxLayerId + 1];
+                    LayerSetLayerIdList[i] = new int[VideoParameterSetRbsp.VpsMaxLayerId + 1];
                     if (VideoParameterSetRbsp.LayerIdIncludedFlag[i][m] != 0)
-                        MyLayerSetLayerIdList[i][n++] = m;
+                        LayerSetLayerIdList[i][n++] = m;
                 }
                 NumLayersInIdList[i] = n;
             }
 
-            int[] MaxSubLayersInLayerSetMinus1 = new int[(VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)];
+            MaxSubLayersInLayerSetMinus1 = new int[(VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)];
             for (int i = 0; i < (VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + VideoParameterSetRbsp.VpsExtension.NumAddLayerSets); i++)
             {
                 int maxSlMinus1 = 0;
                 for (int k = 0; k < NumLayersInIdList[i]; k++)
                 {
-                    int lId = MyLayerSetLayerIdList[i][k];
+                    int lId = LayerSetLayerIdList[i][k];
                     maxSlMinus1 = (int)Math.Max(maxSlMinus1, VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1[LayerIdxInVps[lId]]);
                 }
                 MaxSubLayersInLayerSetMinus1[i] = maxSlMinus1;
