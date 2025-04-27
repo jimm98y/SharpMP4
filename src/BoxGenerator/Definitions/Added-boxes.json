@@ -1202,7 +1202,11 @@
       "type": "Box",
       "syntax": "aligned(8) class UuidBasedProtectionSystemSpecificHeaderBox() extends FullBox('uuid d08a4f1810f34a82b6c832d8aba183d3') {\r\n\t unsigned int(8) systemID[16];\r\n unsigned int(32) count;\r\n unsigned int(8) data[count];\r\n }"
     },
-
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PadsBox() extends Box('pads') {\r\n\t bit(8) data[];\r\n } "
+    },
 
     {
       "containers": [ "*" ],

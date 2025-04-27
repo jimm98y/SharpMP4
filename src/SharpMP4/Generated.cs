@@ -369,6 +369,7 @@ namespace SharpMP4
                 case "ovc1": return new Ovc1VisualSampleEntryImpl();
                 case "owma": if (parent == "stsd") return new AudioSampleEntry(IsoStream.FromFourCC("owma")); break;
                 case "padb": return new PaddingBitsBox();
+                case "pads": return new PadsBox();
                 case "paen": return new PartitionEntry();
                 case "pasp": return new PixelAspectRatioBox();
                 case "payt": return new HintPayloadID();
@@ -52025,6 +52026,49 @@ namespace SharpMP4
             boxSize += 16 * 8; // systemID
             boxSize += 32; // count
             boxSize += ((ulong)(count) * 8); // data
+            return boxSize;
+        }
+    }
+
+
+    /*
+    aligned(8) class PadsBox() extends Box('pads') {
+         bit(8) data[];
+     } 
+    */
+    public class PadsBox : Box
+    {
+        public const string TYPE = "pads";
+        public override string DisplayName { get { return "PadsBox"; } }
+
+        protected byte[] data;
+        public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+        public PadsBox() : base(IsoStream.FromFourCC("pads"))
+        {
+        }
+
+        public override ulong Read(IsoStream stream, ulong readSize)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Read(stream, readSize);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            return boxSize;
+        }
+
+        public override ulong Write(IsoStream stream)
+        {
+            ulong boxSize = 0;
+            boxSize += base.Write(stream);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            return boxSize;
+        }
+
+        public override ulong CalculateSize()
+        {
+            ulong boxSize = 0;
+            boxSize += base.CalculateSize();
+            boxSize += ((ulong)data.Length * 8); // data
             return boxSize;
         }
     }
