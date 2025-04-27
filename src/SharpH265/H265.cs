@@ -94,54 +94,74 @@ namespace SharpH265
 
     public partial class H265Context
     {
+        public SeiPayload SeiPayload { get; set; }
+
         public uint MaxLayersMinus1 { get; set; }
         public uint CpbCnt { get; set; }
-        
-        public uint NumViews { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] NumLayersInIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
-
-        // TODO
-        public int[] MaxSubLayersInLayerSetMinus1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] OlsIdxToLsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[][][] BspSchedCnt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumDeltaPocs { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] MaxTemporalId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[][] NecessaryLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint RefRpsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] ViewOIdxList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint VclInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint NalInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] LayerIdxInVps { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] OlsHighestOutputLayerId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumOutputLayersInOutputLayerSet { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint PicSizeInCtbsY { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
-
-        public int[][] IdDirectRefLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumDirectRefLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint NumIndependentLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumLayersInTreePartition { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] LayerSetLayerIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint NumLayerSets { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint FirstAddLayerSetIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint LastAddLayerSetIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[][] CpPresentFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] DependencyFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] layerIdInListFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] IdRefLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] IdPredictedLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] TreePartitionLayerIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumRefLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumPredictedLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] ScalabilityId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] DependencyId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] AuxId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] DepthLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
-        public int[] ViewOrderIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
-        public SeiPayload SeiPayload { get; set; }
+        public uint NumViews { get; set; }
+        public int[] NumLayersInIdList { get; set; }
+        public int[] MaxSubLayersInLayerSetMinus1 { get; set; }
+        public int[][] IdDirectRefLayer { get; set; }
+        public uint[] NumDirectRefLayers { get; set; }
+        public uint NumIndependentLayers { get; set; }
+        public uint[] NumLayersInTreePartition { get; set; }
+        public int[][] LayerSetLayerIdList { get; set; }
+        public uint NumLayerSets { get; set; }
+        public uint FirstAddLayerSetIdx { get; set; }
+        public uint LastAddLayerSetIdx { get; set; }
+        public uint[][] CpPresentFlag { get; set; }
+        public int[][] DependencyFlag { get; set; }
+        public int[] layerIdInListFlag { get; set; }
+        public int[][] IdRefLayer { get; set; }
+        public int[][] IdPredictedLayer { get; set; }
+        public int[][] TreePartitionLayerIdList { get; set; }
+        public uint[] NumRefLayers { get; set; }
+        public uint[] NumPredictedLayers { get; set; }
+        public int[][] ScalabilityId { get; set; }
+        public int[] DependencyId { get; set; }
+        public int[] AuxId { get; set; }
+        public int[] DepthLayerFlag { get; set; }
+        public int[] ViewOrderIdx { get; set; }
+        public int PicSizeInCtbsY { get; set; }
+        public int MinCbLog2SizeY { get; set; }
+        public int CtbLog2SizeY { get; set; }
+        public int MinCbSizeY { get; set; }
+        public int CtbSizeY { get; set; }
+        public int PicWidthInMinCbsY { get; set; }
+        public int PicWidthInCtbsY { get; set; }
+        public int PicHeightInMinCbsY { get; set; }
+        public int PicHeightInCtbsY { get; set; }
+        public int PicSizeInMinCbsY { get; set; }
+        public int PicSizeInSamplesY { get; set; }
+        public int PicWidthInSamplesC { get; set; }
+        public int PicHeightInSamplesC { get; set; }
+        public int SubWidthC { get; set; }
+        public int SubHeightC { get; set; }
+        public uint[] OlsIdxToLsIdx { get; set; }
+        public uint[] NumOutputLayersInOutputLayerSet { get; set; }
+        public uint[][] OutputLayerFlag { get; set; }
+        public uint[] OlsHighestOutputLayerId { get; set; }
+        public uint[] NumNecessaryLayers { get; set; }
+        public uint[][] NecessaryLayerFlag { get; set; }
+        public int[][] IdRefListLayer { get; set; }
+        public uint[][] ViewCompLayerPresentFlag { get; set; }
+        public int[][] ViewCompLayerId { get; set; }
+        public uint[] LayerIdxInVps { get; set; }
+        public uint[] NumRefListLayers { get; set; }
+        public uint VclInitialArrivalDelayPresent { get; set; }
+        public uint NalInitialArrivalDelayPresent { get; set; }
+        public uint[] ViewOIdxList { get; set; }
+        public uint[][][] BspSchedCnt { get; set; }
+        public uint[] NumNegativePics { get; set; }
+        public uint[] NumPositivePics { get; set; }
+        public uint[][] UsedByCurrPicS0 { get; set; }
+        public uint[][] UsedByCurrPicS1 { get; set; }
+        public int[][] DeltaPocS0 { get; set; }
+        public int[][] DeltaPocS1 { get; set; }
+        public uint[] NumDeltaPocs { get; set; }
+        public uint RefRpsIdx { get; set; }
+        public uint[] MaxTemporalId { get; set; }
+      
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -278,6 +298,212 @@ namespace SharpH265
                 SeiPayload.UserDataUnregistered = payload.UserDataUnregistered;
         }
 
+        public void OnDeltaIdxMinus1(uint stRpsIdx)
+        {
+            var delta_idx_minus1 = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].DeltaIdxMinus1;
+            RefRpsIdx = stRpsIdx - (delta_idx_minus1 + 1); // 7-59
+        }
+
+        public void OnNestingMaxTemporalIdPlus1(uint i)
+        {
+            var nesting_max_temporal_id_plus1 = SeiPayload.ScalableNesting.NestingMaxTemporalIdPlus1;
+            MaxTemporalId[i] = nesting_max_temporal_id_plus1[i] - 1;
+        }
+
+        public void OnUsedByCurrPicS1Flag(uint i, uint stRpsIdx)
+        {
+            var num_negative_pics = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].NumNegativePics;
+            var num_positive_pics = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].NumPositivePics;
+            var used_by_curr_pic_s0_flag = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].UsedByCurrPicS0Flag;
+            var used_by_curr_pic_s1_flag = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].UsedByCurrPicS1Flag;
+            var delta_poc_s0_minus1 = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].DeltaPocS0Minus1;
+            var delta_poc_s1_minus1 = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].DeltaPocS1Minus1;
+
+            NumNegativePics[stRpsIdx] = num_negative_pics; // 7-63
+            NumPositivePics[stRpsIdx] = num_positive_pics; // 7-64
+            UsedByCurrPicS0[stRpsIdx][i] = used_by_curr_pic_s0_flag[i]; // 7-65
+            UsedByCurrPicS1[stRpsIdx][i] = used_by_curr_pic_s1_flag[i]; // 7-66
+            if(i == 0)
+            {
+                DeltaPocS0[stRpsIdx][i] = (int)-(delta_poc_s0_minus1[i] + 1); // 7-67
+                DeltaPocS1[stRpsIdx][i] = (int)delta_poc_s1_minus1[i] + 1; // 7-68
+            }
+            else
+            {
+                DeltaPocS0[stRpsIdx][i] = DeltaPocS0[stRpsIdx][i - 1] - ((int)delta_poc_s0_minus1[i] + 1); // 7-69
+                DeltaPocS1[stRpsIdx][i] = DeltaPocS1[stRpsIdx][i - 1] + ((int)delta_poc_s1_minus1[i] + 1); // 7-70
+            }
+            NumDeltaPocs[stRpsIdx] = NumNegativePics[stRpsIdx] + NumPositivePics[stRpsIdx]; // 7-71
+        }
+
+        public void OnNumBspSchedulesMinus1(uint h, uint i, uint t)
+        {
+            var num_bsp_schedules_minus1 = VideoParameterSetRbsp.VpsExtension.VpsVui.VpsVuiBspHrdParams.NumBspSchedulesMinus1;
+            BspSchedCnt[h][i][t] = num_bsp_schedules_minus1[h][i][t] + 1;
+        }
+
+        public void OnNalHrdParametersPresentFlag(uint value)
+        {
+            NalInitialArrivalDelayPresent = value;
+        }
+
+        public void OnVclHrdParametersPresentFlag(uint value)
+        {
+            VclInitialArrivalDelayPresent = value;
+        }
+
+        public void OnLayerSetIdxForOlsMinus1(uint i) // F-11
+        {
+            var layer_set_idx_for_ols_minus1 = VideoParameterSetRbsp.VpsExtension.LayerSetIdxForOlsMinus1;
+            OlsIdxToLsIdx[i] = (i < NumLayerSets) ? i : (layer_set_idx_for_ols_minus1[i] + 1);
+        }
+
+        public void OnLayerIdInNuh(uint i)
+        {
+            var layer_id_in_nuh = VideoParameterSetRbsp.VpsExtension.LayerIdInNuh;
+            LayerIdxInVps[layer_id_in_nuh[i]] = i;
+        }
+
+        public void OnOutputLayerFlag(uint ii, uint jj)
+        {
+            var NumOutputLayerSets = VideoParameterSetRbsp.VpsExtension.NumOutputLayerSets;
+            var default_output_layer_idc = VideoParameterSetRbsp.VpsExtension.DefaultOutputLayerIdc;
+            var output_layer_flag = VideoParameterSetRbsp.VpsExtension.OutputLayerFlag;
+            var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
+
+            var defaultOutputLayerIdc = Math.Min(default_output_layer_idc, 2);
+
+            if (defaultOutputLayerIdc == 0 || defaultOutputLayerIdc == 1)
+            {
+                for (int i = 0; i <= vps_num_layer_sets_minus1; i++)
+                {
+                    int nuhLayerIdA = LayerSetLayerIdList[OlsIdxToLsIdx[i]][0]; // highest value in LayerSetLayerIdList[OlsIdxToLsIdx[i]]
+                    for (int k = 0; k < LayerSetLayerIdList[OlsIdxToLsIdx[i]].Length; k++)
+                    {
+                        if (LayerSetLayerIdList[OlsIdxToLsIdx[i]][k] > nuhLayerIdA)
+                            nuhLayerIdA = LayerSetLayerIdList[OlsIdxToLsIdx[i]][k];
+                    }
+
+                    for (int j = 0; j < NumLayersInIdList[OlsIdxToLsIdx[i]] - 1; j++)
+                    {
+                        if (defaultOutputLayerIdc == 0 ||
+                             LayerSetLayerIdList[OlsIdxToLsIdx[i]][j] == nuhLayerIdA)
+                            OutputLayerFlag[i][j] = 1;
+                        else
+                            OutputLayerFlag[i][j] = 0;
+                    }
+                }
+            }
+
+            for (uint i = ((defaultOutputLayerIdc == 2) ? 0 : (vps_num_layer_sets_minus1 + 1)); i <= NumOutputLayerSets - 1; i++)
+            {
+                for (int j = 0; j <= NumLayersInIdList[OlsIdxToLsIdx[i]] - 1; j++)
+                {
+                    OutputLayerFlag[i][j] = output_layer_flag[i][j];
+                }
+
+                NumOutputLayersInOutputLayerSet[i] = 0;
+                for (int j = 0; j < NumLayersInIdList[OlsIdxToLsIdx[i]]; j++)
+                {
+                    NumOutputLayersInOutputLayerSet[i] += OutputLayerFlag[i][j];
+                    if (OutputLayerFlag[i][j] != 0)
+                        OlsHighestOutputLayerId[i] = (uint)LayerSetLayerIdList[OlsIdxToLsIdx[i]][j];
+                }
+            }
+
+            for (int olsIdx = 0; olsIdx < NumOutputLayerSets; olsIdx++)
+            {
+                uint lsIdx = OlsIdxToLsIdx[olsIdx];
+                for (int lsLayerIdx = 0; lsLayerIdx < NumLayersInIdList[lsIdx]; lsLayerIdx++)
+                    NecessaryLayerFlag[olsIdx][lsLayerIdx] = 0;
+                for (int lsLayerIdx = 0; lsLayerIdx < NumLayersInIdList[lsIdx]; lsLayerIdx++)
+                    if (OutputLayerFlag[olsIdx][lsLayerIdx] != 0)
+                    {
+                        NecessaryLayerFlag[olsIdx][lsLayerIdx] = 1;
+                        int currLayerId = LayerSetLayerIdList[lsIdx][lsLayerIdx];
+                        for (int rLsLayerIdx = 0; rLsLayerIdx < lsLayerIdx; rLsLayerIdx++)
+                        {
+                            int refLayerId = LayerSetLayerIdList[lsIdx][rLsLayerIdx];
+                            if (DependencyFlag[LayerIdxInVps[currLayerId]][LayerIdxInVps[refLayerId]] != 0)
+                                NecessaryLayerFlag[olsIdx][rLsLayerIdx] = 1;
+                        }
+                        NumNecessaryLayers[olsIdx] = 0;
+                        for (lsLayerIdx = 0; lsLayerIdx < NumLayersInIdList[lsIdx]; lsLayerIdx++)
+                            NumNecessaryLayers[olsIdx] += NecessaryLayerFlag[olsIdx][lsLayerIdx];
+                    }
+            }
+        }
+
+        public void OnLog2DiffMaxMinLumaCodingBlockSize()
+        {
+            var separate_colour_plane_flag = SeqParameterSetRbsp.SeparateColourPlaneFlag;
+            var chroma_format_idc = SeqParameterSetRbsp.ChromaFormatIdc;
+            var log2_min_luma_coding_block_size_minus3 = SeqParameterSetRbsp.Log2MinLumaCodingBlockSizeMinus3;
+            var log2_diff_max_min_luma_coding_block_size = SeqParameterSetRbsp.Log2DiffMaxMinLumaCodingBlockSize;
+            var pic_width_in_luma_samples = SeqParameterSetRbsp.PicWidthInLumaSamples;
+            var pic_height_in_luma_samples = SeqParameterSetRbsp.PicHeightInLumaSamples;
+
+            // TODO: this shoud happen at the beginning of the decoding process
+            if (separate_colour_plane_flag == 0)
+            {
+                if(chroma_format_idc == 0)
+                {
+                    SubWidthC = 1;
+                    SubHeightC = 1;
+                }
+                else if(chroma_format_idc == 1)
+                {
+                    SubWidthC = 2;
+                    SubHeightC = 2;
+                }
+                else if (chroma_format_idc == 2)
+                {
+                    SubWidthC = 2;
+                    SubHeightC = 1;
+                }
+                else if (chroma_format_idc == 3)
+                {
+                    SubWidthC = 1;
+                    SubHeightC = 1;
+                }
+            }
+            else
+            {
+                SubWidthC = 1;
+                SubHeightC = 1;
+            }
+
+            MinCbLog2SizeY = (int)log2_min_luma_coding_block_size_minus3 + 3; // 7-10
+            CtbLog2SizeY = MinCbLog2SizeY + (int)log2_diff_max_min_luma_coding_block_size; // 7-11
+            MinCbSizeY = 1 << MinCbLog2SizeY; // 7-12
+            CtbSizeY = 1 << CtbLog2SizeY; // 7-13
+            PicWidthInMinCbsY = (int)pic_width_in_luma_samples / MinCbSizeY; // 7-14
+            PicWidthInCtbsY = (int)Math.Ceiling((double)pic_width_in_luma_samples / CtbSizeY); // 7-15
+            PicHeightInMinCbsY = (int)pic_height_in_luma_samples / MinCbSizeY; // 7-16
+            PicHeightInCtbsY = (int)Math.Ceiling((double)pic_height_in_luma_samples / CtbSizeY); // 7-17
+            PicSizeInMinCbsY = PicWidthInMinCbsY * PicHeightInMinCbsY; // 7-18
+            PicSizeInCtbsY = PicWidthInCtbsY * PicHeightInCtbsY; // 7-19
+            PicSizeInSamplesY = (int)pic_width_in_luma_samples * (int)pic_height_in_luma_samples; // 7-20
+            PicWidthInSamplesC = (int)pic_width_in_luma_samples / SubWidthC; // 7-21
+            PicHeightInSamplesC = (int)pic_height_in_luma_samples / SubHeightC; // 7-22
+        }
+
+        public void OnSubLayersVpsMaxMinus1()
+        {
+            var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
+
+            for (int i = 0; i < NumLayerSets; i++)
+            {
+                uint maxSlMinus1 = 0;
+                for (int k = 0; k < NumLayersInIdList[i]; k++)
+                {
+                    int lId = LayerSetLayerIdList[i][k];
+                    maxSlMinus1 = Math.Max(maxSlMinus1, sub_layers_vps_max_minus1[LayerIdxInVps[lId]]);
+                }
+                MaxSubLayersInLayerSetMinus1[i] = (int)maxSlMinus1;
+            }
+        }
+
         public void OnVpsMaxLayersMinus1()
         {
             var vps_max_layers_minus1 = VideoParameterSetRbsp.VpsMaxLayersMinus1;
@@ -345,6 +571,58 @@ namespace SharpH265
                         if (ViewOrderIdx[lId] == ViewOrderIdx[layer_id_in_nuh[j]])
                             newViewFlag = 0;
                     NumViews += newViewFlag;
+                }
+            }
+        }
+
+        public void OnDirectDependencyType()
+        {
+            var layer_id_in_nuh = VideoParameterSetRbsp.VpsExtension.LayerIdInNuh;
+
+            // I-7
+            int idx = 0;
+            ViewOIdxList[idx++] = 0;
+            for (int i = 1; i <= MaxLayersMinus1; i++)
+            {
+                uint lId = layer_id_in_nuh[i];
+                int newViewFlag = 1;
+                for (int j = 0; j < i; j++)
+                    if (ViewOrderIdx[layer_id_in_nuh[i]] == ViewOrderIdx[layer_id_in_nuh[j]])
+                        newViewFlag = 0;
+                if (newViewFlag != 0)
+                    ViewOIdxList[idx++] = (uint)ViewOrderIdx[lId];
+            }
+
+            // I-8
+            for (int i = 0; i <= MaxLayersMinus1; i++)
+            {
+                uint iNuhLId = layer_id_in_nuh[i];
+                NumRefListLayers[iNuhLId] = 0;
+                for (int j = 0; j < NumDirectRefLayers[iNuhLId]; j++)
+                {
+                    int jNuhLId = IdDirectRefLayer[iNuhLId][j];
+                    if (DepthLayerFlag[iNuhLId] == DepthLayerFlag[jNuhLId])
+                        IdRefListLayer[iNuhLId][NumRefListLayers[iNuhLId]++] = jNuhLId;
+
+                }
+            }
+
+            // I-9
+            for (int depFlag = 0; depFlag <= 1; depFlag++)
+            {
+                for (int i = 0; i < NumViews; i++)
+                {
+                    uint iViewOIdx = ViewOIdxList[i];
+                    int layerId = -1;
+                    for (int j = 0; j <= MaxLayersMinus1; j++)
+                    {
+                        int jNuhLId = (int)layer_id_in_nuh[j];
+                        if (DepthLayerFlag[jNuhLId] == depFlag && ViewOrderIdx[jNuhLId] == iViewOIdx && DependencyId[jNuhLId] == 0 && AuxId[jNuhLId] == 0)
+                            layerId = jNuhLId;
+
+                    }
+                    ViewCompLayerPresentFlag[iViewOIdx][depFlag] = (layerId != -1) ? 1u : 0u;
+                    ViewCompLayerId[iViewOIdx][depFlag] = layerId;
                 }
             }
         }

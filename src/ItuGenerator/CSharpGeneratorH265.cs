@@ -357,6 +357,30 @@ namespace ItuGenerator
                     return "((H265Context)context).OnCpbCntMinus1(i);";
                 case "sei_payload":
                     return "((H265Context)context).SetSeiPayload(sei_payload);";
+                case "sub_layers_vps_max_minus1":
+                    return "((H265Context)context).OnSubLayersVpsMaxMinus1();";
+                case "log2_diff_max_min_luma_coding_block_size":
+                    return "((H265Context)context).OnLog2DiffMaxMinLumaCodingBlockSize();";
+                case "layer_set_idx_for_ols_minus1":
+                    return "((H265Context)context).OnLayerSetIdxForOlsMinus1(i);";
+                case "output_layer_flag":
+                    return "((H265Context)context).OnOutputLayerFlag(i, j);";
+                case "layer_id_in_nuh":
+                    return "((H265Context)context).OnLayerIdInNuh(i);";
+                case "nal_hrd_parameters_present_flag":
+                    return "((H265Context)context).OnNalHrdParametersPresentFlag(nal_hrd_parameters_present_flag);";
+                case "vcl_hrd_parameters_present_flag":
+                    return "((H265Context)context).OnVclHrdParametersPresentFlag(vcl_hrd_parameters_present_flag);";
+                case "direct_dependency_type":
+                    return "((H265Context)context).OnDirectDependencyType();";
+                case "num_bsp_schedules_minus1":
+                    return "((H265Context)context).OnNumBspSchedulesMinus1(h, i, t);";
+                case "used_by_curr_pic_s1_flag":
+                    return "((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx);";
+                case "delta_idx_minus1":
+                    return "((H265Context)context).OnDeltaIdxMinus1(stRpsIdx);";
+                case "nesting_max_temporal_id_plus1":
+                    return "((H265Context)context).OnNestingMaxTemporalIdPlus1(i);";
             }
 
             return "";
