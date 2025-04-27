@@ -174,9 +174,9 @@ namespace SharpH26X
             _lastMarkBeginPosition = _bitsPosition;
         }
 
-        public ulong GetBitsPositionSinceLastMark()
+        public long GetBitsPositionSinceLastMark()
         {
-            return (ulong)(_bitsPosition - _lastMarkBeginPosition);
+            return _bitsPosition - _lastMarkBeginPosition;
         }
 
         public bool ByteAligned()
@@ -356,7 +356,7 @@ namespace SharpH26X
                 if (one == 0)
                 {
                     
-                    if (GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
+                    if (maxPayloadSize == uint.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
                     {
                         serializable.HasMoreRbspData++;
                         return true;
@@ -384,7 +384,7 @@ namespace SharpH26X
                 else
                 {
                     
-                    if (GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
+                    if (maxPayloadSize == uint.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
                     {
                         serializable.HasMoreRbspData++;
                         return true;

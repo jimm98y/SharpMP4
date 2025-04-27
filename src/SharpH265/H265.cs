@@ -94,88 +94,188 @@ namespace SharpH265
 
     public partial class H265Context
     {
+        public uint MaxLayersMinus1 { get; set; }
+        public uint CpbCnt { get; set; }
+        
+        public uint NumViews { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public int[] NumLayersInIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+
+
+        // TODO
+        public int[] MaxSubLayersInLayerSetMinus1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] OlsIdxToLsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[][][] BspSchedCnt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumDeltaPocs { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] MaxTemporalId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[][] NecessaryLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint RefRpsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] ViewOIdxList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint VclInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint NalInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] LayerIdxInVps { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] OlsHighestOutputLayerId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumOutputLayersInOutputLayerSet { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint PicSizeInCtbsY { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+
+
+        public int[][] IdDirectRefLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumDirectRefLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint NumIndependentLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public uint[] NumLayersInTreePartition { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public int[][] LayerSetLayerIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint NumLayerSets { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint FirstAddLayerSetIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint LastAddLayerSetIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumNegativePics { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumPositivePics { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[][] UsedByCurrPicS0 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[][] UsedByCurrPicS1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] UsedByCurrPicLt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint CurrRpsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
-
-        public uint NumPicTotalCurr { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
-        // VPS
-        public uint[] LayerIdxInVps { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] NumLayersInIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] LayerSetLayerIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] MaxSubLayersInLayerSetMinus1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-
-        // Slice Header
-        public int TemporalId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int DepthFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int ViewIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] curCmpLIds { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] inCmpRefViewIdcs { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] RefPicLayerId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] IdRefListLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[][] CpPresentFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[][] ViewCompLayerPresentFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] ViewCompLayerId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] ScalabilityId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] DependencyId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] AuxId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumRefListLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint numCurCmpLIds { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint cpAvailableFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint allRefCmpLayersAvailFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint inCmpPredAvailFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint MaxLayersMinus1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] ViewOrderIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[] DepthLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public int[][] IdDirectRefLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public int[][] DependencyFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public int[] layerIdInListFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public int[][] IdRefLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public int[][] IdPredictedLayer { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public int[][] TreePartitionLayerIdList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumDirectRefLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] NumRefLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
         public uint[] NumPredictedLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] MaxTemporalId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint NumViews { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] ViewOIdxList { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint NumIndependentLayers { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumLayersInTreePartition { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint NumActiveRefLayerPics { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public int[][] ScalabilityId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public int[] DependencyId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public int[] AuxId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public int[] DepthLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
+        public int[] ViewOrderIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
 
-        // TODO
-        public uint[][][] BspSchedCnt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[][] NecessaryLayerFlag { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] RefPicList1 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumOutputLayersInOutputLayerSet { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] OlsHighestOutputLayerId { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint VclInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint NalInitialArrivalDelayPresent { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint CurrPic { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint RefRpsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] RefPicList0 { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] OlsIdxToLsIdx { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint[] NumDeltaPocs { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint PicSizeInCtbsY { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
-        public uint CpbCnt { get { throw new NotImplementedException(); } set { throw new NotImplementedException(); } }
+        public SeiPayload SeiPayload { get; set; }
 
-        public uint PicOrderCnt(uint picID)
+        public void SetSeiPayload(SeiPayload payload)
         {
-            throw new NotImplementedException();
-        }
+            if(SeiPayload == null)
+            {
+                SeiPayload = payload;
+            }
 
-        public uint PicLayerId(uint picID)
-        {
-            throw new NotImplementedException();
+            if(payload.ActiveParameterSets != null)
+                SeiPayload.ActiveParameterSets = payload.ActiveParameterSets;
+            if (payload.AlphaChannelInfo != null)
+                SeiPayload.AlphaChannelInfo = payload.AlphaChannelInfo;
+            if (payload.AlternativeDepthInfo != null)
+                SeiPayload.AlternativeDepthInfo = payload.AlternativeDepthInfo;
+            if (payload.AlternativeTransferCharacteristics != null)
+                SeiPayload.AlternativeTransferCharacteristics = payload.AlternativeTransferCharacteristics;
+            if (payload.AmbientViewingEnvironment != null)
+                SeiPayload.AmbientViewingEnvironment = payload.AmbientViewingEnvironment;
+            if (payload.BspInitialArrivalTime != null)
+                SeiPayload.BspInitialArrivalTime = payload.BspInitialArrivalTime;
+            if (payload.BspNesting != null)
+                SeiPayload.BspNesting = payload.BspNesting;
+            if (payload.BufferingPeriod != null)
+                SeiPayload.BufferingPeriod = payload.BufferingPeriod;
+            if (payload.ChromaResamplingFilterHint != null)
+                SeiPayload.ChromaResamplingFilterHint = payload.ChromaResamplingFilterHint;
+            if (payload.CodedRegionCompletion != null)
+                SeiPayload.CodedRegionCompletion = payload.CodedRegionCompletion;
+            if (payload.ColourRemappingInfo != null)
+                SeiPayload.ColourRemappingInfo = payload.ColourRemappingInfo;
+            if (payload.ContentColourVolume != null)
+                SeiPayload.ContentColourVolume = payload.ContentColourVolume;
+            if (payload.ContentLightLevelInfo != null)
+                SeiPayload.ContentLightLevelInfo = payload.ContentLightLevelInfo;
+            if (payload.CubemapProjection != null)
+                SeiPayload.CubemapProjection = payload.CubemapProjection;
+            if (payload.DecodedPictureHash != null)
+                SeiPayload.DecodedPictureHash = payload.DecodedPictureHash;
+            if (payload.DecodingUnitInfo != null)
+                SeiPayload.DecodingUnitInfo = payload.DecodingUnitInfo;
+            if (payload.DeinterlacedFieldIdentification != null)
+                SeiPayload.DeinterlacedFieldIdentification = payload.DeinterlacedFieldIdentification;
+            if (payload.DependentRapIndication != null)
+                SeiPayload.DependentRapIndication = payload.DependentRapIndication;
+            if (payload.DepthRepresentationInfo != null)
+                SeiPayload.DepthRepresentationInfo = payload.DepthRepresentationInfo;
+            if (payload.DisplayOrientation != null)
+                SeiPayload.DisplayOrientation = payload.DisplayOrientation;
+            if (payload.EquirectangularProjection != null)
+                SeiPayload.EquirectangularProjection = payload.EquirectangularProjection;
+            if (payload.FillerPayload != null)
+                SeiPayload.FillerPayload = payload.FillerPayload;
+            if (payload.FilmGrainCharacteristics != null)
+                SeiPayload.FilmGrainCharacteristics = payload.FilmGrainCharacteristics;
+            if (payload.FrameFieldInfo != null)
+                SeiPayload.FrameFieldInfo = payload.FrameFieldInfo;
+            if (payload.FramePackingArrangement != null)
+                SeiPayload.FramePackingArrangement = payload.FramePackingArrangement;
+            if (payload.GreenMetadata != null)
+                SeiPayload.GreenMetadata = payload.GreenMetadata;
+            if (payload.InterLayerConstrainedTileSets != null)
+                SeiPayload.InterLayerConstrainedTileSets = payload.InterLayerConstrainedTileSets;
+            if (payload.KneeFunctionInfo != null)
+                SeiPayload.KneeFunctionInfo = payload.KneeFunctionInfo;
+            if (payload.LayersNotPresent != null)
+                SeiPayload.LayersNotPresent = payload.LayersNotPresent;
+            if (payload.MasteringDisplayColourVolume != null)
+                SeiPayload.MasteringDisplayColourVolume = payload.MasteringDisplayColourVolume;
+            if (payload.MctsExtractionInfoNesting != null)
+                SeiPayload.MctsExtractionInfoNesting = payload.MctsExtractionInfoNesting;
+            if (payload.MctsExtractionInfoSets != null)
+                SeiPayload.MctsExtractionInfoSets = payload.MctsExtractionInfoSets;
+            if (payload.MultiviewAcquisitionInfo != null)
+                SeiPayload.MultiviewAcquisitionInfo = payload.MultiviewAcquisitionInfo;
+            if (payload.MultiviewSceneInfo != null)
+                SeiPayload.MultiviewSceneInfo = payload.MultiviewSceneInfo;
+            if (payload.MultiviewViewPosition != null)
+                SeiPayload.MultiviewViewPosition = payload.MultiviewViewPosition;
+            if (payload.NoDisplay != null)
+                SeiPayload.NoDisplay = payload.NoDisplay;
+            if (payload.OmniViewport != null)
+                SeiPayload.OmniViewport = payload.OmniViewport;
+            if (payload.OverlayInfo != null)
+                SeiPayload.OverlayInfo = payload.OverlayInfo;
+            if (payload.PanScanRect != null)
+                SeiPayload.PanScanRect = payload.PanScanRect;
+            if (payload.PicTiming != null)
+                SeiPayload.PicTiming = payload.PicTiming;
+            if (payload.PictureSnapshot != null)
+                SeiPayload.PictureSnapshot = payload.PictureSnapshot;
+            if (payload.PostFilterHint != null)
+                SeiPayload.PostFilterHint = payload.PostFilterHint;
+            if (payload.ProgressiveRefinementSegmentEnd != null)
+                SeiPayload.ProgressiveRefinementSegmentEnd = payload.ProgressiveRefinementSegmentEnd;
+            if (payload.ProgressiveRefinementSegmentStart != null)
+                SeiPayload.ProgressiveRefinementSegmentStart = payload.ProgressiveRefinementSegmentStart;
+            if (payload.RecoveryPoint != null)
+                SeiPayload.RecoveryPoint = payload.RecoveryPoint;
+            if (payload.RegionalNesting != null)
+                SeiPayload.RegionalNesting = payload.RegionalNesting;
+            if (payload.RegionRefreshInfo != null)
+                SeiPayload.RegionRefreshInfo = payload.RegionRefreshInfo;
+            if (payload.RegionwisePacking != null)
+                SeiPayload.RegionwisePacking = payload.RegionwisePacking;
+            if (payload.ReservedSeiMessage != null)
+                SeiPayload.ReservedSeiMessage = payload.ReservedSeiMessage;
+            if (payload.ScalableNesting != null)
+                SeiPayload.ScalableNesting = payload.ScalableNesting;
+            if (payload.SceneInfo != null)
+                SeiPayload.SceneInfo = payload.SceneInfo;
+            if (payload.SegmentedRectFramePackingArrangement != null)
+                SeiPayload.SegmentedRectFramePackingArrangement = payload.SegmentedRectFramePackingArrangement;
+            if (payload.SphereRotation != null)
+                SeiPayload.SphereRotation = payload.SphereRotation;
+            if (payload.StructureOfPicturesInfo != null)
+                SeiPayload.StructureOfPicturesInfo = payload.StructureOfPicturesInfo;
+            if (payload.SubBitstreamProperty != null)
+                SeiPayload.SubBitstreamProperty = payload.SubBitstreamProperty;
+            if (payload.TemporalMotionConstrainedTileSets != null)
+                SeiPayload.TemporalMotionConstrainedTileSets = payload.TemporalMotionConstrainedTileSets;
+            if (payload.TemporalMvPredictionConstraints != null)
+                SeiPayload.TemporalMvPredictionConstraints = payload.TemporalMvPredictionConstraints;
+            if (payload.TemporalSubLayerZeroIdx != null)
+                SeiPayload.TemporalSubLayerZeroIdx = payload.TemporalSubLayerZeroIdx;
+            if (payload.ThreeDimensionalReferenceDisplaysInfo != null)
+                SeiPayload.ThreeDimensionalReferenceDisplaysInfo = payload.ThreeDimensionalReferenceDisplaysInfo;
+            if (payload.TimeCode != null)
+                SeiPayload.TimeCode = payload.TimeCode;
+            if (payload.ToneMappingInfo != null)
+                SeiPayload.ToneMappingInfo = payload.ToneMappingInfo;
+            if (payload.UserDataRegisteredItutT35 != null)
+                SeiPayload.UserDataRegisteredItutT35 = payload.UserDataRegisteredItutT35;
+            if (payload.UserDataUnregistered != null)
+                SeiPayload.UserDataUnregistered = payload.UserDataUnregistered;
         }
 
         public void OnVpsMaxLayersMinus1()
@@ -184,10 +284,37 @@ namespace SharpH265
             MaxLayersMinus1 = Math.Min(62, vps_max_layers_minus1);
         }
 
-        public void OnNuhTemporalIdPlus1()
+        public void OnCpbCntMinus1(uint i)
         {
-            var nuh_temporal_id_plus1 = NalHeader.NalUnitHeader.NuhTemporalIdPlus1;
-            TemporalId = (int)nuh_temporal_id_plus1 - 1;
+            var cpb_cnt_minus1 = SeqParameterSetRbsp.VuiParameters.HrdParameters.CpbCntMinus1;
+            CpbCnt = cpb_cnt_minus1[i] + 1; // E.3.3
+        }
+
+        public void OnNumAddLayerSets()
+        {
+            var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
+            var num_add_layer_sets = VideoParameterSetRbsp.VpsExtension.NumAddLayerSets;
+
+            NumLayerSets = vps_num_layer_sets_minus1 + 1 + num_add_layer_sets; // F-7
+            if(num_add_layer_sets > 0)
+            {
+                // F-8
+                FirstAddLayerSetIdx = vps_num_layer_sets_minus1 + 1;
+                LastAddLayerSetIdx = FirstAddLayerSetIdx + num_add_layer_sets - 1;
+            }
+        }
+
+        public void OnHighestLayerIdxPlus1(uint i) // F-9
+        {
+            var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
+            var highest_layer_idx_plus1 = VideoParameterSetRbsp.VpsExtension.HighestLayerIdxPlus1;
+
+            int layerNum = 0;
+            uint lsIdx = vps_num_layer_sets_minus1 + 1 + i;
+            for (int treeIdx = 1; treeIdx < NumIndependentLayers; treeIdx++)
+                for (int layerCnt = 0; layerCnt < highest_layer_idx_plus1[i][treeIdx]; layerCnt++)
+                    LayerSetLayerIdList[lsIdx][layerNum++] = TreePartitionLayerIdList[treeIdx][layerCnt];
+            NumLayersInIdList[lsIdx] = layerNum;
         }
 
         public void OnDimensionId() // F-3
@@ -220,84 +347,6 @@ namespace SharpH265
                     NumViews += newViewFlag;
                 }
             }
-        }
-
-        public void OnNumAddLayerSets()
-        {
-            var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
-            var num_add_layer_sets = VideoParameterSetRbsp.VpsExtension.NumAddLayerSets;
-
-            NumLayerSets = vps_num_layer_sets_minus1 + 1 + num_add_layer_sets; // F-7
-            if(num_add_layer_sets > 0)
-            {
-                // F-8
-                FirstAddLayerSetIdx = vps_num_layer_sets_minus1 + 1;
-                LastAddLayerSetIdx = FirstAddLayerSetIdx + num_add_layer_sets - 1;
-            }
-        }
-
-        public void OnHighestLayerIdxPlus1(uint i) // F-9
-        {
-            var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
-            var highest_layer_idx_plus1 = VideoParameterSetRbsp.VpsExtension.HighestLayerIdxPlus1;
-
-            int layerNum = 0;
-            uint lsIdx = vps_num_layer_sets_minus1 + 1 + i;
-            for (int treeIdx = 1; treeIdx < NumIndependentLayers; treeIdx++)
-                for (int layerCnt = 0; layerCnt < highest_layer_idx_plus1[i][treeIdx]; layerCnt++)
-                    LayerSetLayerIdList[lsIdx][layerNum++] = TreePartitionLayerIdList[treeIdx][layerCnt];
-            NumLayersInIdList[lsIdx] = layerNum;
-        }
-
-        public void OnDirectDependencyType() 
-        {
-            var layer_id_in_nuh = VideoParameterSetRbsp.VpsExtension.LayerIdInNuh;
-
-            // I-7
-            int idx = 0;
-            ViewOIdxList[idx++] = 0;
-            for (int i = 1; i <= MaxLayersMinus1; i++)
-            {
-                uint lId = layer_id_in_nuh[i];
-                int newViewFlag = 1;
-                for (int j = 0; j < i; j++)
-                    if (ViewOrderIdx[layer_id_in_nuh[i]] == ViewOrderIdx[layer_id_in_nuh[j]])
-                        newViewFlag = 0;
-                if (newViewFlag != 0)
-                    ViewOIdxList[idx++] = (uint)ViewOrderIdx[lId];
-            }
-
-            // I-8
-            for (int i = 0; i <= MaxLayersMinus1; i++)
-            {
-                uint iNuhLId = layer_id_in_nuh[i];
-                NumRefListLayers[iNuhLId] = 0;
-                for (int j = 0; j < NumDirectRefLayers[iNuhLId]; j++)
-                {
-                    int jNuhLId = IdDirectRefLayer[iNuhLId][j];
-                    if (DepthLayerFlag[iNuhLId] == DepthLayerFlag[jNuhLId])
-                        IdRefListLayer[iNuhLId][NumRefListLayers[iNuhLId]++] = jNuhLId;
-                }
-            }
-
-            // I-9
-            for (int depFlag = 0; depFlag <= 1; depFlag++)
-            {
-                for (int i = 0; i < NumViews; i++)
-                {
-                    uint iViewOIdx = ViewOIdxList[i];
-                    int layerId = -1;
-                    for (int j = 0; j <= MaxLayersMinus1; j++)
-                    {
-                        int jNuhLId = (int)layer_id_in_nuh[j];
-                        if (DepthLayerFlag[jNuhLId] == depFlag && ViewOrderIdx[jNuhLId] == iViewOIdx && DependencyId[jNuhLId] == 0 && AuxId[jNuhLId] == 0)
-                            layerId = jNuhLId;
-
-                    }
-                    ViewCompLayerPresentFlag[iViewOIdx][depFlag] = (layerId != -1) ? 1u : 0u;
-                    ViewCompLayerId[iViewOIdx][depFlag] = layerId;
-                }
-            }            
         }
 
         public void OnDirectDependencyFlag()
@@ -366,82 +415,6 @@ namespace SharpH265
             NumIndependentLayers = k;
         }
 
-        public void OnInterLayerPredLayerIdc()
-        {
-            var nuh_layer_id = NalHeader.NalUnitHeader.NuhLayerId;
-            var inter_layer_pred_layer_idc = SliceSegmentLayerRbsp.SliceSegmentHeader.InterLayerPredLayerIdc;
-
-            // RefPicLayerId
-            for (int i = 0; i < NumActiveRefLayerPics; i++)
-            {
-                RefPicLayerId[i] = IdRefListLayer[nuh_layer_id][inter_layer_pred_layer_idc[i]];
-            }
-        }
-
-        public void OnSliceHeaderRbsp()
-        {
-            var nuh_layer_id = NalHeader.NalUnitHeader.NuhLayerId;
-
-            var direct_dependency_flag = VideoParameterSetRbsp.VpsExtension.DirectDependencyFlag;
-            var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
-            var max_tid_il_ref_pics_plus1 = VideoParameterSetRbsp.VpsExtension.MaxTidIlRefPicsPlus1;
-
-            var vsp_mc_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.VspMcEnabledFlag;
-            var dbbp_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.DbbpEnabledFlag;
-            var depth_ref_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.DepthRefEnabledFlag;
-            var intra_contour_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.IntraContourEnabledFlag;
-            var cqt_cu_part_pred_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.CqtCuPartPredEnabledFlag;
-            var tex_mc_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.TexMcEnabledFlag;
-
-            DepthFlag = DepthLayerFlag[nuh_layer_id];
-            ViewIdx = ViewOrderIdx[nuh_layer_id];
-
-            curCmpLIds = DepthFlag != 0 ? new int[] { (int)nuh_layer_id } : RefPicLayerId;
-            numCurCmpLIds = DepthFlag != 0 ? 1 : NumActiveRefLayerPics;
-
-            cpAvailableFlag = 1;
-            allRefCmpLayersAvailFlag = 1;
-            for (int i = 0; i < numCurCmpLIds; i++)
-            {
-                inCmpRefViewIdcs[i] = ViewOrderIdx[curCmpLIds[i]];
-                if (CpPresentFlag[ViewIdx][inCmpRefViewIdcs[i]] == 0)
-                {
-                    cpAvailableFlag = 0;
-                }
-
-                int refCmpCurLIdAvailFlag = 0;
-
-                if (ViewCompLayerPresentFlag[inCmpRefViewIdcs[i]][DepthFlag != 0 ? 0 : 1] == 1)
-                {
-                    uint j = LayerIdxInVps[ViewCompLayerId[inCmpRefViewIdcs[i]][DepthFlag != 0 ? 0 : 1]];
-
-                    if (direct_dependency_flag[LayerIdxInVps[nuh_layer_id]][j] == 1 &&
-                        sub_layers_vps_max_minus1[j] >= TemporalId &&
-                        (TemporalId == 0 || max_tid_il_ref_pics_plus1[j][LayerIdxInVps[nuh_layer_id]] > TemporalId))
-                    {
-                        refCmpCurLIdAvailFlag = 1;
-                    }
-                }
-
-                if (refCmpCurLIdAvailFlag == 0)
-                {
-                    allRefCmpLayersAvailFlag = 0;
-                }
-            }
-
-            if (allRefCmpLayersAvailFlag == 0)
-            {
-                inCmpPredAvailFlag = 0;
-            }
-            else
-            {
-                if (DepthFlag == 0)
-                    inCmpPredAvailFlag = (vsp_mc_enabled_flag[DepthFlag] != 0 || dbbp_enabled_flag[DepthFlag] != 0 || depth_ref_enabled_flag[DepthFlag] != 0) ? 1u : 0u; // I-17
-                else
-                    inCmpPredAvailFlag = (intra_contour_enabled_flag[DepthFlag] != 0 || cqt_cu_part_pred_enabled_flag[DepthFlag] != 0 || tex_mc_enabled_flag[DepthFlag] != 0) ? 1u : 0u; // I-18
-            }
-        }
-
         public void OnCpRefVoi() // I-12
         {
             var num_cp = VideoParameterSetRbsp.Vps3dExtension.NumCp;
@@ -453,31 +426,6 @@ namespace SharpH265
                 for (int m = 0; m < num_cp[i]; m++)
                     CpPresentFlag[i][cp_ref_voi[i][m]] = 1;
             }
-        }
-
-        public void OnListEntryL0() // F-56, replacing 7-57
-        {
-            var pps_curr_pic_ref_enabled_flag = PicParameterSetRbsp.PpsSccExtension.PpsCurrPicRefEnabledFlag;
-            var num_long_term_sps = SliceSegmentLayerRbsp.SliceSegmentHeader.NumLongTermSps;
-            var num_long_term_pics = SliceSegmentLayerRbsp.SliceSegmentHeader.NumLongTermPics;
-            var nal_unit_type = NalHeader.NalUnitHeader.NalUnitType;
-
-            NumPicTotalCurr = 0;
-            if (nal_unit_type != H265NALTypes.IDR_W_RADL && nal_unit_type != H265NALTypes.IDR_N_LP)
-            {
-                for (int i = 0; i < NumNegativePics[CurrRpsIdx]; i++)
-                    if (UsedByCurrPicS0[CurrRpsIdx][i] != 0)
-                        NumPicTotalCurr++;
-                for (int i = 0; i < NumPositivePics[CurrRpsIdx]; i++)
-                    if (UsedByCurrPicS1[CurrRpsIdx][i] != 0)
-                        NumPicTotalCurr++;
-                for (int i = 0; i < num_long_term_sps + num_long_term_pics; i++)
-                    if (UsedByCurrPicLt[i] != 0)
-                        NumPicTotalCurr++;
-}
-            if (pps_curr_pic_ref_enabled_flag != 0)
-                NumPicTotalCurr++;
-            NumPicTotalCurr += NumActiveRefLayerPics;
         }
     }
 }
