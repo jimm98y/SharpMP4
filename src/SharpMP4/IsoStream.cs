@@ -657,7 +657,7 @@ namespace SharpMP4
             long headerOffset = this.GetCurrentOffset();
             ulong headerSize = ReadBoxHeader(out header);
 
-            ulong availableSize = readSize - boxSize - headerSize;
+            ulong availableSize = readSize == ulong.MaxValue ? ulong.MaxValue : (readSize - boxSize - headerSize);
             Box box;
             ulong size;
 
