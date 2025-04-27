@@ -1487,6 +1487,7 @@ sei_message() {
             }
             size += stream.ReadUnsignedInt(size, 8, out this.last_payload_size_byte);
             payloadSize += last_payload_size_byte;
+            stream.MarkCurrentBitsPosition();
             this.sei_payload = new SeiPayload(payloadType, payloadSize);
             size += stream.ReadClass<SeiPayload>(size, context, this.sei_payload);
 
@@ -1522,6 +1523,7 @@ sei_message() {
             }
             size += stream.WriteUnsignedInt(8, this.last_payload_size_byte);
             payloadSize += last_payload_size_byte;
+            stream.MarkCurrentBitsPosition();
             size += stream.WriteClass<SeiPayload>(context, this.sei_payload);
 
             return size;

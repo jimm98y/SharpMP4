@@ -58,4 +58,9 @@
         public const uint UNSPECIFIED8 = 30;
         public const uint UNSPECIFIED9 = 31;
     }
+
+    public partial class H264Context
+    {
+        // TODO
+    }
 }
