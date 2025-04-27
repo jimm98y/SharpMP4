@@ -96,6 +96,8 @@ namespace SharpH265
     {
         public SeiPayload SeiPayload { get; set; }
 
+        // TODO: Add missing allocations
+#warning Add missing allocations
         public uint MaxLayersMinus1 { get; set; }
         public uint CpbCnt { get; set; }
         public uint NumViews { get; set; }
