@@ -24,6 +24,7 @@ namespace ItuGenerator
         string GetCtorParameterType(string parameter);
         string FixFieldValue(string fieldValue);
         void FixMethodAllocation(string name, ref string method, ref string typedef);
+        string GetDerivedVariables(string name);
     }
 
     public class CSharpGenerator
@@ -341,6 +342,12 @@ namespace Sharp{type}
             else if(name == "slice_segment_header_extension_length")
             {
                 retm = $"{retm}\r\n{spacing}stream.MarkCurrentBitsPosition();";
+            }
+
+            string hookDerivedVariables = specificGenerator.GetDerivedVariables(name);
+            if(!string.IsNullOrEmpty(hookDerivedVariables))
+            {
+                retm += $"\r\n{spacing}{hookDerivedVariables}";
             }
 
             return retm;

@@ -333,5 +333,10 @@ namespace ItuGenerator
                 typedef = "[ 0 ]";
             }
         }
+
+        public string GetDerivedVariables(string name)
+        {
+            return null;
+        }
     }
 }

@@ -297,8 +297,8 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
     {
         ulong ituSize = 0;
         var nu = new SharpH264.NalUnit((uint)sampleData.Length);
-        ituSize += nu.Read(context, stream);
         context.NalHeader = nu;
+        ituSize += nu.Read(context, stream);
 
         var ms = new MemoryStream();
         using (ItuStream wstream = new ItuStream(ms))
@@ -526,8 +526,8 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
     {
         ulong ituSize = 0;
         var nu = new SharpH265.NalUnit((uint)sampleData.Length);
-        ituSize += nu.Read(context, stream);
         context.NalHeader = nu;
+        ituSize += nu.Read(context, stream);
 
         var ms = new MemoryStream();
         using (ItuStream wstream = new ItuStream(ms))

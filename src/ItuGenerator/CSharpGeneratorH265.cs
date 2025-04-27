@@ -212,7 +212,7 @@ namespace ItuGenerator
                 case "ViewOIdxList":
                     return "((H265Context)context).ViewOIdxList";
                 case "inCmpPredAvailFlag":
-                    return "((H265Context)context).InCmpPredAvailFlag";
+                    return "((H265Context)context).inCmpPredAvailFlag";
                 case "nalInitialArrivalDelayPresent":
                     return "((H265Context)context).NalInitialArrivalDelayPresent";
                 case "ViewIdx":
@@ -333,6 +333,33 @@ namespace ItuGenerator
                     //throw new NotImplementedException(parameter);
                     return parameter;
             }
+        }
+
+        public string GetDerivedVariables(string field)
+        {
+            switch(field)
+            {
+                case "vps_max_layers_minus1":
+                    return "((H265Context)context).OnVpsMaxLayersMinus1();";
+                case "nuh_temporal_id_plus1":
+                    return "((H265Context)context).OnNuhTemporalIdPlus1();";
+                case "num_add_layer_sets":
+                    return "((H265Context)context).OnNumAddLayerSets();";
+                case "highest_layer_idx_plus1":
+                    return "((H265Context)context).OnHighestLayerIdxPlus1(i);";
+                case "direct_dependency_type":
+                    return "((H265Context)context).OnDirectDependencyType();";
+                case "direct_dependency_flag":
+                    return "((H265Context)context).OnDirectDependencyFlag();";
+                case "inter_layer_pred_layer_idc":
+                    return "((H265Context)context).OnInterLayerPredLayerIdc();";
+                case "cp_ref_voi":
+                    return "((H265Context)context).OnCpRefVoi();";
+                case "list_entry_l0":
+                    return "((H265Context)context).OnListEntryL0();";
+            }
+
+            return "";
         }
 
         public string FixMissingParameters(ItuClass b, string parameter, string classType)
