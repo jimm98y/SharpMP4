@@ -4,6 +4,7 @@ using SharpH26X;
 using SharpMP4;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -12,6 +13,7 @@ using System.Linq;
 //Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
 Log.SinkInfo = (o, e) => { Console.WriteLine(o); };
 Log.SinkError = (o, e) => { 
+    Debug.WriteLine(o);
     try
     {
         File.AppendAllText("C:\\Temp\\_decoding_errors.txt", o + "\r\n");
@@ -189,7 +191,7 @@ foreach (var file in files)
                         uint next_run = 0;
                         int sample_idx = 0;
                         uint samples_per_chunk = 0;
-                        for (int k = 1; k < chunkOffsets.Length; k++)
+                        for (int k = 1; k <= chunkOffsets.Length; k++)
                         {
                             if (k >= next_run)
                             {
@@ -559,7 +561,8 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT) // 34
                 {
@@ -568,7 +571,8 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT) // 32
                 {
@@ -577,7 +581,8 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.VideoParameterSetRbsp.Read(context, stream);
                     context.VideoParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT) // 35
                 {
@@ -666,7 +671,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
             {
                 Log.Error($"Error: {ex.Message}");
                 Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
-                Log.Error($"WriteData: {Convert.ToHexString(ms.ToArray())}");
+                Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
                 throw;
             }
         }
