@@ -51,6 +51,9 @@ foreach (var file in files)
             VideoFormat format = VideoFormat.Unknown;
             uint videoTrackId = 0;
 
+            HEVCConfigurationBox hvcC = null;
+            AVCConfigurationBox avcC = null;
+
             var movieBox = inputMp4
                 .Children.OfType<MovieBox>().SingleOrDefault();
 
@@ -58,28 +61,10 @@ foreach (var file in files)
             {
                 // HEIC
                 var metaBox = inputMp4.Children.OfType<MetaBox>().SingleOrDefault();
-
                 var iprpBox = metaBox.Children.OfType<ItemPropertiesBox>().SingleOrDefault();
                 var ipcoBox = iprpBox.Children.OfType<ItemPropertyContainerBox>().SingleOrDefault();
 
-                HEVCConfigurationBox hvcC = ipcoBox.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
-                if (hvcC != null)
-                {
-                    Log.Info($"-----------Reading H265: {file}");
-
-                    context = new H265Context();
-                    format = VideoFormat.H265;
-
-                    nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
-
-                    foreach (var nalus in hvcC._HEVCConfig.NalUnit)
-                    {
-                        foreach (var nalu in nalus)
-                        {
-                            ParseNALU(context, format, nalu);
-                        }
-                    }
-                }
+                hvcC = ipcoBox.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
             }
             else
             {
@@ -99,54 +84,47 @@ foreach (var file in files)
                     .Children.OfType<SampleDescriptionBox>().Single()
                     .Children.OfType<VisualSampleEntry>().Single();
 
-                var avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
-                if (avcC != null)
+                avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
+                hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
+            }
+
+            if (avcC != null)
+            {
+                context = new H264Context();
+                format = VideoFormat.H264;
+
+                nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+                foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
                 {
-                    // TODO: remove this - skip h264 for now
-                    continue;
+                    ParseNALU(context, format, spsBinary);
+                }
 
-                    context = new H264Context();
-                    format = VideoFormat.H264;
+                foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
+                {
+                    ParseNALU(context, format, ppsBinary);
+                }
+            }
+            else if (hvcC != null)
+            {
+                context = new H265Context();
+                format = VideoFormat.H265;
 
-                    nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+                nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
 
-                    foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
+                foreach (var nalus in hvcC._HEVCConfig.NalUnit)
+                {
+                    foreach (var nalu in nalus)
                     {
-                        ParseNALU(context, format, spsBinary);
-                    }
-
-                    foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
-                    {
-                        ParseNALU(context, format, ppsBinary);
+                        ParseNALU(context, format, nalu);
                     }
                 }
-                else
-                {
-                    var hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
-                    if (hvcC != null)
-                    {
-                        Log.Info($"-----------Reading H265: {file}");
-
-                        context = new H265Context();
-                        format = VideoFormat.H265;
-
-                        nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
-
-                        foreach (var nalus in hvcC._HEVCConfig.NalUnit)
-                        {
-                            foreach (var nalu in nalus)
-                            {
-                                ParseNALU(context, format, nalu);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //throw new NotSupportedException();
-                        Log.Error($"{file}");
-                        continue;
-                    }
-                }
+            }
+            else
+            {
+                //throw new NotSupportedException();
+                Log.Error($"{file}");
+                continue;
             }
 
             MovieBox moov = null;
@@ -174,7 +152,6 @@ foreach (var file in files)
                     meta = (MetaBox)inputMp4.Children[i];
                 }
                 
-
                 if (moov != null && mdat != null)
                 {
                     mdat.Data.Stream.SeekFromBeginning(mdat.Data.Position);
@@ -267,6 +244,7 @@ foreach (var file in files)
                 }
                 else if(meta != null)
                 {
+                    // HEIC
                     var primaryItem = meta.Children.OfType<PrimaryItemBox>().SingleOrDefault();
                     uint item_id = primaryItem.ItemID;
 
