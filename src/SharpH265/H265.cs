@@ -98,32 +98,53 @@ namespace SharpH265
 
         // TODO: Add missing allocations
 #warning Add missing allocations
-        public uint MaxLayersMinus1 { get; set; }
-        public uint CpbCnt { get; set; }
-        public uint NumViews { get; set; }
-        public int[] NumLayersInIdList { get; set; }
-        public int[] MaxSubLayersInLayerSetMinus1 { get; set; }
+        public uint[][][] BspSchedCnt { get; set; }
         public int[][] IdDirectRefLayer { get; set; }
-        public uint[] NumDirectRefLayers { get; set; }
-        public uint NumIndependentLayers { get; set; }
-        public uint[] NumLayersInTreePartition { get; set; }
         public int[][] LayerSetLayerIdList { get; set; }
-        public uint NumLayerSets { get; set; }
-        public uint FirstAddLayerSetIdx { get; set; }
-        public uint LastAddLayerSetIdx { get; set; }
         public uint[][] CpPresentFlag { get; set; }
         public int[][] DependencyFlag { get; set; }
-        public int[] layerIdInListFlag { get; set; }
         public int[][] IdRefLayer { get; set; }
         public int[][] IdPredictedLayer { get; set; }
         public int[][] TreePartitionLayerIdList { get; set; }
+        public int[][] ScalabilityId { get; set; }
+        public uint[][] OutputLayerFlag { get; set; }
+        public uint[][] NecessaryLayerFlag { get; set; }
+        public int[][] IdRefListLayer { get; set; }
+        public uint[][] ViewCompLayerPresentFlag { get; set; }
+        public int[][] ViewCompLayerId { get; set; }
+        public uint[][] UsedByCurrPicS0 { get; set; }
+        public uint[][] UsedByCurrPicS1 { get; set; }
+        public int[][] DeltaPocS0 { get; set; }
+        public int[][] DeltaPocS1 { get; set; }
+        public int[] NumLayersInIdList { get; set; }
+        public int[] MaxSubLayersInLayerSetMinus1 { get; set; }
+        public uint[] NumDirectRefLayers { get; set; }
+        public uint[] NumLayersInTreePartition { get; set; }
+        public int[] layerIdInListFlag { get; set; }
         public uint[] NumRefLayers { get; set; }
         public uint[] NumPredictedLayers { get; set; }
-        public int[][] ScalabilityId { get; set; }
         public int[] DependencyId { get; set; }
         public int[] AuxId { get; set; }
         public int[] DepthLayerFlag { get; set; }
         public int[] ViewOrderIdx { get; set; }
+        public uint[] OlsIdxToLsIdx { get; set; }
+        public uint[] NumOutputLayersInOutputLayerSet { get; set; }
+        public uint[] OlsHighestOutputLayerId { get; set; }
+        public uint[] NumNecessaryLayers { get; set; }
+        public uint[] LayerIdxInVps { get; set; }
+        public uint[] NumRefListLayers { get; set; }
+        public uint[] ViewOIdxList { get; set; }
+        public uint[] NumNegativePics { get; set; }
+        public uint[] NumPositivePics { get; set; }
+        public uint[] NumDeltaPocs { get; set; }
+        public uint[] MaxTemporalId { get; set; }
+        public uint MaxLayersMinus1 { get; set; }
+        public uint CpbCnt { get; set; }
+        public uint NumViews { get; set; }
+        public uint NumIndependentLayers { get; set; }
+        public uint NumLayerSets { get; set; }
+        public uint FirstAddLayerSetIdx { get; set; }
+        public uint LastAddLayerSetIdx { get; set; }
         public int PicSizeInCtbsY { get; set; }
         public int MinCbLog2SizeY { get; set; }
         public int CtbLog2SizeY { get; set; }
@@ -139,30 +160,9 @@ namespace SharpH265
         public int PicHeightInSamplesC { get; set; }
         public int SubWidthC { get; set; }
         public int SubHeightC { get; set; }
-        public uint[] OlsIdxToLsIdx { get; set; }
-        public uint[] NumOutputLayersInOutputLayerSet { get; set; }
-        public uint[][] OutputLayerFlag { get; set; }
-        public uint[] OlsHighestOutputLayerId { get; set; }
-        public uint[] NumNecessaryLayers { get; set; }
-        public uint[][] NecessaryLayerFlag { get; set; }
-        public int[][] IdRefListLayer { get; set; }
-        public uint[][] ViewCompLayerPresentFlag { get; set; }
-        public int[][] ViewCompLayerId { get; set; }
-        public uint[] LayerIdxInVps { get; set; }
-        public uint[] NumRefListLayers { get; set; }
         public uint VclInitialArrivalDelayPresent { get; set; }
         public uint NalInitialArrivalDelayPresent { get; set; }
-        public uint[] ViewOIdxList { get; set; }
-        public uint[][][] BspSchedCnt { get; set; }
-        public uint[] NumNegativePics { get; set; }
-        public uint[] NumPositivePics { get; set; }
-        public uint[][] UsedByCurrPicS0 { get; set; }
-        public uint[][] UsedByCurrPicS1 { get; set; }
-        public int[][] DeltaPocS0 { get; set; }
-        public int[][] DeltaPocS1 { get; set; }
-        public uint[] NumDeltaPocs { get; set; }
         public uint RefRpsIdx { get; set; }
-        public uint[] MaxTemporalId { get; set; }
       
 
         public void SetSeiPayload(SeiPayload payload)

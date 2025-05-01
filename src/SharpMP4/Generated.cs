@@ -10964,7 +10964,7 @@ namespace SharpMP4
         public ItemReferenceBox ItemRefs { get { return this.children.OfType<ItemReferenceBox>().FirstOrDefault(); } }
         public ItemDataBox ItemData { get { return this.children.OfType<ItemDataBox>().FirstOrDefault(); } }
         public IEnumerable<Box> OtherBoxes { get { return this.children.OfType<Box>(); } }
-        public bool IsQuickTime { get { return (GetParent() != null && (((Box)GetParent()).FourCC == IsoStream.FromFourCC("udta") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC("trak"))); } }
+        public bool IsQuickTime { get { return (GetParent() == null || (((Box)GetParent()).FourCC == IsoStream.FromFourCC("udta") || ((Box)GetParent()).FourCC == IsoStream.FromFourCC("trak"))); } }
 
         public MetaBox(uint handler_type = 0) : base(IsoStream.FromFourCC("meta"), 0, 0)
         {
