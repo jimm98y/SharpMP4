@@ -693,7 +693,7 @@ namespace SharpMP4
                     value = "= []";
                 }
 
-                if (fieldType == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "FreeSpaceBox_skip" || b.BoxName == "FreeSpaceBox" || b.BoxName == "ZeroBox"))
+                if (fieldType == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "ItemDataBox" || b.BoxName == "FreeSpaceBox_skip" || b.BoxName == "FreeSpaceBox" || b.BoxName == "ZeroBox"))
                 {
                     fieldType = "StreamMarker";
                 }

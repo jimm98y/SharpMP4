@@ -9625,8 +9625,8 @@ namespace SharpMP4
         public const string TYPE = "idat";
         public override string DisplayName { get { return "ItemDataBox"; } }
 
-        protected byte[] data;
-        public byte[] Data { get { return this.data; } set { this.data = value; } }
+        protected StreamMarker data;
+        public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
         public ItemDataBox() : base(IsoStream.FromFourCC("idat"))
         {

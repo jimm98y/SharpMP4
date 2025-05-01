@@ -63,8 +63,16 @@ foreach (var file in files)
                 var metaBox = inputMp4.Children.OfType<MetaBox>().SingleOrDefault();
                 var iprpBox = metaBox.Children.OfType<ItemPropertiesBox>().SingleOrDefault();
                 var ipcoBox = iprpBox.Children.OfType<ItemPropertyContainerBox>().SingleOrDefault();
+                var ipmaBox = iprpBox.Children.OfType<ItemPropertyAssociationBox>().SingleOrDefault();
 
-                hvcC = ipcoBox.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                var primaryItem = metaBox.Children.OfType<PrimaryItemBox>().SingleOrDefault();
+                uint item_id = primaryItem.ItemID;
+
+                int itemIndex = Array.IndexOf(ipmaBox.ItemID, item_id);
+                var indexes = ipmaBox.PropertyIndex[itemIndex - 1];
+                var results = ipcoBox.Children.Where((x, idx) => indexes.Contains((ushort)(idx + 1))).ToArray();
+
+                hvcC = results.OfType<HEVCConfigurationBox>().SingleOrDefault();
             }
             else
             {
@@ -175,7 +183,7 @@ foreach (var file in files)
                                 {
                                     try
                                     {
-                                        size += ReadAU(nalLengthSize, context, format, mdat, sampleSize);
+                                        size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize);
                                     }
                                     catch (Exception)
                                     {
@@ -230,7 +238,7 @@ foreach (var file in files)
 
                                 try
                                 {
-                                    size += ReadAU(nalLengthSize, context, format, mdat, sampleSize);
+                                    size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize);
                                 }
                                 catch (Exception)
                                 {
@@ -249,6 +257,7 @@ foreach (var file in files)
                     uint item_id = primaryItem.ItemID;
 
                     var ilocBox = meta.Children.OfType<ItemLocationBox>().SingleOrDefault();
+                    var idat = meta.Children.OfType<ItemDataBox>().SingleOrDefault();
                     for (int l = 0; l < ilocBox.BaseOffset.Length; l++)
                     {
                         int baseOffset = ilocBox.BaseOffset[l].Length == 0 ? 0 : ReadVariableInt(ilocBox.BaseOffsetSize, ilocBox.BaseOffset[l]);
@@ -257,11 +266,11 @@ foreach (var file in files)
                         {
                             long position = baseOffset + ReadVariableInt(ilocBox.OffsetSize, ilocBox.ExtentOffset[l][j]);
                             uint length = (uint)ReadVariableInt(ilocBox.LengthSize, ilocBox.ExtentLength[l][j]);
-                            mdat.Data.Stream.SeekFromBeginning(position);
+                            idat.Data.Stream.SeekFromBeginning(position);
 
                             try
                             {
-                                size += ReadAU(nalLengthSize, context, format, mdat, length);
+                                size += ReadAU(nalLengthSize, context, format, idat.Data, length);
                             }
                             catch (Exception)
                             {
@@ -301,7 +310,7 @@ int ReadVariableInt(byte size, byte[] bytes)
     }
 }
 
-static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, MediaDataBox mdat, uint sampleSizeInBytes)
+static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes)
 {
     ulong size = 0;
     long offsetInBytes = 0;
@@ -314,16 +323,16 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
         switch (nalLengthSize)
         {
             case 1:
-                size += mdat.Data.Stream.ReadUInt8(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                size += marker.Stream.ReadUInt8(size, (ulong)marker.Length, out nalUnitLength);
                 break;
             case 2:
-                size += mdat.Data.Stream.ReadUInt16(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                size += marker.Stream.ReadUInt16(size, (ulong)marker.Length, out nalUnitLength);
                 break;
             case 3:
-                size += mdat.Data.Stream.ReadUInt24(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                size += marker.Stream.ReadUInt24(size, (ulong)marker.Length, out nalUnitLength);
                 break;
             case 4:
-                size += mdat.Data.Stream.ReadUInt32(size, (ulong)mdat.Data.Length, out nalUnitLength);
+                size += marker.Stream.ReadUInt32(size, (ulong)marker.Length, out nalUnitLength);
                 break;
 
             default:
@@ -340,7 +349,7 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
             break;
         }
 
-        size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, nalUnitLength, out byte[] sampleData);
+        size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData);
         offsetInBytes += sampleData.Length;
         ParseNALU(context, format, sampleData);
     } while (offsetInBytes < sampleSizeInBytes);
