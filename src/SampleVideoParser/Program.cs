@@ -25,13 +25,14 @@ Log.SinkError = (o, e) => {
 };
 
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
-var files = new string[] { "\\\\HOME-DS\\surveillance\\Garaz\\20250419AM\\Garaz-20250419-111704-1745054224506-7.mp4" };
+var files = new string[] { "C:\\Temp\\IMG_20211003_082118.heic" };
 
 foreach (var file in files)
 {
     Log.Info($"----Reading: {file}");
 
-    try {
+    try
+    {
         using (Stream inputFileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
             var inputMp4 = new Mp4();
@@ -45,51 +46,23 @@ foreach (var file in files)
                 continue;
             }
 
-            var tracks = inputMp4
-                .Children.OfType<MovieBox>().Single()
-                .Children.OfType<TrackBox>();
-
-            var videoTrack = tracks.FirstOrDefault(x => x
-                .Children.OfType<MediaBox>().Single()
-                .Children.OfType<MediaInformationBox>().Single()
-                .Children.OfType<VideoMediaHeaderBox>().FirstOrDefault() != null);
-            uint videoTrackId = videoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
-
-            var visualSample = videoTrack
-                .Children.OfType<MediaBox>().Single()
-                .Children.OfType<MediaInformationBox>().Single()
-                .Children.OfType<SampleTableBox>().Single()
-                .Children.OfType<SampleDescriptionBox>().Single()
-                .Children.OfType<VisualSampleEntry>().Single();
-
             int nalLengthSize = 4;
             IItuContext context = null;
-            VideoFormat format;
+            VideoFormat format = VideoFormat.Unknown;
+            uint videoTrackId = 0;
 
-            var avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
-            if (avcC != null)
+            var movieBox = inputMp4
+                .Children.OfType<MovieBox>().SingleOrDefault();
+
+            if (movieBox == null)
             {
-                // TODO: remove this - skip h264 for now
-                continue;
+                // HEIC
+                var metaBox = inputMp4.Children.OfType<MetaBox>().SingleOrDefault();
 
-                context = new H264Context();
-                format = VideoFormat.H264;
+                var iprpBox = metaBox.Children.OfType<ItemPropertiesBox>().SingleOrDefault();
+                var ipcoBox = iprpBox.Children.OfType<ItemPropertyContainerBox>().SingleOrDefault();
 
-                nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
-
-                foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
-                {
-                    ParseNALU(context, format, spsBinary);
-                }
-
-                foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
-                {
-                    ParseNALU(context, format, ppsBinary);
-                }
-            }
-            else
-            {
-                var hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                var hvcC = ipcoBox.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
                 if (hvcC != null)
                 {
                     Log.Info($"-----------Reading H265: {file}");
@@ -107,17 +80,80 @@ foreach (var file in files)
                         }
                     }
                 }
+            }
+            else
+            {
+                var tracks = movieBox
+                    .Children.OfType<TrackBox>();
+
+                var videoTrack = tracks.FirstOrDefault(x => x
+                    .Children.OfType<MediaBox>().Single()
+                    .Children.OfType<MediaInformationBox>().Single()
+                    .Children.OfType<VideoMediaHeaderBox>().FirstOrDefault() != null);
+                videoTrackId = videoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
+
+                var visualSample = videoTrack
+                    .Children.OfType<MediaBox>().Single()
+                    .Children.OfType<MediaInformationBox>().Single()
+                    .Children.OfType<SampleTableBox>().Single()
+                    .Children.OfType<SampleDescriptionBox>().Single()
+                    .Children.OfType<VisualSampleEntry>().Single();
+
+                var avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
+                if (avcC != null)
+                {
+                    // TODO: remove this - skip h264 for now
+                    continue;
+
+                    context = new H264Context();
+                    format = VideoFormat.H264;
+
+                    nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+                    foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
+                    {
+                        ParseNALU(context, format, spsBinary);
+                    }
+
+                    foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
+                    {
+                        ParseNALU(context, format, ppsBinary);
+                    }
+                }
                 else
                 {
-                    //throw new NotSupportedException();
-                    Log.Error($"{file}");
-                    continue;
+                    var hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                    if (hvcC != null)
+                    {
+                        Log.Info($"-----------Reading H265: {file}");
+
+                        context = new H265Context();
+                        format = VideoFormat.H265;
+
+                        nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+                        foreach (var nalus in hvcC._HEVCConfig.NalUnit)
+                        {
+                            foreach (var nalu in nalus)
+                            {
+                                ParseNALU(context, format, nalu);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //throw new NotSupportedException();
+                        Log.Error($"{file}");
+                        continue;
+                    }
                 }
             }
 
             MovieBox moov = null;
             MovieFragmentBox moof = null;
             MediaDataBox mdat = null;
+                
+            MetaBox meta = null;
             ulong size = 0;
             for (int i = 0; i < inputMp4.Children.Count; i++)
             {
@@ -133,6 +169,11 @@ foreach (var file in files)
                 {
                     mdat = (MediaDataBox)inputMp4.Children[i];
                 }
+                else if (inputMp4.Children[i] is MetaBox)
+                {
+                    meta = (MetaBox)inputMp4.Children[i];
+                }
+                
 
                 if (moov != null && mdat != null)
                 {
@@ -223,13 +264,62 @@ foreach (var file in files)
                     }
 
                     mdat = null;
-                }   
+                }
+                else if(meta != null)
+                {
+                    var primaryItem = meta.Children.OfType<PrimaryItemBox>().SingleOrDefault();
+                    uint item_id = primaryItem.ItemID;
+
+                    var ilocBox = meta.Children.OfType<ItemLocationBox>().SingleOrDefault();
+                    for (int l = 0; l < ilocBox.BaseOffset.Length; l++)
+                    {
+                        int baseOffset = ilocBox.BaseOffset[l].Length == 0 ? 0 : ReadVariableInt(ilocBox.BaseOffsetSize, ilocBox.BaseOffset[l]);
+
+                        for (int j = 0; j < ilocBox.ExtentCount[l]; j++)
+                        {
+                            long position = baseOffset + ReadVariableInt(ilocBox.OffsetSize, ilocBox.ExtentOffset[l][j]);
+                            uint length = (uint)ReadVariableInt(ilocBox.LengthSize, ilocBox.ExtentLength[l][j]);
+                            mdat.Data.Stream.SeekFromBeginning(position);
+
+                            try
+                            {
+                                size += ReadAU(nalLengthSize, context, format, mdat, length);
+                            }
+                            catch (Exception)
+                            {
+                                Log.Error($"---Error reading {file}");
+                            }
+                        }
+                    }
+
+                }
             }
         }
     }
     catch(Exception ex)
     {
 
+    }
+}
+
+int ReadVariableInt(byte size, byte[] bytes)
+{
+    switch(size)
+    {
+        case 1:
+            return bytes[0];
+
+        case 2:
+            return (bytes[0] << 8) + bytes[1];
+
+        case 3:
+            return (bytes[0] << 16) + (bytes[1] << 8) + bytes[2];
+
+        case 4:
+            return (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + bytes[3];
+
+        default:
+            throw new NotSupportedException($"Size {size} not supported");
     }
 }
 
