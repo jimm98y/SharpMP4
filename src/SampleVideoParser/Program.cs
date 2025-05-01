@@ -25,6 +25,7 @@ Log.SinkError = (o, e) => {
 };
 
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
+//var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
 var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
 
 foreach (var file in files)
@@ -50,6 +51,7 @@ foreach (var file in files)
             IItuContext context = null;
             VideoFormat format = VideoFormat.Unknown;
             uint videoTrackId = 0;
+            uint primaryItemID = 0;
 
             HEVCConfigurationBox hvcC = null;
             AVCConfigurationBox avcC = null;
@@ -64,15 +66,50 @@ foreach (var file in files)
                 var iprpBox = metaBox.Children.OfType<ItemPropertiesBox>().SingleOrDefault();
                 var ipcoBox = iprpBox.Children.OfType<ItemPropertyContainerBox>().SingleOrDefault();
                 var ipmaBox = iprpBox.Children.OfType<ItemPropertyAssociationBox>().SingleOrDefault();
+                var irefBox = metaBox.Children.OfType<ItemReferenceBox>().SingleOrDefault();
+                var iinfBox = metaBox.Children.OfType<ItemInfoBox>().SingleOrDefault();
 
                 var primaryItem = metaBox.Children.OfType<PrimaryItemBox>().SingleOrDefault();
-                uint item_id = primaryItem.ItemID;
+                primaryItemID = primaryItem.ItemID;
 
-                int itemIndex = Array.IndexOf(ipmaBox.ItemID, item_id);
-                var indexes = ipmaBox.PropertyIndex[itemIndex - 1];
-                var results = ipcoBox.Children.Where((x, idx) => indexes.Contains((ushort)(idx + 1))).ToArray();
+                int itemIndex = Array.IndexOf(ipmaBox.ItemID, primaryItemID);
+                var indexes = ipmaBox.PropertyIndex[itemIndex];
+                var propertyBoxes = ipcoBox.Children.Where((x, idx) => indexes.Contains((ushort)(idx + 1))).ToArray();
 
-                hvcC = results.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                if (iinfBox.ItemInfos.Single(x => x.ItemID == primaryItemID).ItemType == IsoStream.FromFourCC("grid"))
+                {
+                    // use iref
+                    foreach(var tile in irefBox.References.Single(x => x.FromItemID == primaryItemID).ToItemID)
+                    {
+                        indexes = ipmaBox.PropertyIndex[tile - 1];
+                        propertyBoxes = ipcoBox.Children.Where((x, idx) => indexes.Contains((ushort)(idx + 1))).ToArray();
+                        hvcC = propertyBoxes.OfType<HEVCConfigurationBox>().Single();
+
+                        if (hvcC != null)
+                        {
+                            context = new H265Context();
+                            format = VideoFormat.H265;
+
+                            nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+                            foreach (var nalus in hvcC._HEVCConfig.NalUnit)
+                            {
+                                foreach (var nalu in nalus)
+                                {
+                                    ParseNALU(context, format, nalu);
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (iinfBox.ItemInfos.Single(x => x.ItemID == primaryItemID).ItemType == IsoStream.FromFourCC("hvcC"))
+                {
+                    hvcC = propertyBoxes.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
             }
             else
             {
@@ -250,27 +287,29 @@ foreach (var file in files)
 
                     mdat = null;
                 }
-                else if(meta != null)
+                else if(meta != null && mdat != null)
                 {
                     // HEIC
-                    var primaryItem = meta.Children.OfType<PrimaryItemBox>().SingleOrDefault();
-                    uint item_id = primaryItem.ItemID;
-
                     var ilocBox = meta.Children.OfType<ItemLocationBox>().SingleOrDefault();
-                    var idat = meta.Children.OfType<ItemDataBox>().SingleOrDefault();
+                    var iinfBox = meta.Children.OfType<ItemInfoBox>().SingleOrDefault();
+
                     for (int l = 0; l < ilocBox.BaseOffset.Length; l++)
                     {
-                        int baseOffset = ilocBox.BaseOffset[l].Length == 0 ? 0 : ReadVariableInt(ilocBox.BaseOffsetSize, ilocBox.BaseOffset[l]);
+                        if(iinfBox.ItemInfos.ElementAt(l).ItemType != IsoStream.FromFourCC("hvc1"))
+                           continue; // skip non-video items
+
+                        int baseOffset = ilocBox.BaseOffset[l].Length == 0 ? 0 : GetVariableInt(ilocBox.BaseOffsetSize, ilocBox.BaseOffset[l]);
 
                         for (int j = 0; j < ilocBox.ExtentCount[l]; j++)
                         {
-                            long position = baseOffset + ReadVariableInt(ilocBox.OffsetSize, ilocBox.ExtentOffset[l][j]);
-                            uint length = (uint)ReadVariableInt(ilocBox.LengthSize, ilocBox.ExtentLength[l][j]);
-                            idat.Data.Stream.SeekFromBeginning(position);
+                            long position = baseOffset + GetVariableInt(ilocBox.OffsetSize, ilocBox.ExtentOffset[l][j]);
+                            uint length = (uint)GetVariableInt(ilocBox.LengthSize, ilocBox.ExtentLength[l][j]);
+
+                            mdat.Data.Stream.SeekFromBeginning(position);
 
                             try
                             {
-                                size += ReadAU(nalLengthSize, context, format, idat.Data, length);
+                                size += ReadAU(nalLengthSize, context, format, mdat.Data, length);
                             }
                             catch (Exception)
                             {
@@ -278,7 +317,6 @@ foreach (var file in files)
                             }
                         }
                     }
-
                 }
             }
         }
@@ -289,7 +327,7 @@ foreach (var file in files)
     }
 }
 
-int ReadVariableInt(byte size, byte[] bytes)
+int GetVariableInt(byte size, byte[] bytes)
 {
     switch(size)
     {
