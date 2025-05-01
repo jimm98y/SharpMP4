@@ -10409,12 +10409,12 @@ namespace SharpMP4
 
             if (version == 0)
             {
-                boxSize += stream.ReadBox(boxSize, readSize, this, out this.references);
+                boxSize += stream.ReadBox(boxSize, readSize, (boxHeader) => new SingleItemTypeReferenceBox(boxHeader.Type), this, out this.references);
             }
 
             else if (version == 1)
             {
-                boxSize += stream.ReadBox(boxSize, readSize, this, out this.references0);
+                boxSize += stream.ReadBox(boxSize, readSize, (boxHeader) => new SingleItemTypeReferenceBoxLarge(boxHeader.Type), this, out this.references0);
             }
             return boxSize;
         }

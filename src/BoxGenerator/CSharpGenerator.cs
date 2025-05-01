@@ -1215,7 +1215,18 @@ namespace SharpMP4
             }
             else if (info.FieldType == ParsedBoxType.Box)
             {
-                csharpResult = $"stream.ReadBox(boxSize, readSize, this, ";
+                if(info.Type == "SingleItemTypeReferenceBox")
+                {
+                    csharpResult = "stream.ReadBox(boxSize, readSize, (boxHeader) => new SingleItemTypeReferenceBox(boxHeader.Type), this,";
+                }
+                else if(info.Type == "SingleItemTypeReferenceBoxLarge")
+                {
+                    csharpResult = "stream.ReadBox(boxSize, readSize, (boxHeader) => new SingleItemTypeReferenceBoxLarge(boxHeader.Type), this,";
+                }
+                else
+                {
+                    csharpResult = $"stream.ReadBox(boxSize, readSize, this, ";
+                }
             }
             else if (info.FieldType == ParsedBoxType.Descriptor)
             {

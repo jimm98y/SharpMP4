@@ -25,7 +25,7 @@ Log.SinkError = (o, e) => {
 };
 
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
-var files = new string[] { "C:\\Temp\\IMG_20211003_082118.heic" };
+var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
 
 foreach (var file in files)
 {
