@@ -362,7 +362,7 @@ namespace ItuGenerator
                 case "log2_diff_max_min_luma_coding_block_size":
                     return "((H265Context)context).OnLog2DiffMaxMinLumaCodingBlockSize();";
                 case "layer_set_idx_for_ols_minus1":
-                    return "((H265Context)context).OnLayerSetIdxForOlsMinus1(i);";
+                    return "((H265Context)context).OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);";
                 case "output_layer_flag":
                     return "((H265Context)context).OnOutputLayerFlag(i, j);";
                 case "layer_id_in_nuh":
