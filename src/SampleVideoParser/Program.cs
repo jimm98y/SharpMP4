@@ -62,7 +62,7 @@ foreach (var file in files)
                 var iprpBox = metaBox.Children.OfType<ItemPropertiesBox>().SingleOrDefault();
                 var ipcoBox = iprpBox.Children.OfType<ItemPropertyContainerBox>().SingleOrDefault();
 
-                var hvcC = ipcoBox.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                HEVCConfigurationBox hvcC = ipcoBox.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
                 if (hvcC != null)
                 {
                     Log.Info($"-----------Reading H265: {file}");

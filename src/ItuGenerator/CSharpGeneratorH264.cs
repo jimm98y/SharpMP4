@@ -89,9 +89,9 @@ namespace ItuGenerator
                 case "num_non_anchor_refs_l1":
                     return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1";
                 case "num_init_pic_parameter_set_minus1":
-                    return "((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1"; // looks like there is a typo...
+                    return "((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1"; // looks like there is a typo...
                 case "additional_shift_present":
-                    return "((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()"; // TODO: looks like a typo
+                    return "((H264Context)context).SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()"; // TODO: looks like a typo
                 case "texture_view_present_flag":
                     return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()";
                 case "initial_cpb_removal_delay":
@@ -112,15 +112,15 @@ namespace ItuGenerator
                 case "start_of_coded_interval":
                 case "coded_pivot_value":
                 case "target_pivot_value":
-                    return "(((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3)";
+                    return "(((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3)";
                 case "pre_lut_coded_value":
                 case "pre_lut_target_value":
-                    return "(((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3)";
+                    return "(((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3)";
                 case "post_lut_coded_value":
                 case "post_lut_target_value":
-                    return "(((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3)";
+                    return "(((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3)";
                 case "ar_object_confidence":
-                    return "(((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1)";
+                    return "(((H264Context)context).SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1)";
                 case "da_mantissa":
                     return "(this.da_mantissa_len_minus1 + 1)";
                 case "exponent0":
@@ -334,9 +334,14 @@ namespace ItuGenerator
             }
         }
 
-        public string GetDerivedVariables(string name)
+        public string GetDerivedVariables(string field)
         {
-            return null;
+            switch(field)
+            {
+                case "sei_payload":
+                    return "((H264Context)context).SetSeiPayload(sei_payload);";
+            }
+            return "";
         }
     }
 }

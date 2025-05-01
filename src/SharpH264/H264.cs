@@ -61,6 +61,161 @@
 
     public partial class H264Context
     {
-        // TODO
+        public SeiPayload SeiPayload { get; set; }
+
+        public void SetSeiPayload(SeiPayload payload)
+        {
+            if (SeiPayload == null)
+            {
+                SeiPayload = payload;
+            }
+
+            if (payload.AlternativeDepthInfo != null)
+                SeiPayload.AlternativeDepthInfo = payload.AlternativeDepthInfo;
+            if (payload.AlternativeTransferCharacteristics != null)
+                SeiPayload.AlternativeTransferCharacteristics = payload.AlternativeTransferCharacteristics;
+            if (payload.AmbientViewingEnvironment != null)
+                SeiPayload.AmbientViewingEnvironment = payload.AmbientViewingEnvironment;
+            if (payload.AnnotatedRegions != null)
+                SeiPayload.AnnotatedRegions = payload.AnnotatedRegions;
+            if (payload.BaseLayerTemporalHrd != null)
+                SeiPayload.BaseLayerTemporalHrd = payload.BaseLayerTemporalHrd;
+            if (payload.BaseViewTemporalHrd != null)
+                SeiPayload.BaseViewTemporalHrd = payload.BaseViewTemporalHrd;
+            if (payload.BufferingPeriod != null)
+                SeiPayload.BufferingPeriod = payload.BufferingPeriod;
+            if (payload.ColourRemappingInfo != null)
+                SeiPayload.ColourRemappingInfo = payload.ColourRemappingInfo;
+            if (payload.ConstrainedDepthParameterSetIdentifier != null)
+                SeiPayload.ConstrainedDepthParameterSetIdentifier = payload.ConstrainedDepthParameterSetIdentifier;
+            if (payload.ContentColourVolume != null)
+                SeiPayload.ContentColourVolume = payload.ContentColourVolume;
+            if (payload.ContentLightLevelInfo != null)
+                SeiPayload.ContentLightLevelInfo = payload.ContentLightLevelInfo;
+            if (payload.CubemapProjection != null)
+                SeiPayload.CubemapProjection = payload.CubemapProjection;
+            if (payload.DeblockingFilterDisplayPreference != null)
+                SeiPayload.DeblockingFilterDisplayPreference = payload.DeblockingFilterDisplayPreference;
+            if (payload.DecRefPicMarkingRepetition != null)
+                SeiPayload.DecRefPicMarkingRepetition = payload.DecRefPicMarkingRepetition;
+            if (payload.DepthRepresentationInfo != null)
+                SeiPayload.DepthRepresentationInfo = payload.DepthRepresentationInfo;
+            if (payload.DepthSamplingInfo != null)
+                SeiPayload.DepthSamplingInfo = payload.DepthSamplingInfo;
+            if (payload.DepthTiming != null)
+                SeiPayload.DepthTiming = payload.DepthTiming;
+            if (payload.DisplayOrientation != null)
+                SeiPayload.DisplayOrientation = payload.DisplayOrientation;
+            if (payload.EquirectangularProjection != null)
+                SeiPayload.EquirectangularProjection = payload.EquirectangularProjection;
+            if (payload.FillerPayload != null)
+                SeiPayload.FillerPayload = payload.FillerPayload;
+            if (payload.FilmGrainCharacteristics != null)
+                SeiPayload.FilmGrainCharacteristics = payload.FilmGrainCharacteristics;
+            if (payload.FramePackingArrangement != null)
+                SeiPayload.FramePackingArrangement = payload.FramePackingArrangement;
+            if (payload.FullFrameFreeze != null)
+                SeiPayload.FullFrameFreeze = payload.FullFrameFreeze;
+            if (payload.FullFrameFreezeRelease != null)
+                SeiPayload.FullFrameFreezeRelease = payload.FullFrameFreezeRelease;
+            if (payload.FullFrameSnapshot != null)
+                SeiPayload.FullFrameSnapshot = payload.FullFrameSnapshot;
+            if (payload.GreenMetadata != null)
+                SeiPayload.GreenMetadata = payload.GreenMetadata;
+            if (payload.LayerDependencyChange != null)
+                SeiPayload.LayerDependencyChange = payload.LayerDependencyChange;
+            if (payload.LayersNotPresent != null)
+                SeiPayload.LayersNotPresent = payload.LayersNotPresent;
+            if (payload.MasteringDisplayColourVolume != null)
+                SeiPayload.MasteringDisplayColourVolume = payload.MasteringDisplayColourVolume;
+            if (payload.MotionConstrainedSliceGroupSet != null)
+                SeiPayload.MotionConstrainedSliceGroupSet = payload.MotionConstrainedSliceGroupSet;
+            if (payload.MultiviewAcquisitionInfo != null)
+                SeiPayload.MultiviewAcquisitionInfo = payload.MultiviewAcquisitionInfo;
+            if (payload.MultiviewSceneInfo != null)
+                SeiPayload.MultiviewSceneInfo = payload.MultiviewSceneInfo;
+            if (payload.MultiviewViewPosition != null)
+                SeiPayload.MultiviewViewPosition = payload.MultiviewViewPosition;
+            if (payload.MvcdScalableNesting != null)
+                SeiPayload.MvcdScalableNesting = payload.MvcdScalableNesting;
+            if (payload.MvcdViewScalabilityInfo != null)
+                SeiPayload.MvcdViewScalabilityInfo = payload.MvcdViewScalabilityInfo;
+            if (payload.MvcScalableNesting != null)
+                SeiPayload.MvcScalableNesting = payload.MvcScalableNesting;
+            if (payload.NonRequiredLayerRep != null)
+                SeiPayload.NonRequiredLayerRep = payload.NonRequiredLayerRep;
+            if (payload.NonRequiredViewComponent != null)
+                SeiPayload.NonRequiredViewComponent = payload.NonRequiredViewComponent;
+            if (payload.OmniViewport != null)
+                SeiPayload.OmniViewport = payload.OmniViewport;
+            if (payload.OperationPointNotPresent != null)
+                SeiPayload.OperationPointNotPresent = payload.OperationPointNotPresent;
+            if (payload.PanScanRect != null)
+                SeiPayload.PanScanRect = payload.PanScanRect;
+            if (payload.ParallelDecodingInfo != null)
+                SeiPayload.ParallelDecodingInfo = payload.ParallelDecodingInfo;
+            if (payload.PicTiming != null)
+                SeiPayload.PicTiming = payload.PicTiming;
+            if (payload.PostFilterHint != null)
+                SeiPayload.PostFilterHint = payload.PostFilterHint;
+            if (payload.PriorityLayerInfo != null)
+                SeiPayload.PriorityLayerInfo = payload.PriorityLayerInfo;
+            if (payload.ProgressiveRefinementSegmentEnd != null)
+                SeiPayload.ProgressiveRefinementSegmentEnd = payload.ProgressiveRefinementSegmentEnd;
+            if (payload.ProgressiveRefinementSegmentStart != null)
+                SeiPayload.ProgressiveRefinementSegmentStart = payload.ProgressiveRefinementSegmentStart;
+            if (payload.QualityLayerIntegrityCheck != null)
+                SeiPayload.QualityLayerIntegrityCheck = payload.QualityLayerIntegrityCheck;
+            if (payload.RecoveryPoint != null)
+                SeiPayload.RecoveryPoint = payload.RecoveryPoint;
+            if (payload.RedundantPicProperty != null)
+                SeiPayload.RedundantPicProperty = payload.RedundantPicProperty;
+            if (payload.RegionwisePacking != null)
+                SeiPayload.RegionwisePacking = payload.RegionwisePacking;
+            if (payload.ReservedSeiMessage != null)
+                SeiPayload.ReservedSeiMessage = payload.ReservedSeiMessage;
+            if (payload.ScalabilityInfo != null)
+                SeiPayload.ScalabilityInfo = payload.ScalabilityInfo;
+            if (payload.ScalableNesting != null)
+                SeiPayload.ScalableNesting = payload.ScalableNesting;
+            if (payload.SceneInfo != null)
+                SeiPayload.SceneInfo = payload.SceneInfo;
+            if (payload.SeiManifest != null)
+                SeiPayload.SeiManifest = payload.SeiManifest;
+            if (payload.SeiPrefixIndication != null)
+                SeiPayload.SeiPrefixIndication = payload.SeiPrefixIndication;
+            if (payload.ShutterIntervalInfo != null)
+                SeiPayload.ShutterIntervalInfo = payload.ShutterIntervalInfo;
+            if (payload.SparePic != null)
+                SeiPayload.SparePic = payload.SparePic;
+            if (payload.SphereRotation != null)
+                SeiPayload.SphereRotation = payload.SphereRotation;
+            if (payload.StereoVideoInfo != null)
+                SeiPayload.StereoVideoInfo = payload.StereoVideoInfo;
+            if (payload.SubPicScalableLayer != null)
+                SeiPayload.SubPicScalableLayer = payload.SubPicScalableLayer;
+            if (payload.SubSeqCharacteristics != null)
+                SeiPayload.SubSeqCharacteristics = payload.SubSeqCharacteristics;
+            if (payload.SubSeqInfo != null)
+                SeiPayload.SubSeqInfo = payload.SubSeqInfo;
+            if (payload.SubSeqLayerCharacteristics != null)
+                SeiPayload.SubSeqLayerCharacteristics = payload.SubSeqLayerCharacteristics;
+            if (payload.ThreeDimensionalReferenceDisplaysInfo != null)
+                SeiPayload.ThreeDimensionalReferenceDisplaysInfo = payload.ThreeDimensionalReferenceDisplaysInfo;
+            if (payload.Tl0DepRepIndex != null)
+                SeiPayload.Tl0DepRepIndex = payload.Tl0DepRepIndex;
+            if (payload.TlSwitchingPoint != null)
+                SeiPayload.TlSwitchingPoint = payload.TlSwitchingPoint;
+            if (payload.ToneMappingInfo != null)
+                SeiPayload.ToneMappingInfo = payload.ToneMappingInfo;
+            if (payload.UserDataRegisteredItutT35 != null)
+                SeiPayload.UserDataRegisteredItutT35 = payload.UserDataRegisteredItutT35;
+            if (payload.UserDataUnregistered != null)
+                SeiPayload.UserDataUnregistered = payload.UserDataUnregistered;
+            if (payload.ViewDependencyChange != null)
+                SeiPayload.ViewDependencyChange = payload.ViewDependencyChange;
+            if (payload.ViewScalabilityInfo != null)
+                SeiPayload.ViewScalabilityInfo = payload.ViewScalabilityInfo;
+        }
     }
 }

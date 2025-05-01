@@ -1490,6 +1490,7 @@ sei_message() {
             stream.MarkCurrentBitsPosition();
             this.sei_payload = new SeiPayload(payloadType, payloadSize);
             size += stream.ReadClass<SeiPayload>(size, context, this.sei_payload);
+            ((H264Context)context).SetSeiPayload(sei_payload);
 
             return size;
         }
@@ -1525,6 +1526,7 @@ sei_message() {
             payloadSize += last_payload_size_byte;
             stream.MarkCurrentBitsPosition();
             size += stream.WriteClass<SeiPayload>(context, this.sei_payload);
+            ((H264Context)context).SetSeiPayload(sei_payload);
 
             return size;
         }
@@ -6676,7 +6678,7 @@ tone_mapping_info( payloadSize ) {
                     this.start_of_coded_interval = new uint[(1 << (int)target_bit_depth)];
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i]);
                     }
                 }
 
@@ -6688,8 +6690,8 @@ tone_mapping_info( payloadSize ) {
                     this.target_pivot_value = new uint[num_pivots];
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i]);
                     }
                 }
 
@@ -6753,7 +6755,7 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i]);
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i]);
                     }
                 }
 
@@ -6763,8 +6765,8 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i]);
-                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i]);
                     }
                 }
 
@@ -7240,8 +7242,8 @@ colour_remapping_info( payloadSize ) {
                         this.pre_lut_target_value[c] = new uint[pre_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -7277,8 +7279,8 @@ colour_remapping_info( payloadSize ) {
                         this.post_lut_target_value[c] = new uint[post_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -7320,8 +7322,8 @@ colour_remapping_info( payloadSize ) {
 
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -7350,8 +7352,8 @@ colour_remapping_info( payloadSize ) {
 
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i]);
                         }
                     }
                 }
@@ -8648,7 +8650,7 @@ annotated_regions( payloadSize ) {
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]]);
                                 }
                             }
                         }
@@ -8761,7 +8763,7 @@ annotated_regions( payloadSize ) {
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]]);
                                 }
                             }
                         }
@@ -15388,8 +15390,8 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i]);
 
-                    this.pic_parameter_set_id_delta[i] = new uint[((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
-                    for (j = 0; j <= ((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
+                    this.pic_parameter_set_id_delta[i] = new uint[((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
+                    for (j = 0; j <= ((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
                     }
@@ -15494,7 +15496,7 @@ priority_id[ i ] 5 u(5)
                     }
                     size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_set_minus1[i]);
 
-                    for (j = 0; j <= ((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
+                    for (j = 0; j <= ((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
                     }
@@ -16209,7 +16211,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
                 }
                 size += stream.ReadUnsignedInt(size, 1, out this.additional_shift_present_flag[i]);
 
-                if (((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                if (((H264Context)context).SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
                     size += stream.ReadUnsignedInt(size, 10, out this.num_sample_shift_plus512[i]);
                 }
@@ -16250,7 +16252,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
                 }
                 size += stream.WriteUnsignedInt(1, this.additional_shift_present_flag[i]);
 
-                if (((H264Context)context).SeiRbsp.SeiMessage.Last().Value.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
+                if (((H264Context)context).SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
                     size += stream.WriteUnsignedInt(10, this.num_sample_shift_plus512[i]);
                 }
