@@ -102,7 +102,7 @@ foreach (var file in files)
                         }
                     }
                 }
-                else if (iinfBox.ItemInfos.Single(x => x.ItemID == primaryItemID).ItemType == IsoStream.FromFourCC("hvcC"))
+                else if (iinfBox.ItemInfos.Single(x => x.ItemID == primaryItemID).ItemType == IsoStream.FromFourCC("hvc1"))
                 {
                     hvcC = propertyBoxes.OfType<HEVCConfigurationBox>().SingleOrDefault();
                 }
