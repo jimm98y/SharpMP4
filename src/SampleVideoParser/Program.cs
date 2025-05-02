@@ -56,10 +56,12 @@ foreach (var file in files)
             HEVCConfigurationBox hvcC = null;
             AVCConfigurationBox avcC = null;
 
+            var ftypBox = inputMp4
+                .Children.OfType<FileTypeBox>().SingleOrDefault();
             var movieBox = inputMp4
                 .Children.OfType<MovieBox>().SingleOrDefault();
 
-            if (movieBox == null)
+            if (ftypBox.CompatibleBrands.Contains(IsoStream.FromFourCC("heic")))
             {
                 // HEIC
                 var metaBox = inputMp4.Children.OfType<MetaBox>().SingleOrDefault();
@@ -78,33 +80,19 @@ foreach (var file in files)
 
                 if (iinfBox.ItemInfos.Single(x => x.ItemID == primaryItemID).ItemType == IsoStream.FromFourCC("grid"))
                 {
-                    // use iref
-                    foreach(var tile in irefBox.References.Single(x => x.FromItemID == primaryItemID).ToItemID)
+                    // Apple stores HEIC files with a grid of images
+                    foreach (var tile in irefBox.References.Single(x => x.FromItemID == primaryItemID).ToItemID)
                     {
                         indexes = ipmaBox.PropertyIndex[tile - 1];
                         propertyBoxes = ipcoBox.Children.Where((x, idx) => indexes.Contains((ushort)(idx + 1))).ToArray();
-                        hvcC = propertyBoxes.OfType<HEVCConfigurationBox>().Single();
-
-                        if (hvcC != null)
-                        {
-                            context = new H265Context();
-                            format = VideoFormat.H265;
-
-                            nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
-
-                            foreach (var nalus in hvcC._HEVCConfig.NalUnit)
-                            {
-                                foreach (var nalu in nalus)
-                                {
-                                    ParseNALU(context, format, nalu);
-                                }
-                            }
-                        }
+                        hvcC = propertyBoxes.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                        avcC = propertyBoxes.OfType<AVCConfigurationBox>().SingleOrDefault();
                     }
                 }
                 else if (iinfBox.ItemInfos.Single(x => x.ItemID == primaryItemID).ItemType == IsoStream.FromFourCC("hvc1"))
                 {
                     hvcC = propertyBoxes.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                    avcC = propertyBoxes.OfType<AVCConfigurationBox>().SingleOrDefault();
                 }
                 else
                 {

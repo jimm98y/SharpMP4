@@ -214,6 +214,10 @@ namespace SharpMP4
                     {
                         factory += $"               case \"{item.Key}\": if(parent == \"ilst\") return new AppleCopyrightBox(); else return new CopyrightBox();\r\n";
                     }
+                    else if (item.Key == "ster")
+                    {
+                        factory += $"               case \"{item.Key}\": if(parent == \"grpl\") return new StereoEntityGroupBox(); else return new StereoVideoGroupBox();\r\n";
+                    }
                     else if (item.Value.First().BoxName == "TextMediaBox")
                     {
                         factory += $"               case \"{item.Key}\": if(parent == \"gmhd\") return new TextGmhdMediaBox(); else if(parent == \"stsd\") return new TextMediaBox(); break;\r\n";

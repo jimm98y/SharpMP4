@@ -1207,11 +1207,120 @@
       "type": "Box",
       "syntax": "aligned(8) class PadsBox() extends Box('pads') {\r\n\t bit(8) data[];\r\n } "
     },
-
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AlternativesEntityGroupBox() extends TrackGroupTypeBox('altr') {\r\n\t unsigned int(32) entity_count;\r\n unsigned int(32) entity_ids[]; \r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class StereoEntityGroupBox() extends TrackGroupTypeBox('ster') {\r\n\t unsigned int(32) entity_count;\r\n unsigned int(32) entity_ids[]; \r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ImagePyramidEntityGroupBox() extends TrackGroupTypeBox('pymd') {\r\n\t unsigned int(32) entity_count;\r\n unsigned int(32) entity_ids[]; \r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TimeSynchronizedCaptureEntityGroupBox() extends TrackGroupTypeBox('tsyn') {\r\n\t bit(8) data[];\r\n } "
+    },
     {
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205a861650eca0a9596') {\r\n\t unsigned int(16) unknown1;\r\n unsigned int(16) count;\r\n char version[count];\r\n }"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraIntrinsicMatrixBox() extends FullBox('cmin') {\r\n\t signed int(32) matrix_focal_length_x;\r\n signed int(32) matrix_principal_point_x;\r\n signed int(32) matrix_principal_point_y;\r\n if( flags & 0x1 ) { \r\n signed int(32) matrix_focal_length_y;\r\n signed int(32) matrix_skew;\r\n }\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class UuidCameraIntrinsicMatrixBox() extends FullBox('uuid 22cc04c7d6d94e079d904eb6ecbaf3a3') {\r\n\t signed int(32) matrix_focal_length_x;\r\n signed int(32) matrix_principal_point_x;\r\n signed int(32) matrix_principal_point_y;\r\n if( flags & 0x1 ) { \r\n signed int(32) matrix_focal_length_y;\r\n signed int(32) matrix_skew;\r\n }\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class GenericCompressionConfigurationBox() extends FullBox('cmpC') {\r\n\t unsigned int(32) compression_type;\r\n unsigned int(8) unit_type;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class J2kHBox() extends Box('j2kH') {\r\n\t Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class J2kChannelDefinitionBox() extends Box('cdef') {\r\n\t unsigned int(16) channel_count;\r\n Channel channels[];\r\n } aligned(8) class Channel() {\r\n unsigned int(16) channel_index;\r\n unsigned int(16) channel_type;\r\n unsigned int(16) channel_association;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ItaiBox() extends FullBox('itai') {\r\n\t unsigned int(64) tai_timestamp;\r\n unsigned int(8) status_bits;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TaicBox() extends FullBox('taic') {\r\n\t unsigned int(64) time_uncertainty;\r\n unsigned int(32) clock_resolution;\r\n signed int(32) clock_drift_rate;\r\n unsigned int(8) clock_type;\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class UncompressedFrameConfigurationBox() extends FullBox('uncC') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraExtrinsicMatrixBox() extends FullBox('cmex') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b7d4aab97aebea69803b434') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ComponentDefinitionBox() extends Box('cmpd') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ComponentPatternDefinitionBox() extends FullBox('cpat') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class J2kComponentMappingBox() extends Box('cmap') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class TiledImageBox() extends FullBox('tilC') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class J2kPaletteBox() extends Box('pclr') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class J2kLayersBox() extends Box('j2kL') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MiniBox() extends Box('mini') {\r\n\t bit(8) data[];\r\n } "
     }
   ]
 }
