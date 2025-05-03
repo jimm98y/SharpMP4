@@ -278,6 +278,12 @@ namespace Sharp{type}
                 fieldComment = "//" + (field as ItuField).Comment;
             }
 
+            // h266
+            if(typedef.Contains("bp_max_sublayers_minus1"))
+            {
+                typedef = typedef.Replace("bp_max_sublayers_minus1", specificGenerator.ReplaceParameter("bp_max_sublayers_minus1"));
+            }
+
             string boxSize = "size += ";
 
             if (GetLoopNestingLevel(field) > 0)
@@ -788,6 +794,10 @@ namespace Sharp{type}
                                         variableType = variableType.Replace("_minus1[ h ][ j ]", "_minus1[ h ][ j ] + 1");
                                     else if (variableType.Contains("_minus1[ i ]"))
                                         variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
+                                    else if (variableType.Contains("_minus1[c]"))
+                                        variableType = variableType.Replace("_minus1[c]", "_minus1[c] + 1");
+                                    else if (variableType.Contains("_minus1[i]"))
+                                        variableType = variableType.Replace("_minus1[i]", "_minus1[i] + 1");
                                     else if (variableType.Contains("_minus1"))
                                         variableType = variableType.Replace("_minus1", "_minus1 + 1");
                                     else if (variableType.Contains("Minus1[ currLsIdx ]"))
@@ -1400,7 +1410,7 @@ namespace Sharp{type}
                 {
                     if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                     {
-                        if (field.Name == "ObjectBoundingBoxAvail")
+                        if (field.Name == "ObjectBoundingBoxAvail" || field.Name == "ObjectTracked" || field.Name == "LabelAssigned")
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "bool", FieldArray = field.FieldArray });
                         }
@@ -1408,7 +1418,9 @@ namespace Sharp{type}
                             // h265
                             || field.Name == "numComps"
                             // h266
-                            || field.Name == "numQpTables")
+                            || field.Name == "numQpTables"
+                            || field.Name == "matrixSize"
+                            )
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(64)", FieldArray = field.FieldArray });
                         }

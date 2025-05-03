@@ -267,8 +267,12 @@ namespace ItuGenerator
                     return "(exponent_t[ i ][ j ]  == 0 ? Math.Max( 0, prec_translation_param - 30 ) : Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31 ))";
                 case "rpls_poc_lsb_lt":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
+                case "num_ref_entries":
+                    return "((H266Context)context).PictureHeaderRbsp.PictureHeaderStructure.RefPicLists.RefPicListStruct.First(x => x != null).NumRefEntries";
                 case "pt_du_cpb_removal_delay_increment_minus1":
-                    return "bp_du_cpb_removal_delay_increment_length_minus1 + 1";
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                case "dui_du_cpb_removal_delay_increment":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
 
                 default:
                     //throw new NotImplementedException(parameter);
