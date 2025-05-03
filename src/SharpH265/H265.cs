@@ -95,8 +95,6 @@ namespace SharpH265
     {
         public SeiPayload SeiPayload { get; set; }
 
-        // TODO: Add missing allocations
-#warning Add missing allocations
         public uint[][][] BspSchedCnt { get; set; }
         public int[][] IdDirectRefLayer { get; set; }
         public int[][] LayerSetLayerIdList { get; set; }
@@ -162,7 +160,6 @@ namespace SharpH265
         public uint VclInitialArrivalDelayPresent { get; set; }
         public uint NalInitialArrivalDelayPresent { get; set; }
         public uint RefRpsIdx { get; set; }
-
 
         public void SetSeiPayload(SeiPayload payload)
         {
