@@ -9,6 +9,17 @@ namespace SharpH266
         public const int SCALING_APS = 2; // ScalingList parameters
     }
 
+    public class H266FrameTypes
+    {
+        public const uint B = 0;
+        public const uint P = 1;
+        public const uint I = 2;
+
+        public static bool IsB(uint value) { return value == B; }
+        public static bool IsP(uint value) { return value == P; }
+        public static bool IsI(uint value) { return value == I; }
+    }
+
     public class H266NALTypes
     {          
         public const uint TRAIL_NUT = 0;                     // Coded slice of a trailing picture or subpicture
@@ -87,7 +98,58 @@ namespace SharpH266
                 SeiPayload = payload;
             }
 
-            throw new NotImplementedException();
+            if (payload.AlternativeTransferCharacteristics != null)
+                SeiPayload.AlternativeTransferCharacteristics = payload.AlternativeTransferCharacteristics;
+            if (payload.AmbientViewingEnvironment != null)
+                SeiPayload.AmbientViewingEnvironment = payload.AmbientViewingEnvironment;
+            if (payload.BufferingPeriod != null)
+                SeiPayload.BufferingPeriod = payload.BufferingPeriod;
+            if (payload.ContentColourVolume != null)
+                SeiPayload.ContentColourVolume = payload.ContentColourVolume;
+            if (payload.ContentLightLevelInfo != null)
+                SeiPayload.ContentLightLevelInfo = payload.ContentLightLevelInfo;
+            if (payload.DecodedPictureHash != null)
+                SeiPayload.DecodedPictureHash = payload.DecodedPictureHash;
+            if (payload.DecodingUnitInfo != null)
+                SeiPayload.DecodingUnitInfo = payload.DecodingUnitInfo;
+            if (payload.DependentRapIndication != null)
+                SeiPayload.DependentRapIndication = payload.DependentRapIndication;
+            if (payload.EquirectangularProjection != null)
+                SeiPayload.EquirectangularProjection = payload.EquirectangularProjection;
+            if (payload.FillerPayload != null)
+                SeiPayload.FillerPayload = payload.FillerPayload;
+            if (payload.FilmGrainCharacteristics != null)
+                SeiPayload.FilmGrainCharacteristics = payload.FilmGrainCharacteristics;
+            if (payload.FrameFieldInfo != null)
+                SeiPayload.FrameFieldInfo = payload.FrameFieldInfo;
+            if (payload.FramePackingArrangement != null)
+                SeiPayload.FramePackingArrangement = payload.FramePackingArrangement;
+            if (payload.GeneralizedCubemapProjection != null)
+                SeiPayload.GeneralizedCubemapProjection = payload.GeneralizedCubemapProjection;
+            if (payload.MasteringDisplayColourVolume != null)
+                SeiPayload.MasteringDisplayColourVolume = payload.MasteringDisplayColourVolume;
+            if (payload.OmniViewport != null)
+                SeiPayload.OmniViewport = payload.OmniViewport;
+            if (payload.ParameterSetsInclusionIndication != null)
+                SeiPayload.ParameterSetsInclusionIndication = payload.ParameterSetsInclusionIndication;
+            if (payload.PicTiming != null)
+                SeiPayload.PicTiming = payload.PicTiming;
+            if (payload.RegionwisePacking != null)
+                SeiPayload.RegionwisePacking = payload.RegionwisePacking;
+            if (payload.ReservedMessage != null)
+                SeiPayload.ReservedMessage = payload.ReservedMessage;
+            if (payload.SampleAspectRatioInfo != null)
+                SeiPayload.SampleAspectRatioInfo = payload.SampleAspectRatioInfo;
+            if (payload.ScalableNesting != null)
+                SeiPayload.ScalableNesting = payload.ScalableNesting;
+            if (payload.SphereRotation != null)
+                SeiPayload.SphereRotation = payload.SphereRotation;
+            if (payload.SubpicLevelInfo != null)
+                SeiPayload.SubpicLevelInfo = payload.SubpicLevelInfo;
+            if (payload.UserDataRegisteredItutT35 != null)
+                SeiPayload.UserDataRegisteredItutT35 = payload.UserDataRegisteredItutT35;
+            if (payload.UserDataUnregistered != null)
+                SeiPayload.UserDataUnregistered = payload.UserDataUnregistered;
         }
 
         public void OnVpsNumOutputLayerSetsMinus2()

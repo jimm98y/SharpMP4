@@ -341,6 +341,8 @@ namespace ItuGenerator
         {
             switch(field)
             {
+                case "sei_payload":
+                    return "((H265Context)context).SetSeiPayload(sei_payload);";
                 case "vps_max_layers_minus1":
                     return "((H265Context)context).OnVpsMaxLayersMinus1();";
                 case "num_add_layer_sets":
@@ -355,8 +357,6 @@ namespace ItuGenerator
                     return "((H265Context)context).OnCpRefVoi();";
                 case "cpb_cnt_minus1":
                     return "((H265Context)context).OnCpbCntMinus1(i);";
-                case "sei_payload":
-                    return "((H265Context)context).SetSeiPayload(sei_payload);";
                 case "sub_layers_vps_max_minus1":
                     return "((H265Context)context).OnSubLayersVpsMaxMinus1();";
                 case "log2_diff_max_min_luma_coding_block_size":

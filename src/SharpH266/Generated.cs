@@ -6048,6 +6048,7 @@ sei_message() {
             stream.MarkCurrentBitsPosition();
             this.sei_payload = new SeiPayload(payloadType, payloadSize);
             size += stream.ReadClass<SeiPayload>(size, context, this.sei_payload);
+            ((H266Context)context).SetSeiPayload(sei_payload);
 
             return size;
         }
@@ -6079,6 +6080,7 @@ sei_message() {
             } while (payload_size_byte[whileIndex] == 0xFF);
             stream.MarkCurrentBitsPosition();
             size += stream.WriteClass<SeiPayload>(context, this.sei_payload);
+            ((H266Context)context).SetSeiPayload(sei_payload);
 
             return size;
         }

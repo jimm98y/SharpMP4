@@ -290,6 +290,8 @@ namespace ItuGenerator
         {
             switch(name)
             {
+                case "sei_payload":
+                    return "((H266Context)context).SetSeiPayload(sei_payload);";
                 case "vps_num_output_layer_sets_minus2":
                     return "((H266Context)context).OnVpsNumOutputLayerSetsMinus2();";
                 case "vps_num_dpb_params_minus1":
