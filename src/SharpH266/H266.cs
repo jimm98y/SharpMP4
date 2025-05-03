@@ -2,6 +2,13 @@
 
 namespace SharpH266
 {
+    public class H266Constants
+    {
+        public const int ALF_APS = 0; // ALF parameters
+        public const int LMCS_APS = 1; // LMCS parameters
+        public const int SCALING_APS = 2; // ScalingList parameters
+    }
+
     public class H266NALTypes
     {          
         public const uint TRAIL_NUT = 0;                     // Coded slice of a trailing picture or subpicture
@@ -46,6 +53,9 @@ namespace SharpH266
     public partial class H266Context
     {
         public SeiPayload SeiPayload { get; set; }
+        public uint olsModeIdc { get; set; }
+        public uint TotalNumOlss { get; set; }
+        public uint VpsNumDpbParams { get; private set; }
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -55,6 +65,35 @@ namespace SharpH266
             }
 
             throw new NotImplementedException();
+        }
+
+        public void OnVpsNumOutputLayerSetsMinus2()
+        {
+            var vps_each_layer_is_an_ols_flag = VideoParameterSetRbsp.VpsEachLayerIsAnOlsFlag;
+            var vps_ols_mode_idc = VideoParameterSetRbsp.VpsOlsModeIdc;
+            var vps_max_layers_minus1 = VideoParameterSetRbsp.VpsMaxLayersMinus1;
+            var vps_num_output_layer_sets_minus2 = VideoParameterSetRbsp.VpsNumOutputLayerSetsMinus2;
+
+            if (vps_each_layer_is_an_ols_flag == 0)
+                olsModeIdc = vps_ols_mode_idc;
+            else
+                olsModeIdc = 4;
+
+            if (olsModeIdc == 4 || olsModeIdc == 0 || olsModeIdc == 1)
+                TotalNumOlss = vps_max_layers_minus1 + 1;
+            else if (olsModeIdc == 2)
+                TotalNumOlss = vps_num_output_layer_sets_minus2 + 2;
+        }
+
+        public void OnVpsNumDpbParamsMinus1()
+        {
+            var vps_each_layer_is_an_ols_flag = VideoParameterSetRbsp.VpsEachLayerIsAnOlsFlag;
+            var vps_num_dpb_params_minus1 = VideoParameterSetRbsp.VpsNumDpbParamsMinus1;
+
+            if (vps_each_layer_is_an_ols_flag != 0)
+                VpsNumDpbParams = 0;
+            else
+                VpsNumDpbParams = vps_num_dpb_params_minus1 + 1;
         }
     }
 }

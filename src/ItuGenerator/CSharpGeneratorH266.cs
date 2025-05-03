@@ -6,6 +6,15 @@ namespace ItuGenerator
     {
         public string PreprocessDefinitionsFile(string definitions)
         {
+            definitions = definitions
+                .Replace("sli_sublayer_info_present_flag ? 0", "sli_sublayer_info_present_flag != 0 ? 0")
+                .Replace("subLayerInfoFlag ?", "subLayerInfoFlag != 0 ?")
+                .Replace("sps_rpl1_same_as_rpl0_flag ?", "sps_rpl1_same_as_rpl0_flag != 0 ?")
+                .Replace("sps_sublayer_cpb_params_present_flag ?", "sps_sublayer_cpb_params_present_flag != 0 ?")
+                .Replace("sps_same_qp_table_for_chroma_flag ? 1 : ( sps_joint_cbcr_enabled_flag ? 3 : 2 )", "sps_same_qp_table_for_chroma_flag != 0 ? 1 : ( sps_joint_cbcr_enabled_flag != 0 ? 3 : 2 ) ")
+                .Replace("intrinsic_params_equal_flag ? 0 : num_views_minus1", "(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1)")
+                .Replace("bp_sublayer_initial_cpb_removal_delay_present_flag ?", "bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ?")
+                .Replace("vps_sublayer_cpb_params_present_flag ? 0", "vps_sublayer_cpb_params_present_flag != 0 ? 0");
             return definitions;
         }
 
@@ -27,6 +36,11 @@ namespace ItuGenerator
         {
             switch (parameter)
             {
+                case "TotalNumOlss":
+                    return "((H266Context)context).TotalNumOlss";
+                case "VpsNumDpbParams":
+                    return "((H266Context)context).VpsNumDpbParams";
+
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;
@@ -35,6 +49,13 @@ namespace ItuGenerator
 
         public string GetDerivedVariables(string name)
         {
+            switch(name)
+            {
+                case "vps_num_output_layer_sets_minus2":
+                    return "((H266Context)context).OnVpsNumOutputLayerSetsMinus2();";
+                case "vps_num_dpb_params_minus1":
+                    return "((H266Context)context).OnVpsNumDpbParamsMinus1();";
+            }
             return "";
         }
 
@@ -47,6 +68,15 @@ namespace ItuGenerator
 
         public string FixCondition(string condition, MethodType methodType)
         {
+            condition = condition.Replace("nal_unit_type  !=  ", "nal_unit_type != H266NALTypes.");
+            condition = condition.Replace("nal_unit_type  ==  ", "nal_unit_type == H266NALTypes.");
+            condition = condition.Replace("nal_unit_type  >=  ", "nal_unit_type >= H266NALTypes.");
+            condition = condition.Replace("nal_unit_type  <=  ", "nal_unit_type <= H266NALTypes.");
+
+            condition = condition.Replace("ALF_APS", "H266Constants.ALF_APS");
+            condition = condition.Replace("LMCS_APS", "H266Constants.LMCS_APS");
+            condition = condition.Replace("SCALING_APS", "H266Constants.SCALING_APS");
+
             condition = condition.Replace("Abs(", "(uint)Math.Abs(");
             condition = condition.Replace("Min(", "(uint)Math.Min(");
             condition = condition.Replace("Max(", "(uint)Math.Max(");
@@ -60,6 +90,9 @@ namespace ItuGenerator
 
         public string FixStatement(string fieldValue)
         {
+            fieldValue = fieldValue.Replace("Abs(", "(uint)Math.Abs(");
+            fieldValue = fieldValue.Replace("Min(", "(uint)Math.Min(");
+            fieldValue = fieldValue.Replace("Max(", "(uint)Math.Max(");
             return fieldValue;
         }
 
@@ -70,20 +103,10 @@ namespace ItuGenerator
 
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
-                { "scalingLst",                    "u(32)[]" }, // TODO: remove this temporary fix
                 { "NumBytesInNalUnit",             "u(32)" },
-                { "profilePresentFlag",            "u(32)" },
-                { "maxNumSubLayersMinus1",         "u(32)" },
-                { "stRpsIdx",                      "u(32)" },
                 { "payloadType",                   "u(32)" },
                 { "payloadSize",                   "u(32)" },
-                { "commonInfPresentFlag",          "u(32)" },
                 { "subLayerId",                    "u(32)" },
-                { "inpDepth",                      "u(32)" },
-                { "idxY",                          "u(32)" },
-                { "idxCb",                         "u(32)" },
-                { "idxCr",                         "u(32)" },
-                { "inpLength",                     "u(32)" },
                 { "OutSign",                       "u(32)" },
                 { "OutExp",                        "u(32)" },
                 { "OutMantissa",                   "u(32)" },

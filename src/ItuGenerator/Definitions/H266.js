@@ -372,8 +372,7 @@ seq_parameter_set_rbsp() {
    general_timing_hrd_parameters()  
    if( sps_max_sublayers_minus1 > 0 )  
     sps_sublayer_cpb_params_present_flag u(1) 
-   firstSubLayer = sps_sublayer_cpb_params_present_flag ? 0 : 
-     sps_max_sublayers_minus1 
+   firstSubLayer = sps_sublayer_cpb_params_present_flag ? 0 : sps_max_sublayers_minus1 
  
    ols_timing_hrd_parameters( firstSubLayer, sps_max_sublayers_minus1 )  
   }  
@@ -887,6 +886,41 @@ vui_payload( payloadSize ) {
  }  
 }  
 
+vui_parameters(payloadSize) {
+    vui_progressive_source_flag u(1)
+    vui_interlaced_source_flag u(1)
+    vui_non_packed_constraint_flag u(1)
+    vui_non_projected_constraint_flag u(1)
+    vui_aspect_ratio_info_present_flag u(1)
+    if (vui_aspect_ratio_info_present_flag) {
+        vui_aspect_ratio_constant_flag u(1)
+        vui_aspect_ratio_idc u(8)
+        if (vui_aspect_ratio_idc == 255) {
+            vui_sar_width u(16)
+            vui_sar_height u(16)
+        }
+    }
+    vui_overscan_info_present_flag u(1)
+    if (vui_overscan_info_present_flag)  
+  vui_overscan_appropriate_flag u(1) 
+ vui_colour_description_present_flag u(1)
+    if (vui_colour_description_present_flag) {  
+  vui_colour_primaries u(8) 
+  vui_transfer_characteristics u(8) 
+  vui_matrix_coeffs u(8) 
+  vui_full_range_flag u(1)
+    }  
+ vui_chroma_loc_info_present_flag u(1)
+    if (vui_chroma_loc_info_present_flag) {
+        if (vui_progressive_source_flag && !vui_interlaced_source_flag)  
+   vui_chroma_sample_loc_type_frame ue(v) 
+  else {  
+   vui_chroma_sample_loc_type_top_field ue(v) 
+   vui_chroma_sample_loc_type_bottom_field ue(v)
+        }
+    }
+}  
+
 profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {  
  if( profileTierPresentFlag ) {  
   general_profile_idc u(7) 
@@ -1340,7 +1374,6 @@ ambient_viewing_environment(payloadSize) {
 }
 
 content_colour_volume(payloadSize) {
-    Descriptor 
  ccv_cancel_flag u(1)
     if (!ccv_cancel_flag) {  
   ccv_persistence_flag u(1) 
@@ -1555,7 +1588,7 @@ scalability_dimension_info(payloadSize) {
  sdi_max_layers_minus1 u(6) 
  sdi_multiview_info_flag u(1) 
  sdi_auxiliary_info_flag u(1)
-    if (sdi_multiview_info_flag | | sdi_auxiliary_info_flag) {
+    if (sdi_multiview_info_flag || sdi_auxiliary_info_flag) {
         if (sdi_multiview_info_flag)  
             sdi_view_id_len_minus1 u(4)
         for (i = 0; i <= sdi_max_layers_minus1; i++) {
@@ -1630,7 +1663,7 @@ depth_representation_info(payloadSize) {
     d_max_flag u(1)
     depth_representation_type ue(v) 
     
-    if (d_min_flag | | d_max_flag)
+    if (d_min_flag || d_max_flag)
         disparity_ref_view_id ue(v) 
     if (z_near_flag)
         depth_rep_info_element(ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen)
@@ -1692,7 +1725,7 @@ colour_transform_info(payloadSize) {
         colour_transform_bit_depth_minus8 u(4)
         colour_transform_log2_number_of_points_per_lut_minus1 u(3)
         colour_transform_cross_component_flag u(1)
-        if (colour_transform _cross_component_flag )
+        if (colour_transform_cross_component_flag )
             colour_transform_cross_comp_inferred_flag u(1)
         for (i = 0; i < colourTransformSize; i++)
             colour_transf_lut[0][i] u(v)

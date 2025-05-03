@@ -472,7 +472,7 @@ video_parameter_set_rbsp() {
    for( i = 0; i  <=  vps_num_ols_timing_hrd_params_minus1; i++ ) {  
     if( !vps_default_ptl_dpb_hrd_max_tid_flag )  
      vps_hrd_max_tid[ i ] u(3) 
-    firstSubLayer = vps_sublayer_cpb_params_present_flag ? 0 : vps_hrd_max_tid[ i ]  
+    firstSubLayer = vps_sublayer_cpb_params_present_flag != 0 ? 0 : vps_hrd_max_tid[ i ]  
     ols_timing_hrd_parameters( firstSubLayer, vps_hrd_max_tid[ i ] )  
    }  
    if( vps_num_ols_timing_hrd_params_minus1 > 0  && 
@@ -651,6 +651,7 @@ video_parameter_set_rbsp() {
                     if (vps_ols_mode_idc == 2)
                     {
                         size += stream.ReadUnsignedInt(size, 8, out this.vps_num_output_layer_sets_minus2);
+                        ((H266Context)context).OnVpsNumOutputLayerSetsMinus2();
 
                         this.vps_ols_output_layer_flag = new byte[vps_num_output_layer_sets_minus2 + 1][];
                         for (i = 1; i <= vps_num_output_layer_sets_minus2 + 1; i++)
@@ -697,11 +698,11 @@ video_parameter_set_rbsp() {
                 size += stream.ReadClass<ProfileTierLevel>(size, context, this.profile_tier_level[i]);
             }
 
-            this.vps_ols_ptl_idx = new uint[TotalNumOlss];
-            for (i = 0; i < TotalNumOlss; i++)
+            this.vps_ols_ptl_idx = new uint[((H266Context)context).TotalNumOlss];
+            for (i = 0; i < ((H266Context)context).TotalNumOlss; i++)
             {
 
-                if (vps_num_ptls_minus1 > 0 && vps_num_ptls_minus1 + 1 != TotalNumOlss)
+                if (vps_num_ptls_minus1 > 0 && vps_num_ptls_minus1 + 1 != ((H266Context)context).TotalNumOlss)
                 {
                     size += stream.ReadUnsignedInt(size, 8, out this.vps_ols_ptl_idx[i]);
                 }
@@ -710,15 +711,16 @@ video_parameter_set_rbsp() {
             if (vps_each_layer_is_an_ols_flag == 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.vps_num_dpb_params_minus1);
+                ((H266Context)context).OnVpsNumDpbParamsMinus1();
 
                 if (vps_max_sublayers_minus1 > 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.vps_sublayer_dpb_params_present_flag);
                 }
 
-                this.vps_dpb_max_tid = new uint[VpsNumDpbParams];
-                this.dpb_parameters = new DpbParameters[VpsNumDpbParams];
-                for (i = 0; i < VpsNumDpbParams; i++)
+                this.vps_dpb_max_tid = new uint[((H266Context)context).VpsNumDpbParams];
+                this.dpb_parameters = new DpbParameters[((H266Context)context).VpsNumDpbParams];
+                for (i = 0; i < ((H266Context)context).VpsNumDpbParams; i++)
                 {
 
                     if (vps_default_ptl_dpb_hrd_max_tid_flag == 0)
@@ -741,7 +743,7 @@ video_parameter_set_rbsp() {
                     size += stream.ReadUnsignedInt(size, 2, out this.vps_ols_dpb_chroma_format[i]);
                     size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_bitdepth_minus8[i]);
 
-                    if (VpsNumDpbParams > 1 && VpsNumDpbParams != NumMultiLayerOlss)
+                    if (((H266Context)context).VpsNumDpbParams > 1 && ((H266Context)context).VpsNumDpbParams != NumMultiLayerOlss)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_params_idx[i]);
                     }
@@ -768,7 +770,7 @@ video_parameter_set_rbsp() {
                         {
                             size += stream.ReadUnsignedInt(size, 3, out this.vps_hrd_max_tid[i]);
                         }
-                        firstSubLayer = vps_sublayer_cpb_params_present_flag ? 0 : vps_hrd_max_tid[i];
+                        firstSubLayer = vps_sublayer_cpb_params_present_flag != 0 ? 0 : vps_hrd_max_tid[i];
                         this.ols_timing_hrd_parameters[i] = new OlsTimingHrdParameters(firstSubLayer, vps_hrd_max_tid[i]);
                         size += stream.ReadClass<OlsTimingHrdParameters>(size, context, this.ols_timing_hrd_parameters[i]);
                     }
@@ -869,6 +871,7 @@ video_parameter_set_rbsp() {
                     if (vps_ols_mode_idc == 2)
                     {
                         size += stream.WriteUnsignedInt(8, this.vps_num_output_layer_sets_minus2);
+                        ((H266Context)context).OnVpsNumOutputLayerSetsMinus2();
 
                         for (i = 1; i <= vps_num_output_layer_sets_minus2 + 1; i++)
                         {
@@ -909,10 +912,10 @@ video_parameter_set_rbsp() {
                 size += stream.WriteClass<ProfileTierLevel>(context, this.profile_tier_level[i]);
             }
 
-            for (i = 0; i < TotalNumOlss; i++)
+            for (i = 0; i < ((H266Context)context).TotalNumOlss; i++)
             {
 
-                if (vps_num_ptls_minus1 > 0 && vps_num_ptls_minus1 + 1 != TotalNumOlss)
+                if (vps_num_ptls_minus1 > 0 && vps_num_ptls_minus1 + 1 != ((H266Context)context).TotalNumOlss)
                 {
                     size += stream.WriteUnsignedInt(8, this.vps_ols_ptl_idx[i]);
                 }
@@ -921,13 +924,14 @@ video_parameter_set_rbsp() {
             if (vps_each_layer_is_an_ols_flag == 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.vps_num_dpb_params_minus1);
+                ((H266Context)context).OnVpsNumDpbParamsMinus1();
 
                 if (vps_max_sublayers_minus1 > 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.vps_sublayer_dpb_params_present_flag);
                 }
 
-                for (i = 0; i < VpsNumDpbParams; i++)
+                for (i = 0; i < ((H266Context)context).VpsNumDpbParams; i++)
                 {
 
                     if (vps_default_ptl_dpb_hrd_max_tid_flag == 0)
@@ -944,7 +948,7 @@ video_parameter_set_rbsp() {
                     size += stream.WriteUnsignedInt(2, this.vps_ols_dpb_chroma_format[i]);
                     size += stream.WriteUnsignedIntGolomb(this.vps_ols_dpb_bitdepth_minus8[i]);
 
-                    if (VpsNumDpbParams > 1 && VpsNumDpbParams != NumMultiLayerOlss)
+                    if (((H266Context)context).VpsNumDpbParams > 1 && ((H266Context)context).VpsNumDpbParams != NumMultiLayerOlss)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.vps_ols_dpb_params_idx[i]);
                     }
@@ -968,7 +972,7 @@ video_parameter_set_rbsp() {
                         {
                             size += stream.WriteUnsignedInt(3, this.vps_hrd_max_tid[i]);
                         }
-                        firstSubLayer = vps_sublayer_cpb_params_present_flag ? 0 : vps_hrd_max_tid[i];
+                        firstSubLayer = vps_sublayer_cpb_params_present_flag != 0 ? 0 : vps_hrd_max_tid[i];
                         size += stream.WriteClass<OlsTimingHrdParameters>(context, this.ols_timing_hrd_parameters[i]);
                     }
 
@@ -1121,7 +1125,7 @@ seq_parameter_set_rbsp() {
  if( sps_chroma_format_idc  !=  0 ) {  
   sps_joint_cbcr_enabled_flag u(1) 
   sps_same_qp_table_for_chroma_flag u(1) 
-  numQpTables = sps_same_qp_table_for_chroma_flag ? 1 : ( sps_joint_cbcr_enabled_flag ? 3 : 2 ) 
+  numQpTables = sps_same_qp_table_for_chroma_flag != 0 ? 1 : ( sps_joint_cbcr_enabled_flag != 0 ? 3 : 2 )  
  
   for( i = 0; i < numQpTables; i++ ) {  
    sps_qp_table_start_minus26[ i ] se(v) 
@@ -1144,7 +1148,7 @@ seq_parameter_set_rbsp() {
   sps_inter_layer_prediction_enabled_flag u(1) 
  sps_idr_rpl_present_flag u(1) 
  sps_rpl1_same_as_rpl0_flag u(1) 
- for( i = 0; i < ( sps_rpl1_same_as_rpl0_flag ? 1 : 2 ); i++ ) {  
+ for( i = 0; i < ( sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2 ); i++ ) {  
   sps_num_ref_pic_lists[ i ] ue(v) 
   for( j = 0; j < sps_num_ref_pic_lists[ i ]; j++)  
    ref_pic_list_struct( i, j )  
@@ -1237,8 +1241,7 @@ seq_parameter_set_rbsp() {
    general_timing_hrd_parameters()  
    if( sps_max_sublayers_minus1 > 0 )  
     sps_sublayer_cpb_params_present_flag u(1) 
-   firstSubLayer = sps_sublayer_cpb_params_present_flag ? 0 : 
-     sps_max_sublayers_minus1 
+   firstSubLayer = sps_sublayer_cpb_params_present_flag != 0 ? 0 : sps_max_sublayers_minus1 
  
    ols_timing_hrd_parameters( firstSubLayer, sps_max_sublayers_minus1 )  
   }  
@@ -1770,7 +1773,7 @@ seq_parameter_set_rbsp() {
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.sps_joint_cbcr_enabled_flag);
                 size += stream.ReadUnsignedInt(size, 1, out this.sps_same_qp_table_for_chroma_flag);
-                numQpTables = sps_same_qp_table_for_chroma_flag ? 1 : (sps_joint_cbcr_enabled_flag ? 3 : 2);
+                numQpTables = sps_same_qp_table_for_chroma_flag != 0 ? 1 : (sps_joint_cbcr_enabled_flag != 0 ? 3 : 2);
 
                 this.sps_qp_table_start_minus26 = new int[numQpTables];
                 this.sps_num_points_in_qp_table_minus1 = new uint[numQpTables];
@@ -1809,9 +1812,9 @@ seq_parameter_set_rbsp() {
             size += stream.ReadUnsignedInt(size, 1, out this.sps_idr_rpl_present_flag);
             size += stream.ReadUnsignedInt(size, 1, out this.sps_rpl1_same_as_rpl0_flag);
 
-            this.sps_num_ref_pic_lists = new uint[(sps_rpl1_same_as_rpl0_flag ? 1 : 2)];
-            this.ref_pic_list_struct = new RefPicListStruct[(sps_rpl1_same_as_rpl0_flag ? 1 : 2)][];
-            for (i = 0; i < (sps_rpl1_same_as_rpl0_flag ? 1 : 2); i++)
+            this.sps_num_ref_pic_lists = new uint[(sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2)];
+            this.ref_pic_list_struct = new RefPicListStruct[(sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2)][];
+            for (i = 0; i < (sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2); i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_ref_pic_lists[i]);
 
@@ -1984,9 +1987,7 @@ seq_parameter_set_rbsp() {
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.sps_sublayer_cpb_params_present_flag);
                     }
-                    firstSubLayer = sps_sublayer_cpb_params_present_flag ? 0 : ;
-                    this.sps_max_sublayers_minus1 = new SpsMaxSublayersMinus1();
-                    size += stream.ReadClass<SpsMaxSublayersMinus1>(size, context, this.sps_max_sublayers_minus1);
+                    firstSubLayer = sps_sublayer_cpb_params_present_flag != 0 ? 0 : sps_max_sublayers_minus1;
                     this.ols_timing_hrd_parameters = new OlsTimingHrdParameters(firstSubLayer, sps_max_sublayers_minus1);
                     size += stream.ReadClass<OlsTimingHrdParameters>(size, context, this.ols_timing_hrd_parameters);
                 }
@@ -2219,7 +2220,7 @@ seq_parameter_set_rbsp() {
             {
                 size += stream.WriteUnsignedInt(1, this.sps_joint_cbcr_enabled_flag);
                 size += stream.WriteUnsignedInt(1, this.sps_same_qp_table_for_chroma_flag);
-                numQpTables = sps_same_qp_table_for_chroma_flag ? 1 : (sps_joint_cbcr_enabled_flag ? 3 : 2);
+                numQpTables = sps_same_qp_table_for_chroma_flag != 0 ? 1 : (sps_joint_cbcr_enabled_flag != 0 ? 3 : 2);
 
                 for (i = 0; i < numQpTables; i++)
                 {
@@ -2252,7 +2253,7 @@ seq_parameter_set_rbsp() {
             size += stream.WriteUnsignedInt(1, this.sps_idr_rpl_present_flag);
             size += stream.WriteUnsignedInt(1, this.sps_rpl1_same_as_rpl0_flag);
 
-            for (i = 0; i < (sps_rpl1_same_as_rpl0_flag ? 1 : 2); i++)
+            for (i = 0; i < (sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2); i++)
             {
                 size += stream.WriteUnsignedIntGolomb(this.sps_num_ref_pic_lists[i]);
 
@@ -2418,8 +2419,7 @@ seq_parameter_set_rbsp() {
                     {
                         size += stream.WriteUnsignedInt(1, this.sps_sublayer_cpb_params_present_flag);
                     }
-                    firstSubLayer = sps_sublayer_cpb_params_present_flag ? 0 : ;
-                    size += stream.WriteClass<SpsMaxSublayersMinus1>(context, this.sps_max_sublayers_minus1);
+                    firstSubLayer = sps_sublayer_cpb_params_present_flag != 0 ? 0 : sps_max_sublayers_minus1;
                     size += stream.WriteClass<OlsTimingHrdParameters>(context, this.ols_timing_hrd_parameters);
                 }
             }
@@ -3305,17 +3305,17 @@ adaptation_parameter_set_rbsp() {
             size += stream.ReadUnsignedInt(size, 5, out this.aps_adaptation_parameter_set_id);
             size += stream.ReadUnsignedInt(size, 1, out this.aps_chroma_present_flag);
 
-            if (aps_params_type == ALF_APS)
+            if (aps_params_type == H266Constants.ALF_APS)
             {
                 this.alf_data = new AlfData();
                 size += stream.ReadClass<AlfData>(size, context, this.alf_data);
             }
-            else if (aps_params_type == LMCS_APS)
+            else if (aps_params_type == H266Constants.LMCS_APS)
             {
                 this.lmcs_data = new LmcsData();
                 size += stream.ReadClass<LmcsData>(size, context, this.lmcs_data);
             }
-            else if (aps_params_type == SCALING_APS)
+            else if (aps_params_type == H266Constants.SCALING_APS)
             {
                 this.scaling_list_data = new ScalingListData();
                 size += stream.ReadClass<ScalingListData>(size, context, this.scaling_list_data);
@@ -3347,15 +3347,15 @@ adaptation_parameter_set_rbsp() {
             size += stream.WriteUnsignedInt(5, this.aps_adaptation_parameter_set_id);
             size += stream.WriteUnsignedInt(1, this.aps_chroma_present_flag);
 
-            if (aps_params_type == ALF_APS)
+            if (aps_params_type == H266Constants.ALF_APS)
             {
                 size += stream.WriteClass<AlfData>(context, this.alf_data);
             }
-            else if (aps_params_type == LMCS_APS)
+            else if (aps_params_type == H266Constants.LMCS_APS)
             {
                 size += stream.WriteClass<LmcsData>(context, this.lmcs_data);
             }
-            else if (aps_params_type == SCALING_APS)
+            else if (aps_params_type == H266Constants.SCALING_APS)
             {
                 size += stream.WriteClass<ScalingListData>(context, this.scaling_list_data);
             }
@@ -5591,6 +5591,209 @@ vui_payload( payloadSize ) {
     /*
   
 
+vui_parameters(payloadSize) {
+    vui_progressive_source_flag u(1)
+    vui_interlaced_source_flag u(1)
+    vui_non_packed_constraint_flag u(1)
+    vui_non_projected_constraint_flag u(1)
+    vui_aspect_ratio_info_present_flag u(1)
+    if (vui_aspect_ratio_info_present_flag) {
+        vui_aspect_ratio_constant_flag u(1)
+        vui_aspect_ratio_idc u(8)
+        if (vui_aspect_ratio_idc == 255) {
+            vui_sar_width u(16)
+            vui_sar_height u(16)
+        }
+    }
+    vui_overscan_info_present_flag u(1)
+    if (vui_overscan_info_present_flag)  
+  vui_overscan_appropriate_flag u(1) 
+ vui_colour_description_present_flag u(1)
+    if (vui_colour_description_present_flag) {  
+  vui_colour_primaries u(8) 
+  vui_transfer_characteristics u(8) 
+  vui_matrix_coeffs u(8) 
+  vui_full_range_flag u(1)
+    }  
+ vui_chroma_loc_info_present_flag u(1)
+    if (vui_chroma_loc_info_present_flag) {
+        if (vui_progressive_source_flag && !vui_interlaced_source_flag)  
+   vui_chroma_sample_loc_type_frame ue(v) 
+  else {  
+   vui_chroma_sample_loc_type_top_field ue(v) 
+   vui_chroma_sample_loc_type_bottom_field ue(v)
+        }
+    }
+}
+    */
+    public class VuiParameters : IItuSerializable
+    {
+        private uint payloadSize;
+        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private byte vui_progressive_source_flag;
+        public byte VuiProgressiveSourceFlag { get { return vui_progressive_source_flag; } set { vui_progressive_source_flag = value; } }
+        private byte vui_interlaced_source_flag;
+        public byte VuiInterlacedSourceFlag { get { return vui_interlaced_source_flag; } set { vui_interlaced_source_flag = value; } }
+        private byte vui_non_packed_constraint_flag;
+        public byte VuiNonPackedConstraintFlag { get { return vui_non_packed_constraint_flag; } set { vui_non_packed_constraint_flag = value; } }
+        private byte vui_non_projected_constraint_flag;
+        public byte VuiNonProjectedConstraintFlag { get { return vui_non_projected_constraint_flag; } set { vui_non_projected_constraint_flag = value; } }
+        private byte vui_aspect_ratio_info_present_flag;
+        public byte VuiAspectRatioInfoPresentFlag { get { return vui_aspect_ratio_info_present_flag; } set { vui_aspect_ratio_info_present_flag = value; } }
+        private byte vui_aspect_ratio_constant_flag;
+        public byte VuiAspectRatioConstantFlag { get { return vui_aspect_ratio_constant_flag; } set { vui_aspect_ratio_constant_flag = value; } }
+        private uint vui_aspect_ratio_idc;
+        public uint VuiAspectRatioIdc { get { return vui_aspect_ratio_idc; } set { vui_aspect_ratio_idc = value; } }
+        private uint vui_sar_width;
+        public uint VuiSarWidth { get { return vui_sar_width; } set { vui_sar_width = value; } }
+        private uint vui_sar_height;
+        public uint VuiSarHeight { get { return vui_sar_height; } set { vui_sar_height = value; } }
+        private byte vui_overscan_info_present_flag;
+        public byte VuiOverscanInfoPresentFlag { get { return vui_overscan_info_present_flag; } set { vui_overscan_info_present_flag = value; } }
+        private byte vui_overscan_appropriate_flag;
+        public byte VuiOverscanAppropriateFlag { get { return vui_overscan_appropriate_flag; } set { vui_overscan_appropriate_flag = value; } }
+        private byte vui_colour_description_present_flag;
+        public byte VuiColourDescriptionPresentFlag { get { return vui_colour_description_present_flag; } set { vui_colour_description_present_flag = value; } }
+        private uint vui_colour_primaries;
+        public uint VuiColourPrimaries { get { return vui_colour_primaries; } set { vui_colour_primaries = value; } }
+        private uint vui_transfer_characteristics;
+        public uint VuiTransferCharacteristics { get { return vui_transfer_characteristics; } set { vui_transfer_characteristics = value; } }
+        private uint vui_matrix_coeffs;
+        public uint VuiMatrixCoeffs { get { return vui_matrix_coeffs; } set { vui_matrix_coeffs = value; } }
+        private byte vui_full_range_flag;
+        public byte VuiFullRangeFlag { get { return vui_full_range_flag; } set { vui_full_range_flag = value; } }
+        private byte vui_chroma_loc_info_present_flag;
+        public byte VuiChromaLocInfoPresentFlag { get { return vui_chroma_loc_info_present_flag; } set { vui_chroma_loc_info_present_flag = value; } }
+        private uint vui_chroma_sample_loc_type_frame;
+        public uint VuiChromaSampleLocTypeFrame { get { return vui_chroma_sample_loc_type_frame; } set { vui_chroma_sample_loc_type_frame = value; } }
+        private uint vui_chroma_sample_loc_type_top_field;
+        public uint VuiChromaSampleLocTypeTopField { get { return vui_chroma_sample_loc_type_top_field; } set { vui_chroma_sample_loc_type_top_field = value; } }
+        private uint vui_chroma_sample_loc_type_bottom_field;
+        public uint VuiChromaSampleLocTypeBottomField { get { return vui_chroma_sample_loc_type_bottom_field; } set { vui_chroma_sample_loc_type_bottom_field = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public VuiParameters(uint payloadSize)
+        {
+            this.payloadSize = payloadSize;
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_progressive_source_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_interlaced_source_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_non_packed_constraint_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_non_projected_constraint_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_aspect_ratio_info_present_flag);
+
+            if (vui_aspect_ratio_info_present_flag != 0)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_aspect_ratio_constant_flag);
+                size += stream.ReadUnsignedInt(size, 8, out this.vui_aspect_ratio_idc);
+
+                if (vui_aspect_ratio_idc == 255)
+                {
+                    size += stream.ReadUnsignedInt(size, 16, out this.vui_sar_width);
+                    size += stream.ReadUnsignedInt(size, 16, out this.vui_sar_height);
+                }
+            }
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_overscan_info_present_flag);
+
+            if (vui_overscan_info_present_flag != 0)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_overscan_appropriate_flag);
+            }
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_colour_description_present_flag);
+
+            if (vui_colour_description_present_flag != 0)
+            {
+                size += stream.ReadUnsignedInt(size, 8, out this.vui_colour_primaries);
+                size += stream.ReadUnsignedInt(size, 8, out this.vui_transfer_characteristics);
+                size += stream.ReadUnsignedInt(size, 8, out this.vui_matrix_coeffs);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_full_range_flag);
+            }
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_chroma_loc_info_present_flag);
+
+            if (vui_chroma_loc_info_present_flag != 0)
+            {
+
+                if (vui_progressive_source_flag != 0 && vui_interlaced_source_flag == 0)
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.vui_chroma_sample_loc_type_frame);
+                }
+                else
+                {
+                    size += stream.ReadUnsignedIntGolomb(size, out this.vui_chroma_sample_loc_type_top_field);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.vui_chroma_sample_loc_type_bottom_field);
+                }
+            }
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedInt(1, this.vui_progressive_source_flag);
+            size += stream.WriteUnsignedInt(1, this.vui_interlaced_source_flag);
+            size += stream.WriteUnsignedInt(1, this.vui_non_packed_constraint_flag);
+            size += stream.WriteUnsignedInt(1, this.vui_non_projected_constraint_flag);
+            size += stream.WriteUnsignedInt(1, this.vui_aspect_ratio_info_present_flag);
+
+            if (vui_aspect_ratio_info_present_flag != 0)
+            {
+                size += stream.WriteUnsignedInt(1, this.vui_aspect_ratio_constant_flag);
+                size += stream.WriteUnsignedInt(8, this.vui_aspect_ratio_idc);
+
+                if (vui_aspect_ratio_idc == 255)
+                {
+                    size += stream.WriteUnsignedInt(16, this.vui_sar_width);
+                    size += stream.WriteUnsignedInt(16, this.vui_sar_height);
+                }
+            }
+            size += stream.WriteUnsignedInt(1, this.vui_overscan_info_present_flag);
+
+            if (vui_overscan_info_present_flag != 0)
+            {
+                size += stream.WriteUnsignedInt(1, this.vui_overscan_appropriate_flag);
+            }
+            size += stream.WriteUnsignedInt(1, this.vui_colour_description_present_flag);
+
+            if (vui_colour_description_present_flag != 0)
+            {
+                size += stream.WriteUnsignedInt(8, this.vui_colour_primaries);
+                size += stream.WriteUnsignedInt(8, this.vui_transfer_characteristics);
+                size += stream.WriteUnsignedInt(8, this.vui_matrix_coeffs);
+                size += stream.WriteUnsignedInt(1, this.vui_full_range_flag);
+            }
+            size += stream.WriteUnsignedInt(1, this.vui_chroma_loc_info_present_flag);
+
+            if (vui_chroma_loc_info_present_flag != 0)
+            {
+
+                if (vui_progressive_source_flag != 0 && vui_interlaced_source_flag == 0)
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.vui_chroma_sample_loc_type_frame);
+                }
+                else
+                {
+                    size += stream.WriteUnsignedIntGolomb(this.vui_chroma_sample_loc_type_top_field);
+                    size += stream.WriteUnsignedIntGolomb(this.vui_chroma_sample_loc_type_bottom_field);
+                }
+            }
+
+            return size;
+        }
+
+    }
+
+    /*
+  
+
 profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {  
  if( profileTierPresentFlag ) {  
   general_profile_idc u(7) 
@@ -6240,7 +6443,7 @@ general_constraints_info() {
  
 
 dpb_parameters( MaxSubLayersMinus1, subLayerInfoFlag ) {  
- for( i = ( subLayerInfoFlag ? 0 : MaxSubLayersMinus1 ); 
+ for( i = ( subLayerInfoFlag != 0 ? 0 : MaxSubLayersMinus1 ); 
    i  <=  MaxSubLayersMinus1; i++ ) { 
    dpb_max_dec_pic_buffering_minus1[ i ] ue(v) 
   dpb_max_num_reorder_pics[ i ] ue(v) 
@@ -6279,7 +6482,7 @@ dpb_parameters( MaxSubLayersMinus1, subLayerInfoFlag ) {
             this.dpb_max_dec_pic_buffering_minus1 = new uint[MaxSubLayersMinus1 + 1];
             this.dpb_max_num_reorder_pics = new uint[MaxSubLayersMinus1 + 1];
             this.dpb_max_latency_increase_plus1 = new uint[MaxSubLayersMinus1 + 1];
-            for (i = (subLayerInfoFlag ? 0 : MaxSubLayersMinus1);
+            for (i = (subLayerInfoFlag != 0 ? 0 : MaxSubLayersMinus1);
    i <= MaxSubLayersMinus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.dpb_max_dec_pic_buffering_minus1[i]);
@@ -6296,7 +6499,7 @@ dpb_parameters( MaxSubLayersMinus1, subLayerInfoFlag ) {
 
             uint i = 0;
 
-            for (i = (subLayerInfoFlag ? 0 : MaxSubLayersMinus1);
+            for (i = (subLayerInfoFlag != 0 ? 0 : MaxSubLayersMinus1);
    i <= MaxSubLayersMinus1; i++)
             {
                 size += stream.WriteUnsignedIntGolomb(this.dpb_max_dec_pic_buffering_minus1[i]);
@@ -7531,7 +7734,7 @@ sei_payload( payloadType, payloadSize ) {
 
             int whileIndex = -1;
 
-            if (nal_unit_type == PREFIX_SEI_NUT)
+            if (nal_unit_type == H266NALTypes.PREFIX_SEI_NUT)
             {
 
                 if (payloadType == 0)
@@ -7712,7 +7915,7 @@ sei_payload( payloadType, payloadSize ) {
 
             int whileIndex = -1;
 
-            if (nal_unit_type == PREFIX_SEI_NUT)
+            if (nal_unit_type == H266NALTypes.PREFIX_SEI_NUT)
             {
 
                 if (payloadType == 0)
@@ -8689,7 +8892,6 @@ ambient_viewing_environment(payloadSize) {
 
 
 content_colour_volume(payloadSize) {
-    Descriptor 
  ccv_cancel_flag u(1)
     if (!ccv_cancel_flag) {  
   ccv_persistence_flag u(1) 
@@ -8716,8 +8918,6 @@ content_colour_volume(payloadSize) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private Descriptor descriptor;
-        public Descriptor Descriptor { get { return Descriptor; } set { Descriptor = value; } }
         private byte ccv_cancel_flag;
         public byte CcvCancelFlag { get { return ccv_cancel_flag; } set { ccv_cancel_flag = value; } }
         private byte ccv_persistence_flag;
@@ -8756,8 +8956,6 @@ content_colour_volume(payloadSize) {
             ulong size = 0;
 
             uint c = 0;
-            this.Descriptor = new Descriptor();
-            size += stream.ReadClass<Descriptor>(size, context, this.Descriptor);
             size += stream.ReadUnsignedInt(size, 1, out this.ccv_cancel_flag);
 
             if (ccv_cancel_flag == 0)
@@ -8805,7 +9003,6 @@ content_colour_volume(payloadSize) {
             ulong size = 0;
 
             uint c = 0;
-            size += stream.WriteClass<Descriptor>(context, this.Descriptor);
             size += stream.WriteUnsignedInt(1, this.ccv_cancel_flag);
 
             if (ccv_cancel_flag == 0)
@@ -10034,7 +10231,7 @@ scalability_dimension_info(payloadSize) {
  sdi_max_layers_minus1 u(6) 
  sdi_multiview_info_flag u(1) 
  sdi_auxiliary_info_flag u(1)
-    if (sdi_multiview_info_flag | | sdi_auxiliary_info_flag) {
+    if (sdi_multiview_info_flag || sdi_auxiliary_info_flag) {
         if (sdi_multiview_info_flag)  
             sdi_view_id_len_minus1 u(4)
         for (i = 0; i <= sdi_max_layers_minus1; i++) {
@@ -10093,7 +10290,7 @@ scalability_dimension_info(payloadSize) {
             size += stream.ReadUnsignedInt(size, 1, out this.sdi_multiview_info_flag);
             size += stream.ReadUnsignedInt(size, 1, out this.sdi_auxiliary_info_flag);
 
-            if (sdi_multiview_info_flag | | sdi_auxiliary_info_flag != 0)
+            if (sdi_multiview_info_flag != 0 || sdi_auxiliary_info_flag != 0)
             {
 
                 if (sdi_multiview_info_flag != 0)
@@ -10146,7 +10343,7 @@ scalability_dimension_info(payloadSize) {
             size += stream.WriteUnsignedInt(1, this.sdi_multiview_info_flag);
             size += stream.WriteUnsignedInt(1, this.sdi_auxiliary_info_flag);
 
-            if (sdi_multiview_info_flag | | sdi_auxiliary_info_flag != 0)
+            if (sdi_multiview_info_flag != 0 || sdi_auxiliary_info_flag != 0)
             {
 
                 if (sdi_multiview_info_flag != 0)
@@ -10197,7 +10394,7 @@ multiview_acquisition_info(payloadSize) {
         prec_focal_length ue(v) 
   prec_principal_point ue(v) 
   prec_skew_factor ue(v)
-        for (i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1; i++) {
+        for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1); i++) {
             sign_focal_length_x[i] u(1)
             exponent_focal_length_x[i] u(6)
             mantissa_focal_length_x[i] u(v)
@@ -10323,22 +10520,22 @@ multiview_acquisition_info(payloadSize) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_principal_point);
                 size += stream.ReadUnsignedIntGolomb(size, out this.prec_skew_factor);
 
-                this.sign_focal_length_x = new byte[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.exponent_focal_length_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.mantissa_focal_length_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.sign_focal_length_y = new byte[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.exponent_focal_length_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.mantissa_focal_length_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.sign_principal_point_x = new byte[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.exponent_principal_point_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.mantissa_principal_point_x = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.sign_principal_point_y = new byte[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.exponent_principal_point_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.mantissa_principal_point_y = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.sign_skew_factor = new byte[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.exponent_skew_factor = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                this.mantissa_skew_factor = new uint[intrinsic_params_equal_flag ? 0 : num_views_minus1 + 1];
-                for (i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1; i++)
+                this.sign_focal_length_x = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.exponent_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.mantissa_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.sign_focal_length_y = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.exponent_focal_length_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.mantissa_focal_length_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.sign_principal_point_x = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.exponent_principal_point_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.mantissa_principal_point_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.sign_principal_point_y = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.exponent_principal_point_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.mantissa_principal_point_y = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.sign_skew_factor = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.exponent_skew_factor = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                this.mantissa_skew_factor = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
+                for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1); i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_x[i]);
                     size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_x[i]);
@@ -10422,7 +10619,7 @@ multiview_acquisition_info(payloadSize) {
                 size += stream.WriteUnsignedIntGolomb(this.prec_principal_point);
                 size += stream.WriteUnsignedIntGolomb(this.prec_skew_factor);
 
-                for (i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1; i++)
+                for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1); i++)
                 {
                     size += stream.WriteUnsignedInt(1, this.sign_focal_length_x[i]);
                     size += stream.WriteUnsignedInt(6, this.exponent_focal_length_x[i]);
@@ -10544,7 +10741,7 @@ depth_representation_info(payloadSize) {
     d_max_flag u(1)
     depth_representation_type ue(v) 
     
-    if (d_min_flag | | d_max_flag)
+    if (d_min_flag || d_max_flag)
         disparity_ref_view_id ue(v) 
     if (z_near_flag)
         depth_rep_info_element(ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen)
@@ -10609,7 +10806,7 @@ depth_representation_info(payloadSize) {
             size += stream.ReadUnsignedInt(size, 1, out this.d_max_flag);
             size += stream.ReadUnsignedIntGolomb(size, out this.depth_representation_type);
 
-            if (d_min_flag | | d_max_flag != 0)
+            if (d_min_flag != 0 || d_max_flag != 0)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.disparity_ref_view_id);
             }
@@ -10663,7 +10860,7 @@ depth_representation_info(payloadSize) {
             size += stream.WriteUnsignedInt(1, this.d_max_flag);
             size += stream.WriteUnsignedIntGolomb(this.depth_representation_type);
 
-            if (d_min_flag | | d_max_flag != 0)
+            if (d_min_flag != 0 || d_max_flag != 0)
             {
                 size += stream.WriteUnsignedIntGolomb(this.disparity_ref_view_id);
             }
@@ -10950,7 +11147,7 @@ colour_transform_info(payloadSize) {
         colour_transform_bit_depth_minus8 u(4)
         colour_transform_log2_number_of_points_per_lut_minus1 u(3)
         colour_transform_cross_component_flag u(1)
-        if (colour_transform _cross_component_flag )
+        if (colour_transform_cross_component_flag )
             colour_transform_cross_comp_inferred_flag u(1)
         for (i = 0; i < colourTransformSize; i++)
             colour_transf_lut[0][i] u(v)
@@ -11035,8 +11232,8 @@ colour_transform_info(payloadSize) {
                 size += stream.ReadUnsignedInt(size, 3, out this.colour_transform_log2_number_of_points_per_lut_minus1);
                 size += stream.ReadUnsignedInt(size, 1, out this.colour_transform_cross_component_flag);
 
-                if (colour_transform _cross_component_flag != 0 )
-				{
+                if (colour_transform_cross_component_flag != 0)
+                {
                     size += stream.ReadUnsignedInt(size, 1, out this.colour_transform_cross_comp_inferred_flag);
                 }
 
@@ -11098,8 +11295,8 @@ colour_transform_info(payloadSize) {
                 size += stream.WriteUnsignedInt(3, this.colour_transform_log2_number_of_points_per_lut_minus1);
                 size += stream.WriteUnsignedInt(1, this.colour_transform_cross_component_flag);
 
-                if (colour_transform _cross_component_flag != 0 )
-				{
+                if (colour_transform_cross_component_flag != 0)
+                {
                     size += stream.WriteUnsignedInt(1, this.colour_transform_cross_comp_inferred_flag);
                 }
 
@@ -12107,7 +12304,7 @@ buffering_period( payloadSize ) {
  bp_cpb_cnt_minus1 ue(v) 
  if( bp_max_sublayers_minus1 > 0 )  
   bp_sublayer_initial_cpb_removal_delay_present_flag u(1) 
- for( i = ( bp_sublayer_initial_cpb_removal_delay_present_flag ? 
+ for( i = ( bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ? 
    0 : bp_max_sublayers_minus1 ); i  <=  bp_max_sublayers_minus1; i++ ) { 
  
   if( bp_nal_hrd_params_present_flag )  
@@ -12276,7 +12473,7 @@ buffering_period( payloadSize ) {
             this.bp_vcl_initial_cpb_removal_offset = new uint[bp_max_sublayers_minus1 + 1][];
             this.bp_vcl_initial_alt_cpb_removal_delay = new uint[bp_max_sublayers_minus1 + 1][];
             this.bp_vcl_initial_alt_cpb_removal_offset = new uint[bp_max_sublayers_minus1 + 1][];
-            for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag ?
+            for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ?
    0 : bp_max_sublayers_minus1); i <= bp_max_sublayers_minus1; i++)
             {
 
@@ -12396,7 +12593,7 @@ buffering_period( payloadSize ) {
                 size += stream.WriteUnsignedInt(1, this.bp_sublayer_initial_cpb_removal_delay_present_flag);
             }
 
-            for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag ?
+            for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ?
    0 : bp_max_sublayers_minus1); i <= bp_max_sublayers_minus1; i++)
             {
 
@@ -12480,7 +12677,7 @@ pic_timing( payloadSize ) {
   pt_cpb_alt_timing_info_present_flag u(1) 
   if( pt_cpb_alt_timing_info_present_flag ) {  
    if( bp_nal_hrd_params_present_flag ) {  
-    for( i = ( bp_sublayer_initial_cpb_removal_delay_present_flag ? 0 : 
+    for( i = ( bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ? 0 : 
       bp_max_sublayers_minus1 ); i  <=  bp_max_sublayers_minus1; i++ ) { 
  
      for( j = 0; j < bp_cpb_cnt_minus1 + 1; j++ ) {  
@@ -12492,7 +12689,7 @@ pic_timing( payloadSize ) {
     }  
    }  
    if( bp_vcl_hrd_params_present_flag ) {  
-    for( i = ( bp_sublayer_initial_cpb_removal_delay_present_flag ? 0 : 
+    for( i = ( bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ? 0 : 
       bp_max_sublayers_minus1 ); i  <=  bp_max_sublayers_minus1; i++ ) { 
  
      for( j = 0; j < bp_cpb_cnt_minus1 + 1; j++ ) {  
@@ -12644,7 +12841,7 @@ pic_timing( payloadSize ) {
                         this.pt_nal_cpb_alt_initial_removal_offset_delta = new uint[bp_max_sublayers_minus1 + 1][];
                         this.pt_nal_cpb_delay_offset = new uint[bp_max_sublayers_minus1 + 1];
                         this.pt_nal_dpb_delay_offset = new uint[bp_max_sublayers_minus1 + 1];
-                        for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag ? 0 :
+                        for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ? 0 :
       bp_max_sublayers_minus1); i <= bp_max_sublayers_minus1; i++)
                         {
 
@@ -12667,7 +12864,7 @@ pic_timing( payloadSize ) {
                         this.pt_vcl_cpb_alt_initial_removal_offset_delta = new uint[bp_max_sublayers_minus1 + 1][];
                         this.pt_vcl_cpb_delay_offset = new uint[bp_max_sublayers_minus1 + 1];
                         this.pt_vcl_dpb_delay_offset = new uint[bp_max_sublayers_minus1 + 1];
-                        for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag ? 0 :
+                        for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ? 0 :
       bp_max_sublayers_minus1); i <= bp_max_sublayers_minus1; i++)
                         {
 
@@ -12793,7 +12990,7 @@ pic_timing( payloadSize ) {
                     if (bp_nal_hrd_params_present_flag != 0)
                     {
 
-                        for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag ? 0 :
+                        for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ? 0 :
       bp_max_sublayers_minus1); i <= bp_max_sublayers_minus1; i++)
                         {
 
@@ -12810,7 +13007,7 @@ pic_timing( payloadSize ) {
                     if (bp_vcl_hrd_params_present_flag != 0)
                     {
 
-                        for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag ? 0 :
+                        for (i = (bp_sublayer_initial_cpb_removal_delay_present_flag != 0 ? 0 :
       bp_max_sublayers_minus1); i <= bp_max_sublayers_minus1; i++)
                         {
 
@@ -13221,7 +13418,7 @@ sli_sublayer_info_present_flag u(1)
 while( !byte_aligned() )  
 
 sli_alignment_zero_bit f(1) 
-for( k = sli_sublayer_info_present_flag ? 0 : sli_max_sublayers_minus1; k  <=  sli_max_sublayers_minus1; k++ ) 
+for( k = sli_sublayer_info_present_flag != 0 ? 0 : sli_max_sublayers_minus1; k  <=  sli_max_sublayers_minus1; k++ ) 
 for( i = 0; i  <=  sli_num_ref_levels_minus1; i++ ) {  
 sli_non_subpic_layers_fraction[ i ][ k ] u(8) 
 sli_ref_level_idc[ i ][ k ] u(8) 
@@ -13293,7 +13490,7 @@ sli_ref_level_fraction_minus1[ i ][ j ][ k ] u(8)
             this.sli_non_subpic_layers_fraction = new uint[sli_max_sublayers_minus1 + 1][];
             this.sli_ref_level_idc = new uint[sli_max_sublayers_minus1 + 1][];
             this.sli_ref_level_fraction_minus1 = new uint[sli_max_sublayers_minus1 + 1][][];
-            for (k = sli_sublayer_info_present_flag ? 0 : sli_max_sublayers_minus1; k <= sli_max_sublayers_minus1; k++)
+            for (k = sli_sublayer_info_present_flag != 0 ? 0 : sli_max_sublayers_minus1; k <= sli_max_sublayers_minus1; k++)
             {
 
                 this.sli_non_subpic_layers_fraction[k] = new uint[sli_num_ref_levels_minus1 + 1];
@@ -13345,7 +13542,7 @@ sli_ref_level_fraction_minus1[ i ][ j ][ k ] u(8)
                 size += stream.WriteFixed(1, whileIndex, this.sli_alignment_zero_bit);
             }
 
-            for (k = sli_sublayer_info_present_flag ? 0 : sli_max_sublayers_minus1; k <= sli_max_sublayers_minus1; k++)
+            for (k = sli_sublayer_info_present_flag != 0 ? 0 : sli_max_sublayers_minus1; k <= sli_max_sublayers_minus1; k++)
             {
 
                 for (i = 0; i <= sli_num_ref_levels_minus1; i++)
