@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 
 namespace ItuGenerator
@@ -731,96 +732,100 @@ namespace Sharp{type}
 
                         var conditionChars = new char[] { '<', '=', '>', '!' };
                         int variableIndex = parts[1].IndexOfAny(conditionChars);
-                        string variable = parts[1].Substring(variableIndex).TrimStart(conditionChars);
-
-                        if (!string.IsNullOrWhiteSpace(variable))
+                        if (variableIndex != -1)
                         {
-                            foreach (var req in block.RequiresAllocation)
+
+                            string variable = parts[1].Substring(variableIndex).TrimStart(conditionChars);
+
+                            if (!string.IsNullOrWhiteSpace(variable))
                             {
-                                string suffix;
-                                int blockSuffixLevel = GetNestedInLoopSuffix(block, "", out suffix);
-                                int fieldSuffixLevel = GetNestedInLoopSuffix(req, "", out _);
-
-                                string appendType = "";
-                                if (fieldSuffixLevel - blockSuffixLevel > 1)
+                                foreach (var req in block.RequiresAllocation)
                                 {
-                                    int count = fieldSuffixLevel - blockSuffixLevel - 1;
+                                    string suffix;
+                                    int blockSuffixLevel = GetNestedInLoopSuffix(block, "", out suffix);
+                                    int fieldSuffixLevel = GetNestedInLoopSuffix(req, "", out _);
 
-                                    for (int i = 0; i < count; i++)
+                                    string appendType = "";
+                                    if (fieldSuffixLevel - blockSuffixLevel > 1)
                                     {
-                                        appendType += "[]";
+                                        int count = fieldSuffixLevel - blockSuffixLevel - 1;
+
+                                        for (int i = 0; i < count; i++)
+                                        {
+                                            appendType += "[]";
+                                        }
                                     }
-                                }
 
-                                string variableType = GetCSharpType(req);
-                                int indexesTypeDef = req.FieldArray.Count(x => x == '[');
-                                int indexesType = variableType.Count(x => x == '[');
-                                string variableName = GetFieldName(req) + suffix;
+                                    string variableType = GetCSharpType(req);
+                                    int indexesTypeDef = req.FieldArray.Count(x => x == '[');
+                                    int indexesType = variableType.Count(x => x == '[');
+                                    string variableName = GetFieldName(req) + suffix;
 
-                                if (variableType.Contains("[]"))
-                                {
-                                    int diff = (indexesType - indexesTypeDef);
-                                    variableType = variableType.Replace("[]", "");
-                                    variableType = $"{variableType}[{variable}]";
-                                    for (int i = 0; i < diff; i++)
+                                    if (variableType.Contains("[]"))
                                     {
-                                        variableType += "[]";
+                                        int diff = (indexesType - indexesTypeDef);
+                                        variableType = variableType.Replace("[]", "");
+                                        variableType = $"{variableType}[{variable}]";
+                                        for (int i = 0; i < diff; i++)
+                                        {
+                                            variableType += "[]";
+                                        }
                                     }
-                                }
-                                else
-                                {
-                                    variableType = variableType + $"[{variable}]";
-                                }
+                                    else
+                                    {
+                                        variableType = variableType + $"[{variable}]";
+                                    }
 
-                                if(variableType.Contains("_minus1[ c ]"))
-                                    variableType = variableType.Replace("_minus1[ c ]", "_minus1[ c ] + 1");
-                                else if(variableType.Contains("_minus1[ i ][ j ]"))
-                                    variableType = variableType.Replace("_minus1[ i ][ j ]", "_minus1[ i ][ j ] + 1");
-                                else if(variableType.Contains("_minus1[ h ][ i ][ t ]"))
-                                    variableType = variableType.Replace("_minus1[ h ][ i ][ t ]", "_minus1[ h ][ i ][ t ] + 1");
-                                else if(variableType.Contains("_minus1[ h ][ i ]"))
-                                    variableType = variableType.Replace("_minus1[ h ][ i ]", "_minus1[ h ][ i ] + 1");
-                                else if(variableType.Contains("_minus1[ h ][ j ]"))
-                                    variableType = variableType.Replace("_minus1[ h ][ j ]", "_minus1[ h ][ j ] + 1");
-                                else if(variableType.Contains("_minus1[ i ]"))
-                                    variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
-                                else if (variableType.Contains("_minus1"))
-                                    variableType = variableType.Replace("_minus1", "_minus1 + 1");
-                                else if (variableType.Contains("Minus1[ currLsIdx ]"))
-                                    variableType = variableType.Replace("Minus1[ currLsIdx ]", "Minus1[ currLsIdx ] + 1");
-                                else if (variableType.Contains("Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]]"))
-                                    variableType = variableType.Replace("Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]", "Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1");
-                                else if (variableType.Contains("Minus1[ i ]"))
-                                    variableType = variableType.Replace("Minus1[ i ]", "Minus1[ i ] + 1");
-                                   else if (variableType.Contains("Minus1"))
-                                    variableType = variableType.Replace("Minus1", "Minus1 + 1");
+                                    if (variableType.Contains("_minus1[ c ]"))
+                                        variableType = variableType.Replace("_minus1[ c ]", "_minus1[ c ] + 1");
+                                    else if (variableType.Contains("_minus1[ i ][ j ]"))
+                                        variableType = variableType.Replace("_minus1[ i ][ j ]", "_minus1[ i ][ j ] + 1");
+                                    else if (variableType.Contains("_minus1[ h ][ i ][ t ]"))
+                                        variableType = variableType.Replace("_minus1[ h ][ i ][ t ]", "_minus1[ h ][ i ][ t ] + 1");
+                                    else if (variableType.Contains("_minus1[ h ][ i ]"))
+                                        variableType = variableType.Replace("_minus1[ h ][ i ]", "_minus1[ h ][ i ] + 1");
+                                    else if (variableType.Contains("_minus1[ h ][ j ]"))
+                                        variableType = variableType.Replace("_minus1[ h ][ j ]", "_minus1[ h ][ j ] + 1");
+                                    else if (variableType.Contains("_minus1[ i ]"))
+                                        variableType = variableType.Replace("_minus1[ i ]", "_minus1[ i ] + 1");
+                                    else if (variableType.Contains("_minus1"))
+                                        variableType = variableType.Replace("_minus1", "_minus1 + 1");
+                                    else if (variableType.Contains("Minus1[ currLsIdx ]"))
+                                        variableType = variableType.Replace("Minus1[ currLsIdx ]", "Minus1[ currLsIdx ] + 1");
+                                    else if (variableType.Contains("Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]]"))
+                                        variableType = variableType.Replace("Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ]", "Minus1[ ((H265Context)context).OlsIdxToLsIdx[ h ] ] + 1");
+                                    else if (variableType.Contains("Minus1[ i ]"))
+                                        variableType = variableType.Replace("Minus1[ i ]", "Minus1[ i ] + 1");
+                                    else if (variableType.Contains("Minus1"))
+                                        variableType = variableType.Replace("Minus1", "Minus1 + 1");
 
-                                if (variableName == "ar_label" || // h264
-                                    variableName == "cp_ref_voi" ||
-                                    variableName == "vps_cp_scale[ n ]" ||
-                                    variableName == "vps_cp_off[ n ]" ||
-                                    variableName == "vps_cp_inv_scale_plus_scale[ n ]" ||
-                                    variableName == "vps_cp_inv_off_plus_off[ n ]" ||
-                                    variableName == "cp_scale" ||
-                                    variableName == "cp_off" ||
-                                    variableName == "cp_scale" ||
-                                    variableName == "cp_inv_scale_plus_scale" ||
-                                    variableName == "cp_inv_off_plus_off" 
-                                    )
-                                {
-                                    appendType += "[]"; // TODO fix this workaround
-                                }
-                                else if(
-                                    variableName == "vps_cp_scale" ||
-                                    variableName == "vps_cp_off" ||
-                                    variableName == "vps_cp_inv_scale_plus_scale" ||
-                                    variableName == "vps_cp_inv_off_plus_off"
-                                    )
-                                {
-                                    appendType += "[][]"; // TODO fix this workaround
-                                }
+                                    if (variableName == "ar_label" || // h264
+                                        variableName == "cp_ref_voi" ||
+                                        variableName == "vps_cp_scale[ n ]" ||
+                                        variableName == "vps_cp_off[ n ]" ||
+                                        variableName == "vps_cp_inv_scale_plus_scale[ n ]" ||
+                                        variableName == "vps_cp_inv_off_plus_off[ n ]" ||
+                                        variableName == "cp_scale" ||
+                                        variableName == "cp_off" ||
+                                        variableName == "cp_scale" ||
+                                        variableName == "cp_inv_scale_plus_scale" ||
+                                        variableName == "cp_inv_off_plus_off"
+                                        )
+                                    {
+                                        appendType += "[]"; // TODO fix this workaround
+                                    }
+                                    else if (
+                                        variableName == "vps_cp_scale" ||
+                                        variableName == "vps_cp_off" ||
+                                        variableName == "vps_cp_inv_scale_plus_scale" ||
+                                        variableName == "vps_cp_inv_off_plus_off"
+                                        )
+                                    {
+                                        appendType += "[][]"; // TODO fix this workaround
+                                    }
 
-                                ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+                                    ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+                                }
                             }
                         }
                     }
@@ -971,6 +976,13 @@ namespace Sharp{type}
                         ret.Insert(0, "[m]");
                     else if (parent.Condition.Contains("d =") || parent.Condition.Contains("d=") || parent.Condition.Contains("d ="))
                         ret.Insert(0, "[d]");
+                    // H266
+                    else if (parent.Condition.Contains("filtIdx =") || parent.Condition.Contains("filtIdx=") || parent.Condition.Contains("filtIdx ="))
+                        ret.Insert(0, "[filtIdx]");
+                    else if (parent.Condition.Contains("sfIdx =") || parent.Condition.Contains("sfIdx=") || parent.Condition.Contains("sfIdx ="))
+                        ret.Insert(0, "[sfIdx]");
+                    else if (parent.Condition.Contains("altIdx =") || parent.Condition.Contains("altIdx=") || parent.Condition.Contains("altIdx ="))
+                        ret.Insert(0, "[altIdx]");
                     else
                         throw new Exception();
                 }

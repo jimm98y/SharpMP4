@@ -1,14 +1,14 @@
 ﻿nal_unit( NumBytesInNalUnit ) { 
 nal_unit_header()  
-NumBytesInRbsp = 0  
-for( i = 2; i < NumBytesInNalUnit; i++ )  
-if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 )  ==  0x000003 ) {  
-rbsp_byte[ NumBytesInRbsp++ ] b(8) 
-rbsp_byte[ NumBytesInRbsp++ ] b(8) 
-i  +=  2  
-emulation_prevention_three_byte  /* equal to 0x03 */ f(8) 
-} else  
-rbsp_byte[ NumBytesInRbsp++ ] b(8) 
+/*NumBytesInRbsp = 0  */
+/*for( i = 2; i < NumBytesInNalUnit; i++ )  */
+/*if( i + 2 < NumBytesInNalUnit  &&  next_bits( 24 )  ==  0x000003 ) {  */
+/*rbsp_byte[ NumBytesInRbsp++ ] b(8) */
+/*rbsp_byte[ NumBytesInRbsp++ ] b(8) */
+/*i  +=  2  */
+/*emulation_prevention_three_byte*/  /* equal to 0x03 *//* f(8) */
+/*} else  */
+/*rbsp_byte[ NumBytesInRbsp++ ] b(8) */
 }
 
 nal_unit_header() {  
@@ -756,18 +756,6 @@ fd_ff_byte  /* equal to 0xFF */ f(8)
 rbsp_trailing_bits()  
 }  
 
-slice_layer_rbsp() { 
-slice_header()  
-slice_data()  
-rbsp_slice_trailing_bits()  
-}  
-
-rbsp_slice_trailing_bits() {  
-rbsp_trailing_bits()  
-while( more_rbsp_trailing_data() )  
-rbsp_cabac_zero_word  /* equal to 0x0000 */ f(16) 
-}  
-
 rbsp_trailing_bits() { 
 rbsp_stop_one_bit  /* equal to 1 */ f(1) 
 while( !byte_aligned() )  
@@ -836,7 +824,7 @@ alf_cc_cr_filter_signal_flag u(1)
     alf_cc_cr_mapped_coeff_abs[ k ][ j ] u(3) 
      if( alf_cc_cr_mapped_coeff_abs[ k ][ j ] )  
      alf_cc_cr_coeff_sign[ k ][ j ] u(1)
-        }  
+   }  
   }  
  }  
 } 
@@ -1080,134 +1068,6 @@ sei_message() {
  sei_payload( payloadType, payloadSize )  
 }  
 
-slice_header() {  
- sh_picture_header_in_slice_header_flag u(1) 
- if( sh_picture_header_in_slice_header_flag )  
-  picture_header_structure()  
- if( sps_subpic_info_present_flag )  
-  sh_subpic_id u(v) 
- if( ( pps_rect_slice_flag  &&  NumSlicesInSubpic[ CurrSubpicIdx ] > 1 )  || 
-   ( !pps_rect_slice_flag  &&  NumTilesInPic > 1 ) ) 
- 
-  sh_slice_address u(v) 
- for( i = 0; i < NumExtraShBits; i++ )  
-  sh_extra_bit[ i ] u(1) 
- if( !pps_rect_slice_flag  &&  NumTilesInPic - sh_slice_address > 1 )  
-  sh_num_tiles_in_slice_minus1 ue(v) 
- if( ph_inter_slice_allowed_flag )  
-  sh_slice_type ue(v) 
-   if( nal_unit_type  ==  IDR_W_RADL  ||  nal_unit_type  ==  IDR_N_LP  || 
-   nal_unit_type  ==    CRA_NUT  ||  nal_unit_type  ==  GDR_NUT ) 
- 
-  sh_no_output_of_prior_pics_flag u(1) 
- if( sps_alf_enabled_flag  &&  !pps_alf_info_in_ph_flag ) {  
-  sh_alf_enabled_flag u(1) 
-  if( sh_alf_enabled_flag ) {  
-   sh_num_alf_aps_ids_luma u(3) 
-   for( i = 0; i < sh_num_alf_aps_ids_luma; i++ )  
-    sh_alf_aps_id_luma[ i ] u(3) 
-   if( sps_chroma_format_idc  !=  0 ) {  
-    sh_alf_cb_enabled_flag u(1) 
-    sh_alf_cr_enabled_flag u(1) 
-   }  
-   if( sh_alf_cb_enabled_flag  ||  sh_alf_cr_enabled_flag )  
-    sh_alf_aps_id_chroma u(3) 
-   if( sps_ccalf_enabled_flag ) {  
-    sh_alf_cc_cb_enabled_flag u(1) 
-    if( sh_alf_cc_cb_enabled_flag )  
-     sh_alf_cc_cb_aps_id u(3) 
-    sh_alf_cc_cr_enabled_flag u(1) 
-    if( sh_alf_cc_cr_enabled_flag )  
-     sh_alf_cc_cr_aps_id u(3) 
-   }  
-  }  
- }  
- if( ph_lmcs_enabled_flag  &&  !sh_picture_header_in_slice_header_flag )  
-  sh_lmcs_used_flag u(1) 
- if( ph_explicit_scaling_list_enabled_flag  &&  !sh_picture_header_in_slice_header_flag )  
-  sh_explicit_scaling_list_used_flag u(1) 
- if( !pps_rpl_info_in_ph_flag  &&  ( ( nal_unit_type  !=  IDR_W_RADL  && 
-   nal_unit_type  !=  IDR_N_LP )  ||  sps_idr_rpl_present_flag ) ) 
- 
-  ref_pic_lists()  
- if( ( sh_slice_type  !=  I  &&  num_ref_entries[ 0 ][ RplsIdx[ 0 ] ] > 1 )  || 
-   ( sh_slice_type  ==  B  &&  num_ref_entries[ 1 ][ RplsIdx[ 1 ] ] > 1 ) ) { 
- 
-  sh_num_ref_idx_active_override_flag u(1) 
-  if( sh_num_ref_idx_active_override_flag )  
-   for( i = 0; i < ( sh_slice_type  ==  B ? 2: 1 ); i++ )  
-    if( num_ref_entries[ i ][ RplsIdx[ i ] ] > 1 )  
-     sh_num_ref_idx_active_minus1[ i ] ue(v) 
- }  
- if( sh_slice_type  !=  I ) {  
-  if( pps_cabac_init_present_flag )  
-   sh_cabac_init_flag u(1) 
-  if( ph_temporal_mvp_enabled_flag  &&  !pps_rpl_info_in_ph_flag ) {  
-   if( sh_slice_type  ==  B )  
-    sh_collocated_from_l0_flag u(1) 
-   if( ( sh_collocated_from_l0_flag  &&  NumRefIdxActive[ 0 ] > 1 )  || 
-     ( ! sh_collocated_from_l0_flag  &&  NumRefIdxActive[ 1 ] > 1 ) ) 
- 
-    sh_collocated_ref_idx ue(v) 
-      }  
-  if( !pps_wp_info_in_ph_flag  && 
-    ( ( pps_weighted_pred_flag  &&  sh_slice_type  ==  P )  || 
-    ( pps_weighted_bipred_flag  &&  sh_slice_type  ==  B ) ) ) 
- 
-   pred_weight_table()  
- }   
- if( !pps_qp_delta_info_in_ph_flag )  
-  sh_qp_delta se(v) 
- if( pps_slice_chroma_qp_offsets_present_flag ) {  
-  sh_cb_qp_offset se(v) 
-  sh_cr_qp_offset se(v) 
-  if( sps_joint_cbcr_enabled_flag )  
-   sh_joint_cbcr_qp_offset se(v) 
- }  
- if( pps_cu_chroma_qp_offset_list_enabled_flag )  
-  sh_cu_chroma_qp_offset_enabled_flag u(1) 
- if( sps_sao_enabled_flag  &&  !pps_sao_info_in_ph_flag ) {  
-  sh_sao_luma_used_flag u(1) 
-  if( sps_chroma_format_idc  !=  0 )  
-   sh_sao_chroma_used_flag u(1) 
- }  
- if( pps_deblocking_filter_override_enabled_flag  &&  !pps_dbf_info_in_ph_flag )  
-  sh_deblocking_params_present_flag u(1) 
- if( sh_deblocking_params_present_flag ) {  
-  if( !pps_deblocking_filter_disabled_flag )  
-   sh_deblocking_filter_disabled_flag u(1) 
-  if( !sh_deblocking_filter_disabled_flag ) {  
-   sh_luma_beta_offset_div2 se(v) 
-   sh_luma_tc_offset_div2 se(v) 
-   if( pps_chroma_tool_offsets_present_flag ) {  
-    sh_cb_beta_offset_div2 se(v) 
-    sh_cb_tc_offset_div2 se(v) 
-    sh_cr_beta_offset_div2 se(v) 
-    sh_cr_tc_offset_div2 se(v) 
-   }  
-  }  
- }  
- if( sps_dep_quant_enabled_flag )  
-  sh_dep_quant_used_flag u(1) 
- if( sps_sign_data_hiding_enabled_flag  &&  !sh_dep_quant_used_flag )  
-  sh_sign_data_hiding_used_flag u(1) 
- if( sps_transform_skip_enabled_flag  &&  !sh_dep_quant_used_flag  && 
-   !sh_sign_data_hiding_used_flag ) 
- 
-  sh_ts_residual_coding_disabled_flag u(1) 
- if( pps_slice_header_extension_present_flag ) {  
-  sh_slice_header_extension_length ue(v) 
-  for( i = 0; i < sh_slice_header_extension_length; i++)   
-   sh_slice_header_extension_data_byte[ i ] u(8) 
- }  
-  if( NumEntryPoints > 0 ) {  
-  sh_entry_offset_len_minus1 ue(v) 
-  for( i = 0; i < NumEntryPoints; i++ )  
-   sh_entry_point_offset_minus1[ i ] u(v) 
- }  
- byte_alignment()  
-}  
-
 pred_weight_table() {  
  luma_log2_weight_denom ue(v) 
  if( sps_chroma_format_idc  !=  0 )  
@@ -1298,1124 +1158,6 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
  }  
 }  
 
-slice_data() {  
- FirstCtbRowInSlice = 1  
- for( i = 0; i < NumCtusInCurrSlice; i++ ) {  
-  CtbAddrInRs = CtbAddrInCurrSlice[ i ]  
-  CtbAddrX = ( CtbAddrInRs % PicWidthInCtbsY )  
-  CtbAddrY = ( CtbAddrInRs / PicWidthInCtbsY )  
-  if( CtbAddrX  ==  CtbToTileColBd[ CtbAddrX ] ) {  
-   NumHmvpCand = 0  
-   NumHmvpIbcCand = 0  
-   ResetIbcBuf = 1  
-  }  
-  coding_tree_unit()  
-  if( i  ==  NumCtusInCurrSlice - 1 )  
-   end_of_slice_one_bit  /* equal to 1 */ ae(v) 
-  else if( CtbAddrX  ==  CtbToTileColBd[ CtbAddrX + 1 ] - 1 ) {  
-   if( CtbAddrY  ==  CtbToTileRowBd[ CtbAddrY + 1 ] - 1 ) {  
-    end_of_tile_one_bit  /* equal to 1 */ ae(v) 
-    byte_alignment()  
-   } else if( sps_entropy_coding_sync_enabled_flag ) {  
-    end_of_subset_one_bit  /* equal to 1 */ ae(v) 
-    byte_alignment()  
-   }  
-   FirstCtbRowInSlice = 0  
-  }  
- }  
-}  
-
-coding_tree_unit() {  
- xCtb = CtbAddrX  <<  CtbLog2SizeY  
- yCtb = CtbAddrY  <<  CtbLog2SizeY  
- if( sh_sao_luma_used_flag  ||  sh_sao_chroma_used_flag )  
-  sao( CtbAddrX, CtbAddrY )  
- if( sh_alf_enabled_flag ){  
-  alf_ctb_flag[ 0 ][ CtbAddrX ][ CtbAddrY ] ae(v) 
-  if( alf_ctb_flag[ 0 ][ CtbAddrX ][ CtbAddrY ] ) {  
-   if( sh_num_alf_aps_ids_luma > 0 )  
-       alf_use_aps_flag ae(v) 
-   if( alf_use_aps_flag ) {  
-    if( sh_num_alf_aps_ids_luma > 1 )  
-     alf_luma_prev_filter_idx ae(v) 
-   } else  
-    alf_luma_fixed_filter_idx ae(v) 
-  }  
-  if( sh_alf_cb_enabled_flag ) {  
-   alf_ctb_flag[ 1 ][ CtbAddrX ][ CtbAddrY ] ae(v) 
-   if( alf_ctb_flag[ 1 ][ CtbAddrX ][ CtbAddrY ] 
-    &&  alf_chroma_num_alt_filters_minus1 > 0 ) 
- 
-    alf_ctb_filter_alt_idx[ 0 ][ CtbAddrX ][ CtbAddrY ] ae(v) 
-  }  
-  if( sh_alf_cr_enabled_flag ) {  
-   alf_ctb_flag[ 2 ][ CtbAddrX ][ CtbAddrY ] ae(v) 
-   if( alf_ctb_flag[ 2 ][ CtbAddrX ][ CtbAddrY ] 
-    &&  alf_chroma_num_alt_filters_minus1 > 0 ) 
- 
-    alf_ctb_filter_alt_idx[ 1 ][ CtbAddrX ][ CtbAddrY ] ae(v) 
-  }  
- }  
- if( sh_alf_cc_cb_enabled_flag )  
-  alf_ctb_cc_cb_idc[ CtbAddrX ][ CtbAddrY ] ae(v) 
- if( sh_alf_cc_cr_enabled_flag )  
-  alf_ctb_cc_cr_idc[ CtbAddrX ][ CtbAddrY ] ae(v) 
- if( sh_slice_type  ==  I  &&  sps_qtbtt_dual_tree_intra_flag )  
-  dual_tree_implicit_qt_split( xCtb, yCtb, CtbSizeY, 0 )  
- else  
-  coding_tree( xCtb, yCtb, CtbSizeY, CtbSizeY, 1, 1, 0, 0, 0, 0, 0, 
-       SINGLE_TREE, MODE_TYPE_ALL ) 
- 
-} 
-
-dual_tree_implicit_qt_split( x0, y0, cbSize, cqtDepth ) {  
- cbSubdiv = 2 * cqtDepth  
- if( cbSize > 64 ) {  
-  if( pps_cu_qp_delta_enabled_flag  &&  cbSubdiv  <=  CuQpDeltaSubdiv ) {  
-   IsCuQpDeltaCoded = 0  
-   CuQpDeltaVal = 0  
-   CuQgTopLeftX = x0  
-   CuQgTopLeftY = y0  
-  }  
-  if( sh_cu_chroma_qp_offset_enabled_flag  && 
-    cbSubdiv  <=  CuChromaQpOffsetSubdiv ) { 
- 
-   IsCuChromaQpOffsetCoded = 0  
-   CuQpOffsetCb = 0  
-   CuQpOffsetCr = 0  
-   CuQpOffsetCbCr = 0  
-  }  
-  x1 = x0 + ( cbSize / 2 )  
-  y1 = y0 + ( cbSize / 2 ) 
-    dual_tree_implicit_qt_split( x0, y0, cbSize / 2, cqtDepth + 1 )  
-  if( x1 < pps_pic_width_in_luma_samples )  
-   dual_tree_implicit_qt_split( x1, y0, cbSize / 2, cqtDepth + 1 )  
-  if( y1 < pps_pic_height_in_luma_samples )  
-   dual_tree_implicit_qt_split( x0, y1, cbSize / 2, cqtDepth + 1 )  
-  if( x1 < pps_pic_width_in_luma_samples  &&  y1 < pps_pic_height_in_luma_samples )  
-   dual_tree_implicit_qt_split( x1, y1, cbSize / 2, cqtDepth + 1 )  
- } else {  
-  coding_tree( x0, y0, cbSize, cbSize, 1, 0, cbSubdiv, cqtDepth, 0, 0, 0, 
-       DUAL_TREE_LUMA, MODE_TYPE_ALL ) 
- 
-  coding_tree( x0, y0, cbSize, cbSize, 0, 1, cbSubdiv, cqtDepth, 0, 0, 0, 
-       DUAL_TREE_CHROMA, MODE_TYPE_ALL ) 
- 
- }  
-} 
-
-sao( rx, ry ) {  
- if( rx > 0 ) {  
-  leftCtbAvailable = rx  !=  CtbToTileColBd[ rx ]  
-  if( leftCtbAvailable )  
-   sao_merge_left_flag ae(v) 
- }  
- if( ry > 0  &&  !sao_merge_left_flag ) {  
-  upCtbAvailable = ry  !=  CtbToTileRowBd[ ry ]  && !FirstCtbRowInSlice  
-  if( upCtbAvailable )  
-   sao_merge_up_flag ae(v) 
- }  
- if( !sao_merge_up_flag  &&  !sao_merge_left_flag )  
-  for( cIdx = 0; cIdx < ( sps_chroma_format_idc  !=  0 ? 3 : 1 ); cIdx++ )  
-   if( ( sh_sao_luma_used_flag  &&  cIdx  ==  0 )  || 
-    ( sh_sao_chroma_used_flag  &&  cIdx > 0 ) ) { 
- 
-    if( cIdx  ==  0 )  
-     sao_type_idx_luma ae(v) 
-    else if( cIdx  ==  1 )  
-     sao_type_idx_chroma ae(v) 
-    if( SaoTypeIdx[ cIdx ][ rx ][ ry ]  !=  0 ) {  
-     for( i = 0; i < 4; i++ )  
-      sao_offset_abs[ cIdx ][ rx ][ ry ][ i ] ae(v) 
-     if( SaoTypeIdx[ cIdx ][ rx ][ ry ]  ==  1 ) {  
-      for( i = 0; i < 4; i++ )  
-       if( sao_offset_abs[ cIdx ][ rx ][ ry ][ i ]  !=  0 )  
-        sao_offset_sign_flag[ cIdx ][ rx ][ ry ][ i ] ae(v) 
-      sao_band_position[ cIdx ][ rx ][ ry ] ae(v) 
-     } else {  
-      if( cIdx  ==  0 )  
-       sao_eo_class_luma ae(v) 
-      if( cIdx  ==  1 )  
-             sao_eo_class_chroma ae(v) 
-     }  
-    }  
-   }  
-}  
-
-coding_tree( x0, y0, cbWidth, cbHeight, qgOnY, qgOnC, cbSubdiv, cqtDepth, mttDepth, depthOffset,  
-      partIdx, treeTypeCurr, modeTypeCurr ) { 
- 
- if( ( allowSplitBtVer  ||  allowSplitBtHor  ||  allowSplitTtVer  ||  allowSplitTtHor  || 
-   allowSplitQt )  &&   ( x0 + cbWidth  <=  pps_pic_width_in_luma_samples )  && 
-   ( y0 + cbHeight  <=  pps_pic_height_in_luma_samples ) ) 
- 
-  split_cu_flag ae(v) 
- if( pps_cu_qp_delta_enabled_flag  &&  qgOnY  &&  cbSubdiv  <=  CuQpDeltaSubdiv ) {  
-  IsCuQpDeltaCoded = 0  
-  CuQpDeltaVal = 0  
-  CuQgTopLeftX = x0  
-  CuQgTopLeftY = y0  
- }  
- if( sh_cu_chroma_qp_offset_enabled_flag  &&  qgOnC  && 
-   cbSubdiv  <=  CuChromaQpOffsetSubdiv ) { 
- 
-  IsCuChromaQpOffsetCoded = 0  
-  CuQpOffsetCb = 0  
-  CuQpOffsetCr = 0  
-  CuQpOffsetCbCr = 0  
- }  
- if( split_cu_flag ) {  
-  if( ( allowSplitBtVer  ||  allowSplitBtHor  ||  allowSplitTtVer  ||  allowSplitTtHor )  && 
-    allowSplitQt ) 
- 
-   split_qt_flag ae(v) 
-  if( !split_qt_flag ) {  
-   if( ( allowSplitBtHor  ||  allowSplitTtHor )  &&  ( allowSplitBtVer  ||  allowSplitTtVer ) )  
-    mtt_split_cu_vertical_flag ae(v) 
-   if( ( allowSplitBtVer  &&  allowSplitTtVer  &&  mtt_split_cu_vertical_flag )  || 
-     ( allowSplitBtHor  &&  allowSplitTtHor  &&  !mtt_split_cu_vertical_flag ) ) 
- 
-    mtt_split_cu_binary_flag ae(v) 
-  }  
-  if( ModeTypeCondition  ==  1 )  
-   modeType = MODE_TYPE_INTRA  
-  else if( ModeTypeCondition  ==  2 ) {  
-   non_inter_flag ae(v) 
-   modeType = non_inter_flag ? MODE_TYPE_INTRA : MODE_TYPE_INTER  
-  } else  
-   modeType = modeTypeCurr  
-  treeType = ( modeType  ==  MODE_TYPE_INTRA ) ? DUAL_TREE_LUMA : treeTypeCurr  
-  if( !split_qt_flag ) {  
-   if( MttSplitMode[ x0 ][ y0 ][ mttDepth ]  ==  SPLIT_BT_VER ) {  
-    depthOffset  +=  ( x0 + cbWidth > pps_pic_width_in_luma_samples ) ? 1 : 0 
-        x1 = x0 + ( cbWidth / 2 )  
-    coding_tree( x0, y0, cbWidth / 2, cbHeight, qgOnY, qgOnC, cbSubdiv + 1, 
-          cqtDepth, mttDepth + 1, depthOffset, 0, treeType, modeType ) 
- 
-    if( x1 < pps_pic_width_in_luma_samples )  
-     coding_tree( x1, y0, cbWidth / 2, cbHeight, qgOnY, qgOnC, cbSubdiv + 1,  
-          cqtDepth, mttDepth + 1, depthOffset, 1, treeType, modeType ) 
- 
-   } else if( MttSplitMode[ x0 ][ y0 ][ mttDepth ]  ==  SPLIT_BT_HOR ) {  
-    depthOffset  +=  ( y0 + cbHeight > pps_pic_height_in_luma_samples ) ? 1 : 0  
-    y1 = y0 + ( cbHeight / 2 )  
-    coding_tree( x0, y0, cbWidth, cbHeight / 2, qgOnY, qgOnC, cbSubdiv + 1, 
-          cqtDepth, mttDepth + 1, depthOffset, 0, treeType, modeType ) 
- 
-    if( y1 < pps_pic_height_in_luma_samples )  
-     coding_tree( x0, y1, cbWidth, cbHeight / 2, qgOnY, qgOnC, cbSubdiv + 1, 
-          cqtDepth, mttDepth + 1, depthOffset, 1, treeType, modeType ) 
- 
-   } else if( MttSplitMode[ x0 ][ y0 ][ mttDepth ]  ==  SPLIT_TT_VER ) {  
-    x1 = x0 + ( cbWidth / 4 )  
-    x2 = x0 + ( 3 * cbWidth / 4 )  
-    qgNextOnY = qgOnY  &&  ( cbSubdiv + 2  <=  CuQpDeltaSubdiv )  
-    qgNextOnC = qgOnC  &&  ( cbSubdiv + 2  <=  CuChromaQpOffsetSubdiv )  
-    coding_tree( x0, y0, cbWidth / 4, cbHeight, qgNextOnY, qgNextOnC, cbSubdiv + 2, 
-          cqtDepth, mttDepth + 1, depthOffset, 0, treeType, modeType ) 
- 
-    coding_tree( x1, y0, cbWidth / 2, cbHeight, qgNextOnY, qgNextOnC, cbSubdiv + 1, 
-          cqtDepth, mttDepth + 1, depthOffset, 1, treeType, modeType ) 
- 
-    coding_tree( x2, y0, cbWidth / 4, cbHeight, qgNextOnY, qgNextOnC, cbSubdiv + 2, 
-          cqtDepth, mttDepth + 1, depthOffset, 2, treeType, modeType ) 
- 
-   } else { /* SPLIT_TT_HOR */  
-    y1 = y0 + ( cbHeight / 4 )  
-    y2 = y0 + ( 3 * cbHeight / 4 )  
-    qgNextOnY = qgOnY  &&  ( cbSubdiv + 2  <=  CuQpDeltaSubdiv )  
-    qgNextOnC = qgOnC  &&  ( cbSubdiv + 2  <=  CuChromaQpOffsetSubdiv )  
-    coding_tree( x0, y0, cbWidth, cbHeight / 4, qgNextOnY, qgNextOnC, cbSubdiv + 2, 
-          cqtDepth, mttDepth + 1, depthOffset, 0, treeType, modeType ) 
- 
-    coding_tree( x0, y1, cbWidth, cbHeight / 2, qgNextOnY, qgNextOnC, cbSubdiv + 1, 
-          cqtDepth, mttDepth + 1, depthOffset, 1, treeType, modeType ) 
- 
-    coding_tree( x0, y2, cbWidth, cbHeight / 4, qgNextOnY, qgNextOnC, cbSubdiv + 2, 
-          cqtDepth, mttDepth + 1, depthOffset, 2, treeType, modeType ) 
- 
-   }  
-  } else {  
-   x1 = x0 + ( cbWidth / 2 )  
-   y1 = y0 + ( cbHeight / 2 )  
-   coding_tree( x0, y0, cbWidth / 2, cbHeight / 2, qgOnY, qgOnC, cbSubdiv + 2, 
-         cqtDepth + 1, 0, 0, 0, treeType, modeType ) 
- 
-   if( x1 < pps_pic_width_in_luma_samples )  
-    coding_tree( x1, y0, cbWidth / 2, cbHeight / 2, qgOnY, qgOnC, cbSubdiv + 2, 
-         cqtDepth + 1, 0, 0, 1, treeType, modeType ) 
- 
-   if( y1 < pps_pic_height_in_luma_samples )  
-    coding_tree( x0, y1, cbWidth / 2, cbHeight / 2, qgOnY, qgOnC, cbSubdiv + 2, 
-         cqtDepth + 1, 0, 0, 2, treeType, modeType ) 
- 
-   if( y1 < pps_pic_height_in_luma_samples  &&  x1 < pps_pic_width_in_luma_samples )  
-    coding_tree( x1, y1, cbWidth / 2, cbHeight / 2, qgOnY, qgOnC, cbSubdiv + 2, 
-         cqtDepth + 1, 0, 0, 3, treeType, modeType ) 
- 
-  }  
-  if( modeTypeCurr == MODE_TYPE_ALL && modeType == MODE_TYPE_INTRA )  
-   coding_tree( x0, y0, cbWidth, cbHeight, 0, qgOnC, cbSubdiv, cqtDepth, mttDepth, 0, 0, 
-          DUAL_TREE_CHROMA, modeType ) 
- 
- } else  
-  coding_unit( x0, y0, cbWidth, cbHeight, cqtDepth, treeTypeCurr, modeTypeCurr )  
-}  
-
-coding_unit( x0, y0, cbWidth, cbHeight, cqtDepth, treeType, modeType ) {  
- if( sh_slice_type  ==  I  &&  ( cbWidth > 64  ||  cbHeight > 64 ) )  
-  modeType = MODE_TYPE_INTRA  
- chType = treeType == DUAL_TREE_CHROMA ? 1 : 0  
- if( sh_slice_type  !=  I  ||  sps_ibc_enabled_flag ) {  
-  if( treeType  !=  DUAL_TREE_CHROMA  && 
-    ( ( !( cbWidth  ==  4  &&  cbHeight  ==  4 )  && 
-    modeType  !=  MODE_TYPE_INTRA )  || 
-    ( sps_ibc_enabled_flag  &&  cbWidth  <=  64  &&  cbHeight  <=  64 ) ) ) 
- 
-   cu_skip_flag[ x0 ][ y0 ] ae(v) 
-  if( cu_skip_flag[ x0 ][ y0 ]  ==  0  &&  sh_slice_type  !=  I  && 
-    !( cbWidth  ==  4  &&  cbHeight  ==  4 )  &&  modeType  ==  MODE_TYPE_ALL ) 
- 
-   pred_mode_flag ae(v) 
-  if( ( ( sh_slice_type  ==  I  &&  cu_skip_flag[ x0 ][ y0 ] ==0 )  || 
-    ( sh_slice_type  !=  I  &&  ( CuPredMode[ chType ][ x0 ][ y0 ] !=  MODE_INTRA  || 
-    ( ( ( cbWidth  ==  4  &&  cbHeight  ==  4 )  ||  modeType  == MODE_TYPE_INTRA ) 
-     &&  cu_skip_flag[ x0 ][ y0 ]  ==  0 ) ) ) )  && 
-    cbWidth  <=  64  &&  cbHeight  <= 64  &&  modeType  !=  MODE_TYPE_INTER  && 
-    sps_ibc_enabled_flag  &&  treeType  !=  DUAL_TREE_CHROMA ) 
- 
-   pred_mode_ibc_flag ae(v) 
- }  
- if( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTRA  &&  sps_palette_enabled_flag  && 
-   cbWidth  <=  64  &&  cbHeight  <=  64  &&  cu_skip_flag[ x0 ][ y0 ]  ==  0  && 
-   modeType  !=  MODE_TYPE_INTER  &&  ( ( cbWidth * cbHeight ) >  
-   ( treeType  !=  DUAL_TREE_CHROMA ? 16 : 16 * SubWidthC * SubHeightC ) )  && 
-   ( modeType  !=  MODE_TYPE_INTRA  ||  treeType  !=  DUAL_TREE_CHROMA ) ) 
- 
-  pred_mode_plt_flag ae(v) 
- if( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTRA  &&  sps_act_enabled_flag  && 
-   treeType  ==  SINGLE_TREE ) 
- 
-  cu_act_enabled_flag ae(v) 
- if( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTRA  || 
-   CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_PLT ) { 
- 
-  if( treeType  ==  SINGLE_TREE  ||  treeType  ==  DUAL_TREE_LUMA ) {  
-   if( pred_mode_plt_flag )  
-    palette_coding( x0, y0, cbWidth, cbHeight, treeType )  
-   else {  
-    if( sps_bdpcm_enabled_flag  && 
-      cbWidth  <=  MaxTsSize  &&  cbHeight  <=  MaxTsSize ) 
- 
-     intra_bdpcm_luma_flag ae(v) 
-    if( intra_bdpcm_luma_flag )  
-     intra_bdpcm_luma_dir_flag ae(v) 
-    else {  
-         if( sps_mip_enabled_flag )  
-      intra_mip_flag ae(v) 
-     if( intra_mip_flag ) {  
-      intra_mip_transposed_flag[ x0 ][ y0 ] ae(v) 
-      intra_mip_mode[ x0 ][ y0 ] ae(v) 
-     } else {  
-      if( sps_mrl_enabled_flag  &&  ( ( y0 % CtbSizeY ) > 0 ) )  
-       intra_luma_ref_idx ae(v) 
-      if( sps_isp_enabled_flag  &&  intra_luma_ref_idx  ==  0  && 
-        ( cbWidth  <=  MaxTbSizeY  &&  cbHeight  <=  MaxTbSizeY )  && 
-        ( cbWidth * cbHeight > MinTbSizeY * MinTbSizeY )  && 
-        !cu_act_enabled_flag ) 
- 
-       intra_subpartitions_mode_flag ae(v) 
-      if( intra_subpartitions_mode_flag  ==  1 )  
-       intra_subpartitions_split_flag ae(v) 
-      if( intra_luma_ref_idx  ==  0 )  
-       intra_luma_mpm_flag[ x0 ][ y0 ] ae(v) 
-      if( intra_luma_mpm_flag[ x0 ][ y0 ] ) {  
-       if( intra_luma_ref_idx  ==  0 )  
-        intra_luma_not_planar_flag[ x0 ][ y0 ] ae(v) 
-       if( intra_luma_not_planar_flag[ x0 ][ y0 ] )  
-        intra_luma_mpm_idx[ x0 ][ y0 ] ae(v) 
-      } else  
-       intra_luma_mpm_remainder[ x0 ][ y0 ] ae(v) 
-     }  
-    }  
-   }  
-  }  
-  if( ( treeType  ==  SINGLE_TREE  ||  treeType  ==  DUAL_TREE_CHROMA ) && 
-    sps_chroma_format_idc  !=  0 ) { 
- 
-   if( pred_mode_plt_flag   &&  treeType  ==  DUAL_TREE_CHROMA )  
-    palette_coding( x0, y0, cbWidth / SubWidthC, cbHeight / SubHeightC, treeType )  
-   else if( !pred_mode_plt_flag ) {  
-    if( !cu_act_enabled_flag ) {  
-     if( cbWidth / SubWidthC  <=  MaxTsSize  &&  cbHeight / SubHeightC  <=  MaxTsSize 
-       &&  sps_bdpcm_enabled_flag ) 
- 
-      intra_bdpcm_chroma_flag ae(v) 
-     if( intra_bdpcm_chroma_flag )  
-      intra_bdpcm_chroma_dir_flag ae(v) 
-     else {  
-      if( CclmEnabled )  
-       cclm_mode_flag ae(v) 
-      if( cclm_mode_flag )  
-       cclm_mode_idx ae(v) 
-      else  
-       intra_chroma_pred_mode ae(v) 
-     }  
-    }  
-   }  
-     }  
- } else if( treeType  !=  DUAL_TREE_CHROMA ) { /* MODE_INTER or MODE_IBC */  
-  if( cu_skip_flag[ x0 ][ y0 ]  ==  0 )  
-   general_merge_flag[ x0 ][ y0 ] ae(v) 
-  if( general_merge_flag[ x0 ][ y0 ] )  
-   merge_data( x0, y0, cbWidth, cbHeight, chType )  
-  else if( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_IBC ) {  
-   mvd_coding( x0, y0, 0, 0 )  
-   if( MaxNumIbcMergeCand > 1 )  
-    mvp_l0_flag[ x0 ][ y0 ] ae(v) 
-   if( sps_amvr_enabled_flag  && 
-     ( MvdL0[ x0 ][ y0 ][ 0 ]  !=  0  ||  MvdL0[ x0 ][ y0 ][ 1 ]  !=  0 ) ) 
- 
-    amvr_precision_idx[ x0 ][ y0 ] ae(v) 
-  } else {  
-   if( sh_slice_type  ==  B )  
-    inter_pred_idc[ x0 ][ y0 ] ae(v) 
-   if( sps_affine_enabled_flag  &&  cbWidth  >=  16  &&  cbHeight  >=  16 ) {  
-    inter_affine_flag[ x0 ][ y0 ] ae(v) 
-    if( sps_6param_affine_enabled_flag  &&  inter_affine_flag[ x0 ][ y0 ] )  
-     cu_affine_type_flag[ x0 ][ y0 ] ae(v) 
-   }  
-   if( sps_smvd_enabled_flag  &&  !ph_mvd_l1_zero_flag  && 
-     inter_pred_idc[ x0 ][ y0 ]  ==  PRED_BI  && 
-     !inter_affine_flag[ x0 ][ y0 ]  &&  RefIdxSymL0 > -1  &&  RefIdxSymL1 > -1 ) 
- 
-    sym_mvd_flag[ x0 ][ y0 ] ae(v) 
-   if( inter_pred_idc[ x0 ][ y0 ]  !=  PRED_L1 ) {  
-    if( NumRefIdxActive[ 0 ] > 1  &&  !sym_mvd_flag[ x0 ][ y0 ] )  
-     ref_idx_l0[ x0 ][ y0 ] ae(v) 
-    mvd_coding( x0, y0, 0, 0 )  
-    if( MotionModelIdc[ x0 ][ y0 ] > 0 )  
-     mvd_coding( x0, y0, 0, 1 )  
-    if(MotionModelIdc[ x0 ][ y0 ] > 1 )  
-     mvd_coding( x0, y0, 0, 2 )  
-    mvp_l0_flag[ x0 ][ y0 ] ae(v) 
-   } else {  
-    MvdL0[ x0 ][ y0 ][ 0 ] = 0  
-    MvdL0[ x0 ][ y0 ][ 1 ] = 0  
-   }  
-   if( inter_pred_idc[ x0 ][ y0 ]  !=  PRED_L0 ) {  
-    if( NumRefIdxActive[ 1 ] > 1  &&  !sym_mvd_flag[ x0 ][ y0 ] )  
-     ref_idx_l1[ x0 ][ y0 ] ae(v) 
-    if( ph_mvd_l1_zero_flag  &&  inter_pred_idc[ x0 ][ y0 ]  ==  PRED_BI ) {  
-     MvdL1[ x0 ][ y0 ][ 0 ] = 0  
-     MvdL1[ x0 ][ y0 ][ 1 ] = 0  
-     MvdCpL1[ x0 ][ y0 ][ 0 ][ 0 ] = 0  
-     MvdCpL1[ x0 ][ y0 ][ 0 ][ 1 ] = 0  
-     MvdCpL1[ x0 ][ y0 ][ 1 ][ 0 ] = 0  
-     MvdCpL1[ x0 ][ y0 ][ 1 ][ 1 ] = 0  
-     MvdCpL1[ x0 ][ y0 ][ 2 ][ 0 ] = 0  
-          MvdCpL1[ x0 ][ y0 ][ 2 ][ 1 ] = 0  
-    } else {  
-     if( sym_mvd_flag[ x0 ][ y0 ] ) {  
-      MvdL1[ x0 ][ y0 ][ 0 ] = -MvdL0[ x0 ][ y0 ][ 0 ]  
-      MvdL1[ x0 ][ y0 ][ 1 ] = -MvdL0[ x0 ][ y0 ][ 1 ]  
-     } else  
-      mvd_coding( x0, y0, 1, 0 )  
-     if( MotionModelIdc[ x0 ][ y0 ] > 0 )  
-      mvd_coding( x0, y0, 1, 1 )  
-     if(MotionModelIdc[ x0 ][ y0 ] > 1 )  
-      mvd_coding( x0, y0, 1, 2 )  
-    }  
-    mvp_l1_flag[ x0 ][ y0 ] ae(v) 
-   } else {  
-    MvdL1[ x0 ][ y0 ][ 0 ] = 0  
-    MvdL1[ x0 ][ y0 ][ 1 ] = 0  
-   }  
-   if( ( sps_amvr_enabled_flag  &&  inter_affine_flag[ x0 ][ y0 ]  ==  0  && 
-     ( MvdL0[ x0 ][ y0 ][ 0 ]  !=  0  ||  MvdL0[ x0 ][ y0 ][ 1 ]  !=  0  || 
-     MvdL1[ x0 ][ y0 ][ 0 ]  !=  0  ||  MvdL1[ x0 ][ y0 ][ 1 ]  !=  0 ) )  || 
-     ( sps_affine_amvr_enabled_flag  &&  inter_affine_flag[ x0 ][ y0 ]  ==  1  && 
-     ( MvdCpL0[ x0 ][ y0 ][ 0 ][ 0 ]  !=  0  ||  MvdCpL0[ x0 ][ y0 ][ 0 ][ 1 ]  !=  0  || 
-     MvdCpL1[ x0 ][ y0 ][ 0 ][ 0 ]  !=  0  ||  MvdCpL1[ x0 ][ y0 ][ 0 ][ 1 ]  !=  0  || 
-     MvdCpL0[ x0 ][ y0 ][ 1 ][ 0 ]  !=  0  ||  MvdCpL0[ x0 ][ y0 ][ 1 ][ 1 ]  !=  0  || 
-      MvdCpL1[ x0 ][ y0 ][ 1 ][ 0 ]  !=  0  ||  MvdCpL1[ x0 ][ y0 ][ 1 ][ 1 ]  !=  0  || 
-     MvdCpL0[ x0 ][ y0 ][ 2 ][ 0 ]  !=  0  ||  MvdCpL0[ x0 ][ y0 ][ 2 ][ 1 ]  !=  0  || 
-     MvdCpL1[ x0 ][ y0 ][ 2 ][ 0 ]  !=  0  ||  MvdCpL1[ x0 ][ y0 ][ 2 ][ 1 ]  !=  0 ) ) ) { 
- 
-    amvr_flag[ x0 ][ y0 ] ae(v) 
-    if( amvr_flag[ x0 ][ y0 ] )  
-     amvr_precision_idx[ x0 ][ y0 ] ae(v) 
-   }  
-   if( sps_bcw_enabled_flag  &&  inter_pred_idc[ x0 ][ y0 ]  ==  PRED_BI  && 
-     luma_weight_l0_flag[ ref_idx_l0 [ x0 ][ y0 ] ]  ==  0  && 
-     luma_weight_l1_flag[ ref_idx_l1 [ x0 ][ y0 ] ]  ==  0  && 
-     chroma_weight_l0_flag[ ref_idx_l0 [ x0 ][ y0 ] ]  ==  0  && 
-     chroma_weight_l1_flag[ ref_idx_l1 [ x0 ][ y0 ] ]  ==  0  && 
-     cbWidth * cbHeight  >=  256 ) 
- 
-    bcw_idx[ x0 ][ y0 ] ae(v) 
-  }  
- }  
- if( CuPredMode[ chType ][ x0 ][ y0 ]  !=  MODE_INTRA  && !pred_mode_plt_flag  && 
-   general_merge_flag[ x0 ][ y0 ]  ==  0 ) 
- 
-  cu_coded_flag ae(v) 
- if( cu_coded_flag ) {  
-  if( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTER  &&  sps_sbt_enabled_flag  &&   
-   !ciip_flag[ x0 ][ y0 ]  &&  cbWidth  <=  MaxTbSizeY  &&  cbHeight  <=  MaxTbSizeY ) { 
- 
-   allowSbtVerH = cbWidth  >=  8  
-   allowSbtVerQ = cbWidth  >=  16  
-   allowSbtHorH = cbHeight  >=  8  
-   allowSbtHorQ = cbHeight  >=  16  
-   if( allowSbtVerH  ||  allowSbtHorH )  
-    cu_sbt_flag ae(v) 
-   if( cu_sbt_flag ) {  
-       if( ( allowSbtVerH  ||  allowSbtHorH )  &&  ( allowSbtVerQ  ||  allowSbtHorQ ) )  
-     cu_sbt_quad_flag ae(v) 
-    if( ( cu_sbt_quad_flag  &&  allowSbtVerQ  &&  allowSbtHorQ )  || 
-      ( !cu_sbt_quad_flag  &&  allowSbtVerH  &&  allowSbtHorH ) ) 
- 
-     cu_sbt_horizontal_flag ae(v) 
-    cu_sbt_pos_flag ae(v) 
-   }  
-  }  
-  if( sps_act_enabled_flag  &&  CuPredMode[ chType ][ x0 ][ y0 ]  !=  MODE_INTRA  && 
-    treeType  ==  SINGLE_TREE ) 
- 
-   cu_act_enabled_flag ae(v) 
-  LfnstDcOnly = 1  
-  LfnstZeroOutSigCoeffFlag = 1  
-  MtsDcOnly = 1  
-  MtsZeroOutSigCoeffFlag = 1  
-  transform_tree( x0, y0, cbWidth, cbHeight, treeType, chType )  
-  lfnstWidth = ( treeType  ==  DUAL_TREE_CHROMA ) ? cbWidth / SubWidthC : ( ( IntraSubPartitionsSplitType  ==  ISP_VER_SPLIT ) ? cbWidth / NumIntraSubPartitions : cbWidth ) 
- 
-  lfnstHeight = ( treeType  ==  DUAL_TREE_CHROMA ) ? cbHeight / SubHeightC : ( ( IntraSubPartitionsSplitType  ==  ISP_HOR_SPLIT) ? cbHeight / NumIntraSubPartitions : cbHeight ) 
- 
-  lfnstNotTsFlag = ( treeType  ==  DUAL_TREE_CHROMA  ||  !tu_y_coded_flag[ x0 ][ y0 ]  || transform_skip_flag[ x0 ][ y0 ][ 0 ]  ==  0 )  && ( treeType  ==  DUAL_TREE_LUMA  || ( ( !tu_cb_coded_flag[ x0 ][ y0 ]  ||  transform_skip_flag[ x0 ][ y0 ][ 1 ]  ==  0 )  && ( !tu_cr_coded_flag[ x0 ][ y0 ]  ||  transform_skip_flag[ x0 ][ y0 ][ 2 ]  ==  0 ) ) ) 
- 
-  if( Min( lfnstWidth, lfnstHeight )  >=  4  &&  sps_lfnst_enabled_flag  ==  1  && 
-    CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTRA  &&  lfnstNotTsFlag  ==  1  && 
-    ( treeType  ==  DUAL_TREE_CHROMA  ||  !IntraMipFlag[ x0 ][ y0 ]  || 
-     Min( lfnstWidth, lfnstHeight )  >=  16 )   && 
-    Max( cbWidth, cbHeight )  <=  MaxTbSizeY) { 
- 
-   if( ( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT  ||  LfnstDcOnly  ==  0 )  && 
-     LfnstZeroOutSigCoeffFlag  ==  1 ) 
- 
-    lfnst_idx ae(v) 
-  }  
-  if( treeType  !=  DUAL_TREE_CHROMA  &&  lfnst_idx  ==  0  && 
-    transform_skip_flag[ x0 ][ y0 ][ 0 ]  ==  0  &&  Max( cbWidth, cbHeight )  <=  32  && 
-    IntraSubPartitionsSplitType  ==  ISP_NO_SPLIT  &&  cu_sbt_flag  ==  0  && 
-    MtsZeroOutSigCoeffFlag  ==  1  &&  MtsDcOnly  ==  0 ) { 
- 
-   if( ( ( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTER  && 
-     sps_explicit_mts_inter_enabled_flag )  || 
-     ( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTRA  && 
-     sps_explicit_mts_intra_enabled_flag ) ) ) 
- 
-    mts_idx ae(v) 
-  }  
- }  
-}  
-
-palette_coding( x0, y0, cbWidth, cbHeight, treeType ) {  
- startComp = ( treeType  ==  DUAL_TREE_CHROMA ) ? 1 : 0 
-  numComps = ( treeType  ==  SINGLE_TREE ) ? ( sps_chroma_format_idc  ==  0 ? 1 : 3 ) :  ( treeType  ==  DUAL_TREE_CHROMA ) ? 2 : 1 
- 
- maxNumPaletteEntries = ( treeType == SINGLE_TREE ) ? 31 : 15  
- palettePredictionFinished = 0  
- NumPredictedPaletteEntries = 0  
- for( predictorEntryIdx = 0; predictorEntryIdx < PredictorPaletteSize[ startComp ]  &&  !palettePredictionFinished  && NumPredictedPaletteEntries < maxNumPaletteEntries; predictorEntryIdx++ ) { 
-  palette_predictor_run ae(v) 
-  if( palette_predictor_run  !=  1 ) {  
-   if( palette_predictor_run > 1 )   
-    predictorEntryIdx  +=  palette_predictor_run - 1  
-   PalettePredictorEntryReuseFlags[ predictorEntryIdx ] = 1  
-   NumPredictedPaletteEntries++  
-  } else  
-   palettePredictionFinished = 1  
- }  
- if( NumPredictedPaletteEntries < maxNumPaletteEntries )  
-  num_signalled_palette_entries ae(v) 
- for( cIdx = startComp; cIdx < ( startComp + numComps ); cIdx++ )  
-  for( i = 0; i < num_signalled_palette_entries; i++ )   
-   new_palette_entries[ cIdx ][ i ] ae(v) 
- if( CurrentPaletteSize[ startComp ] > 0 )  
-  palette_escape_val_present_flag ae(v) 
- if( MaxPaletteIndex > 0 ) {  
-  adjust = 0  
-  palette_transpose_flag ae(v) 
- }  
- if( treeType  !=  DUAL_TREE_CHROMA  &&  palette_escape_val_present_flag )  
-  if( pps_cu_qp_delta_enabled_flag  &&  !IsCuQpDeltaCoded ) {  
-   cu_qp_delta_abs ae(v) 
-   if( cu_qp_delta_abs )  
-    cu_qp_delta_sign_flag ae(v) 
-  }  
- if( treeType  !=  DUAL_TREE_LUMA  &&  palette_escape_val_present_flag )  
-  if( sh_cu_chroma_qp_offset_enabled_flag  &&  !IsCuChromaQpOffsetCoded ) {  
-   cu_chroma_qp_offset_flag ae(v) 
-   if( cu_chroma_qp_offset_flag  &&  pps_chroma_qp_offset_list_len_minus1 > 0 )  
-    cu_chroma_qp_offset_idx ae(v) 
-  }  
- PreviousRunPosition = 0  
- PreviousRunType = 0  
- for( subSetId = 0; subSetId  <=  ( cbWidth * cbHeight - 1 ) / 16; subSetId++ ) {  
-  minSubPos = subSetId * 16  
-  if( minSubPos + 16 > cbWidth * cbHeight)  
-   maxSubPos = cbWidth * cbHeight  
-  else   
-   maxSubPos = minSubPos + 16  
-  RunCopyMap[ x0 ][ y0 ] = 0  
-  PaletteScanPos = minSubPos  
-  log2CbWidth = Log2( cbWidth )  
-  log2CbHeight = Log2( cbHeight )  
-  while( PaletteScanPos < maxSubPos ) {  
-   xC = x0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos ][ 0 ]  
-   yC = y0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos ][ 1 ]  
-   if( PaletteScanPos > 0 ) {  
-    xcPrev = x0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos - 1 ][ 0 ]  
-    ycPrev = y0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos - 1 ][ 1 ]  
-   }  
-   if( MaxPaletteIndex > 0  &&  PaletteScanPos > 0 ) {  
-    run_copy_flag ae(v) 
-    RunCopyMap[ xC ][ yC ] = run_copy_flag  
-   }  
-   CopyAboveIndicesFlag[ xC ][ yC ] = 0  
-   if( MaxPaletteIndex > 0  &&  !RunCopyMap[ xC ][ yC ] ) {  
-    if( ( ( !palette_transpose_flag  &&  yC > y0 )  ||  ( palette_transpose_flag  &&  xC > x0 ) ) &&  CopyAboveIndicesFlag[ xcPrev ][ ycPrev ]  ==  0  &&  PaletteScanPos > 0 ) { 
-     copy_above_palette_indices_flag ae(v) 
-     CopyAboveIndicesFlag[ xC ][ yC ] = copy_above_palette_indices_flag  
-    }  
-    PreviousRunType = CopyAboveIndicesFlag[ xC ][ yC ]  
-    PreviousRunPosition = PaletteScanPos  
-   }
-   else if (PaletteScanPos > 0)  
-    CopyAboveIndicesFlag[ xC ][ yC ] = CopyAboveIndicesFlag[ xcPrev ][ ycPrev ]  
-   PaletteScanPos++  
-  }  
-  PaletteScanPos = minSubPos  
-  while( PaletteScanPos < maxSubPos ) {  
-   xC = x0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos ][ 0 ]  
-   yC = y0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos ][ 1 ]  
-   if( PaletteScanPos > 0 ) {  
-    xcPrev =x0 +  TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos - 1 ][ 0 ]  
-    ycPrev = y0 +  TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ PaletteScanPos - 1 ][ 1 ]  
-   }  
-   if( MaxPaletteIndex > 0  &&  !RunCopyMap[ xC ][ yC ]  && CopyAboveIndicesFlag[ xC ][ yC ]  ==  0 ) { 
- 
-    if( MaxPaletteIndex - adjust > 0 )  
-     palette_idx_idc ae(v) 
-    adjust = 1  
-   }  
-   if( !RunCopyMap[ xC ][ yC ]  &&  CopyAboveIndicesFlag[ xC ][ yC ]  ==  0 )  
-    CurrPaletteIndex = palette_idx_idc  
-   if( CopyAboveIndicesFlag[ xC ][ yC ]  ==  0 )  
-    PaletteIndexMap[ xC ][ yC ] = CurrPaletteIndex  
-   else if( !palette_transpose_flag )  
-       PaletteIndexMap[ xC ][ yC ] = PaletteIndexMap[ xC ][ yC - 1 ]  
-   else  
-    PaletteIndexMap[ xC ][ yC ] = PaletteIndexMap[ xC - 1 ][ yC ]  
-   PaletteScanPos++  
-  }  
-  if( palette_escape_val_present_flag ) {  
-   for( cIdx = startComp; cIdx < ( startComp + numComps ); cIdx++ ) {  
-    for( sPos = minSubPos; sPos < maxSubPos; sPos++ ) {  
-     xC = x0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ sPos ][ 0 ]  
-     yC = y0 + TraverseScanOrder[ log2CbWidth ][ log2CbHeight ][ sPos ][ 1 ]  
-     if( !( treeType == SINGLE_TREE  &&  cIdx  !=  0  &&  ( xC % SubWidthC  !=  0  ||  yC % SubHeightC  !=  0 ) ) ) { 
-      if( PaletteIndexMap[ cIdx ][ xC ][ yC ]  ==  MaxPaletteIndex ) {  
-       palette_escape_val ae(v) 
-       PaletteEscapeVal[ cIdx ][ xC ][ yC ] = palette_escape_val  
-      }  
-     }  
-    }  
-   }  
-  }  
- }  
-}  
-
-merge_data( x0, y0, cbWidth, cbHeight, chType ) {  
- if( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_IBC ) {  
-  if( MaxNumIbcMergeCand > 1 )  
-   merge_idx[ x0 ][ y0 ] ae(v) 
- } else {  
-  if( MaxNumSubblockMergeCand > 0  &&  cbWidth  >=  8  &&  cbHeight  >=  8 )  
-   merge_subblock_flag[ x0 ][ y0 ] ae(v) 
-  if( merge_subblock_flag[ x0 ][ y0 ]  ==  1 ) {  
-   if( MaxNumSubblockMergeCand > 1 )  
-    merge_subblock_idx[ x0 ][ y0 ] ae(v) 
-  } else {  
-   if( cbWidth < 128  &&  cbHeight < 128  && 
-     ( ( sps_ciip_enabled_flag  &&  cu_skip_flag[ x0 ][ y0 ]  ==  0  && 
-      ( cbWidth * cbHeight )  >=  64 )  || 
-     ( sps_gpm_enabled_flag  && 
-     sh_slice_type  ==  B  &&  cbWidth  >=  8  &&  cbHeight  >=  8  && 
-     cbWidth < ( 8 * cbHeight )  &&  cbHeight < ( 8 * cbWidth ) ) ) ) 
- 
-    regular_merge_flag[ x0 ][ y0 ] ae(v) 
-   if( regular_merge_flag[ x0 ][ y0 ]  ==  1 ) {  
-    if( sps_mmvd_enabled_flag )  
-     mmvd_merge_flag[ x0 ][ y0 ] ae(v) 
-    if( mmvd_merge_flag[ x0 ][ y0 ]  ==  1 ) {  
-     if( MaxNumMergeCand > 1 )  
-      mmvd_cand_flag[ x0 ][ y0 ] ae(v)
-           mmvd_distance_idx[ x0 ][ y0 ] ae(v) 
-     mmvd_direction_idx[ x0 ][ y0 ] ae(v) 
-    } else if( MaxNumMergeCand > 1 )  
-     merge_idx[ x0 ][ y0 ] ae(v) 
-   } else {  
-    if( sps_ciip_enabled_flag  &&  sps_gpm_enabled_flag  && 
-     sh_slice_type  ==  B  && 
-     cu_skip_flag[ x0 ][ y0 ]  ==  0  &&  cbWidth  >=  8  &&  cbHeight  >=  8  && 
-     cbWidth < ( 8 * cbHeight )  &&  cbHeight < ( 8 * cbWidth )  && 
-     cbWidth < 128  &&  cbHeight < 128 ) 
- 
-     ciip_flag[ x0 ][ y0 ] ae(v) 
-    if( ciip_flag[ x0 ][ y0 ]  &&  MaxNumMergeCand > 1 )  
-     merge_idx[ x0 ][ y0 ] ae(v) 
-    if( !ciip_flag[ x0 ][ y0 ] ) {  
-     merge_gpm_partition_idx[ x0 ][ y0 ] ae(v) 
-     merge_gpm_idx0[ x0 ][ y0 ] ae(v) 
-     if( MaxNumGpmMergeCand > 2 )  
-      merge_gpm_idx1[ x0 ][ y0 ] ae(v) 
-    }  
-   }  
-  }  
- }  
-}  
-
-mvd_coding( x0, y0, refList, cpIdx ) {  
- abs_mvd_greater0_flag[ 0 ] ae(v) 
- abs_mvd_greater0_flag[ 1 ] ae(v) 
- if( abs_mvd_greater0_flag[ 0 ] )  
-  abs_mvd_greater1_flag[ 0 ] ae(v) 
- if( abs_mvd_greater0_flag[ 1 ] )  
-  abs_mvd_greater1_flag[ 1 ] ae(v) 
- if( abs_mvd_greater0_flag[ 0 ] ) {  
-  if( abs_mvd_greater1_flag[ 0 ] )  
-   abs_mvd_minus2[ 0 ] ae(v) 
-  mvd_sign_flag[ 0 ] ae(v) 
- }  
- if( abs_mvd_greater0_flag[ 1 ] ) {  
-  if( abs_mvd_greater1_flag[ 1 ] )  
-   abs_mvd_minus2[ 1 ] ae(v) 
-  mvd_sign_flag[ 1 ] ae(v) 
- }  
-}  
-
-transform_tree( x0, y0, tbWidth, tbHeight, treeType, chType ) {  
- InferTuCbfLuma = 1  
- if( IntraSubPartitionsSplitType  ==  ISP_NO_SPLIT  &&  !cu_sbt_flag ) {  
-  if( tbWidth > MaxTbSizeY  ||  tbHeight > MaxTbSizeY ) {  
-   verSplitFirst = ( tbWidth > MaxTbSizeY && tbWidth > tbHeight ) ? 1 : 0  
-   trafoWidth = verSplitFirst ? ( tbWidth / 2 ) : tbWidth  
-   trafoHeight = !verSplitFirst ? ( tbHeight / 2 ) : tbHeight  
-   transform_tree( x0, y0, trafoWidth, trafoHeight, treeType, chType )  
-   if( verSplitFirst )  
-    transform_tree( x0 + trafoWidth, y0, trafoWidth, trafoHeight, treeType, chType )  
-   else  
-    transform_tree( x0, y0 + trafoHeight, trafoWidth, trafoHeight, treeType, chType )  
-  } else {  
-   transform_unit( x0, y0, tbWidth, tbHeight, treeType, 0, chType )  
-  }  
- } else if( cu_sbt_flag ) {  
-  if( !cu_sbt_horizontal_flag ) {  
-   trafoWidth = tbWidth * SbtNumFourthsTb0 / 4  
-   transform_unit( x0, y0, trafoWidth, tbHeight, treeType, 0, 0 )  
-   transform_unit( x0 + trafoWidth, y0, tbWidth - trafoWidth, tbHeight, treeType, 1, 0 )  
-  } else {  
-   trafoHeight = tbHeight * SbtNumFourthsTb0 / 4  
-   transform_unit( x0, y0, tbWidth, trafoHeight, treeType, 0, 0 )  
-   transform_unit( x0, y0 + trafoHeight, tbWidth, tbHeight - trafoHeight, treeType, 1, 0 )  
-  }  
-  } else if( IntraSubPartitionsSplitType  ==  ISP_HOR_SPLIT ) {  
-  trafoHeight = tbHeight / NumIntraSubPartitions  
-  for( partIdx = 0; partIdx < NumIntraSubPartitions; partIdx++ )  
-   transform_unit( x0, y0 + trafoHeight * partIdx, tbWidth, trafoHeight, treeType, partIdx, 0 )  
- } else if( IntraSubPartitionsSplitType  ==  ISP_VER_SPLIT ) {  
-  trafoWidth = tbWidth / NumIntraSubPartitions  
-  for( partIdx = 0; partIdx < NumIntraSubPartitions; partIdx++ )  
-   transform_unit( x0 + trafoWidth * partIdx, y0, trafoWidth, tbHeight, treeType, partIdx, 0 )  
- }  
-} 
-
-transform_unit( x0, y0, tbWidth, tbHeight, treeType, subTuIndex, chType ) {  
- if( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT  && 
-   treeType  ==  SINGLE_TREE  &&  subTuIndex  ==  NumIntraSubPartitions - 1 ) { 
- 
-  xC = CbPosX[ chType ][ x0 ][ y0 ]  
-  yC = CbPosY[ chType ][ x0 ][ y0 ]  
-  wC = CbWidth[ chType ][ x0 ][ y0 ] / SubWidthC  
-  hC = CbHeight[ chType ][ x0 ][ y0 ] / SubHeightC  
- } else {  
-   xC = x0  
-  yC = y0  
-  wC = tbWidth / SubWidthC  
-  hC = tbHeight / SubHeightC  
- }  
- chromaAvailable = treeType  !=  DUAL_TREE_LUMA  &&  sps_chroma_format_idc  !=  0  && ( IntraSubPartitionsSplitType  ==  ISP_NO_SPLIT   ||  ( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT  &&  subTuIndex  ==  NumIntraSubPartitions - 1 ) ) 
- 
- if( ( treeType  ==  SINGLE_TREE  ||  treeType  ==  DUAL_TREE_CHROMA )  && 
-   sps_chroma_format_idc  !=  0  &&   
-   ( ( IntraSubPartitionsSplitType  ==  ISP_NO_SPLIT  &&  !( cu_sbt_flag  && 
-   ( ( subTuIndex  == 0  &&  cu_sbt_pos_flag )  || 
-   ( subTuIndex  == 1  &&  !cu_sbt_pos_flag ) ) ) )  || 
-   ( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT  && 
-   ( subTuIndex  ==  NumIntraSubPartitions - 1 ) ) ) ) { 
- 
-  tu_cb_coded_flag[ xC ][ yC ] ae(v) 
-  tu_cr_coded_flag[ xC ][ yC ] ae(v) 
- }  
- if( treeType  ==  SINGLE_TREE  ||  treeType  ==  DUAL_TREE_LUMA ) {  
-  if( ( IntraSubPartitionsSplitType  ==  ISP_NO_SPLIT  &&  !( cu_sbt_flag  && 
-    ( ( subTuIndex  == 0  &&  cu_sbt_pos_flag )  || 
-    ( subTuIndex  == 1  &&  !cu_sbt_pos_flag ) ) )  && 
-    ( ( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTRA  &&   
-    !cu_act_enabled_flag[ x0 ][ y0 ] )  || 
-    ( chromaAvailable  &&  ( tu_cb_coded_flag[ xC ][ yC ]  || 
-    tu_cr_coded_flag[ xC ][ yC ] ) )  || 
-    CbWidth[ chType ][ x0 ][ y0 ] > MaxTbSizeY  || 
-    CbHeight[ chType ][ x0 ][ y0 ] > MaxTbSizeY ) )  || 
-    ( IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT && 
-    ( subTuIndex < NumIntraSubPartitions - 1  ||  !InferTuCbfLuma ) ) ) 
- 
-   tu_y_coded_flag[ x0 ][ y0 ] ae(v) 
-  if(IntraSubPartitionsSplitType  !=  ISP_NO_SPLIT )  
-   InferTuCbfLuma  = InferTuCbfLuma  &&  !tu_y_coded_flag[ x0 ][ y0 ]  
- }  
- if( ( CbWidth[ chType ][ x0 ][ y0 ] > 64  ||  CbHeight[ chType ][ x0 ][ y0 ] > 64  || 
-   tu_y_coded_flag[ x0 ][ y0 ]  ||  ( chromaAvailable  &&  ( tu_cb_coded_flag[ xC ][ yC ]  || 
-   tu_cr_coded_flag[ xC ][ yC ] ) ) )  &&  treeType  !=  DUAL_TREE_CHROMA  && 
-   pps_cu_qp_delta_enabled_flag  &&  !IsCuQpDeltaCoded ) { 
- 
-  cu_qp_delta_abs ae(v) 
-  if( cu_qp_delta_abs )  
-   cu_qp_delta_sign_flag ae(v) 
- }  
- if( ( CbWidth[ chType ][ x0 ][ y0 ] > 64  ||  CbHeight[ chType ][ x0 ][ y0 ] > 64  || 
-   ( chromaAvailable  &&  ( tu_cb_coded_flag[ xC ][ yC ]  || 
-   tu_cr_coded_flag[ xC ][ yC ] ) ) )  && 
-   treeType  !=  DUAL_TREE_LUMA  &&  sh_cu_chroma_qp_offset_enabled_flag  && 
-   !IsCuChromaQpOffsetCoded ) { 
- 
-  cu_chroma_qp_offset_flag ae(v) 
-  if( cu_chroma_qp_offset_flag  &&  pps_chroma_qp_offset_list_len_minus1 > 0 )  
-   cu_chroma_qp_offset_idx ae(v) 
- }  
- if( sps_joint_cbcr_enabled_flag  &&  ( ( CuPredMode[ chType ][ x0 ][ y0 ]  ==  MODE_INTRA 
-   &&  ( tu_cb_coded_flag[ xC ][ yC ]  ||  tu_cr_coded_flag[ xC ][ yC ] ) )  || 
-   ( tu_cb_coded_flag[ xC ][ yC ]  &&  tu_cr_coded_flag[ xC ][ yC ] ) )  && 
-   chromaAvailable ) 
- 
-  tu_joint_cbcr_residual_flag[ xC ][ yC ] ae(v) 
-   if( tu_y_coded_flag[ x0 ][ y0 ]  &&  treeType  !=  DUAL_TREE_CHROMA ) {  
-  if( sps_transform_skip_enabled_flag  &&  !BdpcmFlag[ x0 ][ y0 ][ 0 ]  && 
-    tbWidth  <=  MaxTsSize  &&  tbHeight  <=  MaxTsSize  && 
-    ( IntraSubPartitionsSplitType  ==  ISP_NO_SPLIT )  &&  !cu_sbt_flag ) 
- 
-   transform_skip_flag[ x0 ][ y0 ][ 0 ] ae(v) 
-  if( !transform_skip_flag[ x0 ][ y0 ][ 0 ]  ||  sh_ts_residual_coding_disabled_flag )  
-   residual_coding( x0, y0, Log2( tbWidth ), Log2( tbHeight ), 0 )  
-  else  
-   residual_ts_coding( x0, y0, Log2( tbWidth ), Log2( tbHeight ), 0 )  
- }  
- if( tu_cb_coded_flag[ xC ][ yC ]  &&  treeType  !=  DUAL_TREE_LUMA ) {  
-  if( sps_transform_skip_enabled_flag  &&  !BdpcmFlag[ x0 ][ y0 ][ 1 ]  && 
-    wC  <=  MaxTsSize  &&  hC  <=  MaxTsSize  &&  !cu_sbt_flag ) 
- 
-   transform_skip_flag[ xC ][ yC ][ 1 ] ae(v) 
-  if( !transform_skip_flag[ xC ][ yC ][ 1 ]  ||  sh_ts_residual_coding_disabled_flag )  
-   residual_coding( xC, yC, Log2( wC ), Log2( hC ), 1 )  
-  else  
-   residual_ts_coding( xC, yC, Log2( wC ), Log2( hC ), 1 )  
- }  
- if( tu_cr_coded_flag[ xC ][ yC ]  &&  treeType  !=  DUAL_TREE_LUMA  && 
-   !( tu_cb_coded_flag[ xC ][ yC ]  &&  tu_joint_cbcr_residual_flag[ xC ][ yC ] ) ) { 
- 
-  if( sps_transform_skip_enabled_flag  &&  !BdpcmFlag[ x0 ][ y0 ][ 2 ]  && 
-    wC  <=  MaxTsSize  &&  hC  <=  MaxTsSize  &&  !cu_sbt_flag ) 
- 
-   transform_skip_flag[ xC ][ yC ][ 2 ] ae(v) 
-  if( !transform_skip_flag[ xC ][ yC ][ 2 ]  ||  sh_ts_residual_coding_disabled_flag )  
-   residual_coding( xC, yC, Log2( wC ), Log2( hC ), 2 )  
-  else  
-   residual_ts_coding( xC, yC, Log2( wC ), Log2( hC ), 2 )  
- }  
-} 
-
-residual_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {  
- if( sps_mts_enabled_flag  &&  cu_sbt_flag  &&  cIdx  ==  0  && 
-   log2TbWidth  ==  5  &&  log2TbHeight < 6 ) 
- 
-  log2ZoTbWidth = 4  
- else  
-  log2ZoTbWidth = Min( log2TbWidth, 5 )  
- if( sps_mts_enabled_flag  &&  cu_sbt_flag  &&  cIdx  ==  0  &&   
-   log2TbWidth < 6  &&  log2TbHeight  ==  5 ) 
- 
-  log2ZoTbHeight = 4  
- else  
-  log2ZoTbHeight = Min( log2TbHeight, 5 )  
- if( log2TbWidth > 0 )  
-  last_sig_coeff_x_prefix ae(v) 
- if( log2TbHeight > 0 )  
-  last_sig_coeff_y_prefix ae(v) 
- if( last_sig_coeff_x_prefix > 3 )  
-  last_sig_coeff_x_suffix ae(v) 
- if( last_sig_coeff_y_prefix > 3 )  
-   last_sig_coeff_y_suffix ae(v) 
- log2TbWidth = log2ZoTbWidth  
- log2TbHeight = log2ZoTbHeight  
- remBinsPass1 = ( ( 1  <<  ( log2TbWidth + log2TbHeight ) ) * 7 )  >>  2  
- log2SbW = ( Min( log2TbWidth, log2TbHeight ) < 2 ? 1 : 2 )  
- log2SbH = log2SbW  
- if( log2TbWidth + log2TbHeight > 3 )  
-  if( log2TbWidth < 2 ) {  
-   log2SbW = log2TbWidth  
-   log2SbH = 4 - log2SbW  
-  } else if( log2TbHeight < 2 ) {  
-   log2SbH = log2TbHeight  
-   log2SbW = 4 - log2SbH  
-  }  
- numSbCoeff = 1  <<  ( log2SbW + log2SbH )  
- lastScanPos = numSbCoeff  
- lastSubBlock = ( 1  <<  ( log2TbWidth + log2TbHeight - ( log2SbW + log2SbH ) ) ) - 1  
- do {  
-  if( lastScanPos  ==  0 ) {  
-   lastScanPos = numSbCoeff  
-   lastSubBlock--  
-  }  
-  lastScanPos--  
-  xS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ lastSubBlock ][ 0 ] 
-  yS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ lastSubBlock ][ 1 ] 
-  xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ lastScanPos ][ 0 ]  
-  yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ lastScanPos ][ 1 ]  
- } while( ( xC  !=  LastSignificantCoeffX )  ||  ( yC  !=  LastSignificantCoeffY ) )  
- if( lastSubBlock  ==  0  &&  log2TbWidth  >=  2  &&  log2TbHeight  >=  2  && !transform_skip_flag[ x0 ][ y0 ][ cIdx ]  &&  lastScanPos > 0 )  
-  LfnstDcOnly = 0   
- if( ( lastSubBlock > 0  &&  log2TbWidth  >=  2  &&  log2TbHeight  >=  2 )  || ( lastScanPos > 7  &&  ( log2TbWidth  ==  2  ||  log2TbWidth  ==  3 )  && log2TbWidth  ==  log2TbHeight ) )  
-  LfnstZeroOutSigCoeffFlag = 0  
- if( ( lastSubBlock > 0  ||  lastScanPos > 0 )  &&  cIdx == 0 )  
-  MtsDcOnly = 0  
- QState = 0  
- for( i = lastSubBlock; i  >=  0; i-- ) {  
-  startQStateSb = QState  
-  xS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ i ][ 0 ] 
-  yS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ i ][ 1 ] 
-  inferSbDcSigCoeffFlag = 0  
-  if( i < lastSubBlock  &&  i > 0 ) {  
-   sb_coded_flag[ xS ][ yS ] ae(v) 
-   inferSbDcSigCoeffFlag = 1  
-  }  
-  if( sb_coded_flag[ xS ][ yS ]  &&  ( xS > 3  ||  yS > 3 )  &&  cIdx  ==  0 )  
-   MtsZeroOutSigCoeffFlag = 0  
-  firstSigScanPosSb = numSbCoeff  
-  lastSigScanPosSb = -1  
-  firstPosMode0 = ( i  ==  lastSubBlock ? lastScanPos : numSbCoeff - 1 )  
-  firstPosMode1 = firstPosMode0  
-  for( n = firstPosMode0; n  >=  0  &&  remBinsPass1  >=  4; n-- ) {  
-   xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]   
-   yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-   if( sb_coded_flag[ xS ][ yS ]  &&  ( n > 0  ||  !inferSbDcSigCoeffFlag )  && 
-     ( xC  !=  LastSignificantCoeffX  ||  yC  !=  LastSignificantCoeffY ) ) { 
- 
-    sig_coeff_flag[ xC ][ yC ] ae(v) 
-    remBinsPass1--  
-    if( sig_coeff_flag[ xC ][ yC ] )  
-     inferSbDcSigCoeffFlag = 0  
-   }  
-   if( sig_coeff_flag[ xC ][ yC ] ) {  
-    abs_level_gtx_flag[ n ][ 0 ] ae(v) 
-    remBinsPass1--  
-    if( abs_level_gtx_flag[ n ][ 0 ] ) {  
-     par_level_flag[ n ] ae(v) 
-     remBinsPass1--  
-     abs_level_gtx_flag[ n ][ 1 ] ae(v) 
-     remBinsPass1--  
-    }  
-    if( lastSigScanPosSb  ==  -1 )  
-     lastSigScanPosSb = n  
-    firstSigScanPosSb = n  
-   }  
-   AbsLevelPass1[ xC ][ yC ] = sig_coeff_flag[ xC ][ yC ] + par_level_flag[ n ] + abs_level_gtx_flag[ n ][ 0 ] + 2 * abs_level_gtx_flag[ n ][ 1 ] 
- 
-   if( sh_dep_quant_used_flag )  
-    QState = QStateTransTable[ QState ][ AbsLevelPass1[ xC ][ yC ] & 1 ]  
-   firstPosMode1 = n - 1  
-  }  
-  for( n = firstPosMode0; n > firstPosMode1; n-- ) {  
-   xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
-   yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-   if( abs_level_gtx_flag[ n ][ 1 ] )  
-    abs_remainder[ n ] ae(v) 
-   AbsLevel[ xC ][ yC ] = AbsLevelPass1[ xC ][ yC ] +2 * abs_remainder[ n ]  
-  }  
-  for( n = firstPosMode1; n  >=  0; n-- ) {  
-   xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
-   yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-   if( sb_coded_flag[ xS ][ yS ] )  
-    dec_abs_level[ n ] ae(v) 
-   if( AbsLevel[ xC ][ yC ] > 0 ) {  
-       if( lastSigScanPosSb  ==  -1 )  
-     lastSigScanPosSb = n  
-    firstSigScanPosSb = n  
-   }  
-   if( sh_dep_quant_used_flag )  
-    QState = QStateTransTable[ QState ][ AbsLevel[ xC ][ yC ] & 1 ]  
-  }  
-  signHiddenFlag = sh_sign_data_hiding_used_flag  && ( lastSigScanPosSb - firstSigScanPosSb > 3 ? 1 : 0 ) 
- 
-  for( n = numSbCoeff - 1; n  >=  0; n-- ) {  
-   xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]   
-   yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-   if( ( AbsLevel[ xC ][ yC ] > 0 )  && ( !signHiddenFlag  ||  ( n  !=  firstSigScanPosSb ) ) ) 
-    coeff_sign_flag[ n ] ae(v) 
-  }  
-  if( sh_dep_quant_used_flag ) {  
-   QState = startQStateSb  
-   for( n = numSbCoeff - 1; n  >=  0; n-- ) {  
-    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
-    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-    if( AbsLevel[ xC ][ yC ] > 0 )  
-     TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = ( 2 * AbsLevel[ xC ][ yC ] - ( QState > 1 ? 1 : 0 ) ) * ( 1 - 2 * coeff_sign_flag[ n ] ) 
-    QState = QStateTransTable[ QState ][ AbsLevel[ xC ][ yC ] & 1 ]  
-   }  
-  } else {  
-   sumAbsLevel = 0  
-   for( n = numSbCoeff - 1; n  >=  0; n-- ) {  
-    xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
-    yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-    if( AbsLevel[ xC ][ yC ] > 0 ) {  
-     TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ]  = 
-       AbsLevel[ xC ][ yC ] * ( 1 - 2 * coeff_sign_flag[ n ] )  
-     if( signHiddenFlag ) {  
-      sumAbsLevel  +=  AbsLevel[ xC ][ yC ]  
-      if( n  ==  firstSigScanPosSb  &&  sumAbsLevel % 2  ==  1 )  
-       TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ]  = -TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ]  
-     }  
-    }  
-   }  
-  }  
- }  
-}  
-
-residual_ts_coding( x0, y0, log2TbWidth, log2TbHeight, cIdx ) {  
- log2SbW = ( Min( log2TbWidth, log2TbHeight ) < 2 ? 1 : 2 ) 
-  log2SbH = log2SbW  
- if( log2TbWidth + log2TbHeight > 3 )  
-  if( log2TbWidth < 2 ) {  
-   log2SbW = log2TbWidth  
-   log2SbH = 4 - log2SbW  
-  } else if( log2TbHeight < 2 ) {  
-   log2SbH = log2TbHeight  
-   log2SbW = 4 - log2SbH  
-  }  
- numSbCoeff = 1  <<  ( log2SbW + log2SbH )  
- lastSubBlock = ( 1  <<  ( log2TbWidth + log2TbHeight - ( log2SbW + log2SbH ) ) ) - 1  
- inferSbCbf = 1  
- RemCcbs = ( ( 1  <<  ( log2TbWidth + log2TbHeight ) ) * 7 )  >>  2  
- for( i =0; i  <=  lastSubBlock; i++ ) {  
-  xS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ i ][ 0 ]  
-  yS = DiagScanOrder[ log2TbWidth - log2SbW ][ log2TbHeight - log2SbH ][ i ][ 1 ]  
-  if( i  !=  lastSubBlock  ||  !inferSbCbf )  
-   sb_coded_flag[ xS ][ yS ] ae(v) 
-  if( sb_coded_flag[ xS ][ yS ]  &&  i < lastSubBlock )  
-   inferSbCbf = 0  
- /* First scan pass */  
-  inferSbSigCoeffFlag = 1  
-  lastScanPosPass1 = -1  
-  for( n = 0; n  <=  numSbCoeff - 1  &&  RemCcbs  >=  4; n++ ) {  
-   xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
-   yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-   lastScanPosPass1 = n  
-   if( sb_coded_flag[ xS ][ yS ]  && ( n  !=  numSbCoeff - 1  ||  !inferSbSigCoeffFlag ) ) { 
- 
-    sig_coeff_flag[ xC ][ yC ] ae(v) 
-    RemCcbs--  
-    if( sig_coeff_flag[ xC ][ yC ] )  
-     inferSbSigCoeffFlag = 0  
-   }  
-   CoeffSignLevel[ xC ][ yC ] = 0  
-   if( sig_coeff_flag[ xC ][ yC ] ) {  
-    coeff_sign_flag[ n ] ae(v) 
-    RemCcbs--  
-    CoeffSignLevel[ xC ][ yC ] = ( coeff_sign_flag[ n ] > 0 ? -1 : 1 )  
-    abs_level_gtx_flag[ n ][ 0 ] ae(v) 
-    RemCcbs--  
-    if( abs_level_gtx_flag[ n ][ 0 ] ) {  
-     par_level_flag[ n ] ae(v) 
-     RemCcbs--  
-    }  
-   }  
-   AbsLevelPass1[ xC ][ yC ] = 
-     sig_coeff_flag[ xC ][ yC ] + par_level_flag[ n ] + abs_level_gtx_flag[ n ][ 0 ] 
- 
-  }  
-   /* Greater than X scan pass (numGtXFlags=5) */  
-  lastScanPosPass2 = -1  
-  for( n = 0; n  <=  numSbCoeff - 1  &&  RemCcbs  >=  4; n++ ) {  
-   xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
-   yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-   AbsLevelPass2[ xC ][ yC ] = AbsLevelPass1[ xC ][ yC ]  
-   for( j = 1; j < 5; j++ ) {  
-    if( abs_level_gtx_flag[ n ][ j - 1 ] ) {  
-     abs_level_gtx_flag[ n ][ j ] ae(v) 
-     RemCcbs--  
-    }  
-    AbsLevelPass2[ xC ][ yC ]  +=  2 * abs_level_gtx_flag[ n ][ j ]  
-   }  
-   lastScanPosPass2 = n  
-  }  
- /* remainder scan pass */  
-  for( n = 0; n  <=  numSbCoeff - 1; n++ ) {  
-   xC = ( xS  <<  log2SbW ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 0 ]  
-   yC = ( yS  <<  log2SbH ) + DiagScanOrder[ log2SbW ][ log2SbH ][ n ][ 1 ]  
-   if( ( n  <=  lastScanPosPass2  &&  AbsLevelPass2[ xC ][ yC ]  >=  10 )  || 
-     ( n > lastScanPosPass2  &&  n  <=  lastScanPosPass1  && 
-     AbsLevelPass1[ xC ][ yC ]  >=  2 )  || 
-     ( n > lastScanPosPass1  &&  sb_coded_flag[ xS ][ yS ] ) ) 
- 
-    abs_remainder[ n ] ae(v) 
-   if( n  <=  lastScanPosPass2 )  
-    AbsLevel[ xC ][ yC ] = AbsLevelPass2[ xC ][ yC ] + 2 * abs_remainder[ n ]  
-   else if(n  <=  lastScanPosPass1 )  
-    AbsLevel[ xC ][ yC ] = AbsLevelPass1[ xC ][ yC ] + 2 * abs_remainder[ n ]  
-   else { /* bypass */  
-    AbsLevel[ xC ][ yC ] = abs_remainder[ n ]  
-    if( abs_remainder[ n ] )  
-     coeff_sign_flag[ n ] ae(v) 
-   }  
-   if( BdpcmFlag[ x0 ][ y0 ][ cIdx ]  ==  0  &&  n  <=  lastScanPosPass1 ) {  
-    absLeftCoeff = xC > 0 ? AbsLevel[ xC - 1 ][ yC ] : 0  
-    absAboveCoeff  = yC > 0 ? AbsLevel[ xC ][ yC - 1 ] : 0  
-    predCoeff = Max( absLeftCoeff, absAboveCoeff )  
-    if( AbsLevel[ xC ][ yC ]  ==  1  &&  predCoeff > 0 )  
-     AbsLevel[ xC ][ yC ] = predCoeff  
-    else if( AbsLevel[ xC ][ yC ] > 0  && AbsLevel[ xC ][ yC ]  <=  predCoeff )  
-     AbsLevel[ xC ][ yC ]--  
-   }  
-   TransCoeffLevel[ x0 ][ y0 ][ cIdx ][ xC ][ yC ] = ( 1 - 2 * coeff_sign_flag[ n ] ) * AbsLevel[ xC ][ yC ] 
- 
-  }  
- }  
-} 
-
-byte_stream_nal_unit( NumBytesInNalUnit ) { 
-while( next_bits( 24 )  !=  0x000001  &&  next_bits( 32 )  !=  0x00000001 )   
-leading_zero_8bits  /* equal to 0x00 */ f(8) 
-if( next_bits( 24 )  !=  0x000001 )  f(8) 
-zero_byte  /* equal to 0x00 */ 
-start_code_prefix_one_3bytes  /* equal to 0x000001 */ f(24) 
-nal_unit( NumBytesInNalUnit )  
-while( more_data_in_byte_stream()  &&  next_bits( 24 )  !=  0x000001  && 
-next_bits( 32 )  !=  0x00000001 ) 
-trailing_zero_8bits  /* equal to 0x00 */ f(8)
-}  
-
 sei_payload( payloadType, payloadSize ) {  
  if( nal_unit_type  ==  PREFIX_SEI_NUT )  
   if( payloadType  ==  0 )  
@@ -2485,6 +1227,632 @@ sei_payload( payloadType, payloadSize ) {
    sei_payload_bit_equal_to_zero /* equal to 0 */ f(1) 
  }  
 } 
+
+filler_payload(payloadSize) {
+    for (k = 0; k < payloadSize; k++)
+        ff_byte  /* equal to 0xFF */ f(8)
+}
+
+user_data_registered_itu_t_t35(payloadSize) {
+    itu_t_t35_country_code b(8)
+    if (itu_t_t35_country_code != 0xFF)
+        i = 1
+    else {        
+        itu_t_t35_country_code_extension_byte b(8)
+        i = 2
+    }
+    do {
+        itu_t_t35_payload_byte b(8)
+        i++
+    } while (i < payloadSize)
+}
+
+user_data_unregistered(payloadSize) {
+    uuid_iso_iec_11578 u(128)
+    for (i = 16; i < payloadSize; i++)  
+        user_data_payload_byte b(8)
+}
+
+film_grain_characteristics(payloadSize) {
+ fg_characteristics_cancel_flag u(1)
+    if (!fg_characteristics_cancel_flag) {  
+  fg_model_id u(2) 
+  fg_separate_colour_description_present_flag u(1)
+        if (fg_separate_colour_description_present_flag) {  
+   fg_bit_depth_luma_minus8 u(3) 
+   fg_bit_depth_chroma_minus8 u(3) 
+   fg_full_range_flag u(1) 
+   fg_colour_primaries u(8) 
+   fg_transfer_characteristics u(8) 
+   fg_matrix_coeffs u(8)
+        }  
+  fg_blending_mode_id u(2) 
+  fg_log2_scale_factor u(4)
+        for (c = 0; c < 3; c++)
+            fg_comp_model_present_flag[c] u(1)
+        for (c = 0; c < 3; c++)
+            if (fg_comp_model_present_flag[c]) {
+                fg_num_intensity_intervals_minus1[c] u(8)
+                fg_num_model_values_minus1[c] u(3)
+                for (i = 0; i <= fg_num_intensity_intervals_minus1[c]; i++) {
+                    fg_intensity_interval_lower_bound[c][i] u(8)
+                    fg_intensity_interval_upper_bound[c][i] u(8)
+                    for (j = 0; j <= fg_num_model_values_minus1[c]; j++)
+                        fg_comp_model_value[c][i][j] se(v)
+                }
+            }  
+  fg_characteristics_persistence_flag u(1)
+    }
+} 
+
+frame_packing_arrangement(payloadSize) {
+ fp_arrangement_id ue(v) 
+ fp_arrangement_cancel_flag u(1)
+    if (!fp_arrangement_cancel_flag) {  
+  fp_arrangement_type u(7) 
+  fp_quincunx_sampling_flag u(1) 
+  fp_content_interpretation_type u(6) 
+  fp_spatial_flipping_flag u(1) 
+  fp_frame0_flipped_flag u(1) 
+  fp_field_views_flag u(1) 
+  fp_current_frame_is_frame0_flag u(1) 
+  fp_frame0_self_contained_flag u(1) 
+  fp_frame1_self_contained_flag u(1)
+        if (!fp_quincunx_sampling_flag && fp_arrangement_type != 5) {  
+   fp_frame0_grid_position_x u(4) 
+   fp_frame0_grid_position_y u(4) 
+   fp_frame1_grid_position_x u(4) 
+   fp_frame1_grid_position_y u(4)
+        }  
+  fp_arrangement_reserved_byte u(8) 
+  fp_arrangement_persistence_flag u(1)
+    }  
+ fp_upsampled_aspect_ratio_flag u(1)
+}  
+
+mastering_display_colour_volume(payloadSize) {
+    for (c = 0; c < 3; c++) {
+        mdcv_display_primaries_x[c] u(16)
+        mdcv_display_primaries_y[c] u(16)
+    }
+    mdcv_white_point_x u(16)
+    mdcv_white_point_y u(16)
+    mdcv_max_display_mastering_luminance u(32)
+    mdcv_min_display_mastering_luminance u(32)
+}
+
+content_light_level_info(payloadSize) {
+    clli_max_content_light_level u(16)
+    clli_max_pic_average_light_level u(16)
+}
+
+dependent_rap_indication(payloadSize) { 
+} 
+
+alternative_transfer_characteristics(payloadSize) {
+    preferred_transfer_characteristics u(8)
+}
+
+ambient_viewing_environment(payloadSize) {
+    ambient_illuminance u(32)  
+    ambient_light_x u(16) 
+    ambient_light_y u(16)
+}
+
+content_colour_volume(payloadSize) {
+    Descriptor 
+ ccv_cancel_flag u(1)
+    if (!ccv_cancel_flag) {  
+  ccv_persistence_flag u(1) 
+  ccv_primaries_present_flag u(1) 
+  ccv_min_luminance_value_present_flag u(1) 
+  ccv_max_luminance_value_present_flag u(1) 
+  ccv_avg_luminance_value_present_flag u(1) 
+  ccv_reserved_zero_2bits u(2)
+        if (ccv_primaries_present_flag)
+            for (c = 0; c < 3; c++) {
+                ccv_primaries_x[c] i(32)
+                ccv_primaries_y[c] i(32)
+            }
+        if (ccv_min_luminance_value_present_flag)  
+   ccv_min_luminance_value u(32)
+        if (ccv_max_luminance_value_present_flag)  
+   ccv_max_luminance_value u(32)
+        if (ccv_avg_luminance_value_present_flag)  
+   ccv_avg_luminance_value u(32)
+    }
+}  
+
+equirectangular_projection(payloadSize) {
+    erp_cancel_flag u(1)
+    if (!erp_cancel_flag) {
+        erp_persistence_flag u(1)
+        erp_guard_band_flag u(1)
+        erp_reserved_zero_2bits u(2)
+        if (erp_guard_band_flag == 1) {
+            erp_guard_band_type u(3)
+            erp_left_guard_band_width u(8)
+            erp_right_guard_band_width u(8)
+        }
+    }
+}
+
+generalized_cubemap_projection(payloadSize) {
+    gcmp_cancel_flag u(1)
+    if (!gcmp_cancel_flag) {       
+        gcmp_persistence_flag u(1)
+         gcmp_packing_type u(3) 
+  gcmp_mapping_function_type u(2)
+        for (i = 0; i < (gcmp_packing_type == 4 ||
+            gcmp_packing_type  == 5) ? 5 : 6; i++ ) {
+
+            gcmp_face_index[i] u(3)
+            gcmp_face_rotation[i] u(2)
+            if (gcmp_mapping_function_type == 2) {
+                gcmp_function_coeff_u[i] u(7)
+                gcmp_function_u_affected_by_v_flag[i] u(1)
+                gcmp_function_coeff_v[i] u(7)
+                gcmp_function_v_affected_by_u_flag[i] u(1)
+            }
+        }  
+  gcmp_guard_band_flag u(1)
+        if (gcmp_guard_band_flag) {  
+   gcmp_guard_band_type u(3) 
+   gcmp_guard_band_boundary_exterior_flag u(1) 
+   gcmp_guard_band_samples_minus1 u(4)
+        }
+    }
+}  
+
+regionwise_packing(payloadSize) {
+    rwp_cancel_flag  u(1)
+    if (!rwp_cancel_flag) {
+        rwp_persistence_flag  u(1)
+        rwp_constituent_picture_matching_flag  u(1)
+        rwp_reserved_zero_5bits  u(5)
+        rwp_num_packed_regions  u(8)
+        rwp_proj_picture_width u(32)
+        rwp_proj_picture_height u(32)
+         rwp_packed_picture_width u(16) 
+  rwp_packed_picture_height u(16)
+        for (i = 0; i < rwp_num_packed_regions; i++) {
+            rwp_reserved_zero_4bits[i] u(4)
+            rwp_transform_type[i] u(3)
+            rwp_guard_band_flag[i] u(1)
+            rwp_proj_region_width[i] u(32)
+            rwp_proj_region_height[i] u(32)
+            rwp_proj_region_top[i] u(32)
+            rwp_proj_region_left[i] u(32)
+            rwp_packed_region_width[i] u(16)
+            rwp_packed_region_height[i] u(16)
+            rwp_packed_region_top[i] u(16)
+            rwp_packed_region_left[i] u(16)
+            if (rwp_guard_band_flag[i]) {
+                rwp_left_guard_band_width[i] u(8)
+                rwp_right_guard_band_width[i] u(8)
+                rwp_top_guard_band_height[i] u(8)
+                rwp_bottom_guard_band_height[i] u(8)
+                rwp_guard_band_not_used_for_pred_flag[i] u(1)
+                for (j = 0; j < 4; j++)
+                    rwp_guard_band_type[i][j] u(3)
+                rwp_guard_band_reserved_zero_3bits[i] u(3)
+            }
+        }
+    }
+} 
+
+omni_viewport(payloadSize) {
+ omni_viewport_id u(10) 
+ omni_viewport_cancel_flag u(1)
+    if (!omni_viewport_cancel_flag) {  
+  omni_viewport_persistence_flag u(1) 
+  omni_viewport_cnt_minus1 u(4)
+        for (i = 0; i <= omni_viewport_cnt_minus1; i++) {
+            omni_viewport_azimuth_centre[i] i(32)
+            omni_viewport_elevation_centre[i] i(32)
+            omni_viewport_tilt_centre[i] i(32)
+            omni_viewport_hor_range[i] u(32)
+            omni_viewport_ver_range[i] u(32)
+        }
+    }
+} 
+
+frame_field_info(payloadSize) {
+    ffi_field_pic_flag  u(1)
+    if (ffi_field_pic_flag) {
+        ffi_bottom_field_flag u(1)
+        ffi_pairing_indicated_flag u(1)
+        
+        if (ffi_pairing_indicated_flag)
+            ffi_paired_with_next_field_flag u(1)
+     } else {
+        
+        ffi_display_fields_from_frame_flag u(1)
+        if (ffi_display_fields_from_frame_flag)
+            ffi_top_field_first_flag u(1)
+        ffi_display_elemental_periods_minus1 u(8)
+    }
+    ffi_source_scan_type u(2)
+    ffi_duplicate_flag u(1)
+} 
+
+sample_aspect_ratio_info(payloadSize) {
+    sari_cancel_flag u(1)
+    if (!sari_cancel_flag) {
+        sari_persistence_flag u(1)
+        sari_aspect_ratio_idc u(8)
+        if (sari_aspect_ratio_idc == 255) {
+            sari_sar_width u(16) 
+            sari_sar_height u(16) 
+        }
+    }
+}
+
+annotated_regions(payloadSize) {
+    ar_cancel_flag u(1)
+    if (!ar_cancel_flag) {      
+        ar_not_optimized_for_viewing_flag u(1)
+        ar_true_motion_flag u(1)
+        ar_occluded_object_flag u(1)
+        ar_partial_object_flag_present_flag u(1)
+        ar_object_label_present_flag u(1)
+        ar_object_confidence_info_present_flag u(1)
+        if (ar_object_confidence_info_present_flag)
+            ar_object_confidence_length_minus1 u(4)
+        if (ar_object_label_present_flag) {  
+            ar_object_label_language_present_flag u(1)
+            if (ar_object_label_language_present_flag) {
+                while (!byte_aligned())  
+                    ar_bit_equal_to_zero /* equal to 0 */ f(1) 
+                ar_object_label_language st(v)
+            }  
+            ar_num_label_updates ue(v)
+            for (i = 0; i < ar_num_label_updates; i++) {
+                ar_label_idx[i] ue(v) 
+                ar_label_cancel_flag u(1)
+                LabelAssigned[ar_label_idx[i]] = !ar_label_cancel_flag
+                if (!ar_label_cancel_flag) {
+                    while (!byte_aligned())  
+                        ar_bit_equal_to_zero /* equal to 0 */ f(1)
+                    ar_label[ar_label_idx[i]] st(v)
+                }
+            }
+        }  
+        ar_num_object_updates ue(v)
+        for (i = 0; i < ar_num_object_updates; i++) {
+            ar_object_idx[i] ue(v) 
+            ar_object_cancel_flag u(1)
+            ObjectTracked[ar_object_idx[i]] = !ar_object_cancel_flag
+            if (!ar_object_cancel_flag) {
+                if (ar_object_label_present_flag) {  
+                    ar_object_label_update_flag u(1)
+                    if (ar_object_label_update_flag)
+                        ar_object_label_idx[ar_object_idx[i]] ue(v)
+                }  
+                ar_bounding_box_update_flag u(1)
+                if (ar_bounding_box_update_flag) {  
+                    ar_bounding_box_cancel_flag u(1)
+                    ObjectBoundingBoxAvail[ar_object_idx[i]] =
+                        !ar_bounding_box_cancel_flag
+
+                    if (!ar_bounding_box_cancel_flag) {
+                        ar_bounding_box_top[ar_object_idx[i]] u(16)
+                        ar_bounding_box_left[ar_object_idx[i]] u(16)
+                        ar_bounding_box_width[ar_object_idx[i]] u(16)
+                        ar_bounding_box_height[ar_object_idx[i]] u(16)
+                        if (ar_partial_object_flag_present_flag)
+                            ar_partial_object_flag[ar_object_idx[i]] u(1)
+                        if (ar_object_confidence_info_present_flag)
+                            ar_object_confidence[ar_object_idx[i]] u(v)
+                    }
+                }
+            }
+        }
+    }
+}
+
+scalability_dimension_info(payloadSize) {
+ sdi_max_layers_minus1 u(6) 
+ sdi_multiview_info_flag u(1) 
+ sdi_auxiliary_info_flag u(1)
+    if (sdi_multiview_info_flag | | sdi_auxiliary_info_flag) {
+        if (sdi_multiview_info_flag)  
+            sdi_view_id_len_minus1 u(4)
+        for (i = 0; i <= sdi_max_layers_minus1; i++) {
+            sdi_layer_id[i] u(6)
+            if (sdi_multiview_info_flag)
+                sdi_view_id_val[i] u(v)
+            if (sdi_auxiliary_info_flag)
+                sdi_aux_id[i] u(8)
+            if (sdi_aux_id[i] > 0) {
+                sdi_num_associated_primary_layers_minus1[i] u(6)
+                for (j = 0; j <= sdi_num_associated_primary_layers_minus1[i]; j++)
+                    sdi_associated_primary_layer_idx[i][j] u(6)
+            }
+        }
+    }
+}  
+
+multiview_acquisition_info(payloadSize) {
+    intrinsic_param_flag u(1)
+    extrinsic_param_flag u(1)
+    num_views_minus1 ue(v)
+    if (intrinsic_param_flag) {
+        intrinsic_params_equal_flag u(1)
+        prec_focal_length ue(v) 
+  prec_principal_point ue(v) 
+  prec_skew_factor ue(v)
+        for (i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1; i++) {
+            sign_focal_length_x[i] u(1)
+            exponent_focal_length_x[i] u(6)
+            mantissa_focal_length_x[i] u(v)
+            sign_focal_length_y[i] u(1)
+            exponent_focal_length_y[i] u(6)
+            mantissa_focal_length_y[i] u(v)
+            sign_principal_point_x[i] u(1)
+            exponent_principal_point_x[i] u(6)
+            mantissa_principal_point_x[i] u(v)
+            sign_principal_point_y[i] u(1)
+            exponent_principal_point_y[i] u(6)
+            mantissa_principal_point_y[i] u(v)
+            sign_skew_factor[i] u(1)
+            exponent_skew_factor[i] u(6)
+            mantissa_skew_factor[i] u(v)
+        }
+    }
+    if (extrinsic_param_flag) {  
+  prec_rotation_param ue(v) 
+  prec_translation_param ue(v)
+        for (i = 0; i <= num_views_minus1; i++)
+            for (j = 0; j < 3; j++) { /* row */
+                for (k = 0; k < 3; k++) { /* column */
+                    sign_r[i][j][k] u(1)
+                    exponent_r[i][j][k] u(6)
+                    mantissa_r[i][j][k] u(v)
+                }
+                sign_t[i][j] u(1)
+                exponent_t[i][j] u(6)
+                mantissa_t[i][j] u(v)
+            }
+    }
+}
+
+multiview_view_position(payloadSize) {
+    num_views_minus1 ue(v)
+    for (i = 0; i <= num_views_minus1; i++ )
+        view_position[i] ue(v)
+}
+
+depth_representation_info(payloadSize) {
+    z_near_flag u(1)
+    z_far_flag u(1)
+    d_min_flag u(1)
+    d_max_flag u(1)
+    depth_representation_type ue(v) 
+    
+    if (d_min_flag | | d_max_flag)
+        disparity_ref_view_id ue(v) 
+    if (z_near_flag)
+        depth_rep_info_element(ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen)
+    if (z_far_flag)
+        depth_rep_info_element(ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen)
+    if (d_min_flag)
+        depth_rep_info_element(DMinSign, DMinExp, DMinMantissa, DMinManLen)
+    if (d_max_flag)
+        depth_rep_info_element(DMaxSign, DMaxExp, DMaxMantissa, DMaxManLen)
+    if (depth_representation_type == 3) {
+        depth_nonlinear_representation_num_minus1 ue(v)
+        for (i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++)
+            depth_nonlinear_representation_model[i]  ue(v)
+    }
+}  
+
+depth_rep_info_element(OutSign, OutExp, OutMantissa, OutManLen) {
+    da_sign_flag u(1)
+    da_exponent u(7)
+    da_mantissa_len_minus1 u(5)
+    da_mantissa u(v)  
+}
+
+alpha_channel_info(payloadSize) {
+    alpha_channel_cancel_flag u(1)
+    if (!alpha_channel_cancel_flag) {
+        alpha_channel_use_idc u(3)
+        alpha_channel_bit_depth_minus8 u(3)
+        alpha_transparent_value u(v)
+        alpha_opaque_value u(v)
+        alpha_channel_incr_flag u(1)
+        alpha_channel_clip_flag u(1)
+        if (alpha_channel_clip_flag)
+            alpha_channel_clip_type_flag u(1)
+    }
+}  
+
+display_orientation(payloadSize) {
+    display_orientation_cancel_flag u(1)
+    if (!display_orientation_cancel_flag) {
+        display_orientation_persistence_flag u(1)
+        display_orientation_transform_type u(3)
+        display_orientation_reserved_zero_3bits u(3)
+    }
+}
+
+colour_transform_info(payloadSize) {
+    colour_transform_id ue(v)
+    colour_transform_cancel_flag u(1)      
+    if (!colour_transform_cancel_flag) {
+        colour_transform_persistence_flag u(1)
+        colour_transform_video_signal_info_present_flag u(1)
+        if (colour_transform_video_signal_info_present_flag) {
+            colour_transform_full_range_flag u(1)
+            colour_tranform_primaries u(8)
+            colour_transform_transfer_function u(8)
+            colour_transform_matrix_coefficients u(8)
+        }
+        colour_transform_bit_depth_minus8 u(4)
+        colour_transform_log2_number_of_points_per_lut_minus1 u(3)
+        colour_transform_cross_component_flag u(1)
+        if (colour_transform _cross_component_flag )
+            colour_transform_cross_comp_inferred_flag u(1)
+        for (i = 0; i < colourTransformSize; i++)
+            colour_transf_lut[0][i] u(v)
+        if (colour_transform_cross_component_flag == 0 ||
+            colour_transform_cross_comp_inferred_flag == 0) {
+            colour_transform_lut2_present_flag u(1)
+            for (i = 0; i < colourTransformSize; i++)
+                colour_transf_lut[1][i] u(1)
+            if (colour_transform_lut2_present_flag)
+                for (i = 0; i < colourTransformSize; i++)
+                    colour_transf_lut[2][i] u(v)
+        } else { 
+            colour_transform_chroma_offset u(v)
+        }
+    }
+}  
+
+shutter_interval_info(payloadSize) {
+    sii_time_scale  u(32)
+    sii_fixed_shutter_interval_within_clvs_flag u(1)
+    if (fixed_shutter_interval_within_clvs_flag)  
+        sii_num_units_in_shutter_interval u(32)
+    else {
+        sii_max_sub_layers_minus1 u(3)
+        for (i = 0; i <= sii_max_sub_layers_minus1; i++)
+            sii_sub_layer_num_units_in_shutter_interval[i] u(32)
+    }
+}
+
+nn_post_filter_characteristics(payloadSize) {
+ nnpfc_purpose u(16) 
+ nnpfc_id ue(v) 
+ nnpfc_base_flag u(1) 
+ nnpfc_mode_idc ue(v)
+    if (nnpfc_mode_idc == 1) {
+        while (!byte_aligned())  
+   nnpfc_alignment_zero_bit_a u(1) 
+  nnpfc_tag_uri st(v) 
+  nnpfc_uri st(v)
+    }  
+ nnpfc_property_present_flag u(1)
+    if (nnpfc_property_present_flag) {
+  /* input and output formatting */  
+  nnpfc_num_input_pics_minus1 ue(v)
+        if (nnpfc_num_input_pics_minus1 > 0) {
+            for (i = 0; i <= nnpfc_num_input_pics_minus1; i++)
+                nnpfc_input_pic_filtering_flag[i] u(1) 
+   nnpfc_absent_input_pic_zero_flag u(1)
+        }
+        if (ChromaUpsamplingFlag)  
+   nnpfc_out_sub_c_flag u(1)
+        if (ColourizationFlag)  
+   nnpfc_out_colour_format_idc u(2)
+        if (ResolutionResamplingFlag) {  
+   nnpfc_pic_width_num_minus1 ue(v) 
+   nnpfc_pic_width_denom_minus1 ue(v) 
+   nnpfc_pic_height_num_minus1 ue(v) 
+   nnpfc_pic_height_denom_minus1 ue(v)
+        }
+        if (PictureRateUpsamplingFlag)
+            for (i = 0; i < nnpfc_num_input_pics_minus1; i++)
+                nnpfc_interpolated_pics[i] ue(v) 
+  nnpfc_component_last_flag u(1) 
+  nnpfc_inp_format_idc ue(v) 
+  nnpfc_auxiliary_inp_idc ue(v) 
+  nnpfc_inp_order_idc ue(v)
+        if (nnpfc_inp_format_idc == 1) {
+            if (nnpfc_inp_order_idc != 1)  
+    nnpfc_inp_tensor_luma_bitdepth_minus8 ue(v)
+            if (nnpfc_inp_order_idc > 0)  
+    nnpfc_inp_tensor_chroma_bitdepth_minus8 ue(v)
+        }  
+  nnpfc_out_format_idc ue(v) 
+  nnpfc_out_order_idc ue(v) 
+        if (nnpfc_out_format_idc == 1) {
+            if (nnpfc_out_order_idc != 1)  
+    nnpfc_out_tensor_luma_bitdepth_minus8 ue(v)
+            if (nnpfc_out_order_idc != 0)  
+    nnpfc_out_tensor_chroma_bitdepth_minus8 ue(v)
+        }  
+  nnpfc_separate_colour_description_present_flag  u(1)
+        if (nnpfc_separate_colour_description_present_flag) {  
+   nnpfc_colour_primaries u(8) 
+   nnpfc_transfer_characteristics u(8)
+            if (nnpfc_out_format_idc == 1) {  
+    nnpfc_matrix_coeffs u(8) 
+    nnpfc_full_range_flag u(1)
+            }
+        }
+        if (nnpfc_out_order_idc > 0)  
+   nnpfc_chroma_loc_info_present_flag u(1)
+        if (nnpfc_chroma_loc_info_present_flag)  
+   nnpfc_chroma_sample_loc_type_frame ue(v) 
+  nnpfc_overlap ue(v) 
+  nnpfc_constant_patch_size_flag u(1)
+        if (nnpfc_constant_patch_size_flag) {  
+   nnpfc_patch_width_minus1 ue(v) 
+   nnpfc_patch_height_minus1 ue(v)
+        } else {  
+   nnpfc_extended_patch_width_cd_delta_minus1 ue(v) 
+   nnpfc_extended_patch_height_cd_delta_minus1 ue(v)
+        }  
+  nnpfc_padding_type ue(v)
+        if (nnpfc_padding_type == 4) {
+            if (nnpfc_inp_order_idc != 1)  
+    nnpfc_luma_padding_val ue(v)
+            if (nnpfc_inp_order_idc != 0) {  
+    nnpfc_cb_padding_val ue(v) 
+    nnpfc_cr_padding_val ue(v)
+            }
+        }  
+  nnpfc_complexity_info_present_flag u(1)
+        if (nnpfc_complexity_info_present_flag) {  
+   nnpfc_parameter_type_idc u(2)
+            if (nnpfc_parameter_type_idc != 2)  
+    nnpfc_log2_parameter_bit_length_minus3 u(2) 
+   nnpfc_num_parameters_idc u(6) 
+   nnpfc_num_kmac_operations_idc ue(v) 
+   nnpfc_total_kilobyte_size ue(v)
+        }  
+  nnpfc_num_metadata_extension_bits ue(v)
+        if (nnpfc_num_metadata_extension_bits > 0)  
+            nnpfc_reserved_metadata_extension u(v)
+    }    
+    /* ISO/IEC 15938-17 bitstream */
+    if (nnpfc_mode_idc == 0) {
+        while (!byte_aligned())
+            nnpfc_alignment_zero_bit_b u(1)
+        for (i = 0; more_data_in_payload(); i++)
+            nnpfc_payload_byte[i] b(8)
+    }
+}  
+
+nn_post_filter_activation(payloadSize) {
+    nnpfa_target_id  ue(v)
+    nnpfa_cancel_flag u(1)
+   
+    if (!nnpfa_cancel_flag) {
+        nnpfa_persistence_flag u(1)
+        nnpfa_target_base_flag u(1)
+        nnpfa_no_prev_clvs_flag u(1)
+        if (nnpfa_persistence_flag)
+            nnpfa_no_foll_clvs_flag u(1)
+        nnpfa_num_output_entries ue(v)
+        for (i = 0; i < nnpfa_num_output_entries; i++)
+            nnpfa_output_flag[i] u(1)
+    }
+}
+
+phase_indication(payloadSize) {
+    pi_hor_phase_num u(8)
+    pi_hor_phase_den_minus1 u(8)
+    pi_ver_phase_num u(8)
+    pi_ver_phase_den_minus1 u(8)
+}
+
+reserved_message(payloadSize) {
+    for (i = 0; i < payloadSize; i++)
+        reserved_message_payload_byte u(8)    
+}
 
 buffering_period( payloadSize ) {  
  bp_nal_hrd_params_present_flag u(1) 

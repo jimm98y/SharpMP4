@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpH26X", "SharpH26X\Shar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleVideoParser", "SampleVideoParser\SampleVideoParser.csproj", "{63A4732E-D21E-2650-128B-F3764EFDB0B4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpH266", "SharpH266\SharpH266.csproj", "{1F27078F-1ABF-493D-95D5-7E02AF214186}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +69,10 @@ Global
 		{63A4732E-D21E-2650-128B-F3764EFDB0B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63A4732E-D21E-2650-128B-F3764EFDB0B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63A4732E-D21E-2650-128B-F3764EFDB0B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F27078F-1ABF-493D-95D5-7E02AF214186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F27078F-1ABF-493D-95D5-7E02AF214186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F27078F-1ABF-493D-95D5-7E02AF214186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F27078F-1ABF-493D-95D5-7E02AF214186}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
