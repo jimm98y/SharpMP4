@@ -1746,7 +1746,7 @@ colour_transform_info(payloadSize) {
 shutter_interval_info(payloadSize) {
     sii_time_scale  u(32)
     sii_fixed_shutter_interval_within_clvs_flag u(1)
-    if (fixed_shutter_interval_within_clvs_flag)  
+    if (sii_fixed_shutter_interval_within_clvs_flag)  
         sii_num_units_in_shutter_interval u(32)
     else {
         sii_max_sub_layers_minus1 u(3)
@@ -2087,3 +2087,34 @@ for( j = 0; j  <=  sli_num_subpics_minus1; j++ )
 sli_ref_level_fraction_minus1[ i ][ j ][ k ] u(8) 
 }  
 }  
+
+parameter_sets_inclusion_indication(payloadSize) {
+    psii_self_contained_clvs_flag  u(1)
+}
+
+sphere_rotation(payloadSize) { 
+    sphere_rotation_cancel_flag u(1)
+    if (!sphere_rotation_cancel_flag) {  
+      sphere_rotation_persistence_flag u(1) 
+      sphere_rotation_reserved_zero_6bits u(6) 
+      yaw_rotation i(32) 
+      pitch_rotation i(32) 
+      roll_rotation i(32)
+    }
+}
+
+decoded_picture_hash(payloadSize) {
+ dph_sei_hash_type u(8) 
+ dph_sei_single_component_flag u(1) 
+ dph_sei_reserved_zero_7bits u(7)
+    for (cIdx = 0; cIdx < (dph_sei_single_component_flag ? 1 : 3); cIdx++)
+        if (dph_sei_hash_type == 0)
+            for (i = 0; i < 16; i++)
+                dph_sei_picture_md5[cIdx][i] b(8) 
+  else if (dph_sei_hash_type == 1)
+        dph_sei_picture_crc[cIdx] u(16) 
+  else if (dph_sei_hash_type == 2)
+        dph_sei_picture_checksum[cIdx] u(32)
+}
+
+

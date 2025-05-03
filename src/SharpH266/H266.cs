@@ -53,6 +53,7 @@ namespace SharpH266
     public partial class H266Context
     {
         public SeiPayload SeiPayload { get; set; }
+
         public uint olsModeIdc { get; set; }
         public uint TotalNumOlss { get; set; }
         public uint VpsNumDpbParams { get; set; }
@@ -72,8 +73,12 @@ namespace SharpH266
         public int[][] DirectRefLayerIdx { get; set; }
         public int[][] ReferenceLayerIdx { get; set; }
         public uint[] NumLayersInOls { get; set; }
-        public uint CtbLog2SizeY { get; private set; }
-        public uint CtbSizeY { get; private set; }
+        public uint CtbLog2SizeY { get; set; }
+        public uint CtbSizeY { get; set; }
+        public uint MaxNumMergeCand { get; set; }
+        public int NumExtraPhBits { get; set; }
+        public uint NumWeightsL1 { get; private set; }
+        public int NumAlfFilters { get; private set; }
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -367,6 +372,27 @@ namespace SharpH266
             var sps_log2_ctu_size_minus5 = SeqParameterSetRbsp.SpsLog2CtuSizeMinus5;
             CtbLog2SizeY = sps_log2_ctu_size_minus5 + 5;
             CtbSizeY = (uint)(1 << (int)CtbLog2SizeY);
+        }
+
+        public void OnSpsSixMinusMaxNumMergeCand()
+        {
+            var sps_six_minus_max_num_merge_cand = SeqParameterSetRbsp.SpsSixMinusMaxNumMergeCand;
+            MaxNumMergeCand = 6 - sps_six_minus_max_num_merge_cand;
+        }
+
+        public void OnSpsExtraPhBitPresentFlag()
+        {
+            var sps_num_extra_ph_bytes = SeqParameterSetRbsp.SpsNumExtraPhBytes;
+            var sps_extra_ph_bit_present_flag = SeqParameterSetRbsp.SpsExtraPhBitPresentFlag;
+            NumExtraPhBits = 0;
+            for (int i = 0; i < (sps_num_extra_ph_bytes * 8); i++)
+                if (sps_extra_ph_bit_present_flag[i] != 0)
+                    NumExtraPhBits++;
+        }
+               
+        public void OnAlfChromaFilterSignalFlag()
+        {
+            NumAlfFilters = 25;
         }
     }
 }
