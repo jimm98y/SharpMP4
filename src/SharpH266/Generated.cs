@@ -622,6 +622,7 @@ video_parameter_set_rbsp() {
                         for (j = 0; j < i; j++)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.vps_direct_ref_layer_flag[i][j]);
+                            ((H266Context)context).OnVpsDirectRefLayerFlag();
 
                             if (vps_max_tid_ref_present_flag[i] != 0 && vps_direct_ref_layer_flag[i][j] != 0)
                             {
@@ -661,6 +662,7 @@ video_parameter_set_rbsp() {
                             for (j = 0; j <= vps_max_layers_minus1; j++)
                             {
                                 size += stream.ReadUnsignedInt(size, 1, out this.vps_ols_output_layer_flag[i][j]);
+                                ((H266Context)context).OnVpsOlsOutputLayerFlag(j);
                             }
                         }
                     }
@@ -731,19 +733,19 @@ video_parameter_set_rbsp() {
                     size += stream.ReadClass<DpbParameters>(size, context, this.dpb_parameters[i]);
                 }
 
-                this.vps_ols_dpb_pic_width = new uint[NumMultiLayerOlss];
-                this.vps_ols_dpb_pic_height = new uint[NumMultiLayerOlss];
-                this.vps_ols_dpb_chroma_format = new uint[NumMultiLayerOlss];
-                this.vps_ols_dpb_bitdepth_minus8 = new uint[NumMultiLayerOlss];
-                this.vps_ols_dpb_params_idx = new uint[NumMultiLayerOlss];
-                for (i = 0; i < NumMultiLayerOlss; i++)
+                this.vps_ols_dpb_pic_width = new uint[((H266Context)context).NumMultiLayerOlss];
+                this.vps_ols_dpb_pic_height = new uint[((H266Context)context).NumMultiLayerOlss];
+                this.vps_ols_dpb_chroma_format = new uint[((H266Context)context).NumMultiLayerOlss];
+                this.vps_ols_dpb_bitdepth_minus8 = new uint[((H266Context)context).NumMultiLayerOlss];
+                this.vps_ols_dpb_params_idx = new uint[((H266Context)context).NumMultiLayerOlss];
+                for (i = 0; i < ((H266Context)context).NumMultiLayerOlss; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_pic_width[i]);
                     size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_pic_height[i]);
                     size += stream.ReadUnsignedInt(size, 2, out this.vps_ols_dpb_chroma_format[i]);
                     size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_bitdepth_minus8[i]);
 
-                    if (((H266Context)context).VpsNumDpbParams > 1 && ((H266Context)context).VpsNumDpbParams != NumMultiLayerOlss)
+                    if (((H266Context)context).VpsNumDpbParams > 1 && ((H266Context)context).VpsNumDpbParams != ((H266Context)context).NumMultiLayerOlss)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_params_idx[i]);
                     }
@@ -776,11 +778,11 @@ video_parameter_set_rbsp() {
                     }
 
                     if (vps_num_ols_timing_hrd_params_minus1 > 0 &&
-     vps_num_ols_timing_hrd_params_minus1 + 1 != NumMultiLayerOlss)
+     vps_num_ols_timing_hrd_params_minus1 + 1 != ((H266Context)context).NumMultiLayerOlss)
                     {
 
-                        this.vps_ols_timing_hrd_idx = new uint[NumMultiLayerOlss];
-                        for (i = 0; i < NumMultiLayerOlss; i++)
+                        this.vps_ols_timing_hrd_idx = new uint[((H266Context)context).NumMultiLayerOlss];
+                        for (i = 0; i < ((H266Context)context).NumMultiLayerOlss; i++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_timing_hrd_idx[i]);
                         }
@@ -842,6 +844,7 @@ video_parameter_set_rbsp() {
                         for (j = 0; j < i; j++)
                         {
                             size += stream.WriteUnsignedInt(1, this.vps_direct_ref_layer_flag[i][j]);
+                            ((H266Context)context).OnVpsDirectRefLayerFlag();
 
                             if (vps_max_tid_ref_present_flag[i] != 0 && vps_direct_ref_layer_flag[i][j] != 0)
                             {
@@ -879,6 +882,7 @@ video_parameter_set_rbsp() {
                             for (j = 0; j <= vps_max_layers_minus1; j++)
                             {
                                 size += stream.WriteUnsignedInt(1, this.vps_ols_output_layer_flag[i][j]);
+                                ((H266Context)context).OnVpsOlsOutputLayerFlag(j);
                             }
                         }
                     }
@@ -941,14 +945,14 @@ video_parameter_set_rbsp() {
                     size += stream.WriteClass<DpbParameters>(context, this.dpb_parameters[i]);
                 }
 
-                for (i = 0; i < NumMultiLayerOlss; i++)
+                for (i = 0; i < ((H266Context)context).NumMultiLayerOlss; i++)
                 {
                     size += stream.WriteUnsignedIntGolomb(this.vps_ols_dpb_pic_width[i]);
                     size += stream.WriteUnsignedIntGolomb(this.vps_ols_dpb_pic_height[i]);
                     size += stream.WriteUnsignedInt(2, this.vps_ols_dpb_chroma_format[i]);
                     size += stream.WriteUnsignedIntGolomb(this.vps_ols_dpb_bitdepth_minus8[i]);
 
-                    if (((H266Context)context).VpsNumDpbParams > 1 && ((H266Context)context).VpsNumDpbParams != NumMultiLayerOlss)
+                    if (((H266Context)context).VpsNumDpbParams > 1 && ((H266Context)context).VpsNumDpbParams != ((H266Context)context).NumMultiLayerOlss)
                     {
                         size += stream.WriteUnsignedIntGolomb(this.vps_ols_dpb_params_idx[i]);
                     }
@@ -977,10 +981,10 @@ video_parameter_set_rbsp() {
                     }
 
                     if (vps_num_ols_timing_hrd_params_minus1 > 0 &&
-     vps_num_ols_timing_hrd_params_minus1 + 1 != NumMultiLayerOlss)
+     vps_num_ols_timing_hrd_params_minus1 + 1 != ((H266Context)context).NumMultiLayerOlss)
                     {
 
-                        for (i = 0; i < NumMultiLayerOlss; i++)
+                        for (i = 0; i < ((H266Context)context).NumMultiLayerOlss; i++)
                         {
                             size += stream.WriteUnsignedIntGolomb(this.vps_ols_timing_hrd_idx[i]);
                         }

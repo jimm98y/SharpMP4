@@ -40,6 +40,38 @@ namespace ItuGenerator
                     return "((H266Context)context).TotalNumOlss";
                 case "VpsNumDpbParams":
                     return "((H266Context)context).VpsNumDpbParams";
+                case "NumOutputLayersInOls":
+                    return "((H266Context)context).NumOutputLayersInOls";
+                case "OutputLayerIdInOls":
+                    return "((H266Context)context).OutputLayerIdInOls";
+                case "NumSubLayersInLayerInOLS":
+                    return "((H266Context)context).NumSubLayersInLayerInOLS";
+                case "layerIncludedInOlsFlag":
+                    return "((H266Context)context).layerIncludedInOlsFlag";
+                case "LayerUsedAsOutputLayerFlag":
+                    return "((H266Context)context).LayerUsedAsOutputLayerFlag";
+                case "OutputLayerIdx":
+                    return "((H266Context)context).OutputLayerIdx";
+                case "NumMultiLayerOlss":
+                    return "((H266Context)context).NumMultiLayerOlss";
+                case "MultiLayerOlsIdx":
+                    return "((H266Context)context).MultiLayerOlsIdx";
+                case "LayerUsedAsRefLayerFlag":
+                    return "((H266Context)context).LayerUsedAsRefLayerFlag";
+                case "NumDirectRefLayers":
+                    return "((H266Context)context).NumDirectRefLayers";
+                case "NumRefLayers":
+                    return "((H266Context)context).NumRefLayers";
+                case "GeneralLayerIdx":
+                    return "((H266Context)context).GeneralLayerIdx";
+                case "DirectRefLayerIdx":
+                    return "((H266Context)context).DirectRefLayerIdx";
+                case "ReferenceLayerIdx":
+                    return "((H266Context)context).ReferenceLayerIdx";
+                case "NumLayersInOls":
+                    return "((H266Context)context).NumLayersInOls";
+                case "LayerIdInOls":
+                    return "((H266Context)context).LayerIdInOls";
 
                 default:
                     //throw new NotImplementedException(parameter);
@@ -55,6 +87,10 @@ namespace ItuGenerator
                     return "((H266Context)context).OnVpsNumOutputLayerSetsMinus2();";
                 case "vps_num_dpb_params_minus1":
                     return "((H266Context)context).OnVpsNumDpbParamsMinus1();";
+                case "vps_ols_output_layer_flag":
+                    return "((H266Context)context).OnVpsOlsOutputLayerFlag(j);";
+                case "vps_direct_ref_layer_flag":
+                    return "((H266Context)context).OnVpsDirectRefLayerFlag();";
             }
             return "";
         }
