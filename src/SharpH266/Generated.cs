@@ -6908,7 +6908,7 @@ sei_message() {
 
                 size += stream.ReadUnsignedInt(size, 8, whileIndex, this.payload_type_byte);
                 payloadType += payload_type_byte[whileIndex];
-            } while (payload_type_byte == 0xFF);
+            } while (payload_type_byte[whileIndex] == 0xFF);
             payloadSize = 0;
 
             do
@@ -6917,7 +6917,7 @@ sei_message() {
 
                 size += stream.ReadUnsignedInt(size, 8, whileIndex, this.payload_size_byte);
                 payloadSize += payload_size_byte[whileIndex];
-            } while (payload_size_byte == 0xFF);
+            } while (payload_size_byte[whileIndex] == 0xFF);
             stream.MarkCurrentBitsPosition();
             this.sei_payload = new SeiPayload(payloadType, payloadSize);
             size += stream.ReadClass<SeiPayload>(size, context, this.sei_payload);
@@ -6940,7 +6940,7 @@ sei_message() {
 
                 size += stream.WriteUnsignedInt(8, whileIndex, this.payload_type_byte);
                 payloadType += payload_type_byte[whileIndex];
-            } while (payload_type_byte == 0xFF);
+            } while (payload_type_byte[whileIndex] == 0xFF);
             payloadSize = 0;
 
             do
@@ -6949,7 +6949,7 @@ sei_message() {
 
                 size += stream.WriteUnsignedInt(8, whileIndex, this.payload_size_byte);
                 payloadSize += payload_size_byte[whileIndex];
-            } while (payload_size_byte == 0xFF);
+            } while (payload_size_byte[whileIndex] == 0xFF);
             stream.MarkCurrentBitsPosition();
             size += stream.WriteClass<SeiPayload>(context, this.sei_payload);
 
@@ -9150,10 +9150,9 @@ generalized_cubemap_projection(payloadSize) {
     gcmp_cancel_flag u(1)
     if (!gcmp_cancel_flag) {       
         gcmp_persistence_flag u(1)
-         gcmp_packing_type u(3) 
-  gcmp_mapping_function_type u(2)
-        for (i = 0; i < (gcmp_packing_type == 4 ||
-            gcmp_packing_type  == 5) ? 5 : 6; i++ ) {
+        gcmp_packing_type u(3) 
+        gcmp_mapping_function_type u(2)
+        for (i = 0; i < ((gcmp_packing_type == 4 || gcmp_packing_type  == 5) ? 5 : 6); i++ ) {
 
             gcmp_face_index[i] u(3)
             gcmp_face_rotation[i] u(2)
@@ -9227,20 +9226,13 @@ generalized_cubemap_projection(payloadSize) {
                 size += stream.ReadUnsignedInt(size, 3, out this.gcmp_packing_type);
                 size += stream.ReadUnsignedInt(size, 2, out this.gcmp_mapping_function_type);
 
-                this.gcmp_face_index = new uint[(gcmp_packing_type == 4 ||
-            gcmp_packing_type == 5) ? 5 : 6];
-                this.gcmp_face_rotation = new uint[(gcmp_packing_type == 4 ||
-            gcmp_packing_type == 5) ? 5 : 6];
-                this.gcmp_function_coeff_u = new uint[(gcmp_packing_type == 4 ||
-            gcmp_packing_type == 5) ? 5 : 6];
-                this.gcmp_function_u_affected_by_v_flag = new byte[(gcmp_packing_type == 4 ||
-            gcmp_packing_type == 5) ? 5 : 6];
-                this.gcmp_function_coeff_v = new uint[(gcmp_packing_type == 4 ||
-            gcmp_packing_type == 5) ? 5 : 6];
-                this.gcmp_function_v_affected_by_u_flag = new byte[(gcmp_packing_type == 4 ||
-            gcmp_packing_type == 5) ? 5 : 6];
-                for (i = 0; i < (gcmp_packing_type == 4 ||
-            gcmp_packing_type == 5) ? 5 : 6; i++)
+                this.gcmp_face_index = new uint[((gcmp_packing_type == 4 || gcmp_packing_type == 5) ? 5 : 6)];
+                this.gcmp_face_rotation = new uint[((gcmp_packing_type == 4 || gcmp_packing_type == 5) ? 5 : 6)];
+                this.gcmp_function_coeff_u = new uint[((gcmp_packing_type == 4 || gcmp_packing_type == 5) ? 5 : 6)];
+                this.gcmp_function_u_affected_by_v_flag = new byte[((gcmp_packing_type == 4 || gcmp_packing_type == 5) ? 5 : 6)];
+                this.gcmp_function_coeff_v = new uint[((gcmp_packing_type == 4 || gcmp_packing_type == 5) ? 5 : 6)];
+                this.gcmp_function_v_affected_by_u_flag = new byte[((gcmp_packing_type == 4 || gcmp_packing_type == 5) ? 5 : 6)];
+                for (i = 0; i < ((gcmp_packing_type == 4 || gcmp_packing_type == 5) ? 5 : 6); i++)
                 {
                     size += stream.ReadUnsignedInt(size, 3, out this.gcmp_face_index[i]);
                     size += stream.ReadUnsignedInt(size, 2, out this.gcmp_face_rotation[i]);
@@ -9279,8 +9271,7 @@ generalized_cubemap_projection(payloadSize) {
                 size += stream.WriteUnsignedInt(3, this.gcmp_packing_type);
                 size += stream.WriteUnsignedInt(2, this.gcmp_mapping_function_type);
 
-                for (i = 0; i < (gcmp_packing_type == 4 ||
-            gcmp_packing_type == 5) ? 5 : 6; i++)
+                for (i = 0; i < ((gcmp_packing_type == 4 || gcmp_packing_type == 5) ? 5 : 6); i++)
                 {
                     size += stream.WriteUnsignedInt(3, this.gcmp_face_index[i]);
                     size += stream.WriteUnsignedInt(2, this.gcmp_face_rotation[i]);

@@ -316,6 +316,9 @@ namespace ItuGenerator
             condition = condition.Replace("nal_unit_type  >=  ", "nal_unit_type >= H266NALTypes.");
             condition = condition.Replace("nal_unit_type  <=  ", "nal_unit_type <= H266NALTypes.");
 
+            condition = condition.Replace("payload_type_byte  ==  0xFF", "payload_type_byte[whileIndex]  ==  0xFF");
+            condition = condition.Replace("payload_size_byte  ==  0xFF", "payload_size_byte[whileIndex]  ==  0xFF");
+
             condition = condition.Replace("ALF_APS", "H266Constants.ALF_APS");
             condition = condition.Replace("LMCS_APS", "H266Constants.LMCS_APS");
             condition = condition.Replace("SCALING_APS", "H266Constants.SCALING_APS");

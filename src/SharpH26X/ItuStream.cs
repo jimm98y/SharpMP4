@@ -215,12 +215,29 @@ namespace SharpH26X
             value = (byte)v;
             return read;
         }
+        
+        public ulong ReadUnsignedInt(ulong size, int count, int index, Dictionary<int, uint> value)
+        {
+            if (count > 32)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            ulong read = ReadUnsignedInt(size, count, out uint v);
+            value.Add(index, v);
+            return read;
+        }
 
         public ulong WriteUnsignedInt(int count, byte value)
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
             ulong size = WriteUnsignedInt(count, (uint)value);
+            return size;
+        }
+
+        public ulong WriteUnsignedInt(int count, int index, Dictionary<int, uint> value)
+        {
+            if (count > 32)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            ulong size = WriteUnsignedInt(count, value[index]);
             return size;
         }
 
