@@ -72,6 +72,8 @@ namespace SharpH266
         public int[][] DirectRefLayerIdx { get; set; }
         public int[][] ReferenceLayerIdx { get; set; }
         public uint[] NumLayersInOls { get; set; }
+        public uint CtbLog2SizeY { get; private set; }
+        public uint CtbSizeY { get; private set; }
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -358,6 +360,13 @@ namespace SharpH266
                     NumMultiLayerOlss++;
                 }
             }
+        }
+
+        public void OnSpsLog2CtuSizeMinus5()
+        {
+            var sps_log2_ctu_size_minus5 = SeqParameterSetRbsp.SpsLog2CtuSizeMinus5;
+            CtbLog2SizeY = sps_log2_ctu_size_minus5 + 5;
+            CtbSizeY = (uint)(1 << (int)CtbLog2SizeY);
         }
     }
 }

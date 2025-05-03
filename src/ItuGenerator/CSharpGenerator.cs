@@ -1406,7 +1406,9 @@ namespace Sharp{type}
                         }
                         else if (field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel"
                             // h265
-                            || field.Name == "numComps")
+                            || field.Name == "numComps"
+                            // h266
+                            || field.Name == "numQpTables")
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(64)", FieldArray = field.FieldArray });
                         }

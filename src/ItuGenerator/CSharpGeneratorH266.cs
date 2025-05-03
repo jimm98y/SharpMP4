@@ -72,6 +72,18 @@ namespace ItuGenerator
                     return "((H266Context)context).NumLayersInOls";
                 case "LayerIdInOls":
                     return "((H266Context)context).LayerIdInOls";
+                case "CtbLog2SizeY":
+                    return "((H266Context)context).CtbLog2SizeY";
+                case "CtbSizeY":
+                    return "((H266Context)context).CtbSizeY";
+                case "sps_subpic_width_minus1":
+                case "sps_subpic_ctu_top_left_x":
+                    return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
+                case "sps_subpic_height_minus1":
+                case "sps_subpic_ctu_top_left_y":
+                    return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
+                case "sps_subpic_id":
+                    return "sps_subpic_id_len_minus1 + 1";
 
                 default:
                     //throw new NotImplementedException(parameter);

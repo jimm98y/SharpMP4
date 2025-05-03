@@ -1577,7 +1577,7 @@ seq_parameter_set_rbsp() {
             ulong size = 0;
 
             uint i = 0;
-            uint numQpTables = 0;
+            long numQpTables = 0;
             uint j = 0;
             uint firstSubLayer = 0;
             int whileIndex = -1;
@@ -1635,26 +1635,26 @@ seq_parameter_set_rbsp() {
                     if (sps_subpic_same_size_flag == 0 || i == 0)
                     {
 
-                        if (i > 0 && sps_pic_width_max_in_luma_samples > CtbSizeY)
+                        if (i > 0 && sps_pic_width_max_in_luma_samples > ((H266Context)context).CtbSizeY)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, sps_subpic_ctu_top_left_x, out this.sps_subpic_ctu_top_left_x[i]);
+                            size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2((sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1) / ((H266Context)context).CtbSizeY)), out this.sps_subpic_ctu_top_left_x[i]);
                         }
 
-                        if (i > 0 && sps_pic_height_max_in_luma_samples > CtbSizeY)
+                        if (i > 0 && sps_pic_height_max_in_luma_samples > ((H266Context)context).CtbSizeY)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, sps_subpic_ctu_top_left_y, out this.sps_subpic_ctu_top_left_y[i]);
-                        }
-
-                        if (i < sps_num_subpics_minus1 &&
-      sps_pic_width_max_in_luma_samples > CtbSizeY)
-                        {
-                            size += stream.ReadUnsignedIntVariable(size, sps_subpic_width_minus1, out this.sps_subpic_width_minus1[i]);
+                            size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2((sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1) / ((H266Context)context).CtbSizeY)), out this.sps_subpic_ctu_top_left_y[i]);
                         }
 
                         if (i < sps_num_subpics_minus1 &&
-      sps_pic_height_max_in_luma_samples > CtbSizeY)
+      sps_pic_width_max_in_luma_samples > ((H266Context)context).CtbSizeY)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, sps_subpic_height_minus1, out this.sps_subpic_height_minus1[i]);
+                            size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2((sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1) / ((H266Context)context).CtbSizeY)), out this.sps_subpic_width_minus1[i]);
+                        }
+
+                        if (i < sps_num_subpics_minus1 &&
+      sps_pic_height_max_in_luma_samples > ((H266Context)context).CtbSizeY)
+                        {
+                            size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2((sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1) / ((H266Context)context).CtbSizeY)), out this.sps_subpic_height_minus1[i]);
                         }
                     }
 
@@ -1677,7 +1677,7 @@ seq_parameter_set_rbsp() {
                         this.sps_subpic_id = new uint[sps_num_subpics_minus1 + 1];
                         for (i = 0; i <= sps_num_subpics_minus1; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, sps_subpic_id, out this.sps_subpic_id[i]);
+                            size += stream.ReadUnsignedIntVariable(size, sps_subpic_id_len_minus1 + 1, out this.sps_subpic_id[i]);
                         }
                     }
                 }
@@ -1753,7 +1753,7 @@ seq_parameter_set_rbsp() {
                 size += stream.ReadUnsignedIntGolomb(size, out this.sps_log2_diff_max_tt_min_qt_inter_slice);
             }
 
-            if (CtbSizeY > 32)
+            if (((H266Context)context).CtbSizeY > 32)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.sps_max_luma_transform_size_64_flag);
             }
@@ -2035,7 +2035,7 @@ seq_parameter_set_rbsp() {
             ulong size = 0;
 
             uint i = 0;
-            uint numQpTables = 0;
+            long numQpTables = 0;
             uint j = 0;
             uint firstSubLayer = 0;
             int whileIndex = -1;
@@ -2086,26 +2086,26 @@ seq_parameter_set_rbsp() {
                     if (sps_subpic_same_size_flag == 0 || i == 0)
                     {
 
-                        if (i > 0 && sps_pic_width_max_in_luma_samples > CtbSizeY)
+                        if (i > 0 && sps_pic_width_max_in_luma_samples > ((H266Context)context).CtbSizeY)
                         {
-                            size += stream.WriteUnsignedIntVariable(sps_subpic_ctu_top_left_x[i], this.sps_subpic_ctu_top_left_x[i]);
+                            size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2((sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1) / ((H266Context)context).CtbSizeY)), this.sps_subpic_ctu_top_left_x[i]);
                         }
 
-                        if (i > 0 && sps_pic_height_max_in_luma_samples > CtbSizeY)
+                        if (i > 0 && sps_pic_height_max_in_luma_samples > ((H266Context)context).CtbSizeY)
                         {
-                            size += stream.WriteUnsignedIntVariable(sps_subpic_ctu_top_left_y[i], this.sps_subpic_ctu_top_left_y[i]);
-                        }
-
-                        if (i < sps_num_subpics_minus1 &&
-      sps_pic_width_max_in_luma_samples > CtbSizeY)
-                        {
-                            size += stream.WriteUnsignedIntVariable(sps_subpic_width_minus1[i], this.sps_subpic_width_minus1[i]);
+                            size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2((sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1) / ((H266Context)context).CtbSizeY)), this.sps_subpic_ctu_top_left_y[i]);
                         }
 
                         if (i < sps_num_subpics_minus1 &&
-      sps_pic_height_max_in_luma_samples > CtbSizeY)
+      sps_pic_width_max_in_luma_samples > ((H266Context)context).CtbSizeY)
                         {
-                            size += stream.WriteUnsignedIntVariable(sps_subpic_height_minus1[i], this.sps_subpic_height_minus1[i]);
+                            size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2((sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1) / ((H266Context)context).CtbSizeY)), this.sps_subpic_width_minus1[i]);
+                        }
+
+                        if (i < sps_num_subpics_minus1 &&
+      sps_pic_height_max_in_luma_samples > ((H266Context)context).CtbSizeY)
+                        {
+                            size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2((sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1) / ((H266Context)context).CtbSizeY)), this.sps_subpic_height_minus1[i]);
                         }
                     }
 
@@ -2127,7 +2127,7 @@ seq_parameter_set_rbsp() {
 
                         for (i = 0; i <= sps_num_subpics_minus1; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable(sps_subpic_id[i], this.sps_subpic_id[i]);
+                            size += stream.WriteUnsignedIntVariable(sps_subpic_id_len_minus1 + 1, this.sps_subpic_id[i]);
                         }
                     }
                 }
@@ -2200,7 +2200,7 @@ seq_parameter_set_rbsp() {
                 size += stream.WriteUnsignedIntGolomb(this.sps_log2_diff_max_tt_min_qt_inter_slice);
             }
 
-            if (CtbSizeY > 32)
+            if (((H266Context)context).CtbSizeY > 32)
             {
                 size += stream.WriteUnsignedInt(1, this.sps_max_luma_transform_size_64_flag);
             }
