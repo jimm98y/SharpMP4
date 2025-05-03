@@ -52,9 +52,7 @@ partial class Program
             //Debug.WriteLine(code);
             break;
         }
-    }
-
-    
+    }       
 
     private static string GetSampleCode(string sample, long startOffset, long endOffset)
     {

@@ -415,13 +415,14 @@ pic_parameter_set_rbsp() {
  pps_output_flag_present_flag u(1) 
  pps_no_pic_partition_flag u(1) 
  pps_subpic_id_mapping_present_flag u(1) 
+ /*
  if( pps_subpic_id_mapping_present_flag ) {  
   if( !pps_no_pic_partition_flag )  
    pps_num_subpics_minus1 ue(v) 
   pps_subpic_id_len_minus1 ue(v) 
   for( i = 0; i  <=  pps_num_subpics_minus1; i++ )  
    pps_subpic_id[ i ] u(v) 
- }  
+    }  
  if( !pps_no_pic_partition_flag ) {  
   pps_log2_ctu_size_minus5 u(2) 
   pps_num_exp_tile_columns_minus1 ue(v) 
@@ -530,6 +531,7 @@ pic_parameter_set_rbsp() {
   while( more_rbsp_data() )  
    pps_extension_data_flag u(1) 
     rbsp_trailing_bits()  
+    */
 }  
 
 adaptation_parameter_set_rbsp() {  
@@ -540,13 +542,13 @@ adaptation_parameter_set_rbsp() {
   alf_data()  
  else if( aps_params_type  ==  LMCS_APS )  
   lmcs_data()  
- else if( aps_params_type  ==  SCALING_APS )  
-  scaling_list_data()  
- aps_extension_flag u(1) 
- if( aps_extension_flag )  
-  while( more_rbsp_data() )  
-   aps_extension_data_flag u(1) 
- rbsp_trailing_bits()  
+ /* else if( aps_params_type  ==  SCALING_APS ) */
+ /* scaling_list_data()  */
+ /*aps_extension_flag u(1) */
+ /*if( aps_extension_flag )  */
+  /*while( more_rbsp_data() )  */
+  /* aps_extension_data_flag u(1) */
+ /*rbsp_trailing_bits()  */
 } 
 
 picture_header_rbsp() {  
@@ -572,7 +574,8 @@ picture_header_structure() {
    ph_poc_msb_cycle_present_flag u(1) 
   if( ph_poc_msb_cycle_present_flag )  
    ph_poc_msb_cycle_val u(v) 
- }  
+    }  
+ /*
  if( sps_alf_enabled_flag  &&  pps_alf_info_in_ph_flag ) {  
   ph_alf_enabled_flag u(1) 
   if( ph_alf_enabled_flag ) {  
@@ -676,9 +679,9 @@ picture_header_structure() {
   if( sps_mmvd_fullpel_only_enabled_flag )  
    ph_mmvd_fullpel_only_flag u(1) 
   presenceFlag = 0  
-  if( !pps_rpl_info_in_ph_flag ) /* This condition is intentionally not merged into the next, 
+  if( !pps_rpl_info_in_ph_flag )*/ /* This condition is intentionally not merged into the next, 
     to avoid possible interpretation of RplsIdx[ i ] not having a specified value. */ 
- 
+ /*
    presenceFlag = 1  
   else if( num_ref_entries[ 1 ][ RplsIdx[ 1 ] ] > 0 )  
    presenceFlag = 1  
@@ -728,6 +731,7 @@ ph_extension_length ue(v)
 for( i = 0; i < ph_extension_length; i++)   
 ph_extension_data_byte[ i ] u(8) 
 }  
+*/
 }  
 
 sei_rbsp() { 
@@ -843,37 +847,6 @@ lmcs_data() {
    lmcs_delta_sign_crs_flag u(1) 
  }  
 }  
-
-scaling_list_data() {  
- for( id = 0; id < 28; id ++ ) {  
-  matrixSize = id < 2 ? 2 : ( id < 8 ? 4 : 8 )  
-  if( aps_chroma_present_flag  ||  id % 3  ==  2  ||  id  ==  27 ) {  
-   scaling_list_copy_mode_flag[ id ] u(1) 
-   if( !scaling_list_copy_mode_flag[ id ] )  
-    scaling_list_pred_mode_flag[ id ] u(1) 
-   if( ( scaling_list_copy_mode_flag[ id ]  ||  scaling_list_pred_mode_flag[ id ] )  && 
-     id  !=  0  &&  id  !=  2  &&  id  !=  8 ) 
- 
-    scaling_list_pred_id_delta[ id ] ue(v) 
-   if( !scaling_list_copy_mode_flag[ id ] ) {  
-    nextCoef = 0  
-    if( id > 13 ) {  
-     scaling_list_dc_coef[ id - 14 ] se(v) 
-     nextCoef  +=  scaling_list_dc_coef[ id - 14 ]  
-    }  
-    for( i = 0; i < matrixSize * matrixSize; i++ ) {  
-     x = DiagScanOrder[ 3 ][ 3 ][ i ][ 0 ]  
-     y = DiagScanOrder[ 3 ][ 3 ][ i ][ 1 ]  
-     if( !( id > 25  &&  x  >=  4  &&  y  >=  4 ) ) {  
-      scaling_list_delta_coef[ id ][ i ] se(v) 
-      nextCoef  +=  scaling_list_delta_coef[ id ][ i ]  
-           }  
-     ScalingList[ id ][ i ] = nextCoef  
-    }  
-   }  
-  }  
- }  
-} 
 
 vui_payload( payloadSize ) {  
  vui_parameters( payloadSize ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 */  
@@ -1100,73 +1073,6 @@ sei_message() {
   payloadSize  +=  payload_size_byte  
  } while( payload_size_byte  ==  0xFF )  
  sei_payload( payloadType, payloadSize )  
-}  
-
-pred_weight_table() {  
- luma_log2_weight_denom ue(v) 
- if( sps_chroma_format_idc  !=  0 )  
-  delta_chroma_log2_weight_denom se(v) 
- if( pps_wp_info_in_ph_flag )  
-  num_l0_weights ue(v) 
- for( i = 0; i < NumWeightsL0; i++ )  
-  luma_weight_l0_flag[ i ] u(1) 
- if( sps_chroma_format_idc  !=  0 )  
-  for( i = 0; i < NumWeightsL0; i++ )  
-   chroma_weight_l0_flag[ i ] u(1) 
- for( i = 0; i < NumWeightsL0; i++ ) {  
-  if( luma_weight_l0_flag[ i ] ) {  
-   delta_luma_weight_l0[ i ] se(v) 
-   luma_offset_l0[ i ] se(v) 
-  }  
-  if( chroma_weight_l0_flag[ i ] )  
-   for( j = 0; j < 2; j++ ) {  
-    delta_chroma_weight_l0[ i ][ j ] se(v) 
-    delta_chroma_offset_l0[ i ][ j ] se(v) 
-   }  
- }  
- if(  pps_weighted_bipred_flag  &&  pps_wp_info_in_ph_flag  && 
-   num_ref_entries[ 1 ][ RplsIdx[ 1 ] ] > 0 ) 
- 
-  num_l1_weights ue(v) 
- for( i = 0; i < NumWeightsL1; i++ )  
-  luma_weight_l1_flag[ i ] u(1) 
- if( sps_chroma_format_idc  !=  0 )  
-  for( i = 0; i < NumWeightsL1; i++ )  
-   chroma_weight_l1_flag[ i ] u(1) 
- for( i = 0; i < NumWeightsL1; i++ ) {  
-  if( luma_weight_l1_flag[ i ] ) {  
-   delta_luma_weight_l1[ i ] se(v) 
-   luma_offset_l1[ i ] se(v) 
-  }  
-  if( chroma_weight_l1_flag[ i ] )  
-   for( j = 0; j < 2; j++ ) {  
-    delta_chroma_weight_l1[ i ][ j ] se(v) 
-        delta_chroma_offset_l1[ i ][ j ] se(v) 
-   }  
- }  
-}  
-
-ref_pic_lists() {  
- for( i = 0; i < 2; i++ ) {  
-  if( sps_num_ref_pic_lists[ i ] > 0  && 
-     ( i  ==  0  ||  ( i  ==  1  &&  pps_rpl1_idx_present_flag ) ) ) 
- 
-   rpl_sps_flag[ i ] u(1) 
-  if( rpl_sps_flag[ i ] ) {  
-   if( sps_num_ref_pic_lists[ i ] > 1  && 
-      ( i  ==  0  ||  ( i  ==  1  &&  pps_rpl1_idx_present_flag ) ) ) 
- 
-    rpl_idx[ i ] u(v) 
-  } else  
-   ref_pic_list_struct( i, sps_num_ref_pic_lists[ i ] )  
-  for( j = 0; j < NumLtrpEntries[ i ][ RplsIdx[ i ] ]; j++ ) {  
-   if( ltrp_in_header_flag[ i ][ RplsIdx[ i ] ] )  
-    poc_lsb_lt[ i ][ j ] u(v) 
-   delta_poc_msb_cycle_present_flag[ i ][ j ] u(1) 
-   if( delta_poc_msb_cycle_present_flag[ i ][ j ] )  
-    delta_poc_msb_cycle_lt[ i ][ j ] ue(v) 
-  }  
- }  
 }  
 
 ref_pic_list_struct( listIdx, rplsIdx ) {  

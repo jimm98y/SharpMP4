@@ -77,8 +77,8 @@ namespace SharpH266
         public uint CtbSizeY { get; set; }
         public uint MaxNumMergeCand { get; set; }
         public int NumExtraPhBits { get; set; }
-        public uint NumWeightsL1 { get; private set; }
         public int NumAlfFilters { get; private set; }
+        public uint LmcsMaxBinIdx { get; private set; }
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -393,6 +393,12 @@ namespace SharpH266
         public void OnAlfChromaFilterSignalFlag()
         {
             NumAlfFilters = 25;
+        }
+
+        public void OnLmcsDeltaMaxBinIdx()
+        {
+            var lmcs_delta_max_bin_idx = AdaptationParameterSetRbsp.LmcsData.LmcsDeltaMaxBinIdx;
+            LmcsMaxBinIdx = 15 - lmcs_delta_max_bin_idx;
         }
     }
 }

@@ -82,6 +82,10 @@ namespace ItuGenerator
                     return "((H266Context)context).CtbSizeY";
                 case "MaxNumMergeCand":
                     return "((H266Context)context).MaxNumMergeCand";
+                case "NumAlfFilters":
+                    return "((H266Context)context).NumAlfFilters";
+                case "LmcsMaxBinIdx":
+                    return "((H266Context)context).LmcsMaxBinIdx";
                 case "sps_subpic_width_minus1":
                 case "sps_subpic_ctu_top_left_x":
                     return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
@@ -273,6 +277,8 @@ namespace ItuGenerator
                     return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "dui_du_cpb_removal_delay_increment":
                     return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                case "TemporalId":
+                    return "(((H266Context)context).NalHeader.NalUnitHeader.NuhTemporalIdPlus1 - 1)";
 
                 default:
                     //throw new NotImplementedException(parameter);
@@ -294,6 +300,14 @@ namespace ItuGenerator
                     return "((H266Context)context).OnVpsDirectRefLayerFlag();";
                 case "alf_chroma_filter_signal_flag":
                     return "((H266Context)context).OnAlfChromaFilterSignalFlag();";
+                case "lmcs_delta_max_bin_idx":
+                    return "((H266Context)context).OnLmcsDeltaMaxBinIdx();";
+                case "sps_extra_ph_bit_present_flag":
+                    return "((H266Context)context).OnSpsExtraPhBitPresentFlag();";
+                case "sps_six_minus_max_num_merge_cand":
+                    return "((H266Context)context).OnSpsSixMinusMaxNumMergeCand();";
+                case "sps_log2_ctu_size_minus5":
+                    return "((H266Context)context).OnSpsLog2CtuSizeMinus5();";
             }
             return "";
         }
