@@ -1623,12 +1623,12 @@ seq_parameter_set_rbsp() {
                     size += stream.ReadUnsignedInt(size, 1, out this.sps_subpic_same_size_flag);
                 }
 
-                this.sps_subpic_ctu_top_left_x = new uint[0 && i <= sps_num_subpics_minus1 + 1];
-                this.sps_subpic_ctu_top_left_y = new uint[0 && i <= sps_num_subpics_minus1 + 1];
-                this.sps_subpic_width_minus1 = new uint[0 && i <= sps_num_subpics_minus1 + 1];
-                this.sps_subpic_height_minus1 = new uint[0 && i <= sps_num_subpics_minus1 + 1];
-                this.sps_subpic_treated_as_pic_flag = new byte[0 && i <= sps_num_subpics_minus1 + 1];
-                this.sps_loop_filter_across_subpic_enabled_flag = new byte[0 && i <= sps_num_subpics_minus1 + 1];
+                this.sps_subpic_ctu_top_left_x = new uint[sps_num_subpics_minus1 + 1];
+                this.sps_subpic_ctu_top_left_y = new uint[sps_num_subpics_minus1 + 1];
+                this.sps_subpic_width_minus1 = new uint[sps_num_subpics_minus1 + 1];
+                this.sps_subpic_height_minus1 = new uint[sps_num_subpics_minus1 + 1];
+                this.sps_subpic_treated_as_pic_flag = new byte[sps_num_subpics_minus1 + 1];
+                this.sps_loop_filter_across_subpic_enabled_flag = new byte[sps_num_subpics_minus1 + 1];
                 for (i = 0; sps_num_subpics_minus1 > 0 && i <= sps_num_subpics_minus1; i++)
                 {
 

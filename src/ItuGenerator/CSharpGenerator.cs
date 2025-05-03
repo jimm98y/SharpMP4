@@ -824,6 +824,12 @@ namespace Sharp{type}
                                         appendType += "[][]"; // TODO fix this workaround
                                     }
 
+                                    // H266
+                                    if(variableType.Contains(" 0  &&  i  <=  "))
+                                    {
+                                        variableType = variableType.Replace(" 0  &&  i  <=  ", "");
+                                    }
+
                                     ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                                 }
                             }
