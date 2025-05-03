@@ -10,6 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SharpH264\SharpH264.csproj" />
     <ProjectReference Include="..\SharpH265\SharpH265.csproj" />
+    <ProjectReference Include="..\SharpH266\SharpH266.csproj" />
     <ProjectReference Include="..\SharpMP4\SharpMP4.csproj" />
   </ItemGroup>
 

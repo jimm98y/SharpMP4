@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace SharpH265
 {
     public class H265Constants
