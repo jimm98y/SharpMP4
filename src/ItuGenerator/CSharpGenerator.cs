@@ -819,7 +819,15 @@ namespace Sharp{type}
                                         variableName == "cp_off" ||
                                         variableName == "cp_scale" ||
                                         variableName == "cp_inv_scale_plus_scale" ||
-                                        variableName == "cp_inv_off_plus_off"
+                                        variableName == "cp_inv_off_plus_off" ||
+                                        // h266
+                                        variableName == "bit_rate_value_minus1" ||
+                                        variableName == "cpb_size_value_minus1" ||
+                                        variableName == "cpb_size_du_value_minus1" ||
+                                        variableName == "cbr_flag" ||
+                                        variableName == "colour_transf_lut" ||
+                                        variableName == "scaling_list_dc_coef" ||
+                                        variableName == "bit_rate_du_value_minus1"
                                         )
                                     {
                                         appendType += "[]"; // TODO fix this workaround
@@ -828,14 +836,26 @@ namespace Sharp{type}
                                         variableName == "vps_cp_scale" ||
                                         variableName == "vps_cp_off" ||
                                         variableName == "vps_cp_inv_scale_plus_scale" ||
-                                        variableName == "vps_cp_inv_off_plus_off"
+                                        variableName == "vps_cp_inv_off_plus_off" ||
+                                        // h266
+                                        variableName == "inter_layer_ref_pic_flag" ||
+                                        variableName == "st_ref_pic_flag" ||
+                                        variableName == "abs_delta_poc_st" ||
+                                        variableName == "strp_entry_sign_flag" ||
+                                        variableName == "ilrp_idx"
                                         )
                                     {
                                         appendType += "[][]"; // TODO fix this workaround
                                     }
+                                    else if(
+                                        variableName == "rpls_poc_lsb_lt"
+                                        )
+                                    {
+                                        appendType += "[][][]"; // TODO fix this workaround
+                                    }
 
                                     // H266
-                                    if(variableType.Contains(" 0  &&  i  <=  "))
+                                    if (variableType.Contains(" 0  &&  i  <=  "))
                                     {
                                         variableType = variableType.Replace(" 0  &&  i  <=  ", "");
                                     }

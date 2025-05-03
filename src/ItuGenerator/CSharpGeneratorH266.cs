@@ -373,6 +373,8 @@ namespace ItuGenerator
 
         public string FixFieldValue(string fieldValue)
         {
+            fieldValue = fieldValue.Replace("scaling_list_dc_coef[ id - 14 ]", "(uint)scaling_list_dc_coef[ id - 14 ][ id ]");
+            fieldValue = fieldValue.Replace("scaling_list_delta_coef[ id ][ i ]", "(uint)scaling_list_delta_coef[ id ][ i ]");
             return fieldValue;
         }
 
