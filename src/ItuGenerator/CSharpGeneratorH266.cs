@@ -222,6 +222,8 @@ namespace ItuGenerator
                 case "bp_vcl_initial_cpb_removal_offset":
                 case "bp_vcl_initial_alt_cpb_removal_offset":
                     return "bp_cpb_initial_removal_delay_length_minus1 + 1";
+                case "bp_cpb_removal_delay_delta_minus1":
+                    return "bp_cpb_removal_delay_length_minus1 + 1";
                 case "colour_transf_lut":
                     return "(uint)(2 + ( colour_transform_bit_depth_minus8 + 8 ) - ( colour_transform_log2_number_of_points_per_lut_minus1 + 1 ))";
                 case "colourTransformSize":

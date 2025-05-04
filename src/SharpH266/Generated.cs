@@ -6302,7 +6302,7 @@ sei_payload( payloadType, payloadSize ) {
    scalable_nesting( payloadSize )  
   else if( payloadType  ==  137 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 *//*  
    mastering_display_colour_volume( payloadSize )  
-     else if( payloadType  ==  144 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 *//*  
+  else if( payloadType  ==  144 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 *//*  
    content_light_level_info( payloadSize )  
   else if( payloadType  ==  145 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 *//*  
    dependent_rap_indication( payloadSize )  
@@ -6333,7 +6333,7 @@ sei_payload( payloadType, payloadSize ) {
  else /* nal_unit_type  ==  SUFFIX_SEI_NUT *//*  
   if( payloadType  ==  3 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 *//*  
    filler_payload( payloadSize )  
-  if( payloadType  ==  132 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 *//*  
+  else if( payloadType  ==  132 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 *//*  
    decoded_picture_hash( payloadSize )  
   else if( payloadType  ==  133 )  
    scalable_nesting( payloadSize )  
@@ -6565,22 +6565,21 @@ sei_payload( payloadType, payloadSize ) {
                     this.filler_payload = new FillerPayload(payloadSize);
                     size += stream.ReadClass<FillerPayload>(size, context, this.filler_payload);
                 }
-            }
-
-            if (payloadType == 132)
-            {
-                this.decoded_picture_hash = new DecodedPictureHash(payloadSize);
-                size += stream.ReadClass<DecodedPictureHash>(size, context, this.decoded_picture_hash);
-            }
-            else if (payloadType == 133)
-            {
-                this.scalable_nesting = new ScalableNesting(payloadSize);
-                size += stream.ReadClass<ScalableNesting>(size, context, this.scalable_nesting);
-            }
-            else
-            {
-                this.reserved_message = new ReservedMessage(payloadSize);
-                size += stream.ReadClass<ReservedMessage>(size, context, this.reserved_message);
+                else if (payloadType == 132)
+                {
+                    this.decoded_picture_hash = new DecodedPictureHash(payloadSize);
+                    size += stream.ReadClass<DecodedPictureHash>(size, context, this.decoded_picture_hash);
+                }
+                else if (payloadType == 133)
+                {
+                    this.scalable_nesting = new ScalableNesting(payloadSize);
+                    size += stream.ReadClass<ScalableNesting>(size, context, this.scalable_nesting);
+                }
+                else
+                {
+                    this.reserved_message = new ReservedMessage(payloadSize);
+                    size += stream.ReadClass<ReservedMessage>(size, context, this.reserved_message);
+                }
             }
 
             if ((!(stream.ByteAligned() && 8 * payloadSize == stream.GetBitsPositionSinceLastMark())))
@@ -6720,19 +6719,18 @@ sei_payload( payloadType, payloadSize ) {
                 {
                     size += stream.WriteClass<FillerPayload>(context, this.filler_payload);
                 }
-            }
-
-            if (payloadType == 132)
-            {
-                size += stream.WriteClass<DecodedPictureHash>(context, this.decoded_picture_hash);
-            }
-            else if (payloadType == 133)
-            {
-                size += stream.WriteClass<ScalableNesting>(context, this.scalable_nesting);
-            }
-            else
-            {
-                size += stream.WriteClass<ReservedMessage>(context, this.reserved_message);
+                else if (payloadType == 132)
+                {
+                    size += stream.WriteClass<DecodedPictureHash>(context, this.decoded_picture_hash);
+                }
+                else if (payloadType == 133)
+                {
+                    size += stream.WriteClass<ScalableNesting>(context, this.scalable_nesting);
+                }
+                else
+                {
+                    size += stream.WriteClass<ReservedMessage>(context, this.reserved_message);
+                }
             }
 
             if ((!(stream.ByteAligned() && 8 * payloadSize == stream.GetBitsPositionSinceLastMark())))
@@ -10379,7 +10377,7 @@ buffering_period( payloadSize ) {
             {
                 size += stream.ReadUnsignedIntVariable(size, bp_max_initial_removal_delay_for_concatenation, out this.bp_max_initial_removal_delay_for_concatenation);
             }
-            size += stream.ReadUnsignedIntVariable(size, bp_cpb_removal_delay_delta_minus1, out this.bp_cpb_removal_delay_delta_minus1);
+            size += stream.ReadUnsignedIntVariable(size, bp_cpb_removal_delay_length_minus1 + 1, out this.bp_cpb_removal_delay_delta_minus1);
             size += stream.ReadUnsignedInt(size, 3, out this.bp_max_sublayers_minus1);
 
             if (bp_max_sublayers_minus1 > 0)
@@ -10508,7 +10506,7 @@ buffering_period( payloadSize ) {
             {
                 size += stream.WriteUnsignedIntVariable(bp_max_initial_removal_delay_for_concatenation, this.bp_max_initial_removal_delay_for_concatenation);
             }
-            size += stream.WriteUnsignedIntVariable(bp_cpb_removal_delay_delta_minus1, this.bp_cpb_removal_delay_delta_minus1);
+            size += stream.WriteUnsignedIntVariable(bp_cpb_removal_delay_length_minus1 + 1, this.bp_cpb_removal_delay_delta_minus1);
             size += stream.WriteUnsignedInt(3, this.bp_max_sublayers_minus1);
 
             if (bp_max_sublayers_minus1 > 0)

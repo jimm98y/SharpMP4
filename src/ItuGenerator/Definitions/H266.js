@@ -1124,7 +1124,7 @@ sei_payload( payloadType, payloadSize ) {
    scalable_nesting( payloadSize )  
   else if( payloadType  ==  137 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 */  
    mastering_display_colour_volume( payloadSize )  
-     else if( payloadType  ==  144 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 */  
+  else if( payloadType  ==  144 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 */  
    content_light_level_info( payloadSize )  
   else if( payloadType  ==  145 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 */  
    dependent_rap_indication( payloadSize )  
@@ -1155,7 +1155,7 @@ sei_payload( payloadType, payloadSize ) {
  else /* nal_unit_type  ==  SUFFIX_SEI_NUT */  
   if( payloadType  ==  3 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 */  
    filler_payload( payloadSize )  
-  if( payloadType  ==  132 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 */  
+  else if( payloadType  ==  132 ) /* Specified in Rec. ITU-T H.274 | ISO/IEC 23002-7 */  
    decoded_picture_hash( payloadSize )  
   else if( payloadType  ==  133 )  
    scalable_nesting( payloadSize )  
