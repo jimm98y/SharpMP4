@@ -3230,7 +3230,7 @@ sei_payload( payloadType, payloadSize ) {
 
                 if (stream.ReadMoreRbspData(this, payloadSize))
                 {
-                    size += stream.ReadUnsignedIntVariable(size, 8 /* TODO */, out this.reserved_payload_extension_data);
+                    size += stream.ReadUnsignedIntVariable(size, 0 /* TODO */, out this.reserved_payload_extension_data);
                 }
                 size += stream.ReadFixed(size, 1, out this.payload_bit_equal_to_one); // equal to 1 
 
@@ -3545,7 +3545,7 @@ sei_payload( payloadType, payloadSize ) {
 
                 if (stream.ReadMoreRbspData(this, payloadSize))
                 {
-                    size += stream.WriteUnsignedIntVariable(8 /* TODO */, this.reserved_payload_extension_data);
+                    size += stream.WriteUnsignedIntVariable(0 /* TODO */, this.reserved_payload_extension_data);
                 }
                 size += stream.WriteFixed(1, this.payload_bit_equal_to_one); // equal to 1 
 

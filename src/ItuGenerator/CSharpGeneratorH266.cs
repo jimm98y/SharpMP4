@@ -379,11 +379,11 @@ namespace ItuGenerator
                 case "pps_subpic_id":
                     return "pps_subpic_id_len_minus1 + 1";
                 case "vui_reserved_payload_extension_data":
-                    return "8 /* TODO */"; // TODO: this should not be present, but if present, then it's 8 * payloadSize - nEarlierBits - nPayloadZeroBits - 1
+                    return "0 /* TODO */"; // TODO: this should not be present, but if present, then it's 8 * payloadSize - nEarlierBits - nPayloadZeroBits - 1
                 case "rpls_poc_lsb_lt":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
                 case "sei_reserved_payload_extension_data":
-                    return "8 /* TODO */"; // TODO: this should not be present, but if present, then it's 8 * payloadSize - nEarlierBits - nPayloadZeroBits - 1
+                    return "0 /* TODO */"; // TODO: this should not be present, but if present, then it's 8 * payloadSize - nEarlierBits - nPayloadZeroBits - 1
                 case "mantissa_focal_length_x":
                     return "(exponent_focal_length_x[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31 ))";
                 case "mantissa_focal_length_y":

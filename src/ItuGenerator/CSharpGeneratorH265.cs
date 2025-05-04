@@ -413,7 +413,7 @@ namespace ItuGenerator
                 case "dimension_id":
                     return "(dimension_id_len_minus1[i] + 1)";
                 case "reserved_payload_extension_data":
-                    return "8 /* TODO */"; // TODO: specification shall ignore this, but when present it's 8 * payloadSize − nEarlierBits − nPayloadZeroBits − 1
+                    return "0 /* TODO */"; // TODO: specification shall ignore this, but when present it's 8 * payloadSize − nEarlierBits − nPayloadZeroBits − 1
                 case "cpb_delay_offset":
                     return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1";
                 case "dpb_delay_offset":

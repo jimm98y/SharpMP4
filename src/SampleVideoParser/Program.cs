@@ -682,6 +682,37 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     Log.Debug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
+                else if (
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TRAIL_N ||      // 0
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TRAIL_R ||      // 1
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TSA_N ||        // 2
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TSA_R ||        // 3
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.STSA_N ||       // 4
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.STSA_R ||       // 5
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RADL_N ||       // 6
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RADL_R ||       // 7
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RASL_N ||       // 8
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RASL_R ||       // 9
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP ||     // 16
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL ||   // 17
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP ||     // 18
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.IDR_W_RADL ||   // 19
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.IDR_N_LP ||     // 20
+                    nu.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT         // 21
+                    )
+                {
+                    Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT) // 32
+                {
+                    Log.Debug($"NALU: 32, VPS, {sampleData.Length} bytes");
+                    context.VideoParameterSetRbsp = new SharpH265.VideoParameterSetRbsp();
+                    context.VideoParameterSetRbsp.Read(context, stream);
+                    context.VideoParameterSetRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT) // 33
                 {
                     Log.Debug($"NALU: 33, SPS, {sampleData.Length} bytes");
@@ -689,7 +720,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT) // 34
@@ -699,17 +730,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
-                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
-                }
-                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT) // 32
-                {
-                    Log.Debug($"NALU: 32, VPS, {sampleData.Length} bytes");
-                    context.VideoParameterSetRbsp = new SharpH265.VideoParameterSetRbsp();
-                    context.VideoParameterSetRbsp.Read(context, stream);
-                    context.VideoParameterSetRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT) // 35
@@ -766,27 +787,6 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.SeiRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
                         throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
-                }
-                else if (
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.IDR_N_LP ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.IDR_W_RADL ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_N_LP ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_LP ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.BLA_W_RADL ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RASL_N ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RASL_R ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RADL_N ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.RADL_R ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.STSA_N ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.STSA_R ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TSA_N ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TSA_R ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TRAIL_N ||
-                    nu.NalUnitHeader.NalUnitType == H265NALTypes.TRAIL_R
-                    ) 
-                {
-                    Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                 }
                 else
                 {
@@ -847,7 +847,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.OperatingPointInformationRbsp.Read(context, stream);
                     context.OperatingPointInformationRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.DCI_NUT) // 13
@@ -857,7 +857,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.DecodingCapabilityInformationRbsp.Read(context, stream);
                     context.DecodingCapabilityInformationRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.VPS_NUT) // 14
@@ -867,7 +867,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.VideoParameterSetRbsp.Read(context, stream);
                     context.VideoParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SPS_NUT) // 15
@@ -877,7 +877,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PPS_NUT) // 16
@@ -927,7 +927,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.EOS_NUT) // 21
@@ -937,7 +937,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.EndOfSeqRbsp.Read(context, stream);
                     context.EndOfSeqRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.EOB_NUT) // 22
@@ -947,7 +947,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.EndOfBitstreamRbsp.Read(context, stream);
                     context.EndOfBitstreamRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_SEI_NUT) // 23
@@ -957,7 +957,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SUFFIX_SEI_NUT) // 24
@@ -967,7 +967,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.FD_NUT) // 25
@@ -977,7 +977,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.FillerDataRbsp.Read(context, stream);
                     context.FillerDataRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else
