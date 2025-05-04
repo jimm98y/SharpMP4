@@ -421,7 +421,7 @@ namespace ItuGenerator
                 case "bp_vcl_initial_alt_cpb_removal_offset":
                     return "bp_cpb_initial_removal_delay_length_minus1 + 1";
                 case "pt_cpb_removal_delay_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1";
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1";
                 case "pt_du_common_cpb_removal_delay_increment_minus1":
                     return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "sn_subpic_id":

@@ -11199,7 +11199,7 @@ pic_timing( payloadSize ) {
             uint i = 0;
             uint j = 0;
             if (this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new uint[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];
-            size += stream.ReadUnsignedIntVariable(size, ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1, out this.pt_cpb_removal_delay_minus1[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1]);
+            size += stream.ReadUnsignedIntVariable(size, ((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1, out this.pt_cpb_removal_delay_minus1[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1]);
 
             this.pt_sublayer_delays_present_flag = new byte[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];
             this.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1] = 1;
@@ -11228,7 +11228,7 @@ pic_timing( payloadSize ) {
                     else
                     {
                         if (this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new uint[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];
-                        size += stream.ReadUnsignedIntVariable(size, ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1, out this.pt_cpb_removal_delay_minus1[i]);
+                        size += stream.ReadUnsignedIntVariable(size, ((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1, out this.pt_cpb_removal_delay_minus1[i]);
                     }
                 }
             }
@@ -11358,7 +11358,7 @@ pic_timing( payloadSize ) {
             uint i = 0;
             uint j = 0;
             if (this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new uint[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];
-            size += stream.WriteUnsignedIntVariable(((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1, this.pt_cpb_removal_delay_minus1[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1]);
+            size += stream.WriteUnsignedIntVariable(((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1, this.pt_cpb_removal_delay_minus1[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1]);
 
             for (i = (((H266Context)context).NalHeader.NalUnitHeader.NuhTemporalIdPlus1 - 1); i < ((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1; i++)
             {
@@ -11383,7 +11383,7 @@ pic_timing( payloadSize ) {
                     else
                     {
                         if (this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new uint[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];
-                        size += stream.WriteUnsignedIntVariable(((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1, this.pt_cpb_removal_delay_minus1[i]);
+                        size += stream.WriteUnsignedIntVariable(((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1, this.pt_cpb_removal_delay_minus1[i]);
                     }
                 }
             }
