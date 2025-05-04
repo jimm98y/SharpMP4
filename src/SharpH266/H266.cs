@@ -64,6 +64,7 @@ namespace SharpH266
     public partial class H266Context
     {
         public SeiPayload SeiPayload { get; set; }
+        public GeneralTimingHrdParameters GeneralTimingHrdParameters { get; set; }
 
         public uint olsModeIdc { get; set; }
         public uint TotalNumOlss { get; set; }
@@ -90,6 +91,11 @@ namespace SharpH266
         public int NumExtraPhBits { get; set; }
         public int NumAlfFilters { get; private set; }
         public uint LmcsMaxBinIdx { get; private set; }
+
+        public void SetGeneralTimingHrdParameters(GeneralTimingHrdParameters generalTimingHrdParameters)
+        {
+            GeneralTimingHrdParameters = generalTimingHrdParameters;
+        }
 
         public void SetSeiPayload(SeiPayload payload)
         {

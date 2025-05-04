@@ -10,6 +10,7 @@ namespace ItuGenerator
                 .Replace("sli_sublayer_info_present_flag ? 0", "sli_sublayer_info_present_flag != 0 ? 0")
                 .Replace("subLayerInfoFlag ?", "subLayerInfoFlag != 0 ?")
                 .Replace("[ listIdx ][ rplsIdx ]", "") // ref_pic_list_struct is a class, each instance is stored separately
+                .Replace("[ subLayerId ]", "") // subLayerId is a class, each instance is stored separately
                 .Replace("dph_sei_single_component_flag ? ", "dph_sei_single_component_flag != 0 ?")
                 .Replace("sps_rpl1_same_as_rpl0_flag ?", "sps_rpl1_same_as_rpl0_flag != 0 ?")
                 .Replace("sps_sublayer_cpb_params_present_flag ?", "sps_sublayer_cpb_params_present_flag != 0 ?")
@@ -198,13 +199,13 @@ namespace ItuGenerator
                 case "bp_sublayer_initial_cpb_removal_delay_present_flag":
                     return "((H266Context)context).SeiPayload.BufferingPeriod.BpSublayerInitialCpbRemovalDelayPresentFlag"; 
                 case "general_nal_hrd_params_present_flag":
-                    return "((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag";
+                    return "((H266Context)context).GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag";
                 case "general_vcl_hrd_params_present_flag":
-                    return "((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag";
+                    return "((H266Context)context).GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag";
                 case "general_du_hrd_params_present_flag":
-                    return "((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag";
+                    return "((H266Context)context).GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag";
                 case "hrd_cpb_cnt_minus1":
-                    return "((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1";
+                    return "((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1";
                 case "ltrp_in_header_flag":
                     return "ref_pic_list_struct[i].LtrpInHeaderFlag";
                 case "poc_lsb_lt":
@@ -293,6 +294,8 @@ namespace ItuGenerator
             {
                 case "sei_payload":
                     return "((H266Context)context).SetSeiPayload(sei_payload);";
+                case "general_timing_hrd_parameters":
+                    return "((H266Context)context).SetGeneralTimingHrdParameters(general_timing_hrd_parameters);";
                 case "vps_num_output_layer_sets_minus2":
                     return "((H266Context)context).OnVpsNumOutputLayerSetsMinus2();";
                 case "vps_num_dpb_params_minus1":
@@ -335,6 +338,8 @@ namespace ItuGenerator
 
             condition = condition.Replace("payload_type_byte  ==  0xFF", "payload_type_byte[whileIndex]  ==  0xFF");
             condition = condition.Replace("payload_size_byte  ==  0xFF", "payload_size_byte[whileIndex]  ==  0xFF");
+
+            condition = condition.Replace("AbsDeltaPocSt[ i ]", "(((((H266Context)context).SeqParameterSetRbsp.SpsWeightedPredFlag != 0 || ((H266Context)context).SeqParameterSetRbsp.SpsWeightedBipredFlag != 0) && i != 0) ? abs_delta_poc_st[i] : (abs_delta_poc_st[i] + 1))");
 
             condition = condition.Replace("ALF_APS", "H266Constants.ALF_APS");
             condition = condition.Replace("LMCS_APS", "H266Constants.LMCS_APS");

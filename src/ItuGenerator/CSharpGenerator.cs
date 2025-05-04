@@ -811,6 +811,8 @@ namespace Sharp{type}
                                         variableType = variableType.Replace("Minus1[ i ]", "Minus1[ i ] + 1");
                                     else if (variableType.Contains("Minus1"))
                                         variableType = variableType.Replace("Minus1", "Minus1 + 1");
+                                    else if (variableType.Contains("MaxSubLayersVal"))
+                                        variableType = variableType.Replace("MaxSubLayersVal", "MaxSubLayersVal + 1");
 
                                     if (variableName == "ar_label" || // h264
                                         variableName == "cp_ref_voi" ||
@@ -824,13 +826,8 @@ namespace Sharp{type}
                                         variableName == "cp_inv_scale_plus_scale" ||
                                         variableName == "cp_inv_off_plus_off" ||
                                         // h266
-                                        variableName == "bit_rate_value_minus1" ||
-                                        variableName == "cpb_size_value_minus1" ||
-                                        variableName == "cpb_size_du_value_minus1" ||
-                                        variableName == "cbr_flag" ||
                                         variableName == "colour_transf_lut" ||
-                                        variableName == "scaling_list_dc_coef" ||
-                                        variableName == "bit_rate_du_value_minus1" 
+                                        variableName == "scaling_list_dc_coef"
                                         )
                                     {
                                         appendType += "[]"; // TODO fix this workaround

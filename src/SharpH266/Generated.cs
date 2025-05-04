@@ -756,6 +756,7 @@ video_parameter_set_rbsp() {
                 {
                     this.general_timing_hrd_parameters = new GeneralTimingHrdParameters();
                     size += stream.ReadClass<GeneralTimingHrdParameters>(size, context, this.general_timing_hrd_parameters);
+                    ((H266Context)context).SetGeneralTimingHrdParameters(general_timing_hrd_parameters);
 
                     if (vps_max_sublayers_minus1 > 0)
                     {
@@ -962,6 +963,7 @@ video_parameter_set_rbsp() {
                 if (vps_timing_hrd_params_present_flag != 0)
                 {
                     size += stream.WriteClass<GeneralTimingHrdParameters>(context, this.general_timing_hrd_parameters);
+                    ((H266Context)context).SetGeneralTimingHrdParameters(general_timing_hrd_parameters);
 
                     if (vps_max_sublayers_minus1 > 0)
                     {
@@ -1989,6 +1991,7 @@ seq_parameter_set_rbsp() {
                 {
                     this.general_timing_hrd_parameters = new GeneralTimingHrdParameters();
                     size += stream.ReadClass<GeneralTimingHrdParameters>(size, context, this.general_timing_hrd_parameters);
+                    ((H266Context)context).SetGeneralTimingHrdParameters(general_timing_hrd_parameters);
 
                     if (sps_max_sublayers_minus1 > 0)
                     {
@@ -2424,6 +2427,7 @@ seq_parameter_set_rbsp() {
                 if (sps_timing_hrd_params_present_flag != 0)
                 {
                     size += stream.WriteClass<GeneralTimingHrdParameters>(context, this.general_timing_hrd_parameters);
+                    ((H266Context)context).SetGeneralTimingHrdParameters(general_timing_hrd_parameters);
 
                     if (sps_max_sublayers_minus1 > 0)
                     {
@@ -5816,11 +5820,11 @@ ols_timing_hrd_parameters( firstSubLayer, MaxSubLayersVal ) {
 
             uint i = 0;
 
-            this.fixed_pic_rate_general_flag = new byte[MaxSubLayersVal];
-            this.fixed_pic_rate_within_cvs_flag = new byte[MaxSubLayersVal];
-            this.elemental_duration_in_tc_minus1 = new uint[MaxSubLayersVal];
-            this.low_delay_hrd_flag = new byte[MaxSubLayersVal];
-            this.sublayer_hrd_parameters = new SublayerHrdParameters[MaxSubLayersVal];
+            this.fixed_pic_rate_general_flag = new byte[MaxSubLayersVal + 1];
+            this.fixed_pic_rate_within_cvs_flag = new byte[MaxSubLayersVal + 1];
+            this.elemental_duration_in_tc_minus1 = new uint[MaxSubLayersVal + 1];
+            this.low_delay_hrd_flag = new byte[MaxSubLayersVal + 1];
+            this.sublayer_hrd_parameters = new SublayerHrdParameters[MaxSubLayersVal + 1];
             for (i = firstSubLayer; i <= MaxSubLayersVal; i++)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.fixed_pic_rate_general_flag[i]);
@@ -5834,19 +5838,19 @@ ols_timing_hrd_parameters( firstSubLayer, MaxSubLayersVal ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.elemental_duration_in_tc_minus1[i]);
                 }
-                else if ((((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag != 0 ||
-    ((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag != 0) && ((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1 == 0)
+                else if ((((H266Context)context).GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag != 0 ||
+    ((H266Context)context).GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag != 0) && ((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 == 0)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.low_delay_hrd_flag[i]);
                 }
 
-                if (((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag != 0)
+                if (((H266Context)context).GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag != 0)
                 {
                     this.sublayer_hrd_parameters[i] = new SublayerHrdParameters(i);
                     size += stream.ReadClass<SublayerHrdParameters>(size, context, this.sublayer_hrd_parameters[i]);
                 }
 
-                if (((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag != 0)
+                if (((H266Context)context).GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag != 0)
                 {
                     this.sublayer_hrd_parameters[i] = new SublayerHrdParameters(i);
                     size += stream.ReadClass<SublayerHrdParameters>(size, context, this.sublayer_hrd_parameters[i]);
@@ -5875,18 +5879,18 @@ ols_timing_hrd_parameters( firstSubLayer, MaxSubLayersVal ) {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.elemental_duration_in_tc_minus1[i]);
                 }
-                else if ((((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag != 0 ||
-    ((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag != 0) && ((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1 == 0)
+                else if ((((H266Context)context).GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag != 0 ||
+    ((H266Context)context).GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag != 0) && ((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 == 0)
                 {
                     size += stream.WriteUnsignedInt(1, this.low_delay_hrd_flag[i]);
                 }
 
-                if (((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag != 0)
+                if (((H266Context)context).GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag != 0)
                 {
                     size += stream.WriteClass<SublayerHrdParameters>(context, this.sublayer_hrd_parameters[i]);
                 }
 
-                if (((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag != 0)
+                if (((H266Context)context).GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag != 0)
                 {
                     size += stream.WriteClass<SublayerHrdParameters>(context, this.sublayer_hrd_parameters[i]);
                 }
@@ -5902,13 +5906,13 @@ ols_timing_hrd_parameters( firstSubLayer, MaxSubLayersVal ) {
 
 sublayer_hrd_parameters( subLayerId ) {  
  for( j = 0; j  <=  hrd_cpb_cnt_minus1; j++ ) {  
-  bit_rate_value_minus1[ subLayerId ][ j ] ue(v) 
-  cpb_size_value_minus1[ subLayerId ][ j ] ue(v) 
+  bit_rate_value_minus1[ j ] ue(v) 
+  cpb_size_value_minus1[ j ] ue(v) 
   if( general_du_hrd_params_present_flag ) {  
-   cpb_size_du_value_minus1[ subLayerId ][ j ] ue(v) 
-   bit_rate_du_value_minus1[ subLayerId ][ j ] ue(v) 
+   cpb_size_du_value_minus1[ j ] ue(v) 
+   bit_rate_du_value_minus1[ j ] ue(v) 
   }  
-  cbr_flag[ subLayerId ][ j ] u(1) 
+  cbr_flag[ j ] u(1) 
  }  
 }
     */
@@ -5916,16 +5920,16 @@ sublayer_hrd_parameters( subLayerId ) {
     {
         private uint subLayerId;
         public uint SubLayerId { get { return subLayerId; } set { subLayerId = value; } }
-        private uint[][] bit_rate_value_minus1;
-        public uint[][] BitRateValueMinus1 { get { return bit_rate_value_minus1; } set { bit_rate_value_minus1 = value; } }
-        private uint[][] cpb_size_value_minus1;
-        public uint[][] CpbSizeValueMinus1 { get { return cpb_size_value_minus1; } set { cpb_size_value_minus1 = value; } }
-        private uint[][] cpb_size_du_value_minus1;
-        public uint[][] CpbSizeDuValueMinus1 { get { return cpb_size_du_value_minus1; } set { cpb_size_du_value_minus1 = value; } }
-        private uint[][] bit_rate_du_value_minus1;
-        public uint[][] BitRateDuValueMinus1 { get { return bit_rate_du_value_minus1; } set { bit_rate_du_value_minus1 = value; } }
-        private byte[][] cbr_flag;
-        public byte[][] CbrFlag { get { return cbr_flag; } set { cbr_flag = value; } }
+        private uint[] bit_rate_value_minus1;
+        public uint[] BitRateValueMinus1 { get { return bit_rate_value_minus1; } set { bit_rate_value_minus1 = value; } }
+        private uint[] cpb_size_value_minus1;
+        public uint[] CpbSizeValueMinus1 { get { return cpb_size_value_minus1; } set { cpb_size_value_minus1 = value; } }
+        private uint[] cpb_size_du_value_minus1;
+        public uint[] CpbSizeDuValueMinus1 { get { return cpb_size_du_value_minus1; } set { cpb_size_du_value_minus1 = value; } }
+        private uint[] bit_rate_du_value_minus1;
+        public uint[] BitRateDuValueMinus1 { get { return bit_rate_du_value_minus1; } set { bit_rate_du_value_minus1 = value; } }
+        private byte[] cbr_flag;
+        public byte[] CbrFlag { get { return cbr_flag; } set { cbr_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5941,22 +5945,22 @@ sublayer_hrd_parameters( subLayerId ) {
 
             uint j = 0;
 
-            this.bit_rate_value_minus1 = new uint[((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1][];
-            this.cpb_size_value_minus1 = new uint[((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1][];
-            this.cpb_size_du_value_minus1 = new uint[((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1][];
-            this.bit_rate_du_value_minus1 = new uint[((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1][];
-            this.cbr_flag = new byte[((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1][];
-            for (j = 0; j <= ((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1; j++)
+            this.bit_rate_value_minus1 = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            this.cpb_size_value_minus1 = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            this.cpb_size_du_value_minus1 = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            this.bit_rate_du_value_minus1 = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            this.cbr_flag = new byte[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            for (j = 0; j <= ((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1; j++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_value_minus1[subLayerId][j]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_value_minus1[subLayerId][j]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_value_minus1[j]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_value_minus1[j]);
 
-                if (((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag != 0)
+                if (((H266Context)context).GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_du_value_minus1[subLayerId][j]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_du_value_minus1[subLayerId][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_du_value_minus1[j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_du_value_minus1[j]);
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.cbr_flag[subLayerId][j]);
+                size += stream.ReadUnsignedInt(size, 1, out this.cbr_flag[j]);
             }
 
             return size;
@@ -5968,17 +5972,17 @@ sublayer_hrd_parameters( subLayerId ) {
 
             uint j = 0;
 
-            for (j = 0; j <= ((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.HrdCpbCntMinus1; j++)
+            for (j = 0; j <= ((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1; j++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.bit_rate_value_minus1[subLayerId][j]);
-                size += stream.WriteUnsignedIntGolomb(this.cpb_size_value_minus1[subLayerId][j]);
+                size += stream.WriteUnsignedIntGolomb(this.bit_rate_value_minus1[j]);
+                size += stream.WriteUnsignedIntGolomb(this.cpb_size_value_minus1[j]);
 
-                if (((H266Context)context).VideoParameterSetRbsp.GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag != 0)
+                if (((H266Context)context).GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.cpb_size_du_value_minus1[subLayerId][j]);
-                    size += stream.WriteUnsignedIntGolomb(this.bit_rate_du_value_minus1[subLayerId][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.cpb_size_du_value_minus1[j]);
+                    size += stream.WriteUnsignedIntGolomb(this.bit_rate_du_value_minus1[j]);
                 }
-                size += stream.WriteUnsignedInt(1, this.cbr_flag[subLayerId][j]);
+                size += stream.WriteUnsignedInt(1, this.cbr_flag[j]);
             }
 
             return size;
@@ -6191,7 +6195,7 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.abs_delta_poc_st[i]);
 
-                        if (AbsDeltaPocSt[i] > 0)
+                        if ((((((H266Context)context).SeqParameterSetRbsp.SpsWeightedPredFlag != 0 || ((H266Context)context).SeqParameterSetRbsp.SpsWeightedBipredFlag != 0) && i != 0) ? abs_delta_poc_st[i] : (abs_delta_poc_st[i] + 1)) > 0)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.strp_entry_sign_flag[i]);
                         }
@@ -6248,7 +6252,7 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.abs_delta_poc_st[i]);
 
-                        if (AbsDeltaPocSt[i] > 0)
+                        if ((((((H266Context)context).SeqParameterSetRbsp.SpsWeightedPredFlag != 0 || ((H266Context)context).SeqParameterSetRbsp.SpsWeightedBipredFlag != 0) && i != 0) ? abs_delta_poc_st[i] : (abs_delta_poc_st[i] + 1)) > 0)
                         {
                             size += stream.WriteUnsignedInt(1, this.strp_entry_sign_flag[i]);
                         }
