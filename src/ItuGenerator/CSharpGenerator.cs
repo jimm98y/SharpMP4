@@ -18,6 +18,7 @@ namespace ItuGenerator
         string GetFieldDefaultValue(ItuField field);
         void FixClassParameters(ItuClass ituClass);
         string ReplaceParameter(string parameter);
+        string GetVariableSize(string parameter);
         string FixMissingParameters(ItuClass b, string parameter, string classType);
         string FixCondition(string condition, MethodType methodType);
         string FixStatement(string fieldValue);
@@ -300,6 +301,7 @@ namespace Sharp{type}
             }
 
             string retm = "";
+
             if (m.Contains("###value###") && methodType == MethodType.Read)
             {
                 specificGenerator.FixMethodAllocation(name, ref m, ref typedef);
@@ -350,6 +352,10 @@ namespace Sharp{type}
             {
                 retm = $"{retm}\r\n{spacing}stream.MarkCurrentBitsPosition();";
             }
+            else if(name == "pt_cpb_removal_delay_minus1")
+            {
+                retm = $"if(this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new uint[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];\r\n{retm}";
+            }
 
             string hookDerivedVariables = specificGenerator.GetDerivedVariables(name);
             if(!string.IsNullOrEmpty(hookDerivedVariables))
@@ -373,11 +379,8 @@ namespace Sharp{type}
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith('!'))
                 {
-                    fieldValue = $"= {trimmed.Substring(1)} != 0";
+                    fieldValue = $"= {trimmed.Substring(1)} == 0";
                 }
-
-                if (!fieldValue.Contains("||") && !fieldValue.Contains("&&"))
-                    fieldValue = fieldValue.Replace("_flag    != 0", "_flag");
 
                 if (fieldValue.Contains("flag") && !fieldValue.Contains(")"))
                     fieldValue = fieldValue.Replace("||", "|").Replace("&&", "&");
@@ -465,9 +468,9 @@ namespace Sharp{type}
                 case "i(32)":
                     return "stream.WriteSignedInt(32, ";
                 case "u(v)":
-                    return $"stream.WriteUnsignedIntVariable({specificGenerator.ReplaceParameter(ituField.Name)}, ";
+                    return $"stream.WriteUnsignedIntVariable({specificGenerator.GetVariableSize(ituField.Name)}, ";
                 case "i(v)":
-                    return $"stream.WriteSignedIntVariable({specificGenerator.ReplaceParameter(ituField.Name)}, ";
+                    return $"stream.WriteSignedIntVariable({specificGenerator.GetVariableSize(ituField.Name)}, ";
                 case "ue(v)":
                     return "stream.WriteUnsignedIntGolomb(";
                 case "ae(v)":
@@ -550,9 +553,9 @@ namespace Sharp{type}
                 case "i(32)":
                     return "stream.ReadSignedInt(size, 32, ";
                 case "u(v)":
-                    return $"stream.ReadUnsignedIntVariable(size, {specificGenerator.ReplaceParameter(ituField.Name)}, ";
+                    return $"stream.ReadUnsignedIntVariable(size, {specificGenerator.GetVariableSize(ituField.Name)}, ";
                 case "i(v)":
-                    return $"stream.ReadSignedIntVariable(size, {specificGenerator.ReplaceParameter(ituField.Name)}, ";
+                    return $"stream.ReadSignedIntVariable(size, {specificGenerator.GetVariableSize(ituField.Name)}, ";
                 case "ue(v)":
                     return "stream.ReadUnsignedIntGolomb(size, ";
                 case "ae(v)":
@@ -715,6 +718,7 @@ namespace Sharp{type}
                 else if(blockType == "for")
                 {
                     condition = condition.Replace("i = MaxNumSubLayersMinus1 - 1", "i = (int)MaxNumSubLayersMinus1 - 1");
+                    condition = condition.Replace("i = maxNumSubLayersMinus1;", "i = (int)maxNumSubLayersMinus1;");
                 }
             }
 
@@ -855,6 +859,11 @@ namespace Sharp{type}
                                     }
 
                                     ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+
+                                    if(variableName == "pt_sublayer_delays_present_flag")
+                                    {
+                                        ret += "\r\nthis.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1] = 1;"; // The value of pt_sublayer_delays_present_flag[bp_max_sublayers_minus1] is inferred to be equal to 1
+                                    }
                                 }
                             }
                         }
@@ -1429,11 +1438,7 @@ namespace Sharp{type}
                 {
                     if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                     {
-                        if (field.Name == "ObjectBoundingBoxAvail" || field.Name == "ObjectTracked" || field.Name == "LabelAssigned")
-                        {
-                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "bool", FieldArray = field.FieldArray });
-                        }
-                        else if (field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel"
+                        if (field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel"
                             // h265
                             || field.Name == "numComps"
                             // h266

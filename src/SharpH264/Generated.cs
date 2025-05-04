@@ -8541,7 +8541,7 @@ annotated_regions( payloadSize ) {
             uint i = 0;
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
-            bool[] ObjectBoundingBoxAvail = null;
+            uint[] ObjectBoundingBoxAvail = null;
             size += stream.ReadUnsignedInt(size, 1, out this.ar_cancel_flag);
 
             if (ar_cancel_flag == 0)
@@ -8582,7 +8582,7 @@ annotated_regions( payloadSize ) {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i]);
                         size += stream.ReadUnsignedInt(size, 1, out this.ar_label_cancel_flag[i]);
-                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag[i];
+                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                         if (ar_label_cancel_flag[i] == 0)
                         {
@@ -8615,7 +8615,7 @@ annotated_regions( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_idx[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.ar_object_cancel_flag[i]);
-                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag[i];
+                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                     if (ar_object_cancel_flag[i] == 0)
                     {
@@ -8634,7 +8634,7 @@ annotated_regions( payloadSize ) {
                         if (ar_bounding_box_update_flag[i] != 0)
                         {
                             size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_cancel_flag[i]);
-                            ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag[i] != 0;
+                            ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                             if (ar_bounding_box_cancel_flag[i] == 0)
                             {
@@ -8669,7 +8669,7 @@ annotated_regions( payloadSize ) {
             uint i = 0;
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
-            bool[] ObjectBoundingBoxAvail = null;
+            uint[] ObjectBoundingBoxAvail = null;
             size += stream.WriteUnsignedInt(1, this.ar_cancel_flag);
 
             if (ar_cancel_flag == 0)
@@ -8707,7 +8707,7 @@ annotated_regions( payloadSize ) {
                     {
                         size += stream.WriteUnsignedIntGolomb(this.ar_label_idx[i]);
                         size += stream.WriteUnsignedInt(1, this.ar_label_cancel_flag[i]);
-                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag[i];
+                        LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                         if (ar_label_cancel_flag[i] == 0)
                         {
@@ -8728,7 +8728,7 @@ annotated_regions( payloadSize ) {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.ar_object_idx[i]);
                     size += stream.WriteUnsignedInt(1, this.ar_object_cancel_flag[i]);
-                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag[i];
+                    ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                     if (ar_object_cancel_flag[i] == 0)
                     {
@@ -8747,7 +8747,7 @@ annotated_regions( payloadSize ) {
                         if (ar_bounding_box_update_flag[i] != 0)
                         {
                             size += stream.WriteUnsignedInt(1, this.ar_bounding_box_cancel_flag[i]);
-                            ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag[i] != 0;
+                            ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                             if (ar_bounding_box_cancel_flag[i] == 0)
                             {

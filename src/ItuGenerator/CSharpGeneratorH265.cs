@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ItuGenerator
 {
@@ -45,8 +46,6 @@ namespace ItuGenerator
                     return "((H265Context)context).MaxSubLayersInLayerSetMinus1";
                 case "chroma_format_idc":
                     return "((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc";
-                case "sps_palette_predictor_initializer":
-                    return "(((H265Context)context).SeqParameterSetRbsp.BitDepthChromaMinus8 + 8)";
                 case "transform_skip_enabled_flag":
                     return "((H265Context)context).PicParameterSetRbsp.TransformSkipEnabledFlag";
                 case "cabac_init_present_flag":
@@ -57,14 +56,10 @@ namespace ItuGenerator
                     return "((H265Context)context).PicParameterSetRbsp.PpsRangeExtension != null && ((H265Context)context).PicParameterSetRbsp.PpsRangeExtension.ChromaQpOffsetListEnabledFlag";
                 case "num_extra_slice_header_bits":
                     return "((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits";
-                case "pps_palette_predictor_initializer":
-                    return "comp == 0 ? (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8)";
                 case "MaxLayersMinus1":
                     return "Math.Min( 62, ((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1)";
                 case "NumLayerSets":
                     return "(((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets)";
-                case "lt_ref_pic_poc_lsb_sps":
-                    return "(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "num_ref_idx_l0_active_minus1":
                     return "((H265Context)context).SliceSegmentLayerRbsp.SliceSegmentHeader.NumRefIdxL0ActiveMinus1";
                 case "num_cp":
@@ -115,8 +110,6 @@ namespace ItuGenerator
                     return "((H265Context)context).PicParameterSetRbsp.ListsModificationPresentFlag";
                 case "CpbCnt":
                     return "((H265Context)context).CpbCnt";
-                case "nal_initial_arrival_delay":
-                    return "(((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1)";
                 case "cp_ref_voi":
                     return "((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi";
                 case "cp_in_slice_segment_header_flag":
@@ -237,100 +230,10 @@ namespace ItuGenerator
                     return "((H265Context)context).CurrPic";
                 case "RefRpsIdx":
                     return "((H265Context)context).RefRpsIdx";
-                case "time_offset_value":
-                    return "time_offset_length[i]";
-                case "nal_initial_cpb_removal_delay":
-                case "nal_initial_cpb_removal_offset":
-                case "nal_initial_alt_cpb_removal_delay":
-                case "nal_initial_alt_cpb_removal_offset":
-                case "vcl_initial_cpb_removal_delay":
-                case "vcl_initial_cpb_removal_offset":
-                case "vcl_initial_alt_cpb_removal_delay":
-                case "vcl_initial_alt_cpb_removal_offset":
-                case "vcl_initial_arrival_delay":
-                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1)";
-                case "du_cpb_removal_delay_increment_minus1":
-                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1)";
-                case "start_of_coded_interval":
-                case "coded_pivot_value":
-                    return "( ( coded_data_bit_depth + 7 )  >>  3 )  <<  3";
-                case "target_pivot_value":
-                    return "( ( target_bit_depth + 7 )  >>  3 )  <<  3";
-                case "view_id_val":
-                    return "view_id_len";
-                case "dimension_id":
-                    return "(dimension_id_len_minus1[i] + 1)";
-                case "delta_val_diff_minus_min":
-                    return "(uint)Math.Ceiling( Math.Log2( max_diff - min_diff_minus1 + 1 ) )";
-                case "vps_rep_format_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( vps_num_rep_formats_minus1 + 1 ) )";
                 case "lt_idx_sps":
                     return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) )";
                 case "poc_lsb_lt":
                     return "( ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
-                case "man_gvd_z_near":
-                    return "(man_len_gvd_z_near_minus1[ i ] + 1)";
-                case "man_gvd_z_far":
-                    return "(man_len_gvd_z_far_minus1[ i ] + 1)";
-                case "man_gvd_focal_length_x":
-                    return "(exp_gvd_focal_length_x[ i ] == 0 ? Math.Max( 0, prec_gvd_focal_length - 30 ) : Math.Max( 0, exp_gvd_focal_length_x[ i ] + prec_gvd_focal_length - 31 ))";
-                case "man_gvd_focal_length_y":
-                    return "(exp_gvd_focal_length_y[ i ] == 0 ? Math.Max( 0, prec_gvd_focal_length - 30 ) : Math.Max( 0, exp_gvd_focal_length_y[ i ] + prec_gvd_focal_length - 31 ))";
-                case "man_gvd_principal_point_x":
-                    return "(exp_gvd_principal_point_x[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_x[ i ] + prec_gvd_principal_point - 31 ))";
-                case "man_gvd_principal_point_y":
-                    return "(exp_gvd_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_y[ i ] + prec_gvd_principal_point - 31 ))";
-                case "mantissa_ref_viewing_distance":
-                    return "(exponent_ref_viewing_distance[ i ] == 0 ? Math.Max( 0, prec_ref_viewing_dist - 30 ) : Math.Max( 0, exponent_ref_viewing_distance[ i ] + prec_ref_viewing_dist - 31 ))";
-                case "mantissa_ref_display_width":
-                    return "(exponent_ref_display_width[ i ] == 0 ? Math.Max( 0, prec_ref_display_width - 30 ) : Math.Max( 0, exponent_ref_display_width[ i ] + prec_ref_display_width - 31 ))";
-                case "mantissa_focal_length_x":
-                    return "(exponent_focal_length_x[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31 ))";
-                case "mantissa_focal_length_y":
-                    return "(exponent_focal_length_y[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_y[ i ] + prec_focal_length - 31 ))";
-                case "mantissa_principal_point_x":
-                    return "(exponent_principal_point_x[ i ] == 0 ? Math.Max( 0, prec_principal_point - 30 ) : Math.Max( 0, exponent_principal_point_x[ i ] + prec_principal_point - 31 ))";
-                case "mantissa_principal_point_y":
-                    return "(exponent_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_principal_point - 30 ) : Math.Max( 0, exponent_principal_point_y[ i ] + prec_principal_point - 31 ))";
-                case "mantissa_skew_factor":
-                    return "(exponent_skew_factor[ i ] == 0 ? Math.Max( 0, prec_skew_factor - 30 ) : Math.Max( 0, exponent_skew_factor[ i ] + prec_skew_factor - 31 ))";
-                case "layer_set_idx_for_ols_minus1":
-                    return "(uint)Math.Ceiling( Math.Log2( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
-                case "pre_lut_coded_value":
-                    return "(( ( colour_remap_input_bit_depth + 7 )  >>  3 )  <<  3)";
-                case "pre_lut_target_value":
-                    return "(( ( colour_remap_output_bit_depth + 7 )  >>  3 )  <<  3)";
-                case "post_lut_coded_value":
-                    return "(( ( colour_remap_input_bit_depth + 7 )  >>  3 )  <<  3)";
-                case "post_lut_target_value":
-                    return "(( ( colour_remap_output_bit_depth + 7 )  >>  3 )  <<  3)";
-                case "profile_tier_level_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( vps_num_profile_tier_level_minus1 + 1 ) )";
-                case "direct_dependency_type":
-                    return "(direct_dep_type_len_minus2 + 2)";
-                case "overlay_element_label_min":
-                case "overlay_element_label_max":
-                    return "(overlay_element_label_value_length_minus8 + 8)";
-                case "mantissa_r":
-                    return "(exponent_r[ i ][ j ][ k ]  == 0 ? Math.Max( 0, prec_rotation_param - 30 ) : Math.Max( 0, exponent_r[ i ][ j ][ k ] + prec_rotation_param - 31 ))";
-                case "mantissa_t":
-                    return "(exponent_t[ i ][ j ]  == 0 ? Math.Max( 0, prec_translation_param - 30 ) : Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31 ))";
-                case "bsp_hrd_idx":
-                    return "(uint)Math.Ceiling( Math.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) )";
-                case "res_coeff_r":
-                    return "((uint)Math.Max( 0, ( 10 + (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmInputMinus8) - (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmOutputMinus8) - ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmResQuantBits - ( ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmDeltaFlcBitsMinus1 + 1 ) ) ))";
-                case "man_gvd_r":
-                    return "(exp_gvd_r[ i ][ j ][ k ] == 0 ? Math.Max( 0, prec_gvd_rotation_param - 30 ) : Math.Max( 0, exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31 ))";
-                case "entry_point_offset_minus1":
-                    return "(offset_len_minus1 + 1)";
-                case "man_gvd_t_x":
-                    return "(exp_gvd_t_x[ i ] == 0 ? Math.Max( 0, prec_gvd_translation_param - 30 ) : Math.Max( 0, exp_gvd_t_x[ i ] + prec_gvd_translation_param - 31 ))";
-                case "output_slice_segment_address":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
-                case "highest_layer_idx_plus1":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumLayersInTreePartition[ j ] + 1 ) )";
-                case "au_cpb_removal_delay_minus1":
-                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1)";
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;
@@ -469,6 +372,145 @@ namespace ItuGenerator
         public void FixMethodAllocation(string name, ref string method, ref string typedef)
         {
             // TODO
+        }
+
+        public string GetVariableSize(string parameter)
+        {
+            switch (parameter)
+            {
+                case "sps_palette_predictor_initializer":
+                    return "(((H265Context)context).SeqParameterSetRbsp.BitDepthChromaMinus8 + 8)";
+                case "direct_dependency_type":
+                    return "(direct_dep_type_len_minus2 + 2)";
+                case "overlay_element_label_min":
+                case "overlay_element_label_max":
+                    return "(overlay_element_label_value_length_minus8 + 8)";
+                case "mantissa_r":
+                    return "(exponent_r[ i ][ j ][ k ]  == 0 ? Math.Max( 0, prec_rotation_param - 30 ) : Math.Max( 0, exponent_r[ i ][ j ][ k ] + prec_rotation_param - 31 ))";
+                case "mantissa_t":
+                    return "(exponent_t[ i ][ j ]  == 0 ? Math.Max( 0, prec_translation_param - 30 ) : Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31 ))";
+                case "pps_palette_predictor_initializer":
+                    return "comp == 0 ? (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8)";
+                case "nal_initial_arrival_delay":
+                    return "(((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1)";
+                case "nal_initial_cpb_removal_delay":
+                case "nal_initial_cpb_removal_offset":
+                case "nal_initial_alt_cpb_removal_delay":
+                case "nal_initial_alt_cpb_removal_offset":
+                case "vcl_initial_cpb_removal_delay":
+                case "vcl_initial_cpb_removal_offset":
+                case "vcl_initial_alt_cpb_removal_delay":
+                case "vcl_initial_alt_cpb_removal_offset":
+                case "vcl_initial_arrival_delay":
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1)";
+                case "du_cpb_removal_delay_increment_minus1":
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1)";
+                case "start_of_coded_interval":
+                case "coded_pivot_value":
+                    return "( ( coded_data_bit_depth + 7 )  >>  3 )  <<  3";
+                case "target_pivot_value":
+                    return "( ( target_bit_depth + 7 )  >>  3 )  <<  3";
+                case "dimension_id":
+                    return "(dimension_id_len_minus1[i] + 1)";
+                case "reserved_payload_extension_data":
+                    return "8 /* TODO */"; // TODO: specification shall ignore this, but when present it's 8 * payloadSize − nEarlierBits − nPayloadZeroBits − 1
+                case "cpb_delay_offset":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1";
+                case "dpb_delay_offset":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1";
+                case "au_cpb_removal_delay_delta_minus1":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1";
+                case "au_cpb_removal_delay_minus1":
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1)";
+                case "pic_dpb_output_delay":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1";
+                case "pic_dpb_output_du_delay":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1";
+                case "du_common_cpb_removal_delay_increment_minus1":
+                case "du_spt_cpb_removal_delay_increment":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                case "pic_spt_dpb_output_du_delay":
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1";
+                case "time_offset_value":
+                    return "time_offset_length[i]";
+                case "pre_lut_coded_value":
+                    return "(( ( colour_remap_input_bit_depth + 7 )  >>  3 )  <<  3)";
+                case "pre_lut_target_value":
+                    return "(( ( colour_remap_output_bit_depth + 7 )  >>  3 )  <<  3)";
+                case "post_lut_coded_value":
+                    return "(( ( colour_remap_input_bit_depth + 7 )  >>  3 )  <<  3)";
+                case "post_lut_target_value":
+                    return "(( ( colour_remap_output_bit_depth + 7 )  >>  3 )  <<  3)";
+                case "output_slice_segment_address":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
+                case "view_id_val":
+                    return "view_id_len";
+                case "highest_layer_idx_plus1":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumLayersInTreePartition[ j ] + 1 ) )";
+                case "layer_set_idx_for_ols_minus1":
+                    return "(uint)Math.Ceiling( Math.Log2( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
+                case "profile_tier_level_idx":
+                    return "(uint)Math.Ceiling( Math.Log2( vps_num_profile_tier_level_minus1 + 1 ) )";
+                case "vps_rep_format_idx":
+                    return "(uint)Math.Ceiling( Math.Log2( vps_num_rep_formats_minus1 + 1 ) )";
+                case "direct_dependency_all_layers_type":
+                    return "direct_dep_type_len_minus2 + 2";
+                case "bsp_hrd_idx":
+                    return "(uint)Math.Ceiling( Math.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) )";
+                case "lt_ref_pic_poc_lsb_sps":
+                    return "(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
+                case "res_coeff_r":
+                    return "((uint)Math.Max( 0, ( 10 + (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmInputMinus8) - (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmOutputMinus8) - ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmResQuantBits - ( ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmDeltaFlcBitsMinus1 + 1 ) ) ))";
+                case "man_gvd_r":
+                    return "(exp_gvd_r[ i ][ j ][ k ] == 0 ? Math.Max( 0, prec_gvd_rotation_param - 30 ) : Math.Max( 0, exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31 ))";
+                case "entry_point_offset_minus1":
+                    return "(offset_len_minus1 + 1)";
+                case "man_gvd_t_x":
+                    return "(exp_gvd_t_x[ i ] == 0 ? Math.Max( 0, prec_gvd_translation_param - 30 ) : Math.Max( 0, exp_gvd_t_x[ i ] + prec_gvd_translation_param - 31 ))";
+                case "alpha_transparent_value":
+                case "alpha_opaque_value":
+                    return "alpha_channel_bit_depth_minus8 + 9";
+                case "mantissa_ref_display_width":
+                    return "(exponent_ref_display_width[ i ] == 0 ? Math.Max( 0, prec_ref_display_width - 30 ) : Math.Max( 0, exponent_ref_display_width[ i ] + prec_ref_display_width - 31 ))";
+                case "mantissa_focal_length_x":
+                    return "(exponent_focal_length_x[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31 ))";
+                case "mantissa_focal_length_y":
+                    return "(exponent_focal_length_y[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_y[ i ] + prec_focal_length - 31 ))";
+                case "mantissa_principal_point_x":
+                    return "(exponent_principal_point_x[ i ] == 0 ? Math.Max( 0, prec_principal_point - 30 ) : Math.Max( 0, exponent_principal_point_x[ i ] + prec_principal_point - 31 ))";
+                case "mantissa_principal_point_y":
+                    return "(exponent_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_principal_point - 30 ) : Math.Max( 0, exponent_principal_point_y[ i ] + prec_principal_point - 31 ))";
+                case "mantissa_skew_factor":
+                    return "(exponent_skew_factor[ i ] == 0 ? Math.Max( 0, prec_skew_factor - 30 ) : Math.Max( 0, exponent_skew_factor[ i ] + prec_skew_factor - 31 ))";
+                case "mantissa_ref_viewing_distance":
+                    return "(exponent_ref_viewing_distance[ i ] == 0 ? Math.Max( 0, prec_ref_viewing_dist - 30 ) : Math.Max( 0, exponent_ref_viewing_distance[ i ] + prec_ref_viewing_dist - 31 ))";
+                case "da_mantissa":
+                    return "(this.da_mantissa_len_minus1 + 1)";
+                case "num_val_delta_dlt":
+                case "max_diff":
+                    return "((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
+                case "min_diff_minus1":
+                    return "(uint)Math.Ceiling( Math.Log2( max_diff + 1 ) )";
+                case "delta_dlt_val0":
+                    return "((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
+                case "delta_val_diff_minus_min":
+                    return "(uint)Math.Ceiling( Math.Log2( max_diff - min_diff_minus1 + 1 ) )";
+                case "man_gvd_z_near":
+                    return "(man_len_gvd_z_near_minus1[ i ] + 1)";
+                case "man_gvd_z_far":
+                    return "(man_len_gvd_z_far_minus1[ i ] + 1)";
+                case "man_gvd_focal_length_x":
+                    return "(exp_gvd_focal_length_x[ i ] == 0 ? Math.Max( 0, prec_gvd_focal_length - 30 ) : Math.Max( 0, exp_gvd_focal_length_x[ i ] + prec_gvd_focal_length - 31 ))";
+                case "man_gvd_focal_length_y":
+                    return "(exp_gvd_focal_length_y[ i ] == 0 ? Math.Max( 0, prec_gvd_focal_length - 30 ) : Math.Max( 0, exp_gvd_focal_length_y[ i ] + prec_gvd_focal_length - 31 ))";
+                case "man_gvd_principal_point_x":
+                    return "(exp_gvd_principal_point_x[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_x[ i ] + prec_gvd_principal_point - 31 ))";
+                case "man_gvd_principal_point_y":
+                    return "(exp_gvd_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_y[ i ] + prec_gvd_principal_point - 31 ))";
+            }
+
+            Debug.WriteLine(parameter);
+            throw new System.NotImplementedException();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ItuGenerator
 {
@@ -88,14 +89,6 @@ namespace ItuGenerator
                     return "((H266Context)context).NumAlfFilters";
                 case "LmcsMaxBinIdx":
                     return "((H266Context)context).LmcsMaxBinIdx";
-                case "sps_subpic_width_minus1":
-                case "sps_subpic_ctu_top_left_x":
-                    return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
-                case "sps_subpic_height_minus1":
-                case "sps_subpic_ctu_top_left_y":
-                    return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
-                case "sps_subpic_id":
-                    return "sps_subpic_id_len_minus1 + 1";
                 case "sps_poc_msb_cycle_flag":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsPocMsbCycleFlag";
                 case "sps_alf_enabled_flag":
@@ -126,8 +119,6 @@ namespace ItuGenerator
                     return "((H266Context)context).SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag";
                 case "NumExtraPhBits":
                     return "((H266Context)context).NumExtraPhBits";
-                case "pps_subpic_id":
-                    return "pps_subpic_id_len_minus1 + 1";
                 case "sps_ccalf_enabled_flag":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsCcalfEnabledFlag";
                 case "sps_lmcs_enabled_flag":
@@ -212,75 +203,12 @@ namespace ItuGenerator
                     return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
                 case "rpl_idx":
                     return "(uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) )";
-                case "bp_nal_initial_cpb_removal_delay":
-                case "bp_nal_initial_alt_cpb_removal_delay":
-                case "bp_vcl_initial_cpb_removal_delay":
-                case "bp_vcl_initial_alt_cpb_removal_delay":
-                    return "bp_cpb_initial_removal_delay_length_minus1 + 1";
-                case "bp_nal_initial_cpb_removal_offset":
-                case "bp_nal_initial_alt_cpb_removal_offset":
-                case "bp_vcl_initial_cpb_removal_offset":
-                case "bp_vcl_initial_alt_cpb_removal_offset":
-                    return "bp_cpb_initial_removal_delay_length_minus1 + 1";
-                case "bp_cpb_removal_delay_delta_minus1":
-                    return "bp_cpb_removal_delay_length_minus1 + 1";
-                case "colour_transf_lut":
-                    return "(uint)(2 + ( colour_transform_bit_depth_minus8 + 8 ) - ( colour_transform_log2_number_of_points_per_lut_minus1 + 1 ))";
                 case "colourTransformSize":
                     return "( (1  <<  ( (int)colour_transform_log2_number_of_points_per_lut_minus1 + 1 ) ) + 1 )";
                 case "nal_unit_type":
                     return "((H266Context)context).NalHeader.NalUnitHeader.NalUnitType";
-                case "alf_luma_coeff_delta_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) )";
-                case "ar_object_confidence":
-                    return "ar_object_confidence_length_minus1 + 1";
-                case "lmcs_delta_abs_cw":
-                    return "lmcs_delta_cw_prec_minus1 + 1";
-                case "sdi_view_id_val":
-                    return "sdi_view_id_len_minus1 + 1";
-                case "bp_cpb_removal_delay_delta_val":
-                    return "bp_cpb_removal_delay_length_minus1 + 1";
-                case "mantissa_focal_length_x":
-                    return "(exponent_focal_length_x[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31 ))";
-                case "mantissa_focal_length_y":
-                    return "(exponent_focal_length_y[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_y[ i ] + prec_focal_length - 31 ))";
-                case "mantissa_principal_point_x":
-                    return "(exponent_principal_point_x[ i ] == 0 ? Math.Max( 0, prec_principal_point - 30 ) : Math.Max( 0, exponent_principal_point_x[ i ] + prec_principal_point - 31 ))";
-                case "mantissa_principal_point_y":
-                    return "(exponent_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_principal_point - 30 ) : Math.Max( 0, exponent_principal_point_y[ i ] + prec_principal_point - 31 ))";
-                case "mantissa_skew_factor":
-                    return "(exponent_skew_factor[ i ] == 0 ? Math.Max( 0, prec_skew_factor - 30 ) : Math.Max( 0, exponent_skew_factor[ i ] + prec_skew_factor - 31 ))";
-                case "pt_cpb_removal_delay_delta_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) )";
-                case "pt_cpb_removal_delay_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1";
-                case "pt_nal_cpb_alt_initial_removal_delay_delta":
-                case "pt_nal_cpb_alt_initial_removal_offset_delta":
-                case "pt_vcl_cpb_alt_initial_removal_delay_delta":
-                case "pt_vcl_cpb_alt_initial_removal_offset_delta":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbInitialRemovalDelayLengthMinus1 + 1";
-                case "pt_nal_cpb_delay_offset":
-                case "pt_vcl_cpb_delay_offset":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1";
-                case "pt_nal_dpb_delay_offset":
-                case "pt_vcl_dpb_delay_offset":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayLengthMinus1 + 1";
-                case "pt_du_common_cpb_removal_delay_increment_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
-                case "sn_subpic_id":
-                    return "sn_subpic_id_len_minus1 + 1";
-                case "mantissa_r":
-                    return "(exponent_r[ i ][ j ][ k ]  == 0 ? Math.Max( 0, prec_rotation_param - 30 ) : Math.Max( 0, exponent_r[ i ][ j ][ k ] + prec_rotation_param - 31 ))";
-                case "mantissa_t":
-                    return "(exponent_t[ i ][ j ]  == 0 ? Math.Max( 0, prec_translation_param - 30 ) : Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31 ))";
-                case "rpls_poc_lsb_lt":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
                 case "num_ref_entries":
                     return "((H266Context)context).PictureHeaderRbsp.PictureHeaderStructure.RefPicLists.RefPicListStruct.First(x => x != null).NumRefEntries";
-                case "pt_du_cpb_removal_delay_increment_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
-                case "dui_du_cpb_removal_delay_increment":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "TemporalId":
                     return "(((H266Context)context).NalHeader.NalUnitHeader.NuhTemporalIdPlus1 - 1)";
 
@@ -404,7 +332,112 @@ namespace ItuGenerator
 
         public void FixMethodAllocation(string name, ref string method, ref string typedef)
         {
-            // TODO
+            
+        }
+
+        public string GetVariableSize(string parameter)
+        {
+            switch(parameter)
+            {
+                case "sps_subpic_ctu_top_left_x":
+                    return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
+                case "sps_subpic_width_minus1":
+                case "sps_subpic_height_minus1":
+                case "sps_subpic_ctu_top_left_y":
+                    return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
+                case "sps_subpic_id":
+                    return "sps_subpic_id_len_minus1 + 1";
+                case "ph_pic_order_cnt_lsb":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
+                case "ph_poc_msb_cycle_val":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsPocMsbCycleLenMinus1 + 1";
+                case "alf_luma_coeff_delta_idx":
+                    return "(uint)Math.Ceiling( Math.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) )";
+                case "ar_object_confidence":
+                    return "ar_object_confidence_length_minus1 + 1";
+                case "lmcs_delta_abs_cw":
+                    return "lmcs_delta_cw_prec_minus1 + 1";
+                case "sdi_view_id_val":
+                    return "sdi_view_id_len_minus1 + 1";
+                case "bp_cpb_removal_delay_delta_val":
+                    return "bp_cpb_removal_delay_length_minus1 + 1";
+                case "pt_dpb_output_delay":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayLengthMinus1 + 1";
+                case "pt_dpb_output_du_delay":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1 + 1";
+                case "pt_nal_cpb_alt_initial_removal_delay_delta":
+                case "pt_nal_cpb_alt_initial_removal_offset_delta":
+                case "pt_vcl_cpb_alt_initial_removal_delay_delta":
+                case "pt_vcl_cpb_alt_initial_removal_offset_delta":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbInitialRemovalDelayLengthMinus1 + 1";
+                case "pt_nal_cpb_delay_offset":
+                case "pt_vcl_cpb_delay_offset":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1";
+                case "pt_nal_dpb_delay_offset":
+                case "pt_vcl_dpb_delay_offset":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayLengthMinus1 + 1";
+                case "pps_subpic_id":
+                    return "pps_subpic_id_len_minus1 + 1";
+                case "vui_reserved_payload_extension_data":
+                    return "8 /* TODO */"; // TODO: this should not be present, but if present, then it's 8 * payloadSize - nEarlierBits - nPayloadZeroBits - 1
+                case "rpls_poc_lsb_lt":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
+                case "sei_reserved_payload_extension_data":
+                    return "8 /* TODO */"; // TODO: this should not be present, but if present, then it's 8 * payloadSize - nEarlierBits - nPayloadZeroBits - 1
+                case "mantissa_focal_length_x":
+                    return "(exponent_focal_length_x[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31 ))";
+                case "mantissa_focal_length_y":
+                    return "(exponent_focal_length_y[ i ] == 0 ? Math.Max( 0, prec_focal_length - 30 ) : Math.Max( 0, exponent_focal_length_y[ i ] + prec_focal_length - 31 ))";
+                case "mantissa_principal_point_x":
+                    return "(exponent_principal_point_x[ i ] == 0 ? Math.Max( 0, prec_principal_point - 30 ) : Math.Max( 0, exponent_principal_point_x[ i ] + prec_principal_point - 31 ))";
+                case "mantissa_principal_point_y":
+                    return "(exponent_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_principal_point - 30 ) : Math.Max( 0, exponent_principal_point_y[ i ] + prec_principal_point - 31 ))";
+                case "mantissa_skew_factor":
+                    return "(exponent_skew_factor[ i ] == 0 ? Math.Max( 0, prec_skew_factor - 30 ) : Math.Max( 0, exponent_skew_factor[ i ] + prec_skew_factor - 31 ))";
+                case "mantissa_r":
+                    return "(exponent_r[ i ][ j ][ k ]  == 0 ? Math.Max( 0, prec_rotation_param - 30 ) : Math.Max( 0, exponent_r[ i ][ j ][ k ] + prec_rotation_param - 31 ))";
+                case "mantissa_t":
+                    return "(exponent_t[ i ][ j ]  == 0 ? Math.Max( 0, prec_translation_param - 30 ) : Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31 ))";
+                case "da_mantissa":
+                    return "(this.da_mantissa_len_minus1 + 1)";
+                case "alpha_transparent_value":
+                case "alpha_opaque_value":
+                    return "alpha_channel_bit_depth_minus8 + 9";
+                case "colour_transf_lut":
+                case "colour_transform_chroma_offset":
+                    return "(uint)(2 + ( colour_transform_bit_depth_minus8 + 8 ) - ( colour_transform_log2_number_of_points_per_lut_minus1 + 1 ))"; // 2 + bitDepth – log2numLutPoints
+                case "bp_max_initial_removal_delay_for_concatenation":
+                    return "bp_cpb_initial_removal_delay_length_minus1 + 1";
+                case "bp_cpb_removal_delay_delta_minus1":
+                    return "bp_cpb_removal_delay_length_minus1 + 1";
+                case "bp_nal_initial_cpb_removal_delay":
+                case "bp_nal_initial_alt_cpb_removal_delay":
+                case "bp_vcl_initial_cpb_removal_delay":
+                case "bp_vcl_initial_alt_cpb_removal_delay":
+                    return "bp_cpb_initial_removal_delay_length_minus1 + 1";
+                case "bp_nal_initial_cpb_removal_offset":
+                case "bp_nal_initial_alt_cpb_removal_offset":
+                case "bp_vcl_initial_cpb_removal_offset":
+                case "bp_vcl_initial_alt_cpb_removal_offset":
+                    return "bp_cpb_initial_removal_delay_length_minus1 + 1";
+                case "pt_cpb_removal_delay_minus1":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1";
+                case "pt_du_common_cpb_removal_delay_increment_minus1":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                case "sn_subpic_id":
+                    return "sn_subpic_id_len_minus1 + 1";
+                case "pt_cpb_removal_delay_delta_idx":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) )";
+                case "pt_du_cpb_removal_delay_increment_minus1":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                case "dui_du_cpb_removal_delay_increment":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                case "dui_dpb_output_du_delay":
+                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1 + 1";
+            }
+
+            Debug.WriteLine(parameter);
+            throw new System.NotImplementedException();
         }
     }
 }

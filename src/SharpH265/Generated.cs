@@ -1716,7 +1716,7 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
             ulong size = 0;
 
             uint j = 0;
-            uint i = 0;
+            int i = 0;
 
             if (profilePresentFlag != 0)
             {
@@ -1804,7 +1804,7 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
             {
 
                 this.reserved_zero_2bits = new uint[8];
-                for (i = maxNumSubLayersMinus1; i < 8; i++)
+                for (i = (int)maxNumSubLayersMinus1; i < 8; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 2, out this.reserved_zero_2bits[i]);
                 }
@@ -1930,7 +1930,7 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
             ulong size = 0;
 
             uint j = 0;
-            uint i = 0;
+            int i = 0;
 
             if (profilePresentFlag != 0)
             {
@@ -2014,7 +2014,7 @@ profile_tier_level( profilePresentFlag, maxNumSubLayersMinus1 ) {
             if (maxNumSubLayersMinus1 > 0)
             {
 
-                for (i = maxNumSubLayersMinus1; i < 8; i++)
+                for (i = (int)maxNumSubLayersMinus1; i < 8; i++)
                 {
                     size += stream.WriteUnsignedInt(2, this.reserved_zero_2bits[i]);
                 }
@@ -3230,7 +3230,7 @@ sei_payload( payloadType, payloadSize ) {
 
                 if (stream.ReadMoreRbspData(this, payloadSize))
                 {
-                    size += stream.ReadUnsignedIntVariable(size, reserved_payload_extension_data, out this.reserved_payload_extension_data);
+                    size += stream.ReadUnsignedIntVariable(size, 8 /* TODO */, out this.reserved_payload_extension_data);
                 }
                 size += stream.ReadFixed(size, 1, out this.payload_bit_equal_to_one); // equal to 1 
 
@@ -3545,7 +3545,7 @@ sei_payload( payloadType, payloadSize ) {
 
                 if (stream.ReadMoreRbspData(this, payloadSize))
                 {
-                    size += stream.WriteUnsignedIntVariable(reserved_payload_extension_data, this.reserved_payload_extension_data);
+                    size += stream.WriteUnsignedIntVariable(8 /* TODO */, this.reserved_payload_extension_data);
                 }
                 size += stream.WriteFixed(1, this.payload_bit_equal_to_one); // equal to 1 
 
@@ -3656,11 +3656,11 @@ buffering_period( payloadSize ) {
 
             if (irap_cpb_params_present_flag != 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, cpb_delay_offset, out this.cpb_delay_offset);
-                size += stream.ReadUnsignedIntVariable(size, dpb_delay_offset, out this.dpb_delay_offset);
+                size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1, out this.cpb_delay_offset);
+                size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1, out this.dpb_delay_offset);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.concatenation_flag);
-            size += stream.ReadUnsignedIntVariable(size, au_cpb_removal_delay_delta_minus1, out this.au_cpb_removal_delay_delta_minus1);
+            size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1, out this.au_cpb_removal_delay_delta_minus1);
 
             if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag != 0)
             {
@@ -3724,11 +3724,11 @@ buffering_period( payloadSize ) {
 
             if (irap_cpb_params_present_flag != 0)
             {
-                size += stream.WriteUnsignedIntVariable(cpb_delay_offset, this.cpb_delay_offset);
-                size += stream.WriteUnsignedIntVariable(dpb_delay_offset, this.dpb_delay_offset);
+                size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1, this.cpb_delay_offset);
+                size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1, this.dpb_delay_offset);
             }
             size += stream.WriteUnsignedInt(1, this.concatenation_flag);
-            size += stream.WriteUnsignedIntVariable(au_cpb_removal_delay_delta_minus1, this.au_cpb_removal_delay_delta_minus1);
+            size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1, this.au_cpb_removal_delay_delta_minus1);
 
             if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag != 0)
             {
@@ -3853,11 +3853,11 @@ pic_timing( payloadSize ) {
             if ((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
             {
                 size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1), out this.au_cpb_removal_delay_minus1);
-                size += stream.ReadUnsignedIntVariable(size, pic_dpb_output_delay, out this.pic_dpb_output_delay);
+                size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1, out this.pic_dpb_output_delay);
 
                 if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, pic_dpb_output_du_delay, out this.pic_dpb_output_du_delay);
+                    size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1, out this.pic_dpb_output_du_delay);
                 }
 
                 if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 &&
@@ -3868,7 +3868,7 @@ pic_timing( payloadSize ) {
 
                     if (du_common_cpb_removal_delay_flag != 0)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, du_common_cpb_removal_delay_increment_minus1, out this.du_common_cpb_removal_delay_increment_minus1);
+                        size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1, out this.du_common_cpb_removal_delay_increment_minus1);
                     }
 
                     this.num_nalus_in_du_minus1 = new uint[num_decoding_units_minus1 + 1];
@@ -3904,11 +3904,11 @@ pic_timing( payloadSize ) {
             if ((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.NalHrdParametersPresentFlag == 1 || ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
             {
                 size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1), this.au_cpb_removal_delay_minus1);
-                size += stream.WriteUnsignedIntVariable(pic_dpb_output_delay, this.pic_dpb_output_delay);
+                size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1, this.pic_dpb_output_delay);
 
                 if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0)
                 {
-                    size += stream.WriteUnsignedIntVariable(pic_dpb_output_du_delay, this.pic_dpb_output_du_delay);
+                    size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1, this.pic_dpb_output_du_delay);
                 }
 
                 if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicHrdParamsPresentFlag != 0 &&
@@ -3919,7 +3919,7 @@ pic_timing( payloadSize ) {
 
                     if (du_common_cpb_removal_delay_flag != 0)
                     {
-                        size += stream.WriteUnsignedIntVariable(du_common_cpb_removal_delay_increment_minus1, this.du_common_cpb_removal_delay_increment_minus1);
+                        size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1, this.du_common_cpb_removal_delay_increment_minus1);
                     }
 
                     for (i = 0; i <= num_decoding_units_minus1; i++)
@@ -5631,13 +5631,13 @@ decoding_unit_info( payloadSize ) {
 
             if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag == 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, du_spt_cpb_removal_delay_increment, out this.du_spt_cpb_removal_delay_increment);
+                size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1, out this.du_spt_cpb_removal_delay_increment);
             }
             size += stream.ReadUnsignedInt(size, 1, out this.dpb_output_du_delay_present_flag);
 
             if (dpb_output_du_delay_present_flag != 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, pic_spt_dpb_output_du_delay, out this.pic_spt_dpb_output_du_delay);
+                size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1, out this.pic_spt_dpb_output_du_delay);
             }
 
             return size;
@@ -5651,13 +5651,13 @@ decoding_unit_info( payloadSize ) {
 
             if (((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag == 0)
             {
-                size += stream.WriteUnsignedIntVariable(du_spt_cpb_removal_delay_increment, this.du_spt_cpb_removal_delay_increment);
+                size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1, this.du_spt_cpb_removal_delay_increment);
             }
             size += stream.WriteUnsignedInt(1, this.dpb_output_du_delay_present_flag);
 
             if (dpb_output_du_delay_present_flag != 0)
             {
-                size += stream.WriteUnsignedIntVariable(pic_spt_dpb_output_du_delay, this.pic_spt_dpb_output_du_delay);
+                size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1, this.pic_spt_dpb_output_du_delay);
             }
 
             return size;
@@ -9824,7 +9824,7 @@ vps_extension() {
 
             if (direct_dependency_all_layers_flag != 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, direct_dependency_all_layers_type, out this.direct_dependency_all_layers_type);
+                size += stream.ReadUnsignedIntVariable(size, direct_dep_type_len_minus2 + 2, out this.direct_dependency_all_layers_type);
             }
             else
             {
@@ -10069,7 +10069,7 @@ vps_extension() {
 
             if (direct_dependency_all_layers_flag != 0)
             {
-                size += stream.WriteUnsignedIntVariable(direct_dependency_all_layers_type, this.direct_dependency_all_layers_type);
+                size += stream.WriteUnsignedIntVariable(direct_dep_type_len_minus2 + 2, this.direct_dependency_all_layers_type);
             }
             else
             {
@@ -12987,8 +12987,8 @@ alpha_channel_clip_type_flag u(1)
             {
                 size += stream.ReadUnsignedInt(size, 3, out this.alpha_channel_use_idc);
                 size += stream.ReadUnsignedInt(size, 3, out this.alpha_channel_bit_depth_minus8);
-                size += stream.ReadUnsignedIntVariable(size, alpha_transparent_value, out this.alpha_transparent_value);
-                size += stream.ReadUnsignedIntVariable(size, alpha_opaque_value, out this.alpha_opaque_value);
+                size += stream.ReadUnsignedIntVariable(size, alpha_channel_bit_depth_minus8 + 9, out this.alpha_transparent_value);
+                size += stream.ReadUnsignedIntVariable(size, alpha_channel_bit_depth_minus8 + 9, out this.alpha_opaque_value);
                 size += stream.ReadUnsignedInt(size, 1, out this.alpha_channel_incr_flag);
                 size += stream.ReadUnsignedInt(size, 1, out this.alpha_channel_clip_flag);
 
@@ -13011,8 +13011,8 @@ alpha_channel_clip_type_flag u(1)
             {
                 size += stream.WriteUnsignedInt(3, this.alpha_channel_use_idc);
                 size += stream.WriteUnsignedInt(3, this.alpha_channel_bit_depth_minus8);
-                size += stream.WriteUnsignedIntVariable(alpha_transparent_value, this.alpha_transparent_value);
-                size += stream.WriteUnsignedIntVariable(alpha_opaque_value, this.alpha_opaque_value);
+                size += stream.WriteUnsignedIntVariable(alpha_channel_bit_depth_minus8 + 9, this.alpha_transparent_value);
+                size += stream.WriteUnsignedIntVariable(alpha_channel_bit_depth_minus8 + 9, this.alpha_opaque_value);
                 size += stream.WriteUnsignedInt(1, this.alpha_channel_incr_flag);
                 size += stream.WriteUnsignedInt(1, this.alpha_channel_clip_flag);
 
@@ -13756,7 +13756,7 @@ depth_rep_info_element( OutSign, OutExp, OutMantissa, OutManLen ) {
             size += stream.ReadUnsignedInt(size, 1, out this.da_sign_flag);
             size += stream.ReadUnsignedInt(size, 7, out this.da_exponent);
             size += stream.ReadUnsignedInt(size, 5, out this.da_mantissa_len_minus1);
-            size += stream.ReadUnsignedIntVariable(size, da_mantissa, out this.da_mantissa);
+            size += stream.ReadUnsignedIntVariable(size, (this.da_mantissa_len_minus1 + 1), out this.da_mantissa);
 
             return size;
         }
@@ -13768,7 +13768,7 @@ depth_rep_info_element( OutSign, OutExp, OutMantissa, OutManLen ) {
             size += stream.WriteUnsignedInt(1, this.da_sign_flag);
             size += stream.WriteUnsignedInt(7, this.da_exponent);
             size += stream.WriteUnsignedInt(5, this.da_mantissa_len_minus1);
-            size += stream.WriteUnsignedIntVariable(da_mantissa, this.da_mantissa);
+            size += stream.WriteUnsignedIntVariable((this.da_mantissa_len_minus1 + 1), this.da_mantissa);
 
             return size;
         }
@@ -15020,21 +15020,21 @@ delta_dlt() {
             ulong size = 0;
 
             uint k = 0;
-            size += stream.ReadUnsignedIntVariable(size, num_val_delta_dlt, out this.num_val_delta_dlt);
+            size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8, out this.num_val_delta_dlt);
 
             if (num_val_delta_dlt > 0)
             {
 
                 if (num_val_delta_dlt > 1)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, max_diff, out this.max_diff);
+                    size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8, out this.max_diff);
                 }
 
                 if (num_val_delta_dlt > 2 && max_diff > 0)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, min_diff_minus1, out this.min_diff_minus1);
+                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(max_diff + 1)), out this.min_diff_minus1);
                 }
-                size += stream.ReadUnsignedIntVariable(size, delta_dlt_val0, out this.delta_dlt_val0);
+                size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8, out this.delta_dlt_val0);
 
                 if (max_diff > (min_diff_minus1 + 1))
                 {
@@ -15055,21 +15055,21 @@ delta_dlt() {
             ulong size = 0;
 
             uint k = 0;
-            size += stream.WriteUnsignedIntVariable(num_val_delta_dlt, this.num_val_delta_dlt);
+            size += stream.WriteUnsignedIntVariable(((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8, this.num_val_delta_dlt);
 
             if (num_val_delta_dlt > 0)
             {
 
                 if (num_val_delta_dlt > 1)
                 {
-                    size += stream.WriteUnsignedIntVariable(max_diff, this.max_diff);
+                    size += stream.WriteUnsignedIntVariable(((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8, this.max_diff);
                 }
 
                 if (num_val_delta_dlt > 2 && max_diff > 0)
                 {
-                    size += stream.WriteUnsignedIntVariable(min_diff_minus1, this.min_diff_minus1);
+                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(max_diff + 1)), this.min_diff_minus1);
                 }
-                size += stream.WriteUnsignedIntVariable(delta_dlt_val0, this.delta_dlt_val0);
+                size += stream.WriteUnsignedIntVariable(((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8, this.delta_dlt_val0);
 
                 if (max_diff > (min_diff_minus1 + 1))
                 {
