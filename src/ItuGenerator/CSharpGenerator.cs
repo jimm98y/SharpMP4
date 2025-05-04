@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 
 namespace ItuGenerator
@@ -288,8 +287,8 @@ namespace Sharp{type}
 
             if (GetLoopNestingLevel(field) > 0)
             {
-                if (name != "ar_bit_equal_to_zero" && !(field as ItuField).MakeList)
-                {
+                if (name != "ar_bit_equal_to_zero" && name != "rpls_poc_lsb_lt" && !(field as ItuField).MakeList)
+                    {
                     string suffix;
                     GetNestedInLoopSuffix(field, typedef, out suffix);
                     typedef += suffix;
@@ -712,6 +711,10 @@ namespace Sharp{type}
                 {
                     condition = FixCondition(b, condition, methodType);
                 }
+                else if(blockType == "for")
+                {
+                    condition = condition.Replace("i = MaxNumSubLayersMinus1 - 1", "i = (int)MaxNumSubLayersMinus1 - 1");
+                }
             }
 
             if (!string.IsNullOrEmpty(condition))
@@ -827,7 +830,7 @@ namespace Sharp{type}
                                         variableName == "cbr_flag" ||
                                         variableName == "colour_transf_lut" ||
                                         variableName == "scaling_list_dc_coef" ||
-                                        variableName == "bit_rate_du_value_minus1"
+                                        variableName == "bit_rate_du_value_minus1" 
                                         )
                                     {
                                         appendType += "[]"; // TODO fix this workaround
@@ -836,28 +839,21 @@ namespace Sharp{type}
                                         variableName == "vps_cp_scale" ||
                                         variableName == "vps_cp_off" ||
                                         variableName == "vps_cp_inv_scale_plus_scale" ||
-                                        variableName == "vps_cp_inv_off_plus_off" ||
-                                        // h266
-                                        variableName == "inter_layer_ref_pic_flag" ||
-                                        variableName == "st_ref_pic_flag" ||
-                                        variableName == "abs_delta_poc_st" ||
-                                        variableName == "strp_entry_sign_flag" ||
-                                        variableName == "ilrp_idx"
+                                        variableName == "vps_cp_inv_off_plus_off"
                                         )
                                     {
                                         appendType += "[][]"; // TODO fix this workaround
                                     }
-                                    else if(
-                                        variableName == "rpls_poc_lsb_lt"
-                                        )
-                                    {
-                                        appendType += "[][][]"; // TODO fix this workaround
-                                    }
-
+                                    
                                     // H266
                                     if (variableType.Contains(" 0  &&  i  <=  "))
                                     {
                                         variableType = variableType.Replace(" 0  &&  i  <=  ", "");
+                                    }
+
+                                    if (variableType.Contains("[  0]"))
+                                    {
+                                        variableType = variableType.Replace("[  0]", "[MaxNumSubLayersMinus1]");
                                     }
 
                                     ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
@@ -1228,6 +1224,7 @@ namespace Sharp{type}
             }
             else
             {
+               
                 int nestingLevel = GetLoopNestingLevel(field);
                 if (nestingLevel > 0)
                 {
@@ -1237,11 +1234,14 @@ namespace Sharp{type}
 
                     if (nestingLevel > 0)
                     {
-                        // change the type
-                        for (int i = 0; i < nestingLevel; i++)
+                        if (field.Name != "rpls_poc_lsb_lt") // h266
                         {
-                            type += "[]";
-                            initializer = "";
+                            // change the type
+                            for (int i = 0; i < nestingLevel; i++)
+                            {
+                                type += "[]";
+                                initializer = "";
+                            }
                         }
                     }
                 }
@@ -1332,6 +1332,7 @@ namespace Sharp{type}
                             if (variableIndex == -1)
                                 continue;
                             string variable = part.Substring(0, variableIndex).TrimStart(conditionChars).Trim();
+
                             if(variable == "NumDepthViews")
                             {
                                 // h264
@@ -1342,7 +1343,7 @@ namespace Sharp{type}
                             else if (b.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null && b.AddedFields.FirstOrDefault(x => x.Name == variable) == null)
                             {
                                 // h265
-                                if (variable == "matrixId")
+                                if (variable == "matrixId" || (b.ClassName == "profile_tier_level" && variable == "i"))
                                 {
                                     b.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "i(32)" });
                                 }
@@ -1443,6 +1444,10 @@ namespace Sharp{type}
                             )
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(64)", FieldArray = field.FieldArray });
+                        }
+                        else if(field.Name == "st_ref_pic_flag")
+                        {
+                            // do not add anything
                         }
                         else
                         {

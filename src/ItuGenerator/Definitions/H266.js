@@ -1086,7 +1086,9 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
    inter_layer_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] u(1) 
   if( !inter_layer_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] ) {  
    if( sps_long_term_ref_pics_flag )  
-    st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] u(1) 
+          st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] u(1) 
+   else
+      st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] = 1 /* LukasV added default */
    if( st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] ) {  
     abs_delta_poc_st[ listIdx ][ rplsIdx ][ i ] ue(v) 
     if( AbsDeltaPocSt[ listIdx ][ rplsIdx ][ i ] > 0 )  

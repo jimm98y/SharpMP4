@@ -9,6 +9,7 @@ namespace ItuGenerator
             definitions = definitions
                 .Replace("sli_sublayer_info_present_flag ? 0", "sli_sublayer_info_present_flag != 0 ? 0")
                 .Replace("subLayerInfoFlag ?", "subLayerInfoFlag != 0 ?")
+                .Replace("[ listIdx ][ rplsIdx ]", "") // ref_pic_list_struct is a class, each instance is stored separately
                 .Replace("dph_sei_single_component_flag ? ", "dph_sei_single_component_flag != 0 ?")
                 .Replace("sps_rpl1_same_as_rpl0_flag ?", "sps_rpl1_same_as_rpl0_flag != 0 ?")
                 .Replace("sps_sublayer_cpb_params_present_flag ?", "sps_sublayer_cpb_params_present_flag != 0 ?")

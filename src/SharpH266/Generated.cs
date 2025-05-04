@@ -4993,7 +4993,7 @@ profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {
         {
             ulong size = 0;
 
-            uint i = 0;
+            int i = 0;
             int whileIndex = -1;
 
             if (profileTierPresentFlag != 0)
@@ -5011,8 +5011,8 @@ profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {
                 size += stream.ReadClass<GeneralConstraintsInfo>(size, context, this.general_constraints_info);
             }
 
-            this.ptl_sublayer_level_present_flag = new byte[0];
-            for (i = MaxNumSubLayersMinus1 - 1; i >= 0; i--)
+            this.ptl_sublayer_level_present_flag = new byte[MaxNumSubLayersMinus1];
+            for (i = (int)MaxNumSubLayersMinus1 - 1; i >= 0; i--)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.ptl_sublayer_level_present_flag[i]);
             }
@@ -5024,8 +5024,8 @@ profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {
                 size += stream.ReadUnsignedInt(size, 1, whileIndex, this.ptl_reserved_zero_bit);
             }
 
-            this.sublayer_level_idc = new uint[0];
-            for (i = MaxNumSubLayersMinus1 - 1; i >= 0; i--)
+            this.sublayer_level_idc = new uint[MaxNumSubLayersMinus1];
+            for (i = (int)MaxNumSubLayersMinus1 - 1; i >= 0; i--)
             {
 
                 if (ptl_sublayer_level_present_flag[i] != 0)
@@ -5052,7 +5052,7 @@ profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {
         {
             ulong size = 0;
 
-            uint i = 0;
+            int i = 0;
             int whileIndex = -1;
 
             if (profileTierPresentFlag != 0)
@@ -5069,7 +5069,7 @@ profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {
                 size += stream.WriteClass<GeneralConstraintsInfo>(context, this.general_constraints_info);
             }
 
-            for (i = MaxNumSubLayersMinus1 - 1; i >= 0; i--)
+            for (i = (int)MaxNumSubLayersMinus1 - 1; i >= 0; i--)
             {
                 size += stream.WriteUnsignedInt(1, this.ptl_sublayer_level_present_flag[i]);
             }
@@ -5081,7 +5081,7 @@ profile_tier_level( profileTierPresentFlag, MaxNumSubLayersMinus1 ) {
                 size += stream.WriteUnsignedInt(1, whileIndex, this.ptl_reserved_zero_bit);
             }
 
-            for (i = MaxNumSubLayersMinus1 - 1; i >= 0; i--)
+            for (i = (int)MaxNumSubLayersMinus1 - 1; i >= 0; i--)
             {
 
                 if (ptl_sublayer_level_present_flag[i] != 0)
@@ -6091,25 +6091,27 @@ sei_message() {
   
 
 ref_pic_list_struct( listIdx, rplsIdx ) {  
- num_ref_entries[ listIdx ][ rplsIdx ] ue(v) 
+ num_ref_entries ue(v) 
  if( sps_long_term_ref_pics_flag  &&  rplsIdx < sps_num_ref_pic_lists[ listIdx ]  && 
-   num_ref_entries[ listIdx ][ rplsIdx ] > 0 ) 
+   num_ref_entries > 0 ) 
  
-  ltrp_in_header_flag[ listIdx ][ rplsIdx ] u(1) 
- for( i = 0, j = 0; i < num_ref_entries[ listIdx ][ rplsIdx ]; i++) {  
+  ltrp_in_header_flag u(1) 
+ for( i = 0, j = 0; i < num_ref_entries; i++) {  
   if( sps_inter_layer_prediction_enabled_flag )  
-   inter_layer_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] u(1) 
-  if( !inter_layer_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] ) {  
+   inter_layer_ref_pic_flag[ i ] u(1) 
+  if( !inter_layer_ref_pic_flag[ i ] ) {  
    if( sps_long_term_ref_pics_flag )  
-    st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] u(1) 
-   if( st_ref_pic_flag[ listIdx ][ rplsIdx ][ i ] ) {  
-    abs_delta_poc_st[ listIdx ][ rplsIdx ][ i ] ue(v) 
-    if( AbsDeltaPocSt[ listIdx ][ rplsIdx ][ i ] > 0 )  
-     strp_entry_sign_flag[ listIdx ][ rplsIdx ][ i ] u(1) 
-   } else if( !ltrp_in_header_flag[ listIdx ][ rplsIdx ] )  
-    rpls_poc_lsb_lt[ listIdx ][ rplsIdx ][ j++ ] u(v) 
+          st_ref_pic_flag[ i ] u(1) 
+   else
+      st_ref_pic_flag[ i ] = 1 /* LukasV added default *//*
+   if( st_ref_pic_flag[ i ] ) {  
+    abs_delta_poc_st[ i ] ue(v) 
+    if( AbsDeltaPocSt[ i ] > 0 )  
+     strp_entry_sign_flag[ i ] u(1) 
+   } else if( !ltrp_in_header_flag )  
+    rpls_poc_lsb_lt[ j++ ] u(v) 
       } else  
-   ilrp_idx[ listIdx ][ rplsIdx ][ i ] ue(v) 
+   ilrp_idx[ i ] ue(v) 
  }  
 }
     */
@@ -6119,22 +6121,22 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
         public uint ListIdx { get { return listIdx; } set { listIdx = value; } }
         private uint rplsIdx;
         public uint RplsIdx { get { return rplsIdx; } set { rplsIdx = value; } }
-        private uint[][] num_ref_entries;
-        public uint[][] NumRefEntries { get { return num_ref_entries; } set { num_ref_entries = value; } }
-        private byte[][] ltrp_in_header_flag;
-        public byte[][] LtrpInHeaderFlag { get { return ltrp_in_header_flag; } set { ltrp_in_header_flag = value; } }
-        private byte[][][] inter_layer_ref_pic_flag;
-        public byte[][][] InterLayerRefPicFlag { get { return inter_layer_ref_pic_flag; } set { inter_layer_ref_pic_flag = value; } }
-        private byte[][][] st_ref_pic_flag;
-        public byte[][][] StRefPicFlag { get { return st_ref_pic_flag; } set { st_ref_pic_flag = value; } }
-        private uint[][][] abs_delta_poc_st;
-        public uint[][][] AbsDeltaPocSt { get { return abs_delta_poc_st; } set { abs_delta_poc_st = value; } }
-        private byte[][][] strp_entry_sign_flag;
-        public byte[][][] StrpEntrySignFlag { get { return strp_entry_sign_flag; } set { strp_entry_sign_flag = value; } }
-        private uint[][][][] rpls_poc_lsb_lt;
-        public uint[][][][] RplsPocLsbLt { get { return rpls_poc_lsb_lt; } set { rpls_poc_lsb_lt = value; } }
-        private uint[][][] ilrp_idx;
-        public uint[][][] IlrpIdx { get { return ilrp_idx; } set { ilrp_idx = value; } }
+        private uint num_ref_entries;
+        public uint NumRefEntries { get { return num_ref_entries; } set { num_ref_entries = value; } }
+        private byte ltrp_in_header_flag;
+        public byte LtrpInHeaderFlag { get { return ltrp_in_header_flag; } set { ltrp_in_header_flag = value; } }
+        private byte[] inter_layer_ref_pic_flag;
+        public byte[] InterLayerRefPicFlag { get { return inter_layer_ref_pic_flag; } set { inter_layer_ref_pic_flag = value; } }
+        private byte[] st_ref_pic_flag;
+        public byte[] StRefPicFlag { get { return st_ref_pic_flag; } set { st_ref_pic_flag = value; } }
+        private uint[] abs_delta_poc_st;
+        public uint[] AbsDeltaPocSt { get { return abs_delta_poc_st; } set { abs_delta_poc_st = value; } }
+        private byte[] strp_entry_sign_flag;
+        public byte[] StrpEntrySignFlag { get { return strp_entry_sign_flag; } set { strp_entry_sign_flag = value; } }
+        private uint[] rpls_poc_lsb_lt;
+        public uint[] RplsPocLsbLt { get { return rpls_poc_lsb_lt; } set { rpls_poc_lsb_lt = value; } }
+        private uint[] ilrp_idx;
+        public uint[] IlrpIdx { get { return ilrp_idx; } set { ilrp_idx = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -6151,53 +6153,57 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_entries[listIdx][rplsIdx]);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_entries);
 
             if (((H266Context)context).SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0 && rplsIdx < ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] &&
-   num_ref_entries[listIdx][rplsIdx] > 0)
+   num_ref_entries > 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.ltrp_in_header_flag[listIdx][rplsIdx]);
+                size += stream.ReadUnsignedInt(size, 1, out this.ltrp_in_header_flag);
             }
 
-            this.inter_layer_ref_pic_flag = new byte[num_ref_entries[listIdx][rplsIdx]][][];
-            this.st_ref_pic_flag = new byte[num_ref_entries[listIdx][rplsIdx]][][];
-            this.abs_delta_poc_st = new uint[num_ref_entries[listIdx][rplsIdx]][][];
-            this.strp_entry_sign_flag = new byte[num_ref_entries[listIdx][rplsIdx]][][];
-            this.rpls_poc_lsb_lt = new uint[num_ref_entries[listIdx][rplsIdx]][][][];
-            this.ilrp_idx = new uint[num_ref_entries[listIdx][rplsIdx]][][];
-            for (i = 0, j = 0; i < num_ref_entries[listIdx][rplsIdx]; i++)
+            this.inter_layer_ref_pic_flag = new byte[num_ref_entries];
+            this.st_ref_pic_flag = new byte[num_ref_entries];
+            this.abs_delta_poc_st = new uint[num_ref_entries];
+            this.strp_entry_sign_flag = new byte[num_ref_entries];
+            this.rpls_poc_lsb_lt = new uint[num_ref_entries];
+            this.ilrp_idx = new uint[num_ref_entries];
+            for (i = 0, j = 0; i < num_ref_entries; i++)
             {
 
                 if (((H266Context)context).SeqParameterSetRbsp.SpsInterLayerPredictionEnabledFlag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_ref_pic_flag[listIdx][rplsIdx][i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_ref_pic_flag[i]);
                 }
 
-                if (inter_layer_ref_pic_flag[listIdx][rplsIdx][i] == 0)
+                if (inter_layer_ref_pic_flag[i] == 0)
                 {
 
                     if (((H266Context)context).SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.st_ref_pic_flag[listIdx][rplsIdx][i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.st_ref_pic_flag[i]);
+                    }
+                    else
+                    {
+                        st_ref_pic_flag[i] = 1 /* LukasV added default */;
                     }
 
-                    if (st_ref_pic_flag[listIdx][rplsIdx][i] != 0)
+                    if (st_ref_pic_flag[i] != 0)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.abs_delta_poc_st[listIdx][rplsIdx][i]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.abs_delta_poc_st[i]);
 
-                        if (AbsDeltaPocSt[listIdx][rplsIdx][i] > 0)
+                        if (AbsDeltaPocSt[i] > 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.strp_entry_sign_flag[listIdx][rplsIdx][i]);
+                            size += stream.ReadUnsignedInt(size, 1, out this.strp_entry_sign_flag[i]);
                         }
                     }
-                    else if (ltrp_in_header_flag[listIdx][rplsIdx] == 0)
+                    else if (ltrp_in_header_flag == 0)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, ((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4, out this.rpls_poc_lsb_lt[listIdx][rplsIdx][j++][i]);
+                        size += stream.ReadUnsignedIntVariable(size, ((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4, out this.rpls_poc_lsb_lt[j++]);
                     }
                 }
                 else
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.ilrp_idx[listIdx][rplsIdx][i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.ilrp_idx[i]);
                 }
             }
 
@@ -6210,47 +6216,51 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_ref_entries[listIdx][rplsIdx]);
+            size += stream.WriteUnsignedIntGolomb(this.num_ref_entries);
 
             if (((H266Context)context).SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0 && rplsIdx < ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] &&
-   num_ref_entries[listIdx][rplsIdx] > 0)
+   num_ref_entries > 0)
             {
-                size += stream.WriteUnsignedInt(1, this.ltrp_in_header_flag[listIdx][rplsIdx]);
+                size += stream.WriteUnsignedInt(1, this.ltrp_in_header_flag);
             }
 
-            for (i = 0, j = 0; i < num_ref_entries[listIdx][rplsIdx]; i++)
+            for (i = 0, j = 0; i < num_ref_entries; i++)
             {
 
                 if (((H266Context)context).SeqParameterSetRbsp.SpsInterLayerPredictionEnabledFlag != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.inter_layer_ref_pic_flag[listIdx][rplsIdx][i]);
+                    size += stream.WriteUnsignedInt(1, this.inter_layer_ref_pic_flag[i]);
                 }
 
-                if (inter_layer_ref_pic_flag[listIdx][rplsIdx][i] == 0)
+                if (inter_layer_ref_pic_flag[i] == 0)
                 {
 
                     if (((H266Context)context).SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.st_ref_pic_flag[listIdx][rplsIdx][i]);
+                        size += stream.WriteUnsignedInt(1, this.st_ref_pic_flag[i]);
+                    }
+                    else
+                    {
+                        st_ref_pic_flag[i] = 1 /* LukasV added default */;
                     }
 
-                    if (st_ref_pic_flag[listIdx][rplsIdx][i] != 0)
+                    if (st_ref_pic_flag[i] != 0)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.abs_delta_poc_st[listIdx][rplsIdx][i]);
+                        size += stream.WriteUnsignedIntGolomb(this.abs_delta_poc_st[i]);
 
-                        if (AbsDeltaPocSt[listIdx][rplsIdx][i] > 0)
+                        if (AbsDeltaPocSt[i] > 0)
                         {
-                            size += stream.WriteUnsignedInt(1, this.strp_entry_sign_flag[listIdx][rplsIdx][i]);
+                            size += stream.WriteUnsignedInt(1, this.strp_entry_sign_flag[i]);
                         }
                     }
-                    else if (ltrp_in_header_flag[listIdx][rplsIdx] == 0)
+                    else if (ltrp_in_header_flag == 0)
                     {
-                        size += stream.WriteUnsignedIntVariable(((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4, this.rpls_poc_lsb_lt[listIdx][rplsIdx][j++][i]);
+                        size += stream.WriteUnsignedIntVariable(((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4, this.rpls_poc_lsb_lt[j++]);
                     }
                 }
                 else
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.ilrp_idx[listIdx][rplsIdx][i]);
+                    size += stream.WriteUnsignedIntGolomb(this.ilrp_idx[i]);
                 }
             }
 
