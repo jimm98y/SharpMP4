@@ -16,6 +16,7 @@ namespace SharpH266
         public SeqParameterSetRbsp SeqParameterSetRbsp { get; set; }
         public PicParameterSetRbsp PicParameterSetRbsp { get; set; }
         public AdaptationParameterSetRbsp AdaptationParameterSetRbsp { get; set; }
+        public SliceLayerRbsp SliceLayerRbsp { get; set; }
         public PictureHeaderRbsp PictureHeaderRbsp { get; set; }
         public SeiRbsp SeiRbsp { get; set; }
         public AccessUnitDelimiterRbsp AccessUnitDelimiterRbsp { get; set; }
@@ -3082,6 +3083,472 @@ adaptation_parameter_set_rbsp() {
 
     /*
  
+
+slice_layer_rbsp() {
+    slice_header()
+    /* slice_data() *//*
+    /* rbsp_slice_trailing_bits() *//*
+}
+    */
+    public class SliceLayerRbsp : IItuSerializable
+    {
+        private SliceHeader slice_header;
+        public SliceHeader SliceHeader { get { return slice_header; } set { slice_header = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceLayerRbsp()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            this.slice_header = new SliceHeader();
+            size += stream.ReadClass<SliceHeader>(size, context, this.slice_header); // slice_data() 
+            /*  rbsp_slice_trailing_bits()  */
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteClass<SliceHeader>(context, this.slice_header); // slice_data() 
+            /*  rbsp_slice_trailing_bits()  */
+
+
+            return size;
+        }
+
+    }
+
+    /*
+  
+
+slice_header() {  
+    sh_picture_header_in_slice_header_flag u(1)
+    if (sh_picture_header_in_slice_header_flag)
+        picture_header_structure()   
+ 
+    /* if (sps_subpic_info_present_flag) *//*
+    /*    sh_subpic_id u(v)
+    if ((pps_rect_slice_flag && NumSlicesInSubpic[CurrSubpicIdx] > 1) ||
+        (!pps_rect_slice_flag && NumTilesInPic > 1)) 
+ 
+    sh_slice_address u(v)
+    for (i = 0; i < NumExtraShBits; i++)
+        sh_extra_bit[i] u(1)
+    if (!pps_rect_slice_flag && NumTilesInPic - sh_slice_address > 1 )  
+        sh_num_tiles_in_slice_minus1 ue(v)
+    if (ph_inter_slice_allowed_flag)  
+        sh_slice_type ue(v)
+    if (nal_unit_type == IDR_W_RADL || nal_unit_type == IDR_N_LP ||
+        nal_unit_type == CRA_NUT || nal_unit_type == GDR_NUT) 
+        sh_no_output_of_prior_pics_flag u(1)
+    if (sps_alf_enabled_flag && !pps_alf_info_in_ph_flag) {  
+        sh_alf_enabled_flag u(1)
+        if (sh_alf_enabled_flag) {  
+            sh_num_alf_aps_ids_luma u(3)
+            for (i = 0; i < sh_num_alf_aps_ids_luma; i++)
+                sh_alf_aps_id_luma[i] u(3)
+            if (sps_chroma_format_idc != 0) {  
+                sh_alf_cb_enabled_flag u(1) 
+                sh_alf_cr_enabled_flag u(1)
+            }
+            if (sh_alf_cb_enabled_flag || sh_alf_cr_enabled_flag)  
+                sh_alf_aps_id_chroma u(3)
+            if (sps_ccalf_enabled_flag) {  
+                sh_alf_cc_cb_enabled_flag u(1)
+                if (sh_alf_cc_cb_enabled_flag)  
+                    sh_alf_cc_cb_aps_id u(3) 
+                sh_alf_cc_cr_enabled_flag u(1)
+                if (sh_alf_cc_cr_enabled_flag)  
+                    sh_alf_cc_cr_aps_id u(3)
+            }
+        }
+    }
+    if (ph_lmcs_enabled_flag && !sh_picture_header_in_slice_header_flag)  
+        sh_lmcs_used_flag u(1)
+    if (ph_explicit_scaling_list_enabled_flag && !sh_picture_header_in_slice_header_flag)  
+        sh_explicit_scaling_list_used_flag u(1)
+    if (!pps_rpl_info_in_ph_flag && ((nal_unit_type != IDR_W_RADL &&
+        nal_unit_type != IDR_N_LP) || sps_idr_rpl_present_flag))
+
+        ref_pic_lists()
+    if ((sh_slice_type != I && num_ref_entries[0][RplsIdx[0]] > 1) ||
+        (sh_slice_type == B && num_ref_entries[1][RplsIdx[1]] > 1)) { 
+ 
+        sh_num_ref_idx_active_override_flag u(1)
+        if (sh_num_ref_idx_active_override_flag)
+            for (i = 0; i < (sh_slice_type == B ? 2 : 1); i++)
+                if (num_ref_entries[i][RplsIdx[i]] > 1)
+                    sh_num_ref_idx_active_minus1[i] ue(v)
+    }
+    if (sh_slice_type != I) {
+        if (pps_cabac_init_present_flag)  
+            sh_cabac_init_flag u(1)
+        if (ph_temporal_mvp_enabled_flag && !pps_rpl_info_in_ph_flag) {
+            if (sh_slice_type == B)  
+                sh_collocated_from_l0_flag u(1)
+            if ((sh_collocated_from_l0_flag && NumRefIdxActive[0] > 1) ||
+                (!sh_collocated_from_l0_flag && NumRefIdxActive[1] > 1)) 
+ 
+            sh_collocated_ref_idx ue(v)
+        }
+        if (!pps_wp_info_in_ph_flag &&
+            ((pps_weighted_pred_flag && sh_slice_type == P) ||
+                (pps_weighted_bipred_flag && sh_slice_type == B)))
+            pred_weight_table()
+    }
+    if (!pps_qp_delta_info_in_ph_flag)  
+        sh_qp_delta se(v)
+    if (pps_slice_chroma_qp_offsets_present_flag) {  
+        sh_cb_qp_offset se(v) 
+        sh_cr_qp_offset se(v)
+        if (sps_joint_cbcr_enabled_flag)  
+            sh_joint_cbcr_qp_offset se(v)
+    }
+    if (pps_cu_chroma_qp_offset_list_enabled_flag)  
+        sh_cu_chroma_qp_offset_enabled_flag u(1)
+    if (sps_sao_enabled_flag && !pps_sao_info_in_ph_flag) {  
+        sh_sao_luma_used_flag u(1)
+        if (sps_chroma_format_idc != 0)  
+            sh_sao_chroma_used_flag u(1)
+    }
+    if (pps_deblocking_filter_override_enabled_flag && !pps_dbf_info_in_ph_flag)  
+        sh_deblocking_params_present_flag u(1)
+    if (sh_deblocking_params_present_flag) {
+        if (!pps_deblocking_filter_disabled_flag)  
+        sh_deblocking_filter_disabled_flag u(1)
+        if (!sh_deblocking_filter_disabled_flag) {  
+            sh_luma_beta_offset_div2 se(v) 
+            sh_luma_tc_offset_div2 se(v)
+            if (pps_chroma_tool_offsets_present_flag) {  
+                sh_cb_beta_offset_div2 se(v) 
+                sh_cb_tc_offset_div2 se(v) 
+                sh_cr_beta_offset_div2 se(v) 
+                sh_cr_tc_offset_div2 se(v)
+            }
+        }
+    }
+    if (sps_dep_quant_enabled_flag)  
+        sh_dep_quant_used_flag u(1)
+    if (sps_sign_data_hiding_enabled_flag && !sh_dep_quant_used_flag)  
+        sh_sign_data_hiding_used_flag u(1)
+    if (sps_transform_skip_enabled_flag && !sh_dep_quant_used_flag &&
+        !sh_sign_data_hiding_used_flag) 
+ 
+        sh_ts_residual_coding_disabled_flag u(1)
+    if (pps_slice_header_extension_present_flag) {  
+        sh_slice_header_extension_length ue(v)
+        for (i = 0; i < sh_slice_header_extension_length; i++)
+            sh_slice_header_extension_data_byte[i] u(8)
+    }
+    if (NumEntryPoints > 0) {  
+        sh_entry_offset_len_minus1 ue(v)
+        for (i = 0; i < NumEntryPoints; i++)
+            sh_entry_point_offset_minus1[i] u(v)
+    }
+    byte_alignment()
+    *//*
+}
+    */
+    public class SliceHeader : IItuSerializable
+    {
+        private byte sh_picture_header_in_slice_header_flag;
+        public byte ShPictureHeaderInSliceHeaderFlag { get { return sh_picture_header_in_slice_header_flag; } set { sh_picture_header_in_slice_header_flag = value; } }
+        private PictureHeaderStructure picture_header_structure;
+        public PictureHeaderStructure PictureHeaderStructure { get { return picture_header_structure; } set { picture_header_structure = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceHeader()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.ReadUnsignedInt(size, 1, out this.sh_picture_header_in_slice_header_flag);
+
+            if (sh_picture_header_in_slice_header_flag != 0)
+            {
+                this.picture_header_structure = new PictureHeaderStructure();
+                size += stream.ReadClass<PictureHeaderStructure>(size, context, this.picture_header_structure); // if (sps_subpic_info_present_flag) 
+            }
+            /*     sh_subpic_id u(v)
+                if ((pps_rect_slice_flag && NumSlicesInSubpic[CurrSubpicIdx] > 1) ||
+                    (!pps_rect_slice_flag && NumTilesInPic > 1)) 
+
+                sh_slice_address u(v)
+                for (i = 0; i < NumExtraShBits; i++)
+                    sh_extra_bit[i] u(1)
+                if (!pps_rect_slice_flag && NumTilesInPic - sh_slice_address > 1 )  
+                    sh_num_tiles_in_slice_minus1 ue(v)
+                if (ph_inter_slice_allowed_flag)  
+                    sh_slice_type ue(v)
+                if (nal_unit_type == IDR_W_RADL || nal_unit_type == IDR_N_LP ||
+                    nal_unit_type == CRA_NUT || nal_unit_type == GDR_NUT) 
+                    sh_no_output_of_prior_pics_flag u(1)
+                if (sps_alf_enabled_flag && !pps_alf_info_in_ph_flag) {  
+                    sh_alf_enabled_flag u(1)
+                    if (sh_alf_enabled_flag) {  
+                        sh_num_alf_aps_ids_luma u(3)
+                        for (i = 0; i < sh_num_alf_aps_ids_luma; i++)
+                            sh_alf_aps_id_luma[i] u(3)
+                        if (sps_chroma_format_idc != 0) {  
+                            sh_alf_cb_enabled_flag u(1) 
+                            sh_alf_cr_enabled_flag u(1)
+                        }
+                        if (sh_alf_cb_enabled_flag || sh_alf_cr_enabled_flag)  
+                            sh_alf_aps_id_chroma u(3)
+                        if (sps_ccalf_enabled_flag) {  
+                            sh_alf_cc_cb_enabled_flag u(1)
+                            if (sh_alf_cc_cb_enabled_flag)  
+                                sh_alf_cc_cb_aps_id u(3) 
+                            sh_alf_cc_cr_enabled_flag u(1)
+                            if (sh_alf_cc_cr_enabled_flag)  
+                                sh_alf_cc_cr_aps_id u(3)
+                        }
+                    }
+                }
+                if (ph_lmcs_enabled_flag && !sh_picture_header_in_slice_header_flag)  
+                    sh_lmcs_used_flag u(1)
+                if (ph_explicit_scaling_list_enabled_flag && !sh_picture_header_in_slice_header_flag)  
+                    sh_explicit_scaling_list_used_flag u(1)
+                if (!pps_rpl_info_in_ph_flag && ((nal_unit_type != IDR_W_RADL &&
+                    nal_unit_type != IDR_N_LP) || sps_idr_rpl_present_flag))
+
+                    ref_pic_lists()
+                if ((sh_slice_type != I && num_ref_entries[0][RplsIdx[0]] > 1) ||
+                    (sh_slice_type == B && num_ref_entries[1][RplsIdx[1]] > 1)) { 
+
+                    sh_num_ref_idx_active_override_flag u(1)
+                    if (sh_num_ref_idx_active_override_flag)
+                        for (i = 0; i < (sh_slice_type == B ? 2 : 1); i++)
+                            if (num_ref_entries[i][RplsIdx[i]] > 1)
+                                sh_num_ref_idx_active_minus1[i] ue(v)
+                }
+                if (sh_slice_type != I) {
+                    if (pps_cabac_init_present_flag)  
+                        sh_cabac_init_flag u(1)
+                    if (ph_temporal_mvp_enabled_flag && !pps_rpl_info_in_ph_flag) {
+                        if (sh_slice_type == B)  
+                            sh_collocated_from_l0_flag u(1)
+                        if ((sh_collocated_from_l0_flag && NumRefIdxActive[0] > 1) ||
+                            (!sh_collocated_from_l0_flag && NumRefIdxActive[1] > 1)) 
+
+                        sh_collocated_ref_idx ue(v)
+                    }
+                    if (!pps_wp_info_in_ph_flag &&
+                        ((pps_weighted_pred_flag && sh_slice_type == P) ||
+                            (pps_weighted_bipred_flag && sh_slice_type == B)))
+                        pred_weight_table()
+                }
+                if (!pps_qp_delta_info_in_ph_flag)  
+                    sh_qp_delta se(v)
+                if (pps_slice_chroma_qp_offsets_present_flag) {  
+                    sh_cb_qp_offset se(v) 
+                    sh_cr_qp_offset se(v)
+                    if (sps_joint_cbcr_enabled_flag)  
+                        sh_joint_cbcr_qp_offset se(v)
+                }
+                if (pps_cu_chroma_qp_offset_list_enabled_flag)  
+                    sh_cu_chroma_qp_offset_enabled_flag u(1)
+                if (sps_sao_enabled_flag && !pps_sao_info_in_ph_flag) {  
+                    sh_sao_luma_used_flag u(1)
+                    if (sps_chroma_format_idc != 0)  
+                        sh_sao_chroma_used_flag u(1)
+                }
+                if (pps_deblocking_filter_override_enabled_flag && !pps_dbf_info_in_ph_flag)  
+                    sh_deblocking_params_present_flag u(1)
+                if (sh_deblocking_params_present_flag) {
+                    if (!pps_deblocking_filter_disabled_flag)  
+                    sh_deblocking_filter_disabled_flag u(1)
+                    if (!sh_deblocking_filter_disabled_flag) {  
+                        sh_luma_beta_offset_div2 se(v) 
+                        sh_luma_tc_offset_div2 se(v)
+                        if (pps_chroma_tool_offsets_present_flag) {  
+                            sh_cb_beta_offset_div2 se(v) 
+                            sh_cb_tc_offset_div2 se(v) 
+                            sh_cr_beta_offset_div2 se(v) 
+                            sh_cr_tc_offset_div2 se(v)
+                        }
+                    }
+                }
+                if (sps_dep_quant_enabled_flag)  
+                    sh_dep_quant_used_flag u(1)
+                if (sps_sign_data_hiding_enabled_flag && !sh_dep_quant_used_flag)  
+                    sh_sign_data_hiding_used_flag u(1)
+                if (sps_transform_skip_enabled_flag && !sh_dep_quant_used_flag &&
+                    !sh_sign_data_hiding_used_flag) 
+
+                    sh_ts_residual_coding_disabled_flag u(1)
+                if (pps_slice_header_extension_present_flag) {  
+                    sh_slice_header_extension_length ue(v)
+                    for (i = 0; i < sh_slice_header_extension_length; i++)
+                        sh_slice_header_extension_data_byte[i] u(8)
+                }
+                if (NumEntryPoints > 0) {  
+                    sh_entry_offset_len_minus1 ue(v)
+                    for (i = 0; i < NumEntryPoints; i++)
+                        sh_entry_point_offset_minus1[i] u(v)
+                }
+                byte_alignment()
+                 */
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteUnsignedInt(1, this.sh_picture_header_in_slice_header_flag);
+
+            if (sh_picture_header_in_slice_header_flag != 0)
+            {
+                size += stream.WriteClass<PictureHeaderStructure>(context, this.picture_header_structure); // if (sps_subpic_info_present_flag) 
+            }
+            /*     sh_subpic_id u(v)
+                if ((pps_rect_slice_flag && NumSlicesInSubpic[CurrSubpicIdx] > 1) ||
+                    (!pps_rect_slice_flag && NumTilesInPic > 1)) 
+
+                sh_slice_address u(v)
+                for (i = 0; i < NumExtraShBits; i++)
+                    sh_extra_bit[i] u(1)
+                if (!pps_rect_slice_flag && NumTilesInPic - sh_slice_address > 1 )  
+                    sh_num_tiles_in_slice_minus1 ue(v)
+                if (ph_inter_slice_allowed_flag)  
+                    sh_slice_type ue(v)
+                if (nal_unit_type == IDR_W_RADL || nal_unit_type == IDR_N_LP ||
+                    nal_unit_type == CRA_NUT || nal_unit_type == GDR_NUT) 
+                    sh_no_output_of_prior_pics_flag u(1)
+                if (sps_alf_enabled_flag && !pps_alf_info_in_ph_flag) {  
+                    sh_alf_enabled_flag u(1)
+                    if (sh_alf_enabled_flag) {  
+                        sh_num_alf_aps_ids_luma u(3)
+                        for (i = 0; i < sh_num_alf_aps_ids_luma; i++)
+                            sh_alf_aps_id_luma[i] u(3)
+                        if (sps_chroma_format_idc != 0) {  
+                            sh_alf_cb_enabled_flag u(1) 
+                            sh_alf_cr_enabled_flag u(1)
+                        }
+                        if (sh_alf_cb_enabled_flag || sh_alf_cr_enabled_flag)  
+                            sh_alf_aps_id_chroma u(3)
+                        if (sps_ccalf_enabled_flag) {  
+                            sh_alf_cc_cb_enabled_flag u(1)
+                            if (sh_alf_cc_cb_enabled_flag)  
+                                sh_alf_cc_cb_aps_id u(3) 
+                            sh_alf_cc_cr_enabled_flag u(1)
+                            if (sh_alf_cc_cr_enabled_flag)  
+                                sh_alf_cc_cr_aps_id u(3)
+                        }
+                    }
+                }
+                if (ph_lmcs_enabled_flag && !sh_picture_header_in_slice_header_flag)  
+                    sh_lmcs_used_flag u(1)
+                if (ph_explicit_scaling_list_enabled_flag && !sh_picture_header_in_slice_header_flag)  
+                    sh_explicit_scaling_list_used_flag u(1)
+                if (!pps_rpl_info_in_ph_flag && ((nal_unit_type != IDR_W_RADL &&
+                    nal_unit_type != IDR_N_LP) || sps_idr_rpl_present_flag))
+
+                    ref_pic_lists()
+                if ((sh_slice_type != I && num_ref_entries[0][RplsIdx[0]] > 1) ||
+                    (sh_slice_type == B && num_ref_entries[1][RplsIdx[1]] > 1)) { 
+
+                    sh_num_ref_idx_active_override_flag u(1)
+                    if (sh_num_ref_idx_active_override_flag)
+                        for (i = 0; i < (sh_slice_type == B ? 2 : 1); i++)
+                            if (num_ref_entries[i][RplsIdx[i]] > 1)
+                                sh_num_ref_idx_active_minus1[i] ue(v)
+                }
+                if (sh_slice_type != I) {
+                    if (pps_cabac_init_present_flag)  
+                        sh_cabac_init_flag u(1)
+                    if (ph_temporal_mvp_enabled_flag && !pps_rpl_info_in_ph_flag) {
+                        if (sh_slice_type == B)  
+                            sh_collocated_from_l0_flag u(1)
+                        if ((sh_collocated_from_l0_flag && NumRefIdxActive[0] > 1) ||
+                            (!sh_collocated_from_l0_flag && NumRefIdxActive[1] > 1)) 
+
+                        sh_collocated_ref_idx ue(v)
+                    }
+                    if (!pps_wp_info_in_ph_flag &&
+                        ((pps_weighted_pred_flag && sh_slice_type == P) ||
+                            (pps_weighted_bipred_flag && sh_slice_type == B)))
+                        pred_weight_table()
+                }
+                if (!pps_qp_delta_info_in_ph_flag)  
+                    sh_qp_delta se(v)
+                if (pps_slice_chroma_qp_offsets_present_flag) {  
+                    sh_cb_qp_offset se(v) 
+                    sh_cr_qp_offset se(v)
+                    if (sps_joint_cbcr_enabled_flag)  
+                        sh_joint_cbcr_qp_offset se(v)
+                }
+                if (pps_cu_chroma_qp_offset_list_enabled_flag)  
+                    sh_cu_chroma_qp_offset_enabled_flag u(1)
+                if (sps_sao_enabled_flag && !pps_sao_info_in_ph_flag) {  
+                    sh_sao_luma_used_flag u(1)
+                    if (sps_chroma_format_idc != 0)  
+                        sh_sao_chroma_used_flag u(1)
+                }
+                if (pps_deblocking_filter_override_enabled_flag && !pps_dbf_info_in_ph_flag)  
+                    sh_deblocking_params_present_flag u(1)
+                if (sh_deblocking_params_present_flag) {
+                    if (!pps_deblocking_filter_disabled_flag)  
+                    sh_deblocking_filter_disabled_flag u(1)
+                    if (!sh_deblocking_filter_disabled_flag) {  
+                        sh_luma_beta_offset_div2 se(v) 
+                        sh_luma_tc_offset_div2 se(v)
+                        if (pps_chroma_tool_offsets_present_flag) {  
+                            sh_cb_beta_offset_div2 se(v) 
+                            sh_cb_tc_offset_div2 se(v) 
+                            sh_cr_beta_offset_div2 se(v) 
+                            sh_cr_tc_offset_div2 se(v)
+                        }
+                    }
+                }
+                if (sps_dep_quant_enabled_flag)  
+                    sh_dep_quant_used_flag u(1)
+                if (sps_sign_data_hiding_enabled_flag && !sh_dep_quant_used_flag)  
+                    sh_sign_data_hiding_used_flag u(1)
+                if (sps_transform_skip_enabled_flag && !sh_dep_quant_used_flag &&
+                    !sh_sign_data_hiding_used_flag) 
+
+                    sh_ts_residual_coding_disabled_flag u(1)
+                if (pps_slice_header_extension_present_flag) {  
+                    sh_slice_header_extension_length ue(v)
+                    for (i = 0; i < sh_slice_header_extension_length; i++)
+                        sh_slice_header_extension_data_byte[i] u(8)
+                }
+                if (NumEntryPoints > 0) {  
+                    sh_entry_offset_len_minus1 ue(v)
+                    for (i = 0; i < NumEntryPoints; i++)
+                        sh_entry_point_offset_minus1[i] u(v)
+                }
+                byte_alignment()
+                 */
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
 
 picture_header_rbsp() {  
  picture_header_structure()  
