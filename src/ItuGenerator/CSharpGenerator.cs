@@ -341,7 +341,8 @@ namespace Sharp{type}
                 }
             }
 
-            if (name == "sei_payload") // H265
+            if (name == "sei_payload" || // H265
+                name == "vui_payload") // h266
             {
                 retm = $"{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}";
             }

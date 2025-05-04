@@ -2015,6 +2015,7 @@ seq_parameter_set_rbsp() {
 
                     size += stream.ReadFixed(size, 1, whileIndex, this.sps_vui_alignment_zero_bit);
                 }
+                stream.MarkCurrentBitsPosition();
                 this.vui_payload = new VuiPayload(sps_vui_payload_size_minus1 + 1);
                 size += stream.ReadClass<VuiPayload>(size, context, this.vui_payload);
             }
@@ -2450,6 +2451,7 @@ seq_parameter_set_rbsp() {
 
                     size += stream.WriteFixed(1, whileIndex, this.sps_vui_alignment_zero_bit);
                 }
+                stream.MarkCurrentBitsPosition();
                 size += stream.WriteClass<VuiPayload>(context, this.vui_payload);
             }
             size += stream.WriteUnsignedInt(1, this.sps_extension_flag);
