@@ -25,10 +25,10 @@ Log.SinkError = (o, e) => {
     }
 };
 
-//var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
+var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
 //var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
 //var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
-var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
+//var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
 
 foreach (var file in files)
 {
@@ -701,7 +701,13 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     nu.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT         // 21
                     )
                 {
-                    Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
+                    context.SliceSegmentLayerRbsp = new SharpH265.SliceSegmentLayerRbsp();
+                    context.SliceSegmentLayerRbsp.Read(context, stream);
+                    context.SliceSegmentLayerRbsp.Write(context, wstream);
+                    if (!ms.ToArray().SequenceEqual(sampleData))
+                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray()))) // only partially parsed
+                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT) // 32
                 {
@@ -992,6 +998,17 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 Log.Error($"Error: {ex.Message}");
                 Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
                 Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
+
+                try 
+                {
+                    context.SeiRbsp.Write(context, wstream);                    
+                }
+                catch(Exception)
+                {
+                    // ignore
+                    Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
+                }
+
                 throw;
             }
         }

@@ -2299,3 +2299,174 @@ green_metadata(payloadSize) {
         xsd_metric_value 5 u(16)
     }
 }   
+
+slice_segment_layer_rbsp() {
+    slice_segment_header()
+    /*slice_segment_data()  */
+    /* rbsp_slice_segment_trailing_bits()   */
+}
+
+slice_segment_header() {  
+    first_slice_segment_in_pic_flag u(1)
+    if (nal_unit_type >= BLA_W_LP && nal_unit_type <= RSV_IRAP_VCL23)  
+        no_output_of_prior_pics_flag u(1) 
+    slice_pic_parameter_set_id ue(v)
+    if (!first_slice_segment_in_pic_flag) {
+        if (dependent_slice_segments_enabled_flag)  
+            dependent_slice_segment_flag u(1) 
+        slice_segment_address u(v)
+    }
+    if (!dependent_slice_segment_flag) {
+        i = 0
+        if (num_extra_slice_header_bits > i) {
+            i++  
+            discardable_flag u(1)
+        }
+        if (num_extra_slice_header_bits > i) {
+            i++  
+            cross_layer_bla_flag u(1)
+        }
+        for (; i < num_extra_slice_header_bits; i++)
+            slice_reserved_flag[i] u(1) 
+        slice_type ue(v)
+        if (output_flag_present_flag)  
+            pic_output_flag u(1)
+        if (separate_colour_plane_flag == 1)  
+            colour_plane_id u(2)
+        if ((nuh_layer_id > 0 &&
+            !poc_lsb_not_present_flag[LayerIdxInVps[nuh_layer_id]]) ||
+            (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP)) 
+            slice_pic_order_cnt_lsb u(v)
+        if (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP) {  
+            short_term_ref_pic_set_sps_flag u(1)
+            if (!short_term_ref_pic_set_sps_flag)
+                st_ref_pic_set(num_short_term_ref_pic_sets)
+            else if (num_short_term_ref_pic_sets > 1)  
+                short_term_ref_pic_set_idx u(v)
+            if (long_term_ref_pics_present_flag) {
+                if (num_long_term_ref_pics_sps > 0)  
+                    num_long_term_sps ue(v) 
+                num_long_term_pics ue(v)
+                for (i = 0; i < num_long_term_sps + num_long_term_pics; i++) {
+                    if (i < num_long_term_sps) {
+                        if (num_long_term_ref_pics_sps > 1)
+                            lt_idx_sps[i] u(v)
+                    } else {
+                        poc_lsb_lt[i] u(v)
+                        used_by_curr_pic_lt_flag[i] u(1)
+                    }
+                    delta_poc_msb_present_flag[i] u(1)
+                    if (delta_poc_msb_present_flag[i])
+                        delta_poc_msb_cycle_lt[i] ue(v)
+                }
+            }
+            if (sps_temporal_mvp_enabled_flag)  
+                slice_temporal_mvp_enabled_flag u(1)
+        }
+        /*
+        if (nuh_layer_id > 0 && !default_ref_layers_active_flag &&
+            NumRefListLayers[nuh_layer_id] > 0) {  
+            inter_layer_pred_enabled_flag u(1)
+            if (inter_layer_pred_enabled_flag && NumRefListLayers[nuh_layer_id] > 1) {
+                if (!max_one_active_ref_layer_flag)  
+                    num_inter_layer_ref_pics_minus1 u(v)
+                if (NumActiveRefLayerPics != NumRefListLayers[nuh_layer_id])
+                    for (i = 0; i < NumActiveRefLayerPics; i++)
+                        inter_layer_pred_layer_idc[i] u(v)
+            }
+        }
+        if (inCmpPredAvailFlag)  
+            in_comp_pred_flag u(1)
+        if (sample_adaptive_offset_enabled_flag) {  
+            slice_sao_luma_flag u(1)
+            if (ChromaArrayType != 0)  
+                slice_sao_chroma_flag u(1)
+        }
+        if (slice_type == P || slice_type == B) {  
+            num_ref_idx_active_override_flag u(1)
+            if (num_ref_idx_active_override_flag) {  
+                num_ref_idx_l0_active_minus1 ue(v)
+                if (slice_type == B)  
+                    num_ref_idx_l1_active_minus1 ue(v)
+            }
+            if (lists_modification_present_flag && NumPicTotalCurr > 1)
+                ref_pic_lists_modification()
+            if (slice_type == B)  
+                mvd_l1_zero_flag u(1)
+            if (cabac_init_present_flag) 
+                cabac_init_flag u(1)
+            if (slice_temporal_mvp_enabled_flag) {
+                if (slice_type == B)  
+                    collocated_from_l0_flag u(1)
+                if ((collocated_from_l0_flag && num_ref_idx_l0_active_minus1 > 0) ||
+                    (!collocated_from_l0_flag && num_ref_idx_l1_active_minus1 > 0)) 
+                    collocated_ref_idx ue(v)
+            }
+            if ((weighted_pred_flag && slice_type == P) ||
+                (weighted_bipred_flag && slice_type == B))
+                pred_weight_table()
+            else if (!DepthFlag && NumRefListLayers[nuh_layer_id] > 0) {  
+                slice_ic_enabled_flag u(1)
+                if (slice_ic_enabled_flag)  
+                    slice_ic_disabled_merge_zero_idx_flag u(1)
+            }  
+            five_minus_max_num_merge_cand ue(v)
+        }  
+        slice_qp_delta se(v)
+        if (pps_slice_chroma_qp_offsets_present_flag) {  
+            slice_cb_qp_offset se(v) 
+            slice_cr_qp_offset se(v)
+        }
+        if (chroma_qp_offset_list_enabled_flag)  
+            cu_chroma_qp_offset_enabled_flag u(1)
+        if (deblocking_filter_override_enabled_flag)  
+            deblocking_filter_override_flag u(1)
+        if (deblocking_filter_override_flag) {  
+            slice_deblocking_filter_disabled_flag u(1)
+            if (!slice_deblocking_filter_disabled_flag) {  
+                slice_beta_offset_div2 se(v) 
+                slice_tc_offset_div2 se(v)
+            }
+        }
+        if (pps_loop_filter_across_slices_enabled_flag &&
+            (slice_sao_luma_flag || slice_sao_chroma_flag ||
+                !slice_deblocking_filter_disabled_flag)) 
+            slice_loop_filter_across_slices_enabled_flag u(1)
+        if (cp_in_slice_segment_header_flag[ViewIdx])
+            for (m = 0; m < num_cp[ViewIdx]; m++) {
+                j = cp_ref_voi[ViewIdx][m]
+                cp_scale[j] se(v)
+                cp_off[j] se(v)
+                cp_inv_scale_plus_scale[j] se(v)
+                cp_inv_off_plus_off[j] se(v)
+            }*/
+    }
+    /*
+    if (tiles_enabled_flag || entropy_coding_sync_enabled_flag) {  
+        num_entry_point_offsets ue(v)
+        if (num_entry_point_offsets > 0) {  
+            offset_len_minus1 ue(v)
+            for (i = 0; i < num_entry_point_offsets; i++)
+                entry_point_offset_minus1[i] u(v)
+        }
+    }
+    if (slice_segment_header_extension_present_flag) {  
+        slice_segment_header_extension_length ue(v)
+        if (poc_reset_info_present_flag)  
+            poc_reset_idc u(2)
+        if (poc_reset_idc != 0)  
+            poc_reset_period_id u(6)
+        if (poc_reset_idc == 3) {  
+            full_poc_reset_flag u(1) 
+            poc_lsb_val u(v)
+        }
+        if (!PocMsbValRequiredFlag && vps_poc_lsb_aligned_flag)  
+            poc_msb_cycle_val_present_flag u(1)
+        if (poc_msb_cycle_val_present_flag)  
+            poc_msb_cycle_val ue(v)
+        while (more_data_in_slice_segment_header_extension())  
+            slice_segment_header_extension_data_bit u(1)
+    }
+    byte_alignment()
+    */
+}

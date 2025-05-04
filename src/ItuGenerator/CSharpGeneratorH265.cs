@@ -88,10 +88,6 @@ namespace ItuGenerator
                     return "((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps";
                 case "sub_pic_cpb_params_in_pic_timing_sei_flag":
                     return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.SubPicCpbParamsInPicTimingSeiFlag";
-                case "list_entry_l0":
-                    return " (uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
-                case "list_entry_l1":
-                    return " (uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
                 case "NumPicTotalCurr":
                     return "((H265Context)context).NumPicTotalCurr";
                 case "NumOutputLayersInOutputLayerSet":
@@ -230,10 +226,6 @@ namespace ItuGenerator
                     return "((H265Context)context).CurrPic";
                 case "RefRpsIdx":
                     return "((H265Context)context).RefRpsIdx";
-                case "lt_idx_sps":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) )";
-                case "poc_lsb_lt":
-                    return "( ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 default:
                     //throw new NotImplementedException(parameter);
                     return parameter;
@@ -278,8 +270,10 @@ namespace ItuGenerator
                     return "((H265Context)context).OnDirectDependencyType();";
                 case "num_bsp_schedules_minus1":
                     return "((H265Context)context).OnNumBspSchedulesMinus1(h, i, t);";
+                case "used_by_curr_pic_s0_flag":
+                    return "((H265Context)context).OnUsedByCurrPicS0Flag(i, stRpsIdx, this);";
                 case "used_by_curr_pic_s1_flag":
-                    return "((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx);";
+                    return "((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx, this);";
                 case "delta_idx_minus1":
                     return "((H265Context)context).OnDeltaIdxMinus1(stRpsIdx);";
                 case "nesting_max_temporal_id_plus1":
@@ -507,6 +501,21 @@ namespace ItuGenerator
                     return "(exp_gvd_principal_point_x[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_x[ i ] + prec_gvd_principal_point - 31 ))";
                 case "man_gvd_principal_point_y":
                     return "(exp_gvd_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_y[ i ] + prec_gvd_principal_point - 31 ))";
+                case "slice_segment_address":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
+                case "slice_pic_order_cnt_lsb":
+                    return "((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4";
+                case "short_term_ref_pic_set_idx":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets ) )";
+                case "lt_idx_sps":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) )";
+                case "poc_lsb_lt":
+                    return "( ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
+                case "list_entry_l0":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
+                case "list_entry_l1":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
+
             }
 
             Debug.WriteLine(parameter);

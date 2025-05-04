@@ -310,53 +310,70 @@ namespace SharpH265
             MaxTemporalId[i] = nesting_max_temporal_id_plus1[i] - 1;
         }
 
-        public void OnUsedByCurrPicS1Flag(uint i, uint stRpsIdx)
+        public void OnUsedByCurrPicS0Flag(uint i, uint stRpsIdx, StRefPicSet st_ref_pic_set)
         {
-            var num_negative_pics = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].NumNegativePics;
-            var num_positive_pics = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].NumPositivePics;
-            var used_by_curr_pic_s0_flag = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].UsedByCurrPicS0Flag;
-            var used_by_curr_pic_s1_flag = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].UsedByCurrPicS1Flag;
-            var delta_poc_s0_minus1 = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].DeltaPocS0Minus1;
-            var delta_poc_s1_minus1 = SeqParameterSetRbsp.StRefPicSet[stRpsIdx].DeltaPocS1Minus1;
+            var num_negative_pics = st_ref_pic_set.NumNegativePics;
+            var used_by_curr_pic_s0_flag = st_ref_pic_set.UsedByCurrPicS0Flag;
+            var delta_poc_s0_minus1 = st_ref_pic_set.DeltaPocS0Minus1;
 
-            if (NumNegativePics == null || NumNegativePics.Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                NumNegativePics = new uint[SeqParameterSetRbsp.StRefPicSet.Length];
-            if (NumPositivePics == null || NumPositivePics.Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                NumPositivePics = new uint[SeqParameterSetRbsp.StRefPicSet.Length];
-            if (NumDeltaPocs == null || NumDeltaPocs.Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                NumDeltaPocs = new uint[SeqParameterSetRbsp.StRefPicSet.Length];
+            if (NumNegativePics == null || NumNegativePics.Length <= stRpsIdx)
+                NumNegativePics = new uint[stRpsIdx + 1];
+            if (NumDeltaPocs == null || NumDeltaPocs.Length <= stRpsIdx)
+                NumDeltaPocs = new uint[stRpsIdx + 1];
 
             NumNegativePics[stRpsIdx] = num_negative_pics; // 7-63
-            NumPositivePics[stRpsIdx] = num_positive_pics; // 7-64
 
-            if (UsedByCurrPicS0 == null || UsedByCurrPicS0.Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                UsedByCurrPicS0 = new uint[SeqParameterSetRbsp.StRefPicSet.Length][];
-            if (UsedByCurrPicS0[stRpsIdx] == null || UsedByCurrPicS0[stRpsIdx].Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                UsedByCurrPicS0[stRpsIdx] = new uint[SeqParameterSetRbsp.StRefPicSet.Length];
-            if (UsedByCurrPicS1 == null || UsedByCurrPicS1.Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                UsedByCurrPicS1 = new uint[SeqParameterSetRbsp.StRefPicSet.Length][];
-            if (UsedByCurrPicS1[stRpsIdx] == null || UsedByCurrPicS1[stRpsIdx].Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                UsedByCurrPicS1[stRpsIdx] = new uint[SeqParameterSetRbsp.StRefPicSet.Length];
+            if (UsedByCurrPicS0 == null || UsedByCurrPicS0.Length <= stRpsIdx)
+                UsedByCurrPicS0 = new uint[stRpsIdx + 1][];
+            if (UsedByCurrPicS0[stRpsIdx] == null || UsedByCurrPicS0[stRpsIdx].Length < num_negative_pics)
+                UsedByCurrPicS0[stRpsIdx] = new uint[num_negative_pics];
 
-            if (DeltaPocS0 == null || DeltaPocS0.Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                DeltaPocS0 = new int[SeqParameterSetRbsp.StRefPicSet.Length][];
-            if (DeltaPocS0[stRpsIdx] == null || DeltaPocS0[stRpsIdx].Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                DeltaPocS0[stRpsIdx] = new int[SeqParameterSetRbsp.StRefPicSet.Length];
-            if (DeltaPocS1 == null || DeltaPocS1.Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                DeltaPocS1 = new int[SeqParameterSetRbsp.StRefPicSet.Length][];
-            if (DeltaPocS1[stRpsIdx] == null || DeltaPocS1[stRpsIdx].Length < SeqParameterSetRbsp.StRefPicSet.Length)
-                DeltaPocS1[stRpsIdx] = new int[SeqParameterSetRbsp.StRefPicSet.Length];
+            if (DeltaPocS0 == null || DeltaPocS0.Length <= stRpsIdx)
+                DeltaPocS0 = new int[stRpsIdx + 1][];
+            if (DeltaPocS0[stRpsIdx] == null || DeltaPocS0[stRpsIdx].Length < num_negative_pics)
+                DeltaPocS0[stRpsIdx] = new int[num_negative_pics];
 
             UsedByCurrPicS0[stRpsIdx][i] = used_by_curr_pic_s0_flag[i]; // 7-65
-            UsedByCurrPicS1[stRpsIdx][i] = used_by_curr_pic_s1_flag[i]; // 7-66
             if (i == 0)
             {
                 DeltaPocS0[stRpsIdx][i] = (int)-(delta_poc_s0_minus1[i] + 1); // 7-67
-                DeltaPocS1[stRpsIdx][i] = (int)delta_poc_s1_minus1[i] + 1; // 7-68
             }
             else
             {
                 DeltaPocS0[stRpsIdx][i] = DeltaPocS0[stRpsIdx][i - 1] - ((int)delta_poc_s0_minus1[i] + 1); // 7-69
+            }
+        }
+
+        public void OnUsedByCurrPicS1Flag(uint i, uint stRpsIdx, StRefPicSet st_ref_pic_set)
+        {
+            var num_positive_pics = st_ref_pic_set.NumPositivePics;
+            var used_by_curr_pic_s1_flag = st_ref_pic_set.UsedByCurrPicS1Flag;
+            var delta_poc_s1_minus1 = st_ref_pic_set.DeltaPocS1Minus1;
+
+            if (NumPositivePics == null || NumPositivePics.Length <= stRpsIdx)
+                NumPositivePics = new uint[stRpsIdx + 1];
+            if (NumDeltaPocs == null || NumDeltaPocs.Length <= stRpsIdx)
+                NumDeltaPocs = new uint[stRpsIdx + 1];
+
+            NumPositivePics[stRpsIdx] = num_positive_pics; // 7-64
+
+            if (UsedByCurrPicS1 == null || UsedByCurrPicS1.Length <= stRpsIdx)
+                UsedByCurrPicS1 = new uint[stRpsIdx + 1][];
+            if (UsedByCurrPicS1[stRpsIdx] == null || UsedByCurrPicS1[stRpsIdx].Length < num_positive_pics)
+                UsedByCurrPicS1[stRpsIdx] = new uint[num_positive_pics];
+
+            if (DeltaPocS1 == null || DeltaPocS1.Length <= stRpsIdx)
+                DeltaPocS1 = new int[stRpsIdx + 1][];
+            if (DeltaPocS1[stRpsIdx] == null || DeltaPocS1[stRpsIdx].Length < num_positive_pics)
+                DeltaPocS1[stRpsIdx] = new int[num_positive_pics];
+
+            UsedByCurrPicS1[stRpsIdx][i] = used_by_curr_pic_s1_flag[i]; // 7-66
+            if (i == 0)
+            {
+                DeltaPocS1[stRpsIdx][i] = (int)delta_poc_s1_minus1[i] + 1; // 7-68
+            }
+            else
+            {
                 DeltaPocS1[stRpsIdx][i] = DeltaPocS1[stRpsIdx][i - 1] + ((int)delta_poc_s1_minus1[i] + 1); // 7-70
             }
             NumDeltaPocs[stRpsIdx] = NumNegativePics[stRpsIdx] + NumPositivePics[stRpsIdx]; // 7-71

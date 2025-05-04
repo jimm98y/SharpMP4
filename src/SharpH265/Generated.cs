@@ -18,6 +18,7 @@ namespace SharpH265
         public FillerDataRbsp FillerDataRbsp { get; set; }
         public SeqParameterSetRbsp SeqParameterSetRbsp { get; set; }
         public VideoParameterSetRbsp VideoParameterSetRbsp { get; set; }
+        public SliceSegmentLayerRbsp SliceSegmentLayerRbsp { get; set; }
 
     }
 
@@ -2485,6 +2486,7 @@ st_ref_pic_set( stRpsIdx ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.delta_poc_s0_minus1[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_s0_flag[i]);
+                    ((H265Context)context).OnUsedByCurrPicS0Flag(i, stRpsIdx, this);
                 }
 
                 this.delta_poc_s1_minus1 = new uint[num_positive_pics];
@@ -2493,7 +2495,7 @@ st_ref_pic_set( stRpsIdx ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.delta_poc_s1_minus1[i]);
                     size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_s1_flag[i]);
-                    ((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx);
+                    ((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx, this);
                 }
             }
 
@@ -2548,7 +2550,7 @@ st_ref_pic_set( stRpsIdx ) {
                 {
                     size += stream.WriteUnsignedIntGolomb(this.delta_poc_s1_minus1[i]);
                     size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_s1_flag[i]);
-                    ((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx);
+                    ((H265Context)context).OnUsedByCurrPicS1Flag(i, stRpsIdx, this);
                 }
             }
 
@@ -15689,6 +15691,739 @@ green_metadata(payloadSize) {
                 size += stream.WriteUnsignedInt(8, this.xsd_metric_type);
                 size += stream.WriteUnsignedInt(16, this.xsd_metric_value);
             }
+
+            return size;
+        }
+
+    }
+
+    /*
+   
+
+slice_segment_layer_rbsp() {
+    slice_segment_header()
+    /*slice_segment_data()  *//*
+    /* rbsp_slice_segment_trailing_bits()   *//*
+}
+    */
+    public class SliceSegmentLayerRbsp : IItuSerializable
+    {
+        private SliceSegmentHeader slice_segment_header;
+        public SliceSegmentHeader SliceSegmentHeader { get { return slice_segment_header; } set { slice_segment_header = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceSegmentLayerRbsp()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            this.slice_segment_header = new SliceSegmentHeader();
+            size += stream.ReadClass<SliceSegmentHeader>(size, context, this.slice_segment_header); //slice_segment_data()  
+            /*  rbsp_slice_segment_trailing_bits()    */
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            size += stream.WriteClass<SliceSegmentHeader>(context, this.slice_segment_header); //slice_segment_data()  
+            /*  rbsp_slice_segment_trailing_bits()    */
+
+
+            return size;
+        }
+
+    }
+
+    /*
+
+
+slice_segment_header() {  
+    first_slice_segment_in_pic_flag u(1)
+    if (nal_unit_type >= BLA_W_LP && nal_unit_type <= RSV_IRAP_VCL23)  
+        no_output_of_prior_pics_flag u(1) 
+    slice_pic_parameter_set_id ue(v)
+    if (!first_slice_segment_in_pic_flag) {
+        if (dependent_slice_segments_enabled_flag)  
+            dependent_slice_segment_flag u(1) 
+        slice_segment_address u(v)
+    }
+    if (!dependent_slice_segment_flag) {
+        i = 0
+        if (num_extra_slice_header_bits > i) {
+            i++  
+            discardable_flag u(1)
+        }
+        if (num_extra_slice_header_bits > i) {
+            i++  
+            cross_layer_bla_flag u(1)
+        }
+        for (; i < num_extra_slice_header_bits; i++)
+            slice_reserved_flag[i] u(1) 
+        slice_type ue(v)
+        if (output_flag_present_flag)  
+            pic_output_flag u(1)
+        if (separate_colour_plane_flag == 1)  
+            colour_plane_id u(2)
+        if ((nuh_layer_id > 0 &&
+            !poc_lsb_not_present_flag[LayerIdxInVps[nuh_layer_id]]) ||
+            (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP)) 
+            slice_pic_order_cnt_lsb u(v)
+        if (nal_unit_type != IDR_W_RADL && nal_unit_type != IDR_N_LP) {  
+            short_term_ref_pic_set_sps_flag u(1)
+            if (!short_term_ref_pic_set_sps_flag)
+                st_ref_pic_set(num_short_term_ref_pic_sets)
+            else if (num_short_term_ref_pic_sets > 1)  
+                short_term_ref_pic_set_idx u(v)
+            if (long_term_ref_pics_present_flag) {
+                if (num_long_term_ref_pics_sps > 0)  
+                    num_long_term_sps ue(v) 
+                num_long_term_pics ue(v)
+                for (i = 0; i < num_long_term_sps + num_long_term_pics; i++) {
+                    if (i < num_long_term_sps) {
+                        if (num_long_term_ref_pics_sps > 1)
+                            lt_idx_sps[i] u(v)
+                    } else {
+                        poc_lsb_lt[i] u(v)
+                        used_by_curr_pic_lt_flag[i] u(1)
+                    }
+                    delta_poc_msb_present_flag[i] u(1)
+                    if (delta_poc_msb_present_flag[i])
+                        delta_poc_msb_cycle_lt[i] ue(v)
+                }
+            }
+            if (sps_temporal_mvp_enabled_flag)  
+                slice_temporal_mvp_enabled_flag u(1)
+        }
+        /*
+        if (nuh_layer_id > 0 && !default_ref_layers_active_flag &&
+            NumRefListLayers[nuh_layer_id] > 0) {  
+            inter_layer_pred_enabled_flag u(1)
+            if (inter_layer_pred_enabled_flag && NumRefListLayers[nuh_layer_id] > 1) {
+                if (!max_one_active_ref_layer_flag)  
+                    num_inter_layer_ref_pics_minus1 u(v)
+                if (NumActiveRefLayerPics != NumRefListLayers[nuh_layer_id])
+                    for (i = 0; i < NumActiveRefLayerPics; i++)
+                        inter_layer_pred_layer_idc[i] u(v)
+            }
+        }
+        if (inCmpPredAvailFlag)  
+            in_comp_pred_flag u(1)
+        if (sample_adaptive_offset_enabled_flag) {  
+            slice_sao_luma_flag u(1)
+            if (ChromaArrayType != 0)  
+                slice_sao_chroma_flag u(1)
+        }
+        if (slice_type == P || slice_type == B) {  
+            num_ref_idx_active_override_flag u(1)
+            if (num_ref_idx_active_override_flag) {  
+                num_ref_idx_l0_active_minus1 ue(v)
+                if (slice_type == B)  
+                    num_ref_idx_l1_active_minus1 ue(v)
+            }
+            if (lists_modification_present_flag && NumPicTotalCurr > 1)
+                ref_pic_lists_modification()
+            if (slice_type == B)  
+                mvd_l1_zero_flag u(1)
+            if (cabac_init_present_flag) 
+                cabac_init_flag u(1)
+            if (slice_temporal_mvp_enabled_flag) {
+                if (slice_type == B)  
+                    collocated_from_l0_flag u(1)
+                if ((collocated_from_l0_flag && num_ref_idx_l0_active_minus1 > 0) ||
+                    (!collocated_from_l0_flag && num_ref_idx_l1_active_minus1 > 0)) 
+                    collocated_ref_idx ue(v)
+            }
+            if ((weighted_pred_flag && slice_type == P) ||
+                (weighted_bipred_flag && slice_type == B))
+                pred_weight_table()
+            else if (!DepthFlag && NumRefListLayers[nuh_layer_id] > 0) {  
+                slice_ic_enabled_flag u(1)
+                if (slice_ic_enabled_flag)  
+                    slice_ic_disabled_merge_zero_idx_flag u(1)
+            }  
+            five_minus_max_num_merge_cand ue(v)
+        }  
+        slice_qp_delta se(v)
+        if (pps_slice_chroma_qp_offsets_present_flag) {  
+            slice_cb_qp_offset se(v) 
+            slice_cr_qp_offset se(v)
+        }
+        if (chroma_qp_offset_list_enabled_flag)  
+            cu_chroma_qp_offset_enabled_flag u(1)
+        if (deblocking_filter_override_enabled_flag)  
+            deblocking_filter_override_flag u(1)
+        if (deblocking_filter_override_flag) {  
+            slice_deblocking_filter_disabled_flag u(1)
+            if (!slice_deblocking_filter_disabled_flag) {  
+                slice_beta_offset_div2 se(v) 
+                slice_tc_offset_div2 se(v)
+            }
+        }
+        if (pps_loop_filter_across_slices_enabled_flag &&
+            (slice_sao_luma_flag || slice_sao_chroma_flag ||
+                !slice_deblocking_filter_disabled_flag)) 
+            slice_loop_filter_across_slices_enabled_flag u(1)
+        if (cp_in_slice_segment_header_flag[ViewIdx])
+            for (m = 0; m < num_cp[ViewIdx]; m++) {
+                j = cp_ref_voi[ViewIdx][m]
+                cp_scale[j] se(v)
+                cp_off[j] se(v)
+                cp_inv_scale_plus_scale[j] se(v)
+                cp_inv_off_plus_off[j] se(v)
+            }*//*
+    }
+    /*
+    if (tiles_enabled_flag || entropy_coding_sync_enabled_flag) {  
+        num_entry_point_offsets ue(v)
+        if (num_entry_point_offsets > 0) {  
+            offset_len_minus1 ue(v)
+            for (i = 0; i < num_entry_point_offsets; i++)
+                entry_point_offset_minus1[i] u(v)
+        }
+    }
+    if (slice_segment_header_extension_present_flag) {  
+        slice_segment_header_extension_length ue(v)
+        if (poc_reset_info_present_flag)  
+            poc_reset_idc u(2)
+        if (poc_reset_idc != 0)  
+            poc_reset_period_id u(6)
+        if (poc_reset_idc == 3) {  
+            full_poc_reset_flag u(1) 
+            poc_lsb_val u(v)
+        }
+        if (!PocMsbValRequiredFlag && vps_poc_lsb_aligned_flag)  
+            poc_msb_cycle_val_present_flag u(1)
+        if (poc_msb_cycle_val_present_flag)  
+            poc_msb_cycle_val ue(v)
+        while (more_data_in_slice_segment_header_extension())  
+            slice_segment_header_extension_data_bit u(1)
+    }
+    byte_alignment()
+    *//*
+}
+    */
+    public class SliceSegmentHeader : IItuSerializable
+    {
+        private byte first_slice_segment_in_pic_flag;
+        public byte FirstSliceSegmentInPicFlag { get { return first_slice_segment_in_pic_flag; } set { first_slice_segment_in_pic_flag = value; } }
+        private byte no_output_of_prior_pics_flag;
+        public byte NoOutputOfPriorPicsFlag { get { return no_output_of_prior_pics_flag; } set { no_output_of_prior_pics_flag = value; } }
+        private uint slice_pic_parameter_set_id;
+        public uint SlicePicParameterSetId { get { return slice_pic_parameter_set_id; } set { slice_pic_parameter_set_id = value; } }
+        private byte dependent_slice_segment_flag;
+        public byte DependentSliceSegmentFlag { get { return dependent_slice_segment_flag; } set { dependent_slice_segment_flag = value; } }
+        private uint slice_segment_address;
+        public uint SliceSegmentAddress { get { return slice_segment_address; } set { slice_segment_address = value; } }
+        private byte discardable_flag;
+        public byte DiscardableFlag { get { return discardable_flag; } set { discardable_flag = value; } }
+        private byte cross_layer_bla_flag;
+        public byte CrossLayerBlaFlag { get { return cross_layer_bla_flag; } set { cross_layer_bla_flag = value; } }
+        private byte[] slice_reserved_flag;
+        public byte[] SliceReservedFlag { get { return slice_reserved_flag; } set { slice_reserved_flag = value; } }
+        private uint slice_type;
+        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
+        private byte pic_output_flag;
+        public byte PicOutputFlag { get { return pic_output_flag; } set { pic_output_flag = value; } }
+        private uint colour_plane_id;
+        public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
+        private uint slice_pic_order_cnt_lsb;
+        public uint SlicePicOrderCntLsb { get { return slice_pic_order_cnt_lsb; } set { slice_pic_order_cnt_lsb = value; } }
+        private byte short_term_ref_pic_set_sps_flag;
+        public byte ShortTermRefPicSetSpsFlag { get { return short_term_ref_pic_set_sps_flag; } set { short_term_ref_pic_set_sps_flag = value; } }
+        private StRefPicSet st_ref_pic_set;
+        public StRefPicSet StRefPicSet { get { return st_ref_pic_set; } set { st_ref_pic_set = value; } }
+        private uint short_term_ref_pic_set_idx;
+        public uint ShortTermRefPicSetIdx { get { return short_term_ref_pic_set_idx; } set { short_term_ref_pic_set_idx = value; } }
+        private uint num_long_term_sps;
+        public uint NumLongTermSps { get { return num_long_term_sps; } set { num_long_term_sps = value; } }
+        private uint num_long_term_pics;
+        public uint NumLongTermPics { get { return num_long_term_pics; } set { num_long_term_pics = value; } }
+        private uint[] lt_idx_sps;
+        public uint[] LtIdxSps { get { return lt_idx_sps; } set { lt_idx_sps = value; } }
+        private uint[] poc_lsb_lt;
+        public uint[] PocLsbLt { get { return poc_lsb_lt; } set { poc_lsb_lt = value; } }
+        private byte[] used_by_curr_pic_lt_flag;
+        public byte[] UsedByCurrPicLtFlag { get { return used_by_curr_pic_lt_flag; } set { used_by_curr_pic_lt_flag = value; } }
+        private byte[] delta_poc_msb_present_flag;
+        public byte[] DeltaPocMsbPresentFlag { get { return delta_poc_msb_present_flag; } set { delta_poc_msb_present_flag = value; } }
+        private uint[] delta_poc_msb_cycle_lt;
+        public uint[] DeltaPocMsbCycleLt { get { return delta_poc_msb_cycle_lt; } set { delta_poc_msb_cycle_lt = value; } }
+        private byte slice_temporal_mvp_enabled_flag;
+        public byte SliceTemporalMvpEnabledFlag { get { return slice_temporal_mvp_enabled_flag; } set { slice_temporal_mvp_enabled_flag = value; } }
+
+        public int HasMoreRbspData { get; set; }
+        public int[] ReadNextBits { get; set; }
+
+        public SliceSegmentHeader()
+        {
+
+        }
+
+        public ulong Read(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            uint i = 0;
+            size += stream.ReadUnsignedInt(size, 1, out this.first_slice_segment_in_pic_flag);
+
+            if (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType >= H265NALTypes.BLA_W_LP && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_IRAP_VCL23)
+            {
+                size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag);
+            }
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_pic_parameter_set_id);
+
+            if (first_slice_segment_in_pic_flag == 0)
+            {
+
+                if (((H265Context)context).PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag != 0)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.dependent_slice_segment_flag);
+                }
+                size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).PicSizeInCtbsY)), out this.slice_segment_address);
+            }
+
+            if (dependent_slice_segment_flag == 0)
+            {
+                i = 0;
+
+                if (((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
+                {
+                    i++;
+                    size += stream.ReadUnsignedInt(size, 1, out this.discardable_flag);
+                }
+
+                if (((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
+                {
+                    i++;
+                    size += stream.ReadUnsignedInt(size, 1, out this.cross_layer_bla_flag);
+                }
+
+                this.slice_reserved_flag = new byte[((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits];
+                for (; i < ((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits; i++)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.slice_reserved_flag[i]);
+                }
+                size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
+
+                if (((H265Context)context).PicParameterSetRbsp.OutputFlagPresentFlag != 0)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.pic_output_flag);
+                }
+
+                if (((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 1)
+                {
+                    size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+                }
+
+                if ((((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 &&
+            ((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[((H265Context)context).LayerIdxInVps[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] == 0) ||
+            (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP))
+                {
+                    size += stream.ReadUnsignedIntVariable(size, ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4, out this.slice_pic_order_cnt_lsb);
+                }
+
+                if (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP)
+                {
+                    size += stream.ReadUnsignedInt(size, 1, out this.short_term_ref_pic_set_sps_flag);
+
+                    if (short_term_ref_pic_set_sps_flag == 0)
+                    {
+                        this.st_ref_pic_set = new StRefPicSet(((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets);
+                        size += stream.ReadClass<StRefPicSet>(size, context, this.st_ref_pic_set);
+                    }
+                    else if (((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets > 1)
+                    {
+                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets)), out this.short_term_ref_pic_set_idx);
+                    }
+
+                    if (((H265Context)context).SeqParameterSetRbsp.LongTermRefPicsPresentFlag != 0)
+                    {
+
+                        if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 0)
+                        {
+                            size += stream.ReadUnsignedIntGolomb(size, out this.num_long_term_sps);
+                        }
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_long_term_pics);
+
+                        this.lt_idx_sps = new uint[num_long_term_sps + num_long_term_pics];
+                        this.poc_lsb_lt = new uint[num_long_term_sps + num_long_term_pics];
+                        this.used_by_curr_pic_lt_flag = new byte[num_long_term_sps + num_long_term_pics];
+                        this.delta_poc_msb_present_flag = new byte[num_long_term_sps + num_long_term_pics];
+                        this.delta_poc_msb_cycle_lt = new uint[num_long_term_sps + num_long_term_pics];
+                        for (i = 0; i < num_long_term_sps + num_long_term_pics; i++)
+                        {
+
+                            if (i < num_long_term_sps)
+                            {
+
+                                if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 1)
+                                {
+                                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps)), out this.lt_idx_sps[i]);
+                                }
+                            }
+                            else
+                            {
+                                size += stream.ReadUnsignedIntVariable(size, (((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4), out this.poc_lsb_lt[i]);
+                                size += stream.ReadUnsignedInt(size, 1, out this.used_by_curr_pic_lt_flag[i]);
+                            }
+                            size += stream.ReadUnsignedInt(size, 1, out this.delta_poc_msb_present_flag[i]);
+
+                            if (delta_poc_msb_present_flag[i] != 0)
+                            {
+                                size += stream.ReadUnsignedIntGolomb(size, out this.delta_poc_msb_cycle_lt[i]);
+                            }
+                        }
+                    }
+
+                    if (((H265Context)context).SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag != 0)
+                    {
+                        size += stream.ReadUnsignedInt(size, 1, out this.slice_temporal_mvp_enabled_flag);
+                    }
+                }
+                /* 
+                        if (nuh_layer_id > 0 && !default_ref_layers_active_flag &&
+                            NumRefListLayers[nuh_layer_id] > 0) {  
+                            inter_layer_pred_enabled_flag u(1)
+                            if (inter_layer_pred_enabled_flag && NumRefListLayers[nuh_layer_id] > 1) {
+                                if (!max_one_active_ref_layer_flag)  
+                                    num_inter_layer_ref_pics_minus1 u(v)
+                                if (NumActiveRefLayerPics != NumRefListLayers[nuh_layer_id])
+                                    for (i = 0; i < NumActiveRefLayerPics; i++)
+                                        inter_layer_pred_layer_idc[i] u(v)
+                            }
+                        }
+                        if (inCmpPredAvailFlag)  
+                            in_comp_pred_flag u(1)
+                        if (sample_adaptive_offset_enabled_flag) {  
+                            slice_sao_luma_flag u(1)
+                            if (ChromaArrayType != 0)  
+                                slice_sao_chroma_flag u(1)
+                        }
+                        if (slice_type == P || slice_type == B) {  
+                            num_ref_idx_active_override_flag u(1)
+                            if (num_ref_idx_active_override_flag) {  
+                                num_ref_idx_l0_active_minus1 ue(v)
+                                if (slice_type == B)  
+                                    num_ref_idx_l1_active_minus1 ue(v)
+                            }
+                            if (lists_modification_present_flag && NumPicTotalCurr > 1)
+                                ref_pic_lists_modification()
+                            if (slice_type == B)  
+                                mvd_l1_zero_flag u(1)
+                            if (cabac_init_present_flag) 
+                                cabac_init_flag u(1)
+                            if (slice_temporal_mvp_enabled_flag) {
+                                if (slice_type == B)  
+                                    collocated_from_l0_flag u(1)
+                                if ((collocated_from_l0_flag && num_ref_idx_l0_active_minus1 > 0) ||
+                                    (!collocated_from_l0_flag && num_ref_idx_l1_active_minus1 > 0)) 
+                                    collocated_ref_idx ue(v)
+                            }
+                            if ((weighted_pred_flag && slice_type == P) ||
+                                (weighted_bipred_flag && slice_type == B))
+                                pred_weight_table()
+                            else if (!DepthFlag && NumRefListLayers[nuh_layer_id] > 0) {  
+                                slice_ic_enabled_flag u(1)
+                                if (slice_ic_enabled_flag)  
+                                    slice_ic_disabled_merge_zero_idx_flag u(1)
+                            }  
+                            five_minus_max_num_merge_cand ue(v)
+                        }  
+                        slice_qp_delta se(v)
+                        if (pps_slice_chroma_qp_offsets_present_flag) {  
+                            slice_cb_qp_offset se(v) 
+                            slice_cr_qp_offset se(v)
+                        }
+                        if (chroma_qp_offset_list_enabled_flag)  
+                            cu_chroma_qp_offset_enabled_flag u(1)
+                        if (deblocking_filter_override_enabled_flag)  
+                            deblocking_filter_override_flag u(1)
+                        if (deblocking_filter_override_flag) {  
+                            slice_deblocking_filter_disabled_flag u(1)
+                            if (!slice_deblocking_filter_disabled_flag) {  
+                                slice_beta_offset_div2 se(v) 
+                                slice_tc_offset_div2 se(v)
+                            }
+                        }
+                        if (pps_loop_filter_across_slices_enabled_flag &&
+                            (slice_sao_luma_flag || slice_sao_chroma_flag ||
+                                !slice_deblocking_filter_disabled_flag)) 
+                            slice_loop_filter_across_slices_enabled_flag u(1)
+                        if (cp_in_slice_segment_header_flag[ViewIdx])
+                            for (m = 0; m < num_cp[ViewIdx]; m++) {
+                                j = cp_ref_voi[ViewIdx][m]
+                                cp_scale[j] se(v)
+                                cp_off[j] se(v)
+                                cp_inv_scale_plus_scale[j] se(v)
+                                cp_inv_off_plus_off[j] se(v)
+                            } */
+
+            }
+            /* 
+                if (tiles_enabled_flag || entropy_coding_sync_enabled_flag) {  
+                    num_entry_point_offsets ue(v)
+                    if (num_entry_point_offsets > 0) {  
+                        offset_len_minus1 ue(v)
+                        for (i = 0; i < num_entry_point_offsets; i++)
+                            entry_point_offset_minus1[i] u(v)
+                    }
+                }
+                if (slice_segment_header_extension_present_flag) {  
+                    slice_segment_header_extension_length ue(v)
+                    if (poc_reset_info_present_flag)  
+                        poc_reset_idc u(2)
+                    if (poc_reset_idc != 0)  
+                        poc_reset_period_id u(6)
+                    if (poc_reset_idc == 3) {  
+                        full_poc_reset_flag u(1) 
+                        poc_lsb_val u(v)
+                    }
+                    if (!PocMsbValRequiredFlag && vps_poc_lsb_aligned_flag)  
+                        poc_msb_cycle_val_present_flag u(1)
+                    if (poc_msb_cycle_val_present_flag)  
+                        poc_msb_cycle_val ue(v)
+                    while (more_data_in_slice_segment_header_extension())  
+                        slice_segment_header_extension_data_bit u(1)
+                }
+                byte_alignment()
+                 */
+
+
+            return size;
+        }
+
+        public ulong Write(IItuContext context, ItuStream stream)
+        {
+            ulong size = 0;
+
+            uint i = 0;
+            size += stream.WriteUnsignedInt(1, this.first_slice_segment_in_pic_flag);
+
+            if (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType >= H265NALTypes.BLA_W_LP && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_IRAP_VCL23)
+            {
+                size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag);
+            }
+            size += stream.WriteUnsignedIntGolomb(this.slice_pic_parameter_set_id);
+
+            if (first_slice_segment_in_pic_flag == 0)
+            {
+
+                if (((H265Context)context).PicParameterSetRbsp.DependentSliceSegmentsEnabledFlag != 0)
+                {
+                    size += stream.WriteUnsignedInt(1, this.dependent_slice_segment_flag);
+                }
+                size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).PicSizeInCtbsY)), this.slice_segment_address);
+            }
+
+            if (dependent_slice_segment_flag == 0)
+            {
+                i = 0;
+
+                if (((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
+                {
+                    i++;
+                    size += stream.WriteUnsignedInt(1, this.discardable_flag);
+                }
+
+                if (((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits > i)
+                {
+                    i++;
+                    size += stream.WriteUnsignedInt(1, this.cross_layer_bla_flag);
+                }
+
+                for (; i < ((H265Context)context).PicParameterSetRbsp.NumExtraSliceHeaderBits; i++)
+                {
+                    size += stream.WriteUnsignedInt(1, this.slice_reserved_flag[i]);
+                }
+                size += stream.WriteUnsignedIntGolomb(this.slice_type);
+
+                if (((H265Context)context).PicParameterSetRbsp.OutputFlagPresentFlag != 0)
+                {
+                    size += stream.WriteUnsignedInt(1, this.pic_output_flag);
+                }
+
+                if (((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 1)
+                {
+                    size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+                }
+
+                if ((((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId > 0 &&
+            ((H265Context)context).VideoParameterSetRbsp.VpsExtension.PocLsbNotPresentFlag[((H265Context)context).LayerIdxInVps[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId]] == 0) ||
+            (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP))
+                {
+                    size += stream.WriteUnsignedIntVariable(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4, this.slice_pic_order_cnt_lsb);
+                }
+
+                if (((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_W_RADL && ((H265Context)context).NalHeader.NalUnitHeader.NalUnitType != H265NALTypes.IDR_N_LP)
+                {
+                    size += stream.WriteUnsignedInt(1, this.short_term_ref_pic_set_sps_flag);
+
+                    if (short_term_ref_pic_set_sps_flag == 0)
+                    {
+                        size += stream.WriteClass<StRefPicSet>(context, this.st_ref_pic_set);
+                    }
+                    else if (((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets > 1)
+                    {
+                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets)), this.short_term_ref_pic_set_idx);
+                    }
+
+                    if (((H265Context)context).SeqParameterSetRbsp.LongTermRefPicsPresentFlag != 0)
+                    {
+
+                        if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 0)
+                        {
+                            size += stream.WriteUnsignedIntGolomb(this.num_long_term_sps);
+                        }
+                        size += stream.WriteUnsignedIntGolomb(this.num_long_term_pics);
+
+                        for (i = 0; i < num_long_term_sps + num_long_term_pics; i++)
+                        {
+
+                            if (i < num_long_term_sps)
+                            {
+
+                                if (((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps > 1)
+                                {
+                                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps)), this.lt_idx_sps[i]);
+                                }
+                            }
+                            else
+                            {
+                                size += stream.WriteUnsignedIntVariable((((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4), this.poc_lsb_lt[i]);
+                                size += stream.WriteUnsignedInt(1, this.used_by_curr_pic_lt_flag[i]);
+                            }
+                            size += stream.WriteUnsignedInt(1, this.delta_poc_msb_present_flag[i]);
+
+                            if (delta_poc_msb_present_flag[i] != 0)
+                            {
+                                size += stream.WriteUnsignedIntGolomb(this.delta_poc_msb_cycle_lt[i]);
+                            }
+                        }
+                    }
+
+                    if (((H265Context)context).SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag != 0)
+                    {
+                        size += stream.WriteUnsignedInt(1, this.slice_temporal_mvp_enabled_flag);
+                    }
+                }
+                /* 
+                        if (nuh_layer_id > 0 && !default_ref_layers_active_flag &&
+                            NumRefListLayers[nuh_layer_id] > 0) {  
+                            inter_layer_pred_enabled_flag u(1)
+                            if (inter_layer_pred_enabled_flag && NumRefListLayers[nuh_layer_id] > 1) {
+                                if (!max_one_active_ref_layer_flag)  
+                                    num_inter_layer_ref_pics_minus1 u(v)
+                                if (NumActiveRefLayerPics != NumRefListLayers[nuh_layer_id])
+                                    for (i = 0; i < NumActiveRefLayerPics; i++)
+                                        inter_layer_pred_layer_idc[i] u(v)
+                            }
+                        }
+                        if (inCmpPredAvailFlag)  
+                            in_comp_pred_flag u(1)
+                        if (sample_adaptive_offset_enabled_flag) {  
+                            slice_sao_luma_flag u(1)
+                            if (ChromaArrayType != 0)  
+                                slice_sao_chroma_flag u(1)
+                        }
+                        if (slice_type == P || slice_type == B) {  
+                            num_ref_idx_active_override_flag u(1)
+                            if (num_ref_idx_active_override_flag) {  
+                                num_ref_idx_l0_active_minus1 ue(v)
+                                if (slice_type == B)  
+                                    num_ref_idx_l1_active_minus1 ue(v)
+                            }
+                            if (lists_modification_present_flag && NumPicTotalCurr > 1)
+                                ref_pic_lists_modification()
+                            if (slice_type == B)  
+                                mvd_l1_zero_flag u(1)
+                            if (cabac_init_present_flag) 
+                                cabac_init_flag u(1)
+                            if (slice_temporal_mvp_enabled_flag) {
+                                if (slice_type == B)  
+                                    collocated_from_l0_flag u(1)
+                                if ((collocated_from_l0_flag && num_ref_idx_l0_active_minus1 > 0) ||
+                                    (!collocated_from_l0_flag && num_ref_idx_l1_active_minus1 > 0)) 
+                                    collocated_ref_idx ue(v)
+                            }
+                            if ((weighted_pred_flag && slice_type == P) ||
+                                (weighted_bipred_flag && slice_type == B))
+                                pred_weight_table()
+                            else if (!DepthFlag && NumRefListLayers[nuh_layer_id] > 0) {  
+                                slice_ic_enabled_flag u(1)
+                                if (slice_ic_enabled_flag)  
+                                    slice_ic_disabled_merge_zero_idx_flag u(1)
+                            }  
+                            five_minus_max_num_merge_cand ue(v)
+                        }  
+                        slice_qp_delta se(v)
+                        if (pps_slice_chroma_qp_offsets_present_flag) {  
+                            slice_cb_qp_offset se(v) 
+                            slice_cr_qp_offset se(v)
+                        }
+                        if (chroma_qp_offset_list_enabled_flag)  
+                            cu_chroma_qp_offset_enabled_flag u(1)
+                        if (deblocking_filter_override_enabled_flag)  
+                            deblocking_filter_override_flag u(1)
+                        if (deblocking_filter_override_flag) {  
+                            slice_deblocking_filter_disabled_flag u(1)
+                            if (!slice_deblocking_filter_disabled_flag) {  
+                                slice_beta_offset_div2 se(v) 
+                                slice_tc_offset_div2 se(v)
+                            }
+                        }
+                        if (pps_loop_filter_across_slices_enabled_flag &&
+                            (slice_sao_luma_flag || slice_sao_chroma_flag ||
+                                !slice_deblocking_filter_disabled_flag)) 
+                            slice_loop_filter_across_slices_enabled_flag u(1)
+                        if (cp_in_slice_segment_header_flag[ViewIdx])
+                            for (m = 0; m < num_cp[ViewIdx]; m++) {
+                                j = cp_ref_voi[ViewIdx][m]
+                                cp_scale[j] se(v)
+                                cp_off[j] se(v)
+                                cp_inv_scale_plus_scale[j] se(v)
+                                cp_inv_off_plus_off[j] se(v)
+                            } */
+
+            }
+            /* 
+                if (tiles_enabled_flag || entropy_coding_sync_enabled_flag) {  
+                    num_entry_point_offsets ue(v)
+                    if (num_entry_point_offsets > 0) {  
+                        offset_len_minus1 ue(v)
+                        for (i = 0; i < num_entry_point_offsets; i++)
+                            entry_point_offset_minus1[i] u(v)
+                    }
+                }
+                if (slice_segment_header_extension_present_flag) {  
+                    slice_segment_header_extension_length ue(v)
+                    if (poc_reset_info_present_flag)  
+                        poc_reset_idc u(2)
+                    if (poc_reset_idc != 0)  
+                        poc_reset_period_id u(6)
+                    if (poc_reset_idc == 3) {  
+                        full_poc_reset_flag u(1) 
+                        poc_lsb_val u(v)
+                    }
+                    if (!PocMsbValRequiredFlag && vps_poc_lsb_aligned_flag)  
+                        poc_msb_cycle_val_present_flag u(1)
+                    if (poc_msb_cycle_val_present_flag)  
+                        poc_msb_cycle_val ue(v)
+                    while (more_data_in_slice_segment_header_extension())  
+                        slice_segment_header_extension_data_bit u(1)
+                }
+                byte_alignment()
+                 */
+
 
             return size;
         }
