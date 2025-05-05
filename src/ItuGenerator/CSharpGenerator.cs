@@ -719,6 +719,7 @@ namespace Sharp{type}
                 {
                     condition = condition.Replace("i = MaxNumSubLayersMinus1 - 1", "i = (int)MaxNumSubLayersMinus1 - 1");
                     condition = condition.Replace("i = maxNumSubLayersMinus1;", "i = (int)maxNumSubLayersMinus1;");
+                    condition = condition.Replace("sh_slice_type == ", "sh_slice_type == H266FrameTypes.");
                 }
             }
 

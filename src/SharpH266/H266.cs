@@ -133,9 +133,17 @@ namespace SharpH266
         public uint[] NumSlicesInSubpic { get; set; }
         public int[] SubpicIdxForSlice { get; set; }
         public uint[] SubpicLevelSliceIdx { get; set; }
-        public uint[][] NumLtrpEntries { get; private set; }
+        public uint[][] NumLtrpEntries { get; set; }
         public uint[] RplsIdx { get; set; }
-        public uint NumWeightsL0 { get; private set; }
+        public uint NumWeightsL0 { get; set; }
+        public uint[] NumRefIdxActive { get; set; }
+        public int CurrSubpicIdx { get; set; }
+        public uint[] SubpicIdVal { get; set; }
+        public int NumExtraShBits { get; set; }
+        public int NumEntryPoints { get; set; }
+        public uint NumCtusInCurrSlice { get; set; }
+        public uint[] CtbAddrInCurrSlice { get; set; }
+        public uint NumWeightsL1 { get; set; }
 
         public void SetGeneralTimingHrdParameters(GeneralTimingHrdParameters generalTimingHrdParameters)
         {
@@ -911,25 +919,141 @@ namespace SharpH266
 
         public void OnShNumRefIdxActiveMinus1()
         {
-            var sh_num_ref_idx_active_override_flag = ;
+            var sh_num_ref_idx_active_override_flag = SliceLayerRbsp.SliceHeader.ShNumRefIdxActiveOverrideFlag;
+            var sh_slice_type = SliceLayerRbsp.SliceHeader.ShSliceType;
+            var sh_num_ref_idx_active_minus1 = SliceLayerRbsp.SliceHeader.ShNumRefIdxActiveMinus1;
+            var pps_num_ref_idx_default_active_minus1 = PicParameterSetRbsp.PpsNumRefIdxDefaultActiveMinus1;
+
+            if(NumRefIdxActive == null || NumRefIdxActive.Length < 2)
+                NumRefIdxActive = new uint[2];
 
             for (int i = 0; i < 2; i++)
             {
-                if (sh_slice_type == B || (sh_slice_type == P && i == 0))
+                if (sh_slice_type == H266FrameTypes.B || (sh_slice_type == H266FrameTypes.P && i == 0))
                 {
                     if (sh_num_ref_idx_active_override_flag != 0)
                         NumRefIdxActive[i] = sh_num_ref_idx_active_minus1[i] + 1;
                     else
                     {
-                        if (num_ref_entries[i][RplsIdx[i]] >= pps_num_ref_idx_default_active_minus1[i] + 1)
+                        var num_ref_entries = SliceLayerRbsp.SliceHeader.RefPicLists.RefPicListStruct[i].NumRefEntries;
+
+                        if (num_ref_entries >= pps_num_ref_idx_default_active_minus1[i] + 1)
                             NumRefIdxActive[i] = pps_num_ref_idx_default_active_minus1[i] + 1;
                         else
-                            NumRefIdxActive[i] = num_ref_entries[i][RplsIdx[i]];
+                            NumRefIdxActive[i] = num_ref_entries;
                     }
                 }
                 else /* sh_slice_type  = =  I  | |  ( sh_slice_type  = =  P  &&  i  = =  1 ) */
                     NumRefIdxActive[i] = 0;
             }
+        }
+
+        public void OnPpsSubpicId()
+        {
+            var sps_num_subpics_minus1 = SeqParameterSetRbsp.SpsNumSubpicsMinus1;
+            var sps_subpic_id_mapping_explicitly_signalled_flag = SeqParameterSetRbsp.SpsSubpicIdMappingExplicitlySignalledFlag;
+            var pps_subpic_id_mapping_present_flag = PicParameterSetRbsp.PpsSubpicIdMappingPresentFlag;
+            var pps_subpic_id = PicParameterSetRbsp.PpsSubpicId;
+            var sps_subpic_id = SeqParameterSetRbsp.SpsSubpicId;
+
+            if (SubpicIdVal == null || SubpicIdVal.Length < sps_num_subpics_minus1 + 1)
+                SubpicIdVal = new uint[sps_num_subpics_minus1 + 1];
+
+            for (uint i = 0; i <= sps_num_subpics_minus1; i++)
+                if (sps_subpic_id_mapping_explicitly_signalled_flag != 0)
+                    SubpicIdVal[i] = pps_subpic_id_mapping_present_flag != 0 ? pps_subpic_id[i] : sps_subpic_id[i];
+                else
+                    SubpicIdVal[i] = i;
+        }
+
+        public void OnShSubpicId(uint sh_subpic_id)
+        {
+            CurrSubpicIdx = Array.IndexOf(SubpicIdVal, sh_subpic_id);
+        }
+
+        public void OnSpsExtraShBitPresentFlag()
+        {
+            var sps_num_extra_sh_bytes = SeqParameterSetRbsp.SpsNumExtraShBytes;
+            var sps_extra_sh_bit_present_flag = SeqParameterSetRbsp.SpsExtraShBitPresentFlag;
+
+            NumExtraShBits = 0;
+            for (int i = 0; i < (sps_num_extra_sh_bytes * 8); i++)
+                if (sps_extra_sh_bit_present_flag[i] != 0)
+                    NumExtraShBits++;
+        }
+
+        public void OnShSliceHeaderExtensionDataByte()
+        {
+            var sps_entry_point_offsets_present_flag = SeqParameterSetRbsp.SpsEntryPointOffsetsPresentFlag;
+            var sps_entropy_coding_sync_enabled_flag = SeqParameterSetRbsp.SpsEntropyCodingSyncEnabledFlag;
+
+            NumEntryPoints = 0;
+            if (sps_entry_point_offsets_present_flag != 0)
+            {
+                for (int i = 1; i < NumCtusInCurrSlice; i++)
+                {
+                    uint ctbAddrX = CtbAddrInCurrSlice[i] % PicWidthInCtbsY;
+                    uint ctbAddrY = CtbAddrInCurrSlice[i] / PicWidthInCtbsY;
+                    uint prevCtbAddrX = CtbAddrInCurrSlice[i - 1] % PicWidthInCtbsY;
+                    uint prevCtbAddrY = CtbAddrInCurrSlice[i - 1] / PicWidthInCtbsY;
+                    if (CtbToTileRowBd[ctbAddrY] != CtbToTileRowBd[prevCtbAddrY] ||
+                    CtbToTileColBd[ctbAddrX] != CtbToTileColBd[prevCtbAddrX] ||
+                    (ctbAddrY != prevCtbAddrY && sps_entropy_coding_sync_enabled_flag != 0))
+                        NumEntryPoints++;
+                }
+            }
+        }
+
+        public void OnShNumTilesInSliceMinus1()
+        {
+            var pps_rect_slice_flag = PicParameterSetRbsp.PpsRectSliceFlag;
+            var sh_slice_address = SliceLayerRbsp.SliceHeader.ShSliceAddress;
+            var sh_num_tiles_in_slice_minus1 = SliceLayerRbsp.SliceHeader.ShNumTilesInSliceMinus1;
+
+            if (CtbAddrInCurrSlice == null || CtbAddrInCurrSlice.Length < NumCtusInCurrSlice)
+                CtbAddrInCurrSlice = new uint[NumCtusInCurrSlice];
+
+            if (pps_rect_slice_flag != 0)
+            {
+                uint picLevelSliceIdx = sh_slice_address;
+                for (int j = 0; j < CurrSubpicIdx; j++)
+                    picLevelSliceIdx += NumSlicesInSubpic[j];
+                NumCtusInCurrSlice = NumCtusInSlice[picLevelSliceIdx];
+                for (int i = 0; i < NumCtusInCurrSlice; i++)
+                    CtbAddrInCurrSlice[i] = CtbAddrInSlice[picLevelSliceIdx][i];
+            }
+            else
+            {
+                NumCtusInCurrSlice = 0;
+                for (int tileIdx = (int)sh_slice_address; tileIdx <= sh_slice_address + sh_num_tiles_in_slice_minus1; tileIdx++)
+                {
+                    int tileX = tileIdx % NumTileColumns;
+                    int tileY = tileIdx / NumTileColumns;
+                    for (int ctbY = (int)TileRowBdVal[tileY]; ctbY < TileRowBdVal[tileY + 1]; ctbY++)
+                    {
+                        for (int ctbX = (int)TileColBdVal[tileX]; ctbX < TileColBdVal[tileX + 1]; ctbX++)
+                        {
+                            CtbAddrInCurrSlice[NumCtusInCurrSlice] = (uint)(ctbY * PicWidthInCtbsY + ctbX);
+                            NumCtusInCurrSlice++;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void OnNumL1Weights(uint num_l1_weights)
+        {
+            var pps_weighted_bipred_flag = PicParameterSetRbsp.PpsWeightedBipredFlag;
+            var pps_wp_info_in_ph_flag = PicParameterSetRbsp.PpsWpInfoInPhFlag;
+            var num_ref_entries = SliceLayerRbsp.SliceHeader.RefPicLists.RefPicListStruct[1].NumRefEntries;
+
+            if (pps_weighted_bipred_flag == 0 ||
+                (pps_wp_info_in_ph_flag != 0 && num_ref_entries == 0))
+                NumWeightsL1 = 0;
+            else if (pps_wp_info_in_ph_flag != 0)
+                NumWeightsL1 = num_l1_weights;
+            else
+                NumWeightsL1 = NumRefIdxActive[1];
         }
     }
 }

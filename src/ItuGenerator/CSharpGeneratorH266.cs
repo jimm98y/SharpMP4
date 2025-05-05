@@ -137,8 +137,8 @@ namespace ItuGenerator
                     return "((H266Context)context).SeqParameterSetRbsp.SpsLongTermRefPicsFlag";
                 case "sps_num_ref_pic_lists":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists";
-                case "sps_num_ref_pic_lists[":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[";
+                case "sps_num_ref_pic_lists[i]":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[i]";
                 case "sps_sao_enabled_flag":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsSaoEnabledFlag";
                 case "sps_inter_layer_prediction_enabled_flag":
@@ -206,7 +206,7 @@ namespace ItuGenerator
                 case "nal_unit_type":
                     return "((H266Context)context).NalHeader.NalUnitHeader.NalUnitType";
                 case "num_ref_entries":
-                    return "((H266Context)context).PictureHeaderRbsp.PictureHeaderStructure.RefPicLists.RefPicListStruct.First(x => x != null).NumRefEntries";
+                    return "((H266Context)context).PictureHeaderRbsp.PictureHeaderStructure.RefPicLists.RefPicListStruct.NumRefEntries";
                 case "TemporalId":
                     return "(((H266Context)context).NalHeader.NalUnitHeader.NuhTemporalIdPlus1 - 1)";
                 case "PicWidthInCtbsY":
@@ -297,6 +297,54 @@ namespace ItuGenerator
                     return "((H266Context)context).RplsIdx";
                 case "OnNumL0Weights":
                     return "((H266Context)context).OnNumL0Weights";
+                case "NumExtraShBits":
+                    return "((H266Context)context).NumExtraShBits";
+                case "CurrSubpicIdx":
+                    return "((H266Context)context).CurrSubpicIdx";
+                case "sps_subpic_info_present_flag":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsSubpicInfoPresentFlag";
+                case "pps_rect_slice_flag":
+                    return "((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag";
+                case "pps_slice_chroma_qp_offsets_present_flag":
+                    return "((H266Context)context).PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag";
+                case "pps_cabac_init_present_flag":
+                    return "((H266Context)context).PicParameterSetRbsp.PpsCabacInitPresentFlag";
+                case "sps_subpic_id_len_minus1":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsSubpicIdLenMinus1";
+                case "sps_idr_rpl_present_flag":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsIdrRplPresentFlag";
+                case "ph_inter_slice_allowed_flag":
+                    return "((H266Context)context).SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhInterSliceAllowedFlag";   
+                case "ph_lmcs_enabled_flag":
+                    return "((H266Context)context).SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhLmcsEnabledFlag";
+                case "ph_explicit_scaling_list_enabled_flag":
+                    return "((H266Context)context).SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhExplicitScalingListEnabledFlag";
+                case "ph_temporal_mvp_enabled_flag":
+                    return "((H266Context)context).SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhTemporalMvpEnabledFlag";
+                case "pps_deblocking_filter_override_enabled_flag":
+                    return "((H266Context)context).PicParameterSetRbsp.PpsDeblockingFilterOverrideEnabledFlag";
+                case "pps_slice_header_extension_present_flag":
+                    return "((H266Context)context).PicParameterSetRbsp.PpsSliceHeaderExtensionPresentFlag";
+                case "sps_dep_quant_enabled_flag":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsDepQuantEnabledFlag";
+                case "sps_sign_data_hiding_enabled_flag":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsSignDataHidingEnabledFlag";
+                case "sps_transform_skip_enabled_flag":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsTransformSkipEnabledFlag";
+                case "NumWeightsL0":
+                    return "((H266Context)context).NumWeightsL0";
+                case "NumRefIdxActive":
+                    return "((H266Context)context).NumRefIdxActive";
+                case "SubpicIdVal":
+                    return "((H266Context)context).SubpicIdVal";
+                case "NumEntryPoints":
+                    return "((H266Context)context).NumEntryPoints";
+                case "NumWeightsL1":
+                    return "((H266Context)context).NumWeightsL1";
+                case "CtbAddrInCurrSlice":
+                    return "((H266Context)context).CtbAddrInCurrSlice";
+                case "NumCtusInCurrSlice":
+                    return "((H266Context)context).NumCtusInCurrSlice";
 
                 default:
                     //throw new NotImplementedException(parameter);
@@ -344,6 +392,18 @@ namespace ItuGenerator
                     return "((H266Context)context).OnNumL0Weights(num_l0_weights);";
                 case "sh_num_ref_idx_active_minus1": 
                     return "((H266Context)context).OnShNumRefIdxActiveMinus1();";
+                case "sh_subpic_id": 
+                    return "((H266Context)context).OnShSubpicId(sh_subpic_id);";
+                case "pps_subpic_id": 
+                    return "((H266Context)context).OnPpsSubpicId();";
+                case "sps_extra_sh_bit_present_flag": 
+                    return "((H266Context)context).OnSpsExtraShBitPresentFlag();";
+                case "sh_slice_header_extension_data_byte": 
+                    return "((H266Context)context).OnShSliceHeaderExtensionDataByte();";
+                case "sh_num_tiles_in_slice_minus1": 
+                    return "((H266Context)context).OnShNumTilesInSliceMinus1();";
+                case "num_l1_weights": 
+                    return "((H266Context)context).OnNumL1Weights(num_l1_weights);";
             }
             return "";
         }
@@ -361,10 +421,17 @@ namespace ItuGenerator
 
         public string FixCondition(string condition, MethodType methodType)
         {
+            condition = condition.Replace("nal_unit_type != ", "nal_unit_type != H266NALTypes.");
+            condition = condition.Replace("nal_unit_type == ", "nal_unit_type == H266NALTypes.");
+            condition = condition.Replace("nal_unit_type >= ", "nal_unit_type >= H266NALTypes.");
+            condition = condition.Replace("nal_unit_type <= ", "nal_unit_type <= H266NALTypes.");
             condition = condition.Replace("nal_unit_type  !=  ", "nal_unit_type != H266NALTypes.");
             condition = condition.Replace("nal_unit_type  ==  ", "nal_unit_type == H266NALTypes.");
             condition = condition.Replace("nal_unit_type  >=  ", "nal_unit_type >= H266NALTypes.");
             condition = condition.Replace("nal_unit_type  <=  ", "nal_unit_type <= H266NALTypes.");
+
+            condition = condition.Replace("sh_slice_type != ", "sh_slice_type != H266FrameTypes.");
+            condition = condition.Replace("sh_slice_type == ", "sh_slice_type == H266FrameTypes.");
 
             condition = condition.Replace("payload_type_byte  ==  0xFF", "payload_type_byte[whileIndex]  ==  0xFF");
             condition = condition.Replace("payload_size_byte  ==  0xFF", "payload_size_byte[whileIndex]  ==  0xFF");
@@ -538,6 +605,12 @@ namespace ItuGenerator
                     return "(uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) )";
                 case "poc_lsb_lt":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
+                case "sh_subpic_id":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsSubpicIdLenMinus1 + 1";
+                case "sh_slice_address":
+                    return "(uint)(((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( Math.Log2 ( ((H266Context)context).NumTilesInPic ) )  :  Math.Ceiling( Math.Log2( ((H266Context)context).NumSlicesInSubpic[ ((H266Context)context).CurrSubpicIdx ] ) ) )";
+                case "sh_entry_point_offset_minus1":
+                    return "sh_entry_offset_len_minus1 + 1";
             }
 
             Debug.WriteLine(parameter);
