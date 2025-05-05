@@ -89,8 +89,53 @@ namespace SharpH266
         public uint CtbSizeY { get; set; }
         public uint MaxNumMergeCand { get; set; }
         public int NumExtraPhBits { get; set; }
-        public int NumAlfFilters { get; private set; }
-        public uint LmcsMaxBinIdx { get; private set; }
+        public int NumAlfFilters { get; set; }
+        public uint LmcsMaxBinIdx { get; set; }
+        public uint PicWidthInCtbsY { get; set; }
+        public uint PicHeightInCtbsY { get; set; }
+        public uint PicSizeInCtbsY { get; set; }
+        public uint PicWidthInMinCbsY { get; set; }
+        public uint PicHeightInMinCbsY { get; set; }
+        public uint PicSizeInMinCbsY { get; set; }
+        public uint PicSizeInSamplesY { get; set; }
+        public uint PicWidthInSamplesC { get; set; }
+        public uint PicHeightInSamplesC { get; set; }
+        public uint SubWidthC { get; set; }
+        public uint SubHeightC { get; set; }
+        public uint MinCbLog2SizeY { get; set; }
+        public uint MinCbSizeY { get; set; }
+        public uint IbcBufWidthY { get; set; }
+        public uint IbcBufWidthC { get; set; }
+        public uint VSize { get; set; }
+        public uint CtbWidthC { get; set; }
+        public uint CtbHeightC { get; set; }
+        public int NumTileColumns { get; set; }
+        public int NumTileRows { get; set; }
+        public int NumTilesInPic { get; set; }
+        public uint[] ColWidthVal { get; set; }
+        public uint[] RowHeightVal { get; set; }
+        public uint[] TileColBdVal { get; set; }
+        public uint[] TileRowBdVal { get; set; }
+        public uint[] CtbToTileColBd { get; set; }
+        public uint[] ctbToTileColIdx { get; set; }
+        public uint[] CtbToTileRowBd { get; set; }
+        public uint[] ctbToTileRowIdx { get; set; }
+        public uint[] SubpicWidthInTiles { get; set; }
+        public uint[] SubpicHeightInTiles { get; set; }
+        public uint[] subpicHeightLessThanOneTileFlag { get; set; }
+        public uint[] NumCtusInSlice { get; set; }
+        public uint[] SliceTopLeftTileIdx { get; set; }
+        public uint[] sliceWidthInTiles { get; set; }
+        public uint[] sliceHeightInTiles { get; set; }
+        public uint[] NumSlicesInTile { get; set; }
+        public uint[] sliceHeightInCtus { get; set; }
+        public uint[][] CtbAddrInSlice { get; set; }
+        public uint[] NumSlicesInSubpic { get; set; }
+        public int[] SubpicIdxForSlice { get; set; }
+        public uint[] SubpicLevelSliceIdx { get; set; }
+        public uint[][] NumLtrpEntries { get; private set; }
+        public uint[] RplsIdx { get; set; }
+        public uint NumWeightsL0 { get; private set; }
 
         public void SetGeneralTimingHrdParameters(GeneralTimingHrdParameters generalTimingHrdParameters)
         {
@@ -215,13 +260,13 @@ namespace SharpH266
                 }
             }
 
-            if(LayerUsedAsRefLayerFlag == null || LayerUsedAsRefLayerFlag.Length < vps_max_layers_minus1 + 1)
+            if (LayerUsedAsRefLayerFlag == null || LayerUsedAsRefLayerFlag.Length < vps_max_layers_minus1 + 1)
                 LayerUsedAsRefLayerFlag = new uint[vps_max_layers_minus1 + 1];
-            if(NumDirectRefLayers == null || NumDirectRefLayers.Length < vps_max_layers_minus1 + 1)
+            if (NumDirectRefLayers == null || NumDirectRefLayers.Length < vps_max_layers_minus1 + 1)
                 NumDirectRefLayers = new int[vps_max_layers_minus1 + 1];
-            if(NumRefLayers == null || NumRefLayers.Length < vps_max_layers_minus1 + 1)
+            if (NumRefLayers == null || NumRefLayers.Length < vps_max_layers_minus1 + 1)
                 NumRefLayers = new int[vps_max_layers_minus1 + 1];
-            if(GeneralLayerIdx == null || GeneralLayerIdx.Length < vps_max_layers_minus1 + 1)
+            if (GeneralLayerIdx == null || GeneralLayerIdx.Length < vps_max_layers_minus1 + 1)
                 GeneralLayerIdx = new int[vps_max_layers_minus1 + 1];
 
             for (int i = 0; i <= vps_max_layers_minus1; i++)
@@ -262,14 +307,14 @@ namespace SharpH266
             var vps_layer_id = VideoParameterSetRbsp.VpsLayerId;
             var vps_ptl_max_tid = VideoParameterSetRbsp.VpsPtlMaxTid;
             var vps_ols_ptl_idx = VideoParameterSetRbsp.VpsOlsPtlIdx;
-            var vps_max_layers_minus1 = VideoParameterSetRbsp.VpsMaxLayersMinus1; 
+            var vps_max_layers_minus1 = VideoParameterSetRbsp.VpsMaxLayersMinus1;
             var vps_ols_mode_idc = VideoParameterSetRbsp.VpsOlsModeIdc;
             var vps_each_layer_is_an_ols_flag = VideoParameterSetRbsp.VpsEachLayerIsAnOlsFlag;
             var vps_max_tid_il_ref_pics_plus1 = VideoParameterSetRbsp.VpsMaxTidIlRefPicsPlus1;
             var vps_direct_ref_layer_flag = VideoParameterSetRbsp.VpsDirectRefLayerFlag;
             var vps_ols_output_layer_flag = VideoParameterSetRbsp.VpsOlsOutputLayerFlag;
 
-            if(NumOutputLayersInOls == null || NumOutputLayersInOls.Length < TotalNumOlss)
+            if (NumOutputLayersInOls == null || NumOutputLayersInOls.Length < TotalNumOlss)
                 NumOutputLayersInOls = new uint[TotalNumOlss];
             if (OutputLayerIdInOls == null || OutputLayerIdInOls.Length < TotalNumOlss)
             {
@@ -282,7 +327,7 @@ namespace SharpH266
                 for (int i = 0; i < TotalNumOlss; i++)
                 {
                     NumSubLayersInLayerInOLS[i] = new uint[TotalNumOlss];
-                }                
+                }
             }
             if (layerIncludedInOlsFlag == null || layerIncludedInOlsFlag.Length < TotalNumOlss)
             {
@@ -290,7 +335,7 @@ namespace SharpH266
                 for (int i = 0; i < TotalNumOlss; i++)
                 {
                     layerIncludedInOlsFlag[i] = new uint[TotalNumOlss];
-                }                
+                }
             }
             if (OutputLayerIdx == null || OutputLayerIdx.Length < TotalNumOlss)
             {
@@ -298,7 +343,7 @@ namespace SharpH266
                 for (int i = 0; i < TotalNumOlss; i++)
                 {
                     OutputLayerIdx[i] = new int[TotalNumOlss];
-                }                
+                }
             }
             if (LayerIdInOls == null || LayerIdInOls.Length < TotalNumOlss)
             {
@@ -306,13 +351,13 @@ namespace SharpH266
                 for (int i = 0; i < TotalNumOlss; i++)
                 {
                     LayerIdInOls[i] = new uint[TotalNumOlss];
-                }                
+                }
             }
-            if(LayerUsedAsOutputLayerFlag == null || LayerUsedAsOutputLayerFlag.Length < vps_max_layers_minus1 + 1)
+            if (LayerUsedAsOutputLayerFlag == null || LayerUsedAsOutputLayerFlag.Length < vps_max_layers_minus1 + 1)
                 LayerUsedAsOutputLayerFlag = new uint[vps_max_layers_minus1 + 1];
-            if(MultiLayerOlsIdx == null || MultiLayerOlsIdx.Length < TotalNumOlss)
+            if (MultiLayerOlsIdx == null || MultiLayerOlsIdx.Length < TotalNumOlss)
                 LayerUsedAsOutputLayerFlag = new uint[TotalNumOlss];
-            if(NumLayersInOls == null || NumLayersInOls.Length < TotalNumOlss)
+            if (NumLayersInOls == null || NumLayersInOls.Length < TotalNumOlss)
                 NumLayersInOls = new uint[TotalNumOlss];
 
             NumOutputLayersInOls[0] = 1;
@@ -457,7 +502,7 @@ namespace SharpH266
                 if (sps_extra_ph_bit_present_flag[i] != 0)
                     NumExtraPhBits++;
         }
-               
+
         public void OnAlfChromaFilterSignalFlag()
         {
             NumAlfFilters = 25;
@@ -467,6 +512,424 @@ namespace SharpH266
         {
             var lmcs_delta_max_bin_idx = AdaptationParameterSetRbsp.LmcsData.LmcsDeltaMaxBinIdx;
             LmcsMaxBinIdx = 15 - lmcs_delta_max_bin_idx;
+        }
+
+        public void OnSpsLog2MinLumaCodingBlockSizeMinus2()
+        {
+            var sps_log2_min_luma_coding_block_size_minus2 = SeqParameterSetRbsp.SpsLog2MinLumaCodingBlockSizeMinus2;
+            var sps_chroma_format_idc = SeqParameterSetRbsp.SpsChromaFormatIdc;
+
+            SubWidthC = sps_chroma_format_idc == 1 || sps_chroma_format_idc == 2 ? 2u : 1u;
+            SubHeightC = sps_chroma_format_idc == 1 ? 2u : 1u;
+
+            MinCbLog2SizeY = sps_log2_min_luma_coding_block_size_minus2 + 2; // 43
+            MinCbSizeY = (uint)(1 << (int)MinCbLog2SizeY); // 44
+            IbcBufWidthY = 256 * 128 / CtbSizeY; // 45
+            IbcBufWidthC = IbcBufWidthY / SubWidthC; // 46
+            VSize = (uint)Math.Min(64, CtbSizeY); // 47
+
+            if (sps_chroma_format_idc == 0)
+            {
+                CtbWidthC = 0;
+                CtbHeightC = 0;
+            }
+            else
+            {
+                CtbWidthC = CtbSizeY / SubWidthC;
+                CtbHeightC = CtbSizeY / SubHeightC;
+            }
+        }
+
+        public void OnPpsPicHeightInLumaSamples()
+        {
+            var pps_pic_width_in_luma_samples = PicParameterSetRbsp.PpsPicWidthInLumaSamples;
+            var pps_pic_height_in_luma_samples = PicParameterSetRbsp.PpsPicHeightInLumaSamples;
+
+            PicWidthInCtbsY = (uint)Math.Ceiling(pps_pic_width_in_luma_samples / (double)CtbSizeY); // 64
+            PicHeightInCtbsY = (uint)Math.Ceiling(pps_pic_height_in_luma_samples / (double)CtbSizeY); // 65
+            PicSizeInCtbsY = PicWidthInCtbsY * PicHeightInCtbsY; // 66
+            PicWidthInMinCbsY = pps_pic_width_in_luma_samples / MinCbSizeY; // 67
+            PicHeightInMinCbsY = pps_pic_height_in_luma_samples / MinCbSizeY; // 68
+            PicSizeInMinCbsY = PicWidthInMinCbsY * PicHeightInMinCbsY; // 69
+            PicSizeInSamplesY = pps_pic_width_in_luma_samples * pps_pic_height_in_luma_samples; // 70
+            PicWidthInSamplesC = pps_pic_width_in_luma_samples / SubWidthC; // 71
+            PicHeightInSamplesC = pps_pic_height_in_luma_samples / SubHeightC; // 72
+        }
+
+        public void OnPpsTileRowHeightMinus1()
+        {
+            var pps_num_exp_tile_columns_minus1 = PicParameterSetRbsp.PpsNumExpTileColumnsMinus1;
+            var pps_num_exp_tile_rows_minus1 = PicParameterSetRbsp.PpsNumExpTileRowsMinus1;
+            var pps_tile_column_width_minus1 = PicParameterSetRbsp.PpsTileColumnWidthMinus1;
+            var pps_tile_row_height_minus1 = PicParameterSetRbsp.PpsTileRowHeightMinus1;
+            var pps_single_slice_per_subpic_flag = PicParameterSetRbsp.PpsSingleSlicePerSubpicFlag;
+            var pps_num_slices_in_pic_minus1 = PicParameterSetRbsp.PpsNumSlicesInPicMinus1;
+            var pps_slice_width_in_tiles_minus1 = PicParameterSetRbsp.PpsSliceWidthInTilesMinus1;
+            var pps_slice_height_in_tiles_minus1 = PicParameterSetRbsp.PpsSliceHeightInTilesMinus1;
+            var pps_num_exp_slices_in_tile = PicParameterSetRbsp.PpsNumExpSlicesInTile;
+            var pps_exp_slice_height_in_ctus_minus1 = PicParameterSetRbsp.PpsExpSliceHeightInCtusMinus1;
+            var pps_tile_idx_delta_present_flag = PicParameterSetRbsp.PpsTileIdxDeltaPresentFlag;
+            var pps_tile_idx_delta_val = PicParameterSetRbsp.PpsTileIdxDeltaVal;
+
+            var sps_num_subpics_minus1 = SeqParameterSetRbsp.SpsNumSubpicsMinus1;
+            var sps_subpic_ctu_top_left_x = SeqParameterSetRbsp.SpsSubpicCtuTopLeftx;
+            var sps_subpic_width_minus1 = SeqParameterSetRbsp.SpsSubpicWidthMinus1;
+            var sps_subpic_ctu_top_left_y = SeqParameterSetRbsp.SpsSubpicCtuTopLefty;
+            var sps_subpic_height_minus1 = SeqParameterSetRbsp.SpsSubpicHeightMinus1;
+            var sps_subpic_info_present_flag = SeqParameterSetRbsp.SpsSubpicInfoPresentFlag;
+
+            if (ColWidthVal == null || ColWidthVal.Length < pps_num_exp_tile_columns_minus1 + 1)
+                ColWidthVal = new uint[pps_num_exp_tile_columns_minus1 + 1];
+            if (RowHeightVal == null || RowHeightVal.Length < pps_num_exp_tile_rows_minus1 + 1)
+                RowHeightVal = new uint[pps_num_exp_tile_rows_minus1 + 1];
+
+            // 14
+            int i;
+            uint remainingWidthInCtbsY = PicWidthInCtbsY;
+            for (i = 0; i <= pps_num_exp_tile_columns_minus1; i++)
+            {
+                ColWidthVal[i] = pps_tile_column_width_minus1[i] + 1;
+                remainingWidthInCtbsY -= ColWidthVal[i];
+            }
+            uint uniformTileColWidth = pps_tile_column_width_minus1[pps_num_exp_tile_columns_minus1] + 1;
+            while (remainingWidthInCtbsY >= uniformTileColWidth)
+            {
+                ColWidthVal[i++] = uniformTileColWidth;
+                remainingWidthInCtbsY -= uniformTileColWidth;
+            }
+            if (remainingWidthInCtbsY > 0)
+                ColWidthVal[i++] = remainingWidthInCtbsY;
+            NumTileColumns = i;
+
+            // 15
+            int j;
+            uint remainingHeightInCtbsY = PicHeightInCtbsY;
+            for (j = 0; j <= pps_num_exp_tile_rows_minus1; j++)
+            {
+                RowHeightVal[j] = pps_tile_row_height_minus1[j] + 1;
+                remainingHeightInCtbsY -= RowHeightVal[j];
+            }
+            uint uniformTileRowHeight = pps_tile_row_height_minus1[pps_num_exp_tile_rows_minus1] + 1;
+            while (remainingHeightInCtbsY >= uniformTileRowHeight)
+            {
+                RowHeightVal[j++] = uniformTileRowHeight;
+                remainingHeightInCtbsY -= uniformTileRowHeight;
+            }
+            if (remainingHeightInCtbsY > 0)
+                RowHeightVal[j++] = remainingHeightInCtbsY;
+            NumTileRows = j;
+
+            // needed in PPS
+            NumTilesInPic = NumTileColumns * NumTileRows;
+
+            if (TileColBdVal == null || TileColBdVal.Length < NumTileColumns + 1)
+                TileColBdVal = new uint[NumTileColumns + 1];
+
+            for (TileColBdVal[0] = 0, i = 0; i < NumTileColumns; i++)
+                TileColBdVal[i + 1] = TileColBdVal[i] + ColWidthVal[i];
+
+            if (TileRowBdVal == null || TileRowBdVal.Length < NumTileRows + 1)
+                TileRowBdVal = new uint[NumTileRows + 1];
+
+            for (TileRowBdVal[0] = 0, j = 0; j < NumTileRows; j++)
+                TileRowBdVal[j + 1] = TileRowBdVal[j] + RowHeightVal[j];
+
+            // 18
+            if (CtbToTileColBd == null || CtbToTileColBd.Length < PicWidthInCtbsY + 1)
+                CtbToTileColBd = new uint[PicWidthInCtbsY + 1];
+            if (ctbToTileColIdx == null || ctbToTileColIdx.Length < PicWidthInCtbsY + 1)
+                ctbToTileColIdx = new uint[PicWidthInCtbsY + 1];
+
+            uint ctbAddrX = 0;
+            uint tileX = 0;
+            for (ctbAddrX = 0; ctbAddrX <= PicWidthInCtbsY; ctbAddrX++)
+            {
+                if (ctbAddrX == TileColBdVal[tileX + 1])
+                    tileX++;
+                CtbToTileColBd[ctbAddrX] = TileColBdVal[tileX];
+                ctbToTileColIdx[ctbAddrX] = tileX;
+            }
+
+            // 19
+            if (CtbToTileRowBd == null || CtbToTileRowBd.Length < PicHeightInCtbsY + 1)
+                CtbToTileRowBd = new uint[PicHeightInCtbsY + 1];
+            if (ctbToTileRowIdx == null || ctbToTileRowIdx.Length < PicHeightInCtbsY + 1)
+                ctbToTileRowIdx = new uint[PicHeightInCtbsY + 1];
+
+            uint ctbAddrY = 0;
+            uint tileY = 0;
+            for (ctbAddrY = 0; ctbAddrY <= PicHeightInCtbsY; ctbAddrY++)
+            {
+                if (ctbAddrY == TileRowBdVal[tileY + 1])
+                    tileY++;
+                CtbToTileRowBd[ctbAddrY] = TileRowBdVal[tileY];
+                ctbToTileRowIdx[ctbAddrY] = tileY;
+            }
+
+            // 20
+            if (SubpicWidthInTiles == null || SubpicWidthInTiles.Length < sps_num_subpics_minus1 + 1)
+                SubpicWidthInTiles = new uint[sps_num_subpics_minus1 + 1];
+            if (SubpicHeightInTiles == null || SubpicHeightInTiles.Length < sps_num_subpics_minus1 + 1)
+                SubpicHeightInTiles = new uint[sps_num_subpics_minus1 + 1];
+            if (subpicHeightLessThanOneTileFlag == null || subpicHeightLessThanOneTileFlag.Length < sps_num_subpics_minus1 + 1)
+                subpicHeightLessThanOneTileFlag = new uint[sps_num_subpics_minus1 + 1];
+
+            for (i = 0; i <= sps_num_subpics_minus1; i++)
+            {
+                uint leftX = sps_subpic_ctu_top_left_x[i];
+                uint rightX = leftX + sps_subpic_width_minus1[i];
+                SubpicWidthInTiles[i] = ctbToTileColIdx[rightX] + 1 - ctbToTileColIdx[leftX];
+                uint topY = sps_subpic_ctu_top_left_y[i];
+                uint bottomY = topY + sps_subpic_height_minus1[i];
+                SubpicHeightInTiles[i] = ctbToTileRowIdx[bottomY] + 1 - ctbToTileRowIdx[topY];
+                if (SubpicHeightInTiles[i] == 1 && sps_subpic_height_minus1[i] + 1 < RowHeightVal[ctbToTileRowIdx[topY]])
+                    subpicHeightLessThanOneTileFlag[i] = 1;
+                else
+                    subpicHeightLessThanOneTileFlag[i] = 0;
+            }
+
+            // 21
+            if (NumCtusInSlice == null || NumCtusInSlice.Length < sps_num_subpics_minus1 + 1)
+                NumCtusInSlice = new uint[sps_num_subpics_minus1 + 1];
+            if (CtbAddrInSlice == null || CtbAddrInSlice.Length < sps_num_subpics_minus1 + 1)
+                CtbAddrInSlice = new uint[sps_num_subpics_minus1 + 1][];
+
+            if (pps_single_slice_per_subpic_flag != 0)
+            {
+                if (sps_subpic_info_present_flag == 0) /* There is no subpicture info and only one slice in a picture. */
+                {
+                    for (j = 0; j < NumTileRows; j++)
+                    {
+                        for (i = 0; i < NumTileColumns; i++)
+                            AddCtbsToSlice(0, TileColBdVal[i], TileColBdVal[i + 1], TileRowBdVal[j], TileRowBdVal[j + 1]);
+                    }
+                }
+                else
+                {
+                    for (i = 0; i <= sps_num_subpics_minus1; i++)
+                    {
+                        NumCtusInSlice[i] = 0;
+                        if (subpicHeightLessThanOneTileFlag[i] != 0) /* The slice consists of a set of CTU rows in a tile. */
+                            AddCtbsToSlice(i, sps_subpic_ctu_top_left_x[i],
+                             sps_subpic_ctu_top_left_x[i] + sps_subpic_width_minus1[i] + 1,
+                             sps_subpic_ctu_top_left_y[i],
+                             sps_subpic_ctu_top_left_y[i] + sps_subpic_height_minus1[i] + 1);
+                        else
+                        { /* The slice consists of a number of complete tiles covering a rectangular region. */
+                            tileX = ctbToTileColIdx[sps_subpic_ctu_top_left_x[i]];
+                            tileY = ctbToTileRowIdx[sps_subpic_ctu_top_left_y[i]];
+                            for (j = 0; j < SubpicHeightInTiles[i]; j++)
+                                for (int k = 0; k < SubpicWidthInTiles[i]; k++)
+                                    AddCtbsToSlice(i, TileColBdVal[tileX + k], TileColBdVal[tileX + k + 1],
+                                      TileRowBdVal[tileY + j], TileRowBdVal[tileY + j + 1]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                int tileIdx = 0;
+                for (i = 0; i <= pps_num_slices_in_pic_minus1; i++)
+                    NumCtusInSlice[i] = 0;
+
+                if (SliceTopLeftTileIdx == null || SliceTopLeftTileIdx.Length < pps_num_slices_in_pic_minus1 + 1)
+                    SliceTopLeftTileIdx = new uint[pps_num_slices_in_pic_minus1 + 1];
+                if (sliceWidthInTiles == null || sliceWidthInTiles.Length < pps_num_slices_in_pic_minus1 + 1)
+                    sliceWidthInTiles = new uint[pps_num_slices_in_pic_minus1 + 1];
+                if (sliceHeightInTiles == null || sliceHeightInTiles.Length < pps_num_slices_in_pic_minus1 + 1)
+                    sliceHeightInTiles = new uint[pps_num_slices_in_pic_minus1 + 1];
+                if (NumSlicesInTile == null || NumSlicesInTile.Length < pps_num_slices_in_pic_minus1 + 1)
+                    NumSlicesInTile = new uint[pps_num_slices_in_pic_minus1 + 1];
+                if (sliceHeightInCtus == null || sliceHeightInCtus.Length < pps_num_slices_in_pic_minus1 + 1)
+                    sliceHeightInCtus = new uint[pps_num_slices_in_pic_minus1 + 1];
+
+                for (i = 0; i <= pps_num_slices_in_pic_minus1; i++)
+                {
+                    SliceTopLeftTileIdx[i] = (uint)tileIdx;
+                    tileX = (uint)(tileIdx % NumTileColumns);
+                    tileY = (uint)(tileIdx / NumTileColumns);
+                    if (i < pps_num_slices_in_pic_minus1)
+                    {
+                        sliceWidthInTiles[i] = pps_slice_width_in_tiles_minus1[i] + 1;
+                        sliceHeightInTiles[i] = pps_slice_height_in_tiles_minus1[i] + 1;
+                    }
+                    else
+                    {
+                        sliceWidthInTiles[i] = (uint)(NumTileColumns - tileX);
+                        sliceHeightInTiles[i] = (uint)(NumTileRows - tileY);
+                        NumSlicesInTile[i] = 1;
+                    }
+                    if (sliceWidthInTiles[i] == 1 && sliceHeightInTiles[i] == 1)
+                    {
+                        if (pps_num_exp_slices_in_tile[i] == 0)
+                        {
+                            NumSlicesInTile[i] = 1;
+                            sliceHeightInCtus[i] = RowHeightVal[SliceTopLeftTileIdx[i] / NumTileColumns];
+                        }
+                        else
+                        {
+                            remainingHeightInCtbsY = RowHeightVal[SliceTopLeftTileIdx[i] / NumTileColumns];
+                            for (j = 0; j < pps_num_exp_slices_in_tile[i]; j++)
+                            {
+                                sliceHeightInCtus[i + j] = pps_exp_slice_height_in_ctus_minus1[i][j] + 1;
+                                remainingHeightInCtbsY -= sliceHeightInCtus[i + j];
+                            }
+                            uint uniformSliceHeight = sliceHeightInCtus[i + j - 1];
+                            while (remainingHeightInCtbsY >= uniformSliceHeight)
+                            {
+                                sliceHeightInCtus[i + j] = uniformSliceHeight;
+                                remainingHeightInCtbsY -= uniformSliceHeight;
+                                j++;
+                            }
+                            if (remainingHeightInCtbsY > 0)
+                            {
+                                sliceHeightInCtus[i + j] = remainingHeightInCtbsY;
+                                j++;
+                            }
+                            NumSlicesInTile[i] = (uint)j;
+                        }
+                        uint ctbY = TileRowBdVal[tileY];
+                        for (j = 0; j < NumSlicesInTile[i]; j++)
+                        {
+                            AddCtbsToSlice(i + j, TileColBdVal[tileX], TileColBdVal[tileX + 1], ctbY, ctbY + sliceHeightInCtus[i + j]);
+                            ctbY += sliceHeightInCtus[i + j];
+                            sliceWidthInTiles[i + j] = 1;
+                            sliceHeightInTiles[i + j] = 1;
+                        }
+                        i += (int)(NumSlicesInTile[i] - 1);
+                    }
+                    else
+                    {
+                        for (j = 0; j < sliceHeightInTiles[i]; j++)
+                        {
+                            for (int k = 0; k < sliceWidthInTiles[i]; k++)
+                            {
+                                AddCtbsToSlice(i, TileColBdVal[tileX + k], TileColBdVal[tileX + k + 1], TileRowBdVal[tileY + j], TileRowBdVal[tileY + j + 1]);
+                            }
+                        }
+                    }
+                    if (i < pps_num_slices_in_pic_minus1)
+                    {
+                        if (pps_tile_idx_delta_present_flag != 0)
+                        {
+                            tileIdx += pps_tile_idx_delta_val[i];
+                        }
+                        else
+                        {
+                            tileIdx += (int)sliceWidthInTiles[i];
+                            if (tileIdx % NumTileColumns == 0)
+                                tileIdx += (int)((sliceHeightInTiles[i] - 1) * NumTileColumns);
+                        }
+                    }
+                }
+            }
+
+            // 23
+            if (NumSlicesInSubpic == null || NumSlicesInSubpic.Length < sps_num_subpics_minus1 + 1)
+                NumSlicesInSubpic = new uint[sps_num_subpics_minus1 + 1];
+            if (SubpicIdxForSlice == null || SubpicIdxForSlice.Length < pps_num_slices_in_pic_minus1 + 1)
+                SubpicIdxForSlice = new int[pps_num_slices_in_pic_minus1 + 1];
+            if (SubpicLevelSliceIdx == null || SubpicLevelSliceIdx.Length < pps_num_slices_in_pic_minus1 + 1)
+                SubpicLevelSliceIdx = new uint[pps_num_slices_in_pic_minus1 + 1];
+
+            for (i = 0; i <= sps_num_subpics_minus1; i++)
+            {
+                NumSlicesInSubpic[i] = 0;
+                for (j = 0; j <= pps_num_slices_in_pic_minus1; j++)
+                {
+                    uint posX = CtbAddrInSlice[j][0] % PicWidthInCtbsY;
+                    uint posY = CtbAddrInSlice[j][0] / PicWidthInCtbsY;
+                    if ((posX >= sps_subpic_ctu_top_left_x[i]) &&
+                      (posX < sps_subpic_ctu_top_left_x[i] + sps_subpic_width_minus1[i] + 1) &&
+                      (posY >= sps_subpic_ctu_top_left_y[i]) &&
+                      (posY < sps_subpic_ctu_top_left_y[i] + sps_subpic_height_minus1[i] + 1))
+                    {
+                        SubpicIdxForSlice[j] = i;
+                        SubpicLevelSliceIdx[j] = NumSlicesInSubpic[i];
+                        NumSlicesInSubpic[i]++;
+                    }
+                }
+            }
+        }
+
+        public void AddCtbsToSlice(int sliceIdx, uint startX, uint stopX, uint startY, uint stopY)
+        {
+            for (uint ctbY = startY; ctbY < stopY; ctbY++)
+            {
+                for (uint ctbX = startX; ctbX < stopX; ctbX++)
+                {
+                    CtbAddrInSlice[sliceIdx][NumCtusInSlice[sliceIdx]] = ctbY * PicWidthInCtbsY + ctbX;
+                    NumCtusInSlice[sliceIdx]++;
+                }
+            }
+        }
+
+        public void OnStRefPicFlag(uint listIdx, uint rplsIdx, RefPicListStruct refPicListStruct)
+        {
+            var num_ref_entries = refPicListStruct.NumRefEntries;
+            var inter_layer_ref_pic_flag = refPicListStruct.InterLayerRefPicFlag;
+            var st_ref_pic_flag = refPicListStruct.StRefPicFlag;
+            var sps_num_ref_pic_lists = SeqParameterSetRbsp.SpsNumRefPicLists;
+
+            if (NumLtrpEntries == null || NumLtrpEntries.Length < sps_num_ref_pic_lists.Length)
+            {
+                NumLtrpEntries = new uint[sps_num_ref_pic_lists.Length][];
+                for (int i = 0; i < sps_num_ref_pic_lists.Length; i++)
+                {
+                    NumLtrpEntries[i] = new uint[sps_num_ref_pic_lists[i]];
+                }
+            }
+
+            NumLtrpEntries[listIdx][rplsIdx] = 0;
+
+            for (int i = 0; i < num_ref_entries; i++)
+                if (inter_layer_ref_pic_flag[i] == 0 && st_ref_pic_flag[i] == 0)
+                    NumLtrpEntries[listIdx][rplsIdx]++;
+        }
+
+        public void OnRplIdx(RefPicLists refPicLists, uint i)
+        {
+            var rpl_sps_flag = refPicLists.RplSpsFlag;
+            var rpl_idx = refPicLists.RplIdx;
+            var sps_num_ref_pic_lists = SeqParameterSetRbsp.SpsNumRefPicLists;
+
+            if (RplsIdx == null || RplsIdx.Length < 2)
+                RplsIdx = new uint[2];
+
+            RplsIdx[i] = rpl_sps_flag[i] != 0 ? rpl_idx[i] : sps_num_ref_pic_lists[i];
+        }
+
+        public void OnNumL0Weights(uint num_l0_weights)
+        {
+            var pps_wp_info_in_ph_flag = PicParameterSetRbsp.PpsWpInfoInPhFlag;
+
+            if (pps_wp_info_in_ph_flag == 1)
+                NumWeightsL0 = num_l0_weights;
+            else
+                NumWeightsL0 = NumRefIdxActive[0];
+        }
+
+        public void OnShNumRefIdxActiveMinus1()
+        {
+            var sh_num_ref_idx_active_override_flag = ;
+
+            for (int i = 0; i < 2; i++)
+            {
+                if (sh_slice_type == B || (sh_slice_type == P && i == 0))
+                {
+                    if (sh_num_ref_idx_active_override_flag != 0)
+                        NumRefIdxActive[i] = sh_num_ref_idx_active_minus1[i] + 1;
+                    else
+                    {
+                        if (num_ref_entries[i][RplsIdx[i]] >= pps_num_ref_idx_default_active_minus1[i] + 1)
+                            NumRefIdxActive[i] = pps_num_ref_idx_default_active_minus1[i] + 1;
+                        else
+                            NumRefIdxActive[i] = num_ref_entries[i][RplsIdx[i]];
+                    }
+                }
+                else /* sh_slice_type  = =  I  | |  ( sh_slice_type  = =  P  &&  i  = =  1 ) */
+                    NumRefIdxActive[i] = 0;
+            }
         }
     }
 }

@@ -197,12 +197,10 @@ namespace ItuGenerator
                     return "((H266Context)context).GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag";
                 case "hrd_cpb_cnt_minus1":
                     return "((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1";
+                case "NumTilesInPic":
+                    return "((H266Context)context).NumTilesInPic";
                 case "ltrp_in_header_flag":
                     return "ref_pic_list_struct[i].LtrpInHeaderFlag";
-                case "poc_lsb_lt":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
-                case "rpl_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) )";
                 case "colourTransformSize":
                     return "( (1  <<  ( (int)colour_transform_log2_number_of_points_per_lut_minus1 + 1 ) ) + 1 )";
                 case "nal_unit_type":
@@ -211,6 +209,94 @@ namespace ItuGenerator
                     return "((H266Context)context).PictureHeaderRbsp.PictureHeaderStructure.RefPicLists.RefPicListStruct.First(x => x != null).NumRefEntries";
                 case "TemporalId":
                     return "(((H266Context)context).NalHeader.NalUnitHeader.NuhTemporalIdPlus1 - 1)";
+                case "PicWidthInCtbsY":
+                    return "((H266Context)context).PicWidthInCtbsY";
+                case "PicHeightInCtbsY":
+                    return "((H266Context)context).PicHeightInCtbsY";
+                case "PicSizeInCtbsY":
+                    return "((H266Context)context).PicSizeInCtbsY";
+                case "PicWidthInMinCbsY":
+                    return "((H266Context)context).PicWidthInMinCbsY";
+                case "PicHeightInMinCbsY":
+                    return "((H266Context)context).PicHeightInMinCbsY";
+                case "PicSizeInMinCbsY":
+                    return "((H266Context)context).PicSizeInMinCbsY";
+                case "PicSizeInSamplesY":
+                    return "((H266Context)context).PicSizeInSamplesY";
+                case "PicWidthInSamplesC":
+                    return "((H266Context)context).PicWidthInSamplesC";
+                case "PicHeightInSamplesC":
+                    return "((H266Context)context).PicHeightInSamplesC";
+                case "SubWidthC":
+                    return "((H266Context)context).SubWidthC";
+                case "SubHeightC":
+                    return "((H266Context)context).SubHeightC";
+                case "MinCbLog2SizeY":
+                    return "((H266Context)context).MinCbLog2SizeY";
+                case "MinCbSizeY":
+                    return "((H266Context)context).MinCbSizeY";
+                case "IbcBufWidthY":
+                    return "((H266Context)context).IbcBufWidthY";
+                case "IbcBufWidthC":
+                    return "((H266Context)context).IbcBufWidthC";
+                case "VSize":
+                    return "((H266Context)context).VSize";
+                case "CtbWidthC":
+                    return "((H266Context)context).CtbWidthC";
+                case "CtbHeightC":
+                    return "((H266Context)context).CtbHeightC";
+                case "NumTileColumns":
+                    return "((H266Context)context).NumTileColumns";
+                case "NumTileRows":
+                    return "((H266Context)context).NumTileRows";
+                case "ColWidthVal":
+                    return "((H266Context)context).ColWidthVal";
+                case "RowHeightVal":
+                    return "((H266Context)context).RowHeightVal";
+                case "TileColBdVal":
+                    return "((H266Context)context).TileColBdVal";
+                case "TileRowBdVal":
+                    return "((H266Context)context).TileRowBdVal";
+                case "CtbToTileColBd":
+                    return "((H266Context)context).CtbToTileColBd";
+                case "ctbToTileColIdx":
+                    return "((H266Context)context).ctbToTileColIdx";
+                case "CtbToTileRowBd":
+                    return "((H266Context)context).CtbToTileRowBd";
+                case "ctbToTileRowIdx":
+                    return "((H266Context)context).ctbToTileRowIdx";
+                case "SubpicWidthInTiles":
+                    return "((H266Context)context).SubpicWidthInTiles";
+                case "SubpicHeightInTiles":
+                    return "((H266Context)context).SubpicHeightInTiles";
+                case "subpicHeightLessThanOneTileFlag":
+                    return "((H266Context)context).subpicHeightLessThanOneTileFlag";
+                case "NumCtusInSlice":
+                    return "((H266Context)context).NumCtusInSlice";
+                case "SliceTopLeftTileIdx":
+                    return "((H266Context)context).SliceTopLeftTileIdx";
+                case "sliceWidthInTiles":
+                    return "((H266Context)context).sliceWidthInTiles";
+                case "sliceHeightInTiles":
+                    return "((H266Context)context).sliceHeightInTiles";
+                case "NumSlicesInTile":
+                    return "((H266Context)context).NumSlicesInTile";
+                case "sliceHeightInCtus":
+                    return "((H266Context)context).sliceHeightInCtus";
+                case "CtbAddrInSlice":
+                    return "((H266Context)context).CtbAddrInSlice";
+                case "NumSlicesInSubpic":
+                    return "((H266Context)context).NumSlicesInSubpic";
+                case "SubpicIdxForSlice":
+                    return "((H266Context)context).SubpicIdxForSlice";
+                case "SubpicLevelSliceIdx":
+                    return "((H266Context)context).SubpicLevelSliceIdx";
+                case "NumLtrpEntries":
+                    return "((H266Context)context).NumLtrpEntries";
+                case "RplsIdx":
+                    return "((H266Context)context).RplsIdx";
+                case "OnNumL0Weights":
+                    return "((H266Context)context).OnNumL0Weights";
 
                 default:
                     //throw new NotImplementedException(parameter);
@@ -244,6 +330,20 @@ namespace ItuGenerator
                     return "((H266Context)context).OnSpsSixMinusMaxNumMergeCand();";
                 case "sps_log2_ctu_size_minus5":
                     return "((H266Context)context).OnSpsLog2CtuSizeMinus5();";
+                case "pps_pic_height_in_luma_samples":
+                    return "((H266Context)context).OnPpsPicHeightInLumaSamples();";
+                case "sps_log2_min_luma_coding_block_size_minus2":
+                    return "((H266Context)context).OnSpsLog2MinLumaCodingBlockSizeMinus2();";
+                case "pps_tile_row_height_minus1": // TODO: not sure this is the right place
+                    return "((H266Context)context).OnPpsTileRowHeightMinus1();";
+                case "st_ref_pic_flag": 
+                    return "((H266Context)context).OnStRefPicFlag(listIdx, rplsIdx, this);";
+                case "rpl_idx": 
+                    return "((H266Context)context).OnRplIdx(this, i);";
+                case "num_l0_weights": 
+                    return "((H266Context)context).OnNumL0Weights(num_l0_weights);";
+                case "sh_num_ref_idx_active_minus1": 
+                    return "((H266Context)context).OnShNumRefIdxActiveMinus1();";
             }
             return "";
         }
@@ -434,6 +534,10 @@ namespace ItuGenerator
                     return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "dui_dpb_output_du_delay":
                     return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1 + 1";
+                case "rpl_idx":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) )";
+                case "poc_lsb_lt":
+                    return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
             }
 
             Debug.WriteLine(parameter);
