@@ -134,7 +134,7 @@ namespace SharpH266
         public int[] SubpicIdxForSlice { get; set; }
         public uint[] SubpicLevelSliceIdx { get; set; }
         public uint[][] NumLtrpEntries { get; set; }
-        public uint[] RplsIdx { get; set; }
+        public uint[] RplsIdx { get; set; } = new uint[2];
         public uint NumWeightsL0 { get; set; }
         public uint[] NumRefIdxActive { get; set; }
         public int CurrSubpicIdx { get; set; }
@@ -882,16 +882,15 @@ namespace SharpH266
             if (NumLtrpEntries == null || NumLtrpEntries.Length < sps_num_ref_pic_lists.Length)
             {
                 NumLtrpEntries = new uint[sps_num_ref_pic_lists.Length][];
-                for (int i = 0; i < sps_num_ref_pic_lists.Length; i++)
-                {
-                    NumLtrpEntries[i] = new uint[sps_num_ref_pic_lists[i]];
-                }
             }
+
+            if(NumLtrpEntries[listIdx] == null)
+                NumLtrpEntries[listIdx] = new uint[sps_num_ref_pic_lists[listIdx] + 1];
 
             NumLtrpEntries[listIdx][rplsIdx] = 0;
 
-            for (int i = 0; i < num_ref_entries; i++)
-                if (inter_layer_ref_pic_flag[i] == 0 && st_ref_pic_flag[i] == 0)
+            for (int i = 0; i < num_ref_entries[listIdx][rplsIdx]; i++)
+                if (inter_layer_ref_pic_flag[listIdx][rplsIdx][i] == 0 && st_ref_pic_flag[listIdx][rplsIdx][i] == 0)
                     NumLtrpEntries[listIdx][rplsIdx]++;
         }
 
@@ -900,9 +899,6 @@ namespace SharpH266
             var rpl_sps_flag = refPicLists.RplSpsFlag;
             var rpl_idx = refPicLists.RplIdx;
             var sps_num_ref_pic_lists = SeqParameterSetRbsp.SpsNumRefPicLists;
-
-            if (RplsIdx == null || RplsIdx.Length < 2)
-                RplsIdx = new uint[2];
 
             RplsIdx[i] = rpl_sps_flag[i] != 0 ? rpl_idx[i] : sps_num_ref_pic_lists[i];
         }
@@ -935,15 +931,15 @@ namespace SharpH266
                         NumRefIdxActive[i] = sh_num_ref_idx_active_minus1[i] + 1;
                     else
                     {
-                        var num_ref_entries = SliceLayerRbsp.SliceHeader.RefPicLists.RefPicListStruct[i].NumRefEntries;
+                        var num_ref_entries = SliceLayerRbsp.SliceHeader.RefPicLists.RefPicListStruct.NumRefEntries;
 
-                        if (num_ref_entries >= pps_num_ref_idx_default_active_minus1[i] + 1)
+                        if (num_ref_entries[i][RplsIdx[i]] >= pps_num_ref_idx_default_active_minus1[i] + 1)
                             NumRefIdxActive[i] = pps_num_ref_idx_default_active_minus1[i] + 1;
                         else
-                            NumRefIdxActive[i] = num_ref_entries;
+                            NumRefIdxActive[i] = num_ref_entries[i][RplsIdx[i]];
                     }
                 }
-                else /* sh_slice_type  = =  I  | |  ( sh_slice_type  = =  P  &&  i  = =  1 ) */
+                else /* sh_slice_type  ==  I  | |  ( sh_slice_type  ==  P  &&  i  ==  1 ) */
                     NumRefIdxActive[i] = 0;
             }
         }
@@ -1045,10 +1041,10 @@ namespace SharpH266
         {
             var pps_weighted_bipred_flag = PicParameterSetRbsp.PpsWeightedBipredFlag;
             var pps_wp_info_in_ph_flag = PicParameterSetRbsp.PpsWpInfoInPhFlag;
-            var num_ref_entries = SliceLayerRbsp.SliceHeader.RefPicLists.RefPicListStruct[1].NumRefEntries;
+            var num_ref_entries = SliceLayerRbsp.SliceHeader.RefPicLists.RefPicListStruct.NumRefEntries;
 
             if (pps_weighted_bipred_flag == 0 ||
-                (pps_wp_info_in_ph_flag != 0 && num_ref_entries == 0))
+                (pps_wp_info_in_ph_flag != 0 && num_ref_entries[1][RplsIdx[1]] == 0))
                 NumWeightsL1 = 0;
             else if (pps_wp_info_in_ph_flag != 0)
                 NumWeightsL1 = num_l1_weights;
