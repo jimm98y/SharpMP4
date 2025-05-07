@@ -63,6 +63,19 @@ namespace SharpH266
 
     public partial class H266Context
     {
+        internal byte[][] cbr_flag;
+        internal uint[][] bit_rate_du_value_minus1;
+        internal uint[][] cpb_size_du_value_minus1;
+        internal uint[][] bit_rate_value_minus1;
+        internal uint[][] cpb_size_value_minus1;
+        internal uint[][] num_ref_entries;
+        internal byte[][][] inter_layer_ref_pic_flag;
+        internal byte[][][] st_ref_pic_flag;
+        internal uint[][][] abs_delta_poc_st;
+        internal byte[][][] strp_entry_sign_flag;
+        internal uint[][][] rpls_poc_lsb_lt;
+        internal uint[][][] ilrp_idx;
+
         public SeiPayload SeiPayload { get; set; }
         public GeneralTimingHrdParameters GeneralTimingHrdParameters { get; set; }
 
@@ -144,6 +157,7 @@ namespace SharpH266
         public uint NumCtusInCurrSlice { get; set; }
         public uint[] CtbAddrInCurrSlice { get; set; }
         public uint NumWeightsL1 { get; set; }
+        public uint[][][] AbsDeltaPocSt { get; private set; }
 
         public void SetGeneralTimingHrdParameters(GeneralTimingHrdParameters generalTimingHrdParameters)
         {
@@ -1050,6 +1064,30 @@ namespace SharpH266
                 NumWeightsL1 = num_l1_weights;
             else
                 NumWeightsL1 = NumRefIdxActive[1];
+        }
+
+        public void OnAbsDeltaPocSt(uint listIdx, uint rplsIdx, uint i, RefPicListStruct refPicListStruct)
+        {
+            var sps_weighted_pred_flag = SeqParameterSetRbsp.SpsWeightedPredFlag;
+            var sps_weighted_bipred_flag = SeqParameterSetRbsp.SpsWeightedBipredFlag;
+            var sps_num_ref_pic_lists = SeqParameterSetRbsp.SpsNumRefPicLists;
+            var num_ref_entries = refPicListStruct.NumRefEntries;
+
+            if (AbsDeltaPocSt == null || AbsDeltaPocSt.Length < sps_num_ref_pic_lists.Length)
+            {
+                AbsDeltaPocSt = new uint[sps_num_ref_pic_lists.Length][][];
+            }
+
+            if (AbsDeltaPocSt[listIdx] == null)
+                AbsDeltaPocSt[listIdx] = new uint[sps_num_ref_pic_lists[listIdx] + 1][];
+
+            if(AbsDeltaPocSt[listIdx][rplsIdx] == null || AbsDeltaPocSt[listIdx][rplsIdx].Length < num_ref_entries[listIdx][rplsIdx])
+                AbsDeltaPocSt[listIdx][rplsIdx] = new uint[num_ref_entries[listIdx][rplsIdx]];
+
+            if ((sps_weighted_pred_flag != 0 || sps_weighted_bipred_flag != 0) && i != 0)
+                AbsDeltaPocSt[listIdx][rplsIdx][i] = abs_delta_poc_st[listIdx][rplsIdx][i];
+            else
+                AbsDeltaPocSt[listIdx][rplsIdx][i] = abs_delta_poc_st[listIdx][rplsIdx][i] + 1;
         }
     }
 }

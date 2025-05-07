@@ -357,6 +357,12 @@ namespace Sharp{type}
                 retm = $"if(this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new uint[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];\r\n{retm}";
             }
 
+            if (name == "num_ref_entries")
+            {
+                if (methodType == MethodType.Read)
+                    retm = "\r\nthis.num_ref_entries = ((H266Context)context).num_ref_entries;\r\n            this.inter_layer_ref_pic_flag = ((H266Context)context).inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ((H266Context)context).st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ((H266Context)context).abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ((H266Context)context).strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ((H266Context)context).rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ((H266Context)context).ilrp_idx;\r\n" + retm + "\r\n ((H266Context)context).inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).abs_delta_poc_st[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).rpls_poc_lsb_lt[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).ilrp_idx[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];";
+            }
+
             string hookDerivedVariables = specificGenerator.GetDerivedVariables(name);
             if(!string.IsNullOrEmpty(hookDerivedVariables))
             {
@@ -687,6 +693,7 @@ namespace Sharp{type}
                 }
             }
 
+            
             string arraySuffix = "";
             for (int i = 0; i < arrayDimensions; i++)
             {
@@ -859,11 +866,51 @@ namespace Sharp{type}
                                         variableType = variableType.Replace("[  0]", "[MaxNumSubLayersMinus1]");
                                     }
 
-                                    ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
-
-                                    if(variableName == "pt_sublayer_delays_present_flag")
+                                    if (variableName.StartsWith("ref_pic_list_struct"))
                                     {
-                                        ret += "\r\nthis.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1] = 1;"; // The value of pt_sublayer_delays_present_flag[bp_max_sublayers_minus1] is inferred to be equal to 1
+                                        if (methodType == MethodType.Read)
+                                            ret += "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new uint[2][] { new uint[2], new uint[2] };\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[2][], new byte[2][] };\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[2][], new byte[2][] };\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new uint[2][][] { new uint[2][], new uint[2][] };\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[2][], new byte[2][] };\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new uint[2][][] { new uint[2][], new uint[2][] };\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new uint[2][][] { new uint[2][], new uint[2][] };";
+                                    }
+                                    else if(variableName.StartsWith("sublayer_hrd_parameters"))
+                                    {
+                                        if(methodType == MethodType.Read)
+                                            ret += "\r\nif(((H266Context)context).cbr_flag == null)\r\n                ((H266Context)context).cbr_flag = new byte[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).bit_rate_du_value_minus1 == null)\r\n                ((H266Context)context).bit_rate_du_value_minus1 = new uint[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).cpb_size_du_value_minus1 == null)\r\n                ((H266Context)context).cpb_size_du_value_minus1 = new uint[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).bit_rate_value_minus1 == null)\r\n                ((H266Context)context).bit_rate_value_minus1 = new uint[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).cpb_size_value_minus1 == null)\r\n                ((H266Context)context).cpb_size_value_minus1 = new uint[MaxSubLayersVal + 1][];\r\n";
+                                    }
+                                    else if(
+                                        variableName.StartsWith("bit_rate_value_minus1") ||
+                                        variableName.StartsWith("cpb_size_value_minus1") ||
+                                        variableName.StartsWith("cpb_size_du_value_minus1") ||
+                                        variableName.StartsWith("bit_rate_du_value_minus1")
+                                        )
+                                    {
+
+                                    }
+                                    else if(variableName.StartsWith("cbr_flag"))
+                                    {
+                                        if (methodType == MethodType.Read)
+                                            ret += "((H266Context)context).cbr_flag[subLayerId] = new byte[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_du_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_du_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            this.bit_rate_value_minus1 = ((H266Context)context).bit_rate_value_minus1;\r\n            this.cpb_size_value_minus1 = ((H266Context)context).cpb_size_value_minus1;\r\n            this.cpb_size_du_value_minus1 = ((H266Context)context).cpb_size_du_value_minus1;\r\n            this.bit_rate_du_value_minus1 = ((H266Context)context).bit_rate_du_value_minus1;\r\n            this.cbr_flag = ((H266Context)context).cbr_flag;\r\n";
+                                    }
+                                    else if(
+                                        variableName.StartsWith("rpls_poc_lsb_lt") ||
+                                        variableName.StartsWith("strp_entry_sign_flag") ||
+                                        variableName.StartsWith("abs_delta_poc_st") ||
+                                        variableName.StartsWith("st_ref_pic_flag") ||
+                                        variableName.StartsWith("inter_layer_ref_pic_flag") ||
+                                        variableName.StartsWith("ilrp_idx")
+                                        )
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        if (methodType == MethodType.Read)
+                                            ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+                                    }
+
+                                    if (variableName == "pt_sublayer_delays_present_flag")
+                                    {
+                                        if (methodType == MethodType.Read)
+                                            ret += "\r\nthis.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1] = 1;"; // The value of pt_sublayer_delays_present_flag[bp_max_sublayers_minus1] is inferred to be equal to 1
                                     }
                                 }
                             }
@@ -1151,6 +1198,14 @@ namespace Sharp{type}
                 ret.Remove(ret[0]);
             }
 
+            if (field != null && (
+                field.Name == "ref_pic_list_struct" ||
+                field.Name == "sublayer_hrd_parameters"
+                ))
+            {
+                ret.Clear();
+            }
+
             foreach (var suffix in ret.ToArray())
             {
                 if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Replace(" ", "").Replace("-2", "").Contains(suffix.Replace(" ", "")))
@@ -1242,7 +1297,11 @@ namespace Sharp{type}
 
                     if (nestingLevel > 0)
                     {
-                        if (field.Name != "rpls_poc_lsb_lt") // h266
+                        if (
+                            field.Name != "rpls_poc_lsb_lt" &&
+                            field.Name != "ref_pic_list_struct" &&
+                            field.Name != "sublayer_hrd_parameters"
+                            ) // h266
                         {
                             // change the type
                             for (int i = 0; i < nestingLevel; i++)

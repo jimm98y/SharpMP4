@@ -198,13 +198,13 @@ namespace ItuGenerator
                 case "NumTilesInPic":
                     return "((H266Context)context).NumTilesInPic";
                 case "ltrp_in_header_flag":
-                    return "ref_pic_list_struct[i].LtrpInHeaderFlag";
+                    return "ref_pic_list_struct.LtrpInHeaderFlag";
                 case "colourTransformSize":
                     return "( (1  <<  ( (int)colour_transform_log2_number_of_points_per_lut_minus1 + 1 ) ) + 1 )";
                 case "nal_unit_type":
                     return "((H266Context)context).NalHeader.NalUnitHeader.NalUnitType";
                 case "num_ref_entries":
-                    return "((H266Context)context).PictureHeaderRbsp.PictureHeaderStructure.RefPicLists.RefPicListStruct.NumRefEntries";
+                    return "((H266Context)context).num_ref_entries";
                 case "TemporalId":
                     return "(((H266Context)context).NalHeader.NalUnitHeader.NuhTemporalIdPlus1 - 1)";
                 case "PicWidthInCtbsY":
@@ -343,6 +343,8 @@ namespace ItuGenerator
                     return "((H266Context)context).CtbAddrInCurrSlice";
                 case "NumCtusInCurrSlice":
                     return "((H266Context)context).NumCtusInCurrSlice";
+                case "AbsDeltaPocSt":
+                    return "((H266Context)context).AbsDeltaPocSt";
 
                 default:
                     //throw new NotImplementedException(parameter);
@@ -402,6 +404,8 @@ namespace ItuGenerator
                     return "((H266Context)context).OnShNumTilesInSliceMinus1();";
                 case "num_l1_weights": 
                     return "((H266Context)context).OnNumL1Weights(num_l1_weights);";
+                case "abs_delta_poc_st": 
+                    return "((H266Context)context).OnAbsDeltaPocSt(listIdx, rplsIdx, i, this);";
             }
             return "";
         }
@@ -456,6 +460,8 @@ namespace ItuGenerator
             fieldValue = fieldValue.Replace("Abs(", "(uint)Math.Abs(");
             fieldValue = fieldValue.Replace("Min(", "(uint)Math.Min(");
             fieldValue = fieldValue.Replace("Max(", "(uint)Math.Max(");
+
+            fieldValue = fieldValue.Replace("/* LukasV added default */", "/* LukasV added default */;\r\n((H266Context)context).OnStRefPicFlag(listIdx, rplsIdx, this)");
             return fieldValue;
         }
 

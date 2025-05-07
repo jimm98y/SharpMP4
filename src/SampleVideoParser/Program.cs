@@ -1005,17 +1005,6 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 Log.Error($"Error: {ex.Message}");
                 Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
                 Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
-
-                try 
-                {
-                    context.SeiRbsp.Write(context, wstream);                    
-                }
-                catch(Exception)
-                {
-                    // ignore
-                    Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
-                }
-
                 throw;
             }
         }
