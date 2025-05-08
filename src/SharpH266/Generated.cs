@@ -5337,19 +5337,19 @@ ref_pic_lists() {
             this.rpl_sps_flag = new byte[2];
             this.rpl_idx = new uint[2];
             if (((H266Context)context).num_ref_entries == null)
-                ((H266Context)context).num_ref_entries = new uint[2][] { new uint[2], new uint[2] };
+                ((H266Context)context).num_ref_entries = new uint[2][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };
             if (((H266Context)context).inter_layer_ref_pic_flag == null)
-                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[2][], new byte[2][] };
+                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).st_ref_pic_flag == null)
-                ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[2][], new byte[2][] };
+                ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).abs_delta_poc_st == null)
-                ((H266Context)context).abs_delta_poc_st = new uint[2][][] { new uint[2][], new uint[2][] };
+                ((H266Context)context).abs_delta_poc_st = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).strp_entry_sign_flag == null)
-                ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[2][], new byte[2][] };
+                ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).rpls_poc_lsb_lt == null)
-                ((H266Context)context).rpls_poc_lsb_lt = new uint[2][][] { new uint[2][], new uint[2][] };
+                ((H266Context)context).rpls_poc_lsb_lt = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).ilrp_idx == null)
-                ((H266Context)context).ilrp_idx = new uint[2][][] { new uint[2][], new uint[2][] };
+                ((H266Context)context).ilrp_idx = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             this.poc_lsb_lt = new uint[2][];
             this.delta_poc_msb_cycle_present_flag = new byte[2][];
             this.delta_poc_msb_cycle_lt = new uint[2][];

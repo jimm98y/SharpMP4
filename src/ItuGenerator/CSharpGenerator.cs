@@ -360,7 +360,32 @@ namespace Sharp{type}
             if (name == "num_ref_entries")
             {
                 if (methodType == MethodType.Read)
-                    retm = "\r\nthis.num_ref_entries = ((H266Context)context).num_ref_entries;\r\n            this.inter_layer_ref_pic_flag = ((H266Context)context).inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ((H266Context)context).st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ((H266Context)context).abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ((H266Context)context).strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ((H266Context)context).rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ((H266Context)context).ilrp_idx;\r\n" + retm + "\r\n ((H266Context)context).inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).abs_delta_poc_st[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).rpls_poc_lsb_lt[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).ilrp_idx[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];";
+                    retm = "    \r\nthis.num_ref_entries = ((H266Context)context).num_ref_entries;\r\n            this.inter_layer_ref_pic_flag = ((H266Context)context).inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ((H266Context)context).st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ((H266Context)context).abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ((H266Context)context).strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ((H266Context)context).rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ((H266Context)context).ilrp_idx;\r\n" + retm + "\r\n ((H266Context)context).inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).abs_delta_poc_st[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).rpls_poc_lsb_lt[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).ilrp_idx[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];";
+            }
+
+            if (methodType == MethodType.Write)
+            {
+                string setVariables = "";
+                if ((field as ItuField).ClassType == "ref_pic_list_struct")
+                {
+                    if ((field as ItuField).Parameter == "( i, j )")
+                    {
+                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = j;\r\n";
+                    }
+                    else if ((field as ItuField).Parameter == "(i, sps_num_ref_pic_lists[i])")
+                    {
+                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[i];\r\n";
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+                else if ((field as ItuField).ClassType == "sublayer_hrd_parameters")
+                {
+                    setVariables = "sublayer_hrd_parameters.SubLayerId = i;\r\n";
+                }
+                retm = $"{setVariables}{retm}";
             }
 
             string hookDerivedVariables = specificGenerator.GetDerivedVariables(name);
@@ -499,7 +524,9 @@ namespace Sharp{type}
                     return "stream.WriteBits(8, ";
                 default:
                     if (ituField.Type == null)
+                    {
                         return $"stream.WriteClass<{ituField.ClassType.ToPropertyCase()}>(context, ";
+                    }
                     throw new NotImplementedException();
             }
         }
@@ -866,10 +893,18 @@ namespace Sharp{type}
                                         variableType = variableType.Replace("[  0]", "[MaxNumSubLayersMinus1]");
                                     }
 
-                                    if (variableName.StartsWith("ref_pic_list_struct"))
+                                    if (variableName == "ref_pic_list_struct")
                                     {
                                         if (methodType == MethodType.Read)
-                                            ret += "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new uint[2][] { new uint[2], new uint[2] };\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[2][], new byte[2][] };\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[2][], new byte[2][] };\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new uint[2][][] { new uint[2][], new uint[2][] };\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[2][], new byte[2][] };\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new uint[2][][] { new uint[2][], new uint[2][] };\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new uint[2][][] { new uint[2][], new uint[2][] };";
+                                            if(variableType == "RefPicListStruct[ 2]")
+                                                ret += "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new uint[2][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };";
+                                            else
+                                                ret += "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new uint[2][];\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][];\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][];\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new uint[2][][];\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][];\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new uint[2][][];\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new uint[2][][];";
+                                    }
+                                    else if (variableName == "ref_pic_list_struct[ i ]")
+                                    {
+                                        if (methodType == MethodType.Read)
+                                            ret += "\r\nif (((H266Context)context).num_ref_entries[i] == null)\r\n                    ((H266Context)context).num_ref_entries[i] = new uint[sps_num_ref_pic_lists[i] + 1];\r\n                if (((H266Context)context).inter_layer_ref_pic_flag[i] == null)\r\n                    ((H266Context)context).inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).st_ref_pic_flag[i] == null)\r\n                    ((H266Context)context).st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).abs_delta_poc_st[i] == null)\r\n                    ((H266Context)context).abs_delta_poc_st[i] = new uint[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).strp_entry_sign_flag[i] == null)\r\n                    ((H266Context)context).strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).rpls_poc_lsb_lt[i] == null)\r\n                    ((H266Context)context).rpls_poc_lsb_lt[i] = new uint[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).ilrp_idx[i] == null)\r\n                    ((H266Context)context).ilrp_idx[i] = new uint[sps_num_ref_pic_lists[i] + 1][];";
                                     }
                                     else if(variableName.StartsWith("sublayer_hrd_parameters"))
                                     {
