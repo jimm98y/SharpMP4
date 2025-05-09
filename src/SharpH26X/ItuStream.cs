@@ -194,7 +194,7 @@ namespace SharpH26X
             ulong ret = value.Read(context, this);
             _logLevel--;
 
-            LogEnd(name, ret);
+            LogEnd(name, ret, 0);
 
             return ret;
         }
@@ -207,7 +207,7 @@ namespace SharpH26X
             ulong size = value.Write(context, this);
             _logLevel--;
 
-            LogEnd(name, size);
+            LogEnd(name, size, 0);
 
             return size;
         }
@@ -279,7 +279,7 @@ namespace SharpH26X
             if (ret == -1)
                 throw new EndOfStreamException();
             value = (ulong)ret;
-            LogEnd(name, (ulong)count);
+            LogEnd(name, (ulong)count, (long)value);
             return (ulong)count;
         }
 
@@ -287,7 +287,7 @@ namespace SharpH26X
         {
             LogBegin(name);
             WriteBits(count, value);
-            LogEnd(name, (ulong)count);
+            LogEnd(name, (ulong)count, (long)value);
             return (ulong)count;
         }
 
@@ -306,7 +306,7 @@ namespace SharpH26X
         {
             LogBegin(name);
             WriteBits(count, unchecked((ulong)value));
-            LogEnd(name, (ulong)count);
+            LogEnd(name, (ulong)count, (long)value);
             return (ulong)count;
         }
 
@@ -335,7 +335,7 @@ namespace SharpH26X
                 value = 0;
             }
 
-            LogEnd(name, (ulong)(cnt + 1 + cnt));
+            LogEnd(name, (ulong)(cnt + 1 + cnt), (long)value);
             return (ulong)(cnt + 1 + cnt);
         }
 
@@ -357,7 +357,7 @@ namespace SharpH26X
             WriteBit(1);
             WriteBits(bits, (ulong)(value - cumul));
 
-            LogEnd(name, (ulong)(bits + 1 + bits));
+            LogEnd(name, (ulong)(bits + 1 + bits), (long)value);
             return (ulong)(bits + 1 + bits);
         }
 
@@ -528,7 +528,7 @@ namespace SharpH26X
             if(bits == -1)
                 throw new EndOfStreamException();
             value = (byte)bits;
-            LogEnd(name, (ulong)count);
+            LogEnd(name, (ulong)count, (long)value);
             return (ulong)count;
         }
 
@@ -536,7 +536,7 @@ namespace SharpH26X
         {
             LogBegin(name);
             WriteBits(count, (ulong)value);
-            LogEnd(name, (ulong)count);
+            LogEnd(name, (ulong)count, (long)value);
             return (ulong)count;
         }
 
@@ -557,7 +557,7 @@ namespace SharpH26X
             }
 
             value = new BigInteger(bytes);
-            LogEnd(name, (ulong)count);
+            LogEnd(name, (ulong)count, (long)value);
             return (ulong)count;
         }
 
@@ -584,7 +584,7 @@ namespace SharpH26X
                 bytes.Add((byte)b);
             }
             value = bytes.ToArray();
-            LogEnd(name, (ulong)((bytes.Count + 1) * 8));
+            LogEnd(name, (ulong)((bytes.Count + 1) * 8), 0);
             return (ulong)((bytes.Count + 1) * 8);
         }
 
@@ -597,7 +597,7 @@ namespace SharpH26X
                 size += WriteBits(8, value[i], name);
             }
             size += WriteBits(8, 0, name); // null terminator
-            LogEnd(name, size);
+            LogEnd(name, size, 0);
             return size;
         }
 
@@ -718,7 +718,7 @@ namespace SharpH26X
             //Debug.WriteLine($"{padding} {name}");
         }
 
-        private void LogEnd(string name, ulong size)
+        private void LogEnd(string name, ulong size, long value)
         {
             string padding = "-";
             for (int i = 0; i < _logLevel; i++)
@@ -726,9 +726,20 @@ namespace SharpH26X
                 padding += "-";
             }
 
-            Debug.WriteLine($"{padding} {name} {size}");
-        }
+            string endPadding = "";
+            for (int i = 0; i < 80 - padding.Length - name.Length - size.ToString().Length - 2; i++)
+            {
+                endPadding += " ";
+            }
 
+            string endEndPadding = "";
+            for (int i = 0; i < 10 - value.ToString().Length - 1; i++)
+            {
+                endEndPadding += " ";
+            }
+
+            Debug.WriteLine($"{padding} {name}{endPadding}{size}{endEndPadding}{value}");
+        }
 
         #region IDisposable 
 
