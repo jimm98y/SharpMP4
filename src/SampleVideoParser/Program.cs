@@ -813,8 +813,10 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
     }
 }
 
+
 static void ParseH266NALU(H266Context context, byte[] sampleData)
 {
+    NaluDebug.NaluCounter++;
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
     {
         ulong ituSize = 0;
@@ -845,6 +847,11 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     nu.NalUnitHeader.NalUnitType == H266NALTypes.GDR_NUT         // 10
                     )
                 {
+                    if(NaluDebug.NaluCounter == 626)
+                    {
+
+                    }
+
                     Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
                     context.SliceLayerRbsp = new SharpH266.SliceLayerRbsp();
                     context.SliceLayerRbsp.Read(context, stream);
@@ -1002,6 +1009,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
             }
             catch (Exception ex)
             {
+                Log.Error($"NALU counter: {NaluDebug.NaluCounter}");
                 Log.Error($"Error: {ex.Message}");
                 Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
                 Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
@@ -1047,4 +1055,9 @@ public enum VideoFormat
     H264,
     H265,
     H266,
+}
+
+public static class NaluDebug
+{
+    public static int NaluCounter = 0;
 }

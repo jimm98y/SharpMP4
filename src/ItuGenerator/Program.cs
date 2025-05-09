@@ -16,13 +16,13 @@ partial class Program
             if(file.Contains("H264"))
             {
                 // TODO: remove this
-                continue;
+                //continue;
                 customGenerator = new CSharpGeneratorH264();
             }
             else if (file.Contains("H265"))
             {
                 // TODO: remove this
-                continue;
+                //continue;
                 customGenerator = new CSharpGeneratorH265();
             }
             else if (file.Contains("H266"))

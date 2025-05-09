@@ -311,14 +311,14 @@ namespace Sharp{type}
                     // special case, create class first, then read it
                     m = m.Replace("###value###", $"{spacing}this.{name}{typedef}.Add(whileIndex, ");
                     m = m.Replace("###size###", $");\r\n{spacing}{boxSize}");
-                    retm = $"{m} this.{name}{typedef}[whileIndex]); {fieldComment}";
+                    retm = $"{m} this.{name}{typedef}[whileIndex], \"{name}\"); {fieldComment}";
                 }
                 else
                 {
                     // special case, create class first, then read it
                     m = m.Replace("###value###", $"{spacing}this.{name}{typedef} = ");
                     m = m.Replace("###size###", $";\r\n{spacing}{boxSize}");
-                    retm = $"{m} this.{name}{typedef}); {fieldComment}";
+                    retm = $"{m} this.{name}{typedef}, \"{name}\"); {fieldComment}";
                 }
             }
             else
@@ -326,18 +326,18 @@ namespace Sharp{type}
                 if ((field as ItuField).MakeList)
                 {
                     if (methodType == MethodType.Read)
-                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}, \"{name}\"); {fieldComment}";
                     else if (methodType == MethodType.Write)
-                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}, \"{name}\"); {fieldComment}";
                     else
                         throw new NotSupportedException();
                 }
                 else
                 {
                     if (methodType == MethodType.Read)
-                        retm = $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} out this.{name}{typedef}, \"{name}\"); {fieldComment}";
                     else if (methodType == MethodType.Write)
-                        retm = $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
+                        retm = $"{spacing}{boxSize}{m} this.{name}{typedef}, \"{name}\"); {fieldComment}";
                     else
                         throw new NotSupportedException();
                 }
@@ -920,7 +920,7 @@ namespace Sharp{type}
                                     {
 
                                     }
-                                    else if(variableName.StartsWith("cbr_flag"))
+                                    else if(variableName.StartsWith("cbr_flag") && specificGenerator is CSharpGeneratorH266)
                                     {
                                         if (methodType == MethodType.Read)
                                             ret += "((H266Context)context).cbr_flag[subLayerId] = new byte[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_du_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_du_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            this.bit_rate_value_minus1 = ((H266Context)context).bit_rate_value_minus1;\r\n            this.cpb_size_value_minus1 = ((H266Context)context).cpb_size_value_minus1;\r\n            this.cpb_size_du_value_minus1 = ((H266Context)context).cpb_size_du_value_minus1;\r\n            this.bit_rate_du_value_minus1 = ((H266Context)context).bit_rate_du_value_minus1;\r\n            this.cbr_flag = ((H266Context)context).cbr_flag;\r\n";

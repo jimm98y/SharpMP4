@@ -98,9 +98,9 @@ nal_unit( NumBytesInNALunit ) {
             ulong size = 0;
 
             uint nalUnitHeaderBytes = 0;
-            size += stream.ReadFixed(size, 1, out this.forbidden_zero_bit);
-            size += stream.ReadUnsignedInt(size, 2, out this.nal_ref_idc);
-            size += stream.ReadUnsignedInt(size, 5, out this.nal_unit_type);
+            size += stream.ReadFixed(size, 1, out this.forbidden_zero_bit, "forbidden_zero_bit");
+            size += stream.ReadUnsignedInt(size, 2, out this.nal_ref_idc, "nal_ref_idc");
+            size += stream.ReadUnsignedInt(size, 5, out this.nal_unit_type, "nal_unit_type");
             /*  NumBytesInRBSP = 0  */
 
             nalUnitHeaderBytes = 1;
@@ -110,29 +110,29 @@ nal_unit( NumBytesInNALunit ) {
 
                 if (nal_unit_type != 21)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.svc_extension_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.svc_extension_flag, "svc_extension_flag");
                 }
                 else
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.avc_3d_extension_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.avc_3d_extension_flag, "avc_3d_extension_flag");
                 }
 
                 if (svc_extension_flag != 0)
                 {
                     this.nal_unit_header_svc_extension = new NalUnitHeaderSvcExtension();
-                    size += stream.ReadClass<NalUnitHeaderSvcExtension>(size, context, this.nal_unit_header_svc_extension); // specified in Annex G 
+                    size += stream.ReadClass<NalUnitHeaderSvcExtension>(size, context, this.nal_unit_header_svc_extension, "nal_unit_header_svc_extension"); // specified in Annex G 
                     nalUnitHeaderBytes += 3;
                 }
                 else if (avc_3d_extension_flag != 0)
                 {
                     this.nal_unit_header_3davc_extension = new NalUnitHeader3davcExtension();
-                    size += stream.ReadClass<NalUnitHeader3davcExtension>(size, context, this.nal_unit_header_3davc_extension); // specified in Annex J 
+                    size += stream.ReadClass<NalUnitHeader3davcExtension>(size, context, this.nal_unit_header_3davc_extension, "nal_unit_header_3davc_extension"); // specified in Annex J 
                     nalUnitHeaderBytes += 2;
                 }
                 else
                 {
                     this.nal_unit_header_mvc_extension = new NalUnitHeaderMvcExtension();
-                    size += stream.ReadClass<NalUnitHeaderMvcExtension>(size, context, this.nal_unit_header_mvc_extension); // specified in Annex H 
+                    size += stream.ReadClass<NalUnitHeaderMvcExtension>(size, context, this.nal_unit_header_mvc_extension, "nal_unit_header_mvc_extension"); // specified in Annex H 
                     nalUnitHeaderBytes += 3;
                 }
             }
@@ -159,9 +159,9 @@ nal_unit( NumBytesInNALunit ) {
             ulong size = 0;
 
             uint nalUnitHeaderBytes = 0;
-            size += stream.WriteFixed(1, this.forbidden_zero_bit);
-            size += stream.WriteUnsignedInt(2, this.nal_ref_idc);
-            size += stream.WriteUnsignedInt(5, this.nal_unit_type);
+            size += stream.WriteFixed(1, this.forbidden_zero_bit, "forbidden_zero_bit");
+            size += stream.WriteUnsignedInt(2, this.nal_ref_idc, "nal_ref_idc");
+            size += stream.WriteUnsignedInt(5, this.nal_unit_type, "nal_unit_type");
             /*  NumBytesInRBSP = 0  */
 
             nalUnitHeaderBytes = 1;
@@ -171,26 +171,26 @@ nal_unit( NumBytesInNALunit ) {
 
                 if (nal_unit_type != 21)
                 {
-                    size += stream.WriteUnsignedInt(1, this.svc_extension_flag);
+                    size += stream.WriteUnsignedInt(1, this.svc_extension_flag, "svc_extension_flag");
                 }
                 else
                 {
-                    size += stream.WriteUnsignedInt(1, this.avc_3d_extension_flag);
+                    size += stream.WriteUnsignedInt(1, this.avc_3d_extension_flag, "avc_3d_extension_flag");
                 }
 
                 if (svc_extension_flag != 0)
                 {
-                    size += stream.WriteClass<NalUnitHeaderSvcExtension>(context, this.nal_unit_header_svc_extension); // specified in Annex G 
+                    size += stream.WriteClass<NalUnitHeaderSvcExtension>(context, this.nal_unit_header_svc_extension, "nal_unit_header_svc_extension"); // specified in Annex G 
                     nalUnitHeaderBytes += 3;
                 }
                 else if (avc_3d_extension_flag != 0)
                 {
-                    size += stream.WriteClass<NalUnitHeader3davcExtension>(context, this.nal_unit_header_3davc_extension); // specified in Annex J 
+                    size += stream.WriteClass<NalUnitHeader3davcExtension>(context, this.nal_unit_header_3davc_extension, "nal_unit_header_3davc_extension"); // specified in Annex J 
                     nalUnitHeaderBytes += 2;
                 }
                 else
                 {
-                    size += stream.WriteClass<NalUnitHeaderMvcExtension>(context, this.nal_unit_header_mvc_extension); // specified in Annex H 
+                    size += stream.WriteClass<NalUnitHeaderMvcExtension>(context, this.nal_unit_header_mvc_extension, "nal_unit_header_mvc_extension"); // specified in Annex H 
                     nalUnitHeaderBytes += 3;
                 }
             }
@@ -242,9 +242,9 @@ seq_parameter_set_rbsp() {
             ulong size = 0;
 
             this.seq_parameter_set_data = new SeqParameterSetData();
-            size += stream.ReadClass<SeqParameterSetData>(size, context, this.seq_parameter_set_data);
+            size += stream.ReadClass<SeqParameterSetData>(size, context, this.seq_parameter_set_data, "seq_parameter_set_data");
             this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -253,8 +253,8 @@ seq_parameter_set_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.WriteClass<SeqParameterSetData>(context, this.seq_parameter_set_data);
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            size += stream.WriteClass<SeqParameterSetData>(context, this.seq_parameter_set_data, "seq_parameter_set_data");
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -429,16 +429,16 @@ seq_parameter_set_data() {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedInt(size, 8, out this.profile_idc);
-            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set0_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set1_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set2_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set3_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set4_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set5_flag);
-            size += stream.ReadUnsignedInt(size, 2, out this.reserved_zero_2bits); // equal to 0 
-            size += stream.ReadUnsignedInt(size, 8, out this.level_idc);
-            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
+            size += stream.ReadUnsignedInt(size, 8, out this.profile_idc, "profile_idc");
+            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set0_flag, "constraint_set0_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set1_flag, "constraint_set1_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set2_flag, "constraint_set2_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set3_flag, "constraint_set3_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set4_flag, "constraint_set4_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.constraint_set5_flag, "constraint_set5_flag");
+            size += stream.ReadUnsignedInt(size, 2, out this.reserved_zero_2bits, "reserved_zero_2bits"); // equal to 0 
+            size += stream.ReadUnsignedInt(size, 8, out this.level_idc, "level_idc");
+            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id");
 
             if (profile_idc == 100 || profile_idc == 110 ||
   profile_idc == 122 || profile_idc == 244 || profile_idc == 44 ||
@@ -446,16 +446,16 @@ seq_parameter_set_data() {
   profile_idc == 128 || profile_idc == 138 || profile_idc == 139 ||
   profile_idc == 134 || profile_idc == 135)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_format_idc);
+                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_format_idc, "chroma_format_idc");
 
                 if (chroma_format_idc == 3)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.separate_colour_plane_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.separate_colour_plane_flag, "separate_colour_plane_flag");
                 }
-                size += stream.ReadUnsignedIntGolomb(size, out this.bit_depth_luma_minus8);
-                size += stream.ReadUnsignedIntGolomb(size, out this.bit_depth_chroma_minus8);
-                size += stream.ReadUnsignedInt(size, 1, out this.qpprime_y_zero_transform_bypass_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.seq_scaling_matrix_present_flag);
+                size += stream.ReadUnsignedIntGolomb(size, out this.bit_depth_luma_minus8, "bit_depth_luma_minus8");
+                size += stream.ReadUnsignedIntGolomb(size, out this.bit_depth_chroma_minus8, "bit_depth_chroma_minus8");
+                size += stream.ReadUnsignedInt(size, 1, out this.qpprime_y_zero_transform_bypass_flag, "qpprime_y_zero_transform_bypass_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.seq_scaling_matrix_present_flag, "seq_scaling_matrix_present_flag");
 
                 if (seq_scaling_matrix_present_flag != 0)
                 {
@@ -465,7 +465,7 @@ seq_parameter_set_data() {
                     this.scaling_list0 = new ScalingList[((chroma_format_idc != 3) ? 8 : 12)];
                     for (i = 0; i < ((chroma_format_idc != 3) ? 8 : 12); i++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.seq_scaling_list_present_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.seq_scaling_list_present_flag[i], "seq_scaling_list_present_flag");
 
                         if (seq_scaling_list_present_flag[i] != 0)
                         {
@@ -473,63 +473,63 @@ seq_parameter_set_data() {
                             if (i < 6)
                             {
                                 this.scaling_list[i] = new ScalingList(new uint[6 * 16], 16, 0);
-                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list[i]);
+                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list[i], "scaling_list");
                             }
                             else
                             {
                                 this.scaling_list0[i] = new ScalingList(new uint[6 * 64], 64, 0);
-                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list0[i]);
+                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list0[i], "scaling_list0");
                             }
                         }
                     }
                 }
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_frame_num_minus4);
-            size += stream.ReadUnsignedIntGolomb(size, out this.pic_order_cnt_type);
+            size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_frame_num_minus4, "log2_max_frame_num_minus4");
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_order_cnt_type, "pic_order_cnt_type");
 
             if (pic_order_cnt_type == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_pic_order_cnt_lsb_minus4);
+                size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_pic_order_cnt_lsb_minus4, "log2_max_pic_order_cnt_lsb_minus4");
             }
             else if (pic_order_cnt_type == 1)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.delta_pic_order_always_zero_flag);
-                size += stream.ReadSignedIntGolomb(size, out this.offset_for_non_ref_pic);
-                size += stream.ReadSignedIntGolomb(size, out this.offset_for_top_to_bottom_field);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_frames_in_pic_order_cnt_cycle);
+                size += stream.ReadUnsignedInt(size, 1, out this.delta_pic_order_always_zero_flag, "delta_pic_order_always_zero_flag");
+                size += stream.ReadSignedIntGolomb(size, out this.offset_for_non_ref_pic, "offset_for_non_ref_pic");
+                size += stream.ReadSignedIntGolomb(size, out this.offset_for_top_to_bottom_field, "offset_for_top_to_bottom_field");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_frames_in_pic_order_cnt_cycle, "num_ref_frames_in_pic_order_cnt_cycle");
 
                 this.offset_for_ref_frame = new int[num_ref_frames_in_pic_order_cnt_cycle];
                 for (i = 0; i < num_ref_frames_in_pic_order_cnt_cycle; i++)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.offset_for_ref_frame[i]);
+                    size += stream.ReadSignedIntGolomb(size, out this.offset_for_ref_frame[i], "offset_for_ref_frame");
                 }
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.max_num_ref_frames);
-            size += stream.ReadUnsignedInt(size, 1, out this.gaps_in_frame_num_value_allowed_flag);
-            size += stream.ReadUnsignedIntGolomb(size, out this.pic_width_in_mbs_minus1);
-            size += stream.ReadUnsignedIntGolomb(size, out this.pic_height_in_map_units_minus1);
-            size += stream.ReadUnsignedInt(size, 1, out this.frame_mbs_only_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.max_num_ref_frames, "max_num_ref_frames");
+            size += stream.ReadUnsignedInt(size, 1, out this.gaps_in_frame_num_value_allowed_flag, "gaps_in_frame_num_value_allowed_flag");
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_width_in_mbs_minus1, "pic_width_in_mbs_minus1");
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_height_in_map_units_minus1, "pic_height_in_map_units_minus1");
+            size += stream.ReadUnsignedInt(size, 1, out this.frame_mbs_only_flag, "frame_mbs_only_flag");
 
             if (frame_mbs_only_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.mb_adaptive_frame_field_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.mb_adaptive_frame_field_flag, "mb_adaptive_frame_field_flag");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.direct_8x8_inference_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.frame_cropping_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.direct_8x8_inference_flag, "direct_8x8_inference_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.frame_cropping_flag, "frame_cropping_flag");
 
             if (frame_cropping_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.frame_crop_left_offset);
-                size += stream.ReadUnsignedIntGolomb(size, out this.frame_crop_right_offset);
-                size += stream.ReadUnsignedIntGolomb(size, out this.frame_crop_top_offset);
-                size += stream.ReadUnsignedIntGolomb(size, out this.frame_crop_bottom_offset);
+                size += stream.ReadUnsignedIntGolomb(size, out this.frame_crop_left_offset, "frame_crop_left_offset");
+                size += stream.ReadUnsignedIntGolomb(size, out this.frame_crop_right_offset, "frame_crop_right_offset");
+                size += stream.ReadUnsignedIntGolomb(size, out this.frame_crop_top_offset, "frame_crop_top_offset");
+                size += stream.ReadUnsignedIntGolomb(size, out this.frame_crop_bottom_offset, "frame_crop_bottom_offset");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.vui_parameters_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.vui_parameters_present_flag, "vui_parameters_present_flag");
 
             if (vui_parameters_present_flag != 0)
             {
                 this.vui_parameters = new VuiParameters();
-                size += stream.ReadClass<VuiParameters>(size, context, this.vui_parameters);
+                size += stream.ReadClass<VuiParameters>(size, context, this.vui_parameters, "vui_parameters");
             }
 
             return size;
@@ -540,16 +540,16 @@ seq_parameter_set_data() {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedInt(8, this.profile_idc);
-            size += stream.WriteUnsignedInt(1, this.constraint_set0_flag);
-            size += stream.WriteUnsignedInt(1, this.constraint_set1_flag);
-            size += stream.WriteUnsignedInt(1, this.constraint_set2_flag);
-            size += stream.WriteUnsignedInt(1, this.constraint_set3_flag);
-            size += stream.WriteUnsignedInt(1, this.constraint_set4_flag);
-            size += stream.WriteUnsignedInt(1, this.constraint_set5_flag);
-            size += stream.WriteUnsignedInt(2, this.reserved_zero_2bits); // equal to 0 
-            size += stream.WriteUnsignedInt(8, this.level_idc);
-            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
+            size += stream.WriteUnsignedInt(8, this.profile_idc, "profile_idc");
+            size += stream.WriteUnsignedInt(1, this.constraint_set0_flag, "constraint_set0_flag");
+            size += stream.WriteUnsignedInt(1, this.constraint_set1_flag, "constraint_set1_flag");
+            size += stream.WriteUnsignedInt(1, this.constraint_set2_flag, "constraint_set2_flag");
+            size += stream.WriteUnsignedInt(1, this.constraint_set3_flag, "constraint_set3_flag");
+            size += stream.WriteUnsignedInt(1, this.constraint_set4_flag, "constraint_set4_flag");
+            size += stream.WriteUnsignedInt(1, this.constraint_set5_flag, "constraint_set5_flag");
+            size += stream.WriteUnsignedInt(2, this.reserved_zero_2bits, "reserved_zero_2bits"); // equal to 0 
+            size += stream.WriteUnsignedInt(8, this.level_idc, "level_idc");
+            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id, "seq_parameter_set_id");
 
             if (profile_idc == 100 || profile_idc == 110 ||
   profile_idc == 122 || profile_idc == 244 || profile_idc == 44 ||
@@ -557,83 +557,83 @@ seq_parameter_set_data() {
   profile_idc == 128 || profile_idc == 138 || profile_idc == 139 ||
   profile_idc == 134 || profile_idc == 135)
             {
-                size += stream.WriteUnsignedIntGolomb(this.chroma_format_idc);
+                size += stream.WriteUnsignedIntGolomb(this.chroma_format_idc, "chroma_format_idc");
 
                 if (chroma_format_idc == 3)
                 {
-                    size += stream.WriteUnsignedInt(1, this.separate_colour_plane_flag);
+                    size += stream.WriteUnsignedInt(1, this.separate_colour_plane_flag, "separate_colour_plane_flag");
                 }
-                size += stream.WriteUnsignedIntGolomb(this.bit_depth_luma_minus8);
-                size += stream.WriteUnsignedIntGolomb(this.bit_depth_chroma_minus8);
-                size += stream.WriteUnsignedInt(1, this.qpprime_y_zero_transform_bypass_flag);
-                size += stream.WriteUnsignedInt(1, this.seq_scaling_matrix_present_flag);
+                size += stream.WriteUnsignedIntGolomb(this.bit_depth_luma_minus8, "bit_depth_luma_minus8");
+                size += stream.WriteUnsignedIntGolomb(this.bit_depth_chroma_minus8, "bit_depth_chroma_minus8");
+                size += stream.WriteUnsignedInt(1, this.qpprime_y_zero_transform_bypass_flag, "qpprime_y_zero_transform_bypass_flag");
+                size += stream.WriteUnsignedInt(1, this.seq_scaling_matrix_present_flag, "seq_scaling_matrix_present_flag");
 
                 if (seq_scaling_matrix_present_flag != 0)
                 {
 
                     for (i = 0; i < ((chroma_format_idc != 3) ? 8 : 12); i++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.seq_scaling_list_present_flag[i]);
+                        size += stream.WriteUnsignedInt(1, this.seq_scaling_list_present_flag[i], "seq_scaling_list_present_flag");
 
                         if (seq_scaling_list_present_flag[i] != 0)
                         {
 
                             if (i < 6)
                             {
-                                size += stream.WriteClass<ScalingList>(context, this.scaling_list[i]);
+                                size += stream.WriteClass<ScalingList>(context, this.scaling_list[i], "scaling_list");
                             }
                             else
                             {
-                                size += stream.WriteClass<ScalingList>(context, this.scaling_list0[i]);
+                                size += stream.WriteClass<ScalingList>(context, this.scaling_list0[i], "scaling_list0");
                             }
                         }
                     }
                 }
             }
-            size += stream.WriteUnsignedIntGolomb(this.log2_max_frame_num_minus4);
-            size += stream.WriteUnsignedIntGolomb(this.pic_order_cnt_type);
+            size += stream.WriteUnsignedIntGolomb(this.log2_max_frame_num_minus4, "log2_max_frame_num_minus4");
+            size += stream.WriteUnsignedIntGolomb(this.pic_order_cnt_type, "pic_order_cnt_type");
 
             if (pic_order_cnt_type == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.log2_max_pic_order_cnt_lsb_minus4);
+                size += stream.WriteUnsignedIntGolomb(this.log2_max_pic_order_cnt_lsb_minus4, "log2_max_pic_order_cnt_lsb_minus4");
             }
             else if (pic_order_cnt_type == 1)
             {
-                size += stream.WriteUnsignedInt(1, this.delta_pic_order_always_zero_flag);
-                size += stream.WriteSignedIntGolomb(this.offset_for_non_ref_pic);
-                size += stream.WriteSignedIntGolomb(this.offset_for_top_to_bottom_field);
-                size += stream.WriteUnsignedIntGolomb(this.num_ref_frames_in_pic_order_cnt_cycle);
+                size += stream.WriteUnsignedInt(1, this.delta_pic_order_always_zero_flag, "delta_pic_order_always_zero_flag");
+                size += stream.WriteSignedIntGolomb(this.offset_for_non_ref_pic, "offset_for_non_ref_pic");
+                size += stream.WriteSignedIntGolomb(this.offset_for_top_to_bottom_field, "offset_for_top_to_bottom_field");
+                size += stream.WriteUnsignedIntGolomb(this.num_ref_frames_in_pic_order_cnt_cycle, "num_ref_frames_in_pic_order_cnt_cycle");
 
                 for (i = 0; i < num_ref_frames_in_pic_order_cnt_cycle; i++)
                 {
-                    size += stream.WriteSignedIntGolomb(this.offset_for_ref_frame[i]);
+                    size += stream.WriteSignedIntGolomb(this.offset_for_ref_frame[i], "offset_for_ref_frame");
                 }
             }
-            size += stream.WriteUnsignedIntGolomb(this.max_num_ref_frames);
-            size += stream.WriteUnsignedInt(1, this.gaps_in_frame_num_value_allowed_flag);
-            size += stream.WriteUnsignedIntGolomb(this.pic_width_in_mbs_minus1);
-            size += stream.WriteUnsignedIntGolomb(this.pic_height_in_map_units_minus1);
-            size += stream.WriteUnsignedInt(1, this.frame_mbs_only_flag);
+            size += stream.WriteUnsignedIntGolomb(this.max_num_ref_frames, "max_num_ref_frames");
+            size += stream.WriteUnsignedInt(1, this.gaps_in_frame_num_value_allowed_flag, "gaps_in_frame_num_value_allowed_flag");
+            size += stream.WriteUnsignedIntGolomb(this.pic_width_in_mbs_minus1, "pic_width_in_mbs_minus1");
+            size += stream.WriteUnsignedIntGolomb(this.pic_height_in_map_units_minus1, "pic_height_in_map_units_minus1");
+            size += stream.WriteUnsignedInt(1, this.frame_mbs_only_flag, "frame_mbs_only_flag");
 
             if (frame_mbs_only_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.mb_adaptive_frame_field_flag);
+                size += stream.WriteUnsignedInt(1, this.mb_adaptive_frame_field_flag, "mb_adaptive_frame_field_flag");
             }
-            size += stream.WriteUnsignedInt(1, this.direct_8x8_inference_flag);
-            size += stream.WriteUnsignedInt(1, this.frame_cropping_flag);
+            size += stream.WriteUnsignedInt(1, this.direct_8x8_inference_flag, "direct_8x8_inference_flag");
+            size += stream.WriteUnsignedInt(1, this.frame_cropping_flag, "frame_cropping_flag");
 
             if (frame_cropping_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.frame_crop_left_offset);
-                size += stream.WriteUnsignedIntGolomb(this.frame_crop_right_offset);
-                size += stream.WriteUnsignedIntGolomb(this.frame_crop_top_offset);
-                size += stream.WriteUnsignedIntGolomb(this.frame_crop_bottom_offset);
+                size += stream.WriteUnsignedIntGolomb(this.frame_crop_left_offset, "frame_crop_left_offset");
+                size += stream.WriteUnsignedIntGolomb(this.frame_crop_right_offset, "frame_crop_right_offset");
+                size += stream.WriteUnsignedIntGolomb(this.frame_crop_top_offset, "frame_crop_top_offset");
+                size += stream.WriteUnsignedIntGolomb(this.frame_crop_bottom_offset, "frame_crop_bottom_offset");
             }
-            size += stream.WriteUnsignedInt(1, this.vui_parameters_present_flag);
+            size += stream.WriteUnsignedInt(1, this.vui_parameters_present_flag, "vui_parameters_present_flag");
 
             if (vui_parameters_present_flag != 0)
             {
-                size += stream.WriteClass<VuiParameters>(context, this.vui_parameters);
+                size += stream.WriteClass<VuiParameters>(context, this.vui_parameters, "vui_parameters");
             }
 
             return size;
@@ -695,7 +695,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
 
                 if (nextScale != 0)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.delta_scale[j]);
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_scale[j], "delta_scale");
                     nextScale = (uint)(lastScale + delta_scale[j] + 256) % 256;
                     useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? (uint)1 : (uint)0;
                 }
@@ -721,7 +721,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
 
                 if (nextScale != 0)
                 {
-                    size += stream.WriteSignedIntGolomb(this.delta_scale[j]);
+                    size += stream.WriteSignedIntGolomb(this.delta_scale[j], "delta_scale");
                     nextScale = (uint)(lastScale + delta_scale[j] + 256) % 256;
                     useDefaultScalingMatrixFlag = (j == 0 && nextScale == 0) ? (uint)1 : (uint)0;
                 }
@@ -781,19 +781,19 @@ seq_parameter_set_extension_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
-            size += stream.ReadUnsignedIntGolomb(size, out this.aux_format_idc);
+            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id");
+            size += stream.ReadUnsignedIntGolomb(size, out this.aux_format_idc, "aux_format_idc");
 
             if (aux_format_idc != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.bit_depth_aux_minus8);
-                size += stream.ReadUnsignedInt(size, 1, out this.alpha_incr_flag);
-                size += stream.ReadUnsignedIntVariable(size, (this.bit_depth_aux_minus8 + 9), out this.alpha_opaque_value);
-                size += stream.ReadUnsignedIntVariable(size, (this.bit_depth_aux_minus8 + 9), out this.alpha_transparent_value);
+                size += stream.ReadUnsignedIntGolomb(size, out this.bit_depth_aux_minus8, "bit_depth_aux_minus8");
+                size += stream.ReadUnsignedInt(size, 1, out this.alpha_incr_flag, "alpha_incr_flag");
+                size += stream.ReadUnsignedIntVariable(size, (this.bit_depth_aux_minus8 + 9), out this.alpha_opaque_value, "alpha_opaque_value");
+                size += stream.ReadUnsignedIntVariable(size, (this.bit_depth_aux_minus8 + 9), out this.alpha_transparent_value, "alpha_transparent_value");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.additional_extension_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.additional_extension_flag, "additional_extension_flag");
             this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -802,18 +802,18 @@ seq_parameter_set_extension_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
-            size += stream.WriteUnsignedIntGolomb(this.aux_format_idc);
+            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id, "seq_parameter_set_id");
+            size += stream.WriteUnsignedIntGolomb(this.aux_format_idc, "aux_format_idc");
 
             if (aux_format_idc != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.bit_depth_aux_minus8);
-                size += stream.WriteUnsignedInt(1, this.alpha_incr_flag);
-                size += stream.WriteUnsignedIntVariable((this.bit_depth_aux_minus8 + 9), this.alpha_opaque_value);
-                size += stream.WriteUnsignedIntVariable((this.bit_depth_aux_minus8 + 9), this.alpha_transparent_value);
+                size += stream.WriteUnsignedIntGolomb(this.bit_depth_aux_minus8, "bit_depth_aux_minus8");
+                size += stream.WriteUnsignedInt(1, this.alpha_incr_flag, "alpha_incr_flag");
+                size += stream.WriteUnsignedIntVariable((this.bit_depth_aux_minus8 + 9), this.alpha_opaque_value, "alpha_opaque_value");
+                size += stream.WriteUnsignedIntVariable((this.bit_depth_aux_minus8 + 9), this.alpha_transparent_value, "alpha_transparent_value");
             }
-            size += stream.WriteUnsignedInt(1, this.additional_extension_flag);
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            size += stream.WriteUnsignedInt(1, this.additional_extension_flag, "additional_extension_flag");
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -896,49 +896,49 @@ subset_seq_parameter_set_rbsp() {
 
             int whileIndex = -1;
             this.seq_parameter_set_data = new SeqParameterSetData();
-            size += stream.ReadClass<SeqParameterSetData>(size, context, this.seq_parameter_set_data);
+            size += stream.ReadClass<SeqParameterSetData>(size, context, this.seq_parameter_set_data, "seq_parameter_set_data");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 83 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 86)
             {
                 this.seq_parameter_set_svc_extension = new SeqParameterSetSvcExtension();
-                size += stream.ReadClass<SeqParameterSetSvcExtension>(size, context, this.seq_parameter_set_svc_extension); // specified in Annex G 
-                size += stream.ReadUnsignedInt(size, 1, out this.svc_vui_parameters_present_flag);
+                size += stream.ReadClass<SeqParameterSetSvcExtension>(size, context, this.seq_parameter_set_svc_extension, "seq_parameter_set_svc_extension"); // specified in Annex G 
+                size += stream.ReadUnsignedInt(size, 1, out this.svc_vui_parameters_present_flag, "svc_vui_parameters_present_flag");
 
                 if (svc_vui_parameters_present_flag == 1)
                 {
                     this.svc_vui_parameters_extension = new SvcVuiParametersExtension();
-                    size += stream.ReadClass<SvcVuiParametersExtension>(size, context, this.svc_vui_parameters_extension); // specified in Annex G 
+                    size += stream.ReadClass<SvcVuiParametersExtension>(size, context, this.svc_vui_parameters_extension, "svc_vui_parameters_extension"); // specified in Annex G 
                 }
             }
             else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 118 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 128 ||
   ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 134)
             {
-                size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
+                size += stream.ReadFixed(size, 1, out this.bit_equal_to_one, "bit_equal_to_one"); // equal to 1 
                 this.seq_parameter_set_mvc_extension = new SeqParameterSetMvcExtension();
-                size += stream.ReadClass<SeqParameterSetMvcExtension>(size, context, this.seq_parameter_set_mvc_extension); // specified in Annex H 
-                size += stream.ReadUnsignedInt(size, 1, out this.mvc_vui_parameters_present_flag);
+                size += stream.ReadClass<SeqParameterSetMvcExtension>(size, context, this.seq_parameter_set_mvc_extension, "seq_parameter_set_mvc_extension"); // specified in Annex H 
+                size += stream.ReadUnsignedInt(size, 1, out this.mvc_vui_parameters_present_flag, "mvc_vui_parameters_present_flag");
 
                 if (mvc_vui_parameters_present_flag == 1)
                 {
                     this.mvc_vui_parameters_extension = new MvcVuiParametersExtension();
-                    size += stream.ReadClass<MvcVuiParametersExtension>(size, context, this.mvc_vui_parameters_extension); // specified in Annex H 
+                    size += stream.ReadClass<MvcVuiParametersExtension>(size, context, this.mvc_vui_parameters_extension, "mvc_vui_parameters_extension"); // specified in Annex H 
                 }
             }
             else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 138 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 135)
             {
-                size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
+                size += stream.ReadFixed(size, 1, out this.bit_equal_to_one, "bit_equal_to_one"); // equal to 1 
                 this.seq_parameter_set_mvcd_extension = new SeqParameterSetMvcdExtension();
-                size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
+                size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, context, this.seq_parameter_set_mvcd_extension, "seq_parameter_set_mvcd_extension"); // specified in Annex I 
             }
             else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 139)
             {
-                size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
+                size += stream.ReadFixed(size, 1, out this.bit_equal_to_one, "bit_equal_to_one"); // equal to 1 
                 this.seq_parameter_set_mvcd_extension = new SeqParameterSetMvcdExtension();
-                size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
+                size += stream.ReadClass<SeqParameterSetMvcdExtension>(size, context, this.seq_parameter_set_mvcd_extension, "seq_parameter_set_mvcd_extension"); // specified in Annex I 
                 this.seq_parameter_set_3davc_extension = new SeqParameterSet3davcExtension();
-                size += stream.ReadClass<SeqParameterSet3davcExtension>(size, context, this.seq_parameter_set_3davc_extension); // specified in Annex J 
+                size += stream.ReadClass<SeqParameterSet3davcExtension>(size, context, this.seq_parameter_set_3davc_extension, "seq_parameter_set_3davc_extension"); // specified in Annex J 
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.additional_extension2_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.additional_extension2_flag, "additional_extension2_flag");
 
             if (additional_extension2_flag == 1)
             {
@@ -947,11 +947,11 @@ subset_seq_parameter_set_rbsp() {
                 {
                     whileIndex++;
 
-                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_extension2_data_flag);
+                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_extension2_data_flag, "additional_extension2_data_flag");
                 }
             }
             this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -961,42 +961,42 @@ subset_seq_parameter_set_rbsp() {
             ulong size = 0;
 
             int whileIndex = -1;
-            size += stream.WriteClass<SeqParameterSetData>(context, this.seq_parameter_set_data);
+            size += stream.WriteClass<SeqParameterSetData>(context, this.seq_parameter_set_data, "seq_parameter_set_data");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 83 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 86)
             {
-                size += stream.WriteClass<SeqParameterSetSvcExtension>(context, this.seq_parameter_set_svc_extension); // specified in Annex G 
-                size += stream.WriteUnsignedInt(1, this.svc_vui_parameters_present_flag);
+                size += stream.WriteClass<SeqParameterSetSvcExtension>(context, this.seq_parameter_set_svc_extension, "seq_parameter_set_svc_extension"); // specified in Annex G 
+                size += stream.WriteUnsignedInt(1, this.svc_vui_parameters_present_flag, "svc_vui_parameters_present_flag");
 
                 if (svc_vui_parameters_present_flag == 1)
                 {
-                    size += stream.WriteClass<SvcVuiParametersExtension>(context, this.svc_vui_parameters_extension); // specified in Annex G 
+                    size += stream.WriteClass<SvcVuiParametersExtension>(context, this.svc_vui_parameters_extension, "svc_vui_parameters_extension"); // specified in Annex G 
                 }
             }
             else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 118 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 128 ||
   ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 134)
             {
-                size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
-                size += stream.WriteClass<SeqParameterSetMvcExtension>(context, this.seq_parameter_set_mvc_extension); // specified in Annex H 
-                size += stream.WriteUnsignedInt(1, this.mvc_vui_parameters_present_flag);
+                size += stream.WriteFixed(1, this.bit_equal_to_one, "bit_equal_to_one"); // equal to 1 
+                size += stream.WriteClass<SeqParameterSetMvcExtension>(context, this.seq_parameter_set_mvc_extension, "seq_parameter_set_mvc_extension"); // specified in Annex H 
+                size += stream.WriteUnsignedInt(1, this.mvc_vui_parameters_present_flag, "mvc_vui_parameters_present_flag");
 
                 if (mvc_vui_parameters_present_flag == 1)
                 {
-                    size += stream.WriteClass<MvcVuiParametersExtension>(context, this.mvc_vui_parameters_extension); // specified in Annex H 
+                    size += stream.WriteClass<MvcVuiParametersExtension>(context, this.mvc_vui_parameters_extension, "mvc_vui_parameters_extension"); // specified in Annex H 
                 }
             }
             else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 138 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 135)
             {
-                size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
-                size += stream.WriteClass<SeqParameterSetMvcdExtension>(context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
+                size += stream.WriteFixed(1, this.bit_equal_to_one, "bit_equal_to_one"); // equal to 1 
+                size += stream.WriteClass<SeqParameterSetMvcdExtension>(context, this.seq_parameter_set_mvcd_extension, "seq_parameter_set_mvcd_extension"); // specified in Annex I 
             }
             else if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 139)
             {
-                size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
-                size += stream.WriteClass<SeqParameterSetMvcdExtension>(context, this.seq_parameter_set_mvcd_extension); // specified in Annex I 
-                size += stream.WriteClass<SeqParameterSet3davcExtension>(context, this.seq_parameter_set_3davc_extension); // specified in Annex J 
+                size += stream.WriteFixed(1, this.bit_equal_to_one, "bit_equal_to_one"); // equal to 1 
+                size += stream.WriteClass<SeqParameterSetMvcdExtension>(context, this.seq_parameter_set_mvcd_extension, "seq_parameter_set_mvcd_extension"); // specified in Annex I 
+                size += stream.WriteClass<SeqParameterSet3davcExtension>(context, this.seq_parameter_set_3davc_extension, "seq_parameter_set_3davc_extension"); // specified in Annex J 
             }
-            size += stream.WriteUnsignedInt(1, this.additional_extension2_flag);
+            size += stream.WriteUnsignedInt(1, this.additional_extension2_flag, "additional_extension2_flag");
 
             if (additional_extension2_flag == 1)
             {
@@ -1005,10 +1005,10 @@ subset_seq_parameter_set_rbsp() {
                 {
                     whileIndex++;
 
-                    size += stream.WriteUnsignedInt(1, whileIndex, this.additional_extension2_data_flag);
+                    size += stream.WriteUnsignedInt(1, whileIndex, this.additional_extension2_data_flag, "additional_extension2_data_flag");
                 }
             }
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1153,15 +1153,15 @@ pic_parameter_set_rbsp() {
 
             uint iGroup = 0;
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
-            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.entropy_coding_mode_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_pic_order_in_frame_present_flag);
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_slice_groups_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id, "pic_parameter_set_id");
+            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.entropy_coding_mode_flag, "entropy_coding_mode_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_pic_order_in_frame_present_flag, "bottom_field_pic_order_in_frame_present_flag");
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_slice_groups_minus1, "num_slice_groups_minus1");
 
             if (num_slice_groups_minus1 > 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.slice_group_map_type);
+                size += stream.ReadUnsignedIntGolomb(size, out this.slice_group_map_type, "slice_group_map_type");
 
                 if (slice_group_map_type == 0)
                 {
@@ -1169,7 +1169,7 @@ pic_parameter_set_rbsp() {
                     this.run_length_minus1 = new uint[num_slice_groups_minus1 + 1];
                     for (iGroup = 0; iGroup <= num_slice_groups_minus1; iGroup++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.run_length_minus1[iGroup]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.run_length_minus1[iGroup], "run_length_minus1");
                     }
                 }
                 else if (slice_group_map_type == 2)
@@ -1179,43 +1179,43 @@ pic_parameter_set_rbsp() {
                     this.bottom_right = new uint[num_slice_groups_minus1 + 1];
                     for (iGroup = 0; iGroup < num_slice_groups_minus1; iGroup++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.top_left[iGroup]);
-                        size += stream.ReadUnsignedIntGolomb(size, out this.bottom_right[iGroup]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.top_left[iGroup], "top_left");
+                        size += stream.ReadUnsignedIntGolomb(size, out this.bottom_right[iGroup], "bottom_right");
                     }
                 }
                 else if (slice_group_map_type == 3 ||
      slice_group_map_type == 4 ||
      slice_group_map_type == 5)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.slice_group_change_direction_flag);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.slice_group_change_rate_minus1);
+                    size += stream.ReadUnsignedInt(size, 1, out this.slice_group_change_direction_flag, "slice_group_change_direction_flag");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.slice_group_change_rate_minus1, "slice_group_change_rate_minus1");
                 }
                 else if (slice_group_map_type == 6)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.pic_size_in_map_units_minus1);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.pic_size_in_map_units_minus1, "pic_size_in_map_units_minus1");
 
                     this.slice_group_id = new uint[pic_size_in_map_units_minus1 + 1];
                     for (i = 0; i <= pic_size_in_map_units_minus1; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i], "slice_group_id");
                     }
                 }
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_default_active_minus1);
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_default_active_minus1);
-            size += stream.ReadUnsignedInt(size, 1, out this.weighted_pred_flag);
-            size += stream.ReadUnsignedInt(size, 2, out this.weighted_bipred_idc);
-            size += stream.ReadSignedIntGolomb(size, out this.pic_init_qp_minus26);
-            size += stream.ReadSignedIntGolomb(size, out this.pic_init_qs_minus26);
-            size += stream.ReadSignedIntGolomb(size, out this.chroma_qp_index_offset);
-            size += stream.ReadUnsignedInt(size, 1, out this.deblocking_filter_control_present_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.constrained_intra_pred_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.redundant_pic_cnt_present_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_default_active_minus1, "num_ref_idx_l0_default_active_minus1");
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_default_active_minus1, "num_ref_idx_l1_default_active_minus1");
+            size += stream.ReadUnsignedInt(size, 1, out this.weighted_pred_flag, "weighted_pred_flag");
+            size += stream.ReadUnsignedInt(size, 2, out this.weighted_bipred_idc, "weighted_bipred_idc");
+            size += stream.ReadSignedIntGolomb(size, out this.pic_init_qp_minus26, "pic_init_qp_minus26");
+            size += stream.ReadSignedIntGolomb(size, out this.pic_init_qs_minus26, "pic_init_qs_minus26");
+            size += stream.ReadSignedIntGolomb(size, out this.chroma_qp_index_offset, "chroma_qp_index_offset");
+            size += stream.ReadUnsignedInt(size, 1, out this.deblocking_filter_control_present_flag, "deblocking_filter_control_present_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.constrained_intra_pred_flag, "constrained_intra_pred_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.redundant_pic_cnt_present_flag, "redundant_pic_cnt_present_flag");
 
             if (stream.ReadMoreRbspData(this))
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.transform_8x8_mode_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.pic_scaling_matrix_present_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.transform_8x8_mode_flag, "transform_8x8_mode_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.pic_scaling_matrix_present_flag, "pic_scaling_matrix_present_flag");
 
                 if (pic_scaling_matrix_present_flag != 0)
                 {
@@ -1230,7 +1230,7 @@ pic_parameter_set_rbsp() {
      ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
      i++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.pic_scaling_list_present_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.pic_scaling_list_present_flag[i], "pic_scaling_list_present_flag");
 
                         if (pic_scaling_list_present_flag[i] != 0)
                         {
@@ -1238,20 +1238,20 @@ pic_parameter_set_rbsp() {
                             if (i < 6)
                             {
                                 this.scaling_list[i] = new ScalingList(new uint[6 * 16], 16, 0);
-                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list[i]);
+                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list[i], "scaling_list");
                             }
                             else
                             {
                                 this.scaling_list0[i] = new ScalingList(new uint[6 * 64], 64, 0);
-                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list0[i]);
+                                size += stream.ReadClass<ScalingList>(size, context, this.scaling_list0[i], "scaling_list0");
                             }
                         }
                     }
                 }
-                size += stream.ReadSignedIntGolomb(size, out this.second_chroma_qp_index_offset);
+                size += stream.ReadSignedIntGolomb(size, out this.second_chroma_qp_index_offset, "second_chroma_qp_index_offset");
             }
             this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1262,22 +1262,22 @@ pic_parameter_set_rbsp() {
 
             uint iGroup = 0;
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
-            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
-            size += stream.WriteUnsignedInt(1, this.entropy_coding_mode_flag);
-            size += stream.WriteUnsignedInt(1, this.bottom_field_pic_order_in_frame_present_flag);
-            size += stream.WriteUnsignedIntGolomb(this.num_slice_groups_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id, "pic_parameter_set_id");
+            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id, "seq_parameter_set_id");
+            size += stream.WriteUnsignedInt(1, this.entropy_coding_mode_flag, "entropy_coding_mode_flag");
+            size += stream.WriteUnsignedInt(1, this.bottom_field_pic_order_in_frame_present_flag, "bottom_field_pic_order_in_frame_present_flag");
+            size += stream.WriteUnsignedIntGolomb(this.num_slice_groups_minus1, "num_slice_groups_minus1");
 
             if (num_slice_groups_minus1 > 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.slice_group_map_type);
+                size += stream.WriteUnsignedIntGolomb(this.slice_group_map_type, "slice_group_map_type");
 
                 if (slice_group_map_type == 0)
                 {
 
                     for (iGroup = 0; iGroup <= num_slice_groups_minus1; iGroup++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.run_length_minus1[iGroup]);
+                        size += stream.WriteUnsignedIntGolomb(this.run_length_minus1[iGroup], "run_length_minus1");
                     }
                 }
                 else if (slice_group_map_type == 2)
@@ -1285,42 +1285,42 @@ pic_parameter_set_rbsp() {
 
                     for (iGroup = 0; iGroup < num_slice_groups_minus1; iGroup++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.top_left[iGroup]);
-                        size += stream.WriteUnsignedIntGolomb(this.bottom_right[iGroup]);
+                        size += stream.WriteUnsignedIntGolomb(this.top_left[iGroup], "top_left");
+                        size += stream.WriteUnsignedIntGolomb(this.bottom_right[iGroup], "bottom_right");
                     }
                 }
                 else if (slice_group_map_type == 3 ||
      slice_group_map_type == 4 ||
      slice_group_map_type == 5)
                 {
-                    size += stream.WriteUnsignedInt(1, this.slice_group_change_direction_flag);
-                    size += stream.WriteUnsignedIntGolomb(this.slice_group_change_rate_minus1);
+                    size += stream.WriteUnsignedInt(1, this.slice_group_change_direction_flag, "slice_group_change_direction_flag");
+                    size += stream.WriteUnsignedIntGolomb(this.slice_group_change_rate_minus1, "slice_group_change_rate_minus1");
                 }
                 else if (slice_group_map_type == 6)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.pic_size_in_map_units_minus1);
+                    size += stream.WriteUnsignedIntGolomb(this.pic_size_in_map_units_minus1, "pic_size_in_map_units_minus1");
 
                     for (i = 0; i <= pic_size_in_map_units_minus1; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i]);
+                        size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i], "slice_group_id");
                     }
                 }
             }
-            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_default_active_minus1);
-            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_default_active_minus1);
-            size += stream.WriteUnsignedInt(1, this.weighted_pred_flag);
-            size += stream.WriteUnsignedInt(2, this.weighted_bipred_idc);
-            size += stream.WriteSignedIntGolomb(this.pic_init_qp_minus26);
-            size += stream.WriteSignedIntGolomb(this.pic_init_qs_minus26);
-            size += stream.WriteSignedIntGolomb(this.chroma_qp_index_offset);
-            size += stream.WriteUnsignedInt(1, this.deblocking_filter_control_present_flag);
-            size += stream.WriteUnsignedInt(1, this.constrained_intra_pred_flag);
-            size += stream.WriteUnsignedInt(1, this.redundant_pic_cnt_present_flag);
+            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_default_active_minus1, "num_ref_idx_l0_default_active_minus1");
+            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_default_active_minus1, "num_ref_idx_l1_default_active_minus1");
+            size += stream.WriteUnsignedInt(1, this.weighted_pred_flag, "weighted_pred_flag");
+            size += stream.WriteUnsignedInt(2, this.weighted_bipred_idc, "weighted_bipred_idc");
+            size += stream.WriteSignedIntGolomb(this.pic_init_qp_minus26, "pic_init_qp_minus26");
+            size += stream.WriteSignedIntGolomb(this.pic_init_qs_minus26, "pic_init_qs_minus26");
+            size += stream.WriteSignedIntGolomb(this.chroma_qp_index_offset, "chroma_qp_index_offset");
+            size += stream.WriteUnsignedInt(1, this.deblocking_filter_control_present_flag, "deblocking_filter_control_present_flag");
+            size += stream.WriteUnsignedInt(1, this.constrained_intra_pred_flag, "constrained_intra_pred_flag");
+            size += stream.WriteUnsignedInt(1, this.redundant_pic_cnt_present_flag, "redundant_pic_cnt_present_flag");
 
             if (stream.WriteMoreRbspData(this))
             {
-                size += stream.WriteUnsignedInt(1, this.transform_8x8_mode_flag);
-                size += stream.WriteUnsignedInt(1, this.pic_scaling_matrix_present_flag);
+                size += stream.WriteUnsignedInt(1, this.transform_8x8_mode_flag, "transform_8x8_mode_flag");
+                size += stream.WriteUnsignedInt(1, this.pic_scaling_matrix_present_flag, "pic_scaling_matrix_present_flag");
 
                 if (pic_scaling_matrix_present_flag != 0)
                 {
@@ -1329,25 +1329,25 @@ pic_parameter_set_rbsp() {
      ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc != 3) ? 2 : 6) * transform_8x8_mode_flag;
      i++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.pic_scaling_list_present_flag[i]);
+                        size += stream.WriteUnsignedInt(1, this.pic_scaling_list_present_flag[i], "pic_scaling_list_present_flag");
 
                         if (pic_scaling_list_present_flag[i] != 0)
                         {
 
                             if (i < 6)
                             {
-                                size += stream.WriteClass<ScalingList>(context, this.scaling_list[i]);
+                                size += stream.WriteClass<ScalingList>(context, this.scaling_list[i], "scaling_list");
                             }
                             else
                             {
-                                size += stream.WriteClass<ScalingList>(context, this.scaling_list0[i]);
+                                size += stream.WriteClass<ScalingList>(context, this.scaling_list0[i], "scaling_list0");
                             }
                         }
                     }
                 }
-                size += stream.WriteSignedIntGolomb(this.second_chroma_qp_index_offset);
+                size += stream.WriteSignedIntGolomb(this.second_chroma_qp_index_offset, "second_chroma_qp_index_offset");
             }
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1391,10 +1391,10 @@ sei_rbsp() {
                 whileIndex++;
 
                 this.sei_message.Add(whileIndex, new SeiMessage());
-                size += stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex]);
+                size += stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex], "sei_message");
             } while (stream.ReadMoreRbspData(this));
             this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1409,9 +1409,9 @@ sei_rbsp() {
             {
                 whileIndex++;
 
-                size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message);
+                size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message, "sei_message");
             } while (stream.WriteMoreRbspData(this));
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1471,10 +1471,10 @@ sei_message() {
             {
                 whileIndex++;
 
-                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte); // equal to 0xFF 
+                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
                 payloadType += 255;
             }
-            size += stream.ReadUnsignedInt(size, 8, out this.last_payload_type_byte);
+            size += stream.ReadUnsignedInt(size, 8, out this.last_payload_type_byte, "last_payload_type_byte");
             payloadType += last_payload_type_byte;
             payloadSize = 0;
 
@@ -1482,14 +1482,14 @@ sei_message() {
             {
                 whileIndex++;
 
-                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte); // equal to 0xFF 
+                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
                 payloadSize += 255;
             }
-            size += stream.ReadUnsignedInt(size, 8, out this.last_payload_size_byte);
+            size += stream.ReadUnsignedInt(size, 8, out this.last_payload_size_byte, "last_payload_size_byte");
             payloadSize += last_payload_size_byte;
             stream.MarkCurrentBitsPosition();
             this.sei_payload = new SeiPayload(payloadType, payloadSize);
-            size += stream.ReadClass<SeiPayload>(size, context, this.sei_payload);
+            size += stream.ReadClass<SeiPayload>(size, context, this.sei_payload, "sei_payload");
             ((H264Context)context).SetSeiPayload(sei_payload);
 
             return size;
@@ -1508,10 +1508,10 @@ sei_message() {
             {
                 whileIndex++;
 
-                size += stream.WriteFixed(8, whileIndex, this.ff_byte); // equal to 0xFF 
+                size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
                 payloadType += 255;
             }
-            size += stream.WriteUnsignedInt(8, this.last_payload_type_byte);
+            size += stream.WriteUnsignedInt(8, this.last_payload_type_byte, "last_payload_type_byte");
             payloadType += last_payload_type_byte;
             payloadSize = 0;
 
@@ -1519,13 +1519,13 @@ sei_message() {
             {
                 whileIndex++;
 
-                size += stream.WriteFixed(8, whileIndex, this.ff_byte); // equal to 0xFF 
+                size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
                 payloadSize += 255;
             }
-            size += stream.WriteUnsignedInt(8, this.last_payload_size_byte);
+            size += stream.WriteUnsignedInt(8, this.last_payload_size_byte, "last_payload_size_byte");
             payloadSize += last_payload_size_byte;
             stream.MarkCurrentBitsPosition();
-            size += stream.WriteClass<SeiPayload>(context, this.sei_payload);
+            size += stream.WriteClass<SeiPayload>(context, this.sei_payload, "sei_payload");
             ((H264Context)context).SetSeiPayload(sei_payload);
 
             return size;
@@ -1560,9 +1560,9 @@ access_unit_delimiter_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 3, out this.primary_pic_type);
+            size += stream.ReadUnsignedInt(size, 3, out this.primary_pic_type, "primary_pic_type");
             this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1571,8 +1571,8 @@ access_unit_delimiter_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(3, this.primary_pic_type);
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            size += stream.WriteUnsignedInt(3, this.primary_pic_type, "primary_pic_type");
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1683,10 +1683,10 @@ filler_data_rbsp() {
             {
                 whileIndex++;
 
-                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte); // equal to 0xFF 
+                size += stream.ReadFixed(size, 8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
             }
             this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1701,9 +1701,9 @@ filler_data_rbsp() {
             {
                 whileIndex++;
 
-                size += stream.WriteFixed(8, whileIndex, this.ff_byte); // equal to 0xFF 
+                size += stream.WriteFixed(8, whileIndex, this.ff_byte, "ff_byte"); // equal to 0xFF 
             }
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -1737,7 +1737,7 @@ slice_layer_without_partitioning_rbsp() {
             ulong size = 0;
 
             this.slice_header = new SliceHeader();
-            size += stream.ReadClass<SliceHeader>(size, context, this.slice_header);
+            size += stream.ReadClass<SliceHeader>(size, context, this.slice_header, "slice_header");
             /* slice_data() */
 
             /*  all categories of slice_data() syntax  */
@@ -1754,7 +1754,7 @@ slice_layer_without_partitioning_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.WriteClass<SliceHeader>(context, this.slice_header);
+            size += stream.WriteClass<SliceHeader>(context, this.slice_header, "slice_header");
             /* slice_data() */
 
             /*  all categories of slice_data() syntax  */
@@ -1799,8 +1799,8 @@ slice_data_partition_a_layer_rbsp() {
             ulong size = 0;
 
             this.slice_header = new SliceHeader();
-            size += stream.ReadClass<SliceHeader>(size, context, this.slice_header);
-            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id);
+            size += stream.ReadClass<SliceHeader>(size, context, this.slice_header, "slice_header");
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id, "slice_id");
             /* slice_data() */
 
             /*  only category 2 parts of slice_data() syntax  */
@@ -1817,8 +1817,8 @@ slice_data_partition_a_layer_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.WriteClass<SliceHeader>(context, this.slice_header);
-            size += stream.WriteUnsignedIntGolomb(this.slice_id);
+            size += stream.WriteClass<SliceHeader>(context, this.slice_header, "slice_header");
+            size += stream.WriteUnsignedIntGolomb(this.slice_id, "slice_id");
             /* slice_data() */
 
             /*  only category 2 parts of slice_data() syntax  */
@@ -1867,16 +1867,16 @@ slice_data_partition_b_layer_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id, "slice_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
-                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id, "colour_plane_id");
             }
 
             if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt, "redundant_pic_cnt");
             }
             /* slice_data() */
 
@@ -1894,16 +1894,16 @@ slice_data_partition_b_layer_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.slice_id);
+            size += stream.WriteUnsignedIntGolomb(this.slice_id, "slice_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
-                size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+                size += stream.WriteUnsignedInt(2, this.colour_plane_id, "colour_plane_id");
             }
 
             if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt, "redundant_pic_cnt");
             }
             /* slice_data() */
 
@@ -1953,16 +1953,16 @@ slice_data_partition_c_layer_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_id, "slice_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
-                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id, "colour_plane_id");
             }
 
             if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt, "redundant_pic_cnt");
             }
             /* slice_data() */
 
@@ -1980,16 +1980,16 @@ slice_data_partition_c_layer_rbsp() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.slice_id);
+            size += stream.WriteUnsignedIntGolomb(this.slice_id, "slice_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
-                size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+                size += stream.WriteUnsignedInt(2, this.colour_plane_id, "colour_plane_id");
             }
 
             if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt, "redundant_pic_cnt");
             }
             /* slice_data() */
 
@@ -2034,13 +2034,13 @@ rbsp_trailing_bits() {
             ulong size = 0;
 
             int whileIndex = -1;
-            size += stream.ReadFixed(size, 1, out this.rbsp_stop_one_bit); // equal to 1 
+            size += stream.ReadFixed(size, 1, out this.rbsp_stop_one_bit, "rbsp_stop_one_bit"); // equal to 1 
 
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
-                size += stream.ReadFixed(size, 1, whileIndex, this.rbsp_alignment_zero_bit); // equal to 0 
+                size += stream.ReadFixed(size, 1, whileIndex, this.rbsp_alignment_zero_bit, "rbsp_alignment_zero_bit"); // equal to 0 
             }
 
             return size;
@@ -2051,13 +2051,13 @@ rbsp_trailing_bits() {
             ulong size = 0;
 
             int whileIndex = -1;
-            size += stream.WriteFixed(1, this.rbsp_stop_one_bit); // equal to 1 
+            size += stream.WriteFixed(1, this.rbsp_stop_one_bit, "rbsp_stop_one_bit"); // equal to 1 
 
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
-                size += stream.WriteFixed(1, whileIndex, this.rbsp_alignment_zero_bit); // equal to 0 
+                size += stream.WriteFixed(1, whileIndex, this.rbsp_alignment_zero_bit, "rbsp_alignment_zero_bit"); // equal to 0 
             }
 
             return size;
@@ -2094,7 +2094,7 @@ prefix_nal_unit_rbsp() {
             if (((H264Context)context).NalHeader.SvcExtensionFlag != 0)
             {
                 this.prefix_nal_unit_svc = new PrefixNalUnitSvc();
-                size += stream.ReadClass<PrefixNalUnitSvc>(size, context, this.prefix_nal_unit_svc); // specified in Annex G 
+                size += stream.ReadClass<PrefixNalUnitSvc>(size, context, this.prefix_nal_unit_svc, "prefix_nal_unit_svc"); // specified in Annex G 
             }
 
             return size;
@@ -2107,7 +2107,7 @@ prefix_nal_unit_rbsp() {
 
             if (((H264Context)context).NalHeader.SvcExtensionFlag != 0)
             {
-                size += stream.WriteClass<PrefixNalUnitSvc>(context, this.prefix_nal_unit_svc); // specified in Annex G 
+                size += stream.WriteClass<PrefixNalUnitSvc>(context, this.prefix_nal_unit_svc, "prefix_nal_unit_svc"); // specified in Annex G 
             }
 
             return size;
@@ -2158,7 +2158,7 @@ slice_layer_extension_rbsp() {
             if (((H264Context)context).NalHeader.SvcExtensionFlag != 0)
             {
                 this.slice_header_in_scalable_extension = new SliceHeaderInScalableExtension();
-                size += stream.ReadClass<SliceHeaderInScalableExtension>(size, context, this.slice_header_in_scalable_extension); // specified in Annex G 
+                size += stream.ReadClass<SliceHeaderInScalableExtension>(size, context, this.slice_header_in_scalable_extension, "slice_header_in_scalable_extension"); // specified in Annex G 
                 /* if (!slice_skip_flag) */
 
                 /* slice_data_in_scalable_extension() */
@@ -2171,7 +2171,7 @@ slice_layer_extension_rbsp() {
             else if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0)
             {
                 this.slice_header_in_3davc_extension = new SliceHeaderIn3davcExtension();
-                size += stream.ReadClass<SliceHeaderIn3davcExtension>(size, context, this.slice_header_in_3davc_extension); // specified in Annex J 
+                size += stream.ReadClass<SliceHeaderIn3davcExtension>(size, context, this.slice_header_in_3davc_extension, "slice_header_in_3davc_extension"); // specified in Annex J 
                 /* slice_data_in_3davc_extension() */
 
                 /*  specified in Annex J  */
@@ -2182,7 +2182,7 @@ slice_layer_extension_rbsp() {
             else
             {
                 this.slice_header = new SliceHeader();
-                size += stream.ReadClass<SliceHeader>(size, context, this.slice_header);
+                size += stream.ReadClass<SliceHeader>(size, context, this.slice_header, "slice_header");
                 /* slice_data() 2 | 3 | 4 */
 
             }
@@ -2199,7 +2199,7 @@ slice_layer_extension_rbsp() {
 
             if (((H264Context)context).NalHeader.SvcExtensionFlag != 0)
             {
-                size += stream.WriteClass<SliceHeaderInScalableExtension>(context, this.slice_header_in_scalable_extension); // specified in Annex G 
+                size += stream.WriteClass<SliceHeaderInScalableExtension>(context, this.slice_header_in_scalable_extension, "slice_header_in_scalable_extension"); // specified in Annex G 
                 /* if (!slice_skip_flag) */
 
                 /* slice_data_in_scalable_extension() */
@@ -2211,7 +2211,7 @@ slice_layer_extension_rbsp() {
             }
             else if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0)
             {
-                size += stream.WriteClass<SliceHeaderIn3davcExtension>(context, this.slice_header_in_3davc_extension); // specified in Annex J 
+                size += stream.WriteClass<SliceHeaderIn3davcExtension>(context, this.slice_header_in_3davc_extension, "slice_header_in_3davc_extension"); // specified in Annex J 
                 /* slice_data_in_3davc_extension() */
 
                 /*  specified in Annex J  */
@@ -2221,7 +2221,7 @@ slice_layer_extension_rbsp() {
             }
             else
             {
-                size += stream.WriteClass<SliceHeader>(context, this.slice_header);
+                size += stream.WriteClass<SliceHeader>(context, this.slice_header, "slice_header");
                 /* slice_data() 2 | 3 | 4 */
 
             }
@@ -2374,72 +2374,72 @@ slice_header() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice);
-            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
-            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice, "first_mb_in_slice");
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type, "slice_type");
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id, "pic_parameter_set_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
-                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id, "colour_plane_id");
             }
-            size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
+            size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num, "frame_num");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag, "field_pic_flag");
 
                 if (field_pic_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag, "bottom_field_flag");
                 }
             }
 
             if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
+                size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id, "idr_pic_id");
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
+                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb, "pic_order_cnt_lsb");
 
                 if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom, "delta_pic_order_cnt_bottom");
                 }
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
             {
-                size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
+                size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0], "delta_pic_order_cnt");
 
                 if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1], "delta_pic_order_cnt");
                 }
             }
 
             if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt, "redundant_pic_cnt");
             }
 
             if (H264FrameTypes.IsB(slice_type))
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag, "direct_spatial_mv_pred_flag");
             }
 
             if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
 
                 if (num_ref_idx_active_override_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1, "num_ref_idx_l0_active_minus1");
 
                     if (H264FrameTypes.IsB(slice_type))
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1, "num_ref_idx_l1_active_minus1");
                     }
                 }
             }
@@ -2447,58 +2447,58 @@ slice_header() {
             if (((H264Context)context).NalHeader.NalUnitType == 20 || ((H264Context)context).NalHeader.NalUnitType == 21)
             {
                 this.ref_pic_list_mvc_modification = new RefPicListMvcModification();
-                size += stream.ReadClass<RefPicListMvcModification>(size, context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+                size += stream.ReadClass<RefPicListMvcModification>(size, context, this.ref_pic_list_mvc_modification, "ref_pic_list_mvc_modification"); // specified in Annex H 
             }
             else
             {
                 this.ref_pic_list_modification = new RefPicListModification();
-                size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification);
+                size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification, "ref_pic_list_modification");
             }
 
             if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) ||
         (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
             {
                 this.pred_weight_table = new PredWeightTable();
-                size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
+                size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table, "pred_weight_table");
             }
 
             if (((H264Context)context).NalHeader.NalRefIdc != 0)
             {
                 this.dec_ref_pic_marking = new DecRefPicMarking();
-                size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking);
+                size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
             }
 
             if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type))
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
+                size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc, "cabac_init_idc");
             }
-            size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
+            size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta, "slice_qp_delta");
 
             if (H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsSI(slice_type))
             {
 
                 if (H264FrameTypes.IsSP(slice_type))
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag, "sp_for_switch_flag");
                 }
-                size += stream.ReadSignedIntGolomb(size, out this.slice_qs_delta);
+                size += stream.ReadSignedIntGolomb(size, out this.slice_qs_delta, "slice_qs_delta");
             }
 
             if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
+                size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc, "disable_deblocking_filter_idc");
 
                 if (disable_deblocking_filter_idc != 1)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2);
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2);
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2, "slice_alpha_c0_offset_div2");
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2, "slice_beta_offset_div2");
                 }
             }
 
             if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 &&
         ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
             {
-                size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle, "slice_group_change_cycle");
             }
 
             return size;
@@ -2508,127 +2508,127 @@ slice_header() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice);
-            size += stream.WriteUnsignedIntGolomb(this.slice_type);
-            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
+            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice, "first_mb_in_slice");
+            size += stream.WriteUnsignedIntGolomb(this.slice_type, "slice_type");
+            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id, "pic_parameter_set_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
-                size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+                size += stream.WriteUnsignedInt(2, this.colour_plane_id, "colour_plane_id");
             }
-            size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
+            size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num, "frame_num");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.field_pic_flag);
+                size += stream.WriteUnsignedInt(1, this.field_pic_flag, "field_pic_flag");
 
                 if (field_pic_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.bottom_field_flag);
+                    size += stream.WriteUnsignedInt(1, this.bottom_field_flag, "bottom_field_flag");
                 }
             }
 
             if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
+                size += stream.WriteUnsignedIntGolomb(this.idr_pic_id, "idr_pic_id");
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
+                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb, "pic_order_cnt_lsb");
 
                 if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
-                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom, "delta_pic_order_cnt_bottom");
                 }
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
             {
-                size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
+                size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0], "delta_pic_order_cnt");
 
                 if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
-                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1], "delta_pic_order_cnt");
                 }
             }
 
             if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt, "redundant_pic_cnt");
             }
 
             if (H264FrameTypes.IsB(slice_type))
             {
-                size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
+                size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag, "direct_spatial_mv_pred_flag");
             }
 
             if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
             {
-                size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
+                size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
 
                 if (num_ref_idx_active_override_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
+                    size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1, "num_ref_idx_l0_active_minus1");
 
                     if (H264FrameTypes.IsB(slice_type))
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
+                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1, "num_ref_idx_l1_active_minus1");
                     }
                 }
             }
 
             if (((H264Context)context).NalHeader.NalUnitType == 20 || ((H264Context)context).NalHeader.NalUnitType == 21)
             {
-                size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+                size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification, "ref_pic_list_mvc_modification"); // specified in Annex H 
             }
             else
             {
-                size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
+                size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification, "ref_pic_list_modification");
             }
 
             if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) ||
         (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
             {
-                size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
+                size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table, "pred_weight_table");
             }
 
             if (((H264Context)context).NalHeader.NalRefIdc != 0)
             {
-                size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+                size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
             }
 
             if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type))
             {
-                size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
+                size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc, "cabac_init_idc");
             }
-            size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
+            size += stream.WriteSignedIntGolomb(this.slice_qp_delta, "slice_qp_delta");
 
             if (H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsSI(slice_type))
             {
 
                 if (H264FrameTypes.IsSP(slice_type))
                 {
-                    size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag);
+                    size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag, "sp_for_switch_flag");
                 }
-                size += stream.WriteSignedIntGolomb(this.slice_qs_delta);
+                size += stream.WriteSignedIntGolomb(this.slice_qs_delta, "slice_qs_delta");
             }
 
             if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
+                size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc, "disable_deblocking_filter_idc");
 
                 if (disable_deblocking_filter_idc != 1)
                 {
-                    size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2);
-                    size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2);
+                    size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2, "slice_alpha_c0_offset_div2");
+                    size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2, "slice_beta_offset_div2");
                 }
             }
 
             if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 &&
         ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
             {
-                size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle, "slice_group_change_cycle");
             }
 
             return size;
@@ -2697,7 +2697,7 @@ ref_pic_list_modification() {
 
             if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 2 && ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 4)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0);
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0, "ref_pic_list_modification_flag_l0");
 
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
@@ -2706,16 +2706,16 @@ ref_pic_list_modification() {
                     {
                         whileIndex++;
 
-                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc");
 
                         if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
                     } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
@@ -2723,7 +2723,7 @@ ref_pic_list_modification() {
 
             if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1, "ref_pic_list_modification_flag_l1");
 
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
@@ -2732,16 +2732,16 @@ ref_pic_list_modification() {
                     {
                         whileIndex++;
 
-                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc");
 
                         if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
                     } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
@@ -2758,7 +2758,7 @@ ref_pic_list_modification() {
 
             if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 2 && ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 4)
             {
-                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0);
+                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0, "ref_pic_list_modification_flag_l0");
 
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
@@ -2767,16 +2767,16 @@ ref_pic_list_modification() {
                     {
                         whileIndex++;
 
-                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc");
 
                         if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
                     } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
@@ -2784,7 +2784,7 @@ ref_pic_list_modification() {
 
             if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
-                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
+                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1, "ref_pic_list_modification_flag_l1");
 
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
@@ -2793,16 +2793,16 @@ ref_pic_list_modification() {
                     {
                         whileIndex++;
 
-                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc");
 
                         if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
                     } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
@@ -2898,11 +2898,11 @@ pred_weight_table() {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.luma_log2_weight_denom);
+            size += stream.ReadUnsignedIntGolomb(size, out this.luma_log2_weight_denom, "luma_log2_weight_denom");
 
             if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom);
+                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_log2_weight_denom, "chroma_log2_weight_denom");
             }
 
             this.luma_weight_l0_flag = new byte[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
@@ -2913,17 +2913,17 @@ pred_weight_table() {
             this.chroma_offset_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)][];
             for (i = 0; i <= (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1); i++)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i], "luma_weight_l0_flag");
 
                 if (luma_weight_l0_flag[i] != 0)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.luma_weight_l0[i]);
-                    size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l0[i]);
+                    size += stream.ReadSignedIntGolomb(size, out this.luma_weight_l0[i], "luma_weight_l0");
+                    size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l0[i], "luma_offset_l0");
                 }
 
                 if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l0_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l0_flag[i], "chroma_weight_l0_flag");
 
                     if (chroma_weight_l0_flag[i] != 0)
                     {
@@ -2932,8 +2932,8 @@ pred_weight_table() {
                         this.chroma_offset_l0[i] = new int[2];
                         for (j = 0; j < 2; j++)
                         {
-                            size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l0[i][j]);
-                            size += stream.ReadSignedIntGolomb(size, out this.chroma_offset_l0[i][j]);
+                            size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l0[i][j], "chroma_weight_l0");
+                            size += stream.ReadSignedIntGolomb(size, out this.chroma_offset_l0[i][j], "chroma_offset_l0");
                         }
                     }
                 }
@@ -2950,17 +2950,17 @@ pred_weight_table() {
                 this.chroma_offset_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
                 for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i], "luma_weight_l1_flag");
 
                     if (luma_weight_l1_flag[i] != 0)
                     {
-                        size += stream.ReadSignedIntGolomb(size, out this.luma_weight_l1[i]);
-                        size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l1[i]);
+                        size += stream.ReadSignedIntGolomb(size, out this.luma_weight_l1[i], "luma_weight_l1");
+                        size += stream.ReadSignedIntGolomb(size, out this.luma_offset_l1[i], "luma_offset_l1");
                     }
 
                     if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l1_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.chroma_weight_l1_flag[i], "chroma_weight_l1_flag");
 
                         if (chroma_weight_l1_flag[i] != 0)
                         {
@@ -2969,8 +2969,8 @@ pred_weight_table() {
                             this.chroma_offset_l1[i] = new int[2];
                             for (j = 0; j < 2; j++)
                             {
-                                size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l1[i][j]);
-                                size += stream.ReadSignedIntGolomb(size, out this.chroma_offset_l1[i][j]);
+                                size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l1[i][j], "chroma_weight_l1");
+                                size += stream.ReadSignedIntGolomb(size, out this.chroma_offset_l1[i][j], "chroma_offset_l1");
                             }
                         }
                     }
@@ -2986,34 +2986,34 @@ pred_weight_table() {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.luma_log2_weight_denom);
+            size += stream.WriteUnsignedIntGolomb(this.luma_log2_weight_denom, "luma_log2_weight_denom");
 
             if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.chroma_log2_weight_denom);
+                size += stream.WriteUnsignedIntGolomb(this.chroma_log2_weight_denom, "chroma_log2_weight_denom");
             }
 
             for (i = 0; i <= (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1); i++)
             {
-                size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.luma_weight_l0_flag[i], "luma_weight_l0_flag");
 
                 if (luma_weight_l0_flag[i] != 0)
                 {
-                    size += stream.WriteSignedIntGolomb(this.luma_weight_l0[i]);
-                    size += stream.WriteSignedIntGolomb(this.luma_offset_l0[i]);
+                    size += stream.WriteSignedIntGolomb(this.luma_weight_l0[i], "luma_weight_l0");
+                    size += stream.WriteSignedIntGolomb(this.luma_offset_l0[i], "luma_offset_l0");
                 }
 
                 if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.chroma_weight_l0_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.chroma_weight_l0_flag[i], "chroma_weight_l0_flag");
 
                     if (chroma_weight_l0_flag[i] != 0)
                     {
 
                         for (j = 0; j < 2; j++)
                         {
-                            size += stream.WriteSignedIntGolomb(this.chroma_weight_l0[i][j]);
-                            size += stream.WriteSignedIntGolomb(this.chroma_offset_l0[i][j]);
+                            size += stream.WriteSignedIntGolomb(this.chroma_weight_l0[i][j], "chroma_weight_l0");
+                            size += stream.WriteSignedIntGolomb(this.chroma_offset_l0[i][j], "chroma_offset_l0");
                         }
                     }
                 }
@@ -3024,25 +3024,25 @@ pred_weight_table() {
 
                 for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
-                    size += stream.WriteUnsignedInt(1, this.luma_weight_l1_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.luma_weight_l1_flag[i], "luma_weight_l1_flag");
 
                     if (luma_weight_l1_flag[i] != 0)
                     {
-                        size += stream.WriteSignedIntGolomb(this.luma_weight_l1[i]);
-                        size += stream.WriteSignedIntGolomb(this.luma_offset_l1[i]);
+                        size += stream.WriteSignedIntGolomb(this.luma_weight_l1[i], "luma_weight_l1");
+                        size += stream.WriteSignedIntGolomb(this.luma_offset_l1[i], "luma_offset_l1");
                     }
 
                     if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) != 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.chroma_weight_l1_flag[i]);
+                        size += stream.WriteUnsignedInt(1, this.chroma_weight_l1_flag[i], "chroma_weight_l1_flag");
 
                         if (chroma_weight_l1_flag[i] != 0)
                         {
 
                             for (j = 0; j < 2; j++)
                             {
-                                size += stream.WriteSignedIntGolomb(this.chroma_weight_l1[i][j]);
-                                size += stream.WriteSignedIntGolomb(this.chroma_offset_l1[i][j]);
+                                size += stream.WriteSignedIntGolomb(this.chroma_weight_l1[i][j], "chroma_weight_l1");
+                                size += stream.WriteSignedIntGolomb(this.chroma_offset_l1[i][j], "chroma_offset_l1");
                             }
                         }
                     }
@@ -3117,12 +3117,12 @@ dec_ref_pic_marking() {
 
             if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.long_term_reference_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag, "no_output_of_prior_pics_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.long_term_reference_flag, "long_term_reference_flag");
             }
             else
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.adaptive_ref_pic_marking_mode_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.adaptive_ref_pic_marking_mode_flag, "adaptive_ref_pic_marking_mode_flag");
 
                 if (adaptive_ref_pic_marking_mode_flag != 0)
                 {
@@ -3131,28 +3131,28 @@ dec_ref_pic_marking() {
                     {
                         whileIndex++;
 
-                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.memory_management_control_operation);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.memory_management_control_operation, "memory_management_control_operation");
 
                         if (memory_management_control_operation[whileIndex] == 1 ||
      memory_management_control_operation[whileIndex] == 3)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.difference_of_pic_nums_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.difference_of_pic_nums_minus1, "difference_of_pic_nums_minus1");
                         }
 
                         if (memory_management_control_operation[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
 
                         if (memory_management_control_operation[whileIndex] == 3 ||
      memory_management_control_operation[whileIndex] == 6)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_frame_idx);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_frame_idx, "long_term_frame_idx");
                         }
 
                         if (memory_management_control_operation[whileIndex] == 4)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.max_long_term_frame_idx_plus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.max_long_term_frame_idx_plus1, "max_long_term_frame_idx_plus1");
                         }
                     } while (memory_management_control_operation[whileIndex] != 0);
                 }
@@ -3169,12 +3169,12 @@ dec_ref_pic_marking() {
 
             if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag);
-                size += stream.WriteUnsignedInt(1, this.long_term_reference_flag);
+                size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag, "no_output_of_prior_pics_flag");
+                size += stream.WriteUnsignedInt(1, this.long_term_reference_flag, "long_term_reference_flag");
             }
             else
             {
-                size += stream.WriteUnsignedInt(1, this.adaptive_ref_pic_marking_mode_flag);
+                size += stream.WriteUnsignedInt(1, this.adaptive_ref_pic_marking_mode_flag, "adaptive_ref_pic_marking_mode_flag");
 
                 if (adaptive_ref_pic_marking_mode_flag != 0)
                 {
@@ -3183,28 +3183,28 @@ dec_ref_pic_marking() {
                     {
                         whileIndex++;
 
-                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.memory_management_control_operation);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.memory_management_control_operation, "memory_management_control_operation");
 
                         if (memory_management_control_operation[whileIndex] == 1 ||
      memory_management_control_operation[whileIndex] == 3)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.difference_of_pic_nums_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.difference_of_pic_nums_minus1, "difference_of_pic_nums_minus1");
                         }
 
                         if (memory_management_control_operation[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
 
                         if (memory_management_control_operation[whileIndex] == 3 ||
      memory_management_control_operation[whileIndex] == 6)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_frame_idx);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_frame_idx, "long_term_frame_idx");
                         }
 
                         if (memory_management_control_operation[whileIndex] == 4)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.max_long_term_frame_idx_plus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.max_long_term_frame_idx_plus1, "max_long_term_frame_idx_plus1");
                         }
                     } while (memory_management_control_operation[whileIndex] != 0);
                 }
@@ -3548,378 +3548,378 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             if (payloadType == 0)
             {
                 this.buffering_period = new BufferingPeriod(payloadSize);
-                size += stream.ReadClass<BufferingPeriod>(size, context, this.buffering_period);
+                size += stream.ReadClass<BufferingPeriod>(size, context, this.buffering_period, "buffering_period");
             }
             else if (payloadType == 1)
             {
                 this.pic_timing = new PicTiming(payloadSize);
-                size += stream.ReadClass<PicTiming>(size, context, this.pic_timing);
+                size += stream.ReadClass<PicTiming>(size, context, this.pic_timing, "pic_timing");
             }
             else if (payloadType == 2)
             {
                 this.pan_scan_rect = new PanScanRect(payloadSize);
-                size += stream.ReadClass<PanScanRect>(size, context, this.pan_scan_rect);
+                size += stream.ReadClass<PanScanRect>(size, context, this.pan_scan_rect, "pan_scan_rect");
             }
             else if (payloadType == 3)
             {
                 this.filler_payload = new FillerPayload(payloadSize);
-                size += stream.ReadClass<FillerPayload>(size, context, this.filler_payload);
+                size += stream.ReadClass<FillerPayload>(size, context, this.filler_payload, "filler_payload");
             }
             else if (payloadType == 4)
             {
                 this.user_data_registered_itu_t_t35 = new UserDataRegisteredItutT35(payloadSize);
-                size += stream.ReadClass<UserDataRegisteredItutT35>(size, context, this.user_data_registered_itu_t_t35);
+                size += stream.ReadClass<UserDataRegisteredItutT35>(size, context, this.user_data_registered_itu_t_t35, "user_data_registered_itu_t_t35");
             }
             else if (payloadType == 5)
             {
                 this.user_data_unregistered = new UserDataUnregistered(payloadSize);
-                size += stream.ReadClass<UserDataUnregistered>(size, context, this.user_data_unregistered);
+                size += stream.ReadClass<UserDataUnregistered>(size, context, this.user_data_unregistered, "user_data_unregistered");
             }
             else if (payloadType == 6)
             {
                 this.recovery_point = new RecoveryPoint(payloadSize);
-                size += stream.ReadClass<RecoveryPoint>(size, context, this.recovery_point);
+                size += stream.ReadClass<RecoveryPoint>(size, context, this.recovery_point, "recovery_point");
             }
             else if (payloadType == 7)
             {
                 this.dec_ref_pic_marking_repetition = new DecRefPicMarkingRepetition(payloadSize);
-                size += stream.ReadClass<DecRefPicMarkingRepetition>(size, context, this.dec_ref_pic_marking_repetition);
+                size += stream.ReadClass<DecRefPicMarkingRepetition>(size, context, this.dec_ref_pic_marking_repetition, "dec_ref_pic_marking_repetition");
             }
             else if (payloadType == 8)
             {
                 this.spare_pic = new SparePic(payloadSize);
-                size += stream.ReadClass<SparePic>(size, context, this.spare_pic);
+                size += stream.ReadClass<SparePic>(size, context, this.spare_pic, "spare_pic");
             }
             else if (payloadType == 9)
             {
                 this.scene_info = new SceneInfo(payloadSize);
-                size += stream.ReadClass<SceneInfo>(size, context, this.scene_info);
+                size += stream.ReadClass<SceneInfo>(size, context, this.scene_info, "scene_info");
             }
             else if (payloadType == 10)
             {
                 this.sub_seq_info = new SubSeqInfo(payloadSize);
-                size += stream.ReadClass<SubSeqInfo>(size, context, this.sub_seq_info);
+                size += stream.ReadClass<SubSeqInfo>(size, context, this.sub_seq_info, "sub_seq_info");
             }
             else if (payloadType == 11)
             {
                 this.sub_seq_layer_characteristics = new SubSeqLayerCharacteristics(payloadSize);
-                size += stream.ReadClass<SubSeqLayerCharacteristics>(size, context, this.sub_seq_layer_characteristics);
+                size += stream.ReadClass<SubSeqLayerCharacteristics>(size, context, this.sub_seq_layer_characteristics, "sub_seq_layer_characteristics");
             }
             else if (payloadType == 12)
             {
                 this.sub_seq_characteristics = new SubSeqCharacteristics(payloadSize);
-                size += stream.ReadClass<SubSeqCharacteristics>(size, context, this.sub_seq_characteristics);
+                size += stream.ReadClass<SubSeqCharacteristics>(size, context, this.sub_seq_characteristics, "sub_seq_characteristics");
             }
             else if (payloadType == 13)
             {
                 this.full_frame_freeze = new FullFrameFreeze(payloadSize);
-                size += stream.ReadClass<FullFrameFreeze>(size, context, this.full_frame_freeze);
+                size += stream.ReadClass<FullFrameFreeze>(size, context, this.full_frame_freeze, "full_frame_freeze");
             }
             else if (payloadType == 14)
             {
                 this.full_frame_freeze_release = new FullFrameFreezeRelease(payloadSize);
-                size += stream.ReadClass<FullFrameFreezeRelease>(size, context, this.full_frame_freeze_release);
+                size += stream.ReadClass<FullFrameFreezeRelease>(size, context, this.full_frame_freeze_release, "full_frame_freeze_release");
             }
             else if (payloadType == 15)
             {
                 this.full_frame_snapshot = new FullFrameSnapshot(payloadSize);
-                size += stream.ReadClass<FullFrameSnapshot>(size, context, this.full_frame_snapshot);
+                size += stream.ReadClass<FullFrameSnapshot>(size, context, this.full_frame_snapshot, "full_frame_snapshot");
             }
             else if (payloadType == 16)
             {
                 this.progressive_refinement_segment_start = new ProgressiveRefinementSegmentStart(payloadSize);
-                size += stream.ReadClass<ProgressiveRefinementSegmentStart>(size, context, this.progressive_refinement_segment_start);
+                size += stream.ReadClass<ProgressiveRefinementSegmentStart>(size, context, this.progressive_refinement_segment_start, "progressive_refinement_segment_start");
             }
             else if (payloadType == 17)
             {
                 this.progressive_refinement_segment_end = new ProgressiveRefinementSegmentEnd(payloadSize);
-                size += stream.ReadClass<ProgressiveRefinementSegmentEnd>(size, context, this.progressive_refinement_segment_end);
+                size += stream.ReadClass<ProgressiveRefinementSegmentEnd>(size, context, this.progressive_refinement_segment_end, "progressive_refinement_segment_end");
             }
             else if (payloadType == 18)
             {
                 this.motion_constrained_slice_group_set = new MotionConstrainedSliceGroupSet(payloadSize);
-                size += stream.ReadClass<MotionConstrainedSliceGroupSet>(size, context, this.motion_constrained_slice_group_set);
+                size += stream.ReadClass<MotionConstrainedSliceGroupSet>(size, context, this.motion_constrained_slice_group_set, "motion_constrained_slice_group_set");
             }
             else if (payloadType == 19)
             {
                 this.film_grain_characteristics = new FilmGrainCharacteristics(payloadSize);
-                size += stream.ReadClass<FilmGrainCharacteristics>(size, context, this.film_grain_characteristics);
+                size += stream.ReadClass<FilmGrainCharacteristics>(size, context, this.film_grain_characteristics, "film_grain_characteristics");
             }
             else if (payloadType == 20)
             {
                 this.deblocking_filter_display_preference = new DeblockingFilterDisplayPreference(payloadSize);
-                size += stream.ReadClass<DeblockingFilterDisplayPreference>(size, context, this.deblocking_filter_display_preference);
+                size += stream.ReadClass<DeblockingFilterDisplayPreference>(size, context, this.deblocking_filter_display_preference, "deblocking_filter_display_preference");
             }
             else if (payloadType == 21)
             {
                 this.stereo_video_info = new StereoVideoInfo(payloadSize);
-                size += stream.ReadClass<StereoVideoInfo>(size, context, this.stereo_video_info);
+                size += stream.ReadClass<StereoVideoInfo>(size, context, this.stereo_video_info, "stereo_video_info");
             }
             else if (payloadType == 22)
             {
                 this.post_filter_hint = new PostFilterHint(payloadSize);
-                size += stream.ReadClass<PostFilterHint>(size, context, this.post_filter_hint);
+                size += stream.ReadClass<PostFilterHint>(size, context, this.post_filter_hint, "post_filter_hint");
             }
             else if (payloadType == 23)
             {
                 this.tone_mapping_info = new ToneMappingInfo(payloadSize);
-                size += stream.ReadClass<ToneMappingInfo>(size, context, this.tone_mapping_info);
+                size += stream.ReadClass<ToneMappingInfo>(size, context, this.tone_mapping_info, "tone_mapping_info");
             }
             else if (payloadType == 24)
             {
                 this.scalability_info = new ScalabilityInfo(payloadSize);
-                size += stream.ReadClass<ScalabilityInfo>(size, context, this.scalability_info); // specified in Annex G 
+                size += stream.ReadClass<ScalabilityInfo>(size, context, this.scalability_info, "scalability_info"); // specified in Annex G 
             }
             else if (payloadType == 25)
             {
                 this.sub_pic_scalable_layer = new SubPicScalableLayer(payloadSize);
-                size += stream.ReadClass<SubPicScalableLayer>(size, context, this.sub_pic_scalable_layer); // specified in Annex G 
+                size += stream.ReadClass<SubPicScalableLayer>(size, context, this.sub_pic_scalable_layer, "sub_pic_scalable_layer"); // specified in Annex G 
             }
             else if (payloadType == 26)
             {
                 this.non_required_layer_rep = new NonRequiredLayerRep(payloadSize);
-                size += stream.ReadClass<NonRequiredLayerRep>(size, context, this.non_required_layer_rep); // specified in Annex G 
+                size += stream.ReadClass<NonRequiredLayerRep>(size, context, this.non_required_layer_rep, "non_required_layer_rep"); // specified in Annex G 
             }
             else if (payloadType == 27)
             {
                 this.priority_layer_info = new PriorityLayerInfo(payloadSize);
-                size += stream.ReadClass<PriorityLayerInfo>(size, context, this.priority_layer_info); // specified in Annex G 
+                size += stream.ReadClass<PriorityLayerInfo>(size, context, this.priority_layer_info, "priority_layer_info"); // specified in Annex G 
             }
             else if (payloadType == 28)
             {
                 this.layers_not_present = new LayersNotPresent(payloadSize);
-                size += stream.ReadClass<LayersNotPresent>(size, context, this.layers_not_present); // specified in Annex G 
+                size += stream.ReadClass<LayersNotPresent>(size, context, this.layers_not_present, "layers_not_present"); // specified in Annex G 
             }
             else if (payloadType == 29)
             {
                 this.layer_dependency_change = new LayerDependencyChange(payloadSize);
-                size += stream.ReadClass<LayerDependencyChange>(size, context, this.layer_dependency_change); // specified in Annex G 
+                size += stream.ReadClass<LayerDependencyChange>(size, context, this.layer_dependency_change, "layer_dependency_change"); // specified in Annex G 
             }
             else if (payloadType == 30)
             {
                 this.scalable_nesting = new ScalableNesting(payloadSize);
-                size += stream.ReadClass<ScalableNesting>(size, context, this.scalable_nesting); // specified in Annex G 
+                size += stream.ReadClass<ScalableNesting>(size, context, this.scalable_nesting, "scalable_nesting"); // specified in Annex G 
             }
             else if (payloadType == 31)
             {
                 this.base_layer_temporal_hrd = new BaseLayerTemporalHrd(payloadSize);
-                size += stream.ReadClass<BaseLayerTemporalHrd>(size, context, this.base_layer_temporal_hrd); // specified in Annex G 
+                size += stream.ReadClass<BaseLayerTemporalHrd>(size, context, this.base_layer_temporal_hrd, "base_layer_temporal_hrd"); // specified in Annex G 
             }
             else if (payloadType == 32)
             {
                 this.quality_layer_integrity_check = new QualityLayerIntegrityCheck(payloadSize);
-                size += stream.ReadClass<QualityLayerIntegrityCheck>(size, context, this.quality_layer_integrity_check); // specified in Annex G 
+                size += stream.ReadClass<QualityLayerIntegrityCheck>(size, context, this.quality_layer_integrity_check, "quality_layer_integrity_check"); // specified in Annex G 
             }
             else if (payloadType == 33)
             {
                 this.redundant_pic_property = new RedundantPicProperty(payloadSize);
-                size += stream.ReadClass<RedundantPicProperty>(size, context, this.redundant_pic_property); // specified in Annex G 
+                size += stream.ReadClass<RedundantPicProperty>(size, context, this.redundant_pic_property, "redundant_pic_property"); // specified in Annex G 
             }
             else if (payloadType == 34)
             {
                 this.tl0_dep_rep_index = new Tl0DepRepIndex(payloadSize);
-                size += stream.ReadClass<Tl0DepRepIndex>(size, context, this.tl0_dep_rep_index); // specified in Annex G 
+                size += stream.ReadClass<Tl0DepRepIndex>(size, context, this.tl0_dep_rep_index, "tl0_dep_rep_index"); // specified in Annex G 
             }
             else if (payloadType == 35)
             {
                 this.tl_switching_point = new TlSwitchingPoint(payloadSize);
-                size += stream.ReadClass<TlSwitchingPoint>(size, context, this.tl_switching_point); // specified in Annex G 
+                size += stream.ReadClass<TlSwitchingPoint>(size, context, this.tl_switching_point, "tl_switching_point"); // specified in Annex G 
             }
             else if (payloadType == 36)
             {
                 this.parallel_decoding_info = new ParallelDecodingInfo(payloadSize);
-                size += stream.ReadClass<ParallelDecodingInfo>(size, context, this.parallel_decoding_info); // specified in Annex H 
+                size += stream.ReadClass<ParallelDecodingInfo>(size, context, this.parallel_decoding_info, "parallel_decoding_info"); // specified in Annex H 
             }
             else if (payloadType == 37)
             {
                 this.mvc_scalable_nesting = new MvcScalableNesting(payloadSize);
-                size += stream.ReadClass<MvcScalableNesting>(size, context, this.mvc_scalable_nesting); // specified in Annex H 
+                size += stream.ReadClass<MvcScalableNesting>(size, context, this.mvc_scalable_nesting, "mvc_scalable_nesting"); // specified in Annex H 
             }
             else if (payloadType == 38)
             {
                 this.view_scalability_info = new ViewScalabilityInfo(payloadSize);
-                size += stream.ReadClass<ViewScalabilityInfo>(size, context, this.view_scalability_info); // specified in Annex H 
+                size += stream.ReadClass<ViewScalabilityInfo>(size, context, this.view_scalability_info, "view_scalability_info"); // specified in Annex H 
             }
             else if (payloadType == 39)
             {
                 this.multiview_scene_info = new MultiviewSceneInfo(payloadSize);
-                size += stream.ReadClass<MultiviewSceneInfo>(size, context, this.multiview_scene_info); // specified in Annex H 
+                size += stream.ReadClass<MultiviewSceneInfo>(size, context, this.multiview_scene_info, "multiview_scene_info"); // specified in Annex H 
             }
             else if (payloadType == 40)
             {
                 this.multiview_acquisition_info = new MultiviewAcquisitionInfo(payloadSize);
-                size += stream.ReadClass<MultiviewAcquisitionInfo>(size, context, this.multiview_acquisition_info); // specified in Annex H 
+                size += stream.ReadClass<MultiviewAcquisitionInfo>(size, context, this.multiview_acquisition_info, "multiview_acquisition_info"); // specified in Annex H 
             }
             else if (payloadType == 41)
             {
                 this.non_required_view_component = new NonRequiredViewComponent(payloadSize);
-                size += stream.ReadClass<NonRequiredViewComponent>(size, context, this.non_required_view_component); // specified in Annex H 
+                size += stream.ReadClass<NonRequiredViewComponent>(size, context, this.non_required_view_component, "non_required_view_component"); // specified in Annex H 
             }
             else if (payloadType == 42)
             {
                 this.view_dependency_change = new ViewDependencyChange(payloadSize);
-                size += stream.ReadClass<ViewDependencyChange>(size, context, this.view_dependency_change); // specified in Annex H 
+                size += stream.ReadClass<ViewDependencyChange>(size, context, this.view_dependency_change, "view_dependency_change"); // specified in Annex H 
             }
             else if (payloadType == 43)
             {
                 this.operation_point_not_present = new OperationPointNotPresent(payloadSize);
-                size += stream.ReadClass<OperationPointNotPresent>(size, context, this.operation_point_not_present); // specified in Annex H 
+                size += stream.ReadClass<OperationPointNotPresent>(size, context, this.operation_point_not_present, "operation_point_not_present"); // specified in Annex H 
             }
             else if (payloadType == 44)
             {
                 this.base_view_temporal_hrd = new BaseViewTemporalHrd(payloadSize);
-                size += stream.ReadClass<BaseViewTemporalHrd>(size, context, this.base_view_temporal_hrd); // specified in Annex H 
+                size += stream.ReadClass<BaseViewTemporalHrd>(size, context, this.base_view_temporal_hrd, "base_view_temporal_hrd"); // specified in Annex H 
             }
             else if (payloadType == 45)
             {
                 this.frame_packing_arrangement = new FramePackingArrangement(payloadSize);
-                size += stream.ReadClass<FramePackingArrangement>(size, context, this.frame_packing_arrangement);
+                size += stream.ReadClass<FramePackingArrangement>(size, context, this.frame_packing_arrangement, "frame_packing_arrangement");
             }
             else if (payloadType == 46)
             {
                 this.multiview_view_position = new MultiviewViewPosition(payloadSize);
-                size += stream.ReadClass<MultiviewViewPosition>(size, context, this.multiview_view_position); // specified in Annex H 
+                size += stream.ReadClass<MultiviewViewPosition>(size, context, this.multiview_view_position, "multiview_view_position"); // specified in Annex H 
             }
             else if (payloadType == 47)
             {
                 this.display_orientation = new DisplayOrientation(payloadSize);
-                size += stream.ReadClass<DisplayOrientation>(size, context, this.display_orientation);
+                size += stream.ReadClass<DisplayOrientation>(size, context, this.display_orientation, "display_orientation");
             }
             else if (payloadType == 48)
             {
                 this.mvcd_scalable_nesting = new MvcdScalableNesting(payloadSize);
-                size += stream.ReadClass<MvcdScalableNesting>(size, context, this.mvcd_scalable_nesting); // specified in Annex I 
+                size += stream.ReadClass<MvcdScalableNesting>(size, context, this.mvcd_scalable_nesting, "mvcd_scalable_nesting"); // specified in Annex I 
             }
             else if (payloadType == 49)
             {
                 this.mvcd_view_scalability_info = new MvcdViewScalabilityInfo(payloadSize);
-                size += stream.ReadClass<MvcdViewScalabilityInfo>(size, context, this.mvcd_view_scalability_info); // specified in Annex I 
+                size += stream.ReadClass<MvcdViewScalabilityInfo>(size, context, this.mvcd_view_scalability_info, "mvcd_view_scalability_info"); // specified in Annex I 
             }
             else if (payloadType == 50)
             {
                 this.depth_representation_info = new DepthRepresentationInfo(payloadSize);
-                size += stream.ReadClass<DepthRepresentationInfo>(size, context, this.depth_representation_info); // specified in Annex I 
+                size += stream.ReadClass<DepthRepresentationInfo>(size, context, this.depth_representation_info, "depth_representation_info"); // specified in Annex I 
             }
             else if (payloadType == 51)
             {
                 this.three_dimensional_reference_displays_info = new ThreeDimensionalReferenceDisplaysInfo(payloadSize);
-                size += stream.ReadClass<ThreeDimensionalReferenceDisplaysInfo>(size, context, this.three_dimensional_reference_displays_info); // specified in Annex I 
+                size += stream.ReadClass<ThreeDimensionalReferenceDisplaysInfo>(size, context, this.three_dimensional_reference_displays_info, "three_dimensional_reference_displays_info"); // specified in Annex I 
             }
             else if (payloadType == 52)
             {
                 this.depth_timing = new DepthTiming(payloadSize);
-                size += stream.ReadClass<DepthTiming>(size, context, this.depth_timing); // specified in Annex I 
+                size += stream.ReadClass<DepthTiming>(size, context, this.depth_timing, "depth_timing"); // specified in Annex I 
             }
             else if (payloadType == 53)
             {
                 this.depth_sampling_info = new DepthSamplingInfo(payloadSize);
-                size += stream.ReadClass<DepthSamplingInfo>(size, context, this.depth_sampling_info); // specified in Annex I 
+                size += stream.ReadClass<DepthSamplingInfo>(size, context, this.depth_sampling_info, "depth_sampling_info"); // specified in Annex I 
             }
             else if (payloadType == 54)
             {
                 this.constrained_depth_parameter_set_identifier = new ConstrainedDepthParameterSetIdentifier(payloadSize);
-                size += stream.ReadClass<ConstrainedDepthParameterSetIdentifier>(size, context, this.constrained_depth_parameter_set_identifier); // specified in Annex J 
+                size += stream.ReadClass<ConstrainedDepthParameterSetIdentifier>(size, context, this.constrained_depth_parameter_set_identifier, "constrained_depth_parameter_set_identifier"); // specified in Annex J 
             }
             else if (payloadType == 56)
             {
                 this.green_metadata = new GreenMetadata(payloadSize);
-                size += stream.ReadClass<GreenMetadata>(size, context, this.green_metadata); // specified in ISO/IEC 23001-11 
+                size += stream.ReadClass<GreenMetadata>(size, context, this.green_metadata, "green_metadata"); // specified in ISO/IEC 23001-11 
             }
             else if (payloadType == 137)
             {
                 this.mastering_display_colour_volume = new MasteringDisplayColourVolume(payloadSize);
-                size += stream.ReadClass<MasteringDisplayColourVolume>(size, context, this.mastering_display_colour_volume);
+                size += stream.ReadClass<MasteringDisplayColourVolume>(size, context, this.mastering_display_colour_volume, "mastering_display_colour_volume");
             }
             else if (payloadType == 142)
             {
                 this.colour_remapping_info = new ColourRemappingInfo(payloadSize);
-                size += stream.ReadClass<ColourRemappingInfo>(size, context, this.colour_remapping_info);
+                size += stream.ReadClass<ColourRemappingInfo>(size, context, this.colour_remapping_info, "colour_remapping_info");
             }
             else if (payloadType == 144)
             {
                 this.content_light_level_info = new ContentLightLevelInfo(payloadSize);
-                size += stream.ReadClass<ContentLightLevelInfo>(size, context, this.content_light_level_info);
+                size += stream.ReadClass<ContentLightLevelInfo>(size, context, this.content_light_level_info, "content_light_level_info");
             }
             else if (payloadType == 147)
             {
                 this.alternative_transfer_characteristics = new AlternativeTransferCharacteristics(payloadSize);
-                size += stream.ReadClass<AlternativeTransferCharacteristics>(size, context, this.alternative_transfer_characteristics);
+                size += stream.ReadClass<AlternativeTransferCharacteristics>(size, context, this.alternative_transfer_characteristics, "alternative_transfer_characteristics");
             }
             else if (payloadType == 148)
             {
                 this.ambient_viewing_environment = new AmbientViewingEnvironment(payloadSize);
-                size += stream.ReadClass<AmbientViewingEnvironment>(size, context, this.ambient_viewing_environment);
+                size += stream.ReadClass<AmbientViewingEnvironment>(size, context, this.ambient_viewing_environment, "ambient_viewing_environment");
             }
             else if (payloadType == 149)
             {
                 this.content_colour_volume = new ContentColourVolume(payloadSize);
-                size += stream.ReadClass<ContentColourVolume>(size, context, this.content_colour_volume);
+                size += stream.ReadClass<ContentColourVolume>(size, context, this.content_colour_volume, "content_colour_volume");
             }
             else if (payloadType == 150)
             {
                 this.equirectangular_projection = new EquirectangularProjection(payloadSize);
-                size += stream.ReadClass<EquirectangularProjection>(size, context, this.equirectangular_projection);
+                size += stream.ReadClass<EquirectangularProjection>(size, context, this.equirectangular_projection, "equirectangular_projection");
             }
             else if (payloadType == 151)
             {
                 this.cubemap_projection = new CubemapProjection(payloadSize);
-                size += stream.ReadClass<CubemapProjection>(size, context, this.cubemap_projection);
+                size += stream.ReadClass<CubemapProjection>(size, context, this.cubemap_projection, "cubemap_projection");
             }
             else if (payloadType == 154)
             {
                 this.sphere_rotation = new SphereRotation(payloadSize);
-                size += stream.ReadClass<SphereRotation>(size, context, this.sphere_rotation);
+                size += stream.ReadClass<SphereRotation>(size, context, this.sphere_rotation, "sphere_rotation");
             }
             else if (payloadType == 155)
             {
                 this.regionwise_packing = new RegionwisePacking(payloadSize);
-                size += stream.ReadClass<RegionwisePacking>(size, context, this.regionwise_packing);
+                size += stream.ReadClass<RegionwisePacking>(size, context, this.regionwise_packing, "regionwise_packing");
             }
             else if (payloadType == 156)
             {
                 this.omni_viewport = new OmniViewport(payloadSize);
-                size += stream.ReadClass<OmniViewport>(size, context, this.omni_viewport);
+                size += stream.ReadClass<OmniViewport>(size, context, this.omni_viewport, "omni_viewport");
             }
             else if (payloadType == 181)
             {
                 this.alternative_depth_info = new AlternativeDepthInfo(payloadSize);
-                size += stream.ReadClass<AlternativeDepthInfo>(size, context, this.alternative_depth_info); // specified in Annex I 
+                size += stream.ReadClass<AlternativeDepthInfo>(size, context, this.alternative_depth_info, "alternative_depth_info"); // specified in Annex I 
             }
             else if (payloadType == 200)
             {
                 this.sei_manifest = new SeiManifest(payloadSize);
-                size += stream.ReadClass<SeiManifest>(size, context, this.sei_manifest);
+                size += stream.ReadClass<SeiManifest>(size, context, this.sei_manifest, "sei_manifest");
             }
             else if (payloadType == 201)
             {
                 this.sei_prefix_indication = new SeiPrefixIndication(payloadSize);
-                size += stream.ReadClass<SeiPrefixIndication>(size, context, this.sei_prefix_indication);
+                size += stream.ReadClass<SeiPrefixIndication>(size, context, this.sei_prefix_indication, "sei_prefix_indication");
             }
             else if (payloadType == 202)
             {
                 this.annotated_regions = new AnnotatedRegions(payloadSize);
-                size += stream.ReadClass<AnnotatedRegions>(size, context, this.annotated_regions);
+                size += stream.ReadClass<AnnotatedRegions>(size, context, this.annotated_regions, "annotated_regions");
             }
             else if (payloadType == 205)
             {
                 this.shutter_interval_info = new ShutterIntervalInfo(payloadSize);
-                size += stream.ReadClass<ShutterIntervalInfo>(size, context, this.shutter_interval_info);
+                size += stream.ReadClass<ShutterIntervalInfo>(size, context, this.shutter_interval_info, "shutter_interval_info");
             }
             else
             {
                 this.reserved_sei_message = new ReservedSeiMessage(payloadSize);
-                size += stream.ReadClass<ReservedSeiMessage>(size, context, this.reserved_sei_message);
+                size += stream.ReadClass<ReservedSeiMessage>(size, context, this.reserved_sei_message, "reserved_sei_message");
             }
 
             if (!stream.ByteAligned())
             {
-                size += stream.ReadFixed(size, 1, out this.bit_equal_to_one); // equal to 1 
+                size += stream.ReadFixed(size, 1, out this.bit_equal_to_one, "bit_equal_to_one"); // equal to 1 
 
                 while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
-                    size += stream.ReadFixed(size, 1, whileIndex, this.bit_equal_to_zero); // equal to 0 
+                    size += stream.ReadFixed(size, 1, whileIndex, this.bit_equal_to_zero, "bit_equal_to_zero"); // equal to 0 
                 }
             }
 
@@ -3934,306 +3934,306 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
 
             if (payloadType == 0)
             {
-                size += stream.WriteClass<BufferingPeriod>(context, this.buffering_period);
+                size += stream.WriteClass<BufferingPeriod>(context, this.buffering_period, "buffering_period");
             }
             else if (payloadType == 1)
             {
-                size += stream.WriteClass<PicTiming>(context, this.pic_timing);
+                size += stream.WriteClass<PicTiming>(context, this.pic_timing, "pic_timing");
             }
             else if (payloadType == 2)
             {
-                size += stream.WriteClass<PanScanRect>(context, this.pan_scan_rect);
+                size += stream.WriteClass<PanScanRect>(context, this.pan_scan_rect, "pan_scan_rect");
             }
             else if (payloadType == 3)
             {
-                size += stream.WriteClass<FillerPayload>(context, this.filler_payload);
+                size += stream.WriteClass<FillerPayload>(context, this.filler_payload, "filler_payload");
             }
             else if (payloadType == 4)
             {
-                size += stream.WriteClass<UserDataRegisteredItutT35>(context, this.user_data_registered_itu_t_t35);
+                size += stream.WriteClass<UserDataRegisteredItutT35>(context, this.user_data_registered_itu_t_t35, "user_data_registered_itu_t_t35");
             }
             else if (payloadType == 5)
             {
-                size += stream.WriteClass<UserDataUnregistered>(context, this.user_data_unregistered);
+                size += stream.WriteClass<UserDataUnregistered>(context, this.user_data_unregistered, "user_data_unregistered");
             }
             else if (payloadType == 6)
             {
-                size += stream.WriteClass<RecoveryPoint>(context, this.recovery_point);
+                size += stream.WriteClass<RecoveryPoint>(context, this.recovery_point, "recovery_point");
             }
             else if (payloadType == 7)
             {
-                size += stream.WriteClass<DecRefPicMarkingRepetition>(context, this.dec_ref_pic_marking_repetition);
+                size += stream.WriteClass<DecRefPicMarkingRepetition>(context, this.dec_ref_pic_marking_repetition, "dec_ref_pic_marking_repetition");
             }
             else if (payloadType == 8)
             {
-                size += stream.WriteClass<SparePic>(context, this.spare_pic);
+                size += stream.WriteClass<SparePic>(context, this.spare_pic, "spare_pic");
             }
             else if (payloadType == 9)
             {
-                size += stream.WriteClass<SceneInfo>(context, this.scene_info);
+                size += stream.WriteClass<SceneInfo>(context, this.scene_info, "scene_info");
             }
             else if (payloadType == 10)
             {
-                size += stream.WriteClass<SubSeqInfo>(context, this.sub_seq_info);
+                size += stream.WriteClass<SubSeqInfo>(context, this.sub_seq_info, "sub_seq_info");
             }
             else if (payloadType == 11)
             {
-                size += stream.WriteClass<SubSeqLayerCharacteristics>(context, this.sub_seq_layer_characteristics);
+                size += stream.WriteClass<SubSeqLayerCharacteristics>(context, this.sub_seq_layer_characteristics, "sub_seq_layer_characteristics");
             }
             else if (payloadType == 12)
             {
-                size += stream.WriteClass<SubSeqCharacteristics>(context, this.sub_seq_characteristics);
+                size += stream.WriteClass<SubSeqCharacteristics>(context, this.sub_seq_characteristics, "sub_seq_characteristics");
             }
             else if (payloadType == 13)
             {
-                size += stream.WriteClass<FullFrameFreeze>(context, this.full_frame_freeze);
+                size += stream.WriteClass<FullFrameFreeze>(context, this.full_frame_freeze, "full_frame_freeze");
             }
             else if (payloadType == 14)
             {
-                size += stream.WriteClass<FullFrameFreezeRelease>(context, this.full_frame_freeze_release);
+                size += stream.WriteClass<FullFrameFreezeRelease>(context, this.full_frame_freeze_release, "full_frame_freeze_release");
             }
             else if (payloadType == 15)
             {
-                size += stream.WriteClass<FullFrameSnapshot>(context, this.full_frame_snapshot);
+                size += stream.WriteClass<FullFrameSnapshot>(context, this.full_frame_snapshot, "full_frame_snapshot");
             }
             else if (payloadType == 16)
             {
-                size += stream.WriteClass<ProgressiveRefinementSegmentStart>(context, this.progressive_refinement_segment_start);
+                size += stream.WriteClass<ProgressiveRefinementSegmentStart>(context, this.progressive_refinement_segment_start, "progressive_refinement_segment_start");
             }
             else if (payloadType == 17)
             {
-                size += stream.WriteClass<ProgressiveRefinementSegmentEnd>(context, this.progressive_refinement_segment_end);
+                size += stream.WriteClass<ProgressiveRefinementSegmentEnd>(context, this.progressive_refinement_segment_end, "progressive_refinement_segment_end");
             }
             else if (payloadType == 18)
             {
-                size += stream.WriteClass<MotionConstrainedSliceGroupSet>(context, this.motion_constrained_slice_group_set);
+                size += stream.WriteClass<MotionConstrainedSliceGroupSet>(context, this.motion_constrained_slice_group_set, "motion_constrained_slice_group_set");
             }
             else if (payloadType == 19)
             {
-                size += stream.WriteClass<FilmGrainCharacteristics>(context, this.film_grain_characteristics);
+                size += stream.WriteClass<FilmGrainCharacteristics>(context, this.film_grain_characteristics, "film_grain_characteristics");
             }
             else if (payloadType == 20)
             {
-                size += stream.WriteClass<DeblockingFilterDisplayPreference>(context, this.deblocking_filter_display_preference);
+                size += stream.WriteClass<DeblockingFilterDisplayPreference>(context, this.deblocking_filter_display_preference, "deblocking_filter_display_preference");
             }
             else if (payloadType == 21)
             {
-                size += stream.WriteClass<StereoVideoInfo>(context, this.stereo_video_info);
+                size += stream.WriteClass<StereoVideoInfo>(context, this.stereo_video_info, "stereo_video_info");
             }
             else if (payloadType == 22)
             {
-                size += stream.WriteClass<PostFilterHint>(context, this.post_filter_hint);
+                size += stream.WriteClass<PostFilterHint>(context, this.post_filter_hint, "post_filter_hint");
             }
             else if (payloadType == 23)
             {
-                size += stream.WriteClass<ToneMappingInfo>(context, this.tone_mapping_info);
+                size += stream.WriteClass<ToneMappingInfo>(context, this.tone_mapping_info, "tone_mapping_info");
             }
             else if (payloadType == 24)
             {
-                size += stream.WriteClass<ScalabilityInfo>(context, this.scalability_info); // specified in Annex G 
+                size += stream.WriteClass<ScalabilityInfo>(context, this.scalability_info, "scalability_info"); // specified in Annex G 
             }
             else if (payloadType == 25)
             {
-                size += stream.WriteClass<SubPicScalableLayer>(context, this.sub_pic_scalable_layer); // specified in Annex G 
+                size += stream.WriteClass<SubPicScalableLayer>(context, this.sub_pic_scalable_layer, "sub_pic_scalable_layer"); // specified in Annex G 
             }
             else if (payloadType == 26)
             {
-                size += stream.WriteClass<NonRequiredLayerRep>(context, this.non_required_layer_rep); // specified in Annex G 
+                size += stream.WriteClass<NonRequiredLayerRep>(context, this.non_required_layer_rep, "non_required_layer_rep"); // specified in Annex G 
             }
             else if (payloadType == 27)
             {
-                size += stream.WriteClass<PriorityLayerInfo>(context, this.priority_layer_info); // specified in Annex G 
+                size += stream.WriteClass<PriorityLayerInfo>(context, this.priority_layer_info, "priority_layer_info"); // specified in Annex G 
             }
             else if (payloadType == 28)
             {
-                size += stream.WriteClass<LayersNotPresent>(context, this.layers_not_present); // specified in Annex G 
+                size += stream.WriteClass<LayersNotPresent>(context, this.layers_not_present, "layers_not_present"); // specified in Annex G 
             }
             else if (payloadType == 29)
             {
-                size += stream.WriteClass<LayerDependencyChange>(context, this.layer_dependency_change); // specified in Annex G 
+                size += stream.WriteClass<LayerDependencyChange>(context, this.layer_dependency_change, "layer_dependency_change"); // specified in Annex G 
             }
             else if (payloadType == 30)
             {
-                size += stream.WriteClass<ScalableNesting>(context, this.scalable_nesting); // specified in Annex G 
+                size += stream.WriteClass<ScalableNesting>(context, this.scalable_nesting, "scalable_nesting"); // specified in Annex G 
             }
             else if (payloadType == 31)
             {
-                size += stream.WriteClass<BaseLayerTemporalHrd>(context, this.base_layer_temporal_hrd); // specified in Annex G 
+                size += stream.WriteClass<BaseLayerTemporalHrd>(context, this.base_layer_temporal_hrd, "base_layer_temporal_hrd"); // specified in Annex G 
             }
             else if (payloadType == 32)
             {
-                size += stream.WriteClass<QualityLayerIntegrityCheck>(context, this.quality_layer_integrity_check); // specified in Annex G 
+                size += stream.WriteClass<QualityLayerIntegrityCheck>(context, this.quality_layer_integrity_check, "quality_layer_integrity_check"); // specified in Annex G 
             }
             else if (payloadType == 33)
             {
-                size += stream.WriteClass<RedundantPicProperty>(context, this.redundant_pic_property); // specified in Annex G 
+                size += stream.WriteClass<RedundantPicProperty>(context, this.redundant_pic_property, "redundant_pic_property"); // specified in Annex G 
             }
             else if (payloadType == 34)
             {
-                size += stream.WriteClass<Tl0DepRepIndex>(context, this.tl0_dep_rep_index); // specified in Annex G 
+                size += stream.WriteClass<Tl0DepRepIndex>(context, this.tl0_dep_rep_index, "tl0_dep_rep_index"); // specified in Annex G 
             }
             else if (payloadType == 35)
             {
-                size += stream.WriteClass<TlSwitchingPoint>(context, this.tl_switching_point); // specified in Annex G 
+                size += stream.WriteClass<TlSwitchingPoint>(context, this.tl_switching_point, "tl_switching_point"); // specified in Annex G 
             }
             else if (payloadType == 36)
             {
-                size += stream.WriteClass<ParallelDecodingInfo>(context, this.parallel_decoding_info); // specified in Annex H 
+                size += stream.WriteClass<ParallelDecodingInfo>(context, this.parallel_decoding_info, "parallel_decoding_info"); // specified in Annex H 
             }
             else if (payloadType == 37)
             {
-                size += stream.WriteClass<MvcScalableNesting>(context, this.mvc_scalable_nesting); // specified in Annex H 
+                size += stream.WriteClass<MvcScalableNesting>(context, this.mvc_scalable_nesting, "mvc_scalable_nesting"); // specified in Annex H 
             }
             else if (payloadType == 38)
             {
-                size += stream.WriteClass<ViewScalabilityInfo>(context, this.view_scalability_info); // specified in Annex H 
+                size += stream.WriteClass<ViewScalabilityInfo>(context, this.view_scalability_info, "view_scalability_info"); // specified in Annex H 
             }
             else if (payloadType == 39)
             {
-                size += stream.WriteClass<MultiviewSceneInfo>(context, this.multiview_scene_info); // specified in Annex H 
+                size += stream.WriteClass<MultiviewSceneInfo>(context, this.multiview_scene_info, "multiview_scene_info"); // specified in Annex H 
             }
             else if (payloadType == 40)
             {
-                size += stream.WriteClass<MultiviewAcquisitionInfo>(context, this.multiview_acquisition_info); // specified in Annex H 
+                size += stream.WriteClass<MultiviewAcquisitionInfo>(context, this.multiview_acquisition_info, "multiview_acquisition_info"); // specified in Annex H 
             }
             else if (payloadType == 41)
             {
-                size += stream.WriteClass<NonRequiredViewComponent>(context, this.non_required_view_component); // specified in Annex H 
+                size += stream.WriteClass<NonRequiredViewComponent>(context, this.non_required_view_component, "non_required_view_component"); // specified in Annex H 
             }
             else if (payloadType == 42)
             {
-                size += stream.WriteClass<ViewDependencyChange>(context, this.view_dependency_change); // specified in Annex H 
+                size += stream.WriteClass<ViewDependencyChange>(context, this.view_dependency_change, "view_dependency_change"); // specified in Annex H 
             }
             else if (payloadType == 43)
             {
-                size += stream.WriteClass<OperationPointNotPresent>(context, this.operation_point_not_present); // specified in Annex H 
+                size += stream.WriteClass<OperationPointNotPresent>(context, this.operation_point_not_present, "operation_point_not_present"); // specified in Annex H 
             }
             else if (payloadType == 44)
             {
-                size += stream.WriteClass<BaseViewTemporalHrd>(context, this.base_view_temporal_hrd); // specified in Annex H 
+                size += stream.WriteClass<BaseViewTemporalHrd>(context, this.base_view_temporal_hrd, "base_view_temporal_hrd"); // specified in Annex H 
             }
             else if (payloadType == 45)
             {
-                size += stream.WriteClass<FramePackingArrangement>(context, this.frame_packing_arrangement);
+                size += stream.WriteClass<FramePackingArrangement>(context, this.frame_packing_arrangement, "frame_packing_arrangement");
             }
             else if (payloadType == 46)
             {
-                size += stream.WriteClass<MultiviewViewPosition>(context, this.multiview_view_position); // specified in Annex H 
+                size += stream.WriteClass<MultiviewViewPosition>(context, this.multiview_view_position, "multiview_view_position"); // specified in Annex H 
             }
             else if (payloadType == 47)
             {
-                size += stream.WriteClass<DisplayOrientation>(context, this.display_orientation);
+                size += stream.WriteClass<DisplayOrientation>(context, this.display_orientation, "display_orientation");
             }
             else if (payloadType == 48)
             {
-                size += stream.WriteClass<MvcdScalableNesting>(context, this.mvcd_scalable_nesting); // specified in Annex I 
+                size += stream.WriteClass<MvcdScalableNesting>(context, this.mvcd_scalable_nesting, "mvcd_scalable_nesting"); // specified in Annex I 
             }
             else if (payloadType == 49)
             {
-                size += stream.WriteClass<MvcdViewScalabilityInfo>(context, this.mvcd_view_scalability_info); // specified in Annex I 
+                size += stream.WriteClass<MvcdViewScalabilityInfo>(context, this.mvcd_view_scalability_info, "mvcd_view_scalability_info"); // specified in Annex I 
             }
             else if (payloadType == 50)
             {
-                size += stream.WriteClass<DepthRepresentationInfo>(context, this.depth_representation_info); // specified in Annex I 
+                size += stream.WriteClass<DepthRepresentationInfo>(context, this.depth_representation_info, "depth_representation_info"); // specified in Annex I 
             }
             else if (payloadType == 51)
             {
-                size += stream.WriteClass<ThreeDimensionalReferenceDisplaysInfo>(context, this.three_dimensional_reference_displays_info); // specified in Annex I 
+                size += stream.WriteClass<ThreeDimensionalReferenceDisplaysInfo>(context, this.three_dimensional_reference_displays_info, "three_dimensional_reference_displays_info"); // specified in Annex I 
             }
             else if (payloadType == 52)
             {
-                size += stream.WriteClass<DepthTiming>(context, this.depth_timing); // specified in Annex I 
+                size += stream.WriteClass<DepthTiming>(context, this.depth_timing, "depth_timing"); // specified in Annex I 
             }
             else if (payloadType == 53)
             {
-                size += stream.WriteClass<DepthSamplingInfo>(context, this.depth_sampling_info); // specified in Annex I 
+                size += stream.WriteClass<DepthSamplingInfo>(context, this.depth_sampling_info, "depth_sampling_info"); // specified in Annex I 
             }
             else if (payloadType == 54)
             {
-                size += stream.WriteClass<ConstrainedDepthParameterSetIdentifier>(context, this.constrained_depth_parameter_set_identifier); // specified in Annex J 
+                size += stream.WriteClass<ConstrainedDepthParameterSetIdentifier>(context, this.constrained_depth_parameter_set_identifier, "constrained_depth_parameter_set_identifier"); // specified in Annex J 
             }
             else if (payloadType == 56)
             {
-                size += stream.WriteClass<GreenMetadata>(context, this.green_metadata); // specified in ISO/IEC 23001-11 
+                size += stream.WriteClass<GreenMetadata>(context, this.green_metadata, "green_metadata"); // specified in ISO/IEC 23001-11 
             }
             else if (payloadType == 137)
             {
-                size += stream.WriteClass<MasteringDisplayColourVolume>(context, this.mastering_display_colour_volume);
+                size += stream.WriteClass<MasteringDisplayColourVolume>(context, this.mastering_display_colour_volume, "mastering_display_colour_volume");
             }
             else if (payloadType == 142)
             {
-                size += stream.WriteClass<ColourRemappingInfo>(context, this.colour_remapping_info);
+                size += stream.WriteClass<ColourRemappingInfo>(context, this.colour_remapping_info, "colour_remapping_info");
             }
             else if (payloadType == 144)
             {
-                size += stream.WriteClass<ContentLightLevelInfo>(context, this.content_light_level_info);
+                size += stream.WriteClass<ContentLightLevelInfo>(context, this.content_light_level_info, "content_light_level_info");
             }
             else if (payloadType == 147)
             {
-                size += stream.WriteClass<AlternativeTransferCharacteristics>(context, this.alternative_transfer_characteristics);
+                size += stream.WriteClass<AlternativeTransferCharacteristics>(context, this.alternative_transfer_characteristics, "alternative_transfer_characteristics");
             }
             else if (payloadType == 148)
             {
-                size += stream.WriteClass<AmbientViewingEnvironment>(context, this.ambient_viewing_environment);
+                size += stream.WriteClass<AmbientViewingEnvironment>(context, this.ambient_viewing_environment, "ambient_viewing_environment");
             }
             else if (payloadType == 149)
             {
-                size += stream.WriteClass<ContentColourVolume>(context, this.content_colour_volume);
+                size += stream.WriteClass<ContentColourVolume>(context, this.content_colour_volume, "content_colour_volume");
             }
             else if (payloadType == 150)
             {
-                size += stream.WriteClass<EquirectangularProjection>(context, this.equirectangular_projection);
+                size += stream.WriteClass<EquirectangularProjection>(context, this.equirectangular_projection, "equirectangular_projection");
             }
             else if (payloadType == 151)
             {
-                size += stream.WriteClass<CubemapProjection>(context, this.cubemap_projection);
+                size += stream.WriteClass<CubemapProjection>(context, this.cubemap_projection, "cubemap_projection");
             }
             else if (payloadType == 154)
             {
-                size += stream.WriteClass<SphereRotation>(context, this.sphere_rotation);
+                size += stream.WriteClass<SphereRotation>(context, this.sphere_rotation, "sphere_rotation");
             }
             else if (payloadType == 155)
             {
-                size += stream.WriteClass<RegionwisePacking>(context, this.regionwise_packing);
+                size += stream.WriteClass<RegionwisePacking>(context, this.regionwise_packing, "regionwise_packing");
             }
             else if (payloadType == 156)
             {
-                size += stream.WriteClass<OmniViewport>(context, this.omni_viewport);
+                size += stream.WriteClass<OmniViewport>(context, this.omni_viewport, "omni_viewport");
             }
             else if (payloadType == 181)
             {
-                size += stream.WriteClass<AlternativeDepthInfo>(context, this.alternative_depth_info); // specified in Annex I 
+                size += stream.WriteClass<AlternativeDepthInfo>(context, this.alternative_depth_info, "alternative_depth_info"); // specified in Annex I 
             }
             else if (payloadType == 200)
             {
-                size += stream.WriteClass<SeiManifest>(context, this.sei_manifest);
+                size += stream.WriteClass<SeiManifest>(context, this.sei_manifest, "sei_manifest");
             }
             else if (payloadType == 201)
             {
-                size += stream.WriteClass<SeiPrefixIndication>(context, this.sei_prefix_indication);
+                size += stream.WriteClass<SeiPrefixIndication>(context, this.sei_prefix_indication, "sei_prefix_indication");
             }
             else if (payloadType == 202)
             {
-                size += stream.WriteClass<AnnotatedRegions>(context, this.annotated_regions);
+                size += stream.WriteClass<AnnotatedRegions>(context, this.annotated_regions, "annotated_regions");
             }
             else if (payloadType == 205)
             {
-                size += stream.WriteClass<ShutterIntervalInfo>(context, this.shutter_interval_info);
+                size += stream.WriteClass<ShutterIntervalInfo>(context, this.shutter_interval_info, "shutter_interval_info");
             }
             else
             {
-                size += stream.WriteClass<ReservedSeiMessage>(context, this.reserved_sei_message);
+                size += stream.WriteClass<ReservedSeiMessage>(context, this.reserved_sei_message, "reserved_sei_message");
             }
 
             if (!stream.ByteAligned())
             {
-                size += stream.WriteFixed(1, this.bit_equal_to_one); // equal to 1 
+                size += stream.WriteFixed(1, this.bit_equal_to_one, "bit_equal_to_one"); // equal to 1 
 
                 while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
-                    size += stream.WriteFixed(1, whileIndex, this.bit_equal_to_zero); // equal to 0 
+                    size += stream.WriteFixed(1, whileIndex, this.bit_equal_to_zero, "bit_equal_to_zero"); // equal to 0 
                 }
             }
 
@@ -4283,7 +4283,7 @@ buffering_period( payloadSize ) {
             ulong size = 0;
 
             uint SchedSelIdx = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0)
             {
@@ -4292,8 +4292,8 @@ buffering_period( payloadSize ) {
                 this.initial_cpb_removal_delay_offset = new uint[((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
                 for (SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay[SchedSelIdx], "initial_cpb_removal_delay");
+                    size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx], "initial_cpb_removal_delay_offset");
                 }
             }
 
@@ -4302,8 +4302,8 @@ buffering_period( payloadSize ) {
 
                 for (SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay[SchedSelIdx], "initial_cpb_removal_delay");
+                    size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay_offset[SchedSelIdx], "initial_cpb_removal_delay_offset");
                 }
             }
 
@@ -4315,15 +4315,15 @@ buffering_period( payloadSize ) {
             ulong size = 0;
 
             uint SchedSelIdx = 0;
-            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
+            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id, "seq_parameter_set_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0)
             {
 
                 for (SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay[SchedSelIdx], "initial_cpb_removal_delay");
+                    size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx], "initial_cpb_removal_delay_offset");
                 }
             }
 
@@ -4332,8 +4332,8 @@ buffering_period( payloadSize ) {
 
                 for (SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++)
                 {
-                    size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay[SchedSelIdx]);
-                    size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx]);
+                    size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay[SchedSelIdx], "initial_cpb_removal_delay");
+                    size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay_offset[SchedSelIdx], "initial_cpb_removal_delay_offset");
                 }
             }
 
@@ -4443,13 +4443,13 @@ pic_timing( payloadSize ) {
 
             if ((uint)(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 : 23) + 1), out this.cpb_removal_delay);
-                size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 : 23) + 1), out this.dpb_output_delay);
+                size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 : 23) + 1), out this.cpb_removal_delay, "cpb_removal_delay");
+                size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 : 23) + 1), out this.dpb_output_delay, "dpb_output_delay");
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 4, out this.pic_struct);
+                size += stream.ReadUnsignedInt(size, 4, out this.pic_struct, "pic_struct");
 
                 this.clock_timestamp_flag = new byte[this.pic_struct switch
                 {
@@ -4660,41 +4660,41 @@ pic_timing( payloadSize ) {
                     _ => throw new NotSupportedException()
                 }; i++)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.clock_timestamp_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.clock_timestamp_flag[i], "clock_timestamp_flag");
 
                     if (clock_timestamp_flag[i] != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 2, out this.ct_type[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.nuit_field_based_flag[i]);
-                        size += stream.ReadUnsignedInt(size, 5, out this.counting_type[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.full_timestamp_flag[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.discontinuity_flag[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.cnt_dropped_flag[i]);
-                        size += stream.ReadUnsignedInt(size, 8, out this.n_frames[i]);
+                        size += stream.ReadUnsignedInt(size, 2, out this.ct_type[i], "ct_type");
+                        size += stream.ReadUnsignedInt(size, 1, out this.nuit_field_based_flag[i], "nuit_field_based_flag");
+                        size += stream.ReadUnsignedInt(size, 5, out this.counting_type[i], "counting_type");
+                        size += stream.ReadUnsignedInt(size, 1, out this.full_timestamp_flag[i], "full_timestamp_flag");
+                        size += stream.ReadUnsignedInt(size, 1, out this.discontinuity_flag[i], "discontinuity_flag");
+                        size += stream.ReadUnsignedInt(size, 1, out this.cnt_dropped_flag[i], "cnt_dropped_flag");
+                        size += stream.ReadUnsignedInt(size, 8, out this.n_frames[i], "n_frames");
 
                         if (full_timestamp_flag[i] != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i]); // 0..59 
-                            size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i]); // 0..59 
-                            size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i]); // 0..23 
+                            size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i], "seconds_value"); // 0..59 
+                            size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i], "minutes_value"); // 0..59 
+                            size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i], "hours_value"); // 0..23 
                         }
                         else
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.seconds_flag[i]);
+                            size += stream.ReadUnsignedInt(size, 1, out this.seconds_flag[i], "seconds_flag");
 
                             if (seconds_flag[i] != 0)
                             {
-                                size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i]); // range 0..59 
-                                size += stream.ReadUnsignedInt(size, 1, out this.minutes_flag[i]);
+                                size += stream.ReadUnsignedInt(size, 6, out this.seconds_value[i], "seconds_value"); // range 0..59 
+                                size += stream.ReadUnsignedInt(size, 1, out this.minutes_flag[i], "minutes_flag");
 
                                 if (minutes_flag[i] != 0)
                                 {
-                                    size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i]); // 0..59 
-                                    size += stream.ReadUnsignedInt(size, 1, out this.hours_flag[i]);
+                                    size += stream.ReadUnsignedInt(size, 6, out this.minutes_value[i], "minutes_value"); // 0..59 
+                                    size += stream.ReadUnsignedInt(size, 1, out this.hours_flag[i], "hours_flag");
 
                                     if (hours_flag[i] != 0)
                                     {
-                                        size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i]); // 0..23 
+                                        size += stream.ReadUnsignedInt(size, 5, out this.hours_value[i], "hours_value"); // 0..23 
                                     }
                                 }
                             }
@@ -4702,7 +4702,7 @@ pic_timing( payloadSize ) {
 
                         if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength : 24) > 0)
                         {
-                            size += stream.ReadSignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength : 24), out this.time_offset[i]);
+                            size += stream.ReadSignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength : 24), out this.time_offset[i], "time_offset");
                         }
                     }
                 }
@@ -4719,13 +4719,13 @@ pic_timing( payloadSize ) {
 
             if ((uint)(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag == 1 || ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag == 1 ? 1 : 0) != 0)
             {
-                size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 : 23) + 1), this.cpb_removal_delay);
-                size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 : 23) + 1), this.dpb_output_delay);
+                size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 : 23) + 1), this.cpb_removal_delay, "cpb_removal_delay");
+                size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 : 23) + 1), this.dpb_output_delay, "dpb_output_delay");
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0)
             {
-                size += stream.WriteUnsignedInt(4, this.pic_struct);
+                size += stream.WriteUnsignedInt(4, this.pic_struct, "pic_struct");
 
                 for (i = 0; i < this.pic_struct switch
                 {
@@ -4741,41 +4741,41 @@ pic_timing( payloadSize ) {
                     _ => throw new NotSupportedException()
                 }; i++)
                 {
-                    size += stream.WriteUnsignedInt(1, this.clock_timestamp_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.clock_timestamp_flag[i], "clock_timestamp_flag");
 
                     if (clock_timestamp_flag[i] != 0)
                     {
-                        size += stream.WriteUnsignedInt(2, this.ct_type[i]);
-                        size += stream.WriteUnsignedInt(1, this.nuit_field_based_flag[i]);
-                        size += stream.WriteUnsignedInt(5, this.counting_type[i]);
-                        size += stream.WriteUnsignedInt(1, this.full_timestamp_flag[i]);
-                        size += stream.WriteUnsignedInt(1, this.discontinuity_flag[i]);
-                        size += stream.WriteUnsignedInt(1, this.cnt_dropped_flag[i]);
-                        size += stream.WriteUnsignedInt(8, this.n_frames[i]);
+                        size += stream.WriteUnsignedInt(2, this.ct_type[i], "ct_type");
+                        size += stream.WriteUnsignedInt(1, this.nuit_field_based_flag[i], "nuit_field_based_flag");
+                        size += stream.WriteUnsignedInt(5, this.counting_type[i], "counting_type");
+                        size += stream.WriteUnsignedInt(1, this.full_timestamp_flag[i], "full_timestamp_flag");
+                        size += stream.WriteUnsignedInt(1, this.discontinuity_flag[i], "discontinuity_flag");
+                        size += stream.WriteUnsignedInt(1, this.cnt_dropped_flag[i], "cnt_dropped_flag");
+                        size += stream.WriteUnsignedInt(8, this.n_frames[i], "n_frames");
 
                         if (full_timestamp_flag[i] != 0)
                         {
-                            size += stream.WriteUnsignedInt(6, this.seconds_value[i]); // 0..59 
-                            size += stream.WriteUnsignedInt(6, this.minutes_value[i]); // 0..59 
-                            size += stream.WriteUnsignedInt(5, this.hours_value[i]); // 0..23 
+                            size += stream.WriteUnsignedInt(6, this.seconds_value[i], "seconds_value"); // 0..59 
+                            size += stream.WriteUnsignedInt(6, this.minutes_value[i], "minutes_value"); // 0..59 
+                            size += stream.WriteUnsignedInt(5, this.hours_value[i], "hours_value"); // 0..23 
                         }
                         else
                         {
-                            size += stream.WriteUnsignedInt(1, this.seconds_flag[i]);
+                            size += stream.WriteUnsignedInt(1, this.seconds_flag[i], "seconds_flag");
 
                             if (seconds_flag[i] != 0)
                             {
-                                size += stream.WriteUnsignedInt(6, this.seconds_value[i]); // range 0..59 
-                                size += stream.WriteUnsignedInt(1, this.minutes_flag[i]);
+                                size += stream.WriteUnsignedInt(6, this.seconds_value[i], "seconds_value"); // range 0..59 
+                                size += stream.WriteUnsignedInt(1, this.minutes_flag[i], "minutes_flag");
 
                                 if (minutes_flag[i] != 0)
                                 {
-                                    size += stream.WriteUnsignedInt(6, this.minutes_value[i]); // 0..59 
-                                    size += stream.WriteUnsignedInt(1, this.hours_flag[i]);
+                                    size += stream.WriteUnsignedInt(6, this.minutes_value[i], "minutes_value"); // 0..59 
+                                    size += stream.WriteUnsignedInt(1, this.hours_flag[i], "hours_flag");
 
                                     if (hours_flag[i] != 0)
                                     {
-                                        size += stream.WriteUnsignedInt(5, this.hours_value[i]); // 0..23 
+                                        size += stream.WriteUnsignedInt(5, this.hours_value[i], "hours_value"); // 0..23 
                                     }
                                 }
                             }
@@ -4783,7 +4783,7 @@ pic_timing( payloadSize ) {
 
                         if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength : 24) > 0)
                         {
-                            size += stream.WriteSignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength : 24), this.time_offset[i]);
+                            size += stream.WriteSignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength : 24), this.time_offset[i], "time_offset");
                         }
                     }
                 }
@@ -4846,12 +4846,12 @@ if( !pan_scan_rect_cancel_flag ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_rect_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.pan_scan_rect_cancel_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_rect_id, "pan_scan_rect_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.pan_scan_rect_cancel_flag, "pan_scan_rect_cancel_flag");
 
             if (pan_scan_rect_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_cnt_minus1);
+                size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_cnt_minus1, "pan_scan_cnt_minus1");
 
                 this.pan_scan_rect_left_offset = new int[pan_scan_cnt_minus1 + 1];
                 this.pan_scan_rect_right_offset = new int[pan_scan_cnt_minus1 + 1];
@@ -4859,12 +4859,12 @@ if( !pan_scan_rect_cancel_flag ) {
                 this.pan_scan_rect_bottom_offset = new int[pan_scan_cnt_minus1 + 1];
                 for (i = 0; i <= pan_scan_cnt_minus1; i++)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_left_offset[i]);
-                    size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_right_offset[i]);
-                    size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_top_offset[i]);
-                    size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_bottom_offset[i]);
+                    size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_left_offset[i], "pan_scan_rect_left_offset");
+                    size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_right_offset[i], "pan_scan_rect_right_offset");
+                    size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_top_offset[i], "pan_scan_rect_top_offset");
+                    size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_bottom_offset[i], "pan_scan_rect_bottom_offset");
                 }
-                size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_rect_repetition_period);
+                size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_rect_repetition_period, "pan_scan_rect_repetition_period");
             }
 
             return size;
@@ -4875,21 +4875,21 @@ if( !pan_scan_rect_cancel_flag ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.pan_scan_rect_id);
-            size += stream.WriteUnsignedInt(1, this.pan_scan_rect_cancel_flag);
+            size += stream.WriteUnsignedIntGolomb(this.pan_scan_rect_id, "pan_scan_rect_id");
+            size += stream.WriteUnsignedInt(1, this.pan_scan_rect_cancel_flag, "pan_scan_rect_cancel_flag");
 
             if (pan_scan_rect_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.pan_scan_cnt_minus1);
+                size += stream.WriteUnsignedIntGolomb(this.pan_scan_cnt_minus1, "pan_scan_cnt_minus1");
 
                 for (i = 0; i <= pan_scan_cnt_minus1; i++)
                 {
-                    size += stream.WriteSignedIntGolomb(this.pan_scan_rect_left_offset[i]);
-                    size += stream.WriteSignedIntGolomb(this.pan_scan_rect_right_offset[i]);
-                    size += stream.WriteSignedIntGolomb(this.pan_scan_rect_top_offset[i]);
-                    size += stream.WriteSignedIntGolomb(this.pan_scan_rect_bottom_offset[i]);
+                    size += stream.WriteSignedIntGolomb(this.pan_scan_rect_left_offset[i], "pan_scan_rect_left_offset");
+                    size += stream.WriteSignedIntGolomb(this.pan_scan_rect_right_offset[i], "pan_scan_rect_right_offset");
+                    size += stream.WriteSignedIntGolomb(this.pan_scan_rect_top_offset[i], "pan_scan_rect_top_offset");
+                    size += stream.WriteSignedIntGolomb(this.pan_scan_rect_bottom_offset[i], "pan_scan_rect_bottom_offset");
                 }
-                size += stream.WriteUnsignedIntGolomb(this.pan_scan_rect_repetition_period);
+                size += stream.WriteUnsignedIntGolomb(this.pan_scan_rect_repetition_period, "pan_scan_rect_repetition_period");
             }
 
             return size;
@@ -4929,7 +4929,7 @@ filler_payload( payloadSize ) {
             this.ff_byte = new uint[payloadSize];
             for (k = 0; k < payloadSize; k++)
             {
-                size += stream.ReadFixed(size, 8, out this.ff_byte[k]); // equal to 0xFF 
+                size += stream.ReadFixed(size, 8, out this.ff_byte[k], "ff_byte"); // equal to 0xFF 
             }
 
             return size;
@@ -4943,7 +4943,7 @@ filler_payload( payloadSize ) {
 
             for (k = 0; k < payloadSize; k++)
             {
-                size += stream.WriteFixed(8, this.ff_byte[k]); // equal to 0xFF 
+                size += stream.WriteFixed(8, this.ff_byte[k], "ff_byte"); // equal to 0xFF 
             }
 
             return size;
@@ -4993,7 +4993,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
 
             uint i = 0;
             int whileIndex = -1;
-            size += stream.ReadBits(size, 8, out this.itu_t_t35_country_code);
+            size += stream.ReadBits(size, 8, out this.itu_t_t35_country_code, "itu_t_t35_country_code");
 
             if (itu_t_t35_country_code != 0xFF)
             {
@@ -5001,7 +5001,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
             }
             else
             {
-                size += stream.ReadBits(size, 8, out this.itu_t_t35_country_code_extension_byte);
+                size += stream.ReadBits(size, 8, out this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte");
                 i = 2;
             }
 
@@ -5009,7 +5009,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
             {
                 whileIndex++;
 
-                size += stream.ReadBits(size, 8, whileIndex, this.itu_t_t35_payload_byte);
+                size += stream.ReadBits(size, 8, whileIndex, this.itu_t_t35_payload_byte, "itu_t_t35_payload_byte");
                 i++;
             } while (i < payloadSize);
 
@@ -5022,7 +5022,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
 
             uint i = 0;
             int whileIndex = -1;
-            size += stream.WriteBits(8, this.itu_t_t35_country_code);
+            size += stream.WriteBits(8, this.itu_t_t35_country_code, "itu_t_t35_country_code");
 
             if (itu_t_t35_country_code != 0xFF)
             {
@@ -5030,7 +5030,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
             }
             else
             {
-                size += stream.WriteBits(8, this.itu_t_t35_country_code_extension_byte);
+                size += stream.WriteBits(8, this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte");
                 i = 2;
             }
 
@@ -5038,7 +5038,7 @@ user_data_registered_itu_t_t35( payloadSize ) {
             {
                 whileIndex++;
 
-                size += stream.WriteBits(8, whileIndex, this.itu_t_t35_payload_byte);
+                size += stream.WriteBits(8, whileIndex, this.itu_t_t35_payload_byte, "itu_t_t35_payload_byte");
                 i++;
             } while (i < payloadSize);
 
@@ -5078,12 +5078,12 @@ user_data_unregistered( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedInt(size, 128, out this.uuid_iso_iec_11578);
+            size += stream.ReadUnsignedInt(size, 128, out this.uuid_iso_iec_11578, "uuid_iso_iec_11578");
 
             this.user_data_payload_byte = new byte[payloadSize];
             for (i = 16; i < payloadSize; i++)
             {
-                size += stream.ReadBits(size, 8, out this.user_data_payload_byte[i]);
+                size += stream.ReadBits(size, 8, out this.user_data_payload_byte[i], "user_data_payload_byte");
             }
 
             return size;
@@ -5094,11 +5094,11 @@ user_data_unregistered( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedInt(128, this.uuid_iso_iec_11578);
+            size += stream.WriteUnsignedInt(128, this.uuid_iso_iec_11578, "uuid_iso_iec_11578");
 
             for (i = 16; i < payloadSize; i++)
             {
-                size += stream.WriteBits(8, this.user_data_payload_byte[i]);
+                size += stream.WriteBits(8, this.user_data_payload_byte[i], "user_data_payload_byte");
             }
 
             return size;
@@ -5141,10 +5141,10 @@ recovery_point( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.recovery_frame_cnt);
-            size += stream.ReadUnsignedInt(size, 1, out this.exact_match_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.broken_link_flag);
-            size += stream.ReadUnsignedInt(size, 2, out this.changing_slice_group_idc);
+            size += stream.ReadUnsignedIntGolomb(size, out this.recovery_frame_cnt, "recovery_frame_cnt");
+            size += stream.ReadUnsignedInt(size, 1, out this.exact_match_flag, "exact_match_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.broken_link_flag, "broken_link_flag");
+            size += stream.ReadUnsignedInt(size, 2, out this.changing_slice_group_idc, "changing_slice_group_idc");
 
             return size;
         }
@@ -5153,10 +5153,10 @@ recovery_point( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.recovery_frame_cnt);
-            size += stream.WriteUnsignedInt(1, this.exact_match_flag);
-            size += stream.WriteUnsignedInt(1, this.broken_link_flag);
-            size += stream.WriteUnsignedInt(2, this.changing_slice_group_idc);
+            size += stream.WriteUnsignedIntGolomb(this.recovery_frame_cnt, "recovery_frame_cnt");
+            size += stream.WriteUnsignedInt(1, this.exact_match_flag, "exact_match_flag");
+            size += stream.WriteUnsignedInt(1, this.broken_link_flag, "broken_link_flag");
+            size += stream.WriteUnsignedInt(2, this.changing_slice_group_idc, "changing_slice_group_idc");
 
             return size;
         }
@@ -5204,20 +5204,20 @@ dec_ref_pic_marking_repetition( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.original_idr_flag);
-            size += stream.ReadUnsignedIntGolomb(size, out this.original_frame_num);
+            size += stream.ReadUnsignedInt(size, 1, out this.original_idr_flag, "original_idr_flag");
+            size += stream.ReadUnsignedIntGolomb(size, out this.original_frame_num, "original_frame_num");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.original_field_pic_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.original_field_pic_flag, "original_field_pic_flag");
 
                 if (original_field_pic_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.original_bottom_field_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.original_bottom_field_flag, "original_bottom_field_flag");
                 }
             }
             this.dec_ref_pic_marking = new DecRefPicMarking();
-            size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking);
+            size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
 
             return size;
         }
@@ -5226,19 +5226,19 @@ dec_ref_pic_marking_repetition( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.original_idr_flag);
-            size += stream.WriteUnsignedIntGolomb(this.original_frame_num);
+            size += stream.WriteUnsignedInt(1, this.original_idr_flag, "original_idr_flag");
+            size += stream.WriteUnsignedIntGolomb(this.original_frame_num, "original_frame_num");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.original_field_pic_flag);
+                size += stream.WriteUnsignedInt(1, this.original_field_pic_flag, "original_field_pic_flag");
 
                 if (original_field_pic_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.original_bottom_field_flag);
+                    size += stream.WriteUnsignedInt(1, this.original_bottom_field_flag, "original_bottom_field_flag");
                 }
             }
-            size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+            size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
 
             return size;
         }
@@ -5310,14 +5310,14 @@ spare_pic( payloadSize ) {
             uint i = 0;
             uint j = 0;
             uint mapUnitCnt = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.target_frame_num);
-            size += stream.ReadUnsignedInt(size, 1, out this.spare_field_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.target_frame_num, "target_frame_num");
+            size += stream.ReadUnsignedInt(size, 1, out this.spare_field_flag, "spare_field_flag");
 
             if (spare_field_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.target_bottom_field_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.target_bottom_field_flag, "target_bottom_field_flag");
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_spare_pics_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_spare_pics_minus1, "num_spare_pics_minus1");
 
             this.delta_spare_frame_num = new uint[num_spare_pics_minus1 + 1 + 1];
             this.spare_bottom_field_flag = new byte[num_spare_pics_minus1 + 1 + 1];
@@ -5326,13 +5326,13 @@ spare_pic( payloadSize ) {
             this.zero_run_length = new uint[num_spare_pics_minus1 + 1 + 1][];
             for (i = 0; i < num_spare_pics_minus1 + 1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.delta_spare_frame_num[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.delta_spare_frame_num[i], "delta_spare_frame_num");
 
                 if (spare_field_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.spare_bottom_field_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.spare_bottom_field_flag[i], "spare_bottom_field_flag");
                 }
-                size += stream.ReadUnsignedIntGolomb(size, out this.spare_area_idc[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.spare_area_idc[i], "spare_area_idc");
 
                 if (spare_area_idc[i] == 1)
                 {
@@ -5340,7 +5340,7 @@ spare_pic( payloadSize ) {
                     this.spare_unit_flag[i] = new byte[(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
                     for (j = 0; j < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.spare_unit_flag[i][j]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.spare_unit_flag[i][j], "spare_unit_flag");
                     }
                 }
                 else if (spare_area_idc[i] == 2)
@@ -5350,7 +5350,7 @@ spare_pic( payloadSize ) {
                     this.zero_run_length[i] = new uint[(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
                     for (j = 0; mapUnitCnt < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.zero_run_length[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.zero_run_length[i][j], "zero_run_length");
                         mapUnitCnt += zero_run_length[i][j] + 1;
                     }
                 }
@@ -5366,31 +5366,31 @@ spare_pic( payloadSize ) {
             uint i = 0;
             uint j = 0;
             uint mapUnitCnt = 0;
-            size += stream.WriteUnsignedIntGolomb(this.target_frame_num);
-            size += stream.WriteUnsignedInt(1, this.spare_field_flag);
+            size += stream.WriteUnsignedIntGolomb(this.target_frame_num, "target_frame_num");
+            size += stream.WriteUnsignedInt(1, this.spare_field_flag, "spare_field_flag");
 
             if (spare_field_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.target_bottom_field_flag);
+                size += stream.WriteUnsignedInt(1, this.target_bottom_field_flag, "target_bottom_field_flag");
             }
-            size += stream.WriteUnsignedIntGolomb(this.num_spare_pics_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_spare_pics_minus1, "num_spare_pics_minus1");
 
             for (i = 0; i < num_spare_pics_minus1 + 1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.delta_spare_frame_num[i]);
+                size += stream.WriteUnsignedIntGolomb(this.delta_spare_frame_num[i], "delta_spare_frame_num");
 
                 if (spare_field_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.spare_bottom_field_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.spare_bottom_field_flag[i], "spare_bottom_field_flag");
                 }
-                size += stream.WriteUnsignedIntGolomb(this.spare_area_idc[i]);
+                size += stream.WriteUnsignedIntGolomb(this.spare_area_idc[i], "spare_area_idc");
 
                 if (spare_area_idc[i] == 1)
                 {
 
                     for (j = 0; j < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.spare_unit_flag[i][j]);
+                        size += stream.WriteUnsignedInt(1, this.spare_unit_flag[i][j], "spare_unit_flag");
                     }
                 }
                 else if (spare_area_idc[i] == 2)
@@ -5399,7 +5399,7 @@ spare_pic( payloadSize ) {
 
                     for (j = 0; mapUnitCnt < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.zero_run_length[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.zero_run_length[i][j], "zero_run_length");
                         mapUnitCnt += zero_run_length[i][j] + 1;
                     }
                 }
@@ -5448,16 +5448,16 @@ scene_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.scene_info_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.scene_info_present_flag, "scene_info_present_flag");
 
             if (scene_info_present_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.scene_id);
-                size += stream.ReadUnsignedIntGolomb(size, out this.scene_transition_type);
+                size += stream.ReadUnsignedIntGolomb(size, out this.scene_id, "scene_id");
+                size += stream.ReadUnsignedIntGolomb(size, out this.scene_transition_type, "scene_transition_type");
 
                 if (scene_transition_type > 3)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.second_scene_id);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.second_scene_id, "second_scene_id");
                 }
             }
 
@@ -5468,16 +5468,16 @@ scene_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.scene_info_present_flag);
+            size += stream.WriteUnsignedInt(1, this.scene_info_present_flag, "scene_info_present_flag");
 
             if (scene_info_present_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.scene_id);
-                size += stream.WriteUnsignedIntGolomb(this.scene_transition_type);
+                size += stream.WriteUnsignedIntGolomb(this.scene_id, "scene_id");
+                size += stream.WriteUnsignedIntGolomb(this.scene_transition_type, "scene_transition_type");
 
                 if (scene_transition_type > 3)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.second_scene_id);
+                    size += stream.WriteUnsignedIntGolomb(this.second_scene_id, "second_scene_id");
                 }
             }
 
@@ -5531,16 +5531,16 @@ sub_seq_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_layer_num);
-            size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.first_ref_pic_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.leading_non_ref_pic_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.last_pic_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.sub_seq_frame_num_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_layer_num, "sub_seq_layer_num");
+            size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_id, "sub_seq_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.first_ref_pic_flag, "first_ref_pic_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.leading_non_ref_pic_flag, "leading_non_ref_pic_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.last_pic_flag, "last_pic_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.sub_seq_frame_num_flag, "sub_seq_frame_num_flag");
 
             if (sub_seq_frame_num_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_frame_num);
+                size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_frame_num, "sub_seq_frame_num");
             }
 
             return size;
@@ -5550,16 +5550,16 @@ sub_seq_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.sub_seq_layer_num);
-            size += stream.WriteUnsignedIntGolomb(this.sub_seq_id);
-            size += stream.WriteUnsignedInt(1, this.first_ref_pic_flag);
-            size += stream.WriteUnsignedInt(1, this.leading_non_ref_pic_flag);
-            size += stream.WriteUnsignedInt(1, this.last_pic_flag);
-            size += stream.WriteUnsignedInt(1, this.sub_seq_frame_num_flag);
+            size += stream.WriteUnsignedIntGolomb(this.sub_seq_layer_num, "sub_seq_layer_num");
+            size += stream.WriteUnsignedIntGolomb(this.sub_seq_id, "sub_seq_id");
+            size += stream.WriteUnsignedInt(1, this.first_ref_pic_flag, "first_ref_pic_flag");
+            size += stream.WriteUnsignedInt(1, this.leading_non_ref_pic_flag, "leading_non_ref_pic_flag");
+            size += stream.WriteUnsignedInt(1, this.last_pic_flag, "last_pic_flag");
+            size += stream.WriteUnsignedInt(1, this.sub_seq_frame_num_flag, "sub_seq_frame_num_flag");
 
             if (sub_seq_frame_num_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.sub_seq_frame_num);
+                size += stream.WriteUnsignedIntGolomb(this.sub_seq_frame_num, "sub_seq_frame_num");
             }
 
             return size;
@@ -5605,16 +5605,16 @@ sub_seq_layer_characteristics( payloadSize ) {
             ulong size = 0;
 
             uint layer = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_sub_seq_layers_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_sub_seq_layers_minus1, "num_sub_seq_layers_minus1");
 
             this.accurate_statistics_flag = new byte[num_sub_seq_layers_minus1 + 1];
             this.average_bit_rate = new uint[num_sub_seq_layers_minus1 + 1];
             this.average_frame_rate = new uint[num_sub_seq_layers_minus1 + 1];
             for (layer = 0; layer <= num_sub_seq_layers_minus1; layer++)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.accurate_statistics_flag[layer]);
-                size += stream.ReadUnsignedInt(size, 16, out this.average_bit_rate[layer]);
-                size += stream.ReadUnsignedInt(size, 16, out this.average_frame_rate[layer]);
+                size += stream.ReadUnsignedInt(size, 1, out this.accurate_statistics_flag[layer], "accurate_statistics_flag");
+                size += stream.ReadUnsignedInt(size, 16, out this.average_bit_rate[layer], "average_bit_rate");
+                size += stream.ReadUnsignedInt(size, 16, out this.average_frame_rate[layer], "average_frame_rate");
             }
 
             return size;
@@ -5625,13 +5625,13 @@ sub_seq_layer_characteristics( payloadSize ) {
             ulong size = 0;
 
             uint layer = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_sub_seq_layers_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_sub_seq_layers_minus1, "num_sub_seq_layers_minus1");
 
             for (layer = 0; layer <= num_sub_seq_layers_minus1; layer++)
             {
-                size += stream.WriteUnsignedInt(1, this.accurate_statistics_flag[layer]);
-                size += stream.WriteUnsignedInt(16, this.average_bit_rate[layer]);
-                size += stream.WriteUnsignedInt(16, this.average_frame_rate[layer]);
+                size += stream.WriteUnsignedInt(1, this.accurate_statistics_flag[layer], "accurate_statistics_flag");
+                size += stream.WriteUnsignedInt(16, this.average_bit_rate[layer], "average_bit_rate");
+                size += stream.WriteUnsignedInt(16, this.average_frame_rate[layer], "average_frame_rate");
             }
 
             return size;
@@ -5704,32 +5704,32 @@ sub_seq_characteristics( payloadSize ) {
             ulong size = 0;
 
             uint n = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_layer_num);
-            size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.duration_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_layer_num, "sub_seq_layer_num");
+            size += stream.ReadUnsignedIntGolomb(size, out this.sub_seq_id, "sub_seq_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.duration_flag, "duration_flag");
 
             if (duration_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 32, out this.sub_seq_duration);
+                size += stream.ReadUnsignedInt(size, 32, out this.sub_seq_duration, "sub_seq_duration");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.average_rate_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.average_rate_flag, "average_rate_flag");
 
             if (average_rate_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.accurate_statistics_flag);
-                size += stream.ReadUnsignedInt(size, 16, out this.average_bit_rate);
-                size += stream.ReadUnsignedInt(size, 16, out this.average_frame_rate);
+                size += stream.ReadUnsignedInt(size, 1, out this.accurate_statistics_flag, "accurate_statistics_flag");
+                size += stream.ReadUnsignedInt(size, 16, out this.average_bit_rate, "average_bit_rate");
+                size += stream.ReadUnsignedInt(size, 16, out this.average_frame_rate, "average_frame_rate");
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_referenced_subseqs);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_referenced_subseqs, "num_referenced_subseqs");
 
             this.ref_sub_seq_layer_num = new uint[num_referenced_subseqs];
             this.ref_sub_seq_id = new uint[num_referenced_subseqs];
             this.ref_sub_seq_direction = new byte[num_referenced_subseqs];
             for (n = 0; n < num_referenced_subseqs; n++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.ref_sub_seq_layer_num[n]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.ref_sub_seq_id[n]);
-                size += stream.ReadUnsignedInt(size, 1, out this.ref_sub_seq_direction[n]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.ref_sub_seq_layer_num[n], "ref_sub_seq_layer_num");
+                size += stream.ReadUnsignedIntGolomb(size, out this.ref_sub_seq_id[n], "ref_sub_seq_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_sub_seq_direction[n], "ref_sub_seq_direction");
             }
 
             return size;
@@ -5740,29 +5740,29 @@ sub_seq_characteristics( payloadSize ) {
             ulong size = 0;
 
             uint n = 0;
-            size += stream.WriteUnsignedIntGolomb(this.sub_seq_layer_num);
-            size += stream.WriteUnsignedIntGolomb(this.sub_seq_id);
-            size += stream.WriteUnsignedInt(1, this.duration_flag);
+            size += stream.WriteUnsignedIntGolomb(this.sub_seq_layer_num, "sub_seq_layer_num");
+            size += stream.WriteUnsignedIntGolomb(this.sub_seq_id, "sub_seq_id");
+            size += stream.WriteUnsignedInt(1, this.duration_flag, "duration_flag");
 
             if (duration_flag != 0)
             {
-                size += stream.WriteUnsignedInt(32, this.sub_seq_duration);
+                size += stream.WriteUnsignedInt(32, this.sub_seq_duration, "sub_seq_duration");
             }
-            size += stream.WriteUnsignedInt(1, this.average_rate_flag);
+            size += stream.WriteUnsignedInt(1, this.average_rate_flag, "average_rate_flag");
 
             if (average_rate_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.accurate_statistics_flag);
-                size += stream.WriteUnsignedInt(16, this.average_bit_rate);
-                size += stream.WriteUnsignedInt(16, this.average_frame_rate);
+                size += stream.WriteUnsignedInt(1, this.accurate_statistics_flag, "accurate_statistics_flag");
+                size += stream.WriteUnsignedInt(16, this.average_bit_rate, "average_bit_rate");
+                size += stream.WriteUnsignedInt(16, this.average_frame_rate, "average_frame_rate");
             }
-            size += stream.WriteUnsignedIntGolomb(this.num_referenced_subseqs);
+            size += stream.WriteUnsignedIntGolomb(this.num_referenced_subseqs, "num_referenced_subseqs");
 
             for (n = 0; n < num_referenced_subseqs; n++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.ref_sub_seq_layer_num[n]);
-                size += stream.WriteUnsignedIntGolomb(this.ref_sub_seq_id[n]);
-                size += stream.WriteUnsignedInt(1, this.ref_sub_seq_direction[n]);
+                size += stream.WriteUnsignedIntGolomb(this.ref_sub_seq_layer_num[n], "ref_sub_seq_layer_num");
+                size += stream.WriteUnsignedIntGolomb(this.ref_sub_seq_id[n], "ref_sub_seq_id");
+                size += stream.WriteUnsignedInt(1, this.ref_sub_seq_direction[n], "ref_sub_seq_direction");
             }
 
             return size;
@@ -5796,7 +5796,7 @@ full_frame_freeze( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.full_frame_freeze_repetition_period);
+            size += stream.ReadUnsignedIntGolomb(size, out this.full_frame_freeze_repetition_period, "full_frame_freeze_repetition_period");
 
             return size;
         }
@@ -5805,7 +5805,7 @@ full_frame_freeze( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.full_frame_freeze_repetition_period);
+            size += stream.WriteUnsignedIntGolomb(this.full_frame_freeze_repetition_period, "full_frame_freeze_repetition_period");
 
             return size;
         }
@@ -5875,7 +5875,7 @@ full_frame_snapshot( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.snapshot_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.snapshot_id, "snapshot_id");
 
             return size;
         }
@@ -5884,7 +5884,7 @@ full_frame_snapshot( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.snapshot_id);
+            size += stream.WriteUnsignedIntGolomb(this.snapshot_id, "snapshot_id");
 
             return size;
         }
@@ -5920,8 +5920,8 @@ progressive_refinement_segment_start( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.progressive_refinement_id);
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_refinement_steps_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.progressive_refinement_id, "progressive_refinement_id");
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_refinement_steps_minus1, "num_refinement_steps_minus1");
 
             return size;
         }
@@ -5930,8 +5930,8 @@ progressive_refinement_segment_start( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.progressive_refinement_id);
-            size += stream.WriteUnsignedIntGolomb(this.num_refinement_steps_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.progressive_refinement_id, "progressive_refinement_id");
+            size += stream.WriteUnsignedIntGolomb(this.num_refinement_steps_minus1, "num_refinement_steps_minus1");
 
             return size;
         }
@@ -5964,7 +5964,7 @@ progressive_refinement_segment_end( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.progressive_refinement_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.progressive_refinement_id, "progressive_refinement_id");
 
             return size;
         }
@@ -5973,7 +5973,7 @@ progressive_refinement_segment_end( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.progressive_refinement_id);
+            size += stream.WriteUnsignedIntGolomb(this.progressive_refinement_id, "progressive_refinement_id");
 
             return size;
         }
@@ -6023,7 +6023,7 @@ motion_constrained_slice_group_set( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_slice_groups_in_set_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_slice_groups_in_set_minus1, "num_slice_groups_in_set_minus1");
 
             if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0)
             {
@@ -6031,15 +6031,15 @@ motion_constrained_slice_group_set( payloadSize ) {
                 this.slice_group_id = new uint[num_slice_groups_in_set_minus1 + 1];
                 for (i = 0; i <= num_slice_groups_in_set_minus1; i++)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[i], "slice_group_id");
                 }
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.exact_sample_value_match_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.pan_scan_rect_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.exact_sample_value_match_flag, "exact_sample_value_match_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.pan_scan_rect_flag, "pan_scan_rect_flag");
 
             if (pan_scan_rect_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_rect_id);
+                size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_rect_id, "pan_scan_rect_id");
             }
 
             return size;
@@ -6050,22 +6050,22 @@ motion_constrained_slice_group_set( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_slice_groups_in_set_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_slice_groups_in_set_minus1, "num_slice_groups_in_set_minus1");
 
             if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0)
             {
 
                 for (i = 0; i <= num_slice_groups_in_set_minus1; i++)
                 {
-                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i]);
+                    size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[i], "slice_group_id");
                 }
             }
-            size += stream.WriteUnsignedInt(1, this.exact_sample_value_match_flag);
-            size += stream.WriteUnsignedInt(1, this.pan_scan_rect_flag);
+            size += stream.WriteUnsignedInt(1, this.exact_sample_value_match_flag, "exact_sample_value_match_flag");
+            size += stream.WriteUnsignedInt(1, this.pan_scan_rect_flag, "pan_scan_rect_flag");
 
             if (pan_scan_rect_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.pan_scan_rect_id);
+                size += stream.WriteUnsignedIntGolomb(this.pan_scan_rect_id, "pan_scan_rect_id");
             }
 
             return size;
@@ -6164,29 +6164,29 @@ film_grain_characteristics( payloadSize ) {
             uint c = 0;
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedInt(size, 1, out this.film_grain_characteristics_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.film_grain_characteristics_cancel_flag, "film_grain_characteristics_cancel_flag");
 
             if (film_grain_characteristics_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 2, out this.film_grain_model_id);
-                size += stream.ReadUnsignedInt(size, 1, out this.separate_colour_description_present_flag);
+                size += stream.ReadUnsignedInt(size, 2, out this.film_grain_model_id, "film_grain_model_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.separate_colour_description_present_flag, "separate_colour_description_present_flag");
 
                 if (separate_colour_description_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 3, out this.film_grain_bit_depth_luma_minus8);
-                    size += stream.ReadUnsignedInt(size, 3, out this.film_grain_bit_depth_chroma_minus8);
-                    size += stream.ReadUnsignedInt(size, 1, out this.film_grain_full_range_flag);
-                    size += stream.ReadUnsignedInt(size, 8, out this.film_grain_colour_primaries);
-                    size += stream.ReadUnsignedInt(size, 8, out this.film_grain_transfer_characteristics);
-                    size += stream.ReadUnsignedInt(size, 8, out this.film_grain_matrix_coefficients);
+                    size += stream.ReadUnsignedInt(size, 3, out this.film_grain_bit_depth_luma_minus8, "film_grain_bit_depth_luma_minus8");
+                    size += stream.ReadUnsignedInt(size, 3, out this.film_grain_bit_depth_chroma_minus8, "film_grain_bit_depth_chroma_minus8");
+                    size += stream.ReadUnsignedInt(size, 1, out this.film_grain_full_range_flag, "film_grain_full_range_flag");
+                    size += stream.ReadUnsignedInt(size, 8, out this.film_grain_colour_primaries, "film_grain_colour_primaries");
+                    size += stream.ReadUnsignedInt(size, 8, out this.film_grain_transfer_characteristics, "film_grain_transfer_characteristics");
+                    size += stream.ReadUnsignedInt(size, 8, out this.film_grain_matrix_coefficients, "film_grain_matrix_coefficients");
                 }
-                size += stream.ReadUnsignedInt(size, 2, out this.blending_mode_id);
-                size += stream.ReadUnsignedInt(size, 4, out this.log2_scale_factor);
+                size += stream.ReadUnsignedInt(size, 2, out this.blending_mode_id, "blending_mode_id");
+                size += stream.ReadUnsignedInt(size, 4, out this.log2_scale_factor, "log2_scale_factor");
 
                 this.comp_model_present_flag = new byte[3];
                 for (c = 0; c < 3; c++)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.comp_model_present_flag[c]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.comp_model_present_flag[c], "comp_model_present_flag");
                 }
 
                 this.num_intensity_intervals_minus1 = new uint[3];
@@ -6199,26 +6199,26 @@ film_grain_characteristics( payloadSize ) {
 
                     if (comp_model_present_flag[c] != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 8, out this.num_intensity_intervals_minus1[c]);
-                        size += stream.ReadUnsignedInt(size, 3, out this.num_model_values_minus1[c]);
+                        size += stream.ReadUnsignedInt(size, 8, out this.num_intensity_intervals_minus1[c], "num_intensity_intervals_minus1");
+                        size += stream.ReadUnsignedInt(size, 3, out this.num_model_values_minus1[c], "num_model_values_minus1");
 
                         this.intensity_interval_lower_bound[c] = new uint[num_intensity_intervals_minus1[c] + 1];
                         this.intensity_interval_upper_bound[c] = new uint[num_intensity_intervals_minus1[c] + 1];
                         this.comp_model_value[c] = new int[num_intensity_intervals_minus1[c] + 1][];
                         for (i = 0; i <= num_intensity_intervals_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedInt(size, 8, out this.intensity_interval_lower_bound[c][i]);
-                            size += stream.ReadUnsignedInt(size, 8, out this.intensity_interval_upper_bound[c][i]);
+                            size += stream.ReadUnsignedInt(size, 8, out this.intensity_interval_lower_bound[c][i], "intensity_interval_lower_bound");
+                            size += stream.ReadUnsignedInt(size, 8, out this.intensity_interval_upper_bound[c][i], "intensity_interval_upper_bound");
 
                             this.comp_model_value[c][i] = new int[num_model_values_minus1[c] + 1];
                             for (j = 0; j <= num_model_values_minus1[c]; j++)
                             {
-                                size += stream.ReadSignedIntGolomb(size, out this.comp_model_value[c][i][j]);
+                                size += stream.ReadSignedIntGolomb(size, out this.comp_model_value[c][i][j], "comp_model_value");
                             }
                         }
                     }
                 }
-                size += stream.ReadUnsignedIntGolomb(size, out this.film_grain_characteristics_repetition_period);
+                size += stream.ReadUnsignedIntGolomb(size, out this.film_grain_characteristics_repetition_period, "film_grain_characteristics_repetition_period");
             }
 
             return size;
@@ -6231,28 +6231,28 @@ film_grain_characteristics( payloadSize ) {
             uint c = 0;
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedInt(1, this.film_grain_characteristics_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.film_grain_characteristics_cancel_flag, "film_grain_characteristics_cancel_flag");
 
             if (film_grain_characteristics_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(2, this.film_grain_model_id);
-                size += stream.WriteUnsignedInt(1, this.separate_colour_description_present_flag);
+                size += stream.WriteUnsignedInt(2, this.film_grain_model_id, "film_grain_model_id");
+                size += stream.WriteUnsignedInt(1, this.separate_colour_description_present_flag, "separate_colour_description_present_flag");
 
                 if (separate_colour_description_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(3, this.film_grain_bit_depth_luma_minus8);
-                    size += stream.WriteUnsignedInt(3, this.film_grain_bit_depth_chroma_minus8);
-                    size += stream.WriteUnsignedInt(1, this.film_grain_full_range_flag);
-                    size += stream.WriteUnsignedInt(8, this.film_grain_colour_primaries);
-                    size += stream.WriteUnsignedInt(8, this.film_grain_transfer_characteristics);
-                    size += stream.WriteUnsignedInt(8, this.film_grain_matrix_coefficients);
+                    size += stream.WriteUnsignedInt(3, this.film_grain_bit_depth_luma_minus8, "film_grain_bit_depth_luma_minus8");
+                    size += stream.WriteUnsignedInt(3, this.film_grain_bit_depth_chroma_minus8, "film_grain_bit_depth_chroma_minus8");
+                    size += stream.WriteUnsignedInt(1, this.film_grain_full_range_flag, "film_grain_full_range_flag");
+                    size += stream.WriteUnsignedInt(8, this.film_grain_colour_primaries, "film_grain_colour_primaries");
+                    size += stream.WriteUnsignedInt(8, this.film_grain_transfer_characteristics, "film_grain_transfer_characteristics");
+                    size += stream.WriteUnsignedInt(8, this.film_grain_matrix_coefficients, "film_grain_matrix_coefficients");
                 }
-                size += stream.WriteUnsignedInt(2, this.blending_mode_id);
-                size += stream.WriteUnsignedInt(4, this.log2_scale_factor);
+                size += stream.WriteUnsignedInt(2, this.blending_mode_id, "blending_mode_id");
+                size += stream.WriteUnsignedInt(4, this.log2_scale_factor, "log2_scale_factor");
 
                 for (c = 0; c < 3; c++)
                 {
-                    size += stream.WriteUnsignedInt(1, this.comp_model_present_flag[c]);
+                    size += stream.WriteUnsignedInt(1, this.comp_model_present_flag[c], "comp_model_present_flag");
                 }
 
                 for (c = 0; c < 3; c++)
@@ -6260,22 +6260,22 @@ film_grain_characteristics( payloadSize ) {
 
                     if (comp_model_present_flag[c] != 0)
                     {
-                        size += stream.WriteUnsignedInt(8, this.num_intensity_intervals_minus1[c]);
-                        size += stream.WriteUnsignedInt(3, this.num_model_values_minus1[c]);
+                        size += stream.WriteUnsignedInt(8, this.num_intensity_intervals_minus1[c], "num_intensity_intervals_minus1");
+                        size += stream.WriteUnsignedInt(3, this.num_model_values_minus1[c], "num_model_values_minus1");
 
                         for (i = 0; i <= num_intensity_intervals_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedInt(8, this.intensity_interval_lower_bound[c][i]);
-                            size += stream.WriteUnsignedInt(8, this.intensity_interval_upper_bound[c][i]);
+                            size += stream.WriteUnsignedInt(8, this.intensity_interval_lower_bound[c][i], "intensity_interval_lower_bound");
+                            size += stream.WriteUnsignedInt(8, this.intensity_interval_upper_bound[c][i], "intensity_interval_upper_bound");
 
                             for (j = 0; j <= num_model_values_minus1[c]; j++)
                             {
-                                size += stream.WriteSignedIntGolomb(this.comp_model_value[c][i][j]);
+                                size += stream.WriteSignedIntGolomb(this.comp_model_value[c][i][j], "comp_model_value");
                             }
                         }
                     }
                 }
-                size += stream.WriteUnsignedIntGolomb(this.film_grain_characteristics_repetition_period);
+                size += stream.WriteUnsignedIntGolomb(this.film_grain_characteristics_repetition_period, "film_grain_characteristics_repetition_period");
             }
 
             return size;
@@ -6320,13 +6320,13 @@ deblocking_filter_display_preference( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.deblocking_display_preference_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.deblocking_display_preference_cancel_flag, "deblocking_display_preference_cancel_flag");
 
             if (deblocking_display_preference_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.display_prior_to_deblocking_preferred_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.dec_frame_buffering_constraint_flag);
-                size += stream.ReadUnsignedIntGolomb(size, out this.deblocking_display_preference_repetition_period);
+                size += stream.ReadUnsignedInt(size, 1, out this.display_prior_to_deblocking_preferred_flag, "display_prior_to_deblocking_preferred_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.dec_frame_buffering_constraint_flag, "dec_frame_buffering_constraint_flag");
+                size += stream.ReadUnsignedIntGolomb(size, out this.deblocking_display_preference_repetition_period, "deblocking_display_preference_repetition_period");
             }
 
             return size;
@@ -6336,13 +6336,13 @@ deblocking_filter_display_preference( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.deblocking_display_preference_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.deblocking_display_preference_cancel_flag, "deblocking_display_preference_cancel_flag");
 
             if (deblocking_display_preference_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.display_prior_to_deblocking_preferred_flag);
-                size += stream.WriteUnsignedInt(1, this.dec_frame_buffering_constraint_flag);
-                size += stream.WriteUnsignedIntGolomb(this.deblocking_display_preference_repetition_period);
+                size += stream.WriteUnsignedInt(1, this.display_prior_to_deblocking_preferred_flag, "display_prior_to_deblocking_preferred_flag");
+                size += stream.WriteUnsignedInt(1, this.dec_frame_buffering_constraint_flag, "dec_frame_buffering_constraint_flag");
+                size += stream.WriteUnsignedIntGolomb(this.deblocking_display_preference_repetition_period, "deblocking_display_preference_repetition_period");
             }
 
             return size;
@@ -6394,19 +6394,19 @@ stereo_video_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.field_views_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.field_views_flag, "field_views_flag");
 
             if (field_views_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.top_field_is_left_view_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.top_field_is_left_view_flag, "top_field_is_left_view_flag");
             }
             else
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.current_frame_is_left_view_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.next_frame_is_second_view_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.current_frame_is_left_view_flag, "current_frame_is_left_view_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.next_frame_is_second_view_flag, "next_frame_is_second_view_flag");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.left_view_self_contained_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.right_view_self_contained_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.left_view_self_contained_flag, "left_view_self_contained_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.right_view_self_contained_flag, "right_view_self_contained_flag");
 
             return size;
         }
@@ -6415,19 +6415,19 @@ stereo_video_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.field_views_flag);
+            size += stream.WriteUnsignedInt(1, this.field_views_flag, "field_views_flag");
 
             if (field_views_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.top_field_is_left_view_flag);
+                size += stream.WriteUnsignedInt(1, this.top_field_is_left_view_flag, "top_field_is_left_view_flag");
             }
             else
             {
-                size += stream.WriteUnsignedInt(1, this.current_frame_is_left_view_flag);
-                size += stream.WriteUnsignedInt(1, this.next_frame_is_second_view_flag);
+                size += stream.WriteUnsignedInt(1, this.current_frame_is_left_view_flag, "current_frame_is_left_view_flag");
+                size += stream.WriteUnsignedInt(1, this.next_frame_is_second_view_flag, "next_frame_is_second_view_flag");
             }
-            size += stream.WriteUnsignedInt(1, this.left_view_self_contained_flag);
-            size += stream.WriteUnsignedInt(1, this.right_view_self_contained_flag);
+            size += stream.WriteUnsignedInt(1, this.left_view_self_contained_flag, "left_view_self_contained_flag");
+            size += stream.WriteUnsignedInt(1, this.right_view_self_contained_flag, "right_view_self_contained_flag");
 
             return size;
         }
@@ -6478,9 +6478,9 @@ post_filter_hint( payloadSize ) {
             uint colour_component = 0;
             uint cy = 0;
             uint cx = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_y);
-            size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_x);
-            size += stream.ReadUnsignedInt(size, 2, out this.filter_hint_type);
+            size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_y, "filter_hint_size_y");
+            size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_x, "filter_hint_size_x");
+            size += stream.ReadUnsignedInt(size, 2, out this.filter_hint_type, "filter_hint_type");
 
             this.filter_hint = new int[3][][];
             for (colour_component = 0; colour_component < 3; colour_component++)
@@ -6493,11 +6493,11 @@ post_filter_hint( payloadSize ) {
                     this.filter_hint[colour_component][cy] = new int[filter_hint_size_x];
                     for (cx = 0; cx < filter_hint_size_x; cx++)
                     {
-                        size += stream.ReadSignedIntGolomb(size, out this.filter_hint[colour_component][cy][cx]);
+                        size += stream.ReadSignedIntGolomb(size, out this.filter_hint[colour_component][cy][cx], "filter_hint");
                     }
                 }
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.additional_extension_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.additional_extension_flag, "additional_extension_flag");
 
             return size;
         }
@@ -6509,9 +6509,9 @@ post_filter_hint( payloadSize ) {
             uint colour_component = 0;
             uint cy = 0;
             uint cx = 0;
-            size += stream.WriteUnsignedIntGolomb(this.filter_hint_size_y);
-            size += stream.WriteUnsignedIntGolomb(this.filter_hint_size_x);
-            size += stream.WriteUnsignedInt(2, this.filter_hint_type);
+            size += stream.WriteUnsignedIntGolomb(this.filter_hint_size_y, "filter_hint_size_y");
+            size += stream.WriteUnsignedIntGolomb(this.filter_hint_size_x, "filter_hint_size_x");
+            size += stream.WriteUnsignedInt(2, this.filter_hint_type, "filter_hint_type");
 
             for (colour_component = 0; colour_component < 3; colour_component++)
             {
@@ -6521,11 +6521,11 @@ post_filter_hint( payloadSize ) {
 
                     for (cx = 0; cx < filter_hint_size_x; cx++)
                     {
-                        size += stream.WriteSignedIntGolomb(this.filter_hint[colour_component][cy][cx]);
+                        size += stream.WriteSignedIntGolomb(this.filter_hint[colour_component][cy][cx], "filter_hint");
                     }
                 }
             }
-            size += stream.WriteUnsignedInt(1, this.additional_extension_flag);
+            size += stream.WriteUnsignedInt(1, this.additional_extension_flag, "additional_extension_flag");
 
             return size;
         }
@@ -6650,26 +6650,26 @@ tone_mapping_info( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.tone_map_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.tone_map_cancel_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.tone_map_id, "tone_map_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.tone_map_cancel_flag, "tone_map_cancel_flag");
 
             if (tone_map_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.tone_map_repetition_period);
-                size += stream.ReadUnsignedInt(size, 8, out this.coded_data_bit_depth);
-                size += stream.ReadUnsignedInt(size, 8, out this.target_bit_depth);
-                size += stream.ReadUnsignedIntGolomb(size, out this.tone_map_model_id);
+                size += stream.ReadUnsignedIntGolomb(size, out this.tone_map_repetition_period, "tone_map_repetition_period");
+                size += stream.ReadUnsignedInt(size, 8, out this.coded_data_bit_depth, "coded_data_bit_depth");
+                size += stream.ReadUnsignedInt(size, 8, out this.target_bit_depth, "target_bit_depth");
+                size += stream.ReadUnsignedIntGolomb(size, out this.tone_map_model_id, "tone_map_model_id");
 
                 if (tone_map_model_id == 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.min_value);
-                    size += stream.ReadUnsignedInt(size, 32, out this.max_value);
+                    size += stream.ReadUnsignedInt(size, 32, out this.min_value, "min_value");
+                    size += stream.ReadUnsignedInt(size, 32, out this.max_value, "max_value");
                 }
 
                 if (tone_map_model_id == 1)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.sigmoid_midpoint);
-                    size += stream.ReadUnsignedInt(size, 32, out this.sigmoid_width);
+                    size += stream.ReadUnsignedInt(size, 32, out this.sigmoid_midpoint, "sigmoid_midpoint");
+                    size += stream.ReadUnsignedInt(size, 32, out this.sigmoid_width, "sigmoid_width");
                 }
 
                 if (tone_map_model_id == 2)
@@ -6678,45 +6678,45 @@ tone_mapping_info( payloadSize ) {
                     this.start_of_coded_interval = new uint[(1 << (int)target_bit_depth)];
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.start_of_coded_interval[i], "start_of_coded_interval");
                     }
                 }
 
                 if (tone_map_model_id == 3)
                 {
-                    size += stream.ReadUnsignedInt(size, 16, out this.num_pivots);
+                    size += stream.ReadUnsignedInt(size, 16, out this.num_pivots, "num_pivots");
 
                     this.coded_pivot_value = new uint[num_pivots];
                     this.target_pivot_value = new uint[num_pivots];
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i]);
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.coded_pivot_value[i], "coded_pivot_value");
+                        size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), out this.target_pivot_value[i], "target_pivot_value");
                     }
                 }
 
                 if (tone_map_model_id == 4)
                 {
-                    size += stream.ReadUnsignedInt(size, 8, out this.camera_iso_speed_idc);
+                    size += stream.ReadUnsignedInt(size, 8, out this.camera_iso_speed_idc, "camera_iso_speed_idc");
 
                     if (camera_iso_speed_idc == H264Constants.Extended_ISO)
                     {
-                        size += stream.ReadUnsignedInt(size, 32, out this.camera_iso_speed_value);
+                        size += stream.ReadUnsignedInt(size, 32, out this.camera_iso_speed_value, "camera_iso_speed_value");
                     }
-                    size += stream.ReadUnsignedInt(size, 8, out this.exposure_index_idc);
+                    size += stream.ReadUnsignedInt(size, 8, out this.exposure_index_idc, "exposure_index_idc");
 
                     if (exposure_index_idc == H264Constants.Extended_ISO)
                     {
-                        size += stream.ReadUnsignedInt(size, 32, out this.exposure_index_value);
+                        size += stream.ReadUnsignedInt(size, 32, out this.exposure_index_value, "exposure_index_value");
                     }
-                    size += stream.ReadUnsignedInt(size, 1, out this.exposure_compensation_value_sign_flag);
-                    size += stream.ReadUnsignedInt(size, 16, out this.exposure_compensation_value_numerator);
-                    size += stream.ReadUnsignedInt(size, 16, out this.exposure_compensation_value_denom_idc);
-                    size += stream.ReadUnsignedInt(size, 32, out this.ref_screen_luminance_white);
-                    size += stream.ReadUnsignedInt(size, 32, out this.extended_range_white_level);
-                    size += stream.ReadUnsignedInt(size, 16, out this.nominal_black_level_luma_code_value);
-                    size += stream.ReadUnsignedInt(size, 16, out this.nominal_white_level_luma_code_value);
-                    size += stream.ReadUnsignedInt(size, 16, out this.extended_white_level_luma_code_value);
+                    size += stream.ReadUnsignedInt(size, 1, out this.exposure_compensation_value_sign_flag, "exposure_compensation_value_sign_flag");
+                    size += stream.ReadUnsignedInt(size, 16, out this.exposure_compensation_value_numerator, "exposure_compensation_value_numerator");
+                    size += stream.ReadUnsignedInt(size, 16, out this.exposure_compensation_value_denom_idc, "exposure_compensation_value_denom_idc");
+                    size += stream.ReadUnsignedInt(size, 32, out this.ref_screen_luminance_white, "ref_screen_luminance_white");
+                    size += stream.ReadUnsignedInt(size, 32, out this.extended_range_white_level, "extended_range_white_level");
+                    size += stream.ReadUnsignedInt(size, 16, out this.nominal_black_level_luma_code_value, "nominal_black_level_luma_code_value");
+                    size += stream.ReadUnsignedInt(size, 16, out this.nominal_white_level_luma_code_value, "nominal_white_level_luma_code_value");
+                    size += stream.ReadUnsignedInt(size, 16, out this.extended_white_level_luma_code_value, "extended_white_level_luma_code_value");
                 }
             }
 
@@ -6728,26 +6728,26 @@ tone_mapping_info( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.tone_map_id);
-            size += stream.WriteUnsignedInt(1, this.tone_map_cancel_flag);
+            size += stream.WriteUnsignedIntGolomb(this.tone_map_id, "tone_map_id");
+            size += stream.WriteUnsignedInt(1, this.tone_map_cancel_flag, "tone_map_cancel_flag");
 
             if (tone_map_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.tone_map_repetition_period);
-                size += stream.WriteUnsignedInt(8, this.coded_data_bit_depth);
-                size += stream.WriteUnsignedInt(8, this.target_bit_depth);
-                size += stream.WriteUnsignedIntGolomb(this.tone_map_model_id);
+                size += stream.WriteUnsignedIntGolomb(this.tone_map_repetition_period, "tone_map_repetition_period");
+                size += stream.WriteUnsignedInt(8, this.coded_data_bit_depth, "coded_data_bit_depth");
+                size += stream.WriteUnsignedInt(8, this.target_bit_depth, "target_bit_depth");
+                size += stream.WriteUnsignedIntGolomb(this.tone_map_model_id, "tone_map_model_id");
 
                 if (tone_map_model_id == 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.min_value);
-                    size += stream.WriteUnsignedInt(32, this.max_value);
+                    size += stream.WriteUnsignedInt(32, this.min_value, "min_value");
+                    size += stream.WriteUnsignedInt(32, this.max_value, "max_value");
                 }
 
                 if (tone_map_model_id == 1)
                 {
-                    size += stream.WriteUnsignedInt(32, this.sigmoid_midpoint);
-                    size += stream.WriteUnsignedInt(32, this.sigmoid_width);
+                    size += stream.WriteUnsignedInt(32, this.sigmoid_midpoint, "sigmoid_midpoint");
+                    size += stream.WriteUnsignedInt(32, this.sigmoid_width, "sigmoid_width");
                 }
 
                 if (tone_map_model_id == 2)
@@ -6755,43 +6755,43 @@ tone_mapping_info( payloadSize ) {
 
                     for (i = 0; i < (1 << (int)target_bit_depth); i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i]);
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.start_of_coded_interval[i], "start_of_coded_interval");
                     }
                 }
 
                 if (tone_map_model_id == 3)
                 {
-                    size += stream.WriteUnsignedInt(16, this.num_pivots);
+                    size += stream.WriteUnsignedInt(16, this.num_pivots, "num_pivots");
 
                     for (i = 0; i < num_pivots; i++)
                     {
-                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i]);
-                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i]);
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.coded_pivot_value[i], "coded_pivot_value");
+                        size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3), this.target_pivot_value[i], "target_pivot_value");
                     }
                 }
 
                 if (tone_map_model_id == 4)
                 {
-                    size += stream.WriteUnsignedInt(8, this.camera_iso_speed_idc);
+                    size += stream.WriteUnsignedInt(8, this.camera_iso_speed_idc, "camera_iso_speed_idc");
 
                     if (camera_iso_speed_idc == H264Constants.Extended_ISO)
                     {
-                        size += stream.WriteUnsignedInt(32, this.camera_iso_speed_value);
+                        size += stream.WriteUnsignedInt(32, this.camera_iso_speed_value, "camera_iso_speed_value");
                     }
-                    size += stream.WriteUnsignedInt(8, this.exposure_index_idc);
+                    size += stream.WriteUnsignedInt(8, this.exposure_index_idc, "exposure_index_idc");
 
                     if (exposure_index_idc == H264Constants.Extended_ISO)
                     {
-                        size += stream.WriteUnsignedInt(32, this.exposure_index_value);
+                        size += stream.WriteUnsignedInt(32, this.exposure_index_value, "exposure_index_value");
                     }
-                    size += stream.WriteUnsignedInt(1, this.exposure_compensation_value_sign_flag);
-                    size += stream.WriteUnsignedInt(16, this.exposure_compensation_value_numerator);
-                    size += stream.WriteUnsignedInt(16, this.exposure_compensation_value_denom_idc);
-                    size += stream.WriteUnsignedInt(32, this.ref_screen_luminance_white);
-                    size += stream.WriteUnsignedInt(32, this.extended_range_white_level);
-                    size += stream.WriteUnsignedInt(16, this.nominal_black_level_luma_code_value);
-                    size += stream.WriteUnsignedInt(16, this.nominal_white_level_luma_code_value);
-                    size += stream.WriteUnsignedInt(16, this.extended_white_level_luma_code_value);
+                    size += stream.WriteUnsignedInt(1, this.exposure_compensation_value_sign_flag, "exposure_compensation_value_sign_flag");
+                    size += stream.WriteUnsignedInt(16, this.exposure_compensation_value_numerator, "exposure_compensation_value_numerator");
+                    size += stream.WriteUnsignedInt(16, this.exposure_compensation_value_denom_idc, "exposure_compensation_value_denom_idc");
+                    size += stream.WriteUnsignedInt(32, this.ref_screen_luminance_white, "ref_screen_luminance_white");
+                    size += stream.WriteUnsignedInt(32, this.extended_range_white_level, "extended_range_white_level");
+                    size += stream.WriteUnsignedInt(16, this.nominal_black_level_luma_code_value, "nominal_black_level_luma_code_value");
+                    size += stream.WriteUnsignedInt(16, this.nominal_white_level_luma_code_value, "nominal_white_level_luma_code_value");
+                    size += stream.WriteUnsignedInt(16, this.extended_white_level_luma_code_value, "extended_white_level_luma_code_value");
                 }
             }
 
@@ -6883,33 +6883,33 @@ frame_packing_arrangement( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.frame_packing_arrangement_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.frame_packing_arrangement_cancel_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.frame_packing_arrangement_id, "frame_packing_arrangement_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.frame_packing_arrangement_cancel_flag, "frame_packing_arrangement_cancel_flag");
 
             if (frame_packing_arrangement_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 7, out this.frame_packing_arrangement_type);
-                size += stream.ReadUnsignedInt(size, 1, out this.quincunx_sampling_flag);
-                size += stream.ReadUnsignedInt(size, 6, out this.content_interpretation_type);
-                size += stream.ReadUnsignedInt(size, 1, out this.spatial_flipping_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.frame0_flipped_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.field_views_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.current_frame_is_frame0_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.frame0_self_contained_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.frame1_self_contained_flag);
+                size += stream.ReadUnsignedInt(size, 7, out this.frame_packing_arrangement_type, "frame_packing_arrangement_type");
+                size += stream.ReadUnsignedInt(size, 1, out this.quincunx_sampling_flag, "quincunx_sampling_flag");
+                size += stream.ReadUnsignedInt(size, 6, out this.content_interpretation_type, "content_interpretation_type");
+                size += stream.ReadUnsignedInt(size, 1, out this.spatial_flipping_flag, "spatial_flipping_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.frame0_flipped_flag, "frame0_flipped_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.field_views_flag, "field_views_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.current_frame_is_frame0_flag, "current_frame_is_frame0_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.frame0_self_contained_flag, "frame0_self_contained_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.frame1_self_contained_flag, "frame1_self_contained_flag");
 
                 if (quincunx_sampling_flag == 0 &&
    frame_packing_arrangement_type != 5)
                 {
-                    size += stream.ReadUnsignedInt(size, 4, out this.frame0_grid_position_x);
-                    size += stream.ReadUnsignedInt(size, 4, out this.frame0_grid_position_y);
-                    size += stream.ReadUnsignedInt(size, 4, out this.frame1_grid_position_x);
-                    size += stream.ReadUnsignedInt(size, 4, out this.frame1_grid_position_y);
+                    size += stream.ReadUnsignedInt(size, 4, out this.frame0_grid_position_x, "frame0_grid_position_x");
+                    size += stream.ReadUnsignedInt(size, 4, out this.frame0_grid_position_y, "frame0_grid_position_y");
+                    size += stream.ReadUnsignedInt(size, 4, out this.frame1_grid_position_x, "frame1_grid_position_x");
+                    size += stream.ReadUnsignedInt(size, 4, out this.frame1_grid_position_y, "frame1_grid_position_y");
                 }
-                size += stream.ReadUnsignedInt(size, 8, out this.frame_packing_arrangement_reserved_byte);
-                size += stream.ReadUnsignedIntGolomb(size, out this.frame_packing_arrangement_repetition_period);
+                size += stream.ReadUnsignedInt(size, 8, out this.frame_packing_arrangement_reserved_byte, "frame_packing_arrangement_reserved_byte");
+                size += stream.ReadUnsignedIntGolomb(size, out this.frame_packing_arrangement_repetition_period, "frame_packing_arrangement_repetition_period");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.frame_packing_arrangement_extension_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.frame_packing_arrangement_extension_flag, "frame_packing_arrangement_extension_flag");
 
             return size;
         }
@@ -6918,33 +6918,33 @@ frame_packing_arrangement( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.frame_packing_arrangement_id);
-            size += stream.WriteUnsignedInt(1, this.frame_packing_arrangement_cancel_flag);
+            size += stream.WriteUnsignedIntGolomb(this.frame_packing_arrangement_id, "frame_packing_arrangement_id");
+            size += stream.WriteUnsignedInt(1, this.frame_packing_arrangement_cancel_flag, "frame_packing_arrangement_cancel_flag");
 
             if (frame_packing_arrangement_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(7, this.frame_packing_arrangement_type);
-                size += stream.WriteUnsignedInt(1, this.quincunx_sampling_flag);
-                size += stream.WriteUnsignedInt(6, this.content_interpretation_type);
-                size += stream.WriteUnsignedInt(1, this.spatial_flipping_flag);
-                size += stream.WriteUnsignedInt(1, this.frame0_flipped_flag);
-                size += stream.WriteUnsignedInt(1, this.field_views_flag);
-                size += stream.WriteUnsignedInt(1, this.current_frame_is_frame0_flag);
-                size += stream.WriteUnsignedInt(1, this.frame0_self_contained_flag);
-                size += stream.WriteUnsignedInt(1, this.frame1_self_contained_flag);
+                size += stream.WriteUnsignedInt(7, this.frame_packing_arrangement_type, "frame_packing_arrangement_type");
+                size += stream.WriteUnsignedInt(1, this.quincunx_sampling_flag, "quincunx_sampling_flag");
+                size += stream.WriteUnsignedInt(6, this.content_interpretation_type, "content_interpretation_type");
+                size += stream.WriteUnsignedInt(1, this.spatial_flipping_flag, "spatial_flipping_flag");
+                size += stream.WriteUnsignedInt(1, this.frame0_flipped_flag, "frame0_flipped_flag");
+                size += stream.WriteUnsignedInt(1, this.field_views_flag, "field_views_flag");
+                size += stream.WriteUnsignedInt(1, this.current_frame_is_frame0_flag, "current_frame_is_frame0_flag");
+                size += stream.WriteUnsignedInt(1, this.frame0_self_contained_flag, "frame0_self_contained_flag");
+                size += stream.WriteUnsignedInt(1, this.frame1_self_contained_flag, "frame1_self_contained_flag");
 
                 if (quincunx_sampling_flag == 0 &&
    frame_packing_arrangement_type != 5)
                 {
-                    size += stream.WriteUnsignedInt(4, this.frame0_grid_position_x);
-                    size += stream.WriteUnsignedInt(4, this.frame0_grid_position_y);
-                    size += stream.WriteUnsignedInt(4, this.frame1_grid_position_x);
-                    size += stream.WriteUnsignedInt(4, this.frame1_grid_position_y);
+                    size += stream.WriteUnsignedInt(4, this.frame0_grid_position_x, "frame0_grid_position_x");
+                    size += stream.WriteUnsignedInt(4, this.frame0_grid_position_y, "frame0_grid_position_y");
+                    size += stream.WriteUnsignedInt(4, this.frame1_grid_position_x, "frame1_grid_position_x");
+                    size += stream.WriteUnsignedInt(4, this.frame1_grid_position_y, "frame1_grid_position_y");
                 }
-                size += stream.WriteUnsignedInt(8, this.frame_packing_arrangement_reserved_byte);
-                size += stream.WriteUnsignedIntGolomb(this.frame_packing_arrangement_repetition_period);
+                size += stream.WriteUnsignedInt(8, this.frame_packing_arrangement_reserved_byte, "frame_packing_arrangement_reserved_byte");
+                size += stream.WriteUnsignedIntGolomb(this.frame_packing_arrangement_repetition_period, "frame_packing_arrangement_repetition_period");
             }
-            size += stream.WriteUnsignedInt(1, this.frame_packing_arrangement_extension_flag);
+            size += stream.WriteUnsignedInt(1, this.frame_packing_arrangement_extension_flag, "frame_packing_arrangement_extension_flag");
 
             return size;
         }
@@ -6994,15 +6994,15 @@ display_orientation( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.display_orientation_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.display_orientation_cancel_flag, "display_orientation_cancel_flag");
 
             if (display_orientation_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.hor_flip);
-                size += stream.ReadUnsignedInt(size, 1, out this.ver_flip);
-                size += stream.ReadUnsignedInt(size, 16, out this.anticlockwise_rotation);
-                size += stream.ReadUnsignedIntGolomb(size, out this.display_orientation_repetition_period);
-                size += stream.ReadUnsignedInt(size, 1, out this.display_orientation_extension_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.hor_flip, "hor_flip");
+                size += stream.ReadUnsignedInt(size, 1, out this.ver_flip, "ver_flip");
+                size += stream.ReadUnsignedInt(size, 16, out this.anticlockwise_rotation, "anticlockwise_rotation");
+                size += stream.ReadUnsignedIntGolomb(size, out this.display_orientation_repetition_period, "display_orientation_repetition_period");
+                size += stream.ReadUnsignedInt(size, 1, out this.display_orientation_extension_flag, "display_orientation_extension_flag");
             }
 
             return size;
@@ -7012,15 +7012,15 @@ display_orientation( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.display_orientation_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.display_orientation_cancel_flag, "display_orientation_cancel_flag");
 
             if (display_orientation_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.hor_flip);
-                size += stream.WriteUnsignedInt(1, this.ver_flip);
-                size += stream.WriteUnsignedInt(16, this.anticlockwise_rotation);
-                size += stream.WriteUnsignedIntGolomb(this.display_orientation_repetition_period);
-                size += stream.WriteUnsignedInt(1, this.display_orientation_extension_flag);
+                size += stream.WriteUnsignedInt(1, this.hor_flip, "hor_flip");
+                size += stream.WriteUnsignedInt(1, this.ver_flip, "ver_flip");
+                size += stream.WriteUnsignedInt(16, this.anticlockwise_rotation, "anticlockwise_rotation");
+                size += stream.WriteUnsignedIntGolomb(this.display_orientation_repetition_period, "display_orientation_repetition_period");
+                size += stream.WriteUnsignedInt(1, this.display_orientation_extension_flag, "display_orientation_extension_flag");
             }
 
             return size;
@@ -7078,13 +7078,13 @@ display_orientation( payloadSize ) {
             this.display_primaries_y = new uint[3];
             for (c = 0; c < 3; c++)
             {
-                size += stream.ReadUnsignedInt(size, 16, out this.display_primaries_x[c]);
-                size += stream.ReadUnsignedInt(size, 16, out this.display_primaries_y[c]);
+                size += stream.ReadUnsignedInt(size, 16, out this.display_primaries_x[c], "display_primaries_x");
+                size += stream.ReadUnsignedInt(size, 16, out this.display_primaries_y[c], "display_primaries_y");
             }
-            size += stream.ReadUnsignedInt(size, 16, out this.white_point_x);
-            size += stream.ReadUnsignedInt(size, 16, out this.white_point_y);
-            size += stream.ReadUnsignedInt(size, 32, out this.max_display_mastering_luminance);
-            size += stream.ReadUnsignedInt(size, 32, out this.min_display_mastering_luminance);
+            size += stream.ReadUnsignedInt(size, 16, out this.white_point_x, "white_point_x");
+            size += stream.ReadUnsignedInt(size, 16, out this.white_point_y, "white_point_y");
+            size += stream.ReadUnsignedInt(size, 32, out this.max_display_mastering_luminance, "max_display_mastering_luminance");
+            size += stream.ReadUnsignedInt(size, 32, out this.min_display_mastering_luminance, "min_display_mastering_luminance");
 
             return size;
         }
@@ -7097,13 +7097,13 @@ display_orientation( payloadSize ) {
 
             for (c = 0; c < 3; c++)
             {
-                size += stream.WriteUnsignedInt(16, this.display_primaries_x[c]);
-                size += stream.WriteUnsignedInt(16, this.display_primaries_y[c]);
+                size += stream.WriteUnsignedInt(16, this.display_primaries_x[c], "display_primaries_x");
+                size += stream.WriteUnsignedInt(16, this.display_primaries_y[c], "display_primaries_y");
             }
-            size += stream.WriteUnsignedInt(16, this.white_point_x);
-            size += stream.WriteUnsignedInt(16, this.white_point_y);
-            size += stream.WriteUnsignedInt(32, this.max_display_mastering_luminance);
-            size += stream.WriteUnsignedInt(32, this.min_display_mastering_luminance);
+            size += stream.WriteUnsignedInt(16, this.white_point_x, "white_point_x");
+            size += stream.WriteUnsignedInt(16, this.white_point_y, "white_point_y");
+            size += stream.WriteUnsignedInt(32, this.max_display_mastering_luminance, "max_display_mastering_luminance");
+            size += stream.WriteUnsignedInt(32, this.min_display_mastering_luminance, "min_display_mastering_luminance");
 
             return size;
         }
@@ -7210,30 +7210,30 @@ colour_remapping_info( payloadSize ) {
 
             uint c = 0;
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.colour_remap_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_cancel_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.colour_remap_id, "colour_remap_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_cancel_flag, "colour_remap_cancel_flag");
 
             if (colour_remap_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.colour_remap_repetition_period);
-                size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_video_signal_info_present_flag);
+                size += stream.ReadUnsignedIntGolomb(size, out this.colour_remap_repetition_period, "colour_remap_repetition_period");
+                size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_video_signal_info_present_flag, "colour_remap_video_signal_info_present_flag");
 
                 if (colour_remap_video_signal_info_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_full_range_flag);
-                    size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_primaries);
-                    size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_transfer_function);
-                    size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_matrix_coefficients);
+                    size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_full_range_flag, "colour_remap_full_range_flag");
+                    size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_primaries, "colour_remap_primaries");
+                    size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_transfer_function, "colour_remap_transfer_function");
+                    size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_matrix_coefficients, "colour_remap_matrix_coefficients");
                 }
-                size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_input_bit_depth);
-                size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_output_bit_depth);
+                size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_input_bit_depth, "colour_remap_input_bit_depth");
+                size += stream.ReadUnsignedInt(size, 8, out this.colour_remap_output_bit_depth, "colour_remap_output_bit_depth");
 
                 this.pre_lut_num_val_minus1 = new uint[3];
                 this.pre_lut_coded_value = new uint[3][];
                 this.pre_lut_target_value = new uint[3][];
                 for (c = 0; c < 3; c++)
                 {
-                    size += stream.ReadUnsignedInt(size, 8, out this.pre_lut_num_val_minus1[c]);
+                    size += stream.ReadUnsignedInt(size, 8, out this.pre_lut_num_val_minus1[c], "pre_lut_num_val_minus1");
 
                     if (pre_lut_num_val_minus1[c] > 0)
                     {
@@ -7242,16 +7242,16 @@ colour_remapping_info( payloadSize ) {
                         this.pre_lut_target_value[c] = new uint[pre_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_coded_value[c][i], "pre_lut_coded_value");
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), out this.pre_lut_target_value[c][i], "pre_lut_target_value");
                         }
                     }
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_matrix_present_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.colour_remap_matrix_present_flag, "colour_remap_matrix_present_flag");
 
                 if (colour_remap_matrix_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 4, out this.log2_matrix_denom);
+                    size += stream.ReadUnsignedInt(size, 4, out this.log2_matrix_denom, "log2_matrix_denom");
 
                     this.colour_remap_coeffs = new int[3][];
                     for (c = 0; c < 3; c++)
@@ -7260,7 +7260,7 @@ colour_remapping_info( payloadSize ) {
                         this.colour_remap_coeffs[c] = new int[3];
                         for (i = 0; i < 3; i++)
                         {
-                            size += stream.ReadSignedIntGolomb(size, out this.colour_remap_coeffs[c][i]);
+                            size += stream.ReadSignedIntGolomb(size, out this.colour_remap_coeffs[c][i], "colour_remap_coeffs");
                         }
                     }
                 }
@@ -7270,7 +7270,7 @@ colour_remapping_info( payloadSize ) {
                 this.post_lut_target_value = new uint[3][];
                 for (c = 0; c < 3; c++)
                 {
-                    size += stream.ReadUnsignedInt(size, 8, out this.post_lut_num_val_minus1[c]);
+                    size += stream.ReadUnsignedInt(size, 8, out this.post_lut_num_val_minus1[c], "post_lut_num_val_minus1");
 
                     if (post_lut_num_val_minus1[c] > 0)
                     {
@@ -7279,8 +7279,8 @@ colour_remapping_info( payloadSize ) {
                         this.post_lut_target_value[c] = new uint[post_lut_num_val_minus1[c] + 1];
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i]);
-                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i]);
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_coded_value[c][i], "post_lut_coded_value");
+                            size += stream.ReadUnsignedIntVariable(size, (((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), out this.post_lut_target_value[c][i], "post_lut_target_value");
                         }
                     }
                 }
@@ -7295,65 +7295,65 @@ colour_remapping_info( payloadSize ) {
 
             uint c = 0;
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.colour_remap_id);
-            size += stream.WriteUnsignedInt(1, this.colour_remap_cancel_flag);
+            size += stream.WriteUnsignedIntGolomb(this.colour_remap_id, "colour_remap_id");
+            size += stream.WriteUnsignedInt(1, this.colour_remap_cancel_flag, "colour_remap_cancel_flag");
 
             if (colour_remap_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.colour_remap_repetition_period);
-                size += stream.WriteUnsignedInt(1, this.colour_remap_video_signal_info_present_flag);
+                size += stream.WriteUnsignedIntGolomb(this.colour_remap_repetition_period, "colour_remap_repetition_period");
+                size += stream.WriteUnsignedInt(1, this.colour_remap_video_signal_info_present_flag, "colour_remap_video_signal_info_present_flag");
 
                 if (colour_remap_video_signal_info_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.colour_remap_full_range_flag);
-                    size += stream.WriteUnsignedInt(8, this.colour_remap_primaries);
-                    size += stream.WriteUnsignedInt(8, this.colour_remap_transfer_function);
-                    size += stream.WriteUnsignedInt(8, this.colour_remap_matrix_coefficients);
+                    size += stream.WriteUnsignedInt(1, this.colour_remap_full_range_flag, "colour_remap_full_range_flag");
+                    size += stream.WriteUnsignedInt(8, this.colour_remap_primaries, "colour_remap_primaries");
+                    size += stream.WriteUnsignedInt(8, this.colour_remap_transfer_function, "colour_remap_transfer_function");
+                    size += stream.WriteUnsignedInt(8, this.colour_remap_matrix_coefficients, "colour_remap_matrix_coefficients");
                 }
-                size += stream.WriteUnsignedInt(8, this.colour_remap_input_bit_depth);
-                size += stream.WriteUnsignedInt(8, this.colour_remap_output_bit_depth);
+                size += stream.WriteUnsignedInt(8, this.colour_remap_input_bit_depth, "colour_remap_input_bit_depth");
+                size += stream.WriteUnsignedInt(8, this.colour_remap_output_bit_depth, "colour_remap_output_bit_depth");
 
                 for (c = 0; c < 3; c++)
                 {
-                    size += stream.WriteUnsignedInt(8, this.pre_lut_num_val_minus1[c]);
+                    size += stream.WriteUnsignedInt(8, this.pre_lut_num_val_minus1[c], "pre_lut_num_val_minus1");
 
                     if (pre_lut_num_val_minus1[c] > 0)
                     {
 
                         for (i = 0; i <= pre_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_coded_value[c][i], "pre_lut_coded_value");
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3), this.pre_lut_target_value[c][i], "pre_lut_target_value");
                         }
                     }
                 }
-                size += stream.WriteUnsignedInt(1, this.colour_remap_matrix_present_flag);
+                size += stream.WriteUnsignedInt(1, this.colour_remap_matrix_present_flag, "colour_remap_matrix_present_flag");
 
                 if (colour_remap_matrix_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(4, this.log2_matrix_denom);
+                    size += stream.WriteUnsignedInt(4, this.log2_matrix_denom, "log2_matrix_denom");
 
                     for (c = 0; c < 3; c++)
                     {
 
                         for (i = 0; i < 3; i++)
                         {
-                            size += stream.WriteSignedIntGolomb(this.colour_remap_coeffs[c][i]);
+                            size += stream.WriteSignedIntGolomb(this.colour_remap_coeffs[c][i], "colour_remap_coeffs");
                         }
                     }
                 }
 
                 for (c = 0; c < 3; c++)
                 {
-                    size += stream.WriteUnsignedInt(8, this.post_lut_num_val_minus1[c]);
+                    size += stream.WriteUnsignedInt(8, this.post_lut_num_val_minus1[c], "post_lut_num_val_minus1");
 
                     if (post_lut_num_val_minus1[c] > 0)
                     {
 
                         for (i = 0; i <= post_lut_num_val_minus1[c]; i++)
                         {
-                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i]);
-                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i]);
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_coded_value[c][i], "post_lut_coded_value");
+                            size += stream.WriteUnsignedIntVariable((((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3), this.post_lut_target_value[c][i], "post_lut_target_value");
                         }
                     }
                 }
@@ -7393,8 +7393,8 @@ content_light_level_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 16, out this.max_content_light_level);
-            size += stream.ReadUnsignedInt(size, 16, out this.max_pic_average_light_level);
+            size += stream.ReadUnsignedInt(size, 16, out this.max_content_light_level, "max_content_light_level");
+            size += stream.ReadUnsignedInt(size, 16, out this.max_pic_average_light_level, "max_pic_average_light_level");
 
             return size;
         }
@@ -7403,8 +7403,8 @@ content_light_level_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(16, this.max_content_light_level);
-            size += stream.WriteUnsignedInt(16, this.max_pic_average_light_level);
+            size += stream.WriteUnsignedInt(16, this.max_content_light_level, "max_content_light_level");
+            size += stream.WriteUnsignedInt(16, this.max_pic_average_light_level, "max_pic_average_light_level");
 
             return size;
         }
@@ -7437,7 +7437,7 @@ alternative_transfer_characteristics( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 8, out this.preferred_transfer_characteristics);
+            size += stream.ReadUnsignedInt(size, 8, out this.preferred_transfer_characteristics, "preferred_transfer_characteristics");
 
             return size;
         }
@@ -7446,7 +7446,7 @@ alternative_transfer_characteristics( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(8, this.preferred_transfer_characteristics);
+            size += stream.WriteUnsignedInt(8, this.preferred_transfer_characteristics, "preferred_transfer_characteristics");
 
             return size;
         }
@@ -7521,16 +7521,16 @@ content_colour_volume( payloadSize ) {
             ulong size = 0;
 
             uint c = 0;
-            size += stream.ReadUnsignedInt(size, 1, out this.ccv_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.ccv_cancel_flag, "ccv_cancel_flag");
 
             if (ccv_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.ccv_persistence_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ccv_primaries_present_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ccv_min_luminance_value_present_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ccv_max_luminance_value_present_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ccv_avg_luminance_value_present_flag);
-                size += stream.ReadUnsignedInt(size, 2, out this.ccv_reserved_zero_2bits);
+                size += stream.ReadUnsignedInt(size, 1, out this.ccv_persistence_flag, "ccv_persistence_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ccv_primaries_present_flag, "ccv_primaries_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ccv_min_luminance_value_present_flag, "ccv_min_luminance_value_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ccv_max_luminance_value_present_flag, "ccv_max_luminance_value_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ccv_avg_luminance_value_present_flag, "ccv_avg_luminance_value_present_flag");
+                size += stream.ReadUnsignedInt(size, 2, out this.ccv_reserved_zero_2bits, "ccv_reserved_zero_2bits");
 
                 if (ccv_primaries_present_flag != 0)
                 {
@@ -7539,24 +7539,24 @@ content_colour_volume( payloadSize ) {
                     this.ccv_primaries_y = new int[3];
                     for (c = 0; c < 3; c++)
                     {
-                        size += stream.ReadSignedInt(size, 32, out this.ccv_primaries_x[c]);
-                        size += stream.ReadSignedInt(size, 32, out this.ccv_primaries_y[c]);
+                        size += stream.ReadSignedInt(size, 32, out this.ccv_primaries_x[c], "ccv_primaries_x");
+                        size += stream.ReadSignedInt(size, 32, out this.ccv_primaries_y[c], "ccv_primaries_y");
                     }
                 }
 
                 if (ccv_min_luminance_value_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.ccv_min_luminance_value);
+                    size += stream.ReadUnsignedInt(size, 32, out this.ccv_min_luminance_value, "ccv_min_luminance_value");
                 }
 
                 if (ccv_max_luminance_value_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.ccv_max_luminance_value);
+                    size += stream.ReadUnsignedInt(size, 32, out this.ccv_max_luminance_value, "ccv_max_luminance_value");
                 }
 
                 if (ccv_avg_luminance_value_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.ccv_avg_luminance_value);
+                    size += stream.ReadUnsignedInt(size, 32, out this.ccv_avg_luminance_value, "ccv_avg_luminance_value");
                 }
             }
 
@@ -7568,40 +7568,40 @@ content_colour_volume( payloadSize ) {
             ulong size = 0;
 
             uint c = 0;
-            size += stream.WriteUnsignedInt(1, this.ccv_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.ccv_cancel_flag, "ccv_cancel_flag");
 
             if (ccv_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.ccv_persistence_flag);
-                size += stream.WriteUnsignedInt(1, this.ccv_primaries_present_flag);
-                size += stream.WriteUnsignedInt(1, this.ccv_min_luminance_value_present_flag);
-                size += stream.WriteUnsignedInt(1, this.ccv_max_luminance_value_present_flag);
-                size += stream.WriteUnsignedInt(1, this.ccv_avg_luminance_value_present_flag);
-                size += stream.WriteUnsignedInt(2, this.ccv_reserved_zero_2bits);
+                size += stream.WriteUnsignedInt(1, this.ccv_persistence_flag, "ccv_persistence_flag");
+                size += stream.WriteUnsignedInt(1, this.ccv_primaries_present_flag, "ccv_primaries_present_flag");
+                size += stream.WriteUnsignedInt(1, this.ccv_min_luminance_value_present_flag, "ccv_min_luminance_value_present_flag");
+                size += stream.WriteUnsignedInt(1, this.ccv_max_luminance_value_present_flag, "ccv_max_luminance_value_present_flag");
+                size += stream.WriteUnsignedInt(1, this.ccv_avg_luminance_value_present_flag, "ccv_avg_luminance_value_present_flag");
+                size += stream.WriteUnsignedInt(2, this.ccv_reserved_zero_2bits, "ccv_reserved_zero_2bits");
 
                 if (ccv_primaries_present_flag != 0)
                 {
 
                     for (c = 0; c < 3; c++)
                     {
-                        size += stream.WriteSignedInt(32, this.ccv_primaries_x[c]);
-                        size += stream.WriteSignedInt(32, this.ccv_primaries_y[c]);
+                        size += stream.WriteSignedInt(32, this.ccv_primaries_x[c], "ccv_primaries_x");
+                        size += stream.WriteSignedInt(32, this.ccv_primaries_y[c], "ccv_primaries_y");
                     }
                 }
 
                 if (ccv_min_luminance_value_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.ccv_min_luminance_value);
+                    size += stream.WriteUnsignedInt(32, this.ccv_min_luminance_value, "ccv_min_luminance_value");
                 }
 
                 if (ccv_max_luminance_value_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.ccv_max_luminance_value);
+                    size += stream.WriteUnsignedInt(32, this.ccv_max_luminance_value, "ccv_max_luminance_value");
                 }
 
                 if (ccv_avg_luminance_value_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.ccv_avg_luminance_value);
+                    size += stream.WriteUnsignedInt(32, this.ccv_avg_luminance_value, "ccv_avg_luminance_value");
                 }
             }
 
@@ -7642,9 +7642,9 @@ ambient_viewing_environment( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 32, out this.ambient_illuminance);
-            size += stream.ReadUnsignedInt(size, 16, out this.ambient_light_x);
-            size += stream.ReadUnsignedInt(size, 16, out this.ambient_light_y);
+            size += stream.ReadUnsignedInt(size, 32, out this.ambient_illuminance, "ambient_illuminance");
+            size += stream.ReadUnsignedInt(size, 16, out this.ambient_light_x, "ambient_light_x");
+            size += stream.ReadUnsignedInt(size, 16, out this.ambient_light_y, "ambient_light_y");
 
             return size;
         }
@@ -7653,9 +7653,9 @@ ambient_viewing_environment( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(32, this.ambient_illuminance);
-            size += stream.WriteUnsignedInt(16, this.ambient_light_x);
-            size += stream.WriteUnsignedInt(16, this.ambient_light_y);
+            size += stream.WriteUnsignedInt(32, this.ambient_illuminance, "ambient_illuminance");
+            size += stream.WriteUnsignedInt(16, this.ambient_light_x, "ambient_light_x");
+            size += stream.WriteUnsignedInt(16, this.ambient_light_y, "ambient_light_y");
 
             return size;
         }
@@ -7710,19 +7710,19 @@ equirectangular_projection( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.erp_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.erp_cancel_flag, "erp_cancel_flag");
 
             if (erp_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.erp_persistence_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.erp_padding_flag);
-                size += stream.ReadUnsignedInt(size, 2, out this.erp_reserved_zero_2bits);
+                size += stream.ReadUnsignedInt(size, 1, out this.erp_persistence_flag, "erp_persistence_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.erp_padding_flag, "erp_padding_flag");
+                size += stream.ReadUnsignedInt(size, 2, out this.erp_reserved_zero_2bits, "erp_reserved_zero_2bits");
 
                 if (erp_padding_flag == 1)
                 {
-                    size += stream.ReadUnsignedInt(size, 3, out this.gp_erp_type);
-                    size += stream.ReadUnsignedInt(size, 8, out this.left_gb_erp_width);
-                    size += stream.ReadUnsignedInt(size, 8, out this.right_gb_erp_width);
+                    size += stream.ReadUnsignedInt(size, 3, out this.gp_erp_type, "gp_erp_type");
+                    size += stream.ReadUnsignedInt(size, 8, out this.left_gb_erp_width, "left_gb_erp_width");
+                    size += stream.ReadUnsignedInt(size, 8, out this.right_gb_erp_width, "right_gb_erp_width");
                 }
             }
 
@@ -7733,19 +7733,19 @@ equirectangular_projection( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.erp_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.erp_cancel_flag, "erp_cancel_flag");
 
             if (erp_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.erp_persistence_flag);
-                size += stream.WriteUnsignedInt(1, this.erp_padding_flag);
-                size += stream.WriteUnsignedInt(2, this.erp_reserved_zero_2bits);
+                size += stream.WriteUnsignedInt(1, this.erp_persistence_flag, "erp_persistence_flag");
+                size += stream.WriteUnsignedInt(1, this.erp_padding_flag, "erp_padding_flag");
+                size += stream.WriteUnsignedInt(2, this.erp_reserved_zero_2bits, "erp_reserved_zero_2bits");
 
                 if (erp_padding_flag == 1)
                 {
-                    size += stream.WriteUnsignedInt(3, this.gp_erp_type);
-                    size += stream.WriteUnsignedInt(8, this.left_gb_erp_width);
-                    size += stream.WriteUnsignedInt(8, this.right_gb_erp_width);
+                    size += stream.WriteUnsignedInt(3, this.gp_erp_type, "gp_erp_type");
+                    size += stream.WriteUnsignedInt(8, this.left_gb_erp_width, "left_gb_erp_width");
+                    size += stream.WriteUnsignedInt(8, this.right_gb_erp_width, "right_gb_erp_width");
                 }
             }
 
@@ -7784,11 +7784,11 @@ cubemap_projection( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.cmp_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.cmp_cancel_flag, "cmp_cancel_flag");
 
             if (cmp_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.cmp_persistence_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.cmp_persistence_flag, "cmp_persistence_flag");
             }
 
             return size;
@@ -7798,11 +7798,11 @@ cubemap_projection( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.cmp_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.cmp_cancel_flag, "cmp_cancel_flag");
 
             if (cmp_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.cmp_persistence_flag);
+                size += stream.WriteUnsignedInt(1, this.cmp_persistence_flag, "cmp_persistence_flag");
             }
 
             return size;
@@ -7853,15 +7853,15 @@ sphere_rotation( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.sphere_rotation_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.sphere_rotation_cancel_flag, "sphere_rotation_cancel_flag");
 
             if (sphere_rotation_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.sphere_rotation_persistence_flag);
-                size += stream.ReadUnsignedInt(size, 6, out this.sphere_rotation_reserved_zero_6bits);
-                size += stream.ReadSignedInt(size, 32, out this.yaw_rotation);
-                size += stream.ReadSignedInt(size, 32, out this.pitch_rotation);
-                size += stream.ReadSignedInt(size, 32, out this.roll_rotation);
+                size += stream.ReadUnsignedInt(size, 1, out this.sphere_rotation_persistence_flag, "sphere_rotation_persistence_flag");
+                size += stream.ReadUnsignedInt(size, 6, out this.sphere_rotation_reserved_zero_6bits, "sphere_rotation_reserved_zero_6bits");
+                size += stream.ReadSignedInt(size, 32, out this.yaw_rotation, "yaw_rotation");
+                size += stream.ReadSignedInt(size, 32, out this.pitch_rotation, "pitch_rotation");
+                size += stream.ReadSignedInt(size, 32, out this.roll_rotation, "roll_rotation");
             }
 
             return size;
@@ -7871,15 +7871,15 @@ sphere_rotation( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.sphere_rotation_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.sphere_rotation_cancel_flag, "sphere_rotation_cancel_flag");
 
             if (sphere_rotation_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.sphere_rotation_persistence_flag);
-                size += stream.WriteUnsignedInt(6, this.sphere_rotation_reserved_zero_6bits);
-                size += stream.WriteSignedInt(32, this.yaw_rotation);
-                size += stream.WriteSignedInt(32, this.pitch_rotation);
-                size += stream.WriteSignedInt(32, this.roll_rotation);
+                size += stream.WriteUnsignedInt(1, this.sphere_rotation_persistence_flag, "sphere_rotation_persistence_flag");
+                size += stream.WriteUnsignedInt(6, this.sphere_rotation_reserved_zero_6bits, "sphere_rotation_reserved_zero_6bits");
+                size += stream.WriteSignedInt(32, this.yaw_rotation, "yaw_rotation");
+                size += stream.WriteSignedInt(32, this.pitch_rotation, "pitch_rotation");
+                size += stream.WriteSignedInt(32, this.roll_rotation, "roll_rotation");
             }
 
             return size;
@@ -8000,18 +8000,18 @@ regionwise_packing( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedInt(size, 1, out this.rwp_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.rwp_cancel_flag, "rwp_cancel_flag");
 
             if (rwp_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.rwp_persistence_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.constituent_picture_matching_flag);
-                size += stream.ReadUnsignedInt(size, 5, out this.rwp_reserved_zero_5bits);
-                size += stream.ReadUnsignedInt(size, 8, out this.num_packed_regions);
-                size += stream.ReadUnsignedInt(size, 32, out this.proj_picture_width);
-                size += stream.ReadUnsignedInt(size, 32, out this.proj_picture_height);
-                size += stream.ReadUnsignedInt(size, 16, out this.packed_picture_width);
-                size += stream.ReadUnsignedInt(size, 16, out this.packed_picture_height);
+                size += stream.ReadUnsignedInt(size, 1, out this.rwp_persistence_flag, "rwp_persistence_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.constituent_picture_matching_flag, "constituent_picture_matching_flag");
+                size += stream.ReadUnsignedInt(size, 5, out this.rwp_reserved_zero_5bits, "rwp_reserved_zero_5bits");
+                size += stream.ReadUnsignedInt(size, 8, out this.num_packed_regions, "num_packed_regions");
+                size += stream.ReadUnsignedInt(size, 32, out this.proj_picture_width, "proj_picture_width");
+                size += stream.ReadUnsignedInt(size, 32, out this.proj_picture_height, "proj_picture_height");
+                size += stream.ReadUnsignedInt(size, 16, out this.packed_picture_width, "packed_picture_width");
+                size += stream.ReadUnsignedInt(size, 16, out this.packed_picture_height, "packed_picture_height");
 
                 this.rwp_reserved_zero_4bits = new uint[num_packed_regions];
                 this.transform_type = new uint[num_packed_regions];
@@ -8033,32 +8033,32 @@ regionwise_packing( payloadSize ) {
                 this.rwp_gb_reserved_zero_3bits = new uint[num_packed_regions];
                 for (i = 0; i < num_packed_regions; i++)
                 {
-                    size += stream.ReadUnsignedInt(size, 4, out this.rwp_reserved_zero_4bits[i]);
-                    size += stream.ReadUnsignedInt(size, 3, out this.transform_type[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.guard_band_flag[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.proj_region_width[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.proj_region_height[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.proj_region_top[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.proj_region_left[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.packed_region_width[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.packed_region_height[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.packed_region_top[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.packed_region_left[i]);
+                    size += stream.ReadUnsignedInt(size, 4, out this.rwp_reserved_zero_4bits[i], "rwp_reserved_zero_4bits");
+                    size += stream.ReadUnsignedInt(size, 3, out this.transform_type[i], "transform_type");
+                    size += stream.ReadUnsignedInt(size, 1, out this.guard_band_flag[i], "guard_band_flag");
+                    size += stream.ReadUnsignedInt(size, 32, out this.proj_region_width[i], "proj_region_width");
+                    size += stream.ReadUnsignedInt(size, 32, out this.proj_region_height[i], "proj_region_height");
+                    size += stream.ReadUnsignedInt(size, 32, out this.proj_region_top[i], "proj_region_top");
+                    size += stream.ReadUnsignedInt(size, 32, out this.proj_region_left[i], "proj_region_left");
+                    size += stream.ReadUnsignedInt(size, 16, out this.packed_region_width[i], "packed_region_width");
+                    size += stream.ReadUnsignedInt(size, 16, out this.packed_region_height[i], "packed_region_height");
+                    size += stream.ReadUnsignedInt(size, 16, out this.packed_region_top[i], "packed_region_top");
+                    size += stream.ReadUnsignedInt(size, 16, out this.packed_region_left[i], "packed_region_left");
 
                     if (guard_band_flag[i] != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 8, out this.left_gb_width[i]);
-                        size += stream.ReadUnsignedInt(size, 8, out this.right_gb_width[i]);
-                        size += stream.ReadUnsignedInt(size, 8, out this.top_gb_height[i]);
-                        size += stream.ReadUnsignedInt(size, 8, out this.bottom_gb_height[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.gb_not_used_for_pred_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 8, out this.left_gb_width[i], "left_gb_width");
+                        size += stream.ReadUnsignedInt(size, 8, out this.right_gb_width[i], "right_gb_width");
+                        size += stream.ReadUnsignedInt(size, 8, out this.top_gb_height[i], "top_gb_height");
+                        size += stream.ReadUnsignedInt(size, 8, out this.bottom_gb_height[i], "bottom_gb_height");
+                        size += stream.ReadUnsignedInt(size, 1, out this.gb_not_used_for_pred_flag[i], "gb_not_used_for_pred_flag");
 
                         this.gb_type[i] = new uint[4];
                         for (j = 0; j < 4; j++)
                         {
-                            size += stream.ReadUnsignedInt(size, 3, out this.gb_type[i][j]);
+                            size += stream.ReadUnsignedInt(size, 3, out this.gb_type[i][j], "gb_type");
                         }
-                        size += stream.ReadUnsignedInt(size, 3, out this.rwp_gb_reserved_zero_3bits[i]);
+                        size += stream.ReadUnsignedInt(size, 3, out this.rwp_gb_reserved_zero_3bits[i], "rwp_gb_reserved_zero_3bits");
                     }
                 }
             }
@@ -8072,46 +8072,46 @@ regionwise_packing( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedInt(1, this.rwp_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.rwp_cancel_flag, "rwp_cancel_flag");
 
             if (rwp_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.rwp_persistence_flag);
-                size += stream.WriteUnsignedInt(1, this.constituent_picture_matching_flag);
-                size += stream.WriteUnsignedInt(5, this.rwp_reserved_zero_5bits);
-                size += stream.WriteUnsignedInt(8, this.num_packed_regions);
-                size += stream.WriteUnsignedInt(32, this.proj_picture_width);
-                size += stream.WriteUnsignedInt(32, this.proj_picture_height);
-                size += stream.WriteUnsignedInt(16, this.packed_picture_width);
-                size += stream.WriteUnsignedInt(16, this.packed_picture_height);
+                size += stream.WriteUnsignedInt(1, this.rwp_persistence_flag, "rwp_persistence_flag");
+                size += stream.WriteUnsignedInt(1, this.constituent_picture_matching_flag, "constituent_picture_matching_flag");
+                size += stream.WriteUnsignedInt(5, this.rwp_reserved_zero_5bits, "rwp_reserved_zero_5bits");
+                size += stream.WriteUnsignedInt(8, this.num_packed_regions, "num_packed_regions");
+                size += stream.WriteUnsignedInt(32, this.proj_picture_width, "proj_picture_width");
+                size += stream.WriteUnsignedInt(32, this.proj_picture_height, "proj_picture_height");
+                size += stream.WriteUnsignedInt(16, this.packed_picture_width, "packed_picture_width");
+                size += stream.WriteUnsignedInt(16, this.packed_picture_height, "packed_picture_height");
 
                 for (i = 0; i < num_packed_regions; i++)
                 {
-                    size += stream.WriteUnsignedInt(4, this.rwp_reserved_zero_4bits[i]);
-                    size += stream.WriteUnsignedInt(3, this.transform_type[i]);
-                    size += stream.WriteUnsignedInt(1, this.guard_band_flag[i]);
-                    size += stream.WriteUnsignedInt(32, this.proj_region_width[i]);
-                    size += stream.WriteUnsignedInt(32, this.proj_region_height[i]);
-                    size += stream.WriteUnsignedInt(32, this.proj_region_top[i]);
-                    size += stream.WriteUnsignedInt(32, this.proj_region_left[i]);
-                    size += stream.WriteUnsignedInt(16, this.packed_region_width[i]);
-                    size += stream.WriteUnsignedInt(16, this.packed_region_height[i]);
-                    size += stream.WriteUnsignedInt(16, this.packed_region_top[i]);
-                    size += stream.WriteUnsignedInt(16, this.packed_region_left[i]);
+                    size += stream.WriteUnsignedInt(4, this.rwp_reserved_zero_4bits[i], "rwp_reserved_zero_4bits");
+                    size += stream.WriteUnsignedInt(3, this.transform_type[i], "transform_type");
+                    size += stream.WriteUnsignedInt(1, this.guard_band_flag[i], "guard_band_flag");
+                    size += stream.WriteUnsignedInt(32, this.proj_region_width[i], "proj_region_width");
+                    size += stream.WriteUnsignedInt(32, this.proj_region_height[i], "proj_region_height");
+                    size += stream.WriteUnsignedInt(32, this.proj_region_top[i], "proj_region_top");
+                    size += stream.WriteUnsignedInt(32, this.proj_region_left[i], "proj_region_left");
+                    size += stream.WriteUnsignedInt(16, this.packed_region_width[i], "packed_region_width");
+                    size += stream.WriteUnsignedInt(16, this.packed_region_height[i], "packed_region_height");
+                    size += stream.WriteUnsignedInt(16, this.packed_region_top[i], "packed_region_top");
+                    size += stream.WriteUnsignedInt(16, this.packed_region_left[i], "packed_region_left");
 
                     if (guard_band_flag[i] != 0)
                     {
-                        size += stream.WriteUnsignedInt(8, this.left_gb_width[i]);
-                        size += stream.WriteUnsignedInt(8, this.right_gb_width[i]);
-                        size += stream.WriteUnsignedInt(8, this.top_gb_height[i]);
-                        size += stream.WriteUnsignedInt(8, this.bottom_gb_height[i]);
-                        size += stream.WriteUnsignedInt(1, this.gb_not_used_for_pred_flag[i]);
+                        size += stream.WriteUnsignedInt(8, this.left_gb_width[i], "left_gb_width");
+                        size += stream.WriteUnsignedInt(8, this.right_gb_width[i], "right_gb_width");
+                        size += stream.WriteUnsignedInt(8, this.top_gb_height[i], "top_gb_height");
+                        size += stream.WriteUnsignedInt(8, this.bottom_gb_height[i], "bottom_gb_height");
+                        size += stream.WriteUnsignedInt(1, this.gb_not_used_for_pred_flag[i], "gb_not_used_for_pred_flag");
 
                         for (j = 0; j < 4; j++)
                         {
-                            size += stream.WriteUnsignedInt(3, this.gb_type[i][j]);
+                            size += stream.WriteUnsignedInt(3, this.gb_type[i][j], "gb_type");
                         }
-                        size += stream.WriteUnsignedInt(3, this.rwp_gb_reserved_zero_3bits[i]);
+                        size += stream.WriteUnsignedInt(3, this.rwp_gb_reserved_zero_3bits[i], "rwp_gb_reserved_zero_3bits");
                     }
                 }
             }
@@ -8176,13 +8176,13 @@ omni_viewport( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedInt(size, 10, out this.omni_viewport_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.omni_viewport_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 10, out this.omni_viewport_id, "omni_viewport_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.omni_viewport_cancel_flag, "omni_viewport_cancel_flag");
 
             if (omni_viewport_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.omni_viewport_persistence_flag);
-                size += stream.ReadUnsignedInt(size, 4, out this.omni_viewport_cnt_minus1);
+                size += stream.ReadUnsignedInt(size, 1, out this.omni_viewport_persistence_flag, "omni_viewport_persistence_flag");
+                size += stream.ReadUnsignedInt(size, 4, out this.omni_viewport_cnt_minus1, "omni_viewport_cnt_minus1");
 
                 this.omni_viewport_azimuth_centre = new int[omni_viewport_cnt_minus1 + 1];
                 this.omni_viewport_elevation_centre = new int[omni_viewport_cnt_minus1 + 1];
@@ -8191,11 +8191,11 @@ omni_viewport( payloadSize ) {
                 this.omni_viewport_ver_range = new uint[omni_viewport_cnt_minus1 + 1];
                 for (i = 0; i <= omni_viewport_cnt_minus1; i++)
                 {
-                    size += stream.ReadSignedInt(size, 32, out this.omni_viewport_azimuth_centre[i]);
-                    size += stream.ReadSignedInt(size, 32, out this.omni_viewport_elevation_centre[i]);
-                    size += stream.ReadSignedInt(size, 32, out this.omni_viewport_tilt_centre[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.omni_viewport_hor_range[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.omni_viewport_ver_range[i]);
+                    size += stream.ReadSignedInt(size, 32, out this.omni_viewport_azimuth_centre[i], "omni_viewport_azimuth_centre");
+                    size += stream.ReadSignedInt(size, 32, out this.omni_viewport_elevation_centre[i], "omni_viewport_elevation_centre");
+                    size += stream.ReadSignedInt(size, 32, out this.omni_viewport_tilt_centre[i], "omni_viewport_tilt_centre");
+                    size += stream.ReadUnsignedInt(size, 32, out this.omni_viewport_hor_range[i], "omni_viewport_hor_range");
+                    size += stream.ReadUnsignedInt(size, 32, out this.omni_viewport_ver_range[i], "omni_viewport_ver_range");
                 }
             }
 
@@ -8207,21 +8207,21 @@ omni_viewport( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedInt(10, this.omni_viewport_id);
-            size += stream.WriteUnsignedInt(1, this.omni_viewport_cancel_flag);
+            size += stream.WriteUnsignedInt(10, this.omni_viewport_id, "omni_viewport_id");
+            size += stream.WriteUnsignedInt(1, this.omni_viewport_cancel_flag, "omni_viewport_cancel_flag");
 
             if (omni_viewport_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.omni_viewport_persistence_flag);
-                size += stream.WriteUnsignedInt(4, this.omni_viewport_cnt_minus1);
+                size += stream.WriteUnsignedInt(1, this.omni_viewport_persistence_flag, "omni_viewport_persistence_flag");
+                size += stream.WriteUnsignedInt(4, this.omni_viewport_cnt_minus1, "omni_viewport_cnt_minus1");
 
                 for (i = 0; i <= omni_viewport_cnt_minus1; i++)
                 {
-                    size += stream.WriteSignedInt(32, this.omni_viewport_azimuth_centre[i]);
-                    size += stream.WriteSignedInt(32, this.omni_viewport_elevation_centre[i]);
-                    size += stream.WriteSignedInt(32, this.omni_viewport_tilt_centre[i]);
-                    size += stream.WriteUnsignedInt(32, this.omni_viewport_hor_range[i]);
-                    size += stream.WriteUnsignedInt(32, this.omni_viewport_ver_range[i]);
+                    size += stream.WriteSignedInt(32, this.omni_viewport_azimuth_centre[i], "omni_viewport_azimuth_centre");
+                    size += stream.WriteSignedInt(32, this.omni_viewport_elevation_centre[i], "omni_viewport_elevation_centre");
+                    size += stream.WriteSignedInt(32, this.omni_viewport_tilt_centre[i], "omni_viewport_tilt_centre");
+                    size += stream.WriteUnsignedInt(32, this.omni_viewport_hor_range[i], "omni_viewport_hor_range");
+                    size += stream.WriteUnsignedInt(32, this.omni_viewport_ver_range[i], "omni_viewport_ver_range");
                 }
             }
 
@@ -8265,14 +8265,14 @@ sei_manifest( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedInt(size, 16, out this.manifest_num_sei_msg_types);
+            size += stream.ReadUnsignedInt(size, 16, out this.manifest_num_sei_msg_types, "manifest_num_sei_msg_types");
 
             this.manifest_sei_payload_type = new uint[manifest_num_sei_msg_types];
             this.manifest_sei_description = new uint[manifest_num_sei_msg_types];
             for (i = 0; i < manifest_num_sei_msg_types; i++)
             {
-                size += stream.ReadUnsignedInt(size, 16, out this.manifest_sei_payload_type[i]);
-                size += stream.ReadUnsignedInt(size, 8, out this.manifest_sei_description[i]);
+                size += stream.ReadUnsignedInt(size, 16, out this.manifest_sei_payload_type[i], "manifest_sei_payload_type");
+                size += stream.ReadUnsignedInt(size, 8, out this.manifest_sei_description[i], "manifest_sei_description");
             }
 
             return size;
@@ -8283,12 +8283,12 @@ sei_manifest( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedInt(16, this.manifest_num_sei_msg_types);
+            size += stream.WriteUnsignedInt(16, this.manifest_num_sei_msg_types, "manifest_num_sei_msg_types");
 
             for (i = 0; i < manifest_num_sei_msg_types; i++)
             {
-                size += stream.WriteUnsignedInt(16, this.manifest_sei_payload_type[i]);
-                size += stream.WriteUnsignedInt(8, this.manifest_sei_description[i]);
+                size += stream.WriteUnsignedInt(16, this.manifest_sei_payload_type[i], "manifest_sei_payload_type");
+                size += stream.WriteUnsignedInt(8, this.manifest_sei_description[i], "manifest_sei_description");
             }
 
             return size;
@@ -8341,26 +8341,26 @@ sei_prefix_indication( payloadSize ) {
             uint i = 0;
             uint j = 0;
             int whileIndex = -1;
-            size += stream.ReadUnsignedInt(size, 16, out this.prefix_sei_payload_type);
-            size += stream.ReadUnsignedInt(size, 8, out this.num_sei_prefix_indications_minus1);
+            size += stream.ReadUnsignedInt(size, 16, out this.prefix_sei_payload_type, "prefix_sei_payload_type");
+            size += stream.ReadUnsignedInt(size, 8, out this.num_sei_prefix_indications_minus1, "num_sei_prefix_indications_minus1");
 
             this.num_bits_in_prefix_indication_minus1 = new uint[num_sei_prefix_indications_minus1 + 1];
             this.sei_prefix_data_bit = new byte[num_sei_prefix_indications_minus1 + 1][];
             for (i = 0; i <= num_sei_prefix_indications_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 16, out this.num_bits_in_prefix_indication_minus1[i]);
+                size += stream.ReadUnsignedInt(size, 16, out this.num_bits_in_prefix_indication_minus1[i], "num_bits_in_prefix_indication_minus1");
 
                 this.sei_prefix_data_bit[i] = new byte[num_bits_in_prefix_indication_minus1[i] + 1];
                 for (j = 0; j <= num_bits_in_prefix_indication_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.sei_prefix_data_bit[i][j]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.sei_prefix_data_bit[i][j], "sei_prefix_data_bit");
                 }
 
                 while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
-                    size += stream.ReadFixed(size, 1, whileIndex, this.byte_alignment_bit_equal_to_one); // equal to 1 
+                    size += stream.ReadFixed(size, 1, whileIndex, this.byte_alignment_bit_equal_to_one, "byte_alignment_bit_equal_to_one"); // equal to 1 
                 }
             }
 
@@ -8374,23 +8374,23 @@ sei_prefix_indication( payloadSize ) {
             uint i = 0;
             uint j = 0;
             int whileIndex = -1;
-            size += stream.WriteUnsignedInt(16, this.prefix_sei_payload_type);
-            size += stream.WriteUnsignedInt(8, this.num_sei_prefix_indications_minus1);
+            size += stream.WriteUnsignedInt(16, this.prefix_sei_payload_type, "prefix_sei_payload_type");
+            size += stream.WriteUnsignedInt(8, this.num_sei_prefix_indications_minus1, "num_sei_prefix_indications_minus1");
 
             for (i = 0; i <= num_sei_prefix_indications_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(16, this.num_bits_in_prefix_indication_minus1[i]);
+                size += stream.WriteUnsignedInt(16, this.num_bits_in_prefix_indication_minus1[i], "num_bits_in_prefix_indication_minus1");
 
                 for (j = 0; j <= num_bits_in_prefix_indication_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedInt(1, this.sei_prefix_data_bit[i][j]);
+                    size += stream.WriteUnsignedInt(1, this.sei_prefix_data_bit[i][j], "sei_prefix_data_bit");
                 }
 
                 while (!stream.ByteAligned())
                 {
                     whileIndex++;
 
-                    size += stream.WriteFixed(1, whileIndex, this.byte_alignment_bit_equal_to_one); // equal to 1 
+                    size += stream.WriteFixed(1, whileIndex, this.byte_alignment_bit_equal_to_one, "byte_alignment_bit_equal_to_one"); // equal to 1 
                 }
             }
 
@@ -8542,25 +8542,25 @@ annotated_regions( payloadSize ) {
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
             uint[] ObjectBoundingBoxAvail = null;
-            size += stream.ReadUnsignedInt(size, 1, out this.ar_cancel_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.ar_cancel_flag, "ar_cancel_flag");
 
             if (ar_cancel_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.ar_not_optimized_for_viewing_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ar_true_motion_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ar_occluded_object_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ar_partial_object_flag_present_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ar_object_label_present_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.ar_object_confidence_info_present_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.ar_not_optimized_for_viewing_flag, "ar_not_optimized_for_viewing_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ar_true_motion_flag, "ar_true_motion_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ar_occluded_object_flag, "ar_occluded_object_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ar_partial_object_flag_present_flag, "ar_partial_object_flag_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ar_object_label_present_flag, "ar_object_label_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.ar_object_confidence_info_present_flag, "ar_object_confidence_info_present_flag");
 
                 if (ar_object_confidence_info_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 4, out this.ar_object_confidence_length_minus1);
+                    size += stream.ReadUnsignedInt(size, 4, out this.ar_object_confidence_length_minus1, "ar_object_confidence_length_minus1");
                 }
 
                 if (ar_object_label_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.ar_object_label_language_present_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.ar_object_label_language_present_flag, "ar_object_label_language_present_flag");
 
                     if (ar_object_label_language_present_flag != 0)
                     {
@@ -8569,19 +8569,19 @@ annotated_regions( payloadSize ) {
                         {
                             whileIndex++;
 
-                            size += stream.ReadFixed(size, 1, whileIndex, this.ar_bit_equal_to_zero); // equal to 0 
+                            size += stream.ReadFixed(size, 1, whileIndex, this.ar_bit_equal_to_zero, "ar_bit_equal_to_zero"); // equal to 0 
                         }
-                        size += stream.ReadUtf8String(size, out this.ar_object_label_language);
+                        size += stream.ReadUtf8String(size, out this.ar_object_label_language, "ar_object_label_language");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates, "ar_num_label_updates");
 
                     this.ar_label_idx = new uint[ar_num_label_updates];
                     this.ar_label_cancel_flag = new byte[ar_num_label_updates];
                     this.ar_label = new byte[ar_num_label_updates][];
                     for (i = 0; i < ar_num_label_updates; i++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.ar_label_cancel_flag[i]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.ar_label_idx[i], "ar_label_idx");
+                        size += stream.ReadUnsignedInt(size, 1, out this.ar_label_cancel_flag[i], "ar_label_cancel_flag");
                         LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                         if (ar_label_cancel_flag[i] == 0)
@@ -8591,13 +8591,13 @@ annotated_regions( payloadSize ) {
                             {
                                 whileIndex++;
 
-                                size += stream.ReadFixed(size, 1, whileIndex, this.ar_bit_equal_to_zero); // equal to 0 
+                                size += stream.ReadFixed(size, 1, whileIndex, this.ar_bit_equal_to_zero, "ar_bit_equal_to_zero"); // equal to 0 
                             }
-                            size += stream.ReadUtf8String(size, out this.ar_label[ar_label_idx[i]]);
+                            size += stream.ReadUtf8String(size, out this.ar_label[ar_label_idx[i]], "ar_label");
                         }
                     }
                 }
-                size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_object_updates);
+                size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_object_updates, "ar_num_object_updates");
 
                 this.ar_object_idx = new uint[ar_num_object_updates];
                 this.ar_object_cancel_flag = new byte[ar_num_object_updates];
@@ -8613,8 +8613,8 @@ annotated_regions( payloadSize ) {
                 this.ar_object_confidence = new uint[ar_num_object_updates];
                 for (i = 0; i < ar_num_object_updates; i++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_idx[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.ar_object_cancel_flag[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_idx[i], "ar_object_idx");
+                    size += stream.ReadUnsignedInt(size, 1, out this.ar_object_cancel_flag[i], "ar_object_cancel_flag");
                     ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                     if (ar_object_cancel_flag[i] == 0)
@@ -8622,35 +8622,35 @@ annotated_regions( payloadSize ) {
 
                         if (ar_object_label_present_flag != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.ar_object_label_update_flag[i]);
+                            size += stream.ReadUnsignedInt(size, 1, out this.ar_object_label_update_flag[i], "ar_object_label_update_flag");
 
                             if (ar_object_label_update_flag[i] != 0)
                             {
-                                size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_label_idx[ar_object_idx[i]]);
+                                size += stream.ReadUnsignedIntGolomb(size, out this.ar_object_label_idx[ar_object_idx[i]], "ar_object_label_idx");
                             }
                         }
-                        size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_update_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_update_flag[i], "ar_bounding_box_update_flag");
 
                         if (ar_bounding_box_update_flag[i] != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_cancel_flag[i]);
+                            size += stream.ReadUnsignedInt(size, 1, out this.ar_bounding_box_cancel_flag[i], "ar_bounding_box_cancel_flag");
                             ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                             if (ar_bounding_box_cancel_flag[i] == 0)
                             {
-                                size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_top[ar_object_idx[i]]);
-                                size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_left[ar_object_idx[i]]);
-                                size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_width[ar_object_idx[i]]);
-                                size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_height[ar_object_idx[i]]);
+                                size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_top[ar_object_idx[i]], "ar_bounding_box_top");
+                                size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_left[ar_object_idx[i]], "ar_bounding_box_left");
+                                size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_width[ar_object_idx[i]], "ar_bounding_box_width");
+                                size += stream.ReadUnsignedInt(size, 16, out this.ar_bounding_box_height[ar_object_idx[i]], "ar_bounding_box_height");
 
                                 if (ar_partial_object_flag_present_flag != 0)
                                 {
-                                    size += stream.ReadUnsignedInt(size, 1, out this.ar_partial_object_flag[ar_object_idx[i]]);
+                                    size += stream.ReadUnsignedInt(size, 1, out this.ar_partial_object_flag[ar_object_idx[i]], "ar_partial_object_flag");
                                 }
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), out this.ar_object_confidence[ar_object_idx[i]], "ar_object_confidence");
                                 }
                             }
                         }
@@ -8670,25 +8670,25 @@ annotated_regions( payloadSize ) {
             uint[] LabelAssigned = null;
             uint[] ObjectTracked = null;
             uint[] ObjectBoundingBoxAvail = null;
-            size += stream.WriteUnsignedInt(1, this.ar_cancel_flag);
+            size += stream.WriteUnsignedInt(1, this.ar_cancel_flag, "ar_cancel_flag");
 
             if (ar_cancel_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.ar_not_optimized_for_viewing_flag);
-                size += stream.WriteUnsignedInt(1, this.ar_true_motion_flag);
-                size += stream.WriteUnsignedInt(1, this.ar_occluded_object_flag);
-                size += stream.WriteUnsignedInt(1, this.ar_partial_object_flag_present_flag);
-                size += stream.WriteUnsignedInt(1, this.ar_object_label_present_flag);
-                size += stream.WriteUnsignedInt(1, this.ar_object_confidence_info_present_flag);
+                size += stream.WriteUnsignedInt(1, this.ar_not_optimized_for_viewing_flag, "ar_not_optimized_for_viewing_flag");
+                size += stream.WriteUnsignedInt(1, this.ar_true_motion_flag, "ar_true_motion_flag");
+                size += stream.WriteUnsignedInt(1, this.ar_occluded_object_flag, "ar_occluded_object_flag");
+                size += stream.WriteUnsignedInt(1, this.ar_partial_object_flag_present_flag, "ar_partial_object_flag_present_flag");
+                size += stream.WriteUnsignedInt(1, this.ar_object_label_present_flag, "ar_object_label_present_flag");
+                size += stream.WriteUnsignedInt(1, this.ar_object_confidence_info_present_flag, "ar_object_confidence_info_present_flag");
 
                 if (ar_object_confidence_info_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(4, this.ar_object_confidence_length_minus1);
+                    size += stream.WriteUnsignedInt(4, this.ar_object_confidence_length_minus1, "ar_object_confidence_length_minus1");
                 }
 
                 if (ar_object_label_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.ar_object_label_language_present_flag);
+                    size += stream.WriteUnsignedInt(1, this.ar_object_label_language_present_flag, "ar_object_label_language_present_flag");
 
                     if (ar_object_label_language_present_flag != 0)
                     {
@@ -8697,16 +8697,16 @@ annotated_regions( payloadSize ) {
                         {
                             whileIndex++;
 
-                            size += stream.WriteFixed(1, whileIndex, this.ar_bit_equal_to_zero); // equal to 0 
+                            size += stream.WriteFixed(1, whileIndex, this.ar_bit_equal_to_zero, "ar_bit_equal_to_zero"); // equal to 0 
                         }
-                        size += stream.WriteUtf8String(this.ar_object_label_language);
+                        size += stream.WriteUtf8String(this.ar_object_label_language, "ar_object_label_language");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.ar_num_label_updates);
+                    size += stream.WriteUnsignedIntGolomb(this.ar_num_label_updates, "ar_num_label_updates");
 
                     for (i = 0; i < ar_num_label_updates; i++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.ar_label_idx[i]);
-                        size += stream.WriteUnsignedInt(1, this.ar_label_cancel_flag[i]);
+                        size += stream.WriteUnsignedIntGolomb(this.ar_label_idx[i], "ar_label_idx");
+                        size += stream.WriteUnsignedInt(1, this.ar_label_cancel_flag[i], "ar_label_cancel_flag");
                         LabelAssigned[ar_label_idx[i]] = ar_label_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                         if (ar_label_cancel_flag[i] == 0)
@@ -8716,18 +8716,18 @@ annotated_regions( payloadSize ) {
                             {
                                 whileIndex++;
 
-                                size += stream.WriteFixed(1, whileIndex, this.ar_bit_equal_to_zero); // equal to 0 
+                                size += stream.WriteFixed(1, whileIndex, this.ar_bit_equal_to_zero, "ar_bit_equal_to_zero"); // equal to 0 
                             }
-                            size += stream.WriteUtf8String(this.ar_label[ar_label_idx[i]]);
+                            size += stream.WriteUtf8String(this.ar_label[ar_label_idx[i]], "ar_label");
                         }
                     }
                 }
-                size += stream.WriteUnsignedIntGolomb(this.ar_num_object_updates);
+                size += stream.WriteUnsignedIntGolomb(this.ar_num_object_updates, "ar_num_object_updates");
 
                 for (i = 0; i < ar_num_object_updates; i++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.ar_object_idx[i]);
-                    size += stream.WriteUnsignedInt(1, this.ar_object_cancel_flag[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.ar_object_idx[i], "ar_object_idx");
+                    size += stream.WriteUnsignedInt(1, this.ar_object_cancel_flag[i], "ar_object_cancel_flag");
                     ObjectTracked[ar_object_idx[i]] = ar_object_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                     if (ar_object_cancel_flag[i] == 0)
@@ -8735,35 +8735,35 @@ annotated_regions( payloadSize ) {
 
                         if (ar_object_label_present_flag != 0)
                         {
-                            size += stream.WriteUnsignedInt(1, this.ar_object_label_update_flag[i]);
+                            size += stream.WriteUnsignedInt(1, this.ar_object_label_update_flag[i], "ar_object_label_update_flag");
 
                             if (ar_object_label_update_flag[i] != 0)
                             {
-                                size += stream.WriteUnsignedIntGolomb(this.ar_object_label_idx[ar_object_idx[i]]);
+                                size += stream.WriteUnsignedIntGolomb(this.ar_object_label_idx[ar_object_idx[i]], "ar_object_label_idx");
                             }
                         }
-                        size += stream.WriteUnsignedInt(1, this.ar_bounding_box_update_flag[i]);
+                        size += stream.WriteUnsignedInt(1, this.ar_bounding_box_update_flag[i], "ar_bounding_box_update_flag");
 
                         if (ar_bounding_box_update_flag[i] != 0)
                         {
-                            size += stream.WriteUnsignedInt(1, this.ar_bounding_box_cancel_flag[i]);
+                            size += stream.WriteUnsignedInt(1, this.ar_bounding_box_cancel_flag[i], "ar_bounding_box_cancel_flag");
                             ObjectBoundingBoxAvail[ar_object_idx[i]] = ar_bounding_box_cancel_flag[i] == 0 ? (uint)1 : (uint)0;
 
                             if (ar_bounding_box_cancel_flag[i] == 0)
                             {
-                                size += stream.WriteUnsignedInt(16, this.ar_bounding_box_top[ar_object_idx[i]]);
-                                size += stream.WriteUnsignedInt(16, this.ar_bounding_box_left[ar_object_idx[i]]);
-                                size += stream.WriteUnsignedInt(16, this.ar_bounding_box_width[ar_object_idx[i]]);
-                                size += stream.WriteUnsignedInt(16, this.ar_bounding_box_height[ar_object_idx[i]]);
+                                size += stream.WriteUnsignedInt(16, this.ar_bounding_box_top[ar_object_idx[i]], "ar_bounding_box_top");
+                                size += stream.WriteUnsignedInt(16, this.ar_bounding_box_left[ar_object_idx[i]], "ar_bounding_box_left");
+                                size += stream.WriteUnsignedInt(16, this.ar_bounding_box_width[ar_object_idx[i]], "ar_bounding_box_width");
+                                size += stream.WriteUnsignedInt(16, this.ar_bounding_box_height[ar_object_idx[i]], "ar_bounding_box_height");
 
                                 if (ar_partial_object_flag_present_flag != 0)
                                 {
-                                    size += stream.WriteUnsignedInt(1, this.ar_partial_object_flag[ar_object_idx[i]]);
+                                    size += stream.WriteUnsignedInt(1, this.ar_partial_object_flag[ar_object_idx[i]], "ar_partial_object_flag");
                                 }
 
                                 if (ar_object_confidence_info_present_flag != 0)
                                 {
-                                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]]);
+                                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1), this.ar_object_confidence[ar_object_idx[i]], "ar_object_confidence");
                                 }
                             }
                         }
@@ -8830,29 +8830,29 @@ shutter_interval_info( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.sii_sub_layer_idx);
+            size += stream.ReadUnsignedIntGolomb(size, out this.sii_sub_layer_idx, "sii_sub_layer_idx");
 
             if (sii_sub_layer_idx == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.shutter_interval_info_present_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.shutter_interval_info_present_flag, "shutter_interval_info_present_flag");
 
                 if (shutter_interval_info_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.sii_time_scale);
-                    size += stream.ReadUnsignedInt(size, 1, out this.fixed_shutter_interval_within_cvs_flag);
+                    size += stream.ReadUnsignedInt(size, 32, out this.sii_time_scale, "sii_time_scale");
+                    size += stream.ReadUnsignedInt(size, 1, out this.fixed_shutter_interval_within_cvs_flag, "fixed_shutter_interval_within_cvs_flag");
 
                     if (fixed_shutter_interval_within_cvs_flag != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 32, out this.sii_num_units_in_shutter_interval);
+                        size += stream.ReadUnsignedInt(size, 32, out this.sii_num_units_in_shutter_interval, "sii_num_units_in_shutter_interval");
                     }
                     else
                     {
-                        size += stream.ReadUnsignedInt(size, 3, out this.sii_max_sub_layers_minus1);
+                        size += stream.ReadUnsignedInt(size, 3, out this.sii_max_sub_layers_minus1, "sii_max_sub_layers_minus1");
 
                         this.sub_layer_num_units_in_shutter_interval = new uint[sii_max_sub_layers_minus1 + 1];
                         for (i = 0; i <= sii_max_sub_layers_minus1; i++)
                         {
-                            size += stream.ReadUnsignedInt(size, 32, out this.sub_layer_num_units_in_shutter_interval[i]);
+                            size += stream.ReadUnsignedInt(size, 32, out this.sub_layer_num_units_in_shutter_interval[i], "sub_layer_num_units_in_shutter_interval");
                         }
                     }
                 }
@@ -8866,28 +8866,28 @@ shutter_interval_info( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.sii_sub_layer_idx);
+            size += stream.WriteUnsignedIntGolomb(this.sii_sub_layer_idx, "sii_sub_layer_idx");
 
             if (sii_sub_layer_idx == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.shutter_interval_info_present_flag);
+                size += stream.WriteUnsignedInt(1, this.shutter_interval_info_present_flag, "shutter_interval_info_present_flag");
 
                 if (shutter_interval_info_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.sii_time_scale);
-                    size += stream.WriteUnsignedInt(1, this.fixed_shutter_interval_within_cvs_flag);
+                    size += stream.WriteUnsignedInt(32, this.sii_time_scale, "sii_time_scale");
+                    size += stream.WriteUnsignedInt(1, this.fixed_shutter_interval_within_cvs_flag, "fixed_shutter_interval_within_cvs_flag");
 
                     if (fixed_shutter_interval_within_cvs_flag != 0)
                     {
-                        size += stream.WriteUnsignedInt(32, this.sii_num_units_in_shutter_interval);
+                        size += stream.WriteUnsignedInt(32, this.sii_num_units_in_shutter_interval, "sii_num_units_in_shutter_interval");
                     }
                     else
                     {
-                        size += stream.WriteUnsignedInt(3, this.sii_max_sub_layers_minus1);
+                        size += stream.WriteUnsignedInt(3, this.sii_max_sub_layers_minus1, "sii_max_sub_layers_minus1");
 
                         for (i = 0; i <= sii_max_sub_layers_minus1; i++)
                         {
-                            size += stream.WriteUnsignedInt(32, this.sub_layer_num_units_in_shutter_interval[i]);
+                            size += stream.WriteUnsignedInt(32, this.sub_layer_num_units_in_shutter_interval[i], "sub_layer_num_units_in_shutter_interval");
                         }
                     }
                 }
@@ -8930,7 +8930,7 @@ reserved_sei_message( payloadSize ) {
             this.reserved_sei_message_payload_byte = new byte[payloadSize];
             for (i = 0; i < payloadSize; i++)
             {
-                size += stream.ReadBits(size, 8, out this.reserved_sei_message_payload_byte[i]);
+                size += stream.ReadBits(size, 8, out this.reserved_sei_message_payload_byte[i], "reserved_sei_message_payload_byte");
             }
 
             return size;
@@ -8944,7 +8944,7 @@ reserved_sei_message( payloadSize ) {
 
             for (i = 0; i < payloadSize; i++)
             {
-                size += stream.WriteBits(8, this.reserved_sei_message_payload_byte[i]);
+                size += stream.WriteBits(8, this.reserved_sei_message_payload_byte[i], "reserved_sei_message_payload_byte");
             }
 
             return size;
@@ -9092,85 +9092,85 @@ vui_parameters() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.aspect_ratio_info_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.aspect_ratio_info_present_flag, "aspect_ratio_info_present_flag");
 
             if (aspect_ratio_info_present_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 8, out this.aspect_ratio_idc);
+                size += stream.ReadUnsignedInt(size, 8, out this.aspect_ratio_idc, "aspect_ratio_idc");
 
                 if (aspect_ratio_idc == H264Constants.Extended_SAR)
                 {
-                    size += stream.ReadUnsignedInt(size, 16, out this.sar_width);
-                    size += stream.ReadUnsignedInt(size, 16, out this.sar_height);
+                    size += stream.ReadUnsignedInt(size, 16, out this.sar_width, "sar_width");
+                    size += stream.ReadUnsignedInt(size, 16, out this.sar_height, "sar_height");
                 }
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.overscan_info_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.overscan_info_present_flag, "overscan_info_present_flag");
 
             if (overscan_info_present_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.overscan_appropriate_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.overscan_appropriate_flag, "overscan_appropriate_flag");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.video_signal_type_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.video_signal_type_present_flag, "video_signal_type_present_flag");
 
             if (video_signal_type_present_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.video_format);
-                size += stream.ReadUnsignedInt(size, 1, out this.video_full_range_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.colour_description_present_flag);
+                size += stream.ReadUnsignedInt(size, 3, out this.video_format, "video_format");
+                size += stream.ReadUnsignedInt(size, 1, out this.video_full_range_flag, "video_full_range_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.colour_description_present_flag, "colour_description_present_flag");
 
                 if (colour_description_present_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 8, out this.colour_primaries);
-                    size += stream.ReadUnsignedInt(size, 8, out this.transfer_characteristics);
-                    size += stream.ReadUnsignedInt(size, 8, out this.matrix_coefficients);
+                    size += stream.ReadUnsignedInt(size, 8, out this.colour_primaries, "colour_primaries");
+                    size += stream.ReadUnsignedInt(size, 8, out this.transfer_characteristics, "transfer_characteristics");
+                    size += stream.ReadUnsignedInt(size, 8, out this.matrix_coefficients, "matrix_coefficients");
                 }
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.chroma_loc_info_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.chroma_loc_info_present_flag, "chroma_loc_info_present_flag");
 
             if (chroma_loc_info_present_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_sample_loc_type_top_field);
-                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_sample_loc_type_bottom_field);
+                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_sample_loc_type_top_field, "chroma_sample_loc_type_top_field");
+                size += stream.ReadUnsignedIntGolomb(size, out this.chroma_sample_loc_type_bottom_field, "chroma_sample_loc_type_bottom_field");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.timing_info_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.timing_info_present_flag, "timing_info_present_flag");
 
             if (timing_info_present_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 32, out this.num_units_in_tick);
-                size += stream.ReadUnsignedInt(size, 32, out this.time_scale);
-                size += stream.ReadUnsignedInt(size, 1, out this.fixed_frame_rate_flag);
+                size += stream.ReadUnsignedInt(size, 32, out this.num_units_in_tick, "num_units_in_tick");
+                size += stream.ReadUnsignedInt(size, 32, out this.time_scale, "time_scale");
+                size += stream.ReadUnsignedInt(size, 1, out this.fixed_frame_rate_flag, "fixed_frame_rate_flag");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.nal_hrd_parameters_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.nal_hrd_parameters_present_flag, "nal_hrd_parameters_present_flag");
 
             if (nal_hrd_parameters_present_flag != 0)
             {
                 this.hrd_parameters = new HrdParameters();
-                size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters);
+                size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters, "hrd_parameters");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.vcl_hrd_parameters_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.vcl_hrd_parameters_present_flag, "vcl_hrd_parameters_present_flag");
 
             if (vcl_hrd_parameters_present_flag != 0)
             {
                 this.hrd_parameters = new HrdParameters();
-                size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters);
+                size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters, "hrd_parameters");
             }
 
             if (nal_hrd_parameters_present_flag != 0 || vcl_hrd_parameters_present_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.low_delay_hrd_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.low_delay_hrd_flag, "low_delay_hrd_flag");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.pic_struct_present_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.bitstream_restriction_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.pic_struct_present_flag, "pic_struct_present_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.bitstream_restriction_flag, "bitstream_restriction_flag");
 
             if (bitstream_restriction_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.motion_vectors_over_pic_boundaries_flag);
-                size += stream.ReadUnsignedIntGolomb(size, out this.max_bytes_per_pic_denom);
-                size += stream.ReadUnsignedIntGolomb(size, out this.max_bits_per_mb_denom);
-                size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_horizontal);
-                size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_vertical);
-                size += stream.ReadUnsignedIntGolomb(size, out this.max_num_reorder_frames);
-                size += stream.ReadUnsignedIntGolomb(size, out this.max_dec_frame_buffering);
+                size += stream.ReadUnsignedInt(size, 1, out this.motion_vectors_over_pic_boundaries_flag, "motion_vectors_over_pic_boundaries_flag");
+                size += stream.ReadUnsignedIntGolomb(size, out this.max_bytes_per_pic_denom, "max_bytes_per_pic_denom");
+                size += stream.ReadUnsignedIntGolomb(size, out this.max_bits_per_mb_denom, "max_bits_per_mb_denom");
+                size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_horizontal, "log2_max_mv_length_horizontal");
+                size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_vertical, "log2_max_mv_length_vertical");
+                size += stream.ReadUnsignedIntGolomb(size, out this.max_num_reorder_frames, "max_num_reorder_frames");
+                size += stream.ReadUnsignedIntGolomb(size, out this.max_dec_frame_buffering, "max_dec_frame_buffering");
             }
 
             return size;
@@ -9180,83 +9180,83 @@ vui_parameters() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.aspect_ratio_info_present_flag);
+            size += stream.WriteUnsignedInt(1, this.aspect_ratio_info_present_flag, "aspect_ratio_info_present_flag");
 
             if (aspect_ratio_info_present_flag != 0)
             {
-                size += stream.WriteUnsignedInt(8, this.aspect_ratio_idc);
+                size += stream.WriteUnsignedInt(8, this.aspect_ratio_idc, "aspect_ratio_idc");
 
                 if (aspect_ratio_idc == H264Constants.Extended_SAR)
                 {
-                    size += stream.WriteUnsignedInt(16, this.sar_width);
-                    size += stream.WriteUnsignedInt(16, this.sar_height);
+                    size += stream.WriteUnsignedInt(16, this.sar_width, "sar_width");
+                    size += stream.WriteUnsignedInt(16, this.sar_height, "sar_height");
                 }
             }
-            size += stream.WriteUnsignedInt(1, this.overscan_info_present_flag);
+            size += stream.WriteUnsignedInt(1, this.overscan_info_present_flag, "overscan_info_present_flag");
 
             if (overscan_info_present_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.overscan_appropriate_flag);
+                size += stream.WriteUnsignedInt(1, this.overscan_appropriate_flag, "overscan_appropriate_flag");
             }
-            size += stream.WriteUnsignedInt(1, this.video_signal_type_present_flag);
+            size += stream.WriteUnsignedInt(1, this.video_signal_type_present_flag, "video_signal_type_present_flag");
 
             if (video_signal_type_present_flag != 0)
             {
-                size += stream.WriteUnsignedInt(3, this.video_format);
-                size += stream.WriteUnsignedInt(1, this.video_full_range_flag);
-                size += stream.WriteUnsignedInt(1, this.colour_description_present_flag);
+                size += stream.WriteUnsignedInt(3, this.video_format, "video_format");
+                size += stream.WriteUnsignedInt(1, this.video_full_range_flag, "video_full_range_flag");
+                size += stream.WriteUnsignedInt(1, this.colour_description_present_flag, "colour_description_present_flag");
 
                 if (colour_description_present_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(8, this.colour_primaries);
-                    size += stream.WriteUnsignedInt(8, this.transfer_characteristics);
-                    size += stream.WriteUnsignedInt(8, this.matrix_coefficients);
+                    size += stream.WriteUnsignedInt(8, this.colour_primaries, "colour_primaries");
+                    size += stream.WriteUnsignedInt(8, this.transfer_characteristics, "transfer_characteristics");
+                    size += stream.WriteUnsignedInt(8, this.matrix_coefficients, "matrix_coefficients");
                 }
             }
-            size += stream.WriteUnsignedInt(1, this.chroma_loc_info_present_flag);
+            size += stream.WriteUnsignedInt(1, this.chroma_loc_info_present_flag, "chroma_loc_info_present_flag");
 
             if (chroma_loc_info_present_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.chroma_sample_loc_type_top_field);
-                size += stream.WriteUnsignedIntGolomb(this.chroma_sample_loc_type_bottom_field);
+                size += stream.WriteUnsignedIntGolomb(this.chroma_sample_loc_type_top_field, "chroma_sample_loc_type_top_field");
+                size += stream.WriteUnsignedIntGolomb(this.chroma_sample_loc_type_bottom_field, "chroma_sample_loc_type_bottom_field");
             }
-            size += stream.WriteUnsignedInt(1, this.timing_info_present_flag);
+            size += stream.WriteUnsignedInt(1, this.timing_info_present_flag, "timing_info_present_flag");
 
             if (timing_info_present_flag != 0)
             {
-                size += stream.WriteUnsignedInt(32, this.num_units_in_tick);
-                size += stream.WriteUnsignedInt(32, this.time_scale);
-                size += stream.WriteUnsignedInt(1, this.fixed_frame_rate_flag);
+                size += stream.WriteUnsignedInt(32, this.num_units_in_tick, "num_units_in_tick");
+                size += stream.WriteUnsignedInt(32, this.time_scale, "time_scale");
+                size += stream.WriteUnsignedInt(1, this.fixed_frame_rate_flag, "fixed_frame_rate_flag");
             }
-            size += stream.WriteUnsignedInt(1, this.nal_hrd_parameters_present_flag);
+            size += stream.WriteUnsignedInt(1, this.nal_hrd_parameters_present_flag, "nal_hrd_parameters_present_flag");
 
             if (nal_hrd_parameters_present_flag != 0)
             {
-                size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters);
+                size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters, "hrd_parameters");
             }
-            size += stream.WriteUnsignedInt(1, this.vcl_hrd_parameters_present_flag);
+            size += stream.WriteUnsignedInt(1, this.vcl_hrd_parameters_present_flag, "vcl_hrd_parameters_present_flag");
 
             if (vcl_hrd_parameters_present_flag != 0)
             {
-                size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters);
+                size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters, "hrd_parameters");
             }
 
             if (nal_hrd_parameters_present_flag != 0 || vcl_hrd_parameters_present_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.low_delay_hrd_flag);
+                size += stream.WriteUnsignedInt(1, this.low_delay_hrd_flag, "low_delay_hrd_flag");
             }
-            size += stream.WriteUnsignedInt(1, this.pic_struct_present_flag);
-            size += stream.WriteUnsignedInt(1, this.bitstream_restriction_flag);
+            size += stream.WriteUnsignedInt(1, this.pic_struct_present_flag, "pic_struct_present_flag");
+            size += stream.WriteUnsignedInt(1, this.bitstream_restriction_flag, "bitstream_restriction_flag");
 
             if (bitstream_restriction_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.motion_vectors_over_pic_boundaries_flag);
-                size += stream.WriteUnsignedIntGolomb(this.max_bytes_per_pic_denom);
-                size += stream.WriteUnsignedIntGolomb(this.max_bits_per_mb_denom);
-                size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_horizontal);
-                size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_vertical);
-                size += stream.WriteUnsignedIntGolomb(this.max_num_reorder_frames);
-                size += stream.WriteUnsignedIntGolomb(this.max_dec_frame_buffering);
+                size += stream.WriteUnsignedInt(1, this.motion_vectors_over_pic_boundaries_flag, "motion_vectors_over_pic_boundaries_flag");
+                size += stream.WriteUnsignedIntGolomb(this.max_bytes_per_pic_denom, "max_bytes_per_pic_denom");
+                size += stream.WriteUnsignedIntGolomb(this.max_bits_per_mb_denom, "max_bits_per_mb_denom");
+                size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_horizontal, "log2_max_mv_length_horizontal");
+                size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_vertical, "log2_max_mv_length_vertical");
+                size += stream.WriteUnsignedIntGolomb(this.max_num_reorder_frames, "max_num_reorder_frames");
+                size += stream.WriteUnsignedIntGolomb(this.max_dec_frame_buffering, "max_dec_frame_buffering");
             }
 
             return size;
@@ -9319,23 +9319,21 @@ hrd_parameters() {
             ulong size = 0;
 
             uint SchedSelIdx = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.cpb_cnt_minus1);
-            size += stream.ReadUnsignedInt(size, 4, out this.bit_rate_scale);
-            size += stream.ReadUnsignedInt(size, 4, out this.cpb_size_scale);
+            size += stream.ReadUnsignedIntGolomb(size, out this.cpb_cnt_minus1, "cpb_cnt_minus1");
+            size += stream.ReadUnsignedInt(size, 4, out this.bit_rate_scale, "bit_rate_scale");
+            size += stream.ReadUnsignedInt(size, 4, out this.cpb_size_scale, "cpb_size_scale");
 
-            this.bit_rate_value_minus1 = new uint[cpb_cnt_minus1 + 1];
-            this.cpb_size_value_minus1 = new uint[cpb_cnt_minus1 + 1];
             this.cbr_flag = new byte[cpb_cnt_minus1 + 1];
             for (SchedSelIdx = 0; SchedSelIdx <= cpb_cnt_minus1; SchedSelIdx++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_value_minus1[SchedSelIdx]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_value_minus1[SchedSelIdx]);
-                size += stream.ReadUnsignedInt(size, 1, out this.cbr_flag[SchedSelIdx]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.bit_rate_value_minus1[SchedSelIdx], "bit_rate_value_minus1");
+                size += stream.ReadUnsignedIntGolomb(size, out this.cpb_size_value_minus1[SchedSelIdx], "cpb_size_value_minus1");
+                size += stream.ReadUnsignedInt(size, 1, out this.cbr_flag[SchedSelIdx], "cbr_flag");
             }
-            size += stream.ReadUnsignedInt(size, 5, out this.initial_cpb_removal_delay_length_minus1);
-            size += stream.ReadUnsignedInt(size, 5, out this.cpb_removal_delay_length_minus1);
-            size += stream.ReadUnsignedInt(size, 5, out this.dpb_output_delay_length_minus1);
-            size += stream.ReadUnsignedInt(size, 5, out this.time_offset_length);
+            size += stream.ReadUnsignedInt(size, 5, out this.initial_cpb_removal_delay_length_minus1, "initial_cpb_removal_delay_length_minus1");
+            size += stream.ReadUnsignedInt(size, 5, out this.cpb_removal_delay_length_minus1, "cpb_removal_delay_length_minus1");
+            size += stream.ReadUnsignedInt(size, 5, out this.dpb_output_delay_length_minus1, "dpb_output_delay_length_minus1");
+            size += stream.ReadUnsignedInt(size, 5, out this.time_offset_length, "time_offset_length");
 
             return size;
         }
@@ -9345,20 +9343,20 @@ hrd_parameters() {
             ulong size = 0;
 
             uint SchedSelIdx = 0;
-            size += stream.WriteUnsignedIntGolomb(this.cpb_cnt_minus1);
-            size += stream.WriteUnsignedInt(4, this.bit_rate_scale);
-            size += stream.WriteUnsignedInt(4, this.cpb_size_scale);
+            size += stream.WriteUnsignedIntGolomb(this.cpb_cnt_minus1, "cpb_cnt_minus1");
+            size += stream.WriteUnsignedInt(4, this.bit_rate_scale, "bit_rate_scale");
+            size += stream.WriteUnsignedInt(4, this.cpb_size_scale, "cpb_size_scale");
 
             for (SchedSelIdx = 0; SchedSelIdx <= cpb_cnt_minus1; SchedSelIdx++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.bit_rate_value_minus1[SchedSelIdx]);
-                size += stream.WriteUnsignedIntGolomb(this.cpb_size_value_minus1[SchedSelIdx]);
-                size += stream.WriteUnsignedInt(1, this.cbr_flag[SchedSelIdx]);
+                size += stream.WriteUnsignedIntGolomb(this.bit_rate_value_minus1[SchedSelIdx], "bit_rate_value_minus1");
+                size += stream.WriteUnsignedIntGolomb(this.cpb_size_value_minus1[SchedSelIdx], "cpb_size_value_minus1");
+                size += stream.WriteUnsignedInt(1, this.cbr_flag[SchedSelIdx], "cbr_flag");
             }
-            size += stream.WriteUnsignedInt(5, this.initial_cpb_removal_delay_length_minus1);
-            size += stream.WriteUnsignedInt(5, this.cpb_removal_delay_length_minus1);
-            size += stream.WriteUnsignedInt(5, this.dpb_output_delay_length_minus1);
-            size += stream.WriteUnsignedInt(5, this.time_offset_length);
+            size += stream.WriteUnsignedInt(5, this.initial_cpb_removal_delay_length_minus1, "initial_cpb_removal_delay_length_minus1");
+            size += stream.WriteUnsignedInt(5, this.cpb_removal_delay_length_minus1, "cpb_removal_delay_length_minus1");
+            size += stream.WriteUnsignedInt(5, this.dpb_output_delay_length_minus1, "dpb_output_delay_length_minus1");
+            size += stream.WriteUnsignedInt(5, this.time_offset_length, "time_offset_length");
 
             return size;
         }
@@ -9418,16 +9416,16 @@ reserved_three_2bits All u(2)
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.idr_flag);
-            size += stream.ReadUnsignedInt(size, 6, out this.priority_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.no_inter_layer_pred_flag);
-            size += stream.ReadUnsignedInt(size, 3, out this.dependency_id);
-            size += stream.ReadUnsignedInt(size, 4, out this.quality_id);
-            size += stream.ReadUnsignedInt(size, 3, out this.temporal_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.use_ref_base_pic_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.discardable_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.output_flag);
-            size += stream.ReadUnsignedInt(size, 2, out this.reserved_three_2bits);
+            size += stream.ReadUnsignedInt(size, 1, out this.idr_flag, "idr_flag");
+            size += stream.ReadUnsignedInt(size, 6, out this.priority_id, "priority_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.no_inter_layer_pred_flag, "no_inter_layer_pred_flag");
+            size += stream.ReadUnsignedInt(size, 3, out this.dependency_id, "dependency_id");
+            size += stream.ReadUnsignedInt(size, 4, out this.quality_id, "quality_id");
+            size += stream.ReadUnsignedInt(size, 3, out this.temporal_id, "temporal_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.use_ref_base_pic_flag, "use_ref_base_pic_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.discardable_flag, "discardable_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.output_flag, "output_flag");
+            size += stream.ReadUnsignedInt(size, 2, out this.reserved_three_2bits, "reserved_three_2bits");
 
             return size;
         }
@@ -9436,16 +9434,16 @@ reserved_three_2bits All u(2)
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.idr_flag);
-            size += stream.WriteUnsignedInt(6, this.priority_id);
-            size += stream.WriteUnsignedInt(1, this.no_inter_layer_pred_flag);
-            size += stream.WriteUnsignedInt(3, this.dependency_id);
-            size += stream.WriteUnsignedInt(4, this.quality_id);
-            size += stream.WriteUnsignedInt(3, this.temporal_id);
-            size += stream.WriteUnsignedInt(1, this.use_ref_base_pic_flag);
-            size += stream.WriteUnsignedInt(1, this.discardable_flag);
-            size += stream.WriteUnsignedInt(1, this.output_flag);
-            size += stream.WriteUnsignedInt(2, this.reserved_three_2bits);
+            size += stream.WriteUnsignedInt(1, this.idr_flag, "idr_flag");
+            size += stream.WriteUnsignedInt(6, this.priority_id, "priority_id");
+            size += stream.WriteUnsignedInt(1, this.no_inter_layer_pred_flag, "no_inter_layer_pred_flag");
+            size += stream.WriteUnsignedInt(3, this.dependency_id, "dependency_id");
+            size += stream.WriteUnsignedInt(4, this.quality_id, "quality_id");
+            size += stream.WriteUnsignedInt(3, this.temporal_id, "temporal_id");
+            size += stream.WriteUnsignedInt(1, this.use_ref_base_pic_flag, "use_ref_base_pic_flag");
+            size += stream.WriteUnsignedInt(1, this.discardable_flag, "discardable_flag");
+            size += stream.WriteUnsignedInt(1, this.output_flag, "output_flag");
+            size += stream.WriteUnsignedInt(2, this.reserved_three_2bits, "reserved_three_2bits");
 
             return size;
         }
@@ -9520,17 +9518,17 @@ seq_parameter_set_svc_extension() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_deblocking_filter_control_present_flag);
-            size += stream.ReadUnsignedInt(size, 2, out this.extended_spatial_scalability_idc);
+            size += stream.ReadUnsignedInt(size, 1, out this.inter_layer_deblocking_filter_control_present_flag, "inter_layer_deblocking_filter_control_present_flag");
+            size += stream.ReadUnsignedInt(size, 2, out this.extended_spatial_scalability_idc, "extended_spatial_scalability_idc");
 
             if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 1 || (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 2)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.chroma_phase_x_plus1_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.chroma_phase_x_plus1_flag, "chroma_phase_x_plus1_flag");
             }
 
             if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 1)
             {
-                size += stream.ReadUnsignedInt(size, 2, out this.chroma_phase_y_plus1);
+                size += stream.ReadUnsignedInt(size, 2, out this.chroma_phase_y_plus1, "chroma_phase_y_plus1");
             }
 
             if (extended_spatial_scalability_idc == 1)
@@ -9538,21 +9536,21 @@ seq_parameter_set_svc_extension() {
 
                 if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.seq_ref_layer_chroma_phase_x_plus1_flag);
-                    size += stream.ReadUnsignedInt(size, 2, out this.seq_ref_layer_chroma_phase_y_plus1);
+                    size += stream.ReadUnsignedInt(size, 1, out this.seq_ref_layer_chroma_phase_x_plus1_flag, "seq_ref_layer_chroma_phase_x_plus1_flag");
+                    size += stream.ReadUnsignedInt(size, 2, out this.seq_ref_layer_chroma_phase_y_plus1, "seq_ref_layer_chroma_phase_y_plus1");
                 }
-                size += stream.ReadSignedIntGolomb(size, out this.seq_scaled_ref_layer_left_offset);
-                size += stream.ReadSignedIntGolomb(size, out this.seq_scaled_ref_layer_top_offset);
-                size += stream.ReadSignedIntGolomb(size, out this.seq_scaled_ref_layer_right_offset);
-                size += stream.ReadSignedIntGolomb(size, out this.seq_scaled_ref_layer_bottom_offset);
+                size += stream.ReadSignedIntGolomb(size, out this.seq_scaled_ref_layer_left_offset, "seq_scaled_ref_layer_left_offset");
+                size += stream.ReadSignedIntGolomb(size, out this.seq_scaled_ref_layer_top_offset, "seq_scaled_ref_layer_top_offset");
+                size += stream.ReadSignedIntGolomb(size, out this.seq_scaled_ref_layer_right_offset, "seq_scaled_ref_layer_right_offset");
+                size += stream.ReadSignedIntGolomb(size, out this.seq_scaled_ref_layer_bottom_offset, "seq_scaled_ref_layer_bottom_offset");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.seq_tcoeff_level_prediction_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.seq_tcoeff_level_prediction_flag, "seq_tcoeff_level_prediction_flag");
 
             if (seq_tcoeff_level_prediction_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.adaptive_tcoeff_level_prediction_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.adaptive_tcoeff_level_prediction_flag, "adaptive_tcoeff_level_prediction_flag");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.slice_header_restriction_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.slice_header_restriction_flag, "slice_header_restriction_flag");
 
             return size;
         }
@@ -9561,17 +9559,17 @@ seq_parameter_set_svc_extension() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.inter_layer_deblocking_filter_control_present_flag);
-            size += stream.WriteUnsignedInt(2, this.extended_spatial_scalability_idc);
+            size += stream.WriteUnsignedInt(1, this.inter_layer_deblocking_filter_control_present_flag, "inter_layer_deblocking_filter_control_present_flag");
+            size += stream.WriteUnsignedInt(2, this.extended_spatial_scalability_idc, "extended_spatial_scalability_idc");
 
             if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 1 || (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 2)
             {
-                size += stream.WriteUnsignedInt(1, this.chroma_phase_x_plus1_flag);
+                size += stream.WriteUnsignedInt(1, this.chroma_phase_x_plus1_flag, "chroma_phase_x_plus1_flag");
             }
 
             if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) == 1)
             {
-                size += stream.WriteUnsignedInt(2, this.chroma_phase_y_plus1);
+                size += stream.WriteUnsignedInt(2, this.chroma_phase_y_plus1, "chroma_phase_y_plus1");
             }
 
             if (extended_spatial_scalability_idc == 1)
@@ -9579,21 +9577,21 @@ seq_parameter_set_svc_extension() {
 
                 if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.seq_ref_layer_chroma_phase_x_plus1_flag);
-                    size += stream.WriteUnsignedInt(2, this.seq_ref_layer_chroma_phase_y_plus1);
+                    size += stream.WriteUnsignedInt(1, this.seq_ref_layer_chroma_phase_x_plus1_flag, "seq_ref_layer_chroma_phase_x_plus1_flag");
+                    size += stream.WriteUnsignedInt(2, this.seq_ref_layer_chroma_phase_y_plus1, "seq_ref_layer_chroma_phase_y_plus1");
                 }
-                size += stream.WriteSignedIntGolomb(this.seq_scaled_ref_layer_left_offset);
-                size += stream.WriteSignedIntGolomb(this.seq_scaled_ref_layer_top_offset);
-                size += stream.WriteSignedIntGolomb(this.seq_scaled_ref_layer_right_offset);
-                size += stream.WriteSignedIntGolomb(this.seq_scaled_ref_layer_bottom_offset);
+                size += stream.WriteSignedIntGolomb(this.seq_scaled_ref_layer_left_offset, "seq_scaled_ref_layer_left_offset");
+                size += stream.WriteSignedIntGolomb(this.seq_scaled_ref_layer_top_offset, "seq_scaled_ref_layer_top_offset");
+                size += stream.WriteSignedIntGolomb(this.seq_scaled_ref_layer_right_offset, "seq_scaled_ref_layer_right_offset");
+                size += stream.WriteSignedIntGolomb(this.seq_scaled_ref_layer_bottom_offset, "seq_scaled_ref_layer_bottom_offset");
             }
-            size += stream.WriteUnsignedInt(1, this.seq_tcoeff_level_prediction_flag);
+            size += stream.WriteUnsignedInt(1, this.seq_tcoeff_level_prediction_flag, "seq_tcoeff_level_prediction_flag");
 
             if (seq_tcoeff_level_prediction_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.adaptive_tcoeff_level_prediction_flag);
+                size += stream.WriteUnsignedInt(1, this.adaptive_tcoeff_level_prediction_flag, "adaptive_tcoeff_level_prediction_flag");
             }
-            size += stream.WriteUnsignedInt(1, this.slice_header_restriction_flag);
+            size += stream.WriteUnsignedInt(1, this.slice_header_restriction_flag, "slice_header_restriction_flag");
 
             return size;
         }
@@ -9651,15 +9649,15 @@ prefix_nal_unit_svc() {
 
             if (((H264Context)context).NalHeader.NalRefIdc != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.store_ref_base_pic_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.store_ref_base_pic_flag, "store_ref_base_pic_flag");
 
                 if ((((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
             ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
                 {
                     this.dec_ref_base_pic_marking = new DecRefBasePicMarking();
-                    size += stream.ReadClass<DecRefBasePicMarking>(size, context, this.dec_ref_base_pic_marking);
+                    size += stream.ReadClass<DecRefBasePicMarking>(size, context, this.dec_ref_base_pic_marking, "dec_ref_base_pic_marking");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.additional_prefix_nal_unit_extension_flag, "additional_prefix_nal_unit_extension_flag");
 
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
@@ -9668,11 +9666,11 @@ prefix_nal_unit_svc() {
                     {
                         whileIndex++;
 
-                        size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag);
+                        size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag, "additional_prefix_nal_unit_extension_data_flag");
                     }
                 }
                 this.rbsp_trailing_bits = new RbspTrailingBits();
-                size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+                size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
             }
             else if (stream.ReadMoreRbspData(this))
             {
@@ -9681,10 +9679,10 @@ prefix_nal_unit_svc() {
                 {
                     whileIndex++;
 
-                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag);
+                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag, "additional_prefix_nal_unit_extension_data_flag");
                 }
                 this.rbsp_trailing_bits = new RbspTrailingBits();
-                size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+                size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
             }
 
             return size;
@@ -9698,14 +9696,14 @@ prefix_nal_unit_svc() {
 
             if (((H264Context)context).NalHeader.NalRefIdc != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.store_ref_base_pic_flag);
+                size += stream.WriteUnsignedInt(1, this.store_ref_base_pic_flag, "store_ref_base_pic_flag");
 
                 if ((((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
             ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
                 {
-                    size += stream.WriteClass<DecRefBasePicMarking>(context, this.dec_ref_base_pic_marking);
+                    size += stream.WriteClass<DecRefBasePicMarking>(context, this.dec_ref_base_pic_marking, "dec_ref_base_pic_marking");
                 }
-                size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_flag);
+                size += stream.WriteUnsignedInt(1, this.additional_prefix_nal_unit_extension_flag, "additional_prefix_nal_unit_extension_flag");
 
                 if (additional_prefix_nal_unit_extension_flag == 1)
                 {
@@ -9714,10 +9712,10 @@ prefix_nal_unit_svc() {
                     {
                         whileIndex++;
 
-                        size += stream.WriteUnsignedInt(1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag);
+                        size += stream.WriteUnsignedInt(1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag, "additional_prefix_nal_unit_extension_data_flag");
                     }
                 }
-                size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+                size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
             }
             else if (stream.WriteMoreRbspData(this))
             {
@@ -9726,9 +9724,9 @@ prefix_nal_unit_svc() {
                 {
                     whileIndex++;
 
-                    size += stream.WriteUnsignedInt(1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag);
+                    size += stream.WriteUnsignedInt(1, whileIndex, this.additional_prefix_nal_unit_extension_data_flag, "additional_prefix_nal_unit_extension_data_flag");
                 }
-                size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+                size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
             }
 
             return size;
@@ -9972,54 +9970,54 @@ slice_header_in_scalable_extension() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice);
-            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
-            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice, "first_mb_in_slice");
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type, "slice_type");
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id, "pic_parameter_set_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
-                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+                size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id, "colour_plane_id");
             }
-            size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
+            size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num, "frame_num");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag, "field_pic_flag");
 
                 if (field_pic_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag, "bottom_field_flag");
                 }
             }
 
             if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 1)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
+                size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id, "idr_pic_id");
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
+                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb, "pic_order_cnt_lsb");
 
                 if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom, "delta_pic_order_cnt_bottom");
                 }
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
             {
-                size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
+                size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0], "delta_pic_order_cnt");
 
                 if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1], "delta_pic_order_cnt");
                 }
             }
 
             if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+                size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt, "redundant_pic_cnt");
             }
 
             if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
@@ -10027,25 +10025,25 @@ slice_header_in_scalable_extension() {
 
                 if (H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag, "direct_spatial_mv_pred_flag");
                 }
 
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
 
                     if (num_ref_idx_active_override_flag != 0)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1, "num_ref_idx_l0_active_minus1");
 
                         if (H264FrameTypes.IsB(slice_type))
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1, "num_ref_idx_l1_active_minus1");
                         }
                     }
                 }
                 this.ref_pic_list_modification = new RefPicListModification();
-                size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification);
+                size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification, "ref_pic_list_modification");
 
                 if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && H264FrameTypes.IsP(slice_type)) ||
             (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
@@ -10053,30 +10051,30 @@ slice_header_in_scalable_extension() {
 
                     if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.base_pred_weight_table_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.base_pred_weight_table_flag, "base_pred_weight_table_flag");
                     }
 
                     if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag != 0 || base_pred_weight_table_flag == 0)
                     {
                         this.pred_weight_table = new PredWeightTable();
-                        size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
+                        size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table, "pred_weight_table");
                     }
                 }
 
                 if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
                     this.dec_ref_pic_marking = new DecRefPicMarking();
-                    size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking);
+                    size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.store_ref_base_pic_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.store_ref_base_pic_flag, "store_ref_base_pic_flag");
 
                         if ((((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
                     ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
                         {
                             this.dec_ref_base_pic_marking = new DecRefBasePicMarking();
-                            size += stream.ReadClass<DecRefBasePicMarking>(size, context, this.dec_ref_base_pic_marking);
+                            size += stream.ReadClass<DecRefBasePicMarking>(size, context, this.dec_ref_base_pic_marking, "dec_ref_base_pic_marking");
                         }
                     }
                 }
@@ -10084,102 +10082,102 @@ slice_header_in_scalable_extension() {
 
             if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type))
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
+                size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc, "cabac_init_idc");
             }
-            size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
+            size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta, "slice_qp_delta");
 
             if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
+                size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc, "disable_deblocking_filter_idc");
 
                 if (disable_deblocking_filter_idc != 1)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2);
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2);
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2, "slice_alpha_c0_offset_div2");
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2, "slice_beta_offset_div2");
                 }
             }
 
             if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 &&
         ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
             {
-                size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle, "slice_group_change_cycle");
             }
 
             if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.ref_layer_dq_id);
+                size += stream.ReadUnsignedIntGolomb(size, out this.ref_layer_dq_id, "ref_layer_dq_id");
 
                 if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.disable_inter_layer_deblocking_filter_idc);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disable_inter_layer_deblocking_filter_idc, "disable_inter_layer_deblocking_filter_idc");
 
                     if (disable_inter_layer_deblocking_filter_idc != 1)
                     {
-                        size += stream.ReadSignedIntGolomb(size, out this.inter_layer_slice_alpha_c0_offset_div2);
-                        size += stream.ReadSignedIntGolomb(size, out this.inter_layer_slice_beta_offset_div2);
+                        size += stream.ReadSignedIntGolomb(size, out this.inter_layer_slice_alpha_c0_offset_div2, "inter_layer_slice_alpha_c0_offset_div2");
+                        size += stream.ReadSignedIntGolomb(size, out this.inter_layer_slice_beta_offset_div2, "inter_layer_slice_beta_offset_div2");
                     }
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.constrained_intra_resampling_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.constrained_intra_resampling_flag, "constrained_intra_resampling_flag");
 
                 if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc == 2)
                 {
 
                     if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.ref_layer_chroma_phase_x_plus1_flag);
-                        size += stream.ReadUnsignedInt(size, 2, out this.ref_layer_chroma_phase_y_plus1);
+                        size += stream.ReadUnsignedInt(size, 1, out this.ref_layer_chroma_phase_x_plus1_flag, "ref_layer_chroma_phase_x_plus1_flag");
+                        size += stream.ReadUnsignedInt(size, 2, out this.ref_layer_chroma_phase_y_plus1, "ref_layer_chroma_phase_y_plus1");
                     }
-                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_left_offset);
-                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_top_offset);
-                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_right_offset);
-                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_bottom_offset);
+                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_left_offset, "scaled_ref_layer_left_offset");
+                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_top_offset, "scaled_ref_layer_top_offset");
+                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_right_offset, "scaled_ref_layer_right_offset");
+                    size += stream.ReadSignedIntGolomb(size, out this.scaled_ref_layer_bottom_offset, "scaled_ref_layer_bottom_offset");
                 }
             }
 
             if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.slice_skip_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.slice_skip_flag, "slice_skip_flag");
 
                 if (slice_skip_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_mbs_in_slice_minus1);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_mbs_in_slice_minus1, "num_mbs_in_slice_minus1");
                 }
                 else
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.adaptive_base_mode_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.adaptive_base_mode_flag, "adaptive_base_mode_flag");
 
                     if (adaptive_base_mode_flag == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.default_base_mode_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.default_base_mode_flag, "default_base_mode_flag");
                     }
 
                     if (default_base_mode_flag == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.adaptive_motion_prediction_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.adaptive_motion_prediction_flag, "adaptive_motion_prediction_flag");
 
                         if (adaptive_motion_prediction_flag == 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.default_motion_prediction_flag);
+                            size += stream.ReadUnsignedInt(size, 1, out this.default_motion_prediction_flag, "default_motion_prediction_flag");
                         }
                     }
-                    size += stream.ReadUnsignedInt(size, 1, out this.adaptive_residual_prediction_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.adaptive_residual_prediction_flag, "adaptive_residual_prediction_flag");
 
                     if (adaptive_residual_prediction_flag == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.default_residual_prediction_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.default_residual_prediction_flag, "default_residual_prediction_flag");
                     }
                 }
 
                 if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.tcoeff_level_prediction_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.tcoeff_level_prediction_flag, "tcoeff_level_prediction_flag");
                 }
             }
 
             if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0 && slice_skip_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 4, out this.scan_idx_start);
-                size += stream.ReadUnsignedInt(size, 4, out this.scan_idx_end);
+                size += stream.ReadUnsignedInt(size, 4, out this.scan_idx_start, "scan_idx_start");
+                size += stream.ReadUnsignedInt(size, 4, out this.scan_idx_end, "scan_idx_end");
             }
 
             return size;
@@ -10189,54 +10187,54 @@ slice_header_in_scalable_extension() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice);
-            size += stream.WriteUnsignedIntGolomb(this.slice_type);
-            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
+            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice, "first_mb_in_slice");
+            size += stream.WriteUnsignedIntGolomb(this.slice_type, "slice_type");
+            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id, "pic_parameter_set_id");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
             {
-                size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+                size += stream.WriteUnsignedInt(2, this.colour_plane_id, "colour_plane_id");
             }
-            size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
+            size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num, "frame_num");
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.field_pic_flag);
+                size += stream.WriteUnsignedInt(1, this.field_pic_flag, "field_pic_flag");
 
                 if (field_pic_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.bottom_field_flag);
+                    size += stream.WriteUnsignedInt(1, this.bottom_field_flag, "bottom_field_flag");
                 }
             }
 
             if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 1)
             {
-                size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
+                size += stream.WriteUnsignedIntGolomb(this.idr_pic_id, "idr_pic_id");
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
             {
-                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
+                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb, "pic_order_cnt_lsb");
 
                 if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
-                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom, "delta_pic_order_cnt_bottom");
                 }
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
             {
-                size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
+                size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0], "delta_pic_order_cnt");
 
                 if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                 {
-                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1], "delta_pic_order_cnt");
                 }
             }
 
             if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+                size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt, "redundant_pic_cnt");
             }
 
             if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
@@ -10244,24 +10242,24 @@ slice_header_in_scalable_extension() {
 
                 if (H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
+                    size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag, "direct_spatial_mv_pred_flag");
                 }
 
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
+                    size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
 
                     if (num_ref_idx_active_override_flag != 0)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
+                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1, "num_ref_idx_l0_active_minus1");
 
                         if (H264FrameTypes.IsB(slice_type))
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
+                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1, "num_ref_idx_l1_active_minus1");
                         }
                     }
                 }
-                size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
+                size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification, "ref_pic_list_modification");
 
                 if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && H264FrameTypes.IsP(slice_type)) ||
             (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
@@ -10269,27 +10267,27 @@ slice_header_in_scalable_extension() {
 
                     if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.base_pred_weight_table_flag);
+                        size += stream.WriteUnsignedInt(1, this.base_pred_weight_table_flag, "base_pred_weight_table_flag");
                     }
 
                     if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag != 0 || base_pred_weight_table_flag == 0)
                     {
-                        size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
+                        size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table, "pred_weight_table");
                     }
                 }
 
                 if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
-                    size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+                    size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.store_ref_base_pic_flag);
+                        size += stream.WriteUnsignedInt(1, this.store_ref_base_pic_flag, "store_ref_base_pic_flag");
 
                         if ((((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag != 0 || store_ref_base_pic_flag != 0) &&
                     ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag == 0)
                         {
-                            size += stream.WriteClass<DecRefBasePicMarking>(context, this.dec_ref_base_pic_marking);
+                            size += stream.WriteClass<DecRefBasePicMarking>(context, this.dec_ref_base_pic_marking, "dec_ref_base_pic_marking");
                         }
                     }
                 }
@@ -10297,102 +10295,102 @@ slice_header_in_scalable_extension() {
 
             if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type))
             {
-                size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
+                size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc, "cabac_init_idc");
             }
-            size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
+            size += stream.WriteSignedIntGolomb(this.slice_qp_delta, "slice_qp_delta");
 
             if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
+                size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc, "disable_deblocking_filter_idc");
 
                 if (disable_deblocking_filter_idc != 1)
                 {
-                    size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2);
-                    size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2);
+                    size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2, "slice_alpha_c0_offset_div2");
+                    size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2, "slice_beta_offset_div2");
                 }
             }
 
             if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 &&
         ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
             {
-                size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle, "slice_group_change_cycle");
             }
 
             if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0 && ((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.ref_layer_dq_id);
+                size += stream.WriteUnsignedIntGolomb(this.ref_layer_dq_id, "ref_layer_dq_id");
 
                 if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.disable_inter_layer_deblocking_filter_idc);
+                    size += stream.WriteUnsignedIntGolomb(this.disable_inter_layer_deblocking_filter_idc, "disable_inter_layer_deblocking_filter_idc");
 
                     if (disable_inter_layer_deblocking_filter_idc != 1)
                     {
-                        size += stream.WriteSignedIntGolomb(this.inter_layer_slice_alpha_c0_offset_div2);
-                        size += stream.WriteSignedIntGolomb(this.inter_layer_slice_beta_offset_div2);
+                        size += stream.WriteSignedIntGolomb(this.inter_layer_slice_alpha_c0_offset_div2, "inter_layer_slice_alpha_c0_offset_div2");
+                        size += stream.WriteSignedIntGolomb(this.inter_layer_slice_beta_offset_div2, "inter_layer_slice_beta_offset_div2");
                     }
                 }
-                size += stream.WriteUnsignedInt(1, this.constrained_intra_resampling_flag);
+                size += stream.WriteUnsignedInt(1, this.constrained_intra_resampling_flag, "constrained_intra_resampling_flag");
 
                 if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc == 2)
                 {
 
                     if ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 0 ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc : 0) > 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.ref_layer_chroma_phase_x_plus1_flag);
-                        size += stream.WriteUnsignedInt(2, this.ref_layer_chroma_phase_y_plus1);
+                        size += stream.WriteUnsignedInt(1, this.ref_layer_chroma_phase_x_plus1_flag, "ref_layer_chroma_phase_x_plus1_flag");
+                        size += stream.WriteUnsignedInt(2, this.ref_layer_chroma_phase_y_plus1, "ref_layer_chroma_phase_y_plus1");
                     }
-                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_left_offset);
-                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_top_offset);
-                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_right_offset);
-                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_bottom_offset);
+                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_left_offset, "scaled_ref_layer_left_offset");
+                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_top_offset, "scaled_ref_layer_top_offset");
+                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_right_offset, "scaled_ref_layer_right_offset");
+                    size += stream.WriteSignedIntGolomb(this.scaled_ref_layer_bottom_offset, "scaled_ref_layer_bottom_offset");
                 }
             }
 
             if (((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.slice_skip_flag);
+                size += stream.WriteUnsignedInt(1, this.slice_skip_flag, "slice_skip_flag");
 
                 if (slice_skip_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_mbs_in_slice_minus1);
+                    size += stream.WriteUnsignedIntGolomb(this.num_mbs_in_slice_minus1, "num_mbs_in_slice_minus1");
                 }
                 else
                 {
-                    size += stream.WriteUnsignedInt(1, this.adaptive_base_mode_flag);
+                    size += stream.WriteUnsignedInt(1, this.adaptive_base_mode_flag, "adaptive_base_mode_flag");
 
                     if (adaptive_base_mode_flag == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.default_base_mode_flag);
+                        size += stream.WriteUnsignedInt(1, this.default_base_mode_flag, "default_base_mode_flag");
                     }
 
                     if (default_base_mode_flag == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.adaptive_motion_prediction_flag);
+                        size += stream.WriteUnsignedInt(1, this.adaptive_motion_prediction_flag, "adaptive_motion_prediction_flag");
 
                         if (adaptive_motion_prediction_flag == 0)
                         {
-                            size += stream.WriteUnsignedInt(1, this.default_motion_prediction_flag);
+                            size += stream.WriteUnsignedInt(1, this.default_motion_prediction_flag, "default_motion_prediction_flag");
                         }
                     }
-                    size += stream.WriteUnsignedInt(1, this.adaptive_residual_prediction_flag);
+                    size += stream.WriteUnsignedInt(1, this.adaptive_residual_prediction_flag, "adaptive_residual_prediction_flag");
 
                     if (adaptive_residual_prediction_flag == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.default_residual_prediction_flag);
+                        size += stream.WriteUnsignedInt(1, this.default_residual_prediction_flag, "default_residual_prediction_flag");
                     }
                 }
 
                 if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.tcoeff_level_prediction_flag);
+                    size += stream.WriteUnsignedInt(1, this.tcoeff_level_prediction_flag, "tcoeff_level_prediction_flag");
                 }
             }
 
             if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag == 0 && slice_skip_flag == 0)
             {
-                size += stream.WriteUnsignedInt(4, this.scan_idx_start);
-                size += stream.WriteUnsignedInt(4, this.scan_idx_end);
+                size += stream.WriteUnsignedInt(4, this.scan_idx_start, "scan_idx_start");
+                size += stream.WriteUnsignedInt(4, this.scan_idx_end, "scan_idx_end");
             }
 
             return size;
@@ -10439,7 +10437,7 @@ dec_ref_base_pic_marking() {
             ulong size = 0;
 
             int whileIndex = -1;
-            size += stream.ReadUnsignedInt(size, 1, out this.adaptive_ref_base_pic_marking_mode_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.adaptive_ref_base_pic_marking_mode_flag, "adaptive_ref_base_pic_marking_mode_flag");
 
             if (adaptive_ref_base_pic_marking_mode_flag != 0)
             {
@@ -10448,16 +10446,16 @@ dec_ref_base_pic_marking() {
                 {
                     whileIndex++;
 
-                    size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.memory_management_base_control_operation);
+                    size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.memory_management_base_control_operation, "memory_management_base_control_operation");
 
                     if (memory_management_base_control_operation[whileIndex] == 1)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.difference_of_base_pic_nums_minus1);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.difference_of_base_pic_nums_minus1, "difference_of_base_pic_nums_minus1");
                     }
 
                     if (memory_management_base_control_operation[whileIndex] == 2)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_base_pic_num);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_base_pic_num, "long_term_base_pic_num");
                     }
                 } while (memory_management_base_control_operation[whileIndex] != 0);
             }
@@ -10470,7 +10468,7 @@ dec_ref_base_pic_marking() {
             ulong size = 0;
 
             int whileIndex = -1;
-            size += stream.WriteUnsignedInt(1, this.adaptive_ref_base_pic_marking_mode_flag);
+            size += stream.WriteUnsignedInt(1, this.adaptive_ref_base_pic_marking_mode_flag, "adaptive_ref_base_pic_marking_mode_flag");
 
             if (adaptive_ref_base_pic_marking_mode_flag != 0)
             {
@@ -10479,16 +10477,16 @@ dec_ref_base_pic_marking() {
                 {
                     whileIndex++;
 
-                    size += stream.WriteUnsignedIntGolomb(whileIndex, this.memory_management_base_control_operation);
+                    size += stream.WriteUnsignedIntGolomb(whileIndex, this.memory_management_base_control_operation, "memory_management_base_control_operation");
 
                     if (memory_management_base_control_operation[whileIndex] == 1)
                     {
-                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.difference_of_base_pic_nums_minus1);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.difference_of_base_pic_nums_minus1, "difference_of_base_pic_nums_minus1");
                     }
 
                     if (memory_management_base_control_operation[whileIndex] == 2)
                     {
-                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_base_pic_num);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_base_pic_num, "long_term_base_pic_num");
                     }
                 } while (memory_management_base_control_operation[whileIndex] != 0);
             }
@@ -10805,10 +10803,10 @@ scalability_info( payloadSize ) {
             uint i = 0;
             uint j = 0;
             int whileIndex = -1;
-            size += stream.ReadUnsignedInt(size, 1, out this.temporal_id_nesting_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.priority_layer_info_present_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.priority_id_setting_flag);
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1);
+            size += stream.ReadUnsignedInt(size, 1, out this.temporal_id_nesting_flag, "temporal_id_nesting_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.priority_layer_info_present_flag, "priority_layer_info_present_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.priority_id_setting_flag, "priority_id_setting_flag");
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1, "num_layers_minus1");
 
             this.layer_id = new uint[num_layers_minus1 + 1];
             this.priority_id = new uint[num_layers_minus1 + 1];
@@ -10877,159 +10875,159 @@ scalability_info( payloadSize ) {
             this.rewriting_max_bitrate = new uint[num_layers_minus1 + 1][];
             for (i = 0; i <= num_layers_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i]);
-                size += stream.ReadUnsignedInt(size, 6, out this.priority_id[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.discardable_flag[i]);
-                size += stream.ReadUnsignedInt(size, 3, out this.dependency_id[i]);
-                size += stream.ReadUnsignedInt(size, 4, out this.quality_id[i]);
-                size += stream.ReadUnsignedInt(size, 3, out this.temporal_id[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.sub_pic_layer_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.sub_region_layer_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.iroi_division_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.profile_level_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.bitrate_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.frm_rate_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.frm_size_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.layer_dependency_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.parameter_sets_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.bitstream_restriction_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.exact_inter_layer_pred_flag[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i], "layer_id");
+                size += stream.ReadUnsignedInt(size, 6, out this.priority_id[i], "priority_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.discardable_flag[i], "discardable_flag");
+                size += stream.ReadUnsignedInt(size, 3, out this.dependency_id[i], "dependency_id");
+                size += stream.ReadUnsignedInt(size, 4, out this.quality_id[i], "quality_id");
+                size += stream.ReadUnsignedInt(size, 3, out this.temporal_id[i], "temporal_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.sub_pic_layer_flag[i], "sub_pic_layer_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.sub_region_layer_flag[i], "sub_region_layer_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.iroi_division_info_present_flag[i], "iroi_division_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.profile_level_info_present_flag[i], "profile_level_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.bitrate_info_present_flag[i], "bitrate_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.frm_rate_info_present_flag[i], "frm_rate_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.frm_size_info_present_flag[i], "frm_size_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.layer_dependency_info_present_flag[i], "layer_dependency_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.parameter_sets_info_present_flag[i], "parameter_sets_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.bitstream_restriction_info_present_flag[i], "bitstream_restriction_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.exact_inter_layer_pred_flag[i], "exact_inter_layer_pred_flag");
 
                 if (sub_pic_layer_flag[i] != 0 || iroi_division_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.exact_sample_value_match_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.exact_sample_value_match_flag[i], "exact_sample_value_match_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.layer_conversion_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.layer_output_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.layer_conversion_flag[i], "layer_conversion_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.layer_output_flag[i], "layer_output_flag");
 
                 if (profile_level_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 24, out this.layer_profile_level_idc[i]);
+                    size += stream.ReadUnsignedInt(size, 24, out this.layer_profile_level_idc[i], "layer_profile_level_idc");
                 }
 
                 if (bitrate_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 16, out this.avg_bitrate[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_layer[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_layer_representation[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_calc_window[i]);
+                    size += stream.ReadUnsignedInt(size, 16, out this.avg_bitrate[i], "avg_bitrate");
+                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_layer[i], "max_bitrate_layer");
+                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_layer_representation[i], "max_bitrate_layer_representation");
+                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_calc_window[i], "max_bitrate_calc_window");
                 }
 
                 if (frm_rate_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 2, out this.constant_frm_rate_idc[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.avg_frm_rate[i]);
+                    size += stream.ReadUnsignedInt(size, 2, out this.constant_frm_rate_idc[i], "constant_frm_rate_idc");
+                    size += stream.ReadUnsignedInt(size, 16, out this.avg_frm_rate[i], "avg_frm_rate");
                 }
 
                 if (frm_size_info_present_flag[i] != 0 ||
    iroi_division_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.frm_width_in_mbs_minus1[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.frm_height_in_mbs_minus1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.frm_width_in_mbs_minus1[i], "frm_width_in_mbs_minus1");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.frm_height_in_mbs_minus1[i], "frm_height_in_mbs_minus1");
                 }
 
                 if (sub_region_layer_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.base_region_layer_id[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.dynamic_rect_flag[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.base_region_layer_id[i], "base_region_layer_id");
+                    size += stream.ReadUnsignedInt(size, 1, out this.dynamic_rect_flag[i], "dynamic_rect_flag");
 
                     if (dynamic_rect_flag[i] == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 16, out this.horizontal_offset[i]);
-                        size += stream.ReadUnsignedInt(size, 16, out this.vertical_offset[i]);
-                        size += stream.ReadUnsignedInt(size, 16, out this.region_width[i]);
-                        size += stream.ReadUnsignedInt(size, 16, out this.region_height[i]);
+                        size += stream.ReadUnsignedInt(size, 16, out this.horizontal_offset[i], "horizontal_offset");
+                        size += stream.ReadUnsignedInt(size, 16, out this.vertical_offset[i], "vertical_offset");
+                        size += stream.ReadUnsignedInt(size, 16, out this.region_width[i], "region_width");
+                        size += stream.ReadUnsignedInt(size, 16, out this.region_height[i], "region_height");
                     }
                 }
 
                 if (sub_pic_layer_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.roi_id[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.roi_id[i], "roi_id");
                 }
 
                 if (iroi_division_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.iroi_grid_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.iroi_grid_flag[i], "iroi_grid_flag");
 
                     if (iroi_grid_flag[i] != 0)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.grid_width_in_mbs_minus1[i]);
-                        size += stream.ReadUnsignedIntGolomb(size, out this.grid_height_in_mbs_minus1[i]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.grid_width_in_mbs_minus1[i], "grid_width_in_mbs_minus1");
+                        size += stream.ReadUnsignedIntGolomb(size, out this.grid_height_in_mbs_minus1[i], "grid_height_in_mbs_minus1");
                     }
                     else
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_rois_minus1[i]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_rois_minus1[i], "num_rois_minus1");
 
                         this.first_mb_in_roi[i] = new uint[num_rois_minus1[i] + 1];
                         this.roi_width_in_mbs_minus1[i] = new uint[num_rois_minus1[i] + 1];
                         this.roi_height_in_mbs_minus1[i] = new uint[num_rois_minus1[i] + 1];
                         for (j = 0; j <= num_rois_minus1[i]; j++)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_roi[i][j]);
-                            size += stream.ReadUnsignedIntGolomb(size, out this.roi_width_in_mbs_minus1[i][j]);
-                            size += stream.ReadUnsignedIntGolomb(size, out this.roi_height_in_mbs_minus1[i][j]);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_roi[i][j], "first_mb_in_roi");
+                            size += stream.ReadUnsignedIntGolomb(size, out this.roi_width_in_mbs_minus1[i][j], "roi_width_in_mbs_minus1");
+                            size += stream.ReadUnsignedIntGolomb(size, out this.roi_height_in_mbs_minus1[i][j], "roi_height_in_mbs_minus1");
                         }
                     }
                 }
 
                 if (layer_dependency_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i], "num_directly_dependent_layers");
 
                     this.directly_dependent_layer_id_delta_minus1[i] = new uint[num_directly_dependent_layers[i]];
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j], "directly_dependent_layer_id_delta_minus1");
                     }
                 }
                 else
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.layer_dependency_info_src_layer_id_delta[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.layer_dependency_info_src_layer_id_delta[i], "layer_dependency_info_src_layer_id_delta");
                 }
 
                 if (parameter_sets_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i], "num_seq_parameter_sets");
 
                     this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_sets[i]];
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i], "num_subset_seq_parameter_sets");
 
                     this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_sets[i]];
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i], "num_pic_parameter_sets_minus1");
 
                     this.pic_parameter_set_id_delta[i] = new uint[num_pic_parameter_sets_minus1[i] + 1];
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
                     }
                 }
                 else
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_layer_id_delta[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_layer_id_delta[i], "parameter_sets_info_src_layer_id_delta");
                 }
 
                 if (bitstream_restriction_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.motion_vectors_over_pic_boundaries_flag[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bytes_per_pic_denom[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bits_per_mb_denom[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_horizontal[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_vertical[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_num_reorder_frames[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_dec_frame_buffering[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.motion_vectors_over_pic_boundaries_flag[i], "motion_vectors_over_pic_boundaries_flag");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bytes_per_pic_denom[i], "max_bytes_per_pic_denom");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bits_per_mb_denom[i], "max_bits_per_mb_denom");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_horizontal[i], "log2_max_mv_length_horizontal");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_vertical[i], "log2_max_mv_length_vertical");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_num_reorder_frames[i], "max_num_reorder_frames");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_dec_frame_buffering[i], "max_dec_frame_buffering");
                 }
 
                 if (layer_conversion_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.conversion_type_idc[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.conversion_type_idc[i], "conversion_type_idc");
 
                     this.rewriting_info_flag[i] = new byte[2];
                     this.rewriting_profile_level_idc[i] = new uint[2];
@@ -11037,13 +11035,13 @@ scalability_info( payloadSize ) {
                     this.rewriting_max_bitrate[i] = new uint[2];
                     for (j = 0; j < 2; j++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.rewriting_info_flag[i][j]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.rewriting_info_flag[i][j], "rewriting_info_flag");
 
                         if (rewriting_info_flag[i][j] != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 24, out this.rewriting_profile_level_idc[i][j]);
-                            size += stream.ReadUnsignedInt(size, 16, out this.rewriting_avg_bitrate[i][j]);
-                            size += stream.ReadUnsignedInt(size, 16, out this.rewriting_max_bitrate[i][j]);
+                            size += stream.ReadUnsignedInt(size, 24, out this.rewriting_profile_level_idc[i][j], "rewriting_profile_level_idc");
+                            size += stream.ReadUnsignedInt(size, 16, out this.rewriting_avg_bitrate[i][j], "rewriting_avg_bitrate");
+                            size += stream.ReadUnsignedInt(size, 16, out this.rewriting_max_bitrate[i][j], "rewriting_max_bitrate");
                         }
                     }
                 }
@@ -11051,7 +11049,7 @@ scalability_info( payloadSize ) {
 
             if (priority_layer_info_present_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.pr_num_dIds_minus1);
+                size += stream.ReadUnsignedIntGolomb(size, out this.pr_num_dIds_minus1, "pr_num_dIds_minus1");
 
                 this.pr_dependency_id = new uint[pr_num_dIds_minus1 + 1];
                 this.pr_num_minus1 = new uint[pr_num_dIds_minus1 + 1];
@@ -11061,8 +11059,8 @@ scalability_info( payloadSize ) {
                 this.pr_max_bitrate = new uint[pr_num_dIds_minus1 + 1][];
                 for (i = 0; i <= pr_num_dIds_minus1; i++)
                 {
-                    size += stream.ReadUnsignedInt(size, 3, out this.pr_dependency_id[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.pr_num_minus1[i]);
+                    size += stream.ReadUnsignedInt(size, 3, out this.pr_dependency_id[i], "pr_dependency_id");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.pr_num_minus1[i], "pr_num_minus1");
 
                     this.pr_id[i] = new uint[pr_num_minus1[i] + 1];
                     this.pr_profile_level_idc[i] = new uint[pr_num_minus1[i] + 1];
@@ -11070,10 +11068,10 @@ scalability_info( payloadSize ) {
                     this.pr_max_bitrate[i] = new uint[pr_num_minus1[i] + 1];
                     for (j = 0; j <= pr_num_minus1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.pr_id[i][j]);
-                        size += stream.ReadUnsignedInt(size, 24, out this.pr_profile_level_idc[i][j]);
-                        size += stream.ReadUnsignedInt(size, 16, out this.pr_avg_bitrate[i][j]);
-                        size += stream.ReadUnsignedInt(size, 16, out this.pr_max_bitrate[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.pr_id[i][j], "pr_id");
+                        size += stream.ReadUnsignedInt(size, 24, out this.pr_profile_level_idc[i][j], "pr_profile_level_idc");
+                        size += stream.ReadUnsignedInt(size, 16, out this.pr_avg_bitrate[i][j], "pr_avg_bitrate");
+                        size += stream.ReadUnsignedInt(size, 16, out this.pr_max_bitrate[i][j], "pr_max_bitrate");
                     }
                 }
             }
@@ -11085,7 +11083,7 @@ scalability_info( payloadSize ) {
                 {
                     whileIndex++;
 
-                    size += stream.ReadBits(size, 8, whileIndex, this.priority_id_setting_uri);
+                    size += stream.ReadBits(size, 8, whileIndex, this.priority_id_setting_uri, "priority_id_setting_uri");
                 } while (priority_id_setting_uri[whileIndex] != 0);
             }
 
@@ -11099,169 +11097,169 @@ scalability_info( payloadSize ) {
             uint i = 0;
             uint j = 0;
             int whileIndex = -1;
-            size += stream.WriteUnsignedInt(1, this.temporal_id_nesting_flag);
-            size += stream.WriteUnsignedInt(1, this.priority_layer_info_present_flag);
-            size += stream.WriteUnsignedInt(1, this.priority_id_setting_flag);
-            size += stream.WriteUnsignedIntGolomb(this.num_layers_minus1);
+            size += stream.WriteUnsignedInt(1, this.temporal_id_nesting_flag, "temporal_id_nesting_flag");
+            size += stream.WriteUnsignedInt(1, this.priority_layer_info_present_flag, "priority_layer_info_present_flag");
+            size += stream.WriteUnsignedInt(1, this.priority_id_setting_flag, "priority_id_setting_flag");
+            size += stream.WriteUnsignedIntGolomb(this.num_layers_minus1, "num_layers_minus1");
 
             for (i = 0; i <= num_layers_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.layer_id[i]);
-                size += stream.WriteUnsignedInt(6, this.priority_id[i]);
-                size += stream.WriteUnsignedInt(1, this.discardable_flag[i]);
-                size += stream.WriteUnsignedInt(3, this.dependency_id[i]);
-                size += stream.WriteUnsignedInt(4, this.quality_id[i]);
-                size += stream.WriteUnsignedInt(3, this.temporal_id[i]);
-                size += stream.WriteUnsignedInt(1, this.sub_pic_layer_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.sub_region_layer_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.iroi_division_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.profile_level_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.bitrate_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.frm_rate_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.frm_size_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.layer_dependency_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.parameter_sets_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.bitstream_restriction_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.exact_inter_layer_pred_flag[i]);
+                size += stream.WriteUnsignedIntGolomb(this.layer_id[i], "layer_id");
+                size += stream.WriteUnsignedInt(6, this.priority_id[i], "priority_id");
+                size += stream.WriteUnsignedInt(1, this.discardable_flag[i], "discardable_flag");
+                size += stream.WriteUnsignedInt(3, this.dependency_id[i], "dependency_id");
+                size += stream.WriteUnsignedInt(4, this.quality_id[i], "quality_id");
+                size += stream.WriteUnsignedInt(3, this.temporal_id[i], "temporal_id");
+                size += stream.WriteUnsignedInt(1, this.sub_pic_layer_flag[i], "sub_pic_layer_flag");
+                size += stream.WriteUnsignedInt(1, this.sub_region_layer_flag[i], "sub_region_layer_flag");
+                size += stream.WriteUnsignedInt(1, this.iroi_division_info_present_flag[i], "iroi_division_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.profile_level_info_present_flag[i], "profile_level_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.bitrate_info_present_flag[i], "bitrate_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.frm_rate_info_present_flag[i], "frm_rate_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.frm_size_info_present_flag[i], "frm_size_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.layer_dependency_info_present_flag[i], "layer_dependency_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.parameter_sets_info_present_flag[i], "parameter_sets_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.bitstream_restriction_info_present_flag[i], "bitstream_restriction_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.exact_inter_layer_pred_flag[i], "exact_inter_layer_pred_flag");
 
                 if (sub_pic_layer_flag[i] != 0 || iroi_division_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.exact_sample_value_match_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.exact_sample_value_match_flag[i], "exact_sample_value_match_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.layer_conversion_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.layer_output_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.layer_conversion_flag[i], "layer_conversion_flag");
+                size += stream.WriteUnsignedInt(1, this.layer_output_flag[i], "layer_output_flag");
 
                 if (profile_level_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(24, this.layer_profile_level_idc[i]);
+                    size += stream.WriteUnsignedInt(24, this.layer_profile_level_idc[i], "layer_profile_level_idc");
                 }
 
                 if (bitrate_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(16, this.avg_bitrate[i]);
-                    size += stream.WriteUnsignedInt(16, this.max_bitrate_layer[i]);
-                    size += stream.WriteUnsignedInt(16, this.max_bitrate_layer_representation[i]);
-                    size += stream.WriteUnsignedInt(16, this.max_bitrate_calc_window[i]);
+                    size += stream.WriteUnsignedInt(16, this.avg_bitrate[i], "avg_bitrate");
+                    size += stream.WriteUnsignedInt(16, this.max_bitrate_layer[i], "max_bitrate_layer");
+                    size += stream.WriteUnsignedInt(16, this.max_bitrate_layer_representation[i], "max_bitrate_layer_representation");
+                    size += stream.WriteUnsignedInt(16, this.max_bitrate_calc_window[i], "max_bitrate_calc_window");
                 }
 
                 if (frm_rate_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(2, this.constant_frm_rate_idc[i]);
-                    size += stream.WriteUnsignedInt(16, this.avg_frm_rate[i]);
+                    size += stream.WriteUnsignedInt(2, this.constant_frm_rate_idc[i], "constant_frm_rate_idc");
+                    size += stream.WriteUnsignedInt(16, this.avg_frm_rate[i], "avg_frm_rate");
                 }
 
                 if (frm_size_info_present_flag[i] != 0 ||
    iroi_division_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.frm_width_in_mbs_minus1[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.frm_height_in_mbs_minus1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.frm_width_in_mbs_minus1[i], "frm_width_in_mbs_minus1");
+                    size += stream.WriteUnsignedIntGolomb(this.frm_height_in_mbs_minus1[i], "frm_height_in_mbs_minus1");
                 }
 
                 if (sub_region_layer_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.base_region_layer_id[i]);
-                    size += stream.WriteUnsignedInt(1, this.dynamic_rect_flag[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.base_region_layer_id[i], "base_region_layer_id");
+                    size += stream.WriteUnsignedInt(1, this.dynamic_rect_flag[i], "dynamic_rect_flag");
 
                     if (dynamic_rect_flag[i] == 0)
                     {
-                        size += stream.WriteUnsignedInt(16, this.horizontal_offset[i]);
-                        size += stream.WriteUnsignedInt(16, this.vertical_offset[i]);
-                        size += stream.WriteUnsignedInt(16, this.region_width[i]);
-                        size += stream.WriteUnsignedInt(16, this.region_height[i]);
+                        size += stream.WriteUnsignedInt(16, this.horizontal_offset[i], "horizontal_offset");
+                        size += stream.WriteUnsignedInt(16, this.vertical_offset[i], "vertical_offset");
+                        size += stream.WriteUnsignedInt(16, this.region_width[i], "region_width");
+                        size += stream.WriteUnsignedInt(16, this.region_height[i], "region_height");
                     }
                 }
 
                 if (sub_pic_layer_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.roi_id[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.roi_id[i], "roi_id");
                 }
 
                 if (iroi_division_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.iroi_grid_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.iroi_grid_flag[i], "iroi_grid_flag");
 
                     if (iroi_grid_flag[i] != 0)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.grid_width_in_mbs_minus1[i]);
-                        size += stream.WriteUnsignedIntGolomb(this.grid_height_in_mbs_minus1[i]);
+                        size += stream.WriteUnsignedIntGolomb(this.grid_width_in_mbs_minus1[i], "grid_width_in_mbs_minus1");
+                        size += stream.WriteUnsignedIntGolomb(this.grid_height_in_mbs_minus1[i], "grid_height_in_mbs_minus1");
                     }
                     else
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.num_rois_minus1[i]);
+                        size += stream.WriteUnsignedIntGolomb(this.num_rois_minus1[i], "num_rois_minus1");
 
                         for (j = 0; j <= num_rois_minus1[i]; j++)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_roi[i][j]);
-                            size += stream.WriteUnsignedIntGolomb(this.roi_width_in_mbs_minus1[i][j]);
-                            size += stream.WriteUnsignedIntGolomb(this.roi_height_in_mbs_minus1[i][j]);
+                            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_roi[i][j], "first_mb_in_roi");
+                            size += stream.WriteUnsignedIntGolomb(this.roi_width_in_mbs_minus1[i][j], "roi_width_in_mbs_minus1");
+                            size += stream.WriteUnsignedIntGolomb(this.roi_height_in_mbs_minus1[i][j], "roi_height_in_mbs_minus1");
                         }
                     }
                 }
 
                 if (layer_dependency_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_directly_dependent_layers[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_directly_dependent_layers[i], "num_directly_dependent_layers");
 
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.directly_dependent_layer_id_delta_minus1[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.directly_dependent_layer_id_delta_minus1[i][j], "directly_dependent_layer_id_delta_minus1");
                     }
                 }
                 else
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.layer_dependency_info_src_layer_id_delta[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.layer_dependency_info_src_layer_id_delta[i], "layer_dependency_info_src_layer_id_delta");
                 }
 
                 if (parameter_sets_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_seq_parameter_sets[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_seq_parameter_sets[i], "num_seq_parameter_sets");
 
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.num_subset_seq_parameter_sets[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_subset_seq_parameter_sets[i], "num_subset_seq_parameter_sets");
 
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.subset_seq_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_sets_minus1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_sets_minus1[i], "num_pic_parameter_sets_minus1");
 
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
                     }
                 }
                 else
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_layer_id_delta[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_layer_id_delta[i], "parameter_sets_info_src_layer_id_delta");
                 }
 
                 if (bitstream_restriction_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.motion_vectors_over_pic_boundaries_flag[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_bytes_per_pic_denom[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_bits_per_mb_denom[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_horizontal[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_vertical[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_num_reorder_frames[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_dec_frame_buffering[i]);
+                    size += stream.WriteUnsignedInt(1, this.motion_vectors_over_pic_boundaries_flag[i], "motion_vectors_over_pic_boundaries_flag");
+                    size += stream.WriteUnsignedIntGolomb(this.max_bytes_per_pic_denom[i], "max_bytes_per_pic_denom");
+                    size += stream.WriteUnsignedIntGolomb(this.max_bits_per_mb_denom[i], "max_bits_per_mb_denom");
+                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_horizontal[i], "log2_max_mv_length_horizontal");
+                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_vertical[i], "log2_max_mv_length_vertical");
+                    size += stream.WriteUnsignedIntGolomb(this.max_num_reorder_frames[i], "max_num_reorder_frames");
+                    size += stream.WriteUnsignedIntGolomb(this.max_dec_frame_buffering[i], "max_dec_frame_buffering");
                 }
 
                 if (layer_conversion_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.conversion_type_idc[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.conversion_type_idc[i], "conversion_type_idc");
 
                     for (j = 0; j < 2; j++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.rewriting_info_flag[i][j]);
+                        size += stream.WriteUnsignedInt(1, this.rewriting_info_flag[i][j], "rewriting_info_flag");
 
                         if (rewriting_info_flag[i][j] != 0)
                         {
-                            size += stream.WriteUnsignedInt(24, this.rewriting_profile_level_idc[i][j]);
-                            size += stream.WriteUnsignedInt(16, this.rewriting_avg_bitrate[i][j]);
-                            size += stream.WriteUnsignedInt(16, this.rewriting_max_bitrate[i][j]);
+                            size += stream.WriteUnsignedInt(24, this.rewriting_profile_level_idc[i][j], "rewriting_profile_level_idc");
+                            size += stream.WriteUnsignedInt(16, this.rewriting_avg_bitrate[i][j], "rewriting_avg_bitrate");
+                            size += stream.WriteUnsignedInt(16, this.rewriting_max_bitrate[i][j], "rewriting_max_bitrate");
                         }
                     }
                 }
@@ -11269,19 +11267,19 @@ scalability_info( payloadSize ) {
 
             if (priority_layer_info_present_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.pr_num_dIds_minus1);
+                size += stream.WriteUnsignedIntGolomb(this.pr_num_dIds_minus1, "pr_num_dIds_minus1");
 
                 for (i = 0; i <= pr_num_dIds_minus1; i++)
                 {
-                    size += stream.WriteUnsignedInt(3, this.pr_dependency_id[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.pr_num_minus1[i]);
+                    size += stream.WriteUnsignedInt(3, this.pr_dependency_id[i], "pr_dependency_id");
+                    size += stream.WriteUnsignedIntGolomb(this.pr_num_minus1[i], "pr_num_minus1");
 
                     for (j = 0; j <= pr_num_minus1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.pr_id[i][j]);
-                        size += stream.WriteUnsignedInt(24, this.pr_profile_level_idc[i][j]);
-                        size += stream.WriteUnsignedInt(16, this.pr_avg_bitrate[i][j]);
-                        size += stream.WriteUnsignedInt(16, this.pr_max_bitrate[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.pr_id[i][j], "pr_id");
+                        size += stream.WriteUnsignedInt(24, this.pr_profile_level_idc[i][j], "pr_profile_level_idc");
+                        size += stream.WriteUnsignedInt(16, this.pr_avg_bitrate[i][j], "pr_avg_bitrate");
+                        size += stream.WriteUnsignedInt(16, this.pr_max_bitrate[i][j], "pr_max_bitrate");
                     }
                 }
             }
@@ -11293,7 +11291,7 @@ scalability_info( payloadSize ) {
                 {
                     whileIndex++;
 
-                    size += stream.WriteBits(8, whileIndex, this.priority_id_setting_uri);
+                    size += stream.WriteBits(8, whileIndex, this.priority_id_setting_uri, "priority_id_setting_uri");
                 } while (priority_id_setting_uri[whileIndex] != 0);
             }
 
@@ -11328,7 +11326,7 @@ sub_pic_scalable_layer( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.layer_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.layer_id, "layer_id");
 
             return size;
         }
@@ -11337,7 +11335,7 @@ sub_pic_scalable_layer( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.layer_id);
+            size += stream.WriteUnsignedIntGolomb(this.layer_id, "layer_id");
 
             return size;
         }
@@ -11388,7 +11386,7 @@ non_required_layer_rep( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1, "num_info_entries_minus1");
 
             this.entry_dependency_id = new uint[num_info_entries_minus1 + 1];
             this.num_non_required_layer_reps_minus1 = new uint[num_info_entries_minus1 + 1];
@@ -11396,15 +11394,15 @@ non_required_layer_rep( payloadSize ) {
             this.non_required_layer_rep_quality_id = new uint[num_info_entries_minus1 + 1][];
             for (i = 0; i <= num_info_entries_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.entry_dependency_id[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_non_required_layer_reps_minus1[i]);
+                size += stream.ReadUnsignedInt(size, 3, out this.entry_dependency_id[i], "entry_dependency_id");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_non_required_layer_reps_minus1[i], "num_non_required_layer_reps_minus1");
 
                 this.non_required_layer_rep_dependency_id[i] = new uint[num_non_required_layer_reps_minus1[i] + 1];
                 this.non_required_layer_rep_quality_id[i] = new uint[num_non_required_layer_reps_minus1[i] + 1];
                 for (j = 0; j <= num_non_required_layer_reps_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedInt(size, 3, out this.non_required_layer_rep_dependency_id[i][j]);
-                    size += stream.ReadUnsignedInt(size, 4, out this.non_required_layer_rep_quality_id[i][j]);
+                    size += stream.ReadUnsignedInt(size, 3, out this.non_required_layer_rep_dependency_id[i][j], "non_required_layer_rep_dependency_id");
+                    size += stream.ReadUnsignedInt(size, 4, out this.non_required_layer_rep_quality_id[i][j], "non_required_layer_rep_quality_id");
                 }
             }
 
@@ -11417,17 +11415,17 @@ non_required_layer_rep( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_info_entries_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_info_entries_minus1, "num_info_entries_minus1");
 
             for (i = 0; i <= num_info_entries_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(3, this.entry_dependency_id[i]);
-                size += stream.WriteUnsignedIntGolomb(this.num_non_required_layer_reps_minus1[i]);
+                size += stream.WriteUnsignedInt(3, this.entry_dependency_id[i], "entry_dependency_id");
+                size += stream.WriteUnsignedIntGolomb(this.num_non_required_layer_reps_minus1[i], "num_non_required_layer_reps_minus1");
 
                 for (j = 0; j <= num_non_required_layer_reps_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedInt(3, this.non_required_layer_rep_dependency_id[i][j]);
-                    size += stream.WriteUnsignedInt(4, this.non_required_layer_rep_quality_id[i][j]);
+                    size += stream.WriteUnsignedInt(3, this.non_required_layer_rep_dependency_id[i][j], "non_required_layer_rep_dependency_id");
+                    size += stream.WriteUnsignedInt(4, this.non_required_layer_rep_quality_id[i][j], "non_required_layer_rep_quality_id");
                 }
             }
 
@@ -11471,13 +11469,13 @@ priority_layer_info( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedInt(size, 3, out this.pr_dependency_id);
-            size += stream.ReadUnsignedInt(size, 4, out this.num_priority_ids);
+            size += stream.ReadUnsignedInt(size, 3, out this.pr_dependency_id, "pr_dependency_id");
+            size += stream.ReadUnsignedInt(size, 4, out this.num_priority_ids, "num_priority_ids");
 
             this.alt_priority_id = new uint[num_priority_ids];
             for (i = 0; i < num_priority_ids; i++)
             {
-                size += stream.ReadUnsignedInt(size, 6, out this.alt_priority_id[i]);
+                size += stream.ReadUnsignedInt(size, 6, out this.alt_priority_id[i], "alt_priority_id");
             }
 
             return size;
@@ -11488,12 +11486,12 @@ priority_layer_info( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedInt(3, this.pr_dependency_id);
-            size += stream.WriteUnsignedInt(4, this.num_priority_ids);
+            size += stream.WriteUnsignedInt(3, this.pr_dependency_id, "pr_dependency_id");
+            size += stream.WriteUnsignedInt(4, this.num_priority_ids, "num_priority_ids");
 
             for (i = 0; i < num_priority_ids; i++)
             {
-                size += stream.WriteUnsignedInt(6, this.alt_priority_id[i]);
+                size += stream.WriteUnsignedInt(6, this.alt_priority_id[i], "alt_priority_id");
             }
 
             return size;
@@ -11533,12 +11531,12 @@ layers_not_present( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_layers);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_layers, "num_layers");
 
             this.layer_id = new uint[num_layers];
             for (i = 0; i < num_layers; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i], "layer_id");
             }
 
             return size;
@@ -11549,11 +11547,11 @@ layers_not_present( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_layers);
+            size += stream.WriteUnsignedIntGolomb(this.num_layers, "num_layers");
 
             for (i = 0; i < num_layers; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.layer_id[i]);
+                size += stream.WriteUnsignedIntGolomb(this.layer_id[i], "layer_id");
             }
 
             return size;
@@ -11610,7 +11608,7 @@ layer_dependency_change( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1, "num_layers_minus1");
 
             this.layer_id = new uint[num_layers_minus1 + 1];
             this.layer_dependency_info_present_flag = new byte[num_layers_minus1 + 1];
@@ -11619,22 +11617,22 @@ layer_dependency_change( payloadSize ) {
             this.layer_dependency_info_src_layer_id_delta_minus1 = new uint[num_layers_minus1 + 1];
             for (i = 0; i <= num_layers_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.layer_dependency_info_present_flag[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i], "layer_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.layer_dependency_info_present_flag[i], "layer_dependency_info_present_flag");
 
                 if (layer_dependency_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i], "num_directly_dependent_layers");
 
                     this.directly_dependent_layer_id_delta_minus1[i] = new uint[num_directly_dependent_layers[i]];
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j], "directly_dependent_layer_id_delta_minus1");
                     }
                 }
                 else
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.layer_dependency_info_src_layer_id_delta_minus1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.layer_dependency_info_src_layer_id_delta_minus1[i], "layer_dependency_info_src_layer_id_delta_minus1");
                 }
             }
 
@@ -11647,25 +11645,25 @@ layer_dependency_change( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_layers_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_layers_minus1, "num_layers_minus1");
 
             for (i = 0; i <= num_layers_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.layer_id[i]);
-                size += stream.WriteUnsignedInt(1, this.layer_dependency_info_present_flag[i]);
+                size += stream.WriteUnsignedIntGolomb(this.layer_id[i], "layer_id");
+                size += stream.WriteUnsignedInt(1, this.layer_dependency_info_present_flag[i], "layer_dependency_info_present_flag");
 
                 if (layer_dependency_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_directly_dependent_layers[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_directly_dependent_layers[i], "num_directly_dependent_layers");
 
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.directly_dependent_layer_id_delta_minus1[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.directly_dependent_layer_id_delta_minus1[i][j], "directly_dependent_layer_id_delta_minus1");
                     }
                 }
                 else
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.layer_dependency_info_src_layer_id_delta_minus1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.layer_dependency_info_src_layer_id_delta_minus1[i], "layer_dependency_info_src_layer_id_delta_minus1");
                 }
             }
 
@@ -11727,27 +11725,27 @@ scalable_nesting( payloadSize ) {
 
             uint i = 0;
             int whileIndex = -1;
-            size += stream.ReadUnsignedInt(size, 1, out this.all_layer_representations_in_au_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.all_layer_representations_in_au_flag, "all_layer_representations_in_au_flag");
 
             if (all_layer_representations_in_au_flag == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_layer_representations_minus1);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_layer_representations_minus1, "num_layer_representations_minus1");
 
                 this.sei_dependency_id = new uint[num_layer_representations_minus1 + 1];
                 this.sei_quality_id = new uint[num_layer_representations_minus1 + 1];
                 for (i = 0; i <= num_layer_representations_minus1; i++)
                 {
-                    size += stream.ReadUnsignedInt(size, 3, out this.sei_dependency_id[i]);
-                    size += stream.ReadUnsignedInt(size, 4, out this.sei_quality_id[i]);
+                    size += stream.ReadUnsignedInt(size, 3, out this.sei_dependency_id[i], "sei_dependency_id");
+                    size += stream.ReadUnsignedInt(size, 4, out this.sei_quality_id[i], "sei_quality_id");
                 }
-                size += stream.ReadUnsignedInt(size, 3, out this.sei_temporal_id);
+                size += stream.ReadUnsignedInt(size, 3, out this.sei_temporal_id, "sei_temporal_id");
             }
 
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
-                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
+                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
             }
 
             do
@@ -11755,7 +11753,7 @@ scalable_nesting( payloadSize ) {
                 whileIndex++;
 
                 this.sei_message.Add(whileIndex, new SeiMessage());
-                size += stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex]);
+                size += stream.ReadClass<SeiMessage>(size, context, this.sei_message[whileIndex], "sei_message");
             } while (stream.ReadMoreRbspData(this));
 
             return size;
@@ -11767,32 +11765,32 @@ scalable_nesting( payloadSize ) {
 
             uint i = 0;
             int whileIndex = -1;
-            size += stream.WriteUnsignedInt(1, this.all_layer_representations_in_au_flag);
+            size += stream.WriteUnsignedInt(1, this.all_layer_representations_in_au_flag, "all_layer_representations_in_au_flag");
 
             if (all_layer_representations_in_au_flag == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.num_layer_representations_minus1);
+                size += stream.WriteUnsignedIntGolomb(this.num_layer_representations_minus1, "num_layer_representations_minus1");
 
                 for (i = 0; i <= num_layer_representations_minus1; i++)
                 {
-                    size += stream.WriteUnsignedInt(3, this.sei_dependency_id[i]);
-                    size += stream.WriteUnsignedInt(4, this.sei_quality_id[i]);
+                    size += stream.WriteUnsignedInt(3, this.sei_dependency_id[i], "sei_dependency_id");
+                    size += stream.WriteUnsignedInt(4, this.sei_quality_id[i], "sei_quality_id");
                 }
-                size += stream.WriteUnsignedInt(3, this.sei_temporal_id);
+                size += stream.WriteUnsignedInt(3, this.sei_temporal_id, "sei_temporal_id");
             }
 
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
-                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
+                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
             }
 
             do
             {
                 whileIndex++;
 
-                size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message);
+                size += stream.WriteClass<SeiMessage>(context, whileIndex, this.sei_message, "sei_message");
             } while (stream.WriteMoreRbspData(this));
 
             return size;
@@ -11867,7 +11865,7 @@ base_layer_temporal_hrd( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_of_temporal_layers_in_base_layer_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_of_temporal_layers_in_base_layer_minus1, "num_of_temporal_layers_in_base_layer_minus1");
 
             this.sei_temporal_id = new uint[num_of_temporal_layers_in_base_layer_minus1 + 1];
             this.sei_timing_info_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1 + 1];
@@ -11881,36 +11879,36 @@ base_layer_temporal_hrd( payloadSize ) {
             this.sei_pic_struct_present_flag = new byte[num_of_temporal_layers_in_base_layer_minus1 + 1];
             for (i = 0; i <= num_of_temporal_layers_in_base_layer_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.sei_temporal_id[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_timing_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 3, out this.sei_temporal_id[i], "sei_temporal_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_timing_info_present_flag[i], "sei_timing_info_present_flag");
 
                 if (sei_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.sei_num_units_in_tick[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.sei_time_scale[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.sei_fixed_frame_rate_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 32, out this.sei_num_units_in_tick[i], "sei_num_units_in_tick");
+                    size += stream.ReadUnsignedInt(size, 32, out this.sei_time_scale[i], "sei_time_scale");
+                    size += stream.ReadUnsignedInt(size, 1, out this.sei_fixed_frame_rate_flag[i], "sei_fixed_frame_rate_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_nal_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_nal_hrd_parameters_present_flag[i], "sei_nal_hrd_parameters_present_flag");
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_vcl_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_vcl_hrd_parameters_present_flag[i], "sei_vcl_hrd_parameters_present_flag");
 
                 if (sei_vcl_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0 ||
    sei_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.sei_low_delay_hrd_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.sei_low_delay_hrd_flag[i], "sei_low_delay_hrd_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_pic_struct_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_pic_struct_present_flag[i], "sei_pic_struct_present_flag");
             }
 
             return size;
@@ -11921,38 +11919,38 @@ base_layer_temporal_hrd( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_of_temporal_layers_in_base_layer_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_of_temporal_layers_in_base_layer_minus1, "num_of_temporal_layers_in_base_layer_minus1");
 
             for (i = 0; i <= num_of_temporal_layers_in_base_layer_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(3, this.sei_temporal_id[i]);
-                size += stream.WriteUnsignedInt(1, this.sei_timing_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(3, this.sei_temporal_id[i], "sei_temporal_id");
+                size += stream.WriteUnsignedInt(1, this.sei_timing_info_present_flag[i], "sei_timing_info_present_flag");
 
                 if (sei_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.sei_num_units_in_tick[i]);
-                    size += stream.WriteUnsignedInt(32, this.sei_time_scale[i]);
-                    size += stream.WriteUnsignedInt(1, this.sei_fixed_frame_rate_flag[i]);
+                    size += stream.WriteUnsignedInt(32, this.sei_num_units_in_tick[i], "sei_num_units_in_tick");
+                    size += stream.WriteUnsignedInt(32, this.sei_time_scale[i], "sei_time_scale");
+                    size += stream.WriteUnsignedInt(1, this.sei_fixed_frame_rate_flag[i], "sei_fixed_frame_rate_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.sei_nal_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.sei_nal_hrd_parameters_present_flag[i], "sei_nal_hrd_parameters_present_flag");
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.WriteUnsignedInt(1, this.sei_vcl_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.sei_vcl_hrd_parameters_present_flag[i], "sei_vcl_hrd_parameters_present_flag");
 
                 if (sei_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (sei_nal_hrd_parameters_present_flag[i] != 0 ||
    sei_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.sei_low_delay_hrd_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.sei_low_delay_hrd_flag[i], "sei_low_delay_hrd_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.sei_pic_struct_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.sei_pic_struct_present_flag[i], "sei_pic_struct_present_flag");
             }
 
             return size;
@@ -11995,14 +11993,14 @@ quality_layer_integrity_check( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1, "num_info_entries_minus1");
 
             this.entry_dependency_id = new uint[num_info_entries_minus1 + 1];
             this.quality_layer_crc = new uint[num_info_entries_minus1 + 1];
             for (i = 0; i <= num_info_entries_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.entry_dependency_id[i]);
-                size += stream.ReadUnsignedInt(size, 16, out this.quality_layer_crc[i]);
+                size += stream.ReadUnsignedInt(size, 3, out this.entry_dependency_id[i], "entry_dependency_id");
+                size += stream.ReadUnsignedInt(size, 16, out this.quality_layer_crc[i], "quality_layer_crc");
             }
 
             return size;
@@ -12013,12 +12011,12 @@ quality_layer_integrity_check( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_info_entries_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_info_entries_minus1, "num_info_entries_minus1");
 
             for (i = 0; i <= num_info_entries_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(3, this.entry_dependency_id[i]);
-                size += stream.WriteUnsignedInt(16, this.quality_layer_crc[i]);
+                size += stream.WriteUnsignedInt(3, this.entry_dependency_id[i], "entry_dependency_id");
+                size += stream.WriteUnsignedInt(16, this.quality_layer_crc[i], "quality_layer_crc");
             }
 
             return size;
@@ -12093,7 +12091,7 @@ redundant_pic_property( payloadSize ) {
             uint i = 0;
             uint j = 0;
             uint k = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_dIds_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_dIds_minus1, "num_dIds_minus1");
 
             this.dependency_id = new uint[num_dIds_minus1 + 1];
             this.num_qIds_minus1 = new uint[num_dIds_minus1 + 1];
@@ -12107,8 +12105,8 @@ redundant_pic_property( payloadSize ) {
             this.intra_samples_match_flag = new byte[num_dIds_minus1 + 1][][];
             for (i = 0; i <= num_dIds_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.dependency_id[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_qIds_minus1[i]);
+                size += stream.ReadUnsignedInt(size, 3, out this.dependency_id[i], "dependency_id");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_qIds_minus1[i], "num_qIds_minus1");
 
                 this.quality_id[i] = new uint[num_qIds_minus1[i] + 1];
                 this.num_redundant_pics_minus1[i] = new uint[num_qIds_minus1[i] + 1];
@@ -12120,8 +12118,8 @@ redundant_pic_property( payloadSize ) {
                 this.intra_samples_match_flag[i] = new byte[num_qIds_minus1[i] + 1][];
                 for (j = 0; j <= num_qIds_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedInt(size, 4, out this.quality_id[i][j]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_redundant_pics_minus1[i][j]);
+                    size += stream.ReadUnsignedInt(size, 4, out this.quality_id[i][j], "quality_id");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_redundant_pics_minus1[i][j], "num_redundant_pics_minus1");
 
                     this.redundant_pic_cnt_minus1[i][j] = new uint[num_redundant_pics_minus1[i][j] + 1];
                     this.pic_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j] + 1];
@@ -12131,15 +12129,15 @@ redundant_pic_property( payloadSize ) {
                     this.intra_samples_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j] + 1];
                     for (k = 0; k <= num_redundant_pics_minus1[i][j]; k++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt_minus1[i][j][k]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.pic_match_flag[i][j][k]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt_minus1[i][j][k], "redundant_pic_cnt_minus1");
+                        size += stream.ReadUnsignedInt(size, 1, out this.pic_match_flag[i][j][k], "pic_match_flag");
 
                         if (pic_match_flag[i][j][k] == 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.mb_type_match_flag[i][j][k]);
-                            size += stream.ReadUnsignedInt(size, 1, out this.motion_match_flag[i][j][k]);
-                            size += stream.ReadUnsignedInt(size, 1, out this.residual_match_flag[i][j][k]);
-                            size += stream.ReadUnsignedInt(size, 1, out this.intra_samples_match_flag[i][j][k]);
+                            size += stream.ReadUnsignedInt(size, 1, out this.mb_type_match_flag[i][j][k], "mb_type_match_flag");
+                            size += stream.ReadUnsignedInt(size, 1, out this.motion_match_flag[i][j][k], "motion_match_flag");
+                            size += stream.ReadUnsignedInt(size, 1, out this.residual_match_flag[i][j][k], "residual_match_flag");
+                            size += stream.ReadUnsignedInt(size, 1, out this.intra_samples_match_flag[i][j][k], "intra_samples_match_flag");
                         }
                     }
                 }
@@ -12155,29 +12153,29 @@ redundant_pic_property( payloadSize ) {
             uint i = 0;
             uint j = 0;
             uint k = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_dIds_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_dIds_minus1, "num_dIds_minus1");
 
             for (i = 0; i <= num_dIds_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(3, this.dependency_id[i]);
-                size += stream.WriteUnsignedIntGolomb(this.num_qIds_minus1[i]);
+                size += stream.WriteUnsignedInt(3, this.dependency_id[i], "dependency_id");
+                size += stream.WriteUnsignedIntGolomb(this.num_qIds_minus1[i], "num_qIds_minus1");
 
                 for (j = 0; j <= num_qIds_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedInt(4, this.quality_id[i][j]);
-                    size += stream.WriteUnsignedIntGolomb(this.num_redundant_pics_minus1[i][j]);
+                    size += stream.WriteUnsignedInt(4, this.quality_id[i][j], "quality_id");
+                    size += stream.WriteUnsignedIntGolomb(this.num_redundant_pics_minus1[i][j], "num_redundant_pics_minus1");
 
                     for (k = 0; k <= num_redundant_pics_minus1[i][j]; k++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt_minus1[i][j][k]);
-                        size += stream.WriteUnsignedInt(1, this.pic_match_flag[i][j][k]);
+                        size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt_minus1[i][j][k], "redundant_pic_cnt_minus1");
+                        size += stream.WriteUnsignedInt(1, this.pic_match_flag[i][j][k], "pic_match_flag");
 
                         if (pic_match_flag[i][j][k] == 0)
                         {
-                            size += stream.WriteUnsignedInt(1, this.mb_type_match_flag[i][j][k]);
-                            size += stream.WriteUnsignedInt(1, this.motion_match_flag[i][j][k]);
-                            size += stream.WriteUnsignedInt(1, this.residual_match_flag[i][j][k]);
-                            size += stream.WriteUnsignedInt(1, this.intra_samples_match_flag[i][j][k]);
+                            size += stream.WriteUnsignedInt(1, this.mb_type_match_flag[i][j][k], "mb_type_match_flag");
+                            size += stream.WriteUnsignedInt(1, this.motion_match_flag[i][j][k], "motion_match_flag");
+                            size += stream.WriteUnsignedInt(1, this.residual_match_flag[i][j][k], "residual_match_flag");
+                            size += stream.WriteUnsignedInt(1, this.intra_samples_match_flag[i][j][k], "intra_samples_match_flag");
                         }
                     }
                 }
@@ -12217,8 +12215,8 @@ tl0_dep_rep_index( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 8, out this.tl0_dep_rep_idx);
-            size += stream.ReadUnsignedInt(size, 16, out this.effective_idr_pic_id);
+            size += stream.ReadUnsignedInt(size, 8, out this.tl0_dep_rep_idx, "tl0_dep_rep_idx");
+            size += stream.ReadUnsignedInt(size, 16, out this.effective_idr_pic_id, "effective_idr_pic_id");
 
             return size;
         }
@@ -12227,8 +12225,8 @@ tl0_dep_rep_index( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(8, this.tl0_dep_rep_idx);
-            size += stream.WriteUnsignedInt(16, this.effective_idr_pic_id);
+            size += stream.WriteUnsignedInt(8, this.tl0_dep_rep_idx, "tl0_dep_rep_idx");
+            size += stream.WriteUnsignedInt(16, this.effective_idr_pic_id, "effective_idr_pic_id");
 
             return size;
         }
@@ -12261,7 +12259,7 @@ delta_frame_num 5 se(v)
         {
             ulong size = 0;
 
-            size += stream.ReadSignedIntGolomb(size, out this.delta_frame_num);
+            size += stream.ReadSignedIntGolomb(size, out this.delta_frame_num, "delta_frame_num");
 
             return size;
         }
@@ -12270,7 +12268,7 @@ delta_frame_num 5 se(v)
         {
             ulong size = 0;
 
-            size += stream.WriteSignedIntGolomb(this.delta_frame_num);
+            size += stream.WriteSignedIntGolomb(this.delta_frame_num, "delta_frame_num");
 
             return size;
         }
@@ -12348,7 +12346,7 @@ svc_vui_parameters_extension() {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.vui_ext_num_entries_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.vui_ext_num_entries_minus1, "vui_ext_num_entries_minus1");
 
             this.vui_ext_dependency_id = new uint[vui_ext_num_entries_minus1 + 1];
             this.vui_ext_quality_id = new uint[vui_ext_num_entries_minus1 + 1];
@@ -12364,38 +12362,38 @@ svc_vui_parameters_extension() {
             this.vui_ext_pic_struct_present_flag = new byte[vui_ext_num_entries_minus1 + 1];
             for (i = 0; i <= vui_ext_num_entries_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.vui_ext_dependency_id[i]);
-                size += stream.ReadUnsignedInt(size, 4, out this.vui_ext_quality_id[i]);
-                size += stream.ReadUnsignedInt(size, 3, out this.vui_ext_temporal_id[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_timing_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 3, out this.vui_ext_dependency_id[i], "vui_ext_dependency_id");
+                size += stream.ReadUnsignedInt(size, 4, out this.vui_ext_quality_id[i], "vui_ext_quality_id");
+                size += stream.ReadUnsignedInt(size, 3, out this.vui_ext_temporal_id[i], "vui_ext_temporal_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_timing_info_present_flag[i], "vui_ext_timing_info_present_flag");
 
                 if (vui_ext_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.vui_ext_num_units_in_tick[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.vui_ext_time_scale[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_fixed_frame_rate_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 32, out this.vui_ext_num_units_in_tick[i], "vui_ext_num_units_in_tick");
+                    size += stream.ReadUnsignedInt(size, 32, out this.vui_ext_time_scale[i], "vui_ext_time_scale");
+                    size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_fixed_frame_rate_flag[i], "vui_ext_fixed_frame_rate_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_nal_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_nal_hrd_parameters_present_flag[i], "vui_ext_nal_hrd_parameters_present_flag");
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_vcl_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_vcl_hrd_parameters_present_flag[i], "vui_ext_vcl_hrd_parameters_present_flag");
 
                 if (vui_ext_vcl_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0 ||
    vui_ext_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_low_delay_hrd_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_low_delay_hrd_flag[i], "vui_ext_low_delay_hrd_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_pic_struct_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_ext_pic_struct_present_flag[i], "vui_ext_pic_struct_present_flag");
             }
 
             return size;
@@ -12406,40 +12404,40 @@ svc_vui_parameters_extension() {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.vui_ext_num_entries_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.vui_ext_num_entries_minus1, "vui_ext_num_entries_minus1");
 
             for (i = 0; i <= vui_ext_num_entries_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(3, this.vui_ext_dependency_id[i]);
-                size += stream.WriteUnsignedInt(4, this.vui_ext_quality_id[i]);
-                size += stream.WriteUnsignedInt(3, this.vui_ext_temporal_id[i]);
-                size += stream.WriteUnsignedInt(1, this.vui_ext_timing_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(3, this.vui_ext_dependency_id[i], "vui_ext_dependency_id");
+                size += stream.WriteUnsignedInt(4, this.vui_ext_quality_id[i], "vui_ext_quality_id");
+                size += stream.WriteUnsignedInt(3, this.vui_ext_temporal_id[i], "vui_ext_temporal_id");
+                size += stream.WriteUnsignedInt(1, this.vui_ext_timing_info_present_flag[i], "vui_ext_timing_info_present_flag");
 
                 if (vui_ext_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.vui_ext_num_units_in_tick[i]);
-                    size += stream.WriteUnsignedInt(32, this.vui_ext_time_scale[i]);
-                    size += stream.WriteUnsignedInt(1, this.vui_ext_fixed_frame_rate_flag[i]);
+                    size += stream.WriteUnsignedInt(32, this.vui_ext_num_units_in_tick[i], "vui_ext_num_units_in_tick");
+                    size += stream.WriteUnsignedInt(32, this.vui_ext_time_scale[i], "vui_ext_time_scale");
+                    size += stream.WriteUnsignedInt(1, this.vui_ext_fixed_frame_rate_flag[i], "vui_ext_fixed_frame_rate_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_ext_nal_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_ext_nal_hrd_parameters_present_flag[i], "vui_ext_nal_hrd_parameters_present_flag");
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_ext_vcl_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_ext_vcl_hrd_parameters_present_flag[i], "vui_ext_vcl_hrd_parameters_present_flag");
 
                 if (vui_ext_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (vui_ext_nal_hrd_parameters_present_flag[i] != 0 ||
    vui_ext_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.vui_ext_low_delay_hrd_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.vui_ext_low_delay_hrd_flag[i], "vui_ext_low_delay_hrd_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_ext_pic_struct_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_ext_pic_struct_present_flag[i], "vui_ext_pic_struct_present_flag");
             }
 
             return size;
@@ -12489,13 +12487,13 @@ reserved_one_bit All u(1)
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.non_idr_flag);
-            size += stream.ReadUnsignedInt(size, 6, out this.priority_id);
-            size += stream.ReadUnsignedInt(size, 10, out this.view_id);
-            size += stream.ReadUnsignedInt(size, 3, out this.temporal_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.anchor_pic_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.inter_view_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.reserved_one_bit);
+            size += stream.ReadUnsignedInt(size, 1, out this.non_idr_flag, "non_idr_flag");
+            size += stream.ReadUnsignedInt(size, 6, out this.priority_id, "priority_id");
+            size += stream.ReadUnsignedInt(size, 10, out this.view_id, "view_id");
+            size += stream.ReadUnsignedInt(size, 3, out this.temporal_id, "temporal_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.anchor_pic_flag, "anchor_pic_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.inter_view_flag, "inter_view_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.reserved_one_bit, "reserved_one_bit");
 
             return size;
         }
@@ -12504,13 +12502,13 @@ reserved_one_bit All u(1)
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.non_idr_flag);
-            size += stream.WriteUnsignedInt(6, this.priority_id);
-            size += stream.WriteUnsignedInt(10, this.view_id);
-            size += stream.WriteUnsignedInt(3, this.temporal_id);
-            size += stream.WriteUnsignedInt(1, this.anchor_pic_flag);
-            size += stream.WriteUnsignedInt(1, this.inter_view_flag);
-            size += stream.WriteUnsignedInt(1, this.reserved_one_bit);
+            size += stream.WriteUnsignedInt(1, this.non_idr_flag, "non_idr_flag");
+            size += stream.WriteUnsignedInt(6, this.priority_id, "priority_id");
+            size += stream.WriteUnsignedInt(10, this.view_id, "view_id");
+            size += stream.WriteUnsignedInt(3, this.temporal_id, "temporal_id");
+            size += stream.WriteUnsignedInt(1, this.anchor_pic_flag, "anchor_pic_flag");
+            size += stream.WriteUnsignedInt(1, this.inter_view_flag, "inter_view_flag");
+            size += stream.WriteUnsignedInt(1, this.reserved_one_bit, "reserved_one_bit");
 
             return size;
         }
@@ -12637,12 +12635,12 @@ seq_parameter_set_mvc_extension() {
             uint i = 0;
             uint j = 0;
             uint k = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
 
             this.view_id = new uint[num_views_minus1 + 1];
             for (i = 0; i <= num_views_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i], "view_id");
             }
 
             this.num_anchor_refs_l0 = new uint[num_views_minus1 + 1];
@@ -12651,19 +12649,19 @@ seq_parameter_set_mvc_extension() {
             this.anchor_ref_l1 = new uint[num_views_minus1 + 1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
                 this.anchor_ref_l0[i] = new uint[num_anchor_refs_l0[i]];
                 for (j = 0; j < num_anchor_refs_l0[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j], "anchor_ref_l0");
                 }
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
                 this.anchor_ref_l1[i] = new uint[num_anchor_refs_l1[i]];
                 for (j = 0; j < num_anchor_refs_l1[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j], "anchor_ref_l1");
                 }
             }
 
@@ -12673,22 +12671,22 @@ seq_parameter_set_mvc_extension() {
             this.non_anchor_ref_l1 = new uint[num_views_minus1 + 1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
                 this.non_anchor_ref_l0[i] = new uint[num_non_anchor_refs_l0[i]];
                 for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                 }
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
                 this.non_anchor_ref_l1[i] = new uint[num_non_anchor_refs_l1[i]];
                 for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
                 }
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_level_values_signalled_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_level_values_signalled_minus1, "num_level_values_signalled_minus1");
 
             this.level_idc = new uint[num_level_values_signalled_minus1 + 1];
             this.num_applicable_ops_minus1 = new uint[num_level_values_signalled_minus1 + 1];
@@ -12698,8 +12696,8 @@ seq_parameter_set_mvc_extension() {
             this.applicable_op_num_views_minus1 = new uint[num_level_values_signalled_minus1 + 1][];
             for (i = 0; i <= num_level_values_signalled_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 8, out this.level_idc[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_applicable_ops_minus1[i]);
+                size += stream.ReadUnsignedInt(size, 8, out this.level_idc[i], "level_idc");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_applicable_ops_minus1[i], "num_applicable_ops_minus1");
 
                 this.applicable_op_temporal_id[i] = new uint[num_applicable_ops_minus1[i] + 1];
                 this.applicable_op_num_target_views_minus1[i] = new uint[num_applicable_ops_minus1[i] + 1];
@@ -12707,39 +12705,39 @@ seq_parameter_set_mvc_extension() {
                 this.applicable_op_num_views_minus1[i] = new uint[num_applicable_ops_minus1[i] + 1];
                 for (j = 0; j <= num_applicable_ops_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedInt(size, 3, out this.applicable_op_temporal_id[i][j]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_target_views_minus1[i][j]);
+                    size += stream.ReadUnsignedInt(size, 3, out this.applicable_op_temporal_id[i][j], "applicable_op_temporal_id");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_target_views_minus1[i][j], "applicable_op_num_target_views_minus1");
 
                     this.applicable_op_target_view_id[i][j] = new uint[applicable_op_num_target_views_minus1[i][j] + 1];
                     for (k = 0; k <= applicable_op_num_target_views_minus1[i][j]; k++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_target_view_id[i][j][k]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_target_view_id[i][j][k], "applicable_op_target_view_id");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_views_minus1[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_views_minus1[i][j], "applicable_op_num_views_minus1");
                 }
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 134)
             {
-                size += stream.ReadUnsignedInt(size, 6, out this.mfc_format_idc);
+                size += stream.ReadUnsignedInt(size, 6, out this.mfc_format_idc, "mfc_format_idc");
 
                 if (mfc_format_idc == 0 || mfc_format_idc == 1)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.default_grid_position_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.default_grid_position_flag, "default_grid_position_flag");
 
                     if (default_grid_position_flag == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 4, out this.view0_grid_position_x);
-                        size += stream.ReadUnsignedInt(size, 4, out this.view0_grid_position_y);
-                        size += stream.ReadUnsignedInt(size, 4, out this.view1_grid_position_x);
-                        size += stream.ReadUnsignedInt(size, 4, out this.view1_grid_position_y);
+                        size += stream.ReadUnsignedInt(size, 4, out this.view0_grid_position_x, "view0_grid_position_x");
+                        size += stream.ReadUnsignedInt(size, 4, out this.view0_grid_position_y, "view0_grid_position_y");
+                        size += stream.ReadUnsignedInt(size, 4, out this.view1_grid_position_x, "view1_grid_position_x");
+                        size += stream.ReadUnsignedInt(size, 4, out this.view1_grid_position_y, "view1_grid_position_y");
                     }
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.rpu_filter_enabled_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.rpu_filter_enabled_flag, "rpu_filter_enabled_flag");
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.rpu_field_processing_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.rpu_field_processing_flag, "rpu_field_processing_flag");
                 }
             }
 
@@ -12753,85 +12751,85 @@ seq_parameter_set_mvc_extension() {
             uint i = 0;
             uint j = 0;
             uint k = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_views_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_views_minus1, "num_views_minus1");
 
             for (i = 0; i <= num_views_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.view_id[i]);
+                size += stream.WriteUnsignedIntGolomb(this.view_id[i], "view_id");
             }
 
             for (i = 1; i <= num_views_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l0[i]);
+                size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
                 for (j = 0; j < num_anchor_refs_l0[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l0[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l0[i][j], "anchor_ref_l0");
                 }
-                size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l1[i]);
+                size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
                 for (j = 0; j < num_anchor_refs_l1[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l1[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l1[i][j], "anchor_ref_l1");
                 }
             }
 
             for (i = 1; i <= num_views_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l0[i]);
+                size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
                 for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l0[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                 }
-                size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l1[i]);
+                size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
                 for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l1[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
                 }
             }
-            size += stream.WriteUnsignedIntGolomb(this.num_level_values_signalled_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_level_values_signalled_minus1, "num_level_values_signalled_minus1");
 
             for (i = 0; i <= num_level_values_signalled_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(8, this.level_idc[i]);
-                size += stream.WriteUnsignedIntGolomb(this.num_applicable_ops_minus1[i]);
+                size += stream.WriteUnsignedInt(8, this.level_idc[i], "level_idc");
+                size += stream.WriteUnsignedIntGolomb(this.num_applicable_ops_minus1[i], "num_applicable_ops_minus1");
 
                 for (j = 0; j <= num_applicable_ops_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedInt(3, this.applicable_op_temporal_id[i][j]);
-                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_target_views_minus1[i][j]);
+                    size += stream.WriteUnsignedInt(3, this.applicable_op_temporal_id[i][j], "applicable_op_temporal_id");
+                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_target_views_minus1[i][j], "applicable_op_num_target_views_minus1");
 
                     for (k = 0; k <= applicable_op_num_target_views_minus1[i][j]; k++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.applicable_op_target_view_id[i][j][k]);
+                        size += stream.WriteUnsignedIntGolomb(this.applicable_op_target_view_id[i][j][k], "applicable_op_target_view_id");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_views_minus1[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_views_minus1[i][j], "applicable_op_num_views_minus1");
                 }
             }
 
             if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc == 134)
             {
-                size += stream.WriteUnsignedInt(6, this.mfc_format_idc);
+                size += stream.WriteUnsignedInt(6, this.mfc_format_idc, "mfc_format_idc");
 
                 if (mfc_format_idc == 0 || mfc_format_idc == 1)
                 {
-                    size += stream.WriteUnsignedInt(1, this.default_grid_position_flag);
+                    size += stream.WriteUnsignedInt(1, this.default_grid_position_flag, "default_grid_position_flag");
 
                     if (default_grid_position_flag == 0)
                     {
-                        size += stream.WriteUnsignedInt(4, this.view0_grid_position_x);
-                        size += stream.WriteUnsignedInt(4, this.view0_grid_position_y);
-                        size += stream.WriteUnsignedInt(4, this.view1_grid_position_x);
-                        size += stream.WriteUnsignedInt(4, this.view1_grid_position_y);
+                        size += stream.WriteUnsignedInt(4, this.view0_grid_position_x, "view0_grid_position_x");
+                        size += stream.WriteUnsignedInt(4, this.view0_grid_position_y, "view0_grid_position_y");
+                        size += stream.WriteUnsignedInt(4, this.view1_grid_position_x, "view1_grid_position_x");
+                        size += stream.WriteUnsignedInt(4, this.view1_grid_position_y, "view1_grid_position_y");
                     }
                 }
-                size += stream.WriteUnsignedInt(1, this.rpu_filter_enabled_flag);
+                size += stream.WriteUnsignedInt(1, this.rpu_filter_enabled_flag, "rpu_filter_enabled_flag");
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.rpu_field_processing_flag);
+                    size += stream.WriteUnsignedInt(1, this.rpu_field_processing_flag, "rpu_field_processing_flag");
                 }
             }
 
@@ -12911,7 +12909,7 @@ ref_pic_list_mvc_modification() {
 
             if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 2 && ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 4)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0);
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l0, "ref_pic_list_modification_flag_l0");
 
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
@@ -12920,21 +12918,21 @@ ref_pic_list_mvc_modification() {
                     {
                         whileIndex++;
 
-                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc");
 
                         if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
                     modification_of_pic_nums_idc[whileIndex] == 5)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_view_idx_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_view_idx_minus1, "abs_diff_view_idx_minus1");
                         }
                     } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
@@ -12942,7 +12940,7 @@ ref_pic_list_mvc_modification() {
 
             if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1);
+                size += stream.ReadUnsignedInt(size, 1, out this.ref_pic_list_modification_flag_l1, "ref_pic_list_modification_flag_l1");
 
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
@@ -12951,21 +12949,21 @@ ref_pic_list_mvc_modification() {
                     {
                         whileIndex++;
 
-                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc);
+                        size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc");
 
                         if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
                     modification_of_pic_nums_idc[whileIndex] == 5)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_view_idx_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, whileIndex, this.abs_diff_view_idx_minus1, "abs_diff_view_idx_minus1");
                         }
                     } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
@@ -12982,7 +12980,7 @@ ref_pic_list_mvc_modification() {
 
             if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 2 && ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 != 4)
             {
-                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0);
+                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l0, "ref_pic_list_modification_flag_l0");
 
                 if (ref_pic_list_modification_flag_l0 != 0)
                 {
@@ -12991,21 +12989,21 @@ ref_pic_list_mvc_modification() {
                     {
                         whileIndex++;
 
-                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc");
 
                         if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
                     modification_of_pic_nums_idc[whileIndex] == 5)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_view_idx_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_view_idx_minus1, "abs_diff_view_idx_minus1");
                         }
                     } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
@@ -13013,7 +13011,7 @@ ref_pic_list_mvc_modification() {
 
             if (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceType % 5 == 1)
             {
-                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1);
+                size += stream.WriteUnsignedInt(1, this.ref_pic_list_modification_flag_l1, "ref_pic_list_modification_flag_l1");
 
                 if (ref_pic_list_modification_flag_l1 != 0)
                 {
@@ -13022,21 +13020,21 @@ ref_pic_list_mvc_modification() {
                     {
                         whileIndex++;
 
-                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc);
+                        size += stream.WriteUnsignedIntGolomb(whileIndex, this.modification_of_pic_nums_idc, "modification_of_pic_nums_idc");
 
                         if (modification_of_pic_nums_idc[whileIndex] == 0 ||
                     modification_of_pic_nums_idc[whileIndex] == 1)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_pic_num_minus1, "abs_diff_pic_num_minus1");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 2)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.long_term_pic_num, "long_term_pic_num");
                         }
                         else if (modification_of_pic_nums_idc[whileIndex] == 4 ||
                     modification_of_pic_nums_idc[whileIndex] == 5)
                         {
-                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_view_idx_minus1);
+                            size += stream.WriteUnsignedIntGolomb(whileIndex, this.abs_diff_view_idx_minus1, "abs_diff_view_idx_minus1");
                         }
                     } while (modification_of_pic_nums_idc[whileIndex] != 3);
                 }
@@ -13097,7 +13095,7 @@ parallel_decoding_info( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id");
 
             this.pdi_init_delay_anchor_minus2_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
             this.pdi_init_delay_anchor_minus2_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
@@ -13112,13 +13110,13 @@ parallel_decoding_info( payloadSize ) {
                     this.pdi_init_delay_anchor_minus2_l0[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l0[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l0[i][j], "pdi_init_delay_anchor_minus2_l0");
                     }
 
                     this.pdi_init_delay_anchor_minus2_l1[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l1[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l1[i][j], "pdi_init_delay_anchor_minus2_l1");
                     }
                 }
                 else
@@ -13127,13 +13125,13 @@ parallel_decoding_info( payloadSize ) {
                     this.pdi_init_delay_non_anchor_minus2_l0[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l0[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l0[i][j], "pdi_init_delay_non_anchor_minus2_l0");
                     }
 
                     this.pdi_init_delay_non_anchor_minus2_l1[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l1[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l1[i][j], "pdi_init_delay_non_anchor_minus2_l1");
                     }
                 }
             }
@@ -13147,7 +13145,7 @@ parallel_decoding_info( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
+            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id, "seq_parameter_set_id");
 
             for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
             {
@@ -13157,12 +13155,12 @@ parallel_decoding_info( payloadSize ) {
 
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l0[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l0[i][j], "pdi_init_delay_anchor_minus2_l0");
                     }
 
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l1[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_anchor_minus2_l1[i][j], "pdi_init_delay_anchor_minus2_l1");
                     }
                 }
                 else
@@ -13170,12 +13168,12 @@ parallel_decoding_info( payloadSize ) {
 
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_non_anchor_minus2_l0[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_non_anchor_minus2_l0[i][j], "pdi_init_delay_non_anchor_minus2_l0");
                     }
 
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_non_anchor_minus2_l1[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.pdi_init_delay_non_anchor_minus2_l1[i][j], "pdi_init_delay_non_anchor_minus2_l1");
                     }
                 }
             }
@@ -13245,43 +13243,43 @@ mvc_scalable_nesting( payloadSize ) {
 
             uint i = 0;
             int whileIndex = -1;
-            size += stream.ReadUnsignedInt(size, 1, out this.operation_point_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.operation_point_flag, "operation_point_flag");
 
             if (operation_point_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.all_view_components_in_au_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.all_view_components_in_au_flag, "all_view_components_in_au_flag");
 
                 if (all_view_components_in_au_flag == 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_minus1);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_minus1, "num_view_components_minus1");
 
                     this.sei_view_id = new uint[num_view_components_minus1 + 1];
                     for (i = 0; i <= num_view_components_minus1; i++)
                     {
-                        size += stream.ReadUnsignedInt(size, 10, out this.sei_view_id[i]);
+                        size += stream.ReadUnsignedInt(size, 10, out this.sei_view_id[i], "sei_view_id");
                     }
                 }
             }
             else
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1, "num_view_components_op_minus1");
 
                 this.sei_op_view_id = new uint[num_view_components_op_minus1 + 1];
                 for (i = 0; i <= num_view_components_op_minus1; i++)
                 {
-                    size += stream.ReadUnsignedInt(size, 10, out this.sei_op_view_id[i]);
+                    size += stream.ReadUnsignedInt(size, 10, out this.sei_op_view_id[i], "sei_op_view_id");
                 }
-                size += stream.ReadUnsignedInt(size, 3, out this.sei_op_temporal_id);
+                size += stream.ReadUnsignedInt(size, 3, out this.sei_op_temporal_id, "sei_op_temporal_id");
             }
 
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
-                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
+                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
             }
             this.sei_message = new SeiMessage();
-            size += stream.ReadClass<SeiMessage>(size, context, this.sei_message);
+            size += stream.ReadClass<SeiMessage>(size, context, this.sei_message, "sei_message");
 
             return size;
         }
@@ -13292,40 +13290,40 @@ mvc_scalable_nesting( payloadSize ) {
 
             uint i = 0;
             int whileIndex = -1;
-            size += stream.WriteUnsignedInt(1, this.operation_point_flag);
+            size += stream.WriteUnsignedInt(1, this.operation_point_flag, "operation_point_flag");
 
             if (operation_point_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.all_view_components_in_au_flag);
+                size += stream.WriteUnsignedInt(1, this.all_view_components_in_au_flag, "all_view_components_in_au_flag");
 
                 if (all_view_components_in_au_flag == 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_view_components_minus1);
+                    size += stream.WriteUnsignedIntGolomb(this.num_view_components_minus1, "num_view_components_minus1");
 
                     for (i = 0; i <= num_view_components_minus1; i++)
                     {
-                        size += stream.WriteUnsignedInt(10, this.sei_view_id[i]);
+                        size += stream.WriteUnsignedInt(10, this.sei_view_id[i], "sei_view_id");
                     }
                 }
             }
             else
             {
-                size += stream.WriteUnsignedIntGolomb(this.num_view_components_op_minus1);
+                size += stream.WriteUnsignedIntGolomb(this.num_view_components_op_minus1, "num_view_components_op_minus1");
 
                 for (i = 0; i <= num_view_components_op_minus1; i++)
                 {
-                    size += stream.WriteUnsignedInt(10, this.sei_op_view_id[i]);
+                    size += stream.WriteUnsignedInt(10, this.sei_op_view_id[i], "sei_op_view_id");
                 }
-                size += stream.WriteUnsignedInt(3, this.sei_op_temporal_id);
+                size += stream.WriteUnsignedInt(3, this.sei_op_temporal_id, "sei_op_temporal_id");
             }
 
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
-                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
+                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
             }
-            size += stream.WriteClass<SeiMessage>(context, this.sei_message);
+            size += stream.WriteClass<SeiMessage>(context, this.sei_message, "sei_message");
 
             return size;
         }
@@ -13482,7 +13480,7 @@ view_scalability_info( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points_minus1, "num_operation_points_minus1");
 
             this.operation_point_id = new uint[num_operation_points_minus1 + 1];
             this.priority_id = new uint[num_operation_points_minus1 + 1];
@@ -13520,98 +13518,98 @@ view_scalability_info( payloadSize ) {
             this.max_dec_frame_buffering = new uint[num_operation_points_minus1 + 1];
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i]);
-                size += stream.ReadUnsignedInt(size, 5, out this.priority_id[i]);
-                size += stream.ReadUnsignedInt(size, 3, out this.temporal_id[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_target_output_views_minus1[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i], "operation_point_id");
+                size += stream.ReadUnsignedInt(size, 5, out this.priority_id[i], "priority_id");
+                size += stream.ReadUnsignedInt(size, 3, out this.temporal_id[i], "temporal_id");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_target_output_views_minus1[i], "num_target_output_views_minus1");
 
                 this.view_id[i] = new uint[num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i][j], "view_id");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.profile_level_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.bitrate_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.frm_rate_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.profile_level_info_present_flag[i], "profile_level_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.bitrate_info_present_flag[i], "bitrate_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.frm_rate_info_present_flag[i], "frm_rate_info_present_flag");
 
                 if (num_target_output_views_minus1[i] == 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.view_dependency_info_present_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.view_dependency_info_present_flag[i], "view_dependency_info_present_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.parameter_sets_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.bitstream_restriction_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.parameter_sets_info_present_flag[i], "parameter_sets_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.bitstream_restriction_info_present_flag[i], "bitstream_restriction_info_present_flag");
 
                 if (profile_level_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 24, out this.op_profile_level_idc[i]);
+                    size += stream.ReadUnsignedInt(size, 24, out this.op_profile_level_idc[i], "op_profile_level_idc");
                 }
 
                 if (bitrate_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 16, out this.avg_bitrate[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_calc_window[i]);
+                    size += stream.ReadUnsignedInt(size, 16, out this.avg_bitrate[i], "avg_bitrate");
+                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate[i], "max_bitrate");
+                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_calc_window[i], "max_bitrate_calc_window");
                 }
 
                 if (frm_rate_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 2, out this.constant_frm_rate_idc[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.avg_frm_rate[i]);
+                    size += stream.ReadUnsignedInt(size, 2, out this.constant_frm_rate_idc[i], "constant_frm_rate_idc");
+                    size += stream.ReadUnsignedInt(size, 16, out this.avg_frm_rate[i], "avg_frm_rate");
                 }
 
                 if (view_dependency_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i], "num_directly_dependent_views");
 
                     this.directly_dependent_view_id[i] = new uint[num_directly_dependent_views[i]];
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j], "directly_dependent_view_id");
                     }
                 }
                 else
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.view_dependency_info_src_op_id[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.view_dependency_info_src_op_id[i], "view_dependency_info_src_op_id");
                 }
 
                 if (parameter_sets_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i], "num_seq_parameter_sets");
 
                     this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_sets[i]];
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i], "num_subset_seq_parameter_sets");
 
                     this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_sets[i]];
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i], "num_pic_parameter_sets_minus1");
 
                     this.pic_parameter_set_id_delta[i] = new uint[num_pic_parameter_sets_minus1[i] + 1];
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
                     }
                 }
                 else
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_op_id[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_op_id[i], "parameter_sets_info_src_op_id");
                 }
 
                 if (bitstream_restriction_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.motion_vectors_over_pic_boundaries_flag[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bytes_per_pic_denom[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bits_per_mb_denom[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_horizontal[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_vertical[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_num_reorder_frames[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_dec_frame_buffering[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.motion_vectors_over_pic_boundaries_flag[i], "motion_vectors_over_pic_boundaries_flag");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bytes_per_pic_denom[i], "max_bytes_per_pic_denom");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bits_per_mb_denom[i], "max_bits_per_mb_denom");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_horizontal[i], "log2_max_mv_length_horizontal");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_vertical[i], "log2_max_mv_length_vertical");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_num_reorder_frames[i], "max_num_reorder_frames");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_dec_frame_buffering[i], "max_dec_frame_buffering");
                 }
             }
 
@@ -13624,97 +13622,97 @@ view_scalability_info( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_operation_points_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_operation_points_minus1, "num_operation_points_minus1");
 
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.operation_point_id[i]);
-                size += stream.WriteUnsignedInt(5, this.priority_id[i]);
-                size += stream.WriteUnsignedInt(3, this.temporal_id[i]);
-                size += stream.WriteUnsignedIntGolomb(this.num_target_output_views_minus1[i]);
+                size += stream.WriteUnsignedIntGolomb(this.operation_point_id[i], "operation_point_id");
+                size += stream.WriteUnsignedInt(5, this.priority_id[i], "priority_id");
+                size += stream.WriteUnsignedInt(3, this.temporal_id[i], "temporal_id");
+                size += stream.WriteUnsignedIntGolomb(this.num_target_output_views_minus1[i], "num_target_output_views_minus1");
 
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.view_id[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.view_id[i][j], "view_id");
                 }
-                size += stream.WriteUnsignedInt(1, this.profile_level_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.bitrate_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.frm_rate_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.profile_level_info_present_flag[i], "profile_level_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.bitrate_info_present_flag[i], "bitrate_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.frm_rate_info_present_flag[i], "frm_rate_info_present_flag");
 
                 if (num_target_output_views_minus1[i] == 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.view_dependency_info_present_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.view_dependency_info_present_flag[i], "view_dependency_info_present_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.parameter_sets_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.bitstream_restriction_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.parameter_sets_info_present_flag[i], "parameter_sets_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.bitstream_restriction_info_present_flag[i], "bitstream_restriction_info_present_flag");
 
                 if (profile_level_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(24, this.op_profile_level_idc[i]);
+                    size += stream.WriteUnsignedInt(24, this.op_profile_level_idc[i], "op_profile_level_idc");
                 }
 
                 if (bitrate_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(16, this.avg_bitrate[i]);
-                    size += stream.WriteUnsignedInt(16, this.max_bitrate[i]);
-                    size += stream.WriteUnsignedInt(16, this.max_bitrate_calc_window[i]);
+                    size += stream.WriteUnsignedInt(16, this.avg_bitrate[i], "avg_bitrate");
+                    size += stream.WriteUnsignedInt(16, this.max_bitrate[i], "max_bitrate");
+                    size += stream.WriteUnsignedInt(16, this.max_bitrate_calc_window[i], "max_bitrate_calc_window");
                 }
 
                 if (frm_rate_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(2, this.constant_frm_rate_idc[i]);
-                    size += stream.WriteUnsignedInt(16, this.avg_frm_rate[i]);
+                    size += stream.WriteUnsignedInt(2, this.constant_frm_rate_idc[i], "constant_frm_rate_idc");
+                    size += stream.WriteUnsignedInt(16, this.avg_frm_rate[i], "avg_frm_rate");
                 }
 
                 if (view_dependency_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_directly_dependent_views[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_directly_dependent_views[i], "num_directly_dependent_views");
 
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.directly_dependent_view_id[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.directly_dependent_view_id[i][j], "directly_dependent_view_id");
                     }
                 }
                 else
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.view_dependency_info_src_op_id[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.view_dependency_info_src_op_id[i], "view_dependency_info_src_op_id");
                 }
 
                 if (parameter_sets_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_seq_parameter_sets[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_seq_parameter_sets[i], "num_seq_parameter_sets");
 
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.num_subset_seq_parameter_sets[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_subset_seq_parameter_sets[i], "num_subset_seq_parameter_sets");
 
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.subset_seq_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_sets_minus1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_sets_minus1[i], "num_pic_parameter_sets_minus1");
 
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
                     }
                 }
                 else
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_op_id[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_op_id[i], "parameter_sets_info_src_op_id");
                 }
 
                 if (bitstream_restriction_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.motion_vectors_over_pic_boundaries_flag[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_bytes_per_pic_denom[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_bits_per_mb_denom[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_horizontal[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_vertical[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_num_reorder_frames[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_dec_frame_buffering[i]);
+                    size += stream.WriteUnsignedInt(1, this.motion_vectors_over_pic_boundaries_flag[i], "motion_vectors_over_pic_boundaries_flag");
+                    size += stream.WriteUnsignedIntGolomb(this.max_bytes_per_pic_denom[i], "max_bytes_per_pic_denom");
+                    size += stream.WriteUnsignedIntGolomb(this.max_bits_per_mb_denom[i], "max_bits_per_mb_denom");
+                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_horizontal[i], "log2_max_mv_length_horizontal");
+                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_vertical[i], "log2_max_mv_length_vertical");
+                    size += stream.WriteUnsignedIntGolomb(this.max_num_reorder_frames[i], "max_num_reorder_frames");
+                    size += stream.WriteUnsignedIntGolomb(this.max_dec_frame_buffering[i], "max_dec_frame_buffering");
                 }
             }
 
@@ -13749,7 +13747,7 @@ multiview_scene_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.max_disparity);
+            size += stream.ReadUnsignedIntGolomb(size, out this.max_disparity, "max_disparity");
 
             return size;
         }
@@ -13758,7 +13756,7 @@ multiview_scene_info( payloadSize ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.max_disparity);
+            size += stream.WriteUnsignedIntGolomb(this.max_disparity, "max_disparity");
 
             return size;
         }
@@ -13895,16 +13893,16 @@ if (intrinsic_param_flag ) {
             uint i = 0;
             uint j = 0;
             uint k = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1);
-            size += stream.ReadUnsignedInt(size, 1, out this.intrinsic_param_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.extrinsic_param_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
+            size += stream.ReadUnsignedInt(size, 1, out this.intrinsic_param_flag, "intrinsic_param_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.extrinsic_param_flag, "extrinsic_param_flag");
 
             if (intrinsic_param_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.intrinsic_params_equal_flag);
-                size += stream.ReadUnsignedIntGolomb(size, out this.prec_focal_length);
-                size += stream.ReadUnsignedIntGolomb(size, out this.prec_principal_point);
-                size += stream.ReadUnsignedIntGolomb(size, out this.prec_skew_factor);
+                size += stream.ReadUnsignedInt(size, 1, out this.intrinsic_params_equal_flag, "intrinsic_params_equal_flag");
+                size += stream.ReadUnsignedIntGolomb(size, out this.prec_focal_length, "prec_focal_length");
+                size += stream.ReadUnsignedIntGolomb(size, out this.prec_principal_point, "prec_principal_point");
+                size += stream.ReadUnsignedIntGolomb(size, out this.prec_skew_factor, "prec_skew_factor");
 
                 this.sign_focal_length_x = new byte[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
                 this.exponent_focal_length_x = new uint[(intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1 + 1)];
@@ -13924,28 +13922,28 @@ if (intrinsic_param_flag ) {
                 for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1);
    i++)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_x[i]);
-                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_x[i]);
-                    size += stream.ReadUnsignedIntVariable(size, (exponent_focal_length_x[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_x[i] + prec_focal_length - 31)), out this.mantissa_focal_length_x[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_y[i]);
-                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_y[i]);
-                    size += stream.ReadUnsignedIntVariable(size, (exponent_focal_length_y[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_y[i] + prec_focal_length - 31)), out this.mantissa_focal_length_y[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.sign_principal_point_x[i]);
-                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_principal_point_x[i]);
-                    size += stream.ReadUnsignedIntVariable(size, (exponent_principal_point_x[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_x[i] + prec_principal_point - 31)), out this.mantissa_principal_point_x[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.sign_principal_point_y[i]);
-                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_principal_point_y[i]);
-                    size += stream.ReadUnsignedIntVariable(size, (exponent_principal_point_y[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_y[i] + prec_principal_point - 31)), out this.mantissa_principal_point_y[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.sign_skew_factor[i]);
-                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_skew_factor[i]);
-                    size += stream.ReadUnsignedIntVariable(size, (exponent_skew_factor[i] == 0) ? (Math.Max(0, prec_skew_factor - 30)) : (Math.Max(0, exponent_skew_factor[i] + prec_skew_factor - 31)), out this.mantissa_skew_factor[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_x[i], "sign_focal_length_x");
+                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_x[i], "exponent_focal_length_x");
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_focal_length_x[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_x[i] + prec_focal_length - 31)), out this.mantissa_focal_length_x[i], "mantissa_focal_length_x");
+                    size += stream.ReadUnsignedInt(size, 1, out this.sign_focal_length_y[i], "sign_focal_length_y");
+                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_focal_length_y[i], "exponent_focal_length_y");
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_focal_length_y[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_y[i] + prec_focal_length - 31)), out this.mantissa_focal_length_y[i], "mantissa_focal_length_y");
+                    size += stream.ReadUnsignedInt(size, 1, out this.sign_principal_point_x[i], "sign_principal_point_x");
+                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_principal_point_x[i], "exponent_principal_point_x");
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_principal_point_x[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_x[i] + prec_principal_point - 31)), out this.mantissa_principal_point_x[i], "mantissa_principal_point_x");
+                    size += stream.ReadUnsignedInt(size, 1, out this.sign_principal_point_y[i], "sign_principal_point_y");
+                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_principal_point_y[i], "exponent_principal_point_y");
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_principal_point_y[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_y[i] + prec_principal_point - 31)), out this.mantissa_principal_point_y[i], "mantissa_principal_point_y");
+                    size += stream.ReadUnsignedInt(size, 1, out this.sign_skew_factor[i], "sign_skew_factor");
+                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_skew_factor[i], "exponent_skew_factor");
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_skew_factor[i] == 0) ? (Math.Max(0, prec_skew_factor - 30)) : (Math.Max(0, exponent_skew_factor[i] + prec_skew_factor - 31)), out this.mantissa_skew_factor[i], "mantissa_skew_factor");
                 }
             }
 
             if (extrinsic_param_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.prec_rotation_param);
-                size += stream.ReadUnsignedIntGolomb(size, out this.prec_translation_param);
+                size += stream.ReadUnsignedIntGolomb(size, out this.prec_rotation_param, "prec_rotation_param");
+                size += stream.ReadUnsignedIntGolomb(size, out this.prec_translation_param, "prec_translation_param");
 
                 this.sign_r = new byte[num_views_minus1 + 1][][];
                 this.exponent_r = new uint[num_views_minus1 + 1][][];
@@ -13974,13 +13972,13 @@ if (intrinsic_param_flag ) {
                         {
                             /*  column  */
 
-                            size += stream.ReadUnsignedInt(size, 1, out this.sign_r[i][j][k]);
-                            size += stream.ReadUnsignedInt(size, 6, out this.exponent_r[i][j][k]);
-                            size += stream.ReadUnsignedIntVariable(size, (exponent_r[i][j][k] == 0) ? (Math.Max(0, prec_rotation_param - 30)) : (Math.Max(0, exponent_r[i][j][k] + prec_rotation_param - 31)), out this.mantissa_r[i][j][k]);
+                            size += stream.ReadUnsignedInt(size, 1, out this.sign_r[i][j][k], "sign_r");
+                            size += stream.ReadUnsignedInt(size, 6, out this.exponent_r[i][j][k], "exponent_r");
+                            size += stream.ReadUnsignedIntVariable(size, (exponent_r[i][j][k] == 0) ? (Math.Max(0, prec_rotation_param - 30)) : (Math.Max(0, exponent_r[i][j][k] + prec_rotation_param - 31)), out this.mantissa_r[i][j][k], "mantissa_r");
                         }
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign_t[i][j]);
-                        size += stream.ReadUnsignedInt(size, 6, out this.exponent_t[i][j]);
-                        size += stream.ReadUnsignedIntVariable(size, (exponent_t[i][j] == 0) ? (Math.Max(0, prec_translation_param - 30)) : (Math.Max(0, exponent_t[i][j] + prec_translation_param - 31)), out this.mantissa_t[i][j]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign_t[i][j], "sign_t");
+                        size += stream.ReadUnsignedInt(size, 6, out this.exponent_t[i][j], "exponent_t");
+                        size += stream.ReadUnsignedIntVariable(size, (exponent_t[i][j] == 0) ? (Math.Max(0, prec_translation_param - 30)) : (Math.Max(0, exponent_t[i][j] + prec_translation_param - 31)), out this.mantissa_t[i][j], "mantissa_t");
                     }
                 }
             }
@@ -13995,42 +13993,42 @@ if (intrinsic_param_flag ) {
             uint i = 0;
             uint j = 0;
             uint k = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_views_minus1);
-            size += stream.WriteUnsignedInt(1, this.intrinsic_param_flag);
-            size += stream.WriteUnsignedInt(1, this.extrinsic_param_flag);
+            size += stream.WriteUnsignedIntGolomb(this.num_views_minus1, "num_views_minus1");
+            size += stream.WriteUnsignedInt(1, this.intrinsic_param_flag, "intrinsic_param_flag");
+            size += stream.WriteUnsignedInt(1, this.extrinsic_param_flag, "extrinsic_param_flag");
 
             if (intrinsic_param_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.intrinsic_params_equal_flag);
-                size += stream.WriteUnsignedIntGolomb(this.prec_focal_length);
-                size += stream.WriteUnsignedIntGolomb(this.prec_principal_point);
-                size += stream.WriteUnsignedIntGolomb(this.prec_skew_factor);
+                size += stream.WriteUnsignedInt(1, this.intrinsic_params_equal_flag, "intrinsic_params_equal_flag");
+                size += stream.WriteUnsignedIntGolomb(this.prec_focal_length, "prec_focal_length");
+                size += stream.WriteUnsignedIntGolomb(this.prec_principal_point, "prec_principal_point");
+                size += stream.WriteUnsignedIntGolomb(this.prec_skew_factor, "prec_skew_factor");
 
                 for (i = 0; i <= (intrinsic_params_equal_flag != 0 ? 0 : num_views_minus1);
    i++)
                 {
-                    size += stream.WriteUnsignedInt(1, this.sign_focal_length_x[i]);
-                    size += stream.WriteUnsignedInt(6, this.exponent_focal_length_x[i]);
-                    size += stream.WriteUnsignedIntVariable((exponent_focal_length_x[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_x[i] + prec_focal_length - 31)), this.mantissa_focal_length_x[i]);
-                    size += stream.WriteUnsignedInt(1, this.sign_focal_length_y[i]);
-                    size += stream.WriteUnsignedInt(6, this.exponent_focal_length_y[i]);
-                    size += stream.WriteUnsignedIntVariable((exponent_focal_length_y[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_y[i] + prec_focal_length - 31)), this.mantissa_focal_length_y[i]);
-                    size += stream.WriteUnsignedInt(1, this.sign_principal_point_x[i]);
-                    size += stream.WriteUnsignedInt(6, this.exponent_principal_point_x[i]);
-                    size += stream.WriteUnsignedIntVariable((exponent_principal_point_x[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_x[i] + prec_principal_point - 31)), this.mantissa_principal_point_x[i]);
-                    size += stream.WriteUnsignedInt(1, this.sign_principal_point_y[i]);
-                    size += stream.WriteUnsignedInt(6, this.exponent_principal_point_y[i]);
-                    size += stream.WriteUnsignedIntVariable((exponent_principal_point_y[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_y[i] + prec_principal_point - 31)), this.mantissa_principal_point_y[i]);
-                    size += stream.WriteUnsignedInt(1, this.sign_skew_factor[i]);
-                    size += stream.WriteUnsignedInt(6, this.exponent_skew_factor[i]);
-                    size += stream.WriteUnsignedIntVariable((exponent_skew_factor[i] == 0) ? (Math.Max(0, prec_skew_factor - 30)) : (Math.Max(0, exponent_skew_factor[i] + prec_skew_factor - 31)), this.mantissa_skew_factor[i]);
+                    size += stream.WriteUnsignedInt(1, this.sign_focal_length_x[i], "sign_focal_length_x");
+                    size += stream.WriteUnsignedInt(6, this.exponent_focal_length_x[i], "exponent_focal_length_x");
+                    size += stream.WriteUnsignedIntVariable((exponent_focal_length_x[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_x[i] + prec_focal_length - 31)), this.mantissa_focal_length_x[i], "mantissa_focal_length_x");
+                    size += stream.WriteUnsignedInt(1, this.sign_focal_length_y[i], "sign_focal_length_y");
+                    size += stream.WriteUnsignedInt(6, this.exponent_focal_length_y[i], "exponent_focal_length_y");
+                    size += stream.WriteUnsignedIntVariable((exponent_focal_length_y[i] == 0) ? (Math.Max(0, prec_focal_length - 30)) : (Math.Max(0, exponent_focal_length_y[i] + prec_focal_length - 31)), this.mantissa_focal_length_y[i], "mantissa_focal_length_y");
+                    size += stream.WriteUnsignedInt(1, this.sign_principal_point_x[i], "sign_principal_point_x");
+                    size += stream.WriteUnsignedInt(6, this.exponent_principal_point_x[i], "exponent_principal_point_x");
+                    size += stream.WriteUnsignedIntVariable((exponent_principal_point_x[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_x[i] + prec_principal_point - 31)), this.mantissa_principal_point_x[i], "mantissa_principal_point_x");
+                    size += stream.WriteUnsignedInt(1, this.sign_principal_point_y[i], "sign_principal_point_y");
+                    size += stream.WriteUnsignedInt(6, this.exponent_principal_point_y[i], "exponent_principal_point_y");
+                    size += stream.WriteUnsignedIntVariable((exponent_principal_point_y[i] == 0) ? (Math.Max(0, prec_principal_point - 30)) : (Math.Max(0, exponent_principal_point_y[i] + prec_principal_point - 31)), this.mantissa_principal_point_y[i], "mantissa_principal_point_y");
+                    size += stream.WriteUnsignedInt(1, this.sign_skew_factor[i], "sign_skew_factor");
+                    size += stream.WriteUnsignedInt(6, this.exponent_skew_factor[i], "exponent_skew_factor");
+                    size += stream.WriteUnsignedIntVariable((exponent_skew_factor[i] == 0) ? (Math.Max(0, prec_skew_factor - 30)) : (Math.Max(0, exponent_skew_factor[i] + prec_skew_factor - 31)), this.mantissa_skew_factor[i], "mantissa_skew_factor");
                 }
             }
 
             if (extrinsic_param_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.prec_rotation_param);
-                size += stream.WriteUnsignedIntGolomb(this.prec_translation_param);
+                size += stream.WriteUnsignedIntGolomb(this.prec_rotation_param, "prec_rotation_param");
+                size += stream.WriteUnsignedIntGolomb(this.prec_translation_param, "prec_translation_param");
 
                 for (i = 0; i <= num_views_minus1; i++)
                 {
@@ -14044,13 +14042,13 @@ if (intrinsic_param_flag ) {
                         {
                             /*  column  */
 
-                            size += stream.WriteUnsignedInt(1, this.sign_r[i][j][k]);
-                            size += stream.WriteUnsignedInt(6, this.exponent_r[i][j][k]);
-                            size += stream.WriteUnsignedIntVariable((exponent_r[i][j][k] == 0) ? (Math.Max(0, prec_rotation_param - 30)) : (Math.Max(0, exponent_r[i][j][k] + prec_rotation_param - 31)), this.mantissa_r[i][j][k]);
+                            size += stream.WriteUnsignedInt(1, this.sign_r[i][j][k], "sign_r");
+                            size += stream.WriteUnsignedInt(6, this.exponent_r[i][j][k], "exponent_r");
+                            size += stream.WriteUnsignedIntVariable((exponent_r[i][j][k] == 0) ? (Math.Max(0, prec_rotation_param - 30)) : (Math.Max(0, exponent_r[i][j][k] + prec_rotation_param - 31)), this.mantissa_r[i][j][k], "mantissa_r");
                         }
-                        size += stream.WriteUnsignedInt(1, this.sign_t[i][j]);
-                        size += stream.WriteUnsignedInt(6, this.exponent_t[i][j]);
-                        size += stream.WriteUnsignedIntVariable((exponent_t[i][j] == 0) ? (Math.Max(0, prec_translation_param - 30)) : (Math.Max(0, exponent_t[i][j] + prec_translation_param - 31)), this.mantissa_t[i][j]);
+                        size += stream.WriteUnsignedInt(1, this.sign_t[i][j], "sign_t");
+                        size += stream.WriteUnsignedInt(6, this.exponent_t[i][j], "exponent_t");
+                        size += stream.WriteUnsignedIntVariable((exponent_t[i][j] == 0) ? (Math.Max(0, prec_translation_param - 30)) : (Math.Max(0, exponent_t[i][j] + prec_translation_param - 31)), this.mantissa_t[i][j], "mantissa_t");
                     }
                 }
             }
@@ -14100,20 +14098,20 @@ non_required_view_component( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1, "num_info_entries_minus1");
 
             this.view_order_index = new uint[num_info_entries_minus1 + 1];
             this.num_non_required_view_components_minus1 = new uint[num_info_entries_minus1 + 1];
             this.index_delta_minus1 = new uint[num_info_entries_minus1 + 1][];
             for (i = 0; i <= num_info_entries_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.view_order_index[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_non_required_view_components_minus1[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.view_order_index[i], "view_order_index");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_non_required_view_components_minus1[i], "num_non_required_view_components_minus1");
 
                 this.index_delta_minus1[i] = new uint[num_non_required_view_components_minus1[i] + 1];
                 for (j = 0; j <= num_non_required_view_components_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.index_delta_minus1[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.index_delta_minus1[i][j], "index_delta_minus1");
                 }
             }
 
@@ -14126,16 +14124,16 @@ non_required_view_component( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_info_entries_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_info_entries_minus1, "num_info_entries_minus1");
 
             for (i = 0; i <= num_info_entries_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.view_order_index[i]);
-                size += stream.WriteUnsignedIntGolomb(this.num_non_required_view_components_minus1[i]);
+                size += stream.WriteUnsignedIntGolomb(this.view_order_index[i], "view_order_index");
+                size += stream.WriteUnsignedIntGolomb(this.num_non_required_view_components_minus1[i], "num_non_required_view_components_minus1");
 
                 for (j = 0; j <= num_non_required_view_components_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.index_delta_minus1[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.index_delta_minus1[i][j], "index_delta_minus1");
                 }
             }
 
@@ -14200,9 +14198,9 @@ view_dependency_change( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.anchor_update_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_update_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.anchor_update_flag, "anchor_update_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_update_flag, "non_anchor_update_flag");
 
             if (anchor_update_flag != 0)
             {
@@ -14215,13 +14213,13 @@ view_dependency_change( payloadSize ) {
                     this.anchor_ref_l0_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l0_flag[i][j]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l0_flag[i][j], "anchor_ref_l0_flag");
                     }
 
                     this.anchor_ref_l1_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l1_flag[i][j]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.anchor_ref_l1_flag[i][j], "anchor_ref_l1_flag");
                     }
                 }
             }
@@ -14237,13 +14235,13 @@ view_dependency_change( payloadSize ) {
                     this.non_anchor_ref_l0_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l0_flag[i][j]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l0_flag[i][j], "non_anchor_ref_l0_flag");
                     }
 
                     this.non_anchor_ref_l1_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l1_flag[i][j]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_ref_l1_flag[i][j], "non_anchor_ref_l1_flag");
                     }
                 }
             }
@@ -14257,9 +14255,9 @@ view_dependency_change( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id);
-            size += stream.WriteUnsignedInt(1, this.anchor_update_flag);
-            size += stream.WriteUnsignedInt(1, this.non_anchor_update_flag);
+            size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id, "seq_parameter_set_id");
+            size += stream.WriteUnsignedInt(1, this.anchor_update_flag, "anchor_update_flag");
+            size += stream.WriteUnsignedInt(1, this.non_anchor_update_flag, "non_anchor_update_flag");
 
             if (anchor_update_flag != 0)
             {
@@ -14269,12 +14267,12 @@ view_dependency_change( payloadSize ) {
 
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.anchor_ref_l0_flag[i][j]);
+                        size += stream.WriteUnsignedInt(1, this.anchor_ref_l0_flag[i][j], "anchor_ref_l0_flag");
                     }
 
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.anchor_ref_l1_flag[i][j]);
+                        size += stream.WriteUnsignedInt(1, this.anchor_ref_l1_flag[i][j], "anchor_ref_l1_flag");
                     }
                 }
             }
@@ -14287,12 +14285,12 @@ view_dependency_change( payloadSize ) {
 
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.non_anchor_ref_l0_flag[i][j]);
+                        size += stream.WriteUnsignedInt(1, this.non_anchor_ref_l0_flag[i][j], "non_anchor_ref_l0_flag");
                     }
 
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.non_anchor_ref_l1_flag[i][j]);
+                        size += stream.WriteUnsignedInt(1, this.non_anchor_ref_l1_flag[i][j], "non_anchor_ref_l1_flag");
                     }
                 }
             }
@@ -14333,12 +14331,12 @@ operation_point_not_present( payloadSize ) {
             ulong size = 0;
 
             uint k = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points, "num_operation_points");
 
             this.operation_point_not_present_id = new uint[num_operation_points];
             for (k = 0; k < num_operation_points; k++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_not_present_id[k]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_not_present_id[k], "operation_point_not_present_id");
             }
 
             return size;
@@ -14349,11 +14347,11 @@ operation_point_not_present( payloadSize ) {
             ulong size = 0;
 
             uint k = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_operation_points);
+            size += stream.WriteUnsignedIntGolomb(this.num_operation_points, "num_operation_points");
 
             for (k = 0; k < num_operation_points; k++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.operation_point_not_present_id[k]);
+                size += stream.WriteUnsignedIntGolomb(this.operation_point_not_present_id[k], "operation_point_not_present_id");
             }
 
             return size;
@@ -14427,7 +14425,7 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_of_temporal_layers_in_base_view_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_of_temporal_layers_in_base_view_minus1, "num_of_temporal_layers_in_base_view_minus1");
 
             this.sei_mvc_temporal_id = new uint[num_of_temporal_layers_in_base_view_minus1 + 1];
             this.sei_mvc_timing_info_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1 + 1];
@@ -14441,36 +14439,36 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
             this.sei_mvc_pic_struct_present_flag = new byte[num_of_temporal_layers_in_base_view_minus1 + 1];
             for (i = 0; i <= num_of_temporal_layers_in_base_view_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.sei_mvc_temporal_id[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_timing_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 3, out this.sei_mvc_temporal_id[i], "sei_mvc_temporal_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_timing_info_present_flag[i], "sei_mvc_timing_info_present_flag");
 
                 if (sei_mvc_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.sei_mvc_num_units_in_tick[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.sei_mvc_time_scale[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_fixed_frame_rate_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 32, out this.sei_mvc_num_units_in_tick[i], "sei_mvc_num_units_in_tick");
+                    size += stream.ReadUnsignedInt(size, 32, out this.sei_mvc_time_scale[i], "sei_mvc_time_scale");
+                    size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_fixed_frame_rate_flag[i], "sei_mvc_fixed_frame_rate_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_nal_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_nal_hrd_parameters_present_flag[i], "sei_mvc_nal_hrd_parameters_present_flag");
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_vcl_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_vcl_hrd_parameters_present_flag[i], "sei_mvc_vcl_hrd_parameters_present_flag");
 
                 if (sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
 sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_low_delay_hrd_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_low_delay_hrd_flag[i], "sei_mvc_low_delay_hrd_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_pic_struct_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_mvc_pic_struct_present_flag[i], "sei_mvc_pic_struct_present_flag");
             }
 
             return size;
@@ -14481,38 +14479,38 @@ sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_of_temporal_layers_in_base_view_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_of_temporal_layers_in_base_view_minus1, "num_of_temporal_layers_in_base_view_minus1");
 
             for (i = 0; i <= num_of_temporal_layers_in_base_view_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(3, this.sei_mvc_temporal_id[i]);
-                size += stream.WriteUnsignedInt(1, this.sei_mvc_timing_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(3, this.sei_mvc_temporal_id[i], "sei_mvc_temporal_id");
+                size += stream.WriteUnsignedInt(1, this.sei_mvc_timing_info_present_flag[i], "sei_mvc_timing_info_present_flag");
 
                 if (sei_mvc_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.sei_mvc_num_units_in_tick[i]);
-                    size += stream.WriteUnsignedInt(32, this.sei_mvc_time_scale[i]);
-                    size += stream.WriteUnsignedInt(1, this.sei_mvc_fixed_frame_rate_flag[i]);
+                    size += stream.WriteUnsignedInt(32, this.sei_mvc_num_units_in_tick[i], "sei_mvc_num_units_in_tick");
+                    size += stream.WriteUnsignedInt(32, this.sei_mvc_time_scale[i], "sei_mvc_time_scale");
+                    size += stream.WriteUnsignedInt(1, this.sei_mvc_fixed_frame_rate_flag[i], "sei_mvc_fixed_frame_rate_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.sei_mvc_nal_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.sei_mvc_nal_hrd_parameters_present_flag[i], "sei_mvc_nal_hrd_parameters_present_flag");
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.WriteUnsignedInt(1, this.sei_mvc_vcl_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.sei_mvc_vcl_hrd_parameters_present_flag[i], "sei_mvc_vcl_hrd_parameters_present_flag");
 
                 if (sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (sei_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
 sei_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.sei_mvc_low_delay_hrd_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.sei_mvc_low_delay_hrd_flag[i], "sei_mvc_low_delay_hrd_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.sei_mvc_pic_struct_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.sei_mvc_pic_struct_present_flag[i], "sei_mvc_pic_struct_present_flag");
             }
 
             return size;
@@ -14554,14 +14552,14 @@ multiview_view_position_extension_flag 5 u(1)
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
 
             this.view_position = new uint[num_views_minus1 + 1];
             for (i = 0; i <= num_views_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.view_position[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.view_position[i], "view_position");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.multiview_view_position_extension_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.multiview_view_position_extension_flag, "multiview_view_position_extension_flag");
 
             return size;
         }
@@ -14571,13 +14569,13 @@ multiview_view_position_extension_flag 5 u(1)
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_views_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_views_minus1, "num_views_minus1");
 
             for (i = 0; i <= num_views_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.view_position[i]);
+                size += stream.WriteUnsignedIntGolomb(this.view_position[i], "view_position");
             }
-            size += stream.WriteUnsignedInt(1, this.multiview_view_position_extension_flag);
+            size += stream.WriteUnsignedInt(1, this.multiview_view_position_extension_flag, "multiview_view_position_extension_flag");
 
             return size;
         }
@@ -14657,7 +14655,7 @@ mvc_vui_parameters_extension() {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_num_ops_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_num_ops_minus1, "vui_mvc_num_ops_minus1");
 
             this.vui_mvc_temporal_id = new uint[vui_mvc_num_ops_minus1 + 1];
             this.vui_mvc_num_target_output_views_minus1 = new uint[vui_mvc_num_ops_minus1 + 1];
@@ -14673,43 +14671,43 @@ mvc_vui_parameters_extension() {
             this.vui_mvc_pic_struct_present_flag = new byte[vui_mvc_num_ops_minus1 + 1];
             for (i = 0; i <= vui_mvc_num_ops_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.vui_mvc_temporal_id[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_num_target_output_views_minus1[i]);
+                size += stream.ReadUnsignedInt(size, 3, out this.vui_mvc_temporal_id[i], "vui_mvc_temporal_id");
+                size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_num_target_output_views_minus1[i], "vui_mvc_num_target_output_views_minus1");
 
                 this.vui_mvc_view_id[i] = new uint[vui_mvc_num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= vui_mvc_num_target_output_views_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_view_id[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_view_id[i][j], "vui_mvc_view_id");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_timing_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_timing_info_present_flag[i], "vui_mvc_timing_info_present_flag");
 
                 if (vui_mvc_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.vui_mvc_num_units_in_tick[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.vui_mvc_time_scale[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_fixed_frame_rate_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 32, out this.vui_mvc_num_units_in_tick[i], "vui_mvc_num_units_in_tick");
+                    size += stream.ReadUnsignedInt(size, 32, out this.vui_mvc_time_scale[i], "vui_mvc_time_scale");
+                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_fixed_frame_rate_flag[i], "vui_mvc_fixed_frame_rate_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_nal_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_nal_hrd_parameters_present_flag[i], "vui_mvc_nal_hrd_parameters_present_flag");
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_vcl_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_vcl_hrd_parameters_present_flag[i], "vui_mvc_vcl_hrd_parameters_present_flag");
 
                 if (vui_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
    vui_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_low_delay_hrd_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_low_delay_hrd_flag[i], "vui_mvc_low_delay_hrd_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_pic_struct_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvc_pic_struct_present_flag[i], "vui_mvc_pic_struct_present_flag");
             }
 
             return size;
@@ -14721,44 +14719,44 @@ mvc_vui_parameters_extension() {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.vui_mvc_num_ops_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.vui_mvc_num_ops_minus1, "vui_mvc_num_ops_minus1");
 
             for (i = 0; i <= vui_mvc_num_ops_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(3, this.vui_mvc_temporal_id[i]);
-                size += stream.WriteUnsignedIntGolomb(this.vui_mvc_num_target_output_views_minus1[i]);
+                size += stream.WriteUnsignedInt(3, this.vui_mvc_temporal_id[i], "vui_mvc_temporal_id");
+                size += stream.WriteUnsignedIntGolomb(this.vui_mvc_num_target_output_views_minus1[i], "vui_mvc_num_target_output_views_minus1");
 
                 for (j = 0; j <= vui_mvc_num_target_output_views_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.vui_mvc_view_id[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.vui_mvc_view_id[i][j], "vui_mvc_view_id");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_mvc_timing_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_mvc_timing_info_present_flag[i], "vui_mvc_timing_info_present_flag");
 
                 if (vui_mvc_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.vui_mvc_num_units_in_tick[i]);
-                    size += stream.WriteUnsignedInt(32, this.vui_mvc_time_scale[i]);
-                    size += stream.WriteUnsignedInt(1, this.vui_mvc_fixed_frame_rate_flag[i]);
+                    size += stream.WriteUnsignedInt(32, this.vui_mvc_num_units_in_tick[i], "vui_mvc_num_units_in_tick");
+                    size += stream.WriteUnsignedInt(32, this.vui_mvc_time_scale[i], "vui_mvc_time_scale");
+                    size += stream.WriteUnsignedInt(1, this.vui_mvc_fixed_frame_rate_flag[i], "vui_mvc_fixed_frame_rate_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_mvc_nal_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_mvc_nal_hrd_parameters_present_flag[i], "vui_mvc_nal_hrd_parameters_present_flag");
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_mvc_vcl_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_mvc_vcl_hrd_parameters_present_flag[i], "vui_mvc_vcl_hrd_parameters_present_flag");
 
                 if (vui_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (vui_mvc_nal_hrd_parameters_present_flag[i] != 0 ||
    vui_mvc_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.vui_mvc_low_delay_hrd_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.vui_mvc_low_delay_hrd_flag[i], "vui_mvc_low_delay_hrd_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_mvc_pic_struct_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_mvc_pic_struct_present_flag[i], "vui_mvc_pic_struct_present_flag");
             }
 
             return size;
@@ -14895,18 +14893,18 @@ seq_parameter_set_mvcd_extension() {
             uint[] DepthViewId = null;
             uint j = 0;
             uint k = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
 
             this.view_id = new uint[num_views_minus1 + 1];
             this.depth_view_present_flag = new byte[num_views_minus1 + 1];
             this.texture_view_present_flag = new byte[num_views_minus1 + 1];
             for (i = 0, NumDepthViews = 0; i <= num_views_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.depth_view_present_flag[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i], "view_id");
+                size += stream.ReadUnsignedInt(size, 1, out this.depth_view_present_flag[i], "depth_view_present_flag");
                 DepthViewId[NumDepthViews] = view_id[i];
                 NumDepthViews += depth_view_present_flag[i];
-                size += stream.ReadUnsignedInt(size, 1, out this.texture_view_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.texture_view_present_flag[i], "texture_view_present_flag");
             }
 
             this.num_anchor_refs_l0 = new uint[num_views_minus1 + 1];
@@ -14918,19 +14916,19 @@ seq_parameter_set_mvcd_extension() {
 
                 if (depth_view_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
                     this.anchor_ref_l0[i] = new uint[num_anchor_refs_l0[i]];
                     for (j = 0; j < num_anchor_refs_l0[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j], "anchor_ref_l0");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
                     this.anchor_ref_l1[i] = new uint[num_anchor_refs_l1[i]];
                     for (j = 0; j < num_anchor_refs_l1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j], "anchor_ref_l1");
                     }
                 }
             }
@@ -14944,23 +14942,23 @@ seq_parameter_set_mvcd_extension() {
 
                 if (depth_view_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
                     this.non_anchor_ref_l0[i] = new uint[num_non_anchor_refs_l0[i]];
                     for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
                     this.non_anchor_ref_l1[i] = new uint[num_non_anchor_refs_l1[i]];
                     for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
                     }
                 }
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_level_values_signalled_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_level_values_signalled_minus1, "num_level_values_signalled_minus1");
 
             this.level_idc = new uint[num_level_values_signalled_minus1 + 1];
             this.num_applicable_ops_minus1 = new uint[num_level_values_signalled_minus1 + 1];
@@ -14973,8 +14971,8 @@ seq_parameter_set_mvcd_extension() {
             this.applicable_op_num_depth_views = new uint[num_level_values_signalled_minus1 + 1][];
             for (i = 0; i <= num_level_values_signalled_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 8, out this.level_idc[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_applicable_ops_minus1[i]);
+                size += stream.ReadUnsignedInt(size, 8, out this.level_idc[i], "level_idc");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_applicable_ops_minus1[i], "num_applicable_ops_minus1");
 
                 this.applicable_op_temporal_id[i] = new uint[num_applicable_ops_minus1[i] + 1];
                 this.applicable_op_num_target_views_minus1[i] = new uint[num_applicable_ops_minus1[i] + 1];
@@ -14985,8 +14983,8 @@ seq_parameter_set_mvcd_extension() {
                 this.applicable_op_num_depth_views[i] = new uint[num_applicable_ops_minus1[i] + 1];
                 for (j = 0; j <= num_applicable_ops_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedInt(size, 3, out this.applicable_op_temporal_id[i][j]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_target_views_minus1[i][j]);
+                    size += stream.ReadUnsignedInt(size, 3, out this.applicable_op_temporal_id[i][j], "applicable_op_temporal_id");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_target_views_minus1[i][j], "applicable_op_num_target_views_minus1");
 
                     this.applicable_op_target_view_id[i][j] = new uint[applicable_op_num_target_views_minus1[i][j] + 1];
                     this.applicable_op_depth_flag[i][j] = new byte[applicable_op_num_target_views_minus1[i][j] + 1];
@@ -14994,27 +14992,27 @@ seq_parameter_set_mvcd_extension() {
                     for (k = 0; k <= applicable_op_num_target_views_minus1[i][j];
     k++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_target_view_id[i][j][k]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.applicable_op_depth_flag[i][j][k]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.applicable_op_texture_flag[i][j][k]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_target_view_id[i][j][k], "applicable_op_target_view_id");
+                        size += stream.ReadUnsignedInt(size, 1, out this.applicable_op_depth_flag[i][j][k], "applicable_op_depth_flag");
+                        size += stream.ReadUnsignedInt(size, 1, out this.applicable_op_texture_flag[i][j][k], "applicable_op_texture_flag");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_texture_views_minus1[i][j]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_depth_views[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_texture_views_minus1[i][j], "applicable_op_num_texture_views_minus1");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_depth_views[i][j], "applicable_op_num_depth_views");
                 }
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.mvcd_vui_parameters_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.mvcd_vui_parameters_present_flag, "mvcd_vui_parameters_present_flag");
 
             if (mvcd_vui_parameters_present_flag == 1)
             {
                 this.mvcd_vui_parameters_extension = new MvcdVuiParametersExtension();
-                size += stream.ReadClass<MvcdVuiParametersExtension>(size, context, this.mvcd_vui_parameters_extension);
+                size += stream.ReadClass<MvcdVuiParametersExtension>(size, context, this.mvcd_vui_parameters_extension, "mvcd_vui_parameters_extension");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.texture_vui_parameters_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.texture_vui_parameters_present_flag, "texture_vui_parameters_present_flag");
 
             if (texture_vui_parameters_present_flag == 1)
             {
                 this.mvc_vui_parameters_extension = new MvcVuiParametersExtension();
-                size += stream.ReadClass<MvcVuiParametersExtension>(size, context, this.mvc_vui_parameters_extension);
+                size += stream.ReadClass<MvcVuiParametersExtension>(size, context, this.mvc_vui_parameters_extension, "mvc_vui_parameters_extension");
             }
 
             return size;
@@ -15028,15 +15026,15 @@ seq_parameter_set_mvcd_extension() {
             uint[] DepthViewId = null;
             uint j = 0;
             uint k = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_views_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_views_minus1, "num_views_minus1");
 
             for (i = 0, NumDepthViews = 0; i <= num_views_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.view_id[i]);
-                size += stream.WriteUnsignedInt(1, this.depth_view_present_flag[i]);
+                size += stream.WriteUnsignedIntGolomb(this.view_id[i], "view_id");
+                size += stream.WriteUnsignedInt(1, this.depth_view_present_flag[i], "depth_view_present_flag");
                 DepthViewId[NumDepthViews] = view_id[i];
                 NumDepthViews += depth_view_present_flag[i];
-                size += stream.WriteUnsignedInt(1, this.texture_view_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.texture_view_present_flag[i], "texture_view_present_flag");
             }
 
             for (i = 1; i <= num_views_minus1; i++)
@@ -15044,17 +15042,17 @@ seq_parameter_set_mvcd_extension() {
 
                 if (depth_view_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l0[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
                     for (j = 0; j < num_anchor_refs_l0[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l0[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l0[i][j], "anchor_ref_l0");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
                     for (j = 0; j < num_anchor_refs_l1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l1[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l1[i][j], "anchor_ref_l1");
                     }
                 }
             }
@@ -15064,54 +15062,54 @@ seq_parameter_set_mvcd_extension() {
 
                 if (depth_view_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l0[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
                     for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l0[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
                     for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l1[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
                     }
                 }
             }
-            size += stream.WriteUnsignedIntGolomb(this.num_level_values_signalled_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_level_values_signalled_minus1, "num_level_values_signalled_minus1");
 
             for (i = 0; i <= num_level_values_signalled_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(8, this.level_idc[i]);
-                size += stream.WriteUnsignedIntGolomb(this.num_applicable_ops_minus1[i]);
+                size += stream.WriteUnsignedInt(8, this.level_idc[i], "level_idc");
+                size += stream.WriteUnsignedIntGolomb(this.num_applicable_ops_minus1[i], "num_applicable_ops_minus1");
 
                 for (j = 0; j <= num_applicable_ops_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedInt(3, this.applicable_op_temporal_id[i][j]);
-                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_target_views_minus1[i][j]);
+                    size += stream.WriteUnsignedInt(3, this.applicable_op_temporal_id[i][j], "applicable_op_temporal_id");
+                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_target_views_minus1[i][j], "applicable_op_num_target_views_minus1");
 
                     for (k = 0; k <= applicable_op_num_target_views_minus1[i][j];
     k++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.applicable_op_target_view_id[i][j][k]);
-                        size += stream.WriteUnsignedInt(1, this.applicable_op_depth_flag[i][j][k]);
-                        size += stream.WriteUnsignedInt(1, this.applicable_op_texture_flag[i][j][k]);
+                        size += stream.WriteUnsignedIntGolomb(this.applicable_op_target_view_id[i][j][k], "applicable_op_target_view_id");
+                        size += stream.WriteUnsignedInt(1, this.applicable_op_depth_flag[i][j][k], "applicable_op_depth_flag");
+                        size += stream.WriteUnsignedInt(1, this.applicable_op_texture_flag[i][j][k], "applicable_op_texture_flag");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_texture_views_minus1[i][j]);
-                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_depth_views[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_texture_views_minus1[i][j], "applicable_op_num_texture_views_minus1");
+                    size += stream.WriteUnsignedIntGolomb(this.applicable_op_num_depth_views[i][j], "applicable_op_num_depth_views");
                 }
             }
-            size += stream.WriteUnsignedInt(1, this.mvcd_vui_parameters_present_flag);
+            size += stream.WriteUnsignedInt(1, this.mvcd_vui_parameters_present_flag, "mvcd_vui_parameters_present_flag");
 
             if (mvcd_vui_parameters_present_flag == 1)
             {
-                size += stream.WriteClass<MvcdVuiParametersExtension>(context, this.mvcd_vui_parameters_extension);
+                size += stream.WriteClass<MvcdVuiParametersExtension>(context, this.mvcd_vui_parameters_extension, "mvcd_vui_parameters_extension");
             }
-            size += stream.WriteUnsignedInt(1, this.texture_vui_parameters_present_flag);
+            size += stream.WriteUnsignedInt(1, this.texture_vui_parameters_present_flag, "texture_vui_parameters_present_flag");
 
             if (texture_vui_parameters_present_flag == 1)
             {
-                size += stream.WriteClass<MvcVuiParametersExtension>(context, this.mvc_vui_parameters_extension);
+                size += stream.WriteClass<MvcVuiParametersExtension>(context, this.mvc_vui_parameters_extension, "mvc_vui_parameters_extension");
             }
 
             return size;
@@ -15274,7 +15272,7 @@ priority_id[ i ] 5 u(5)
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points_minus1, "num_operation_points_minus1");
 
             this.operation_point_id = new uint[num_operation_points_minus1 + 1];
             this.priority_id = new uint[num_operation_points_minus1 + 1];
@@ -15313,103 +15311,103 @@ priority_id[ i ] 5 u(5)
             this.max_dec_frame_buffering = new uint[num_operation_points_minus1 + 1];
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i]);
-                size += stream.ReadUnsignedInt(size, 5, out this.priority_id[i]);
-                size += stream.ReadUnsignedInt(size, 3, out this.temporal_id[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_target_output_views_minus1[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i], "operation_point_id");
+                size += stream.ReadUnsignedInt(size, 5, out this.priority_id[i], "priority_id");
+                size += stream.ReadUnsignedInt(size, 3, out this.temporal_id[i], "temporal_id");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_target_output_views_minus1[i], "num_target_output_views_minus1");
 
                 this.view_id[i] = new uint[num_target_output_views_minus1[i] + 1];
                 this.mvcd_op_view_info[i] = new MvcdOpViewInfo[num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i][j], "view_id");
                     this.mvcd_op_view_info[i][j] = new MvcdOpViewInfo();
-                    size += stream.ReadClass<MvcdOpViewInfo>(size, context, this.mvcd_op_view_info[i][j]);
+                    size += stream.ReadClass<MvcdOpViewInfo>(size, context, this.mvcd_op_view_info[i][j], "mvcd_op_view_info");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.profile_level_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.bitrate_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.frm_rate_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.profile_level_info_present_flag[i], "profile_level_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.bitrate_info_present_flag[i], "bitrate_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.frm_rate_info_present_flag[i], "frm_rate_info_present_flag");
 
                 if (num_target_output_views_minus1[i] == 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.view_dependency_info_present_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.view_dependency_info_present_flag[i], "view_dependency_info_present_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.parameter_sets_info_present_flag[i]);
-                size += stream.ReadUnsignedInt(size, 1, out this.bitstream_restriction_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.parameter_sets_info_present_flag[i], "parameter_sets_info_present_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.bitstream_restriction_info_present_flag[i], "bitstream_restriction_info_present_flag");
 
                 if (profile_level_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 24, out this.op_profile_level_idc[i]);
+                    size += stream.ReadUnsignedInt(size, 24, out this.op_profile_level_idc[i], "op_profile_level_idc");
                 }
 
                 if (bitrate_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 16, out this.avg_bitrate[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_calc_window[i]);
+                    size += stream.ReadUnsignedInt(size, 16, out this.avg_bitrate[i], "avg_bitrate");
+                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate[i], "max_bitrate");
+                    size += stream.ReadUnsignedInt(size, 16, out this.max_bitrate_calc_window[i], "max_bitrate_calc_window");
                 }
 
                 if (frm_rate_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 2, out this.constant_frm_rate_idc[i]);
-                    size += stream.ReadUnsignedInt(size, 16, out this.avg_frm_rate[i]);
+                    size += stream.ReadUnsignedInt(size, 2, out this.constant_frm_rate_idc[i], "constant_frm_rate_idc");
+                    size += stream.ReadUnsignedInt(size, 16, out this.avg_frm_rate[i], "avg_frm_rate");
                 }
 
                 if (view_dependency_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i], "num_directly_dependent_views");
 
                     this.directly_dependent_view_id[i] = new uint[num_directly_dependent_views[i]];
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j], "directly_dependent_view_id");
                         this.mvcd_op_view_info[i][j] = new MvcdOpViewInfo();
-                        size += stream.ReadClass<MvcdOpViewInfo>(size, context, this.mvcd_op_view_info[i][j]);
+                        size += stream.ReadClass<MvcdOpViewInfo>(size, context, this.mvcd_op_view_info[i][j], "mvcd_op_view_info");
                     }
                 }
                 else
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.view_dependency_info_src_op_id[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.view_dependency_info_src_op_id[i], "view_dependency_info_src_op_id");
                 }
 
                 if (parameter_sets_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_set_minus1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_set_minus1[i], "num_seq_parameter_set_minus1");
 
                     this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_set_minus1[i] + 1];
                     for (j = 0; j <= num_seq_parameter_set_minus1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_set_minus1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_set_minus1[i], "num_subset_seq_parameter_set_minus1");
 
                     this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_set_minus1[i] + 1];
                     for (j = 0; j <= num_subset_seq_parameter_set_minus1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i], "num_pic_parameter_set_minus1");
 
                     this.pic_parameter_set_id_delta[i] = new uint[((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
                     for (j = 0; j <= ((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
                     }
                 }
                 else
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_op_id[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.parameter_sets_info_src_op_id[i], "parameter_sets_info_src_op_id");
                 }
 
                 if (bitstream_restriction_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.motion_vectors_over_pic_boundaries_flag[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bytes_per_pic_denom[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bits_per_mb_denom[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_horizontal[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_vertical[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_reorder_frames[i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.max_dec_frame_buffering[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.motion_vectors_over_pic_boundaries_flag[i], "motion_vectors_over_pic_boundaries_flag");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bytes_per_pic_denom[i], "max_bytes_per_pic_denom");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_bits_per_mb_denom[i], "max_bits_per_mb_denom");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_horizontal[i], "log2_max_mv_length_horizontal");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.log2_max_mv_length_vertical[i], "log2_max_mv_length_vertical");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_reorder_frames[i], "num_reorder_frames");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.max_dec_frame_buffering[i], "max_dec_frame_buffering");
                 }
             }
 
@@ -15422,99 +15420,99 @@ priority_id[ i ] 5 u(5)
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.num_operation_points_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_operation_points_minus1, "num_operation_points_minus1");
 
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.operation_point_id[i]);
-                size += stream.WriteUnsignedInt(5, this.priority_id[i]);
-                size += stream.WriteUnsignedInt(3, this.temporal_id[i]);
-                size += stream.WriteUnsignedIntGolomb(this.num_target_output_views_minus1[i]);
+                size += stream.WriteUnsignedIntGolomb(this.operation_point_id[i], "operation_point_id");
+                size += stream.WriteUnsignedInt(5, this.priority_id[i], "priority_id");
+                size += stream.WriteUnsignedInt(3, this.temporal_id[i], "temporal_id");
+                size += stream.WriteUnsignedIntGolomb(this.num_target_output_views_minus1[i], "num_target_output_views_minus1");
 
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.view_id[i][j]);
-                    size += stream.WriteClass<MvcdOpViewInfo>(context, this.mvcd_op_view_info[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.view_id[i][j], "view_id");
+                    size += stream.WriteClass<MvcdOpViewInfo>(context, this.mvcd_op_view_info[i][j], "mvcd_op_view_info");
                 }
-                size += stream.WriteUnsignedInt(1, this.profile_level_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.bitrate_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.frm_rate_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.profile_level_info_present_flag[i], "profile_level_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.bitrate_info_present_flag[i], "bitrate_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.frm_rate_info_present_flag[i], "frm_rate_info_present_flag");
 
                 if (num_target_output_views_minus1[i] == 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.view_dependency_info_present_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.view_dependency_info_present_flag[i], "view_dependency_info_present_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.parameter_sets_info_present_flag[i]);
-                size += stream.WriteUnsignedInt(1, this.bitstream_restriction_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.parameter_sets_info_present_flag[i], "parameter_sets_info_present_flag");
+                size += stream.WriteUnsignedInt(1, this.bitstream_restriction_info_present_flag[i], "bitstream_restriction_info_present_flag");
 
                 if (profile_level_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(24, this.op_profile_level_idc[i]);
+                    size += stream.WriteUnsignedInt(24, this.op_profile_level_idc[i], "op_profile_level_idc");
                 }
 
                 if (bitrate_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(16, this.avg_bitrate[i]);
-                    size += stream.WriteUnsignedInt(16, this.max_bitrate[i]);
-                    size += stream.WriteUnsignedInt(16, this.max_bitrate_calc_window[i]);
+                    size += stream.WriteUnsignedInt(16, this.avg_bitrate[i], "avg_bitrate");
+                    size += stream.WriteUnsignedInt(16, this.max_bitrate[i], "max_bitrate");
+                    size += stream.WriteUnsignedInt(16, this.max_bitrate_calc_window[i], "max_bitrate_calc_window");
                 }
 
                 if (frm_rate_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(2, this.constant_frm_rate_idc[i]);
-                    size += stream.WriteUnsignedInt(16, this.avg_frm_rate[i]);
+                    size += stream.WriteUnsignedInt(2, this.constant_frm_rate_idc[i], "constant_frm_rate_idc");
+                    size += stream.WriteUnsignedInt(16, this.avg_frm_rate[i], "avg_frm_rate");
                 }
 
                 if (view_dependency_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_directly_dependent_views[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_directly_dependent_views[i], "num_directly_dependent_views");
 
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.directly_dependent_view_id[i][j]);
-                        size += stream.WriteClass<MvcdOpViewInfo>(context, this.mvcd_op_view_info[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.directly_dependent_view_id[i][j], "directly_dependent_view_id");
+                        size += stream.WriteClass<MvcdOpViewInfo>(context, this.mvcd_op_view_info[i][j], "mvcd_op_view_info");
                     }
                 }
                 else
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.view_dependency_info_src_op_id[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.view_dependency_info_src_op_id[i], "view_dependency_info_src_op_id");
                 }
 
                 if (parameter_sets_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_seq_parameter_set_minus1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_seq_parameter_set_minus1[i], "num_seq_parameter_set_minus1");
 
                     for (j = 0; j <= num_seq_parameter_set_minus1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.num_subset_seq_parameter_set_minus1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_subset_seq_parameter_set_minus1[i], "num_subset_seq_parameter_set_minus1");
 
                     for (j = 0; j <= num_subset_seq_parameter_set_minus1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.subset_seq_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
-                    size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_set_minus1[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.num_pic_parameter_set_minus1[i], "num_pic_parameter_set_minus1");
 
                     for (j = 0; j <= ((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j]);
+                        size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
                     }
                 }
                 else
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_op_id[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.parameter_sets_info_src_op_id[i], "parameter_sets_info_src_op_id");
                 }
 
                 if (bitstream_restriction_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.motion_vectors_over_pic_boundaries_flag[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_bytes_per_pic_denom[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_bits_per_mb_denom[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_horizontal[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_vertical[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.num_reorder_frames[i]);
-                    size += stream.WriteUnsignedIntGolomb(this.max_dec_frame_buffering[i]);
+                    size += stream.WriteUnsignedInt(1, this.motion_vectors_over_pic_boundaries_flag[i], "motion_vectors_over_pic_boundaries_flag");
+                    size += stream.WriteUnsignedIntGolomb(this.max_bytes_per_pic_denom[i], "max_bytes_per_pic_denom");
+                    size += stream.WriteUnsignedIntGolomb(this.max_bits_per_mb_denom[i], "max_bits_per_mb_denom");
+                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_horizontal[i], "log2_max_mv_length_horizontal");
+                    size += stream.WriteUnsignedIntGolomb(this.log2_max_mv_length_vertical[i], "log2_max_mv_length_vertical");
+                    size += stream.WriteUnsignedIntGolomb(this.num_reorder_frames[i], "num_reorder_frames");
+                    size += stream.WriteUnsignedIntGolomb(this.max_dec_frame_buffering[i], "max_dec_frame_buffering");
                 }
             }
 
@@ -15558,17 +15556,17 @@ mvcd_op_view_info() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.view_info_depth_view_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.view_info_depth_view_present_flag, "view_info_depth_view_present_flag");
 
             if (view_info_depth_view_present_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.mvcd_depth_view_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.mvcd_depth_view_flag, "mvcd_depth_view_flag");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.view_info_texture_view_present_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.view_info_texture_view_present_flag, "view_info_texture_view_present_flag");
 
             if (view_info_texture_view_present_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.mvcd_texture_view_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.mvcd_texture_view_flag, "mvcd_texture_view_flag");
             }
 
             return size;
@@ -15578,17 +15576,17 @@ mvcd_op_view_info() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.view_info_depth_view_present_flag);
+            size += stream.WriteUnsignedInt(1, this.view_info_depth_view_present_flag, "view_info_depth_view_present_flag");
 
             if (view_info_depth_view_present_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.mvcd_depth_view_flag);
+                size += stream.WriteUnsignedInt(1, this.mvcd_depth_view_flag, "mvcd_depth_view_flag");
             }
-            size += stream.WriteUnsignedInt(1, this.view_info_texture_view_present_flag);
+            size += stream.WriteUnsignedInt(1, this.view_info_texture_view_present_flag, "view_info_texture_view_present_flag");
 
             if (view_info_texture_view_present_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.mvcd_texture_view_flag);
+                size += stream.WriteUnsignedInt(1, this.mvcd_texture_view_flag, "mvcd_texture_view_flag");
             }
 
             return size;
@@ -15672,54 +15670,54 @@ mvcd_scalable_nesting( payloadSize ) {
 
             uint i = 0;
             int whileIndex = -1;
-            size += stream.ReadUnsignedInt(size, 1, out this.operation_point_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.operation_point_flag, "operation_point_flag");
 
             if (operation_point_flag == 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.all_view_components_in_au_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.all_view_components_in_au_flag, "all_view_components_in_au_flag");
 
                 if (all_view_components_in_au_flag == 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_minus1);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_minus1, "num_view_components_minus1");
 
                     this.sei_view_id = new uint[num_view_components_minus1 + 1];
                     this.sei_view_applicability_flag = new byte[num_view_components_minus1 + 1];
                     for (i = 0; i <= num_view_components_minus1; i++)
                     {
-                        size += stream.ReadUnsignedInt(size, 10, out this.sei_view_id[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.sei_view_applicability_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 10, out this.sei_view_id[i], "sei_view_id");
+                        size += stream.ReadUnsignedInt(size, 1, out this.sei_view_applicability_flag[i], "sei_view_applicability_flag");
                     }
                 }
             }
             else
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.sei_op_texture_only_flag);
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1);
+                size += stream.ReadUnsignedInt(size, 1, out this.sei_op_texture_only_flag, "sei_op_texture_only_flag");
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_view_components_op_minus1, "num_view_components_op_minus1");
 
                 this.sei_op_view_id = new uint[num_view_components_op_minus1 + 1];
                 this.sei_op_depth_flag = new byte[num_view_components_op_minus1 + 1];
                 this.sei_op_texture_flag = new byte[num_view_components_op_minus1 + 1];
                 for (i = 0; i <= num_view_components_op_minus1; i++)
                 {
-                    size += stream.ReadUnsignedInt(size, 10, out this.sei_op_view_id[i]);
+                    size += stream.ReadUnsignedInt(size, 10, out this.sei_op_view_id[i], "sei_op_view_id");
 
                     if (sei_op_texture_only_flag == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.sei_op_depth_flag[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.sei_op_texture_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.sei_op_depth_flag[i], "sei_op_depth_flag");
+                        size += stream.ReadUnsignedInt(size, 1, out this.sei_op_texture_flag[i], "sei_op_texture_flag");
                     }
                 }
-                size += stream.ReadUnsignedInt(size, 3, out this.sei_op_temporal_id);
+                size += stream.ReadUnsignedInt(size, 3, out this.sei_op_temporal_id, "sei_op_temporal_id");
             }
 
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
-                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
+                size += stream.ReadFixed(size, 1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
             }
             this.sei_message = new SeiMessage();
-            size += stream.ReadClass<SeiMessage>(size, context, this.sei_message);
+            size += stream.ReadClass<SeiMessage>(size, context, this.sei_message, "sei_message");
 
             return size;
         }
@@ -15730,48 +15728,48 @@ mvcd_scalable_nesting( payloadSize ) {
 
             uint i = 0;
             int whileIndex = -1;
-            size += stream.WriteUnsignedInt(1, this.operation_point_flag);
+            size += stream.WriteUnsignedInt(1, this.operation_point_flag, "operation_point_flag");
 
             if (operation_point_flag == 0)
             {
-                size += stream.WriteUnsignedInt(1, this.all_view_components_in_au_flag);
+                size += stream.WriteUnsignedInt(1, this.all_view_components_in_au_flag, "all_view_components_in_au_flag");
 
                 if (all_view_components_in_au_flag == 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.num_view_components_minus1);
+                    size += stream.WriteUnsignedIntGolomb(this.num_view_components_minus1, "num_view_components_minus1");
 
                     for (i = 0; i <= num_view_components_minus1; i++)
                     {
-                        size += stream.WriteUnsignedInt(10, this.sei_view_id[i]);
-                        size += stream.WriteUnsignedInt(1, this.sei_view_applicability_flag[i]);
+                        size += stream.WriteUnsignedInt(10, this.sei_view_id[i], "sei_view_id");
+                        size += stream.WriteUnsignedInt(1, this.sei_view_applicability_flag[i], "sei_view_applicability_flag");
                     }
                 }
             }
             else
             {
-                size += stream.WriteUnsignedInt(1, this.sei_op_texture_only_flag);
-                size += stream.WriteUnsignedIntGolomb(this.num_view_components_op_minus1);
+                size += stream.WriteUnsignedInt(1, this.sei_op_texture_only_flag, "sei_op_texture_only_flag");
+                size += stream.WriteUnsignedIntGolomb(this.num_view_components_op_minus1, "num_view_components_op_minus1");
 
                 for (i = 0; i <= num_view_components_op_minus1; i++)
                 {
-                    size += stream.WriteUnsignedInt(10, this.sei_op_view_id[i]);
+                    size += stream.WriteUnsignedInt(10, this.sei_op_view_id[i], "sei_op_view_id");
 
                     if (sei_op_texture_only_flag == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.sei_op_depth_flag[i]);
-                        size += stream.WriteUnsignedInt(1, this.sei_op_texture_flag[i]);
+                        size += stream.WriteUnsignedInt(1, this.sei_op_depth_flag[i], "sei_op_depth_flag");
+                        size += stream.WriteUnsignedInt(1, this.sei_op_texture_flag[i], "sei_op_texture_flag");
                     }
                 }
-                size += stream.WriteUnsignedInt(3, this.sei_op_temporal_id);
+                size += stream.WriteUnsignedInt(3, this.sei_op_temporal_id, "sei_op_temporal_id");
             }
 
             while (!stream.ByteAligned())
             {
                 whileIndex++;
 
-                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit); // equal to 0 
+                size += stream.WriteFixed(1, whileIndex, this.sei_nesting_zero_bit, "sei_nesting_zero_bit"); // equal to 0 
             }
-            size += stream.WriteClass<SeiMessage>(context, this.sei_message);
+            size += stream.WriteClass<SeiMessage>(context, this.sei_message, "sei_message");
 
             return size;
         }
@@ -15879,32 +15877,32 @@ depth_representation_info( payloadSize ) {
 
             uint numViews = 0;
             uint i = 0;
-            size += stream.ReadUnsignedInt(size, 1, out this.all_views_equal_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.all_views_equal_flag, "all_views_equal_flag");
 
             if (all_views_equal_flag == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
                 numViews = num_views_minus1 + 1;
             }
             else
             {
                 numViews = 1;
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.z_near_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.z_far_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.z_near_flag, "z_near_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.z_far_flag, "z_far_flag");
 
             if (z_near_flag != 0 || z_far_flag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.z_axis_equal_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.z_axis_equal_flag, "z_axis_equal_flag");
 
                 if (z_axis_equal_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.common_z_axis_reference_view);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.common_z_axis_reference_view, "common_z_axis_reference_view");
                 }
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.d_min_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.d_max_flag);
-            size += stream.ReadUnsignedIntGolomb(size, out this.depth_representation_type);
+            size += stream.ReadUnsignedInt(size, 1, out this.d_min_flag, "d_min_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.d_max_flag, "d_max_flag");
+            size += stream.ReadUnsignedIntGolomb(size, out this.depth_representation_type, "depth_representation_type");
 
             this.depth_info_view_id = new uint[numViews];
             this.z_axis_reference_view = new uint[numViews];
@@ -15915,51 +15913,51 @@ depth_representation_info( payloadSize ) {
             this.depth_representation_sei_element2 = new DepthRepresentationSeiElement[numViews];
             for (i = 0; i < numViews; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.depth_info_view_id[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.depth_info_view_id[i], "depth_info_view_id");
 
                 if ((z_near_flag != 0 || z_far_flag != 0) && (z_axis_equal_flag == 0))
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.z_axis_reference_view[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.z_axis_reference_view[i], "z_axis_reference_view");
                 }
 
                 if (d_min_flag != 0 || d_max_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_reference_view[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_reference_view[i], "disparity_reference_view");
                 }
 
                 if (z_near_flag != 0)
                 {
                     this.depth_representation_sei_element[i] = new DepthRepresentationSeiElement();
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element[i]);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element[i], "depth_representation_sei_element");
                 }
 
                 if (z_far_flag != 0)
                 {
                     this.depth_representation_sei_element0[i] = new DepthRepresentationSeiElement();
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element0[i]);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element0[i], "depth_representation_sei_element0");
                 }
 
                 if (d_min_flag != 0)
                 {
                     this.depth_representation_sei_element1[i] = new DepthRepresentationSeiElement();
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element1[i]);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element1[i], "depth_representation_sei_element1");
                 }
 
                 if (d_max_flag != 0)
                 {
                     this.depth_representation_sei_element2[i] = new DepthRepresentationSeiElement();
-                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element2[i]);
+                    size += stream.ReadClass<DepthRepresentationSeiElement>(size, context, this.depth_representation_sei_element2[i], "depth_representation_sei_element2");
                 }
             }
 
             if (depth_representation_type == 3)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_num_minus1);
+                size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_num_minus1, "depth_nonlinear_representation_num_minus1");
 
                 this.depth_nonlinear_representation_model = new uint[depth_nonlinear_representation_num_minus1 + 1 + 1];
                 for (i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_model[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_model[i], "depth_nonlinear_representation_model");
                 }
             }
 
@@ -15972,75 +15970,75 @@ depth_representation_info( payloadSize ) {
 
             uint numViews = 0;
             uint i = 0;
-            size += stream.WriteUnsignedInt(1, this.all_views_equal_flag);
+            size += stream.WriteUnsignedInt(1, this.all_views_equal_flag, "all_views_equal_flag");
 
             if (all_views_equal_flag == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.num_views_minus1);
+                size += stream.WriteUnsignedIntGolomb(this.num_views_minus1, "num_views_minus1");
                 numViews = num_views_minus1 + 1;
             }
             else
             {
                 numViews = 1;
             }
-            size += stream.WriteUnsignedInt(1, this.z_near_flag);
-            size += stream.WriteUnsignedInt(1, this.z_far_flag);
+            size += stream.WriteUnsignedInt(1, this.z_near_flag, "z_near_flag");
+            size += stream.WriteUnsignedInt(1, this.z_far_flag, "z_far_flag");
 
             if (z_near_flag != 0 || z_far_flag != 0)
             {
-                size += stream.WriteUnsignedInt(1, this.z_axis_equal_flag);
+                size += stream.WriteUnsignedInt(1, this.z_axis_equal_flag, "z_axis_equal_flag");
 
                 if (z_axis_equal_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.common_z_axis_reference_view);
+                    size += stream.WriteUnsignedIntGolomb(this.common_z_axis_reference_view, "common_z_axis_reference_view");
                 }
             }
-            size += stream.WriteUnsignedInt(1, this.d_min_flag);
-            size += stream.WriteUnsignedInt(1, this.d_max_flag);
-            size += stream.WriteUnsignedIntGolomb(this.depth_representation_type);
+            size += stream.WriteUnsignedInt(1, this.d_min_flag, "d_min_flag");
+            size += stream.WriteUnsignedInt(1, this.d_max_flag, "d_max_flag");
+            size += stream.WriteUnsignedIntGolomb(this.depth_representation_type, "depth_representation_type");
 
             for (i = 0; i < numViews; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.depth_info_view_id[i]);
+                size += stream.WriteUnsignedIntGolomb(this.depth_info_view_id[i], "depth_info_view_id");
 
                 if ((z_near_flag != 0 || z_far_flag != 0) && (z_axis_equal_flag == 0))
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.z_axis_reference_view[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.z_axis_reference_view[i], "z_axis_reference_view");
                 }
 
                 if (d_min_flag != 0 || d_max_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.disparity_reference_view[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.disparity_reference_view[i], "disparity_reference_view");
                 }
 
                 if (z_near_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element[i]);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element[i], "depth_representation_sei_element");
                 }
 
                 if (z_far_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element0[i]);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element0[i], "depth_representation_sei_element0");
                 }
 
                 if (d_min_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element1[i]);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element1[i], "depth_representation_sei_element1");
                 }
 
                 if (d_max_flag != 0)
                 {
-                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element2[i]);
+                    size += stream.WriteClass<DepthRepresentationSeiElement>(context, this.depth_representation_sei_element2[i], "depth_representation_sei_element2");
                 }
             }
 
             if (depth_representation_type == 3)
             {
-                size += stream.WriteUnsignedIntGolomb(this.depth_nonlinear_representation_num_minus1);
+                size += stream.WriteUnsignedIntGolomb(this.depth_nonlinear_representation_num_minus1, "depth_nonlinear_representation_num_minus1");
 
                 for (i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.depth_nonlinear_representation_model[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.depth_nonlinear_representation_model[i], "depth_nonlinear_representation_model");
                 }
             }
 
@@ -16082,10 +16080,10 @@ depth_representation_sei_element( outSign, outExp, outMantissa, outManLen ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.da_sign_flag);
-            size += stream.ReadUnsignedInt(size, 7, out this.da_exponent);
-            size += stream.ReadUnsignedInt(size, 5, out this.da_mantissa_len_minus1);
-            size += stream.ReadUnsignedIntVariable(size, (this.da_mantissa_len_minus1 + 1), out this.da_mantissa);
+            size += stream.ReadUnsignedInt(size, 1, out this.da_sign_flag, "da_sign_flag");
+            size += stream.ReadUnsignedInt(size, 7, out this.da_exponent, "da_exponent");
+            size += stream.ReadUnsignedInt(size, 5, out this.da_mantissa_len_minus1, "da_mantissa_len_minus1");
+            size += stream.ReadUnsignedIntVariable(size, (this.da_mantissa_len_minus1 + 1), out this.da_mantissa, "da_mantissa");
 
             return size;
         }
@@ -16094,10 +16092,10 @@ depth_representation_sei_element( outSign, outExp, outMantissa, outManLen ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.da_sign_flag);
-            size += stream.WriteUnsignedInt(7, this.da_exponent);
-            size += stream.WriteUnsignedInt(5, this.da_mantissa_len_minus1);
-            size += stream.WriteUnsignedIntVariable((this.da_mantissa_len_minus1 + 1), this.da_mantissa);
+            size += stream.WriteUnsignedInt(1, this.da_sign_flag, "da_sign_flag");
+            size += stream.WriteUnsignedInt(7, this.da_exponent, "da_exponent");
+            size += stream.WriteUnsignedInt(5, this.da_mantissa_len_minus1, "da_mantissa_len_minus1");
+            size += stream.WriteUnsignedIntVariable((this.da_mantissa_len_minus1 + 1), this.da_mantissa, "da_mantissa");
 
             return size;
         }
@@ -16178,15 +16176,15 @@ three_dimensional_reference_displays_info( payloadSize ) {
 
             uint numRefDisplays = 0;
             uint i = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.prec_ref_baseline);
-            size += stream.ReadUnsignedIntGolomb(size, out this.prec_ref_display_width);
-            size += stream.ReadUnsignedInt(size, 1, out this.ref_viewing_distance_flag);
+            size += stream.ReadUnsignedIntGolomb(size, out this.prec_ref_baseline, "prec_ref_baseline");
+            size += stream.ReadUnsignedIntGolomb(size, out this.prec_ref_display_width, "prec_ref_display_width");
+            size += stream.ReadUnsignedInt(size, 1, out this.ref_viewing_distance_flag, "ref_viewing_distance_flag");
 
             if (ref_viewing_distance_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.prec_ref_viewing_dist);
+                size += stream.ReadUnsignedIntGolomb(size, out this.prec_ref_viewing_dist, "prec_ref_viewing_dist");
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_displays_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_displays_minus1, "num_ref_displays_minus1");
             numRefDisplays = num_ref_displays_minus1 + 1;
 
             this.exponent_ref_baseline = new uint[numRefDisplays];
@@ -16199,24 +16197,24 @@ three_dimensional_reference_displays_info( payloadSize ) {
             this.num_sample_shift_plus512 = new uint[numRefDisplays];
             for (i = 0; i < numRefDisplays; i++)
             {
-                size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_baseline[i]);
-                size += stream.ReadUnsignedIntVariable(size, (exponent_ref_baseline[i] == 0) ? (Math.Max(0, prec_ref_baseline - 30)) : (Math.Max(0, exponent_ref_baseline[i] + prec_ref_baseline - 31)), out this.mantissa_ref_baseline[i]);
-                size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_display_width[i]);
-                size += stream.ReadUnsignedIntVariable(size, (exponent_ref_display_width[i] == 0) ? (Math.Max(0, prec_ref_display_width - 30)) : (Math.Max(0, exponent_ref_display_width[i] + prec_ref_display_width - 31)), out this.mantissa_ref_display_width[i]);
+                size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_baseline[i], "exponent_ref_baseline");
+                size += stream.ReadUnsignedIntVariable(size, (exponent_ref_baseline[i] == 0) ? (Math.Max(0, prec_ref_baseline - 30)) : (Math.Max(0, exponent_ref_baseline[i] + prec_ref_baseline - 31)), out this.mantissa_ref_baseline[i], "mantissa_ref_baseline");
+                size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_display_width[i], "exponent_ref_display_width");
+                size += stream.ReadUnsignedIntVariable(size, (exponent_ref_display_width[i] == 0) ? (Math.Max(0, prec_ref_display_width - 30)) : (Math.Max(0, exponent_ref_display_width[i] + prec_ref_display_width - 31)), out this.mantissa_ref_display_width[i], "mantissa_ref_display_width");
 
                 if (ref_viewing_distance_flag != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_viewing_distance[i]);
-                    size += stream.ReadUnsignedIntVariable(size, (exponent_ref_viewing_distance[i] == 0) ? (Math.Max(0, prec_ref_viewing_dist - 30)) : (Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_dist - 31)), out this.mantissa_ref_viewing_distance[i]);
+                    size += stream.ReadUnsignedInt(size, 6, out this.exponent_ref_viewing_distance[i], "exponent_ref_viewing_distance");
+                    size += stream.ReadUnsignedIntVariable(size, (exponent_ref_viewing_distance[i] == 0) ? (Math.Max(0, prec_ref_viewing_dist - 30)) : (Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_dist - 31)), out this.mantissa_ref_viewing_distance[i], "mantissa_ref_viewing_distance");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.additional_shift_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.additional_shift_present_flag[i], "additional_shift_present_flag");
 
                 if (((H264Context)context).SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 10, out this.num_sample_shift_plus512[i]);
+                    size += stream.ReadUnsignedInt(size, 10, out this.num_sample_shift_plus512[i], "num_sample_shift_plus512");
                 }
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.three_dimensional_reference_displays_extension_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.three_dimensional_reference_displays_extension_flag, "three_dimensional_reference_displays_extension_flag");
 
             return size;
         }
@@ -16227,37 +16225,37 @@ three_dimensional_reference_displays_info( payloadSize ) {
 
             uint numRefDisplays = 0;
             uint i = 0;
-            size += stream.WriteUnsignedIntGolomb(this.prec_ref_baseline);
-            size += stream.WriteUnsignedIntGolomb(this.prec_ref_display_width);
-            size += stream.WriteUnsignedInt(1, this.ref_viewing_distance_flag);
+            size += stream.WriteUnsignedIntGolomb(this.prec_ref_baseline, "prec_ref_baseline");
+            size += stream.WriteUnsignedIntGolomb(this.prec_ref_display_width, "prec_ref_display_width");
+            size += stream.WriteUnsignedInt(1, this.ref_viewing_distance_flag, "ref_viewing_distance_flag");
 
             if (ref_viewing_distance_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.prec_ref_viewing_dist);
+                size += stream.WriteUnsignedIntGolomb(this.prec_ref_viewing_dist, "prec_ref_viewing_dist");
             }
-            size += stream.WriteUnsignedIntGolomb(this.num_ref_displays_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.num_ref_displays_minus1, "num_ref_displays_minus1");
             numRefDisplays = num_ref_displays_minus1 + 1;
 
             for (i = 0; i < numRefDisplays; i++)
             {
-                size += stream.WriteUnsignedInt(6, this.exponent_ref_baseline[i]);
-                size += stream.WriteUnsignedIntVariable((exponent_ref_baseline[i] == 0) ? (Math.Max(0, prec_ref_baseline - 30)) : (Math.Max(0, exponent_ref_baseline[i] + prec_ref_baseline - 31)), this.mantissa_ref_baseline[i]);
-                size += stream.WriteUnsignedInt(6, this.exponent_ref_display_width[i]);
-                size += stream.WriteUnsignedIntVariable((exponent_ref_display_width[i] == 0) ? (Math.Max(0, prec_ref_display_width - 30)) : (Math.Max(0, exponent_ref_display_width[i] + prec_ref_display_width - 31)), this.mantissa_ref_display_width[i]);
+                size += stream.WriteUnsignedInt(6, this.exponent_ref_baseline[i], "exponent_ref_baseline");
+                size += stream.WriteUnsignedIntVariable((exponent_ref_baseline[i] == 0) ? (Math.Max(0, prec_ref_baseline - 30)) : (Math.Max(0, exponent_ref_baseline[i] + prec_ref_baseline - 31)), this.mantissa_ref_baseline[i], "mantissa_ref_baseline");
+                size += stream.WriteUnsignedInt(6, this.exponent_ref_display_width[i], "exponent_ref_display_width");
+                size += stream.WriteUnsignedIntVariable((exponent_ref_display_width[i] == 0) ? (Math.Max(0, prec_ref_display_width - 30)) : (Math.Max(0, exponent_ref_display_width[i] + prec_ref_display_width - 31)), this.mantissa_ref_display_width[i], "mantissa_ref_display_width");
 
                 if (ref_viewing_distance_flag != 0)
                 {
-                    size += stream.WriteUnsignedInt(6, this.exponent_ref_viewing_distance[i]);
-                    size += stream.WriteUnsignedIntVariable((exponent_ref_viewing_distance[i] == 0) ? (Math.Max(0, prec_ref_viewing_dist - 30)) : (Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_dist - 31)), this.mantissa_ref_viewing_distance[i]);
+                    size += stream.WriteUnsignedInt(6, this.exponent_ref_viewing_distance[i], "exponent_ref_viewing_distance");
+                    size += stream.WriteUnsignedIntVariable((exponent_ref_viewing_distance[i] == 0) ? (Math.Max(0, prec_ref_viewing_dist - 30)) : (Math.Max(0, exponent_ref_viewing_distance[i] + prec_ref_viewing_dist - 31)), this.mantissa_ref_viewing_distance[i], "mantissa_ref_viewing_distance");
                 }
-                size += stream.WriteUnsignedInt(1, this.additional_shift_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.additional_shift_present_flag[i], "additional_shift_present_flag");
 
                 if (((H264Context)context).SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(10, this.num_sample_shift_plus512[i]);
+                    size += stream.WriteUnsignedInt(10, this.num_sample_shift_plus512[i], "num_sample_shift_plus512");
                 }
             }
-            size += stream.WriteUnsignedInt(1, this.three_dimensional_reference_displays_extension_flag);
+            size += stream.WriteUnsignedInt(1, this.three_dimensional_reference_displays_extension_flag, "three_dimensional_reference_displays_extension_flag");
 
             return size;
         }
@@ -16298,7 +16296,7 @@ depth_timing( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedInt(size, 1, out this.per_view_depth_timing_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.per_view_depth_timing_flag, "per_view_depth_timing_flag");
 
             if (per_view_depth_timing_flag != 0)
             {
@@ -16307,14 +16305,14 @@ depth_timing( payloadSize ) {
                 for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     this.depth_timing_offset[i] = new DepthTimingOffset();
-                    size += stream.ReadClass<DepthTimingOffset>(size, context, this.depth_timing_offset[i]);
+                    size += stream.ReadClass<DepthTimingOffset>(size, context, this.depth_timing_offset[i], "depth_timing_offset");
                 }
             }
             else
             {
                 this.depth_timing_offset = new DepthTimingOffset[1];
                 this.depth_timing_offset[0] = new DepthTimingOffset();
-                size += stream.ReadClass<DepthTimingOffset>(size, context, this.depth_timing_offset[0]);
+                size += stream.ReadClass<DepthTimingOffset>(size, context, this.depth_timing_offset[0], "depth_timing_offset");
             }
 
             return size;
@@ -16325,19 +16323,19 @@ depth_timing( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedInt(1, this.per_view_depth_timing_flag);
+            size += stream.WriteUnsignedInt(1, this.per_view_depth_timing_flag, "per_view_depth_timing_flag");
 
             if (per_view_depth_timing_flag != 0)
             {
 
                 for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
-                    size += stream.WriteClass<DepthTimingOffset>(context, this.depth_timing_offset[i]);
+                    size += stream.WriteClass<DepthTimingOffset>(context, this.depth_timing_offset[i], "depth_timing_offset");
                 }
             }
             else
             {
-                size += stream.WriteClass<DepthTimingOffset>(context, this.depth_timing_offset);
+                size += stream.WriteClass<DepthTimingOffset>(context, this.depth_timing_offset, "depth_timing_offset");
             }
 
             return size;
@@ -16375,9 +16373,9 @@ depth_timing_offset() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 5, out this.offset_len_minus1);
-            size += stream.ReadUnsignedIntVariable(size, (this.offset_len_minus1 + 1), out this.depth_disp_delay_offset_fp);
-            size += stream.ReadUnsignedInt(size, 6, out this.depth_disp_delay_offset_dp);
+            size += stream.ReadUnsignedInt(size, 5, out this.offset_len_minus1, "offset_len_minus1");
+            size += stream.ReadUnsignedIntVariable(size, (this.offset_len_minus1 + 1), out this.depth_disp_delay_offset_fp, "depth_disp_delay_offset_fp");
+            size += stream.ReadUnsignedInt(size, 6, out this.depth_disp_delay_offset_dp, "depth_disp_delay_offset_dp");
 
             return size;
         }
@@ -16386,9 +16384,9 @@ depth_timing_offset() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(5, this.offset_len_minus1);
-            size += stream.WriteUnsignedIntVariable((this.offset_len_minus1 + 1), this.depth_disp_delay_offset_fp);
-            size += stream.WriteUnsignedInt(6, this.depth_disp_delay_offset_dp);
+            size += stream.WriteUnsignedInt(5, this.offset_len_minus1, "offset_len_minus1");
+            size += stream.WriteUnsignedIntVariable((this.offset_len_minus1 + 1), this.depth_disp_delay_offset_fp, "depth_disp_delay_offset_fp");
+            size += stream.WriteUnsignedInt(6, this.depth_disp_delay_offset_dp, "depth_disp_delay_offset_dp");
 
             return size;
         }
@@ -16551,16 +16549,16 @@ alternative_depth_info( payloadSize ) {
             uint i = 0;
             uint j = 0;
             uint k = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.depth_type);
+            size += stream.ReadUnsignedIntGolomb(size, out this.depth_type, "depth_type");
 
             if (depth_type == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_constituent_views_gvd_minus1);
-                size += stream.ReadUnsignedInt(size, 1, out this.depth_present_gvd_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.z_gvd_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.intrinsic_param_gvd_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.rotation_gvd_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.translation_gvd_flag);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_constituent_views_gvd_minus1, "num_constituent_views_gvd_minus1");
+                size += stream.ReadUnsignedInt(size, 1, out this.depth_present_gvd_flag, "depth_present_gvd_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.z_gvd_flag, "z_gvd_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.intrinsic_param_gvd_flag, "intrinsic_param_gvd_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.rotation_gvd_flag, "rotation_gvd_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.translation_gvd_flag, "translation_gvd_flag");
 
                 if (z_gvd_flag != 0)
                 {
@@ -16575,31 +16573,31 @@ alternative_depth_info( payloadSize ) {
                     this.man_gvd_z_far = new uint[num_constituent_views_gvd_minus1 + 1 + 1];
                     for (i = 0; i <= num_constituent_views_gvd_minus1 + 1; i++)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_z_near_flag[i]);
-                        size += stream.ReadUnsignedInt(size, 7, out this.exp_gvd_z_near[i]);
-                        size += stream.ReadUnsignedInt(size, 5, out this.man_len_gvd_z_near_minus1[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (man_len_gvd_z_near_minus1[i] + 1), out this.man_gvd_z_near[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_z_far_flag[i]);
-                        size += stream.ReadUnsignedInt(size, 7, out this.exp_gvd_z_far[i]);
-                        size += stream.ReadUnsignedInt(size, 5, out this.man_len_gvd_z_far_minus1[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (man_len_gvd_z_far_minus1[i] + 1), out this.man_gvd_z_far[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_z_near_flag[i], "sign_gvd_z_near_flag");
+                        size += stream.ReadUnsignedInt(size, 7, out this.exp_gvd_z_near[i], "exp_gvd_z_near");
+                        size += stream.ReadUnsignedInt(size, 5, out this.man_len_gvd_z_near_minus1[i], "man_len_gvd_z_near_minus1");
+                        size += stream.ReadUnsignedIntVariable(size, (man_len_gvd_z_near_minus1[i] + 1), out this.man_gvd_z_near[i], "man_gvd_z_near");
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_z_far_flag[i], "sign_gvd_z_far_flag");
+                        size += stream.ReadUnsignedInt(size, 7, out this.exp_gvd_z_far[i], "exp_gvd_z_far");
+                        size += stream.ReadUnsignedInt(size, 5, out this.man_len_gvd_z_far_minus1[i], "man_len_gvd_z_far_minus1");
+                        size += stream.ReadUnsignedIntVariable(size, (man_len_gvd_z_far_minus1[i] + 1), out this.man_gvd_z_far[i], "man_gvd_z_far");
                     }
                 }
 
                 if (intrinsic_param_gvd_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_focal_length);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_principal_point);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_focal_length, "prec_gvd_focal_length");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_principal_point, "prec_gvd_principal_point");
                 }
 
                 if (rotation_gvd_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_rotation_param);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_rotation_param, "prec_gvd_rotation_param");
                 }
 
                 if (translation_gvd_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_translation_param);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.prec_gvd_translation_param, "prec_gvd_translation_param");
                 }
 
                 this.sign_gvd_focal_length_x = new byte[num_constituent_views_gvd_minus1 + 1 + 1];
@@ -16625,18 +16623,18 @@ alternative_depth_info( payloadSize ) {
 
                     if (intrinsic_param_gvd_flag != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_focal_length_x[i]);
-                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_focal_length_x[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_focal_length_x[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_x[i] + prec_gvd_focal_length - 31)), out this.man_gvd_focal_length_x[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_focal_length_y[i]);
-                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_focal_length_y[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_focal_length_y[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_y[i] + prec_gvd_focal_length - 31)), out this.man_gvd_focal_length_y[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_principal_point_x[i]);
-                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_principal_point_x[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_principal_point_x[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_x[i] + prec_gvd_principal_point - 31)), out this.man_gvd_principal_point_x[i]);
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_principal_point_y[i]);
-                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_principal_point_y[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_principal_point_y[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_y[i] + prec_gvd_principal_point - 31)), out this.man_gvd_principal_point_y[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_focal_length_x[i], "sign_gvd_focal_length_x");
+                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_focal_length_x[i], "exp_gvd_focal_length_x");
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_focal_length_x[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_x[i] + prec_gvd_focal_length - 31)), out this.man_gvd_focal_length_x[i], "man_gvd_focal_length_x");
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_focal_length_y[i], "sign_gvd_focal_length_y");
+                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_focal_length_y[i], "exp_gvd_focal_length_y");
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_focal_length_y[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_y[i] + prec_gvd_focal_length - 31)), out this.man_gvd_focal_length_y[i], "man_gvd_focal_length_y");
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_principal_point_x[i], "sign_gvd_principal_point_x");
+                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_principal_point_x[i], "exp_gvd_principal_point_x");
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_principal_point_x[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_x[i] + prec_gvd_principal_point - 31)), out this.man_gvd_principal_point_x[i], "man_gvd_principal_point_x");
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_principal_point_y[i], "sign_gvd_principal_point_y");
+                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_principal_point_y[i], "exp_gvd_principal_point_y");
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_principal_point_y[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_y[i] + prec_gvd_principal_point - 31)), out this.man_gvd_principal_point_y[i], "man_gvd_principal_point_y");
                     }
 
                     if (rotation_gvd_flag != 0)
@@ -16655,18 +16653,18 @@ alternative_depth_info( payloadSize ) {
                             {
                                 /*  column  */
 
-                                size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_r[i][j][k]);
-                                size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_r[i][j][k]);
-                                size += stream.ReadUnsignedIntVariable(size, (exp_gvd_r[i][j][k] == 0) ? (Math.Max(0, prec_gvd_rotation_param - 30)) : (Math.Max(0, exp_gvd_r[i][j][k] + prec_gvd_rotation_param - 31)), out this.man_gvd_r[i][j][k]);
+                                size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_r[i][j][k], "sign_gvd_r");
+                                size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_r[i][j][k], "exp_gvd_r");
+                                size += stream.ReadUnsignedIntVariable(size, (exp_gvd_r[i][j][k] == 0) ? (Math.Max(0, prec_gvd_rotation_param - 30)) : (Math.Max(0, exp_gvd_r[i][j][k] + prec_gvd_rotation_param - 31)), out this.man_gvd_r[i][j][k], "man_gvd_r");
                             }
                         }
                     }
 
                     if (translation_gvd_flag != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_t_x[i]);
-                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_t_x[i]);
-                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_t_x[i] == 0) ? (Math.Max(0, prec_gvd_translation_param - 30)) : (Math.Max(0, exp_gvd_t_x[i] + prec_gvd_translation_param - 31)), out this.man_gvd_t_x[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign_gvd_t_x[i], "sign_gvd_t_x");
+                        size += stream.ReadUnsignedInt(size, 6, out this.exp_gvd_t_x[i], "exp_gvd_t_x");
+                        size += stream.ReadUnsignedIntVariable(size, (exp_gvd_t_x[i] == 0) ? (Math.Max(0, prec_gvd_translation_param - 30)) : (Math.Max(0, exp_gvd_t_x[i] + prec_gvd_translation_param - 31)), out this.man_gvd_t_x[i], "man_gvd_t_x");
                     }
                 }
             }
@@ -16681,47 +16679,47 @@ alternative_depth_info( payloadSize ) {
             uint i = 0;
             uint j = 0;
             uint k = 0;
-            size += stream.WriteUnsignedIntGolomb(this.depth_type);
+            size += stream.WriteUnsignedIntGolomb(this.depth_type, "depth_type");
 
             if (depth_type == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.num_constituent_views_gvd_minus1);
-                size += stream.WriteUnsignedInt(1, this.depth_present_gvd_flag);
-                size += stream.WriteUnsignedInt(1, this.z_gvd_flag);
-                size += stream.WriteUnsignedInt(1, this.intrinsic_param_gvd_flag);
-                size += stream.WriteUnsignedInt(1, this.rotation_gvd_flag);
-                size += stream.WriteUnsignedInt(1, this.translation_gvd_flag);
+                size += stream.WriteUnsignedIntGolomb(this.num_constituent_views_gvd_minus1, "num_constituent_views_gvd_minus1");
+                size += stream.WriteUnsignedInt(1, this.depth_present_gvd_flag, "depth_present_gvd_flag");
+                size += stream.WriteUnsignedInt(1, this.z_gvd_flag, "z_gvd_flag");
+                size += stream.WriteUnsignedInt(1, this.intrinsic_param_gvd_flag, "intrinsic_param_gvd_flag");
+                size += stream.WriteUnsignedInt(1, this.rotation_gvd_flag, "rotation_gvd_flag");
+                size += stream.WriteUnsignedInt(1, this.translation_gvd_flag, "translation_gvd_flag");
 
                 if (z_gvd_flag != 0)
                 {
 
                     for (i = 0; i <= num_constituent_views_gvd_minus1 + 1; i++)
                     {
-                        size += stream.WriteUnsignedInt(1, this.sign_gvd_z_near_flag[i]);
-                        size += stream.WriteUnsignedInt(7, this.exp_gvd_z_near[i]);
-                        size += stream.WriteUnsignedInt(5, this.man_len_gvd_z_near_minus1[i]);
-                        size += stream.WriteUnsignedIntVariable((man_len_gvd_z_near_minus1[i] + 1), this.man_gvd_z_near[i]);
-                        size += stream.WriteUnsignedInt(1, this.sign_gvd_z_far_flag[i]);
-                        size += stream.WriteUnsignedInt(7, this.exp_gvd_z_far[i]);
-                        size += stream.WriteUnsignedInt(5, this.man_len_gvd_z_far_minus1[i]);
-                        size += stream.WriteUnsignedIntVariable((man_len_gvd_z_far_minus1[i] + 1), this.man_gvd_z_far[i]);
+                        size += stream.WriteUnsignedInt(1, this.sign_gvd_z_near_flag[i], "sign_gvd_z_near_flag");
+                        size += stream.WriteUnsignedInt(7, this.exp_gvd_z_near[i], "exp_gvd_z_near");
+                        size += stream.WriteUnsignedInt(5, this.man_len_gvd_z_near_minus1[i], "man_len_gvd_z_near_minus1");
+                        size += stream.WriteUnsignedIntVariable((man_len_gvd_z_near_minus1[i] + 1), this.man_gvd_z_near[i], "man_gvd_z_near");
+                        size += stream.WriteUnsignedInt(1, this.sign_gvd_z_far_flag[i], "sign_gvd_z_far_flag");
+                        size += stream.WriteUnsignedInt(7, this.exp_gvd_z_far[i], "exp_gvd_z_far");
+                        size += stream.WriteUnsignedInt(5, this.man_len_gvd_z_far_minus1[i], "man_len_gvd_z_far_minus1");
+                        size += stream.WriteUnsignedIntVariable((man_len_gvd_z_far_minus1[i] + 1), this.man_gvd_z_far[i], "man_gvd_z_far");
                     }
                 }
 
                 if (intrinsic_param_gvd_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.prec_gvd_focal_length);
-                    size += stream.WriteUnsignedIntGolomb(this.prec_gvd_principal_point);
+                    size += stream.WriteUnsignedIntGolomb(this.prec_gvd_focal_length, "prec_gvd_focal_length");
+                    size += stream.WriteUnsignedIntGolomb(this.prec_gvd_principal_point, "prec_gvd_principal_point");
                 }
 
                 if (rotation_gvd_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.prec_gvd_rotation_param);
+                    size += stream.WriteUnsignedIntGolomb(this.prec_gvd_rotation_param, "prec_gvd_rotation_param");
                 }
 
                 if (translation_gvd_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.prec_gvd_translation_param);
+                    size += stream.WriteUnsignedIntGolomb(this.prec_gvd_translation_param, "prec_gvd_translation_param");
                 }
 
                 for (i = 0; i <= num_constituent_views_gvd_minus1 + 1; i++)
@@ -16729,18 +16727,18 @@ alternative_depth_info( payloadSize ) {
 
                     if (intrinsic_param_gvd_flag != 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.sign_gvd_focal_length_x[i]);
-                        size += stream.WriteUnsignedInt(6, this.exp_gvd_focal_length_x[i]);
-                        size += stream.WriteUnsignedIntVariable((exp_gvd_focal_length_x[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_x[i] + prec_gvd_focal_length - 31)), this.man_gvd_focal_length_x[i]);
-                        size += stream.WriteUnsignedInt(1, this.sign_gvd_focal_length_y[i]);
-                        size += stream.WriteUnsignedInt(6, this.exp_gvd_focal_length_y[i]);
-                        size += stream.WriteUnsignedIntVariable((exp_gvd_focal_length_y[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_y[i] + prec_gvd_focal_length - 31)), this.man_gvd_focal_length_y[i]);
-                        size += stream.WriteUnsignedInt(1, this.sign_gvd_principal_point_x[i]);
-                        size += stream.WriteUnsignedInt(6, this.exp_gvd_principal_point_x[i]);
-                        size += stream.WriteUnsignedIntVariable((exp_gvd_principal_point_x[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_x[i] + prec_gvd_principal_point - 31)), this.man_gvd_principal_point_x[i]);
-                        size += stream.WriteUnsignedInt(1, this.sign_gvd_principal_point_y[i]);
-                        size += stream.WriteUnsignedInt(6, this.exp_gvd_principal_point_y[i]);
-                        size += stream.WriteUnsignedIntVariable((exp_gvd_principal_point_y[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_y[i] + prec_gvd_principal_point - 31)), this.man_gvd_principal_point_y[i]);
+                        size += stream.WriteUnsignedInt(1, this.sign_gvd_focal_length_x[i], "sign_gvd_focal_length_x");
+                        size += stream.WriteUnsignedInt(6, this.exp_gvd_focal_length_x[i], "exp_gvd_focal_length_x");
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_focal_length_x[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_x[i] + prec_gvd_focal_length - 31)), this.man_gvd_focal_length_x[i], "man_gvd_focal_length_x");
+                        size += stream.WriteUnsignedInt(1, this.sign_gvd_focal_length_y[i], "sign_gvd_focal_length_y");
+                        size += stream.WriteUnsignedInt(6, this.exp_gvd_focal_length_y[i], "exp_gvd_focal_length_y");
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_focal_length_y[i] == 0) ? (Math.Max(0, prec_gvd_focal_length - 30)) : (Math.Max(0, exp_gvd_focal_length_y[i] + prec_gvd_focal_length - 31)), this.man_gvd_focal_length_y[i], "man_gvd_focal_length_y");
+                        size += stream.WriteUnsignedInt(1, this.sign_gvd_principal_point_x[i], "sign_gvd_principal_point_x");
+                        size += stream.WriteUnsignedInt(6, this.exp_gvd_principal_point_x[i], "exp_gvd_principal_point_x");
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_principal_point_x[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_x[i] + prec_gvd_principal_point - 31)), this.man_gvd_principal_point_x[i], "man_gvd_principal_point_x");
+                        size += stream.WriteUnsignedInt(1, this.sign_gvd_principal_point_y[i], "sign_gvd_principal_point_y");
+                        size += stream.WriteUnsignedInt(6, this.exp_gvd_principal_point_y[i], "exp_gvd_principal_point_y");
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_principal_point_y[i] == 0) ? (Math.Max(0, prec_gvd_principal_point - 30)) : (Math.Max(0, exp_gvd_principal_point_y[i] + prec_gvd_principal_point - 31)), this.man_gvd_principal_point_y[i], "man_gvd_principal_point_y");
                     }
 
                     if (rotation_gvd_flag != 0)
@@ -16753,18 +16751,18 @@ alternative_depth_info( payloadSize ) {
                             {
                                 /*  column  */
 
-                                size += stream.WriteUnsignedInt(1, this.sign_gvd_r[i][j][k]);
-                                size += stream.WriteUnsignedInt(6, this.exp_gvd_r[i][j][k]);
-                                size += stream.WriteUnsignedIntVariable((exp_gvd_r[i][j][k] == 0) ? (Math.Max(0, prec_gvd_rotation_param - 30)) : (Math.Max(0, exp_gvd_r[i][j][k] + prec_gvd_rotation_param - 31)), this.man_gvd_r[i][j][k]);
+                                size += stream.WriteUnsignedInt(1, this.sign_gvd_r[i][j][k], "sign_gvd_r");
+                                size += stream.WriteUnsignedInt(6, this.exp_gvd_r[i][j][k], "exp_gvd_r");
+                                size += stream.WriteUnsignedIntVariable((exp_gvd_r[i][j][k] == 0) ? (Math.Max(0, prec_gvd_rotation_param - 30)) : (Math.Max(0, exp_gvd_r[i][j][k] + prec_gvd_rotation_param - 31)), this.man_gvd_r[i][j][k], "man_gvd_r");
                             }
                         }
                     }
 
                     if (translation_gvd_flag != 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.sign_gvd_t_x[i]);
-                        size += stream.WriteUnsignedInt(6, this.exp_gvd_t_x[i]);
-                        size += stream.WriteUnsignedIntVariable((exp_gvd_t_x[i] == 0) ? (Math.Max(0, prec_gvd_translation_param - 30)) : (Math.Max(0, exp_gvd_t_x[i] + prec_gvd_translation_param - 31)), this.man_gvd_t_x[i]);
+                        size += stream.WriteUnsignedInt(1, this.sign_gvd_t_x[i], "sign_gvd_t_x");
+                        size += stream.WriteUnsignedInt(6, this.exp_gvd_t_x[i], "exp_gvd_t_x");
+                        size += stream.WriteUnsignedIntVariable((exp_gvd_t_x[i] == 0) ? (Math.Max(0, prec_gvd_translation_param - 30)) : (Math.Max(0, exp_gvd_t_x[i] + prec_gvd_translation_param - 31)), this.man_gvd_t_x[i], "man_gvd_t_x");
                     }
                 }
             }
@@ -16827,30 +16825,30 @@ depth_sampling_info( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.ReadUnsignedInt(size, 16, out this.dttsr_x_mul);
-            size += stream.ReadUnsignedInt(size, 4, out this.dttsr_x_dp);
-            size += stream.ReadUnsignedInt(size, 16, out this.dttsr_y_mul);
-            size += stream.ReadUnsignedInt(size, 4, out this.dttsr_y_dp);
-            size += stream.ReadUnsignedInt(size, 1, out this.per_view_depth_grid_pos_flag);
+            size += stream.ReadUnsignedInt(size, 16, out this.dttsr_x_mul, "dttsr_x_mul");
+            size += stream.ReadUnsignedInt(size, 4, out this.dttsr_x_dp, "dttsr_x_dp");
+            size += stream.ReadUnsignedInt(size, 16, out this.dttsr_y_mul, "dttsr_y_mul");
+            size += stream.ReadUnsignedInt(size, 4, out this.dttsr_y_dp, "dttsr_y_dp");
+            size += stream.ReadUnsignedInt(size, 1, out this.per_view_depth_grid_pos_flag, "per_view_depth_grid_pos_flag");
 
             if (per_view_depth_grid_pos_flag != 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.num_video_plus_depth_views_minus1);
+                size += stream.ReadUnsignedIntGolomb(size, out this.num_video_plus_depth_views_minus1, "num_video_plus_depth_views_minus1");
 
                 this.depth_grid_view_id = new uint[num_video_plus_depth_views_minus1 + 1];
                 this.depth_grid_position = new DepthGridPosition[num_video_plus_depth_views_minus1 + 1];
                 for (i = 0; i <= num_video_plus_depth_views_minus1; i++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_grid_view_id[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_grid_view_id[i], "depth_grid_view_id");
                     this.depth_grid_position[i] = new DepthGridPosition();
-                    size += stream.ReadClass<DepthGridPosition>(size, context, this.depth_grid_position[i]);
+                    size += stream.ReadClass<DepthGridPosition>(size, context, this.depth_grid_position[i], "depth_grid_position");
                 }
             }
             else
             {
                 this.depth_grid_position = new DepthGridPosition[1];
                 this.depth_grid_position[0] = new DepthGridPosition();
-                size += stream.ReadClass<DepthGridPosition>(size, context, this.depth_grid_position[0]);
+                size += stream.ReadClass<DepthGridPosition>(size, context, this.depth_grid_position[0], "depth_grid_position");
             }
 
             return size;
@@ -16861,25 +16859,25 @@ depth_sampling_info( payloadSize ) {
             ulong size = 0;
 
             uint i = 0;
-            size += stream.WriteUnsignedInt(16, this.dttsr_x_mul);
-            size += stream.WriteUnsignedInt(4, this.dttsr_x_dp);
-            size += stream.WriteUnsignedInt(16, this.dttsr_y_mul);
-            size += stream.WriteUnsignedInt(4, this.dttsr_y_dp);
-            size += stream.WriteUnsignedInt(1, this.per_view_depth_grid_pos_flag);
+            size += stream.WriteUnsignedInt(16, this.dttsr_x_mul, "dttsr_x_mul");
+            size += stream.WriteUnsignedInt(4, this.dttsr_x_dp, "dttsr_x_dp");
+            size += stream.WriteUnsignedInt(16, this.dttsr_y_mul, "dttsr_y_mul");
+            size += stream.WriteUnsignedInt(4, this.dttsr_y_dp, "dttsr_y_dp");
+            size += stream.WriteUnsignedInt(1, this.per_view_depth_grid_pos_flag, "per_view_depth_grid_pos_flag");
 
             if (per_view_depth_grid_pos_flag != 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.num_video_plus_depth_views_minus1);
+                size += stream.WriteUnsignedIntGolomb(this.num_video_plus_depth_views_minus1, "num_video_plus_depth_views_minus1");
 
                 for (i = 0; i <= num_video_plus_depth_views_minus1; i++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.depth_grid_view_id[i]);
-                    size += stream.WriteClass<DepthGridPosition>(context, this.depth_grid_position[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.depth_grid_view_id[i], "depth_grid_view_id");
+                    size += stream.WriteClass<DepthGridPosition>(context, this.depth_grid_position[i], "depth_grid_position");
                 }
             }
             else
             {
-                size += stream.WriteClass<DepthGridPosition>(context, this.depth_grid_position);
+                size += stream.WriteClass<DepthGridPosition>(context, this.depth_grid_position, "depth_grid_position");
             }
 
             return size;
@@ -16916,8 +16914,8 @@ constrained_depth_parameter_set_identifier(payloadSize) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.max_dps_id);
-            size += stream.ReadUnsignedIntGolomb(size, out this.max_dps_id_diff);
+            size += stream.ReadUnsignedIntGolomb(size, out this.max_dps_id, "max_dps_id");
+            size += stream.ReadUnsignedIntGolomb(size, out this.max_dps_id_diff, "max_dps_id_diff");
 
             return size;
         }
@@ -16926,8 +16924,8 @@ constrained_depth_parameter_set_identifier(payloadSize) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.max_dps_id);
-            size += stream.WriteUnsignedIntGolomb(this.max_dps_id_diff);
+            size += stream.WriteUnsignedIntGolomb(this.max_dps_id, "max_dps_id");
+            size += stream.WriteUnsignedIntGolomb(this.max_dps_id_diff, "max_dps_id_diff");
 
             return size;
         }
@@ -16973,12 +16971,12 @@ depth_grid_pos_y_sign_flag 5 u(1)
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 20, out this.depth_grid_pos_x_fp);
-            size += stream.ReadUnsignedInt(size, 4, out this.depth_grid_pos_x_dp);
-            size += stream.ReadUnsignedInt(size, 1, out this.depth_grid_pos_x_sign_flag);
-            size += stream.ReadUnsignedInt(size, 20, out this.depth_grid_pos_y_fp);
-            size += stream.ReadUnsignedInt(size, 4, out this.depth_grid_pos_y_dp);
-            size += stream.ReadUnsignedInt(size, 1, out this.depth_grid_pos_y_sign_flag);
+            size += stream.ReadUnsignedInt(size, 20, out this.depth_grid_pos_x_fp, "depth_grid_pos_x_fp");
+            size += stream.ReadUnsignedInt(size, 4, out this.depth_grid_pos_x_dp, "depth_grid_pos_x_dp");
+            size += stream.ReadUnsignedInt(size, 1, out this.depth_grid_pos_x_sign_flag, "depth_grid_pos_x_sign_flag");
+            size += stream.ReadUnsignedInt(size, 20, out this.depth_grid_pos_y_fp, "depth_grid_pos_y_fp");
+            size += stream.ReadUnsignedInt(size, 4, out this.depth_grid_pos_y_dp, "depth_grid_pos_y_dp");
+            size += stream.ReadUnsignedInt(size, 1, out this.depth_grid_pos_y_sign_flag, "depth_grid_pos_y_sign_flag");
 
             return size;
         }
@@ -16987,12 +16985,12 @@ depth_grid_pos_y_sign_flag 5 u(1)
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(20, this.depth_grid_pos_x_fp);
-            size += stream.WriteUnsignedInt(4, this.depth_grid_pos_x_dp);
-            size += stream.WriteUnsignedInt(1, this.depth_grid_pos_x_sign_flag);
-            size += stream.WriteUnsignedInt(20, this.depth_grid_pos_y_fp);
-            size += stream.WriteUnsignedInt(4, this.depth_grid_pos_y_dp);
-            size += stream.WriteUnsignedInt(1, this.depth_grid_pos_y_sign_flag);
+            size += stream.WriteUnsignedInt(20, this.depth_grid_pos_x_fp, "depth_grid_pos_x_fp");
+            size += stream.WriteUnsignedInt(4, this.depth_grid_pos_x_dp, "depth_grid_pos_x_dp");
+            size += stream.WriteUnsignedInt(1, this.depth_grid_pos_x_sign_flag, "depth_grid_pos_x_sign_flag");
+            size += stream.WriteUnsignedInt(20, this.depth_grid_pos_y_fp, "depth_grid_pos_y_fp");
+            size += stream.WriteUnsignedInt(4, this.depth_grid_pos_y_dp, "depth_grid_pos_y_dp");
+            size += stream.WriteUnsignedInt(1, this.depth_grid_pos_y_sign_flag, "depth_grid_pos_y_sign_flag");
 
             return size;
         }
@@ -17079,7 +17077,7 @@ mvcd_vui_parameters_extension() {
 
             uint i = 0;
             uint j = 0;
-            size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_num_ops_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_num_ops_minus1, "vui_mvcd_num_ops_minus1");
 
             this.vui_mvcd_temporal_id = new uint[vui_mvcd_num_ops_minus1 + 1];
             this.vui_mvcd_num_target_output_views_minus1 = new uint[vui_mvcd_num_ops_minus1 + 1];
@@ -17097,47 +17095,47 @@ mvcd_vui_parameters_extension() {
             this.vui_mvcd_pic_struct_present_flag = new byte[vui_mvcd_num_ops_minus1 + 1];
             for (i = 0; i <= vui_mvcd_num_ops_minus1; i++)
             {
-                size += stream.ReadUnsignedInt(size, 3, out this.vui_mvcd_temporal_id[i]);
-                size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_num_target_output_views_minus1[i]);
+                size += stream.ReadUnsignedInt(size, 3, out this.vui_mvcd_temporal_id[i], "vui_mvcd_temporal_id");
+                size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_num_target_output_views_minus1[i], "vui_mvcd_num_target_output_views_minus1");
 
                 this.vui_mvcd_view_id[i] = new uint[vui_mvcd_num_target_output_views_minus1[i] + 1];
                 this.vui_mvcd_depth_flag[i] = new byte[vui_mvcd_num_target_output_views_minus1[i] + 1];
                 this.vui_mvcd_texture_flag[i] = new byte[vui_mvcd_num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= vui_mvcd_num_target_output_views_minus1[i]; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_view_id[i][j]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_depth_flag[i][j]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_texture_flag[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_view_id[i][j], "vui_mvcd_view_id");
+                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_depth_flag[i][j], "vui_mvcd_depth_flag");
+                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_texture_flag[i][j], "vui_mvcd_texture_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_timing_info_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_timing_info_present_flag[i], "vui_mvcd_timing_info_present_flag");
 
                 if (vui_mvcd_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 32, out this.vui_mvcd_num_units_in_tick[i]);
-                    size += stream.ReadUnsignedInt(size, 32, out this.vui_mvcd_time_scale[i]);
-                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_fixed_frame_rate_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 32, out this.vui_mvcd_num_units_in_tick[i], "vui_mvcd_num_units_in_tick");
+                    size += stream.ReadUnsignedInt(size, 32, out this.vui_mvcd_time_scale[i], "vui_mvcd_time_scale");
+                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_fixed_frame_rate_flag[i], "vui_mvcd_fixed_frame_rate_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_nal_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_nal_hrd_parameters_present_flag[i], "vui_mvcd_nal_hrd_parameters_present_flag");
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_vcl_hrd_parameters_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_vcl_hrd_parameters_present_flag[i], "vui_mvcd_vcl_hrd_parameters_present_flag");
 
                 if (vui_mvcd_vcl_hrd_parameters_present_flag[i] != 0)
                 {
                     this.hrd_parameters[i] = new HrdParameters();
-                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i]);
+                    size += stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0 ||
    vui_mvcd_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_low_delay_hrd_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_low_delay_hrd_flag[i], "vui_mvcd_low_delay_hrd_flag");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_pic_struct_present_flag[i]);
+                size += stream.ReadUnsignedInt(size, 1, out this.vui_mvcd_pic_struct_present_flag[i], "vui_mvcd_pic_struct_present_flag");
             }
 
             return size;
@@ -17149,46 +17147,46 @@ mvcd_vui_parameters_extension() {
 
             uint i = 0;
             uint j = 0;
-            size += stream.WriteUnsignedIntGolomb(this.vui_mvcd_num_ops_minus1);
+            size += stream.WriteUnsignedIntGolomb(this.vui_mvcd_num_ops_minus1, "vui_mvcd_num_ops_minus1");
 
             for (i = 0; i <= vui_mvcd_num_ops_minus1; i++)
             {
-                size += stream.WriteUnsignedInt(3, this.vui_mvcd_temporal_id[i]);
-                size += stream.WriteUnsignedIntGolomb(this.vui_mvcd_num_target_output_views_minus1[i]);
+                size += stream.WriteUnsignedInt(3, this.vui_mvcd_temporal_id[i], "vui_mvcd_temporal_id");
+                size += stream.WriteUnsignedIntGolomb(this.vui_mvcd_num_target_output_views_minus1[i], "vui_mvcd_num_target_output_views_minus1");
 
                 for (j = 0; j <= vui_mvcd_num_target_output_views_minus1[i]; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.vui_mvcd_view_id[i][j]);
-                    size += stream.WriteUnsignedInt(1, this.vui_mvcd_depth_flag[i][j]);
-                    size += stream.WriteUnsignedInt(1, this.vui_mvcd_texture_flag[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.vui_mvcd_view_id[i][j], "vui_mvcd_view_id");
+                    size += stream.WriteUnsignedInt(1, this.vui_mvcd_depth_flag[i][j], "vui_mvcd_depth_flag");
+                    size += stream.WriteUnsignedInt(1, this.vui_mvcd_texture_flag[i][j], "vui_mvcd_texture_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_mvcd_timing_info_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_mvcd_timing_info_present_flag[i], "vui_mvcd_timing_info_present_flag");
 
                 if (vui_mvcd_timing_info_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(32, this.vui_mvcd_num_units_in_tick[i]);
-                    size += stream.WriteUnsignedInt(32, this.vui_mvcd_time_scale[i]);
-                    size += stream.WriteUnsignedInt(1, this.vui_mvcd_fixed_frame_rate_flag[i]);
+                    size += stream.WriteUnsignedInt(32, this.vui_mvcd_num_units_in_tick[i], "vui_mvcd_num_units_in_tick");
+                    size += stream.WriteUnsignedInt(32, this.vui_mvcd_time_scale[i], "vui_mvcd_time_scale");
+                    size += stream.WriteUnsignedInt(1, this.vui_mvcd_fixed_frame_rate_flag[i], "vui_mvcd_fixed_frame_rate_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_mvcd_nal_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_mvcd_nal_hrd_parameters_present_flag[i], "vui_mvcd_nal_hrd_parameters_present_flag");
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_mvcd_vcl_hrd_parameters_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_mvcd_vcl_hrd_parameters_present_flag[i], "vui_mvcd_vcl_hrd_parameters_present_flag");
 
                 if (vui_mvcd_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i]);
+                    size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[i], "hrd_parameters");
                 }
 
                 if (vui_mvcd_nal_hrd_parameters_present_flag[i] != 0 ||
    vui_mvcd_vcl_hrd_parameters_present_flag[i] != 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.vui_mvcd_low_delay_hrd_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.vui_mvcd_low_delay_hrd_flag[i], "vui_mvcd_low_delay_hrd_flag");
                 }
-                size += stream.WriteUnsignedInt(1, this.vui_mvcd_pic_struct_present_flag[i]);
+                size += stream.WriteUnsignedInt(1, this.vui_mvcd_pic_struct_present_flag[i], "vui_mvcd_pic_struct_present_flag");
             }
 
             return size;
@@ -17235,12 +17233,12 @@ nal_unit_header_3davc_extension() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 8, out this.view_idx);
-            size += stream.ReadUnsignedInt(size, 1, out this.depth_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.non_idr_flag);
-            size += stream.ReadUnsignedInt(size, 3, out this.temporal_id);
-            size += stream.ReadUnsignedInt(size, 1, out this.anchor_pic_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.inter_view_flag);
+            size += stream.ReadUnsignedInt(size, 8, out this.view_idx, "view_idx");
+            size += stream.ReadUnsignedInt(size, 1, out this.depth_flag, "depth_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.non_idr_flag, "non_idr_flag");
+            size += stream.ReadUnsignedInt(size, 3, out this.temporal_id, "temporal_id");
+            size += stream.ReadUnsignedInt(size, 1, out this.anchor_pic_flag, "anchor_pic_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.inter_view_flag, "inter_view_flag");
 
             return size;
         }
@@ -17249,12 +17247,12 @@ nal_unit_header_3davc_extension() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(8, this.view_idx);
-            size += stream.WriteUnsignedInt(1, this.depth_flag);
-            size += stream.WriteUnsignedInt(1, this.non_idr_flag);
-            size += stream.WriteUnsignedInt(3, this.temporal_id);
-            size += stream.WriteUnsignedInt(1, this.anchor_pic_flag);
-            size += stream.WriteUnsignedInt(1, this.inter_view_flag);
+            size += stream.WriteUnsignedInt(8, this.view_idx, "view_idx");
+            size += stream.WriteUnsignedInt(1, this.depth_flag, "depth_flag");
+            size += stream.WriteUnsignedInt(1, this.non_idr_flag, "non_idr_flag");
+            size += stream.WriteUnsignedInt(3, this.temporal_id, "temporal_id");
+            size += stream.WriteUnsignedInt(1, this.anchor_pic_flag, "anchor_pic_flag");
+            size += stream.WriteUnsignedInt(1, this.inter_view_flag, "inter_view_flag");
 
             return size;
         }
@@ -17406,57 +17404,57 @@ seq_parameter_set_3davc_extension() {
 
             if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews > 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.three_dv_acquisition_idc);
+                size += stream.ReadUnsignedIntGolomb(size, out this.three_dv_acquisition_idc, "three_dv_acquisition_idc");
 
                 this.view_id_3dv = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews];
                 for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.view_id_3dv[i]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.view_id_3dv[i], "view_id_3dv");
                 }
 
                 if (three_dv_acquisition_idc != 0)
                 {
                     this.depth_ranges = new DepthRanges(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews, 2, 0);
-                    size += stream.ReadClass<DepthRanges>(size, context, this.depth_ranges);
+                    size += stream.ReadClass<DepthRanges>(size, context, this.depth_ranges, "depth_ranges");
                     this.vsp_param = new VspParam(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews, 2, 0);
-                    size += stream.ReadClass<VspParam>(size, context, this.vsp_param);
+                    size += stream.ReadClass<VspParam>(size, context, this.vsp_param, "vsp_param");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.reduced_resolution_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.reduced_resolution_flag, "reduced_resolution_flag");
 
                 if (reduced_resolution_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_pic_width_in_mbs_minus1);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_pic_height_in_map_units_minus1);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_hor_mult_minus1);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_ver_mult_minus1);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_hor_rsh);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_ver_rsh);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_pic_width_in_mbs_minus1, "depth_pic_width_in_mbs_minus1");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_pic_height_in_map_units_minus1, "depth_pic_height_in_map_units_minus1");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_hor_mult_minus1, "depth_hor_mult_minus1");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_ver_mult_minus1, "depth_ver_mult_minus1");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_hor_rsh, "depth_hor_rsh");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_ver_rsh, "depth_ver_rsh");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.depth_frame_cropping_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.depth_frame_cropping_flag, "depth_frame_cropping_flag");
 
                 if (depth_frame_cropping_flag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_frame_crop_left_offset);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_frame_crop_right_offset);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_frame_crop_top_offset);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_frame_crop_bottom_offset);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_frame_crop_left_offset, "depth_frame_crop_left_offset");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_frame_crop_right_offset, "depth_frame_crop_right_offset");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_frame_crop_top_offset, "depth_frame_crop_top_offset");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.depth_frame_crop_bottom_offset, "depth_frame_crop_bottom_offset");
                 }
-                size += stream.ReadUnsignedIntGolomb(size, out this.grid_pos_num_views);
+                size += stream.ReadUnsignedIntGolomb(size, out this.grid_pos_num_views, "grid_pos_num_views");
 
                 this.grid_pos_view_id = new uint[grid_pos_num_views];
                 this.grid_pos_x = new int[grid_pos_num_views];
                 this.grid_pos_y = new int[grid_pos_num_views];
                 for (i = 0; i < grid_pos_num_views; i++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.grid_pos_view_id[i]);
-                    size += stream.ReadSignedIntGolomb(size, out this.grid_pos_x[grid_pos_view_id[i]]);
-                    size += stream.ReadSignedIntGolomb(size, out this.grid_pos_y[grid_pos_view_id[i]]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.grid_pos_view_id[i], "grid_pos_view_id");
+                    size += stream.ReadSignedIntGolomb(size, out this.grid_pos_x[grid_pos_view_id[i]], "grid_pos_x");
+                    size += stream.ReadSignedIntGolomb(size, out this.grid_pos_y[grid_pos_view_id[i]], "grid_pos_y");
                 }
-                size += stream.ReadUnsignedInt(size, 1, out this.slice_header_prediction_flag);
-                size += stream.ReadUnsignedInt(size, 1, out this.seq_view_synthesis_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.slice_header_prediction_flag, "slice_header_prediction_flag");
+                size += stream.ReadUnsignedInt(size, 1, out this.seq_view_synthesis_flag, "seq_view_synthesis_flag");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.alc_sps_enable_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.enable_rle_skip_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.alc_sps_enable_flag, "alc_sps_enable_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.enable_rle_skip_flag, "enable_rle_skip_flag");
 
             if (((Func<uint>)(() =>
             {
@@ -17476,19 +17474,19 @@ seq_parameter_set_3davc_extension() {
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
                         this.anchor_ref_l0[i] = new uint[num_anchor_refs_l0[i]];
                         for (j = 0; j < num_anchor_refs_l0[i]; j++)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j]);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j], "anchor_ref_l0");
                         }
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
                         this.anchor_ref_l1[i] = new uint[num_anchor_refs_l1[i]];
                         for (j = 0; j < num_anchor_refs_l1[i]; j++)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j]);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j], "anchor_ref_l1");
                         }
                     }
                 }
@@ -17502,19 +17500,19 @@ seq_parameter_set_3davc_extension() {
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
                         this.non_anchor_ref_l0[i] = new uint[num_non_anchor_refs_l0[i]];
                         for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j]);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                         }
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i]);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
                         this.non_anchor_ref_l1[i] = new uint[num_non_anchor_refs_l1[i]];
                         for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j]);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
                         }
                     }
                 }
@@ -17532,51 +17530,51 @@ seq_parameter_set_3davc_extension() {
 
             if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews > 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.three_dv_acquisition_idc);
+                size += stream.WriteUnsignedIntGolomb(this.three_dv_acquisition_idc, "three_dv_acquisition_idc");
 
                 for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.view_id_3dv[i]);
+                    size += stream.WriteUnsignedIntGolomb(this.view_id_3dv[i], "view_id_3dv");
                 }
 
                 if (three_dv_acquisition_idc != 0)
                 {
-                    size += stream.WriteClass<DepthRanges>(context, this.depth_ranges);
-                    size += stream.WriteClass<VspParam>(context, this.vsp_param);
+                    size += stream.WriteClass<DepthRanges>(context, this.depth_ranges, "depth_ranges");
+                    size += stream.WriteClass<VspParam>(context, this.vsp_param, "vsp_param");
                 }
-                size += stream.WriteUnsignedInt(1, this.reduced_resolution_flag);
+                size += stream.WriteUnsignedInt(1, this.reduced_resolution_flag, "reduced_resolution_flag");
 
                 if (reduced_resolution_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.depth_pic_width_in_mbs_minus1);
-                    size += stream.WriteUnsignedIntGolomb(this.depth_pic_height_in_map_units_minus1);
-                    size += stream.WriteUnsignedIntGolomb(this.depth_hor_mult_minus1);
-                    size += stream.WriteUnsignedIntGolomb(this.depth_ver_mult_minus1);
-                    size += stream.WriteUnsignedIntGolomb(this.depth_hor_rsh);
-                    size += stream.WriteUnsignedIntGolomb(this.depth_ver_rsh);
+                    size += stream.WriteUnsignedIntGolomb(this.depth_pic_width_in_mbs_minus1, "depth_pic_width_in_mbs_minus1");
+                    size += stream.WriteUnsignedIntGolomb(this.depth_pic_height_in_map_units_minus1, "depth_pic_height_in_map_units_minus1");
+                    size += stream.WriteUnsignedIntGolomb(this.depth_hor_mult_minus1, "depth_hor_mult_minus1");
+                    size += stream.WriteUnsignedIntGolomb(this.depth_ver_mult_minus1, "depth_ver_mult_minus1");
+                    size += stream.WriteUnsignedIntGolomb(this.depth_hor_rsh, "depth_hor_rsh");
+                    size += stream.WriteUnsignedIntGolomb(this.depth_ver_rsh, "depth_ver_rsh");
                 }
-                size += stream.WriteUnsignedInt(1, this.depth_frame_cropping_flag);
+                size += stream.WriteUnsignedInt(1, this.depth_frame_cropping_flag, "depth_frame_cropping_flag");
 
                 if (depth_frame_cropping_flag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.depth_frame_crop_left_offset);
-                    size += stream.WriteUnsignedIntGolomb(this.depth_frame_crop_right_offset);
-                    size += stream.WriteUnsignedIntGolomb(this.depth_frame_crop_top_offset);
-                    size += stream.WriteUnsignedIntGolomb(this.depth_frame_crop_bottom_offset);
+                    size += stream.WriteUnsignedIntGolomb(this.depth_frame_crop_left_offset, "depth_frame_crop_left_offset");
+                    size += stream.WriteUnsignedIntGolomb(this.depth_frame_crop_right_offset, "depth_frame_crop_right_offset");
+                    size += stream.WriteUnsignedIntGolomb(this.depth_frame_crop_top_offset, "depth_frame_crop_top_offset");
+                    size += stream.WriteUnsignedIntGolomb(this.depth_frame_crop_bottom_offset, "depth_frame_crop_bottom_offset");
                 }
-                size += stream.WriteUnsignedIntGolomb(this.grid_pos_num_views);
+                size += stream.WriteUnsignedIntGolomb(this.grid_pos_num_views, "grid_pos_num_views");
 
                 for (i = 0; i < grid_pos_num_views; i++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.grid_pos_view_id[i]);
-                    size += stream.WriteSignedIntGolomb(this.grid_pos_x[grid_pos_view_id[i]]);
-                    size += stream.WriteSignedIntGolomb(this.grid_pos_y[grid_pos_view_id[i]]);
+                    size += stream.WriteUnsignedIntGolomb(this.grid_pos_view_id[i], "grid_pos_view_id");
+                    size += stream.WriteSignedIntGolomb(this.grid_pos_x[grid_pos_view_id[i]], "grid_pos_x");
+                    size += stream.WriteSignedIntGolomb(this.grid_pos_y[grid_pos_view_id[i]], "grid_pos_y");
                 }
-                size += stream.WriteUnsignedInt(1, this.slice_header_prediction_flag);
-                size += stream.WriteUnsignedInt(1, this.seq_view_synthesis_flag);
+                size += stream.WriteUnsignedInt(1, this.slice_header_prediction_flag, "slice_header_prediction_flag");
+                size += stream.WriteUnsignedInt(1, this.seq_view_synthesis_flag, "seq_view_synthesis_flag");
             }
-            size += stream.WriteUnsignedInt(1, this.alc_sps_enable_flag);
-            size += stream.WriteUnsignedInt(1, this.enable_rle_skip_flag);
+            size += stream.WriteUnsignedInt(1, this.alc_sps_enable_flag, "alc_sps_enable_flag");
+            size += stream.WriteUnsignedInt(1, this.enable_rle_skip_flag, "enable_rle_skip_flag");
 
             if (((Func<uint>)(() =>
             {
@@ -17592,17 +17590,17 @@ seq_parameter_set_3davc_extension() {
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l0[i]);
+                        size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
                         for (j = 0; j < num_anchor_refs_l0[i]; j++)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l0[i][j]);
+                            size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l0[i][j], "anchor_ref_l0");
                         }
-                        size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l1[i]);
+                        size += stream.WriteUnsignedIntGolomb(this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
                         for (j = 0; j < num_anchor_refs_l1[i]; j++)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l1[i][j]);
+                            size += stream.WriteUnsignedIntGolomb(this.anchor_ref_l1[i][j], "anchor_ref_l1");
                         }
                     }
                 }
@@ -17612,17 +17610,17 @@ seq_parameter_set_3davc_extension() {
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l0[i]);
+                        size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
                         for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l0[i][j]);
+                            size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                         }
-                        size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l1[i]);
+                        size += stream.WriteUnsignedIntGolomb(this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
                         for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l1[i][j]);
+                            size += stream.WriteUnsignedIntGolomb(this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
                         }
                     }
                 }
@@ -17713,38 +17711,38 @@ depth_parameter_set_rbsp() {
             uint predWeight0 = 0;
             uint i = 0;
             int whileIndex = -1;
-            size += stream.ReadUnsignedIntGolomb(size, out this.depth_parameter_set_id);
-            size += stream.ReadUnsignedIntGolomb(size, out this.pred_direction);
+            size += stream.ReadUnsignedIntGolomb(size, out this.depth_parameter_set_id, "depth_parameter_set_id");
+            size += stream.ReadUnsignedIntGolomb(size, out this.pred_direction, "pred_direction");
 
             if (pred_direction == 0 || pred_direction == 1)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.ref_dps_id0);
+                size += stream.ReadUnsignedIntGolomb(size, out this.ref_dps_id0, "ref_dps_id0");
                 predWeight0 = 64;
             }
 
             if (pred_direction == 0)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.ref_dps_id1);
-                size += stream.ReadUnsignedInt(size, 6, out this.pred_weight0);
+                size += stream.ReadUnsignedIntGolomb(size, out this.ref_dps_id1, "ref_dps_id1");
+                size += stream.ReadUnsignedInt(size, 6, out this.pred_weight0, "pred_weight0");
                 predWeight0 = pred_weight0;
             }
-            size += stream.ReadUnsignedIntGolomb(size, out this.num_depth_views_minus1);
+            size += stream.ReadUnsignedIntGolomb(size, out this.num_depth_views_minus1, "num_depth_views_minus1");
             this.depth_ranges = new DepthRanges(num_depth_views_minus1 + 1, pred_direction, depth_parameter_set_id);
-            size += stream.ReadClass<DepthRanges>(size, context, this.depth_ranges);
-            size += stream.ReadUnsignedInt(size, 1, out this.vsp_param_flag);
+            size += stream.ReadClass<DepthRanges>(size, context, this.depth_ranges, "depth_ranges");
+            size += stream.ReadUnsignedInt(size, 1, out this.vsp_param_flag, "vsp_param_flag");
 
             if (vsp_param_flag != 0)
             {
                 this.vsp_param = new VspParam(num_depth_views_minus1 + 1, pred_direction, depth_parameter_set_id);
-                size += stream.ReadClass<VspParam>(size, context, this.vsp_param);
+                size += stream.ReadClass<VspParam>(size, context, this.vsp_param, "vsp_param");
             }
-            size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_flag);
-            size += stream.ReadUnsignedIntGolomb(size, out this.nonlinear_depth_representation_num);
+            size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_flag, "depth_param_additional_extension_flag");
+            size += stream.ReadUnsignedIntGolomb(size, out this.nonlinear_depth_representation_num, "nonlinear_depth_representation_num");
 
             this.nonlinear_depth_representation_model = new uint[nonlinear_depth_representation_num];
             for (i = 1; i <= nonlinear_depth_representation_num; i++)
             {
-                size += stream.ReadUnsignedIntGolomb(size, out this.nonlinear_depth_representation_model[i]);
+                size += stream.ReadUnsignedIntGolomb(size, out this.nonlinear_depth_representation_model[i], "nonlinear_depth_representation_model");
             }
 
             if (depth_param_additional_extension_flag == 1)
@@ -17754,11 +17752,11 @@ depth_parameter_set_rbsp() {
                 {
                     whileIndex++;
 
-                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.depth_param_additional_extension_data_flag);
+                    size += stream.ReadUnsignedInt(size, 1, whileIndex, this.depth_param_additional_extension_data_flag, "depth_param_additional_extension_data_flag");
                 }
             }
             this.rbsp_trailing_bits = new RbspTrailingBits();
-            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits);
+            size += stream.ReadClass<RbspTrailingBits>(size, context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -17770,35 +17768,35 @@ depth_parameter_set_rbsp() {
             uint predWeight0 = 0;
             uint i = 0;
             int whileIndex = -1;
-            size += stream.WriteUnsignedIntGolomb(this.depth_parameter_set_id);
-            size += stream.WriteUnsignedIntGolomb(this.pred_direction);
+            size += stream.WriteUnsignedIntGolomb(this.depth_parameter_set_id, "depth_parameter_set_id");
+            size += stream.WriteUnsignedIntGolomb(this.pred_direction, "pred_direction");
 
             if (pred_direction == 0 || pred_direction == 1)
             {
-                size += stream.WriteUnsignedIntGolomb(this.ref_dps_id0);
+                size += stream.WriteUnsignedIntGolomb(this.ref_dps_id0, "ref_dps_id0");
                 predWeight0 = 64;
             }
 
             if (pred_direction == 0)
             {
-                size += stream.WriteUnsignedIntGolomb(this.ref_dps_id1);
-                size += stream.WriteUnsignedInt(6, this.pred_weight0);
+                size += stream.WriteUnsignedIntGolomb(this.ref_dps_id1, "ref_dps_id1");
+                size += stream.WriteUnsignedInt(6, this.pred_weight0, "pred_weight0");
                 predWeight0 = pred_weight0;
             }
-            size += stream.WriteUnsignedIntGolomb(this.num_depth_views_minus1);
-            size += stream.WriteClass<DepthRanges>(context, this.depth_ranges);
-            size += stream.WriteUnsignedInt(1, this.vsp_param_flag);
+            size += stream.WriteUnsignedIntGolomb(this.num_depth_views_minus1, "num_depth_views_minus1");
+            size += stream.WriteClass<DepthRanges>(context, this.depth_ranges, "depth_ranges");
+            size += stream.WriteUnsignedInt(1, this.vsp_param_flag, "vsp_param_flag");
 
             if (vsp_param_flag != 0)
             {
-                size += stream.WriteClass<VspParam>(context, this.vsp_param);
+                size += stream.WriteClass<VspParam>(context, this.vsp_param, "vsp_param");
             }
-            size += stream.WriteUnsignedInt(1, this.depth_param_additional_extension_flag);
-            size += stream.WriteUnsignedIntGolomb(this.nonlinear_depth_representation_num);
+            size += stream.WriteUnsignedInt(1, this.depth_param_additional_extension_flag, "depth_param_additional_extension_flag");
+            size += stream.WriteUnsignedIntGolomb(this.nonlinear_depth_representation_num, "nonlinear_depth_representation_num");
 
             for (i = 1; i <= nonlinear_depth_representation_num; i++)
             {
-                size += stream.WriteUnsignedIntGolomb(this.nonlinear_depth_representation_model[i]);
+                size += stream.WriteUnsignedIntGolomb(this.nonlinear_depth_representation_model[i], "nonlinear_depth_representation_model");
             }
 
             if (depth_param_additional_extension_flag == 1)
@@ -17808,10 +17806,10 @@ depth_parameter_set_rbsp() {
                 {
                     whileIndex++;
 
-                    size += stream.WriteUnsignedInt(1, whileIndex, this.depth_param_additional_extension_data_flag);
+                    size += stream.WriteUnsignedInt(1, whileIndex, this.depth_param_additional_extension_data_flag, "depth_param_additional_extension_data_flag");
                 }
             }
-            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits);
+            size += stream.WriteClass<RbspTrailingBits>(context, this.rbsp_trailing_bits, "rbsp_trailing_bits");
 
             return size;
         }
@@ -17863,19 +17861,19 @@ depth_ranges( numViews, predDirection, index ) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 1, out this.z_near_flag);
-            size += stream.ReadUnsignedInt(size, 1, out this.z_far_flag);
+            size += stream.ReadUnsignedInt(size, 1, out this.z_near_flag, "z_near_flag");
+            size += stream.ReadUnsignedInt(size, 1, out this.z_far_flag, "z_far_flag");
 
             if (z_near_flag != 0)
             {
                 this.three_dv_acquisition_element = new ThreeDvAcquisitionElement(numViews, predDirection, 7, index, new uint[index, numViews], new uint[index, numViews], new uint[index, numViews], new uint[index, numViews]);
-                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, context, this.three_dv_acquisition_element);
+                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, context, this.three_dv_acquisition_element, "three_dv_acquisition_element");
             }
 
             if (z_far_flag != 0)
             {
                 this.three_dv_acquisition_element0 = new ThreeDvAcquisitionElement(numViews, predDirection, 7, index, new uint[index, numViews], new uint[index, numViews], new uint[index, numViews], new uint[index, numViews]);
-                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, context, this.three_dv_acquisition_element0);
+                size += stream.ReadClass<ThreeDvAcquisitionElement>(size, context, this.three_dv_acquisition_element0, "three_dv_acquisition_element0");
             }
 
             return size;
@@ -17885,17 +17883,17 @@ depth_ranges( numViews, predDirection, index ) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(1, this.z_near_flag);
-            size += stream.WriteUnsignedInt(1, this.z_far_flag);
+            size += stream.WriteUnsignedInt(1, this.z_near_flag, "z_near_flag");
+            size += stream.WriteUnsignedInt(1, this.z_far_flag, "z_far_flag");
 
             if (z_near_flag != 0)
             {
-                size += stream.WriteClass<ThreeDvAcquisitionElement>(context, this.three_dv_acquisition_element);
+                size += stream.WriteClass<ThreeDvAcquisitionElement>(context, this.three_dv_acquisition_element, "three_dv_acquisition_element");
             }
 
             if (z_far_flag != 0)
             {
-                size += stream.WriteClass<ThreeDvAcquisitionElement>(context, this.three_dv_acquisition_element0);
+                size += stream.WriteClass<ThreeDvAcquisitionElement>(context, this.three_dv_acquisition_element0, "three_dv_acquisition_element0");
             }
 
             return size;
@@ -18026,7 +18024,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
 
             if (numViews > 1)
             {
-                size += stream.ReadUnsignedInt(size, 1, out this.element_equal_flag);
+                size += stream.ReadUnsignedInt(size, 1, out this.element_equal_flag, "element_equal_flag");
             }
 
             if (element_equal_flag == 0)
@@ -18052,39 +18050,39 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
 
                 if (predDirection == 2 && i == 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 5, out this.mantissa_len_minus1[i]);
+                    size += stream.ReadUnsignedInt(size, 5, out this.mantissa_len_minus1[i], "mantissa_len_minus1");
                     outManLen[index, i] = mantissa_len_minus1[i] + 1;
                 }
 
                 if (predDirection == 2)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.sign0[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.sign0[i], "sign0");
                     outSign[index, i] = sign0[i];
-                    size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent0[i]);
+                    size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent0[i], "exponent0");
                     outExp[index, i] = exponent0[i];
-                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), out this.mantissa0[i]);
+                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), out this.mantissa0[i], "mantissa0");
                     outMantissa[index, i] = mantissa0[i];
                 }
                 else
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.skip_flag[i]);
+                    size += stream.ReadUnsignedInt(size, 1, out this.skip_flag[i], "skip_flag");
 
                     if (skip_flag[i] == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.sign1[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.sign1[i], "sign1");
                         outSign[index, i] = sign1[i];
-                        size += stream.ReadUnsignedInt(size, 1, out this.exponent_skip_flag[i]);
+                        size += stream.ReadUnsignedInt(size, 1, out this.exponent_skip_flag[i], "exponent_skip_flag");
 
                         if (exponent_skip_flag[i] == 0)
                         {
-                            size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent1[i]);
+                            size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, out this.exponent1[i], "exponent1");
                             outExp[index, i] = exponent1[i];
                         }
                         else
                         {
                             outExp[index, i] = outExp[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                         }
-                        size += stream.ReadSignedIntGolomb(size, out this.mantissa_diff[i]);
+                        size += stream.ReadSignedIntGolomb(size, out this.mantissa_diff[i], "mantissa_diff");
 
                         if (predDirection == 0)
                         {
@@ -18132,7 +18130,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
 
             if (numViews > 1)
             {
-                size += stream.WriteUnsignedInt(1, this.element_equal_flag);
+                size += stream.WriteUnsignedInt(1, this.element_equal_flag, "element_equal_flag");
             }
 
             if (element_equal_flag == 0)
@@ -18149,39 +18147,39 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
 
                 if (predDirection == 2 && i == 0)
                 {
-                    size += stream.WriteUnsignedInt(5, this.mantissa_len_minus1[i]);
+                    size += stream.WriteUnsignedInt(5, this.mantissa_len_minus1[i], "mantissa_len_minus1");
                     outManLen[index, i] = mantissa_len_minus1[i] + 1;
                 }
 
                 if (predDirection == 2)
                 {
-                    size += stream.WriteUnsignedInt(1, this.sign0[i]);
+                    size += stream.WriteUnsignedInt(1, this.sign0[i], "sign0");
                     outSign[index, i] = sign0[i];
-                    size += stream.WriteUnsignedIntVariable(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent0[i]);
+                    size += stream.WriteUnsignedIntVariable(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent0[i], "exponent0");
                     outExp[index, i] = exponent0[i];
-                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), this.mantissa0[i]);
+                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1), this.mantissa0[i], "mantissa0");
                     outMantissa[index, i] = mantissa0[i];
                 }
                 else
                 {
-                    size += stream.WriteUnsignedInt(1, this.skip_flag[i]);
+                    size += stream.WriteUnsignedInt(1, this.skip_flag[i], "skip_flag");
 
                     if (skip_flag[i] == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.sign1[i]);
+                        size += stream.WriteUnsignedInt(1, this.sign1[i], "sign1");
                         outSign[index, i] = sign1[i];
-                        size += stream.WriteUnsignedInt(1, this.exponent_skip_flag[i]);
+                        size += stream.WriteUnsignedInt(1, this.exponent_skip_flag[i], "exponent_skip_flag");
 
                         if (exponent_skip_flag[i] == 0)
                         {
-                            size += stream.WriteUnsignedIntVariable(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent1[i]);
+                            size += stream.WriteUnsignedIntVariable(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen, this.exponent1[i], "exponent1");
                             outExp[index, i] = exponent1[i];
                         }
                         else
                         {
                             outExp[index, i] = outExp[((H264Context)context).DepthParameterSetRbsp.RefDpsId0, i];
                         }
-                        size += stream.WriteSignedIntGolomb(this.mantissa_diff[i]);
+                        size += stream.WriteSignedIntGolomb(this.mantissa_diff[i], "mantissa_diff");
 
                         if (predDirection == 0)
                         {
@@ -18281,10 +18279,10 @@ vsp_param( numViews, predDirection, index ) {
                 this.disparity_diff_oij[i] = new uint[i];
                 for (j = 0; j < i; j++)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_wji[j][i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_oji[j][i]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_wij[i][j]);
-                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_oij[i][j]);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_wji[j][i], "disparity_diff_wji");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_oji[j][i], "disparity_diff_oji");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_wij[i][j], "disparity_diff_wij");
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_oij[i][j], "disparity_diff_oij");
                 }
             }
 
@@ -18303,10 +18301,10 @@ vsp_param( numViews, predDirection, index ) {
 
                 for (j = 0; j < i; j++)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.disparity_diff_wji[j][i]);
-                    size += stream.WriteUnsignedIntGolomb(this.disparity_diff_oji[j][i]);
-                    size += stream.WriteUnsignedIntGolomb(this.disparity_diff_wij[i][j]);
-                    size += stream.WriteUnsignedIntGolomb(this.disparity_diff_oij[i][j]);
+                    size += stream.WriteUnsignedIntGolomb(this.disparity_diff_wji[j][i], "disparity_diff_wji");
+                    size += stream.WriteUnsignedIntGolomb(this.disparity_diff_oji[j][i], "disparity_diff_oji");
+                    size += stream.WriteUnsignedIntGolomb(this.disparity_diff_wij[i][j], "disparity_diff_wij");
+                    size += stream.WriteUnsignedIntGolomb(this.disparity_diff_oij[i][j], "disparity_diff_oij");
                 }
             }
 
@@ -18506,124 +18504,124 @@ slice_header_in_3davc_extension() {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice);
-            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type);
-            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id);
+            size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_slice, "first_mb_in_slice");
+            size += stream.ReadUnsignedIntGolomb(size, out this.slice_type, "slice_type");
+            size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id, "pic_parameter_set_id");
 
             if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
             {
-                size += stream.ReadUnsignedInt(size, 2, out this.pre_slice_header_src);
+                size += stream.ReadUnsignedInt(size, 2, out this.pre_slice_header_src, "pre_slice_header_src");
 
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.ReadUnsignedInt(size, 2, out this.pre_ref_lists_src);
+                    size += stream.ReadUnsignedInt(size, 2, out this.pre_ref_lists_src, "pre_ref_lists_src");
 
                     if (pre_ref_lists_src == 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
 
                         if (num_ref_idx_active_override_flag != 0)
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1, "num_ref_idx_l0_active_minus1");
 
                             if (H264FrameTypes.IsB(slice_type))
                             {
-                                size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
+                                size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1, "num_ref_idx_l1_active_minus1");
                             }
                         }
                         this.ref_pic_list_mvc_modification = new RefPicListMvcModification();
-                        size += stream.ReadClass<RefPicListMvcModification>(size, context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+                        size += stream.ReadClass<RefPicListMvcModification>(size, context, this.ref_pic_list_mvc_modification, "ref_pic_list_mvc_modification"); // specified in Annex H 
                     }
                 }
 
                 if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) || (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
-                    size += stream.ReadUnsignedInt(size, 2, out this.pre_pred_weight_table_src);
+                    size += stream.ReadUnsignedInt(size, 2, out this.pre_pred_weight_table_src, "pre_pred_weight_table_src");
 
                     if (pre_pred_weight_table_src == 0)
                     {
                         this.pred_weight_table = new PredWeightTable();
-                        size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
+                        size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table, "pred_weight_table");
                     }
                 }
 
                 if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 2, out this.pre_dec_ref_pic_marking_src);
+                    size += stream.ReadUnsignedInt(size, 2, out this.pre_dec_ref_pic_marking_src, "pre_dec_ref_pic_marking_src");
 
                     if (pre_dec_ref_pic_marking_src == 0)
                     {
                         this.dec_ref_pic_marking = new DecRefPicMarking();
-                        size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking);
+                        size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
                     }
                 }
-                size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
+                size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta, "slice_qp_delta");
             }
             else
             {
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
                 {
-                    size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id);
+                    size += stream.ReadUnsignedInt(size, 2, out this.colour_plane_id, "colour_plane_id");
                 }
-                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num);
+                size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), out this.frame_num, "frame_num");
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.field_pic_flag, "field_pic_flag");
 
                     if (field_pic_flag != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_flag, "bottom_field_flag");
                     }
                 }
 
                 if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.idr_pic_id, "idr_pic_id");
                 }
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb);
+                    size += stream.ReadUnsignedIntVariable(size, (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), out this.pic_order_cnt_lsb, "pic_order_cnt_lsb");
 
                     if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
-                        size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom);
+                        size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt_bottom, "delta_pic_order_cnt_bottom");
                     }
                 }
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
                 {
-                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0]);
+                    size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[0], "delta_pic_order_cnt");
 
                     if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
-                        size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1]);
+                        size += stream.ReadSignedIntGolomb(size, out this.delta_pic_order_cnt[1], "delta_pic_order_cnt");
                     }
                 }
 
                 if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.redundant_pic_cnt, "redundant_pic_cnt");
                 }
 
                 if (H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.direct_spatial_mv_pred_flag, "direct_spatial_mv_pred_flag");
                 }
 
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag);
+                    size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
 
                     if (num_ref_idx_active_override_flag != 0)
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l0_active_minus1, "num_ref_idx_l0_active_minus1");
 
                         if (H264FrameTypes.IsB(slice_type))
                         {
-                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1);
+                            size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_idx_l1_active_minus1, "num_ref_idx_l1_active_minus1");
                         }
                     }
                 }
@@ -18631,56 +18629,56 @@ slice_header_in_3davc_extension() {
                 if (((H264Context)context).NalHeader.NalUnitType == 20 || ((H264Context)context).NalHeader.NalUnitType == 21)
                 {
                     this.ref_pic_list_mvc_modification = new RefPicListMvcModification();
-                    size += stream.ReadClass<RefPicListMvcModification>(size, context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+                    size += stream.ReadClass<RefPicListMvcModification>(size, context, this.ref_pic_list_mvc_modification, "ref_pic_list_mvc_modification"); // specified in Annex H 
                 }
                 else
                 {
                     this.ref_pic_list_modification = new RefPicListModification();
-                    size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification);
+                    size += stream.ReadClass<RefPicListModification>(size, context, this.ref_pic_list_modification, "ref_pic_list_modification");
                 }
 
                 if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) || (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
                     this.pred_weight_table = new PredWeightTable();
-                    size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table);
+                    size += stream.ReadClass<PredWeightTable>(size, context, this.pred_weight_table, "pred_weight_table");
                 }
 
                 if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
                     this.dec_ref_pic_marking = new DecRefPicMarking();
-                    size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking);
+                    size += stream.ReadClass<DecRefPicMarking>(size, context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
                 }
 
                 if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type))
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.cabac_init_idc, "cabac_init_idc");
                 }
-                size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta);
+                size += stream.ReadSignedIntGolomb(size, out this.slice_qp_delta, "slice_qp_delta");
 
                 if (H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsSI(slice_type))
                 {
 
                     if (H264FrameTypes.IsSP(slice_type))
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.sp_for_switch_flag, "sp_for_switch_flag");
                     }
-                    size += stream.ReadSignedIntGolomb(size, out this.slice_qs_delta);
+                    size += stream.ReadSignedIntGolomb(size, out this.slice_qs_delta, "slice_qs_delta");
                 }
 
                 if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
                 {
-                    size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc);
+                    size += stream.ReadUnsignedIntGolomb(size, out this.disable_deblocking_filter_idc, "disable_deblocking_filter_idc");
 
                     if (disable_deblocking_filter_idc != 1)
                     {
-                        size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2);
-                        size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2);
+                        size += stream.ReadSignedIntGolomb(size, out this.slice_alpha_c0_offset_div2, "slice_alpha_c0_offset_div2");
+                        size += stream.ReadSignedIntGolomb(size, out this.slice_beta_offset_div2, "slice_beta_offset_div2");
                     }
                 }
 
                 if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
                 {
-                    size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle);
+                    size += stream.ReadUnsignedIntVariable(size, ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, out this.slice_group_change_cycle, "slice_group_change_cycle");
                 }
 
                 if (((H264Context)context).NalHeader.NalUnitType == 21 && (!H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type)))
@@ -18688,21 +18686,21 @@ slice_header_in_3davc_extension() {
 
                     if ((((H264Context)context).NalHeader.NalUnitType != 21) ? false : (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 ? ((H264Context)context).NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.depth_weighted_pred_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.depth_weighted_pred_flag, "depth_weighted_pred_flag");
                     }
                     else if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0)
                     {
-                        size += stream.ReadUnsignedInt(size, 1, out this.dmvp_flag);
+                        size += stream.ReadUnsignedInt(size, 1, out this.dmvp_flag, "dmvp_flag");
 
                         if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SeqViewSynthesisFlag != 0)
                         {
-                            size += stream.ReadUnsignedInt(size, 1, out this.slice_vsp_flag);
+                            size += stream.ReadUnsignedInt(size, 1, out this.slice_vsp_flag, "slice_vsp_flag");
                         }
                     }
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc != 1 && (depth_weighted_pred_flag != 0 || dmvp_flag != 0))
                     {
-                        size += stream.ReadUnsignedIntGolomb(size, out this.dps_id);
+                        size += stream.ReadUnsignedIntGolomb(size, out this.dps_id, "dps_id");
                     }
                 }
             }
@@ -18714,174 +18712,174 @@ slice_header_in_3davc_extension() {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice);
-            size += stream.WriteUnsignedIntGolomb(this.slice_type);
-            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id);
+            size += stream.WriteUnsignedIntGolomb(this.first_mb_in_slice, "first_mb_in_slice");
+            size += stream.WriteUnsignedIntGolomb(this.slice_type, "slice_type");
+            size += stream.WriteUnsignedIntGolomb(this.pic_parameter_set_id, "pic_parameter_set_id");
 
             if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
             {
-                size += stream.WriteUnsignedInt(2, this.pre_slice_header_src);
+                size += stream.WriteUnsignedInt(2, this.pre_slice_header_src, "pre_slice_header_src");
 
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.WriteUnsignedInt(2, this.pre_ref_lists_src);
+                    size += stream.WriteUnsignedInt(2, this.pre_ref_lists_src, "pre_ref_lists_src");
 
                     if (pre_ref_lists_src == 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
+                        size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
 
                         if (num_ref_idx_active_override_flag != 0)
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
+                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1, "num_ref_idx_l0_active_minus1");
 
                             if (H264FrameTypes.IsB(slice_type))
                             {
-                                size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
+                                size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1, "num_ref_idx_l1_active_minus1");
                             }
                         }
-                        size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+                        size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification, "ref_pic_list_mvc_modification"); // specified in Annex H 
                     }
                 }
 
                 if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) || (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
-                    size += stream.WriteUnsignedInt(2, this.pre_pred_weight_table_src);
+                    size += stream.WriteUnsignedInt(2, this.pre_pred_weight_table_src, "pre_pred_weight_table_src");
 
                     if (pre_pred_weight_table_src == 0)
                     {
-                        size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
+                        size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table, "pred_weight_table");
                     }
                 }
 
                 if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
-                    size += stream.WriteUnsignedInt(2, this.pre_dec_ref_pic_marking_src);
+                    size += stream.WriteUnsignedInt(2, this.pre_dec_ref_pic_marking_src, "pre_dec_ref_pic_marking_src");
 
                     if (pre_dec_ref_pic_marking_src == 0)
                     {
-                        size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+                        size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
                     }
                 }
-                size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
+                size += stream.WriteSignedIntGolomb(this.slice_qp_delta, "slice_qp_delta");
             }
             else
             {
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
                 {
-                    size += stream.WriteUnsignedInt(2, this.colour_plane_id);
+                    size += stream.WriteUnsignedInt(2, this.colour_plane_id, "colour_plane_id");
                 }
-                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num);
+                size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4), this.frame_num, "frame_num");
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag == 0)
                 {
-                    size += stream.WriteUnsignedInt(1, this.field_pic_flag);
+                    size += stream.WriteUnsignedInt(1, this.field_pic_flag, "field_pic_flag");
 
                     if (field_pic_flag != 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.bottom_field_flag);
+                        size += stream.WriteUnsignedInt(1, this.bottom_field_flag, "bottom_field_flag");
                     }
                 }
 
                 if ((uint)((((H264Context)context).NalHeader.NalUnitType == 5) ? 1 : 0) != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.idr_pic_id);
+                    size += stream.WriteUnsignedIntGolomb(this.idr_pic_id, "idr_pic_id");
                 }
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 0)
                 {
-                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb);
+                    size += stream.WriteUnsignedIntVariable((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4), this.pic_order_cnt_lsb, "pic_order_cnt_lsb");
 
                     if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
-                        size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom);
+                        size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt_bottom, "delta_pic_order_cnt_bottom");
                     }
                 }
 
                 if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType == 1 && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag == 0)
                 {
-                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0]);
+                    size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[0], "delta_pic_order_cnt");
 
                     if (((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag != 0 && field_pic_flag == 0)
                     {
-                        size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1]);
+                        size += stream.WriteSignedIntGolomb(this.delta_pic_order_cnt[1], "delta_pic_order_cnt");
                     }
                 }
 
                 if (((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt);
+                    size += stream.WriteUnsignedIntGolomb(this.redundant_pic_cnt, "redundant_pic_cnt");
                 }
 
                 if (H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag);
+                    size += stream.WriteUnsignedInt(1, this.direct_spatial_mv_pred_flag, "direct_spatial_mv_pred_flag");
                 }
 
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
-                    size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag);
+                    size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
 
                     if (num_ref_idx_active_override_flag != 0)
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1);
+                        size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l0_active_minus1, "num_ref_idx_l0_active_minus1");
 
                         if (H264FrameTypes.IsB(slice_type))
                         {
-                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1);
+                            size += stream.WriteUnsignedIntGolomb(this.num_ref_idx_l1_active_minus1, "num_ref_idx_l1_active_minus1");
                         }
                     }
                 }
 
                 if (((H264Context)context).NalHeader.NalUnitType == 20 || ((H264Context)context).NalHeader.NalUnitType == 21)
                 {
-                    size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification); // specified in Annex H 
+                    size += stream.WriteClass<RefPicListMvcModification>(context, this.ref_pic_list_mvc_modification, "ref_pic_list_mvc_modification"); // specified in Annex H 
                 }
                 else
                 {
-                    size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification);
+                    size += stream.WriteClass<RefPicListModification>(context, this.ref_pic_list_modification, "ref_pic_list_modification");
                 }
 
                 if ((((H264Context)context).PicParameterSetRbsp.WeightedPredFlag != 0 && (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type))) || (((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc == 1 && H264FrameTypes.IsB(slice_type)))
                 {
-                    size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table);
+                    size += stream.WriteClass<PredWeightTable>(context, this.pred_weight_table, "pred_weight_table");
                 }
 
                 if (((H264Context)context).NalHeader.NalRefIdc != 0)
                 {
-                    size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking);
+                    size += stream.WriteClass<DecRefPicMarking>(context, this.dec_ref_pic_marking, "dec_ref_pic_marking");
                 }
 
                 if (((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag != 0 && !H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type))
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc);
+                    size += stream.WriteUnsignedIntGolomb(this.cabac_init_idc, "cabac_init_idc");
                 }
-                size += stream.WriteSignedIntGolomb(this.slice_qp_delta);
+                size += stream.WriteSignedIntGolomb(this.slice_qp_delta, "slice_qp_delta");
 
                 if (H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsSI(slice_type))
                 {
 
                     if (H264FrameTypes.IsSP(slice_type))
                     {
-                        size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag);
+                        size += stream.WriteUnsignedInt(1, this.sp_for_switch_flag, "sp_for_switch_flag");
                     }
-                    size += stream.WriteSignedIntGolomb(this.slice_qs_delta);
+                    size += stream.WriteSignedIntGolomb(this.slice_qs_delta, "slice_qs_delta");
                 }
 
                 if (((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag != 0)
                 {
-                    size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc);
+                    size += stream.WriteUnsignedIntGolomb(this.disable_deblocking_filter_idc, "disable_deblocking_filter_idc");
 
                     if (disable_deblocking_filter_idc != 1)
                     {
-                        size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2);
-                        size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2);
+                        size += stream.WriteSignedIntGolomb(this.slice_alpha_c0_offset_div2, "slice_alpha_c0_offset_div2");
+                        size += stream.WriteSignedIntGolomb(this.slice_beta_offset_div2, "slice_beta_offset_div2");
                     }
                 }
 
                 if (((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 > 0 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType >= 3 && ((H264Context)context).PicParameterSetRbsp.SliceGroupMapType <= 5)
                 {
-                    size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle);
+                    size += stream.WriteUnsignedIntVariable(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle, this.slice_group_change_cycle, "slice_group_change_cycle");
                 }
 
                 if (((H264Context)context).NalHeader.NalUnitType == 21 && (!H264FrameTypes.IsI(slice_type) && !H264FrameTypes.IsSI(slice_type)))
@@ -18889,21 +18887,21 @@ slice_header_in_3davc_extension() {
 
                     if ((((H264Context)context).NalHeader.NalUnitType != 21) ? false : (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 ? ((H264Context)context).NalHeader.NalUnitHeader3davcExtension.DepthFlag : 1) != 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.depth_weighted_pred_flag);
+                        size += stream.WriteUnsignedInt(1, this.depth_weighted_pred_flag, "depth_weighted_pred_flag");
                     }
                     else if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0)
                     {
-                        size += stream.WriteUnsignedInt(1, this.dmvp_flag);
+                        size += stream.WriteUnsignedInt(1, this.dmvp_flag, "dmvp_flag");
 
                         if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SeqViewSynthesisFlag != 0)
                         {
-                            size += stream.WriteUnsignedInt(1, this.slice_vsp_flag);
+                            size += stream.WriteUnsignedInt(1, this.slice_vsp_flag, "slice_vsp_flag");
                         }
                     }
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc != 1 && (depth_weighted_pred_flag != 0 || dmvp_flag != 0))
                     {
-                        size += stream.WriteUnsignedIntGolomb(this.dps_id);
+                        size += stream.WriteUnsignedIntGolomb(this.dps_id, "dps_id");
                     }
                 }
             }
@@ -18976,29 +18974,29 @@ green_metadata(payloadSize) {
         {
             ulong size = 0;
 
-            size += stream.ReadUnsignedInt(size, 8, out this.green_metadata_type);
+            size += stream.ReadUnsignedInt(size, 8, out this.green_metadata_type, "green_metadata_type");
 
             if (green_metadata_type == 0)
             {
-                size += stream.ReadUnsignedInt(size, 8, out this.period_type);
+                size += stream.ReadUnsignedInt(size, 8, out this.period_type, "period_type");
 
                 if (period_type == 2)
                 {
-                    size += stream.ReadUnsignedInt(size, 16, out this.num_seconds);
+                    size += stream.ReadUnsignedInt(size, 16, out this.num_seconds, "num_seconds");
                 }
                 else if (period_type == 3)
                 {
-                    size += stream.ReadUnsignedInt(size, 16, out this.num_pictures);
+                    size += stream.ReadUnsignedInt(size, 16, out this.num_pictures, "num_pictures");
                 }
-                size += stream.ReadUnsignedInt(size, 8, out this.percent_non_zero_macroblocks);
-                size += stream.ReadUnsignedInt(size, 8, out this.percent_intra_coded_macroblocks);
-                size += stream.ReadUnsignedInt(size, 8, out this.percent_six_tap_filtering);
-                size += stream.ReadUnsignedInt(size, 8, out this.percent_alpha_point_deblocking_instance);
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_non_zero_macroblocks, "percent_non_zero_macroblocks");
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_intra_coded_macroblocks, "percent_intra_coded_macroblocks");
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_six_tap_filtering, "percent_six_tap_filtering");
+                size += stream.ReadUnsignedInt(size, 8, out this.percent_alpha_point_deblocking_instance, "percent_alpha_point_deblocking_instance");
             }
             else if (green_metadata_type == 1)
             {
-                size += stream.ReadUnsignedInt(size, 8, out this.xsd_metric_type);
-                size += stream.ReadUnsignedInt(size, 16, out this.xsd_metric_value);
+                size += stream.ReadUnsignedInt(size, 8, out this.xsd_metric_type, "xsd_metric_type");
+                size += stream.ReadUnsignedInt(size, 16, out this.xsd_metric_value, "xsd_metric_value");
             }
 
             return size;
@@ -19008,29 +19006,29 @@ green_metadata(payloadSize) {
         {
             ulong size = 0;
 
-            size += stream.WriteUnsignedInt(8, this.green_metadata_type);
+            size += stream.WriteUnsignedInt(8, this.green_metadata_type, "green_metadata_type");
 
             if (green_metadata_type == 0)
             {
-                size += stream.WriteUnsignedInt(8, this.period_type);
+                size += stream.WriteUnsignedInt(8, this.period_type, "period_type");
 
                 if (period_type == 2)
                 {
-                    size += stream.WriteUnsignedInt(16, this.num_seconds);
+                    size += stream.WriteUnsignedInt(16, this.num_seconds, "num_seconds");
                 }
                 else if (period_type == 3)
                 {
-                    size += stream.WriteUnsignedInt(16, this.num_pictures);
+                    size += stream.WriteUnsignedInt(16, this.num_pictures, "num_pictures");
                 }
-                size += stream.WriteUnsignedInt(8, this.percent_non_zero_macroblocks);
-                size += stream.WriteUnsignedInt(8, this.percent_intra_coded_macroblocks);
-                size += stream.WriteUnsignedInt(8, this.percent_six_tap_filtering);
-                size += stream.WriteUnsignedInt(8, this.percent_alpha_point_deblocking_instance);
+                size += stream.WriteUnsignedInt(8, this.percent_non_zero_macroblocks, "percent_non_zero_macroblocks");
+                size += stream.WriteUnsignedInt(8, this.percent_intra_coded_macroblocks, "percent_intra_coded_macroblocks");
+                size += stream.WriteUnsignedInt(8, this.percent_six_tap_filtering, "percent_six_tap_filtering");
+                size += stream.WriteUnsignedInt(8, this.percent_alpha_point_deblocking_instance, "percent_alpha_point_deblocking_instance");
             }
             else if (green_metadata_type == 1)
             {
-                size += stream.WriteUnsignedInt(8, this.xsd_metric_type);
-                size += stream.WriteUnsignedInt(16, this.xsd_metric_value);
+                size += stream.WriteUnsignedInt(8, this.xsd_metric_type, "xsd_metric_type");
+                size += stream.WriteUnsignedInt(16, this.xsd_metric_value, "xsd_metric_value");
             }
 
             return size;
