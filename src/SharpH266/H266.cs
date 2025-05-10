@@ -11,13 +11,13 @@ namespace SharpH266
 
     public class H266FrameTypes
     {
-        public const uint B = 0;
-        public const uint P = 1;
-        public const uint I = 2;
+        public const ulong B = 0;
+        public const ulong P = 1;
+        public const ulong I = 2;
 
-        public static bool IsB(uint value) { return value == B; }
-        public static bool IsP(uint value) { return value == P; }
-        public static bool IsI(uint value) { return value == I; }
+        public static bool IsB(ulong value) { return value == B; }
+        public static bool IsP(ulong value) { return value == P; }
+        public static bool IsI(ulong value) { return value == I; }
     }
 
     public class H266NALTypes
@@ -64,24 +64,24 @@ namespace SharpH266
     public partial class H266Context
     {
         internal byte[][] cbr_flag;
-        internal uint[][] bit_rate_du_value_minus1;
-        internal uint[][] cpb_size_du_value_minus1;
-        internal uint[][] bit_rate_value_minus1;
-        internal uint[][] cpb_size_value_minus1;
-        internal uint[][] num_ref_entries;
+        internal ulong[][] bit_rate_du_value_minus1;
+        internal ulong[][] cpb_size_du_value_minus1;
+        internal ulong[][] bit_rate_value_minus1;
+        internal ulong[][] cpb_size_value_minus1;
+        internal ulong[][] num_ref_entries;
         internal byte[][][] inter_layer_ref_pic_flag;
         internal byte[][][] st_ref_pic_flag;
-        internal uint[][][] abs_delta_poc_st;
+        internal ulong[][][] abs_delta_poc_st;
         internal byte[][][] strp_entry_sign_flag;
         internal uint[][][] rpls_poc_lsb_lt;
-        internal uint[][][] ilrp_idx;
+        internal ulong[][][] ilrp_idx;
 
         public SeiPayload SeiPayload { get; set; }
         public GeneralTimingHrdParameters GeneralTimingHrdParameters { get; set; }
 
         public uint olsModeIdc { get; set; }
         public uint TotalNumOlss { get; set; }
-        public uint VpsNumDpbParams { get; set; }
+        public ulong VpsNumDpbParams { get; set; }
         public uint[] NumOutputLayersInOls { get; set; }
         public uint[][] OutputLayerIdInOls { get; set; }
         public uint[][] layerIncludedInOlsFlag { get; set; }
@@ -89,8 +89,8 @@ namespace SharpH266
         public uint[] LayerUsedAsOutputLayerFlag { get; set; }
         public int[][] OutputLayerIdx { get; set; }
         public uint[][] LayerIdInOls { get; set; }
-        public int NumMultiLayerOlss { get; set; }
-        public int[] MultiLayerOlsIdx { get; set; }
+        public ulong NumMultiLayerOlss { get; set; }
+        public ulong[] MultiLayerOlsIdx { get; set; }
         public uint[] LayerUsedAsRefLayerFlag { get; set; }
         public int[] NumDirectRefLayers { get; set; }
         public int[] NumRefLayers { get; set; }
@@ -100,22 +100,22 @@ namespace SharpH266
         public uint[] NumLayersInOls { get; set; }
         public uint CtbLog2SizeY { get; set; }
         public uint CtbSizeY { get; set; }
-        public uint MaxNumMergeCand { get; set; }
+        public ulong MaxNumMergeCand { get; set; }
         public int NumExtraPhBits { get; set; }
         public int NumAlfFilters { get; set; }
-        public uint LmcsMaxBinIdx { get; set; }
+        public ulong LmcsMaxBinIdx { get; set; }
         public uint PicWidthInCtbsY { get; set; }
         public uint PicHeightInCtbsY { get; set; }
         public uint PicSizeInCtbsY { get; set; }
-        public uint PicWidthInMinCbsY { get; set; }
-        public uint PicHeightInMinCbsY { get; set; }
-        public uint PicSizeInMinCbsY { get; set; }
-        public uint PicSizeInSamplesY { get; set; }
-        public uint PicWidthInSamplesC { get; set; }
-        public uint PicHeightInSamplesC { get; set; }
+        public ulong PicWidthInMinCbsY { get; set; }
+        public ulong PicHeightInMinCbsY { get; set; }
+        public ulong PicSizeInMinCbsY { get; set; }
+        public ulong PicSizeInSamplesY { get; set; }
+        public ulong PicWidthInSamplesC { get; set; }
+        public ulong PicHeightInSamplesC { get; set; }
         public uint SubWidthC { get; set; }
         public uint SubHeightC { get; set; }
-        public uint MinCbLog2SizeY { get; set; }
+        public ulong MinCbLog2SizeY { get; set; }
         public uint MinCbSizeY { get; set; }
         public uint IbcBufWidthY { get; set; }
         public uint IbcBufWidthC { get; set; }
@@ -125,39 +125,39 @@ namespace SharpH266
         public int NumTileColumns { get; set; }
         public int NumTileRows { get; set; }
         public int NumTilesInPic { get; set; }
-        public uint[] ColWidthVal { get; set; }
-        public uint[] RowHeightVal { get; set; }
-        public uint[] TileColBdVal { get; set; }
-        public uint[] TileRowBdVal { get; set; }
-        public uint[] CtbToTileColBd { get; set; }
+        public ulong[] ColWidthVal { get; set; }
+        public ulong[] RowHeightVal { get; set; }
+        public ulong[] TileColBdVal { get; set; }
+        public ulong[] TileRowBdVal { get; set; }
+        public ulong[] CtbToTileColBd { get; set; }
         public uint[] ctbToTileColIdx { get; set; }
-        public uint[] CtbToTileRowBd { get; set; }
+        public ulong[] CtbToTileRowBd { get; set; }
         public uint[] ctbToTileRowIdx { get; set; }
         public uint[] SubpicWidthInTiles { get; set; }
         public uint[] SubpicHeightInTiles { get; set; }
         public uint[] subpicHeightLessThanOneTileFlag { get; set; }
         public uint[] NumCtusInSlice { get; set; }
         public uint[] SliceTopLeftTileIdx { get; set; }
-        public uint[] sliceWidthInTiles { get; set; }
-        public uint[] sliceHeightInTiles { get; set; }
+        public ulong[] sliceWidthInTiles { get; set; }
+        public ulong[] sliceHeightInTiles { get; set; }
         public uint[] NumSlicesInTile { get; set; }
-        public uint[] sliceHeightInCtus { get; set; }
-        public uint[][] CtbAddrInSlice { get; set; }
+        public ulong[] sliceHeightInCtus { get; set; }
+        public ulong[][] CtbAddrInSlice { get; set; }
         public uint[] NumSlicesInSubpic { get; set; }
         public int[] SubpicIdxForSlice { get; set; }
         public uint[] SubpicLevelSliceIdx { get; set; }
         public uint[][] NumLtrpEntries { get; set; }
-        public uint[] RplsIdx { get; set; } = new uint[2];
-        public uint NumWeightsL0 { get; set; }
-        public uint[] NumRefIdxActive { get; set; }
+        public ulong[] RplsIdx { get; set; } = new ulong[2];
+        public ulong NumWeightsL0 { get; set; }
+        public ulong[] NumRefIdxActive { get; set; }
         public int CurrSubpicIdx { get; set; }
         public uint[] SubpicIdVal { get; set; }
         public int NumExtraShBits { get; set; }
         public int NumEntryPoints { get; set; }
         public uint NumCtusInCurrSlice { get; set; }
-        public uint[] CtbAddrInCurrSlice { get; set; }
-        public uint NumWeightsL1 { get; set; }
-        public uint[][][] AbsDeltaPocSt { get; private set; }
+        public ulong[] CtbAddrInCurrSlice { get; set; }
+        public ulong NumWeightsL1 { get; set; }
+        public ulong[][][] AbsDeltaPocSt { get; private set; }
 
         public void SetGeneralTimingHrdParameters(GeneralTimingHrdParameters generalTimingHrdParameters)
         {
@@ -600,20 +600,20 @@ namespace SharpH266
             var sps_subpic_height_minus1 = SeqParameterSetRbsp.SpsSubpicHeightMinus1;
             var sps_subpic_info_present_flag = SeqParameterSetRbsp.SpsSubpicInfoPresentFlag;
 
-            if (ColWidthVal == null || ColWidthVal.Length < pps_num_exp_tile_columns_minus1 + 1)
-                ColWidthVal = new uint[pps_num_exp_tile_columns_minus1 + 1];
-            if (RowHeightVal == null || RowHeightVal.Length < pps_num_exp_tile_rows_minus1 + 1)
-                RowHeightVal = new uint[pps_num_exp_tile_rows_minus1 + 1];
+            if (ColWidthVal == null || ColWidthVal.Length < (int)pps_num_exp_tile_columns_minus1 + 1)
+                ColWidthVal = new ulong[pps_num_exp_tile_columns_minus1 + 1];
+            if (RowHeightVal == null || RowHeightVal.Length < (int)pps_num_exp_tile_rows_minus1 + 1)
+                RowHeightVal = new ulong[pps_num_exp_tile_rows_minus1 + 1];
 
             // 14
             int i;
-            uint remainingWidthInCtbsY = PicWidthInCtbsY;
-            for (i = 0; i <= pps_num_exp_tile_columns_minus1; i++)
+            ulong remainingWidthInCtbsY = PicWidthInCtbsY;
+            for (i = 0; i <= (int)pps_num_exp_tile_columns_minus1; i++)
             {
                 ColWidthVal[i] = pps_tile_column_width_minus1[i] + 1;
                 remainingWidthInCtbsY -= ColWidthVal[i];
             }
-            uint uniformTileColWidth = pps_tile_column_width_minus1[pps_num_exp_tile_columns_minus1] + 1;
+            ulong uniformTileColWidth = pps_tile_column_width_minus1[pps_num_exp_tile_columns_minus1] + 1;
             while (remainingWidthInCtbsY >= uniformTileColWidth)
             {
                 ColWidthVal[i++] = uniformTileColWidth;
@@ -625,13 +625,13 @@ namespace SharpH266
 
             // 15
             int j;
-            uint remainingHeightInCtbsY = PicHeightInCtbsY;
-            for (j = 0; j <= pps_num_exp_tile_rows_minus1; j++)
+            ulong remainingHeightInCtbsY = PicHeightInCtbsY;
+            for (j = 0; j <= (int)pps_num_exp_tile_rows_minus1; j++)
             {
                 RowHeightVal[j] = pps_tile_row_height_minus1[j] + 1;
                 remainingHeightInCtbsY -= RowHeightVal[j];
             }
-            uint uniformTileRowHeight = pps_tile_row_height_minus1[pps_num_exp_tile_rows_minus1] + 1;
+            ulong uniformTileRowHeight = pps_tile_row_height_minus1[pps_num_exp_tile_rows_minus1] + 1;
             while (remainingHeightInCtbsY >= uniformTileRowHeight)
             {
                 RowHeightVal[j++] = uniformTileRowHeight;
@@ -645,20 +645,20 @@ namespace SharpH266
             NumTilesInPic = NumTileColumns * NumTileRows;
 
             if (TileColBdVal == null || TileColBdVal.Length < NumTileColumns + 1)
-                TileColBdVal = new uint[NumTileColumns + 1];
+                TileColBdVal = new ulong[NumTileColumns + 1];
 
             for (TileColBdVal[0] = 0, i = 0; i < NumTileColumns; i++)
                 TileColBdVal[i + 1] = TileColBdVal[i] + ColWidthVal[i];
 
             if (TileRowBdVal == null || TileRowBdVal.Length < NumTileRows + 1)
-                TileRowBdVal = new uint[NumTileRows + 1];
+                TileRowBdVal = new ulong[NumTileRows + 1];
 
             for (TileRowBdVal[0] = 0, j = 0; j < NumTileRows; j++)
                 TileRowBdVal[j + 1] = TileRowBdVal[j] + RowHeightVal[j];
 
             // 18
             if (CtbToTileColBd == null || CtbToTileColBd.Length < PicWidthInCtbsY + 1)
-                CtbToTileColBd = new uint[PicWidthInCtbsY + 1];
+                CtbToTileColBd = new ulong[PicWidthInCtbsY + 1];
             if (ctbToTileColIdx == null || ctbToTileColIdx.Length < PicWidthInCtbsY + 1)
                 ctbToTileColIdx = new uint[PicWidthInCtbsY + 1];
 
@@ -674,7 +674,7 @@ namespace SharpH266
 
             // 19
             if (CtbToTileRowBd == null || CtbToTileRowBd.Length < PicHeightInCtbsY + 1)
-                CtbToTileRowBd = new uint[PicHeightInCtbsY + 1];
+                CtbToTileRowBd = new ulong[PicHeightInCtbsY + 1];
             if (ctbToTileRowIdx == null || ctbToTileRowIdx.Length < PicHeightInCtbsY + 1)
                 ctbToTileRowIdx = new uint[PicHeightInCtbsY + 1];
 
@@ -689,14 +689,14 @@ namespace SharpH266
             }
 
             // 20
-            if (SubpicWidthInTiles == null || SubpicWidthInTiles.Length < sps_num_subpics_minus1 + 1)
+            if (SubpicWidthInTiles == null || SubpicWidthInTiles.Length < (int)sps_num_subpics_minus1 + 1)
                 SubpicWidthInTiles = new uint[sps_num_subpics_minus1 + 1];
-            if (SubpicHeightInTiles == null || SubpicHeightInTiles.Length < sps_num_subpics_minus1 + 1)
+            if (SubpicHeightInTiles == null || SubpicHeightInTiles.Length < (int)sps_num_subpics_minus1 + 1)
                 SubpicHeightInTiles = new uint[sps_num_subpics_minus1 + 1];
-            if (subpicHeightLessThanOneTileFlag == null || subpicHeightLessThanOneTileFlag.Length < sps_num_subpics_minus1 + 1)
+            if (subpicHeightLessThanOneTileFlag == null || subpicHeightLessThanOneTileFlag.Length < (int)sps_num_subpics_minus1 + 1)
                 subpicHeightLessThanOneTileFlag = new uint[sps_num_subpics_minus1 + 1];
 
-            for (i = 0; i <= sps_num_subpics_minus1; i++)
+            for (i = 0; i <= (int)sps_num_subpics_minus1; i++)
             {
                 uint leftX = sps_subpic_ctu_top_left_x[i];
                 uint rightX = leftX + sps_subpic_width_minus1[i];
@@ -711,10 +711,10 @@ namespace SharpH266
             }
 
             // 21
-            if (NumCtusInSlice == null || NumCtusInSlice.Length < sps_num_subpics_minus1 + 1)
+            if (NumCtusInSlice == null || NumCtusInSlice.Length < (int)sps_num_subpics_minus1 + 1)
                 NumCtusInSlice = new uint[sps_num_subpics_minus1 + 1];
-            if (CtbAddrInSlice == null || CtbAddrInSlice.Length < sps_num_subpics_minus1 + 1)
-                CtbAddrInSlice = new uint[sps_num_subpics_minus1 + 1][];
+            if (CtbAddrInSlice == null || CtbAddrInSlice.Length < (int)sps_num_subpics_minus1 + 1)
+                CtbAddrInSlice = new ulong[sps_num_subpics_minus1 + 1][];
 
             if (pps_single_slice_per_subpic_flag != 0)
             {
@@ -728,7 +728,7 @@ namespace SharpH266
                 }
                 else
                 {
-                    for (i = 0; i <= sps_num_subpics_minus1; i++)
+                    for (i = 0; i <= (int)sps_num_subpics_minus1; i++)
                     {
                         NumCtusInSlice[i] = 0;
                         if (subpicHeightLessThanOneTileFlag[i] != 0) /* The slice consists of a set of CTU rows in a tile. */
@@ -751,26 +751,26 @@ namespace SharpH266
             else
             {
                 int tileIdx = 0;
-                for (i = 0; i <= pps_num_slices_in_pic_minus1; i++)
+                for (i = 0; i <= (int)pps_num_slices_in_pic_minus1; i++)
                     NumCtusInSlice[i] = 0;
 
-                if (SliceTopLeftTileIdx == null || SliceTopLeftTileIdx.Length < pps_num_slices_in_pic_minus1 + 1)
+                if (SliceTopLeftTileIdx == null || SliceTopLeftTileIdx.Length < (int)pps_num_slices_in_pic_minus1 + 1)
                     SliceTopLeftTileIdx = new uint[pps_num_slices_in_pic_minus1 + 1];
-                if (sliceWidthInTiles == null || sliceWidthInTiles.Length < pps_num_slices_in_pic_minus1 + 1)
-                    sliceWidthInTiles = new uint[pps_num_slices_in_pic_minus1 + 1];
-                if (sliceHeightInTiles == null || sliceHeightInTiles.Length < pps_num_slices_in_pic_minus1 + 1)
-                    sliceHeightInTiles = new uint[pps_num_slices_in_pic_minus1 + 1];
-                if (NumSlicesInTile == null || NumSlicesInTile.Length < pps_num_slices_in_pic_minus1 + 1)
+                if (sliceWidthInTiles == null || sliceWidthInTiles.Length < (int)pps_num_slices_in_pic_minus1 + 1)
+                    sliceWidthInTiles = new ulong[pps_num_slices_in_pic_minus1 + 1];
+                if (sliceHeightInTiles == null || sliceHeightInTiles.Length < (int)pps_num_slices_in_pic_minus1 + 1)
+                    sliceHeightInTiles = new ulong[pps_num_slices_in_pic_minus1 + 1];
+                if (NumSlicesInTile == null || NumSlicesInTile.Length < (int)pps_num_slices_in_pic_minus1 + 1)
                     NumSlicesInTile = new uint[pps_num_slices_in_pic_minus1 + 1];
-                if (sliceHeightInCtus == null || sliceHeightInCtus.Length < pps_num_slices_in_pic_minus1 + 1)
-                    sliceHeightInCtus = new uint[pps_num_slices_in_pic_minus1 + 1];
+                if (sliceHeightInCtus == null || sliceHeightInCtus.Length < (int)pps_num_slices_in_pic_minus1 + 1)
+                    sliceHeightInCtus = new ulong[pps_num_slices_in_pic_minus1 + 1];
 
-                for (i = 0; i <= pps_num_slices_in_pic_minus1; i++)
+                for (i = 0; i <= (int)pps_num_slices_in_pic_minus1; i++)
                 {
                     SliceTopLeftTileIdx[i] = (uint)tileIdx;
                     tileX = (uint)(tileIdx % NumTileColumns);
                     tileY = (uint)(tileIdx / NumTileColumns);
-                    if (i < pps_num_slices_in_pic_minus1)
+                    if (i < (int)pps_num_slices_in_pic_minus1)
                     {
                         sliceWidthInTiles[i] = pps_slice_width_in_tiles_minus1[i] + 1;
                         sliceHeightInTiles[i] = pps_slice_height_in_tiles_minus1[i] + 1;
@@ -791,12 +791,12 @@ namespace SharpH266
                         else
                         {
                             remainingHeightInCtbsY = RowHeightVal[SliceTopLeftTileIdx[i] / NumTileColumns];
-                            for (j = 0; j < pps_num_exp_slices_in_tile[i]; j++)
+                            for (j = 0; j < (int)pps_num_exp_slices_in_tile[i]; j++)
                             {
                                 sliceHeightInCtus[i + j] = pps_exp_slice_height_in_ctus_minus1[i][j] + 1;
                                 remainingHeightInCtbsY -= sliceHeightInCtus[i + j];
                             }
-                            uint uniformSliceHeight = sliceHeightInCtus[i + j - 1];
+                            ulong uniformSliceHeight = sliceHeightInCtus[i + j - 1];
                             while (remainingHeightInCtbsY >= uniformSliceHeight)
                             {
                                 sliceHeightInCtus[i + j] = uniformSliceHeight;
@@ -810,7 +810,7 @@ namespace SharpH266
                             }
                             NumSlicesInTile[i] = (uint)j;
                         }
-                        uint ctbY = TileRowBdVal[tileY];
+                        ulong ctbY = TileRowBdVal[tileY];
                         for (j = 0; j < NumSlicesInTile[i]; j++)
                         {
                             AddCtbsToSlice(i + j, TileColBdVal[tileX], TileColBdVal[tileX + 1], ctbY, ctbY + sliceHeightInCtus[i + j]);
@@ -822,45 +822,45 @@ namespace SharpH266
                     }
                     else
                     {
-                        for (j = 0; j < sliceHeightInTiles[i]; j++)
+                        for (j = 0; j < (int)sliceHeightInTiles[i]; j++)
                         {
-                            for (int k = 0; k < sliceWidthInTiles[i]; k++)
+                            for (int k = 0; k < (int)sliceWidthInTiles[i]; k++)
                             {
                                 AddCtbsToSlice(i, TileColBdVal[tileX + k], TileColBdVal[tileX + k + 1], TileRowBdVal[tileY + j], TileRowBdVal[tileY + j + 1]);
                             }
                         }
                     }
-                    if (i < pps_num_slices_in_pic_minus1)
+                    if (i < (int)pps_num_slices_in_pic_minus1)
                     {
                         if (pps_tile_idx_delta_present_flag != 0)
                         {
-                            tileIdx += pps_tile_idx_delta_val[i];
+                            tileIdx += (int)pps_tile_idx_delta_val[i];
                         }
                         else
                         {
                             tileIdx += (int)sliceWidthInTiles[i];
                             if (tileIdx % NumTileColumns == 0)
-                                tileIdx += (int)((sliceHeightInTiles[i] - 1) * NumTileColumns);
+                                tileIdx += (((int)sliceHeightInTiles[i] - 1) * NumTileColumns);
                         }
                     }
                 }
             }
 
             // 23
-            if (NumSlicesInSubpic == null || NumSlicesInSubpic.Length < sps_num_subpics_minus1 + 1)
+            if (NumSlicesInSubpic == null || NumSlicesInSubpic.Length < (int)sps_num_subpics_minus1 + 1)
                 NumSlicesInSubpic = new uint[sps_num_subpics_minus1 + 1];
-            if (SubpicIdxForSlice == null || SubpicIdxForSlice.Length < pps_num_slices_in_pic_minus1 + 1)
+            if (SubpicIdxForSlice == null || SubpicIdxForSlice.Length < (int)pps_num_slices_in_pic_minus1 + 1)
                 SubpicIdxForSlice = new int[pps_num_slices_in_pic_minus1 + 1];
-            if (SubpicLevelSliceIdx == null || SubpicLevelSliceIdx.Length < pps_num_slices_in_pic_minus1 + 1)
+            if (SubpicLevelSliceIdx == null || SubpicLevelSliceIdx.Length < (int)pps_num_slices_in_pic_minus1 + 1)
                 SubpicLevelSliceIdx = new uint[pps_num_slices_in_pic_minus1 + 1];
 
-            for (i = 0; i <= sps_num_subpics_minus1; i++)
+            for (i = 0; i <= (int)sps_num_subpics_minus1; i++)
             {
                 NumSlicesInSubpic[i] = 0;
-                for (j = 0; j <= pps_num_slices_in_pic_minus1; j++)
+                for (j = 0; j <= (int)pps_num_slices_in_pic_minus1; j++)
                 {
-                    uint posX = CtbAddrInSlice[j][0] % PicWidthInCtbsY;
-                    uint posY = CtbAddrInSlice[j][0] / PicWidthInCtbsY;
+                    ulong posX = CtbAddrInSlice[j][0] % PicWidthInCtbsY;
+                    ulong posY = CtbAddrInSlice[j][0] / PicWidthInCtbsY;
                     if ((posX >= sps_subpic_ctu_top_left_x[i]) &&
                       (posX < sps_subpic_ctu_top_left_x[i] + sps_subpic_width_minus1[i] + 1) &&
                       (posY >= sps_subpic_ctu_top_left_y[i]) &&
@@ -874,11 +874,11 @@ namespace SharpH266
             }
         }
 
-        public void AddCtbsToSlice(int sliceIdx, uint startX, uint stopX, uint startY, uint stopY)
+        public void AddCtbsToSlice(int sliceIdx, ulong startX, ulong stopX, ulong startY, ulong stopY)
         {
-            for (uint ctbY = startY; ctbY < stopY; ctbY++)
+            for (ulong ctbY = startY; ctbY < stopY; ctbY++)
             {
-                for (uint ctbX = startX; ctbX < stopX; ctbX++)
+                for (ulong ctbX = startX; ctbX < stopX; ctbX++)
                 {
                     CtbAddrInSlice[sliceIdx][NumCtusInSlice[sliceIdx]] = ctbY * PicWidthInCtbsY + ctbX;
                     NumCtusInSlice[sliceIdx]++;
@@ -886,7 +886,7 @@ namespace SharpH266
             }
         }
 
-        public void OnStRefPicFlag(uint listIdx, uint rplsIdx, RefPicListStruct refPicListStruct)
+        public void OnStRefPicFlag(uint listIdx, ulong rplsIdx, RefPicListStruct refPicListStruct)
         {
             var num_ref_entries = refPicListStruct.NumRefEntries;
             var inter_layer_ref_pic_flag = refPicListStruct.InterLayerRefPicFlag;
@@ -903,7 +903,7 @@ namespace SharpH266
 
             NumLtrpEntries[listIdx][rplsIdx] = 0;
 
-            for (int i = 0; i < num_ref_entries[listIdx][rplsIdx]; i++)
+            for (uint i = 0; i < num_ref_entries[listIdx][rplsIdx]; i++)
                 if (inter_layer_ref_pic_flag[listIdx][rplsIdx][i] == 0 && st_ref_pic_flag[listIdx][rplsIdx][i] == 0)
                     NumLtrpEntries[listIdx][rplsIdx]++;
         }
@@ -917,7 +917,7 @@ namespace SharpH266
             RplsIdx[i] = rpl_sps_flag[i] != 0 ? rpl_idx[i] : sps_num_ref_pic_lists[i];
         }
 
-        public void OnNumL0Weights(uint num_l0_weights)
+        public void OnNumL0Weights(ulong num_l0_weights)
         {
             var pps_wp_info_in_ph_flag = PicParameterSetRbsp.PpsWpInfoInPhFlag;
 
@@ -935,7 +935,7 @@ namespace SharpH266
             var pps_num_ref_idx_default_active_minus1 = PicParameterSetRbsp.PpsNumRefIdxDefaultActiveMinus1;
 
             if(NumRefIdxActive == null || NumRefIdxActive.Length < 2)
-                NumRefIdxActive = new uint[2];
+                NumRefIdxActive = new ulong[2];
 
             for (int i = 0; i < 2; i++)
             {
@@ -966,7 +966,7 @@ namespace SharpH266
             var pps_subpic_id = PicParameterSetRbsp.PpsSubpicId;
             var sps_subpic_id = SeqParameterSetRbsp.SpsSubpicId;
 
-            if (SubpicIdVal == null || SubpicIdVal.Length < sps_num_subpics_minus1 + 1)
+            if (SubpicIdVal == null || SubpicIdVal.Length < (int)sps_num_subpics_minus1 + 1)
                 SubpicIdVal = new uint[sps_num_subpics_minus1 + 1];
 
             for (uint i = 0; i <= sps_num_subpics_minus1; i++)
@@ -1002,10 +1002,10 @@ namespace SharpH266
             {
                 for (int i = 1; i < NumCtusInCurrSlice; i++)
                 {
-                    uint ctbAddrX = CtbAddrInCurrSlice[i] % PicWidthInCtbsY;
-                    uint ctbAddrY = CtbAddrInCurrSlice[i] / PicWidthInCtbsY;
-                    uint prevCtbAddrX = CtbAddrInCurrSlice[i - 1] % PicWidthInCtbsY;
-                    uint prevCtbAddrY = CtbAddrInCurrSlice[i - 1] / PicWidthInCtbsY;
+                    ulong ctbAddrX = CtbAddrInCurrSlice[i] % PicWidthInCtbsY;
+                    ulong ctbAddrY = CtbAddrInCurrSlice[i] / PicWidthInCtbsY;
+                    ulong prevCtbAddrX = CtbAddrInCurrSlice[i - 1] % PicWidthInCtbsY;
+                    ulong prevCtbAddrY = CtbAddrInCurrSlice[i - 1] / PicWidthInCtbsY;
                     if (CtbToTileRowBd[ctbAddrY] != CtbToTileRowBd[prevCtbAddrY] ||
                     CtbToTileColBd[ctbAddrX] != CtbToTileColBd[prevCtbAddrX] ||
                     (ctbAddrY != prevCtbAddrY && sps_entropy_coding_sync_enabled_flag != 0))
@@ -1021,7 +1021,7 @@ namespace SharpH266
             var sh_num_tiles_in_slice_minus1 = SliceLayerRbsp.SliceHeader.ShNumTilesInSliceMinus1;
 
             if (CtbAddrInCurrSlice == null || CtbAddrInCurrSlice.Length < NumCtusInCurrSlice)
-                CtbAddrInCurrSlice = new uint[NumCtusInCurrSlice];
+                CtbAddrInCurrSlice = new ulong[NumCtusInCurrSlice];
 
             if (pps_rect_slice_flag != 0)
             {
@@ -1035,13 +1035,13 @@ namespace SharpH266
             else
             {
                 NumCtusInCurrSlice = 0;
-                for (int tileIdx = (int)sh_slice_address; tileIdx <= sh_slice_address + sh_num_tiles_in_slice_minus1; tileIdx++)
+                for (int tileIdx = (int)sh_slice_address; tileIdx <= (int)sh_slice_address + (int)sh_num_tiles_in_slice_minus1; tileIdx++)
                 {
                     int tileX = tileIdx % NumTileColumns;
                     int tileY = tileIdx / NumTileColumns;
-                    for (int ctbY = (int)TileRowBdVal[tileY]; ctbY < TileRowBdVal[tileY + 1]; ctbY++)
+                    for (int ctbY = (int)TileRowBdVal[tileY]; ctbY < (int)TileRowBdVal[tileY + 1]; ctbY++)
                     {
-                        for (int ctbX = (int)TileColBdVal[tileX]; ctbX < TileColBdVal[tileX + 1]; ctbX++)
+                        for (int ctbX = (int)TileColBdVal[tileX]; ctbX < (int)TileColBdVal[tileX + 1]; ctbX++)
                         {
                             CtbAddrInCurrSlice[NumCtusInCurrSlice] = (uint)(ctbY * PicWidthInCtbsY + ctbX);
                             NumCtusInCurrSlice++;
@@ -1051,7 +1051,7 @@ namespace SharpH266
             }
         }
 
-        public void OnNumL1Weights(uint num_l1_weights)
+        public void OnNumL1Weights(ulong num_l1_weights)
         {
             var pps_weighted_bipred_flag = PicParameterSetRbsp.PpsWeightedBipredFlag;
             var pps_wp_info_in_ph_flag = PicParameterSetRbsp.PpsWpInfoInPhFlag;
@@ -1066,7 +1066,7 @@ namespace SharpH266
                 NumWeightsL1 = NumRefIdxActive[1];
         }
 
-        public void OnAbsDeltaPocSt(uint listIdx, uint rplsIdx, uint i, RefPicListStruct refPicListStruct)
+        public void OnAbsDeltaPocSt(uint listIdx, ulong rplsIdx, uint i, RefPicListStruct refPicListStruct)
         {
             var sps_weighted_pred_flag = SeqParameterSetRbsp.SpsWeightedPredFlag;
             var sps_weighted_bipred_flag = SeqParameterSetRbsp.SpsWeightedBipredFlag;
@@ -1075,14 +1075,14 @@ namespace SharpH266
 
             if (AbsDeltaPocSt == null || AbsDeltaPocSt.Length < sps_num_ref_pic_lists.Length)
             {
-                AbsDeltaPocSt = new uint[sps_num_ref_pic_lists.Length][][];
+                AbsDeltaPocSt = new ulong[sps_num_ref_pic_lists.Length][][];
             }
 
             if (AbsDeltaPocSt[listIdx] == null)
-                AbsDeltaPocSt[listIdx] = new uint[sps_num_ref_pic_lists[listIdx] + 1][];
+                AbsDeltaPocSt[listIdx] = new ulong[sps_num_ref_pic_lists[listIdx] + 1][];
 
-            if(AbsDeltaPocSt[listIdx][rplsIdx] == null || AbsDeltaPocSt[listIdx][rplsIdx].Length < num_ref_entries[listIdx][rplsIdx])
-                AbsDeltaPocSt[listIdx][rplsIdx] = new uint[num_ref_entries[listIdx][rplsIdx]];
+            if(AbsDeltaPocSt[listIdx][rplsIdx] == null || AbsDeltaPocSt[listIdx][rplsIdx].Length < (int)num_ref_entries[listIdx][rplsIdx])
+                AbsDeltaPocSt[listIdx][rplsIdx] = new ulong[num_ref_entries[listIdx][rplsIdx]];
 
             if ((sps_weighted_pred_flag != 0 || sps_weighted_bipred_flag != 0) && i != 0)
                 AbsDeltaPocSt[listIdx][rplsIdx][i] = abs_delta_poc_st[listIdx][rplsIdx][i];

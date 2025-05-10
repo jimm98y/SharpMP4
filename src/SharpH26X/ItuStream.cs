@@ -50,6 +50,10 @@ namespace SharpH26X
 
         private ulong WriteByte(byte value)
         {
+            if(value == 0x40)
+            {
+
+            }
             _stream.WriteByte(value);
             return 8;
         }
@@ -163,7 +167,7 @@ namespace SharpH26X
             while (count > 0)
             {
                 int bits = count - 1;
-                ulong mask = 0x1u << bits;
+                ulong mask = 0x1ul << bits;
                 WriteBit((int)((value & mask) >> bits));
                 count--;
             }
@@ -176,9 +180,9 @@ namespace SharpH26X
             _lastMarkBeginPosition = _bitsPosition;
         }
 
-        public long GetBitsPositionSinceLastMark()
+        public ulong GetBitsPositionSinceLastMark()
         {
-            return _bitsPosition - _lastMarkBeginPosition;
+            return (ulong)(_bitsPosition - _lastMarkBeginPosition);
         }
 
         public bool ByteAligned()
@@ -218,7 +222,7 @@ namespace SharpH26X
             return WriteClass(context, value.Single(), name);
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, out byte value, string name)
+        public ulong ReadUnsignedInt(ulong size, ulong count, out byte value, string name)
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -227,7 +231,7 @@ namespace SharpH26X
             return read;
         }
         
-        public ulong ReadUnsignedInt(ulong size, int count, int index, Dictionary<int, uint> value, string name)
+        public ulong ReadUnsignedInt(ulong size, ulong count, int index, Dictionary<int, uint> value, string name)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -236,7 +240,7 @@ namespace SharpH26X
             return read;
         }
 
-        public ulong WriteUnsignedInt(int count, byte value, string name)
+        public ulong WriteUnsignedInt(ulong count, byte value, string name)
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -244,7 +248,7 @@ namespace SharpH26X
             return size;
         }
 
-        public ulong WriteUnsignedInt(int count, int index, Dictionary<int, uint> value, string name)
+        public ulong WriteUnsignedInt(ulong count, int index, Dictionary<int, uint> value, string name)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -252,17 +256,17 @@ namespace SharpH26X
             return size;
         }
 
-        public ulong ReadFixed(ulong size, int count, out uint value, string name)
+        public ulong ReadFixed(ulong size, ulong count, out uint value, string name)
         {
             return ReadUnsignedInt(size, count, out value, name);
         }
 
-        public ulong WriteFixed(int count, uint value, string name)
+        public ulong WriteFixed(ulong count, uint value, string name)
         {
             return WriteUnsignedInt(count, value, name);
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, out uint value, string name)
+        public ulong ReadUnsignedInt(ulong size, ulong count, out uint value, string name)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -271,12 +275,12 @@ namespace SharpH26X
             return read;
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, out ulong value, string name)
+        public ulong ReadUnsignedInt(ulong size, ulong count, out ulong value, string name)
         {
             LogBegin(name);
             if (count > 64)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            long ret = ReadBits(count);
+            long ret = ReadBits((int)count);
             if (ret == -1)
                 throw new EndOfStreamException();
             value = (ulong)ret;
@@ -284,34 +288,34 @@ namespace SharpH26X
             return (ulong)count;
         }
 
-        public ulong WriteUnsignedInt(int count, ulong value, string name)
+        public ulong WriteUnsignedInt(ulong count, ulong value, string name)
         {
             LogBegin(name);
-            WriteBits(count, value);
+            WriteBits((int)count, value);
             LogEnd(name, (ulong)count, value);
             return (ulong)count;
         }
 
-        public ulong ReadSignedInt(ulong size, int count, out int value, string name)
+        public ulong ReadSignedInt(ulong size, ulong count, out int value, string name)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            long ret = ReadBits(count);
+            long ret = ReadBits((int)count);
             if (ret == -1)
                 throw new EndOfStreamException();
             value = unchecked((int)ret);
             return (ulong)count;
         }
 
-        public ulong WriteSignedInt(int count, int value, string name)
+        public ulong WriteSignedInt(ulong count, int value, string name)
         {
             LogBegin(name);
-            WriteBits(count, unchecked((ulong)value));
+            WriteBits((int)count, unchecked((ulong)value));
             LogEnd(name, (ulong)count, value);
             return (ulong)count;
         }
 
-        public ulong ReadUnsignedIntGolomb(ulong size, out uint value, string name)
+        public ulong ReadUnsignedIntGolomb(ulong size, out ulong value, string name)
         {
             LogBegin(name);
             int cnt = 0;
@@ -321,7 +325,7 @@ namespace SharpH26X
                 cnt++;
             }
 
-            if(bit == -1)
+            if (bit == -1)
                 throw new EndOfStreamException();
 
             if (cnt > 0)
@@ -329,7 +333,7 @@ namespace SharpH26X
                 long bits = ReadBits(cnt);
                 if (bits == -1)
                     throw new EndOfStreamException();
-                value = (uint)((1 << cnt) - 1 + bits);
+                value = (1ul << cnt) - 1ul + (ulong)bits;
             }
             else
             {
@@ -340,44 +344,41 @@ namespace SharpH26X
             return (ulong)(cnt + 1 + cnt);
         }
 
-        public ulong WriteUnsignedIntGolomb(uint value, string name)
+        public ulong WriteUnsignedIntGolomb(ulong value, string name)
         {
             LogBegin(name);
-            int bits = 0;
-            int cumul = 0;
-            for (int i = 0; i < 31; i++)
+            int cnt = 0;
+            for (int i = 0; i < 64; i++)
             {
-                if (value < cumul + (1 << i))
+                if (((value + 1ul) >> i) > 0)
                 {
-                    bits = i;
-                    break;
+                    cnt = i;
                 }
-                cumul += (1 << i);
             }
-            WriteBits(bits, 0);
+            WriteBits(cnt, 0);
             WriteBit(1);
-            WriteBits(bits, (ulong)(value - cumul));
+            WriteBits(cnt, value - (1ul << cnt) + 1);
 
-            LogEnd(name, (ulong)(bits + 1 + bits), (long)value);
-            return (ulong)(bits + 1 + bits);
+            LogEnd(name, (ulong)(cnt + 1 + cnt), (long)value);
+            return (ulong)(cnt + 1 + cnt);
         }
 
-        public ulong ReadSignedIntGolomb(ulong size, out int value, string name)
+        public ulong ReadSignedIntGolomb(ulong size, out long value, string name)
         {
-            uint val;
+            ulong val;
             ulong read = ReadUnsignedIntGolomb(size, out val, name);
-            int sign = (((int)val & 0x1) << 1) - 1;
-            value = (((int)val >> 1) + ((int)val & 0x1)) * sign;
+            long sign = (((long)val & 0x1) << 1) - 1;
+            value = (((long)val >> 1) + ((long)val & 0x1)) * sign;
             return read;
         }
 
-        public ulong WriteSignedIntGolomb(int value, string name)
+        public ulong WriteSignedIntGolomb(long value, string name)
         {
-            uint mapped = (uint)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
+            ulong mapped = (ulong)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
             return WriteUnsignedIntGolomb(mapped, name);
         }
 
-        public bool ReadMoreRbspData(IItuSerializable serializable, uint maxPayloadSize = uint.MaxValue)
+        public bool ReadMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue)
         {
             if (_stream.Position == _stream.Length && _bitsPosition % 8 == 0)
                 return false;
@@ -395,7 +396,7 @@ namespace SharpH26X
                 if (one == 0)
                 {
                     
-                    if (maxPayloadSize == uint.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
+                    if (maxPayloadSize == ulong.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
                     {
                         serializable.HasMoreRbspData++;
                         return true;
@@ -423,7 +424,7 @@ namespace SharpH26X
                 else
                 {
                     
-                    if (maxPayloadSize == uint.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
+                    if (maxPayloadSize == ulong.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
                     {
                         serializable.HasMoreRbspData++;
                         return true;
@@ -445,7 +446,7 @@ namespace SharpH26X
             return _rbspDataCounter-- != 0;
         }
 
-        public int ReadNextBits(IItuSerializable serializable, int count)
+        public int ReadNextBits(IItuSerializable serializable, ulong count)
         {
             var bytes = (_stream as MemoryStream).ToArray();
             var msstream = new MemoryStream(bytes);
@@ -473,7 +474,7 @@ namespace SharpH26X
             }
         }
 
-        public int WriteNextBits(IItuSerializable serializable, int count)
+        public int WriteNextBits(IItuSerializable serializable, ulong count)
         {
             if (serializable.ReadNextBits == null)
                 return 0;
@@ -502,30 +503,30 @@ namespace SharpH26X
             }
         }
 
-        public ulong ReadUnsignedIntVariable(ulong size, uint count, out uint value, string name)
+        public ulong ReadUnsignedIntVariable(ulong size, ulong count, out uint value, string name)
         {
-            return ReadUnsignedInt(size, (int)count, out value, name);
+            return ReadUnsignedInt(size, count, out value, name);
         }
 
-        public ulong WriteUnsignedIntVariable(uint count, uint value, string name)
+        public ulong WriteUnsignedIntVariable(ulong count, uint value, string name)
         {
-            return WriteUnsignedInt((int)count, value, name);
+            return WriteUnsignedInt(count, value, name);
         }
 
-        public ulong ReadSignedIntVariable(ulong size, uint count, out int value, string name)
+        public ulong ReadSignedIntVariable(ulong size, ulong count, out int value, string name)
         {
-            return ReadSignedInt(size, (int)count, out value, name);
+            return ReadSignedInt(size, count, out value, name);
         }
 
-        public ulong WriteSignedIntVariable(uint count, int value, string name)
+        public ulong WriteSignedIntVariable(ulong count, int value, string name)
         {
-            return WriteSignedInt((int)count, value, name);
+            return WriteSignedInt(count, value, name);
         }
 
-        public ulong ReadBits(ulong size, int count, out byte value, string name)
+        public ulong ReadBits(ulong size, ulong count, out byte value, string name)
         {
             LogBegin(name);
-            long bits = ReadBits(count);
+            long bits = ReadBits((int)count);
             if(bits == -1)
                 throw new EndOfStreamException();
             value = (byte)bits;
@@ -533,15 +534,15 @@ namespace SharpH26X
             return (ulong)count;
         }
 
-        public ulong WriteBits(int count, byte value, string name)
+        public ulong WriteBits(ulong count, byte value, string name)
         {
             LogBegin(name);
-            WriteBits(count, (ulong)value);
-            LogEnd(name, (ulong)count, (long)value);
-            return (ulong)count;
+            WriteBits((int)count, value);
+            LogEnd(name, count, (long)value);
+            return count;
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, out BigInteger value, string name)
+        public ulong ReadUnsignedInt(ulong size, ulong count, out BigInteger value, string name)
         {
             LogBegin(name);
             if (count % 8 > 0)
@@ -558,11 +559,11 @@ namespace SharpH26X
             }
 
             value = new BigInteger(bytes);
-            LogEnd(name, (ulong)count, (long)value);
-            return (ulong)count;
+            LogEnd(name, count, (long)value);
+            return count;
         }
 
-        public ulong WriteUnsignedInt(int count, BigInteger value, string name)
+        public ulong WriteUnsignedInt(ulong count, BigInteger value, string name)
         {
             ulong size = 0;
             byte[] bytes = value.ToByteArray();
@@ -604,7 +605,7 @@ namespace SharpH26X
 
         #region Lists in do/while loops
 
-        public ulong ReadFixed(ulong size, int count, int whileIndex, Dictionary<int, uint> list, string name)
+        public ulong ReadFixed(ulong size, ulong count, int whileIndex, Dictionary<int, uint> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -614,17 +615,17 @@ namespace SharpH26X
             return read;
         }
 
-        public ulong ReadUnsignedIntGolomb(ulong size, int whileIndex, Dictionary<int, uint> list, string name)
+        public ulong ReadUnsignedIntGolomb(ulong size, int whileIndex, Dictionary<int, ulong> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            ulong read = ReadUnsignedIntGolomb(size, out var value, name);
+            ulong read = ReadUnsignedIntGolomb(size, out ulong value, name);
             list.Add(whileIndex, value);
             return read;
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, int whileIndex, Dictionary<int, byte> list, string name)
+        public ulong ReadUnsignedInt(ulong size, ulong count, int whileIndex, Dictionary<int, byte> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -634,7 +635,7 @@ namespace SharpH26X
             return read;
         }
 
-        public ulong ReadBits(ulong size, int count, int whileIndex, Dictionary<int, byte> list, string name)
+        public ulong ReadBits(ulong size, ulong count, int whileIndex, Dictionary<int, byte> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -644,7 +645,7 @@ namespace SharpH26X
             return read;
         }
 
-        public ulong WriteFixed(int count, int whileIndex, Dictionary<int, uint> list, string name)
+        public ulong WriteFixed(ulong count, int whileIndex, Dictionary<int, uint> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -656,7 +657,7 @@ namespace SharpH26X
             return size;
         }
 
-        public ulong WriteUnsignedInt(int count, int whileIndex, Dictionary<int, byte> list, string name)
+        public ulong WriteUnsignedInt(ulong count, int whileIndex, Dictionary<int, byte> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -668,7 +669,7 @@ namespace SharpH26X
             return size;
         }
 
-        public ulong WriteUnsignedIntGolomb(int whileIndex, Dictionary<int, uint> list, string name)
+        public ulong WriteUnsignedIntGolomb(int whileIndex, Dictionary<int, ulong> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -680,7 +681,7 @@ namespace SharpH26X
             return size;
         }
 
-        public ulong WriteBits(int count, int whileIndex, Dictionary<int, byte> list, string name)
+        public ulong WriteBits(ulong count, int whileIndex, Dictionary<int, byte> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));

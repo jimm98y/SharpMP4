@@ -73,7 +73,7 @@ namespace ItuGenerator
                 case "vps_base_layer_internal_flag":
                     return "((H265Context)context).VideoParameterSetRbsp.VpsBaseLayerInternalFlag";
                 case "vps_num_hrd_parameters":
-                    return "((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters";
+                    return "(uint)((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters";
                 case "layer_id_in_nuh":
                     return "((H265Context)context).VideoParameterSetRbsp.VpsExtension.LayerIdInNuh";
                 case "sub_pic_hrd_params_present_flag":
@@ -336,8 +336,8 @@ namespace ItuGenerator
                 { "scalingLst",                    "u(32)[]" }, // TODO: remove this temporary fix
                 { "NumBytesInNalUnit",             "u(32)" },
                 { "profilePresentFlag",            "u(32)" },
-                { "maxNumSubLayersMinus1",         "u(32)" },
-                { "stRpsIdx",                      "u(32)" },
+                { "maxNumSubLayersMinus1",         "u(64)" },
+                { "stRpsIdx",                      "u(64)" },
                 { "payloadType",                   "u(32)" },
                 { "payloadSize",                   "u(32)" },
                 { "commonInfPresentFlag",          "u(32)" },
@@ -360,6 +360,7 @@ namespace ItuGenerator
         public string FixFieldValue(string fieldValue)
         {
             fieldValue = fieldValue.Replace("<<", "<< (int)");
+            fieldValue = fieldValue.Replace("cp_ref_voi[ i ][ m ]", "(uint)cp_ref_voi[ i ][ m ]");
             return fieldValue;
         }
 

@@ -42,7 +42,7 @@ namespace ItuGenerator
                 case "NumClockTS":
                     return "this.pic_struct switch\r\n{\r\n0u => 1,\r\n1u => 1,\r\n2u => 1,\r\n3u => 2,\r\n4u => 2,\r\n5u => 3,\r\n6u => 3,\r\n7u => 2,\r\n8u => 3,\r\n_ => throw new NotSupportedException()\r\n}";
                 case "AllViewsPairedFlag":
-                    return "((Func<uint>)(() =>\r\n            {\r\n                uint AllViewsPairedFlag = 1;\r\n                for (int i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)\r\n                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);\r\n                return AllViewsPairedFlag;\r\n            })).Invoke()";
+                    return "((Func<uint>)(() =>\r\n            {\r\n                uint AllViewsPairedFlag = 1;\r\n                for (int i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)\r\n                    AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);\r\n                return AllViewsPairedFlag;\r\n            })).Invoke()";
                 case "cpb_cnt_minus1":
                     return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1";
                 case "ChromaArrayType":
@@ -70,7 +70,7 @@ namespace ItuGenerator
                 case "num_slice_groups_minus1":
                     return "((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1";
                 case "num_views_minus1":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1";
+                    return "(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1";
                 case "anchor_pic_flag":
                     return "((H264Context)context).NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag";
                 case "ref_dps_id0":
@@ -228,9 +228,9 @@ namespace ItuGenerator
                 { "outExp",                        "u(32)[,]" },
                 { "outMantissa",                   "u(32)[,]" },
                 { "outManLen",                     "u(32)[,]" },
-                { "numViews",                      "u(32)" },
-                { "predDirection",                 "u(32)" },
-                { "index",                         "u(32)" },
+                { "numViews",                      "u(64)" },
+                { "predDirection",                 "u(64)" },
+                { "index",                         "u(64)" },
                 { "expLen",                        "u(32)" },
             };
 

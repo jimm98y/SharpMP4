@@ -351,16 +351,16 @@ seq_parameter_set_data() {
         public uint ReservedZero2bits { get { return reserved_zero_2bits; } set { reserved_zero_2bits = value; } }
         private uint level_idc;
         public uint LevelIdc { get { return level_idc; } set { level_idc = value; } }
-        private uint seq_parameter_set_id;
-        public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
-        private uint chroma_format_idc = 1;
-        public uint ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
+        private ulong seq_parameter_set_id;
+        public ulong SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
+        private ulong chroma_format_idc = 1;
+        public ulong ChromaFormatIdc { get { return chroma_format_idc; } set { chroma_format_idc = value; } }
         private byte separate_colour_plane_flag;
         public byte SeparateColourPlaneFlag { get { return separate_colour_plane_flag; } set { separate_colour_plane_flag = value; } }
-        private uint bit_depth_luma_minus8;
-        public uint BitDepthLumaMinus8 { get { return bit_depth_luma_minus8; } set { bit_depth_luma_minus8 = value; } }
-        private uint bit_depth_chroma_minus8;
-        public uint BitDepthChromaMinus8 { get { return bit_depth_chroma_minus8; } set { bit_depth_chroma_minus8 = value; } }
+        private ulong bit_depth_luma_minus8;
+        public ulong BitDepthLumaMinus8 { get { return bit_depth_luma_minus8; } set { bit_depth_luma_minus8 = value; } }
+        private ulong bit_depth_chroma_minus8;
+        public ulong BitDepthChromaMinus8 { get { return bit_depth_chroma_minus8; } set { bit_depth_chroma_minus8 = value; } }
         private byte qpprime_y_zero_transform_bypass_flag;
         public byte QpprimeyZeroTransformBypassFlag { get { return qpprime_y_zero_transform_bypass_flag; } set { qpprime_y_zero_transform_bypass_flag = value; } }
         private byte seq_scaling_matrix_present_flag;
@@ -371,30 +371,30 @@ seq_parameter_set_data() {
         public ScalingList[] ScalingList { get { return scaling_list; } set { scaling_list = value; } }
         private ScalingList[] scaling_list0;
         public ScalingList[] ScalingList0 { get { return scaling_list0; } set { scaling_list0 = value; } }
-        private uint log2_max_frame_num_minus4;
-        public uint Log2MaxFrameNumMinus4 { get { return log2_max_frame_num_minus4; } set { log2_max_frame_num_minus4 = value; } }
-        private uint pic_order_cnt_type;
-        public uint PicOrderCntType { get { return pic_order_cnt_type; } set { pic_order_cnt_type = value; } }
-        private uint log2_max_pic_order_cnt_lsb_minus4;
-        public uint Log2MaxPicOrderCntLsbMinus4 { get { return log2_max_pic_order_cnt_lsb_minus4; } set { log2_max_pic_order_cnt_lsb_minus4 = value; } }
+        private ulong log2_max_frame_num_minus4;
+        public ulong Log2MaxFrameNumMinus4 { get { return log2_max_frame_num_minus4; } set { log2_max_frame_num_minus4 = value; } }
+        private ulong pic_order_cnt_type;
+        public ulong PicOrderCntType { get { return pic_order_cnt_type; } set { pic_order_cnt_type = value; } }
+        private ulong log2_max_pic_order_cnt_lsb_minus4;
+        public ulong Log2MaxPicOrderCntLsbMinus4 { get { return log2_max_pic_order_cnt_lsb_minus4; } set { log2_max_pic_order_cnt_lsb_minus4 = value; } }
         private byte delta_pic_order_always_zero_flag;
         public byte DeltaPicOrderAlwaysZeroFlag { get { return delta_pic_order_always_zero_flag; } set { delta_pic_order_always_zero_flag = value; } }
-        private int offset_for_non_ref_pic;
-        public int OffsetForNonRefPic { get { return offset_for_non_ref_pic; } set { offset_for_non_ref_pic = value; } }
-        private int offset_for_top_to_bottom_field;
-        public int OffsetForTopToBottomField { get { return offset_for_top_to_bottom_field; } set { offset_for_top_to_bottom_field = value; } }
-        private uint num_ref_frames_in_pic_order_cnt_cycle;
-        public uint NumRefFramesInPicOrderCntCycle { get { return num_ref_frames_in_pic_order_cnt_cycle; } set { num_ref_frames_in_pic_order_cnt_cycle = value; } }
-        private int[] offset_for_ref_frame;
-        public int[] OffsetForRefFrame { get { return offset_for_ref_frame; } set { offset_for_ref_frame = value; } }
-        private uint max_num_ref_frames;
-        public uint MaxNumRefFrames { get { return max_num_ref_frames; } set { max_num_ref_frames = value; } }
+        private long offset_for_non_ref_pic;
+        public long OffsetForNonRefPic { get { return offset_for_non_ref_pic; } set { offset_for_non_ref_pic = value; } }
+        private long offset_for_top_to_bottom_field;
+        public long OffsetForTopToBottomField { get { return offset_for_top_to_bottom_field; } set { offset_for_top_to_bottom_field = value; } }
+        private ulong num_ref_frames_in_pic_order_cnt_cycle;
+        public ulong NumRefFramesInPicOrderCntCycle { get { return num_ref_frames_in_pic_order_cnt_cycle; } set { num_ref_frames_in_pic_order_cnt_cycle = value; } }
+        private long[] offset_for_ref_frame;
+        public long[] OffsetForRefFrame { get { return offset_for_ref_frame; } set { offset_for_ref_frame = value; } }
+        private ulong max_num_ref_frames;
+        public ulong MaxNumRefFrames { get { return max_num_ref_frames; } set { max_num_ref_frames = value; } }
         private byte gaps_in_frame_num_value_allowed_flag;
         public byte GapsInFrameNumValueAllowedFlag { get { return gaps_in_frame_num_value_allowed_flag; } set { gaps_in_frame_num_value_allowed_flag = value; } }
-        private uint pic_width_in_mbs_minus1;
-        public uint PicWidthInMbsMinus1 { get { return pic_width_in_mbs_minus1; } set { pic_width_in_mbs_minus1 = value; } }
-        private uint pic_height_in_map_units_minus1;
-        public uint PicHeightInMapUnitsMinus1 { get { return pic_height_in_map_units_minus1; } set { pic_height_in_map_units_minus1 = value; } }
+        private ulong pic_width_in_mbs_minus1;
+        public ulong PicWidthInMbsMinus1 { get { return pic_width_in_mbs_minus1; } set { pic_width_in_mbs_minus1 = value; } }
+        private ulong pic_height_in_map_units_minus1;
+        public ulong PicHeightInMapUnitsMinus1 { get { return pic_height_in_map_units_minus1; } set { pic_height_in_map_units_minus1 = value; } }
         private byte frame_mbs_only_flag;
         public byte FrameMbsOnlyFlag { get { return frame_mbs_only_flag; } set { frame_mbs_only_flag = value; } }
         private byte mb_adaptive_frame_field_flag;
@@ -403,14 +403,14 @@ seq_parameter_set_data() {
         public byte Direct8x8InferenceFlag { get { return direct_8x8_inference_flag; } set { direct_8x8_inference_flag = value; } }
         private byte frame_cropping_flag;
         public byte FrameCroppingFlag { get { return frame_cropping_flag; } set { frame_cropping_flag = value; } }
-        private uint frame_crop_left_offset;
-        public uint FrameCropLeftOffset { get { return frame_crop_left_offset; } set { frame_crop_left_offset = value; } }
-        private uint frame_crop_right_offset;
-        public uint FrameCropRightOffset { get { return frame_crop_right_offset; } set { frame_crop_right_offset = value; } }
-        private uint frame_crop_top_offset;
-        public uint FrameCropTopOffset { get { return frame_crop_top_offset; } set { frame_crop_top_offset = value; } }
-        private uint frame_crop_bottom_offset;
-        public uint FrameCropBottomOffset { get { return frame_crop_bottom_offset; } set { frame_crop_bottom_offset = value; } }
+        private ulong frame_crop_left_offset;
+        public ulong FrameCropLeftOffset { get { return frame_crop_left_offset; } set { frame_crop_left_offset = value; } }
+        private ulong frame_crop_right_offset;
+        public ulong FrameCropRightOffset { get { return frame_crop_right_offset; } set { frame_crop_right_offset = value; } }
+        private ulong frame_crop_top_offset;
+        public ulong FrameCropTopOffset { get { return frame_crop_top_offset; } set { frame_crop_top_offset = value; } }
+        private ulong frame_crop_bottom_offset;
+        public ulong FrameCropBottomOffset { get { return frame_crop_bottom_offset; } set { frame_crop_bottom_offset = value; } }
         private byte vui_parameters_present_flag;
         public byte VuiParametersPresentFlag { get { return vui_parameters_present_flag; } set { vui_parameters_present_flag = value; } }
         private VuiParameters vui_parameters;
@@ -498,7 +498,7 @@ seq_parameter_set_data() {
                 size += stream.ReadSignedIntGolomb(size, out this.offset_for_top_to_bottom_field, "offset_for_top_to_bottom_field");
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_frames_in_pic_order_cnt_cycle, "num_ref_frames_in_pic_order_cnt_cycle");
 
-                this.offset_for_ref_frame = new int[num_ref_frames_in_pic_order_cnt_cycle];
+                this.offset_for_ref_frame = new long[num_ref_frames_in_pic_order_cnt_cycle];
                 for (i = 0; i < num_ref_frames_in_pic_order_cnt_cycle; i++)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.offset_for_ref_frame[i], "offset_for_ref_frame");
@@ -666,8 +666,8 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
         public uint SizeOfScalingList { get { return sizeOfScalingList; } set { sizeOfScalingList = value; } }
         private uint useDefaultScalingMatrixFlag;
         public uint UseDefaultScalingMatrixFlag { get { return useDefaultScalingMatrixFlag; } set { useDefaultScalingMatrixFlag = value; } }
-        private int[] delta_scale;
-        public int[] DeltaScale { get { return delta_scale; } set { delta_scale = value; } }
+        private long[] delta_scale;
+        public long[] DeltaScale { get { return delta_scale; } set { delta_scale = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -689,7 +689,7 @@ scaling_list( scalingLst, sizeOfScalingList, useDefaultScalingMatrixFlag ) {
             lastScale = 8;
             nextScale = 8;
 
-            this.delta_scale = new int[sizeOfScalingList];
+            this.delta_scale = new long[sizeOfScalingList];
             for (j = 0; j < sizeOfScalingList; j++)
             {
 
@@ -752,12 +752,12 @@ seq_parameter_set_extension_rbsp() {
     */
     public class SeqParameterSetExtensionRbsp : IItuSerializable
     {
-        private uint seq_parameter_set_id;
-        public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
-        private uint aux_format_idc;
-        public uint AuxFormatIdc { get { return aux_format_idc; } set { aux_format_idc = value; } }
-        private uint bit_depth_aux_minus8;
-        public uint BitDepthAuxMinus8 { get { return bit_depth_aux_minus8; } set { bit_depth_aux_minus8 = value; } }
+        private ulong seq_parameter_set_id;
+        public ulong SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
+        private ulong aux_format_idc;
+        public ulong AuxFormatIdc { get { return aux_format_idc; } set { aux_format_idc = value; } }
+        private ulong bit_depth_aux_minus8;
+        public ulong BitDepthAuxMinus8 { get { return bit_depth_aux_minus8; } set { bit_depth_aux_minus8 = value; } }
         private byte alpha_incr_flag;
         public byte AlphaIncrFlag { get { return alpha_incr_flag; } set { alpha_incr_flag = value; } }
         private uint alpha_opaque_value;
@@ -1078,46 +1078,46 @@ pic_parameter_set_rbsp() {
     */
     public class PicParameterSetRbsp : IItuSerializable
     {
-        private uint pic_parameter_set_id;
-        public uint PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
-        private uint seq_parameter_set_id;
-        public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
+        private ulong pic_parameter_set_id;
+        public ulong PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
+        private ulong seq_parameter_set_id;
+        public ulong SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
         private byte entropy_coding_mode_flag;
         public byte EntropyCodingModeFlag { get { return entropy_coding_mode_flag; } set { entropy_coding_mode_flag = value; } }
         private byte bottom_field_pic_order_in_frame_present_flag;
         public byte BottomFieldPicOrderInFramePresentFlag { get { return bottom_field_pic_order_in_frame_present_flag; } set { bottom_field_pic_order_in_frame_present_flag = value; } }
-        private uint num_slice_groups_minus1;
-        public uint NumSliceGroupsMinus1 { get { return num_slice_groups_minus1; } set { num_slice_groups_minus1 = value; } }
-        private uint slice_group_map_type;
-        public uint SliceGroupMapType { get { return slice_group_map_type; } set { slice_group_map_type = value; } }
-        private uint[] run_length_minus1;
-        public uint[] RunLengthMinus1 { get { return run_length_minus1; } set { run_length_minus1 = value; } }
-        private uint[] top_left;
-        public uint[] TopLeft { get { return top_left; } set { top_left = value; } }
-        private uint[] bottom_right;
-        public uint[] BottomRight { get { return bottom_right; } set { bottom_right = value; } }
+        private ulong num_slice_groups_minus1;
+        public ulong NumSliceGroupsMinus1 { get { return num_slice_groups_minus1; } set { num_slice_groups_minus1 = value; } }
+        private ulong slice_group_map_type;
+        public ulong SliceGroupMapType { get { return slice_group_map_type; } set { slice_group_map_type = value; } }
+        private ulong[] run_length_minus1;
+        public ulong[] RunLengthMinus1 { get { return run_length_minus1; } set { run_length_minus1 = value; } }
+        private ulong[] top_left;
+        public ulong[] TopLeft { get { return top_left; } set { top_left = value; } }
+        private ulong[] bottom_right;
+        public ulong[] BottomRight { get { return bottom_right; } set { bottom_right = value; } }
         private byte slice_group_change_direction_flag;
         public byte SliceGroupChangeDirectionFlag { get { return slice_group_change_direction_flag; } set { slice_group_change_direction_flag = value; } }
-        private uint slice_group_change_rate_minus1;
-        public uint SliceGroupChangeRateMinus1 { get { return slice_group_change_rate_minus1; } set { slice_group_change_rate_minus1 = value; } }
-        private uint pic_size_in_map_units_minus1;
-        public uint PicSizeInMapUnitsMinus1 { get { return pic_size_in_map_units_minus1; } set { pic_size_in_map_units_minus1 = value; } }
+        private ulong slice_group_change_rate_minus1;
+        public ulong SliceGroupChangeRateMinus1 { get { return slice_group_change_rate_minus1; } set { slice_group_change_rate_minus1 = value; } }
+        private ulong pic_size_in_map_units_minus1;
+        public ulong PicSizeInMapUnitsMinus1 { get { return pic_size_in_map_units_minus1; } set { pic_size_in_map_units_minus1 = value; } }
         private uint[] slice_group_id;
         public uint[] SliceGroupId { get { return slice_group_id; } set { slice_group_id = value; } }
-        private uint num_ref_idx_l0_default_active_minus1;
-        public uint NumRefIdxL0DefaultActiveMinus1 { get { return num_ref_idx_l0_default_active_minus1; } set { num_ref_idx_l0_default_active_minus1 = value; } }
-        private uint num_ref_idx_l1_default_active_minus1;
-        public uint NumRefIdxL1DefaultActiveMinus1 { get { return num_ref_idx_l1_default_active_minus1; } set { num_ref_idx_l1_default_active_minus1 = value; } }
+        private ulong num_ref_idx_l0_default_active_minus1;
+        public ulong NumRefIdxL0DefaultActiveMinus1 { get { return num_ref_idx_l0_default_active_minus1; } set { num_ref_idx_l0_default_active_minus1 = value; } }
+        private ulong num_ref_idx_l1_default_active_minus1;
+        public ulong NumRefIdxL1DefaultActiveMinus1 { get { return num_ref_idx_l1_default_active_minus1; } set { num_ref_idx_l1_default_active_minus1 = value; } }
         private byte weighted_pred_flag;
         public byte WeightedPredFlag { get { return weighted_pred_flag; } set { weighted_pred_flag = value; } }
         private uint weighted_bipred_idc;
         public uint WeightedBipredIdc { get { return weighted_bipred_idc; } set { weighted_bipred_idc = value; } }
-        private int pic_init_qp_minus26;
-        public int PicInitQpMinus26 { get { return pic_init_qp_minus26; } set { pic_init_qp_minus26 = value; } }
-        private int pic_init_qs_minus26;
-        public int PicInitQsMinus26 { get { return pic_init_qs_minus26; } set { pic_init_qs_minus26 = value; } }
-        private int chroma_qp_index_offset;
-        public int ChromaQpIndexOffset { get { return chroma_qp_index_offset; } set { chroma_qp_index_offset = value; } }
+        private long pic_init_qp_minus26;
+        public long PicInitQpMinus26 { get { return pic_init_qp_minus26; } set { pic_init_qp_minus26 = value; } }
+        private long pic_init_qs_minus26;
+        public long PicInitQsMinus26 { get { return pic_init_qs_minus26; } set { pic_init_qs_minus26 = value; } }
+        private long chroma_qp_index_offset;
+        public long ChromaQpIndexOffset { get { return chroma_qp_index_offset; } set { chroma_qp_index_offset = value; } }
         private byte deblocking_filter_control_present_flag;
         public byte DeblockingFilterControlPresentFlag { get { return deblocking_filter_control_present_flag; } set { deblocking_filter_control_present_flag = value; } }
         private byte constrained_intra_pred_flag;
@@ -1134,8 +1134,8 @@ pic_parameter_set_rbsp() {
         public ScalingList[] ScalingList { get { return scaling_list; } set { scaling_list = value; } }
         private ScalingList[] scaling_list0;
         public ScalingList[] ScalingList0 { get { return scaling_list0; } set { scaling_list0 = value; } }
-        private int second_chroma_qp_index_offset;
-        public int SecondChromaQpIndexOffset { get { return second_chroma_qp_index_offset; } set { second_chroma_qp_index_offset = value; } }
+        private long second_chroma_qp_index_offset;
+        public long SecondChromaQpIndexOffset { get { return second_chroma_qp_index_offset; } set { second_chroma_qp_index_offset = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
         public RbspTrailingBits RbspTrailingBits { get { return rbsp_trailing_bits; } set { rbsp_trailing_bits = value; } }
 
@@ -1166,7 +1166,7 @@ pic_parameter_set_rbsp() {
                 if (slice_group_map_type == 0)
                 {
 
-                    this.run_length_minus1 = new uint[num_slice_groups_minus1 + 1];
+                    this.run_length_minus1 = new ulong[num_slice_groups_minus1 + 1];
                     for (iGroup = 0; iGroup <= num_slice_groups_minus1; iGroup++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.run_length_minus1[iGroup], "run_length_minus1");
@@ -1175,8 +1175,8 @@ pic_parameter_set_rbsp() {
                 else if (slice_group_map_type == 2)
                 {
 
-                    this.top_left = new uint[num_slice_groups_minus1 + 1];
-                    this.bottom_right = new uint[num_slice_groups_minus1 + 1];
+                    this.top_left = new ulong[num_slice_groups_minus1 + 1];
+                    this.bottom_right = new ulong[num_slice_groups_minus1 + 1];
                     for (iGroup = 0; iGroup < num_slice_groups_minus1; iGroup++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.top_left[iGroup], "top_left");
@@ -1783,8 +1783,8 @@ slice_data_partition_a_layer_rbsp() {
     {
         private SliceHeader slice_header;
         public SliceHeader SliceHeader { get { return slice_header; } set { slice_header = value; } }
-        private uint slice_id;
-        public uint SliceId { get { return slice_id; } set { slice_id = value; } }
+        private ulong slice_id;
+        public ulong SliceId { get { return slice_id; } set { slice_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -1848,12 +1848,12 @@ slice_data_partition_b_layer_rbsp() {
     */
     public class SliceDataPartitionbLayerRbsp : IItuSerializable
     {
-        private uint slice_id;
-        public uint SliceId { get { return slice_id; } set { slice_id = value; } }
+        private ulong slice_id;
+        public ulong SliceId { get { return slice_id; } set { slice_id = value; } }
         private uint colour_plane_id;
         public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
-        private uint redundant_pic_cnt;
-        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+        private ulong redundant_pic_cnt;
+        public ulong RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -1934,12 +1934,12 @@ slice_data_partition_c_layer_rbsp() {
     */
     public class SliceDataPartitioncLayerRbsp : IItuSerializable
     {
-        private uint slice_id;
-        public uint SliceId { get { return slice_id; } set { slice_id = value; } }
+        private ulong slice_id;
+        public ulong SliceId { get { return slice_id; } set { slice_id = value; } }
         private uint colour_plane_id;
         public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
-        private uint redundant_pic_cnt;
-        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+        private ulong redundant_pic_cnt;
+        public ulong RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -2305,12 +2305,12 @@ slice_header() {
     */
     public class SliceHeader : IItuSerializable
     {
-        private uint first_mb_in_slice;
-        public uint FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
-        private uint slice_type;
-        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
-        private uint pic_parameter_set_id;
-        public uint PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
+        private ulong first_mb_in_slice;
+        public ulong FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
+        private ulong slice_type;
+        public ulong SliceType { get { return slice_type; } set { slice_type = value; } }
+        private ulong pic_parameter_set_id;
+        public ulong PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
         private uint colour_plane_id;
         public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
         private uint frame_num;
@@ -2319,24 +2319,24 @@ slice_header() {
         public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
         private byte bottom_field_flag;
         public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
-        private uint idr_pic_id;
-        public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
+        private ulong idr_pic_id;
+        public ulong IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
         private uint pic_order_cnt_lsb;
         public uint PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
-        private int delta_pic_order_cnt_bottom;
-        public int DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
-        private int[] delta_pic_order_cnt;
-        public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
-        private uint redundant_pic_cnt;
-        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+        private long delta_pic_order_cnt_bottom;
+        public long DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
+        private long[] delta_pic_order_cnt;
+        public long[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
+        private ulong redundant_pic_cnt;
+        public ulong RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
         private byte direct_spatial_mv_pred_flag;
         public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
         private byte num_ref_idx_active_override_flag;
         public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
-        private uint num_ref_idx_l0_active_minus1;
-        public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
-        private uint num_ref_idx_l1_active_minus1;
-        public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
+        private ulong num_ref_idx_l0_active_minus1;
+        public ulong NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
+        private ulong num_ref_idx_l1_active_minus1;
+        public ulong NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
         private RefPicListMvcModification ref_pic_list_mvc_modification;
         public RefPicListMvcModification RefPicListMvcModification { get { return ref_pic_list_mvc_modification; } set { ref_pic_list_mvc_modification = value; } }
         private RefPicListModification ref_pic_list_modification;
@@ -2345,20 +2345,20 @@ slice_header() {
         public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
         private DecRefPicMarking dec_ref_pic_marking;
         public DecRefPicMarking DecRefPicMarking { get { return dec_ref_pic_marking; } set { dec_ref_pic_marking = value; } }
-        private uint cabac_init_idc;
-        public uint CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
-        private int slice_qp_delta;
-        public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
+        private ulong cabac_init_idc;
+        public ulong CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
+        private long slice_qp_delta;
+        public long SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
         private byte sp_for_switch_flag;
         public byte SpForSwitchFlag { get { return sp_for_switch_flag; } set { sp_for_switch_flag = value; } }
-        private int slice_qs_delta;
-        public int SliceQsDelta { get { return slice_qs_delta; } set { slice_qs_delta = value; } }
-        private uint disable_deblocking_filter_idc;
-        public uint DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
-        private int slice_alpha_c0_offset_div2;
-        public int SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
-        private int slice_beta_offset_div2;
-        public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
+        private long slice_qs_delta;
+        public long SliceQsDelta { get { return slice_qs_delta; } set { slice_qs_delta = value; } }
+        private ulong disable_deblocking_filter_idc;
+        public ulong DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
+        private long slice_alpha_c0_offset_div2;
+        public long SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
+        private long slice_beta_offset_div2;
+        public long SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
         private uint slice_group_change_cycle;
         public uint SliceGroupChangeCycle { get { return slice_group_change_cycle; } set { slice_group_change_cycle = value; } }
 
@@ -2672,12 +2672,12 @@ ref_pic_list_modification() {
     {
         private byte ref_pic_list_modification_flag_l0;
         public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
-        private Dictionary<int, uint> modification_of_pic_nums_idc = new Dictionary<int, uint>();
-        public Dictionary<int, uint> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
-        private Dictionary<int, uint> abs_diff_pic_num_minus1 = new Dictionary<int, uint>();
-        public Dictionary<int, uint> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
-        private Dictionary<int, uint> long_term_pic_num = new Dictionary<int, uint>();
-        public Dictionary<int, uint> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+        private Dictionary<int, ulong> modification_of_pic_nums_idc = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
+        private Dictionary<int, ulong> abs_diff_pic_num_minus1 = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
+        private Dictionary<int, ulong> long_term_pic_num = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
         private byte ref_pic_list_modification_flag_l1;
         public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
 
@@ -2855,34 +2855,34 @@ pred_weight_table() {
     */
     public class PredWeightTable : IItuSerializable
     {
-        private uint luma_log2_weight_denom;
-        public uint LumaLog2WeightDenom { get { return luma_log2_weight_denom; } set { luma_log2_weight_denom = value; } }
-        private uint chroma_log2_weight_denom;
-        public uint ChromaLog2WeightDenom { get { return chroma_log2_weight_denom; } set { chroma_log2_weight_denom = value; } }
+        private ulong luma_log2_weight_denom;
+        public ulong LumaLog2WeightDenom { get { return luma_log2_weight_denom; } set { luma_log2_weight_denom = value; } }
+        private ulong chroma_log2_weight_denom;
+        public ulong ChromaLog2WeightDenom { get { return chroma_log2_weight_denom; } set { chroma_log2_weight_denom = value; } }
         private byte[] luma_weight_l0_flag;
         public byte[] LumaWeightL0Flag { get { return luma_weight_l0_flag; } set { luma_weight_l0_flag = value; } }
-        private int[] luma_weight_l0;
-        public int[] LumaWeightL0 { get { return luma_weight_l0; } set { luma_weight_l0 = value; } }
-        private int[] luma_offset_l0;
-        public int[] LumaOffsetL0 { get { return luma_offset_l0; } set { luma_offset_l0 = value; } }
+        private long[] luma_weight_l0;
+        public long[] LumaWeightL0 { get { return luma_weight_l0; } set { luma_weight_l0 = value; } }
+        private long[] luma_offset_l0;
+        public long[] LumaOffsetL0 { get { return luma_offset_l0; } set { luma_offset_l0 = value; } }
         private byte[] chroma_weight_l0_flag;
         public byte[] ChromaWeightL0Flag { get { return chroma_weight_l0_flag; } set { chroma_weight_l0_flag = value; } }
-        private int[][] chroma_weight_l0;
-        public int[][] ChromaWeightL0 { get { return chroma_weight_l0; } set { chroma_weight_l0 = value; } }
-        private int[][] chroma_offset_l0;
-        public int[][] ChromaOffsetL0 { get { return chroma_offset_l0; } set { chroma_offset_l0 = value; } }
+        private long[][] chroma_weight_l0;
+        public long[][] ChromaWeightL0 { get { return chroma_weight_l0; } set { chroma_weight_l0 = value; } }
+        private long[][] chroma_offset_l0;
+        public long[][] ChromaOffsetL0 { get { return chroma_offset_l0; } set { chroma_offset_l0 = value; } }
         private byte[] luma_weight_l1_flag;
         public byte[] LumaWeightL1Flag { get { return luma_weight_l1_flag; } set { luma_weight_l1_flag = value; } }
-        private int[] luma_weight_l1;
-        public int[] LumaWeightL1 { get { return luma_weight_l1; } set { luma_weight_l1 = value; } }
-        private int[] luma_offset_l1;
-        public int[] LumaOffsetL1 { get { return luma_offset_l1; } set { luma_offset_l1 = value; } }
+        private long[] luma_weight_l1;
+        public long[] LumaWeightL1 { get { return luma_weight_l1; } set { luma_weight_l1 = value; } }
+        private long[] luma_offset_l1;
+        public long[] LumaOffsetL1 { get { return luma_offset_l1; } set { luma_offset_l1 = value; } }
         private byte[] chroma_weight_l1_flag;
         public byte[] ChromaWeightL1Flag { get { return chroma_weight_l1_flag; } set { chroma_weight_l1_flag = value; } }
-        private int[][] chroma_weight_l1;
-        public int[][] ChromaWeightL1 { get { return chroma_weight_l1; } set { chroma_weight_l1 = value; } }
-        private int[][] chroma_offset_l1;
-        public int[][] ChromaOffsetL1 { get { return chroma_offset_l1; } set { chroma_offset_l1 = value; } }
+        private long[][] chroma_weight_l1;
+        public long[][] ChromaWeightL1 { get { return chroma_weight_l1; } set { chroma_weight_l1 = value; } }
+        private long[][] chroma_offset_l1;
+        public long[][] ChromaOffsetL1 { get { return chroma_offset_l1; } set { chroma_offset_l1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -2906,11 +2906,11 @@ pred_weight_table() {
             }
 
             this.luma_weight_l0_flag = new byte[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
-            this.luma_weight_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
-            this.luma_offset_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
+            this.luma_weight_l0 = new long[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
+            this.luma_offset_l0 = new long[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
             this.chroma_weight_l0_flag = new byte[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)];
-            this.chroma_weight_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)][];
-            this.chroma_offset_l0 = new int[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)][];
+            this.chroma_weight_l0 = new long[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)][];
+            this.chroma_offset_l0 = new long[(((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 + 1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1 + 1)][];
             for (i = 0; i <= (((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxActiveOverrideFlag != 0 ? ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL0ActiveMinus1 : ((H264Context)context).PicParameterSetRbsp.NumRefIdxL0DefaultActiveMinus1); i++)
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l0_flag[i], "luma_weight_l0_flag");
@@ -2928,8 +2928,8 @@ pred_weight_table() {
                     if (chroma_weight_l0_flag[i] != 0)
                     {
 
-                        this.chroma_weight_l0[i] = new int[2];
-                        this.chroma_offset_l0[i] = new int[2];
+                        this.chroma_weight_l0[i] = new long[2];
+                        this.chroma_offset_l0[i] = new long[2];
                         for (j = 0; j < 2; j++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l0[i][j], "chroma_weight_l0");
@@ -2943,11 +2943,11 @@ pred_weight_table() {
             {
 
                 this.luma_weight_l1_flag = new byte[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.luma_weight_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.luma_offset_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.luma_weight_l1 = new long[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
+                this.luma_offset_l1 = new long[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
                 this.chroma_weight_l1_flag = new byte[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1];
-                this.chroma_weight_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
-                this.chroma_offset_l1 = new int[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
+                this.chroma_weight_l1 = new long[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
+                this.chroma_offset_l1 = new long[((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1 + 1][];
                 for (i = 0; i <= ((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.NumRefIdxL1ActiveMinus1; i++)
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.luma_weight_l1_flag[i], "luma_weight_l1_flag");
@@ -2965,8 +2965,8 @@ pred_weight_table() {
                         if (chroma_weight_l1_flag[i] != 0)
                         {
 
-                            this.chroma_weight_l1[i] = new int[2];
-                            this.chroma_offset_l1[i] = new int[2];
+                            this.chroma_weight_l1[i] = new long[2];
+                            this.chroma_offset_l1[i] = new long[2];
                             for (j = 0; j < 2; j++)
                             {
                                 size += stream.ReadSignedIntGolomb(size, out this.chroma_weight_l1[i][j], "chroma_weight_l1");
@@ -3090,16 +3090,16 @@ dec_ref_pic_marking() {
         public byte LongTermReferenceFlag { get { return long_term_reference_flag; } set { long_term_reference_flag = value; } }
         private byte adaptive_ref_pic_marking_mode_flag;
         public byte AdaptiveRefPicMarkingModeFlag { get { return adaptive_ref_pic_marking_mode_flag; } set { adaptive_ref_pic_marking_mode_flag = value; } }
-        private Dictionary<int, uint> memory_management_control_operation = new Dictionary<int, uint>();
-        public Dictionary<int, uint> MemoryManagementControlOperation { get { return memory_management_control_operation; } set { memory_management_control_operation = value; } }
-        private Dictionary<int, uint> difference_of_pic_nums_minus1 = new Dictionary<int, uint>();
-        public Dictionary<int, uint> DifferenceOfPicNumsMinus1 { get { return difference_of_pic_nums_minus1; } set { difference_of_pic_nums_minus1 = value; } }
-        private Dictionary<int, uint> long_term_pic_num = new Dictionary<int, uint>();
-        public Dictionary<int, uint> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
-        private Dictionary<int, uint> long_term_frame_idx = new Dictionary<int, uint>();
-        public Dictionary<int, uint> LongTermFrameIdx { get { return long_term_frame_idx; } set { long_term_frame_idx = value; } }
-        private Dictionary<int, uint> max_long_term_frame_idx_plus1 = new Dictionary<int, uint>();
-        public Dictionary<int, uint> MaxLongTermFrameIdxPlus1 { get { return max_long_term_frame_idx_plus1; } set { max_long_term_frame_idx_plus1 = value; } }
+        private Dictionary<int, ulong> memory_management_control_operation = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> MemoryManagementControlOperation { get { return memory_management_control_operation; } set { memory_management_control_operation = value; } }
+        private Dictionary<int, ulong> difference_of_pic_nums_minus1 = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> DifferenceOfPicNumsMinus1 { get { return difference_of_pic_nums_minus1; } set { difference_of_pic_nums_minus1 = value; } }
+        private Dictionary<int, ulong> long_term_pic_num = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+        private Dictionary<int, ulong> long_term_frame_idx = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> LongTermFrameIdx { get { return long_term_frame_idx; } set { long_term_frame_idx = value; } }
+        private Dictionary<int, ulong> max_long_term_frame_idx_plus1 = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> MaxLongTermFrameIdxPlus1 { get { return max_long_term_frame_idx_plus1; } set { max_long_term_frame_idx_plus1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -4263,8 +4263,8 @@ buffering_period( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint seq_parameter_set_id;
-        public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
+        private ulong seq_parameter_set_id;
+        public ulong SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
         private uint[] initial_cpb_removal_delay;
         public uint[] InitialCpbRemovalDelay { get { return initial_cpb_removal_delay; } set { initial_cpb_removal_delay = value; } }
         private uint[] initial_cpb_removal_delay_offset;
@@ -4816,22 +4816,22 @@ if( !pan_scan_rect_cancel_flag ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint pan_scan_rect_id;
-        public uint PanScanRectId { get { return pan_scan_rect_id; } set { pan_scan_rect_id = value; } }
+        private ulong pan_scan_rect_id;
+        public ulong PanScanRectId { get { return pan_scan_rect_id; } set { pan_scan_rect_id = value; } }
         private byte pan_scan_rect_cancel_flag;
         public byte PanScanRectCancelFlag { get { return pan_scan_rect_cancel_flag; } set { pan_scan_rect_cancel_flag = value; } }
-        private uint pan_scan_cnt_minus1;
-        public uint PanScanCntMinus1 { get { return pan_scan_cnt_minus1; } set { pan_scan_cnt_minus1 = value; } }
-        private int[] pan_scan_rect_left_offset;
-        public int[] PanScanRectLeftOffset { get { return pan_scan_rect_left_offset; } set { pan_scan_rect_left_offset = value; } }
-        private int[] pan_scan_rect_right_offset;
-        public int[] PanScanRectRightOffset { get { return pan_scan_rect_right_offset; } set { pan_scan_rect_right_offset = value; } }
-        private int[] pan_scan_rect_top_offset;
-        public int[] PanScanRectTopOffset { get { return pan_scan_rect_top_offset; } set { pan_scan_rect_top_offset = value; } }
-        private int[] pan_scan_rect_bottom_offset;
-        public int[] PanScanRectBottomOffset { get { return pan_scan_rect_bottom_offset; } set { pan_scan_rect_bottom_offset = value; } }
-        private uint pan_scan_rect_repetition_period;
-        public uint PanScanRectRepetitionPeriod { get { return pan_scan_rect_repetition_period; } set { pan_scan_rect_repetition_period = value; } }
+        private ulong pan_scan_cnt_minus1;
+        public ulong PanScanCntMinus1 { get { return pan_scan_cnt_minus1; } set { pan_scan_cnt_minus1 = value; } }
+        private long[] pan_scan_rect_left_offset;
+        public long[] PanScanRectLeftOffset { get { return pan_scan_rect_left_offset; } set { pan_scan_rect_left_offset = value; } }
+        private long[] pan_scan_rect_right_offset;
+        public long[] PanScanRectRightOffset { get { return pan_scan_rect_right_offset; } set { pan_scan_rect_right_offset = value; } }
+        private long[] pan_scan_rect_top_offset;
+        public long[] PanScanRectTopOffset { get { return pan_scan_rect_top_offset; } set { pan_scan_rect_top_offset = value; } }
+        private long[] pan_scan_rect_bottom_offset;
+        public long[] PanScanRectBottomOffset { get { return pan_scan_rect_bottom_offset; } set { pan_scan_rect_bottom_offset = value; } }
+        private ulong pan_scan_rect_repetition_period;
+        public ulong PanScanRectRepetitionPeriod { get { return pan_scan_rect_repetition_period; } set { pan_scan_rect_repetition_period = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -4853,10 +4853,10 @@ if( !pan_scan_rect_cancel_flag ) {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.pan_scan_cnt_minus1, "pan_scan_cnt_minus1");
 
-                this.pan_scan_rect_left_offset = new int[pan_scan_cnt_minus1 + 1];
-                this.pan_scan_rect_right_offset = new int[pan_scan_cnt_minus1 + 1];
-                this.pan_scan_rect_top_offset = new int[pan_scan_cnt_minus1 + 1];
-                this.pan_scan_rect_bottom_offset = new int[pan_scan_cnt_minus1 + 1];
+                this.pan_scan_rect_left_offset = new long[pan_scan_cnt_minus1 + 1];
+                this.pan_scan_rect_right_offset = new long[pan_scan_cnt_minus1 + 1];
+                this.pan_scan_rect_top_offset = new long[pan_scan_cnt_minus1 + 1];
+                this.pan_scan_rect_bottom_offset = new long[pan_scan_cnt_minus1 + 1];
                 for (i = 0; i <= pan_scan_cnt_minus1; i++)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.pan_scan_rect_left_offset[i], "pan_scan_rect_left_offset");
@@ -5120,8 +5120,8 @@ recovery_point( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint recovery_frame_cnt;
-        public uint RecoveryFrameCnt { get { return recovery_frame_cnt; } set { recovery_frame_cnt = value; } }
+        private ulong recovery_frame_cnt;
+        public ulong RecoveryFrameCnt { get { return recovery_frame_cnt; } set { recovery_frame_cnt = value; } }
         private byte exact_match_flag;
         public byte ExactMatchFlag { get { return exact_match_flag; } set { exact_match_flag = value; } }
         private byte broken_link_flag;
@@ -5183,8 +5183,8 @@ dec_ref_pic_marking_repetition( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte original_idr_flag;
         public byte OriginalIdrFlag { get { return original_idr_flag; } set { original_idr_flag = value; } }
-        private uint original_frame_num;
-        public uint OriginalFrameNum { get { return original_frame_num; } set { original_frame_num = value; } }
+        private ulong original_frame_num;
+        public ulong OriginalFrameNum { get { return original_frame_num; } set { original_frame_num = value; } }
         private byte original_field_pic_flag;
         public byte OriginalFieldPicFlag { get { return original_field_pic_flag; } set { original_field_pic_flag = value; } }
         private byte original_bottom_field_flag;
@@ -5276,24 +5276,24 @@ spare_pic( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint target_frame_num;
-        public uint TargetFrameNum { get { return target_frame_num; } set { target_frame_num = value; } }
+        private ulong target_frame_num;
+        public ulong TargetFrameNum { get { return target_frame_num; } set { target_frame_num = value; } }
         private byte spare_field_flag;
         public byte SpareFieldFlag { get { return spare_field_flag; } set { spare_field_flag = value; } }
         private byte target_bottom_field_flag;
         public byte TargetBottomFieldFlag { get { return target_bottom_field_flag; } set { target_bottom_field_flag = value; } }
-        private uint num_spare_pics_minus1;
-        public uint NumSparePicsMinus1 { get { return num_spare_pics_minus1; } set { num_spare_pics_minus1 = value; } }
-        private uint[] delta_spare_frame_num;
-        public uint[] DeltaSpareFrameNum { get { return delta_spare_frame_num; } set { delta_spare_frame_num = value; } }
+        private ulong num_spare_pics_minus1;
+        public ulong NumSparePicsMinus1 { get { return num_spare_pics_minus1; } set { num_spare_pics_minus1 = value; } }
+        private ulong[] delta_spare_frame_num;
+        public ulong[] DeltaSpareFrameNum { get { return delta_spare_frame_num; } set { delta_spare_frame_num = value; } }
         private byte[] spare_bottom_field_flag;
         public byte[] SpareBottomFieldFlag { get { return spare_bottom_field_flag; } set { spare_bottom_field_flag = value; } }
-        private uint[] spare_area_idc;
-        public uint[] SpareAreaIdc { get { return spare_area_idc; } set { spare_area_idc = value; } }
+        private ulong[] spare_area_idc;
+        public ulong[] SpareAreaIdc { get { return spare_area_idc; } set { spare_area_idc = value; } }
         private byte[][] spare_unit_flag;
         public byte[][] SpareUnitFlag { get { return spare_unit_flag; } set { spare_unit_flag = value; } }
-        private uint[][] zero_run_length;
-        public uint[][] ZeroRunLength { get { return zero_run_length; } set { zero_run_length = value; } }
+        private ulong[][] zero_run_length;
+        public ulong[][] ZeroRunLength { get { return zero_run_length; } set { zero_run_length = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5309,7 +5309,7 @@ spare_pic( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            uint mapUnitCnt = 0;
+            ulong mapUnitCnt = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.target_frame_num, "target_frame_num");
             size += stream.ReadUnsignedInt(size, 1, out this.spare_field_flag, "spare_field_flag");
 
@@ -5319,11 +5319,11 @@ spare_pic( payloadSize ) {
             }
             size += stream.ReadUnsignedIntGolomb(size, out this.num_spare_pics_minus1, "num_spare_pics_minus1");
 
-            this.delta_spare_frame_num = new uint[num_spare_pics_minus1 + 1 + 1];
+            this.delta_spare_frame_num = new ulong[num_spare_pics_minus1 + 1 + 1];
             this.spare_bottom_field_flag = new byte[num_spare_pics_minus1 + 1 + 1];
-            this.spare_area_idc = new uint[num_spare_pics_minus1 + 1 + 1];
+            this.spare_area_idc = new ulong[num_spare_pics_minus1 + 1 + 1];
             this.spare_unit_flag = new byte[num_spare_pics_minus1 + 1 + 1][];
-            this.zero_run_length = new uint[num_spare_pics_minus1 + 1 + 1][];
+            this.zero_run_length = new ulong[num_spare_pics_minus1 + 1 + 1][];
             for (i = 0; i < num_spare_pics_minus1 + 1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.delta_spare_frame_num[i], "delta_spare_frame_num");
@@ -5347,7 +5347,7 @@ spare_pic( payloadSize ) {
                 {
                     mapUnitCnt = 0;
 
-                    this.zero_run_length[i] = new uint[(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
+                    this.zero_run_length[i] = new ulong[(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1 + 1)];
                     for (j = 0; mapUnitCnt < (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1 + 1) * (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1 + 1); j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.zero_run_length[i][j], "zero_run_length");
@@ -5365,7 +5365,7 @@ spare_pic( payloadSize ) {
 
             uint i = 0;
             uint j = 0;
-            uint mapUnitCnt = 0;
+            ulong mapUnitCnt = 0;
             size += stream.WriteUnsignedIntGolomb(this.target_frame_num, "target_frame_num");
             size += stream.WriteUnsignedInt(1, this.spare_field_flag, "spare_field_flag");
 
@@ -5429,12 +5429,12 @@ scene_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte scene_info_present_flag;
         public byte SceneInfoPresentFlag { get { return scene_info_present_flag; } set { scene_info_present_flag = value; } }
-        private uint scene_id;
-        public uint SceneId { get { return scene_id; } set { scene_id = value; } }
-        private uint scene_transition_type;
-        public uint SceneTransitionType { get { return scene_transition_type; } set { scene_transition_type = value; } }
-        private uint second_scene_id;
-        public uint SecondSceneId { get { return second_scene_id; } set { second_scene_id = value; } }
+        private ulong scene_id;
+        public ulong SceneId { get { return scene_id; } set { scene_id = value; } }
+        private ulong scene_transition_type;
+        public ulong SceneTransitionType { get { return scene_transition_type; } set { scene_transition_type = value; } }
+        private ulong second_scene_id;
+        public ulong SecondSceneId { get { return second_scene_id; } set { second_scene_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5504,10 +5504,10 @@ sub_seq_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint sub_seq_layer_num;
-        public uint SubSeqLayerNum { get { return sub_seq_layer_num; } set { sub_seq_layer_num = value; } }
-        private uint sub_seq_id;
-        public uint SubSeqId { get { return sub_seq_id; } set { sub_seq_id = value; } }
+        private ulong sub_seq_layer_num;
+        public ulong SubSeqLayerNum { get { return sub_seq_layer_num; } set { sub_seq_layer_num = value; } }
+        private ulong sub_seq_id;
+        public ulong SubSeqId { get { return sub_seq_id; } set { sub_seq_id = value; } }
         private byte first_ref_pic_flag;
         public byte FirstRefPicFlag { get { return first_ref_pic_flag; } set { first_ref_pic_flag = value; } }
         private byte leading_non_ref_pic_flag;
@@ -5516,8 +5516,8 @@ sub_seq_info( payloadSize ) {
         public byte LastPicFlag { get { return last_pic_flag; } set { last_pic_flag = value; } }
         private byte sub_seq_frame_num_flag;
         public byte SubSeqFrameNumFlag { get { return sub_seq_frame_num_flag; } set { sub_seq_frame_num_flag = value; } }
-        private uint sub_seq_frame_num;
-        public uint SubSeqFrameNum { get { return sub_seq_frame_num; } set { sub_seq_frame_num = value; } }
+        private ulong sub_seq_frame_num;
+        public ulong SubSeqFrameNum { get { return sub_seq_frame_num; } set { sub_seq_frame_num = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5583,8 +5583,8 @@ sub_seq_layer_characteristics( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_sub_seq_layers_minus1;
-        public uint NumSubSeqLayersMinus1 { get { return num_sub_seq_layers_minus1; } set { num_sub_seq_layers_minus1 = value; } }
+        private ulong num_sub_seq_layers_minus1;
+        public ulong NumSubSeqLayersMinus1 { get { return num_sub_seq_layers_minus1; } set { num_sub_seq_layers_minus1 = value; } }
         private byte[] accurate_statistics_flag;
         public byte[] AccurateStatisticsFlag { get { return accurate_statistics_flag; } set { accurate_statistics_flag = value; } }
         private uint[] average_bit_rate;
@@ -5666,10 +5666,10 @@ sub_seq_characteristics( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint sub_seq_layer_num;
-        public uint SubSeqLayerNum { get { return sub_seq_layer_num; } set { sub_seq_layer_num = value; } }
-        private uint sub_seq_id;
-        public uint SubSeqId { get { return sub_seq_id; } set { sub_seq_id = value; } }
+        private ulong sub_seq_layer_num;
+        public ulong SubSeqLayerNum { get { return sub_seq_layer_num; } set { sub_seq_layer_num = value; } }
+        private ulong sub_seq_id;
+        public ulong SubSeqId { get { return sub_seq_id; } set { sub_seq_id = value; } }
         private byte duration_flag;
         public byte DurationFlag { get { return duration_flag; } set { duration_flag = value; } }
         private uint sub_seq_duration;
@@ -5682,12 +5682,12 @@ sub_seq_characteristics( payloadSize ) {
         public uint AverageBitRate { get { return average_bit_rate; } set { average_bit_rate = value; } }
         private uint average_frame_rate;
         public uint AverageFrameRate { get { return average_frame_rate; } set { average_frame_rate = value; } }
-        private uint num_referenced_subseqs;
-        public uint NumReferencedSubseqs { get { return num_referenced_subseqs; } set { num_referenced_subseqs = value; } }
-        private uint[] ref_sub_seq_layer_num;
-        public uint[] RefSubSeqLayerNum { get { return ref_sub_seq_layer_num; } set { ref_sub_seq_layer_num = value; } }
-        private uint[] ref_sub_seq_id;
-        public uint[] RefSubSeqId { get { return ref_sub_seq_id; } set { ref_sub_seq_id = value; } }
+        private ulong num_referenced_subseqs;
+        public ulong NumReferencedSubseqs { get { return num_referenced_subseqs; } set { num_referenced_subseqs = value; } }
+        private ulong[] ref_sub_seq_layer_num;
+        public ulong[] RefSubSeqLayerNum { get { return ref_sub_seq_layer_num; } set { ref_sub_seq_layer_num = value; } }
+        private ulong[] ref_sub_seq_id;
+        public ulong[] RefSubSeqId { get { return ref_sub_seq_id; } set { ref_sub_seq_id = value; } }
         private byte[] ref_sub_seq_direction;
         public byte[] RefSubSeqDirection { get { return ref_sub_seq_direction; } set { ref_sub_seq_direction = value; } }
 
@@ -5722,8 +5722,8 @@ sub_seq_characteristics( payloadSize ) {
             }
             size += stream.ReadUnsignedIntGolomb(size, out this.num_referenced_subseqs, "num_referenced_subseqs");
 
-            this.ref_sub_seq_layer_num = new uint[num_referenced_subseqs];
-            this.ref_sub_seq_id = new uint[num_referenced_subseqs];
+            this.ref_sub_seq_layer_num = new ulong[num_referenced_subseqs];
+            this.ref_sub_seq_id = new ulong[num_referenced_subseqs];
             this.ref_sub_seq_direction = new byte[num_referenced_subseqs];
             for (n = 0; n < num_referenced_subseqs; n++)
             {
@@ -5781,8 +5781,8 @@ full_frame_freeze( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint full_frame_freeze_repetition_period;
-        public uint FullFrameFreezeRepetitionPeriod { get { return full_frame_freeze_repetition_period; } set { full_frame_freeze_repetition_period = value; } }
+        private ulong full_frame_freeze_repetition_period;
+        public ulong FullFrameFreezeRepetitionPeriod { get { return full_frame_freeze_repetition_period; } set { full_frame_freeze_repetition_period = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5860,8 +5860,8 @@ full_frame_snapshot( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint snapshot_id;
-        public uint SnapshotId { get { return snapshot_id; } set { snapshot_id = value; } }
+        private ulong snapshot_id;
+        public ulong SnapshotId { get { return snapshot_id; } set { snapshot_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5903,10 +5903,10 @@ progressive_refinement_segment_start( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint progressive_refinement_id;
-        public uint ProgressiveRefinementId { get { return progressive_refinement_id; } set { progressive_refinement_id = value; } }
-        private uint num_refinement_steps_minus1;
-        public uint NumRefinementStepsMinus1 { get { return num_refinement_steps_minus1; } set { num_refinement_steps_minus1 = value; } }
+        private ulong progressive_refinement_id;
+        public ulong ProgressiveRefinementId { get { return progressive_refinement_id; } set { progressive_refinement_id = value; } }
+        private ulong num_refinement_steps_minus1;
+        public ulong NumRefinementStepsMinus1 { get { return num_refinement_steps_minus1; } set { num_refinement_steps_minus1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5949,8 +5949,8 @@ progressive_refinement_segment_end( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint progressive_refinement_id;
-        public uint ProgressiveRefinementId { get { return progressive_refinement_id; } set { progressive_refinement_id = value; } }
+        private ulong progressive_refinement_id;
+        public ulong ProgressiveRefinementId { get { return progressive_refinement_id; } set { progressive_refinement_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5999,16 +5999,16 @@ motion_constrained_slice_group_set( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_slice_groups_in_set_minus1;
-        public uint NumSliceGroupsInSetMinus1 { get { return num_slice_groups_in_set_minus1; } set { num_slice_groups_in_set_minus1 = value; } }
+        private ulong num_slice_groups_in_set_minus1;
+        public ulong NumSliceGroupsInSetMinus1 { get { return num_slice_groups_in_set_minus1; } set { num_slice_groups_in_set_minus1 = value; } }
         private uint[] slice_group_id;
         public uint[] SliceGroupId { get { return slice_group_id; } set { slice_group_id = value; } }
         private byte exact_sample_value_match_flag;
         public byte ExactSampleValueMatchFlag { get { return exact_sample_value_match_flag; } set { exact_sample_value_match_flag = value; } }
         private byte pan_scan_rect_flag;
         public byte PanScanRectFlag { get { return pan_scan_rect_flag; } set { pan_scan_rect_flag = value; } }
-        private uint pan_scan_rect_id;
-        public uint PanScanRectId { get { return pan_scan_rect_id; } set { pan_scan_rect_id = value; } }
+        private ulong pan_scan_rect_id;
+        public ulong PanScanRectId { get { return pan_scan_rect_id; } set { pan_scan_rect_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -6144,10 +6144,10 @@ film_grain_characteristics( payloadSize ) {
         public uint[][] IntensityIntervalLowerBound { get { return intensity_interval_lower_bound; } set { intensity_interval_lower_bound = value; } }
         private uint[][] intensity_interval_upper_bound;
         public uint[][] IntensityIntervalUpperBound { get { return intensity_interval_upper_bound; } set { intensity_interval_upper_bound = value; } }
-        private int[][][] comp_model_value;
-        public int[][][] CompModelValue { get { return comp_model_value; } set { comp_model_value = value; } }
-        private uint film_grain_characteristics_repetition_period;
-        public uint FilmGrainCharacteristicsRepetitionPeriod { get { return film_grain_characteristics_repetition_period; } set { film_grain_characteristics_repetition_period = value; } }
+        private long[][][] comp_model_value;
+        public long[][][] CompModelValue { get { return comp_model_value; } set { comp_model_value = value; } }
+        private ulong film_grain_characteristics_repetition_period;
+        public ulong FilmGrainCharacteristicsRepetitionPeriod { get { return film_grain_characteristics_repetition_period; } set { film_grain_characteristics_repetition_period = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -6193,7 +6193,7 @@ film_grain_characteristics( payloadSize ) {
                 this.num_model_values_minus1 = new uint[3];
                 this.intensity_interval_lower_bound = new uint[3][];
                 this.intensity_interval_upper_bound = new uint[3][];
-                this.comp_model_value = new int[3][][];
+                this.comp_model_value = new long[3][][];
                 for (c = 0; c < 3; c++)
                 {
 
@@ -6204,13 +6204,13 @@ film_grain_characteristics( payloadSize ) {
 
                         this.intensity_interval_lower_bound[c] = new uint[num_intensity_intervals_minus1[c] + 1];
                         this.intensity_interval_upper_bound[c] = new uint[num_intensity_intervals_minus1[c] + 1];
-                        this.comp_model_value[c] = new int[num_intensity_intervals_minus1[c] + 1][];
+                        this.comp_model_value[c] = new long[num_intensity_intervals_minus1[c] + 1][];
                         for (i = 0; i <= num_intensity_intervals_minus1[c]; i++)
                         {
                             size += stream.ReadUnsignedInt(size, 8, out this.intensity_interval_lower_bound[c][i], "intensity_interval_lower_bound");
                             size += stream.ReadUnsignedInt(size, 8, out this.intensity_interval_upper_bound[c][i], "intensity_interval_upper_bound");
 
-                            this.comp_model_value[c][i] = new int[num_model_values_minus1[c] + 1];
+                            this.comp_model_value[c][i] = new long[num_model_values_minus1[c] + 1];
                             for (j = 0; j <= num_model_values_minus1[c]; j++)
                             {
                                 size += stream.ReadSignedIntGolomb(size, out this.comp_model_value[c][i][j], "comp_model_value");
@@ -6305,8 +6305,8 @@ deblocking_filter_display_preference( payloadSize ) {
         public byte DisplayPriorToDeblockingPreferredFlag { get { return display_prior_to_deblocking_preferred_flag; } set { display_prior_to_deblocking_preferred_flag = value; } }
         private byte dec_frame_buffering_constraint_flag;
         public byte DecFrameBufferingConstraintFlag { get { return dec_frame_buffering_constraint_flag; } set { dec_frame_buffering_constraint_flag = value; } }
-        private uint deblocking_display_preference_repetition_period;
-        public uint DeblockingDisplayPreferenceRepetitionPeriod { get { return deblocking_display_preference_repetition_period; } set { deblocking_display_preference_repetition_period = value; } }
+        private ulong deblocking_display_preference_repetition_period;
+        public ulong DeblockingDisplayPreferenceRepetitionPeriod { get { return deblocking_display_preference_repetition_period; } set { deblocking_display_preference_repetition_period = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -6452,14 +6452,14 @@ post_filter_hint( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint filter_hint_size_y;
-        public uint FilterHintSizey { get { return filter_hint_size_y; } set { filter_hint_size_y = value; } }
-        private uint filter_hint_size_x;
-        public uint FilterHintSizex { get { return filter_hint_size_x; } set { filter_hint_size_x = value; } }
+        private ulong filter_hint_size_y;
+        public ulong FilterHintSizey { get { return filter_hint_size_y; } set { filter_hint_size_y = value; } }
+        private ulong filter_hint_size_x;
+        public ulong FilterHintSizex { get { return filter_hint_size_x; } set { filter_hint_size_x = value; } }
         private uint filter_hint_type;
         public uint FilterHintType { get { return filter_hint_type; } set { filter_hint_type = value; } }
-        private int[][][] filter_hint;
-        public int[][][] FilterHint { get { return filter_hint; } set { filter_hint = value; } }
+        private long[][][] filter_hint;
+        public long[][][] FilterHint { get { return filter_hint; } set { filter_hint = value; } }
         private byte additional_extension_flag;
         public byte AdditionalExtensionFlag { get { return additional_extension_flag; } set { additional_extension_flag = value; } }
 
@@ -6482,15 +6482,15 @@ post_filter_hint( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.filter_hint_size_x, "filter_hint_size_x");
             size += stream.ReadUnsignedInt(size, 2, out this.filter_hint_type, "filter_hint_type");
 
-            this.filter_hint = new int[3][][];
+            this.filter_hint = new long[3][][];
             for (colour_component = 0; colour_component < 3; colour_component++)
             {
 
-                this.filter_hint[colour_component] = new int[filter_hint_size_y][];
+                this.filter_hint[colour_component] = new long[filter_hint_size_y][];
                 for (cy = 0; cy < filter_hint_size_y; cy++)
                 {
 
-                    this.filter_hint[colour_component][cy] = new int[filter_hint_size_x];
+                    this.filter_hint[colour_component][cy] = new long[filter_hint_size_x];
                     for (cx = 0; cx < filter_hint_size_x; cx++)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.filter_hint[colour_component][cy][cx], "filter_hint");
@@ -6584,18 +6584,18 @@ tone_mapping_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint tone_map_id;
-        public uint ToneMapId { get { return tone_map_id; } set { tone_map_id = value; } }
+        private ulong tone_map_id;
+        public ulong ToneMapId { get { return tone_map_id; } set { tone_map_id = value; } }
         private byte tone_map_cancel_flag;
         public byte ToneMapCancelFlag { get { return tone_map_cancel_flag; } set { tone_map_cancel_flag = value; } }
-        private uint tone_map_repetition_period;
-        public uint ToneMapRepetitionPeriod { get { return tone_map_repetition_period; } set { tone_map_repetition_period = value; } }
+        private ulong tone_map_repetition_period;
+        public ulong ToneMapRepetitionPeriod { get { return tone_map_repetition_period; } set { tone_map_repetition_period = value; } }
         private uint coded_data_bit_depth;
         public uint CodedDataBitDepth { get { return coded_data_bit_depth; } set { coded_data_bit_depth = value; } }
         private uint target_bit_depth;
         public uint TargetBitDepth { get { return target_bit_depth; } set { target_bit_depth = value; } }
-        private uint tone_map_model_id;
-        public uint ToneMapModelId { get { return tone_map_model_id; } set { tone_map_model_id = value; } }
+        private ulong tone_map_model_id;
+        public ulong ToneMapModelId { get { return tone_map_model_id; } set { tone_map_model_id = value; } }
         private uint min_value;
         public uint MinValue { get { return min_value; } set { min_value = value; } }
         private uint max_value;
@@ -6834,8 +6834,8 @@ frame_packing_arrangement( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint frame_packing_arrangement_id;
-        public uint FramePackingArrangementId { get { return frame_packing_arrangement_id; } set { frame_packing_arrangement_id = value; } }
+        private ulong frame_packing_arrangement_id;
+        public ulong FramePackingArrangementId { get { return frame_packing_arrangement_id; } set { frame_packing_arrangement_id = value; } }
         private byte frame_packing_arrangement_cancel_flag;
         public byte FramePackingArrangementCancelFlag { get { return frame_packing_arrangement_cancel_flag; } set { frame_packing_arrangement_cancel_flag = value; } }
         private uint frame_packing_arrangement_type;
@@ -6866,8 +6866,8 @@ frame_packing_arrangement( payloadSize ) {
         public uint Frame1GridPositiony { get { return frame1_grid_position_y; } set { frame1_grid_position_y = value; } }
         private uint frame_packing_arrangement_reserved_byte;
         public uint FramePackingArrangementReservedByte { get { return frame_packing_arrangement_reserved_byte; } set { frame_packing_arrangement_reserved_byte = value; } }
-        private uint frame_packing_arrangement_repetition_period;
-        public uint FramePackingArrangementRepetitionPeriod { get { return frame_packing_arrangement_repetition_period; } set { frame_packing_arrangement_repetition_period = value; } }
+        private ulong frame_packing_arrangement_repetition_period;
+        public ulong FramePackingArrangementRepetitionPeriod { get { return frame_packing_arrangement_repetition_period; } set { frame_packing_arrangement_repetition_period = value; } }
         private byte frame_packing_arrangement_extension_flag;
         public byte FramePackingArrangementExtensionFlag { get { return frame_packing_arrangement_extension_flag; } set { frame_packing_arrangement_extension_flag = value; } }
 
@@ -6977,8 +6977,8 @@ display_orientation( payloadSize ) {
         public byte VerFlip { get { return ver_flip; } set { ver_flip = value; } }
         private uint anticlockwise_rotation;
         public uint AnticlockwiseRotation { get { return anticlockwise_rotation; } set { anticlockwise_rotation = value; } }
-        private uint display_orientation_repetition_period;
-        public uint DisplayOrientationRepetitionPeriod { get { return display_orientation_repetition_period; } set { display_orientation_repetition_period = value; } }
+        private ulong display_orientation_repetition_period;
+        public ulong DisplayOrientationRepetitionPeriod { get { return display_orientation_repetition_period; } set { display_orientation_repetition_period = value; } }
         private byte display_orientation_extension_flag;
         public byte DisplayOrientationExtensionFlag { get { return display_orientation_extension_flag; } set { display_orientation_extension_flag = value; } }
 
@@ -7157,12 +7157,12 @@ colour_remapping_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint colour_remap_id;
-        public uint ColourRemapId { get { return colour_remap_id; } set { colour_remap_id = value; } }
+        private ulong colour_remap_id;
+        public ulong ColourRemapId { get { return colour_remap_id; } set { colour_remap_id = value; } }
         private byte colour_remap_cancel_flag;
         public byte ColourRemapCancelFlag { get { return colour_remap_cancel_flag; } set { colour_remap_cancel_flag = value; } }
-        private uint colour_remap_repetition_period;
-        public uint ColourRemapRepetitionPeriod { get { return colour_remap_repetition_period; } set { colour_remap_repetition_period = value; } }
+        private ulong colour_remap_repetition_period;
+        public ulong ColourRemapRepetitionPeriod { get { return colour_remap_repetition_period; } set { colour_remap_repetition_period = value; } }
         private byte colour_remap_video_signal_info_present_flag;
         public byte ColourRemapVideoSignalInfoPresentFlag { get { return colour_remap_video_signal_info_present_flag; } set { colour_remap_video_signal_info_present_flag = value; } }
         private byte colour_remap_full_range_flag;
@@ -7187,8 +7187,8 @@ colour_remapping_info( payloadSize ) {
         public byte ColourRemapMatrixPresentFlag { get { return colour_remap_matrix_present_flag; } set { colour_remap_matrix_present_flag = value; } }
         private uint log2_matrix_denom;
         public uint Log2MatrixDenom { get { return log2_matrix_denom; } set { log2_matrix_denom = value; } }
-        private int[][] colour_remap_coeffs;
-        public int[][] ColourRemapCoeffs { get { return colour_remap_coeffs; } set { colour_remap_coeffs = value; } }
+        private long[][] colour_remap_coeffs;
+        public long[][] ColourRemapCoeffs { get { return colour_remap_coeffs; } set { colour_remap_coeffs = value; } }
         private uint[] post_lut_num_val_minus1;
         public uint[] PostLutNumValMinus1 { get { return post_lut_num_val_minus1; } set { post_lut_num_val_minus1 = value; } }
         private uint[][] post_lut_coded_value;
@@ -7253,11 +7253,11 @@ colour_remapping_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedInt(size, 4, out this.log2_matrix_denom, "log2_matrix_denom");
 
-                    this.colour_remap_coeffs = new int[3][];
+                    this.colour_remap_coeffs = new long[3][];
                     for (c = 0; c < 3; c++)
                     {
 
-                        this.colour_remap_coeffs[c] = new int[3];
+                        this.colour_remap_coeffs[c] = new long[3];
                         for (i = 0; i < 3; i++)
                         {
                             size += stream.ReadSignedIntGolomb(size, out this.colour_remap_coeffs[c][i], "colour_remap_coeffs");
@@ -8490,24 +8490,24 @@ annotated_regions( payloadSize ) {
         public Dictionary<int, uint> ArBitEqualToZero { get { return ar_bit_equal_to_zero; } set { ar_bit_equal_to_zero = value; } }
         private byte[] ar_object_label_language;
         public byte[] ArObjectLabelLanguage { get { return ar_object_label_language; } set { ar_object_label_language = value; } }
-        private uint ar_num_label_updates;
-        public uint ArNumLabelUpdates { get { return ar_num_label_updates; } set { ar_num_label_updates = value; } }
-        private uint[] ar_label_idx;
-        public uint[] ArLabelIdx { get { return ar_label_idx; } set { ar_label_idx = value; } }
+        private ulong ar_num_label_updates;
+        public ulong ArNumLabelUpdates { get { return ar_num_label_updates; } set { ar_num_label_updates = value; } }
+        private ulong[] ar_label_idx;
+        public ulong[] ArLabelIdx { get { return ar_label_idx; } set { ar_label_idx = value; } }
         private byte[] ar_label_cancel_flag;
         public byte[] ArLabelCancelFlag { get { return ar_label_cancel_flag; } set { ar_label_cancel_flag = value; } }
         private byte[][] ar_label;
         public byte[][] ArLabel { get { return ar_label; } set { ar_label = value; } }
-        private uint ar_num_object_updates;
-        public uint ArNumObjectUpdates { get { return ar_num_object_updates; } set { ar_num_object_updates = value; } }
-        private uint[] ar_object_idx;
-        public uint[] ArObjectIdx { get { return ar_object_idx; } set { ar_object_idx = value; } }
+        private ulong ar_num_object_updates;
+        public ulong ArNumObjectUpdates { get { return ar_num_object_updates; } set { ar_num_object_updates = value; } }
+        private ulong[] ar_object_idx;
+        public ulong[] ArObjectIdx { get { return ar_object_idx; } set { ar_object_idx = value; } }
         private byte[] ar_object_cancel_flag;
         public byte[] ArObjectCancelFlag { get { return ar_object_cancel_flag; } set { ar_object_cancel_flag = value; } }
         private byte[] ar_object_label_update_flag;
         public byte[] ArObjectLabelUpdateFlag { get { return ar_object_label_update_flag; } set { ar_object_label_update_flag = value; } }
-        private uint[] ar_object_label_idx;
-        public uint[] ArObjectLabelIdx { get { return ar_object_label_idx; } set { ar_object_label_idx = value; } }
+        private ulong[] ar_object_label_idx;
+        public ulong[] ArObjectLabelIdx { get { return ar_object_label_idx; } set { ar_object_label_idx = value; } }
         private byte[] ar_bounding_box_update_flag;
         public byte[] ArBoundingBoxUpdateFlag { get { return ar_bounding_box_update_flag; } set { ar_bounding_box_update_flag = value; } }
         private byte[] ar_bounding_box_cancel_flag;
@@ -8575,7 +8575,7 @@ annotated_regions( payloadSize ) {
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates, "ar_num_label_updates");
 
-                    this.ar_label_idx = new uint[ar_num_label_updates];
+                    this.ar_label_idx = new ulong[ar_num_label_updates];
                     this.ar_label_cancel_flag = new byte[ar_num_label_updates];
                     this.ar_label = new byte[ar_num_label_updates][];
                     for (i = 0; i < ar_num_label_updates; i++)
@@ -8599,10 +8599,10 @@ annotated_regions( payloadSize ) {
                 }
                 size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_object_updates, "ar_num_object_updates");
 
-                this.ar_object_idx = new uint[ar_num_object_updates];
+                this.ar_object_idx = new ulong[ar_num_object_updates];
                 this.ar_object_cancel_flag = new byte[ar_num_object_updates];
                 this.ar_object_label_update_flag = new byte[ar_num_object_updates];
-                this.ar_object_label_idx = new uint[ar_num_object_updates];
+                this.ar_object_label_idx = new ulong[ar_num_object_updates];
                 this.ar_bounding_box_update_flag = new byte[ar_num_object_updates];
                 this.ar_bounding_box_cancel_flag = new byte[ar_num_object_updates];
                 this.ar_bounding_box_top = new uint[ar_num_object_updates];
@@ -8802,8 +8802,8 @@ shutter_interval_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint sii_sub_layer_idx;
-        public uint SiiSubLayerIdx { get { return sii_sub_layer_idx; } set { sii_sub_layer_idx = value; } }
+        private ulong sii_sub_layer_idx;
+        public ulong SiiSubLayerIdx { get { return sii_sub_layer_idx; } set { sii_sub_layer_idx = value; } }
         private byte shutter_interval_info_present_flag;
         public byte ShutterIntervalInfoPresentFlag { get { return shutter_interval_info_present_flag; } set { shutter_interval_info_present_flag = value; } }
         private uint sii_time_scale;
@@ -9041,10 +9041,10 @@ vui_parameters() {
         public uint MatrixCoefficients { get { return matrix_coefficients; } set { matrix_coefficients = value; } }
         private byte chroma_loc_info_present_flag;
         public byte ChromaLocInfoPresentFlag { get { return chroma_loc_info_present_flag; } set { chroma_loc_info_present_flag = value; } }
-        private uint chroma_sample_loc_type_top_field;
-        public uint ChromaSampleLocTypeTopField { get { return chroma_sample_loc_type_top_field; } set { chroma_sample_loc_type_top_field = value; } }
-        private uint chroma_sample_loc_type_bottom_field;
-        public uint ChromaSampleLocTypeBottomField { get { return chroma_sample_loc_type_bottom_field; } set { chroma_sample_loc_type_bottom_field = value; } }
+        private ulong chroma_sample_loc_type_top_field;
+        public ulong ChromaSampleLocTypeTopField { get { return chroma_sample_loc_type_top_field; } set { chroma_sample_loc_type_top_field = value; } }
+        private ulong chroma_sample_loc_type_bottom_field;
+        public ulong ChromaSampleLocTypeBottomField { get { return chroma_sample_loc_type_bottom_field; } set { chroma_sample_loc_type_bottom_field = value; } }
         private byte timing_info_present_flag;
         public byte TimingInfoPresentFlag { get { return timing_info_present_flag; } set { timing_info_present_flag = value; } }
         private uint num_units_in_tick;
@@ -9067,18 +9067,18 @@ vui_parameters() {
         public byte BitstreamRestrictionFlag { get { return bitstream_restriction_flag; } set { bitstream_restriction_flag = value; } }
         private byte motion_vectors_over_pic_boundaries_flag;
         public byte MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
-        private uint max_bytes_per_pic_denom;
-        public uint MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
-        private uint max_bits_per_mb_denom;
-        public uint MaxBitsPerMbDenom { get { return max_bits_per_mb_denom; } set { max_bits_per_mb_denom = value; } }
-        private uint log2_max_mv_length_horizontal;
-        public uint Log2MaxMvLengthHorizontal { get { return log2_max_mv_length_horizontal; } set { log2_max_mv_length_horizontal = value; } }
-        private uint log2_max_mv_length_vertical;
-        public uint Log2MaxMvLengthVertical { get { return log2_max_mv_length_vertical; } set { log2_max_mv_length_vertical = value; } }
-        private uint max_num_reorder_frames;
-        public uint MaxNumReorderFrames { get { return max_num_reorder_frames; } set { max_num_reorder_frames = value; } }
-        private uint max_dec_frame_buffering;
-        public uint MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
+        private ulong max_bytes_per_pic_denom;
+        public ulong MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
+        private ulong max_bits_per_mb_denom;
+        public ulong MaxBitsPerMbDenom { get { return max_bits_per_mb_denom; } set { max_bits_per_mb_denom = value; } }
+        private ulong log2_max_mv_length_horizontal;
+        public ulong Log2MaxMvLengthHorizontal { get { return log2_max_mv_length_horizontal; } set { log2_max_mv_length_horizontal = value; } }
+        private ulong log2_max_mv_length_vertical;
+        public ulong Log2MaxMvLengthVertical { get { return log2_max_mv_length_vertical; } set { log2_max_mv_length_vertical = value; } }
+        private ulong max_num_reorder_frames;
+        public ulong MaxNumReorderFrames { get { return max_num_reorder_frames; } set { max_num_reorder_frames = value; } }
+        private ulong max_dec_frame_buffering;
+        public ulong MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -9285,16 +9285,16 @@ hrd_parameters() {
     */
     public class HrdParameters : IItuSerializable
     {
-        private uint cpb_cnt_minus1;
-        public uint CpbCntMinus1 { get { return cpb_cnt_minus1; } set { cpb_cnt_minus1 = value; } }
+        private ulong cpb_cnt_minus1;
+        public ulong CpbCntMinus1 { get { return cpb_cnt_minus1; } set { cpb_cnt_minus1 = value; } }
         private uint bit_rate_scale;
         public uint BitRateScale { get { return bit_rate_scale; } set { bit_rate_scale = value; } }
         private uint cpb_size_scale;
         public uint CpbSizeScale { get { return cpb_size_scale; } set { cpb_size_scale = value; } }
-        private uint[] bit_rate_value_minus1;
-        public uint[] BitRateValueMinus1 { get { return bit_rate_value_minus1; } set { bit_rate_value_minus1 = value; } }
-        private uint[] cpb_size_value_minus1;
-        public uint[] CpbSizeValueMinus1 { get { return cpb_size_value_minus1; } set { cpb_size_value_minus1 = value; } }
+        private ulong[] bit_rate_value_minus1;
+        public ulong[] BitRateValueMinus1 { get { return bit_rate_value_minus1; } set { bit_rate_value_minus1 = value; } }
+        private ulong[] cpb_size_value_minus1;
+        public ulong[] CpbSizeValueMinus1 { get { return cpb_size_value_minus1; } set { cpb_size_value_minus1 = value; } }
         private byte[] cbr_flag;
         public byte[] CbrFlag { get { return cbr_flag; } set { cbr_flag = value; } }
         private uint initial_cpb_removal_delay_length_minus1;
@@ -9491,14 +9491,14 @@ seq_parameter_set_svc_extension() {
         public byte SeqRefLayerChromaPhasexPlus1Flag { get { return seq_ref_layer_chroma_phase_x_plus1_flag; } set { seq_ref_layer_chroma_phase_x_plus1_flag = value; } }
         private uint seq_ref_layer_chroma_phase_y_plus1;
         public uint SeqRefLayerChromaPhaseyPlus1 { get { return seq_ref_layer_chroma_phase_y_plus1; } set { seq_ref_layer_chroma_phase_y_plus1 = value; } }
-        private int seq_scaled_ref_layer_left_offset;
-        public int SeqScaledRefLayerLeftOffset { get { return seq_scaled_ref_layer_left_offset; } set { seq_scaled_ref_layer_left_offset = value; } }
-        private int seq_scaled_ref_layer_top_offset;
-        public int SeqScaledRefLayerTopOffset { get { return seq_scaled_ref_layer_top_offset; } set { seq_scaled_ref_layer_top_offset = value; } }
-        private int seq_scaled_ref_layer_right_offset;
-        public int SeqScaledRefLayerRightOffset { get { return seq_scaled_ref_layer_right_offset; } set { seq_scaled_ref_layer_right_offset = value; } }
-        private int seq_scaled_ref_layer_bottom_offset;
-        public int SeqScaledRefLayerBottomOffset { get { return seq_scaled_ref_layer_bottom_offset; } set { seq_scaled_ref_layer_bottom_offset = value; } }
+        private long seq_scaled_ref_layer_left_offset;
+        public long SeqScaledRefLayerLeftOffset { get { return seq_scaled_ref_layer_left_offset; } set { seq_scaled_ref_layer_left_offset = value; } }
+        private long seq_scaled_ref_layer_top_offset;
+        public long SeqScaledRefLayerTopOffset { get { return seq_scaled_ref_layer_top_offset; } set { seq_scaled_ref_layer_top_offset = value; } }
+        private long seq_scaled_ref_layer_right_offset;
+        public long SeqScaledRefLayerRightOffset { get { return seq_scaled_ref_layer_right_offset; } set { seq_scaled_ref_layer_right_offset = value; } }
+        private long seq_scaled_ref_layer_bottom_offset;
+        public long SeqScaledRefLayerBottomOffset { get { return seq_scaled_ref_layer_bottom_offset; } set { seq_scaled_ref_layer_bottom_offset = value; } }
         private byte seq_tcoeff_level_prediction_flag;
         public byte SeqTcoeffLevelPredictionFlag { get { return seq_tcoeff_level_prediction_flag; } set { seq_tcoeff_level_prediction_flag = value; } }
         private byte adaptive_tcoeff_level_prediction_flag;
@@ -9857,12 +9857,12 @@ slice_header_in_scalable_extension() {
     */
     public class SliceHeaderInScalableExtension : IItuSerializable
     {
-        private uint first_mb_in_slice;
-        public uint FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
-        private uint slice_type;
-        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
-        private uint pic_parameter_set_id;
-        public uint PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
+        private ulong first_mb_in_slice;
+        public ulong FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
+        private ulong slice_type;
+        public ulong SliceType { get { return slice_type; } set { slice_type = value; } }
+        private ulong pic_parameter_set_id;
+        public ulong PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
         private uint colour_plane_id;
         public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
         private uint frame_num;
@@ -9871,24 +9871,24 @@ slice_header_in_scalable_extension() {
         public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
         private byte bottom_field_flag;
         public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
-        private uint idr_pic_id;
-        public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
+        private ulong idr_pic_id;
+        public ulong IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
         private uint pic_order_cnt_lsb;
         public uint PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
-        private int delta_pic_order_cnt_bottom;
-        public int DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
-        private int[] delta_pic_order_cnt;
-        public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
-        private uint redundant_pic_cnt;
-        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+        private long delta_pic_order_cnt_bottom;
+        public long DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
+        private long[] delta_pic_order_cnt;
+        public long[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
+        private ulong redundant_pic_cnt;
+        public ulong RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
         private byte direct_spatial_mv_pred_flag;
         public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
         private byte num_ref_idx_active_override_flag;
         public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
-        private uint num_ref_idx_l0_active_minus1;
-        public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
-        private uint num_ref_idx_l1_active_minus1;
-        public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
+        private ulong num_ref_idx_l0_active_minus1;
+        public ulong NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
+        private ulong num_ref_idx_l1_active_minus1;
+        public ulong NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
         private RefPicListModification ref_pic_list_modification;
         public RefPicListModification RefPicListModification { get { return ref_pic_list_modification; } set { ref_pic_list_modification = value; } }
         private byte base_pred_weight_table_flag;
@@ -9901,44 +9901,44 @@ slice_header_in_scalable_extension() {
         public byte StoreRefBasePicFlag { get { return store_ref_base_pic_flag; } set { store_ref_base_pic_flag = value; } }
         private DecRefBasePicMarking dec_ref_base_pic_marking;
         public DecRefBasePicMarking DecRefBasePicMarking { get { return dec_ref_base_pic_marking; } set { dec_ref_base_pic_marking = value; } }
-        private uint cabac_init_idc;
-        public uint CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
-        private int slice_qp_delta;
-        public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
-        private uint disable_deblocking_filter_idc;
-        public uint DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
-        private int slice_alpha_c0_offset_div2;
-        public int SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
-        private int slice_beta_offset_div2;
-        public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
+        private ulong cabac_init_idc;
+        public ulong CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
+        private long slice_qp_delta;
+        public long SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
+        private ulong disable_deblocking_filter_idc;
+        public ulong DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
+        private long slice_alpha_c0_offset_div2;
+        public long SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
+        private long slice_beta_offset_div2;
+        public long SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
         private uint slice_group_change_cycle;
         public uint SliceGroupChangeCycle { get { return slice_group_change_cycle; } set { slice_group_change_cycle = value; } }
-        private uint ref_layer_dq_id;
-        public uint RefLayerDqId { get { return ref_layer_dq_id; } set { ref_layer_dq_id = value; } }
-        private uint disable_inter_layer_deblocking_filter_idc;
-        public uint DisableInterLayerDeblockingFilterIdc { get { return disable_inter_layer_deblocking_filter_idc; } set { disable_inter_layer_deblocking_filter_idc = value; } }
-        private int inter_layer_slice_alpha_c0_offset_div2;
-        public int InterLayerSliceAlphaC0OffsetDiv2 { get { return inter_layer_slice_alpha_c0_offset_div2; } set { inter_layer_slice_alpha_c0_offset_div2 = value; } }
-        private int inter_layer_slice_beta_offset_div2;
-        public int InterLayerSliceBetaOffsetDiv2 { get { return inter_layer_slice_beta_offset_div2; } set { inter_layer_slice_beta_offset_div2 = value; } }
+        private ulong ref_layer_dq_id;
+        public ulong RefLayerDqId { get { return ref_layer_dq_id; } set { ref_layer_dq_id = value; } }
+        private ulong disable_inter_layer_deblocking_filter_idc;
+        public ulong DisableInterLayerDeblockingFilterIdc { get { return disable_inter_layer_deblocking_filter_idc; } set { disable_inter_layer_deblocking_filter_idc = value; } }
+        private long inter_layer_slice_alpha_c0_offset_div2;
+        public long InterLayerSliceAlphaC0OffsetDiv2 { get { return inter_layer_slice_alpha_c0_offset_div2; } set { inter_layer_slice_alpha_c0_offset_div2 = value; } }
+        private long inter_layer_slice_beta_offset_div2;
+        public long InterLayerSliceBetaOffsetDiv2 { get { return inter_layer_slice_beta_offset_div2; } set { inter_layer_slice_beta_offset_div2 = value; } }
         private byte constrained_intra_resampling_flag;
         public byte ConstrainedIntraResamplingFlag { get { return constrained_intra_resampling_flag; } set { constrained_intra_resampling_flag = value; } }
         private byte ref_layer_chroma_phase_x_plus1_flag;
         public byte RefLayerChromaPhasexPlus1Flag { get { return ref_layer_chroma_phase_x_plus1_flag; } set { ref_layer_chroma_phase_x_plus1_flag = value; } }
         private uint ref_layer_chroma_phase_y_plus1;
         public uint RefLayerChromaPhaseyPlus1 { get { return ref_layer_chroma_phase_y_plus1; } set { ref_layer_chroma_phase_y_plus1 = value; } }
-        private int scaled_ref_layer_left_offset;
-        public int ScaledRefLayerLeftOffset { get { return scaled_ref_layer_left_offset; } set { scaled_ref_layer_left_offset = value; } }
-        private int scaled_ref_layer_top_offset;
-        public int ScaledRefLayerTopOffset { get { return scaled_ref_layer_top_offset; } set { scaled_ref_layer_top_offset = value; } }
-        private int scaled_ref_layer_right_offset;
-        public int ScaledRefLayerRightOffset { get { return scaled_ref_layer_right_offset; } set { scaled_ref_layer_right_offset = value; } }
-        private int scaled_ref_layer_bottom_offset;
-        public int ScaledRefLayerBottomOffset { get { return scaled_ref_layer_bottom_offset; } set { scaled_ref_layer_bottom_offset = value; } }
+        private long scaled_ref_layer_left_offset;
+        public long ScaledRefLayerLeftOffset { get { return scaled_ref_layer_left_offset; } set { scaled_ref_layer_left_offset = value; } }
+        private long scaled_ref_layer_top_offset;
+        public long ScaledRefLayerTopOffset { get { return scaled_ref_layer_top_offset; } set { scaled_ref_layer_top_offset = value; } }
+        private long scaled_ref_layer_right_offset;
+        public long ScaledRefLayerRightOffset { get { return scaled_ref_layer_right_offset; } set { scaled_ref_layer_right_offset = value; } }
+        private long scaled_ref_layer_bottom_offset;
+        public long ScaledRefLayerBottomOffset { get { return scaled_ref_layer_bottom_offset; } set { scaled_ref_layer_bottom_offset = value; } }
         private byte slice_skip_flag;
         public byte SliceSkipFlag { get { return slice_skip_flag; } set { slice_skip_flag = value; } }
-        private uint num_mbs_in_slice_minus1;
-        public uint NumMbsInSliceMinus1 { get { return num_mbs_in_slice_minus1; } set { num_mbs_in_slice_minus1 = value; } }
+        private ulong num_mbs_in_slice_minus1;
+        public ulong NumMbsInSliceMinus1 { get { return num_mbs_in_slice_minus1; } set { num_mbs_in_slice_minus1 = value; } }
         private byte adaptive_base_mode_flag;
         public byte AdaptiveBaseModeFlag { get { return adaptive_base_mode_flag; } set { adaptive_base_mode_flag = value; } }
         private byte default_base_mode_flag;
@@ -10417,12 +10417,12 @@ dec_ref_base_pic_marking() {
     {
         private byte adaptive_ref_base_pic_marking_mode_flag;
         public byte AdaptiveRefBasePicMarkingModeFlag { get { return adaptive_ref_base_pic_marking_mode_flag; } set { adaptive_ref_base_pic_marking_mode_flag = value; } }
-        private Dictionary<int, uint> memory_management_base_control_operation = new Dictionary<int, uint>();
-        public Dictionary<int, uint> MemoryManagementBaseControlOperation { get { return memory_management_base_control_operation; } set { memory_management_base_control_operation = value; } }
-        private Dictionary<int, uint> difference_of_base_pic_nums_minus1 = new Dictionary<int, uint>();
-        public Dictionary<int, uint> DifferenceOfBasePicNumsMinus1 { get { return difference_of_base_pic_nums_minus1; } set { difference_of_base_pic_nums_minus1 = value; } }
-        private Dictionary<int, uint> long_term_base_pic_num = new Dictionary<int, uint>();
-        public Dictionary<int, uint> LongTermBasePicNum { get { return long_term_base_pic_num; } set { long_term_base_pic_num = value; } }
+        private Dictionary<int, ulong> memory_management_base_control_operation = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> MemoryManagementBaseControlOperation { get { return memory_management_base_control_operation; } set { memory_management_base_control_operation = value; } }
+        private Dictionary<int, ulong> difference_of_base_pic_nums_minus1 = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> DifferenceOfBasePicNumsMinus1 { get { return difference_of_base_pic_nums_minus1; } set { difference_of_base_pic_nums_minus1 = value; } }
+        private Dictionary<int, ulong> long_term_base_pic_num = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> LongTermBasePicNum { get { return long_term_base_pic_num; } set { long_term_base_pic_num = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -10639,10 +10639,10 @@ scalability_info( payloadSize ) {
         public byte PriorityLayerInfoPresentFlag { get { return priority_layer_info_present_flag; } set { priority_layer_info_present_flag = value; } }
         private byte priority_id_setting_flag;
         public byte PriorityIdSettingFlag { get { return priority_id_setting_flag; } set { priority_id_setting_flag = value; } }
-        private uint num_layers_minus1;
-        public uint NumLayersMinus1 { get { return num_layers_minus1; } set { num_layers_minus1 = value; } }
-        private uint[] layer_id;
-        public uint[] LayerId { get { return layer_id; } set { layer_id = value; } }
+        private ulong num_layers_minus1;
+        public ulong NumLayersMinus1 { get { return num_layers_minus1; } set { num_layers_minus1 = value; } }
+        private ulong[] layer_id;
+        public ulong[] LayerId { get { return layer_id; } set { layer_id = value; } }
         private uint[] priority_id;
         public uint[] PriorityId { get { return priority_id; } set { priority_id = value; } }
         private byte[] discardable_flag;
@@ -10695,12 +10695,12 @@ scalability_info( payloadSize ) {
         public uint[] ConstantFrmRateIdc { get { return constant_frm_rate_idc; } set { constant_frm_rate_idc = value; } }
         private uint[] avg_frm_rate;
         public uint[] AvgFrmRate { get { return avg_frm_rate; } set { avg_frm_rate = value; } }
-        private uint[] frm_width_in_mbs_minus1;
-        public uint[] FrmWidthInMbsMinus1 { get { return frm_width_in_mbs_minus1; } set { frm_width_in_mbs_minus1 = value; } }
-        private uint[] frm_height_in_mbs_minus1;
-        public uint[] FrmHeightInMbsMinus1 { get { return frm_height_in_mbs_minus1; } set { frm_height_in_mbs_minus1 = value; } }
-        private uint[] base_region_layer_id;
-        public uint[] BaseRegionLayerId { get { return base_region_layer_id; } set { base_region_layer_id = value; } }
+        private ulong[] frm_width_in_mbs_minus1;
+        public ulong[] FrmWidthInMbsMinus1 { get { return frm_width_in_mbs_minus1; } set { frm_width_in_mbs_minus1 = value; } }
+        private ulong[] frm_height_in_mbs_minus1;
+        public ulong[] FrmHeightInMbsMinus1 { get { return frm_height_in_mbs_minus1; } set { frm_height_in_mbs_minus1 = value; } }
+        private ulong[] base_region_layer_id;
+        public ulong[] BaseRegionLayerId { get { return base_region_layer_id; } set { base_region_layer_id = value; } }
         private byte[] dynamic_rect_flag;
         public byte[] DynamicRectFlag { get { return dynamic_rect_flag; } set { dynamic_rect_flag = value; } }
         private uint[] horizontal_offset;
@@ -10711,58 +10711,58 @@ scalability_info( payloadSize ) {
         public uint[] RegionWidth { get { return region_width; } set { region_width = value; } }
         private uint[] region_height;
         public uint[] RegionHeight { get { return region_height; } set { region_height = value; } }
-        private uint[] roi_id;
-        public uint[] RoiId { get { return roi_id; } set { roi_id = value; } }
+        private ulong[] roi_id;
+        public ulong[] RoiId { get { return roi_id; } set { roi_id = value; } }
         private byte[] iroi_grid_flag;
         public byte[] IroiGridFlag { get { return iroi_grid_flag; } set { iroi_grid_flag = value; } }
-        private uint[] grid_width_in_mbs_minus1;
-        public uint[] GridWidthInMbsMinus1 { get { return grid_width_in_mbs_minus1; } set { grid_width_in_mbs_minus1 = value; } }
-        private uint[] grid_height_in_mbs_minus1;
-        public uint[] GridHeightInMbsMinus1 { get { return grid_height_in_mbs_minus1; } set { grid_height_in_mbs_minus1 = value; } }
-        private uint[] num_rois_minus1;
-        public uint[] NumRoisMinus1 { get { return num_rois_minus1; } set { num_rois_minus1 = value; } }
-        private uint[][] first_mb_in_roi;
-        public uint[][] FirstMbInRoi { get { return first_mb_in_roi; } set { first_mb_in_roi = value; } }
-        private uint[][] roi_width_in_mbs_minus1;
-        public uint[][] RoiWidthInMbsMinus1 { get { return roi_width_in_mbs_minus1; } set { roi_width_in_mbs_minus1 = value; } }
-        private uint[][] roi_height_in_mbs_minus1;
-        public uint[][] RoiHeightInMbsMinus1 { get { return roi_height_in_mbs_minus1; } set { roi_height_in_mbs_minus1 = value; } }
-        private uint[] num_directly_dependent_layers;
-        public uint[] NumDirectlyDependentLayers { get { return num_directly_dependent_layers; } set { num_directly_dependent_layers = value; } }
-        private uint[][] directly_dependent_layer_id_delta_minus1;
-        public uint[][] DirectlyDependentLayerIdDeltaMinus1 { get { return directly_dependent_layer_id_delta_minus1; } set { directly_dependent_layer_id_delta_minus1 = value; } }
-        private uint[] layer_dependency_info_src_layer_id_delta;
-        public uint[] LayerDependencyInfoSrcLayerIdDelta { get { return layer_dependency_info_src_layer_id_delta; } set { layer_dependency_info_src_layer_id_delta = value; } }
-        private uint[] num_seq_parameter_sets;
-        public uint[] NumSeqParameterSets { get { return num_seq_parameter_sets; } set { num_seq_parameter_sets = value; } }
-        private uint[][] seq_parameter_set_id_delta;
-        public uint[][] SeqParameterSetIdDelta { get { return seq_parameter_set_id_delta; } set { seq_parameter_set_id_delta = value; } }
-        private uint[] num_subset_seq_parameter_sets;
-        public uint[] NumSubsetSeqParameterSets { get { return num_subset_seq_parameter_sets; } set { num_subset_seq_parameter_sets = value; } }
-        private uint[][] subset_seq_parameter_set_id_delta;
-        public uint[][] SubsetSeqParameterSetIdDelta { get { return subset_seq_parameter_set_id_delta; } set { subset_seq_parameter_set_id_delta = value; } }
-        private uint[] num_pic_parameter_sets_minus1;
-        public uint[] NumPicParameterSetsMinus1 { get { return num_pic_parameter_sets_minus1; } set { num_pic_parameter_sets_minus1 = value; } }
-        private uint[][] pic_parameter_set_id_delta;
-        public uint[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
-        private uint[] parameter_sets_info_src_layer_id_delta;
-        public uint[] ParameterSetsInfoSrcLayerIdDelta { get { return parameter_sets_info_src_layer_id_delta; } set { parameter_sets_info_src_layer_id_delta = value; } }
+        private ulong[] grid_width_in_mbs_minus1;
+        public ulong[] GridWidthInMbsMinus1 { get { return grid_width_in_mbs_minus1; } set { grid_width_in_mbs_minus1 = value; } }
+        private ulong[] grid_height_in_mbs_minus1;
+        public ulong[] GridHeightInMbsMinus1 { get { return grid_height_in_mbs_minus1; } set { grid_height_in_mbs_minus1 = value; } }
+        private ulong[] num_rois_minus1;
+        public ulong[] NumRoisMinus1 { get { return num_rois_minus1; } set { num_rois_minus1 = value; } }
+        private ulong[][] first_mb_in_roi;
+        public ulong[][] FirstMbInRoi { get { return first_mb_in_roi; } set { first_mb_in_roi = value; } }
+        private ulong[][] roi_width_in_mbs_minus1;
+        public ulong[][] RoiWidthInMbsMinus1 { get { return roi_width_in_mbs_minus1; } set { roi_width_in_mbs_minus1 = value; } }
+        private ulong[][] roi_height_in_mbs_minus1;
+        public ulong[][] RoiHeightInMbsMinus1 { get { return roi_height_in_mbs_minus1; } set { roi_height_in_mbs_minus1 = value; } }
+        private ulong[] num_directly_dependent_layers;
+        public ulong[] NumDirectlyDependentLayers { get { return num_directly_dependent_layers; } set { num_directly_dependent_layers = value; } }
+        private ulong[][] directly_dependent_layer_id_delta_minus1;
+        public ulong[][] DirectlyDependentLayerIdDeltaMinus1 { get { return directly_dependent_layer_id_delta_minus1; } set { directly_dependent_layer_id_delta_minus1 = value; } }
+        private ulong[] layer_dependency_info_src_layer_id_delta;
+        public ulong[] LayerDependencyInfoSrcLayerIdDelta { get { return layer_dependency_info_src_layer_id_delta; } set { layer_dependency_info_src_layer_id_delta = value; } }
+        private ulong[] num_seq_parameter_sets;
+        public ulong[] NumSeqParameterSets { get { return num_seq_parameter_sets; } set { num_seq_parameter_sets = value; } }
+        private ulong[][] seq_parameter_set_id_delta;
+        public ulong[][] SeqParameterSetIdDelta { get { return seq_parameter_set_id_delta; } set { seq_parameter_set_id_delta = value; } }
+        private ulong[] num_subset_seq_parameter_sets;
+        public ulong[] NumSubsetSeqParameterSets { get { return num_subset_seq_parameter_sets; } set { num_subset_seq_parameter_sets = value; } }
+        private ulong[][] subset_seq_parameter_set_id_delta;
+        public ulong[][] SubsetSeqParameterSetIdDelta { get { return subset_seq_parameter_set_id_delta; } set { subset_seq_parameter_set_id_delta = value; } }
+        private ulong[] num_pic_parameter_sets_minus1;
+        public ulong[] NumPicParameterSetsMinus1 { get { return num_pic_parameter_sets_minus1; } set { num_pic_parameter_sets_minus1 = value; } }
+        private ulong[][] pic_parameter_set_id_delta;
+        public ulong[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
+        private ulong[] parameter_sets_info_src_layer_id_delta;
+        public ulong[] ParameterSetsInfoSrcLayerIdDelta { get { return parameter_sets_info_src_layer_id_delta; } set { parameter_sets_info_src_layer_id_delta = value; } }
         private byte[] motion_vectors_over_pic_boundaries_flag;
         public byte[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
-        private uint[] max_bytes_per_pic_denom;
-        public uint[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
-        private uint[] max_bits_per_mb_denom;
-        public uint[] MaxBitsPerMbDenom { get { return max_bits_per_mb_denom; } set { max_bits_per_mb_denom = value; } }
-        private uint[] log2_max_mv_length_horizontal;
-        public uint[] Log2MaxMvLengthHorizontal { get { return log2_max_mv_length_horizontal; } set { log2_max_mv_length_horizontal = value; } }
-        private uint[] log2_max_mv_length_vertical;
-        public uint[] Log2MaxMvLengthVertical { get { return log2_max_mv_length_vertical; } set { log2_max_mv_length_vertical = value; } }
-        private uint[] max_num_reorder_frames;
-        public uint[] MaxNumReorderFrames { get { return max_num_reorder_frames; } set { max_num_reorder_frames = value; } }
-        private uint[] max_dec_frame_buffering;
-        public uint[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
-        private uint[] conversion_type_idc;
-        public uint[] ConversionTypeIdc { get { return conversion_type_idc; } set { conversion_type_idc = value; } }
+        private ulong[] max_bytes_per_pic_denom;
+        public ulong[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
+        private ulong[] max_bits_per_mb_denom;
+        public ulong[] MaxBitsPerMbDenom { get { return max_bits_per_mb_denom; } set { max_bits_per_mb_denom = value; } }
+        private ulong[] log2_max_mv_length_horizontal;
+        public ulong[] Log2MaxMvLengthHorizontal { get { return log2_max_mv_length_horizontal; } set { log2_max_mv_length_horizontal = value; } }
+        private ulong[] log2_max_mv_length_vertical;
+        public ulong[] Log2MaxMvLengthVertical { get { return log2_max_mv_length_vertical; } set { log2_max_mv_length_vertical = value; } }
+        private ulong[] max_num_reorder_frames;
+        public ulong[] MaxNumReorderFrames { get { return max_num_reorder_frames; } set { max_num_reorder_frames = value; } }
+        private ulong[] max_dec_frame_buffering;
+        public ulong[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
+        private ulong[] conversion_type_idc;
+        public ulong[] ConversionTypeIdc { get { return conversion_type_idc; } set { conversion_type_idc = value; } }
         private byte[][] rewriting_info_flag;
         public byte[][] RewritingInfoFlag { get { return rewriting_info_flag; } set { rewriting_info_flag = value; } }
         private uint[][] rewriting_profile_level_idc;
@@ -10771,14 +10771,14 @@ scalability_info( payloadSize ) {
         public uint[][] RewritingAvgBitrate { get { return rewriting_avg_bitrate; } set { rewriting_avg_bitrate = value; } }
         private uint[][] rewriting_max_bitrate;
         public uint[][] RewritingMaxBitrate { get { return rewriting_max_bitrate; } set { rewriting_max_bitrate = value; } }
-        private uint pr_num_dIds_minus1;
-        public uint PrNumDIdsMinus1 { get { return pr_num_dIds_minus1; } set { pr_num_dIds_minus1 = value; } }
+        private ulong pr_num_dIds_minus1;
+        public ulong PrNumDIdsMinus1 { get { return pr_num_dIds_minus1; } set { pr_num_dIds_minus1 = value; } }
         private uint[] pr_dependency_id;
         public uint[] PrDependencyId { get { return pr_dependency_id; } set { pr_dependency_id = value; } }
-        private uint[] pr_num_minus1;
-        public uint[] PrNumMinus1 { get { return pr_num_minus1; } set { pr_num_minus1 = value; } }
-        private uint[][] pr_id;
-        public uint[][] PrId { get { return pr_id; } set { pr_id = value; } }
+        private ulong[] pr_num_minus1;
+        public ulong[] PrNumMinus1 { get { return pr_num_minus1; } set { pr_num_minus1 = value; } }
+        private ulong[][] pr_id;
+        public ulong[][] PrId { get { return pr_id; } set { pr_id = value; } }
         private uint[][] pr_profile_level_idc;
         public uint[][] PrProfileLevelIdc { get { return pr_profile_level_idc; } set { pr_profile_level_idc = value; } }
         private uint[][] pr_avg_bitrate;
@@ -10808,7 +10808,7 @@ scalability_info( payloadSize ) {
             size += stream.ReadUnsignedInt(size, 1, out this.priority_id_setting_flag, "priority_id_setting_flag");
             size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1, "num_layers_minus1");
 
-            this.layer_id = new uint[num_layers_minus1 + 1];
+            this.layer_id = new ulong[num_layers_minus1 + 1];
             this.priority_id = new uint[num_layers_minus1 + 1];
             this.discardable_flag = new byte[num_layers_minus1 + 1];
             this.dependency_id = new uint[num_layers_minus1 + 1];
@@ -10835,40 +10835,40 @@ scalability_info( payloadSize ) {
             this.max_bitrate_calc_window = new uint[num_layers_minus1 + 1];
             this.constant_frm_rate_idc = new uint[num_layers_minus1 + 1];
             this.avg_frm_rate = new uint[num_layers_minus1 + 1];
-            this.frm_width_in_mbs_minus1 = new uint[num_layers_minus1 + 1];
-            this.frm_height_in_mbs_minus1 = new uint[num_layers_minus1 + 1];
-            this.base_region_layer_id = new uint[num_layers_minus1 + 1];
+            this.frm_width_in_mbs_minus1 = new ulong[num_layers_minus1 + 1];
+            this.frm_height_in_mbs_minus1 = new ulong[num_layers_minus1 + 1];
+            this.base_region_layer_id = new ulong[num_layers_minus1 + 1];
             this.dynamic_rect_flag = new byte[num_layers_minus1 + 1];
             this.horizontal_offset = new uint[num_layers_minus1 + 1];
             this.vertical_offset = new uint[num_layers_minus1 + 1];
             this.region_width = new uint[num_layers_minus1 + 1];
             this.region_height = new uint[num_layers_minus1 + 1];
-            this.roi_id = new uint[num_layers_minus1 + 1];
+            this.roi_id = new ulong[num_layers_minus1 + 1];
             this.iroi_grid_flag = new byte[num_layers_minus1 + 1];
-            this.grid_width_in_mbs_minus1 = new uint[num_layers_minus1 + 1];
-            this.grid_height_in_mbs_minus1 = new uint[num_layers_minus1 + 1];
-            this.num_rois_minus1 = new uint[num_layers_minus1 + 1];
-            this.first_mb_in_roi = new uint[num_layers_minus1 + 1][];
-            this.roi_width_in_mbs_minus1 = new uint[num_layers_minus1 + 1][];
-            this.roi_height_in_mbs_minus1 = new uint[num_layers_minus1 + 1][];
-            this.num_directly_dependent_layers = new uint[num_layers_minus1 + 1];
-            this.directly_dependent_layer_id_delta_minus1 = new uint[num_layers_minus1 + 1][];
-            this.layer_dependency_info_src_layer_id_delta = new uint[num_layers_minus1 + 1];
-            this.num_seq_parameter_sets = new uint[num_layers_minus1 + 1];
-            this.seq_parameter_set_id_delta = new uint[num_layers_minus1 + 1][];
-            this.num_subset_seq_parameter_sets = new uint[num_layers_minus1 + 1];
-            this.subset_seq_parameter_set_id_delta = new uint[num_layers_minus1 + 1][];
-            this.num_pic_parameter_sets_minus1 = new uint[num_layers_minus1 + 1];
-            this.pic_parameter_set_id_delta = new uint[num_layers_minus1 + 1][];
-            this.parameter_sets_info_src_layer_id_delta = new uint[num_layers_minus1 + 1];
+            this.grid_width_in_mbs_minus1 = new ulong[num_layers_minus1 + 1];
+            this.grid_height_in_mbs_minus1 = new ulong[num_layers_minus1 + 1];
+            this.num_rois_minus1 = new ulong[num_layers_minus1 + 1];
+            this.first_mb_in_roi = new ulong[num_layers_minus1 + 1][];
+            this.roi_width_in_mbs_minus1 = new ulong[num_layers_minus1 + 1][];
+            this.roi_height_in_mbs_minus1 = new ulong[num_layers_minus1 + 1][];
+            this.num_directly_dependent_layers = new ulong[num_layers_minus1 + 1];
+            this.directly_dependent_layer_id_delta_minus1 = new ulong[num_layers_minus1 + 1][];
+            this.layer_dependency_info_src_layer_id_delta = new ulong[num_layers_minus1 + 1];
+            this.num_seq_parameter_sets = new ulong[num_layers_minus1 + 1];
+            this.seq_parameter_set_id_delta = new ulong[num_layers_minus1 + 1][];
+            this.num_subset_seq_parameter_sets = new ulong[num_layers_minus1 + 1];
+            this.subset_seq_parameter_set_id_delta = new ulong[num_layers_minus1 + 1][];
+            this.num_pic_parameter_sets_minus1 = new ulong[num_layers_minus1 + 1];
+            this.pic_parameter_set_id_delta = new ulong[num_layers_minus1 + 1][];
+            this.parameter_sets_info_src_layer_id_delta = new ulong[num_layers_minus1 + 1];
             this.motion_vectors_over_pic_boundaries_flag = new byte[num_layers_minus1 + 1];
-            this.max_bytes_per_pic_denom = new uint[num_layers_minus1 + 1];
-            this.max_bits_per_mb_denom = new uint[num_layers_minus1 + 1];
-            this.log2_max_mv_length_horizontal = new uint[num_layers_minus1 + 1];
-            this.log2_max_mv_length_vertical = new uint[num_layers_minus1 + 1];
-            this.max_num_reorder_frames = new uint[num_layers_minus1 + 1];
-            this.max_dec_frame_buffering = new uint[num_layers_minus1 + 1];
-            this.conversion_type_idc = new uint[num_layers_minus1 + 1];
+            this.max_bytes_per_pic_denom = new ulong[num_layers_minus1 + 1];
+            this.max_bits_per_mb_denom = new ulong[num_layers_minus1 + 1];
+            this.log2_max_mv_length_horizontal = new ulong[num_layers_minus1 + 1];
+            this.log2_max_mv_length_vertical = new ulong[num_layers_minus1 + 1];
+            this.max_num_reorder_frames = new ulong[num_layers_minus1 + 1];
+            this.max_dec_frame_buffering = new ulong[num_layers_minus1 + 1];
+            this.conversion_type_idc = new ulong[num_layers_minus1 + 1];
             this.rewriting_info_flag = new byte[num_layers_minus1 + 1][];
             this.rewriting_profile_level_idc = new uint[num_layers_minus1 + 1][];
             this.rewriting_avg_bitrate = new uint[num_layers_minus1 + 1][];
@@ -10958,9 +10958,9 @@ scalability_info( payloadSize ) {
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_rois_minus1[i], "num_rois_minus1");
 
-                        this.first_mb_in_roi[i] = new uint[num_rois_minus1[i] + 1];
-                        this.roi_width_in_mbs_minus1[i] = new uint[num_rois_minus1[i] + 1];
-                        this.roi_height_in_mbs_minus1[i] = new uint[num_rois_minus1[i] + 1];
+                        this.first_mb_in_roi[i] = new ulong[num_rois_minus1[i] + 1];
+                        this.roi_width_in_mbs_minus1[i] = new ulong[num_rois_minus1[i] + 1];
+                        this.roi_height_in_mbs_minus1[i] = new ulong[num_rois_minus1[i] + 1];
                         for (j = 0; j <= num_rois_minus1[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.first_mb_in_roi[i][j], "first_mb_in_roi");
@@ -10974,7 +10974,7 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i], "num_directly_dependent_layers");
 
-                    this.directly_dependent_layer_id_delta_minus1[i] = new uint[num_directly_dependent_layers[i]];
+                    this.directly_dependent_layer_id_delta_minus1[i] = new ulong[num_directly_dependent_layers[i]];
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j], "directly_dependent_layer_id_delta_minus1");
@@ -10989,21 +10989,21 @@ scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i], "num_seq_parameter_sets");
 
-                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_sets[i]];
+                    this.seq_parameter_set_id_delta[i] = new ulong[num_seq_parameter_sets[i]];
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i], "num_subset_seq_parameter_sets");
 
-                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_sets[i]];
+                    this.subset_seq_parameter_set_id_delta[i] = new ulong[num_subset_seq_parameter_sets[i]];
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i], "num_pic_parameter_sets_minus1");
 
-                    this.pic_parameter_set_id_delta[i] = new uint[num_pic_parameter_sets_minus1[i] + 1];
+                    this.pic_parameter_set_id_delta[i] = new ulong[num_pic_parameter_sets_minus1[i] + 1];
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
@@ -11052,8 +11052,8 @@ scalability_info( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.pr_num_dIds_minus1, "pr_num_dIds_minus1");
 
                 this.pr_dependency_id = new uint[pr_num_dIds_minus1 + 1];
-                this.pr_num_minus1 = new uint[pr_num_dIds_minus1 + 1];
-                this.pr_id = new uint[pr_num_dIds_minus1 + 1][];
+                this.pr_num_minus1 = new ulong[pr_num_dIds_minus1 + 1];
+                this.pr_id = new ulong[pr_num_dIds_minus1 + 1][];
                 this.pr_profile_level_idc = new uint[pr_num_dIds_minus1 + 1][];
                 this.pr_avg_bitrate = new uint[pr_num_dIds_minus1 + 1][];
                 this.pr_max_bitrate = new uint[pr_num_dIds_minus1 + 1][];
@@ -11062,7 +11062,7 @@ scalability_info( payloadSize ) {
                     size += stream.ReadUnsignedInt(size, 3, out this.pr_dependency_id[i], "pr_dependency_id");
                     size += stream.ReadUnsignedIntGolomb(size, out this.pr_num_minus1[i], "pr_num_minus1");
 
-                    this.pr_id[i] = new uint[pr_num_minus1[i] + 1];
+                    this.pr_id[i] = new ulong[pr_num_minus1[i] + 1];
                     this.pr_profile_level_idc[i] = new uint[pr_num_minus1[i] + 1];
                     this.pr_avg_bitrate[i] = new uint[pr_num_minus1[i] + 1];
                     this.pr_max_bitrate[i] = new uint[pr_num_minus1[i] + 1];
@@ -11311,8 +11311,8 @@ sub_pic_scalable_layer( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint layer_id;
-        public uint LayerId { get { return layer_id; } set { layer_id = value; } }
+        private ulong layer_id;
+        public ulong LayerId { get { return layer_id; } set { layer_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -11361,12 +11361,12 @@ non_required_layer_rep( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_info_entries_minus1;
-        public uint NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
+        private ulong num_info_entries_minus1;
+        public ulong NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
         private uint[] entry_dependency_id;
         public uint[] EntryDependencyId { get { return entry_dependency_id; } set { entry_dependency_id = value; } }
-        private uint[] num_non_required_layer_reps_minus1;
-        public uint[] NumNonRequiredLayerRepsMinus1 { get { return num_non_required_layer_reps_minus1; } set { num_non_required_layer_reps_minus1 = value; } }
+        private ulong[] num_non_required_layer_reps_minus1;
+        public ulong[] NumNonRequiredLayerRepsMinus1 { get { return num_non_required_layer_reps_minus1; } set { num_non_required_layer_reps_minus1 = value; } }
         private uint[][] non_required_layer_rep_dependency_id;
         public uint[][] NonRequiredLayerRepDependencyId { get { return non_required_layer_rep_dependency_id; } set { non_required_layer_rep_dependency_id = value; } }
         private uint[][] non_required_layer_rep_quality_id;
@@ -11389,7 +11389,7 @@ non_required_layer_rep( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1, "num_info_entries_minus1");
 
             this.entry_dependency_id = new uint[num_info_entries_minus1 + 1];
-            this.num_non_required_layer_reps_minus1 = new uint[num_info_entries_minus1 + 1];
+            this.num_non_required_layer_reps_minus1 = new ulong[num_info_entries_minus1 + 1];
             this.non_required_layer_rep_dependency_id = new uint[num_info_entries_minus1 + 1][];
             this.non_required_layer_rep_quality_id = new uint[num_info_entries_minus1 + 1][];
             for (i = 0; i <= num_info_entries_minus1; i++)
@@ -11513,10 +11513,10 @@ layers_not_present( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_layers;
-        public uint NumLayers { get { return num_layers; } set { num_layers = value; } }
-        private uint[] layer_id;
-        public uint[] LayerId { get { return layer_id; } set { layer_id = value; } }
+        private ulong num_layers;
+        public ulong NumLayers { get { return num_layers; } set { num_layers = value; } }
+        private ulong[] layer_id;
+        public ulong[] LayerId { get { return layer_id; } set { layer_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -11533,7 +11533,7 @@ layers_not_present( payloadSize ) {
             uint i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_layers, "num_layers");
 
-            this.layer_id = new uint[num_layers];
+            this.layer_id = new ulong[num_layers];
             for (i = 0; i < num_layers; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i], "layer_id");
@@ -11581,18 +11581,18 @@ layer_dependency_change( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_layers_minus1;
-        public uint NumLayersMinus1 { get { return num_layers_minus1; } set { num_layers_minus1 = value; } }
-        private uint[] layer_id;
-        public uint[] LayerId { get { return layer_id; } set { layer_id = value; } }
+        private ulong num_layers_minus1;
+        public ulong NumLayersMinus1 { get { return num_layers_minus1; } set { num_layers_minus1 = value; } }
+        private ulong[] layer_id;
+        public ulong[] LayerId { get { return layer_id; } set { layer_id = value; } }
         private byte[] layer_dependency_info_present_flag;
         public byte[] LayerDependencyInfoPresentFlag { get { return layer_dependency_info_present_flag; } set { layer_dependency_info_present_flag = value; } }
-        private uint[] num_directly_dependent_layers;
-        public uint[] NumDirectlyDependentLayers { get { return num_directly_dependent_layers; } set { num_directly_dependent_layers = value; } }
-        private uint[][] directly_dependent_layer_id_delta_minus1;
-        public uint[][] DirectlyDependentLayerIdDeltaMinus1 { get { return directly_dependent_layer_id_delta_minus1; } set { directly_dependent_layer_id_delta_minus1 = value; } }
-        private uint[] layer_dependency_info_src_layer_id_delta_minus1;
-        public uint[] LayerDependencyInfoSrcLayerIdDeltaMinus1 { get { return layer_dependency_info_src_layer_id_delta_minus1; } set { layer_dependency_info_src_layer_id_delta_minus1 = value; } }
+        private ulong[] num_directly_dependent_layers;
+        public ulong[] NumDirectlyDependentLayers { get { return num_directly_dependent_layers; } set { num_directly_dependent_layers = value; } }
+        private ulong[][] directly_dependent_layer_id_delta_minus1;
+        public ulong[][] DirectlyDependentLayerIdDeltaMinus1 { get { return directly_dependent_layer_id_delta_minus1; } set { directly_dependent_layer_id_delta_minus1 = value; } }
+        private ulong[] layer_dependency_info_src_layer_id_delta_minus1;
+        public ulong[] LayerDependencyInfoSrcLayerIdDeltaMinus1 { get { return layer_dependency_info_src_layer_id_delta_minus1; } set { layer_dependency_info_src_layer_id_delta_minus1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -11610,11 +11610,11 @@ layer_dependency_change( payloadSize ) {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_layers_minus1, "num_layers_minus1");
 
-            this.layer_id = new uint[num_layers_minus1 + 1];
+            this.layer_id = new ulong[num_layers_minus1 + 1];
             this.layer_dependency_info_present_flag = new byte[num_layers_minus1 + 1];
-            this.num_directly_dependent_layers = new uint[num_layers_minus1 + 1];
-            this.directly_dependent_layer_id_delta_minus1 = new uint[num_layers_minus1 + 1][];
-            this.layer_dependency_info_src_layer_id_delta_minus1 = new uint[num_layers_minus1 + 1];
+            this.num_directly_dependent_layers = new ulong[num_layers_minus1 + 1];
+            this.directly_dependent_layer_id_delta_minus1 = new ulong[num_layers_minus1 + 1][];
+            this.layer_dependency_info_src_layer_id_delta_minus1 = new ulong[num_layers_minus1 + 1];
             for (i = 0; i <= num_layers_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.layer_id[i], "layer_id");
@@ -11624,7 +11624,7 @@ layer_dependency_change( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_layers[i], "num_directly_dependent_layers");
 
-                    this.directly_dependent_layer_id_delta_minus1[i] = new uint[num_directly_dependent_layers[i]];
+                    this.directly_dependent_layer_id_delta_minus1[i] = new ulong[num_directly_dependent_layers[i]];
                     for (j = 0; j < num_directly_dependent_layers[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_layer_id_delta_minus1[i][j], "directly_dependent_layer_id_delta_minus1");
@@ -11698,8 +11698,8 @@ scalable_nesting( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte all_layer_representations_in_au_flag;
         public byte AllLayerRepresentationsInAuFlag { get { return all_layer_representations_in_au_flag; } set { all_layer_representations_in_au_flag = value; } }
-        private uint num_layer_representations_minus1;
-        public uint NumLayerRepresentationsMinus1 { get { return num_layer_representations_minus1; } set { num_layer_representations_minus1 = value; } }
+        private ulong num_layer_representations_minus1;
+        public ulong NumLayerRepresentationsMinus1 { get { return num_layer_representations_minus1; } set { num_layer_representations_minus1 = value; } }
         private uint[] sei_dependency_id;
         public uint[] SeiDependencyId { get { return sei_dependency_id; } set { sei_dependency_id = value; } }
         private uint[] sei_quality_id;
@@ -11829,8 +11829,8 @@ base_layer_temporal_hrd( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_of_temporal_layers_in_base_layer_minus1;
-        public uint NumOfTemporalLayersInBaseLayerMinus1 { get { return num_of_temporal_layers_in_base_layer_minus1; } set { num_of_temporal_layers_in_base_layer_minus1 = value; } }
+        private ulong num_of_temporal_layers_in_base_layer_minus1;
+        public ulong NumOfTemporalLayersInBaseLayerMinus1 { get { return num_of_temporal_layers_in_base_layer_minus1; } set { num_of_temporal_layers_in_base_layer_minus1 = value; } }
         private uint[] sei_temporal_id;
         public uint[] SeiTemporalId { get { return sei_temporal_id; } set { sei_temporal_id = value; } }
         private byte[] sei_timing_info_present_flag;
@@ -11973,8 +11973,8 @@ quality_layer_integrity_check( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_info_entries_minus1;
-        public uint NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
+        private ulong num_info_entries_minus1;
+        public ulong NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
         private uint[] entry_dependency_id;
         public uint[] EntryDependencyId { get { return entry_dependency_id; } set { entry_dependency_id = value; } }
         private uint[] quality_layer_crc;
@@ -12053,18 +12053,18 @@ redundant_pic_property( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_dIds_minus1;
-        public uint NumDIdsMinus1 { get { return num_dIds_minus1; } set { num_dIds_minus1 = value; } }
+        private ulong num_dIds_minus1;
+        public ulong NumDIdsMinus1 { get { return num_dIds_minus1; } set { num_dIds_minus1 = value; } }
         private uint[] dependency_id;
         public uint[] DependencyId { get { return dependency_id; } set { dependency_id = value; } }
-        private uint[] num_qIds_minus1;
-        public uint[] NumQIdsMinus1 { get { return num_qIds_minus1; } set { num_qIds_minus1 = value; } }
+        private ulong[] num_qIds_minus1;
+        public ulong[] NumQIdsMinus1 { get { return num_qIds_minus1; } set { num_qIds_minus1 = value; } }
         private uint[][] quality_id;
         public uint[][] QualityId { get { return quality_id; } set { quality_id = value; } }
-        private uint[][] num_redundant_pics_minus1;
-        public uint[][] NumRedundantPicsMinus1 { get { return num_redundant_pics_minus1; } set { num_redundant_pics_minus1 = value; } }
-        private uint[][][] redundant_pic_cnt_minus1;
-        public uint[][][] RedundantPicCntMinus1 { get { return redundant_pic_cnt_minus1; } set { redundant_pic_cnt_minus1 = value; } }
+        private ulong[][] num_redundant_pics_minus1;
+        public ulong[][] NumRedundantPicsMinus1 { get { return num_redundant_pics_minus1; } set { num_redundant_pics_minus1 = value; } }
+        private ulong[][][] redundant_pic_cnt_minus1;
+        public ulong[][][] RedundantPicCntMinus1 { get { return redundant_pic_cnt_minus1; } set { redundant_pic_cnt_minus1 = value; } }
         private byte[][][] pic_match_flag;
         public byte[][][] PicMatchFlag { get { return pic_match_flag; } set { pic_match_flag = value; } }
         private byte[][][] mb_type_match_flag;
@@ -12094,10 +12094,10 @@ redundant_pic_property( payloadSize ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_dIds_minus1, "num_dIds_minus1");
 
             this.dependency_id = new uint[num_dIds_minus1 + 1];
-            this.num_qIds_minus1 = new uint[num_dIds_minus1 + 1];
+            this.num_qIds_minus1 = new ulong[num_dIds_minus1 + 1];
             this.quality_id = new uint[num_dIds_minus1 + 1][];
-            this.num_redundant_pics_minus1 = new uint[num_dIds_minus1 + 1][];
-            this.redundant_pic_cnt_minus1 = new uint[num_dIds_minus1 + 1][][];
+            this.num_redundant_pics_minus1 = new ulong[num_dIds_minus1 + 1][];
+            this.redundant_pic_cnt_minus1 = new ulong[num_dIds_minus1 + 1][][];
             this.pic_match_flag = new byte[num_dIds_minus1 + 1][][];
             this.mb_type_match_flag = new byte[num_dIds_minus1 + 1][][];
             this.motion_match_flag = new byte[num_dIds_minus1 + 1][][];
@@ -12109,8 +12109,8 @@ redundant_pic_property( payloadSize ) {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_qIds_minus1[i], "num_qIds_minus1");
 
                 this.quality_id[i] = new uint[num_qIds_minus1[i] + 1];
-                this.num_redundant_pics_minus1[i] = new uint[num_qIds_minus1[i] + 1];
-                this.redundant_pic_cnt_minus1[i] = new uint[num_qIds_minus1[i] + 1][];
+                this.num_redundant_pics_minus1[i] = new ulong[num_qIds_minus1[i] + 1];
+                this.redundant_pic_cnt_minus1[i] = new ulong[num_qIds_minus1[i] + 1][];
                 this.pic_match_flag[i] = new byte[num_qIds_minus1[i] + 1][];
                 this.mb_type_match_flag[i] = new byte[num_qIds_minus1[i] + 1][];
                 this.motion_match_flag[i] = new byte[num_qIds_minus1[i] + 1][];
@@ -12121,7 +12121,7 @@ redundant_pic_property( payloadSize ) {
                     size += stream.ReadUnsignedInt(size, 4, out this.quality_id[i][j], "quality_id");
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_redundant_pics_minus1[i][j], "num_redundant_pics_minus1");
 
-                    this.redundant_pic_cnt_minus1[i][j] = new uint[num_redundant_pics_minus1[i][j] + 1];
+                    this.redundant_pic_cnt_minus1[i][j] = new ulong[num_redundant_pics_minus1[i][j] + 1];
                     this.pic_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j] + 1];
                     this.mb_type_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j] + 1];
                     this.motion_match_flag[i][j] = new byte[num_redundant_pics_minus1[i][j] + 1];
@@ -12244,8 +12244,8 @@ delta_frame_num 5 se(v)
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private int delta_frame_num;
-        public int DeltaFrameNum { get { return delta_frame_num; } set { delta_frame_num = value; } }
+        private long delta_frame_num;
+        public long DeltaFrameNum { get { return delta_frame_num; } set { delta_frame_num = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -12306,8 +12306,8 @@ svc_vui_parameters_extension() {
     */
     public class SvcVuiParametersExtension : IItuSerializable
     {
-        private uint vui_ext_num_entries_minus1;
-        public uint VuiExtNumEntriesMinus1 { get { return vui_ext_num_entries_minus1; } set { vui_ext_num_entries_minus1 = value; } }
+        private ulong vui_ext_num_entries_minus1;
+        public ulong VuiExtNumEntriesMinus1 { get { return vui_ext_num_entries_minus1; } set { vui_ext_num_entries_minus1 = value; } }
         private uint[] vui_ext_dependency_id;
         public uint[] VuiExtDependencyId { get { return vui_ext_dependency_id; } set { vui_ext_dependency_id = value; } }
         private uint[] vui_ext_quality_id;
@@ -12569,40 +12569,40 @@ seq_parameter_set_mvc_extension() {
     */
     public class SeqParameterSetMvcExtension : IItuSerializable
     {
-        private uint num_views_minus1;
-        public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
-        private uint[] view_id;
-        public uint[] ViewId { get { return view_id; } set { view_id = value; } }
-        private uint[] num_anchor_refs_l0;
-        public uint[] NumAnchorRefsL0 { get { return num_anchor_refs_l0; } set { num_anchor_refs_l0 = value; } }
-        private uint[][] anchor_ref_l0;
-        public uint[][] AnchorRefL0 { get { return anchor_ref_l0; } set { anchor_ref_l0 = value; } }
-        private uint[] num_anchor_refs_l1;
-        public uint[] NumAnchorRefsL1 { get { return num_anchor_refs_l1; } set { num_anchor_refs_l1 = value; } }
-        private uint[][] anchor_ref_l1;
-        public uint[][] AnchorRefL1 { get { return anchor_ref_l1; } set { anchor_ref_l1 = value; } }
-        private uint[] num_non_anchor_refs_l0;
-        public uint[] NumNonAnchorRefsL0 { get { return num_non_anchor_refs_l0; } set { num_non_anchor_refs_l0 = value; } }
-        private uint[][] non_anchor_ref_l0;
-        public uint[][] NonAnchorRefL0 { get { return non_anchor_ref_l0; } set { non_anchor_ref_l0 = value; } }
-        private uint[] num_non_anchor_refs_l1;
-        public uint[] NumNonAnchorRefsL1 { get { return num_non_anchor_refs_l1; } set { num_non_anchor_refs_l1 = value; } }
-        private uint[][] non_anchor_ref_l1;
-        public uint[][] NonAnchorRefL1 { get { return non_anchor_ref_l1; } set { non_anchor_ref_l1 = value; } }
-        private uint num_level_values_signalled_minus1;
-        public uint NumLevelValuesSignalledMinus1 { get { return num_level_values_signalled_minus1; } set { num_level_values_signalled_minus1 = value; } }
+        private ulong num_views_minus1;
+        public ulong NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
+        private ulong[] view_id;
+        public ulong[] ViewId { get { return view_id; } set { view_id = value; } }
+        private ulong[] num_anchor_refs_l0;
+        public ulong[] NumAnchorRefsL0 { get { return num_anchor_refs_l0; } set { num_anchor_refs_l0 = value; } }
+        private ulong[][] anchor_ref_l0;
+        public ulong[][] AnchorRefL0 { get { return anchor_ref_l0; } set { anchor_ref_l0 = value; } }
+        private ulong[] num_anchor_refs_l1;
+        public ulong[] NumAnchorRefsL1 { get { return num_anchor_refs_l1; } set { num_anchor_refs_l1 = value; } }
+        private ulong[][] anchor_ref_l1;
+        public ulong[][] AnchorRefL1 { get { return anchor_ref_l1; } set { anchor_ref_l1 = value; } }
+        private ulong[] num_non_anchor_refs_l0;
+        public ulong[] NumNonAnchorRefsL0 { get { return num_non_anchor_refs_l0; } set { num_non_anchor_refs_l0 = value; } }
+        private ulong[][] non_anchor_ref_l0;
+        public ulong[][] NonAnchorRefL0 { get { return non_anchor_ref_l0; } set { non_anchor_ref_l0 = value; } }
+        private ulong[] num_non_anchor_refs_l1;
+        public ulong[] NumNonAnchorRefsL1 { get { return num_non_anchor_refs_l1; } set { num_non_anchor_refs_l1 = value; } }
+        private ulong[][] non_anchor_ref_l1;
+        public ulong[][] NonAnchorRefL1 { get { return non_anchor_ref_l1; } set { non_anchor_ref_l1 = value; } }
+        private ulong num_level_values_signalled_minus1;
+        public ulong NumLevelValuesSignalledMinus1 { get { return num_level_values_signalled_minus1; } set { num_level_values_signalled_minus1 = value; } }
         private uint[] level_idc;
         public uint[] LevelIdc { get { return level_idc; } set { level_idc = value; } }
-        private uint[] num_applicable_ops_minus1;
-        public uint[] NumApplicableOpsMinus1 { get { return num_applicable_ops_minus1; } set { num_applicable_ops_minus1 = value; } }
+        private ulong[] num_applicable_ops_minus1;
+        public ulong[] NumApplicableOpsMinus1 { get { return num_applicable_ops_minus1; } set { num_applicable_ops_minus1 = value; } }
         private uint[][] applicable_op_temporal_id;
         public uint[][] ApplicableOpTemporalId { get { return applicable_op_temporal_id; } set { applicable_op_temporal_id = value; } }
-        private uint[][] applicable_op_num_target_views_minus1;
-        public uint[][] ApplicableOpNumTargetViewsMinus1 { get { return applicable_op_num_target_views_minus1; } set { applicable_op_num_target_views_minus1 = value; } }
-        private uint[][][] applicable_op_target_view_id;
-        public uint[][][] ApplicableOpTargetViewId { get { return applicable_op_target_view_id; } set { applicable_op_target_view_id = value; } }
-        private uint[][] applicable_op_num_views_minus1;
-        public uint[][] ApplicableOpNumViewsMinus1 { get { return applicable_op_num_views_minus1; } set { applicable_op_num_views_minus1 = value; } }
+        private ulong[][] applicable_op_num_target_views_minus1;
+        public ulong[][] ApplicableOpNumTargetViewsMinus1 { get { return applicable_op_num_target_views_minus1; } set { applicable_op_num_target_views_minus1 = value; } }
+        private ulong[][][] applicable_op_target_view_id;
+        public ulong[][][] ApplicableOpTargetViewId { get { return applicable_op_target_view_id; } set { applicable_op_target_view_id = value; } }
+        private ulong[][] applicable_op_num_views_minus1;
+        public ulong[][] ApplicableOpNumViewsMinus1 { get { return applicable_op_num_views_minus1; } set { applicable_op_num_views_minus1 = value; } }
         private uint mfc_format_idc;
         public uint MfcFormatIdc { get { return mfc_format_idc; } set { mfc_format_idc = value; } }
         private byte default_grid_position_flag;
@@ -12637,50 +12637,50 @@ seq_parameter_set_mvc_extension() {
             uint k = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
 
-            this.view_id = new uint[num_views_minus1 + 1];
+            this.view_id = new ulong[num_views_minus1 + 1];
             for (i = 0; i <= num_views_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i], "view_id");
             }
 
-            this.num_anchor_refs_l0 = new uint[num_views_minus1 + 1];
-            this.anchor_ref_l0 = new uint[num_views_minus1 + 1][];
-            this.num_anchor_refs_l1 = new uint[num_views_minus1 + 1];
-            this.anchor_ref_l1 = new uint[num_views_minus1 + 1][];
+            this.num_anchor_refs_l0 = new ulong[num_views_minus1 + 1];
+            this.anchor_ref_l0 = new ulong[num_views_minus1 + 1][];
+            this.num_anchor_refs_l1 = new ulong[num_views_minus1 + 1];
+            this.anchor_ref_l1 = new ulong[num_views_minus1 + 1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
-                this.anchor_ref_l0[i] = new uint[num_anchor_refs_l0[i]];
+                this.anchor_ref_l0[i] = new ulong[num_anchor_refs_l0[i]];
                 for (j = 0; j < num_anchor_refs_l0[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j], "anchor_ref_l0");
                 }
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
-                this.anchor_ref_l1[i] = new uint[num_anchor_refs_l1[i]];
+                this.anchor_ref_l1[i] = new ulong[num_anchor_refs_l1[i]];
                 for (j = 0; j < num_anchor_refs_l1[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j], "anchor_ref_l1");
                 }
             }
 
-            this.num_non_anchor_refs_l0 = new uint[num_views_minus1 + 1];
-            this.non_anchor_ref_l0 = new uint[num_views_minus1 + 1][];
-            this.num_non_anchor_refs_l1 = new uint[num_views_minus1 + 1];
-            this.non_anchor_ref_l1 = new uint[num_views_minus1 + 1][];
+            this.num_non_anchor_refs_l0 = new ulong[num_views_minus1 + 1];
+            this.non_anchor_ref_l0 = new ulong[num_views_minus1 + 1][];
+            this.num_non_anchor_refs_l1 = new ulong[num_views_minus1 + 1];
+            this.non_anchor_ref_l1 = new ulong[num_views_minus1 + 1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
-                this.non_anchor_ref_l0[i] = new uint[num_non_anchor_refs_l0[i]];
+                this.non_anchor_ref_l0[i] = new ulong[num_non_anchor_refs_l0[i]];
                 for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                 }
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
-                this.non_anchor_ref_l1[i] = new uint[num_non_anchor_refs_l1[i]];
+                this.non_anchor_ref_l1[i] = new ulong[num_non_anchor_refs_l1[i]];
                 for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
@@ -12689,26 +12689,26 @@ seq_parameter_set_mvc_extension() {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_level_values_signalled_minus1, "num_level_values_signalled_minus1");
 
             this.level_idc = new uint[num_level_values_signalled_minus1 + 1];
-            this.num_applicable_ops_minus1 = new uint[num_level_values_signalled_minus1 + 1];
+            this.num_applicable_ops_minus1 = new ulong[num_level_values_signalled_minus1 + 1];
             this.applicable_op_temporal_id = new uint[num_level_values_signalled_minus1 + 1][];
-            this.applicable_op_num_target_views_minus1 = new uint[num_level_values_signalled_minus1 + 1][];
-            this.applicable_op_target_view_id = new uint[num_level_values_signalled_minus1 + 1][][];
-            this.applicable_op_num_views_minus1 = new uint[num_level_values_signalled_minus1 + 1][];
+            this.applicable_op_num_target_views_minus1 = new ulong[num_level_values_signalled_minus1 + 1][];
+            this.applicable_op_target_view_id = new ulong[num_level_values_signalled_minus1 + 1][][];
+            this.applicable_op_num_views_minus1 = new ulong[num_level_values_signalled_minus1 + 1][];
             for (i = 0; i <= num_level_values_signalled_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 8, out this.level_idc[i], "level_idc");
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_applicable_ops_minus1[i], "num_applicable_ops_minus1");
 
                 this.applicable_op_temporal_id[i] = new uint[num_applicable_ops_minus1[i] + 1];
-                this.applicable_op_num_target_views_minus1[i] = new uint[num_applicable_ops_minus1[i] + 1];
-                this.applicable_op_target_view_id[i] = new uint[num_applicable_ops_minus1[i] + 1][];
-                this.applicable_op_num_views_minus1[i] = new uint[num_applicable_ops_minus1[i] + 1];
+                this.applicable_op_num_target_views_minus1[i] = new ulong[num_applicable_ops_minus1[i] + 1];
+                this.applicable_op_target_view_id[i] = new ulong[num_applicable_ops_minus1[i] + 1][];
+                this.applicable_op_num_views_minus1[i] = new ulong[num_applicable_ops_minus1[i] + 1];
                 for (j = 0; j <= num_applicable_ops_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedInt(size, 3, out this.applicable_op_temporal_id[i][j], "applicable_op_temporal_id");
                     size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_target_views_minus1[i][j], "applicable_op_num_target_views_minus1");
 
-                    this.applicable_op_target_view_id[i][j] = new uint[applicable_op_num_target_views_minus1[i][j] + 1];
+                    this.applicable_op_target_view_id[i][j] = new ulong[applicable_op_num_target_views_minus1[i][j] + 1];
                     for (k = 0; k <= applicable_op_num_target_views_minus1[i][j]; k++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_target_view_id[i][j][k], "applicable_op_target_view_id");
@@ -12882,14 +12882,14 @@ ref_pic_list_mvc_modification() {
     {
         private byte ref_pic_list_modification_flag_l0;
         public byte RefPicListModificationFlagL0 { get { return ref_pic_list_modification_flag_l0; } set { ref_pic_list_modification_flag_l0 = value; } }
-        private Dictionary<int, uint> modification_of_pic_nums_idc = new Dictionary<int, uint>();
-        public Dictionary<int, uint> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
-        private Dictionary<int, uint> abs_diff_pic_num_minus1 = new Dictionary<int, uint>();
-        public Dictionary<int, uint> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
-        private Dictionary<int, uint> long_term_pic_num = new Dictionary<int, uint>();
-        public Dictionary<int, uint> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
-        private Dictionary<int, uint> abs_diff_view_idx_minus1 = new Dictionary<int, uint>();
-        public Dictionary<int, uint> AbsDiffViewIdxMinus1 { get { return abs_diff_view_idx_minus1; } set { abs_diff_view_idx_minus1 = value; } }
+        private Dictionary<int, ulong> modification_of_pic_nums_idc = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> ModificationOfPicNumsIdc { get { return modification_of_pic_nums_idc; } set { modification_of_pic_nums_idc = value; } }
+        private Dictionary<int, ulong> abs_diff_pic_num_minus1 = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> AbsDiffPicNumMinus1 { get { return abs_diff_pic_num_minus1; } set { abs_diff_pic_num_minus1 = value; } }
+        private Dictionary<int, ulong> long_term_pic_num = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> LongTermPicNum { get { return long_term_pic_num; } set { long_term_pic_num = value; } }
+        private Dictionary<int, ulong> abs_diff_view_idx_minus1 = new Dictionary<int, ulong>();
+        public Dictionary<int, ulong> AbsDiffViewIdxMinus1 { get { return abs_diff_view_idx_minus1; } set { abs_diff_view_idx_minus1 = value; } }
         private byte ref_pic_list_modification_flag_l1;
         public byte RefPicListModificationFlagL1 { get { return ref_pic_list_modification_flag_l1; } set { ref_pic_list_modification_flag_l1 = value; } }
 
@@ -13070,16 +13070,16 @@ parallel_decoding_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint seq_parameter_set_id;
-        public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
-        private uint[][] pdi_init_delay_anchor_minus2_l0;
-        public uint[][] PdiInitDelayAnchorMinus2L0 { get { return pdi_init_delay_anchor_minus2_l0; } set { pdi_init_delay_anchor_minus2_l0 = value; } }
-        private uint[][] pdi_init_delay_anchor_minus2_l1;
-        public uint[][] PdiInitDelayAnchorMinus2L1 { get { return pdi_init_delay_anchor_minus2_l1; } set { pdi_init_delay_anchor_minus2_l1 = value; } }
-        private uint[][] pdi_init_delay_non_anchor_minus2_l0;
-        public uint[][] PdiInitDelayNonAnchorMinus2L0 { get { return pdi_init_delay_non_anchor_minus2_l0; } set { pdi_init_delay_non_anchor_minus2_l0 = value; } }
-        private uint[][] pdi_init_delay_non_anchor_minus2_l1;
-        public uint[][] PdiInitDelayNonAnchorMinus2L1 { get { return pdi_init_delay_non_anchor_minus2_l1; } set { pdi_init_delay_non_anchor_minus2_l1 = value; } }
+        private ulong seq_parameter_set_id;
+        public ulong SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
+        private ulong[][] pdi_init_delay_anchor_minus2_l0;
+        public ulong[][] PdiInitDelayAnchorMinus2L0 { get { return pdi_init_delay_anchor_minus2_l0; } set { pdi_init_delay_anchor_minus2_l0 = value; } }
+        private ulong[][] pdi_init_delay_anchor_minus2_l1;
+        public ulong[][] PdiInitDelayAnchorMinus2L1 { get { return pdi_init_delay_anchor_minus2_l1; } set { pdi_init_delay_anchor_minus2_l1 = value; } }
+        private ulong[][] pdi_init_delay_non_anchor_minus2_l0;
+        public ulong[][] PdiInitDelayNonAnchorMinus2L0 { get { return pdi_init_delay_non_anchor_minus2_l0; } set { pdi_init_delay_non_anchor_minus2_l0 = value; } }
+        private ulong[][] pdi_init_delay_non_anchor_minus2_l1;
+        public ulong[][] PdiInitDelayNonAnchorMinus2L1 { get { return pdi_init_delay_non_anchor_minus2_l1; } set { pdi_init_delay_non_anchor_minus2_l1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -13097,23 +13097,23 @@ parallel_decoding_info( payloadSize ) {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id");
 
-            this.pdi_init_delay_anchor_minus2_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-            this.pdi_init_delay_anchor_minus2_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-            this.pdi_init_delay_non_anchor_minus2_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-            this.pdi_init_delay_non_anchor_minus2_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-            for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+            this.pdi_init_delay_anchor_minus2_l0 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_anchor_minus2_l1 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_non_anchor_minus2_l0 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            this.pdi_init_delay_non_anchor_minus2_l1 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+            for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
             {
 
                 if (((H264Context)context).NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag != 0)
                 {
 
-                    this.pdi_init_delay_anchor_minus2_l0[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
+                    this.pdi_init_delay_anchor_minus2_l0[i] = new ulong[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l0[i][j], "pdi_init_delay_anchor_minus2_l0");
                     }
 
-                    this.pdi_init_delay_anchor_minus2_l1[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
+                    this.pdi_init_delay_anchor_minus2_l1[i] = new ulong[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]];
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_anchor_minus2_l1[i][j], "pdi_init_delay_anchor_minus2_l1");
@@ -13122,13 +13122,13 @@ parallel_decoding_info( payloadSize ) {
                 else
                 {
 
-                    this.pdi_init_delay_non_anchor_minus2_l0[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
+                    this.pdi_init_delay_non_anchor_minus2_l0[i] = new ulong[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l0[i][j], "pdi_init_delay_non_anchor_minus2_l0");
                     }
 
-                    this.pdi_init_delay_non_anchor_minus2_l1[i] = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
+                    this.pdi_init_delay_non_anchor_minus2_l1[i] = new ulong[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]];
                     for (j = 0; j <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pdi_init_delay_non_anchor_minus2_l1[i][j], "pdi_init_delay_non_anchor_minus2_l1");
@@ -13147,7 +13147,7 @@ parallel_decoding_info( payloadSize ) {
             uint j = 0;
             size += stream.WriteUnsignedIntGolomb(this.seq_parameter_set_id, "seq_parameter_set_id");
 
-            for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+            for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
             {
 
                 if (((H264Context)context).NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag != 0)
@@ -13214,12 +13214,12 @@ mvc_scalable_nesting( payloadSize ) {
         public byte OperationPointFlag { get { return operation_point_flag; } set { operation_point_flag = value; } }
         private byte all_view_components_in_au_flag;
         public byte AllViewComponentsInAuFlag { get { return all_view_components_in_au_flag; } set { all_view_components_in_au_flag = value; } }
-        private uint num_view_components_minus1;
-        public uint NumViewComponentsMinus1 { get { return num_view_components_minus1; } set { num_view_components_minus1 = value; } }
+        private ulong num_view_components_minus1;
+        public ulong NumViewComponentsMinus1 { get { return num_view_components_minus1; } set { num_view_components_minus1 = value; } }
         private uint[] sei_view_id;
         public uint[] SeiViewId { get { return sei_view_id; } set { sei_view_id = value; } }
-        private uint num_view_components_op_minus1;
-        public uint NumViewComponentsOpMinus1 { get { return num_view_components_op_minus1; } set { num_view_components_op_minus1 = value; } }
+        private ulong num_view_components_op_minus1;
+        public ulong NumViewComponentsOpMinus1 { get { return num_view_components_op_minus1; } set { num_view_components_op_minus1 = value; } }
         private uint[] sei_op_view_id;
         public uint[] SeiOpViewId { get { return sei_op_view_id; } set { sei_op_view_id = value; } }
         private uint sei_op_temporal_id;
@@ -13395,18 +13395,18 @@ view_scalability_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_operation_points_minus1;
-        public uint NumOperationPointsMinus1 { get { return num_operation_points_minus1; } set { num_operation_points_minus1 = value; } }
-        private uint[] operation_point_id;
-        public uint[] OperationPointId { get { return operation_point_id; } set { operation_point_id = value; } }
+        private ulong num_operation_points_minus1;
+        public ulong NumOperationPointsMinus1 { get { return num_operation_points_minus1; } set { num_operation_points_minus1 = value; } }
+        private ulong[] operation_point_id;
+        public ulong[] OperationPointId { get { return operation_point_id; } set { operation_point_id = value; } }
         private uint[] priority_id;
         public uint[] PriorityId { get { return priority_id; } set { priority_id = value; } }
         private uint[] temporal_id;
         public uint[] TemporalId { get { return temporal_id; } set { temporal_id = value; } }
-        private uint[] num_target_output_views_minus1;
-        public uint[] NumTargetOutputViewsMinus1 { get { return num_target_output_views_minus1; } set { num_target_output_views_minus1 = value; } }
-        private uint[][] view_id;
-        public uint[][] ViewId { get { return view_id; } set { view_id = value; } }
+        private ulong[] num_target_output_views_minus1;
+        public ulong[] NumTargetOutputViewsMinus1 { get { return num_target_output_views_minus1; } set { num_target_output_views_minus1 = value; } }
+        private ulong[][] view_id;
+        public ulong[][] ViewId { get { return view_id; } set { view_id = value; } }
         private byte[] profile_level_info_present_flag;
         public byte[] ProfileLevelInfoPresentFlag { get { return profile_level_info_present_flag; } set { profile_level_info_present_flag = value; } }
         private byte[] bitrate_info_present_flag;
@@ -13431,40 +13431,40 @@ view_scalability_info( payloadSize ) {
         public uint[] ConstantFrmRateIdc { get { return constant_frm_rate_idc; } set { constant_frm_rate_idc = value; } }
         private uint[] avg_frm_rate;
         public uint[] AvgFrmRate { get { return avg_frm_rate; } set { avg_frm_rate = value; } }
-        private uint[] num_directly_dependent_views;
-        public uint[] NumDirectlyDependentViews { get { return num_directly_dependent_views; } set { num_directly_dependent_views = value; } }
-        private uint[][] directly_dependent_view_id;
-        public uint[][] DirectlyDependentViewId { get { return directly_dependent_view_id; } set { directly_dependent_view_id = value; } }
-        private uint[] view_dependency_info_src_op_id;
-        public uint[] ViewDependencyInfoSrcOpId { get { return view_dependency_info_src_op_id; } set { view_dependency_info_src_op_id = value; } }
-        private uint[] num_seq_parameter_sets;
-        public uint[] NumSeqParameterSets { get { return num_seq_parameter_sets; } set { num_seq_parameter_sets = value; } }
-        private uint[][] seq_parameter_set_id_delta;
-        public uint[][] SeqParameterSetIdDelta { get { return seq_parameter_set_id_delta; } set { seq_parameter_set_id_delta = value; } }
-        private uint[] num_subset_seq_parameter_sets;
-        public uint[] NumSubsetSeqParameterSets { get { return num_subset_seq_parameter_sets; } set { num_subset_seq_parameter_sets = value; } }
-        private uint[][] subset_seq_parameter_set_id_delta;
-        public uint[][] SubsetSeqParameterSetIdDelta { get { return subset_seq_parameter_set_id_delta; } set { subset_seq_parameter_set_id_delta = value; } }
-        private uint[] num_pic_parameter_sets_minus1;
-        public uint[] NumPicParameterSetsMinus1 { get { return num_pic_parameter_sets_minus1; } set { num_pic_parameter_sets_minus1 = value; } }
-        private uint[][] pic_parameter_set_id_delta;
-        public uint[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
-        private uint[] parameter_sets_info_src_op_id;
-        public uint[] ParameterSetsInfoSrcOpId { get { return parameter_sets_info_src_op_id; } set { parameter_sets_info_src_op_id = value; } }
+        private ulong[] num_directly_dependent_views;
+        public ulong[] NumDirectlyDependentViews { get { return num_directly_dependent_views; } set { num_directly_dependent_views = value; } }
+        private ulong[][] directly_dependent_view_id;
+        public ulong[][] DirectlyDependentViewId { get { return directly_dependent_view_id; } set { directly_dependent_view_id = value; } }
+        private ulong[] view_dependency_info_src_op_id;
+        public ulong[] ViewDependencyInfoSrcOpId { get { return view_dependency_info_src_op_id; } set { view_dependency_info_src_op_id = value; } }
+        private ulong[] num_seq_parameter_sets;
+        public ulong[] NumSeqParameterSets { get { return num_seq_parameter_sets; } set { num_seq_parameter_sets = value; } }
+        private ulong[][] seq_parameter_set_id_delta;
+        public ulong[][] SeqParameterSetIdDelta { get { return seq_parameter_set_id_delta; } set { seq_parameter_set_id_delta = value; } }
+        private ulong[] num_subset_seq_parameter_sets;
+        public ulong[] NumSubsetSeqParameterSets { get { return num_subset_seq_parameter_sets; } set { num_subset_seq_parameter_sets = value; } }
+        private ulong[][] subset_seq_parameter_set_id_delta;
+        public ulong[][] SubsetSeqParameterSetIdDelta { get { return subset_seq_parameter_set_id_delta; } set { subset_seq_parameter_set_id_delta = value; } }
+        private ulong[] num_pic_parameter_sets_minus1;
+        public ulong[] NumPicParameterSetsMinus1 { get { return num_pic_parameter_sets_minus1; } set { num_pic_parameter_sets_minus1 = value; } }
+        private ulong[][] pic_parameter_set_id_delta;
+        public ulong[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
+        private ulong[] parameter_sets_info_src_op_id;
+        public ulong[] ParameterSetsInfoSrcOpId { get { return parameter_sets_info_src_op_id; } set { parameter_sets_info_src_op_id = value; } }
         private byte[] motion_vectors_over_pic_boundaries_flag;
         public byte[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
-        private uint[] max_bytes_per_pic_denom;
-        public uint[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
-        private uint[] max_bits_per_mb_denom;
-        public uint[] MaxBitsPerMbDenom { get { return max_bits_per_mb_denom; } set { max_bits_per_mb_denom = value; } }
-        private uint[] log2_max_mv_length_horizontal;
-        public uint[] Log2MaxMvLengthHorizontal { get { return log2_max_mv_length_horizontal; } set { log2_max_mv_length_horizontal = value; } }
-        private uint[] log2_max_mv_length_vertical;
-        public uint[] Log2MaxMvLengthVertical { get { return log2_max_mv_length_vertical; } set { log2_max_mv_length_vertical = value; } }
-        private uint[] max_num_reorder_frames;
-        public uint[] MaxNumReorderFrames { get { return max_num_reorder_frames; } set { max_num_reorder_frames = value; } }
-        private uint[] max_dec_frame_buffering;
-        public uint[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
+        private ulong[] max_bytes_per_pic_denom;
+        public ulong[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
+        private ulong[] max_bits_per_mb_denom;
+        public ulong[] MaxBitsPerMbDenom { get { return max_bits_per_mb_denom; } set { max_bits_per_mb_denom = value; } }
+        private ulong[] log2_max_mv_length_horizontal;
+        public ulong[] Log2MaxMvLengthHorizontal { get { return log2_max_mv_length_horizontal; } set { log2_max_mv_length_horizontal = value; } }
+        private ulong[] log2_max_mv_length_vertical;
+        public ulong[] Log2MaxMvLengthVertical { get { return log2_max_mv_length_vertical; } set { log2_max_mv_length_vertical = value; } }
+        private ulong[] max_num_reorder_frames;
+        public ulong[] MaxNumReorderFrames { get { return max_num_reorder_frames; } set { max_num_reorder_frames = value; } }
+        private ulong[] max_dec_frame_buffering;
+        public ulong[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -13482,11 +13482,11 @@ view_scalability_info( payloadSize ) {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points_minus1, "num_operation_points_minus1");
 
-            this.operation_point_id = new uint[num_operation_points_minus1 + 1];
+            this.operation_point_id = new ulong[num_operation_points_minus1 + 1];
             this.priority_id = new uint[num_operation_points_minus1 + 1];
             this.temporal_id = new uint[num_operation_points_minus1 + 1];
-            this.num_target_output_views_minus1 = new uint[num_operation_points_minus1 + 1];
-            this.view_id = new uint[num_operation_points_minus1 + 1][];
+            this.num_target_output_views_minus1 = new ulong[num_operation_points_minus1 + 1];
+            this.view_id = new ulong[num_operation_points_minus1 + 1][];
             this.profile_level_info_present_flag = new byte[num_operation_points_minus1 + 1];
             this.bitrate_info_present_flag = new byte[num_operation_points_minus1 + 1];
             this.frm_rate_info_present_flag = new byte[num_operation_points_minus1 + 1];
@@ -13499,23 +13499,23 @@ view_scalability_info( payloadSize ) {
             this.max_bitrate_calc_window = new uint[num_operation_points_minus1 + 1];
             this.constant_frm_rate_idc = new uint[num_operation_points_minus1 + 1];
             this.avg_frm_rate = new uint[num_operation_points_minus1 + 1];
-            this.num_directly_dependent_views = new uint[num_operation_points_minus1 + 1];
-            this.directly_dependent_view_id = new uint[num_operation_points_minus1 + 1][];
-            this.view_dependency_info_src_op_id = new uint[num_operation_points_minus1 + 1];
-            this.num_seq_parameter_sets = new uint[num_operation_points_minus1 + 1];
-            this.seq_parameter_set_id_delta = new uint[num_operation_points_minus1 + 1][];
-            this.num_subset_seq_parameter_sets = new uint[num_operation_points_minus1 + 1];
-            this.subset_seq_parameter_set_id_delta = new uint[num_operation_points_minus1 + 1][];
-            this.num_pic_parameter_sets_minus1 = new uint[num_operation_points_minus1 + 1];
-            this.pic_parameter_set_id_delta = new uint[num_operation_points_minus1 + 1][];
-            this.parameter_sets_info_src_op_id = new uint[num_operation_points_minus1 + 1];
+            this.num_directly_dependent_views = new ulong[num_operation_points_minus1 + 1];
+            this.directly_dependent_view_id = new ulong[num_operation_points_minus1 + 1][];
+            this.view_dependency_info_src_op_id = new ulong[num_operation_points_minus1 + 1];
+            this.num_seq_parameter_sets = new ulong[num_operation_points_minus1 + 1];
+            this.seq_parameter_set_id_delta = new ulong[num_operation_points_minus1 + 1][];
+            this.num_subset_seq_parameter_sets = new ulong[num_operation_points_minus1 + 1];
+            this.subset_seq_parameter_set_id_delta = new ulong[num_operation_points_minus1 + 1][];
+            this.num_pic_parameter_sets_minus1 = new ulong[num_operation_points_minus1 + 1];
+            this.pic_parameter_set_id_delta = new ulong[num_operation_points_minus1 + 1][];
+            this.parameter_sets_info_src_op_id = new ulong[num_operation_points_minus1 + 1];
             this.motion_vectors_over_pic_boundaries_flag = new byte[num_operation_points_minus1 + 1];
-            this.max_bytes_per_pic_denom = new uint[num_operation_points_minus1 + 1];
-            this.max_bits_per_mb_denom = new uint[num_operation_points_minus1 + 1];
-            this.log2_max_mv_length_horizontal = new uint[num_operation_points_minus1 + 1];
-            this.log2_max_mv_length_vertical = new uint[num_operation_points_minus1 + 1];
-            this.max_num_reorder_frames = new uint[num_operation_points_minus1 + 1];
-            this.max_dec_frame_buffering = new uint[num_operation_points_minus1 + 1];
+            this.max_bytes_per_pic_denom = new ulong[num_operation_points_minus1 + 1];
+            this.max_bits_per_mb_denom = new ulong[num_operation_points_minus1 + 1];
+            this.log2_max_mv_length_horizontal = new ulong[num_operation_points_minus1 + 1];
+            this.log2_max_mv_length_vertical = new ulong[num_operation_points_minus1 + 1];
+            this.max_num_reorder_frames = new ulong[num_operation_points_minus1 + 1];
+            this.max_dec_frame_buffering = new ulong[num_operation_points_minus1 + 1];
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i], "operation_point_id");
@@ -13523,7 +13523,7 @@ view_scalability_info( payloadSize ) {
                 size += stream.ReadUnsignedInt(size, 3, out this.temporal_id[i], "temporal_id");
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_target_output_views_minus1[i], "num_target_output_views_minus1");
 
-                this.view_id[i] = new uint[num_target_output_views_minus1[i] + 1];
+                this.view_id[i] = new ulong[num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_id[i][j], "view_id");
@@ -13561,7 +13561,7 @@ view_scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i], "num_directly_dependent_views");
 
-                    this.directly_dependent_view_id[i] = new uint[num_directly_dependent_views[i]];
+                    this.directly_dependent_view_id[i] = new ulong[num_directly_dependent_views[i]];
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j], "directly_dependent_view_id");
@@ -13576,21 +13576,21 @@ view_scalability_info( payloadSize ) {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_sets[i], "num_seq_parameter_sets");
 
-                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_sets[i]];
+                    this.seq_parameter_set_id_delta[i] = new ulong[num_seq_parameter_sets[i]];
                     for (j = 0; j < num_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_sets[i], "num_subset_seq_parameter_sets");
 
-                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_sets[i]];
+                    this.subset_seq_parameter_set_id_delta[i] = new ulong[num_subset_seq_parameter_sets[i]];
                     for (j = 0; j < num_subset_seq_parameter_sets[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_sets_minus1[i], "num_pic_parameter_sets_minus1");
 
-                    this.pic_parameter_set_id_delta[i] = new uint[num_pic_parameter_sets_minus1[i] + 1];
+                    this.pic_parameter_set_id_delta[i] = new ulong[num_pic_parameter_sets_minus1[i] + 1];
                     for (j = 0; j <= num_pic_parameter_sets_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
@@ -13732,8 +13732,8 @@ multiview_scene_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint max_disparity;
-        public uint MaxDisparity { get { return max_disparity; } set { max_disparity = value; } }
+        private ulong max_disparity;
+        public ulong MaxDisparity { get { return max_disparity; } set { max_disparity = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -13817,20 +13817,20 @@ if (intrinsic_param_flag ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_views_minus1;
-        public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
+        private ulong num_views_minus1;
+        public ulong NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
         private byte intrinsic_param_flag;
         public byte IntrinsicParamFlag { get { return intrinsic_param_flag; } set { intrinsic_param_flag = value; } }
         private byte extrinsic_param_flag;
         public byte ExtrinsicParamFlag { get { return extrinsic_param_flag; } set { extrinsic_param_flag = value; } }
         private byte intrinsic_params_equal_flag;
         public byte IntrinsicParamsEqualFlag { get { return intrinsic_params_equal_flag; } set { intrinsic_params_equal_flag = value; } }
-        private uint prec_focal_length;
-        public uint PrecFocalLength { get { return prec_focal_length; } set { prec_focal_length = value; } }
-        private uint prec_principal_point;
-        public uint PrecPrincipalPoint { get { return prec_principal_point; } set { prec_principal_point = value; } }
-        private uint prec_skew_factor;
-        public uint PrecSkewFactor { get { return prec_skew_factor; } set { prec_skew_factor = value; } }
+        private ulong prec_focal_length;
+        public ulong PrecFocalLength { get { return prec_focal_length; } set { prec_focal_length = value; } }
+        private ulong prec_principal_point;
+        public ulong PrecPrincipalPoint { get { return prec_principal_point; } set { prec_principal_point = value; } }
+        private ulong prec_skew_factor;
+        public ulong PrecSkewFactor { get { return prec_skew_factor; } set { prec_skew_factor = value; } }
         private byte[] sign_focal_length_x;
         public byte[] SignFocalLengthx { get { return sign_focal_length_x; } set { sign_focal_length_x = value; } }
         private uint[] exponent_focal_length_x;
@@ -13861,10 +13861,10 @@ if (intrinsic_param_flag ) {
         public uint[] ExponentSkewFactor { get { return exponent_skew_factor; } set { exponent_skew_factor = value; } }
         private uint[] mantissa_skew_factor;
         public uint[] MantissaSkewFactor { get { return mantissa_skew_factor; } set { mantissa_skew_factor = value; } }
-        private uint prec_rotation_param;
-        public uint PrecRotationParam { get { return prec_rotation_param; } set { prec_rotation_param = value; } }
-        private uint prec_translation_param;
-        public uint PrecTranslationParam { get { return prec_translation_param; } set { prec_translation_param = value; } }
+        private ulong prec_rotation_param;
+        public ulong PrecRotationParam { get { return prec_rotation_param; } set { prec_rotation_param = value; } }
+        private ulong prec_translation_param;
+        public ulong PrecTranslationParam { get { return prec_translation_param; } set { prec_translation_param = value; } }
         private byte[][][] sign_r;
         public byte[][][] Signr { get { return sign_r; } set { sign_r = value; } }
         private uint[][][] exponent_r;
@@ -14075,14 +14075,14 @@ non_required_view_component( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_info_entries_minus1;
-        public uint NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
-        private uint[] view_order_index;
-        public uint[] ViewOrderIndex { get { return view_order_index; } set { view_order_index = value; } }
-        private uint[] num_non_required_view_components_minus1;
-        public uint[] NumNonRequiredViewComponentsMinus1 { get { return num_non_required_view_components_minus1; } set { num_non_required_view_components_minus1 = value; } }
-        private uint[][] index_delta_minus1;
-        public uint[][] IndexDeltaMinus1 { get { return index_delta_minus1; } set { index_delta_minus1 = value; } }
+        private ulong num_info_entries_minus1;
+        public ulong NumInfoEntriesMinus1 { get { return num_info_entries_minus1; } set { num_info_entries_minus1 = value; } }
+        private ulong[] view_order_index;
+        public ulong[] ViewOrderIndex { get { return view_order_index; } set { view_order_index = value; } }
+        private ulong[] num_non_required_view_components_minus1;
+        public ulong[] NumNonRequiredViewComponentsMinus1 { get { return num_non_required_view_components_minus1; } set { num_non_required_view_components_minus1 = value; } }
+        private ulong[][] index_delta_minus1;
+        public ulong[][] IndexDeltaMinus1 { get { return index_delta_minus1; } set { index_delta_minus1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -14100,15 +14100,15 @@ non_required_view_component( payloadSize ) {
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_info_entries_minus1, "num_info_entries_minus1");
 
-            this.view_order_index = new uint[num_info_entries_minus1 + 1];
-            this.num_non_required_view_components_minus1 = new uint[num_info_entries_minus1 + 1];
-            this.index_delta_minus1 = new uint[num_info_entries_minus1 + 1][];
+            this.view_order_index = new ulong[num_info_entries_minus1 + 1];
+            this.num_non_required_view_components_minus1 = new ulong[num_info_entries_minus1 + 1];
+            this.index_delta_minus1 = new ulong[num_info_entries_minus1 + 1][];
             for (i = 0; i <= num_info_entries_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.view_order_index[i], "view_order_index");
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_non_required_view_components_minus1[i], "num_non_required_view_components_minus1");
 
-                this.index_delta_minus1[i] = new uint[num_non_required_view_components_minus1[i] + 1];
+                this.index_delta_minus1[i] = new ulong[num_non_required_view_components_minus1[i] + 1];
                 for (j = 0; j <= num_non_required_view_components_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.index_delta_minus1[i][j], "index_delta_minus1");
@@ -14169,8 +14169,8 @@ view_dependency_change( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint seq_parameter_set_id;
-        public uint SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
+        private ulong seq_parameter_set_id;
+        public ulong SeqParameterSetId { get { return seq_parameter_set_id; } set { seq_parameter_set_id = value; } }
         private byte anchor_update_flag;
         public byte AnchorUpdateFlag { get { return anchor_update_flag; } set { anchor_update_flag = value; } }
         private byte non_anchor_update_flag;
@@ -14205,9 +14205,9 @@ view_dependency_change( payloadSize ) {
             if (anchor_update_flag != 0)
             {
 
-                this.anchor_ref_l0_flag = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                this.anchor_ref_l1_flag = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                this.anchor_ref_l0_flag = new byte[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.anchor_ref_l1_flag = new byte[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
                     this.anchor_ref_l0_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]];
@@ -14227,9 +14227,9 @@ view_dependency_change( payloadSize ) {
             if (non_anchor_update_flag != 0)
             {
 
-                this.non_anchor_ref_l0_flag = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                this.non_anchor_ref_l1_flag = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                this.non_anchor_ref_l0_flag = new byte[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.non_anchor_ref_l1_flag = new byte[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
                     this.non_anchor_ref_l0_flag[i] = new byte[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]];
@@ -14262,7 +14262,7 @@ view_dependency_change( payloadSize ) {
             if (anchor_update_flag != 0)
             {
 
-                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0[i]; j++)
@@ -14280,7 +14280,7 @@ view_dependency_change( payloadSize ) {
             if (non_anchor_update_flag != 0)
             {
 
-                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
                     for (j = 0; j < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0[i]; j++)
@@ -14313,10 +14313,10 @@ operation_point_not_present( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_operation_points;
-        public uint NumOperationPoints { get { return num_operation_points; } set { num_operation_points = value; } }
-        private uint[] operation_point_not_present_id;
-        public uint[] OperationPointNotPresentId { get { return operation_point_not_present_id; } set { operation_point_not_present_id = value; } }
+        private ulong num_operation_points;
+        public ulong NumOperationPoints { get { return num_operation_points; } set { num_operation_points = value; } }
+        private ulong[] operation_point_not_present_id;
+        public ulong[] OperationPointNotPresentId { get { return operation_point_not_present_id; } set { operation_point_not_present_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -14333,7 +14333,7 @@ operation_point_not_present( payloadSize ) {
             uint k = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points, "num_operation_points");
 
-            this.operation_point_not_present_id = new uint[num_operation_points];
+            this.operation_point_not_present_id = new ulong[num_operation_points];
             for (k = 0; k < num_operation_points; k++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_not_present_id[k], "operation_point_not_present_id");
@@ -14389,8 +14389,8 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_of_temporal_layers_in_base_view_minus1;
-        public uint NumOfTemporalLayersInBaseViewMinus1 { get { return num_of_temporal_layers_in_base_view_minus1; } set { num_of_temporal_layers_in_base_view_minus1 = value; } }
+        private ulong num_of_temporal_layers_in_base_view_minus1;
+        public ulong NumOfTemporalLayersInBaseViewMinus1 { get { return num_of_temporal_layers_in_base_view_minus1; } set { num_of_temporal_layers_in_base_view_minus1 = value; } }
         private uint[] sei_mvc_temporal_id;
         public uint[] SeiMvcTemporalId { get { return sei_mvc_temporal_id; } set { sei_mvc_temporal_id = value; } }
         private byte[] sei_mvc_timing_info_present_flag;
@@ -14532,10 +14532,10 @@ multiview_view_position_extension_flag 5 u(1)
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_views_minus1;
-        public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
-        private uint[] view_position;
-        public uint[] ViewPosition { get { return view_position; } set { view_position = value; } }
+        private ulong num_views_minus1;
+        public ulong NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
+        private ulong[] view_position;
+        public ulong[] ViewPosition { get { return view_position; } set { view_position = value; } }
         private byte multiview_view_position_extension_flag;
         public byte MultiviewViewPositionExtensionFlag { get { return multiview_view_position_extension_flag; } set { multiview_view_position_extension_flag = value; } }
 
@@ -14554,7 +14554,7 @@ multiview_view_position_extension_flag 5 u(1)
             uint i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
 
-            this.view_position = new uint[num_views_minus1 + 1];
+            this.view_position = new ulong[num_views_minus1 + 1];
             for (i = 0; i <= num_views_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.view_position[i], "view_position");
@@ -14614,14 +14614,14 @@ mvc_vui_parameters_extension() {
     */
     public class MvcVuiParametersExtension : IItuSerializable
     {
-        private uint vui_mvc_num_ops_minus1;
-        public uint VuiMvcNumOpsMinus1 { get { return vui_mvc_num_ops_minus1; } set { vui_mvc_num_ops_minus1 = value; } }
+        private ulong vui_mvc_num_ops_minus1;
+        public ulong VuiMvcNumOpsMinus1 { get { return vui_mvc_num_ops_minus1; } set { vui_mvc_num_ops_minus1 = value; } }
         private uint[] vui_mvc_temporal_id;
         public uint[] VuiMvcTemporalId { get { return vui_mvc_temporal_id; } set { vui_mvc_temporal_id = value; } }
-        private uint[] vui_mvc_num_target_output_views_minus1;
-        public uint[] VuiMvcNumTargetOutputViewsMinus1 { get { return vui_mvc_num_target_output_views_minus1; } set { vui_mvc_num_target_output_views_minus1 = value; } }
-        private uint[][] vui_mvc_view_id;
-        public uint[][] VuiMvcViewId { get { return vui_mvc_view_id; } set { vui_mvc_view_id = value; } }
+        private ulong[] vui_mvc_num_target_output_views_minus1;
+        public ulong[] VuiMvcNumTargetOutputViewsMinus1 { get { return vui_mvc_num_target_output_views_minus1; } set { vui_mvc_num_target_output_views_minus1 = value; } }
+        private ulong[][] vui_mvc_view_id;
+        public ulong[][] VuiMvcViewId { get { return vui_mvc_view_id; } set { vui_mvc_view_id = value; } }
         private byte[] vui_mvc_timing_info_present_flag;
         public byte[] VuiMvcTimingInfoPresentFlag { get { return vui_mvc_timing_info_present_flag; } set { vui_mvc_timing_info_present_flag = value; } }
         private uint[] vui_mvc_num_units_in_tick;
@@ -14658,8 +14658,8 @@ mvc_vui_parameters_extension() {
             size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_num_ops_minus1, "vui_mvc_num_ops_minus1");
 
             this.vui_mvc_temporal_id = new uint[vui_mvc_num_ops_minus1 + 1];
-            this.vui_mvc_num_target_output_views_minus1 = new uint[vui_mvc_num_ops_minus1 + 1];
-            this.vui_mvc_view_id = new uint[vui_mvc_num_ops_minus1 + 1][];
+            this.vui_mvc_num_target_output_views_minus1 = new ulong[vui_mvc_num_ops_minus1 + 1];
+            this.vui_mvc_view_id = new ulong[vui_mvc_num_ops_minus1 + 1][];
             this.vui_mvc_timing_info_present_flag = new byte[vui_mvc_num_ops_minus1 + 1];
             this.vui_mvc_num_units_in_tick = new uint[vui_mvc_num_ops_minus1 + 1];
             this.vui_mvc_time_scale = new uint[vui_mvc_num_ops_minus1 + 1];
@@ -14674,7 +14674,7 @@ mvc_vui_parameters_extension() {
                 size += stream.ReadUnsignedInt(size, 3, out this.vui_mvc_temporal_id[i], "vui_mvc_temporal_id");
                 size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_num_target_output_views_minus1[i], "vui_mvc_num_target_output_views_minus1");
 
-                this.vui_mvc_view_id[i] = new uint[vui_mvc_num_target_output_views_minus1[i] + 1];
+                this.vui_mvc_view_id[i] = new ulong[vui_mvc_num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= vui_mvc_num_target_output_views_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvc_view_id[i][j], "vui_mvc_view_id");
@@ -14822,52 +14822,52 @@ seq_parameter_set_mvcd_extension() {
     */
     public class SeqParameterSetMvcdExtension : IItuSerializable
     {
-        private uint num_views_minus1;
-        public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
+        private ulong num_views_minus1;
+        public ulong NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
         private uint numDepthViews;
         public uint NumDepthViews { get { return NumDepthViews; } set { NumDepthViews = value; } }
-        private uint[] view_id;
-        public uint[] ViewId { get { return view_id; } set { view_id = value; } }
+        private ulong[] view_id;
+        public ulong[] ViewId { get { return view_id; } set { view_id = value; } }
         private byte[] depth_view_present_flag;
         public byte[] DepthViewPresentFlag { get { return depth_view_present_flag; } set { depth_view_present_flag = value; } }
         private byte[] texture_view_present_flag;
         public byte[] TextureViewPresentFlag { get { return texture_view_present_flag; } set { texture_view_present_flag = value; } }
-        private uint[] num_anchor_refs_l0;
-        public uint[] NumAnchorRefsL0 { get { return num_anchor_refs_l0; } set { num_anchor_refs_l0 = value; } }
-        private uint[][] anchor_ref_l0;
-        public uint[][] AnchorRefL0 { get { return anchor_ref_l0; } set { anchor_ref_l0 = value; } }
-        private uint[] num_anchor_refs_l1;
-        public uint[] NumAnchorRefsL1 { get { return num_anchor_refs_l1; } set { num_anchor_refs_l1 = value; } }
-        private uint[][] anchor_ref_l1;
-        public uint[][] AnchorRefL1 { get { return anchor_ref_l1; } set { anchor_ref_l1 = value; } }
-        private uint[] num_non_anchor_refs_l0;
-        public uint[] NumNonAnchorRefsL0 { get { return num_non_anchor_refs_l0; } set { num_non_anchor_refs_l0 = value; } }
-        private uint[][] non_anchor_ref_l0;
-        public uint[][] NonAnchorRefL0 { get { return non_anchor_ref_l0; } set { non_anchor_ref_l0 = value; } }
-        private uint[] num_non_anchor_refs_l1;
-        public uint[] NumNonAnchorRefsL1 { get { return num_non_anchor_refs_l1; } set { num_non_anchor_refs_l1 = value; } }
-        private uint[][] non_anchor_ref_l1;
-        public uint[][] NonAnchorRefL1 { get { return non_anchor_ref_l1; } set { non_anchor_ref_l1 = value; } }
-        private uint num_level_values_signalled_minus1;
-        public uint NumLevelValuesSignalledMinus1 { get { return num_level_values_signalled_minus1; } set { num_level_values_signalled_minus1 = value; } }
+        private ulong[] num_anchor_refs_l0;
+        public ulong[] NumAnchorRefsL0 { get { return num_anchor_refs_l0; } set { num_anchor_refs_l0 = value; } }
+        private ulong[][] anchor_ref_l0;
+        public ulong[][] AnchorRefL0 { get { return anchor_ref_l0; } set { anchor_ref_l0 = value; } }
+        private ulong[] num_anchor_refs_l1;
+        public ulong[] NumAnchorRefsL1 { get { return num_anchor_refs_l1; } set { num_anchor_refs_l1 = value; } }
+        private ulong[][] anchor_ref_l1;
+        public ulong[][] AnchorRefL1 { get { return anchor_ref_l1; } set { anchor_ref_l1 = value; } }
+        private ulong[] num_non_anchor_refs_l0;
+        public ulong[] NumNonAnchorRefsL0 { get { return num_non_anchor_refs_l0; } set { num_non_anchor_refs_l0 = value; } }
+        private ulong[][] non_anchor_ref_l0;
+        public ulong[][] NonAnchorRefL0 { get { return non_anchor_ref_l0; } set { non_anchor_ref_l0 = value; } }
+        private ulong[] num_non_anchor_refs_l1;
+        public ulong[] NumNonAnchorRefsL1 { get { return num_non_anchor_refs_l1; } set { num_non_anchor_refs_l1 = value; } }
+        private ulong[][] non_anchor_ref_l1;
+        public ulong[][] NonAnchorRefL1 { get { return non_anchor_ref_l1; } set { non_anchor_ref_l1 = value; } }
+        private ulong num_level_values_signalled_minus1;
+        public ulong NumLevelValuesSignalledMinus1 { get { return num_level_values_signalled_minus1; } set { num_level_values_signalled_minus1 = value; } }
         private uint[] level_idc;
         public uint[] LevelIdc { get { return level_idc; } set { level_idc = value; } }
-        private uint[] num_applicable_ops_minus1;
-        public uint[] NumApplicableOpsMinus1 { get { return num_applicable_ops_minus1; } set { num_applicable_ops_minus1 = value; } }
+        private ulong[] num_applicable_ops_minus1;
+        public ulong[] NumApplicableOpsMinus1 { get { return num_applicable_ops_minus1; } set { num_applicable_ops_minus1 = value; } }
         private uint[][] applicable_op_temporal_id;
         public uint[][] ApplicableOpTemporalId { get { return applicable_op_temporal_id; } set { applicable_op_temporal_id = value; } }
-        private uint[][] applicable_op_num_target_views_minus1;
-        public uint[][] ApplicableOpNumTargetViewsMinus1 { get { return applicable_op_num_target_views_minus1; } set { applicable_op_num_target_views_minus1 = value; } }
-        private uint[][][] applicable_op_target_view_id;
-        public uint[][][] ApplicableOpTargetViewId { get { return applicable_op_target_view_id; } set { applicable_op_target_view_id = value; } }
+        private ulong[][] applicable_op_num_target_views_minus1;
+        public ulong[][] ApplicableOpNumTargetViewsMinus1 { get { return applicable_op_num_target_views_minus1; } set { applicable_op_num_target_views_minus1 = value; } }
+        private ulong[][][] applicable_op_target_view_id;
+        public ulong[][][] ApplicableOpTargetViewId { get { return applicable_op_target_view_id; } set { applicable_op_target_view_id = value; } }
         private byte[][][] applicable_op_depth_flag;
         public byte[][][] ApplicableOpDepthFlag { get { return applicable_op_depth_flag; } set { applicable_op_depth_flag = value; } }
         private byte[][][] applicable_op_texture_flag;
         public byte[][][] ApplicableOpTextureFlag { get { return applicable_op_texture_flag; } set { applicable_op_texture_flag = value; } }
-        private uint[][] applicable_op_num_texture_views_minus1;
-        public uint[][] ApplicableOpNumTextureViewsMinus1 { get { return applicable_op_num_texture_views_minus1; } set { applicable_op_num_texture_views_minus1 = value; } }
-        private uint[][] applicable_op_num_depth_views;
-        public uint[][] ApplicableOpNumDepthViews { get { return applicable_op_num_depth_views; } set { applicable_op_num_depth_views = value; } }
+        private ulong[][] applicable_op_num_texture_views_minus1;
+        public ulong[][] ApplicableOpNumTextureViewsMinus1 { get { return applicable_op_num_texture_views_minus1; } set { applicable_op_num_texture_views_minus1 = value; } }
+        private ulong[][] applicable_op_num_depth_views;
+        public ulong[][] ApplicableOpNumDepthViews { get { return applicable_op_num_depth_views; } set { applicable_op_num_depth_views = value; } }
         private byte mvcd_vui_parameters_present_flag;
         public byte MvcdVuiParametersPresentFlag { get { return mvcd_vui_parameters_present_flag; } set { mvcd_vui_parameters_present_flag = value; } }
         private MvcdVuiParametersExtension mvcd_vui_parameters_extension;
@@ -14890,12 +14890,12 @@ seq_parameter_set_mvcd_extension() {
             ulong size = 0;
 
             uint i = 0;
-            uint[] DepthViewId = null;
+            ulong[] DepthViewId = null;
             uint j = 0;
             uint k = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
 
-            this.view_id = new uint[num_views_minus1 + 1];
+            this.view_id = new ulong[num_views_minus1 + 1];
             this.depth_view_present_flag = new byte[num_views_minus1 + 1];
             this.texture_view_present_flag = new byte[num_views_minus1 + 1];
             for (i = 0, NumDepthViews = 0; i <= num_views_minus1; i++)
@@ -14907,10 +14907,10 @@ seq_parameter_set_mvcd_extension() {
                 size += stream.ReadUnsignedInt(size, 1, out this.texture_view_present_flag[i], "texture_view_present_flag");
             }
 
-            this.num_anchor_refs_l0 = new uint[num_views_minus1 + 1];
-            this.anchor_ref_l0 = new uint[num_views_minus1 + 1][];
-            this.num_anchor_refs_l1 = new uint[num_views_minus1 + 1];
-            this.anchor_ref_l1 = new uint[num_views_minus1 + 1][];
+            this.num_anchor_refs_l0 = new ulong[num_views_minus1 + 1];
+            this.anchor_ref_l0 = new ulong[num_views_minus1 + 1][];
+            this.num_anchor_refs_l1 = new ulong[num_views_minus1 + 1];
+            this.anchor_ref_l1 = new ulong[num_views_minus1 + 1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
 
@@ -14918,14 +14918,14 @@ seq_parameter_set_mvcd_extension() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
-                    this.anchor_ref_l0[i] = new uint[num_anchor_refs_l0[i]];
+                    this.anchor_ref_l0[i] = new ulong[num_anchor_refs_l0[i]];
                     for (j = 0; j < num_anchor_refs_l0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j], "anchor_ref_l0");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
-                    this.anchor_ref_l1[i] = new uint[num_anchor_refs_l1[i]];
+                    this.anchor_ref_l1[i] = new ulong[num_anchor_refs_l1[i]];
                     for (j = 0; j < num_anchor_refs_l1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j], "anchor_ref_l1");
@@ -14933,10 +14933,10 @@ seq_parameter_set_mvcd_extension() {
                 }
             }
 
-            this.num_non_anchor_refs_l0 = new uint[num_views_minus1 + 1];
-            this.non_anchor_ref_l0 = new uint[num_views_minus1 + 1][];
-            this.num_non_anchor_refs_l1 = new uint[num_views_minus1 + 1];
-            this.non_anchor_ref_l1 = new uint[num_views_minus1 + 1][];
+            this.num_non_anchor_refs_l0 = new ulong[num_views_minus1 + 1];
+            this.non_anchor_ref_l0 = new ulong[num_views_minus1 + 1][];
+            this.num_non_anchor_refs_l1 = new ulong[num_views_minus1 + 1];
+            this.non_anchor_ref_l1 = new ulong[num_views_minus1 + 1][];
             for (i = 1; i <= num_views_minus1; i++)
             {
 
@@ -14944,14 +14944,14 @@ seq_parameter_set_mvcd_extension() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
-                    this.non_anchor_ref_l0[i] = new uint[num_non_anchor_refs_l0[i]];
+                    this.non_anchor_ref_l0[i] = new ulong[num_non_anchor_refs_l0[i]];
                     for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
-                    this.non_anchor_ref_l1[i] = new uint[num_non_anchor_refs_l1[i]];
+                    this.non_anchor_ref_l1[i] = new ulong[num_non_anchor_refs_l1[i]];
                     for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
@@ -14961,32 +14961,32 @@ seq_parameter_set_mvcd_extension() {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_level_values_signalled_minus1, "num_level_values_signalled_minus1");
 
             this.level_idc = new uint[num_level_values_signalled_minus1 + 1];
-            this.num_applicable_ops_minus1 = new uint[num_level_values_signalled_minus1 + 1];
+            this.num_applicable_ops_minus1 = new ulong[num_level_values_signalled_minus1 + 1];
             this.applicable_op_temporal_id = new uint[num_level_values_signalled_minus1 + 1][];
-            this.applicable_op_num_target_views_minus1 = new uint[num_level_values_signalled_minus1 + 1][];
-            this.applicable_op_target_view_id = new uint[num_level_values_signalled_minus1 + 1][][];
+            this.applicable_op_num_target_views_minus1 = new ulong[num_level_values_signalled_minus1 + 1][];
+            this.applicable_op_target_view_id = new ulong[num_level_values_signalled_minus1 + 1][][];
             this.applicable_op_depth_flag = new byte[num_level_values_signalled_minus1 + 1][][];
             this.applicable_op_texture_flag = new byte[num_level_values_signalled_minus1 + 1][][];
-            this.applicable_op_num_texture_views_minus1 = new uint[num_level_values_signalled_minus1 + 1][];
-            this.applicable_op_num_depth_views = new uint[num_level_values_signalled_minus1 + 1][];
+            this.applicable_op_num_texture_views_minus1 = new ulong[num_level_values_signalled_minus1 + 1][];
+            this.applicable_op_num_depth_views = new ulong[num_level_values_signalled_minus1 + 1][];
             for (i = 0; i <= num_level_values_signalled_minus1; i++)
             {
                 size += stream.ReadUnsignedInt(size, 8, out this.level_idc[i], "level_idc");
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_applicable_ops_minus1[i], "num_applicable_ops_minus1");
 
                 this.applicable_op_temporal_id[i] = new uint[num_applicable_ops_minus1[i] + 1];
-                this.applicable_op_num_target_views_minus1[i] = new uint[num_applicable_ops_minus1[i] + 1];
-                this.applicable_op_target_view_id[i] = new uint[num_applicable_ops_minus1[i] + 1][];
+                this.applicable_op_num_target_views_minus1[i] = new ulong[num_applicable_ops_minus1[i] + 1];
+                this.applicable_op_target_view_id[i] = new ulong[num_applicable_ops_minus1[i] + 1][];
                 this.applicable_op_depth_flag[i] = new byte[num_applicable_ops_minus1[i] + 1][];
                 this.applicable_op_texture_flag[i] = new byte[num_applicable_ops_minus1[i] + 1][];
-                this.applicable_op_num_texture_views_minus1[i] = new uint[num_applicable_ops_minus1[i] + 1];
-                this.applicable_op_num_depth_views[i] = new uint[num_applicable_ops_minus1[i] + 1];
+                this.applicable_op_num_texture_views_minus1[i] = new ulong[num_applicable_ops_minus1[i] + 1];
+                this.applicable_op_num_depth_views[i] = new ulong[num_applicable_ops_minus1[i] + 1];
                 for (j = 0; j <= num_applicable_ops_minus1[i]; j++)
                 {
                     size += stream.ReadUnsignedInt(size, 3, out this.applicable_op_temporal_id[i][j], "applicable_op_temporal_id");
                     size += stream.ReadUnsignedIntGolomb(size, out this.applicable_op_num_target_views_minus1[i][j], "applicable_op_num_target_views_minus1");
 
-                    this.applicable_op_target_view_id[i][j] = new uint[applicable_op_num_target_views_minus1[i][j] + 1];
+                    this.applicable_op_target_view_id[i][j] = new ulong[applicable_op_num_target_views_minus1[i][j] + 1];
                     this.applicable_op_depth_flag[i][j] = new byte[applicable_op_num_target_views_minus1[i][j] + 1];
                     this.applicable_op_texture_flag[i][j] = new byte[applicable_op_num_target_views_minus1[i][j] + 1];
                     for (k = 0; k <= applicable_op_num_target_views_minus1[i][j];
@@ -15023,7 +15023,7 @@ seq_parameter_set_mvcd_extension() {
             ulong size = 0;
 
             uint i = 0;
-            uint[] DepthViewId = null;
+            ulong[] DepthViewId = null;
             uint j = 0;
             uint k = 0;
             size += stream.WriteUnsignedIntGolomb(this.num_views_minus1, "num_views_minus1");
@@ -15185,18 +15185,18 @@ priority_id[ i ] 5 u(5)
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_operation_points_minus1;
-        public uint NumOperationPointsMinus1 { get { return num_operation_points_minus1; } set { num_operation_points_minus1 = value; } }
-        private uint[] operation_point_id;
-        public uint[] OperationPointId { get { return operation_point_id; } set { operation_point_id = value; } }
+        private ulong num_operation_points_minus1;
+        public ulong NumOperationPointsMinus1 { get { return num_operation_points_minus1; } set { num_operation_points_minus1 = value; } }
+        private ulong[] operation_point_id;
+        public ulong[] OperationPointId { get { return operation_point_id; } set { operation_point_id = value; } }
         private uint[] priority_id;
         public uint[] PriorityId { get { return priority_id; } set { priority_id = value; } }
         private uint[] temporal_id;
         public uint[] TemporalId { get { return temporal_id; } set { temporal_id = value; } }
-        private uint[] num_target_output_views_minus1;
-        public uint[] NumTargetOutputViewsMinus1 { get { return num_target_output_views_minus1; } set { num_target_output_views_minus1 = value; } }
-        private uint[][] view_id;
-        public uint[][] ViewId { get { return view_id; } set { view_id = value; } }
+        private ulong[] num_target_output_views_minus1;
+        public ulong[] NumTargetOutputViewsMinus1 { get { return num_target_output_views_minus1; } set { num_target_output_views_minus1 = value; } }
+        private ulong[][] view_id;
+        public ulong[][] ViewId { get { return view_id; } set { view_id = value; } }
         private MvcdOpViewInfo[][] mvcd_op_view_info;
         public MvcdOpViewInfo[][] MvcdOpViewInfo { get { return mvcd_op_view_info; } set { mvcd_op_view_info = value; } }
         private byte[] profile_level_info_present_flag;
@@ -15223,40 +15223,40 @@ priority_id[ i ] 5 u(5)
         public uint[] ConstantFrmRateIdc { get { return constant_frm_rate_idc; } set { constant_frm_rate_idc = value; } }
         private uint[] avg_frm_rate;
         public uint[] AvgFrmRate { get { return avg_frm_rate; } set { avg_frm_rate = value; } }
-        private uint[] num_directly_dependent_views;
-        public uint[] NumDirectlyDependentViews { get { return num_directly_dependent_views; } set { num_directly_dependent_views = value; } }
-        private uint[][] directly_dependent_view_id;
-        public uint[][] DirectlyDependentViewId { get { return directly_dependent_view_id; } set { directly_dependent_view_id = value; } }
-        private uint[] view_dependency_info_src_op_id;
-        public uint[] ViewDependencyInfoSrcOpId { get { return view_dependency_info_src_op_id; } set { view_dependency_info_src_op_id = value; } }
-        private uint[] num_seq_parameter_set_minus1;
-        public uint[] NumSeqParameterSetMinus1 { get { return num_seq_parameter_set_minus1; } set { num_seq_parameter_set_minus1 = value; } }
-        private uint[][] seq_parameter_set_id_delta;
-        public uint[][] SeqParameterSetIdDelta { get { return seq_parameter_set_id_delta; } set { seq_parameter_set_id_delta = value; } }
-        private uint[] num_subset_seq_parameter_set_minus1;
-        public uint[] NumSubsetSeqParameterSetMinus1 { get { return num_subset_seq_parameter_set_minus1; } set { num_subset_seq_parameter_set_minus1 = value; } }
-        private uint[][] subset_seq_parameter_set_id_delta;
-        public uint[][] SubsetSeqParameterSetIdDelta { get { return subset_seq_parameter_set_id_delta; } set { subset_seq_parameter_set_id_delta = value; } }
-        private uint[] num_pic_parameter_set_minus1;
-        public uint[] NumPicParameterSetMinus1 { get { return num_pic_parameter_set_minus1; } set { num_pic_parameter_set_minus1 = value; } }
-        private uint[][] pic_parameter_set_id_delta;
-        public uint[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
-        private uint[] parameter_sets_info_src_op_id;
-        public uint[] ParameterSetsInfoSrcOpId { get { return parameter_sets_info_src_op_id; } set { parameter_sets_info_src_op_id = value; } }
+        private ulong[] num_directly_dependent_views;
+        public ulong[] NumDirectlyDependentViews { get { return num_directly_dependent_views; } set { num_directly_dependent_views = value; } }
+        private ulong[][] directly_dependent_view_id;
+        public ulong[][] DirectlyDependentViewId { get { return directly_dependent_view_id; } set { directly_dependent_view_id = value; } }
+        private ulong[] view_dependency_info_src_op_id;
+        public ulong[] ViewDependencyInfoSrcOpId { get { return view_dependency_info_src_op_id; } set { view_dependency_info_src_op_id = value; } }
+        private ulong[] num_seq_parameter_set_minus1;
+        public ulong[] NumSeqParameterSetMinus1 { get { return num_seq_parameter_set_minus1; } set { num_seq_parameter_set_minus1 = value; } }
+        private ulong[][] seq_parameter_set_id_delta;
+        public ulong[][] SeqParameterSetIdDelta { get { return seq_parameter_set_id_delta; } set { seq_parameter_set_id_delta = value; } }
+        private ulong[] num_subset_seq_parameter_set_minus1;
+        public ulong[] NumSubsetSeqParameterSetMinus1 { get { return num_subset_seq_parameter_set_minus1; } set { num_subset_seq_parameter_set_minus1 = value; } }
+        private ulong[][] subset_seq_parameter_set_id_delta;
+        public ulong[][] SubsetSeqParameterSetIdDelta { get { return subset_seq_parameter_set_id_delta; } set { subset_seq_parameter_set_id_delta = value; } }
+        private ulong[] num_pic_parameter_set_minus1;
+        public ulong[] NumPicParameterSetMinus1 { get { return num_pic_parameter_set_minus1; } set { num_pic_parameter_set_minus1 = value; } }
+        private ulong[][] pic_parameter_set_id_delta;
+        public ulong[][] PicParameterSetIdDelta { get { return pic_parameter_set_id_delta; } set { pic_parameter_set_id_delta = value; } }
+        private ulong[] parameter_sets_info_src_op_id;
+        public ulong[] ParameterSetsInfoSrcOpId { get { return parameter_sets_info_src_op_id; } set { parameter_sets_info_src_op_id = value; } }
         private byte[] motion_vectors_over_pic_boundaries_flag;
         public byte[] MotionVectorsOverPicBoundariesFlag { get { return motion_vectors_over_pic_boundaries_flag; } set { motion_vectors_over_pic_boundaries_flag = value; } }
-        private uint[] max_bytes_per_pic_denom;
-        public uint[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
-        private uint[] max_bits_per_mb_denom;
-        public uint[] MaxBitsPerMbDenom { get { return max_bits_per_mb_denom; } set { max_bits_per_mb_denom = value; } }
-        private uint[] log2_max_mv_length_horizontal;
-        public uint[] Log2MaxMvLengthHorizontal { get { return log2_max_mv_length_horizontal; } set { log2_max_mv_length_horizontal = value; } }
-        private uint[] log2_max_mv_length_vertical;
-        public uint[] Log2MaxMvLengthVertical { get { return log2_max_mv_length_vertical; } set { log2_max_mv_length_vertical = value; } }
-        private uint[] num_reorder_frames;
-        public uint[] NumReorderFrames { get { return num_reorder_frames; } set { num_reorder_frames = value; } }
-        private uint[] max_dec_frame_buffering;
-        public uint[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
+        private ulong[] max_bytes_per_pic_denom;
+        public ulong[] MaxBytesPerPicDenom { get { return max_bytes_per_pic_denom; } set { max_bytes_per_pic_denom = value; } }
+        private ulong[] max_bits_per_mb_denom;
+        public ulong[] MaxBitsPerMbDenom { get { return max_bits_per_mb_denom; } set { max_bits_per_mb_denom = value; } }
+        private ulong[] log2_max_mv_length_horizontal;
+        public ulong[] Log2MaxMvLengthHorizontal { get { return log2_max_mv_length_horizontal; } set { log2_max_mv_length_horizontal = value; } }
+        private ulong[] log2_max_mv_length_vertical;
+        public ulong[] Log2MaxMvLengthVertical { get { return log2_max_mv_length_vertical; } set { log2_max_mv_length_vertical = value; } }
+        private ulong[] num_reorder_frames;
+        public ulong[] NumReorderFrames { get { return num_reorder_frames; } set { num_reorder_frames = value; } }
+        private ulong[] max_dec_frame_buffering;
+        public ulong[] MaxDecFrameBuffering { get { return max_dec_frame_buffering; } set { max_dec_frame_buffering = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -15274,11 +15274,11 @@ priority_id[ i ] 5 u(5)
             uint j = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_operation_points_minus1, "num_operation_points_minus1");
 
-            this.operation_point_id = new uint[num_operation_points_minus1 + 1];
+            this.operation_point_id = new ulong[num_operation_points_minus1 + 1];
             this.priority_id = new uint[num_operation_points_minus1 + 1];
             this.temporal_id = new uint[num_operation_points_minus1 + 1];
-            this.num_target_output_views_minus1 = new uint[num_operation_points_minus1 + 1];
-            this.view_id = new uint[num_operation_points_minus1 + 1][];
+            this.num_target_output_views_minus1 = new ulong[num_operation_points_minus1 + 1];
+            this.view_id = new ulong[num_operation_points_minus1 + 1][];
             this.mvcd_op_view_info = new MvcdOpViewInfo[num_operation_points_minus1 + 1][];
             this.profile_level_info_present_flag = new byte[num_operation_points_minus1 + 1];
             this.bitrate_info_present_flag = new byte[num_operation_points_minus1 + 1];
@@ -15292,23 +15292,23 @@ priority_id[ i ] 5 u(5)
             this.max_bitrate_calc_window = new uint[num_operation_points_minus1 + 1];
             this.constant_frm_rate_idc = new uint[num_operation_points_minus1 + 1];
             this.avg_frm_rate = new uint[num_operation_points_minus1 + 1];
-            this.num_directly_dependent_views = new uint[num_operation_points_minus1 + 1];
-            this.directly_dependent_view_id = new uint[num_operation_points_minus1 + 1][];
-            this.view_dependency_info_src_op_id = new uint[num_operation_points_minus1 + 1];
-            this.num_seq_parameter_set_minus1 = new uint[num_operation_points_minus1 + 1];
-            this.seq_parameter_set_id_delta = new uint[num_operation_points_minus1 + 1][];
-            this.num_subset_seq_parameter_set_minus1 = new uint[num_operation_points_minus1 + 1];
-            this.subset_seq_parameter_set_id_delta = new uint[num_operation_points_minus1 + 1][];
-            this.num_pic_parameter_set_minus1 = new uint[num_operation_points_minus1 + 1];
-            this.pic_parameter_set_id_delta = new uint[num_operation_points_minus1 + 1][];
-            this.parameter_sets_info_src_op_id = new uint[num_operation_points_minus1 + 1];
+            this.num_directly_dependent_views = new ulong[num_operation_points_minus1 + 1];
+            this.directly_dependent_view_id = new ulong[num_operation_points_minus1 + 1][];
+            this.view_dependency_info_src_op_id = new ulong[num_operation_points_minus1 + 1];
+            this.num_seq_parameter_set_minus1 = new ulong[num_operation_points_minus1 + 1];
+            this.seq_parameter_set_id_delta = new ulong[num_operation_points_minus1 + 1][];
+            this.num_subset_seq_parameter_set_minus1 = new ulong[num_operation_points_minus1 + 1];
+            this.subset_seq_parameter_set_id_delta = new ulong[num_operation_points_minus1 + 1][];
+            this.num_pic_parameter_set_minus1 = new ulong[num_operation_points_minus1 + 1];
+            this.pic_parameter_set_id_delta = new ulong[num_operation_points_minus1 + 1][];
+            this.parameter_sets_info_src_op_id = new ulong[num_operation_points_minus1 + 1];
             this.motion_vectors_over_pic_boundaries_flag = new byte[num_operation_points_minus1 + 1];
-            this.max_bytes_per_pic_denom = new uint[num_operation_points_minus1 + 1];
-            this.max_bits_per_mb_denom = new uint[num_operation_points_minus1 + 1];
-            this.log2_max_mv_length_horizontal = new uint[num_operation_points_minus1 + 1];
-            this.log2_max_mv_length_vertical = new uint[num_operation_points_minus1 + 1];
-            this.num_reorder_frames = new uint[num_operation_points_minus1 + 1];
-            this.max_dec_frame_buffering = new uint[num_operation_points_minus1 + 1];
+            this.max_bytes_per_pic_denom = new ulong[num_operation_points_minus1 + 1];
+            this.max_bits_per_mb_denom = new ulong[num_operation_points_minus1 + 1];
+            this.log2_max_mv_length_horizontal = new ulong[num_operation_points_minus1 + 1];
+            this.log2_max_mv_length_vertical = new ulong[num_operation_points_minus1 + 1];
+            this.num_reorder_frames = new ulong[num_operation_points_minus1 + 1];
+            this.max_dec_frame_buffering = new ulong[num_operation_points_minus1 + 1];
             for (i = 0; i <= num_operation_points_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.operation_point_id[i], "operation_point_id");
@@ -15316,7 +15316,7 @@ priority_id[ i ] 5 u(5)
                 size += stream.ReadUnsignedInt(size, 3, out this.temporal_id[i], "temporal_id");
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_target_output_views_minus1[i], "num_target_output_views_minus1");
 
-                this.view_id[i] = new uint[num_target_output_views_minus1[i] + 1];
+                this.view_id[i] = new ulong[num_target_output_views_minus1[i] + 1];
                 this.mvcd_op_view_info[i] = new MvcdOpViewInfo[num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= num_target_output_views_minus1[i]; j++)
                 {
@@ -15357,7 +15357,7 @@ priority_id[ i ] 5 u(5)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_directly_dependent_views[i], "num_directly_dependent_views");
 
-                    this.directly_dependent_view_id[i] = new uint[num_directly_dependent_views[i]];
+                    this.directly_dependent_view_id[i] = new ulong[num_directly_dependent_views[i]];
                     for (j = 0; j < num_directly_dependent_views[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.directly_dependent_view_id[i][j], "directly_dependent_view_id");
@@ -15374,21 +15374,21 @@ priority_id[ i ] 5 u(5)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_seq_parameter_set_minus1[i], "num_seq_parameter_set_minus1");
 
-                    this.seq_parameter_set_id_delta[i] = new uint[num_seq_parameter_set_minus1[i] + 1];
+                    this.seq_parameter_set_id_delta[i] = new ulong[num_seq_parameter_set_minus1[i] + 1];
                     for (j = 0; j <= num_seq_parameter_set_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id_delta[i][j], "seq_parameter_set_id_delta");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_subset_seq_parameter_set_minus1[i], "num_subset_seq_parameter_set_minus1");
 
-                    this.subset_seq_parameter_set_id_delta[i] = new uint[num_subset_seq_parameter_set_minus1[i] + 1];
+                    this.subset_seq_parameter_set_id_delta[i] = new ulong[num_subset_seq_parameter_set_minus1[i] + 1];
                     for (j = 0; j <= num_subset_seq_parameter_set_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.subset_seq_parameter_set_id_delta[i][j], "subset_seq_parameter_set_id_delta");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.num_pic_parameter_set_minus1[i], "num_pic_parameter_set_minus1");
 
-                    this.pic_parameter_set_id_delta[i] = new uint[((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
+                    this.pic_parameter_set_id_delta[i] = new ulong[((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i] + 1];
                     for (j = 0; j <= ((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id_delta[i][j], "pic_parameter_set_id_delta");
@@ -15633,16 +15633,16 @@ mvcd_scalable_nesting( payloadSize ) {
         public byte OperationPointFlag { get { return operation_point_flag; } set { operation_point_flag = value; } }
         private byte all_view_components_in_au_flag;
         public byte AllViewComponentsInAuFlag { get { return all_view_components_in_au_flag; } set { all_view_components_in_au_flag = value; } }
-        private uint num_view_components_minus1;
-        public uint NumViewComponentsMinus1 { get { return num_view_components_minus1; } set { num_view_components_minus1 = value; } }
+        private ulong num_view_components_minus1;
+        public ulong NumViewComponentsMinus1 { get { return num_view_components_minus1; } set { num_view_components_minus1 = value; } }
         private uint[] sei_view_id;
         public uint[] SeiViewId { get { return sei_view_id; } set { sei_view_id = value; } }
         private byte[] sei_view_applicability_flag;
         public byte[] SeiViewApplicabilityFlag { get { return sei_view_applicability_flag; } set { sei_view_applicability_flag = value; } }
         private byte sei_op_texture_only_flag;
         public byte SeiOpTextureOnlyFlag { get { return sei_op_texture_only_flag; } set { sei_op_texture_only_flag = value; } }
-        private uint num_view_components_op_minus1;
-        public uint NumViewComponentsOpMinus1 { get { return num_view_components_op_minus1; } set { num_view_components_op_minus1 = value; } }
+        private ulong num_view_components_op_minus1;
+        public ulong NumViewComponentsOpMinus1 { get { return num_view_components_op_minus1; } set { num_view_components_op_minus1 = value; } }
         private uint[] sei_op_view_id;
         public uint[] SeiOpViewId { get { return sei_op_view_id; } set { sei_op_view_id = value; } }
         private byte[] sei_op_depth_flag;
@@ -15828,28 +15828,28 @@ depth_representation_info( payloadSize ) {
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte all_views_equal_flag;
         public byte AllViewsEqualFlag { get { return all_views_equal_flag; } set { all_views_equal_flag = value; } }
-        private uint num_views_minus1;
-        public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
+        private ulong num_views_minus1;
+        public ulong NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
         private byte z_near_flag;
         public byte zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
         private byte z_far_flag;
         public byte zFarFlag { get { return z_far_flag; } set { z_far_flag = value; } }
         private byte z_axis_equal_flag;
         public byte zAxisEqualFlag { get { return z_axis_equal_flag; } set { z_axis_equal_flag = value; } }
-        private uint common_z_axis_reference_view;
-        public uint CommonzAxisReferenceView { get { return common_z_axis_reference_view; } set { common_z_axis_reference_view = value; } }
+        private ulong common_z_axis_reference_view;
+        public ulong CommonzAxisReferenceView { get { return common_z_axis_reference_view; } set { common_z_axis_reference_view = value; } }
         private byte d_min_flag;
         public byte dMinFlag { get { return d_min_flag; } set { d_min_flag = value; } }
         private byte d_max_flag;
         public byte dMaxFlag { get { return d_max_flag; } set { d_max_flag = value; } }
-        private uint depth_representation_type;
-        public uint DepthRepresentationType { get { return depth_representation_type; } set { depth_representation_type = value; } }
-        private uint[] depth_info_view_id;
-        public uint[] DepthInfoViewId { get { return depth_info_view_id; } set { depth_info_view_id = value; } }
-        private uint[] z_axis_reference_view;
-        public uint[] zAxisReferenceView { get { return z_axis_reference_view; } set { z_axis_reference_view = value; } }
-        private uint[] disparity_reference_view;
-        public uint[] DisparityReferenceView { get { return disparity_reference_view; } set { disparity_reference_view = value; } }
+        private ulong depth_representation_type;
+        public ulong DepthRepresentationType { get { return depth_representation_type; } set { depth_representation_type = value; } }
+        private ulong[] depth_info_view_id;
+        public ulong[] DepthInfoViewId { get { return depth_info_view_id; } set { depth_info_view_id = value; } }
+        private ulong[] z_axis_reference_view;
+        public ulong[] zAxisReferenceView { get { return z_axis_reference_view; } set { z_axis_reference_view = value; } }
+        private ulong[] disparity_reference_view;
+        public ulong[] DisparityReferenceView { get { return disparity_reference_view; } set { disparity_reference_view = value; } }
         private DepthRepresentationSeiElement[] depth_representation_sei_element;
         public DepthRepresentationSeiElement[] DepthRepresentationSeiElement { get { return depth_representation_sei_element; } set { depth_representation_sei_element = value; } }
         private DepthRepresentationSeiElement[] depth_representation_sei_element0;
@@ -15858,10 +15858,10 @@ depth_representation_info( payloadSize ) {
         public DepthRepresentationSeiElement[] DepthRepresentationSeiElement1 { get { return depth_representation_sei_element1; } set { depth_representation_sei_element1 = value; } }
         private DepthRepresentationSeiElement[] depth_representation_sei_element2;
         public DepthRepresentationSeiElement[] DepthRepresentationSeiElement2 { get { return depth_representation_sei_element2; } set { depth_representation_sei_element2 = value; } }
-        private uint depth_nonlinear_representation_num_minus1;
-        public uint DepthNonlinearRepresentationNumMinus1 { get { return depth_nonlinear_representation_num_minus1; } set { depth_nonlinear_representation_num_minus1 = value; } }
-        private uint[] depth_nonlinear_representation_model;
-        public uint[] DepthNonlinearRepresentationModel { get { return depth_nonlinear_representation_model; } set { depth_nonlinear_representation_model = value; } }
+        private ulong depth_nonlinear_representation_num_minus1;
+        public ulong DepthNonlinearRepresentationNumMinus1 { get { return depth_nonlinear_representation_num_minus1; } set { depth_nonlinear_representation_num_minus1 = value; } }
+        private ulong[] depth_nonlinear_representation_model;
+        public ulong[] DepthNonlinearRepresentationModel { get { return depth_nonlinear_representation_model; } set { depth_nonlinear_representation_model = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -15875,7 +15875,7 @@ depth_representation_info( payloadSize ) {
         {
             ulong size = 0;
 
-            uint numViews = 0;
+            ulong numViews = 0;
             uint i = 0;
             size += stream.ReadUnsignedInt(size, 1, out this.all_views_equal_flag, "all_views_equal_flag");
 
@@ -15904,9 +15904,9 @@ depth_representation_info( payloadSize ) {
             size += stream.ReadUnsignedInt(size, 1, out this.d_max_flag, "d_max_flag");
             size += stream.ReadUnsignedIntGolomb(size, out this.depth_representation_type, "depth_representation_type");
 
-            this.depth_info_view_id = new uint[numViews];
-            this.z_axis_reference_view = new uint[numViews];
-            this.disparity_reference_view = new uint[numViews];
+            this.depth_info_view_id = new ulong[numViews];
+            this.z_axis_reference_view = new ulong[numViews];
+            this.disparity_reference_view = new ulong[numViews];
             this.depth_representation_sei_element = new DepthRepresentationSeiElement[numViews];
             this.depth_representation_sei_element0 = new DepthRepresentationSeiElement[numViews];
             this.depth_representation_sei_element1 = new DepthRepresentationSeiElement[numViews];
@@ -15954,7 +15954,7 @@ depth_representation_info( payloadSize ) {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_num_minus1, "depth_nonlinear_representation_num_minus1");
 
-                this.depth_nonlinear_representation_model = new uint[depth_nonlinear_representation_num_minus1 + 1 + 1];
+                this.depth_nonlinear_representation_model = new ulong[depth_nonlinear_representation_num_minus1 + 1 + 1];
                 for (i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_model[i], "depth_nonlinear_representation_model");
@@ -15968,7 +15968,7 @@ depth_representation_info( payloadSize ) {
         {
             ulong size = 0;
 
-            uint numViews = 0;
+            ulong numViews = 0;
             uint i = 0;
             size += stream.WriteUnsignedInt(1, this.all_views_equal_flag, "all_views_equal_flag");
 
@@ -16133,16 +16133,16 @@ three_dimensional_reference_displays_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint prec_ref_baseline;
-        public uint PrecRefBaseline { get { return prec_ref_baseline; } set { prec_ref_baseline = value; } }
-        private uint prec_ref_display_width;
-        public uint PrecRefDisplayWidth { get { return prec_ref_display_width; } set { prec_ref_display_width = value; } }
+        private ulong prec_ref_baseline;
+        public ulong PrecRefBaseline { get { return prec_ref_baseline; } set { prec_ref_baseline = value; } }
+        private ulong prec_ref_display_width;
+        public ulong PrecRefDisplayWidth { get { return prec_ref_display_width; } set { prec_ref_display_width = value; } }
         private byte ref_viewing_distance_flag;
         public byte RefViewingDistanceFlag { get { return ref_viewing_distance_flag; } set { ref_viewing_distance_flag = value; } }
-        private uint prec_ref_viewing_dist;
-        public uint PrecRefViewingDist { get { return prec_ref_viewing_dist; } set { prec_ref_viewing_dist = value; } }
-        private uint num_ref_displays_minus1;
-        public uint NumRefDisplaysMinus1 { get { return num_ref_displays_minus1; } set { num_ref_displays_minus1 = value; } }
+        private ulong prec_ref_viewing_dist;
+        public ulong PrecRefViewingDist { get { return prec_ref_viewing_dist; } set { prec_ref_viewing_dist = value; } }
+        private ulong num_ref_displays_minus1;
+        public ulong NumRefDisplaysMinus1 { get { return num_ref_displays_minus1; } set { num_ref_displays_minus1 = value; } }
         private uint[] exponent_ref_baseline;
         public uint[] ExponentRefBaseline { get { return exponent_ref_baseline; } set { exponent_ref_baseline = value; } }
         private uint[] mantissa_ref_baseline;
@@ -16174,7 +16174,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
         {
             ulong size = 0;
 
-            uint numRefDisplays = 0;
+            ulong numRefDisplays = 0;
             uint i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.prec_ref_baseline, "prec_ref_baseline");
             size += stream.ReadUnsignedIntGolomb(size, out this.prec_ref_display_width, "prec_ref_display_width");
@@ -16223,7 +16223,7 @@ three_dimensional_reference_displays_info( payloadSize ) {
         {
             ulong size = 0;
 
-            uint numRefDisplays = 0;
+            ulong numRefDisplays = 0;
             uint i = 0;
             size += stream.WriteUnsignedIntGolomb(this.prec_ref_baseline, "prec_ref_baseline");
             size += stream.WriteUnsignedIntGolomb(this.prec_ref_display_width, "prec_ref_display_width");
@@ -16459,10 +16459,10 @@ alternative_depth_info( payloadSize ) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint depth_type;
-        public uint DepthType { get { return depth_type; } set { depth_type = value; } }
-        private uint num_constituent_views_gvd_minus1;
-        public uint NumConstituentViewsGvdMinus1 { get { return num_constituent_views_gvd_minus1; } set { num_constituent_views_gvd_minus1 = value; } }
+        private ulong depth_type;
+        public ulong DepthType { get { return depth_type; } set { depth_type = value; } }
+        private ulong num_constituent_views_gvd_minus1;
+        public ulong NumConstituentViewsGvdMinus1 { get { return num_constituent_views_gvd_minus1; } set { num_constituent_views_gvd_minus1 = value; } }
         private byte depth_present_gvd_flag;
         public byte DepthPresentGvdFlag { get { return depth_present_gvd_flag; } set { depth_present_gvd_flag = value; } }
         private byte z_gvd_flag;
@@ -16489,14 +16489,14 @@ alternative_depth_info( payloadSize ) {
         public uint[] ManLenGvdzFarMinus1 { get { return man_len_gvd_z_far_minus1; } set { man_len_gvd_z_far_minus1 = value; } }
         private uint[] man_gvd_z_far;
         public uint[] ManGvdzFar { get { return man_gvd_z_far; } set { man_gvd_z_far = value; } }
-        private uint prec_gvd_focal_length;
-        public uint PrecGvdFocalLength { get { return prec_gvd_focal_length; } set { prec_gvd_focal_length = value; } }
-        private uint prec_gvd_principal_point;
-        public uint PrecGvdPrincipalPoint { get { return prec_gvd_principal_point; } set { prec_gvd_principal_point = value; } }
-        private uint prec_gvd_rotation_param;
-        public uint PrecGvdRotationParam { get { return prec_gvd_rotation_param; } set { prec_gvd_rotation_param = value; } }
-        private uint prec_gvd_translation_param;
-        public uint PrecGvdTranslationParam { get { return prec_gvd_translation_param; } set { prec_gvd_translation_param = value; } }
+        private ulong prec_gvd_focal_length;
+        public ulong PrecGvdFocalLength { get { return prec_gvd_focal_length; } set { prec_gvd_focal_length = value; } }
+        private ulong prec_gvd_principal_point;
+        public ulong PrecGvdPrincipalPoint { get { return prec_gvd_principal_point; } set { prec_gvd_principal_point = value; } }
+        private ulong prec_gvd_rotation_param;
+        public ulong PrecGvdRotationParam { get { return prec_gvd_rotation_param; } set { prec_gvd_rotation_param = value; } }
+        private ulong prec_gvd_translation_param;
+        public ulong PrecGvdTranslationParam { get { return prec_gvd_translation_param; } set { prec_gvd_translation_param = value; } }
         private byte[] sign_gvd_focal_length_x;
         public byte[] SignGvdFocalLengthx { get { return sign_gvd_focal_length_x; } set { sign_gvd_focal_length_x = value; } }
         private uint[] exp_gvd_focal_length_x;
@@ -16805,10 +16805,10 @@ depth_sampling_info( payloadSize ) {
         public uint DttsryDp { get { return dttsr_y_dp; } set { dttsr_y_dp = value; } }
         private byte per_view_depth_grid_pos_flag;
         public byte PerViewDepthGridPosFlag { get { return per_view_depth_grid_pos_flag; } set { per_view_depth_grid_pos_flag = value; } }
-        private uint num_video_plus_depth_views_minus1;
-        public uint NumVideoPlusDepthViewsMinus1 { get { return num_video_plus_depth_views_minus1; } set { num_video_plus_depth_views_minus1 = value; } }
-        private uint[] depth_grid_view_id;
-        public uint[] DepthGridViewId { get { return depth_grid_view_id; } set { depth_grid_view_id = value; } }
+        private ulong num_video_plus_depth_views_minus1;
+        public ulong NumVideoPlusDepthViewsMinus1 { get { return num_video_plus_depth_views_minus1; } set { num_video_plus_depth_views_minus1 = value; } }
+        private ulong[] depth_grid_view_id;
+        public ulong[] DepthGridViewId { get { return depth_grid_view_id; } set { depth_grid_view_id = value; } }
         private DepthGridPosition[] depth_grid_position;
         public DepthGridPosition[] DepthGridPosition { get { return depth_grid_position; } set { depth_grid_position = value; } }
 
@@ -16835,7 +16835,7 @@ depth_sampling_info( payloadSize ) {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.num_video_plus_depth_views_minus1, "num_video_plus_depth_views_minus1");
 
-                this.depth_grid_view_id = new uint[num_video_plus_depth_views_minus1 + 1];
+                this.depth_grid_view_id = new ulong[num_video_plus_depth_views_minus1 + 1];
                 this.depth_grid_position = new DepthGridPosition[num_video_plus_depth_views_minus1 + 1];
                 for (i = 0; i <= num_video_plus_depth_views_minus1; i++)
                 {
@@ -16897,10 +16897,10 @@ constrained_depth_parameter_set_identifier(payloadSize) {
     {
         private uint payloadSize;
         public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint max_dps_id;
-        public uint MaxDpsId { get { return max_dps_id; } set { max_dps_id = value; } }
-        private uint max_dps_id_diff;
-        public uint MaxDpsIdDiff { get { return max_dps_id_diff; } set { max_dps_id_diff = value; } }
+        private ulong max_dps_id;
+        public ulong MaxDpsId { get { return max_dps_id; } set { max_dps_id = value; } }
+        private ulong max_dps_id_diff;
+        public ulong MaxDpsIdDiff { get { return max_dps_id_diff; } set { max_dps_id_diff = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -17032,14 +17032,14 @@ mvcd_vui_parameters_extension() {
     */
     public class MvcdVuiParametersExtension : IItuSerializable
     {
-        private uint vui_mvcd_num_ops_minus1;
-        public uint VuiMvcdNumOpsMinus1 { get { return vui_mvcd_num_ops_minus1; } set { vui_mvcd_num_ops_minus1 = value; } }
+        private ulong vui_mvcd_num_ops_minus1;
+        public ulong VuiMvcdNumOpsMinus1 { get { return vui_mvcd_num_ops_minus1; } set { vui_mvcd_num_ops_minus1 = value; } }
         private uint[] vui_mvcd_temporal_id;
         public uint[] VuiMvcdTemporalId { get { return vui_mvcd_temporal_id; } set { vui_mvcd_temporal_id = value; } }
-        private uint[] vui_mvcd_num_target_output_views_minus1;
-        public uint[] VuiMvcdNumTargetOutputViewsMinus1 { get { return vui_mvcd_num_target_output_views_minus1; } set { vui_mvcd_num_target_output_views_minus1 = value; } }
-        private uint[][] vui_mvcd_view_id;
-        public uint[][] VuiMvcdViewId { get { return vui_mvcd_view_id; } set { vui_mvcd_view_id = value; } }
+        private ulong[] vui_mvcd_num_target_output_views_minus1;
+        public ulong[] VuiMvcdNumTargetOutputViewsMinus1 { get { return vui_mvcd_num_target_output_views_minus1; } set { vui_mvcd_num_target_output_views_minus1 = value; } }
+        private ulong[][] vui_mvcd_view_id;
+        public ulong[][] VuiMvcdViewId { get { return vui_mvcd_view_id; } set { vui_mvcd_view_id = value; } }
         private byte[][] vui_mvcd_depth_flag;
         public byte[][] VuiMvcdDepthFlag { get { return vui_mvcd_depth_flag; } set { vui_mvcd_depth_flag = value; } }
         private byte[][] vui_mvcd_texture_flag;
@@ -17080,8 +17080,8 @@ mvcd_vui_parameters_extension() {
             size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_num_ops_minus1, "vui_mvcd_num_ops_minus1");
 
             this.vui_mvcd_temporal_id = new uint[vui_mvcd_num_ops_minus1 + 1];
-            this.vui_mvcd_num_target_output_views_minus1 = new uint[vui_mvcd_num_ops_minus1 + 1];
-            this.vui_mvcd_view_id = new uint[vui_mvcd_num_ops_minus1 + 1][];
+            this.vui_mvcd_num_target_output_views_minus1 = new ulong[vui_mvcd_num_ops_minus1 + 1];
+            this.vui_mvcd_view_id = new ulong[vui_mvcd_num_ops_minus1 + 1][];
             this.vui_mvcd_depth_flag = new byte[vui_mvcd_num_ops_minus1 + 1][];
             this.vui_mvcd_texture_flag = new byte[vui_mvcd_num_ops_minus1 + 1][];
             this.vui_mvcd_timing_info_present_flag = new byte[vui_mvcd_num_ops_minus1 + 1];
@@ -17098,7 +17098,7 @@ mvcd_vui_parameters_extension() {
                 size += stream.ReadUnsignedInt(size, 3, out this.vui_mvcd_temporal_id[i], "vui_mvcd_temporal_id");
                 size += stream.ReadUnsignedIntGolomb(size, out this.vui_mvcd_num_target_output_views_minus1[i], "vui_mvcd_num_target_output_views_minus1");
 
-                this.vui_mvcd_view_id[i] = new uint[vui_mvcd_num_target_output_views_minus1[i] + 1];
+                this.vui_mvcd_view_id[i] = new ulong[vui_mvcd_num_target_output_views_minus1[i] + 1];
                 this.vui_mvcd_depth_flag[i] = new byte[vui_mvcd_num_target_output_views_minus1[i] + 1];
                 this.vui_mvcd_texture_flag[i] = new byte[vui_mvcd_num_target_output_views_minus1[i] + 1];
                 for (j = 0; j <= vui_mvcd_num_target_output_views_minus1[i]; j++)
@@ -17322,46 +17322,46 @@ seq_parameter_set_3davc_extension() {
     */
     public class SeqParameterSet3davcExtension : IItuSerializable
     {
-        private uint three_dv_acquisition_idc;
-        public uint ThreeDvAcquisitionIdc { get { return three_dv_acquisition_idc; } set { three_dv_acquisition_idc = value; } }
-        private uint[] view_id_3dv;
-        public uint[] ViewId3dv { get { return view_id_3dv; } set { view_id_3dv = value; } }
+        private ulong three_dv_acquisition_idc;
+        public ulong ThreeDvAcquisitionIdc { get { return three_dv_acquisition_idc; } set { three_dv_acquisition_idc = value; } }
+        private ulong[] view_id_3dv;
+        public ulong[] ViewId3dv { get { return view_id_3dv; } set { view_id_3dv = value; } }
         private DepthRanges depth_ranges;
         public DepthRanges DepthRanges { get { return depth_ranges; } set { depth_ranges = value; } }
         private VspParam vsp_param;
         public VspParam VspParam { get { return vsp_param; } set { vsp_param = value; } }
         private byte reduced_resolution_flag;
         public byte ReducedResolutionFlag { get { return reduced_resolution_flag; } set { reduced_resolution_flag = value; } }
-        private uint depth_pic_width_in_mbs_minus1;
-        public uint DepthPicWidthInMbsMinus1 { get { return depth_pic_width_in_mbs_minus1; } set { depth_pic_width_in_mbs_minus1 = value; } }
-        private uint depth_pic_height_in_map_units_minus1;
-        public uint DepthPicHeightInMapUnitsMinus1 { get { return depth_pic_height_in_map_units_minus1; } set { depth_pic_height_in_map_units_minus1 = value; } }
-        private uint depth_hor_mult_minus1;
-        public uint DepthHorMultMinus1 { get { return depth_hor_mult_minus1; } set { depth_hor_mult_minus1 = value; } }
-        private uint depth_ver_mult_minus1;
-        public uint DepthVerMultMinus1 { get { return depth_ver_mult_minus1; } set { depth_ver_mult_minus1 = value; } }
-        private uint depth_hor_rsh;
-        public uint DepthHorRsh { get { return depth_hor_rsh; } set { depth_hor_rsh = value; } }
-        private uint depth_ver_rsh;
-        public uint DepthVerRsh { get { return depth_ver_rsh; } set { depth_ver_rsh = value; } }
+        private ulong depth_pic_width_in_mbs_minus1;
+        public ulong DepthPicWidthInMbsMinus1 { get { return depth_pic_width_in_mbs_minus1; } set { depth_pic_width_in_mbs_minus1 = value; } }
+        private ulong depth_pic_height_in_map_units_minus1;
+        public ulong DepthPicHeightInMapUnitsMinus1 { get { return depth_pic_height_in_map_units_minus1; } set { depth_pic_height_in_map_units_minus1 = value; } }
+        private ulong depth_hor_mult_minus1;
+        public ulong DepthHorMultMinus1 { get { return depth_hor_mult_minus1; } set { depth_hor_mult_minus1 = value; } }
+        private ulong depth_ver_mult_minus1;
+        public ulong DepthVerMultMinus1 { get { return depth_ver_mult_minus1; } set { depth_ver_mult_minus1 = value; } }
+        private ulong depth_hor_rsh;
+        public ulong DepthHorRsh { get { return depth_hor_rsh; } set { depth_hor_rsh = value; } }
+        private ulong depth_ver_rsh;
+        public ulong DepthVerRsh { get { return depth_ver_rsh; } set { depth_ver_rsh = value; } }
         private byte depth_frame_cropping_flag;
         public byte DepthFrameCroppingFlag { get { return depth_frame_cropping_flag; } set { depth_frame_cropping_flag = value; } }
-        private uint depth_frame_crop_left_offset;
-        public uint DepthFrameCropLeftOffset { get { return depth_frame_crop_left_offset; } set { depth_frame_crop_left_offset = value; } }
-        private uint depth_frame_crop_right_offset;
-        public uint DepthFrameCropRightOffset { get { return depth_frame_crop_right_offset; } set { depth_frame_crop_right_offset = value; } }
-        private uint depth_frame_crop_top_offset;
-        public uint DepthFrameCropTopOffset { get { return depth_frame_crop_top_offset; } set { depth_frame_crop_top_offset = value; } }
-        private uint depth_frame_crop_bottom_offset;
-        public uint DepthFrameCropBottomOffset { get { return depth_frame_crop_bottom_offset; } set { depth_frame_crop_bottom_offset = value; } }
-        private uint grid_pos_num_views;
-        public uint GridPosNumViews { get { return grid_pos_num_views; } set { grid_pos_num_views = value; } }
-        private uint[] grid_pos_view_id;
-        public uint[] GridPosViewId { get { return grid_pos_view_id; } set { grid_pos_view_id = value; } }
-        private int[] grid_pos_x;
-        public int[] GridPosx { get { return grid_pos_x; } set { grid_pos_x = value; } }
-        private int[] grid_pos_y;
-        public int[] GridPosy { get { return grid_pos_y; } set { grid_pos_y = value; } }
+        private ulong depth_frame_crop_left_offset;
+        public ulong DepthFrameCropLeftOffset { get { return depth_frame_crop_left_offset; } set { depth_frame_crop_left_offset = value; } }
+        private ulong depth_frame_crop_right_offset;
+        public ulong DepthFrameCropRightOffset { get { return depth_frame_crop_right_offset; } set { depth_frame_crop_right_offset = value; } }
+        private ulong depth_frame_crop_top_offset;
+        public ulong DepthFrameCropTopOffset { get { return depth_frame_crop_top_offset; } set { depth_frame_crop_top_offset = value; } }
+        private ulong depth_frame_crop_bottom_offset;
+        public ulong DepthFrameCropBottomOffset { get { return depth_frame_crop_bottom_offset; } set { depth_frame_crop_bottom_offset = value; } }
+        private ulong grid_pos_num_views;
+        public ulong GridPosNumViews { get { return grid_pos_num_views; } set { grid_pos_num_views = value; } }
+        private ulong[] grid_pos_view_id;
+        public ulong[] GridPosViewId { get { return grid_pos_view_id; } set { grid_pos_view_id = value; } }
+        private long[] grid_pos_x;
+        public long[] GridPosx { get { return grid_pos_x; } set { grid_pos_x = value; } }
+        private long[] grid_pos_y;
+        public long[] GridPosy { get { return grid_pos_y; } set { grid_pos_y = value; } }
         private byte slice_header_prediction_flag;
         public byte SliceHeaderPredictionFlag { get { return slice_header_prediction_flag; } set { slice_header_prediction_flag = value; } }
         private byte seq_view_synthesis_flag;
@@ -17370,22 +17370,22 @@ seq_parameter_set_3davc_extension() {
         public byte AlcSpsEnableFlag { get { return alc_sps_enable_flag; } set { alc_sps_enable_flag = value; } }
         private byte enable_rle_skip_flag;
         public byte EnableRleSkipFlag { get { return enable_rle_skip_flag; } set { enable_rle_skip_flag = value; } }
-        private uint[] num_anchor_refs_l0;
-        public uint[] NumAnchorRefsL0 { get { return num_anchor_refs_l0; } set { num_anchor_refs_l0 = value; } }
-        private uint[][] anchor_ref_l0;
-        public uint[][] AnchorRefL0 { get { return anchor_ref_l0; } set { anchor_ref_l0 = value; } }
-        private uint[] num_anchor_refs_l1;
-        public uint[] NumAnchorRefsL1 { get { return num_anchor_refs_l1; } set { num_anchor_refs_l1 = value; } }
-        private uint[][] anchor_ref_l1;
-        public uint[][] AnchorRefL1 { get { return anchor_ref_l1; } set { anchor_ref_l1 = value; } }
-        private uint[] num_non_anchor_refs_l0;
-        public uint[] NumNonAnchorRefsL0 { get { return num_non_anchor_refs_l0; } set { num_non_anchor_refs_l0 = value; } }
-        private uint[][] non_anchor_ref_l0;
-        public uint[][] NonAnchorRefL0 { get { return non_anchor_ref_l0; } set { non_anchor_ref_l0 = value; } }
-        private uint[] num_non_anchor_refs_l1;
-        public uint[] NumNonAnchorRefsL1 { get { return num_non_anchor_refs_l1; } set { num_non_anchor_refs_l1 = value; } }
-        private uint[][] non_anchor_ref_l1;
-        public uint[][] NonAnchorRefL1 { get { return non_anchor_ref_l1; } set { non_anchor_ref_l1 = value; } }
+        private ulong[] num_anchor_refs_l0;
+        public ulong[] NumAnchorRefsL0 { get { return num_anchor_refs_l0; } set { num_anchor_refs_l0 = value; } }
+        private ulong[][] anchor_ref_l0;
+        public ulong[][] AnchorRefL0 { get { return anchor_ref_l0; } set { anchor_ref_l0 = value; } }
+        private ulong[] num_anchor_refs_l1;
+        public ulong[] NumAnchorRefsL1 { get { return num_anchor_refs_l1; } set { num_anchor_refs_l1 = value; } }
+        private ulong[][] anchor_ref_l1;
+        public ulong[][] AnchorRefL1 { get { return anchor_ref_l1; } set { anchor_ref_l1 = value; } }
+        private ulong[] num_non_anchor_refs_l0;
+        public ulong[] NumNonAnchorRefsL0 { get { return num_non_anchor_refs_l0; } set { num_non_anchor_refs_l0 = value; } }
+        private ulong[][] non_anchor_ref_l0;
+        public ulong[][] NonAnchorRefL0 { get { return non_anchor_ref_l0; } set { non_anchor_ref_l0 = value; } }
+        private ulong[] num_non_anchor_refs_l1;
+        public ulong[] NumNonAnchorRefsL1 { get { return num_non_anchor_refs_l1; } set { num_non_anchor_refs_l1 = value; } }
+        private ulong[][] non_anchor_ref_l1;
+        public ulong[][] NonAnchorRefL1 { get { return non_anchor_ref_l1; } set { non_anchor_ref_l1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -17406,7 +17406,7 @@ seq_parameter_set_3davc_extension() {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.three_dv_acquisition_idc, "three_dv_acquisition_idc");
 
-                this.view_id_3dv = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews];
+                this.view_id_3dv = new ulong[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews];
                 for (i = 0; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.view_id_3dv[i], "view_id_3dv");
@@ -17441,9 +17441,9 @@ seq_parameter_set_3davc_extension() {
                 }
                 size += stream.ReadUnsignedIntGolomb(size, out this.grid_pos_num_views, "grid_pos_num_views");
 
-                this.grid_pos_view_id = new uint[grid_pos_num_views];
-                this.grid_pos_x = new int[grid_pos_num_views];
-                this.grid_pos_y = new int[grid_pos_num_views];
+                this.grid_pos_view_id = new ulong[grid_pos_num_views];
+                this.grid_pos_x = new long[grid_pos_num_views];
+                this.grid_pos_y = new long[grid_pos_num_views];
                 for (i = 0; i < grid_pos_num_views; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.grid_pos_view_id[i], "grid_pos_view_id");
@@ -17459,31 +17459,31 @@ seq_parameter_set_3davc_extension() {
             if (((Func<uint>)(() =>
             {
                 uint AllViewsPairedFlag = 1;
-                for (int i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (int i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                     AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
                 return AllViewsPairedFlag;
             })).Invoke() == 0)
             {
 
-                this.num_anchor_refs_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
-                this.anchor_ref_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                this.num_anchor_refs_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
-                this.anchor_ref_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                this.num_anchor_refs_l0 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.anchor_ref_l0 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.num_anchor_refs_l1 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.anchor_ref_l1 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l0[i], "num_anchor_refs_l0");
 
-                        this.anchor_ref_l0[i] = new uint[num_anchor_refs_l0[i]];
+                        this.anchor_ref_l0[i] = new ulong[num_anchor_refs_l0[i]];
                         for (j = 0; j < num_anchor_refs_l0[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l0[i][j], "anchor_ref_l0");
                         }
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_anchor_refs_l1[i], "num_anchor_refs_l1");
 
-                        this.anchor_ref_l1[i] = new uint[num_anchor_refs_l1[i]];
+                        this.anchor_ref_l1[i] = new ulong[num_anchor_refs_l1[i]];
                         for (j = 0; j < num_anchor_refs_l1[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.anchor_ref_l1[i][j], "anchor_ref_l1");
@@ -17491,25 +17491,25 @@ seq_parameter_set_3davc_extension() {
                     }
                 }
 
-                this.num_non_anchor_refs_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
-                this.non_anchor_ref_l0 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                this.num_non_anchor_refs_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
-                this.non_anchor_ref_l1 = new uint[((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
-                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                this.num_non_anchor_refs_l0 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.non_anchor_ref_l0 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                this.num_non_anchor_refs_l1 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1];
+                this.non_anchor_ref_l1 = new ulong[(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
+                for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l0[i], "num_non_anchor_refs_l0");
 
-                        this.non_anchor_ref_l0[i] = new uint[num_non_anchor_refs_l0[i]];
+                        this.non_anchor_ref_l0[i] = new ulong[num_non_anchor_refs_l0[i]];
                         for (j = 0; j < num_non_anchor_refs_l0[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l0[i][j], "non_anchor_ref_l0");
                         }
                         size += stream.ReadUnsignedIntGolomb(size, out this.num_non_anchor_refs_l1[i], "num_non_anchor_refs_l1");
 
-                        this.non_anchor_ref_l1[i] = new uint[num_non_anchor_refs_l1[i]];
+                        this.non_anchor_ref_l1[i] = new ulong[num_non_anchor_refs_l1[i]];
                         for (j = 0; j < num_non_anchor_refs_l1[i]; j++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.non_anchor_ref_l1[i][j], "non_anchor_ref_l1");
@@ -17579,13 +17579,13 @@ seq_parameter_set_3davc_extension() {
             if (((Func<uint>)(() =>
             {
                 uint AllViewsPairedFlag = 1;
-                for (int i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (int i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                     AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
                 return AllViewsPairedFlag;
             })).Invoke() == 0)
             {
 
-                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
@@ -17605,7 +17605,7 @@ seq_parameter_set_3davc_extension() {
                     }
                 }
 
-                for (i = 1; i <= ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                for (i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
                 {
 
                     if (((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag.Select(x => (uint)x).ToArray()[i] != 0)
@@ -17667,18 +17667,18 @@ depth_parameter_set_rbsp() {
     */
     public class DepthParameterSetRbsp : IItuSerializable
     {
-        private uint depth_parameter_set_id;
-        public uint DepthParameterSetId { get { return depth_parameter_set_id; } set { depth_parameter_set_id = value; } }
-        private uint pred_direction;
-        public uint PredDirection { get { return pred_direction; } set { pred_direction = value; } }
-        private uint ref_dps_id0;
-        public uint RefDpsId0 { get { return ref_dps_id0; } set { ref_dps_id0 = value; } }
-        private uint ref_dps_id1;
-        public uint RefDpsId1 { get { return ref_dps_id1; } set { ref_dps_id1 = value; } }
+        private ulong depth_parameter_set_id;
+        public ulong DepthParameterSetId { get { return depth_parameter_set_id; } set { depth_parameter_set_id = value; } }
+        private ulong pred_direction;
+        public ulong PredDirection { get { return pred_direction; } set { pred_direction = value; } }
+        private ulong ref_dps_id0;
+        public ulong RefDpsId0 { get { return ref_dps_id0; } set { ref_dps_id0 = value; } }
+        private ulong ref_dps_id1;
+        public ulong RefDpsId1 { get { return ref_dps_id1; } set { ref_dps_id1 = value; } }
         private uint pred_weight0;
         public uint PredWeight0 { get { return pred_weight0; } set { pred_weight0 = value; } }
-        private uint num_depth_views_minus1;
-        public uint NumDepthViewsMinus1 { get { return num_depth_views_minus1; } set { num_depth_views_minus1 = value; } }
+        private ulong num_depth_views_minus1;
+        public ulong NumDepthViewsMinus1 { get { return num_depth_views_minus1; } set { num_depth_views_minus1 = value; } }
         private DepthRanges depth_ranges;
         public DepthRanges DepthRanges { get { return depth_ranges; } set { depth_ranges = value; } }
         private byte vsp_param_flag;
@@ -17687,10 +17687,10 @@ depth_parameter_set_rbsp() {
         public VspParam VspParam { get { return vsp_param; } set { vsp_param = value; } }
         private byte depth_param_additional_extension_flag;
         public byte DepthParamAdditionalExtensionFlag { get { return depth_param_additional_extension_flag; } set { depth_param_additional_extension_flag = value; } }
-        private uint nonlinear_depth_representation_num;
-        public uint NonlinearDepthRepresentationNum { get { return nonlinear_depth_representation_num; } set { nonlinear_depth_representation_num = value; } }
-        private uint[] nonlinear_depth_representation_model;
-        public uint[] NonlinearDepthRepresentationModel { get { return nonlinear_depth_representation_model; } set { nonlinear_depth_representation_model = value; } }
+        private ulong nonlinear_depth_representation_num;
+        public ulong NonlinearDepthRepresentationNum { get { return nonlinear_depth_representation_num; } set { nonlinear_depth_representation_num = value; } }
+        private ulong[] nonlinear_depth_representation_model;
+        public ulong[] NonlinearDepthRepresentationModel { get { return nonlinear_depth_representation_model; } set { nonlinear_depth_representation_model = value; } }
         private Dictionary<int, byte> depth_param_additional_extension_data_flag = new Dictionary<int, byte>();
         public Dictionary<int, byte> DepthParamAdditionalExtensionDataFlag { get { return depth_param_additional_extension_data_flag; } set { depth_param_additional_extension_data_flag = value; } }
         private RbspTrailingBits rbsp_trailing_bits;
@@ -17739,7 +17739,7 @@ depth_parameter_set_rbsp() {
             size += stream.ReadUnsignedInt(size, 1, out this.depth_param_additional_extension_flag, "depth_param_additional_extension_flag");
             size += stream.ReadUnsignedIntGolomb(size, out this.nonlinear_depth_representation_num, "nonlinear_depth_representation_num");
 
-            this.nonlinear_depth_representation_model = new uint[nonlinear_depth_representation_num];
+            this.nonlinear_depth_representation_model = new ulong[nonlinear_depth_representation_num];
             for (i = 1; i <= nonlinear_depth_representation_num; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.nonlinear_depth_representation_model[i], "nonlinear_depth_representation_model");
@@ -17832,12 +17832,12 @@ depth_ranges( numViews, predDirection, index ) {
     */
     public class DepthRanges : IItuSerializable
     {
-        private uint numViews;
-        public uint NumViews { get { return numViews; } set { numViews = value; } }
-        private uint predDirection;
-        public uint PredDirection { get { return predDirection; } set { predDirection = value; } }
-        private uint index;
-        public uint Index { get { return index; } set { index = value; } }
+        private ulong numViews;
+        public ulong NumViews { get { return numViews; } set { numViews = value; } }
+        private ulong predDirection;
+        public ulong PredDirection { get { return predDirection; } set { predDirection = value; } }
+        private ulong index;
+        public ulong Index { get { return index; } set { index = value; } }
         private byte z_near_flag;
         public byte zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
         private byte z_far_flag;
@@ -17850,7 +17850,7 @@ depth_ranges( numViews, predDirection, index ) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public DepthRanges(uint numViews, uint predDirection, uint index)
+        public DepthRanges(ulong numViews, ulong predDirection, ulong index)
         {
             this.numViews = numViews;
             this.predDirection = predDirection;
@@ -17962,14 +17962,14 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
     */
     public class ThreeDvAcquisitionElement : IItuSerializable
     {
-        private uint numViews;
-        public uint NumViews { get { return numViews; } set { numViews = value; } }
-        private uint predDirection;
-        public uint PredDirection { get { return predDirection; } set { predDirection = value; } }
+        private ulong numViews;
+        public ulong NumViews { get { return numViews; } set { numViews = value; } }
+        private ulong predDirection;
+        public ulong PredDirection { get { return predDirection; } set { predDirection = value; } }
         private uint expLen;
         public uint ExpLen { get { return expLen; } set { expLen = value; } }
-        private uint index;
-        public uint Index { get { return index; } set { index = value; } }
+        private ulong index;
+        public ulong Index { get { return index; } set { index = value; } }
         private uint[,] outSign;
         public uint[,] OutSign { get { return outSign; } set { outSign = value; } }
         private uint[,] outExp;
@@ -17996,13 +17996,13 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
         public byte[] ExponentSkipFlag { get { return exponent_skip_flag; } set { exponent_skip_flag = value; } }
         private uint[] exponent1;
         public uint[] Exponent1 { get { return exponent1; } set { exponent1 = value; } }
-        private int[] mantissa_diff;
-        public int[] MantissaDiff { get { return mantissa_diff; } set { mantissa_diff = value; } }
+        private long[] mantissa_diff;
+        public long[] MantissaDiff { get { return mantissa_diff; } set { mantissa_diff = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ThreeDvAcquisitionElement(uint numViews, uint predDirection, uint expLen, uint index, uint[,] outSign, uint[,] outExp, uint[,] outMantissa, uint[,] outManLen)
+        public ThreeDvAcquisitionElement(ulong numViews, ulong predDirection, uint expLen, ulong index, uint[,] outSign, uint[,] outExp, uint[,] outMantissa, uint[,] outManLen)
         {
             this.numViews = numViews;
             this.predDirection = predDirection;
@@ -18018,7 +18018,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
         {
             ulong size = 0;
 
-            uint numValues = 0;
+            ulong numValues = 0;
             uint i = 0;
             uint mantissaPred = 0;
 
@@ -18044,7 +18044,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
             this.sign1 = new byte[numValues];
             this.exponent_skip_flag = new byte[numValues];
             this.exponent1 = new uint[numValues];
-            this.mantissa_diff = new int[numValues];
+            this.mantissa_diff = new long[numValues];
             for (i = 0; i < numValues; i++)
             {
 
@@ -18108,7 +18108,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
+                for (i = 1; i < (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
@@ -18124,7 +18124,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
         {
             ulong size = 0;
 
-            uint numValues = 0;
+            ulong numValues = 0;
             uint i = 0;
             uint mantissaPred = 0;
 
@@ -18205,7 +18205,7 @@ three_dv_acquisition_element( numViews, predDirection, expLen, index, outSign, o
             if (element_equal_flag == 1)
             {
 
-                for (i = 1; i < ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
+                for (i = 1; i < (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1 - 0; i++)
                 {
                     outSign[index, i] = outSign[index, 0];
                     outExp[index, i] = outExp[index, 0];
@@ -18234,25 +18234,25 @@ vsp_param( numViews, predDirection, index ) {
     */
     public class VspParam : IItuSerializable
     {
-        private uint numViews;
-        public uint NumViews { get { return numViews; } set { numViews = value; } }
-        private uint predDirection;
-        public uint PredDirection { get { return predDirection; } set { predDirection = value; } }
-        private uint index;
-        public uint Index { get { return index; } set { index = value; } }
-        private uint[][] disparity_diff_wji;
-        public uint[][] DisparityDiffWji { get { return disparity_diff_wji; } set { disparity_diff_wji = value; } }
-        private uint[][] disparity_diff_oji;
-        public uint[][] DisparityDiffOji { get { return disparity_diff_oji; } set { disparity_diff_oji = value; } }
-        private uint[][] disparity_diff_wij;
-        public uint[][] DisparityDiffWij { get { return disparity_diff_wij; } set { disparity_diff_wij = value; } }
-        private uint[][] disparity_diff_oij;
-        public uint[][] DisparityDiffOij { get { return disparity_diff_oij; } set { disparity_diff_oij = value; } }
+        private ulong numViews;
+        public ulong NumViews { get { return numViews; } set { numViews = value; } }
+        private ulong predDirection;
+        public ulong PredDirection { get { return predDirection; } set { predDirection = value; } }
+        private ulong index;
+        public ulong Index { get { return index; } set { index = value; } }
+        private ulong[][] disparity_diff_wji;
+        public ulong[][] DisparityDiffWji { get { return disparity_diff_wji; } set { disparity_diff_wji = value; } }
+        private ulong[][] disparity_diff_oji;
+        public ulong[][] DisparityDiffOji { get { return disparity_diff_oji; } set { disparity_diff_oji = value; } }
+        private ulong[][] disparity_diff_wij;
+        public ulong[][] DisparityDiffWij { get { return disparity_diff_wij; } set { disparity_diff_wij = value; } }
+        private ulong[][] disparity_diff_oij;
+        public ulong[][] DisparityDiffOij { get { return disparity_diff_oij; } set { disparity_diff_oij = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public VspParam(uint numViews, uint predDirection, uint index)
+        public VspParam(ulong numViews, ulong predDirection, ulong index)
         {
             this.numViews = numViews;
             this.predDirection = predDirection;
@@ -18266,17 +18266,17 @@ vsp_param( numViews, predDirection, index ) {
             uint i = 0;
             uint j = 0;
 
-            this.disparity_diff_wji = new uint[numViews][];
-            this.disparity_diff_oji = new uint[numViews][];
-            this.disparity_diff_wij = new uint[numViews][];
-            this.disparity_diff_oij = new uint[numViews][];
+            this.disparity_diff_wji = new ulong[numViews][];
+            this.disparity_diff_oji = new ulong[numViews][];
+            this.disparity_diff_wij = new ulong[numViews][];
+            this.disparity_diff_oij = new ulong[numViews][];
             for (i = 0; i < numViews; i++)
             {
 
-                this.disparity_diff_wji[i] = new uint[i];
-                this.disparity_diff_oji[i] = new uint[i];
-                this.disparity_diff_wij[i] = new uint[i];
-                this.disparity_diff_oij[i] = new uint[i];
+                this.disparity_diff_wji[i] = new ulong[i];
+                this.disparity_diff_oji[i] = new ulong[i];
+                this.disparity_diff_wij[i] = new ulong[i];
+                this.disparity_diff_oij[i] = new ulong[i];
                 for (j = 0; j < i; j++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.disparity_diff_wji[j][i], "disparity_diff_wji");
@@ -18419,22 +18419,22 @@ slice_header_in_3davc_extension() {
     */
     public class SliceHeaderIn3davcExtension : IItuSerializable
     {
-        private uint first_mb_in_slice;
-        public uint FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
-        private uint slice_type;
-        public uint SliceType { get { return slice_type; } set { slice_type = value; } }
-        private uint pic_parameter_set_id;
-        public uint PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
+        private ulong first_mb_in_slice;
+        public ulong FirstMbInSlice { get { return first_mb_in_slice; } set { first_mb_in_slice = value; } }
+        private ulong slice_type;
+        public ulong SliceType { get { return slice_type; } set { slice_type = value; } }
+        private ulong pic_parameter_set_id;
+        public ulong PicParameterSetId { get { return pic_parameter_set_id; } set { pic_parameter_set_id = value; } }
         private uint pre_slice_header_src;
         public uint PreSliceHeaderSrc { get { return pre_slice_header_src; } set { pre_slice_header_src = value; } }
         private uint pre_ref_lists_src;
         public uint PreRefListsSrc { get { return pre_ref_lists_src; } set { pre_ref_lists_src = value; } }
         private byte num_ref_idx_active_override_flag;
         public byte NumRefIdxActiveOverrideFlag { get { return num_ref_idx_active_override_flag; } set { num_ref_idx_active_override_flag = value; } }
-        private uint num_ref_idx_l0_active_minus1;
-        public uint NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
-        private uint num_ref_idx_l1_active_minus1;
-        public uint NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
+        private ulong num_ref_idx_l0_active_minus1;
+        public ulong NumRefIdxL0ActiveMinus1 { get { return num_ref_idx_l0_active_minus1; } set { num_ref_idx_l0_active_minus1 = value; } }
+        private ulong num_ref_idx_l1_active_minus1;
+        public ulong NumRefIdxL1ActiveMinus1 { get { return num_ref_idx_l1_active_minus1; } set { num_ref_idx_l1_active_minus1 = value; } }
         private RefPicListMvcModification ref_pic_list_mvc_modification;
         public RefPicListMvcModification RefPicListMvcModification { get { return ref_pic_list_mvc_modification; } set { ref_pic_list_mvc_modification = value; } }
         private uint pre_pred_weight_table_src;
@@ -18445,8 +18445,8 @@ slice_header_in_3davc_extension() {
         public uint PreDecRefPicMarkingSrc { get { return pre_dec_ref_pic_marking_src; } set { pre_dec_ref_pic_marking_src = value; } }
         private DecRefPicMarking dec_ref_pic_marking;
         public DecRefPicMarking DecRefPicMarking { get { return dec_ref_pic_marking; } set { dec_ref_pic_marking = value; } }
-        private int slice_qp_delta;
-        public int SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
+        private long slice_qp_delta;
+        public long SliceQpDelta { get { return slice_qp_delta; } set { slice_qp_delta = value; } }
         private uint colour_plane_id;
         public uint ColourPlaneId { get { return colour_plane_id; } set { colour_plane_id = value; } }
         private uint frame_num;
@@ -18455,32 +18455,32 @@ slice_header_in_3davc_extension() {
         public byte FieldPicFlag { get { return field_pic_flag; } set { field_pic_flag = value; } }
         private byte bottom_field_flag;
         public byte BottomFieldFlag { get { return bottom_field_flag; } set { bottom_field_flag = value; } }
-        private uint idr_pic_id;
-        public uint IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
+        private ulong idr_pic_id;
+        public ulong IdrPicId { get { return idr_pic_id; } set { idr_pic_id = value; } }
         private uint pic_order_cnt_lsb;
         public uint PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
-        private int delta_pic_order_cnt_bottom;
-        public int DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
-        private int[] delta_pic_order_cnt;
-        public int[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
-        private uint redundant_pic_cnt;
-        public uint RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
+        private long delta_pic_order_cnt_bottom;
+        public long DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
+        private long[] delta_pic_order_cnt;
+        public long[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
+        private ulong redundant_pic_cnt;
+        public ulong RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
         private byte direct_spatial_mv_pred_flag;
         public byte DirectSpatialMvPredFlag { get { return direct_spatial_mv_pred_flag; } set { direct_spatial_mv_pred_flag = value; } }
         private RefPicListModification ref_pic_list_modification;
         public RefPicListModification RefPicListModification { get { return ref_pic_list_modification; } set { ref_pic_list_modification = value; } }
-        private uint cabac_init_idc;
-        public uint CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
+        private ulong cabac_init_idc;
+        public ulong CabacInitIdc { get { return cabac_init_idc; } set { cabac_init_idc = value; } }
         private byte sp_for_switch_flag;
         public byte SpForSwitchFlag { get { return sp_for_switch_flag; } set { sp_for_switch_flag = value; } }
-        private int slice_qs_delta;
-        public int SliceQsDelta { get { return slice_qs_delta; } set { slice_qs_delta = value; } }
-        private uint disable_deblocking_filter_idc;
-        public uint DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
-        private int slice_alpha_c0_offset_div2;
-        public int SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
-        private int slice_beta_offset_div2;
-        public int SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
+        private long slice_qs_delta;
+        public long SliceQsDelta { get { return slice_qs_delta; } set { slice_qs_delta = value; } }
+        private ulong disable_deblocking_filter_idc;
+        public ulong DisableDeblockingFilterIdc { get { return disable_deblocking_filter_idc; } set { disable_deblocking_filter_idc = value; } }
+        private long slice_alpha_c0_offset_div2;
+        public long SliceAlphaC0OffsetDiv2 { get { return slice_alpha_c0_offset_div2; } set { slice_alpha_c0_offset_div2 = value; } }
+        private long slice_beta_offset_div2;
+        public long SliceBetaOffsetDiv2 { get { return slice_beta_offset_div2; } set { slice_beta_offset_div2 = value; } }
         private uint slice_group_change_cycle;
         public uint SliceGroupChangeCycle { get { return slice_group_change_cycle; } set { slice_group_change_cycle = value; } }
         private byte depth_weighted_pred_flag;
@@ -18489,8 +18489,8 @@ slice_header_in_3davc_extension() {
         public byte DmvpFlag { get { return dmvp_flag; } set { dmvp_flag = value; } }
         private byte slice_vsp_flag;
         public byte SliceVspFlag { get { return slice_vsp_flag; } set { slice_vsp_flag = value; } }
-        private uint dps_id;
-        public uint DpsId { get { return dps_id; } set { dps_id = value; } }
+        private ulong dps_id;
+        public ulong DpsId { get { return dps_id; } set { dps_id = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }

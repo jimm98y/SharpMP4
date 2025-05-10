@@ -474,7 +474,7 @@ namespace ItuGenerator
             {
                 { "NumBytesInNalUnit",             "u(32)" },
                 { "payloadType",                   "u(32)" },
-                { "payloadSize",                   "u(32)" },
+                { "payloadSize",                   "u(64)" },
                 { "subLayerId",                    "u(32)" },
                 { "OutSign",                       "u(32)" },
                 { "OutExp",                        "u(32)" },
@@ -488,7 +488,7 @@ namespace ItuGenerator
                 { "firstSubLayer",                 "u(32)" },
                 { "MaxSubLayersVal",               "u(32)" },
                 { "listIdx",                       "u(32)" },
-                { "rplsIdx",                       "u(32)" },
+                { "rplsIdx",                       "u(64)" },
             };
 
             return map[parameter];

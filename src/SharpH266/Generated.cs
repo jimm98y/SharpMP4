@@ -302,8 +302,8 @@ operating_point_information_rbsp() {
         public byte OpiOlsInfoPresentFlag { get { return opi_ols_info_present_flag; } set { opi_ols_info_present_flag = value; } }
         private byte opi_htid_info_present_flag;
         public byte OpiHtidInfoPresentFlag { get { return opi_htid_info_present_flag; } set { opi_htid_info_present_flag = value; } }
-        private uint opi_ols_idx;
-        public uint OpiOlsIdx { get { return opi_ols_idx; } set { opi_ols_idx = value; } }
+        private ulong opi_ols_idx;
+        public ulong OpiOlsIdx { get { return opi_ols_idx; } set { opi_ols_idx = value; } }
         private uint opi_htid_plus1;
         public uint OpiHtidPlus1 { get { return opi_htid_plus1; } set { opi_htid_plus1 = value; } }
         private byte opi_extension_flag;
@@ -532,38 +532,38 @@ video_parameter_set_rbsp() {
         public ProfileTierLevel[] ProfileTierLevel { get { return profile_tier_level; } set { profile_tier_level = value; } }
         private uint[] vps_ols_ptl_idx;
         public uint[] VpsOlsPtlIdx { get { return vps_ols_ptl_idx; } set { vps_ols_ptl_idx = value; } }
-        private uint vps_num_dpb_params_minus1;
-        public uint VpsNumDpbParamsMinus1 { get { return vps_num_dpb_params_minus1; } set { vps_num_dpb_params_minus1 = value; } }
+        private ulong vps_num_dpb_params_minus1;
+        public ulong VpsNumDpbParamsMinus1 { get { return vps_num_dpb_params_minus1; } set { vps_num_dpb_params_minus1 = value; } }
         private byte vps_sublayer_dpb_params_present_flag;
         public byte VpsSublayerDpbParamsPresentFlag { get { return vps_sublayer_dpb_params_present_flag; } set { vps_sublayer_dpb_params_present_flag = value; } }
         private uint[] vps_dpb_max_tid;
         public uint[] VpsDpbMaxTid { get { return vps_dpb_max_tid; } set { vps_dpb_max_tid = value; } }
         private DpbParameters[] dpb_parameters;
         public DpbParameters[] DpbParameters { get { return dpb_parameters; } set { dpb_parameters = value; } }
-        private uint[] vps_ols_dpb_pic_width;
-        public uint[] VpsOlsDpbPicWidth { get { return vps_ols_dpb_pic_width; } set { vps_ols_dpb_pic_width = value; } }
-        private uint[] vps_ols_dpb_pic_height;
-        public uint[] VpsOlsDpbPicHeight { get { return vps_ols_dpb_pic_height; } set { vps_ols_dpb_pic_height = value; } }
+        private ulong[] vps_ols_dpb_pic_width;
+        public ulong[] VpsOlsDpbPicWidth { get { return vps_ols_dpb_pic_width; } set { vps_ols_dpb_pic_width = value; } }
+        private ulong[] vps_ols_dpb_pic_height;
+        public ulong[] VpsOlsDpbPicHeight { get { return vps_ols_dpb_pic_height; } set { vps_ols_dpb_pic_height = value; } }
         private uint[] vps_ols_dpb_chroma_format;
         public uint[] VpsOlsDpbChromaFormat { get { return vps_ols_dpb_chroma_format; } set { vps_ols_dpb_chroma_format = value; } }
-        private uint[] vps_ols_dpb_bitdepth_minus8;
-        public uint[] VpsOlsDpbBitdepthMinus8 { get { return vps_ols_dpb_bitdepth_minus8; } set { vps_ols_dpb_bitdepth_minus8 = value; } }
-        private uint[] vps_ols_dpb_params_idx;
-        public uint[] VpsOlsDpbParamsIdx { get { return vps_ols_dpb_params_idx; } set { vps_ols_dpb_params_idx = value; } }
+        private ulong[] vps_ols_dpb_bitdepth_minus8;
+        public ulong[] VpsOlsDpbBitdepthMinus8 { get { return vps_ols_dpb_bitdepth_minus8; } set { vps_ols_dpb_bitdepth_minus8 = value; } }
+        private ulong[] vps_ols_dpb_params_idx;
+        public ulong[] VpsOlsDpbParamsIdx { get { return vps_ols_dpb_params_idx; } set { vps_ols_dpb_params_idx = value; } }
         private byte vps_timing_hrd_params_present_flag;
         public byte VpsTimingHrdParamsPresentFlag { get { return vps_timing_hrd_params_present_flag; } set { vps_timing_hrd_params_present_flag = value; } }
         private GeneralTimingHrdParameters general_timing_hrd_parameters;
         public GeneralTimingHrdParameters GeneralTimingHrdParameters { get { return general_timing_hrd_parameters; } set { general_timing_hrd_parameters = value; } }
         private byte vps_sublayer_cpb_params_present_flag;
         public byte VpsSublayerCpbParamsPresentFlag { get { return vps_sublayer_cpb_params_present_flag; } set { vps_sublayer_cpb_params_present_flag = value; } }
-        private uint vps_num_ols_timing_hrd_params_minus1;
-        public uint VpsNumOlsTimingHrdParamsMinus1 { get { return vps_num_ols_timing_hrd_params_minus1; } set { vps_num_ols_timing_hrd_params_minus1 = value; } }
+        private ulong vps_num_ols_timing_hrd_params_minus1;
+        public ulong VpsNumOlsTimingHrdParamsMinus1 { get { return vps_num_ols_timing_hrd_params_minus1; } set { vps_num_ols_timing_hrd_params_minus1 = value; } }
         private uint[] vps_hrd_max_tid;
         public uint[] VpsHrdMaxTid { get { return vps_hrd_max_tid; } set { vps_hrd_max_tid = value; } }
         private OlsTimingHrdParameters[] ols_timing_hrd_parameters;
         public OlsTimingHrdParameters[] OlsTimingHrdParameters { get { return ols_timing_hrd_parameters; } set { ols_timing_hrd_parameters = value; } }
-        private uint[] vps_ols_timing_hrd_idx;
-        public uint[] VpsOlsTimingHrdIdx { get { return vps_ols_timing_hrd_idx; } set { vps_ols_timing_hrd_idx = value; } }
+        private ulong[] vps_ols_timing_hrd_idx;
+        public ulong[] VpsOlsTimingHrdIdx { get { return vps_ols_timing_hrd_idx; } set { vps_ols_timing_hrd_idx = value; } }
         private byte vps_extension_flag;
         public byte VpsExtensionFlag { get { return vps_extension_flag; } set { vps_extension_flag = value; } }
         private Dictionary<int, byte> vps_extension_data_flag = new Dictionary<int, byte>();
@@ -734,11 +734,11 @@ video_parameter_set_rbsp() {
                     size += stream.ReadClass<DpbParameters>(size, context, this.dpb_parameters[i], "dpb_parameters");
                 }
 
-                this.vps_ols_dpb_pic_width = new uint[((H266Context)context).NumMultiLayerOlss];
-                this.vps_ols_dpb_pic_height = new uint[((H266Context)context).NumMultiLayerOlss];
+                this.vps_ols_dpb_pic_width = new ulong[((H266Context)context).NumMultiLayerOlss];
+                this.vps_ols_dpb_pic_height = new ulong[((H266Context)context).NumMultiLayerOlss];
                 this.vps_ols_dpb_chroma_format = new uint[((H266Context)context).NumMultiLayerOlss];
-                this.vps_ols_dpb_bitdepth_minus8 = new uint[((H266Context)context).NumMultiLayerOlss];
-                this.vps_ols_dpb_params_idx = new uint[((H266Context)context).NumMultiLayerOlss];
+                this.vps_ols_dpb_bitdepth_minus8 = new ulong[((H266Context)context).NumMultiLayerOlss];
+                this.vps_ols_dpb_params_idx = new ulong[((H266Context)context).NumMultiLayerOlss];
                 for (i = 0; i < ((H266Context)context).NumMultiLayerOlss; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_dpb_pic_width[i], "vps_ols_dpb_pic_width");
@@ -783,7 +783,7 @@ video_parameter_set_rbsp() {
      vps_num_ols_timing_hrd_params_minus1 + 1 != ((H266Context)context).NumMultiLayerOlss)
                     {
 
-                        this.vps_ols_timing_hrd_idx = new uint[((H266Context)context).NumMultiLayerOlss];
+                        this.vps_ols_timing_hrd_idx = new ulong[((H266Context)context).NumMultiLayerOlss];
                         for (i = 0; i < ((H266Context)context).NumMultiLayerOlss; i++)
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.vps_ols_timing_hrd_idx[i], "vps_ols_timing_hrd_idx");
@@ -1290,24 +1290,24 @@ seq_parameter_set_rbsp() {
         public byte SpsRefPicResamplingEnabledFlag { get { return sps_ref_pic_resampling_enabled_flag; } set { sps_ref_pic_resampling_enabled_flag = value; } }
         private byte sps_res_change_in_clvs_allowed_flag;
         public byte SpsResChangeInClvsAllowedFlag { get { return sps_res_change_in_clvs_allowed_flag; } set { sps_res_change_in_clvs_allowed_flag = value; } }
-        private uint sps_pic_width_max_in_luma_samples;
-        public uint SpsPicWidthMaxInLumaSamples { get { return sps_pic_width_max_in_luma_samples; } set { sps_pic_width_max_in_luma_samples = value; } }
-        private uint sps_pic_height_max_in_luma_samples;
-        public uint SpsPicHeightMaxInLumaSamples { get { return sps_pic_height_max_in_luma_samples; } set { sps_pic_height_max_in_luma_samples = value; } }
+        private ulong sps_pic_width_max_in_luma_samples;
+        public ulong SpsPicWidthMaxInLumaSamples { get { return sps_pic_width_max_in_luma_samples; } set { sps_pic_width_max_in_luma_samples = value; } }
+        private ulong sps_pic_height_max_in_luma_samples;
+        public ulong SpsPicHeightMaxInLumaSamples { get { return sps_pic_height_max_in_luma_samples; } set { sps_pic_height_max_in_luma_samples = value; } }
         private byte sps_conformance_window_flag;
         public byte SpsConformanceWindowFlag { get { return sps_conformance_window_flag; } set { sps_conformance_window_flag = value; } }
-        private uint sps_conf_win_left_offset;
-        public uint SpsConfWinLeftOffset { get { return sps_conf_win_left_offset; } set { sps_conf_win_left_offset = value; } }
-        private uint sps_conf_win_right_offset;
-        public uint SpsConfWinRightOffset { get { return sps_conf_win_right_offset; } set { sps_conf_win_right_offset = value; } }
-        private uint sps_conf_win_top_offset;
-        public uint SpsConfWinTopOffset { get { return sps_conf_win_top_offset; } set { sps_conf_win_top_offset = value; } }
-        private uint sps_conf_win_bottom_offset;
-        public uint SpsConfWinBottomOffset { get { return sps_conf_win_bottom_offset; } set { sps_conf_win_bottom_offset = value; } }
+        private ulong sps_conf_win_left_offset;
+        public ulong SpsConfWinLeftOffset { get { return sps_conf_win_left_offset; } set { sps_conf_win_left_offset = value; } }
+        private ulong sps_conf_win_right_offset;
+        public ulong SpsConfWinRightOffset { get { return sps_conf_win_right_offset; } set { sps_conf_win_right_offset = value; } }
+        private ulong sps_conf_win_top_offset;
+        public ulong SpsConfWinTopOffset { get { return sps_conf_win_top_offset; } set { sps_conf_win_top_offset = value; } }
+        private ulong sps_conf_win_bottom_offset;
+        public ulong SpsConfWinBottomOffset { get { return sps_conf_win_bottom_offset; } set { sps_conf_win_bottom_offset = value; } }
         private byte sps_subpic_info_present_flag;
         public byte SpsSubpicInfoPresentFlag { get { return sps_subpic_info_present_flag; } set { sps_subpic_info_present_flag = value; } }
-        private uint sps_num_subpics_minus1;
-        public uint SpsNumSubpicsMinus1 { get { return sps_num_subpics_minus1; } set { sps_num_subpics_minus1 = value; } }
+        private ulong sps_num_subpics_minus1;
+        public ulong SpsNumSubpicsMinus1 { get { return sps_num_subpics_minus1; } set { sps_num_subpics_minus1 = value; } }
         private byte sps_independent_subpics_flag;
         public byte SpsIndependentSubpicsFlag { get { return sps_independent_subpics_flag; } set { sps_independent_subpics_flag = value; } }
         private byte sps_subpic_same_size_flag;
@@ -1324,16 +1324,16 @@ seq_parameter_set_rbsp() {
         public byte[] SpsSubpicTreatedAsPicFlag { get { return sps_subpic_treated_as_pic_flag; } set { sps_subpic_treated_as_pic_flag = value; } }
         private byte[] sps_loop_filter_across_subpic_enabled_flag;
         public byte[] SpsLoopFilterAcrossSubpicEnabledFlag { get { return sps_loop_filter_across_subpic_enabled_flag; } set { sps_loop_filter_across_subpic_enabled_flag = value; } }
-        private uint sps_subpic_id_len_minus1;
-        public uint SpsSubpicIdLenMinus1 { get { return sps_subpic_id_len_minus1; } set { sps_subpic_id_len_minus1 = value; } }
+        private ulong sps_subpic_id_len_minus1;
+        public ulong SpsSubpicIdLenMinus1 { get { return sps_subpic_id_len_minus1; } set { sps_subpic_id_len_minus1 = value; } }
         private byte sps_subpic_id_mapping_explicitly_signalled_flag;
         public byte SpsSubpicIdMappingExplicitlySignalledFlag { get { return sps_subpic_id_mapping_explicitly_signalled_flag; } set { sps_subpic_id_mapping_explicitly_signalled_flag = value; } }
         private byte sps_subpic_id_mapping_present_flag;
         public byte SpsSubpicIdMappingPresentFlag { get { return sps_subpic_id_mapping_present_flag; } set { sps_subpic_id_mapping_present_flag = value; } }
         private uint[] sps_subpic_id;
         public uint[] SpsSubpicId { get { return sps_subpic_id; } set { sps_subpic_id = value; } }
-        private uint sps_bitdepth_minus8;
-        public uint SpsBitdepthMinus8 { get { return sps_bitdepth_minus8; } set { sps_bitdepth_minus8 = value; } }
+        private ulong sps_bitdepth_minus8;
+        public ulong SpsBitdepthMinus8 { get { return sps_bitdepth_minus8; } set { sps_bitdepth_minus8 = value; } }
         private byte sps_entropy_coding_sync_enabled_flag;
         public byte SpsEntropyCodingSyncEnabledFlag { get { return sps_entropy_coding_sync_enabled_flag; } set { sps_entropy_coding_sync_enabled_flag = value; } }
         private byte sps_entry_point_offsets_present_flag;
@@ -1342,8 +1342,8 @@ seq_parameter_set_rbsp() {
         public uint SpsLog2MaxPicOrderCntLsbMinus4 { get { return sps_log2_max_pic_order_cnt_lsb_minus4; } set { sps_log2_max_pic_order_cnt_lsb_minus4 = value; } }
         private byte sps_poc_msb_cycle_flag;
         public byte SpsPocMsbCycleFlag { get { return sps_poc_msb_cycle_flag; } set { sps_poc_msb_cycle_flag = value; } }
-        private uint sps_poc_msb_cycle_len_minus1;
-        public uint SpsPocMsbCycleLenMinus1 { get { return sps_poc_msb_cycle_len_minus1; } set { sps_poc_msb_cycle_len_minus1 = value; } }
+        private ulong sps_poc_msb_cycle_len_minus1;
+        public ulong SpsPocMsbCycleLenMinus1 { get { return sps_poc_msb_cycle_len_minus1; } set { sps_poc_msb_cycle_len_minus1 = value; } }
         private uint sps_num_extra_ph_bytes;
         public uint SpsNumExtraPhBytes { get { return sps_num_extra_ph_bytes; } set { sps_num_extra_ph_bytes = value; } }
         private byte[] sps_extra_ph_bit_present_flag;
@@ -1356,42 +1356,42 @@ seq_parameter_set_rbsp() {
         public byte SpsSublayerDpbParamsFlag { get { return sps_sublayer_dpb_params_flag; } set { sps_sublayer_dpb_params_flag = value; } }
         private DpbParameters dpb_parameters;
         public DpbParameters DpbParameters { get { return dpb_parameters; } set { dpb_parameters = value; } }
-        private uint sps_log2_min_luma_coding_block_size_minus2;
-        public uint SpsLog2MinLumaCodingBlockSizeMinus2 { get { return sps_log2_min_luma_coding_block_size_minus2; } set { sps_log2_min_luma_coding_block_size_minus2 = value; } }
+        private ulong sps_log2_min_luma_coding_block_size_minus2;
+        public ulong SpsLog2MinLumaCodingBlockSizeMinus2 { get { return sps_log2_min_luma_coding_block_size_minus2; } set { sps_log2_min_luma_coding_block_size_minus2 = value; } }
         private byte sps_partition_constraints_override_enabled_flag;
         public byte SpsPartitionConstraintsOverrideEnabledFlag { get { return sps_partition_constraints_override_enabled_flag; } set { sps_partition_constraints_override_enabled_flag = value; } }
-        private uint sps_log2_diff_min_qt_min_cb_intra_slice_luma;
-        public uint SpsLog2DiffMinQtMinCbIntraSliceLuma { get { return sps_log2_diff_min_qt_min_cb_intra_slice_luma; } set { sps_log2_diff_min_qt_min_cb_intra_slice_luma = value; } }
-        private uint sps_max_mtt_hierarchy_depth_intra_slice_luma;
-        public uint SpsMaxMttHierarchyDepthIntraSliceLuma { get { return sps_max_mtt_hierarchy_depth_intra_slice_luma; } set { sps_max_mtt_hierarchy_depth_intra_slice_luma = value; } }
-        private uint sps_log2_diff_max_bt_min_qt_intra_slice_luma;
-        public uint SpsLog2DiffMaxBtMinQtIntraSliceLuma { get { return sps_log2_diff_max_bt_min_qt_intra_slice_luma; } set { sps_log2_diff_max_bt_min_qt_intra_slice_luma = value; } }
-        private uint sps_log2_diff_max_tt_min_qt_intra_slice_luma;
-        public uint SpsLog2DiffMaxTtMinQtIntraSliceLuma { get { return sps_log2_diff_max_tt_min_qt_intra_slice_luma; } set { sps_log2_diff_max_tt_min_qt_intra_slice_luma = value; } }
+        private ulong sps_log2_diff_min_qt_min_cb_intra_slice_luma;
+        public ulong SpsLog2DiffMinQtMinCbIntraSliceLuma { get { return sps_log2_diff_min_qt_min_cb_intra_slice_luma; } set { sps_log2_diff_min_qt_min_cb_intra_slice_luma = value; } }
+        private ulong sps_max_mtt_hierarchy_depth_intra_slice_luma;
+        public ulong SpsMaxMttHierarchyDepthIntraSliceLuma { get { return sps_max_mtt_hierarchy_depth_intra_slice_luma; } set { sps_max_mtt_hierarchy_depth_intra_slice_luma = value; } }
+        private ulong sps_log2_diff_max_bt_min_qt_intra_slice_luma;
+        public ulong SpsLog2DiffMaxBtMinQtIntraSliceLuma { get { return sps_log2_diff_max_bt_min_qt_intra_slice_luma; } set { sps_log2_diff_max_bt_min_qt_intra_slice_luma = value; } }
+        private ulong sps_log2_diff_max_tt_min_qt_intra_slice_luma;
+        public ulong SpsLog2DiffMaxTtMinQtIntraSliceLuma { get { return sps_log2_diff_max_tt_min_qt_intra_slice_luma; } set { sps_log2_diff_max_tt_min_qt_intra_slice_luma = value; } }
         private byte sps_qtbtt_dual_tree_intra_flag;
         public byte SpsQtbttDualTreeIntraFlag { get { return sps_qtbtt_dual_tree_intra_flag; } set { sps_qtbtt_dual_tree_intra_flag = value; } }
-        private uint sps_log2_diff_min_qt_min_cb_intra_slice_chroma;
-        public uint SpsLog2DiffMinQtMinCbIntraSliceChroma { get { return sps_log2_diff_min_qt_min_cb_intra_slice_chroma; } set { sps_log2_diff_min_qt_min_cb_intra_slice_chroma = value; } }
-        private uint sps_max_mtt_hierarchy_depth_intra_slice_chroma;
-        public uint SpsMaxMttHierarchyDepthIntraSliceChroma { get { return sps_max_mtt_hierarchy_depth_intra_slice_chroma; } set { sps_max_mtt_hierarchy_depth_intra_slice_chroma = value; } }
-        private uint sps_log2_diff_max_bt_min_qt_intra_slice_chroma;
-        public uint SpsLog2DiffMaxBtMinQtIntraSliceChroma { get { return sps_log2_diff_max_bt_min_qt_intra_slice_chroma; } set { sps_log2_diff_max_bt_min_qt_intra_slice_chroma = value; } }
-        private uint sps_log2_diff_max_tt_min_qt_intra_slice_chroma;
-        public uint SpsLog2DiffMaxTtMinQtIntraSliceChroma { get { return sps_log2_diff_max_tt_min_qt_intra_slice_chroma; } set { sps_log2_diff_max_tt_min_qt_intra_slice_chroma = value; } }
-        private uint sps_log2_diff_min_qt_min_cb_inter_slice;
-        public uint SpsLog2DiffMinQtMinCbInterSlice { get { return sps_log2_diff_min_qt_min_cb_inter_slice; } set { sps_log2_diff_min_qt_min_cb_inter_slice = value; } }
-        private uint sps_max_mtt_hierarchy_depth_inter_slice;
-        public uint SpsMaxMttHierarchyDepthInterSlice { get { return sps_max_mtt_hierarchy_depth_inter_slice; } set { sps_max_mtt_hierarchy_depth_inter_slice = value; } }
-        private uint sps_log2_diff_max_bt_min_qt_inter_slice;
-        public uint SpsLog2DiffMaxBtMinQtInterSlice { get { return sps_log2_diff_max_bt_min_qt_inter_slice; } set { sps_log2_diff_max_bt_min_qt_inter_slice = value; } }
-        private uint sps_log2_diff_max_tt_min_qt_inter_slice;
-        public uint SpsLog2DiffMaxTtMinQtInterSlice { get { return sps_log2_diff_max_tt_min_qt_inter_slice; } set { sps_log2_diff_max_tt_min_qt_inter_slice = value; } }
+        private ulong sps_log2_diff_min_qt_min_cb_intra_slice_chroma;
+        public ulong SpsLog2DiffMinQtMinCbIntraSliceChroma { get { return sps_log2_diff_min_qt_min_cb_intra_slice_chroma; } set { sps_log2_diff_min_qt_min_cb_intra_slice_chroma = value; } }
+        private ulong sps_max_mtt_hierarchy_depth_intra_slice_chroma;
+        public ulong SpsMaxMttHierarchyDepthIntraSliceChroma { get { return sps_max_mtt_hierarchy_depth_intra_slice_chroma; } set { sps_max_mtt_hierarchy_depth_intra_slice_chroma = value; } }
+        private ulong sps_log2_diff_max_bt_min_qt_intra_slice_chroma;
+        public ulong SpsLog2DiffMaxBtMinQtIntraSliceChroma { get { return sps_log2_diff_max_bt_min_qt_intra_slice_chroma; } set { sps_log2_diff_max_bt_min_qt_intra_slice_chroma = value; } }
+        private ulong sps_log2_diff_max_tt_min_qt_intra_slice_chroma;
+        public ulong SpsLog2DiffMaxTtMinQtIntraSliceChroma { get { return sps_log2_diff_max_tt_min_qt_intra_slice_chroma; } set { sps_log2_diff_max_tt_min_qt_intra_slice_chroma = value; } }
+        private ulong sps_log2_diff_min_qt_min_cb_inter_slice;
+        public ulong SpsLog2DiffMinQtMinCbInterSlice { get { return sps_log2_diff_min_qt_min_cb_inter_slice; } set { sps_log2_diff_min_qt_min_cb_inter_slice = value; } }
+        private ulong sps_max_mtt_hierarchy_depth_inter_slice;
+        public ulong SpsMaxMttHierarchyDepthInterSlice { get { return sps_max_mtt_hierarchy_depth_inter_slice; } set { sps_max_mtt_hierarchy_depth_inter_slice = value; } }
+        private ulong sps_log2_diff_max_bt_min_qt_inter_slice;
+        public ulong SpsLog2DiffMaxBtMinQtInterSlice { get { return sps_log2_diff_max_bt_min_qt_inter_slice; } set { sps_log2_diff_max_bt_min_qt_inter_slice = value; } }
+        private ulong sps_log2_diff_max_tt_min_qt_inter_slice;
+        public ulong SpsLog2DiffMaxTtMinQtInterSlice { get { return sps_log2_diff_max_tt_min_qt_inter_slice; } set { sps_log2_diff_max_tt_min_qt_inter_slice = value; } }
         private byte sps_max_luma_transform_size_64_flag;
         public byte SpsMaxLumaTransformSize64Flag { get { return sps_max_luma_transform_size_64_flag; } set { sps_max_luma_transform_size_64_flag = value; } }
         private byte sps_transform_skip_enabled_flag;
         public byte SpsTransformSkipEnabledFlag { get { return sps_transform_skip_enabled_flag; } set { sps_transform_skip_enabled_flag = value; } }
-        private uint sps_log2_transform_skip_max_size_minus2;
-        public uint SpsLog2TransformSkipMaxSizeMinus2 { get { return sps_log2_transform_skip_max_size_minus2; } set { sps_log2_transform_skip_max_size_minus2 = value; } }
+        private ulong sps_log2_transform_skip_max_size_minus2;
+        public ulong SpsLog2TransformSkipMaxSizeMinus2 { get { return sps_log2_transform_skip_max_size_minus2; } set { sps_log2_transform_skip_max_size_minus2 = value; } }
         private byte sps_bdpcm_enabled_flag;
         public byte SpsBdpcmEnabledFlag { get { return sps_bdpcm_enabled_flag; } set { sps_bdpcm_enabled_flag = value; } }
         private byte sps_mts_enabled_flag;
@@ -1406,14 +1406,14 @@ seq_parameter_set_rbsp() {
         public byte SpsJointCbcrEnabledFlag { get { return sps_joint_cbcr_enabled_flag; } set { sps_joint_cbcr_enabled_flag = value; } }
         private byte sps_same_qp_table_for_chroma_flag;
         public byte SpsSameQpTableForChromaFlag { get { return sps_same_qp_table_for_chroma_flag; } set { sps_same_qp_table_for_chroma_flag = value; } }
-        private int[] sps_qp_table_start_minus26;
-        public int[] SpsQpTableStartMinus26 { get { return sps_qp_table_start_minus26; } set { sps_qp_table_start_minus26 = value; } }
-        private uint[] sps_num_points_in_qp_table_minus1;
-        public uint[] SpsNumPointsInQpTableMinus1 { get { return sps_num_points_in_qp_table_minus1; } set { sps_num_points_in_qp_table_minus1 = value; } }
-        private uint[][] sps_delta_qp_in_val_minus1;
-        public uint[][] SpsDeltaQpInValMinus1 { get { return sps_delta_qp_in_val_minus1; } set { sps_delta_qp_in_val_minus1 = value; } }
-        private uint[][] sps_delta_qp_diff_val;
-        public uint[][] SpsDeltaQpDiffVal { get { return sps_delta_qp_diff_val; } set { sps_delta_qp_diff_val = value; } }
+        private long[] sps_qp_table_start_minus26;
+        public long[] SpsQpTableStartMinus26 { get { return sps_qp_table_start_minus26; } set { sps_qp_table_start_minus26 = value; } }
+        private ulong[] sps_num_points_in_qp_table_minus1;
+        public ulong[] SpsNumPointsInQpTableMinus1 { get { return sps_num_points_in_qp_table_minus1; } set { sps_num_points_in_qp_table_minus1 = value; } }
+        private ulong[][] sps_delta_qp_in_val_minus1;
+        public ulong[][] SpsDeltaQpInValMinus1 { get { return sps_delta_qp_in_val_minus1; } set { sps_delta_qp_in_val_minus1 = value; } }
+        private ulong[][] sps_delta_qp_diff_val;
+        public ulong[][] SpsDeltaQpDiffVal { get { return sps_delta_qp_diff_val; } set { sps_delta_qp_diff_val = value; } }
         private byte sps_sao_enabled_flag;
         public byte SpsSaoEnabledFlag { get { return sps_sao_enabled_flag; } set { sps_sao_enabled_flag = value; } }
         private byte sps_alf_enabled_flag;
@@ -1434,8 +1434,8 @@ seq_parameter_set_rbsp() {
         public byte SpsIdrRplPresentFlag { get { return sps_idr_rpl_present_flag; } set { sps_idr_rpl_present_flag = value; } }
         private byte sps_rpl1_same_as_rpl0_flag;
         public byte SpsRpl1SameAsRpl0Flag { get { return sps_rpl1_same_as_rpl0_flag; } set { sps_rpl1_same_as_rpl0_flag = value; } }
-        private uint[] sps_num_ref_pic_lists;
-        public uint[] SpsNumRefPicLists { get { return sps_num_ref_pic_lists; } set { sps_num_ref_pic_lists = value; } }
+        private ulong[] sps_num_ref_pic_lists;
+        public ulong[] SpsNumRefPicLists { get { return sps_num_ref_pic_lists; } set { sps_num_ref_pic_lists = value; } }
         private RefPicListStruct ref_pic_list_struct;
         public RefPicListStruct RefPicListStruct { get { return ref_pic_list_struct; } set { ref_pic_list_struct = value; } }
         private byte sps_ref_wraparound_enabled_flag;
@@ -1460,14 +1460,14 @@ seq_parameter_set_rbsp() {
         public byte SpsMmvdEnabledFlag { get { return sps_mmvd_enabled_flag; } set { sps_mmvd_enabled_flag = value; } }
         private byte sps_mmvd_fullpel_only_enabled_flag;
         public byte SpsMmvdFullpelOnlyEnabledFlag { get { return sps_mmvd_fullpel_only_enabled_flag; } set { sps_mmvd_fullpel_only_enabled_flag = value; } }
-        private uint sps_six_minus_max_num_merge_cand;
-        public uint SpsSixMinusMaxNumMergeCand { get { return sps_six_minus_max_num_merge_cand; } set { sps_six_minus_max_num_merge_cand = value; } }
+        private ulong sps_six_minus_max_num_merge_cand;
+        public ulong SpsSixMinusMaxNumMergeCand { get { return sps_six_minus_max_num_merge_cand; } set { sps_six_minus_max_num_merge_cand = value; } }
         private byte sps_sbt_enabled_flag;
         public byte SpsSbtEnabledFlag { get { return sps_sbt_enabled_flag; } set { sps_sbt_enabled_flag = value; } }
         private byte sps_affine_enabled_flag;
         public byte SpsAffineEnabledFlag { get { return sps_affine_enabled_flag; } set { sps_affine_enabled_flag = value; } }
-        private uint sps_five_minus_max_num_subblock_merge_cand;
-        public uint SpsFiveMinusMaxNumSubblockMergeCand { get { return sps_five_minus_max_num_subblock_merge_cand; } set { sps_five_minus_max_num_subblock_merge_cand = value; } }
+        private ulong sps_five_minus_max_num_subblock_merge_cand;
+        public ulong SpsFiveMinusMaxNumSubblockMergeCand { get { return sps_five_minus_max_num_subblock_merge_cand; } set { sps_five_minus_max_num_subblock_merge_cand = value; } }
         private byte sps_6param_affine_enabled_flag;
         public byte Sps6paramAffineEnabledFlag { get { return sps_6param_affine_enabled_flag; } set { sps_6param_affine_enabled_flag = value; } }
         private byte sps_affine_amvr_enabled_flag;
@@ -1482,10 +1482,10 @@ seq_parameter_set_rbsp() {
         public byte SpsCiipEnabledFlag { get { return sps_ciip_enabled_flag; } set { sps_ciip_enabled_flag = value; } }
         private byte sps_gpm_enabled_flag;
         public byte SpsGpmEnabledFlag { get { return sps_gpm_enabled_flag; } set { sps_gpm_enabled_flag = value; } }
-        private uint sps_max_num_merge_cand_minus_max_num_gpm_cand;
-        public uint SpsMaxNumMergeCandMinusMaxNumGpmCand { get { return sps_max_num_merge_cand_minus_max_num_gpm_cand; } set { sps_max_num_merge_cand_minus_max_num_gpm_cand = value; } }
-        private uint sps_log2_parallel_merge_level_minus2;
-        public uint SpsLog2ParallelMergeLevelMinus2 { get { return sps_log2_parallel_merge_level_minus2; } set { sps_log2_parallel_merge_level_minus2 = value; } }
+        private ulong sps_max_num_merge_cand_minus_max_num_gpm_cand;
+        public ulong SpsMaxNumMergeCandMinusMaxNumGpmCand { get { return sps_max_num_merge_cand_minus_max_num_gpm_cand; } set { sps_max_num_merge_cand_minus_max_num_gpm_cand = value; } }
+        private ulong sps_log2_parallel_merge_level_minus2;
+        public ulong SpsLog2ParallelMergeLevelMinus2 { get { return sps_log2_parallel_merge_level_minus2; } set { sps_log2_parallel_merge_level_minus2 = value; } }
         private byte sps_isp_enabled_flag;
         public byte SpsIspEnabledFlag { get { return sps_isp_enabled_flag; } set { sps_isp_enabled_flag = value; } }
         private byte sps_mrl_enabled_flag;
@@ -1502,22 +1502,22 @@ seq_parameter_set_rbsp() {
         public byte SpsPaletteEnabledFlag { get { return sps_palette_enabled_flag; } set { sps_palette_enabled_flag = value; } }
         private byte sps_act_enabled_flag;
         public byte SpsActEnabledFlag { get { return sps_act_enabled_flag; } set { sps_act_enabled_flag = value; } }
-        private uint sps_min_qp_prime_ts;
-        public uint SpsMinQpPrimeTs { get { return sps_min_qp_prime_ts; } set { sps_min_qp_prime_ts = value; } }
+        private ulong sps_min_qp_prime_ts;
+        public ulong SpsMinQpPrimeTs { get { return sps_min_qp_prime_ts; } set { sps_min_qp_prime_ts = value; } }
         private byte sps_ibc_enabled_flag;
         public byte SpsIbcEnabledFlag { get { return sps_ibc_enabled_flag; } set { sps_ibc_enabled_flag = value; } }
-        private uint sps_six_minus_max_num_ibc_merge_cand;
-        public uint SpsSixMinusMaxNumIbcMergeCand { get { return sps_six_minus_max_num_ibc_merge_cand; } set { sps_six_minus_max_num_ibc_merge_cand = value; } }
+        private ulong sps_six_minus_max_num_ibc_merge_cand;
+        public ulong SpsSixMinusMaxNumIbcMergeCand { get { return sps_six_minus_max_num_ibc_merge_cand; } set { sps_six_minus_max_num_ibc_merge_cand = value; } }
         private byte sps_ladf_enabled_flag;
         public byte SpsLadfEnabledFlag { get { return sps_ladf_enabled_flag; } set { sps_ladf_enabled_flag = value; } }
         private uint sps_num_ladf_intervals_minus2;
         public uint SpsNumLadfIntervalsMinus2 { get { return sps_num_ladf_intervals_minus2; } set { sps_num_ladf_intervals_minus2 = value; } }
-        private int sps_ladf_lowest_interval_qp_offset;
-        public int SpsLadfLowestIntervalQpOffset { get { return sps_ladf_lowest_interval_qp_offset; } set { sps_ladf_lowest_interval_qp_offset = value; } }
-        private int[] sps_ladf_qp_offset;
-        public int[] SpsLadfQpOffset { get { return sps_ladf_qp_offset; } set { sps_ladf_qp_offset = value; } }
-        private uint[] sps_ladf_delta_threshold_minus1;
-        public uint[] SpsLadfDeltaThresholdMinus1 { get { return sps_ladf_delta_threshold_minus1; } set { sps_ladf_delta_threshold_minus1 = value; } }
+        private long sps_ladf_lowest_interval_qp_offset;
+        public long SpsLadfLowestIntervalQpOffset { get { return sps_ladf_lowest_interval_qp_offset; } set { sps_ladf_lowest_interval_qp_offset = value; } }
+        private long[] sps_ladf_qp_offset;
+        public long[] SpsLadfQpOffset { get { return sps_ladf_qp_offset; } set { sps_ladf_qp_offset = value; } }
+        private ulong[] sps_ladf_delta_threshold_minus1;
+        public ulong[] SpsLadfDeltaThresholdMinus1 { get { return sps_ladf_delta_threshold_minus1; } set { sps_ladf_delta_threshold_minus1 = value; } }
         private byte sps_explicit_scaling_list_enabled_flag;
         public byte SpsExplicitScalingListEnabledFlag { get { return sps_explicit_scaling_list_enabled_flag; } set { sps_explicit_scaling_list_enabled_flag = value; } }
         private byte sps_scaling_matrix_for_lfnst_disabled_flag;
@@ -1534,14 +1534,14 @@ seq_parameter_set_rbsp() {
         public byte SpsVirtualBoundariesEnabledFlag { get { return sps_virtual_boundaries_enabled_flag; } set { sps_virtual_boundaries_enabled_flag = value; } }
         private byte sps_virtual_boundaries_present_flag;
         public byte SpsVirtualBoundariesPresentFlag { get { return sps_virtual_boundaries_present_flag; } set { sps_virtual_boundaries_present_flag = value; } }
-        private uint sps_num_ver_virtual_boundaries;
-        public uint SpsNumVerVirtualBoundaries { get { return sps_num_ver_virtual_boundaries; } set { sps_num_ver_virtual_boundaries = value; } }
-        private uint[] sps_virtual_boundary_pos_x_minus1;
-        public uint[] SpsVirtualBoundaryPosxMinus1 { get { return sps_virtual_boundary_pos_x_minus1; } set { sps_virtual_boundary_pos_x_minus1 = value; } }
-        private uint sps_num_hor_virtual_boundaries;
-        public uint SpsNumHorVirtualBoundaries { get { return sps_num_hor_virtual_boundaries; } set { sps_num_hor_virtual_boundaries = value; } }
-        private uint[] sps_virtual_boundary_pos_y_minus1;
-        public uint[] SpsVirtualBoundaryPosyMinus1 { get { return sps_virtual_boundary_pos_y_minus1; } set { sps_virtual_boundary_pos_y_minus1 = value; } }
+        private ulong sps_num_ver_virtual_boundaries;
+        public ulong SpsNumVerVirtualBoundaries { get { return sps_num_ver_virtual_boundaries; } set { sps_num_ver_virtual_boundaries = value; } }
+        private ulong[] sps_virtual_boundary_pos_x_minus1;
+        public ulong[] SpsVirtualBoundaryPosxMinus1 { get { return sps_virtual_boundary_pos_x_minus1; } set { sps_virtual_boundary_pos_x_minus1 = value; } }
+        private ulong sps_num_hor_virtual_boundaries;
+        public ulong SpsNumHorVirtualBoundaries { get { return sps_num_hor_virtual_boundaries; } set { sps_num_hor_virtual_boundaries = value; } }
+        private ulong[] sps_virtual_boundary_pos_y_minus1;
+        public ulong[] SpsVirtualBoundaryPosyMinus1 { get { return sps_virtual_boundary_pos_y_minus1; } set { sps_virtual_boundary_pos_y_minus1 = value; } }
         private byte sps_timing_hrd_params_present_flag;
         public byte SpsTimingHrdParamsPresentFlag { get { return sps_timing_hrd_params_present_flag; } set { sps_timing_hrd_params_present_flag = value; } }
         private GeneralTimingHrdParameters general_timing_hrd_parameters;
@@ -1554,8 +1554,8 @@ seq_parameter_set_rbsp() {
         public byte SpsFieldSeqFlag { get { return sps_field_seq_flag; } set { sps_field_seq_flag = value; } }
         private byte sps_vui_parameters_present_flag;
         public byte SpsVuiParametersPresentFlag { get { return sps_vui_parameters_present_flag; } set { sps_vui_parameters_present_flag = value; } }
-        private uint sps_vui_payload_size_minus1;
-        public uint SpsVuiPayloadSizeMinus1 { get { return sps_vui_payload_size_minus1; } set { sps_vui_payload_size_minus1 = value; } }
+        private ulong sps_vui_payload_size_minus1;
+        public ulong SpsVuiPayloadSizeMinus1 { get { return sps_vui_payload_size_minus1; } set { sps_vui_payload_size_minus1 = value; } }
         private Dictionary<int, uint> sps_vui_alignment_zero_bit = new Dictionary<int, uint>();
         public Dictionary<int, uint> SpsVuiAlignmentZeroBit { get { return sps_vui_alignment_zero_bit; } set { sps_vui_alignment_zero_bit = value; } }
         private VuiPayload vui_payload;
@@ -1786,17 +1786,17 @@ seq_parameter_set_rbsp() {
                 size += stream.ReadUnsignedInt(size, 1, out this.sps_same_qp_table_for_chroma_flag, "sps_same_qp_table_for_chroma_flag");
                 numQpTables = sps_same_qp_table_for_chroma_flag != 0 ? 1 : (sps_joint_cbcr_enabled_flag != 0 ? 3 : 2);
 
-                this.sps_qp_table_start_minus26 = new int[numQpTables];
-                this.sps_num_points_in_qp_table_minus1 = new uint[numQpTables];
-                this.sps_delta_qp_in_val_minus1 = new uint[numQpTables][];
-                this.sps_delta_qp_diff_val = new uint[numQpTables][];
+                this.sps_qp_table_start_minus26 = new long[numQpTables];
+                this.sps_num_points_in_qp_table_minus1 = new ulong[numQpTables];
+                this.sps_delta_qp_in_val_minus1 = new ulong[numQpTables][];
+                this.sps_delta_qp_diff_val = new ulong[numQpTables][];
                 for (i = 0; i < numQpTables; i++)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.sps_qp_table_start_minus26[i], "sps_qp_table_start_minus26");
                     size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_points_in_qp_table_minus1[i], "sps_num_points_in_qp_table_minus1");
 
-                    this.sps_delta_qp_in_val_minus1[i] = new uint[sps_num_points_in_qp_table_minus1[i] + 1];
-                    this.sps_delta_qp_diff_val[i] = new uint[sps_num_points_in_qp_table_minus1[i] + 1];
+                    this.sps_delta_qp_in_val_minus1[i] = new ulong[sps_num_points_in_qp_table_minus1[i] + 1];
+                    this.sps_delta_qp_diff_val[i] = new ulong[sps_num_points_in_qp_table_minus1[i] + 1];
                     for (j = 0; j <= sps_num_points_in_qp_table_minus1[i]; j++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.sps_delta_qp_in_val_minus1[i][j], "sps_delta_qp_in_val_minus1");
@@ -1823,39 +1823,39 @@ seq_parameter_set_rbsp() {
             size += stream.ReadUnsignedInt(size, 1, out this.sps_idr_rpl_present_flag, "sps_idr_rpl_present_flag");
             size += stream.ReadUnsignedInt(size, 1, out this.sps_rpl1_same_as_rpl0_flag, "sps_rpl1_same_as_rpl0_flag");
 
-            this.sps_num_ref_pic_lists = new uint[(sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2)];
+            this.sps_num_ref_pic_lists = new ulong[(sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2)];
             if (((H266Context)context).num_ref_entries == null)
-                ((H266Context)context).num_ref_entries = new uint[2][];
+                ((H266Context)context).num_ref_entries = new ulong[2][];
             if (((H266Context)context).inter_layer_ref_pic_flag == null)
                 ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][];
             if (((H266Context)context).st_ref_pic_flag == null)
                 ((H266Context)context).st_ref_pic_flag = new byte[2][][];
             if (((H266Context)context).abs_delta_poc_st == null)
-                ((H266Context)context).abs_delta_poc_st = new uint[2][][];
+                ((H266Context)context).abs_delta_poc_st = new ulong[2][][];
             if (((H266Context)context).strp_entry_sign_flag == null)
                 ((H266Context)context).strp_entry_sign_flag = new byte[2][][];
             if (((H266Context)context).rpls_poc_lsb_lt == null)
                 ((H266Context)context).rpls_poc_lsb_lt = new uint[2][][];
             if (((H266Context)context).ilrp_idx == null)
-                ((H266Context)context).ilrp_idx = new uint[2][][];
+                ((H266Context)context).ilrp_idx = new ulong[2][][];
             for (i = 0; i < (sps_rpl1_same_as_rpl0_flag != 0 ? 1 : 2); i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_ref_pic_lists[i], "sps_num_ref_pic_lists");
 
                 if (((H266Context)context).num_ref_entries[i] == null)
-                    ((H266Context)context).num_ref_entries[i] = new uint[sps_num_ref_pic_lists[i] + 1];
+                    ((H266Context)context).num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];
                 if (((H266Context)context).inter_layer_ref_pic_flag[i] == null)
                     ((H266Context)context).inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
                 if (((H266Context)context).st_ref_pic_flag[i] == null)
                     ((H266Context)context).st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
                 if (((H266Context)context).abs_delta_poc_st[i] == null)
-                    ((H266Context)context).abs_delta_poc_st[i] = new uint[sps_num_ref_pic_lists[i] + 1][];
+                    ((H266Context)context).abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
                 if (((H266Context)context).strp_entry_sign_flag[i] == null)
                     ((H266Context)context).strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];
                 if (((H266Context)context).rpls_poc_lsb_lt[i] == null)
                     ((H266Context)context).rpls_poc_lsb_lt[i] = new uint[sps_num_ref_pic_lists[i] + 1][];
                 if (((H266Context)context).ilrp_idx[i] == null)
-                    ((H266Context)context).ilrp_idx[i] = new uint[sps_num_ref_pic_lists[i] + 1][];
+                    ((H266Context)context).ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];
                 for (j = 0; j < sps_num_ref_pic_lists[i]; j++)
                 {
                     this.ref_pic_list_struct = new RefPicListStruct(i, j);
@@ -1961,8 +1961,8 @@ seq_parameter_set_rbsp() {
                 size += stream.ReadUnsignedInt(size, 2, out this.sps_num_ladf_intervals_minus2, "sps_num_ladf_intervals_minus2");
                 size += stream.ReadSignedIntGolomb(size, out this.sps_ladf_lowest_interval_qp_offset, "sps_ladf_lowest_interval_qp_offset");
 
-                this.sps_ladf_qp_offset = new int[sps_num_ladf_intervals_minus2 + 1];
-                this.sps_ladf_delta_threshold_minus1 = new uint[sps_num_ladf_intervals_minus2 + 1];
+                this.sps_ladf_qp_offset = new long[sps_num_ladf_intervals_minus2 + 1];
+                this.sps_ladf_delta_threshold_minus1 = new ulong[sps_num_ladf_intervals_minus2 + 1];
                 for (i = 0; i < sps_num_ladf_intervals_minus2 + 1; i++)
                 {
                     size += stream.ReadSignedIntGolomb(size, out this.sps_ladf_qp_offset[i], "sps_ladf_qp_offset");
@@ -1997,14 +1997,14 @@ seq_parameter_set_rbsp() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_ver_virtual_boundaries, "sps_num_ver_virtual_boundaries");
 
-                    this.sps_virtual_boundary_pos_x_minus1 = new uint[sps_num_ver_virtual_boundaries];
+                    this.sps_virtual_boundary_pos_x_minus1 = new ulong[sps_num_ver_virtual_boundaries];
                     for (i = 0; i < sps_num_ver_virtual_boundaries; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.sps_virtual_boundary_pos_x_minus1[i], "sps_virtual_boundary_pos_x_minus1");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.sps_num_hor_virtual_boundaries, "sps_num_hor_virtual_boundaries");
 
-                    this.sps_virtual_boundary_pos_y_minus1 = new uint[sps_num_hor_virtual_boundaries];
+                    this.sps_virtual_boundary_pos_y_minus1 = new ulong[sps_num_hor_virtual_boundaries];
                     for (i = 0; i < sps_num_hor_virtual_boundaries; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.sps_virtual_boundary_pos_y_minus1[i], "sps_virtual_boundary_pos_y_minus1");
@@ -2657,78 +2657,78 @@ pic_parameter_set_rbsp() {
         public uint PpsSeqParameterSetId { get { return pps_seq_parameter_set_id; } set { pps_seq_parameter_set_id = value; } }
         private byte pps_mixed_nalu_types_in_pic_flag;
         public byte PpsMixedNaluTypesInPicFlag { get { return pps_mixed_nalu_types_in_pic_flag; } set { pps_mixed_nalu_types_in_pic_flag = value; } }
-        private uint pps_pic_width_in_luma_samples;
-        public uint PpsPicWidthInLumaSamples { get { return pps_pic_width_in_luma_samples; } set { pps_pic_width_in_luma_samples = value; } }
-        private uint pps_pic_height_in_luma_samples;
-        public uint PpsPicHeightInLumaSamples { get { return pps_pic_height_in_luma_samples; } set { pps_pic_height_in_luma_samples = value; } }
+        private ulong pps_pic_width_in_luma_samples;
+        public ulong PpsPicWidthInLumaSamples { get { return pps_pic_width_in_luma_samples; } set { pps_pic_width_in_luma_samples = value; } }
+        private ulong pps_pic_height_in_luma_samples;
+        public ulong PpsPicHeightInLumaSamples { get { return pps_pic_height_in_luma_samples; } set { pps_pic_height_in_luma_samples = value; } }
         private byte pps_conformance_window_flag;
         public byte PpsConformanceWindowFlag { get { return pps_conformance_window_flag; } set { pps_conformance_window_flag = value; } }
-        private uint pps_conf_win_left_offset;
-        public uint PpsConfWinLeftOffset { get { return pps_conf_win_left_offset; } set { pps_conf_win_left_offset = value; } }
-        private uint pps_conf_win_right_offset;
-        public uint PpsConfWinRightOffset { get { return pps_conf_win_right_offset; } set { pps_conf_win_right_offset = value; } }
-        private uint pps_conf_win_top_offset;
-        public uint PpsConfWinTopOffset { get { return pps_conf_win_top_offset; } set { pps_conf_win_top_offset = value; } }
-        private uint pps_conf_win_bottom_offset;
-        public uint PpsConfWinBottomOffset { get { return pps_conf_win_bottom_offset; } set { pps_conf_win_bottom_offset = value; } }
+        private ulong pps_conf_win_left_offset;
+        public ulong PpsConfWinLeftOffset { get { return pps_conf_win_left_offset; } set { pps_conf_win_left_offset = value; } }
+        private ulong pps_conf_win_right_offset;
+        public ulong PpsConfWinRightOffset { get { return pps_conf_win_right_offset; } set { pps_conf_win_right_offset = value; } }
+        private ulong pps_conf_win_top_offset;
+        public ulong PpsConfWinTopOffset { get { return pps_conf_win_top_offset; } set { pps_conf_win_top_offset = value; } }
+        private ulong pps_conf_win_bottom_offset;
+        public ulong PpsConfWinBottomOffset { get { return pps_conf_win_bottom_offset; } set { pps_conf_win_bottom_offset = value; } }
         private byte pps_scaling_window_explicit_signalling_flag;
         public byte PpsScalingWindowExplicitSignallingFlag { get { return pps_scaling_window_explicit_signalling_flag; } set { pps_scaling_window_explicit_signalling_flag = value; } }
-        private int pps_scaling_win_left_offset;
-        public int PpsScalingWinLeftOffset { get { return pps_scaling_win_left_offset; } set { pps_scaling_win_left_offset = value; } }
-        private int pps_scaling_win_right_offset;
-        public int PpsScalingWinRightOffset { get { return pps_scaling_win_right_offset; } set { pps_scaling_win_right_offset = value; } }
-        private int pps_scaling_win_top_offset;
-        public int PpsScalingWinTopOffset { get { return pps_scaling_win_top_offset; } set { pps_scaling_win_top_offset = value; } }
-        private int pps_scaling_win_bottom_offset;
-        public int PpsScalingWinBottomOffset { get { return pps_scaling_win_bottom_offset; } set { pps_scaling_win_bottom_offset = value; } }
+        private long pps_scaling_win_left_offset;
+        public long PpsScalingWinLeftOffset { get { return pps_scaling_win_left_offset; } set { pps_scaling_win_left_offset = value; } }
+        private long pps_scaling_win_right_offset;
+        public long PpsScalingWinRightOffset { get { return pps_scaling_win_right_offset; } set { pps_scaling_win_right_offset = value; } }
+        private long pps_scaling_win_top_offset;
+        public long PpsScalingWinTopOffset { get { return pps_scaling_win_top_offset; } set { pps_scaling_win_top_offset = value; } }
+        private long pps_scaling_win_bottom_offset;
+        public long PpsScalingWinBottomOffset { get { return pps_scaling_win_bottom_offset; } set { pps_scaling_win_bottom_offset = value; } }
         private byte pps_output_flag_present_flag;
         public byte PpsOutputFlagPresentFlag { get { return pps_output_flag_present_flag; } set { pps_output_flag_present_flag = value; } }
         private byte pps_no_pic_partition_flag;
         public byte PpsNoPicPartitionFlag { get { return pps_no_pic_partition_flag; } set { pps_no_pic_partition_flag = value; } }
         private byte pps_subpic_id_mapping_present_flag;
         public byte PpsSubpicIdMappingPresentFlag { get { return pps_subpic_id_mapping_present_flag; } set { pps_subpic_id_mapping_present_flag = value; } }
-        private uint pps_num_subpics_minus1;
-        public uint PpsNumSubpicsMinus1 { get { return pps_num_subpics_minus1; } set { pps_num_subpics_minus1 = value; } }
-        private uint pps_subpic_id_len_minus1;
-        public uint PpsSubpicIdLenMinus1 { get { return pps_subpic_id_len_minus1; } set { pps_subpic_id_len_minus1 = value; } }
+        private ulong pps_num_subpics_minus1;
+        public ulong PpsNumSubpicsMinus1 { get { return pps_num_subpics_minus1; } set { pps_num_subpics_minus1 = value; } }
+        private ulong pps_subpic_id_len_minus1;
+        public ulong PpsSubpicIdLenMinus1 { get { return pps_subpic_id_len_minus1; } set { pps_subpic_id_len_minus1 = value; } }
         private uint[] pps_subpic_id;
         public uint[] PpsSubpicId { get { return pps_subpic_id; } set { pps_subpic_id = value; } }
         private uint pps_log2_ctu_size_minus5;
         public uint PpsLog2CtuSizeMinus5 { get { return pps_log2_ctu_size_minus5; } set { pps_log2_ctu_size_minus5 = value; } }
-        private uint pps_num_exp_tile_columns_minus1;
-        public uint PpsNumExpTileColumnsMinus1 { get { return pps_num_exp_tile_columns_minus1; } set { pps_num_exp_tile_columns_minus1 = value; } }
-        private uint pps_num_exp_tile_rows_minus1;
-        public uint PpsNumExpTileRowsMinus1 { get { return pps_num_exp_tile_rows_minus1; } set { pps_num_exp_tile_rows_minus1 = value; } }
-        private uint[] pps_tile_column_width_minus1;
-        public uint[] PpsTileColumnWidthMinus1 { get { return pps_tile_column_width_minus1; } set { pps_tile_column_width_minus1 = value; } }
-        private uint[] pps_tile_row_height_minus1;
-        public uint[] PpsTileRowHeightMinus1 { get { return pps_tile_row_height_minus1; } set { pps_tile_row_height_minus1 = value; } }
+        private ulong pps_num_exp_tile_columns_minus1;
+        public ulong PpsNumExpTileColumnsMinus1 { get { return pps_num_exp_tile_columns_minus1; } set { pps_num_exp_tile_columns_minus1 = value; } }
+        private ulong pps_num_exp_tile_rows_minus1;
+        public ulong PpsNumExpTileRowsMinus1 { get { return pps_num_exp_tile_rows_minus1; } set { pps_num_exp_tile_rows_minus1 = value; } }
+        private ulong[] pps_tile_column_width_minus1;
+        public ulong[] PpsTileColumnWidthMinus1 { get { return pps_tile_column_width_minus1; } set { pps_tile_column_width_minus1 = value; } }
+        private ulong[] pps_tile_row_height_minus1;
+        public ulong[] PpsTileRowHeightMinus1 { get { return pps_tile_row_height_minus1; } set { pps_tile_row_height_minus1 = value; } }
         private byte pps_loop_filter_across_tiles_enabled_flag;
         public byte PpsLoopFilterAcrossTilesEnabledFlag { get { return pps_loop_filter_across_tiles_enabled_flag; } set { pps_loop_filter_across_tiles_enabled_flag = value; } }
         private byte pps_rect_slice_flag;
         public byte PpsRectSliceFlag { get { return pps_rect_slice_flag; } set { pps_rect_slice_flag = value; } }
         private byte pps_single_slice_per_subpic_flag;
         public byte PpsSingleSlicePerSubpicFlag { get { return pps_single_slice_per_subpic_flag; } set { pps_single_slice_per_subpic_flag = value; } }
-        private uint pps_num_slices_in_pic_minus1;
-        public uint PpsNumSlicesInPicMinus1 { get { return pps_num_slices_in_pic_minus1; } set { pps_num_slices_in_pic_minus1 = value; } }
+        private ulong pps_num_slices_in_pic_minus1;
+        public ulong PpsNumSlicesInPicMinus1 { get { return pps_num_slices_in_pic_minus1; } set { pps_num_slices_in_pic_minus1 = value; } }
         private byte pps_tile_idx_delta_present_flag;
         public byte PpsTileIdxDeltaPresentFlag { get { return pps_tile_idx_delta_present_flag; } set { pps_tile_idx_delta_present_flag = value; } }
-        private uint[] pps_slice_width_in_tiles_minus1;
-        public uint[] PpsSliceWidthInTilesMinus1 { get { return pps_slice_width_in_tiles_minus1; } set { pps_slice_width_in_tiles_minus1 = value; } }
-        private uint[] pps_slice_height_in_tiles_minus1;
-        public uint[] PpsSliceHeightInTilesMinus1 { get { return pps_slice_height_in_tiles_minus1; } set { pps_slice_height_in_tiles_minus1 = value; } }
-        private uint[] pps_num_exp_slices_in_tile;
-        public uint[] PpsNumExpSlicesInTile { get { return pps_num_exp_slices_in_tile; } set { pps_num_exp_slices_in_tile = value; } }
-        private uint[][] pps_exp_slice_height_in_ctus_minus1;
-        public uint[][] PpsExpSliceHeightInCtusMinus1 { get { return pps_exp_slice_height_in_ctus_minus1; } set { pps_exp_slice_height_in_ctus_minus1 = value; } }
-        private int[] pps_tile_idx_delta_val;
-        public int[] PpsTileIdxDeltaVal { get { return pps_tile_idx_delta_val; } set { pps_tile_idx_delta_val = value; } }
+        private ulong[] pps_slice_width_in_tiles_minus1;
+        public ulong[] PpsSliceWidthInTilesMinus1 { get { return pps_slice_width_in_tiles_minus1; } set { pps_slice_width_in_tiles_minus1 = value; } }
+        private ulong[] pps_slice_height_in_tiles_minus1;
+        public ulong[] PpsSliceHeightInTilesMinus1 { get { return pps_slice_height_in_tiles_minus1; } set { pps_slice_height_in_tiles_minus1 = value; } }
+        private ulong[] pps_num_exp_slices_in_tile;
+        public ulong[] PpsNumExpSlicesInTile { get { return pps_num_exp_slices_in_tile; } set { pps_num_exp_slices_in_tile = value; } }
+        private ulong[][] pps_exp_slice_height_in_ctus_minus1;
+        public ulong[][] PpsExpSliceHeightInCtusMinus1 { get { return pps_exp_slice_height_in_ctus_minus1; } set { pps_exp_slice_height_in_ctus_minus1 = value; } }
+        private long[] pps_tile_idx_delta_val;
+        public long[] PpsTileIdxDeltaVal { get { return pps_tile_idx_delta_val; } set { pps_tile_idx_delta_val = value; } }
         private byte pps_loop_filter_across_slices_enabled_flag;
         public byte PpsLoopFilterAcrossSlicesEnabledFlag { get { return pps_loop_filter_across_slices_enabled_flag; } set { pps_loop_filter_across_slices_enabled_flag = value; } }
         private byte pps_cabac_init_present_flag;
         public byte PpsCabacInitPresentFlag { get { return pps_cabac_init_present_flag; } set { pps_cabac_init_present_flag = value; } }
-        private uint[] pps_num_ref_idx_default_active_minus1;
-        public uint[] PpsNumRefIdxDefaultActiveMinus1 { get { return pps_num_ref_idx_default_active_minus1; } set { pps_num_ref_idx_default_active_minus1 = value; } }
+        private ulong[] pps_num_ref_idx_default_active_minus1;
+        public ulong[] PpsNumRefIdxDefaultActiveMinus1 { get { return pps_num_ref_idx_default_active_minus1; } set { pps_num_ref_idx_default_active_minus1 = value; } }
         private byte pps_rpl1_idx_present_flag;
         public byte PpsRpl1IdxPresentFlag { get { return pps_rpl1_idx_present_flag; } set { pps_rpl1_idx_present_flag = value; } }
         private byte pps_weighted_pred_flag;
@@ -2737,34 +2737,34 @@ pic_parameter_set_rbsp() {
         public byte PpsWeightedBipredFlag { get { return pps_weighted_bipred_flag; } set { pps_weighted_bipred_flag = value; } }
         private byte pps_ref_wraparound_enabled_flag;
         public byte PpsRefWraparoundEnabledFlag { get { return pps_ref_wraparound_enabled_flag; } set { pps_ref_wraparound_enabled_flag = value; } }
-        private uint pps_pic_width_minus_wraparound_offset;
-        public uint PpsPicWidthMinusWraparoundOffset { get { return pps_pic_width_minus_wraparound_offset; } set { pps_pic_width_minus_wraparound_offset = value; } }
-        private int pps_init_qp_minus26;
-        public int PpsInitQpMinus26 { get { return pps_init_qp_minus26; } set { pps_init_qp_minus26 = value; } }
+        private ulong pps_pic_width_minus_wraparound_offset;
+        public ulong PpsPicWidthMinusWraparoundOffset { get { return pps_pic_width_minus_wraparound_offset; } set { pps_pic_width_minus_wraparound_offset = value; } }
+        private long pps_init_qp_minus26;
+        public long PpsInitQpMinus26 { get { return pps_init_qp_minus26; } set { pps_init_qp_minus26 = value; } }
         private byte pps_cu_qp_delta_enabled_flag;
         public byte PpsCuQpDeltaEnabledFlag { get { return pps_cu_qp_delta_enabled_flag; } set { pps_cu_qp_delta_enabled_flag = value; } }
         private byte pps_chroma_tool_offsets_present_flag;
         public byte PpsChromaToolOffsetsPresentFlag { get { return pps_chroma_tool_offsets_present_flag; } set { pps_chroma_tool_offsets_present_flag = value; } }
-        private int pps_cb_qp_offset;
-        public int PpsCbQpOffset { get { return pps_cb_qp_offset; } set { pps_cb_qp_offset = value; } }
-        private int pps_cr_qp_offset;
-        public int PpsCrQpOffset { get { return pps_cr_qp_offset; } set { pps_cr_qp_offset = value; } }
+        private long pps_cb_qp_offset;
+        public long PpsCbQpOffset { get { return pps_cb_qp_offset; } set { pps_cb_qp_offset = value; } }
+        private long pps_cr_qp_offset;
+        public long PpsCrQpOffset { get { return pps_cr_qp_offset; } set { pps_cr_qp_offset = value; } }
         private byte pps_joint_cbcr_qp_offset_present_flag;
         public byte PpsJointCbcrQpOffsetPresentFlag { get { return pps_joint_cbcr_qp_offset_present_flag; } set { pps_joint_cbcr_qp_offset_present_flag = value; } }
-        private int pps_joint_cbcr_qp_offset_value;
-        public int PpsJointCbcrQpOffsetValue { get { return pps_joint_cbcr_qp_offset_value; } set { pps_joint_cbcr_qp_offset_value = value; } }
+        private long pps_joint_cbcr_qp_offset_value;
+        public long PpsJointCbcrQpOffsetValue { get { return pps_joint_cbcr_qp_offset_value; } set { pps_joint_cbcr_qp_offset_value = value; } }
         private byte pps_slice_chroma_qp_offsets_present_flag;
         public byte PpsSliceChromaQpOffsetsPresentFlag { get { return pps_slice_chroma_qp_offsets_present_flag; } set { pps_slice_chroma_qp_offsets_present_flag = value; } }
         private byte pps_cu_chroma_qp_offset_list_enabled_flag;
         public byte PpsCuChromaQpOffsetListEnabledFlag { get { return pps_cu_chroma_qp_offset_list_enabled_flag; } set { pps_cu_chroma_qp_offset_list_enabled_flag = value; } }
-        private uint pps_chroma_qp_offset_list_len_minus1;
-        public uint PpsChromaQpOffsetListLenMinus1 { get { return pps_chroma_qp_offset_list_len_minus1; } set { pps_chroma_qp_offset_list_len_minus1 = value; } }
-        private int[] pps_cb_qp_offset_list;
-        public int[] PpsCbQpOffsetList { get { return pps_cb_qp_offset_list; } set { pps_cb_qp_offset_list = value; } }
-        private int[] pps_cr_qp_offset_list;
-        public int[] PpsCrQpOffsetList { get { return pps_cr_qp_offset_list; } set { pps_cr_qp_offset_list = value; } }
-        private int[] pps_joint_cbcr_qp_offset_list;
-        public int[] PpsJointCbcrQpOffsetList { get { return pps_joint_cbcr_qp_offset_list; } set { pps_joint_cbcr_qp_offset_list = value; } }
+        private ulong pps_chroma_qp_offset_list_len_minus1;
+        public ulong PpsChromaQpOffsetListLenMinus1 { get { return pps_chroma_qp_offset_list_len_minus1; } set { pps_chroma_qp_offset_list_len_minus1 = value; } }
+        private long[] pps_cb_qp_offset_list;
+        public long[] PpsCbQpOffsetList { get { return pps_cb_qp_offset_list; } set { pps_cb_qp_offset_list = value; } }
+        private long[] pps_cr_qp_offset_list;
+        public long[] PpsCrQpOffsetList { get { return pps_cr_qp_offset_list; } set { pps_cr_qp_offset_list = value; } }
+        private long[] pps_joint_cbcr_qp_offset_list;
+        public long[] PpsJointCbcrQpOffsetList { get { return pps_joint_cbcr_qp_offset_list; } set { pps_joint_cbcr_qp_offset_list = value; } }
         private byte pps_deblocking_filter_control_present_flag;
         public byte PpsDeblockingFilterControlPresentFlag { get { return pps_deblocking_filter_control_present_flag; } set { pps_deblocking_filter_control_present_flag = value; } }
         private byte pps_deblocking_filter_override_enabled_flag;
@@ -2773,18 +2773,18 @@ pic_parameter_set_rbsp() {
         public byte PpsDeblockingFilterDisabledFlag { get { return pps_deblocking_filter_disabled_flag; } set { pps_deblocking_filter_disabled_flag = value; } }
         private byte pps_dbf_info_in_ph_flag;
         public byte PpsDbfInfoInPhFlag { get { return pps_dbf_info_in_ph_flag; } set { pps_dbf_info_in_ph_flag = value; } }
-        private int pps_luma_beta_offset_div2;
-        public int PpsLumaBetaOffsetDiv2 { get { return pps_luma_beta_offset_div2; } set { pps_luma_beta_offset_div2 = value; } }
-        private int pps_luma_tc_offset_div2;
-        public int PpsLumaTcOffsetDiv2 { get { return pps_luma_tc_offset_div2; } set { pps_luma_tc_offset_div2 = value; } }
-        private int pps_cb_beta_offset_div2;
-        public int PpsCbBetaOffsetDiv2 { get { return pps_cb_beta_offset_div2; } set { pps_cb_beta_offset_div2 = value; } }
-        private int pps_cb_tc_offset_div2;
-        public int PpsCbTcOffsetDiv2 { get { return pps_cb_tc_offset_div2; } set { pps_cb_tc_offset_div2 = value; } }
-        private int pps_cr_beta_offset_div2;
-        public int PpsCrBetaOffsetDiv2 { get { return pps_cr_beta_offset_div2; } set { pps_cr_beta_offset_div2 = value; } }
-        private int pps_cr_tc_offset_div2;
-        public int PpsCrTcOffsetDiv2 { get { return pps_cr_tc_offset_div2; } set { pps_cr_tc_offset_div2 = value; } }
+        private long pps_luma_beta_offset_div2;
+        public long PpsLumaBetaOffsetDiv2 { get { return pps_luma_beta_offset_div2; } set { pps_luma_beta_offset_div2 = value; } }
+        private long pps_luma_tc_offset_div2;
+        public long PpsLumaTcOffsetDiv2 { get { return pps_luma_tc_offset_div2; } set { pps_luma_tc_offset_div2 = value; } }
+        private long pps_cb_beta_offset_div2;
+        public long PpsCbBetaOffsetDiv2 { get { return pps_cb_beta_offset_div2; } set { pps_cb_beta_offset_div2 = value; } }
+        private long pps_cb_tc_offset_div2;
+        public long PpsCbTcOffsetDiv2 { get { return pps_cb_tc_offset_div2; } set { pps_cb_tc_offset_div2 = value; } }
+        private long pps_cr_beta_offset_div2;
+        public long PpsCrBetaOffsetDiv2 { get { return pps_cr_beta_offset_div2; } set { pps_cr_beta_offset_div2 = value; } }
+        private long pps_cr_tc_offset_div2;
+        public long PpsCrTcOffsetDiv2 { get { return pps_cr_tc_offset_div2; } set { pps_cr_tc_offset_div2 = value; } }
         private byte pps_rpl_info_in_ph_flag;
         public byte PpsRplInfoInPhFlag { get { return pps_rpl_info_in_ph_flag; } set { pps_rpl_info_in_ph_flag = value; } }
         private byte pps_sao_info_in_ph_flag;
@@ -2872,13 +2872,13 @@ pic_parameter_set_rbsp() {
                 size += stream.ReadUnsignedIntGolomb(size, out this.pps_num_exp_tile_columns_minus1, "pps_num_exp_tile_columns_minus1");
                 size += stream.ReadUnsignedIntGolomb(size, out this.pps_num_exp_tile_rows_minus1, "pps_num_exp_tile_rows_minus1");
 
-                this.pps_tile_column_width_minus1 = new uint[pps_num_exp_tile_columns_minus1 + 1];
+                this.pps_tile_column_width_minus1 = new ulong[pps_num_exp_tile_columns_minus1 + 1];
                 for (i = 0; i <= pps_num_exp_tile_columns_minus1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.pps_tile_column_width_minus1[i], "pps_tile_column_width_minus1");
                 }
 
-                this.pps_tile_row_height_minus1 = new uint[pps_num_exp_tile_rows_minus1 + 1];
+                this.pps_tile_row_height_minus1 = new ulong[pps_num_exp_tile_rows_minus1 + 1];
                 for (i = 0; i <= pps_num_exp_tile_rows_minus1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.pps_tile_row_height_minus1[i], "pps_tile_row_height_minus1");
@@ -2905,11 +2905,11 @@ pic_parameter_set_rbsp() {
                         size += stream.ReadUnsignedInt(size, 1, out this.pps_tile_idx_delta_present_flag, "pps_tile_idx_delta_present_flag");
                     }
 
-                    this.pps_slice_width_in_tiles_minus1 = new uint[pps_num_slices_in_pic_minus1 + 1];
-                    this.pps_slice_height_in_tiles_minus1 = new uint[pps_num_slices_in_pic_minus1 + 1];
-                    this.pps_num_exp_slices_in_tile = new uint[pps_num_slices_in_pic_minus1 + 1];
-                    this.pps_exp_slice_height_in_ctus_minus1 = new uint[pps_num_slices_in_pic_minus1 + 1][];
-                    this.pps_tile_idx_delta_val = new int[pps_num_slices_in_pic_minus1 + 1];
+                    this.pps_slice_width_in_tiles_minus1 = new ulong[pps_num_slices_in_pic_minus1 + 1];
+                    this.pps_slice_height_in_tiles_minus1 = new ulong[pps_num_slices_in_pic_minus1 + 1];
+                    this.pps_num_exp_slices_in_tile = new ulong[pps_num_slices_in_pic_minus1 + 1];
+                    this.pps_exp_slice_height_in_ctus_minus1 = new ulong[pps_num_slices_in_pic_minus1 + 1][];
+                    this.pps_tile_idx_delta_val = new long[pps_num_slices_in_pic_minus1 + 1];
                     for (i = 0; i < pps_num_slices_in_pic_minus1; i++)
                     {
 
@@ -2931,7 +2931,7 @@ pic_parameter_set_rbsp() {
                         {
                             size += stream.ReadUnsignedIntGolomb(size, out this.pps_num_exp_slices_in_tile[i], "pps_num_exp_slices_in_tile");
 
-                            this.pps_exp_slice_height_in_ctus_minus1[i] = new uint[pps_num_exp_slices_in_tile[i]];
+                            this.pps_exp_slice_height_in_ctus_minus1[i] = new ulong[pps_num_exp_slices_in_tile[i]];
                             for (j = 0; j < pps_num_exp_slices_in_tile[i]; j++)
                             {
                                 size += stream.ReadUnsignedIntGolomb(size, out this.pps_exp_slice_height_in_ctus_minus1[i][j], "pps_exp_slice_height_in_ctus_minus1");
@@ -2954,7 +2954,7 @@ pic_parameter_set_rbsp() {
             }
             size += stream.ReadUnsignedInt(size, 1, out this.pps_cabac_init_present_flag, "pps_cabac_init_present_flag");
 
-            this.pps_num_ref_idx_default_active_minus1 = new uint[2];
+            this.pps_num_ref_idx_default_active_minus1 = new ulong[2];
             for (i = 0; i < 2; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.pps_num_ref_idx_default_active_minus1[i], "pps_num_ref_idx_default_active_minus1");
@@ -2989,9 +2989,9 @@ pic_parameter_set_rbsp() {
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.pps_chroma_qp_offset_list_len_minus1, "pps_chroma_qp_offset_list_len_minus1");
 
-                    this.pps_cb_qp_offset_list = new int[pps_chroma_qp_offset_list_len_minus1 + 1];
-                    this.pps_cr_qp_offset_list = new int[pps_chroma_qp_offset_list_len_minus1 + 1];
-                    this.pps_joint_cbcr_qp_offset_list = new int[pps_chroma_qp_offset_list_len_minus1 + 1];
+                    this.pps_cb_qp_offset_list = new long[pps_chroma_qp_offset_list_len_minus1 + 1];
+                    this.pps_cr_qp_offset_list = new long[pps_chroma_qp_offset_list_len_minus1 + 1];
+                    this.pps_joint_cbcr_qp_offset_list = new long[pps_chroma_qp_offset_list_len_minus1 + 1];
                     for (i = 0; i <= pps_chroma_qp_offset_list_len_minus1; i++)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.pps_cb_qp_offset_list[i], "pps_cb_qp_offset_list");
@@ -3600,10 +3600,10 @@ slice_header() {
         public uint ShSliceAddress { get { return sh_slice_address; } set { sh_slice_address = value; } }
         private byte[] sh_extra_bit;
         public byte[] ShExtraBit { get { return sh_extra_bit; } set { sh_extra_bit = value; } }
-        private uint sh_num_tiles_in_slice_minus1;
-        public uint ShNumTilesInSliceMinus1 { get { return sh_num_tiles_in_slice_minus1; } set { sh_num_tiles_in_slice_minus1 = value; } }
-        private uint sh_slice_type;
-        public uint ShSliceType { get { return sh_slice_type; } set { sh_slice_type = value; } }
+        private ulong sh_num_tiles_in_slice_minus1;
+        public ulong ShNumTilesInSliceMinus1 { get { return sh_num_tiles_in_slice_minus1; } set { sh_num_tiles_in_slice_minus1 = value; } }
+        private ulong sh_slice_type;
+        public ulong ShSliceType { get { return sh_slice_type; } set { sh_slice_type = value; } }
         private byte sh_no_output_of_prior_pics_flag;
         public byte ShNoOutputOfPriorPicsFlag { get { return sh_no_output_of_prior_pics_flag; } set { sh_no_output_of_prior_pics_flag = value; } }
         private byte sh_alf_enabled_flag;
@@ -3634,24 +3634,24 @@ slice_header() {
         public RefPicLists RefPicLists { get { return ref_pic_lists; } set { ref_pic_lists = value; } }
         private byte sh_num_ref_idx_active_override_flag;
         public byte ShNumRefIdxActiveOverrideFlag { get { return sh_num_ref_idx_active_override_flag; } set { sh_num_ref_idx_active_override_flag = value; } }
-        private uint[] sh_num_ref_idx_active_minus1;
-        public uint[] ShNumRefIdxActiveMinus1 { get { return sh_num_ref_idx_active_minus1; } set { sh_num_ref_idx_active_minus1 = value; } }
+        private ulong[] sh_num_ref_idx_active_minus1;
+        public ulong[] ShNumRefIdxActiveMinus1 { get { return sh_num_ref_idx_active_minus1; } set { sh_num_ref_idx_active_minus1 = value; } }
         private byte sh_cabac_init_flag;
         public byte ShCabacInitFlag { get { return sh_cabac_init_flag; } set { sh_cabac_init_flag = value; } }
         private byte sh_collocated_from_l0_flag;
         public byte ShCollocatedFromL0Flag { get { return sh_collocated_from_l0_flag; } set { sh_collocated_from_l0_flag = value; } }
-        private uint sh_collocated_ref_idx;
-        public uint ShCollocatedRefIdx { get { return sh_collocated_ref_idx; } set { sh_collocated_ref_idx = value; } }
+        private ulong sh_collocated_ref_idx;
+        public ulong ShCollocatedRefIdx { get { return sh_collocated_ref_idx; } set { sh_collocated_ref_idx = value; } }
         private PredWeightTable pred_weight_table;
         public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
-        private int sh_qp_delta;
-        public int ShQpDelta { get { return sh_qp_delta; } set { sh_qp_delta = value; } }
-        private int sh_cb_qp_offset;
-        public int ShCbQpOffset { get { return sh_cb_qp_offset; } set { sh_cb_qp_offset = value; } }
-        private int sh_cr_qp_offset;
-        public int ShCrQpOffset { get { return sh_cr_qp_offset; } set { sh_cr_qp_offset = value; } }
-        private int sh_joint_cbcr_qp_offset;
-        public int ShJointCbcrQpOffset { get { return sh_joint_cbcr_qp_offset; } set { sh_joint_cbcr_qp_offset = value; } }
+        private long sh_qp_delta;
+        public long ShQpDelta { get { return sh_qp_delta; } set { sh_qp_delta = value; } }
+        private long sh_cb_qp_offset;
+        public long ShCbQpOffset { get { return sh_cb_qp_offset; } set { sh_cb_qp_offset = value; } }
+        private long sh_cr_qp_offset;
+        public long ShCrQpOffset { get { return sh_cr_qp_offset; } set { sh_cr_qp_offset = value; } }
+        private long sh_joint_cbcr_qp_offset;
+        public long ShJointCbcrQpOffset { get { return sh_joint_cbcr_qp_offset; } set { sh_joint_cbcr_qp_offset = value; } }
         private byte sh_cu_chroma_qp_offset_enabled_flag;
         public byte ShCuChromaQpOffsetEnabledFlag { get { return sh_cu_chroma_qp_offset_enabled_flag; } set { sh_cu_chroma_qp_offset_enabled_flag = value; } }
         private byte sh_sao_luma_used_flag;
@@ -3662,30 +3662,30 @@ slice_header() {
         public byte ShDeblockingParamsPresentFlag { get { return sh_deblocking_params_present_flag; } set { sh_deblocking_params_present_flag = value; } }
         private byte sh_deblocking_filter_disabled_flag;
         public byte ShDeblockingFilterDisabledFlag { get { return sh_deblocking_filter_disabled_flag; } set { sh_deblocking_filter_disabled_flag = value; } }
-        private int sh_luma_beta_offset_div2;
-        public int ShLumaBetaOffsetDiv2 { get { return sh_luma_beta_offset_div2; } set { sh_luma_beta_offset_div2 = value; } }
-        private int sh_luma_tc_offset_div2;
-        public int ShLumaTcOffsetDiv2 { get { return sh_luma_tc_offset_div2; } set { sh_luma_tc_offset_div2 = value; } }
-        private int sh_cb_beta_offset_div2;
-        public int ShCbBetaOffsetDiv2 { get { return sh_cb_beta_offset_div2; } set { sh_cb_beta_offset_div2 = value; } }
-        private int sh_cb_tc_offset_div2;
-        public int ShCbTcOffsetDiv2 { get { return sh_cb_tc_offset_div2; } set { sh_cb_tc_offset_div2 = value; } }
-        private int sh_cr_beta_offset_div2;
-        public int ShCrBetaOffsetDiv2 { get { return sh_cr_beta_offset_div2; } set { sh_cr_beta_offset_div2 = value; } }
-        private int sh_cr_tc_offset_div2;
-        public int ShCrTcOffsetDiv2 { get { return sh_cr_tc_offset_div2; } set { sh_cr_tc_offset_div2 = value; } }
+        private long sh_luma_beta_offset_div2;
+        public long ShLumaBetaOffsetDiv2 { get { return sh_luma_beta_offset_div2; } set { sh_luma_beta_offset_div2 = value; } }
+        private long sh_luma_tc_offset_div2;
+        public long ShLumaTcOffsetDiv2 { get { return sh_luma_tc_offset_div2; } set { sh_luma_tc_offset_div2 = value; } }
+        private long sh_cb_beta_offset_div2;
+        public long ShCbBetaOffsetDiv2 { get { return sh_cb_beta_offset_div2; } set { sh_cb_beta_offset_div2 = value; } }
+        private long sh_cb_tc_offset_div2;
+        public long ShCbTcOffsetDiv2 { get { return sh_cb_tc_offset_div2; } set { sh_cb_tc_offset_div2 = value; } }
+        private long sh_cr_beta_offset_div2;
+        public long ShCrBetaOffsetDiv2 { get { return sh_cr_beta_offset_div2; } set { sh_cr_beta_offset_div2 = value; } }
+        private long sh_cr_tc_offset_div2;
+        public long ShCrTcOffsetDiv2 { get { return sh_cr_tc_offset_div2; } set { sh_cr_tc_offset_div2 = value; } }
         private byte sh_dep_quant_used_flag;
         public byte ShDepQuantUsedFlag { get { return sh_dep_quant_used_flag; } set { sh_dep_quant_used_flag = value; } }
         private byte sh_sign_data_hiding_used_flag;
         public byte ShSignDataHidingUsedFlag { get { return sh_sign_data_hiding_used_flag; } set { sh_sign_data_hiding_used_flag = value; } }
         private byte sh_ts_residual_coding_disabled_flag;
         public byte ShTsResidualCodingDisabledFlag { get { return sh_ts_residual_coding_disabled_flag; } set { sh_ts_residual_coding_disabled_flag = value; } }
-        private uint sh_slice_header_extension_length;
-        public uint ShSliceHeaderExtensionLength { get { return sh_slice_header_extension_length; } set { sh_slice_header_extension_length = value; } }
+        private ulong sh_slice_header_extension_length;
+        public ulong ShSliceHeaderExtensionLength { get { return sh_slice_header_extension_length; } set { sh_slice_header_extension_length = value; } }
         private uint[] sh_slice_header_extension_data_byte;
         public uint[] ShSliceHeaderExtensionDataByte { get { return sh_slice_header_extension_data_byte; } set { sh_slice_header_extension_data_byte = value; } }
-        private uint sh_entry_offset_len_minus1;
-        public uint ShEntryOffsetLenMinus1 { get { return sh_entry_offset_len_minus1; } set { sh_entry_offset_len_minus1 = value; } }
+        private ulong sh_entry_offset_len_minus1;
+        public ulong ShEntryOffsetLenMinus1 { get { return sh_entry_offset_len_minus1; } set { sh_entry_offset_len_minus1 = value; } }
         private uint[] sh_entry_point_offset_minus1;
         public uint[] ShEntryPointOffsetMinus1 { get { return sh_entry_point_offset_minus1; } set { sh_entry_point_offset_minus1 = value; } }
         private ByteAlignment byte_alignment;
@@ -3815,7 +3815,7 @@ slice_header() {
                 if (sh_num_ref_idx_active_override_flag != 0)
                 {
 
-                    this.sh_num_ref_idx_active_minus1 = new uint[(sh_slice_type == H266FrameTypes.B ? 2 : 1)];
+                    this.sh_num_ref_idx_active_minus1 = new ulong[(sh_slice_type == H266FrameTypes.B ? 2 : 1)];
                     for (i = 0; i < (sh_slice_type == H266FrameTypes.B ? 2 : 1); i++)
                     {
 
@@ -4458,12 +4458,12 @@ ph_extension_data_byte[ i ] u(8)
         public byte PhInterSliceAllowedFlag { get { return ph_inter_slice_allowed_flag; } set { ph_inter_slice_allowed_flag = value; } }
         private byte ph_intra_slice_allowed_flag;
         public byte PhIntraSliceAllowedFlag { get { return ph_intra_slice_allowed_flag; } set { ph_intra_slice_allowed_flag = value; } }
-        private uint ph_pic_parameter_set_id;
-        public uint PhPicParameterSetId { get { return ph_pic_parameter_set_id; } set { ph_pic_parameter_set_id = value; } }
+        private ulong ph_pic_parameter_set_id;
+        public ulong PhPicParameterSetId { get { return ph_pic_parameter_set_id; } set { ph_pic_parameter_set_id = value; } }
         private uint ph_pic_order_cnt_lsb;
         public uint PhPicOrderCntLsb { get { return ph_pic_order_cnt_lsb; } set { ph_pic_order_cnt_lsb = value; } }
-        private uint ph_recovery_poc_cnt;
-        public uint PhRecoveryPocCnt { get { return ph_recovery_poc_cnt; } set { ph_recovery_poc_cnt = value; } }
+        private ulong ph_recovery_poc_cnt;
+        public ulong PhRecoveryPocCnt { get { return ph_recovery_poc_cnt; } set { ph_recovery_poc_cnt = value; } }
         private byte[] ph_extra_bit;
         public byte[] PhExtraBit { get { return ph_extra_bit; } set { ph_extra_bit = value; } }
         private byte ph_poc_msb_cycle_present_flag;
@@ -4502,58 +4502,58 @@ ph_extension_data_byte[ i ] u(8)
         public uint PhScalingListApsId { get { return ph_scaling_list_aps_id; } set { ph_scaling_list_aps_id = value; } }
         private byte ph_virtual_boundaries_present_flag;
         public byte PhVirtualBoundariesPresentFlag { get { return ph_virtual_boundaries_present_flag; } set { ph_virtual_boundaries_present_flag = value; } }
-        private uint ph_num_ver_virtual_boundaries;
-        public uint PhNumVerVirtualBoundaries { get { return ph_num_ver_virtual_boundaries; } set { ph_num_ver_virtual_boundaries = value; } }
-        private uint[] ph_virtual_boundary_pos_x_minus1;
-        public uint[] PhVirtualBoundaryPosxMinus1 { get { return ph_virtual_boundary_pos_x_minus1; } set { ph_virtual_boundary_pos_x_minus1 = value; } }
-        private uint ph_num_hor_virtual_boundaries;
-        public uint PhNumHorVirtualBoundaries { get { return ph_num_hor_virtual_boundaries; } set { ph_num_hor_virtual_boundaries = value; } }
-        private uint[] ph_virtual_boundary_pos_y_minus1;
-        public uint[] PhVirtualBoundaryPosyMinus1 { get { return ph_virtual_boundary_pos_y_minus1; } set { ph_virtual_boundary_pos_y_minus1 = value; } }
+        private ulong ph_num_ver_virtual_boundaries;
+        public ulong PhNumVerVirtualBoundaries { get { return ph_num_ver_virtual_boundaries; } set { ph_num_ver_virtual_boundaries = value; } }
+        private ulong[] ph_virtual_boundary_pos_x_minus1;
+        public ulong[] PhVirtualBoundaryPosxMinus1 { get { return ph_virtual_boundary_pos_x_minus1; } set { ph_virtual_boundary_pos_x_minus1 = value; } }
+        private ulong ph_num_hor_virtual_boundaries;
+        public ulong PhNumHorVirtualBoundaries { get { return ph_num_hor_virtual_boundaries; } set { ph_num_hor_virtual_boundaries = value; } }
+        private ulong[] ph_virtual_boundary_pos_y_minus1;
+        public ulong[] PhVirtualBoundaryPosyMinus1 { get { return ph_virtual_boundary_pos_y_minus1; } set { ph_virtual_boundary_pos_y_minus1 = value; } }
         private byte ph_pic_output_flag;
         public byte PhPicOutputFlag { get { return ph_pic_output_flag; } set { ph_pic_output_flag = value; } }
         private RefPicLists ref_pic_lists;
         public RefPicLists RefPicLists { get { return ref_pic_lists; } set { ref_pic_lists = value; } }
         private byte ph_partition_constraints_override_flag;
         public byte PhPartitionConstraintsOverrideFlag { get { return ph_partition_constraints_override_flag; } set { ph_partition_constraints_override_flag = value; } }
-        private uint ph_log2_diff_min_qt_min_cb_intra_slice_luma;
-        public uint PhLog2DiffMinQtMinCbIntraSliceLuma { get { return ph_log2_diff_min_qt_min_cb_intra_slice_luma; } set { ph_log2_diff_min_qt_min_cb_intra_slice_luma = value; } }
-        private uint ph_max_mtt_hierarchy_depth_intra_slice_luma;
-        public uint PhMaxMttHierarchyDepthIntraSliceLuma { get { return ph_max_mtt_hierarchy_depth_intra_slice_luma; } set { ph_max_mtt_hierarchy_depth_intra_slice_luma = value; } }
-        private uint ph_log2_diff_max_bt_min_qt_intra_slice_luma;
-        public uint PhLog2DiffMaxBtMinQtIntraSliceLuma { get { return ph_log2_diff_max_bt_min_qt_intra_slice_luma; } set { ph_log2_diff_max_bt_min_qt_intra_slice_luma = value; } }
-        private uint ph_log2_diff_max_tt_min_qt_intra_slice_luma;
-        public uint PhLog2DiffMaxTtMinQtIntraSliceLuma { get { return ph_log2_diff_max_tt_min_qt_intra_slice_luma; } set { ph_log2_diff_max_tt_min_qt_intra_slice_luma = value; } }
-        private uint ph_log2_diff_min_qt_min_cb_intra_slice_chroma;
-        public uint PhLog2DiffMinQtMinCbIntraSliceChroma { get { return ph_log2_diff_min_qt_min_cb_intra_slice_chroma; } set { ph_log2_diff_min_qt_min_cb_intra_slice_chroma = value; } }
-        private uint ph_max_mtt_hierarchy_depth_intra_slice_chroma;
-        public uint PhMaxMttHierarchyDepthIntraSliceChroma { get { return ph_max_mtt_hierarchy_depth_intra_slice_chroma; } set { ph_max_mtt_hierarchy_depth_intra_slice_chroma = value; } }
-        private uint ph_log2_diff_max_bt_min_qt_intra_slice_chroma;
-        public uint PhLog2DiffMaxBtMinQtIntraSliceChroma { get { return ph_log2_diff_max_bt_min_qt_intra_slice_chroma; } set { ph_log2_diff_max_bt_min_qt_intra_slice_chroma = value; } }
-        private uint ph_log2_diff_max_tt_min_qt_intra_slice_chroma;
-        public uint PhLog2DiffMaxTtMinQtIntraSliceChroma { get { return ph_log2_diff_max_tt_min_qt_intra_slice_chroma; } set { ph_log2_diff_max_tt_min_qt_intra_slice_chroma = value; } }
-        private uint ph_cu_qp_delta_subdiv_intra_slice;
-        public uint PhCuQpDeltaSubdivIntraSlice { get { return ph_cu_qp_delta_subdiv_intra_slice; } set { ph_cu_qp_delta_subdiv_intra_slice = value; } }
-        private uint ph_cu_chroma_qp_offset_subdiv_intra_slice;
-        public uint PhCuChromaQpOffsetSubdivIntraSlice { get { return ph_cu_chroma_qp_offset_subdiv_intra_slice; } set { ph_cu_chroma_qp_offset_subdiv_intra_slice = value; } }
-        private uint ph_log2_diff_min_qt_min_cb_inter_slice;
-        public uint PhLog2DiffMinQtMinCbInterSlice { get { return ph_log2_diff_min_qt_min_cb_inter_slice; } set { ph_log2_diff_min_qt_min_cb_inter_slice = value; } }
-        private uint ph_max_mtt_hierarchy_depth_inter_slice;
-        public uint PhMaxMttHierarchyDepthInterSlice { get { return ph_max_mtt_hierarchy_depth_inter_slice; } set { ph_max_mtt_hierarchy_depth_inter_slice = value; } }
-        private uint ph_log2_diff_max_bt_min_qt_inter_slice;
-        public uint PhLog2DiffMaxBtMinQtInterSlice { get { return ph_log2_diff_max_bt_min_qt_inter_slice; } set { ph_log2_diff_max_bt_min_qt_inter_slice = value; } }
-        private uint ph_log2_diff_max_tt_min_qt_inter_slice;
-        public uint PhLog2DiffMaxTtMinQtInterSlice { get { return ph_log2_diff_max_tt_min_qt_inter_slice; } set { ph_log2_diff_max_tt_min_qt_inter_slice = value; } }
-        private uint ph_cu_qp_delta_subdiv_inter_slice;
-        public uint PhCuQpDeltaSubdivInterSlice { get { return ph_cu_qp_delta_subdiv_inter_slice; } set { ph_cu_qp_delta_subdiv_inter_slice = value; } }
-        private uint ph_cu_chroma_qp_offset_subdiv_inter_slice;
-        public uint PhCuChromaQpOffsetSubdivInterSlice { get { return ph_cu_chroma_qp_offset_subdiv_inter_slice; } set { ph_cu_chroma_qp_offset_subdiv_inter_slice = value; } }
+        private ulong ph_log2_diff_min_qt_min_cb_intra_slice_luma;
+        public ulong PhLog2DiffMinQtMinCbIntraSliceLuma { get { return ph_log2_diff_min_qt_min_cb_intra_slice_luma; } set { ph_log2_diff_min_qt_min_cb_intra_slice_luma = value; } }
+        private ulong ph_max_mtt_hierarchy_depth_intra_slice_luma;
+        public ulong PhMaxMttHierarchyDepthIntraSliceLuma { get { return ph_max_mtt_hierarchy_depth_intra_slice_luma; } set { ph_max_mtt_hierarchy_depth_intra_slice_luma = value; } }
+        private ulong ph_log2_diff_max_bt_min_qt_intra_slice_luma;
+        public ulong PhLog2DiffMaxBtMinQtIntraSliceLuma { get { return ph_log2_diff_max_bt_min_qt_intra_slice_luma; } set { ph_log2_diff_max_bt_min_qt_intra_slice_luma = value; } }
+        private ulong ph_log2_diff_max_tt_min_qt_intra_slice_luma;
+        public ulong PhLog2DiffMaxTtMinQtIntraSliceLuma { get { return ph_log2_diff_max_tt_min_qt_intra_slice_luma; } set { ph_log2_diff_max_tt_min_qt_intra_slice_luma = value; } }
+        private ulong ph_log2_diff_min_qt_min_cb_intra_slice_chroma;
+        public ulong PhLog2DiffMinQtMinCbIntraSliceChroma { get { return ph_log2_diff_min_qt_min_cb_intra_slice_chroma; } set { ph_log2_diff_min_qt_min_cb_intra_slice_chroma = value; } }
+        private ulong ph_max_mtt_hierarchy_depth_intra_slice_chroma;
+        public ulong PhMaxMttHierarchyDepthIntraSliceChroma { get { return ph_max_mtt_hierarchy_depth_intra_slice_chroma; } set { ph_max_mtt_hierarchy_depth_intra_slice_chroma = value; } }
+        private ulong ph_log2_diff_max_bt_min_qt_intra_slice_chroma;
+        public ulong PhLog2DiffMaxBtMinQtIntraSliceChroma { get { return ph_log2_diff_max_bt_min_qt_intra_slice_chroma; } set { ph_log2_diff_max_bt_min_qt_intra_slice_chroma = value; } }
+        private ulong ph_log2_diff_max_tt_min_qt_intra_slice_chroma;
+        public ulong PhLog2DiffMaxTtMinQtIntraSliceChroma { get { return ph_log2_diff_max_tt_min_qt_intra_slice_chroma; } set { ph_log2_diff_max_tt_min_qt_intra_slice_chroma = value; } }
+        private ulong ph_cu_qp_delta_subdiv_intra_slice;
+        public ulong PhCuQpDeltaSubdivIntraSlice { get { return ph_cu_qp_delta_subdiv_intra_slice; } set { ph_cu_qp_delta_subdiv_intra_slice = value; } }
+        private ulong ph_cu_chroma_qp_offset_subdiv_intra_slice;
+        public ulong PhCuChromaQpOffsetSubdivIntraSlice { get { return ph_cu_chroma_qp_offset_subdiv_intra_slice; } set { ph_cu_chroma_qp_offset_subdiv_intra_slice = value; } }
+        private ulong ph_log2_diff_min_qt_min_cb_inter_slice;
+        public ulong PhLog2DiffMinQtMinCbInterSlice { get { return ph_log2_diff_min_qt_min_cb_inter_slice; } set { ph_log2_diff_min_qt_min_cb_inter_slice = value; } }
+        private ulong ph_max_mtt_hierarchy_depth_inter_slice;
+        public ulong PhMaxMttHierarchyDepthInterSlice { get { return ph_max_mtt_hierarchy_depth_inter_slice; } set { ph_max_mtt_hierarchy_depth_inter_slice = value; } }
+        private ulong ph_log2_diff_max_bt_min_qt_inter_slice;
+        public ulong PhLog2DiffMaxBtMinQtInterSlice { get { return ph_log2_diff_max_bt_min_qt_inter_slice; } set { ph_log2_diff_max_bt_min_qt_inter_slice = value; } }
+        private ulong ph_log2_diff_max_tt_min_qt_inter_slice;
+        public ulong PhLog2DiffMaxTtMinQtInterSlice { get { return ph_log2_diff_max_tt_min_qt_inter_slice; } set { ph_log2_diff_max_tt_min_qt_inter_slice = value; } }
+        private ulong ph_cu_qp_delta_subdiv_inter_slice;
+        public ulong PhCuQpDeltaSubdivInterSlice { get { return ph_cu_qp_delta_subdiv_inter_slice; } set { ph_cu_qp_delta_subdiv_inter_slice = value; } }
+        private ulong ph_cu_chroma_qp_offset_subdiv_inter_slice;
+        public ulong PhCuChromaQpOffsetSubdivInterSlice { get { return ph_cu_chroma_qp_offset_subdiv_inter_slice; } set { ph_cu_chroma_qp_offset_subdiv_inter_slice = value; } }
         private byte ph_temporal_mvp_enabled_flag;
         public byte PhTemporalMvpEnabledFlag { get { return ph_temporal_mvp_enabled_flag; } set { ph_temporal_mvp_enabled_flag = value; } }
         private byte ph_collocated_from_l0_flag;
         public byte PhCollocatedFromL0Flag { get { return ph_collocated_from_l0_flag; } set { ph_collocated_from_l0_flag = value; } }
-        private uint ph_collocated_ref_idx;
-        public uint PhCollocatedRefIdx { get { return ph_collocated_ref_idx; } set { ph_collocated_ref_idx = value; } }
+        private ulong ph_collocated_ref_idx;
+        public ulong PhCollocatedRefIdx { get { return ph_collocated_ref_idx; } set { ph_collocated_ref_idx = value; } }
         private byte ph_mmvd_fullpel_only_flag;
         public byte PhMmvdFullpelOnlyFlag { get { return ph_mmvd_fullpel_only_flag; } set { ph_mmvd_fullpel_only_flag = value; } }
         private byte ph_mvd_l1_zero_flag;
@@ -4566,8 +4566,8 @@ ph_extension_data_byte[ i ] u(8)
         public byte PhProfDisabledFlag { get { return ph_prof_disabled_flag; } set { ph_prof_disabled_flag = value; } }
         private PredWeightTable pred_weight_table;
         public PredWeightTable PredWeightTable { get { return pred_weight_table; } set { pred_weight_table = value; } }
-        private int ph_qp_delta;
-        public int PhQpDelta { get { return ph_qp_delta; } set { ph_qp_delta = value; } }
+        private long ph_qp_delta;
+        public long PhQpDelta { get { return ph_qp_delta; } set { ph_qp_delta = value; } }
         private byte ph_joint_cbcr_sign_flag;
         public byte PhJointCbcrSignFlag { get { return ph_joint_cbcr_sign_flag; } set { ph_joint_cbcr_sign_flag = value; } }
         private byte ph_sao_luma_enabled_flag;
@@ -4578,20 +4578,20 @@ ph_extension_data_byte[ i ] u(8)
         public byte PhDeblockingParamsPresentFlag { get { return ph_deblocking_params_present_flag; } set { ph_deblocking_params_present_flag = value; } }
         private byte ph_deblocking_filter_disabled_flag;
         public byte PhDeblockingFilterDisabledFlag { get { return ph_deblocking_filter_disabled_flag; } set { ph_deblocking_filter_disabled_flag = value; } }
-        private int ph_luma_beta_offset_div2;
-        public int PhLumaBetaOffsetDiv2 { get { return ph_luma_beta_offset_div2; } set { ph_luma_beta_offset_div2 = value; } }
-        private int ph_luma_tc_offset_div2;
-        public int PhLumaTcOffsetDiv2 { get { return ph_luma_tc_offset_div2; } set { ph_luma_tc_offset_div2 = value; } }
-        private int ph_cb_beta_offset_div2;
-        public int PhCbBetaOffsetDiv2 { get { return ph_cb_beta_offset_div2; } set { ph_cb_beta_offset_div2 = value; } }
-        private int ph_cb_tc_offset_div2;
-        public int PhCbTcOffsetDiv2 { get { return ph_cb_tc_offset_div2; } set { ph_cb_tc_offset_div2 = value; } }
-        private int ph_cr_beta_offset_div2;
-        public int PhCrBetaOffsetDiv2 { get { return ph_cr_beta_offset_div2; } set { ph_cr_beta_offset_div2 = value; } }
-        private int ph_cr_tc_offset_div2;
-        public int PhCrTcOffsetDiv2 { get { return ph_cr_tc_offset_div2; } set { ph_cr_tc_offset_div2 = value; } }
-        private uint ph_extension_length;
-        public uint PhExtensionLength { get { return ph_extension_length; } set { ph_extension_length = value; } }
+        private long ph_luma_beta_offset_div2;
+        public long PhLumaBetaOffsetDiv2 { get { return ph_luma_beta_offset_div2; } set { ph_luma_beta_offset_div2 = value; } }
+        private long ph_luma_tc_offset_div2;
+        public long PhLumaTcOffsetDiv2 { get { return ph_luma_tc_offset_div2; } set { ph_luma_tc_offset_div2 = value; } }
+        private long ph_cb_beta_offset_div2;
+        public long PhCbBetaOffsetDiv2 { get { return ph_cb_beta_offset_div2; } set { ph_cb_beta_offset_div2 = value; } }
+        private long ph_cb_tc_offset_div2;
+        public long PhCbTcOffsetDiv2 { get { return ph_cb_tc_offset_div2; } set { ph_cb_tc_offset_div2 = value; } }
+        private long ph_cr_beta_offset_div2;
+        public long PhCrBetaOffsetDiv2 { get { return ph_cr_beta_offset_div2; } set { ph_cr_beta_offset_div2 = value; } }
+        private long ph_cr_tc_offset_div2;
+        public long PhCrTcOffsetDiv2 { get { return ph_cr_tc_offset_div2; } set { ph_cr_tc_offset_div2 = value; } }
+        private ulong ph_extension_length;
+        public ulong PhExtensionLength { get { return ph_extension_length; } set { ph_extension_length = value; } }
         private uint[] ph_extension_data_byte;
         public uint[] PhExtensionDataByte { get { return ph_extension_data_byte; } set { ph_extension_data_byte = value; } }
 
@@ -4722,14 +4722,14 @@ ph_extension_data_byte[ i ] u(8)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.ph_num_ver_virtual_boundaries, "ph_num_ver_virtual_boundaries");
 
-                    this.ph_virtual_boundary_pos_x_minus1 = new uint[ph_num_ver_virtual_boundaries];
+                    this.ph_virtual_boundary_pos_x_minus1 = new ulong[ph_num_ver_virtual_boundaries];
                     for (i = 0; i < ph_num_ver_virtual_boundaries; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ph_virtual_boundary_pos_x_minus1[i], "ph_virtual_boundary_pos_x_minus1");
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.ph_num_hor_virtual_boundaries, "ph_num_hor_virtual_boundaries");
 
-                    this.ph_virtual_boundary_pos_y_minus1 = new uint[ph_num_hor_virtual_boundaries];
+                    this.ph_virtual_boundary_pos_y_minus1 = new ulong[ph_num_hor_virtual_boundaries];
                     for (i = 0; i < ph_num_hor_virtual_boundaries; i++)
                     {
                         size += stream.ReadUnsignedIntGolomb(size, out this.ph_virtual_boundary_pos_y_minus1[i], "ph_virtual_boundary_pos_y_minus1");
@@ -5316,8 +5316,8 @@ ref_pic_lists() {
         public uint[][] PocLsbLt { get { return poc_lsb_lt; } set { poc_lsb_lt = value; } }
         private byte[][] delta_poc_msb_cycle_present_flag;
         public byte[][] DeltaPocMsbCyclePresentFlag { get { return delta_poc_msb_cycle_present_flag; } set { delta_poc_msb_cycle_present_flag = value; } }
-        private uint[][] delta_poc_msb_cycle_lt;
-        public uint[][] DeltaPocMsbCycleLt { get { return delta_poc_msb_cycle_lt; } set { delta_poc_msb_cycle_lt = value; } }
+        private ulong[][] delta_poc_msb_cycle_lt;
+        public ulong[][] DeltaPocMsbCycleLt { get { return delta_poc_msb_cycle_lt; } set { delta_poc_msb_cycle_lt = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5337,22 +5337,22 @@ ref_pic_lists() {
             this.rpl_sps_flag = new byte[2];
             this.rpl_idx = new uint[2];
             if (((H266Context)context).num_ref_entries == null)
-                ((H266Context)context).num_ref_entries = new uint[2][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };
+                ((H266Context)context).num_ref_entries = new ulong[2][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };
             if (((H266Context)context).inter_layer_ref_pic_flag == null)
                 ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).st_ref_pic_flag == null)
                 ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).abs_delta_poc_st == null)
-                ((H266Context)context).abs_delta_poc_st = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
+                ((H266Context)context).abs_delta_poc_st = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).strp_entry_sign_flag == null)
                 ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).rpls_poc_lsb_lt == null)
                 ((H266Context)context).rpls_poc_lsb_lt = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             if (((H266Context)context).ilrp_idx == null)
-                ((H266Context)context).ilrp_idx = new uint[2][][] { new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new uint[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
+                ((H266Context)context).ilrp_idx = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };
             this.poc_lsb_lt = new uint[2][];
             this.delta_poc_msb_cycle_present_flag = new byte[2][];
-            this.delta_poc_msb_cycle_lt = new uint[2][];
+            this.delta_poc_msb_cycle_lt = new ulong[2][];
             for (i = 0; i < 2; i++)
             {
 
@@ -5380,7 +5380,7 @@ ref_pic_lists() {
 
                 this.poc_lsb_lt[i] = new uint[((H266Context)context).NumLtrpEntries[i][((H266Context)context).RplsIdx[i]]];
                 this.delta_poc_msb_cycle_present_flag[i] = new byte[((H266Context)context).NumLtrpEntries[i][((H266Context)context).RplsIdx[i]]];
-                this.delta_poc_msb_cycle_lt[i] = new uint[((H266Context)context).NumLtrpEntries[i][((H266Context)context).RplsIdx[i]]];
+                this.delta_poc_msb_cycle_lt[i] = new ulong[((H266Context)context).NumLtrpEntries[i][((H266Context)context).RplsIdx[i]]];
                 for (j = 0; j < ((H266Context)context).NumLtrpEntries[i][((H266Context)context).RplsIdx[i]]; j++)
                 {
 
@@ -5503,38 +5503,38 @@ pred_weight_table() {
     */
     public class PredWeightTable : IItuSerializable
     {
-        private uint luma_log2_weight_denom;
-        public uint LumaLog2WeightDenom { get { return luma_log2_weight_denom; } set { luma_log2_weight_denom = value; } }
-        private int delta_chroma_log2_weight_denom;
-        public int DeltaChromaLog2WeightDenom { get { return delta_chroma_log2_weight_denom; } set { delta_chroma_log2_weight_denom = value; } }
-        private uint num_l0_weights;
-        public uint NumL0Weights { get { return num_l0_weights; } set { num_l0_weights = value; } }
+        private ulong luma_log2_weight_denom;
+        public ulong LumaLog2WeightDenom { get { return luma_log2_weight_denom; } set { luma_log2_weight_denom = value; } }
+        private long delta_chroma_log2_weight_denom;
+        public long DeltaChromaLog2WeightDenom { get { return delta_chroma_log2_weight_denom; } set { delta_chroma_log2_weight_denom = value; } }
+        private ulong num_l0_weights;
+        public ulong NumL0Weights { get { return num_l0_weights; } set { num_l0_weights = value; } }
         private byte[] luma_weight_l0_flag;
         public byte[] LumaWeightL0Flag { get { return luma_weight_l0_flag; } set { luma_weight_l0_flag = value; } }
         private byte[] chroma_weight_l0_flag;
         public byte[] ChromaWeightL0Flag { get { return chroma_weight_l0_flag; } set { chroma_weight_l0_flag = value; } }
-        private int[] delta_luma_weight_l0;
-        public int[] DeltaLumaWeightL0 { get { return delta_luma_weight_l0; } set { delta_luma_weight_l0 = value; } }
-        private int[] luma_offset_l0;
-        public int[] LumaOffsetL0 { get { return luma_offset_l0; } set { luma_offset_l0 = value; } }
-        private int[][] delta_chroma_weight_l0;
-        public int[][] DeltaChromaWeightL0 { get { return delta_chroma_weight_l0; } set { delta_chroma_weight_l0 = value; } }
-        private int[][] delta_chroma_offset_l0;
-        public int[][] DeltaChromaOffsetL0 { get { return delta_chroma_offset_l0; } set { delta_chroma_offset_l0 = value; } }
-        private uint num_l1_weights;
-        public uint NumL1Weights { get { return num_l1_weights; } set { num_l1_weights = value; } }
+        private long[] delta_luma_weight_l0;
+        public long[] DeltaLumaWeightL0 { get { return delta_luma_weight_l0; } set { delta_luma_weight_l0 = value; } }
+        private long[] luma_offset_l0;
+        public long[] LumaOffsetL0 { get { return luma_offset_l0; } set { luma_offset_l0 = value; } }
+        private long[][] delta_chroma_weight_l0;
+        public long[][] DeltaChromaWeightL0 { get { return delta_chroma_weight_l0; } set { delta_chroma_weight_l0 = value; } }
+        private long[][] delta_chroma_offset_l0;
+        public long[][] DeltaChromaOffsetL0 { get { return delta_chroma_offset_l0; } set { delta_chroma_offset_l0 = value; } }
+        private ulong num_l1_weights;
+        public ulong NumL1Weights { get { return num_l1_weights; } set { num_l1_weights = value; } }
         private byte[] luma_weight_l1_flag;
         public byte[] LumaWeightL1Flag { get { return luma_weight_l1_flag; } set { luma_weight_l1_flag = value; } }
         private byte[] chroma_weight_l1_flag;
         public byte[] ChromaWeightL1Flag { get { return chroma_weight_l1_flag; } set { chroma_weight_l1_flag = value; } }
-        private int[] delta_luma_weight_l1;
-        public int[] DeltaLumaWeightL1 { get { return delta_luma_weight_l1; } set { delta_luma_weight_l1 = value; } }
-        private int[] luma_offset_l1;
-        public int[] LumaOffsetL1 { get { return luma_offset_l1; } set { luma_offset_l1 = value; } }
-        private int[][] delta_chroma_weight_l1;
-        public int[][] DeltaChromaWeightL1 { get { return delta_chroma_weight_l1; } set { delta_chroma_weight_l1 = value; } }
-        private int[][] delta_chroma_offset_l1;
-        public int[][] DeltaChromaOffsetL1 { get { return delta_chroma_offset_l1; } set { delta_chroma_offset_l1 = value; } }
+        private long[] delta_luma_weight_l1;
+        public long[] DeltaLumaWeightL1 { get { return delta_luma_weight_l1; } set { delta_luma_weight_l1 = value; } }
+        private long[] luma_offset_l1;
+        public long[] LumaOffsetL1 { get { return luma_offset_l1; } set { luma_offset_l1 = value; } }
+        private long[][] delta_chroma_weight_l1;
+        public long[][] DeltaChromaWeightL1 { get { return delta_chroma_weight_l1; } set { delta_chroma_weight_l1 = value; } }
+        private long[][] delta_chroma_offset_l1;
+        public long[][] DeltaChromaOffsetL1 { get { return delta_chroma_offset_l1; } set { delta_chroma_offset_l1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -5579,10 +5579,10 @@ pred_weight_table() {
                 }
             }
 
-            this.delta_luma_weight_l0 = new int[((H266Context)context).NumWeightsL0];
-            this.luma_offset_l0 = new int[((H266Context)context).NumWeightsL0];
-            this.delta_chroma_weight_l0 = new int[((H266Context)context).NumWeightsL0][];
-            this.delta_chroma_offset_l0 = new int[((H266Context)context).NumWeightsL0][];
+            this.delta_luma_weight_l0 = new long[((H266Context)context).NumWeightsL0];
+            this.luma_offset_l0 = new long[((H266Context)context).NumWeightsL0];
+            this.delta_chroma_weight_l0 = new long[((H266Context)context).NumWeightsL0][];
+            this.delta_chroma_offset_l0 = new long[((H266Context)context).NumWeightsL0][];
             for (i = 0; i < ((H266Context)context).NumWeightsL0; i++)
             {
 
@@ -5595,8 +5595,8 @@ pred_weight_table() {
                 if (chroma_weight_l0_flag[i] != 0)
                 {
 
-                    this.delta_chroma_weight_l0[i] = new int[2];
-                    this.delta_chroma_offset_l0[i] = new int[2];
+                    this.delta_chroma_weight_l0[i] = new long[2];
+                    this.delta_chroma_offset_l0[i] = new long[2];
                     for (j = 0; j < 2; j++)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.delta_chroma_weight_l0[i][j], "delta_chroma_weight_l0");
@@ -5628,10 +5628,10 @@ pred_weight_table() {
                 }
             }
 
-            this.delta_luma_weight_l1 = new int[((H266Context)context).NumWeightsL1];
-            this.luma_offset_l1 = new int[((H266Context)context).NumWeightsL1];
-            this.delta_chroma_weight_l1 = new int[((H266Context)context).NumWeightsL1][];
-            this.delta_chroma_offset_l1 = new int[((H266Context)context).NumWeightsL1][];
+            this.delta_luma_weight_l1 = new long[((H266Context)context).NumWeightsL1];
+            this.luma_offset_l1 = new long[((H266Context)context).NumWeightsL1];
+            this.delta_chroma_weight_l1 = new long[((H266Context)context).NumWeightsL1][];
+            this.delta_chroma_offset_l1 = new long[((H266Context)context).NumWeightsL1][];
             for (i = 0; i < ((H266Context)context).NumWeightsL1; i++)
             {
 
@@ -5644,8 +5644,8 @@ pred_weight_table() {
                 if (chroma_weight_l1_flag[i] != 0)
                 {
 
-                    this.delta_chroma_weight_l1[i] = new int[2];
-                    this.delta_chroma_offset_l1[i] = new int[2];
+                    this.delta_chroma_weight_l1[i] = new long[2];
+                    this.delta_chroma_offset_l1[i] = new long[2];
                     for (j = 0; j < 2; j++)
                     {
                         size += stream.ReadSignedIntGolomb(size, out this.delta_chroma_weight_l1[i][j], "delta_chroma_weight_l1");
@@ -6197,34 +6197,34 @@ alf_cc_cr_filter_signal_flag u(1)
         public byte AlfCcCrFilterSignalFlag { get { return alf_cc_cr_filter_signal_flag; } set { alf_cc_cr_filter_signal_flag = value; } }
         private byte alf_luma_clip_flag;
         public byte AlfLumaClipFlag { get { return alf_luma_clip_flag; } set { alf_luma_clip_flag = value; } }
-        private uint alf_luma_num_filters_signalled_minus1;
-        public uint AlfLumaNumFiltersSignalledMinus1 { get { return alf_luma_num_filters_signalled_minus1; } set { alf_luma_num_filters_signalled_minus1 = value; } }
+        private ulong alf_luma_num_filters_signalled_minus1;
+        public ulong AlfLumaNumFiltersSignalledMinus1 { get { return alf_luma_num_filters_signalled_minus1; } set { alf_luma_num_filters_signalled_minus1 = value; } }
         private uint[] alf_luma_coeff_delta_idx;
         public uint[] AlfLumaCoeffDeltaIdx { get { return alf_luma_coeff_delta_idx; } set { alf_luma_coeff_delta_idx = value; } }
-        private uint[][] alf_luma_coeff_abs;
-        public uint[][] AlfLumaCoeffAbs { get { return alf_luma_coeff_abs; } set { alf_luma_coeff_abs = value; } }
+        private ulong[][] alf_luma_coeff_abs;
+        public ulong[][] AlfLumaCoeffAbs { get { return alf_luma_coeff_abs; } set { alf_luma_coeff_abs = value; } }
         private byte[][] alf_luma_coeff_sign;
         public byte[][] AlfLumaCoeffSign { get { return alf_luma_coeff_sign; } set { alf_luma_coeff_sign = value; } }
         private uint[][] alf_luma_clip_idx;
         public uint[][] AlfLumaClipIdx { get { return alf_luma_clip_idx; } set { alf_luma_clip_idx = value; } }
         private byte alf_chroma_clip_flag;
         public byte AlfChromaClipFlag { get { return alf_chroma_clip_flag; } set { alf_chroma_clip_flag = value; } }
-        private uint alf_chroma_num_alt_filters_minus1;
-        public uint AlfChromaNumAltFiltersMinus1 { get { return alf_chroma_num_alt_filters_minus1; } set { alf_chroma_num_alt_filters_minus1 = value; } }
-        private uint[][] alf_chroma_coeff_abs;
-        public uint[][] AlfChromaCoeffAbs { get { return alf_chroma_coeff_abs; } set { alf_chroma_coeff_abs = value; } }
+        private ulong alf_chroma_num_alt_filters_minus1;
+        public ulong AlfChromaNumAltFiltersMinus1 { get { return alf_chroma_num_alt_filters_minus1; } set { alf_chroma_num_alt_filters_minus1 = value; } }
+        private ulong[][] alf_chroma_coeff_abs;
+        public ulong[][] AlfChromaCoeffAbs { get { return alf_chroma_coeff_abs; } set { alf_chroma_coeff_abs = value; } }
         private byte[][] alf_chroma_coeff_sign;
         public byte[][] AlfChromaCoeffSign { get { return alf_chroma_coeff_sign; } set { alf_chroma_coeff_sign = value; } }
         private uint[][] alf_chroma_clip_idx;
         public uint[][] AlfChromaClipIdx { get { return alf_chroma_clip_idx; } set { alf_chroma_clip_idx = value; } }
-        private uint alf_cc_cb_filters_signalled_minus1;
-        public uint AlfCcCbFiltersSignalledMinus1 { get { return alf_cc_cb_filters_signalled_minus1; } set { alf_cc_cb_filters_signalled_minus1 = value; } }
+        private ulong alf_cc_cb_filters_signalled_minus1;
+        public ulong AlfCcCbFiltersSignalledMinus1 { get { return alf_cc_cb_filters_signalled_minus1; } set { alf_cc_cb_filters_signalled_minus1 = value; } }
         private uint[][] alf_cc_cb_mapped_coeff_abs;
         public uint[][] AlfCcCbMappedCoeffAbs { get { return alf_cc_cb_mapped_coeff_abs; } set { alf_cc_cb_mapped_coeff_abs = value; } }
         private byte[][] alf_cc_cb_coeff_sign;
         public byte[][] AlfCcCbCoeffSign { get { return alf_cc_cb_coeff_sign; } set { alf_cc_cb_coeff_sign = value; } }
-        private uint alf_cc_cr_filters_signalled_minus1;
-        public uint AlfCcCrFiltersSignalledMinus1 { get { return alf_cc_cr_filters_signalled_minus1; } set { alf_cc_cr_filters_signalled_minus1 = value; } }
+        private ulong alf_cc_cr_filters_signalled_minus1;
+        public ulong AlfCcCrFiltersSignalledMinus1 { get { return alf_cc_cr_filters_signalled_minus1; } set { alf_cc_cr_filters_signalled_minus1 = value; } }
         private uint[][] alf_cc_cr_mapped_coeff_abs;
         public uint[][] AlfCcCrMappedCoeffAbs { get { return alf_cc_cr_mapped_coeff_abs; } set { alf_cc_cr_mapped_coeff_abs = value; } }
         private byte[][] alf_cc_cr_coeff_sign;
@@ -6272,12 +6272,12 @@ alf_cc_cr_filter_signal_flag u(1)
                     }
                 }
 
-                this.alf_luma_coeff_abs = new uint[alf_luma_num_filters_signalled_minus1 + 1][];
+                this.alf_luma_coeff_abs = new ulong[alf_luma_num_filters_signalled_minus1 + 1][];
                 this.alf_luma_coeff_sign = new byte[alf_luma_num_filters_signalled_minus1 + 1][];
                 for (sfIdx = 0; sfIdx <= alf_luma_num_filters_signalled_minus1; sfIdx++)
                 {
 
-                    this.alf_luma_coeff_abs[sfIdx] = new uint[12];
+                    this.alf_luma_coeff_abs[sfIdx] = new ulong[12];
                     this.alf_luma_coeff_sign[sfIdx] = new byte[12];
                     for (j = 0; j < 12; j++)
                     {
@@ -6311,13 +6311,13 @@ alf_cc_cr_filter_signal_flag u(1)
                 size += stream.ReadUnsignedInt(size, 1, out this.alf_chroma_clip_flag, "alf_chroma_clip_flag");
                 size += stream.ReadUnsignedIntGolomb(size, out this.alf_chroma_num_alt_filters_minus1, "alf_chroma_num_alt_filters_minus1");
 
-                this.alf_chroma_coeff_abs = new uint[alf_chroma_num_alt_filters_minus1 + 1][];
+                this.alf_chroma_coeff_abs = new ulong[alf_chroma_num_alt_filters_minus1 + 1][];
                 this.alf_chroma_coeff_sign = new byte[alf_chroma_num_alt_filters_minus1 + 1][];
                 this.alf_chroma_clip_idx = new uint[alf_chroma_num_alt_filters_minus1 + 1][];
                 for (altIdx = 0; altIdx <= alf_chroma_num_alt_filters_minus1; altIdx++)
                 {
 
-                    this.alf_chroma_coeff_abs[altIdx] = new uint[6];
+                    this.alf_chroma_coeff_abs[altIdx] = new ulong[6];
                     this.alf_chroma_coeff_sign[altIdx] = new byte[6];
                     for (j = 0; j < 6; j++)
                     {
@@ -6544,12 +6544,12 @@ lmcs_data() {
     */
     public class LmcsData : IItuSerializable
     {
-        private uint lmcs_min_bin_idx;
-        public uint LmcsMinBinIdx { get { return lmcs_min_bin_idx; } set { lmcs_min_bin_idx = value; } }
-        private uint lmcs_delta_max_bin_idx;
-        public uint LmcsDeltaMaxBinIdx { get { return lmcs_delta_max_bin_idx; } set { lmcs_delta_max_bin_idx = value; } }
-        private uint lmcs_delta_cw_prec_minus1;
-        public uint LmcsDeltaCwPrecMinus1 { get { return lmcs_delta_cw_prec_minus1; } set { lmcs_delta_cw_prec_minus1 = value; } }
+        private ulong lmcs_min_bin_idx;
+        public ulong LmcsMinBinIdx { get { return lmcs_min_bin_idx; } set { lmcs_min_bin_idx = value; } }
+        private ulong lmcs_delta_max_bin_idx;
+        public ulong LmcsDeltaMaxBinIdx { get { return lmcs_delta_max_bin_idx; } set { lmcs_delta_max_bin_idx = value; } }
+        private ulong lmcs_delta_cw_prec_minus1;
+        public ulong LmcsDeltaCwPrecMinus1 { get { return lmcs_delta_cw_prec_minus1; } set { lmcs_delta_cw_prec_minus1 = value; } }
         private uint[] lmcs_delta_abs_cw;
         public uint[] LmcsDeltaAbsCw { get { return lmcs_delta_abs_cw; } set { lmcs_delta_abs_cw = value; } }
         private byte[] lmcs_delta_sign_cw_flag;
@@ -6579,7 +6579,7 @@ lmcs_data() {
 
             this.lmcs_delta_abs_cw = new uint[((H266Context)context).LmcsMaxBinIdx];
             this.lmcs_delta_sign_cw_flag = new byte[((H266Context)context).LmcsMaxBinIdx];
-            for (i = lmcs_min_bin_idx; i <= ((H266Context)context).LmcsMaxBinIdx; i++)
+            for (i = (uint)lmcs_min_bin_idx; i <= ((H266Context)context).LmcsMaxBinIdx; i++)
             {
                 size += stream.ReadUnsignedIntVariable(size, lmcs_delta_cw_prec_minus1 + 1, out this.lmcs_delta_abs_cw[i], "lmcs_delta_abs_cw");
 
@@ -6612,7 +6612,7 @@ lmcs_data() {
             ((H266Context)context).OnLmcsDeltaMaxBinIdx();
             size += stream.WriteUnsignedIntGolomb(this.lmcs_delta_cw_prec_minus1, "lmcs_delta_cw_prec_minus1");
 
-            for (i = lmcs_min_bin_idx; i <= ((H266Context)context).LmcsMaxBinIdx; i++)
+            for (i = (uint)lmcs_min_bin_idx; i <= ((H266Context)context).LmcsMaxBinIdx; i++)
             {
                 size += stream.WriteUnsignedIntVariable(lmcs_delta_cw_prec_minus1 + 1, this.lmcs_delta_abs_cw[i], "lmcs_delta_abs_cw");
 
@@ -6653,8 +6653,8 @@ vui_payload( payloadSize ) {
     */
     public class VuiPayload : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private VuiParameters vui_parameters;
         public VuiParameters VuiParameters { get { return vui_parameters; } set { vui_parameters = value; } }
         private uint vui_reserved_payload_extension_data;
@@ -6667,7 +6667,7 @@ vui_payload( payloadSize ) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public VuiPayload(uint payloadSize)
+        public VuiPayload(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -6769,8 +6769,8 @@ vui_parameters(payloadSize) {
     */
     public class VuiParameters : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte vui_progressive_source_flag;
         public byte VuiProgressiveSourceFlag { get { return vui_progressive_source_flag; } set { vui_progressive_source_flag = value; } }
         private byte vui_interlaced_source_flag;
@@ -6805,17 +6805,17 @@ vui_parameters(payloadSize) {
         public byte VuiFullRangeFlag { get { return vui_full_range_flag; } set { vui_full_range_flag = value; } }
         private byte vui_chroma_loc_info_present_flag;
         public byte VuiChromaLocInfoPresentFlag { get { return vui_chroma_loc_info_present_flag; } set { vui_chroma_loc_info_present_flag = value; } }
-        private uint vui_chroma_sample_loc_type_frame;
-        public uint VuiChromaSampleLocTypeFrame { get { return vui_chroma_sample_loc_type_frame; } set { vui_chroma_sample_loc_type_frame = value; } }
-        private uint vui_chroma_sample_loc_type_top_field;
-        public uint VuiChromaSampleLocTypeTopField { get { return vui_chroma_sample_loc_type_top_field; } set { vui_chroma_sample_loc_type_top_field = value; } }
-        private uint vui_chroma_sample_loc_type_bottom_field;
-        public uint VuiChromaSampleLocTypeBottomField { get { return vui_chroma_sample_loc_type_bottom_field; } set { vui_chroma_sample_loc_type_bottom_field = value; } }
+        private ulong vui_chroma_sample_loc_type_frame;
+        public ulong VuiChromaSampleLocTypeFrame { get { return vui_chroma_sample_loc_type_frame; } set { vui_chroma_sample_loc_type_frame = value; } }
+        private ulong vui_chroma_sample_loc_type_top_field;
+        public ulong VuiChromaSampleLocTypeTopField { get { return vui_chroma_sample_loc_type_top_field; } set { vui_chroma_sample_loc_type_top_field = value; } }
+        private ulong vui_chroma_sample_loc_type_bottom_field;
+        public ulong VuiChromaSampleLocTypeBottomField { get { return vui_chroma_sample_loc_type_bottom_field; } set { vui_chroma_sample_loc_type_bottom_field = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public VuiParameters(uint payloadSize)
+        public VuiParameters(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -7598,12 +7598,12 @@ dpb_parameters( MaxSubLayersMinus1, subLayerInfoFlag ) {
         public uint MaxSubLayersMinus1 { get { return maxSubLayersMinus1; } set { maxSubLayersMinus1 = value; } }
         private uint subLayerInfoFlag;
         public uint SubLayerInfoFlag { get { return subLayerInfoFlag; } set { subLayerInfoFlag = value; } }
-        private uint[] dpb_max_dec_pic_buffering_minus1;
-        public uint[] DpbMaxDecPicBufferingMinus1 { get { return dpb_max_dec_pic_buffering_minus1; } set { dpb_max_dec_pic_buffering_minus1 = value; } }
-        private uint[] dpb_max_num_reorder_pics;
-        public uint[] DpbMaxNumReorderPics { get { return dpb_max_num_reorder_pics; } set { dpb_max_num_reorder_pics = value; } }
-        private uint[] dpb_max_latency_increase_plus1;
-        public uint[] DpbMaxLatencyIncreasePlus1 { get { return dpb_max_latency_increase_plus1; } set { dpb_max_latency_increase_plus1 = value; } }
+        private ulong[] dpb_max_dec_pic_buffering_minus1;
+        public ulong[] DpbMaxDecPicBufferingMinus1 { get { return dpb_max_dec_pic_buffering_minus1; } set { dpb_max_dec_pic_buffering_minus1 = value; } }
+        private ulong[] dpb_max_num_reorder_pics;
+        public ulong[] DpbMaxNumReorderPics { get { return dpb_max_num_reorder_pics; } set { dpb_max_num_reorder_pics = value; } }
+        private ulong[] dpb_max_latency_increase_plus1;
+        public ulong[] DpbMaxLatencyIncreasePlus1 { get { return dpb_max_latency_increase_plus1; } set { dpb_max_latency_increase_plus1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -7620,9 +7620,9 @@ dpb_parameters( MaxSubLayersMinus1, subLayerInfoFlag ) {
 
             uint i = 0;
 
-            this.dpb_max_dec_pic_buffering_minus1 = new uint[MaxSubLayersMinus1 + 1];
-            this.dpb_max_num_reorder_pics = new uint[MaxSubLayersMinus1 + 1];
-            this.dpb_max_latency_increase_plus1 = new uint[MaxSubLayersMinus1 + 1];
+            this.dpb_max_dec_pic_buffering_minus1 = new ulong[MaxSubLayersMinus1 + 1];
+            this.dpb_max_num_reorder_pics = new ulong[MaxSubLayersMinus1 + 1];
+            this.dpb_max_latency_increase_plus1 = new ulong[MaxSubLayersMinus1 + 1];
             for (i = (subLayerInfoFlag != 0 ? 0 : MaxSubLayersMinus1);
    i <= MaxSubLayersMinus1; i++)
             {
@@ -7696,8 +7696,8 @@ general_timing_hrd_parameters() {
         public uint CpbSizeScale { get { return cpb_size_scale; } set { cpb_size_scale = value; } }
         private uint cpb_size_du_scale;
         public uint CpbSizeDuScale { get { return cpb_size_du_scale; } set { cpb_size_du_scale = value; } }
-        private uint hrd_cpb_cnt_minus1;
-        public uint HrdCpbCntMinus1 { get { return hrd_cpb_cnt_minus1; } set { hrd_cpb_cnt_minus1 = value; } }
+        private ulong hrd_cpb_cnt_minus1;
+        public ulong HrdCpbCntMinus1 { get { return hrd_cpb_cnt_minus1; } set { hrd_cpb_cnt_minus1 = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
@@ -7802,8 +7802,8 @@ ols_timing_hrd_parameters( firstSubLayer, MaxSubLayersVal ) {
         public byte[] FixedPicRateGeneralFlag { get { return fixed_pic_rate_general_flag; } set { fixed_pic_rate_general_flag = value; } }
         private byte[] fixed_pic_rate_within_cvs_flag;
         public byte[] FixedPicRateWithinCvsFlag { get { return fixed_pic_rate_within_cvs_flag; } set { fixed_pic_rate_within_cvs_flag = value; } }
-        private uint[] elemental_duration_in_tc_minus1;
-        public uint[] ElementalDurationInTcMinus1 { get { return elemental_duration_in_tc_minus1; } set { elemental_duration_in_tc_minus1 = value; } }
+        private ulong[] elemental_duration_in_tc_minus1;
+        public ulong[] ElementalDurationInTcMinus1 { get { return elemental_duration_in_tc_minus1; } set { elemental_duration_in_tc_minus1 = value; } }
         private byte[] low_delay_hrd_flag;
         public byte[] LowDelayHrdFlag { get { return low_delay_hrd_flag; } set { low_delay_hrd_flag = value; } }
         private SublayerHrdParameters sublayer_hrd_parameters;
@@ -7826,18 +7826,18 @@ ols_timing_hrd_parameters( firstSubLayer, MaxSubLayersVal ) {
 
             this.fixed_pic_rate_general_flag = new byte[MaxSubLayersVal + 1];
             this.fixed_pic_rate_within_cvs_flag = new byte[MaxSubLayersVal + 1];
-            this.elemental_duration_in_tc_minus1 = new uint[MaxSubLayersVal + 1];
+            this.elemental_duration_in_tc_minus1 = new ulong[MaxSubLayersVal + 1];
             this.low_delay_hrd_flag = new byte[MaxSubLayersVal + 1];
             if (((H266Context)context).cbr_flag == null)
                 ((H266Context)context).cbr_flag = new byte[MaxSubLayersVal + 1][];
             if (((H266Context)context).bit_rate_du_value_minus1 == null)
-                ((H266Context)context).bit_rate_du_value_minus1 = new uint[MaxSubLayersVal + 1][];
+                ((H266Context)context).bit_rate_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];
             if (((H266Context)context).cpb_size_du_value_minus1 == null)
-                ((H266Context)context).cpb_size_du_value_minus1 = new uint[MaxSubLayersVal + 1][];
+                ((H266Context)context).cpb_size_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];
             if (((H266Context)context).bit_rate_value_minus1 == null)
-                ((H266Context)context).bit_rate_value_minus1 = new uint[MaxSubLayersVal + 1][];
+                ((H266Context)context).bit_rate_value_minus1 = new ulong[MaxSubLayersVal + 1][];
             if (((H266Context)context).cpb_size_value_minus1 == null)
-                ((H266Context)context).cpb_size_value_minus1 = new uint[MaxSubLayersVal + 1][];
+                ((H266Context)context).cpb_size_value_minus1 = new ulong[MaxSubLayersVal + 1][];
 
             for (i = firstSubLayer; i <= MaxSubLayersVal; i++)
             {
@@ -7936,14 +7936,14 @@ sublayer_hrd_parameters( subLayerId ) {
     {
         private uint subLayerId;
         public uint SubLayerId { get { return subLayerId; } set { subLayerId = value; } }
-        private uint[][] bit_rate_value_minus1;
-        public uint[][] BitRateValueMinus1 { get { return bit_rate_value_minus1; } set { bit_rate_value_minus1 = value; } }
-        private uint[][] cpb_size_value_minus1;
-        public uint[][] CpbSizeValueMinus1 { get { return cpb_size_value_minus1; } set { cpb_size_value_minus1 = value; } }
-        private uint[][] cpb_size_du_value_minus1;
-        public uint[][] CpbSizeDuValueMinus1 { get { return cpb_size_du_value_minus1; } set { cpb_size_du_value_minus1 = value; } }
-        private uint[][] bit_rate_du_value_minus1;
-        public uint[][] BitRateDuValueMinus1 { get { return bit_rate_du_value_minus1; } set { bit_rate_du_value_minus1 = value; } }
+        private ulong[][] bit_rate_value_minus1;
+        public ulong[][] BitRateValueMinus1 { get { return bit_rate_value_minus1; } set { bit_rate_value_minus1 = value; } }
+        private ulong[][] cpb_size_value_minus1;
+        public ulong[][] CpbSizeValueMinus1 { get { return cpb_size_value_minus1; } set { cpb_size_value_minus1 = value; } }
+        private ulong[][] cpb_size_du_value_minus1;
+        public ulong[][] CpbSizeDuValueMinus1 { get { return cpb_size_du_value_minus1; } set { cpb_size_du_value_minus1 = value; } }
+        private ulong[][] bit_rate_du_value_minus1;
+        public ulong[][] BitRateDuValueMinus1 { get { return bit_rate_du_value_minus1; } set { bit_rate_du_value_minus1 = value; } }
         private byte[][] cbr_flag;
         public byte[][] CbrFlag { get { return cbr_flag; } set { cbr_flag = value; } }
 
@@ -7961,10 +7961,10 @@ sublayer_hrd_parameters( subLayerId ) {
 
             uint j = 0;
             ((H266Context)context).cbr_flag[subLayerId] = new byte[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
-            ((H266Context)context).bit_rate_du_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
-            ((H266Context)context).cpb_size_du_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
-            ((H266Context)context).bit_rate_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
-            ((H266Context)context).cpb_size_value_minus1[subLayerId] = new uint[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            ((H266Context)context).bit_rate_du_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            ((H266Context)context).cpb_size_du_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            ((H266Context)context).bit_rate_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
+            ((H266Context)context).cpb_size_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];
             this.bit_rate_value_minus1 = ((H266Context)context).bit_rate_value_minus1;
             this.cpb_size_value_minus1 = ((H266Context)context).cpb_size_value_minus1;
             this.cpb_size_du_value_minus1 = ((H266Context)context).cpb_size_du_value_minus1;
@@ -8144,29 +8144,29 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
     {
         private uint listIdx;
         public uint ListIdx { get { return listIdx; } set { listIdx = value; } }
-        private uint rplsIdx;
-        public uint RplsIdx { get { return rplsIdx; } set { rplsIdx = value; } }
-        private uint[][] num_ref_entries;
-        public uint[][] NumRefEntries { get { return num_ref_entries; } set { num_ref_entries = value; } }
+        private ulong rplsIdx;
+        public ulong RplsIdx { get { return rplsIdx; } set { rplsIdx = value; } }
+        private ulong[][] num_ref_entries;
+        public ulong[][] NumRefEntries { get { return num_ref_entries; } set { num_ref_entries = value; } }
         private byte[][] ltrp_in_header_flag;
         public byte[][] LtrpInHeaderFlag { get { return ltrp_in_header_flag; } set { ltrp_in_header_flag = value; } }
         private byte[][][] inter_layer_ref_pic_flag;
         public byte[][][] InterLayerRefPicFlag { get { return inter_layer_ref_pic_flag; } set { inter_layer_ref_pic_flag = value; } }
         private byte[][][] st_ref_pic_flag;
         public byte[][][] StRefPicFlag { get { return st_ref_pic_flag; } set { st_ref_pic_flag = value; } }
-        private uint[][][] abs_delta_poc_st;
-        public uint[][][] AbsDeltaPocSt { get { return abs_delta_poc_st; } set { abs_delta_poc_st = value; } }
+        private ulong[][][] abs_delta_poc_st;
+        public ulong[][][] AbsDeltaPocSt { get { return abs_delta_poc_st; } set { abs_delta_poc_st = value; } }
         private byte[][][] strp_entry_sign_flag;
         public byte[][][] StrpEntrySignFlag { get { return strp_entry_sign_flag; } set { strp_entry_sign_flag = value; } }
         private uint[][][] rpls_poc_lsb_lt;
         public uint[][][] RplsPocLsbLt { get { return rpls_poc_lsb_lt; } set { rpls_poc_lsb_lt = value; } }
-        private uint[][][] ilrp_idx;
-        public uint[][][] IlrpIdx { get { return ilrp_idx; } set { ilrp_idx = value; } }
+        private ulong[][][] ilrp_idx;
+        public ulong[][][] IlrpIdx { get { return ilrp_idx; } set { ilrp_idx = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public RefPicListStruct(uint listIdx, uint rplsIdx)
+        public RefPicListStruct(uint listIdx, ulong rplsIdx)
         {
             this.listIdx = listIdx;
             this.rplsIdx = rplsIdx;
@@ -8189,10 +8189,10 @@ ref_pic_list_struct( listIdx, rplsIdx ) {
             size += stream.ReadUnsignedIntGolomb(size, out this.num_ref_entries[listIdx][rplsIdx], "num_ref_entries");
             ((H266Context)context).inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
             ((H266Context)context).st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
-            ((H266Context)context).abs_delta_poc_st[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];
+            ((H266Context)context).abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
             ((H266Context)context).strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];
             ((H266Context)context).rpls_poc_lsb_lt[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];
-            ((H266Context)context).ilrp_idx[listIdx][rplsIdx] = new uint[this.num_ref_entries[listIdx][rplsIdx]];
+            ((H266Context)context).ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];
 
             if (((H266Context)context).SeqParameterSetRbsp.SpsLongTermRefPicsFlag != 0 && rplsIdx < ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[listIdx] &&
    num_ref_entries[listIdx][rplsIdx] > 0)
@@ -8385,8 +8385,8 @@ sei_payload( payloadType, payloadSize ) {
     {
         private uint payloadType;
         public uint PayloadType { get { return payloadType; } set { payloadType = value; } }
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private BufferingPeriod buffering_period;
         public BufferingPeriod BufferingPeriod { get { return buffering_period; } set { buffering_period = value; } }
         private PicTiming pic_timing;
@@ -8449,7 +8449,7 @@ sei_payload( payloadType, payloadSize ) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public SeiPayload(uint payloadType, uint payloadSize)
+        public SeiPayload(uint payloadType, ulong payloadSize)
         {
             this.payloadType = payloadType;
             this.payloadSize = payloadSize;
@@ -8798,15 +8798,15 @@ filler_payload(payloadSize) {
     */
     public class FillerPayload : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint[] ff_byte;
         public uint[] FfByte { get { return ff_byte; } set { ff_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public FillerPayload(uint payloadSize)
+        public FillerPayload(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -8861,8 +8861,8 @@ user_data_registered_itu_t_t35(payloadSize) {
     */
     public class UserDataRegisteredItutT35 : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte itu_t_t35_country_code;
         public byte ItutT35CountryCode { get { return itu_t_t35_country_code; } set { itu_t_t35_country_code = value; } }
         private byte itu_t_t35_country_code_extension_byte;
@@ -8873,7 +8873,7 @@ user_data_registered_itu_t_t35(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public UserDataRegisteredItutT35(uint payloadSize)
+        public UserDataRegisteredItutT35(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -8949,8 +8949,8 @@ user_data_unregistered(payloadSize) {
     */
     public class UserDataUnregistered : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private BigInteger uuid_iso_iec_11578;
         public BigInteger UuidIsoIec11578 { get { return uuid_iso_iec_11578; } set { uuid_iso_iec_11578 = value; } }
         private byte[] user_data_payload_byte;
@@ -8959,7 +8959,7 @@ user_data_unregistered(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public UserDataUnregistered(uint payloadSize)
+        public UserDataUnregistered(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9034,8 +9034,8 @@ film_grain_characteristics(payloadSize) {
     */
     public class FilmGrainCharacteristics : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte fg_characteristics_cancel_flag;
         public byte FgCharacteristicsCancelFlag { get { return fg_characteristics_cancel_flag; } set { fg_characteristics_cancel_flag = value; } }
         private uint fg_model_id;
@@ -9068,15 +9068,15 @@ film_grain_characteristics(payloadSize) {
         public uint[][] FgIntensityIntervalLowerBound { get { return fg_intensity_interval_lower_bound; } set { fg_intensity_interval_lower_bound = value; } }
         private uint[][] fg_intensity_interval_upper_bound;
         public uint[][] FgIntensityIntervalUpperBound { get { return fg_intensity_interval_upper_bound; } set { fg_intensity_interval_upper_bound = value; } }
-        private int[][][] fg_comp_model_value;
-        public int[][][] FgCompModelValue { get { return fg_comp_model_value; } set { fg_comp_model_value = value; } }
+        private long[][][] fg_comp_model_value;
+        public long[][][] FgCompModelValue { get { return fg_comp_model_value; } set { fg_comp_model_value = value; } }
         private byte fg_characteristics_persistence_flag;
         public byte FgCharacteristicsPersistenceFlag { get { return fg_characteristics_persistence_flag; } set { fg_characteristics_persistence_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public FilmGrainCharacteristics(uint payloadSize)
+        public FilmGrainCharacteristics(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9117,7 +9117,7 @@ film_grain_characteristics(payloadSize) {
                 this.fg_num_model_values_minus1 = new uint[3];
                 this.fg_intensity_interval_lower_bound = new uint[3][];
                 this.fg_intensity_interval_upper_bound = new uint[3][];
-                this.fg_comp_model_value = new int[3][][];
+                this.fg_comp_model_value = new long[3][][];
                 for (c = 0; c < 3; c++)
                 {
 
@@ -9128,13 +9128,13 @@ film_grain_characteristics(payloadSize) {
 
                         this.fg_intensity_interval_lower_bound[c] = new uint[fg_num_intensity_intervals_minus1[c] + 1];
                         this.fg_intensity_interval_upper_bound[c] = new uint[fg_num_intensity_intervals_minus1[c] + 1];
-                        this.fg_comp_model_value[c] = new int[fg_num_intensity_intervals_minus1[c] + 1][];
+                        this.fg_comp_model_value[c] = new long[fg_num_intensity_intervals_minus1[c] + 1][];
                         for (i = 0; i <= fg_num_intensity_intervals_minus1[c]; i++)
                         {
                             size += stream.ReadUnsignedInt(size, 8, out this.fg_intensity_interval_lower_bound[c][i], "fg_intensity_interval_lower_bound");
                             size += stream.ReadUnsignedInt(size, 8, out this.fg_intensity_interval_upper_bound[c][i], "fg_intensity_interval_upper_bound");
 
-                            this.fg_comp_model_value[c][i] = new int[fg_num_model_values_minus1[c] + 1];
+                            this.fg_comp_model_value[c][i] = new long[fg_num_model_values_minus1[c] + 1];
                             for (j = 0; j <= fg_num_model_values_minus1[c]; j++)
                             {
                                 size += stream.ReadSignedIntGolomb(size, out this.fg_comp_model_value[c][i][j], "fg_comp_model_value");
@@ -9237,10 +9237,10 @@ frame_packing_arrangement(payloadSize) {
     */
     public class FramePackingArrangement : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint fp_arrangement_id;
-        public uint FpArrangementId { get { return fp_arrangement_id; } set { fp_arrangement_id = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong fp_arrangement_id;
+        public ulong FpArrangementId { get { return fp_arrangement_id; } set { fp_arrangement_id = value; } }
         private byte fp_arrangement_cancel_flag;
         public byte FpArrangementCancelFlag { get { return fp_arrangement_cancel_flag; } set { fp_arrangement_cancel_flag = value; } }
         private uint fp_arrangement_type;
@@ -9279,7 +9279,7 @@ frame_packing_arrangement(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public FramePackingArrangement(uint payloadSize)
+        public FramePackingArrangement(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9370,8 +9370,8 @@ mastering_display_colour_volume(payloadSize) {
     */
     public class MasteringDisplayColourVolume : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint[] mdcv_display_primaries_x;
         public uint[] MdcvDisplayPrimariesx { get { return mdcv_display_primaries_x; } set { mdcv_display_primaries_x = value; } }
         private uint[] mdcv_display_primaries_y;
@@ -9388,7 +9388,7 @@ mastering_display_colour_volume(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public MasteringDisplayColourVolume(uint payloadSize)
+        public MasteringDisplayColourVolume(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9445,8 +9445,8 @@ content_light_level_info(payloadSize) {
     */
     public class ContentLightLevelInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint clli_max_content_light_level;
         public uint ClliMaxContentLightLevel { get { return clli_max_content_light_level; } set { clli_max_content_light_level = value; } }
         private uint clli_max_pic_average_light_level;
@@ -9455,7 +9455,7 @@ content_light_level_info(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ContentLightLevelInfo(uint payloadSize)
+        public ContentLightLevelInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9490,13 +9490,13 @@ dependent_rap_indication(payloadSize) {
     */
     public class DependentRapIndication : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public DependentRapIndication(uint payloadSize)
+        public DependentRapIndication(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9528,15 +9528,15 @@ alternative_transfer_characteristics(payloadSize) {
     */
     public class AlternativeTransferCharacteristics : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint preferred_transfer_characteristics;
         public uint PreferredTransferCharacteristics { get { return preferred_transfer_characteristics; } set { preferred_transfer_characteristics = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public AlternativeTransferCharacteristics(uint payloadSize)
+        public AlternativeTransferCharacteristics(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9572,8 +9572,8 @@ ambient_viewing_environment(payloadSize) {
     */
     public class AmbientViewingEnvironment : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint ambient_illuminance;
         public uint AmbientIlluminance { get { return ambient_illuminance; } set { ambient_illuminance = value; } }
         private uint ambient_light_x;
@@ -9584,7 +9584,7 @@ ambient_viewing_environment(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public AmbientViewingEnvironment(uint payloadSize)
+        public AmbientViewingEnvironment(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9641,8 +9641,8 @@ content_colour_volume(payloadSize) {
     */
     public class ContentColourVolume : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte ccv_cancel_flag;
         public byte CcvCancelFlag { get { return ccv_cancel_flag; } set { ccv_cancel_flag = value; } }
         private byte ccv_persistence_flag;
@@ -9671,7 +9671,7 @@ content_colour_volume(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ContentColourVolume(uint payloadSize)
+        public ContentColourVolume(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9789,8 +9789,8 @@ equirectangular_projection(payloadSize) {
     */
     public class EquirectangularProjection : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte erp_cancel_flag;
         public byte ErpCancelFlag { get { return erp_cancel_flag; } set { erp_cancel_flag = value; } }
         private byte erp_persistence_flag;
@@ -9809,7 +9809,7 @@ equirectangular_projection(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public EquirectangularProjection(uint payloadSize)
+        public EquirectangularProjection(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -9893,8 +9893,8 @@ generalized_cubemap_projection(payloadSize) {
     */
     public class GeneralizedCubemapProjection : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte gcmp_cancel_flag;
         public byte GcmpCancelFlag { get { return gcmp_cancel_flag; } set { gcmp_cancel_flag = value; } }
         private byte gcmp_persistence_flag;
@@ -9927,7 +9927,7 @@ generalized_cubemap_projection(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public GeneralizedCubemapProjection(uint payloadSize)
+        public GeneralizedCubemapProjection(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -10060,8 +10060,8 @@ regionwise_packing(payloadSize) {
     */
     public class RegionwisePacking : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte rwp_cancel_flag;
         public byte RwpCancelFlag { get { return rwp_cancel_flag; } set { rwp_cancel_flag = value; } }
         private byte rwp_persistence_flag;
@@ -10120,7 +10120,7 @@ regionwise_packing(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public RegionwisePacking(uint payloadSize)
+        public RegionwisePacking(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -10273,8 +10273,8 @@ omni_viewport(payloadSize) {
     */
     public class OmniViewport : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint omni_viewport_id;
         public uint OmniViewportId { get { return omni_viewport_id; } set { omni_viewport_id = value; } }
         private byte omni_viewport_cancel_flag;
@@ -10297,7 +10297,7 @@ omni_viewport(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public OmniViewport(uint payloadSize)
+        public OmniViewport(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -10385,8 +10385,8 @@ frame_field_info(payloadSize) {
     */
     public class FrameFieldInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte ffi_field_pic_flag;
         public byte FfiFieldPicFlag { get { return ffi_field_pic_flag; } set { ffi_field_pic_flag = value; } }
         private byte ffi_bottom_field_flag;
@@ -10409,7 +10409,7 @@ frame_field_info(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public FrameFieldInfo(uint payloadSize)
+        public FrameFieldInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -10497,8 +10497,8 @@ sample_aspect_ratio_info(payloadSize) {
     */
     public class SampleAspectRatioInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte sari_cancel_flag;
         public byte SariCancelFlag { get { return sari_cancel_flag; } set { sari_cancel_flag = value; } }
         private byte sari_persistence_flag;
@@ -10513,7 +10513,7 @@ sample_aspect_ratio_info(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public SampleAspectRatioInfo(uint payloadSize)
+        public SampleAspectRatioInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -10630,8 +10630,8 @@ annotated_regions(payloadSize) {
     */
     public class AnnotatedRegions : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte ar_cancel_flag;
         public byte ArCancelFlag { get { return ar_cancel_flag; } set { ar_cancel_flag = value; } }
         private byte ar_not_optimized_for_viewing_flag;
@@ -10654,24 +10654,24 @@ annotated_regions(payloadSize) {
         public Dictionary<int, uint> ArBitEqualToZero { get { return ar_bit_equal_to_zero; } set { ar_bit_equal_to_zero = value; } }
         private byte[] ar_object_label_language;
         public byte[] ArObjectLabelLanguage { get { return ar_object_label_language; } set { ar_object_label_language = value; } }
-        private uint ar_num_label_updates;
-        public uint ArNumLabelUpdates { get { return ar_num_label_updates; } set { ar_num_label_updates = value; } }
-        private uint[] ar_label_idx;
-        public uint[] ArLabelIdx { get { return ar_label_idx; } set { ar_label_idx = value; } }
+        private ulong ar_num_label_updates;
+        public ulong ArNumLabelUpdates { get { return ar_num_label_updates; } set { ar_num_label_updates = value; } }
+        private ulong[] ar_label_idx;
+        public ulong[] ArLabelIdx { get { return ar_label_idx; } set { ar_label_idx = value; } }
         private byte[] ar_label_cancel_flag;
         public byte[] ArLabelCancelFlag { get { return ar_label_cancel_flag; } set { ar_label_cancel_flag = value; } }
         private byte[][] ar_label;
         public byte[][] ArLabel { get { return ar_label; } set { ar_label = value; } }
-        private uint ar_num_object_updates;
-        public uint ArNumObjectUpdates { get { return ar_num_object_updates; } set { ar_num_object_updates = value; } }
-        private uint[] ar_object_idx;
-        public uint[] ArObjectIdx { get { return ar_object_idx; } set { ar_object_idx = value; } }
+        private ulong ar_num_object_updates;
+        public ulong ArNumObjectUpdates { get { return ar_num_object_updates; } set { ar_num_object_updates = value; } }
+        private ulong[] ar_object_idx;
+        public ulong[] ArObjectIdx { get { return ar_object_idx; } set { ar_object_idx = value; } }
         private byte[] ar_object_cancel_flag;
         public byte[] ArObjectCancelFlag { get { return ar_object_cancel_flag; } set { ar_object_cancel_flag = value; } }
         private byte[] ar_object_label_update_flag;
         public byte[] ArObjectLabelUpdateFlag { get { return ar_object_label_update_flag; } set { ar_object_label_update_flag = value; } }
-        private uint[] ar_object_label_idx;
-        public uint[] ArObjectLabelIdx { get { return ar_object_label_idx; } set { ar_object_label_idx = value; } }
+        private ulong[] ar_object_label_idx;
+        public ulong[] ArObjectLabelIdx { get { return ar_object_label_idx; } set { ar_object_label_idx = value; } }
         private byte[] ar_bounding_box_update_flag;
         public byte[] ArBoundingBoxUpdateFlag { get { return ar_bounding_box_update_flag; } set { ar_bounding_box_update_flag = value; } }
         private byte[] ar_bounding_box_cancel_flag;
@@ -10692,7 +10692,7 @@ annotated_regions(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public AnnotatedRegions(uint payloadSize)
+        public AnnotatedRegions(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -10739,7 +10739,7 @@ annotated_regions(payloadSize) {
                     }
                     size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_label_updates, "ar_num_label_updates");
 
-                    this.ar_label_idx = new uint[ar_num_label_updates];
+                    this.ar_label_idx = new ulong[ar_num_label_updates];
                     this.ar_label_cancel_flag = new byte[ar_num_label_updates];
                     this.ar_label = new byte[ar_num_label_updates][];
                     for (i = 0; i < ar_num_label_updates; i++)
@@ -10763,10 +10763,10 @@ annotated_regions(payloadSize) {
                 }
                 size += stream.ReadUnsignedIntGolomb(size, out this.ar_num_object_updates, "ar_num_object_updates");
 
-                this.ar_object_idx = new uint[ar_num_object_updates];
+                this.ar_object_idx = new ulong[ar_num_object_updates];
                 this.ar_object_cancel_flag = new byte[ar_num_object_updates];
                 this.ar_object_label_update_flag = new byte[ar_num_object_updates];
-                this.ar_object_label_idx = new uint[ar_num_object_updates];
+                this.ar_object_label_idx = new ulong[ar_num_object_updates];
                 this.ar_bounding_box_update_flag = new byte[ar_num_object_updates];
                 this.ar_bounding_box_cancel_flag = new byte[ar_num_object_updates];
                 this.ar_bounding_box_top = new uint[ar_num_object_updates];
@@ -10967,8 +10967,8 @@ scalability_dimension_info(payloadSize) {
     */
     public class ScalabilityDimensionInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint sdi_max_layers_minus1;
         public uint SdiMaxLayersMinus1 { get { return sdi_max_layers_minus1; } set { sdi_max_layers_minus1 = value; } }
         private byte sdi_multiview_info_flag;
@@ -10991,7 +10991,7 @@ scalability_dimension_info(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ScalabilityDimensionInfo(uint payloadSize)
+        public ScalabilityDimensionInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -11147,22 +11147,22 @@ multiview_acquisition_info(payloadSize) {
     */
     public class MultiviewAcquisitionInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte intrinsic_param_flag;
         public byte IntrinsicParamFlag { get { return intrinsic_param_flag; } set { intrinsic_param_flag = value; } }
         private byte extrinsic_param_flag;
         public byte ExtrinsicParamFlag { get { return extrinsic_param_flag; } set { extrinsic_param_flag = value; } }
-        private uint num_views_minus1;
-        public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
+        private ulong num_views_minus1;
+        public ulong NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
         private byte intrinsic_params_equal_flag;
         public byte IntrinsicParamsEqualFlag { get { return intrinsic_params_equal_flag; } set { intrinsic_params_equal_flag = value; } }
-        private uint prec_focal_length;
-        public uint PrecFocalLength { get { return prec_focal_length; } set { prec_focal_length = value; } }
-        private uint prec_principal_point;
-        public uint PrecPrincipalPoint { get { return prec_principal_point; } set { prec_principal_point = value; } }
-        private uint prec_skew_factor;
-        public uint PrecSkewFactor { get { return prec_skew_factor; } set { prec_skew_factor = value; } }
+        private ulong prec_focal_length;
+        public ulong PrecFocalLength { get { return prec_focal_length; } set { prec_focal_length = value; } }
+        private ulong prec_principal_point;
+        public ulong PrecPrincipalPoint { get { return prec_principal_point; } set { prec_principal_point = value; } }
+        private ulong prec_skew_factor;
+        public ulong PrecSkewFactor { get { return prec_skew_factor; } set { prec_skew_factor = value; } }
         private byte[] sign_focal_length_x;
         public byte[] SignFocalLengthx { get { return sign_focal_length_x; } set { sign_focal_length_x = value; } }
         private uint[] exponent_focal_length_x;
@@ -11193,10 +11193,10 @@ multiview_acquisition_info(payloadSize) {
         public uint[] ExponentSkewFactor { get { return exponent_skew_factor; } set { exponent_skew_factor = value; } }
         private uint[] mantissa_skew_factor;
         public uint[] MantissaSkewFactor { get { return mantissa_skew_factor; } set { mantissa_skew_factor = value; } }
-        private uint prec_rotation_param;
-        public uint PrecRotationParam { get { return prec_rotation_param; } set { prec_rotation_param = value; } }
-        private uint prec_translation_param;
-        public uint PrecTranslationParam { get { return prec_translation_param; } set { prec_translation_param = value; } }
+        private ulong prec_rotation_param;
+        public ulong PrecRotationParam { get { return prec_rotation_param; } set { prec_rotation_param = value; } }
+        private ulong prec_translation_param;
+        public ulong PrecTranslationParam { get { return prec_translation_param; } set { prec_translation_param = value; } }
         private byte[][][] sign_r;
         public byte[][][] Signr { get { return sign_r; } set { sign_r = value; } }
         private uint[][][] exponent_r;
@@ -11213,7 +11213,7 @@ multiview_acquisition_info(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public MultiviewAcquisitionInfo(uint payloadSize)
+        public MultiviewAcquisitionInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -11399,17 +11399,17 @@ multiview_view_position(payloadSize) {
     */
     public class MultiviewViewPosition : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint num_views_minus1;
-        public uint NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
-        private uint[] view_position;
-        public uint[] ViewPosition { get { return view_position; } set { view_position = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong num_views_minus1;
+        public ulong NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
+        private ulong[] view_position;
+        public ulong[] ViewPosition { get { return view_position; } set { view_position = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public MultiviewViewPosition(uint payloadSize)
+        public MultiviewViewPosition(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -11421,7 +11421,7 @@ multiview_view_position(payloadSize) {
             uint i = 0;
             size += stream.ReadUnsignedIntGolomb(size, out this.num_views_minus1, "num_views_minus1");
 
-            this.view_position = new uint[num_views_minus1 + 1];
+            this.view_position = new ulong[num_views_minus1 + 1];
             for (i = 0; i <= num_views_minus1; i++)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.view_position[i], "view_position");
@@ -11476,8 +11476,8 @@ depth_representation_info(payloadSize) {
     */
     public class DepthRepresentationInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte z_near_flag;
         public byte zNearFlag { get { return z_near_flag; } set { z_near_flag = value; } }
         private byte z_far_flag;
@@ -11486,10 +11486,10 @@ depth_representation_info(payloadSize) {
         public byte dMinFlag { get { return d_min_flag; } set { d_min_flag = value; } }
         private byte d_max_flag;
         public byte dMaxFlag { get { return d_max_flag; } set { d_max_flag = value; } }
-        private uint depth_representation_type;
-        public uint DepthRepresentationType { get { return depth_representation_type; } set { depth_representation_type = value; } }
-        private uint disparity_ref_view_id;
-        public uint DisparityRefViewId { get { return disparity_ref_view_id; } set { disparity_ref_view_id = value; } }
+        private ulong depth_representation_type;
+        public ulong DepthRepresentationType { get { return depth_representation_type; } set { depth_representation_type = value; } }
+        private ulong disparity_ref_view_id;
+        public ulong DisparityRefViewId { get { return disparity_ref_view_id; } set { disparity_ref_view_id = value; } }
         private DepthRepInfoElement depth_rep_info_element;
         public DepthRepInfoElement DepthRepInfoElement { get { return depth_rep_info_element; } set { depth_rep_info_element = value; } }
         private DepthRepInfoElement depth_rep_info_element0;
@@ -11498,15 +11498,15 @@ depth_representation_info(payloadSize) {
         public DepthRepInfoElement DepthRepInfoElement1 { get { return depth_rep_info_element1; } set { depth_rep_info_element1 = value; } }
         private DepthRepInfoElement depth_rep_info_element2;
         public DepthRepInfoElement DepthRepInfoElement2 { get { return depth_rep_info_element2; } set { depth_rep_info_element2 = value; } }
-        private uint depth_nonlinear_representation_num_minus1;
-        public uint DepthNonlinearRepresentationNumMinus1 { get { return depth_nonlinear_representation_num_minus1; } set { depth_nonlinear_representation_num_minus1 = value; } }
-        private uint[] depth_nonlinear_representation_model;
-        public uint[] DepthNonlinearRepresentationModel { get { return depth_nonlinear_representation_model; } set { depth_nonlinear_representation_model = value; } }
+        private ulong depth_nonlinear_representation_num_minus1;
+        public ulong DepthNonlinearRepresentationNumMinus1 { get { return depth_nonlinear_representation_num_minus1; } set { depth_nonlinear_representation_num_minus1 = value; } }
+        private ulong[] depth_nonlinear_representation_model;
+        public ulong[] DepthNonlinearRepresentationModel { get { return depth_nonlinear_representation_model; } set { depth_nonlinear_representation_model = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public DepthRepresentationInfo(uint payloadSize)
+        public DepthRepresentationInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -11555,7 +11555,7 @@ depth_representation_info(payloadSize) {
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_num_minus1, "depth_nonlinear_representation_num_minus1");
 
-                this.depth_nonlinear_representation_model = new uint[depth_nonlinear_representation_num_minus1 + 1 + 1];
+                this.depth_nonlinear_representation_model = new ulong[depth_nonlinear_representation_num_minus1 + 1 + 1];
                 for (i = 1; i <= depth_nonlinear_representation_num_minus1 + 1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.depth_nonlinear_representation_model[i], "depth_nonlinear_representation_model");
@@ -11690,8 +11690,8 @@ alpha_channel_info(payloadSize) {
     */
     public class AlphaChannelInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte alpha_channel_cancel_flag;
         public byte AlphaChannelCancelFlag { get { return alpha_channel_cancel_flag; } set { alpha_channel_cancel_flag = value; } }
         private uint alpha_channel_use_idc;
@@ -11712,7 +11712,7 @@ alpha_channel_info(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public AlphaChannelInfo(uint payloadSize)
+        public AlphaChannelInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -11781,8 +11781,8 @@ display_orientation(payloadSize) {
     */
     public class DisplayOrientation : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte display_orientation_cancel_flag;
         public byte DisplayOrientationCancelFlag { get { return display_orientation_cancel_flag; } set { display_orientation_cancel_flag = value; } }
         private byte display_orientation_persistence_flag;
@@ -11795,7 +11795,7 @@ display_orientation(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public DisplayOrientation(uint payloadSize)
+        public DisplayOrientation(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -11872,10 +11872,10 @@ colour_transform_info(payloadSize) {
     */
     public class ColourTransformInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint colour_transform_id;
-        public uint ColourTransformId { get { return colour_transform_id; } set { colour_transform_id = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong colour_transform_id;
+        public ulong ColourTransformId { get { return colour_transform_id; } set { colour_transform_id = value; } }
         private byte colour_transform_cancel_flag;
         public byte ColourTransformCancelFlag { get { return colour_transform_cancel_flag; } set { colour_transform_cancel_flag = value; } }
         private byte colour_transform_persistence_flag;
@@ -11908,7 +11908,7 @@ colour_transform_info(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ColourTransformInfo(uint payloadSize)
+        public ColourTransformInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -12057,8 +12057,8 @@ shutter_interval_info(payloadSize) {
     */
     public class ShutterIntervalInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint sii_time_scale;
         public uint SiiTimeScale { get { return sii_time_scale; } set { sii_time_scale = value; } }
         private byte sii_fixed_shutter_interval_within_clvs_flag;
@@ -12073,7 +12073,7 @@ shutter_interval_info(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ShutterIntervalInfo(uint payloadSize)
+        public ShutterIntervalInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -12143,8 +12143,8 @@ phase_indication(payloadSize) {
     */
     public class PhaseIndication : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint pi_hor_phase_num;
         public uint PiHorPhaseNum { get { return pi_hor_phase_num; } set { pi_hor_phase_num = value; } }
         private uint pi_hor_phase_den_minus1;
@@ -12157,7 +12157,7 @@ phase_indication(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public PhaseIndication(uint payloadSize)
+        public PhaseIndication(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -12198,15 +12198,15 @@ reserved_message(payloadSize) {
     */
     public class ReservedMessage : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint[] reserved_message_payload_byte;
         public uint[] ReservedMessagePayloadByte { get { return reserved_message_payload_byte; } set { reserved_message_payload_byte = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ReservedMessage(uint payloadSize)
+        public ReservedMessage(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -12308,8 +12308,8 @@ buffering_period( payloadSize ) {
     */
     public class BufferingPeriod : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte bp_nal_hrd_params_present_flag;
         public byte BpNalHrdParamsPresentFlag { get { return bp_nal_hrd_params_present_flag; } set { bp_nal_hrd_params_present_flag = value; } }
         private byte bp_vcl_hrd_params_present_flag;
@@ -12342,12 +12342,12 @@ buffering_period( payloadSize ) {
         public uint BpMaxSublayersMinus1 { get { return bp_max_sublayers_minus1; } set { bp_max_sublayers_minus1 = value; } }
         private byte bp_cpb_removal_delay_deltas_present_flag;
         public byte BpCpbRemovalDelayDeltasPresentFlag { get { return bp_cpb_removal_delay_deltas_present_flag; } set { bp_cpb_removal_delay_deltas_present_flag = value; } }
-        private uint bp_num_cpb_removal_delay_deltas_minus1;
-        public uint BpNumCpbRemovalDelayDeltasMinus1 { get { return bp_num_cpb_removal_delay_deltas_minus1; } set { bp_num_cpb_removal_delay_deltas_minus1 = value; } }
+        private ulong bp_num_cpb_removal_delay_deltas_minus1;
+        public ulong BpNumCpbRemovalDelayDeltasMinus1 { get { return bp_num_cpb_removal_delay_deltas_minus1; } set { bp_num_cpb_removal_delay_deltas_minus1 = value; } }
         private uint[] bp_cpb_removal_delay_delta_val;
         public uint[] BpCpbRemovalDelayDeltaVal { get { return bp_cpb_removal_delay_delta_val; } set { bp_cpb_removal_delay_delta_val = value; } }
-        private uint bp_cpb_cnt_minus1;
-        public uint BpCpbCntMinus1 { get { return bp_cpb_cnt_minus1; } set { bp_cpb_cnt_minus1 = value; } }
+        private ulong bp_cpb_cnt_minus1;
+        public ulong BpCpbCntMinus1 { get { return bp_cpb_cnt_minus1; } set { bp_cpb_cnt_minus1 = value; } }
         private byte bp_sublayer_initial_cpb_removal_delay_present_flag;
         public byte BpSublayerInitialCpbRemovalDelayPresentFlag { get { return bp_sublayer_initial_cpb_removal_delay_present_flag; } set { bp_sublayer_initial_cpb_removal_delay_present_flag = value; } }
         private uint[][] bp_nal_initial_cpb_removal_delay;
@@ -12368,8 +12368,8 @@ buffering_period( payloadSize ) {
         public uint[][] BpVclInitialAltCpbRemovalOffset { get { return bp_vcl_initial_alt_cpb_removal_offset; } set { bp_vcl_initial_alt_cpb_removal_offset = value; } }
         private byte bp_sublayer_dpb_output_offsets_present_flag;
         public byte BpSublayerDpbOutputOffsetsPresentFlag { get { return bp_sublayer_dpb_output_offsets_present_flag; } set { bp_sublayer_dpb_output_offsets_present_flag = value; } }
-        private uint[] bp_dpb_output_tid_offset;
-        public uint[] BpDpbOutputTidOffset { get { return bp_dpb_output_tid_offset; } set { bp_dpb_output_tid_offset = value; } }
+        private ulong[] bp_dpb_output_tid_offset;
+        public ulong[] BpDpbOutputTidOffset { get { return bp_dpb_output_tid_offset; } set { bp_dpb_output_tid_offset = value; } }
         private byte bp_alt_cpb_params_present_flag;
         public byte BpAltCpbParamsPresentFlag { get { return bp_alt_cpb_params_present_flag; } set { bp_alt_cpb_params_present_flag = value; } }
         private byte bp_use_alt_cpb_params_flag;
@@ -12378,7 +12378,7 @@ buffering_period( payloadSize ) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public BufferingPeriod(uint payloadSize)
+        public BufferingPeriod(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -12496,7 +12496,7 @@ buffering_period( payloadSize ) {
             if (bp_sublayer_dpb_output_offsets_present_flag != 0)
             {
 
-                this.bp_dpb_output_tid_offset = new uint[bp_max_sublayers_minus1 + 1];
+                this.bp_dpb_output_tid_offset = new ulong[bp_max_sublayers_minus1 + 1];
                 for (i = 0; i < bp_max_sublayers_minus1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.bp_dpb_output_tid_offset[i], "bp_dpb_output_tid_offset");
@@ -12703,8 +12703,8 @@ pic_timing( payloadSize ) {
     */
     public class PicTiming : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint[] pt_cpb_removal_delay_minus1;
         public uint[] PtCpbRemovalDelayMinus1 { get { return pt_cpb_removal_delay_minus1; } set { pt_cpb_removal_delay_minus1 = value; } }
         private byte[] pt_sublayer_delays_present_flag;
@@ -12735,14 +12735,14 @@ pic_timing( payloadSize ) {
         public uint[] PtVclDpbDelayOffset { get { return pt_vcl_dpb_delay_offset; } set { pt_vcl_dpb_delay_offset = value; } }
         private uint pt_dpb_output_du_delay;
         public uint PtDpbOutputDuDelay { get { return pt_dpb_output_du_delay; } set { pt_dpb_output_du_delay = value; } }
-        private uint pt_num_decoding_units_minus1;
-        public uint PtNumDecodingUnitsMinus1 { get { return pt_num_decoding_units_minus1; } set { pt_num_decoding_units_minus1 = value; } }
+        private ulong pt_num_decoding_units_minus1;
+        public ulong PtNumDecodingUnitsMinus1 { get { return pt_num_decoding_units_minus1; } set { pt_num_decoding_units_minus1 = value; } }
         private byte pt_du_common_cpb_removal_delay_flag;
         public byte PtDuCommonCpbRemovalDelayFlag { get { return pt_du_common_cpb_removal_delay_flag; } set { pt_du_common_cpb_removal_delay_flag = value; } }
         private uint[] pt_du_common_cpb_removal_delay_increment_minus1;
         public uint[] PtDuCommonCpbRemovalDelayIncrementMinus1 { get { return pt_du_common_cpb_removal_delay_increment_minus1; } set { pt_du_common_cpb_removal_delay_increment_minus1 = value; } }
-        private uint[] pt_num_nalus_in_du_minus1;
-        public uint[] PtNumNalusInDuMinus1 { get { return pt_num_nalus_in_du_minus1; } set { pt_num_nalus_in_du_minus1 = value; } }
+        private ulong[] pt_num_nalus_in_du_minus1;
+        public ulong[] PtNumNalusInDuMinus1 { get { return pt_num_nalus_in_du_minus1; } set { pt_num_nalus_in_du_minus1 = value; } }
         private uint[][] pt_du_cpb_removal_delay_increment_minus1;
         public uint[][] PtDuCpbRemovalDelayIncrementMinus1 { get { return pt_du_cpb_removal_delay_increment_minus1; } set { pt_du_cpb_removal_delay_increment_minus1 = value; } }
         private byte pt_delay_for_concatenation_ensured_flag;
@@ -12753,7 +12753,7 @@ pic_timing( payloadSize ) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public PicTiming(uint payloadSize)
+        public PicTiming(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -12884,7 +12884,7 @@ pic_timing( payloadSize ) {
                         }
                     }
 
-                    this.pt_num_nalus_in_du_minus1 = new uint[pt_num_decoding_units_minus1 + 1];
+                    this.pt_num_nalus_in_du_minus1 = new ulong[pt_num_decoding_units_minus1 + 1];
                     this.pt_du_cpb_removal_delay_increment_minus1 = new uint[pt_num_decoding_units_minus1 + 1][];
                     for (i = 0; i <= pt_num_decoding_units_minus1; i++)
                     {
@@ -13079,10 +13079,10 @@ dui_dpb_output_du_delay u(v)
     */
     public class DecodingUnitInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
-        private uint dui_decoding_unit_idx;
-        public uint DuiDecodingUnitIdx { get { return dui_decoding_unit_idx; } set { dui_decoding_unit_idx = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong dui_decoding_unit_idx;
+        public ulong DuiDecodingUnitIdx { get { return dui_decoding_unit_idx; } set { dui_decoding_unit_idx = value; } }
         private byte[] dui_sublayer_delays_present_flag;
         public byte[] DuiSublayerDelaysPresentFlag { get { return dui_sublayer_delays_present_flag; } set { dui_sublayer_delays_present_flag = value; } }
         private uint[] dui_du_cpb_removal_delay_increment;
@@ -13095,7 +13095,7 @@ dui_dpb_output_du_delay u(v)
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public DecodingUnitInfo(uint payloadSize)
+        public DecodingUnitInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -13212,30 +13212,30 @@ sei_message()
     */
     public class ScalableNesting : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte sn_ols_flag;
         public byte SnOlsFlag { get { return sn_ols_flag; } set { sn_ols_flag = value; } }
         private byte sn_subpic_flag;
         public byte SnSubpicFlag { get { return sn_subpic_flag; } set { sn_subpic_flag = value; } }
-        private uint sn_num_olss_minus1;
-        public uint SnNumOlssMinus1 { get { return sn_num_olss_minus1; } set { sn_num_olss_minus1 = value; } }
-        private uint[] sn_ols_idx_delta_minus1;
-        public uint[] SnOlsIdxDeltaMinus1 { get { return sn_ols_idx_delta_minus1; } set { sn_ols_idx_delta_minus1 = value; } }
+        private ulong sn_num_olss_minus1;
+        public ulong SnNumOlssMinus1 { get { return sn_num_olss_minus1; } set { sn_num_olss_minus1 = value; } }
+        private ulong[] sn_ols_idx_delta_minus1;
+        public ulong[] SnOlsIdxDeltaMinus1 { get { return sn_ols_idx_delta_minus1; } set { sn_ols_idx_delta_minus1 = value; } }
         private byte sn_all_layers_flag;
         public byte SnAllLayersFlag { get { return sn_all_layers_flag; } set { sn_all_layers_flag = value; } }
-        private uint sn_num_layers_minus1;
-        public uint SnNumLayersMinus1 { get { return sn_num_layers_minus1; } set { sn_num_layers_minus1 = value; } }
+        private ulong sn_num_layers_minus1;
+        public ulong SnNumLayersMinus1 { get { return sn_num_layers_minus1; } set { sn_num_layers_minus1 = value; } }
         private uint[] sn_layer_id;
         public uint[] SnLayerId { get { return sn_layer_id; } set { sn_layer_id = value; } }
-        private uint sn_num_subpics_minus1;
-        public uint SnNumSubpicsMinus1 { get { return sn_num_subpics_minus1; } set { sn_num_subpics_minus1 = value; } }
-        private uint sn_subpic_id_len_minus1;
-        public uint SnSubpicIdLenMinus1 { get { return sn_subpic_id_len_minus1; } set { sn_subpic_id_len_minus1 = value; } }
+        private ulong sn_num_subpics_minus1;
+        public ulong SnNumSubpicsMinus1 { get { return sn_num_subpics_minus1; } set { sn_num_subpics_minus1 = value; } }
+        private ulong sn_subpic_id_len_minus1;
+        public ulong SnSubpicIdLenMinus1 { get { return sn_subpic_id_len_minus1; } set { sn_subpic_id_len_minus1 = value; } }
         private uint[] sn_subpic_id;
         public uint[] SnSubpicId { get { return sn_subpic_id; } set { sn_subpic_id = value; } }
-        private uint sn_num_seis_minus1;
-        public uint SnNumSeisMinus1 { get { return sn_num_seis_minus1; } set { sn_num_seis_minus1 = value; } }
+        private ulong sn_num_seis_minus1;
+        public ulong SnNumSeisMinus1 { get { return sn_num_seis_minus1; } set { sn_num_seis_minus1 = value; } }
         private Dictionary<int, byte> sn_zero_bit = new Dictionary<int, byte>();
         public Dictionary<int, byte> SnZeroBit { get { return sn_zero_bit; } set { sn_zero_bit = value; } }
         private SeiMessage[] sei_message;
@@ -13244,7 +13244,7 @@ sei_message()
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ScalableNesting(uint payloadSize)
+        public ScalableNesting(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -13262,7 +13262,7 @@ sei_message()
             if (sn_ols_flag != 0)
             {
 
-                this.sn_ols_idx_delta_minus1 = new uint[sn_num_olss_minus1 + 1];
+                this.sn_ols_idx_delta_minus1 = new ulong[sn_num_olss_minus1 + 1];
                 for (i = 0; i <= sn_num_olss_minus1; i++)
                 {
                     size += stream.ReadUnsignedIntGolomb(size, out this.sn_ols_idx_delta_minus1[i], "sn_ols_idx_delta_minus1");
@@ -13405,16 +13405,16 @@ sli_ref_level_fraction_minus1[ i ][ j ][ k ] u(8)
     */
     public class SubpicLevelInfo : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint sli_num_ref_levels_minus1;
         public uint SliNumRefLevelsMinus1 { get { return sli_num_ref_levels_minus1; } set { sli_num_ref_levels_minus1 = value; } }
         private byte sli_cbr_constraint_flag;
         public byte SliCbrConstraintFlag { get { return sli_cbr_constraint_flag; } set { sli_cbr_constraint_flag = value; } }
         private byte sli_explicit_fraction_present_flag;
         public byte SliExplicitFractionPresentFlag { get { return sli_explicit_fraction_present_flag; } set { sli_explicit_fraction_present_flag = value; } }
-        private uint sli_num_subpics_minus1;
-        public uint SliNumSubpicsMinus1 { get { return sli_num_subpics_minus1; } set { sli_num_subpics_minus1 = value; } }
+        private ulong sli_num_subpics_minus1;
+        public ulong SliNumSubpicsMinus1 { get { return sli_num_subpics_minus1; } set { sli_num_subpics_minus1 = value; } }
         private uint sli_max_sublayers_minus1;
         public uint SliMaxSublayersMinus1 { get { return sli_max_sublayers_minus1; } set { sli_max_sublayers_minus1 = value; } }
         private byte sli_sublayer_info_present_flag;
@@ -13431,7 +13431,7 @@ sli_ref_level_fraction_minus1[ i ][ j ][ k ] u(8)
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public SubpicLevelInfo(uint payloadSize)
+        public SubpicLevelInfo(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -13550,15 +13550,15 @@ parameter_sets_inclusion_indication(payloadSize) {
     */
     public class ParameterSetsInclusionIndication : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte psii_self_contained_clvs_flag;
         public byte PsiiSelfContainedClvsFlag { get { return psii_self_contained_clvs_flag; } set { psii_self_contained_clvs_flag = value; } }
 
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public ParameterSetsInclusionIndication(uint payloadSize)
+        public ParameterSetsInclusionIndication(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -13599,8 +13599,8 @@ sphere_rotation(payloadSize) {
     */
     public class SphereRotation : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private byte sphere_rotation_cancel_flag;
         public byte SphereRotationCancelFlag { get { return sphere_rotation_cancel_flag; } set { sphere_rotation_cancel_flag = value; } }
         private byte sphere_rotation_persistence_flag;
@@ -13617,7 +13617,7 @@ sphere_rotation(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public SphereRotation(uint payloadSize)
+        public SphereRotation(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
@@ -13679,8 +13679,8 @@ decoded_picture_hash(payloadSize) {
     */
     public class DecodedPictureHash : IItuSerializable
     {
-        private uint payloadSize;
-        public uint PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
+        private ulong payloadSize;
+        public ulong PayloadSize { get { return payloadSize; } set { payloadSize = value; } }
         private uint dph_sei_hash_type;
         public uint DphSeiHashType { get { return dph_sei_hash_type; } set { dph_sei_hash_type = value; } }
         private byte dph_sei_single_component_flag;
@@ -13697,7 +13697,7 @@ decoded_picture_hash(payloadSize) {
         public int HasMoreRbspData { get; set; }
         public int[] ReadNextBits { get; set; }
 
-        public DecodedPictureHash(uint payloadSize)
+        public DecodedPictureHash(ulong payloadSize)
         {
             this.payloadSize = payloadSize;
         }
