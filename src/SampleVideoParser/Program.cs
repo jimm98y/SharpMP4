@@ -12,8 +12,8 @@ using System.Linq;
 // .\ffmpeg.exe - i "frag_bunny.mp4" - c:v copy -bsf:v trace_headers -f null -  > log.txt 2>&1
 
 //Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
-Log.SinkInfo = (o, e) => { Console.WriteLine(o); };
-Log.SinkError = (o, e) => { 
+SharpMP4.Log.SinkInfo = (o, e) => { Console.WriteLine(o); };
+SharpMP4.Log.SinkError = (o, e) => { 
     Debug.WriteLine(o);
     try
     {
@@ -25,6 +25,11 @@ Log.SinkError = (o, e) => {
     }
 };
 
+SharpH26X.Log.SinkInfo = (o, e) =>
+{
+    Debug.WriteLine(o);
+};
+
 //var files = File.ReadAllLines("C:\\Temp\\testFiles0.txt");
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
 //var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
@@ -33,7 +38,7 @@ var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare
 
 foreach (var file in files)
 {
-    Log.Info($"----Reading: {file}");
+    SharpMP4.Log.Info($"----Reading: {file}");
 
     try
     {
@@ -46,7 +51,7 @@ foreach (var file in files)
             }
             catch (SharpMP4.IsoEndOfStreamException)
             {
-                Log.Error($"Invalid file: {file}");
+                SharpMP4.Log.Error($"Invalid file: {file}");
                 continue;
             }
 
@@ -178,7 +183,7 @@ foreach (var file in files)
             else
             {
                 //throw new NotSupportedException();
-                Log.Error($"{file}");
+                SharpMP4.Log.Error($"{file}");
                 continue;
             }
 
@@ -219,7 +224,7 @@ foreach (var file in files)
                         {
                             uint trackId = (trun.GetParent() as TrackFragmentBox).Children.OfType<TrackFragmentHeaderBox>().First().TrackID;
                             bool isVideo = trackId == videoTrackId;
-                            if (Log.DebugEnabled) Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
+                            if (SharpMP4.Log.DebugEnabled) SharpMP4.Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
 
                             for (int j = 0; j < trun._TrunEntry.Length; j++)
                             {
@@ -234,7 +239,7 @@ foreach (var file in files)
                                     }
                                     catch (Exception)
                                     {
-                                        Log.Error($"---Error reading {file}");
+                                        SharpMP4.Log.Error($"---Error reading {file}");
                                     }
                                 }
                                 else
@@ -289,7 +294,7 @@ foreach (var file in files)
                                 }
                                 catch (Exception)
                                 {
-                                    Log.Error($"---Error reading {file}");
+                                    SharpMP4.Log.Error($"---Error reading {file}");
                                 }
                             }
                         }
@@ -323,7 +328,7 @@ foreach (var file in files)
                             }
                             catch (Exception)
                             {
-                                Log.Error($"---Error reading {file}");
+                                SharpMP4.Log.Error($"---Error reading {file}");
                             }
                         }
                     }
@@ -363,7 +368,7 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
     ulong size = 0;
     long offsetInBytes = 0;
 
-    Log.Debug($"AU begin {sampleSizeInBytes}");
+    SharpMP4.Log.Debug($"AU begin {sampleSizeInBytes}");
 
     do
     {
@@ -390,7 +395,7 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
 
         if (nalUnitLength > (sampleSizeInBytes - offsetInBytes))
         {
-            Log.Error($"Invalid NALU size: {nalUnitLength}");
+            SharpMP4.Log.Error($"Invalid NALU size: {nalUnitLength}");
             nalUnitLength = (uint)(sampleSizeInBytes - offsetInBytes);
             size += nalUnitLength;
             offsetInBytes += nalUnitLength;
@@ -405,7 +410,7 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
     if (offsetInBytes != sampleSizeInBytes)
         throw new Exception("Mismatch!");
 
-    Log.Debug("AU end");
+    SharpMP4.Log.Debug("AU end");
 
     return size;
 }
@@ -451,12 +456,12 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
             {
                 if (nu.NalUnitType == H264NALTypes.UNSPECIFIED0) // 0
                 {
-                    Log.Debug($"NALU: 0, Unspecified {nu.NalUnitType}, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 0, Unspecified {nu.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (nu.NalUnitType == H264NALTypes.SLICE) // 1
                 {
-                    Log.Debug($"NALU: 1, slice of non-IDR picture, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 1, slice of non-IDR picture, {sampleData.Length} bytes");
                     context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
                     context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
                     context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
@@ -465,7 +470,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.DPA) // 2
                 {
-                    Log.Debug($"NALU: 2, coded slice data partition A, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 2, coded slice data partition A, {sampleData.Length} bytes");
                     context.SliceDataPartitionaLayerRbsp = new SliceDataPartitionaLayerRbsp();
                     context.SliceDataPartitionaLayerRbsp.Read(context, stream);
                     context.SliceDataPartitionaLayerRbsp.Write(context, wstream);
@@ -474,7 +479,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.DPB) // 3
                 {
-                    Log.Debug($"NALU: 3, coded slice data partition B, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 3, coded slice data partition B, {sampleData.Length} bytes");
                     context.SliceDataPartitionbLayerRbsp = new SliceDataPartitionbLayerRbsp();
                     context.SliceDataPartitionbLayerRbsp.Read(context, stream);
                     context.SliceDataPartitionbLayerRbsp.Write(context, wstream);
@@ -483,7 +488,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.DPB) // 4
                 {
-                    Log.Debug($"NALU: 4, coded slice data partition C, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 4, coded slice data partition C, {sampleData.Length} bytes");
                     context.SliceDataPartitioncLayerRbsp = new SliceDataPartitioncLayerRbsp();
                     context.SliceDataPartitioncLayerRbsp.Read(context, stream);
                     context.SliceDataPartitioncLayerRbsp.Write(context, wstream);
@@ -492,7 +497,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.IDR_SLICE) // 5
                 {
-                    Log.Debug($"NALU: 5, slice of non-IDR picture, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 5, slice of non-IDR picture, {sampleData.Length} bytes");
                     context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
                     context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
                     context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
@@ -501,7 +506,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SEI) // 6
                 {
-                    Log.Debug($"NALU: 6, SEI, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 6, SEI, {sampleData.Length} bytes");
                     context.SeiRbsp = new SharpH264.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
@@ -510,7 +515,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SPS) // 7
                 {
-                    Log.Debug($"NALU: 7, SPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 7, SPS, {sampleData.Length} bytes");
                     context.SeqParameterSetRbsp = new SharpH264.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
@@ -519,7 +524,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.PPS) // 8
                 {
-                    Log.Debug($"NALU: 8, PPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 8, PPS, {sampleData.Length} bytes");
                     context.PicParameterSetRbsp = new SharpH264.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
@@ -528,7 +533,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.AUD) // 9
                 {
-                    Log.Debug($"NALU: 9, AU Delimiter, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 9, AU Delimiter, {sampleData.Length} bytes");
                     context.AccessUnitDelimiterRbsp = new SharpH264.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
@@ -537,7 +542,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.END_OF_SEQUENCE) // 10
                 {
-                    Log.Debug($"NALU: 10, End of Sequence, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 10, End of Sequence, {sampleData.Length} bytes");
                     context.EndOfSeqRbsp = new SharpH264.EndOfSeqRbsp();
                     context.EndOfSeqRbsp.Read(context, stream);
                     context.EndOfSeqRbsp.Write(context, wstream);
@@ -546,7 +551,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.END_OF_STREAM) // 11
                 {
-                    Log.Debug($"NALU: 11, End of Stream, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 11, End of Stream, {sampleData.Length} bytes");
                     context.EndOfStreamRbsp = new EndOfStreamRbsp();
                     context.EndOfStreamRbsp.Read(context, stream);
                     context.EndOfStreamRbsp.Write(context, wstream);
@@ -555,7 +560,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.FILLER_DATA) // 12
                 {
-                    Log.Debug($"NALU: 12, Filler Data, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 12, Filler Data, {sampleData.Length} bytes");
                     context.FillerDataRbsp = new SharpH264.FillerDataRbsp();
                     context.FillerDataRbsp.Read(context, stream);
                     context.FillerDataRbsp.Write(context, wstream);
@@ -564,7 +569,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SPS_EXT) // 13
                 {
-                    Log.Debug($"NALU: 13, SPS Extension, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 13, SPS Extension, {sampleData.Length} bytes");
                     context.SeqParameterSetExtensionRbsp = new SeqParameterSetExtensionRbsp();
                     context.SeqParameterSetExtensionRbsp.Read(context, stream);
                     context.SeqParameterSetExtensionRbsp.Write(context, wstream);
@@ -573,7 +578,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.PREFIX_NAL) // 14
                 {
-                    Log.Debug($"NALU: 14, Prefix NAL, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 14, Prefix NAL, {sampleData.Length} bytes");
                     context.PrefixNalUnitRbsp = new PrefixNalUnitRbsp();
                     context.PrefixNalUnitRbsp.Read(context, stream);
                     context.PrefixNalUnitRbsp.Write(context, wstream);
@@ -582,7 +587,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SUBSET_SPS) // 15
                 {
-                    Log.Debug($"NALU: 15, Subset SPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 15, Subset SPS, {sampleData.Length} bytes");
                     context.SubsetSeqParameterSetRbsp = new SubsetSeqParameterSetRbsp();
                     context.SubsetSeqParameterSetRbsp.Read(context, stream);
                     context.SubsetSeqParameterSetRbsp.Write(context, wstream);
@@ -591,7 +596,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.DPS) // 16
                 {
-                    Log.Debug($"NALU: 16, DPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 16, DPS, {sampleData.Length} bytes");
                     context.DepthParameterSetRbsp = new DepthParameterSetRbsp();
                     context.DepthParameterSetRbsp.Read(context, stream);
                     context.DepthParameterSetRbsp.Write(context, wstream);
@@ -600,17 +605,17 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED0) // 17
                 {
-                    Log.Debug($"NALU: 17, Reserved {nu.NalUnitType}, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 17, Reserved {nu.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED1) // 18
                 {
-                    Log.Debug($"NALU: 18, Reserved {nu.NalUnitType}, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 18, Reserved {nu.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (nu.NalUnitType == H264NALTypes.SLICE_NOPARTITIONING) // 19
                 {
-                    Log.Debug($"NALU: 19, Auxiliary coded picture without partitioning, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 19, Auxiliary coded picture without partitioning, {sampleData.Length} bytes");
                     context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
                     context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
                     context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
@@ -619,7 +624,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SLICE_EXT) // 20
                 {
-                    Log.Debug($"NALU: 20, Slice Layer Extension, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 20, Slice Layer Extension, {sampleData.Length} bytes");
                     context.SliceLayerExtensionRbsp = new SliceLayerExtensionRbsp();
                     context.SliceLayerExtensionRbsp.Read(context, stream);
                     context.SliceLayerExtensionRbsp.Write(context, wstream);
@@ -628,7 +633,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SLICE_EXT_VIEW_COMPONENT) // 21
                 {
-                    Log.Debug($"NALU: 21, Slice Extension for Depth View or a 3D AVC texture view component, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 21, Slice Extension for Depth View or a 3D AVC texture view component, {sampleData.Length} bytes");
                     context.SliceLayerExtensionRbsp = new SliceLayerExtensionRbsp();
                     context.SliceLayerExtensionRbsp.Read(context, stream);
                     context.SliceLayerExtensionRbsp.Write(context, wstream);
@@ -637,25 +642,25 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED2) // 22
                 {
-                    Log.Debug($"NALU: 22, Reserved, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 22, Reserved, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED3) // 23
                 {
-                    Log.Debug($"NALU: 23, Reserved, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 23, Reserved, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else
                 {
-                    Log.Debug($"NALU: Unspecified {nu.NalUnitType}, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: Unspecified {nu.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
             }
             catch (Exception ex)
             {
-                Log.Error($"Error: {ex.Message}");
-                Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
-                Log.Error($"WriteData: {Convert.ToHexString(ms.ToArray())}");
+                SharpMP4.Log.Error($"Error: {ex.Message}");
+                SharpMP4.Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
+                SharpMP4.Log.Error($"WriteData: {Convert.ToHexString(ms.ToArray())}");
                 throw;
             }
         }
@@ -680,7 +685,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
             {
                 if (nu.NalUnitHeader.NalUnitType >= H265NALTypes.UNSPEC48) // unspecified
                 {
-                    Log.Debug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (
@@ -702,7 +707,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     nu.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT         // 21
                     )
                 {
-                    Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
                     context.SliceSegmentLayerRbsp = new SharpH265.SliceSegmentLayerRbsp();
                     context.SliceSegmentLayerRbsp.Read(context, stream);
                     context.SliceSegmentLayerRbsp.Write(context, wstream);
@@ -712,7 +717,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT) // 32
                 {
-                    Log.Debug($"NALU: 32, VPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 32, VPS, {sampleData.Length} bytes");
                     context.VideoParameterSetRbsp = new SharpH265.VideoParameterSetRbsp();
                     context.VideoParameterSetRbsp.Read(context, stream);
                     context.VideoParameterSetRbsp.Write(context, wstream);
@@ -722,7 +727,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT) // 33
                 {
-                    Log.Debug($"NALU: 33, SPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 33, SPS, {sampleData.Length} bytes");
                     context.SeqParameterSetRbsp = new SharpH265.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
@@ -732,7 +737,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT) // 34
                 {
-                    Log.Debug($"NALU: 34, PPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 34, PPS, {sampleData.Length} bytes");
                     context.PicParameterSetRbsp = new SharpH265.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
@@ -742,7 +747,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT) // 35
                 {
-                    Log.Debug($"NALU: 35, AUD, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 35, AUD, {sampleData.Length} bytes");
                     context.AccessUnitDelimiterRbsp = new SharpH265.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
@@ -751,7 +756,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.EOS_NUT) // 36
                 {
-                    Log.Debug($"NALU: 36, EOS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 36, EOS, {sampleData.Length} bytes");
                     context.EndOfSeqRbsp = new SharpH265.EndOfSeqRbsp();
                     context.EndOfSeqRbsp.Read(context, stream);
                     context.EndOfSeqRbsp.Write(context, wstream);
@@ -760,7 +765,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.EOB_NUT) // 37
                 {
-                    Log.Debug($"NALU: 37, EOB, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 37, EOB, {sampleData.Length} bytes");
                     context.EndOfBitstreamRbsp = new SharpH265.EndOfBitstreamRbsp();
                     context.EndOfBitstreamRbsp.Read(context, stream);
                     context.EndOfBitstreamRbsp.Write(context, wstream);
@@ -769,7 +774,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.FD_NUT) // 38
                 {
-                    Log.Debug($"NALU: 38, FillerData, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 38, FillerData, {sampleData.Length} bytes");
                     context.FillerDataRbsp = new SharpH265.FillerDataRbsp();
                     context.FillerDataRbsp.Read(context, stream);
                     context.FillerDataRbsp.Write(context, wstream);
@@ -778,7 +783,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT) // 39
                 {
-                    Log.Debug($"NALU: 39, Prefix SEI, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 39, Prefix SEI, {sampleData.Length} bytes");
                     context.SeiRbsp = new SharpH265.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
@@ -787,7 +792,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SUFFIX_SEI_NUT) // 40
                 {
-                    Log.Debug($"NALU: 40, Suffix SEI, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 40, Suffix SEI, {sampleData.Length} bytes");
                     var oldSei = context.SeiRbsp;
                     context.SeiRbsp = new SharpH265.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
@@ -798,15 +803,15 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 else
                 {
                     // 10-15, 22-31, 41-47
-                    Log.Debug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
             }
             catch (Exception ex)
             {
-                Log.Error($"Error: {ex.Message}");
-                Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
-                Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
+                SharpMP4.Log.Error($"Error: {ex.Message}");
+                SharpMP4.Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
+                SharpMP4.Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
                 throw;
             }
         }
@@ -833,7 +838,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
             {
                 if (nu.NalUnitHeader.NalUnitType >= H266NALTypes.UNSPEC_28) // unspecified
                 {
-                    Log.Debug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (
@@ -847,7 +852,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     nu.NalUnitHeader.NalUnitType == H266NALTypes.GDR_NUT         // 10
                     )
                 {
-                    Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
                     context.SliceLayerRbsp = new SharpH266.SliceLayerRbsp();
                     context.SliceLayerRbsp.Read(context, stream);
                     context.SliceLayerRbsp.Write(context, wstream);
@@ -857,7 +862,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.OPI_NUT) // 12
                 {
-                    Log.Debug($"NALU: 12, OPI, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 12, OPI, {sampleData.Length} bytes");
                     context.OperatingPointInformationRbsp = new SharpH266.OperatingPointInformationRbsp();
                     context.OperatingPointInformationRbsp.Read(context, stream);
                     context.OperatingPointInformationRbsp.Write(context, wstream);
@@ -867,7 +872,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.DCI_NUT) // 13
                 {
-                    Log.Debug($"NALU: 13, DCI, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 13, DCI, {sampleData.Length} bytes");
                     context.DecodingCapabilityInformationRbsp = new SharpH266.DecodingCapabilityInformationRbsp();
                     context.DecodingCapabilityInformationRbsp.Read(context, stream);
                     context.DecodingCapabilityInformationRbsp.Write(context, wstream);
@@ -877,7 +882,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.VPS_NUT) // 14
                 {
-                    Log.Debug($"NALU: 14, VPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 14, VPS, {sampleData.Length} bytes");
                     context.VideoParameterSetRbsp = new SharpH266.VideoParameterSetRbsp();
                     context.VideoParameterSetRbsp.Read(context, stream);
                     context.VideoParameterSetRbsp.Write(context, wstream);
@@ -887,7 +892,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SPS_NUT) // 15
                 {
-                    Log.Debug($"NALU: 15, SPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 15, SPS, {sampleData.Length} bytes");
                     context.SeqParameterSetRbsp = new SharpH266.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
@@ -897,7 +902,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PPS_NUT) // 16
                 {
-                    Log.Debug($"NALU: 16, PPS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 16, PPS, {sampleData.Length} bytes");
                     context.PicParameterSetRbsp = new SharpH266.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
@@ -907,7 +912,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_APS_NUT) // 17
                 {
-                    Log.Debug($"NALU: 17, Prefix APS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 17, Prefix APS, {sampleData.Length} bytes");
                     context.AdaptationParameterSetRbsp = new SharpH266.AdaptationParameterSetRbsp();
                     context.AdaptationParameterSetRbsp.Read(context, stream);
                     context.AdaptationParameterSetRbsp.Write(context, wstream);
@@ -917,7 +922,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SUFFIX_APS_NUT) // 18
                 {
-                    Log.Debug($"NALU: 18, Suffix APS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 18, Suffix APS, {sampleData.Length} bytes");
                     context.AdaptationParameterSetRbsp = new SharpH266.AdaptationParameterSetRbsp();
                     context.AdaptationParameterSetRbsp.Read(context, stream);
                     context.AdaptationParameterSetRbsp.Write(context, wstream);
@@ -927,7 +932,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PH_NUT) // 19
                 {
-                    Log.Debug($"NALU: 19, Picture Header, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 19, Picture Header, {sampleData.Length} bytes");
                     context.PictureHeaderRbsp = new SharpH266.PictureHeaderRbsp();
                     context.PictureHeaderRbsp.Read(context, stream);
                     context.PictureHeaderRbsp.Write(context, wstream);
@@ -937,7 +942,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.AUD_NUT) // 20
                 {
-                    Log.Debug($"NALU: 20, AUD, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 20, AUD, {sampleData.Length} bytes");
                     context.AccessUnitDelimiterRbsp = new SharpH266.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
@@ -947,7 +952,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.EOS_NUT) // 21
                 {
-                    Log.Debug($"NALU: 21, EOS, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 21, EOS, {sampleData.Length} bytes");
                     context.EndOfSeqRbsp = new SharpH266.EndOfSeqRbsp();
                     context.EndOfSeqRbsp.Read(context, stream);
                     context.EndOfSeqRbsp.Write(context, wstream);
@@ -957,7 +962,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.EOB_NUT) // 22
                 {
-                    Log.Debug($"NALU: 22, EOB, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 22, EOB, {sampleData.Length} bytes");
                     context.EndOfBitstreamRbsp = new SharpH266.EndOfBitstreamRbsp();
                     context.EndOfBitstreamRbsp.Read(context, stream);
                     context.EndOfBitstreamRbsp.Write(context, wstream);
@@ -967,7 +972,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_SEI_NUT) // 23
                 {
-                    Log.Debug($"NALU: 23, Prefix SEI, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 23, Prefix SEI, {sampleData.Length} bytes");
                     context.SeiRbsp = new SharpH266.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
@@ -977,7 +982,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SUFFIX_SEI_NUT) // 24
                 {
-                    Log.Debug($"NALU: 24, Suffix SEI, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 24, Suffix SEI, {sampleData.Length} bytes");
                     context.SeiRbsp = new SharpH266.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
@@ -987,7 +992,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.FD_NUT) // 25
                 {
-                    Log.Debug($"NALU: 25, Filler Data, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: 25, Filler Data, {sampleData.Length} bytes");
                     context.FillerDataRbsp = new SharpH266.FillerDataRbsp();
                     context.FillerDataRbsp.Read(context, stream);
                     context.FillerDataRbsp.Write(context, wstream);
@@ -998,16 +1003,16 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 else
                 {
                     // 4-6, 11, 26-27
-                    Log.Debug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    SharpMP4.Log.Debug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
             }
             catch (Exception ex)
             {
-                Log.Error($"NALU counter: {NaluDebug.NaluCounter}");
-                Log.Error($"Error: {ex.Message}");
-                Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
-                Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
+                SharpMP4.Log.Error($"NALU counter: {NaluDebug.NaluCounter}");
+                SharpMP4.Log.Error($"Error: {ex.Message}");
+                SharpMP4.Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
+                SharpMP4.Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
                 throw;
             }
         }

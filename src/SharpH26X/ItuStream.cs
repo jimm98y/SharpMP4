@@ -273,7 +273,7 @@ namespace SharpH26X
 
         public ulong ReadUnsignedInt(ulong size, ulong count, out ulong value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             if (count > 64)
                 throw new ArgumentOutOfRangeException(nameof(count));
             long ret = ReadBits((int)count);
@@ -286,7 +286,7 @@ namespace SharpH26X
 
         public ulong WriteUnsignedInt(ulong count, ulong value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             WriteBits((int)count, value);
             LogEnd(name, (ulong)count, value);
             return (ulong)count;
@@ -305,7 +305,7 @@ namespace SharpH26X
 
         public ulong WriteSignedInt(ulong count, int value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             WriteBits((int)count, unchecked((ulong)value));
             LogEnd(name, (ulong)count, value);
             return (ulong)count;
@@ -313,7 +313,7 @@ namespace SharpH26X
 
         public ulong ReadUnsignedIntGolomb(ulong size, out ulong value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             int cnt = 0;
             int bit = -1;
             while ((bit = ReadBit()) == 0)
@@ -342,7 +342,7 @@ namespace SharpH26X
 
         public ulong WriteUnsignedIntGolomb(ulong value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             int cnt = 0;
             for (int i = 0; i < 64; i++)
             {
@@ -521,7 +521,7 @@ namespace SharpH26X
 
         public ulong ReadBits(ulong size, ulong count, out byte value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             long bits = ReadBits((int)count);
             if(bits == -1)
                 throw new EndOfStreamException();
@@ -532,7 +532,7 @@ namespace SharpH26X
 
         public ulong WriteBits(ulong count, byte value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             WriteBits((int)count, value);
             LogEnd(name, count, (long)value);
             return count;
@@ -540,7 +540,7 @@ namespace SharpH26X
 
         public ulong ReadUnsignedInt(ulong size, ulong count, out BigInteger value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             if (count % 8 > 0)
                 throw new NotSupportedException();
 
@@ -572,7 +572,7 @@ namespace SharpH26X
 
         public ulong ReadUtf8String(ulong size, out byte[] value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             List<byte> bytes = new List<byte>();
             int b = -1;
             while((b = ReadByte()) != -1)
@@ -588,7 +588,7 @@ namespace SharpH26X
 
         public ulong WriteUtf8String(byte[] value, string name)
         {
-            LogBegin(name);
+            //LogBegin(name);
             ulong size = 0;
             for (int i = 0; i < value.Length; i++)
             {
@@ -713,7 +713,7 @@ namespace SharpH26X
                 padding += "-";
             }
 
-            //Debug.WriteLine($"{padding} {name}");
+            Log.Info($"{padding} {name}");
         }
 
         private void LogEnd<T>(string name, ulong size, T value)
@@ -730,7 +730,7 @@ namespace SharpH26X
                 endPadding += " ";
             }
 
-            Debug.WriteLine($"{padding} {name}{endPadding}{size}   {value}");
+            Log.Info($"{padding} {name}{endPadding}{size}   {value}");
         }
 
         #region IDisposable 
