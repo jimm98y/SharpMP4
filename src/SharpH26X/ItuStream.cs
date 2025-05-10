@@ -50,10 +50,6 @@ namespace SharpH26X
 
         private ulong WriteByte(byte value)
         {
-            if(value == 0x40)
-            {
-
-            }
             _stream.WriteByte(value);
             return 8;
         }

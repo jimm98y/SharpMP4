@@ -847,11 +847,6 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     nu.NalUnitHeader.NalUnitType == H266NALTypes.GDR_NUT         // 10
                     )
                 {
-                    if(NaluDebug.NaluCounter == 626)
-                    {
-
-                    }
-
                     Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
                     context.SliceLayerRbsp = new SharpH266.SliceLayerRbsp();
                     context.SliceLayerRbsp.Read(context, stream);
