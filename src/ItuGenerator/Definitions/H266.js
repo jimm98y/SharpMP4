@@ -415,7 +415,6 @@ pic_parameter_set_rbsp() {
  pps_output_flag_present_flag u(1) 
  pps_no_pic_partition_flag u(1) 
  pps_subpic_id_mapping_present_flag u(1) 
- /*
  if( pps_subpic_id_mapping_present_flag ) {  
   if( !pps_no_pic_partition_flag )  
    pps_num_subpics_minus1 ue(v) 
@@ -531,7 +530,6 @@ pic_parameter_set_rbsp() {
   while( more_rbsp_data() )  
    pps_extension_data_flag u(1) 
     rbsp_trailing_bits()  
-    */
 }  
 
 adaptation_parameter_set_rbsp() {  
@@ -562,8 +560,8 @@ slice_header() {
     if (sh_picture_header_in_slice_header_flag)
         picture_header_structure()   
  
-    /* if (sps_subpic_info_present_flag) */
-    /*    sh_subpic_id u(v)
+    if (sps_subpic_info_present_flag)
+        sh_subpic_id u(v)
     if ((pps_rect_slice_flag && NumSlicesInSubpic[CurrSubpicIdx] > 1) ||
         (!pps_rect_slice_flag && NumTilesInPic > 1)) 
  
@@ -682,7 +680,6 @@ slice_header() {
             sh_entry_point_offset_minus1[i] u(v)
     }
     byte_alignment()
-    */
 }
 
 picture_header_rbsp() {  
@@ -709,7 +706,6 @@ picture_header_structure() {
   if( ph_poc_msb_cycle_present_flag )  
    ph_poc_msb_cycle_val u(v) 
     }  
- /*
  if( sps_alf_enabled_flag  &&  pps_alf_info_in_ph_flag ) {  
   ph_alf_enabled_flag u(1) 
   if( ph_alf_enabled_flag ) {  
@@ -813,9 +809,9 @@ picture_header_structure() {
   if( sps_mmvd_fullpel_only_enabled_flag )  
    ph_mmvd_fullpel_only_flag u(1) 
   presenceFlag = 0  
-  if( !pps_rpl_info_in_ph_flag )*/ /* This condition is intentionally not merged into the next, 
+  if( !pps_rpl_info_in_ph_flag ) /* This condition is intentionally not merged into the next, 
     to avoid possible interpretation of RplsIdx[ i ] not having a specified value. */ 
- /*
+ 
    presenceFlag = 1  
   else if( num_ref_entries[ 1 ][ RplsIdx[ 1 ] ] > 0 )  
    presenceFlag = 1  
@@ -865,7 +861,73 @@ ph_extension_length ue(v)
 for( i = 0; i < ph_extension_length; i++)   
 ph_extension_data_byte[ i ] u(8) 
 }  
-*/
+}  
+
+ref_pic_lists() {
+    for (i = 0; i < 2; i++) {
+        if (sps_num_ref_pic_lists[i] > 0 &&
+            (i == 0 || (i == 1 && pps_rpl1_idx_present_flag)))
+
+            rpl_sps_flag[i] u(1)
+        if (rpl_sps_flag[i]) {
+            if (sps_num_ref_pic_lists[i] > 1 &&
+                (i == 0 || (i == 1 && pps_rpl1_idx_present_flag)))
+
+                rpl_idx[i] u(v)
+        } else
+            ref_pic_list_struct(i, sps_num_ref_pic_lists[i])
+        for (j = 0; j < NumLtrpEntries[i][RplsIdx[i]]; j++) {
+            if (ltrp_in_header_flag[i][RplsIdx[i]])
+                poc_lsb_lt[i][j] u(v)
+            delta_poc_msb_cycle_present_flag[i][j] u(1)
+            if (delta_poc_msb_cycle_present_flag[i][j])
+                delta_poc_msb_cycle_lt[i][j] ue(v)
+        }
+    }
+}   
+
+pred_weight_table() {  
+ luma_log2_weight_denom ue(v)
+    if (sps_chroma_format_idc != 0)  
+  delta_chroma_log2_weight_denom se(v)
+    if (pps_wp_info_in_ph_flag)  
+  num_l0_weights ue(v)
+    for (i = 0; i < NumWeightsL0; i++)
+        luma_weight_l0_flag[i] u(1)
+    if (sps_chroma_format_idc != 0)
+        for (i = 0; i < NumWeightsL0; i++)
+            chroma_weight_l0_flag[i] u(1)
+    for (i = 0; i < NumWeightsL0; i++) {
+        if (luma_weight_l0_flag[i]) {
+            delta_luma_weight_l0[i] se(v)
+            luma_offset_l0[i] se(v)
+        }
+        if (chroma_weight_l0_flag[i])
+            for (j = 0; j < 2; j++) {
+                delta_chroma_weight_l0[i][j] se(v)
+                delta_chroma_offset_l0[i][j] se(v)
+            }
+    }
+    if (pps_weighted_bipred_flag && pps_wp_info_in_ph_flag &&
+        num_ref_entries[1][RplsIdx[1]] > 0) 
+ 
+  num_l1_weights ue(v)
+    for (i = 0; i < NumWeightsL1; i++)
+        luma_weight_l1_flag[i] u(1)
+    if (sps_chroma_format_idc != 0)
+        for (i = 0; i < NumWeightsL1; i++)
+            chroma_weight_l1_flag[i] u(1)
+    for (i = 0; i < NumWeightsL1; i++) {
+        if (luma_weight_l1_flag[i]) {
+            delta_luma_weight_l1[i] se(v)
+            luma_offset_l1[i] se(v)
+        }
+        if (chroma_weight_l1_flag[i])
+            for (j = 0; j < 2; j++) {
+                delta_chroma_weight_l1[i][j] se(v)
+                delta_chroma_offset_l1[i][j] se(v)
+            }
+    }
 }  
 
 sei_rbsp() { 

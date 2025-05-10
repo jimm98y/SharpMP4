@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 
 namespace SharpH26X
 {
@@ -161,7 +163,7 @@ namespace SharpH26X
             while (count > 0)
             {
                 int bits = count - 1;
-                ulong mask = 0x1u << bits;
+                ulong mask = 0x1ul << bits;
                 WriteBit((int)((value & mask) >> bits));
                 count--;
             }
@@ -174,9 +176,9 @@ namespace SharpH26X
             _lastMarkBeginPosition = _bitsPosition;
         }
 
-        public long GetBitsPositionSinceLastMark()
+        public ulong GetBitsPositionSinceLastMark()
         {
-            return _bitsPosition - _lastMarkBeginPosition;
+            return (ulong)(_bitsPosition - _lastMarkBeginPosition);
         }
 
         public bool ByteAligned()
@@ -185,117 +187,133 @@ namespace SharpH26X
         }
 
         // H265
-        public bool PayloadExtensionPresent()
+        public ulong ReadClass<T>(ulong size, IItuContext context, T value, string name) where T : IItuSerializable
         {
-            throw new NotImplementedException();
+            LogBegin(name);
+
+            _logLevel++;
+            ulong ret = value.Read(context, this);
+            _logLevel--;
+
+            LogEnd(name, ret, value);
+
+            return ret;
         }
 
-        public ulong ReadClass<T>(ulong size, IItuContext context, T value) where T : IItuSerializable
+        public ulong WriteClass<T>(IItuContext context, T value, string name) where T : IItuSerializable
         {
-            return value.Read(context, this);
-        }
+            LogBegin(name);
 
-        public ulong WriteClass<T>(IItuContext context, T value) where T : IItuSerializable
-        {
+            _logLevel++;
             ulong size = value.Write(context, this);
+            _logLevel--;
+
+            LogEnd(name, size, value);
+
             return size;
         }
 
-        public ulong WriteClass<T>(IItuContext context, T[] value) where T : IItuSerializable
+        public ulong WriteClass<T>(IItuContext context, T[] value, string name) where T : IItuSerializable
         {
-            ulong size = value.Single().Write(context, this);
-            return size;
+            return WriteClass(context, value.Single(), name);
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, out byte value)
+        public ulong ReadUnsignedInt(ulong size, ulong count, out byte value, string name)
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            ulong read = ReadUnsignedInt(size, count, out uint v);
+            ulong read = ReadUnsignedInt(size, count, out uint v, name);
             value = (byte)v;
             return read;
         }
         
-        public ulong ReadUnsignedInt(ulong size, int count, int index, Dictionary<int, uint> value)
+        public ulong ReadUnsignedInt(ulong size, ulong count, int index, Dictionary<int, uint> value, string name)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            ulong read = ReadUnsignedInt(size, count, out uint v);
+            ulong read = ReadUnsignedInt(size, count, out uint v, name);
             value.Add(index, v);
             return read;
         }
 
-        public ulong WriteUnsignedInt(int count, byte value)
+        public ulong WriteUnsignedInt(ulong count, byte value, string name)
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            ulong size = WriteUnsignedInt(count, (uint)value);
+            ulong size = WriteUnsignedInt(count, (uint)value, name);
             return size;
         }
 
-        public ulong WriteUnsignedInt(int count, int index, Dictionary<int, uint> value)
+        public ulong WriteUnsignedInt(ulong count, int index, Dictionary<int, uint> value, string name)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            ulong size = WriteUnsignedInt(count, value[index]);
+            ulong size = WriteUnsignedInt(count, value[index], name);
             return size;
         }
 
-        public ulong ReadFixed(ulong size, int count, out uint value)
+        public ulong ReadFixed(ulong size, ulong count, out uint value, string name)
         {
-            return ReadUnsignedInt(size, count, out value);
+            return ReadUnsignedInt(size, count, out value, name);
         }
 
-        public ulong WriteFixed(int count, uint value)
+        public ulong WriteFixed(ulong count, uint value, string name)
         {
-            return WriteUnsignedInt(count, value);
+            return WriteUnsignedInt(count, value, name);
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, out uint value)
+        public ulong ReadUnsignedInt(ulong size, ulong count, out uint value, string name)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            ulong read = ReadUnsignedInt(size, count, out ulong v);
+            ulong read = ReadUnsignedInt(size, count, out ulong v, name);
             value = (uint)v;
             return read;
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, out ulong value)
+        public ulong ReadUnsignedInt(ulong size, ulong count, out ulong value, string name)
         {
+            LogBegin(name);
             if (count > 64)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            long ret = ReadBits(count);
+            long ret = ReadBits((int)count);
             if (ret == -1)
                 throw new EndOfStreamException();
             value = (ulong)ret;
+            LogEnd(name, (ulong)count, value);
             return (ulong)count;
         }
 
-        public ulong WriteUnsignedInt(int count, ulong value)
+        public ulong WriteUnsignedInt(ulong count, ulong value, string name)
         {
-            WriteBits(count, value);
+            LogBegin(name);
+            WriteBits((int)count, value);
+            LogEnd(name, (ulong)count, value);
             return (ulong)count;
         }
 
-        public ulong ReadSignedInt(ulong size, int count, out int value)
+        public ulong ReadSignedInt(ulong size, ulong count, out int value, string name)
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            long ret = ReadBits(count);
+            long ret = ReadBits((int)count);
             if (ret == -1)
                 throw new EndOfStreamException();
             value = unchecked((int)ret);
             return (ulong)count;
         }
 
-        public ulong WriteSignedInt(int count, int value)
+        public ulong WriteSignedInt(ulong count, int value, string name)
         {
-            WriteBits(count, unchecked((ulong)value));
+            LogBegin(name);
+            WriteBits((int)count, unchecked((ulong)value));
+            LogEnd(name, (ulong)count, value);
             return (ulong)count;
         }
 
-        public ulong ReadUnsignedIntGolomb(ulong size, out uint value)
+        public ulong ReadUnsignedIntGolomb(ulong size, out ulong value, string name)
         {
+            LogBegin(name);
             int cnt = 0;
             int bit = -1;
             while ((bit = ReadBit()) == 0)
@@ -303,7 +321,7 @@ namespace SharpH26X
                 cnt++;
             }
 
-            if(bit == -1)
+            if (bit == -1)
                 throw new EndOfStreamException();
 
             if (cnt > 0)
@@ -311,51 +329,52 @@ namespace SharpH26X
                 long bits = ReadBits(cnt);
                 if (bits == -1)
                     throw new EndOfStreamException();
-                value = (uint)((1 << cnt) - 1 + bits);
+                value = (1ul << cnt) - 1ul + (ulong)bits;
             }
             else
             {
                 value = 0;
             }
 
+            LogEnd(name, (ulong)(cnt + 1 + cnt), (long)value);
             return (ulong)(cnt + 1 + cnt);
         }
 
-        public ulong WriteUnsignedIntGolomb(uint value)
+        public ulong WriteUnsignedIntGolomb(ulong value, string name)
         {
-            int bits = 0;
-            int cumul = 0;
-            for (int i = 0; i < 31; i++)
+            LogBegin(name);
+            int cnt = 0;
+            for (int i = 0; i < 64; i++)
             {
-                if (value < cumul + (1 << i))
+                if (((value + 1ul) >> i) > 0)
                 {
-                    bits = i;
-                    break;
+                    cnt = i;
                 }
-                cumul += (1 << i);
             }
-            WriteBits(bits, 0);
+            WriteBits(cnt, 0);
             WriteBit(1);
-            WriteBits(bits, (ulong)(value - cumul));
-            return (ulong)(bits + 1 + bits);
+            WriteBits(cnt, value - (1ul << cnt) + 1);
+
+            LogEnd(name, (ulong)(cnt + 1 + cnt), (long)value);
+            return (ulong)(cnt + 1 + cnt);
         }
 
-        public ulong ReadSignedIntGolomb(ulong size, out int value)
+        public ulong ReadSignedIntGolomb(ulong size, out long value, string name)
         {
-            uint val;
-            ulong read = ReadUnsignedIntGolomb(size, out val);
-            int sign = (((int)val & 0x1) << 1) - 1;
-            value = (((int)val >> 1) + ((int)val & 0x1)) * sign;
+            ulong val;
+            ulong read = ReadUnsignedIntGolomb(size, out val, name);
+            long sign = (((long)val & 0x1) << 1) - 1;
+            value = (((long)val >> 1) + ((long)val & 0x1)) * sign;
             return read;
         }
 
-        public ulong WriteSignedIntGolomb(int value)
+        public ulong WriteSignedIntGolomb(long value, string name)
         {
-            uint mapped = (uint)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
-            return WriteUnsignedIntGolomb(mapped);
+            ulong mapped = (ulong)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
+            return WriteUnsignedIntGolomb(mapped, name);
         }
 
-        public bool ReadMoreRbspData(IItuSerializable serializable, uint maxPayloadSize = uint.MaxValue)
+        public bool ReadMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue)
         {
             if (_stream.Position == _stream.Length && _bitsPosition % 8 == 0)
                 return false;
@@ -373,7 +392,7 @@ namespace SharpH26X
                 if (one == 0)
                 {
                     
-                    if (maxPayloadSize == uint.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
+                    if (maxPayloadSize == ulong.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
                     {
                         serializable.HasMoreRbspData++;
                         return true;
@@ -401,7 +420,7 @@ namespace SharpH26X
                 else
                 {
                     
-                    if (maxPayloadSize == uint.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
+                    if (maxPayloadSize == ulong.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
                     {
                         serializable.HasMoreRbspData++;
                         return true;
@@ -423,7 +442,7 @@ namespace SharpH26X
             return _rbspDataCounter-- != 0;
         }
 
-        public int ReadNextBits(IItuSerializable serializable, int count)
+        public int ReadNextBits(IItuSerializable serializable, ulong count)
         {
             var bytes = (_stream as MemoryStream).ToArray();
             var msstream = new MemoryStream(bytes);
@@ -451,7 +470,7 @@ namespace SharpH26X
             }
         }
 
-        public int WriteNextBits(IItuSerializable serializable, int count)
+        public int WriteNextBits(IItuSerializable serializable, ulong count)
         {
             if (serializable.ReadNextBits == null)
                 return 0;
@@ -480,43 +499,48 @@ namespace SharpH26X
             }
         }
 
-        public ulong ReadUnsignedIntVariable(ulong size, uint count, out uint value)
+        public ulong ReadUnsignedIntVariable(ulong size, ulong count, out uint value, string name)
         {
-            return ReadUnsignedInt(size, (int)count, out value);
+            return ReadUnsignedInt(size, count, out value, name);
         }
 
-        public ulong WriteUnsignedIntVariable(uint count, uint value)
+        public ulong WriteUnsignedIntVariable(ulong count, uint value, string name)
         {
-            return WriteUnsignedInt((int)count, value);
+            return WriteUnsignedInt(count, value, name);
         }
 
-        public ulong ReadSignedIntVariable(ulong size, uint count, out int value)
+        public ulong ReadSignedIntVariable(ulong size, ulong count, out int value, string name)
         {
-            return ReadSignedInt(size, (int)count, out value);
+            return ReadSignedInt(size, count, out value, name);
         }
 
-        public ulong WriteSignedIntVariable(uint count, int value)
+        public ulong WriteSignedIntVariable(ulong count, int value, string name)
         {
-            return WriteSignedInt((int)count, value);
+            return WriteSignedInt(count, value, name);
         }
 
-        public ulong ReadBits(ulong size, int count, out byte value)
+        public ulong ReadBits(ulong size, ulong count, out byte value, string name)
         {
-            long bits = ReadBits(count);
+            LogBegin(name);
+            long bits = ReadBits((int)count);
             if(bits == -1)
                 throw new EndOfStreamException();
             value = (byte)bits;
+            LogEnd(name, (ulong)count, (long)value);
             return (ulong)count;
         }
 
-        public ulong WriteBits(int count, byte value)
+        public ulong WriteBits(ulong count, byte value, string name)
         {
-            WriteBits(count, (ulong)value);
-            return (ulong)count;
+            LogBegin(name);
+            WriteBits((int)count, value);
+            LogEnd(name, count, (long)value);
+            return count;
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, out BigInteger value)
+        public ulong ReadUnsignedInt(ulong size, ulong count, out BigInteger value, string name)
         {
+            LogBegin(name);
             if (count % 8 > 0)
                 throw new NotSupportedException();
 
@@ -531,22 +555,24 @@ namespace SharpH26X
             }
 
             value = new BigInteger(bytes);
-            return (ulong)count;
+            LogEnd(name, count, (long)value);
+            return count;
         }
 
-        public ulong WriteUnsignedInt(int count, BigInteger value)
+        public ulong WriteUnsignedInt(ulong count, BigInteger value, string name)
         {
             ulong size = 0;
             byte[] bytes = value.ToByteArray();
             for (int i = 0; i < bytes.Length; i++)
             {
-                size += WriteUnsignedInt(8, bytes[i]);
+                size += WriteUnsignedInt(8, bytes[i], name);
             }
             return size;
         }
 
-        public ulong ReadUtf8String(ulong size, out byte[] value)
+        public ulong ReadUtf8String(ulong size, out byte[] value, string name)
         {
+            LogBegin(name);
             List<byte> bytes = new List<byte>();
             int b = -1;
             while((b = ReadByte()) != -1)
@@ -556,63 +582,66 @@ namespace SharpH26X
                 bytes.Add((byte)b);
             }
             value = bytes.ToArray();
+            LogEnd(name, (ulong)((bytes.Count + 1) * 8), Encoding.UTF8.GetString(value));
             return (ulong)((bytes.Count + 1) * 8);
         }
 
-        public ulong WriteUtf8String(byte[] value)
+        public ulong WriteUtf8String(byte[] value, string name)
         {
+            LogBegin(name);
             ulong size = 0;
             for (int i = 0; i < value.Length; i++)
             {
-                size += WriteBits(8, value[i]);
+                size += WriteBits(8, value[i], name);
             }
-            size += WriteBits(8, 0); // null terminator
+            size += WriteBits(8, 0, name); // null terminator
+            LogEnd(name, size, Encoding.UTF8.GetString(value));
             return size;
         }
 
         #region Lists in do/while loops
 
-        public ulong ReadFixed(ulong size, int count, int whileIndex, Dictionary<int, uint> list)
+        public ulong ReadFixed(ulong size, ulong count, int whileIndex, Dictionary<int, uint> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            ulong read = ReadFixed(size, count, out var value);
+            ulong read = ReadFixed(size, count, out var value, name);
             list.Add(whileIndex, value);
             return read;
         }
 
-        public ulong ReadUnsignedIntGolomb(ulong size, int whileIndex, Dictionary<int, uint> list)
+        public ulong ReadUnsignedIntGolomb(ulong size, int whileIndex, Dictionary<int, ulong> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            ulong read = ReadUnsignedIntGolomb(size, out var value);
+            ulong read = ReadUnsignedIntGolomb(size, out ulong value, name);
             list.Add(whileIndex, value);
             return read;
         }
 
-        public ulong ReadUnsignedInt(ulong size, int count, int whileIndex, Dictionary<int, byte> list)
+        public ulong ReadUnsignedInt(ulong size, ulong count, int whileIndex, Dictionary<int, byte> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            ulong read = ReadUnsignedInt(size, count, out byte value);
+            ulong read = ReadUnsignedInt(size, count, out byte value, name);
             list.Add(whileIndex, value);
             return read;
         }
 
-        public ulong ReadBits(ulong size, int count, int whileIndex, Dictionary<int, byte> list)
+        public ulong ReadBits(ulong size, ulong count, int whileIndex, Dictionary<int, byte> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            ulong read = ReadBits(size, count, out byte value);
+            ulong read = ReadBits(size, count, out byte value, name);
             list.Add(whileIndex, value);
             return read;
         }
 
-        public ulong WriteFixed(int count, int whileIndex, Dictionary<int, uint> list)
+        public ulong WriteFixed(ulong count, int whileIndex, Dictionary<int, uint> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -620,11 +649,11 @@ namespace SharpH26X
             if (!list.ContainsKey(whileIndex))
                 throw new ArgumentOutOfRangeException(nameof(whileIndex));
 
-            ulong size = WriteFixed(count, list[whileIndex]);
+            ulong size = WriteFixed(count, list[whileIndex], name);
             return size;
         }
 
-        public ulong WriteUnsignedInt(int count, int whileIndex, Dictionary<int, byte> list)
+        public ulong WriteUnsignedInt(ulong count, int whileIndex, Dictionary<int, byte> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -632,11 +661,11 @@ namespace SharpH26X
             if (!list.ContainsKey(whileIndex))
                 throw new ArgumentOutOfRangeException(nameof(whileIndex));
 
-            ulong size = WriteUnsignedInt(count, list[whileIndex]);
+            ulong size = WriteUnsignedInt(count, list[whileIndex], name);
             return size;
         }
 
-        public ulong WriteUnsignedIntGolomb(int whileIndex, Dictionary<int, uint> list)
+        public ulong WriteUnsignedIntGolomb(int whileIndex, Dictionary<int, ulong> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -644,11 +673,11 @@ namespace SharpH26X
             if (!list.ContainsKey(whileIndex))
                 throw new ArgumentOutOfRangeException(nameof(whileIndex));
 
-            ulong size = WriteUnsignedIntGolomb(list[whileIndex]);
+            ulong size = WriteUnsignedIntGolomb(list[whileIndex], name);
             return size;
         }
 
-        public ulong WriteBits(int count, int whileIndex, Dictionary<int, byte> list)
+        public ulong WriteBits(ulong count, int whileIndex, Dictionary<int, byte> list, string name)
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -656,11 +685,11 @@ namespace SharpH26X
             if (!list.ContainsKey(whileIndex))
                 throw new ArgumentOutOfRangeException(nameof(whileIndex));
 
-            ulong size = WriteBits(count, list[whileIndex]);
+            ulong size = WriteBits(count, list[whileIndex], name);
             return size;
         }
 
-        public ulong WriteClass<T>(IItuContext context, int whileIndex, Dictionary<int, T> list) where T : IItuSerializable
+        public ulong WriteClass<T>(IItuContext context, int whileIndex, Dictionary<int, T> list, string name) where T : IItuSerializable
         {
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
@@ -668,11 +697,41 @@ namespace SharpH26X
             if (!list.ContainsKey(whileIndex))
                 throw new ArgumentOutOfRangeException(nameof(whileIndex));
 
-            ulong size = WriteClass(context, list[whileIndex]);
+            ulong size = WriteClass(context, list[whileIndex], name);
             return size;
         }
 
         #endregion // Lists in do/while loops
+
+        private int _logLevel = 0;
+
+        private void LogBegin(string name)
+        {
+            string padding = "-";
+            for (int i = 0; i < _logLevel; i++)
+            {
+                padding += "-";
+            }
+
+            //Debug.WriteLine($"{padding} {name}");
+        }
+
+        private void LogEnd<T>(string name, ulong size, T value)
+        {
+            string padding = "-";
+            for (int i = 0; i < _logLevel; i++)
+            {
+                padding += "-";
+            }
+
+            string endPadding = "";
+            for (int i = 0; i < 64 - padding.Length - name.Length - size.ToString().Length - 2; i++)
+            {
+                endPadding += " ";
+            }
+
+            Debug.WriteLine($"{padding} {name}{endPadding}{size}   {value}");
+        }
 
         #region IDisposable 
 
@@ -696,11 +755,6 @@ namespace SharpH26X
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
-        }
-
-        internal bool MoreRbspTrailingData()
-        {
-            throw new NotImplementedException();
         }
 
         #endregion // IDisposable

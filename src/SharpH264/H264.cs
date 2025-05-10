@@ -15,11 +15,11 @@
         public const uint SI = 4; // 9
 
         // mod 5
-        public static bool IsP(uint value) { return value % 5 == P; }
-        public static bool IsB(uint value) { return value % 5 == B; }
-        public static bool IsI(uint value) { return value % 5 == I; }
-        public static bool IsSP(uint value) { return value % 5 == SP; }
-        public static bool IsSI(uint value) { return value % 5 == SI; }
+        public static bool IsP(ulong value) { return value % 5 == P; }
+        public static bool IsB(ulong value) { return value % 5 == B; }
+        public static bool IsI(ulong value) { return value % 5 == I; }
+        public static bool IsSP(ulong value) { return value % 5 == SP; }
+        public static bool IsSI(ulong value) { return value % 5 == SI; }
     }
 
     public class H264NALTypes

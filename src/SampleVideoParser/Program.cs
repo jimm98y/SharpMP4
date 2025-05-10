@@ -813,8 +813,10 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
     }
 }
 
+
 static void ParseH266NALU(H266Context context, byte[] sampleData)
 {
+    NaluDebug.NaluCounter++;
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
     {
         ulong ituSize = 0;
@@ -900,7 +902,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
                     if (!ms.ToArray().SequenceEqual(sampleData))
-                        if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
+                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                             throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_APS_NUT) // 17
@@ -1002,20 +1004,10 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
             }
             catch (Exception ex)
             {
+                Log.Error($"NALU counter: {NaluDebug.NaluCounter}");
                 Log.Error($"Error: {ex.Message}");
                 Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
                 Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
-
-                try 
-                {
-                    context.SeiRbsp.Write(context, wstream);                    
-                }
-                catch(Exception)
-                {
-                    // ignore
-                    Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
-                }
-
                 throw;
             }
         }
@@ -1058,4 +1050,9 @@ public enum VideoFormat
     H264,
     H265,
     H266,
+}
+
+public static class NaluDebug
+{
+    public static int NaluCounter = 0;
 }
