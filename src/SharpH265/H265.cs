@@ -127,7 +127,7 @@ namespace SharpH265
         public int[] AuxId { get; set; }
         public int[] DepthLayerFlag { get; set; } = new int[] { 0 };
         public int[] ViewOrderIdx { get; set; }
-        public uint[] OlsIdxToLsIdx { get; set; }
+        public ulong[] OlsIdxToLsIdx { get; set; }
         public uint[] NumOutputLayersInOutputLayerSet { get; set; }
         public uint[] OlsHighestOutputLayerId { get; set; }
         public uint[] NumNecessaryLayers { get; set; }
@@ -163,11 +163,11 @@ namespace SharpH265
         public uint VclInitialArrivalDelayPresent { get; set; }
         public uint NalInitialArrivalDelayPresent { get; set; }
         public ulong RefRpsIdx { get; set; }
-        public uint NumActiveRefLayerPics { get; private set; }
+        public ulong NumActiveRefLayerPics { get; private set; }
         public uint[] refLayerPicIdc { get; private set; }
         public uint TemporalId { get; private set; }
         public uint NumPicTotalCurr { get; private set; }
-        public uint[] PocLsbLt { get; private set; }
+        public ulong[] PocLsbLt { get; private set; }
         public uint[] UsedByCurrPicLt { get; private set; }
         public ulong CurrRpsIdx { get; private set; }
         public int inCmpPredAvailFlag { get; internal set; } // TODO
@@ -427,7 +427,7 @@ namespace SharpH265
 
             if (OlsIdxToLsIdx == null || OlsIdxToLsIdx.Length < (int)NumOutputLayerSets)
             {
-                OlsIdxToLsIdx = new uint[NumOutputLayerSets];
+                OlsIdxToLsIdx = new ulong[NumOutputLayerSets];
             }
 
             OlsIdxToLsIdx[i] = (i < NumLayerSets) ? i : (layer_set_idx_for_ols_minus1[i] + 1);
@@ -516,7 +516,7 @@ namespace SharpH265
 
             for (int olsIdx = 0; olsIdx < (int)NumOutputLayerSets; olsIdx++)
             {
-                uint lsIdx = OlsIdxToLsIdx[olsIdx];
+                ulong lsIdx = OlsIdxToLsIdx[olsIdx];
                 for (int lsLayerIdx = 0; lsLayerIdx < NumLayersInIdList[lsIdx]; lsLayerIdx++)
                     NecessaryLayerFlag[olsIdx][lsLayerIdx] = 0;
                 for (int lsLayerIdx = 0; lsLayerIdx < NumLayersInIdList[lsIdx]; lsLayerIdx++)
@@ -651,12 +651,12 @@ namespace SharpH265
             uint lsIdx = (uint)vps_num_layer_sets_minus1 + 1 + i;
             for (int treeIdx = 1; treeIdx < NumIndependentLayers; treeIdx++)
             {
-                if (LayerSetLayerIdList[lsIdx] == null || LayerSetLayerIdList[lsIdx].Length < (NumIndependentLayers * (highest_layer_idx_plus1[i][treeIdx])))
+                if (LayerSetLayerIdList[lsIdx] == null || LayerSetLayerIdList[lsIdx].Length < (int)(NumIndependentLayers * (highest_layer_idx_plus1[i][treeIdx])))
                 {
                     LayerSetLayerIdList[lsIdx] = new int[layerNum + 1];
                 }
 
-                for (int layerCnt = 0; layerCnt < highest_layer_idx_plus1[i][treeIdx]; layerCnt++)
+                for (int layerCnt = 0; layerCnt < (int)highest_layer_idx_plus1[i][treeIdx]; layerCnt++)
                 {
                     LayerSetLayerIdList[lsIdx][layerNum++] = TreePartitionLayerIdList[treeIdx][layerCnt];
                 }
@@ -1018,7 +1018,7 @@ namespace SharpH265
 
             if(PocLsbLt == null || PocLsbLt.Length < (int)(num_long_term_sps + num_long_term_pics))
             {
-                PocLsbLt = new uint[num_long_term_sps + num_long_term_pics];
+                PocLsbLt = new ulong[num_long_term_sps + num_long_term_pics];
             }
             if(UsedByCurrPicLt == null || UsedByCurrPicLt.Length < (int)(num_long_term_sps + num_long_term_pics))
             {

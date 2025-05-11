@@ -509,6 +509,16 @@ namespace SharpH26X
             return WriteUnsignedInt(count, value, name);
         }
 
+        public ulong ReadUnsignedIntVariable(ulong size, ulong count, out ulong value, string name)
+        {
+            return ReadUnsignedInt(size, count, out value, name);
+        }
+
+        public ulong WriteUnsignedIntVariable(ulong count, ulong value, string name)
+        {
+            return WriteUnsignedInt(count, value, name);
+        }
+
         public ulong ReadSignedIntVariable(ulong size, ulong count, out int value, string name)
         {
             return ReadSignedInt(size, count, out value, name);

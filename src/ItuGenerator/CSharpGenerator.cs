@@ -665,7 +665,7 @@ namespace Sharp{type}
                 { "u(43)",                      "ulong" },
                 { "u(64)",                      "ulong" },
                 { "u(128)",                     "BigInteger" },
-                { "u(v)",                       "uint" },
+                { "u(v)",                       "ulong" },
                 { "ue(v)",                      "ulong" },
                 { "ae(v)",                      "ulong" },
                 { "ce(v)",                      "ulong" },
@@ -1556,6 +1556,7 @@ namespace Sharp{type}
                             // h265
                             || field.Name == "psIdx"
                             || field.Name == "numSignificantSets"
+                            || field.Name == "currLsIdx"
                             )
                         {
                             b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "u(64)", FieldArray = field.FieldArray });

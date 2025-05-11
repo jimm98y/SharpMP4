@@ -25,6 +25,9 @@ namespace ItuGenerator
         {
             switch (field.Name)
             {
+                case "collocated_from_l0_flag":
+                    return "1";
+
                 default:
                     return "";
             }
