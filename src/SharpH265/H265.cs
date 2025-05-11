@@ -1,6 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 
 namespace SharpH265
@@ -97,9 +95,6 @@ namespace SharpH265
 
     public partial class H265Context
     {
-        private ulong numCurCmpLIds;
-        private int refCmpCurLIdAvailFlag;
-
         public SeiPayload SeiPayload { get; set; }
 
         public ulong[][][] BspSchedCnt { get; set; }
@@ -177,11 +172,13 @@ namespace SharpH265
         public int inCmpPredAvailFlag { get; set; }
         public int DepthFlag { get; set; }
         public int ViewIdx { get; set; }
-        public List<int> curCmpLIds { get; set; }
+        public int[] curCmpLIds { get; set; }
         public int[] RefPicLayerId { get; set; }
         public int[] inCmpRefViewIdcs { get; set; }
         public int cpAvailableFlag { get; set; }
         public int allRefCmpLayersAvailFlag { get; set; }
+        private ulong numCurCmpLIds { get; set; }
+        private int refCmpCurLIdAvailFlag { get; set; }
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -1100,7 +1097,7 @@ namespace SharpH265
             DepthFlag = DepthLayerFlag[nuh_layer_id];
             ViewIdx = ViewOrderIdx[nuh_layer_id];
 
-            curCmpLIds = DepthFlag != 0 ? new List<int>() { (int)nuh_layer_id } : RefPicLayerId.ToList();
+            curCmpLIds = DepthFlag != 0 ? new int[] { (int)nuh_layer_id } : RefPicLayerId.ToArray();
             numCurCmpLIds = DepthFlag != 0 ? 1 : NumActiveRefLayerPics;
 
             cpAvailableFlag = 1;
