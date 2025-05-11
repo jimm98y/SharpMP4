@@ -12,12 +12,12 @@ namespace SharpH265
 
     public class H265FrameTypes
     {
-        public const ulong P = 0;
-        public const ulong B = 1;
+        public const ulong B = 0;
+        public const ulong P = 1;
         public const ulong I = 2;
 
-        public static bool IsP(ulong value) { return value == P; }
         public static bool IsB(ulong value) { return value == B; }
+        public static bool IsP(ulong value) { return value == P; }
         public static bool IsI(ulong value) { return value == I; }
     }
 
