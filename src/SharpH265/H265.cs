@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SharpH265
 {
@@ -96,6 +97,9 @@ namespace SharpH265
 
     public partial class H265Context
     {
+        private ulong numCurCmpLIds;
+        private int refCmpCurLIdAvailFlag;
+
         public SeiPayload SeiPayload { get; set; }
 
         public ulong[][][] BspSchedCnt { get; set; }
@@ -163,14 +167,21 @@ namespace SharpH265
         public uint VclInitialArrivalDelayPresent { get; set; }
         public uint NalInitialArrivalDelayPresent { get; set; }
         public ulong RefRpsIdx { get; set; }
-        public ulong NumActiveRefLayerPics { get; private set; }
-        public uint[] refLayerPicIdc { get; private set; }
-        public uint TemporalId { get; private set; }
-        public uint NumPicTotalCurr { get; private set; }
+        public ulong NumActiveRefLayerPics { get; set; }
+        public uint[] refLayerPicIdc { get; set; }
+        public uint TemporalId { get; set; }
+        public uint NumPicTotalCurr { get; set; }
         public ulong[] PocLsbLt { get; private set; }
-        public uint[] UsedByCurrPicLt { get; private set; }
-        public ulong CurrRpsIdx { get; private set; }
-        public int inCmpPredAvailFlag { get; internal set; } // TODO
+        public uint[] UsedByCurrPicLt { get; set; }
+        public ulong CurrRpsIdx { get; set; }
+        public int inCmpPredAvailFlag { get; set; }
+        public int DepthFlag { get; set; }
+        public int ViewIdx { get; set; }
+        public List<int> curCmpLIds { get; set; }
+        public int[] RefPicLayerId { get; set; }
+        public int[] inCmpRefViewIdcs { get; set; }
+        public int cpAvailableFlag { get; set; }
+        public int allRefCmpLayersAvailFlag { get; set; }
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -1050,6 +1061,91 @@ namespace SharpH265
             else
             {
                 CurrRpsIdx = num_short_term_ref_pic_sets;
+            }
+        }
+
+        public void OnInterLayerPredLayerIdc()
+        {
+            var nuh_layer_id = NalHeader.NalUnitHeader.NuhLayerId;
+            var inter_layer_pred_layer_idc = SliceSegmentLayerRbsp.SliceSegmentHeader.InterLayerPredLayerIdc;
+
+            if(RefPicLayerId == null || RefPicLayerId.Length < MaxLayersMinus1 + 1)
+            {
+                RefPicLayerId = new int[MaxLayersMinus1 + 1];
+            }
+
+            int j = 0;
+            for (int i = 0; i < (int)NumActiveRefLayerPics; i++)
+                RefPicLayerId[i] = IdRefListLayer[nuh_layer_id][inter_layer_pred_layer_idc[i]];
+        }
+
+        public void OnSliceType()
+        {
+            if (SeqParameterSetRbsp.Sps3dExtension == null || SeqParameterSetRbsp.Sps3dExtension == null)
+                return;
+
+            // I.7.4.7.1
+            var nuh_layer_id = NalHeader.NalUnitHeader.NuhLayerId;
+            var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
+            var max_tid_il_ref_pics_plus1 = VideoParameterSetRbsp.VpsExtension.MaxTidIlRefPicsPlus1;
+            var direct_dependency_flag = VideoParameterSetRbsp.VpsExtension.DirectDependencyFlag;
+
+            var vsp_mc_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.VspMcEnabledFlag;
+            var dbbp_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.DbbpEnabledFlag;
+            var depth_ref_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.DepthRefEnabledFlag;
+            var intra_contour_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.IntraContourEnabledFlag;
+            var cqt_cu_part_pred_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.CqtCuPartPredEnabledFlag;
+            var tex_mc_enabled_flag = SeqParameterSetRbsp.Sps3dExtension.TexMcEnabledFlag;
+
+            DepthFlag = DepthLayerFlag[nuh_layer_id];
+            ViewIdx = ViewOrderIdx[nuh_layer_id];
+
+            curCmpLIds = DepthFlag != 0 ? new List<int>() { (int)nuh_layer_id } : RefPicLayerId.ToList();
+            numCurCmpLIds = DepthFlag != 0 ? 1 : NumActiveRefLayerPics;
+
+            cpAvailableFlag = 1;
+            allRefCmpLayersAvailFlag = 1;
+
+            if(inCmpRefViewIdcs == null || inCmpRefViewIdcs.Length < MaxLayersMinus1 + 1)
+            {
+                inCmpRefViewIdcs = new int[MaxLayersMinus1 + 1];
+            }
+
+            for (int i = 0; i < (int)numCurCmpLIds - 1; i++)
+            {
+                inCmpRefViewIdcs[i] = ViewOrderIdx[curCmpLIds[i]];
+                if (CpPresentFlag[ViewIdx][inCmpRefViewIdcs[i]] == 0)
+                    cpAvailableFlag = 0;
+
+                refCmpCurLIdAvailFlag = 0;
+                if(ViewCompLayerPresentFlag[inCmpRefViewIdcs[i]][DepthFlag == 0 ? 1 : 0] == 1)
+                {
+                    uint j = LayerIdxInVps[ViewCompLayerId[inCmpRefViewIdcs[i]][DepthFlag == 0 ? 1 : 0]];
+                    if(direct_dependency_flag[LayerIdxInVps[nuh_layer_id]][j] == 1 && sub_layers_vps_max_minus1[j] > TemporalId && (TemporalId == 0 || max_tid_il_ref_pics_plus1[j][LayerIdxInVps[nuh_layer_id]] > TemporalId))
+                    {
+                        refCmpCurLIdAvailFlag = 1;
+                    }
+                }
+                if (refCmpCurLIdAvailFlag == 0)
+                {
+                    allRefCmpLayersAvailFlag = 0;
+                }
+            }
+
+            if (allRefCmpLayersAvailFlag == 0)
+            {
+                inCmpPredAvailFlag = 0;
+            }
+            else
+            {
+                if (DepthFlag == 0)
+                {
+                    inCmpPredAvailFlag = (vsp_mc_enabled_flag[DepthFlag] != 0 || dbbp_enabled_flag[DepthFlag] != 0 || depth_ref_enabled_flag[DepthFlag] != 0) ? 1 : 0;
+                }
+                else
+                {
+                    inCmpPredAvailFlag = (intra_contour_enabled_flag[DepthFlag] != 0 || cqt_cu_part_pred_enabled_flag[DepthFlag] != 0 || tex_mc_enabled_flag[DepthFlag] != 0) ? 1 : 0;
+                }
             }
         }
     }

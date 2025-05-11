@@ -291,6 +291,10 @@ namespace ItuGenerator
                     return "((H265Context)context).OnUsedByCurrPicLtFlag(i);";
                 case "short_term_ref_pic_set_idx":
                     return "((H265Context)context).OnShortTermRefPicSetIdx();";
+                case "inter_layer_pred_layer_idc":
+                    return "((H265Context)context).OnInterLayerPredLayerIdc();";
+                case "slice_type":
+                    return "((H265Context)context).OnSliceType();";
             }
 
             return "";

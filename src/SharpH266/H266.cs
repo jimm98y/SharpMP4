@@ -157,7 +157,7 @@ namespace SharpH266
         public uint NumCtusInCurrSlice { get; set; }
         public ulong[] CtbAddrInCurrSlice { get; set; }
         public ulong NumWeightsL1 { get; set; }
-        public ulong[][][] AbsDeltaPocSt { get; private set; }
+        public ulong[][][] AbsDeltaPocSt { get; set; }
 
         public void SetGeneralTimingHrdParameters(GeneralTimingHrdParameters generalTimingHrdParameters)
         {

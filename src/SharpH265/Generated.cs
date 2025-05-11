@@ -16099,6 +16099,7 @@ slice_segment_header() {
                     size += stream.ReadUnsignedInt(size, 1, out this.slice_reserved_flag[i], "slice_reserved_flag");
                 }
                 size += stream.ReadUnsignedIntGolomb(size, out this.slice_type, "slice_type");
+                ((H265Context)context).OnSliceType();
 
                 if (((H265Context)context).PicParameterSetRbsp.OutputFlagPresentFlag != 0)
                 {
@@ -16199,6 +16200,7 @@ slice_segment_header() {
                             for (i = 0; i < ((H265Context)context).NumActiveRefLayerPics; i++)
                             {
                                 size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H265Context)context).NumDirectRefLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])), out this.inter_layer_pred_layer_idc[i], "inter_layer_pred_layer_idc");
+                                ((H265Context)context).OnInterLayerPredLayerIdc();
                             }
                         }
                     }
@@ -16442,6 +16444,7 @@ slice_segment_header() {
                     size += stream.WriteUnsignedInt(1, this.slice_reserved_flag[i], "slice_reserved_flag");
                 }
                 size += stream.WriteUnsignedIntGolomb(this.slice_type, "slice_type");
+                ((H265Context)context).OnSliceType();
 
                 if (((H265Context)context).PicParameterSetRbsp.OutputFlagPresentFlag != 0)
                 {
@@ -16535,6 +16538,7 @@ slice_segment_header() {
                             for (i = 0; i < ((H265Context)context).NumActiveRefLayerPics; i++)
                             {
                                 size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H265Context)context).NumDirectRefLayers[((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId])), this.inter_layer_pred_layer_idc[i], "inter_layer_pred_layer_idc");
+                                ((H265Context)context).OnInterLayerPredLayerIdc();
                             }
                         }
                     }
