@@ -2363,7 +2363,6 @@ slice_segment_header() {
             if (sps_temporal_mvp_enabled_flag)  
                 slice_temporal_mvp_enabled_flag u(1)
         }
-        /*
         if (nuh_layer_id > 0 && !default_ref_layers_active_flag &&
             NumRefListLayers[nuh_layer_id] > 0) {  
             inter_layer_pred_enabled_flag u(1)
@@ -2439,9 +2438,8 @@ slice_segment_header() {
                 cp_off[j] se(v)
                 cp_inv_scale_plus_scale[j] se(v)
                 cp_inv_off_plus_off[j] se(v)
-            }*/
+            }
     }
-    /*
     if (tiles_enabled_flag || entropy_coding_sync_enabled_flag) {  
         num_entry_point_offsets ue(v)
         if (num_entry_point_offsets > 0) {  
@@ -2468,5 +2466,57 @@ slice_segment_header() {
             slice_segment_header_extension_data_bit u(1)
     }
     byte_alignment()
-    */
 }
+
+pred_weight_table() {  
+ luma_log2_weight_denom ue(v)
+    if (ChromaArrayType != 0)  
+       delta_chroma_log2_weight_denom se(v)
+    for (i = 0; i <= num_ref_idx_l0_active_minus1; i++) /* if ((pic_layer_id(RefPicList0[i]) != nuh_layer_id) || (PicOrderCnt(RefPicList0[i]) != PicOrderCnt(CurrPic))) */
+            luma_weight_l0_flag[i] u(1)
+    if (ChromaArrayType != 0)
+        for (i = 0; i <= num_ref_idx_l0_active_minus1; i++) /* if ((pic_layer_id(RefPicList0[i]) != nuh_layer_id) || (PicOrderCnt(RefPicList0[i]) != PicOrderCnt(CurrPic))) */
+            chroma_weight_l0_flag[i] u(1)
+    for (i = 0; i <= num_ref_idx_l0_active_minus1; i++) {
+        if (luma_weight_l0_flag[i]) {
+            delta_luma_weight_l0[i] se(v)
+            luma_offset_l0[i] se(v)
+        }
+        if (chroma_weight_l0_flag[i])
+            for (j = 0; j < 2; j++) {
+                delta_chroma_weight_l0[i][j] se(v)
+                delta_chroma_offset_l0[i][j] se(v)
+            }
+    }
+    if (slice_type == B) {
+        for (i = 0; i <= num_ref_idx_l1_active_minus1; i++) /* if ((pic_layer_id(RefPicList0[i]) != nuh_layer_id) || (PicOrderCnt(RefPicList1[i]) != PicOrderCnt(CurrPic))) */
+            luma_weight_l1_flag[i] u(1)
+        if (ChromaArrayType != 0)
+            for (i = 0; i <= num_ref_idx_l1_active_minus1; i++) /* if ((pic_layer_id(RefPicList0[i]) != nuh_layer_id) || (PicOrderCnt(RefPicList1[i]) != PicOrderCnt(CurrPic))) */
+            chroma_weight_l1_flag[i] u(1)
+        for (i = 0; i <= num_ref_idx_l1_active_minus1; i++) {
+            if (luma_weight_l1_flag[i]) {
+                delta_luma_weight_l1[i] se(v)
+                luma_offset_l1[i] se(v)
+            }
+            if (chroma_weight_l1_flag[i])
+                for (j = 0; j < 2; j++) {
+                    delta_chroma_weight_l1[i][j] se(v)
+                    delta_chroma_offset_l1[i][j] se(v)
+                }
+        }
+    }
+}  
+
+ref_pic_lists_modification() { 
+    ref_pic_list_modification_flag_l0  u(1)
+    if (ref_pic_list_modification_flag_l0)
+        for (i = 0; i <= num_ref_idx_l0_active_minus1; i++)
+            list_entry_l0[i] u(v)
+    if (slice_type == B) {   
+        ref_pic_list_modification_flag_l1 u(1)
+        if (ref_pic_list_modification_flag_l1)
+            for (i = 0; i <= num_ref_idx_l1_active_minus1; i++)
+                list_entry_l1[i] u(v)
+    }
+} 

@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 
 namespace SharpH265
 {
@@ -124,14 +125,14 @@ namespace SharpH265
         public uint[] NumPredictedLayers { get; set; }
         public int[] DependencyId { get; set; }
         public int[] AuxId { get; set; }
-        public int[] DepthLayerFlag { get; set; }
+        public int[] DepthLayerFlag { get; set; } = new int[] { 0 };
         public int[] ViewOrderIdx { get; set; }
         public uint[] OlsIdxToLsIdx { get; set; }
         public uint[] NumOutputLayersInOutputLayerSet { get; set; }
         public uint[] OlsHighestOutputLayerId { get; set; }
         public uint[] NumNecessaryLayers { get; set; }
         public uint[] LayerIdxInVps { get; set; }
-        public uint[] NumRefListLayers { get; set; }
+        public uint[] NumRefListLayers { get; set; } = new uint[] { 0 };
         public uint[] ViewOIdxList { get; set; }
         public ulong[] NumNegativePics { get; set; }
         public ulong[] NumPositivePics { get; set; }
@@ -162,6 +163,14 @@ namespace SharpH265
         public uint VclInitialArrivalDelayPresent { get; set; }
         public uint NalInitialArrivalDelayPresent { get; set; }
         public ulong RefRpsIdx { get; set; }
+        public uint NumActiveRefLayerPics { get; private set; }
+        public uint[] refLayerPicIdc { get; private set; }
+        public uint TemporalId { get; private set; }
+        public uint NumPicTotalCurr { get; private set; }
+        public uint[] PocLsbLt { get; private set; }
+        public uint[] UsedByCurrPicLt { get; private set; }
+        public ulong CurrRpsIdx { get; private set; }
+        public int inCmpPredAvailFlag { get; internal set; } // TODO
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -382,9 +391,9 @@ namespace SharpH265
         public void OnNumBspSchedulesMinus1(uint h, uint i, uint t)
         {
             var num_signalled_partitioning_schemes = VideoParameterSetRbsp.VpsExtension.VpsVui.VpsVuiBspHrdParams.NumSignalledPartitioningSchemes[h];
-            
-            if (BspSchedCnt == null || 
-                BspSchedCnt.Length < (int)(num_signalled_partitioning_schemes + 1) || 
+
+            if (BspSchedCnt == null ||
+                BspSchedCnt.Length < (int)(num_signalled_partitioning_schemes + 1) ||
                 BspSchedCnt[h].Length < (int)(num_signalled_partitioning_schemes + 1))
             {
                 BspSchedCnt = new ulong[num_signalled_partitioning_schemes + 1][][];
@@ -416,7 +425,7 @@ namespace SharpH265
         {
             var layer_set_idx_for_ols_minus1 = VideoParameterSetRbsp.VpsExtension.LayerSetIdxForOlsMinus1;
 
-            if(OlsIdxToLsIdx == null || OlsIdxToLsIdx.Length < (int)NumOutputLayerSets)
+            if (OlsIdxToLsIdx == null || OlsIdxToLsIdx.Length < (int)NumOutputLayerSets)
             {
                 OlsIdxToLsIdx = new uint[NumOutputLayerSets];
             }
@@ -426,7 +435,7 @@ namespace SharpH265
 
         public void OnLayerIdInNuh(uint i)
         {
-            if(LayerIdxInVps == null || LayerIdxInVps.Length < Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1)
+            if (LayerIdxInVps == null || LayerIdxInVps.Length < Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1)
             {
                 LayerIdxInVps = new uint[Math.Min(62, VideoParameterSetRbsp.VpsMaxLayersMinus1) + 1];
             }
@@ -444,7 +453,7 @@ namespace SharpH265
 
             var defaultOutputLayerIdc = Math.Min(default_output_layer_idc, 2);
 
-            if(OutputLayerFlag == null || OutputLayerFlag.Length < (int)vps_num_layer_sets_minus1 + 1)
+            if (OutputLayerFlag == null || OutputLayerFlag.Length < (int)vps_num_layer_sets_minus1 + 1)
             {
                 OutputLayerFlag = new uint[vps_num_layer_sets_minus1 + 1][];
                 for (int i = 0; i < (int)vps_num_layer_sets_minus1 + 1; i++)
@@ -454,7 +463,7 @@ namespace SharpH265
             }
             if (NumOutputLayersInOutputLayerSet == null || NumOutputLayersInOutputLayerSet.Length < (int)vps_num_layer_sets_minus1 + 1)
                 NumOutputLayersInOutputLayerSet = new uint[vps_num_layer_sets_minus1 + 1];
-            if(OlsHighestOutputLayerId == null || OlsHighestOutputLayerId.Length < (int)vps_num_layer_sets_minus1 + 1)
+            if (OlsHighestOutputLayerId == null || OlsHighestOutputLayerId.Length < (int)vps_num_layer_sets_minus1 + 1)
                 OlsHighestOutputLayerId = new uint[vps_num_layer_sets_minus1 + 1];
             if (NecessaryLayerFlag == null || NecessaryLayerFlag.Length < (int)NumOutputLayerSets)
             {
@@ -540,12 +549,12 @@ namespace SharpH265
             // TODO: this shoud happen at the beginning of the decoding process
             if (separate_colour_plane_flag == 0)
             {
-                if(chroma_format_idc == 0)
+                if (chroma_format_idc == 0)
                 {
                     SubWidthC = 1;
                     SubHeightC = 1;
                 }
-                else if(chroma_format_idc == 1)
+                else if (chroma_format_idc == 1)
                 {
                     SubWidthC = 2;
                     SubHeightC = 2;
@@ -586,7 +595,7 @@ namespace SharpH265
         {
             var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
 
-            if(MaxSubLayersInLayerSetMinus1 == null || MaxSubLayersInLayerSetMinus1.Length < (int)NumLayerSets)
+            if (MaxSubLayersInLayerSetMinus1 == null || MaxSubLayersInLayerSetMinus1.Length < (int)NumLayerSets)
                 MaxSubLayersInLayerSetMinus1 = new int[NumLayerSets];
 
             for (int i = 0; i < (int)NumLayerSets; i++)
@@ -619,7 +628,7 @@ namespace SharpH265
             var num_add_layer_sets = VideoParameterSetRbsp.VpsExtension.NumAddLayerSets;
 
             NumLayerSets = vps_num_layer_sets_minus1 + 1 + num_add_layer_sets; // F-7
-            if(num_add_layer_sets > 0)
+            if (num_add_layer_sets > 0)
             {
                 // F-8
                 FirstAddLayerSetIdx = vps_num_layer_sets_minus1 + 1;
@@ -633,7 +642,7 @@ namespace SharpH265
             var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
             var highest_layer_idx_plus1 = VideoParameterSetRbsp.VpsExtension.HighestLayerIdxPlus1;
 
-            if(LayerSetLayerIdList == null ||  LayerSetLayerIdList.Length < (int)vps_num_layer_sets_minus1 + 1 + (int)num_add_layer_sets)
+            if (LayerSetLayerIdList == null || LayerSetLayerIdList.Length < (int)vps_num_layer_sets_minus1 + 1 + (int)num_add_layer_sets)
             {
                 LayerSetLayerIdList = new int[vps_num_layer_sets_minus1 + 1 + num_add_layer_sets][];
             }
@@ -661,7 +670,7 @@ namespace SharpH265
             var layer_id_in_nuh = VideoParameterSetRbsp.VpsExtension.LayerIdInNuh;
             var scalability_mask_flag = VideoParameterSetRbsp.VpsExtension.ScalabilityMaskFlag;
 
-            if(ScalabilityId == null || ScalabilityId.Length < MaxLayersMinus1 + 1)
+            if (ScalabilityId == null || ScalabilityId.Length < MaxLayersMinus1 + 1)
             {
                 ScalabilityId = new int[MaxLayersMinus1 + 1][];
                 for (int i = 0; i < MaxLayersMinus1 + 1; i++)
@@ -669,13 +678,13 @@ namespace SharpH265
                     ScalabilityId[i] = new int[16];
                 }
             }
-            if(DepthLayerFlag == null || DepthLayerFlag.Length < MaxLayersMinus1 + 1)
+            if (DepthLayerFlag == null || DepthLayerFlag.Length < MaxLayersMinus1 + 1)
                 DepthLayerFlag = new int[MaxLayersMinus1 + 1];
-            if(ViewOrderIdx == null || ViewOrderIdx.Length < MaxLayersMinus1 + 1)
+            if (ViewOrderIdx == null || ViewOrderIdx.Length < MaxLayersMinus1 + 1)
                 ViewOrderIdx = new int[MaxLayersMinus1 + 1];
-            if(DependencyId == null || DependencyId.Length < MaxLayersMinus1 + 1)
+            if (DependencyId == null || DependencyId.Length < MaxLayersMinus1 + 1)
                 DependencyId = new int[MaxLayersMinus1 + 1];
-            if(AuxId == null || AuxId.Length < MaxLayersMinus1 + 1)
+            if (AuxId == null || AuxId.Length < MaxLayersMinus1 + 1)
                 AuxId = new int[MaxLayersMinus1 + 1];
 
             NumViews = 1;
@@ -708,9 +717,9 @@ namespace SharpH265
         {
             var layer_id_in_nuh = VideoParameterSetRbsp.VpsExtension.LayerIdInNuh;
 
-            if(ViewOIdxList == null || ViewOIdxList.Length < MaxLayersMinus1 + 1)
+            if (ViewOIdxList == null || ViewOIdxList.Length < MaxLayersMinus1 + 1)
                 ViewOIdxList = new uint[MaxLayersMinus1 + 1];
-            if(NumRefListLayers == null || NumRefListLayers.Length < MaxLayersMinus1 + 1)
+            if (NumRefListLayers == null || NumRefListLayers.Length < MaxLayersMinus1 + 1)
                 NumRefListLayers = new uint[MaxLayersMinus1 + 1];
             if (IdRefListLayer == null || IdRefListLayer.Length < MaxLayersMinus1 + 1)
             {
@@ -720,7 +729,7 @@ namespace SharpH265
                     IdRefListLayer[i] = new int[MaxLayersMinus1 + 1];
                 }
             }
-            if(ViewCompLayerPresentFlag == null)
+            if (ViewCompLayerPresentFlag == null)
             {
                 ViewCompLayerPresentFlag = new uint[MaxLayersMinus1 + 1][];
                 for (int i = 0; i < MaxLayersMinus1 + 1; i++)
@@ -728,7 +737,7 @@ namespace SharpH265
                     ViewCompLayerPresentFlag[i] = new uint[2];
                 }
             }
-            if(ViewCompLayerId == null)
+            if (ViewCompLayerId == null)
             {
                 ViewCompLayerId = new int[MaxLayersMinus1 + 1][];
                 for (int i = 0; i < MaxLayersMinus1 + 1; i++)
@@ -791,9 +800,9 @@ namespace SharpH265
 
 
             uint k = 0;
-            
+
             // F-4
-            if(DependencyFlag == null || DependencyFlag.Length < MaxLayersMinus1 + 1)
+            if (DependencyFlag == null || DependencyFlag.Length < MaxLayersMinus1 + 1)
             {
                 DependencyFlag = new int[MaxLayersMinus1 + 1][];
                 for (int i = 0; i < MaxLayersMinus1 + 1; i++)
@@ -814,7 +823,7 @@ namespace SharpH265
             }
 
             // F-5
-            if(IdDirectRefLayer == null || IdDirectRefLayer.Length < MaxLayersMinus1 + 1)
+            if (IdDirectRefLayer == null || IdDirectRefLayer.Length < MaxLayersMinus1 + 1)
             {
                 IdDirectRefLayer = new int[MaxLayersMinus1 + 1][];
                 for (int i = 0; i < MaxLayersMinus1 + 1; i++)
@@ -873,7 +882,7 @@ namespace SharpH265
             k = 0;
 
             // F-6
-            if(layerIdInListFlag == null || layerIdInListFlag.Length < 64)
+            if (layerIdInListFlag == null || layerIdInListFlag.Length < 64)
                 layerIdInListFlag = new int[64];
 
             if (TreePartitionLayerIdList == null || TreePartitionLayerIdList.Length < MaxLayersMinus1 + 1)
@@ -884,7 +893,7 @@ namespace SharpH265
                     TreePartitionLayerIdList[i] = new int[MaxLayersMinus1 + 1];
                 }
             }
-            if(NumLayersInTreePartition == null || NumLayersInTreePartition.Length < MaxLayersMinus1 + 1)
+            if (NumLayersInTreePartition == null || NumLayersInTreePartition.Length < MaxLayersMinus1 + 1)
             {
                 NumLayersInTreePartition = new uint[MaxLayersMinus1 + 1];
             }
@@ -932,6 +941,115 @@ namespace SharpH265
                 uint i = ViewOIdxList[n];
                 for (int m = 0; m < num_cp[i]; m++)
                     CpPresentFlag[i][cp_ref_voi[i][m]] = 1;
+            }
+        }
+
+        public void OnNumInterLayerRefPicsMinus1()
+        {
+            var nuh_layer_id = NalHeader.NalUnitHeader.NuhLayerId;
+            var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
+            var max_tid_il_ref_pics_plus1 = VideoParameterSetRbsp.VpsExtension.MaxTidIlRefPicsPlus1;
+            var default_ref_layers_active_flag = VideoParameterSetRbsp.VpsExtension.DefaultRefLayersActiveFlag;
+            var inter_layer_pred_enabled_flag = SliceSegmentLayerRbsp.SliceSegmentHeader.InterLayerPredEnabledFlag;
+            var max_one_active_ref_layer_flag = VideoParameterSetRbsp.VpsExtension.MaxOneActiveRefLayerFlag;
+            var num_inter_layer_ref_pics_minus1 = SliceSegmentLayerRbsp.SliceSegmentHeader.NumInterLayerRefPicsMinus1;
+
+            if (refLayerPicIdc == null || refLayerPicIdc.Length < MaxLayersMinus1 + 1)
+            {
+                refLayerPicIdc = new uint[MaxLayersMinus1 + 1];
+            }
+
+            uint j = 0;
+            for (uint i = 0; i < NumDirectRefLayers[nuh_layer_id]; i++)
+            {
+                uint refLayerIdx = LayerIdxInVps[IdDirectRefLayer[nuh_layer_id][i]];
+                if (sub_layers_vps_max_minus1[refLayerIdx] >= TemporalId && (TemporalId == 0 || max_tid_il_ref_pics_plus1[refLayerIdx][LayerIdxInVps[nuh_layer_id]] > TemporalId))
+                    refLayerPicIdc[j++] = i;
+            }
+            uint numRefLayerPics = j;
+
+            if (nuh_layer_id == 0 || numRefLayerPics == 0)
+                NumActiveRefLayerPics = 0;
+            else if (default_ref_layers_active_flag != 0)
+                NumActiveRefLayerPics = numRefLayerPics;
+            else if (inter_layer_pred_enabled_flag == 0)
+                NumActiveRefLayerPics = 0;
+            else if (max_one_active_ref_layer_flag != 0 || NumDirectRefLayers[nuh_layer_id] == 1)
+                NumActiveRefLayerPics = 1;
+            else
+                NumActiveRefLayerPics = num_inter_layer_ref_pics_minus1 + 1;
+        }
+
+        public void OnNuhTemporalIdPlus1()
+        {
+            var nuh_temporal_id_plus1 = NalHeader.NalUnitHeader.NuhTemporalIdPlus1;
+            TemporalId = nuh_temporal_id_plus1 - 1;
+        }
+
+        public void OnListEntryL0()
+        {
+            var pps_curr_pic_ref_enabled_flag = PicParameterSetRbsp.PpsSccExtension.PpsCurrPicRefEnabledFlag;
+            var num_long_term_sps = SliceSegmentLayerRbsp.SliceSegmentHeader.NumLongTermSps;
+            var num_long_term_pics = SliceSegmentLayerRbsp.SliceSegmentHeader.NumLongTermPics;
+
+            NumPicTotalCurr = 0;
+            for (int i = 0; i < (int)NumNegativePics[CurrRpsIdx]; i++)
+                if (UsedByCurrPicS0[CurrRpsIdx][i] != 0)
+                    NumPicTotalCurr++;
+            for (int i = 0; i < (int)NumPositivePics[CurrRpsIdx]; i++)
+                if (UsedByCurrPicS1[CurrRpsIdx][i] != 0)
+                    NumPicTotalCurr++;
+            for (int i = 0; i < (int)(num_long_term_sps + num_long_term_pics); i++)
+                if (UsedByCurrPicLt[i] != 0)
+                    NumPicTotalCurr++;
+            if (pps_curr_pic_ref_enabled_flag != 0)
+                NumPicTotalCurr++;
+        }
+
+        public void OnUsedByCurrPicLtFlag(uint i)
+        {
+            var num_long_term_sps = SliceSegmentLayerRbsp.SliceSegmentHeader.NumLongTermSps;
+            var num_long_term_pics = SliceSegmentLayerRbsp.SliceSegmentHeader.NumLongTermPics;
+            var lt_ref_pic_poc_lsb_sps = SeqParameterSetRbsp.LtRefPicPocLsbSps;
+            var lt_idx_sps = SliceSegmentLayerRbsp.SliceSegmentHeader.LtIdxSps;
+            var used_by_curr_pic_lt_sps_flag = SeqParameterSetRbsp.UsedByCurrPicLtSpsFlag;
+            var poc_lsb_lt = SliceSegmentLayerRbsp.SliceSegmentHeader.PocLsbLt;
+            var used_by_curr_pic_lt_flag = SliceSegmentLayerRbsp.SliceSegmentHeader.UsedByCurrPicLtFlag;
+
+            if(PocLsbLt == null || PocLsbLt.Length < (int)(num_long_term_sps + num_long_term_pics))
+            {
+                PocLsbLt = new uint[num_long_term_sps + num_long_term_pics];
+            }
+            if(UsedByCurrPicLt == null || UsedByCurrPicLt.Length < (int)(num_long_term_sps + num_long_term_pics))
+            {
+                UsedByCurrPicLt = new uint[num_long_term_sps + num_long_term_pics];
+            }
+
+            if (i < num_long_term_sps)
+            {
+                PocLsbLt[i] = lt_ref_pic_poc_lsb_sps[lt_idx_sps[i]];
+                UsedByCurrPicLt[i] = used_by_curr_pic_lt_sps_flag[lt_idx_sps[i]];
+            }
+            else
+            {
+                PocLsbLt[i] = poc_lsb_lt[i];
+                UsedByCurrPicLt[i] = used_by_curr_pic_lt_flag[i];
+            }
+        }
+
+        public void OnShortTermRefPicSetIdx()
+        {
+            var short_term_ref_pic_set_sps_flag = SliceSegmentLayerRbsp.SliceSegmentHeader.ShortTermRefPicSetSpsFlag;
+            var short_term_ref_pic_set_idx = SliceSegmentLayerRbsp.SliceSegmentHeader.ShortTermRefPicSetIdx;
+            var num_short_term_ref_pic_sets = SeqParameterSetRbsp.NumShortTermRefPicSets;
+
+            if (short_term_ref_pic_set_sps_flag == 1)
+            {
+                CurrRpsIdx = short_term_ref_pic_set_idx;
+            }
+            else
+            {
+                CurrRpsIdx = num_short_term_ref_pic_sets;
             }
         }
     }

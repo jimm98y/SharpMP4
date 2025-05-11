@@ -433,7 +433,7 @@ namespace SharpH26X
             }
         }
 
-        public bool WriteMoreRbspData(IItuSerializable serializable)
+        public bool WriteMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue) // TODO
         {
             if (serializable.HasMoreRbspData == 0 || _rbspDataCounter == 0)
                 return false;
