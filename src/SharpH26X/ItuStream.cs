@@ -555,7 +555,7 @@ namespace SharpH26X
             }
 
             value = new BigInteger(bytes);
-            LogEnd(name, count, (long)value);
+            LogEnd(name, count, value);
             return count;
         }
 
