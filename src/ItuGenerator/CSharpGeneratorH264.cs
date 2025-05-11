@@ -169,8 +169,8 @@ namespace ItuGenerator
             parameter = parameter.Replace("UseDefaultScalingMatrix4x4Flag[ i ]", "0");
             parameter = parameter.Replace("ScalingList8x8[ i - 6 ]", "new uint[6 * 64]");
             parameter = parameter.Replace("UseDefaultScalingMatrix8x8Flag[ i - 6 ]", $"0");
-            parameter = parameter.Replace("ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen", "new uint[index, numViews], new uint[index, numViews], new uint[index, numViews], new uint[index, numViews]");
-            parameter = parameter.Replace("ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen", "new uint[index, numViews], new uint[index, numViews], new uint[index, numViews], new uint[index, numViews]");
+            parameter = parameter.Replace("ZNearSign, ZNearExp, ZNearMantissa, ZNearManLen", "new uint[index, numViews], new ulong[index, numViews], new ulong[index, numViews], new uint[index, numViews]");
+            parameter = parameter.Replace("ZFarSign, ZFarExp, ZFarMantissa, ZFarManLen", "new uint[index, numViews], new ulong[index, numViews], new ulong[index, numViews], new uint[index, numViews]");
 
             if (classType == "depth_representation_sei_element")
                 parameter = "()";
@@ -225,8 +225,8 @@ namespace ItuGenerator
                 { "payloadType",                   "u(32)" },
                 { "payloadSize",                   "u(32)" },
                 { "outSign",                       "u(32)[,]" },
-                { "outExp",                        "u(32)[,]" },
-                { "outMantissa",                   "u(32)[,]" },
+                { "outExp",                        "u(64)[,]" },
+                { "outMantissa",                   "u(64)[,]" },
                 { "outManLen",                     "u(32)[,]" },
                 { "numViews",                      "u(64)" },
                 { "predDirection",                 "u(64)" },
@@ -240,7 +240,7 @@ namespace ItuGenerator
         public string FixFieldValue(string fieldValue)
         {
             fieldValue = fieldValue.Replace("<<", "<< (int)");
-            fieldValue = fieldValue.Replace("mantissaPred + mantissa_diff", "(uint)(mantissaPred + mantissa_diff)");
+            fieldValue = fieldValue.Replace("mantissaPred + mantissa_diff", "(ulong)((long)mantissaPred + mantissa_diff)");
             return fieldValue;
         }
 

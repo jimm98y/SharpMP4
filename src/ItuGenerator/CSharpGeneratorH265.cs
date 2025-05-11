@@ -25,6 +25,9 @@ namespace ItuGenerator
         {
             switch (field.Name)
             {
+                case "collocated_from_l0_flag":
+                    return "1";
+
                 default:
                     return "";
             }
@@ -107,7 +110,7 @@ namespace ItuGenerator
                 case "CpbCnt":
                     return "((H265Context)context).CpbCnt";
                 case "cp_ref_voi":
-                    return "((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi";
+                    return "(uint)((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpRefVoi";
                 case "cp_in_slice_segment_header_flag":
                     return "((H265Context)context).VideoParameterSetRbsp.Vps3dExtension != null && ((H265Context)context).VideoParameterSetRbsp.Vps3dExtension.CpInSliceSegmentHeaderFlag";
                 case "deblocking_filter_override_enabled_flag":
@@ -278,6 +281,16 @@ namespace ItuGenerator
                     return "((H265Context)context).OnDeltaIdxMinus1(stRpsIdx);";
                 case "nesting_max_temporal_id_plus1":
                     return "((H265Context)context).OnNestingMaxTemporalIdPlus1(i);";
+                case "num_inter_layer_ref_pics_minus1":
+                    return "((H265Context)context).OnNumInterLayerRefPicsMinus1();";
+                case "nuh_temporal_id_plus1":
+                    return "((H265Context)context).OnNuhTemporalIdPlus1();";
+                case "list_entry_l0":
+                    return "((H265Context)context).OnListEntryL0();";
+                case "used_by_curr_pic_lt_flag":
+                    return "((H265Context)context).OnUsedByCurrPicLtFlag(i);";
+                case "short_term_ref_pic_set_idx":
+                    return "((H265Context)context).OnShortTermRefPicSetIdx();";
             }
 
             return "";
@@ -311,8 +324,9 @@ namespace ItuGenerator
             condition = condition.Replace("Max(", "(uint)Math.Max(");
             condition = condition.Replace("byte_aligned()", "stream.ByteAligned()");
             condition = condition.Replace("more_data_in_payload()", "(!(stream.ByteAligned() && 8 * payloadSize == stream.GetBitsPositionSinceLastMark()))");
-            condition = condition.Replace("payload_extension_present()", "stream.ReadMoreRbspData(this, payloadSize)");
+            condition = condition.Replace("payload_extension_present()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this, payloadSize)");
             condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
+            condition = condition.Replace("more_data_in_slice_segment_header_extension()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this, slice_segment_header_extension_length)");
             condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");
             return condition;
         }
@@ -516,7 +530,11 @@ namespace ItuGenerator
                     return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
                 case "list_entry_l1":
                     return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
-
+                case "inter_layer_pred_layer_idc":
+                case "num_inter_layer_ref_pics_minus1":
+                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) )";
+                case "poc_lsb_val":
+                    return "((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4";
             }
 
             Debug.WriteLine(parameter);

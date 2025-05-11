@@ -73,7 +73,7 @@ namespace SharpH266
         internal byte[][][] st_ref_pic_flag;
         internal ulong[][][] abs_delta_poc_st;
         internal byte[][][] strp_entry_sign_flag;
-        internal uint[][][] rpls_poc_lsb_lt;
+        internal ulong[][][] rpls_poc_lsb_lt;
         internal ulong[][][] ilrp_idx;
 
         public SeiPayload SeiPayload { get; set; }
@@ -151,7 +151,7 @@ namespace SharpH266
         public ulong NumWeightsL0 { get; set; }
         public ulong[] NumRefIdxActive { get; set; }
         public int CurrSubpicIdx { get; set; }
-        public uint[] SubpicIdVal { get; set; }
+        public ulong[] SubpicIdVal { get; set; }
         public int NumExtraShBits { get; set; }
         public int NumEntryPoints { get; set; }
         public uint NumCtusInCurrSlice { get; set; }
@@ -698,11 +698,11 @@ namespace SharpH266
 
             for (i = 0; i <= (int)sps_num_subpics_minus1; i++)
             {
-                uint leftX = sps_subpic_ctu_top_left_x[i];
-                uint rightX = leftX + sps_subpic_width_minus1[i];
+                ulong leftX = sps_subpic_ctu_top_left_x[i];
+                ulong rightX = leftX + sps_subpic_width_minus1[i];
                 SubpicWidthInTiles[i] = ctbToTileColIdx[rightX] + 1 - ctbToTileColIdx[leftX];
-                uint topY = sps_subpic_ctu_top_left_y[i];
-                uint bottomY = topY + sps_subpic_height_minus1[i];
+                ulong topY = sps_subpic_ctu_top_left_y[i];
+                ulong bottomY = topY + sps_subpic_height_minus1[i];
                 SubpicHeightInTiles[i] = ctbToTileRowIdx[bottomY] + 1 - ctbToTileRowIdx[topY];
                 if (SubpicHeightInTiles[i] == 1 && sps_subpic_height_minus1[i] + 1 < RowHeightVal[ctbToTileRowIdx[topY]])
                     subpicHeightLessThanOneTileFlag[i] = 1;
@@ -967,7 +967,7 @@ namespace SharpH266
             var sps_subpic_id = SeqParameterSetRbsp.SpsSubpicId;
 
             if (SubpicIdVal == null || SubpicIdVal.Length < (int)sps_num_subpics_minus1 + 1)
-                SubpicIdVal = new uint[sps_num_subpics_minus1 + 1];
+                SubpicIdVal = new ulong[sps_num_subpics_minus1 + 1];
 
             for (uint i = 0; i <= sps_num_subpics_minus1; i++)
                 if (sps_subpic_id_mapping_explicitly_signalled_flag != 0)
@@ -976,7 +976,7 @@ namespace SharpH266
                     SubpicIdVal[i] = i;
         }
 
-        public void OnShSubpicId(uint sh_subpic_id)
+        public void OnShSubpicId(ulong sh_subpic_id)
         {
             CurrSubpicIdx = Array.IndexOf(SubpicIdVal, sh_subpic_id);
         }
@@ -1025,7 +1025,7 @@ namespace SharpH266
 
             if (pps_rect_slice_flag != 0)
             {
-                uint picLevelSliceIdx = sh_slice_address;
+                ulong picLevelSliceIdx = sh_slice_address;
                 for (int j = 0; j < CurrSubpicIdx; j++)
                     picLevelSliceIdx += NumSlicesInSubpic[j];
                 NumCtusInCurrSlice = NumCtusInSlice[picLevelSliceIdx];

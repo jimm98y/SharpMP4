@@ -439,6 +439,7 @@ namespace ItuGenerator
             condition = condition.Replace("payload_size_byte  ==  0xFF", "payload_size_byte[whileIndex]  ==  0xFF");
 
             condition = condition.Replace("AbsDeltaPocSt[ i ]", "(((((H266Context)context).SeqParameterSetRbsp.SpsWeightedPredFlag != 0 || ((H266Context)context).SeqParameterSetRbsp.SpsWeightedBipredFlag != 0) && i != 0) ? abs_delta_poc_st[i] : (abs_delta_poc_st[i] + 1))");
+            condition = condition.Replace("- sh_slice_address", "- (int)sh_slice_address");
 
             condition = condition.Replace("ALF_APS", "H266Constants.ALF_APS");
             condition = condition.Replace("LMCS_APS", "H266Constants.LMCS_APS");

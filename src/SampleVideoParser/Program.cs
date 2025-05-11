@@ -31,10 +31,10 @@ SharpH26X.Log.SinkInfo = (o, e) =>
 };
 
 //var files = File.ReadAllLines("C:\\Temp\\testFiles0.txt");
-//var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
+var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
 //var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
 //var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
-var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
+//var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
 
 foreach (var file in files)
 {
