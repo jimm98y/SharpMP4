@@ -1,4 +1,6 @@
-﻿namespace SharpH264
+﻿using System;
+
+namespace SharpH264
 {
     public class H264Constants
     {
@@ -62,6 +64,23 @@
     public partial class H264Context
     {
         public SeiPayload SeiPayload { get; set; }
+
+        public int NumClockTS { get; set; }
+        public uint AllViewsPairedFlag { get; set; } = 1;
+        public ulong ChromaArrayType { get; set; }
+        public uint IdrPicFlag { get; private set; }
+        public int DepthFlag { get; private set; }
+        public uint CpbDpbDelaysPresentFlag { get; private set; }
+        public ulong PicHeightInMapUnits { get; private set; }
+        public ulong PicSizeInMapUnits { get; private set; }
+        public ulong PicWidthInMbs { get; private set; }
+        public int deltaFlag { get; private set; }
+
+        // TODO: artificially added because there are many different slice_header types - unify?
+        public uint TimeOffsetLength { get; set; } = 24;
+        public ulong SliceType { get; set; }
+        public ulong NumRefIdxL1ActiveMinus1 { get; set; }
+        public ulong NumRefIdxL0ActiveMinus1 { get; set; }
 
         public void SetSeiPayload(SeiPayload payload)
         {
@@ -216,6 +235,101 @@
                 SeiPayload.ViewDependencyChange = payload.ViewDependencyChange;
             if (payload.ViewScalabilityInfo != null)
                 SeiPayload.ViewScalabilityInfo = payload.ViewScalabilityInfo;
+        }
+
+        public void OnPicStruct()
+        {
+            var pic_struct = SeiPayload.PicTiming.PicStruct;
+
+            NumClockTS = pic_struct switch
+            {
+                0u => 1,
+                1u => 1,
+                2u => 1,
+                3u => 2,
+                4u => 2,
+                5u => 3,
+                6u => 3,
+                7u => 2,
+                8u => 3,
+                _ => throw new NotSupportedException()
+            };
+        }
+
+        public void OnEnableRleSkipFlag()
+        {
+            AllViewsPairedFlag = 1;
+            for (int i = 1; i <= (int)SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++)
+                AllViewsPairedFlag = (uint)((AllViewsPairedFlag != 0 && SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.DepthViewPresentFlag[i] != 0 && SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag[i] != 0) ? 1 : 0);
+        }
+
+        public void OnSeparateColourPlaneFlag()
+        {
+            var separate_colour_plane_flag = SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag;
+            var chroma_format_idc = SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc;
+
+            if (separate_colour_plane_flag == 0)
+                ChromaArrayType = chroma_format_idc;
+            else
+                ChromaArrayType = 0;
+        }
+
+        public void OnNalUnitType()
+        {
+            var nal_unit_type = NalHeader.NalUnitType;
+
+            IdrPicFlag = (uint)((nal_unit_type == 5) ? 1 : 0);
+        }
+
+        public void OnAvc3dExtensionFlag()
+        {
+            var nal_unit_type = NalHeader.NalUnitType;
+            var avc_3d_extension_flag = NalHeader.Avc3dExtensionFlag;
+            var depth_flag = NalHeader.NalUnitHeader3davcExtension.DepthFlag;
+
+            DepthFlag = (nal_unit_type != 21) ? 0 : (avc_3d_extension_flag != 0 ? depth_flag : 1);
+        }
+
+        public void OnVclHrdParametersPresentFlag()
+        {
+            var nal_hrd_parameters_present_flag = SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag;
+            var vcl_hrd_parameters_present_flag = SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag;
+            CpbDpbDelaysPresentFlag = (uint)(nal_hrd_parameters_present_flag == 1 || vcl_hrd_parameters_present_flag == 1 ? 1 : 0);
+        }
+
+        public void OnPicWidthInMbsMinus1()
+        {
+            var pic_width_in_mbs_minus1 = SeqParameterSetRbsp.SeqParameterSetData.PicWidthInMbsMinus1;
+            PicWidthInMbs = pic_width_in_mbs_minus1 + 1;
+            //PicWidthInSamplesL = PicWidthInMbs * 16;
+            //PicWidthInSamplesC = PicWidthInMbs * MbWidthC;
+        }
+
+        public void OnPicHeightInMapUnitsMinus1()
+        {
+            var pic_height_in_map_units_minus1 = SeqParameterSetRbsp.SeqParameterSetData.PicHeightInMapUnitsMinus1;
+            PicHeightInMapUnits = pic_height_in_map_units_minus1 + 1;
+            PicSizeInMapUnits = PicWidthInMbs * PicHeightInMapUnits;
+        }
+
+        public void OnTimeOffsetLength(uint time_offset_length)
+        {
+            TimeOffsetLength = time_offset_length;
+        }
+        
+        public void OnSliceType(ulong slice_type)
+        {
+            SliceType = slice_type;
+        }
+
+        public void OnNumRefIdxL0ActiveMinus1(ulong num_ref_idx_l0_active_minus1)
+        {
+            NumRefIdxL0ActiveMinus1 = num_ref_idx_l0_active_minus1;
+        }
+
+        public void OnNumRefIdxL1ActiveMinus1(ulong num_ref_idx_l1_active_minus1)
+        {
+            NumRefIdxL1ActiveMinus1 = num_ref_idx_l1_active_minus1;
         }
     }
 }
