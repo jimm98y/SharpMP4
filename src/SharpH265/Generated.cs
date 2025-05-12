@@ -9353,6 +9353,10 @@ cbr_flag[ i ] u(1)
 
             uint i = 0;
 
+            this.bit_rate_value_minus1 = new ulong[((H265Context)context).CpbCnt];
+            this.cpb_size_value_minus1 = new ulong[((H265Context)context).CpbCnt];
+            this.cpb_size_du_value_minus1 = new ulong[((H265Context)context).CpbCnt];
+            this.bit_rate_du_value_minus1 = new ulong[((H265Context)context).CpbCnt];
             this.cbr_flag = new byte[((H265Context)context).CpbCnt];
             for (i = 0; i < ((H265Context)context).CpbCnt; i++)
             {

@@ -885,7 +885,7 @@ namespace Sharp{type}
                                     {
                                         appendType += "[][]"; // TODO fix this workaround
                                     }
-                                    
+
                                     // H266
                                     if (variableType.Contains(" 0  &&  i  <=  "))
                                     {
@@ -897,54 +897,63 @@ namespace Sharp{type}
                                         variableType = variableType.Replace("[  0]", "[MaxNumSubLayersMinus1]");
                                     }
 
-                                    if (variableName == "ref_pic_list_struct")
+                                    if (specificGenerator is CSharpGeneratorH266)
                                     {
-                                        if (methodType == MethodType.Read)
-                                            if(variableType == "RefPicListStruct[ 2]")
-                                                ret += "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new ulong[2][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };";
-                                            else
-                                                ret += "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new ulong[2][];\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][];\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][];\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new ulong[2][][];\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][];\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new ulong[2][][];\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new ulong[2][][];";
-                                    }
-                                    else if (variableName == "ref_pic_list_struct[ i ]")
-                                    {
-                                        if (methodType == MethodType.Read)
-                                            ret += "\r\nif (((H266Context)context).num_ref_entries[i] == null)\r\n                    ((H266Context)context).num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];\r\n                if (((H266Context)context).inter_layer_ref_pic_flag[i] == null)\r\n                    ((H266Context)context).inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).st_ref_pic_flag[i] == null)\r\n                    ((H266Context)context).st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).abs_delta_poc_st[i] == null)\r\n                    ((H266Context)context).abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).strp_entry_sign_flag[i] == null)\r\n                    ((H266Context)context).strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).rpls_poc_lsb_lt[i] == null)\r\n                    ((H266Context)context).rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).ilrp_idx[i] == null)\r\n                    ((H266Context)context).ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];";
-                                    }
-                                    else if(variableName.StartsWith("sublayer_hrd_parameters"))
-                                    {
-                                        if(methodType == MethodType.Read)
-                                            ret += "\r\nif(((H266Context)context).cbr_flag == null)\r\n                ((H266Context)context).cbr_flag = new byte[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).bit_rate_du_value_minus1 == null)\r\n                ((H266Context)context).bit_rate_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).cpb_size_du_value_minus1 == null)\r\n                ((H266Context)context).cpb_size_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).bit_rate_value_minus1 == null)\r\n                ((H266Context)context).bit_rate_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).cpb_size_value_minus1 == null)\r\n                ((H266Context)context).cpb_size_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n";
-                                    }
-                                    else if(
-                                        variableName.StartsWith("bit_rate_value_minus1") ||
-                                        variableName.StartsWith("cpb_size_value_minus1") ||
-                                        variableName.StartsWith("cpb_size_du_value_minus1") ||
-                                        variableName.StartsWith("bit_rate_du_value_minus1")
-                                        )
-                                    {
+                                        if (variableName == "ref_pic_list_struct")
+                                        {
+                                            if (methodType == MethodType.Read)
+                                                if (variableType == "RefPicListStruct[ 2]")
+                                                    ret += "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new ulong[2][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };";
+                                                else
+                                                    ret += "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new ulong[2][];\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][];\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][];\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new ulong[2][][];\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][];\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new ulong[2][][];\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new ulong[2][][];";
+                                        }
+                                        else if (variableName == "ref_pic_list_struct[ i ]")
+                                        {
+                                            if (methodType == MethodType.Read)
+                                                ret += "\r\nif (((H266Context)context).num_ref_entries[i] == null)\r\n                    ((H266Context)context).num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];\r\n                if (((H266Context)context).inter_layer_ref_pic_flag[i] == null)\r\n                    ((H266Context)context).inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).st_ref_pic_flag[i] == null)\r\n                    ((H266Context)context).st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).abs_delta_poc_st[i] == null)\r\n                    ((H266Context)context).abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).strp_entry_sign_flag[i] == null)\r\n                    ((H266Context)context).strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).rpls_poc_lsb_lt[i] == null)\r\n                    ((H266Context)context).rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).ilrp_idx[i] == null)\r\n                    ((H266Context)context).ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];";
+                                        }
+                                        else if (variableName.StartsWith("sublayer_hrd_parameters"))
+                                        {
+                                            if (methodType == MethodType.Read)
+                                                ret += "\r\nif(((H266Context)context).cbr_flag == null)\r\n                ((H266Context)context).cbr_flag = new byte[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).bit_rate_du_value_minus1 == null)\r\n                ((H266Context)context).bit_rate_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).cpb_size_du_value_minus1 == null)\r\n                ((H266Context)context).cpb_size_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).bit_rate_value_minus1 == null)\r\n                ((H266Context)context).bit_rate_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).cpb_size_value_minus1 == null)\r\n                ((H266Context)context).cpb_size_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n";
+                                        }
+                                        else if (
+                                            variableName.StartsWith("bit_rate_value_minus1") ||
+                                            variableName.StartsWith("cpb_size_value_minus1") ||
+                                            variableName.StartsWith("cpb_size_du_value_minus1") ||
+                                            variableName.StartsWith("bit_rate_du_value_minus1")
+                                            )
+                                        {
 
-                                    }
-                                    else if(variableName.StartsWith("cbr_flag") && specificGenerator is CSharpGeneratorH266)
-                                    {
-                                        if (methodType == MethodType.Read)
-                                            ret += "((H266Context)context).cbr_flag[subLayerId] = new byte[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_du_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_du_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            this.bit_rate_value_minus1 = ((H266Context)context).bit_rate_value_minus1;\r\n            this.cpb_size_value_minus1 = ((H266Context)context).cpb_size_value_minus1;\r\n            this.cpb_size_du_value_minus1 = ((H266Context)context).cpb_size_du_value_minus1;\r\n            this.bit_rate_du_value_minus1 = ((H266Context)context).bit_rate_du_value_minus1;\r\n            this.cbr_flag = ((H266Context)context).cbr_flag;\r\n";
-                                    }
-                                    else if(
-                                        variableName.StartsWith("rpls_poc_lsb_lt") ||
-                                        variableName.StartsWith("strp_entry_sign_flag") ||
-                                        variableName.StartsWith("abs_delta_poc_st") ||
-                                        variableName.StartsWith("st_ref_pic_flag") ||
-                                        variableName.StartsWith("inter_layer_ref_pic_flag") ||
-                                        variableName.StartsWith("ilrp_idx")
-                                        )
-                                    {
+                                        }
+                                        else if (variableName.StartsWith("cbr_flag") && specificGenerator is CSharpGeneratorH266)
+                                        {
+                                            if (methodType == MethodType.Read)
+                                                ret += "((H266Context)context).cbr_flag[subLayerId] = new byte[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_du_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_du_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            this.bit_rate_value_minus1 = ((H266Context)context).bit_rate_value_minus1;\r\n            this.cpb_size_value_minus1 = ((H266Context)context).cpb_size_value_minus1;\r\n            this.cpb_size_du_value_minus1 = ((H266Context)context).cpb_size_du_value_minus1;\r\n            this.bit_rate_du_value_minus1 = ((H266Context)context).bit_rate_du_value_minus1;\r\n            this.cbr_flag = ((H266Context)context).cbr_flag;\r\n";
+                                        }
+                                        else if (
+                                            variableName.StartsWith("rpls_poc_lsb_lt") ||
+                                            variableName.StartsWith("strp_entry_sign_flag") ||
+                                            variableName.StartsWith("abs_delta_poc_st") ||
+                                            variableName.StartsWith("st_ref_pic_flag") ||
+                                            variableName.StartsWith("inter_layer_ref_pic_flag") ||
+                                            variableName.StartsWith("ilrp_idx")
+                                            )
+                                        {
 
+                                        }
+                                        else
+                                        {
+                                            if (methodType == MethodType.Read)
+                                                ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+                                        }
                                     }
                                     else
                                     {
                                         if (methodType == MethodType.Read)
                                             ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
                                     }
+
 
                                     if (variableName == "pt_sublayer_delays_present_flag")
                                     {

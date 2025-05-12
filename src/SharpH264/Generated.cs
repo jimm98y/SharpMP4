@@ -9139,6 +9139,8 @@ hrd_parameters() {
             size += stream.ReadUnsignedInt(size, 4, out this.bit_rate_scale, "bit_rate_scale");
             size += stream.ReadUnsignedInt(size, 4, out this.cpb_size_scale, "cpb_size_scale");
 
+            this.bit_rate_value_minus1 = new ulong[cpb_cnt_minus1 + 1];
+            this.cpb_size_value_minus1 = new ulong[cpb_cnt_minus1 + 1];
             this.cbr_flag = new byte[cpb_cnt_minus1 + 1];
             for (SchedSelIdx = 0; SchedSelIdx <= cpb_cnt_minus1; SchedSelIdx++)
             {

@@ -30,7 +30,7 @@ SharpH26X.Log.SinkInfo = (o, e) =>
     Debug.WriteLine(o);
 };
 
-var files = File.ReadAllLines("C:\\Temp\\testFiles0.txt");
+var files = File.ReadAllLines("C:\\Temp\\testFiles2.txt");
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
 //var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
 //var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
