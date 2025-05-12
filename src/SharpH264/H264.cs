@@ -331,5 +331,10 @@ namespace SharpH264
         {
             NumRefIdxL1ActiveMinus1 = num_ref_idx_l1_active_minus1;
         }
+
+        public void OnPicTiming(PicTiming pic_timing)
+        {
+            SeiPayload.PicTiming = pic_timing;
+        }
     }
 }

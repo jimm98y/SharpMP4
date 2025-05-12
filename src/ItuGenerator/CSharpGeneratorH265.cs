@@ -544,5 +544,10 @@ namespace ItuGenerator
             Debug.WriteLine(parameter);
             throw new System.NotImplementedException();
         }
+
+        public string GetDerivedInstances(string field)
+        {
+            return "";
+        }
     }
 }

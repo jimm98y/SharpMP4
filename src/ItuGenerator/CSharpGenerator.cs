@@ -26,6 +26,7 @@ namespace ItuGenerator
         string FixFieldValue(string fieldValue);
         void FixMethodAllocation(string name, ref string method, ref string typedef);
         string GetDerivedVariables(string name);
+        string GetDerivedInstances(string field);
     }
 
     public class CSharpGenerator
@@ -305,18 +306,25 @@ namespace Sharp{type}
             {
                 specificGenerator.FixMethodAllocation(name, ref m, ref typedef);
 
+                string instances = "";
+                instances = specificGenerator.GetDerivedInstances(name);
+                if (!string.IsNullOrEmpty(instances))
+                {
+                    instances += "\r\n";
+                }
+
                 if ((field as ItuField).MakeList)
                 {
                     // special case, create class first, then read it
                     m = m.Replace("###value###", $"{spacing}this.{name}{typedef}.Add(whileIndex, ");
-                    m = m.Replace("###size###", $");\r\n{spacing}{boxSize}");
+                    m = m.Replace("###size###", $");\r\n{instances}{spacing}{boxSize}");
                     retm = $"{m} this.{name}{typedef}[whileIndex], \"{name}\"); {fieldComment}";
                 }
                 else
                 {
                     // special case, create class first, then read it
                     m = m.Replace("###value###", $"{spacing}this.{name}{typedef} = ");
-                    m = m.Replace("###size###", $";\r\n{spacing}{boxSize}");
+                    m = m.Replace("###size###", $";\r\n{instances}{spacing}{boxSize}");
                     retm = $"{m} this.{name}{typedef}, \"{name}\"); {fieldComment}";
                 }
             }

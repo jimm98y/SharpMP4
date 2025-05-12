@@ -292,6 +292,18 @@ namespace ItuGenerator
                     return "((H264Context)context).OnNumRefIdxL0ActiveMinus1(num_ref_idx_l0_active_minus1);";
                 case "num_ref_idx_l1_active_minus1":
                     return "((H264Context)context).OnNumRefIdxL1ActiveMinus1(num_ref_idx_l1_active_minus1);";
+                case "pic_timing":
+                    return "((H264Context)context).OnPicTiming(pic_timing);";
+            }
+            return "";
+        }
+
+        public string GetDerivedInstances(string field)
+        {
+            switch (field)
+            {
+                case "pic_timing":
+                    return "((H264Context)context).OnPicTiming(pic_timing);";
             }
             return "";
         }

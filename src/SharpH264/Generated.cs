@@ -3568,7 +3568,9 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             else if (payloadType == 1)
             {
                 this.pic_timing = new PicTiming(payloadSize);
+                ((H264Context)context).OnPicTiming(pic_timing);
                 size += stream.ReadClass<PicTiming>(size, context, this.pic_timing, "pic_timing");
+                ((H264Context)context).OnPicTiming(pic_timing);
             }
             else if (payloadType == 2)
             {
@@ -3954,6 +3956,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
             else if (payloadType == 1)
             {
                 size += stream.WriteClass<PicTiming>(context, this.pic_timing, "pic_timing");
+                ((H264Context)context).OnPicTiming(pic_timing);
             }
             else if (payloadType == 2)
             {
