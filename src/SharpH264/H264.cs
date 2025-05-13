@@ -67,7 +67,7 @@ namespace SharpH264
 
         public int NumClockTS { get; set; }
         public uint AllViewsPairedFlag { get; set; } = 1;
-        public ulong ChromaArrayType { get; set; }
+        public ulong ChromaArrayType { get; set; } = 1; // default value of chroma_format_idc when not present
         public uint IdrPicFlag { get; private set; }
         public int DepthFlag { get; private set; }
         public uint CpbDpbDelaysPresentFlag { get; private set; }
@@ -335,6 +335,11 @@ namespace SharpH264
         public void OnPicTiming(PicTiming pic_timing)
         {
             SeiPayload.PicTiming = pic_timing;
+        }
+
+        public void OnChromaFormatIdc()
+        {
+            OnSeparateColourPlaneFlag();
         }
     }
 }

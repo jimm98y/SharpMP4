@@ -289,7 +289,7 @@ namespace Sharp{type}
             if (GetLoopNestingLevel(field) > 0)
             {
                 if (name != "ar_bit_equal_to_zero" && name != "rpls_poc_lsb_lt" && !(field as ItuField).MakeList)
-                    {
+                {
                     string suffix;
                     GetNestedInLoopSuffix(field, typedef, out suffix);
                     typedef += suffix;

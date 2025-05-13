@@ -8,8 +8,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 // .\ffmpeg.exe - i "frag_bunny.mp4" - c:v copy -bsf:v trace_headers -f null -  > log.txt 2>&1
+
+var logger = new FileLogger("C:\\Temp\\video_debug.txt");
 
 //Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
 SharpMP4.Log.SinkInfo = (o, e) => { Console.WriteLine(o); };
@@ -25,9 +28,15 @@ SharpMP4.Log.SinkError = (o, e) => {
     }
 };
 
+SharpMP4.Log.SinkDebug = (o, e) =>
+{
+    Debug.WriteLine(o);
+    //logger.Log(o + "\r\n");
+};
 SharpH26X.Log.SinkInfo = (o, e) =>
 {
     Debug.WriteLine(o);
+    //logger.Log(o + "\r\n");
 };
 
 var files = File.ReadAllLines("C:\\Temp\\testFiles2.txt");
@@ -284,18 +293,19 @@ foreach (var file in files)
                             mdat.Data.Stream.SeekFromBeginning(chunkOffset);
 
                             // read samples in this chunk
-                            for (int l = 0; l < samples_per_chunk; l++)
+                            try
                             {
-                                uint sampleSize = sampleSizes[sample_idx++];
 
-                                try
+                                for (int l = 0; l < samples_per_chunk; l++)
                                 {
+                                    uint sampleSize = sampleSizes[sample_idx++];
                                     size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize);
                                 }
-                                catch (Exception)
-                                {
-                                    SharpMP4.Log.Error($"---Error reading {file}");
-                                }
+                            }
+                            catch (Exception)
+                            {
+                                SharpMP4.Log.Error($"---Error reading {file}");
+                                logger.Flush();
                             }
                         }
                     }
@@ -1060,4 +1070,35 @@ public enum VideoFormat
 public static class NaluDebug
 {
     public static int NaluCounter = 0;
+}
+
+public class FileLogger : IDisposable
+{
+    private readonly string _path;
+    private readonly FileStream _fs;
+    private readonly BufferedStream _bs;
+
+    public FileLogger(string path)
+    {
+        _path = path ?? throw new ArgumentNullException(nameof(path));
+        _fs = new FileStream(_path, FileMode.Create, FileAccess.Write, FileShare.Read);
+        _bs = new BufferedStream(_fs, 4096);
+    }
+
+    public void Log(string message)
+    {
+        var bytes = Encoding.UTF8.GetBytes(message);
+        _bs.Write(bytes, 0, bytes.Length);
+    }
+
+    public void Flush()
+    {
+        _bs.Flush();
+    }
+
+    public void Dispose()
+    {
+        _bs.Flush();
+        _bs.Dispose();
+    }
 }

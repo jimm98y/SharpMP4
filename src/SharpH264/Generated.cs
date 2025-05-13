@@ -450,6 +450,7 @@ seq_parameter_set_data() {
   profile_idc == 134 || profile_idc == 135)
             {
                 size += stream.ReadUnsignedIntGolomb(size, out this.chroma_format_idc, "chroma_format_idc");
+                ((H264Context)context).OnChromaFormatIdc();
 
                 if (chroma_format_idc == 3)
                 {
@@ -564,6 +565,7 @@ seq_parameter_set_data() {
   profile_idc == 134 || profile_idc == 135)
             {
                 size += stream.WriteUnsignedIntGolomb(this.chroma_format_idc, "chroma_format_idc");
+                ((H264Context)context).OnChromaFormatIdc();
 
                 if (chroma_format_idc == 3)
                 {
