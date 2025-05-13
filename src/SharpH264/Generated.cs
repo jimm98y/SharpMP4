@@ -2444,6 +2444,7 @@ slice_header() {
             if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
             {
                 size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
+                ((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);
 
                 if (num_ref_idx_active_override_flag != 0)
                 {
@@ -2581,6 +2582,7 @@ slice_header() {
             if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
             {
                 size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
+                ((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);
 
                 if (num_ref_idx_active_override_flag != 0)
                 {
@@ -9856,6 +9858,7 @@ slice_header_in_scalable_extension() {
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
+                    ((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);
 
                     if (num_ref_idx_active_override_flag != 0)
                     {
@@ -10076,6 +10079,7 @@ slice_header_in_scalable_extension() {
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
+                    ((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);
 
                     if (num_ref_idx_active_override_flag != 0)
                     {
@@ -18340,6 +18344,7 @@ slice_header_in_3davc_extension() {
                     if (pre_ref_lists_src == 0)
                     {
                         size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
+                        ((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);
 
                         if (num_ref_idx_active_override_flag != 0)
                         {
@@ -18437,6 +18442,7 @@ slice_header_in_3davc_extension() {
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.ReadUnsignedInt(size, 1, out this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
+                    ((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);
 
                     if (num_ref_idx_active_override_flag != 0)
                     {
@@ -18553,6 +18559,7 @@ slice_header_in_3davc_extension() {
                     if (pre_ref_lists_src == 0)
                     {
                         size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
+                        ((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);
 
                         if (num_ref_idx_active_override_flag != 0)
                         {
@@ -18647,6 +18654,7 @@ slice_header_in_3davc_extension() {
                 if (H264FrameTypes.IsP(slice_type) || H264FrameTypes.IsSP(slice_type) || H264FrameTypes.IsB(slice_type))
                 {
                     size += stream.WriteUnsignedInt(1, this.num_ref_idx_active_override_flag, "num_ref_idx_active_override_flag");
+                    ((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);
 
                     if (num_ref_idx_active_override_flag != 0)
                     {

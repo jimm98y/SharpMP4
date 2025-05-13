@@ -363,6 +363,7 @@ namespace SharpH26X
         {
             ulong val;
             ulong read = ReadUnsignedIntGolomb(size, out val, name);
+            //value = (val % 2 == 0 ? -1L : 1L) * (long)((val + 1) / 2);
             long sign = (((long)val & 0x1) << 1) - 1;
             value = (((long)val >> 1) + ((long)val & 0x1)) * sign;
             return read;
@@ -370,6 +371,7 @@ namespace SharpH26X
 
         public ulong WriteSignedIntGolomb(long value, string name)
         {
+            //ulong mapped = (ulong)(value <= 0 ? -2 * value : 2 * value - 1);
             ulong mapped = (ulong)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
             return WriteUnsignedIntGolomb(mapped, name);
         }

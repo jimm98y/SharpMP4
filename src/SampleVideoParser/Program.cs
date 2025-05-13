@@ -74,6 +74,9 @@ foreach (var file in files)
             HEVCConfigurationBox hvcC = null;
             VvcConfigurationBox vvcC = null;
 
+            if (inputMp4.Children.Count == 0)
+                continue;
+
             var ftypBox = inputMp4
                 .Children.OfType<FileTypeBox>().SingleOrDefault();
             var movieBox = inputMp4

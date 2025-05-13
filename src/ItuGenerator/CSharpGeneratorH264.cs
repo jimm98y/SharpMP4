@@ -296,6 +296,8 @@ namespace ItuGenerator
                     return "((H264Context)context).OnPicTiming(pic_timing);";
                 case "chroma_format_idc":
                     return "((H264Context)context).OnChromaFormatIdc();";
+                case "num_ref_idx_active_override_flag":
+                    return "((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);";
             }
             return "";
         }
