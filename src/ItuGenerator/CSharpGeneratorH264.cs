@@ -418,5 +418,10 @@ namespace ItuGenerator
             Debug.WriteLine(parameter);
             throw new System.NotImplementedException();
         }
+
+        public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
+        {
+            return "";
+        }
     }
 }

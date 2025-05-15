@@ -571,5 +571,10 @@ namespace ItuGenerator
         {
             return "";
         }
+
+        public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
+        {
+            return "";
+        }
     }
 }
