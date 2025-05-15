@@ -541,7 +541,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                     context.PicParameterSetRbsp = new SharpH264.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
                         throw new Exception($"Failed to write NALu {nu.NalUnitType}");
                 }
                 else if (nu.NalUnitType == H264NALTypes.AUD) // 9
@@ -673,7 +673,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
             {
                 SharpMP4.Log.Error($"Error: {ex.Message}");
                 SharpMP4.Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
-                SharpMP4.Log.Error($"WriteData: {Convert.ToHexString(ms.ToArray())}");
+                SharpMP4.Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
                 throw;
             }
         }

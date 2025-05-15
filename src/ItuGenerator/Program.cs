@@ -15,14 +15,10 @@ partial class Program
             ICustomGenerator customGenerator = null;
             if(file.Contains("H264"))
             {
-                // TODO: remove this
-                //continue;
                 customGenerator = new CSharpGeneratorH264();
             }
             else if (file.Contains("H265"))
             {
-                // TODO: remove this
-                continue;
                 customGenerator = new CSharpGeneratorH265();
             }
             else if (file.Contains("H266"))
