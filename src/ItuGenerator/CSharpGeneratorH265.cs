@@ -397,6 +397,36 @@ namespace ItuGenerator
             return map[parameter];
         }
 
+        public string GetParameterType(string parameter)
+        {
+            if (string.IsNullOrWhiteSpace(parameter))
+                return "";
+
+            Dictionary<string, string> map = new Dictionary<string, string>()
+            {
+                { "levelVal",               "i(64)" },
+                { "levelCode",              "i(64)" },
+                { "coeffNum",               "i(64)" },
+                { "coeffLevel",             "i(64)" },
+                { "numComps",               "i(64)" },
+                { "numViews",               "u(64)" },
+                { "mapUnitCnt",             "u(64)" },
+                { "DepthViewId",            "u(64)" },
+                { "numRefDisplays",         "u(64)" },
+                { "numValues",              "u(64)" },
+                { "mantissaPred",           "u(64)" },
+                { "psIdx",                  "u(64)" },
+                { "numSignificantSets",     "u(64)" },
+                { "currLsIdx",              "u(64)" },
+                { "st_ref_pic_flag",        null },
+            };
+
+            if (map.ContainsKey(parameter))
+                return map[parameter];
+            else
+                return "u(32)";
+        }
+
         public string FixFieldValue(string fieldValue)
         {
             fieldValue = fieldValue.Replace("<<", "<< (int)");

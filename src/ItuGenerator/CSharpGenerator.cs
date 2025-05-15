@@ -14,6 +14,7 @@ namespace ItuGenerator
 
     public interface ICustomGenerator
     {
+        string GetParameterType(string parameter);
         string FixAllocations(string spacing, string appendType, string variableType, string variableName);
         string AppendMethod(ItuCode field, MethodType methodType, string spacing, string retm);
         string PreprocessDefinitionsFile(string definitions);
@@ -1448,39 +1449,10 @@ namespace Sharp{type}
                 {
                     if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                     {
-                        if (field.Name == "levelVal" || field.Name == "levelCode" || field.Name == "coeffNum" || field.Name == "coeffLevel"
-                            // h265
-                            || field.Name == "numComps"
-                            // h266
-                            || field.Name == "numQpTables"
-                            || field.Name == "matrixSize"
-                            )
+                        string requiredType = specificGenerator.GetParameterType(field.Name);
+                        if(!string.IsNullOrEmpty(requiredType))
                         {
-                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "i(64)", FieldArray = field.FieldArray });
-                        }
-                        else if (  
-                            // h264
-                            field.Name == "numViews"
-                            || field.Name == "mapUnitCnt"
-                            || field.Name == "DepthViewId"
-                            || field.Name == "numRefDisplays"
-                            || field.Name == "numValues"
-                            || field.Name == "mantissaPred"
-                            // h265
-                            || field.Name == "psIdx"
-                            || field.Name == "numSignificantSets"
-                            || field.Name == "currLsIdx"
-                            )
-                        {
-                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "u(64)", FieldArray = field.FieldArray });
-                        }
-                        else if (field.Name == "st_ref_pic_flag")
-                        {
-                            // do not add anything
-                        }
-                        else
-                        {
-                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = "u(32)", FieldArray = field.FieldArray });
+                            b.RequiresDefinition.Add(new ItuField() { Name = field.Name, Type = requiredType, FieldArray = field.FieldArray });
                         }
                     }
                     
