@@ -1,5 +1,6 @@
 ﻿using Pidgin;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace ItuGenerator;
@@ -45,8 +46,8 @@ partial class Program
 
             CSharpGenerator generator = new CSharpGenerator(customGenerator);
             string code = generator.GenerateParser(Path.GetFileNameWithoutExtension(file), parsed);
-            //Debug.WriteLine(code);
-            break;
+            Debug.WriteLine(code);
+            // break;
         }
     }       
 

@@ -1,10 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ItuGenerator
 {
     public class CSharpGeneratorH265 : ICustomGenerator
-    {
+    {        public string AppendMethod(ItuCode field, MethodType methodType, string spacing, string retm)
+        {
+            string name = (field as ItuField).Name;
+
+            if (name == "sei_payload" || name == "vui_payload")
+            {
+                retm = $"{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}";
+            }
+            else if (name == "slice_segment_header_extension_length")
+            {
+                retm = $"{retm}\r\n{spacing}stream.MarkCurrentBitsPosition();";
+            }
+
+            return retm;
+        }
+
         public string PreprocessDefinitionsFile(string definitions)
         {
             definitions = definitions
@@ -332,6 +348,12 @@ namespace ItuGenerator
             condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
             condition = condition.Replace("more_data_in_slice_segment_header_extension()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this, slice_segment_header_extension_length)");
             condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");
+
+            condition = condition.Replace("i = MaxNumSubLayersMinus1 - 1", "i = (int)MaxNumSubLayersMinus1 - 1");
+            condition = condition.Replace("i = maxNumSubLayersMinus1;", "i = (int)maxNumSubLayersMinus1;");
+            condition = condition.Replace("sh_slice_type == ", "sh_slice_type == H266FrameTypes.");
+            condition = condition.Replace("i < maxNumSubLayersMinus1", "i < (int)maxNumSubLayersMinus1");
+            condition = condition.Replace("i = lmcs_min_bin_idx", "i = (uint)lmcs_min_bin_idx");
             return condition;
         }
 

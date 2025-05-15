@@ -1,10 +1,57 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ItuGenerator
 {
     internal class CSharpGeneratorH266 : ICustomGenerator
     {
+        public string AppendMethod(ItuCode field, MethodType methodType, string spacing, string retm)
+        {
+            string name = (field as ItuField).Name;
+
+            if (name == "sei_payload" || name == "vui_payload")
+            {
+                retm = $"{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}";
+            }
+            else if (name == "pt_cpb_removal_delay_minus1")
+            {
+                retm = $"if(this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new ulong[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];\r\n{retm}";
+            }
+            else if (name == "num_ref_entries")
+            {
+                if (methodType == MethodType.Read)
+                    retm = "    \r\nthis.num_ref_entries = ((H266Context)context).num_ref_entries;\r\n            this.inter_layer_ref_pic_flag = ((H266Context)context).inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ((H266Context)context).st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ((H266Context)context).abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ((H266Context)context).strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ((H266Context)context).rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ((H266Context)context).ilrp_idx;\r\n" + retm + "\r\n ((H266Context)context).inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];";
+            }
+
+            if (methodType == MethodType.Write)
+            {
+                string setVariables = "";
+                if ((field as ItuField).ClassType == "ref_pic_list_struct")
+                {
+                    if ((field as ItuField).Parameter == "( i, j )")
+                    {
+                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = j;\r\n";
+                    }
+                    else if ((field as ItuField).Parameter == "(i, sps_num_ref_pic_lists[i])")
+                    {
+                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[i];\r\n";
+                    }
+                    else
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+                else if ((field as ItuField).ClassType == "sublayer_hrd_parameters")
+                {
+                    setVariables = "sublayer_hrd_parameters.SubLayerId = i;\r\n";
+                }
+                retm = $"{setVariables}{retm}";
+            }
+
+            return retm;
+        }
+
         public string PreprocessDefinitionsFile(string definitions)
         {
             definitions = definitions
@@ -453,6 +500,11 @@ namespace ItuGenerator
             condition = condition.Replace("payload_extension_present()", "stream.ReadMoreRbspData(this, payloadSize)");
             condition = condition.Replace("more_rbsp_data()", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}MoreRbspData(this)");
             condition = condition.Replace("next_bits(", $"stream.{(methodType == MethodType.Read ? "Read" : "Write")}NextBits(this, ");
+
+            condition = condition.Replace("i = MaxNumSubLayersMinus1 - 1", "i = (int)MaxNumSubLayersMinus1 - 1");
+            condition = condition.Replace("i = maxNumSubLayersMinus1;", "i = (int)maxNumSubLayersMinus1;");
+            condition = condition.Replace("i < maxNumSubLayersMinus1", "i < (int)maxNumSubLayersMinus1");
+            condition = condition.Replace("i = lmcs_min_bin_idx", "i = (uint)lmcs_min_bin_idx");
             return condition;
         }
 

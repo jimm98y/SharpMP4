@@ -14,6 +14,7 @@ namespace ItuGenerator
 
     public interface ICustomGenerator
     {
+        string AppendMethod(ItuCode field, MethodType methodType, string spacing, string retm);
         string PreprocessDefinitionsFile(string definitions);
         string GetFieldDefaultValue(ItuField field);
         void FixClassParameters(ItuClass ituClass);
@@ -245,11 +246,11 @@ namespace Sharp{type}
             if (blockIf != null)
             {
                 string ret = BuildBlock(b, parent, (ItuBlock)blockIf.BlockIf, level, methodType);
-                foreach(var elseBlock in blockIf.BlockElseIf)
+                foreach (var elseBlock in blockIf.BlockElseIf)
                 {
                     ret += BuildBlock(b, parent, (ItuBlock)elseBlock, level, methodType);
                 }
-                if(blockIf.BlockElse != null)
+                if (blockIf.BlockElse != null)
                 {
                     ret += BuildBlock(b, parent, (ItuBlock)blockIf.BlockElse, level, methodType);
                 }
@@ -266,8 +267,8 @@ namespace Sharp{type}
             {
                 return BuildStatement(b, parent, field as ItuField, level, methodType);
             }
-           
-            string name = GetFieldName(field as ItuField);
+
+            string name = (field as ItuField).Name;
             string m = methodType == MethodType.Read ? GetReadMethod(b, field as ItuField) : GetWriteMethod(field as ItuField);
 
             string typedef = (field as ItuField).FieldArray;
@@ -279,10 +280,7 @@ namespace Sharp{type}
             }
 
             // h266
-            if(typedef.Contains("bp_max_sublayers_minus1"))
-            {
-                typedef = typedef.Replace("bp_max_sublayers_minus1", specificGenerator.ReplaceParameter("bp_max_sublayers_minus1"));
-            }
+            typedef = typedef.Replace("bp_max_sublayers_minus1", specificGenerator.ReplaceParameter("bp_max_sublayers_minus1"));
 
             string boxSize = "size += ";
 
@@ -350,53 +348,10 @@ namespace Sharp{type}
                 }
             }
 
-            if (name == "sei_payload" || // H265
-                name == "vui_payload") // h266
-            {
-                retm = $"{spacing}stream.MarkCurrentBitsPosition();\r\n{retm}";
-            }
-            else if(name == "slice_segment_header_extension_length")
-            {
-                retm = $"{retm}\r\n{spacing}stream.MarkCurrentBitsPosition();";
-            }
-            else if(name == "pt_cpb_removal_delay_minus1")
-            {
-                retm = $"if(this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new ulong[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];\r\n{retm}";
-            }
-
-            if (name == "num_ref_entries")
-            {
-                if (methodType == MethodType.Read)
-                    retm = "    \r\nthis.num_ref_entries = ((H266Context)context).num_ref_entries;\r\n            this.inter_layer_ref_pic_flag = ((H266Context)context).inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ((H266Context)context).st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ((H266Context)context).abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ((H266Context)context).strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ((H266Context)context).rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ((H266Context)context).ilrp_idx;\r\n" + retm + "\r\n ((H266Context)context).inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];";
-            }
-
-            if (methodType == MethodType.Write)
-            {
-                string setVariables = "";
-                if ((field as ItuField).ClassType == "ref_pic_list_struct")
-                {
-                    if ((field as ItuField).Parameter == "( i, j )")
-                    {
-                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = j;\r\n";
-                    }
-                    else if ((field as ItuField).Parameter == "(i, sps_num_ref_pic_lists[i])")
-                    {
-                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[i];\r\n";
-                    }
-                    else
-                    {
-                        throw new NotImplementedException();
-                    }
-                }
-                else if ((field as ItuField).ClassType == "sublayer_hrd_parameters")
-                {
-                    setVariables = "sublayer_hrd_parameters.SubLayerId = i;\r\n";
-                }
-                retm = $"{setVariables}{retm}";
-            }
+            retm = specificGenerator.AppendMethod(field, methodType, spacing, retm);
 
             string hookDerivedVariables = specificGenerator.GetDerivedVariables(name);
-            if(!string.IsNullOrEmpty(hookDerivedVariables))
+            if (!string.IsNullOrEmpty(hookDerivedVariables))
             {
                 retm += $"\r\n{spacing}{hookDerivedVariables}";
             }
@@ -760,11 +715,7 @@ namespace Sharp{type}
                 }
                 else if(blockType == "for")
                 {
-                    condition = condition.Replace("i = MaxNumSubLayersMinus1 - 1", "i = (int)MaxNumSubLayersMinus1 - 1");
-                    condition = condition.Replace("i = maxNumSubLayersMinus1;", "i = (int)maxNumSubLayersMinus1;");
-                    condition = condition.Replace("sh_slice_type == ", "sh_slice_type == H266FrameTypes.");
-                    condition = condition.Replace("i < maxNumSubLayersMinus1", "i < (int)maxNumSubLayersMinus1");
-                    condition = condition.Replace("i = lmcs_min_bin_idx", "i = (uint)lmcs_min_bin_idx");
+                    condition = specificGenerator.FixCondition(condition, methodType);
                 }
             }
 
@@ -794,7 +745,6 @@ namespace Sharp{type}
                         int variableIndex = parts[1].IndexOfAny(conditionChars);
                         if (variableIndex != -1)
                         {
-
                             string variable = parts[1].Substring(variableIndex).TrimStart(conditionChars);
 
                             if (!string.IsNullOrWhiteSpace(variable))
@@ -819,7 +769,7 @@ namespace Sharp{type}
                                     string variableType = GetCSharpType(req);
                                     int indexesTypeDef = req.FieldArray.Count(x => x == '[');
                                     int indexesType = variableType.Count(x => x == '[');
-                                    string variableName = GetFieldName(req) + suffix;
+                                    string variableName = req.Name + suffix;
 
                                     if (variableType.Contains("[]"))
                                     {
@@ -1369,7 +1319,7 @@ namespace Sharp{type}
                 }
             }
 
-            string propertyName = GetFieldName(field).ToPropertyCase();
+            string propertyName = field.Name.ToPropertyCase();
             if(propertyName == ituClass.ClassName.ToPropertyCase())
             {
                 propertyName = $"_{propertyName}";
@@ -1392,11 +1342,6 @@ namespace Sharp{type}
 
                 parent = parent.Parent;
             }
-        }
-
-        private string GetFieldName(ItuField field)
-        {
-            return field.Name;
         }
 
         private List<ItuField> FlattenFields(ItuClass b, IEnumerable<ItuCode> fields, ItuBlock parent = null)
