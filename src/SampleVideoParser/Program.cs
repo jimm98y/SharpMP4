@@ -154,12 +154,26 @@ foreach (var file in files)
 
                 foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
                 {
-                    ParseNALU(context, format, spsBinary);
+                    try
+                    {
+                        ParseNALU(context, format, spsBinary);
+                    }
+                    catch (Exception ex)
+                    {
+                        SharpMP4.Log.Error($"Error parsing file: {ex.Message}");
+                    }
                 }
 
                 foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
                 {
-                    ParseNALU(context, format, ppsBinary);
+                    try
+                    {
+                        ParseNALU(context, format, ppsBinary);
+                    }
+                    catch (Exception ex)
+                    {
+                        SharpMP4.Log.Error($"Error parsing file: {ex.Message}");
+                    }
                 }
             }
             else if (hvcC != null)
@@ -173,7 +187,14 @@ foreach (var file in files)
                 {
                     foreach (var nalu in nalus)
                     {
-                        ParseNALU(context, format, nalu);
+                        try 
+                        { 
+                            ParseNALU(context, format, nalu);
+                        }
+                        catch (Exception ex)
+                        {
+                            SharpMP4.Log.Error($"Error parsing file: {ex.Message}");
+                        }
                     }
                 }
             }
@@ -188,7 +209,14 @@ foreach (var file in files)
                 {
                     foreach (var nalu in nalus)
                     {
-                        ParseNALU(context, format, nalu);
+                        try 
+                        { 
+                            ParseNALU(context, format, nalu);
+                        }
+                        catch (Exception ex)
+                        {
+                            SharpMP4.Log.Error($"Error parsing file: {ex.Message}");
+                        }
                     }
                 }
             }
