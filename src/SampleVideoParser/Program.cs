@@ -160,7 +160,8 @@ foreach (var file in files)
                     }
                     catch (Exception ex)
                     {
-                        SharpMP4.Log.Error($"Error parsing file: {ex.Message}");
+                        SharpMP4.Log.Error($"Error reading file: {file}");
+                        SharpMP4.Log.Error(ex.Message);
                     }
                 }
 
@@ -172,7 +173,8 @@ foreach (var file in files)
                     }
                     catch (Exception ex)
                     {
-                        SharpMP4.Log.Error($"Error parsing file: {ex.Message}");
+                        SharpMP4.Log.Error($"Error reading file: {file}");
+                        SharpMP4.Log.Error(ex.Message);
                     }
                 }
             }
@@ -193,7 +195,8 @@ foreach (var file in files)
                         }
                         catch (Exception ex)
                         {
-                            SharpMP4.Log.Error($"Error parsing file: {ex.Message}");
+                            SharpMP4.Log.Error($"Error reading file: {file}");
+                            SharpMP4.Log.Error(ex.Message);
                         }
                     }
                 }
@@ -215,7 +218,8 @@ foreach (var file in files)
                         }
                         catch (Exception ex)
                         {
-                            SharpMP4.Log.Error($"Error parsing file: {ex.Message}");
+                            SharpMP4.Log.Error($"Error reading file: {file}");
+                            SharpMP4.Log.Error(ex.Message);
                         }
                     }
                 }

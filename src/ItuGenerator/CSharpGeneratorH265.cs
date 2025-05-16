@@ -606,5 +606,47 @@ namespace ItuGenerator
         {
             return "";
         }
+
+        public string FixVariableType(string variableType)
+        {
+            if (variableType.Contains(" 0  &&  i  <=  "))
+            {
+                variableType = variableType.Replace(" 0  &&  i  <=  ", "");
+            }
+            if (variableType.Contains("[  0]"))
+            {
+                variableType = variableType.Replace("[  0]", "[MaxNumSubLayersMinus1]");
+            }
+
+            return variableType;
+        }
+
+        public string FixAppendType(string appendType, string variableName)
+        {
+            if (variableName == "cp_ref_voi" ||
+                variableName == "vps_cp_scale[ n ]" ||
+                variableName == "vps_cp_off[ n ]" ||
+                variableName == "vps_cp_inv_scale_plus_scale[ n ]" ||
+                variableName == "vps_cp_inv_off_plus_off[ n ]" ||
+                variableName == "cp_scale" ||
+                variableName == "cp_off" ||
+                variableName == "cp_scale" ||
+                variableName == "cp_inv_scale_plus_scale" ||
+                variableName == "cp_inv_off_plus_off")
+            {
+                appendType += "[]"; // TODO fix this workaround
+            }
+            else if (
+                variableName == "vps_cp_scale" ||
+                variableName == "vps_cp_off" ||
+                variableName == "vps_cp_inv_scale_plus_scale" ||
+                variableName == "vps_cp_inv_off_plus_off"
+                )
+            {
+                appendType += "[][]"; // TODO fix this workaround
+            }
+
+            return appendType;
+        }
     }
 }

@@ -449,5 +449,29 @@ namespace ItuGenerator
         {
             return "";
         }
+
+        public string FixVariableType(string variableType)
+        {
+            if (variableType.Contains(" 0  &&  i  <=  "))
+            {
+                variableType = variableType.Replace(" 0  &&  i  <=  ", "");
+            }
+            if (variableType.Contains("[  0]"))
+            {
+                variableType = variableType.Replace("[  0]", "[MaxNumSubLayersMinus1]");
+            }
+
+            return variableType;
+        }
+
+        public string FixAppendType(string appendType, string variableName)
+        {
+            if (variableName == "ar_label")
+            {
+                appendType += "[]"; // TODO fix this workaround
+            }
+
+            return appendType;
+        }
     }
 }

@@ -14,6 +14,8 @@ namespace ItuGenerator
 
     public interface ICustomGenerator
     {
+        string FixVariableType(string variableType);
+        string FixAppendType(string appendType, string variableName);
         string GetParameterType(string parameter);
         string FixAllocations(string spacing, string appendType, string variableType, string variableName);
         string AppendMethod(ItuCode field, MethodType methodType, string spacing, string retm);
@@ -817,48 +819,15 @@ namespace Sharp{type}
                                     else if (variableType.Contains("MaxSubLayersVal"))
                                         variableType = variableType.Replace("MaxSubLayersVal", "MaxSubLayersVal + 1");
 
-                                    if (variableName == "ar_label" || // h264
-                                        variableName == "cp_ref_voi" ||
-                                        variableName == "vps_cp_scale[ n ]" ||
-                                        variableName == "vps_cp_off[ n ]" ||
-                                        variableName == "vps_cp_inv_scale_plus_scale[ n ]" ||
-                                        variableName == "vps_cp_inv_off_plus_off[ n ]" ||
-                                        variableName == "cp_scale" ||
-                                        variableName == "cp_off" ||
-                                        variableName == "cp_scale" ||
-                                        variableName == "cp_inv_scale_plus_scale" ||
-                                        variableName == "cp_inv_off_plus_off" ||
-                                        // h266
-                                        variableName == "colour_transf_lut" ||
-                                        variableName == "scaling_list_dc_coef"
-                                        )
-                                    {
-                                        appendType += "[]"; // TODO fix this workaround
-                                    }
-                                    else if (
-                                        variableName == "vps_cp_scale" ||
-                                        variableName == "vps_cp_off" ||
-                                        variableName == "vps_cp_inv_scale_plus_scale" ||
-                                        variableName == "vps_cp_inv_off_plus_off"
-                                        )
-                                    {
-                                        appendType += "[][]"; // TODO fix this workaround
-                                    }
+                                    appendType = specificGenerator.FixAppendType(appendType, variableName);
 
                                     // H266
-                                    if (variableType.Contains(" 0  &&  i  <=  "))
-                                    {
-                                        variableType = variableType.Replace(" 0  &&  i  <=  ", "");
-                                    }
-                                    if (variableType.Contains("[  0]"))
-                                    {
-                                        variableType = variableType.Replace("[  0]", "[MaxNumSubLayersMinus1]");
-                                    }
+                                    variableType = specificGenerator.FixVariableType(variableType);
 
                                     if (methodType == MethodType.Read)
                                     {
                                         string fixedAllocations = specificGenerator.FixAllocations(spacing, appendType, variableType, variableName);
-                                        if(!string.IsNullOrEmpty(fixedAllocations))
+                                        if (!string.IsNullOrEmpty(fixedAllocations))
                                         {
                                             ret += fixedAllocations;
                                         }
@@ -904,9 +873,7 @@ namespace Sharp{type}
                 ret += $"while {condition};";
 
             return ret;
-        }
-
-        
+        }       
 
         private string FixCondition(ItuClass b, string condition, MethodType methodType)
         {
