@@ -473,5 +473,10 @@ namespace ItuGenerator
 
             return appendType;
         }
+
+        public void FixNestedIndexes(List<string> ret, ItuField field)
+        {
+            // nothing to do
+        }
     }
 }

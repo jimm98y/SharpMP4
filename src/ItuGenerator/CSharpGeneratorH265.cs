@@ -648,5 +648,41 @@ namespace ItuGenerator
 
             return appendType;
         }
+
+        public void FixNestedIndexes(List<string> ret, ItuField field)
+        {
+            if (field != null && (
+                            field.Name == "coded_res_flag" ||
+                            field.Name == "res_coeff_q" ||
+                            field.Name == "res_coeff_r" ||
+                            field.Name == "res_coeff_s"
+                            ))
+            {
+                ret.Remove(ret[0]);
+                ret.Insert(0, "[ idxCr ]");
+                ret.Insert(0, "[ idxCb ]");
+                ret.Insert(0, "[ idxShiftY ]");
+            }
+
+            if (field != null && (
+                field.Name == "num_cp" ||
+                field.Name == "cp_in_slice_segment_header_flag" ||
+                field.Name == "cp_ref_voi" ||
+                field.Name == "vps_cp_scale" ||
+                field.Name == "vps_cp_off" ||
+                field.Name == "vps_cp_inv_scale_plus_scale" ||
+                field.Name == "vps_cp_inv_off_plus_off"
+                ))
+            {
+                ret.Remove(ret[0]);
+            }
+
+            if (field != null && (
+                field.Name == "slice_reserved_flag"
+                ))
+            {
+                ret.Remove(ret[0]);
+            }
+        }
     }
 }

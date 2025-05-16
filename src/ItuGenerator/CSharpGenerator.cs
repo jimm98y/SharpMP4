@@ -32,6 +32,7 @@ namespace ItuGenerator
         void FixMethodAllocation(string name, ref string method, ref string typedef);
         string GetDerivedVariables(string name);
         string GetDerivedInstances(string field);
+        void FixNestedIndexes(List<string> ret, ItuField field);
     }
 
     public class CSharpGenerator
@@ -1068,7 +1069,7 @@ namespace Sharp{type}
         }
 
         private int GetNestedInLoopSuffix(ItuCode code, string currentSuffix, out string result)
-        {            
+        {
             List<string> ret = new List<string>();
             ItuBlock parent = null;
             var field = code as ItuField;
@@ -1084,54 +1085,15 @@ namespace Sharp{type}
                 {
                     ret.Insert(0, $"[{parent.Condition.Substring(1, parent.Condition.Length - 2).Split(';').First().Split('=').First()}]");
                 }
-                else if(parent.Type == "do" || parent.Type == "while")
+                else if (parent.Type == "do" || parent.Type == "while")
                 {
                     ret.Insert(0, $"[whileIndex]");
                 }
-                
+
                 parent = parent.Parent;
             }
 
-            if (field != null && (
-                field.Name == "coded_res_flag" ||
-                field.Name == "res_coeff_q" ||
-                field.Name == "res_coeff_r" ||
-                field.Name == "res_coeff_s"
-                ))
-            {
-                ret.Remove(ret[0]);
-                ret.Insert(0, "[ idxCr ]");
-                ret.Insert(0, "[ idxCb ]");
-                ret.Insert(0, "[ idxShiftY ]");
-            }
-
-            if(field != null && (
-                field.Name == "num_cp" ||
-                field.Name == "cp_in_slice_segment_header_flag" ||
-                field.Name == "cp_ref_voi" ||
-                field.Name == "vps_cp_scale" ||
-                field.Name == "vps_cp_off" ||
-                field.Name == "vps_cp_inv_scale_plus_scale" ||
-                field.Name == "vps_cp_inv_off_plus_off" 
-                ))
-            {
-                ret.Remove(ret[0]);
-            }
-
-            if( field != null && (
-                field.Name == "slice_reserved_flag"
-                ))
-            {
-                ret.Remove(ret[0]);
-            }
-
-            if (field != null && (
-                field.Name == "ref_pic_list_struct" ||
-                field.Name == "sublayer_hrd_parameters"
-                ))
-            {
-                ret.Clear();
-            }
+            specificGenerator.FixNestedIndexes(ret, field);
 
             foreach (var suffix in ret.ToArray())
             {
@@ -1142,7 +1104,6 @@ namespace Sharp{type}
             result = string.Concat(ret);
             return ret.Count;
         }
-
         private string GetSpacing(int level)
         {
             string ret = "";

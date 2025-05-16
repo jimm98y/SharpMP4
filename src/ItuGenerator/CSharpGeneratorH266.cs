@@ -791,5 +791,16 @@ namespace ItuGenerator
 
             return appendType;
         }
+
+        public void FixNestedIndexes(List<string> ret, ItuField field)
+        {         
+            if (field != null && (
+                field.Name == "ref_pic_list_struct" ||
+                field.Name == "sublayer_hrd_parameters"
+                ))
+            {
+                ret.Clear();
+            }
+        }
     }
 }
