@@ -887,11 +887,11 @@ ref_pic_lists() {
 }   
 
 pred_weight_table() {  
- luma_log2_weight_denom ue(v)
+    luma_log2_weight_denom ue(v)
     if (sps_chroma_format_idc != 0)  
-  delta_chroma_log2_weight_denom se(v)
+        delta_chroma_log2_weight_denom se(v)
     if (pps_wp_info_in_ph_flag)  
-  num_l0_weights ue(v)
+        num_l0_weights ue(v)
     for (i = 0; i < NumWeightsL0; i++)
         luma_weight_l0_flag[i] u(1)
     if (sps_chroma_format_idc != 0)
@@ -911,7 +911,7 @@ pred_weight_table() {
     if (pps_weighted_bipred_flag && pps_wp_info_in_ph_flag &&
         num_ref_entries[1][RplsIdx[1]] > 0) 
  
-  num_l1_weights ue(v)
+    num_l1_weights ue(v)
     for (i = 0; i < NumWeightsL1; i++)
         luma_weight_l1_flag[i] u(1)
     if (sps_chroma_format_idc != 0)
@@ -931,10 +931,10 @@ pred_weight_table() {
 }  
 
 sei_rbsp() { 
-do  
-sei_message()  
-while( more_rbsp_data() )  
-rbsp_trailing_bits()  
+  do  
+    sei_message()  
+  while( more_rbsp_data() )  
+  rbsp_trailing_bits()  
 } 
 
 access_unit_delimiter_rbsp() {  
@@ -1071,21 +1071,21 @@ vui_parameters(payloadSize) {
     }
     vui_overscan_info_present_flag u(1)
     if (vui_overscan_info_present_flag)  
-  vui_overscan_appropriate_flag u(1) 
- vui_colour_description_present_flag u(1)
+       vui_overscan_appropriate_flag u(1) 
+    vui_colour_description_present_flag u(1)
     if (vui_colour_description_present_flag) {  
-  vui_colour_primaries u(8) 
-  vui_transfer_characteristics u(8) 
-  vui_matrix_coeffs u(8) 
-  vui_full_range_flag u(1)
+      vui_colour_primaries u(8) 
+      vui_transfer_characteristics u(8) 
+      vui_matrix_coeffs u(8) 
+      vui_full_range_flag u(1)
     }  
- vui_chroma_loc_info_present_flag u(1)
+    vui_chroma_loc_info_present_flag u(1)
     if (vui_chroma_loc_info_present_flag) {
         if (vui_progressive_source_flag && !vui_interlaced_source_flag)  
-   vui_chroma_sample_loc_type_frame ue(v) 
-  else {  
-   vui_chroma_sample_loc_type_top_field ue(v) 
-   vui_chroma_sample_loc_type_bottom_field ue(v)
+            vui_chroma_sample_loc_type_frame ue(v) 
+        else {  
+            vui_chroma_sample_loc_type_top_field ue(v) 
+            vui_chroma_sample_loc_type_bottom_field ue(v)
         }
     }
 }  
@@ -1392,20 +1392,20 @@ user_data_unregistered(payloadSize) {
 }
 
 film_grain_characteristics(payloadSize) {
- fg_characteristics_cancel_flag u(1)
+    fg_characteristics_cancel_flag u(1)
     if (!fg_characteristics_cancel_flag) {  
-  fg_model_id u(2) 
-  fg_separate_colour_description_present_flag u(1)
+        fg_model_id u(2) 
+        fg_separate_colour_description_present_flag u(1)
         if (fg_separate_colour_description_present_flag) {  
-   fg_bit_depth_luma_minus8 u(3) 
-   fg_bit_depth_chroma_minus8 u(3) 
-   fg_full_range_flag u(1) 
-   fg_colour_primaries u(8) 
-   fg_transfer_characteristics u(8) 
-   fg_matrix_coeffs u(8)
+            fg_bit_depth_luma_minus8 u(3) 
+            fg_bit_depth_chroma_minus8 u(3) 
+            fg_full_range_flag u(1) 
+            fg_colour_primaries u(8) 
+            fg_transfer_characteristics u(8) 
+            fg_matrix_coeffs u(8)
         }  
-  fg_blending_mode_id u(2) 
-  fg_log2_scale_factor u(4)
+        fg_blending_mode_id u(2) 
+        fg_log2_scale_factor u(4)
         for (c = 0; c < 3; c++)
             fg_comp_model_present_flag[c] u(1)
         for (c = 0; c < 3; c++)
@@ -1419,33 +1419,33 @@ film_grain_characteristics(payloadSize) {
                         fg_comp_model_value[c][i][j] se(v)
                 }
             }  
-  fg_characteristics_persistence_flag u(1)
+        fg_characteristics_persistence_flag u(1)
     }
 } 
 
 frame_packing_arrangement(payloadSize) {
- fp_arrangement_id ue(v) 
- fp_arrangement_cancel_flag u(1)
+    fp_arrangement_id ue(v) 
+    fp_arrangement_cancel_flag u(1)
     if (!fp_arrangement_cancel_flag) {  
-  fp_arrangement_type u(7) 
-  fp_quincunx_sampling_flag u(1) 
-  fp_content_interpretation_type u(6) 
-  fp_spatial_flipping_flag u(1) 
-  fp_frame0_flipped_flag u(1) 
-  fp_field_views_flag u(1) 
-  fp_current_frame_is_frame0_flag u(1) 
-  fp_frame0_self_contained_flag u(1) 
-  fp_frame1_self_contained_flag u(1)
+        fp_arrangement_type u(7) 
+        fp_quincunx_sampling_flag u(1) 
+        fp_content_interpretation_type u(6) 
+        fp_spatial_flipping_flag u(1) 
+        fp_frame0_flipped_flag u(1) 
+        fp_field_views_flag u(1) 
+        fp_current_frame_is_frame0_flag u(1) 
+        fp_frame0_self_contained_flag u(1) 
+        fp_frame1_self_contained_flag u(1)
         if (!fp_quincunx_sampling_flag && fp_arrangement_type != 5) {  
-   fp_frame0_grid_position_x u(4) 
-   fp_frame0_grid_position_y u(4) 
-   fp_frame1_grid_position_x u(4) 
-   fp_frame1_grid_position_y u(4)
+            fp_frame0_grid_position_x u(4) 
+            fp_frame0_grid_position_y u(4) 
+            fp_frame1_grid_position_x u(4) 
+            fp_frame1_grid_position_y u(4)
         }  
-  fp_arrangement_reserved_byte u(8) 
-  fp_arrangement_persistence_flag u(1)
+        fp_arrangement_reserved_byte u(8) 
+        fp_arrangement_persistence_flag u(1)
     }  
- fp_upsampled_aspect_ratio_flag u(1)
+    fp_upsampled_aspect_ratio_flag u(1)
 }  
 
 mastering_display_colour_volume(payloadSize) {
@@ -1478,25 +1478,25 @@ ambient_viewing_environment(payloadSize) {
 }
 
 content_colour_volume(payloadSize) {
- ccv_cancel_flag u(1)
+    ccv_cancel_flag u(1)
     if (!ccv_cancel_flag) {  
-  ccv_persistence_flag u(1) 
-  ccv_primaries_present_flag u(1) 
-  ccv_min_luminance_value_present_flag u(1) 
-  ccv_max_luminance_value_present_flag u(1) 
-  ccv_avg_luminance_value_present_flag u(1) 
-  ccv_reserved_zero_2bits u(2)
+        ccv_persistence_flag u(1) 
+        ccv_primaries_present_flag u(1) 
+        ccv_min_luminance_value_present_flag u(1) 
+        ccv_max_luminance_value_present_flag u(1) 
+        ccv_avg_luminance_value_present_flag u(1) 
+        ccv_reserved_zero_2bits u(2)
         if (ccv_primaries_present_flag)
             for (c = 0; c < 3; c++) {
                 ccv_primaries_x[c] i(32)
                 ccv_primaries_y[c] i(32)
             }
         if (ccv_min_luminance_value_present_flag)  
-   ccv_min_luminance_value u(32)
+            ccv_min_luminance_value u(32)
         if (ccv_max_luminance_value_present_flag)  
-   ccv_max_luminance_value u(32)
+            ccv_max_luminance_value u(32)
         if (ccv_avg_luminance_value_present_flag)  
-   ccv_avg_luminance_value u(32)
+            ccv_avg_luminance_value u(32)
     }
 }  
 
@@ -1531,11 +1531,11 @@ generalized_cubemap_projection(payloadSize) {
                 gcmp_function_v_affected_by_u_flag[i] u(1)
             }
         }  
-  gcmp_guard_band_flag u(1)
+        gcmp_guard_band_flag u(1)
         if (gcmp_guard_band_flag) {  
-   gcmp_guard_band_type u(3) 
-   gcmp_guard_band_boundary_exterior_flag u(1) 
-   gcmp_guard_band_samples_minus1 u(4)
+            gcmp_guard_band_type u(3) 
+            gcmp_guard_band_boundary_exterior_flag u(1) 
+            gcmp_guard_band_samples_minus1 u(4)
         }
     }
 }  
@@ -1549,8 +1549,8 @@ regionwise_packing(payloadSize) {
         rwp_num_packed_regions  u(8)
         rwp_proj_picture_width u(32)
         rwp_proj_picture_height u(32)
-         rwp_packed_picture_width u(16) 
-  rwp_packed_picture_height u(16)
+        rwp_packed_picture_width u(16) 
+        rwp_packed_picture_height u(16)
         for (i = 0; i < rwp_num_packed_regions; i++) {
             rwp_reserved_zero_4bits[i] u(4)
             rwp_transform_type[i] u(3)
@@ -1578,11 +1578,11 @@ regionwise_packing(payloadSize) {
 } 
 
 omni_viewport(payloadSize) {
- omni_viewport_id u(10) 
- omni_viewport_cancel_flag u(1)
+    omni_viewport_id u(10) 
+    omni_viewport_cancel_flag u(1)
     if (!omni_viewport_cancel_flag) {  
-  omni_viewport_persistence_flag u(1) 
-  omni_viewport_cnt_minus1 u(4)
+        omni_viewport_persistence_flag u(1) 
+        omni_viewport_cnt_minus1 u(4)
         for (i = 0; i <= omni_viewport_cnt_minus1; i++) {
             omni_viewport_azimuth_centre[i] i(32)
             omni_viewport_elevation_centre[i] i(32)
@@ -1688,9 +1688,9 @@ annotated_regions(payloadSize) {
 }
 
 scalability_dimension_info(payloadSize) {
- sdi_max_layers_minus1 u(6) 
- sdi_multiview_info_flag u(1) 
- sdi_auxiliary_info_flag u(1)
+    sdi_max_layers_minus1 u(6) 
+    sdi_multiview_info_flag u(1) 
+    sdi_auxiliary_info_flag u(1)
     if (sdi_multiview_info_flag || sdi_auxiliary_info_flag) {
         if (sdi_multiview_info_flag)  
             sdi_view_id_len_minus1 u(4)
@@ -1716,8 +1716,8 @@ multiview_acquisition_info(payloadSize) {
     if (intrinsic_param_flag) {
         intrinsic_params_equal_flag u(1)
         prec_focal_length ue(v) 
-  prec_principal_point ue(v) 
-  prec_skew_factor ue(v)
+        prec_principal_point ue(v) 
+        prec_skew_factor ue(v)
         for (i = 0; i <= intrinsic_params_equal_flag ? 0 : num_views_minus1; i++) {
             sign_focal_length_x[i] u(1)
             exponent_focal_length_x[i] u(6)
@@ -1737,8 +1737,8 @@ multiview_acquisition_info(payloadSize) {
         }
     }
     if (extrinsic_param_flag) {  
-  prec_rotation_param ue(v) 
-  prec_translation_param ue(v)
+        prec_rotation_param ue(v) 
+        prec_translation_param ue(v)
         for (i = 0; i <= num_views_minus1; i++)
             for (j = 0; j < 3; j++) { /* row */
                 for (k = 0; k < 3; k++) { /* column */
@@ -2006,69 +2006,67 @@ pic_timing( payloadSize ) {
 
 
 decoding_unit_info( payloadSize ) { 
-dui_decoding_unit_idx  ue(v)
-if( !bp_du_cpb_params_in_pic_timing_sei_flag )  
-for( i = TemporalId; i  <=  bp_max_sublayers_minus1; i++ ) {  
-if( i < bp_max_sublayers_minus1 )  
-dui_sublayer_delays_present_flag[ i ]  u(1) 
-if( dui_sublayer_delays_present_flag[ i ] )  
-dui_du_cpb_removal_delay_increment[ i ] u(v) 
-}  
-if( !bp_du_dpb_params_in_pic_timing_sei_flag )  
-dui_dpb_output_du_delay_present_flag u(1) 
-if( dui_dpb_output_du_delay_present_flag )  
-dui_dpb_output_du_delay u(v) 
-}  
-scalable_nesting( payloadSize ) { 
-sn_ols_flag  u(1) 
-sn_subpic_flag u(1) 
-sn_num_olss_minus1 ue(v) 
-if( sn_ols_flag ) {  
-for( i = 0; i  <=  sn_num_olss_minus1; i++ )  
-sn_ols_idx_delta_minus1[ i ] ue(v) 
-} else { 
-sn_all_layers_flag u(1) 
-if( !sn_all_layers_flag ) {  
-sn_num_layers_minus1 ue(v) 
-for( i = 1; i  <=  sn_num_layers_minus1; i++ )  
-sn_layer_id[ i ] u(6) 
-}  
-}  
-if( sn_subpic_flag ) {  
-sn_num_subpics_minus1 ue(v) 
-sn_subpic_id_len_minus1 ue(v) 
-for( i = 0; i  <=  sn_num_subpics_minus1; i++ )  
-sn_subpic_id[ i ] u(v) 
-}  
-sn_num_seis_minus1 ue(v) 
-while( !byte_aligned() )  
-sn_zero_bit /* equal to 0 */ u(1) 
-for( i = 0; i  <=  sn_num_seis_minus1; i++ )  
-sei_message()  
+   dui_decoding_unit_idx  ue(v)
+   if( !bp_du_cpb_params_in_pic_timing_sei_flag )  
+      for( i = TemporalId; i  <=  bp_max_sublayers_minus1; i++ ) {  
+         if( i < bp_max_sublayers_minus1 )  
+            dui_sublayer_delays_present_flag[ i ]  u(1) 
+         if( dui_sublayer_delays_present_flag[ i ] )  
+            dui_du_cpb_removal_delay_increment[ i ] u(v) 
+      }  
+      if( !bp_du_dpb_params_in_pic_timing_sei_flag )  
+          dui_dpb_output_du_delay_present_flag u(1) 
+      if( dui_dpb_output_du_delay_present_flag )  
+          dui_dpb_output_du_delay u(v) 
+   }  
+   scalable_nesting( payloadSize ) { 
+   sn_ols_flag  u(1) 
+   sn_subpic_flag u(1) 
+   sn_num_olss_minus1 ue(v) 
+   if( sn_ols_flag ) {  
+      for( i = 0; i  <=  sn_num_olss_minus1; i++ )  
+         sn_ols_idx_delta_minus1[ i ] ue(v) 
+   } else { 
+      sn_all_layers_flag u(1) 
+      if( !sn_all_layers_flag ) {  
+         sn_num_layers_minus1 ue(v) 
+         for( i = 1; i  <=  sn_num_layers_minus1; i++ )  
+            sn_layer_id[ i ] u(6) 
+      }  
+   }  
+   if( sn_subpic_flag ) {  
+      sn_num_subpics_minus1 ue(v) 
+      sn_subpic_id_len_minus1 ue(v) 
+      for( i = 0; i  <=  sn_num_subpics_minus1; i++ )  
+         sn_subpic_id[ i ] u(v) 
+   }  
+   sn_num_seis_minus1 ue(v) 
+   while( !byte_aligned() )  
+      sn_zero_bit /* equal to 0 */ u(1) 
+   for( i = 0; i  <=  sn_num_seis_minus1; i++ )  
+      sei_message()  
 }  
 
 subpic_level_info( payloadSize ) { 
-sli_num_ref_levels_minus1  u(3) 
-sli_cbr_constraint_flag u(1) 
-sli_explicit_fraction_present_flag u(1) 
+   sli_num_ref_levels_minus1  u(3) 
+   sli_cbr_constraint_flag u(1) 
+   sli_explicit_fraction_present_flag u(1) 
+   
+   if( sli_explicit_fraction_present_flag )  
+      sli_num_subpics_minus1 ue(v) 
+   sli_max_sublayers_minus1 u(3) 
+   sli_sublayer_info_present_flag u(1) 
 
-if( sli_explicit_fraction_present_flag )  
-
-sli_num_subpics_minus1 ue(v) 
-sli_max_sublayers_minus1 u(3) 
-sli_sublayer_info_present_flag u(1) 
-
-while( !byte_aligned() )  
-
-sli_alignment_zero_bit f(1) 
-for( k = sli_sublayer_info_present_flag ? 0 : sli_max_sublayers_minus1; k  <=  sli_max_sublayers_minus1; k++ ) 
-for( i = 0; i  <=  sli_num_ref_levels_minus1; i++ ) {  
-sli_non_subpic_layers_fraction[ i ][ k ] u(8) 
-sli_ref_level_idc[ i ][ k ] u(8) 
-if( sli_explicit_fraction_present_flag )  
-for( j = 0; j  <=  sli_num_subpics_minus1; j++ )  
-sli_ref_level_fraction_minus1[ i ][ j ][ k ] u(8) 
-}  
+   while( !byte_aligned() )  
+      sli_alignment_zero_bit f(1) 
+   for( k = sli_sublayer_info_present_flag ? 0 : sli_max_sublayers_minus1; k  <=  sli_max_sublayers_minus1; k++ ) 
+      for( i = 0; i  <=  sli_num_ref_levels_minus1; i++ ) {  
+         sli_non_subpic_layers_fraction[ i ][ k ] u(8) 
+         sli_ref_level_idc[ i ][ k ] u(8) 
+         if( sli_explicit_fraction_present_flag )  
+            for( j = 0; j  <=  sli_num_subpics_minus1; j++ )  
+               sli_ref_level_fraction_minus1[ i ][ j ][ k ] u(8) 
+      }  
 }  
 
 parameter_sets_inclusion_indication(payloadSize) {
@@ -2087,17 +2085,15 @@ sphere_rotation(payloadSize) {
 }
 
 decoded_picture_hash(payloadSize) {
- dph_sei_hash_type u(8) 
- dph_sei_single_component_flag u(1) 
- dph_sei_reserved_zero_7bits u(7)
+    dph_sei_hash_type u(8) 
+    dph_sei_single_component_flag u(1) 
+    dph_sei_reserved_zero_7bits u(7)
     for (cIdx = 0; cIdx < (dph_sei_single_component_flag ? 1 : 3); cIdx++)
         if (dph_sei_hash_type == 0)
             for (i = 0; i < 16; i++)
                 dph_sei_picture_md5[cIdx][i] b(8) 
-  else if (dph_sei_hash_type == 1)
-        dph_sei_picture_crc[cIdx] u(16) 
-  else if (dph_sei_hash_type == 2)
-        dph_sei_picture_checksum[cIdx] u(32)
+        else if (dph_sei_hash_type == 1)
+           dph_sei_picture_crc[cIdx] u(16) 
+        else if (dph_sei_hash_type == 2)
+           dph_sei_picture_checksum[cIdx] u(32)
 }
-
-

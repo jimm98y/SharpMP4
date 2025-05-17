@@ -1103,10 +1103,10 @@ pps_scc_extension() {
   
 
 sei_rbsp() { 
-do  
-sei_message()  
-while( more_rbsp_data() )  
-rbsp_trailing_bits()  
+   do  
+       sei_message()  
+   while( more_rbsp_data() )  
+   rbsp_trailing_bits()  
 }
     */
     public class SeiRbsp : IItuSerializable
@@ -1283,7 +1283,7 @@ end_of_bitstream_rbsp() {
 
 filler_data_rbsp() { 
 while( next_bits( 8 ) == 0xFF )  
-ff_byte  /* equal to 0xFF *//* f(8) 
+    ff_byte  /* equal to 0xFF *//* f(8) 
 rbsp_trailing_bits()  
 }
     */
@@ -1345,7 +1345,7 @@ rbsp_trailing_bits()
 rbsp_trailing_bits() { 
 rbsp_stop_one_bit  /* equal to 1 *//* f(1) 
 while( !byte_aligned() )  
-rbsp_alignment_zero_bit  /* equal to 0 *//* f(1) 
+    rbsp_alignment_zero_bit  /* equal to 0 *//* f(1) 
 }
     */
     public class RbspTrailingBits : IItuSerializable
@@ -1405,7 +1405,7 @@ rbsp_alignment_zero_bit  /* equal to 0 *//* f(1)
 byte_alignment() { 
  alignment_bit_equal_to_one  /* equal to 1 *//* f(1) 
  while( !byte_aligned() )  
-  alignment_bit_equal_to_zero  /* equal to 0 *//* f(1) 
+   alignment_bit_equal_to_zero  /* equal to 0 *//* f(1) 
 }
     */
     public class ByteAlignment : IItuSerializable

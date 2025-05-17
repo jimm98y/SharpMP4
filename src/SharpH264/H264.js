@@ -322,23 +322,23 @@ slice_layer_extension_rbsp() {
 }
 
 slice_header() { 
- first_mb_in_slice 2 ue(v) 
- slice_type 2 ue(v) 
- pic_parameter_set_id 2 ue(v)
+    first_mb_in_slice 2 ue(v) 
+    slice_type 2 ue(v) 
+    pic_parameter_set_id 2 ue(v)
     if (separate_colour_plane_flag == 1)   
-  colour_plane_id 2 u(2) 
- frame_num 2 u(v)
+        colour_plane_id 2 u(2) 
+    frame_num 2 u(v)
     if (!frame_mbs_only_flag) {   
-  field_pic_flag 2 u(1)
+        field_pic_flag 2 u(1)
         if (field_pic_flag)   
-   bottom_field_flag 2 u(1)
+             bottom_field_flag 2 u(1)
     }
     if (IdrPicFlag)   
-  idr_pic_id 2 ue(v)
+         idr_pic_id 2 ue(v)
     if (pic_order_cnt_type == 0) {   
-  pic_order_cnt_lsb 2 u(v)
+        pic_order_cnt_lsb 2 u(v)
         if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)   
-   delta_pic_order_cnt_bottom 2 se(v)
+            delta_pic_order_cnt_bottom 2 se(v)
     }
     if (pic_order_cnt_type == 1 && !delta_pic_order_always_zero_flag) {
         delta_pic_order_cnt[0] 2 se(v)
@@ -346,40 +346,38 @@ slice_header() {
             delta_pic_order_cnt[1] 2 se(v)
     }
     if (redundant_pic_cnt_present_flag)   
-  redundant_pic_cnt 2 ue(v)
+        redundant_pic_cnt 2 ue(v)
     if (slice_type == B)   
-  direct_spatial_mv_pred_flag 2 u(1)
+        direct_spatial_mv_pred_flag 2 u(1)
     if (slice_type == P || slice_type == SP || slice_type == B) {   
-  num_ref_idx_active_override_flag 2 u(1)
+        num_ref_idx_active_override_flag 2 u(1)
         if (num_ref_idx_active_override_flag) {   
-   num_ref_idx_l0_active_minus1 2 ue(v)
+            num_ref_idx_l0_active_minus1 2 ue(v)
             if (slice_type == B)   
-    num_ref_idx_l1_active_minus1 2 ue(v)
+                num_ref_idx_l1_active_minus1 2 ue(v)
         }
     }
     if (nal_unit_type == 20 || nal_unit_type == 21)
         ref_pic_list_mvc_modification()  /* specified in Annex H */ 2  
- else
-    ref_pic_list_modification() 2
-    if ((weighted_pred_flag && (slice_type == P || slice_type == SP)) ||
-        (weighted_bipred_idc == 1 && slice_type == B))
-
+    else
+        ref_pic_list_modification() 2
+    if ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || (weighted_bipred_idc == 1 && slice_type == B))
         pred_weight_table() 2
     if (nal_ref_idc != 0)
         dec_ref_pic_marking() 2
     if (entropy_coding_mode_flag && slice_type != I && slice_type != SI)   
-  cabac_init_idc 2 ue(v) 
- slice_qp_delta 2 se(v)
+        cabac_init_idc 2 ue(v) 
+    slice_qp_delta 2 se(v)
     if (slice_type == SP || slice_type == SI) {
         if (slice_type == SP)   
-   sp_for_switch_flag 2 u(1) 
-  slice_qs_delta 2 se(v)
+            sp_for_switch_flag 2 u(1) 
+        slice_qs_delta 2 se(v)
     }
     if (deblocking_filter_control_present_flag) {   
-  disable_deblocking_filter_idc 2 ue(v)
+        disable_deblocking_filter_idc 2 ue(v)
         if (disable_deblocking_filter_idc != 1) {   
-   slice_alpha_c0_offset_div2 2 se(v) 
-   slice_beta_offset_div2 2 se(v)
+           slice_alpha_c0_offset_div2 2 se(v) 
+           slice_beta_offset_div2 2 se(v)
         }
     }
     if (num_slice_groups_minus1 > 0 &&
@@ -390,45 +388,42 @@ slice_header() {
 
 ref_pic_list_modification() {
     if (slice_type % 5 != 2 && slice_type % 5 != 4) {    
-  ref_pic_list_modification_flag_l0 2 u(1)
+        ref_pic_list_modification_flag_l0 2 u(1)
         if (ref_pic_list_modification_flag_l0)
             do {   
-    modification_of_pic_nums_idc 2 ue(v)
-                if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1) 
-  
-     abs_diff_pic_num_minus1 2 ue(v) 
-    else if (modification_of_pic_nums_idc == 2)   
-     long_term_pic_num 2 ue(v)
+                modification_of_pic_nums_idc 2 ue(v)
+                if (modification_of_pic_nums_idc == 0 || modification_of_pic_nums_idc == 1) 
+                    abs_diff_pic_num_minus1 2 ue(v) 
+                else if (modification_of_pic_nums_idc == 2)   
+                    long_term_pic_num 2 ue(v)
             } while (modification_of_pic_nums_idc != 3)
     }
     if (slice_type % 5 == 1) {    
-  ref_pic_list_modification_flag_l1 2 u(1)
+        ref_pic_list_modification_flag_l1 2 u(1)
         if (ref_pic_list_modification_flag_l1)
             do {   
-    modification_of_pic_nums_idc 2 ue(v)
+                modification_of_pic_nums_idc 2 ue(v)
                 if (modification_of_pic_nums_idc == 0 ||
                     modification_of_pic_nums_idc == 1) 
-  
-     abs_diff_pic_num_minus1 2 ue(v) 
-    else if (modification_of_pic_nums_idc == 2)   
-     long_term_pic_num 2 ue(v)
+                   abs_diff_pic_num_minus1 2 ue(v) 
+                else if (modification_of_pic_nums_idc == 2)   
+                   long_term_pic_num 2 ue(v)
             } while (modification_of_pic_nums_idc != 3)
     }
 }
 
 pred_weight_table() { 
- luma_log2_weight_denom 2 ue(v)
+    luma_log2_weight_denom 2 ue(v)
     if (ChromaArrayType != 0)   
-  chroma_log2_weight_denom 2 ue(v)
+        chroma_log2_weight_denom 2 ue(v)
     for (i = 0; i <= num_ref_idx_l0_active_minus1; i++) {   
-  luma_weight_l0_flag 2 u(1)
+        luma_weight_l0_flag 2 u(1)
         if (luma_weight_l0_flag) {
             luma_weight_l0[i] 2 se(v)
             luma_offset_l0[i] 2 se(v)
         }
         if (ChromaArrayType != 0) {   
-   chroma_weight_l0_flag 2 u(1)
+            chroma_weight_l0_flag 2 u(1)
             if (chroma_weight_l0_flag)
                 for (j = 0; j < 2; j++) {
                     chroma_weight_l0[i][j] 2 se(v)
@@ -438,13 +433,13 @@ pred_weight_table() {
     }
     if (slice_type % 5 == 1)
         for (i = 0; i <= num_ref_idx_l1_active_minus1; i++) {   
-   luma_weight_l1_flag 2 u(1)
+            luma_weight_l1_flag 2 u(1)
             if (luma_weight_l1_flag) {
                 luma_weight_l1[i] 2 se(v)
                 luma_offset_l1[i] 2 se(v)
             }
             if (ChromaArrayType != 0) {   
-    chroma_weight_l1_flag 2 u(1)
+                chroma_weight_l1_flag 2 u(1)
                 if (chroma_weight_l1_flag)
                     for (j = 0; j < 2; j++) {
                         chroma_weight_l1[i][j] 2 se(v)
@@ -1355,16 +1350,16 @@ hrd_parameters() {
 
 
 nal_unit_header_svc_extension() { 
-idr_flag  All u(1) 
-priority_id All u(6) 
-no_inter_layer_pred_flag All u(1) 
-dependency_id All u(3) 
-quality_id All u(4) 
-temporal_id All u(3) 
-use_ref_base_pic_flag All u(1) 
-discardable_flag All u(1) 
-output_flag All u(1) 
-reserved_three_2bits All u(2) 
+  idr_flag  All u(1) 
+  priority_id All u(6) 
+  no_inter_layer_pred_flag All u(1) 
+  dependency_id All u(3) 
+  quality_id All u(4) 
+  temporal_id All u(3) 
+  use_ref_base_pic_flag All u(1) 
+  discardable_flag All u(1) 
+  output_flag All u(1) 
+  reserved_three_2bits All u(2) 
 }   
 
 seq_parameter_set_svc_extension() {  
@@ -1393,41 +1388,39 @@ seq_parameter_set_svc_extension() {
 
 prefix_nal_unit_svc() {
     if (nal_ref_idc != 0) {   
-  store_ref_base_pic_flag 2 u(1)
-        if ((use_ref_base_pic_flag || store_ref_base_pic_flag) &&
-            !idr_flag)
-
+        store_ref_base_pic_flag 2 u(1)
+        if ((use_ref_base_pic_flag || store_ref_base_pic_flag) && !idr_flag)
             dec_ref_base_pic_marking() 2  
-  additional_prefix_nal_unit_extension_flag 2 u(1)
+        additional_prefix_nal_unit_extension_flag 2 u(1)
         if (additional_prefix_nal_unit_extension_flag == 1)
             while (more_rbsp_data())   
-    additional_prefix_nal_unit_extension_data_flag 2 u(1)
+                additional_prefix_nal_unit_extension_data_flag 2 u(1)
         rbsp_trailing_bits() 2
     } else if (more_rbsp_data()) {
         while (more_rbsp_data())   
-   additional_prefix_nal_unit_extension_data_flag 2 u(1)
+           additional_prefix_nal_unit_extension_data_flag 2 u(1)
         rbsp_trailing_bits() 2
     }
 }
 
 slice_header_in_scalable_extension() {  
- first_mb_in_slice 2 ue(v) 
- slice_type 2 ue(v) 
- pic_parameter_set_id 2 ue(v)
+    first_mb_in_slice 2 ue(v) 
+    slice_type 2 ue(v) 
+    pic_parameter_set_id 2 ue(v)
     if (separate_colour_plane_flag == 1)   
-  colour_plane_id 2 u(2) 
- frame_num 2 u(v)
+        colour_plane_id 2 u(2) 
+    frame_num 2 u(v)
     if (!frame_mbs_only_flag) {   
-  field_pic_flag 2 u(1)
+        field_pic_flag 2 u(1)
         if (field_pic_flag)   
-   bottom_field_flag 2 u(1)
+           bottom_field_flag 2 u(1)
     }
     if (idr_flag == 1)   
-  idr_pic_id 2 ue(v)
+        idr_pic_id 2 ue(v)
     if (pic_order_cnt_type == 0) {   
-  pic_order_cnt_lsb 2 u(v)
+        pic_order_cnt_lsb 2 u(v)
         if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)   
-   delta_pic_order_cnt_bottom 2 se(v)
+           delta_pic_order_cnt_bottom 2 se(v)
     }
     if (pic_order_cnt_type == 1 && !delta_pic_order_always_zero_flag) {
         delta_pic_order_cnt[0] 2 se(v)
@@ -1435,16 +1428,16 @@ slice_header_in_scalable_extension() {
             delta_pic_order_cnt[1] 2 se(v)
     }
     if (redundant_pic_cnt_present_flag)   
-  redundant_pic_cnt 2 ue(v)
+        redundant_pic_cnt 2 ue(v)
     if (quality_id == 0) {
         if (slice_type == EB)   
-   direct_spatial_mv_pred_flag 2 u(1)
+           direct_spatial_mv_pred_flag 2 u(1)
         if (slice_type == EP || slice_type == EB) {   
-   num_ref_idx_active_override_flag 2 u(1)
+            num_ref_idx_active_override_flag 2 u(1)
             if (num_ref_idx_active_override_flag) {   
-    num_ref_idx_l0_active_minus1 2 ue(v)
+                num_ref_idx_l0_active_minus1 2 ue(v)
                 if (slice_type == EB)   
-     num_ref_idx_l1_active_minus1 2 ue(v)
+                   num_ref_idx_l1_active_minus1 2 ue(v)
             }
         }
         ref_pic_list_modification() 2
@@ -1452,79 +1445,77 @@ slice_header_in_scalable_extension() {
             (weighted_bipred_idc == 1 && slice_type == EB)) {
 
             if (!no_inter_layer_pred_flag)   
-    base_pred_weight_table_flag 2 u(1)
+                base_pred_weight_table_flag 2 u(1)
             if (no_inter_layer_pred_flag || !base_pred_weight_table_flag)
                 pred_weight_table() 2
         }
         if (nal_ref_idc != 0) {
             dec_ref_pic_marking() 2
             if (!slice_header_restriction_flag) {   
-    store_ref_base_pic_flag 2 u(1)
-                if ((use_ref_base_pic_flag || store_ref_base_pic_flag) &&
-                    !idr_flag)
-
+                store_ref_base_pic_flag 2 u(1)
+                if ((use_ref_base_pic_flag || store_ref_base_pic_flag) && !idr_flag)
                     dec_ref_base_pic_marking() 2
             }
         }
     }
     if (entropy_coding_mode_flag && slice_type != EI)  
-   cabac_init_idc 2 ue(v) 
- slice_qp_delta 2 se(v)
+       cabac_init_idc 2 ue(v) 
+    slice_qp_delta 2 se(v)
     if (deblocking_filter_control_present_flag) {   
-  disable_deblocking_filter_idc 2 ue(v)
+        disable_deblocking_filter_idc 2 ue(v)
         if (disable_deblocking_filter_idc != 1) {   
-   slice_alpha_c0_offset_div2 2 se(v) 
-   slice_beta_offset_div2 2 se(v)
+           slice_alpha_c0_offset_div2 2 se(v) 
+           slice_beta_offset_div2 2 se(v)
         }
     }
     if (num_slice_groups_minus1 > 0 &&
         slice_group_map_type >= 3 && slice_group_map_type <= 5) 
   
-  slice_group_change_cycle 2 u(v)
+    slice_group_change_cycle 2 u(v)
     if (!no_inter_layer_pred_flag && quality_id == 0) {   
-  ref_layer_dq_id 2 ue(v)
+        ref_layer_dq_id 2 ue(v)
         if (inter_layer_deblocking_filter_control_present_flag) {   
-   disable_inter_layer_deblocking_filter_idc 2 ue(v)
+            disable_inter_layer_deblocking_filter_idc 2 ue(v)
             if (disable_inter_layer_deblocking_filter_idc != 1) {   
-    inter_layer_slice_alpha_c0_offset_div2 2 se(v) 
-    inter_layer_slice_beta_offset_div2 2 se(v)
+               inter_layer_slice_alpha_c0_offset_div2 2 se(v) 
+               inter_layer_slice_beta_offset_div2 2 se(v)
             }
         }   
-  constrained_intra_resampling_flag 2 u(1)
+        constrained_intra_resampling_flag 2 u(1)
         if (extended_spatial_scalability_idc == 2) {
             if (ChromaArrayType > 0) {   
-    ref_layer_chroma_phase_x_plus1_flag 2 u(1) 
-    ref_layer_chroma_phase_y_plus1 2 u(2)
+               ref_layer_chroma_phase_x_plus1_flag 2 u(1) 
+               ref_layer_chroma_phase_y_plus1 2 u(2)
             }   
-   scaled_ref_layer_left_offset 2 se(v) 
-   scaled_ref_layer_top_offset 2 se(v) 
-   scaled_ref_layer_right_offset 2 se(v) 
-   scaled_ref_layer_bottom_offset 2 se(v)
+            scaled_ref_layer_left_offset 2 se(v) 
+            scaled_ref_layer_top_offset 2 se(v) 
+            scaled_ref_layer_right_offset 2 se(v) 
+            scaled_ref_layer_bottom_offset 2 se(v)
         }
     }
     if (!no_inter_layer_pred_flag) {   
-  slice_skip_flag 2 u(1)
+        slice_skip_flag 2 u(1)
         if (slice_skip_flag)   
-   num_mbs_in_slice_minus1 2 ue(v) 
-  else {   
-   adaptive_base_mode_flag 2 u(1)
+            num_mbs_in_slice_minus1 2 ue(v) 
+        else {   
+            adaptive_base_mode_flag 2 u(1)
             if (!adaptive_base_mode_flag)   
-    default_base_mode_flag 2 u(1)
+                default_base_mode_flag 2 u(1)
             if (!default_base_mode_flag) {   
-    adaptive_motion_prediction_flag 2 u(1)
+                adaptive_motion_prediction_flag 2 u(1)
                 if (!adaptive_motion_prediction_flag)   
-     default_motion_prediction_flag 2 u(1)
+                   default_motion_prediction_flag 2 u(1)
             }   
-   adaptive_residual_prediction_flag 2 u(1)
+            adaptive_residual_prediction_flag 2 u(1)
             if (!adaptive_residual_prediction_flag)   
-    default_residual_prediction_flag 2 u(1)
+               default_residual_prediction_flag 2 u(1)
         }
         if (adaptive_tcoeff_level_prediction_flag)   
-   tcoeff_level_prediction_flag 2 u(1)
+           tcoeff_level_prediction_flag 2 u(1)
     }
     if (!slice_header_restriction_flag && !slice_skip_flag) {   
-  scan_idx_start 2 u(4) 
-  scan_idx_end 2 u(4)
+       scan_idx_start 2 u(4) 
+       scan_idx_end 2 u(4)
     }
 }
 
@@ -1883,37 +1874,32 @@ seq_parameter_set_mvc_extension() {
 
 ref_pic_list_mvc_modification() {
     if (slice_type % 5 != 2 && slice_type % 5 != 4) {    
-  ref_pic_list_modification_flag_l0 2 u(1)
+        ref_pic_list_modification_flag_l0 2 u(1)
         if (ref_pic_list_modification_flag_l0)
             do {   
-    modification_of_pic_nums_idc 2 ue(v)
+                modification_of_pic_nums_idc 2 ue(v)
                 if (modification_of_pic_nums_idc == 0 ||
                     modification_of_pic_nums_idc == 1) 
-  
-     abs_diff_pic_num_minus1 2 ue(v) 
-    else if (modification_of_pic_nums_idc == 2)   
-     long_term_pic_num 2 ue(v) 
-    else if (modification_of_pic_nums_idc == 4 ||
+                    abs_diff_pic_num_minus1 2 ue(v) 
+                else if (modification_of_pic_nums_idc == 2)   
+                    long_term_pic_num 2 ue(v) 
+                else if (modification_of_pic_nums_idc == 4 ||
                     modification_of_pic_nums_idc == 5) 
   
-      abs_diff_view_idx_minus1 2 ue(v)
+                abs_diff_view_idx_minus1 2 ue(v)
             } while (modification_of_pic_nums_idc != 3)
     }
     if (slice_type % 5 == 1) {    
-  ref_pic_list_modification_flag_l1 2 u(1)
+        ref_pic_list_modification_flag_l1 2 u(1)
         if (ref_pic_list_modification_flag_l1)
             do {   
-    modification_of_pic_nums_idc 2 ue(v)
-                if (modification_of_pic_nums_idc == 0 ||
-                    modification_of_pic_nums_idc == 1) 
-  
-     abs_diff_pic_num_minus1 2 ue(v) 
-    else if (modification_of_pic_nums_idc == 2)   
-     long_term_pic_num 2 ue(v) 
-    else if (modification_of_pic_nums_idc == 4 ||
-                    modification_of_pic_nums_idc == 5) 
-  
-     abs_diff_view_idx_minus1 2 ue(v)
+                modification_of_pic_nums_idc 2 ue(v)
+                if (modification_of_pic_nums_idc == 0 || modification_of_pic_nums_idc == 1) 
+                    abs_diff_pic_num_minus1 2 ue(v) 
+                else if (modification_of_pic_nums_idc == 2)   
+                    long_term_pic_num 2 ue(v) 
+                else if (modification_of_pic_nums_idc == 4 || modification_of_pic_nums_idc == 5) 
+                    abs_diff_view_idx_minus1 2 ue(v)
             } while (modification_of_pic_nums_idc != 3)
     }
 }   
@@ -2693,49 +2679,49 @@ vsp_param( numViews, predDirection, index ) {
 }   
 
 slice_header_in_3davc_extension() {  
- first_mb_in_slice 2 ue(v) 
- slice_type 2 ue(v) 
- pic_parameter_set_id 2 ue(v)
+   first_mb_in_slice 2 ue(v) 
+   slice_type 2 ue(v) 
+   pic_parameter_set_id 2 ue(v)
     if (avc_3d_extension_flag && slice_header_prediction_flag != 0) {   
-  pre_slice_header_src 2 u(2)
+        pre_slice_header_src 2 u(2)
         if (slice_type == P || slice_type == SP || slice_type == B) { 
-   pre_ref_lists_src 2 u(2)
+            pre_ref_lists_src 2 u(2)
             if (!pre_ref_lists_src) {   
-    num_ref_idx_active_override_flag 2 u(1)
+                num_ref_idx_active_override_flag 2 u(1)
                 if (num_ref_idx_active_override_flag) {   
-    num_ref_idx_l0_active_minus1 2 ue(v)
+                    num_ref_idx_l0_active_minus1 2 ue(v)
                     if (slice_type == B) 
-     num_ref_idx_l1_active_minus1 2 ue(v)
+                       num_ref_idx_l1_active_minus1 2 ue(v)
                 }
                 ref_pic_list_mvc_modification()  /* specified in Annex H */ 2
             }
         }
         if ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || (weighted_bipred_idc == 1 && slice_type == B)) { 
-   pre_pred_weight_table_src 2 u(2)
+            pre_pred_weight_table_src 2 u(2)
             if (!pre_pred_weight_table_src)
                 pred_weight_table() 2
         }
         if (nal_ref_idc != 0) {   
-   pre_dec_ref_pic_marking_src 2 u(2)
+            pre_dec_ref_pic_marking_src 2 u(2)
             if (!pre_dec_ref_pic_marking_src)
                 dec_ref_pic_marking() 2
         }   
-  slice_qp_delta 2 se(v)
+        slice_qp_delta 2 se(v)
     } else {
         if (separate_colour_plane_flag == 1)   
-   colour_plane_id 2 u(2) 
-  frame_num 2 u(v)
+           colour_plane_id 2 u(2) 
+        frame_num 2 u(v)
         if (!frame_mbs_only_flag) {   
-   field_pic_flag 2 u(1)
+           field_pic_flag 2 u(1)
             if (field_pic_flag)   
-    bottom_field_flag 2 u(1)
+               bottom_field_flag 2 u(1)
         }
         if (IdrPicFlag)   
-   idr_pic_id 2 ue(v)
+           idr_pic_id 2 ue(v)
         if (pic_order_cnt_type == 0) {   
-   pic_order_cnt_lsb 2 u(v)
-            if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)   
-    delta_pic_order_cnt_bottom 2 se(v)
+           pic_order_cnt_lsb 2 u(v)
+           if (bottom_field_pic_order_in_frame_present_flag && !field_pic_flag)   
+              delta_pic_order_cnt_bottom 2 se(v)
         }
         if (pic_order_cnt_type == 1 && !delta_pic_order_always_zero_flag) {
             delta_pic_order_cnt[0] 2 se(v)
@@ -2743,52 +2729,52 @@ slice_header_in_3davc_extension() {
                 delta_pic_order_cnt[1] 2 se(v)
         }
         if (redundant_pic_cnt_present_flag)   
-   redundant_pic_cnt 2 ue(v)
+           redundant_pic_cnt 2 ue(v)
         if (slice_type == B)   
-   direct_spatial_mv_pred_flag 2 u(1)
+           direct_spatial_mv_pred_flag 2 u(1)
         if (slice_type == P || slice_type == SP || slice_type == B) {   
-   num_ref_idx_active_override_flag 2 u(1)
+           num_ref_idx_active_override_flag 2 u(1)
             if (num_ref_idx_active_override_flag) {   
-    num_ref_idx_l0_active_minus1 2 ue(v)
-                if (slice_type == B)   
-     num_ref_idx_l1_active_minus1 2 ue(v)
+               num_ref_idx_l0_active_minus1 2 ue(v)
+               if (slice_type == B)   
+                 num_ref_idx_l1_active_minus1 2 ue(v)
             }
         }
         if (nal_unit_type == 20 || nal_unit_type == 21)
             ref_pic_list_mvc_modification()  /* specified in Annex H */ 2  
-  else
-        ref_pic_list_modification() 2
+        else
+            ref_pic_list_modification() 2
         if ((weighted_pred_flag && (slice_type == P || slice_type == SP)) || (weighted_bipred_idc == 1 && slice_type == B))
             pred_weight_table() 2
         if (nal_ref_idc != 0)
             dec_ref_pic_marking() 2
         if (entropy_coding_mode_flag && slice_type != I && slice_type != SI) 
-   cabac_init_idc 2 ue(v) 
-  slice_qp_delta 2 se(v)
+           cabac_init_idc 2 ue(v) 
+        slice_qp_delta 2 se(v)
         if (slice_type == SP || slice_type == SI) {
             if (slice_type == SP)   
-    sp_for_switch_flag 2 u(1) 
-   slice_qs_delta 2 se(v)
+               sp_for_switch_flag 2 u(1) 
+               slice_qs_delta 2 se(v)
         }
         if (deblocking_filter_control_present_flag) {   
-   disable_deblocking_filter_idc 2 ue(v)
+            disable_deblocking_filter_idc 2 ue(v)
             if (disable_deblocking_filter_idc != 1) {   
-    slice_alpha_c0_offset_div2 2 se(v) 
-    slice_beta_offset_div2 2 se(v)
+               slice_alpha_c0_offset_div2 2 se(v) 
+               slice_beta_offset_div2 2 se(v)
             }
         }
         if (num_slice_groups_minus1 > 0 && slice_group_map_type >= 3 && slice_group_map_type <= 5) 
-     slice_group_change_cycle 2 u(v)
+           slice_group_change_cycle 2 u(v)
         if (nal_unit_type == 21 && (slice_type != I && slice_type != SI)) {
             if (DepthFlag)   
-    depth_weighted_pred_flag 2 u(1) 
-   else if (avc_3d_extension_flag) {   
-    dmvp_flag 2 u(1)
+                depth_weighted_pred_flag 2 u(1) 
+            else if (avc_3d_extension_flag) {   
+                dmvp_flag 2 u(1)
                 if (seq_view_synthesis_flag)   
-     slice_vsp_flag 2 u(1)
+                   slice_vsp_flag 2 u(1)
             }
             if (3dv_acquisition_idc != 1 && (depth_weighted_pred_flag || dmvp_flag) ) 
-    dps_id 2 ue(v)
+               dps_id 2 ue(v)
         }
     }
 }  
