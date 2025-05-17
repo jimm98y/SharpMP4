@@ -312,7 +312,7 @@ namespace ItuGenerator.CSharp
                 case "sei_payload":
                     return "((H264Context)context).SetSeiPayload(sei_payload);";
                 case "pic_struct":
-                    return "((H264Context)context).OnPicStruct();";
+                    return "((H264Context)context).OnPicStruct(pic_struct);";
                 case "enable_rle_skip_flag":
                     return "((H264Context)context).OnEnableRleSkipFlag();";
                 case "separate_colour_plane_flag":
@@ -337,22 +337,10 @@ namespace ItuGenerator.CSharp
                     return "((H264Context)context).OnNumRefIdxL0ActiveMinus1(num_ref_idx_l0_active_minus1);";
                 case "num_ref_idx_l1_active_minus1":
                     return "((H264Context)context).OnNumRefIdxL1ActiveMinus1(num_ref_idx_l1_active_minus1);";
-                case "pic_timing":
-                    return "((H264Context)context).OnPicTiming(pic_timing);";
                 case "chroma_format_idc":
                     return "((H264Context)context).OnChromaFormatIdc();";
                 case "num_ref_idx_active_override_flag":
                     return "((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);";
-            }
-            return "";
-        }
-
-        public string GetDerivedInstances(string field)
-        {
-            switch (field)
-            {
-                case "pic_timing":
-                    return "((H264Context)context).OnPicTiming(pic_timing);";
             }
             return "";
         }

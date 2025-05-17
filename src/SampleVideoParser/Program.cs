@@ -39,7 +39,7 @@ SharpH26X.Log.SinkInfo = (o, e) =>
     //logger.Log(o + "\r\n");
 };
 
-var files = File.ReadAllLines("C:\\Temp\\testFiles2.txt");
+var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
 //var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
 //var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
@@ -160,8 +160,9 @@ foreach (var file in files)
                     }
                     catch (Exception ex)
                     {
-                        SharpMP4.Log.Error($"Error reading file: {file}");
-                        SharpMP4.Log.Error(ex.Message);
+                        SharpMP4.Log.Error($"---Error (1) reading {file}, exception: {ex.Message}");
+                        logger.Flush();
+                        break;
                     }
                 }
 
@@ -173,8 +174,9 @@ foreach (var file in files)
                     }
                     catch (Exception ex)
                     {
-                        SharpMP4.Log.Error($"Error reading file: {file}");
-                        SharpMP4.Log.Error(ex.Message);
+                        SharpMP4.Log.Error($"---Error (2) reading {file}, exception: {ex.Message}");
+                        logger.Flush();
+                        break;
                     }
                 }
             }
@@ -195,8 +197,9 @@ foreach (var file in files)
                         }
                         catch (Exception ex)
                         {
-                            SharpMP4.Log.Error($"Error reading file: {file}");
-                            SharpMP4.Log.Error(ex.Message);
+                            SharpMP4.Log.Error($"---Error (3) reading {file}, exception: {ex.Message}");
+                            logger.Flush();
+                            break;
                         }
                     }
                 }
@@ -218,8 +221,9 @@ foreach (var file in files)
                         }
                         catch (Exception ex)
                         {
-                            SharpMP4.Log.Error($"Error reading file: {file}");
-                            SharpMP4.Log.Error(ex.Message);
+                            SharpMP4.Log.Error($"---Error (4) reading {file}, exception: {ex.Message}");
+                            logger.Flush();
+                            break;
                         }
                     }
                 }
@@ -262,6 +266,7 @@ foreach (var file in files)
 
                     if (moof != null)
                     {
+                        // fmp4
                         IOrderedEnumerable<TrackRunBox> plan = moof.Children.OfType<TrackFragmentBox>().SelectMany(x => x.Children.OfType<TrackRunBox>()).OrderBy(x => x.DataOffset);
 
                         foreach (var trun in plan)
@@ -281,9 +286,11 @@ foreach (var file in files)
                                     {
                                         size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize);
                                     }
-                                    catch (Exception)
+                                    catch (Exception ex)
                                     {
-                                        SharpMP4.Log.Error($"---Error reading {file}");
+                                        SharpMP4.Log.Error($"---Error (5) reading {file}, exception: {ex.Message}");
+                                        logger.Flush();
+                                        break;
                                     }
                                 }
                                 else
@@ -296,6 +303,7 @@ foreach (var file in files)
                     }
                     else
                     {
+                        // mp4
                         SampleTableBox sample_table_box = moov
                             .Children.OfType<TrackBox>().First(x => x.Children.OfType<TrackHeaderBox>().Single().TrackID == videoTrackId)
                             .Children.OfType<MediaBox>().Single()
@@ -337,10 +345,11 @@ foreach (var file in files)
                                     size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize);
                                 }
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-                                SharpMP4.Log.Error($"---Error reading {file}");
+                                SharpMP4.Log.Error($"---Error (6) reading {file}, exception: {ex.Message}"); 
                                 logger.Flush();
+                                break;
                             }
                         }
                     }
@@ -349,7 +358,7 @@ foreach (var file in files)
                 }
                 else if(meta != null && mdat != null)
                 {
-                    // HEIC
+                    // heif
                     var ilocBox = meta.Children.OfType<ItemLocationBox>().SingleOrDefault();
                     var iinfBox = meta.Children.OfType<ItemInfoBox>().SingleOrDefault();
 
@@ -371,9 +380,11 @@ foreach (var file in files)
                             {
                                 size += ReadAU(nalLengthSize, context, format, mdat.Data, length);
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-                                SharpMP4.Log.Error($"---Error reading {file}");
+                                SharpMP4.Log.Error($"---Error (7) reading {file}, exception: {ex.Message}");
+                                logger.Flush();
+                                break;
                             }
                         }
                     }
@@ -383,7 +394,8 @@ foreach (var file in files)
     }
     catch(Exception ex)
     {
-        SharpMP4.Log.Error(ex.Message);
+        SharpMP4.Log.Error($"---Error (8) reading {file}, exception: {ex.Message}");
+        logger.Flush();
     }
 }
 
@@ -555,7 +567,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                     context.SeiRbsp = new SharpH264.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
                         throw new Exception($"Failed to write NALu {nu.NalUnitType}");
                 }
                 else if (nu.NalUnitType == H264NALTypes.SPS) // 7
@@ -564,7 +576,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                     context.SeqParameterSetRbsp = new SharpH264.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
                         throw new Exception($"Failed to write NALu {nu.NalUnitType}");
                 }
                 else if (nu.NalUnitType == H264NALTypes.PPS) // 8
@@ -582,7 +594,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                     context.AccessUnitDelimiterRbsp = new SharpH264.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
                         throw new Exception($"Failed to write NALu {nu.NalUnitType}");
                 }
                 else if (nu.NalUnitType == H264NALTypes.END_OF_SEQUENCE) // 10

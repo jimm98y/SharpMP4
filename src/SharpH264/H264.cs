@@ -237,10 +237,8 @@ namespace SharpH264
                 SeiPayload.ViewScalabilityInfo = payload.ViewScalabilityInfo;
         }
 
-        public void OnPicStruct()
+        public void OnPicStruct(uint pic_struct)
         {
-            var pic_struct = SeiPayload.PicTiming.PicStruct;
-
             NumClockTS = pic_struct switch
             {
                 0u => 1,
@@ -339,11 +337,6 @@ namespace SharpH264
             {
                 NumRefIdxL0ActiveMinus1 = num_ref_idx_l0_default_active_minus1;
             }
-        }
-
-        public void OnPicTiming(PicTiming pic_timing)
-        {
-            SeiPayload.PicTiming = pic_timing;
         }
 
         public void OnChromaFormatIdc()

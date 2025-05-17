@@ -3572,9 +3572,7 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
 			else if ( payloadType  ==  1 )
 			{
 				this.pic_timing =  new PicTiming( payloadSize ) ;
-((H264Context)context).OnPicTiming(pic_timing);
 				size +=  stream.ReadClass<PicTiming>(size, context, this.pic_timing, "pic_timing"); 
-				((H264Context)context).OnPicTiming(pic_timing);
 			}
 			else if ( payloadType  ==  2 )
 			{
@@ -3960,7 +3958,6 @@ bit_equal_to_zero  /* equal to 0 *//* 5 f(1)
 			else if ( payloadType  ==  1 )
 			{
 				size += stream.WriteClass<PicTiming>(context, this.pic_timing, "pic_timing"); 
-				((H264Context)context).OnPicTiming(pic_timing);
 			}
 			else if ( payloadType  ==  2 )
 			{
@@ -4472,7 +4469,7 @@ pic_timing( payloadSize ) {
 			if ( ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0 )
 			{
 				size += stream.ReadUnsignedInt(size, 4, out this.pic_struct, "pic_struct"); 
-				((H264Context)context).OnPicStruct();
+				((H264Context)context).OnPicStruct(pic_struct);
 
 				this.clock_timestamp_flag = new byte[ ((H264Context)context).NumClockTS];
 				this.ct_type = new uint[ ((H264Context)context).NumClockTS];
@@ -4557,7 +4554,7 @@ pic_timing( payloadSize ) {
 			if ( ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.PicStructPresentFlag != 0 )
 			{
 				size += stream.WriteUnsignedInt(4, this.pic_struct, "pic_struct"); 
-				((H264Context)context).OnPicStruct();
+				((H264Context)context).OnPicStruct(pic_struct);
 
 				for ( i = 0; i < ((H264Context)context).NumClockTS; i++ )
 				{

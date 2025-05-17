@@ -705,11 +705,6 @@ namespace ItuGenerator.CSharp
             throw new NotImplementedException();
         }
 
-        public string GetDerivedInstances(string field)
-        {
-            return "";
-        }
-
         public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
         {
             string ret;
