@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ItuGenerator
+namespace ItuGenerator.CSharp
 {
     internal class CSharpGeneratorH266 : ICustomGenerator
     {
@@ -702,7 +702,7 @@ namespace ItuGenerator
             }
 
             Debug.WriteLine(parameter);
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public string GetDerivedInstances(string field)

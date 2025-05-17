@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ItuGenerator
+namespace ItuGenerator.CSharp
 {
     public class CSharpGeneratorH264 : ICustomGenerator
     {
@@ -442,7 +442,7 @@ namespace ItuGenerator
             }
 
             Debug.WriteLine(parameter);
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public string FixAllocations(string spacing, string appendType, string variableType, string variableName)

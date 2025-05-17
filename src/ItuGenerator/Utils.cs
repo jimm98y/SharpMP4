@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ItuGenerator
@@ -33,5 +34,26 @@ namespace ItuGenerator
                 return source;
             return string.Format("{0}{1}", char.ToLower(source[0]), source.Substring(1));
         }
+    }
+
+    public static class DictionaryExtensions
+    {
+#if NETSTANDARD
+        public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
+        {
+            if (dictionary == null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            if (!dictionary.ContainsKey(key))
+            {
+                dictionary.Add(key, value);
+                return true;
+            }
+
+            return false;
+        }
+#endif
     }
 }

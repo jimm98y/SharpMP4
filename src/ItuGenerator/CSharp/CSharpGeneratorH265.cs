@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace ItuGenerator
+namespace ItuGenerator.CSharp
 {
     public class CSharpGeneratorH265 : ICustomGenerator
     {        public string AppendMethod(ItuCode field, MethodType methodType, string spacing, string retm)
@@ -594,7 +594,7 @@ namespace ItuGenerator
             }
 
             Debug.WriteLine(parameter);
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public string GetDerivedInstances(string field)
@@ -677,9 +677,9 @@ namespace ItuGenerator
                 ret.Remove(ret[0]);
             }
 
-            if (field != null && (
+            if (field != null && 
                 field.Name == "slice_reserved_flag"
-                ))
+                )
             {
                 ret.Remove(ret[0]);
             }

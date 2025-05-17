@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ItuGenerator
+namespace ItuGenerator.CSharp
 {
     public enum MethodType
     {
@@ -74,7 +74,7 @@ namespace Sharp{type}
             string ret = @$"
     public partial class {type}Context : IItuContext
     {{
-            public NalUnit NalHeader {{ get; set; }}
+        public NalUnit NalHeader {{ get; set; }}
 ";
             var rbsp = ituClasses.Where(x => x.ClassName.EndsWith("rbsp")).ToArray();
             foreach (var cls in rbsp)
@@ -111,7 +111,7 @@ namespace Sharp{type}
             resultCode += $@"
          public ulong Read(IItuContext context, ItuStream stream)
          {{
-             ulong size = 0;
+            ulong size = 0;
 ";
             resultCode += BuildRequiredVariables(ituClass);
 
@@ -122,14 +122,14 @@ namespace Sharp{type}
             ituClass.AddedFields.Clear();
             resultCode += $@"
 
-             return size;
+            return size;
          }}
 ";
 
             resultCode += $@"
          public ulong Write(IItuContext context, ItuStream stream)
          {{
-             ulong size = 0;
+            ulong size = 0;
 ";
             resultCode += BuildRequiredVariables(ituClass);
 
@@ -140,7 +140,7 @@ namespace Sharp{type}
             ituClass.AddedFields.Clear();
             resultCode += $@"
 
-             return size;
+            return size;
          }}
 ";
 
@@ -165,7 +165,7 @@ namespace Sharp{type}
                         value = v.Value;
                     }
 
-                    resultCode += $"\r\n{type} {v.Name} {value};";
+                    resultCode += $"\r\n\t\t\t{type} {v.Name} {value};";
                 }
                 else
                 {
@@ -208,7 +208,7 @@ namespace Sharp{type}
                             array += "[]";
                         }
                     }
-                    resultCode += $"\r\n{type}{array} {v.Name} = null;"; // TODO: size
+                    resultCode += $"\r\n\t\t\t{type}{array} {v.Name} = null;"; // TODO: size
                 }
             }
 
@@ -375,7 +375,7 @@ namespace Sharp{type}
                 fieldValue = specificGenerator.FixFieldValue(fieldValue);
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
-                if (trimmed.StartsWith('!'))
+                if (trimmed.StartsWith("!"))
                 {
                     fieldValue = $"= {trimmed.Substring(1)} == 0";
                 }
@@ -395,18 +395,18 @@ namespace Sharp{type}
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
             {
-                return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue};";
+                return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue}".TrimEnd() + ";";
             }
             else
             {
                 if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null && b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
                     b.AddedFields.Add(new ItuField() { Name = field.Name, Value = fieldValue });
-                    return $"{GetSpacing(level)}uint {field.Name}{fieldArray}{fieldValue};";
+                    return $"{GetSpacing(level)}uint {field.Name}{fieldArray}{fieldValue}".TrimEnd() + ";";
                 }
                 else
                 {
-                    return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue};";
+                    return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue}".TrimEnd() + ";";
                 }
             }
         }
@@ -416,59 +416,59 @@ namespace Sharp{type}
             switch (ituField.Type)
             {
                 case "f(1)":
-                    return "stream.WriteFixed(1, ";
+                    return "stream.WriteFixed(1,";
                 case "f(8)":
-                    return "stream.WriteFixed(8, ";
+                    return "stream.WriteFixed(8,";
                 case "f(16)":
-                    return "stream.WriteFixed(16, ";
+                    return "stream.WriteFixed(16,";
                 case "u(1)":
-                    return "stream.WriteUnsignedInt(1, ";
+                    return "stream.WriteUnsignedInt(1,";
                 case "u(1) | ae(v)":
-                    return "stream.WriteUnsignedInt(1, ";
+                    return "stream.WriteUnsignedInt(1,";
                 case "u(2)":
-                    return "stream.WriteUnsignedInt(2, ";
+                    return "stream.WriteUnsignedInt(2,";
                 case "u(3)":
-                    return "stream.WriteUnsignedInt(3, ";
+                    return "stream.WriteUnsignedInt(3,";
                 case "u(3) | ae(v)":
-                    return "stream.WriteUnsignedInt(3, ";
+                    return "stream.WriteUnsignedInt(3,";
                 case "u(4)":
-                    return "stream.WriteUnsignedInt(4, ";
+                    return "stream.WriteUnsignedInt(4,";
                 case "u(5)":
-                    return "stream.WriteUnsignedInt(5, ";
+                    return "stream.WriteUnsignedInt(5,";
                 case "u(6)":
-                    return "stream.WriteUnsignedInt(6, ";
+                    return "stream.WriteUnsignedInt(6,";
                 case "u(7)":
-                    return "stream.WriteUnsignedInt(7, ";
+                    return "stream.WriteUnsignedInt(7,";
                 case "u(8)":
-                    return "stream.WriteUnsignedInt(8, ";
+                    return "stream.WriteUnsignedInt(8,";
                 case "u(9)":
-                    return "stream.WriteUnsignedInt(9, ";
+                    return "stream.WriteUnsignedInt(9,";
                 case "u(10)":
-                    return "stream.WriteUnsignedInt(10, ";
+                    return "stream.WriteUnsignedInt(10,";
                 case "u(16)":
-                    return "stream.WriteUnsignedInt(16, ";
+                    return "stream.WriteUnsignedInt(16,";
                 case "u(20)":
-                    return "stream.WriteUnsignedInt(20, ";
+                    return "stream.WriteUnsignedInt(20,";
                 case "u(24)":
-                    return "stream.WriteUnsignedInt(24, ";
+                    return "stream.WriteUnsignedInt(24,";
                 case "u(32)":
-                    return "stream.WriteUnsignedInt(32, ";
+                    return "stream.WriteUnsignedInt(32,";
                 case "u(33)":
-                    return "stream.WriteUnsignedInt(33, ";
+                    return "stream.WriteUnsignedInt(33,";
                 case "u(34)":
-                    return "stream.WriteUnsignedInt(34, ";
+                    return "stream.WriteUnsignedInt(34,";
                 case "u(35)":
-                    return "stream.WriteUnsignedInt(35, ";
+                    return "stream.WriteUnsignedInt(35,";
                 case "u(43)":
-                    return "stream.WriteUnsignedInt(43, ";
+                    return "stream.WriteUnsignedInt(43,";
                 case "u(128)":
-                    return "stream.WriteUnsignedInt(128, ";
+                    return "stream.WriteUnsignedInt(128,";
                 case "i(32)":
                     return "stream.WriteSignedInt(32, ";
                 case "u(v)":
-                    return $"stream.WriteUnsignedIntVariable({specificGenerator.GetVariableSize(ituField.Name)}, ";
+                    return $"stream.WriteUnsignedIntVariable({specificGenerator.GetVariableSize(ituField.Name)},";
                 case "i(v)":
-                    return $"stream.WriteSignedIntVariable({specificGenerator.GetVariableSize(ituField.Name)}, ";
+                    return $"stream.WriteSignedIntVariable({specificGenerator.GetVariableSize(ituField.Name)},";
                 case "ue(v)":
                     return "stream.WriteUnsignedIntGolomb(";
                 case "ae(v)":
@@ -488,11 +488,11 @@ namespace Sharp{type}
                 case "te(v) | ae(v)":
                     return "stream.WriteSignedIntGolomb(";
                 case "b(8)":
-                    return "stream.WriteBits(8, ";
+                    return "stream.WriteBits(8,";
                 default:
                     if (ituField.Type == null)
                     {
-                        return $"stream.WriteClass<{ituField.ClassType.ToPropertyCase()}>(context, ";
+                        return $"stream.WriteClass<{ituField.ClassType.ToPropertyCase()}>(context,";
                     }
                     throw new NotImplementedException();
             }
@@ -503,79 +503,79 @@ namespace Sharp{type}
             switch(ituField.Type)
             {
                 case "f(1)":
-                    return "stream.ReadFixed(size, 1, ";
+                    return "stream.ReadFixed(size, 1,";
                 case "f(8)":
-                    return "stream.ReadFixed(size, 8, ";
+                    return "stream.ReadFixed(size, 8,";
                 case "f(16)":
-                    return "stream.ReadFixed(size, 16, ";
+                    return "stream.ReadFixed(size, 16,";
                 case "u(1)":
-                    return "stream.ReadUnsignedInt(size, 1, ";               
+                    return "stream.ReadUnsignedInt(size, 1,";               
                 case "u(1) | ae(v)":
-                    return "stream.ReadUnsignedInt(size, 1, ";               
+                    return "stream.ReadUnsignedInt(size, 1,";               
                 case "u(2)":
-                    return "stream.ReadUnsignedInt(size, 2, ";
+                    return "stream.ReadUnsignedInt(size, 2,";
                 case "u(3)":
-                    return "stream.ReadUnsignedInt(size, 3, ";
+                    return "stream.ReadUnsignedInt(size, 3,";
                 case "u(3) | ae(v)":
-                    return "stream.ReadUnsignedInt(size, 3, ";
+                    return "stream.ReadUnsignedInt(size, 3,";
                 case "u(4)":
-                    return "stream.ReadUnsignedInt(size, 4, ";
+                    return "stream.ReadUnsignedInt(size, 4,";
                 case "u(5)":
-                    return "stream.ReadUnsignedInt(size, 5, ";
+                    return "stream.ReadUnsignedInt(size, 5,";
                 case "u(6)":
-                    return "stream.ReadUnsignedInt(size, 6, ";
+                    return "stream.ReadUnsignedInt(size, 6,";
                 case "u(7)":
-                    return "stream.ReadUnsignedInt(size, 7, ";
+                    return "stream.ReadUnsignedInt(size, 7,";
                 case "u(8)":
-                    return "stream.ReadUnsignedInt(size, 8, ";
+                    return "stream.ReadUnsignedInt(size, 8,";
                 case "u(9)":
-                    return "stream.ReadUnsignedInt(size, 9, ";
+                    return "stream.ReadUnsignedInt(size, 9,";
                 case "u(10)":
-                    return "stream.ReadUnsignedInt(size, 10, ";
+                    return "stream.ReadUnsignedInt(size, 10,";
                 case "u(16)":
-                    return "stream.ReadUnsignedInt(size, 16, ";
+                    return "stream.ReadUnsignedInt(size, 16,";
                 case "u(20)":
-                    return "stream.ReadUnsignedInt(size, 20, ";
+                    return "stream.ReadUnsignedInt(size, 20,";
                 case "u(24)":
-                    return "stream.ReadUnsignedInt(size, 24, ";
+                    return "stream.ReadUnsignedInt(size, 24,";
                 case "u(32)":
-                    return "stream.ReadUnsignedInt(size, 32, ";
+                    return "stream.ReadUnsignedInt(size, 32,";
                 case "u(33)":
-                    return "stream.ReadUnsignedInt(size, 33, ";
+                    return "stream.ReadUnsignedInt(size, 33,";
                 case "u(34)":
-                    return "stream.ReadUnsignedInt(size, 34, ";
+                    return "stream.ReadUnsignedInt(size, 34,";
                 case "u(35)":
-                    return "stream.ReadUnsignedInt(size, 35, ";
+                    return "stream.ReadUnsignedInt(size, 35,";
                 case "u(43)":
-                    return "stream.ReadUnsignedInt(size, 43, ";
+                    return "stream.ReadUnsignedInt(size, 43,";
                 case "u(128)":
-                    return "stream.ReadUnsignedInt(size, 128, ";
+                    return "stream.ReadUnsignedInt(size, 128,";
                 case "i(32)":
-                    return "stream.ReadSignedInt(size, 32, ";
+                    return "stream.ReadSignedInt(size, 32,";
                 case "u(v)":
-                    return $"stream.ReadUnsignedIntVariable(size, {specificGenerator.GetVariableSize(ituField.Name)}, ";
+                    return $"stream.ReadUnsignedIntVariable(size, {specificGenerator.GetVariableSize(ituField.Name)},";
                 case "i(v)":
-                    return $"stream.ReadSignedIntVariable(size, {specificGenerator.GetVariableSize(ituField.Name)}, ";
+                    return $"stream.ReadSignedIntVariable(size, {specificGenerator.GetVariableSize(ituField.Name)},";
                 case "ue(v)":
-                    return "stream.ReadUnsignedIntGolomb(size, ";
+                    return "stream.ReadUnsignedIntGolomb(size,";
                 case "ae(v)":
-                    return "stream.ReadUnsignedIntGolomb(size, ";
+                    return "stream.ReadUnsignedIntGolomb(size,";
                 case "ce(v)":
-                    return "stream.ReadUnsignedIntGolomb(size, ";
+                    return "stream.ReadUnsignedIntGolomb(size,";
                 case "ue(v) | ae(v)":
-                    return "stream.ReadUnsignedIntGolomb(size, ";
+                    return "stream.ReadUnsignedIntGolomb(size,";
                 case "me(v) | ae(v)":
-                    return "stream.ReadUnsignedIntGolomb(size, ";
+                    return "stream.ReadUnsignedIntGolomb(size,";
                 case "se(v)":
-                    return "stream.ReadSignedIntGolomb(size, ";
+                    return "stream.ReadSignedIntGolomb(size,";
                 case "st(v)":
-                    return "stream.ReadUtf8String(size, ";
+                    return "stream.ReadUtf8String(size,";
                 case "se(v) | ae(v)":
-                    return "stream.ReadSignedIntGolomb(size, ";
+                    return "stream.ReadSignedIntGolomb(size,";
                 case "te(v) | ae(v)":
-                    return "stream.ReadSignedIntGolomb(size, ";
+                    return "stream.ReadSignedIntGolomb(size,";
                 case "b(8)":
-                    return "stream.ReadBits(size, 8, ";
+                    return "stream.ReadBits(size, 8,";
                 default:
                     if (ituField.Type == null)
                     {
@@ -593,11 +593,11 @@ namespace Sharp{type}
                                 {
                                     parts[j] = specificGenerator.ReplaceParameter(parts[j].Trim());
                                 }
-                                parameters[i] = string.Join(' ', parts);
+                                parameters[i] = string.Join(" ", parts);
                             }
                         }
                         par = $"({string.Join(", ", parameters)})";
-                        return $"###value### new {ituField.ClassType.ToPropertyCase()}{par} ###size### stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context, ";
+                        return $"###value### new {ituField.ClassType.ToPropertyCase()}{par} ###size### stream.ReadClass<{ituField.ClassType.ToPropertyCase()}>(size, context,";
                     }
                     throw new NotImplementedException();
             }
@@ -649,8 +649,6 @@ namespace Sharp{type}
                 { "u(32)[][]",                  "int[][]" },
                 { "u(32)[,]",                   "uint[,]" },
                 { "u(64)[,]",                   "ulong[,]" },
-
-                // added
                 { "bool",                       "bool" },
                 { "i(64)",                      "long" },
             };
@@ -778,7 +776,7 @@ namespace Sharp{type}
 
                                     if (variableType.Contains("[]"))
                                     {
-                                        int diff = (indexesType - indexesTypeDef);
+                                        int diff = indexesType - indexesTypeDef;
                                         variableType = variableType.Replace("[]", "");
                                         variableType = $"{variableType}[{variable}]";
                                         for (int i = 0; i < diff; i++)
@@ -861,7 +859,7 @@ namespace Sharp{type}
                 ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
             if (blockType == "do" || blockType == "while")
-                ret += $"{spacing}whileIndex++;\r\n";
+                ret += $"\r\n{spacing}\twhileIndex++;\r\n";
 
             foreach (var field in block.Content)
             {
@@ -871,18 +869,20 @@ namespace Sharp{type}
             ret += $"\r\n{spacing}}}";
 
             if(block.Type == "do")
-                ret += $"while {condition};";
+                ret += $" while {condition};";
 
             return ret;
         }       
 
         private string FixCondition(ItuClass b, string condition, MethodType methodType)
         {
-            string[] parts = condition.Substring(1, condition.Length - 2).Split(new string[] { "||", "&&" }, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = condition.Substring(1, condition.Length - 2).Split(new string[] { "||", "&&" }, StringSplitOptions.RemoveEmptyEntries);
 
             for (int i = 0; i < parts.Length; i++)
             {
-                if (parts[i].StartsWith('!'))
+                parts[i] = parts[i].Trim();
+
+                if (parts[i].StartsWith("!"))
                 {
                     string trimmed = parts[i].Trim(new char[] { ' ', '(', ')' });
                     if (!trimmed.Contains("(") && !parts[i].Contains("()")) // if (more_rbsp_data())
@@ -917,7 +917,7 @@ namespace Sharp{type}
         private string FixMissingFields(ItuClass b, string condition)
         {
             Regex r = new Regex("\\b[a-zA-Z_][\\w_]+");
-            var matches = r.Matches(condition).Select(x => x.Value).Distinct().ToArray();
+            var matches = r.Matches(condition).OfType<Match>().Select(x => x.Value).Distinct().ToArray();
             foreach (var match in matches)
             {
                 if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null &&
@@ -1293,7 +1293,7 @@ namespace Sharp{type}
                             else if (b.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null && b.AddedFields.FirstOrDefault(x => x.Name == variable) == null)
                             {
                                 // h265
-                                if (variable == "matrixId" || (b.ClassName == "profile_tier_level" && variable == "i"))
+                                if (variable == "matrixId" || b.ClassName == "profile_tier_level" && variable == "i")
                                 {
                                     b.RequiresDefinition.Add(new ItuField() { Name = variable, Type = "i(32)" });
                                 }

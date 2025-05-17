@@ -383,7 +383,7 @@ foreach (var file in files)
     }
     catch(Exception ex)
     {
-
+        SharpMP4.Log.Error(ex.Message);
     }
 }
 
