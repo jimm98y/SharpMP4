@@ -415,13 +415,9 @@ namespace Sharp{type}
                     return "stream.WriteFixed(16,";
                 case "u(1)":
                     return "stream.WriteUnsignedInt(1,";
-                case "u(1) | ae(v)":
-                    return "stream.WriteUnsignedInt(1,";
                 case "u(2)":
                     return "stream.WriteUnsignedInt(2,";
                 case "u(3)":
-                    return "stream.WriteUnsignedInt(3,";
-                case "u(3) | ae(v)":
                     return "stream.WriteUnsignedInt(3,";
                 case "u(4)":
                     return "stream.WriteUnsignedInt(4,";
@@ -467,18 +463,10 @@ namespace Sharp{type}
                     return "stream.WriteUnsignedIntGolomb(";
                 case "ce(v)":
                     return "stream.WriteUnsignedIntGolomb(";
-                case "ue(v) | ae(v)":
-                    return "stream.WriteUnsignedIntGolomb(";
-                case "me(v) | ae(v)":
-                    return "stream.WriteUnsignedIntGolomb(";
                 case "se(v)":
                     return "stream.WriteSignedIntGolomb(";
                 case "st(v)":
                     return "stream.WriteUtf8String(";
-                case "se(v) | ae(v)":
-                    return "stream.WriteSignedIntGolomb(";
-                case "te(v) | ae(v)":
-                    return "stream.WriteSignedIntGolomb(";
                 case "b(8)":
                     return "stream.WriteBits(8,";
                 default:
@@ -502,13 +490,9 @@ namespace Sharp{type}
                     return "stream.ReadFixed(size, 16,";
                 case "u(1)":
                     return "stream.ReadUnsignedInt(size, 1,";               
-                case "u(1) | ae(v)":
-                    return "stream.ReadUnsignedInt(size, 1,";               
                 case "u(2)":
                     return "stream.ReadUnsignedInt(size, 2,";
                 case "u(3)":
-                    return "stream.ReadUnsignedInt(size, 3,";
-                case "u(3) | ae(v)":
                     return "stream.ReadUnsignedInt(size, 3,";
                 case "u(4)":
                     return "stream.ReadUnsignedInt(size, 4,";
@@ -554,18 +538,10 @@ namespace Sharp{type}
                     return "stream.ReadUnsignedIntGolomb(size,";
                 case "ce(v)":
                     return "stream.ReadUnsignedIntGolomb(size,";
-                case "ue(v) | ae(v)":
-                    return "stream.ReadUnsignedIntGolomb(size,";
-                case "me(v) | ae(v)":
-                    return "stream.ReadUnsignedIntGolomb(size,";
                 case "se(v)":
                     return "stream.ReadSignedIntGolomb(size,";
                 case "st(v)":
                     return "stream.ReadUtf8String(size,";
-                case "se(v) | ae(v)":
-                    return "stream.ReadSignedIntGolomb(size,";
-                case "te(v) | ae(v)":
-                    return "stream.ReadSignedIntGolomb(size,";
                 case "b(8)":
                     return "stream.ReadBits(size, 8,";
                 default:

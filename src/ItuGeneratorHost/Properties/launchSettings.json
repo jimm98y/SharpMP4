@@ -1,8 +1,16 @@
 {
   "profiles": {
-    "ItuGeneratorHost": {
+    "ItuGeneratorHost H264": {
       "commandName": "Project",
       "commandLineArgs": "..\\..\\..\\..\\SharpH264\\H264.js"
+    },
+    "ItuGeneratorHost H265": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\..\\SharpH265\\H265.js"
+    },
+    "ItuGeneratorHost H266": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\..\\SharpH266\\H266.js"
     }
   }
 }
