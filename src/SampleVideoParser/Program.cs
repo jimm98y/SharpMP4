@@ -15,17 +15,15 @@ using System.Text;
 var logger = new FileLogger("C:\\Temp\\video_debug.txt");
 
 //Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
-SharpMP4.Log.SinkInfo = (o, e) => { Console.WriteLine(o); };
-SharpMP4.Log.SinkError = (o, e) => { 
+SharpMP4.Log.SinkInfo = (o, e) => 
+{ 
+    Console.WriteLine(o);
+    File.AppendAllText("C:\\Temp\\_decoding_progress.txt", o + "\r\n");
+};
+SharpMP4.Log.SinkError = (o, e) => 
+{ 
     Debug.WriteLine(o);
-    try
-    {
-        File.AppendAllText("C:\\Temp\\_decoding_errors.txt", o + "\r\n");
-    }
-    catch
-    {
-
-    }
+    File.AppendAllText("C:\\Temp\\_decoding_errors.txt", o + "\r\n");
 };
 
 SharpMP4.Log.SinkDebug = (o, e) =>
