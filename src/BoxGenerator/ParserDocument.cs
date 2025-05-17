@@ -626,7 +626,7 @@ namespace BoxGenerator
                     string value = field.Value;
 
                     // TODO: incorrectly parsed type
-                    if (!string.IsNullOrEmpty(value) && value.StartsWith('['))
+                    if (!string.IsNullOrEmpty(value) && value.StartsWith("["))
                     {
                         field.FieldArray = value;
                     }

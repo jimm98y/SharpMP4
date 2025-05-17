@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ItuGeneratorHost": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\..\\SharpMP4\\Definitions"
+    }
+  }
+}

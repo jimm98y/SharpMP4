@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using BoxGenerator.CSharp;
+using Newtonsoft.Json;
 using Pidgin;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,10 @@ public interface ICodeGenerator
     string GenerateParser();
 }
 
-partial class Program
+public static class BoxGenerator
 {
-    static void Main(string[] args)
+    public static string Generate(string[] jsonFiles, string[] jsonContents)
     {
-        string[] jsonFiles = Directory.GetFiles("Definitions", "*.json");
-
         int success = 0;
         int duplicated = 0;
         int fail = 0;
@@ -29,9 +28,11 @@ partial class Program
         List<PseudoClass> duplicates = new List<PseudoClass>();
         List<string> containers = new List<string>();
 
-        foreach (var file in jsonFiles)
+        for(int i = 0; i < jsonFiles.Length; i++) 
         {
-            using (var json = File.OpenRead(file))
+            string file = jsonFiles[i];
+            string json = jsonContents[i];
+
             using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
             {
                 foreach (JsonElement element in document.RootElement.GetProperty("entries").EnumerateArray())
@@ -113,6 +114,7 @@ partial class Program
         ParserDocument parserDocument = new ParserDocument(parsedClasses, containers);
         ICodeGenerator generator = new CSharpGenerator(parserDocument);
         string code = generator.GenerateParser();
+        return code;
     }
 
     private static IEnumerable<PseudoClass> DeduplicateBoxes(IEnumerable<PseudoClass> result)
@@ -123,7 +125,7 @@ partial class Program
         {
             if (box.Extended != null && box.Extended.BoxType != null && box.Extended.BoxType.Contains("\' or \'"))
             {
-                string[] parts = box.Extended.BoxType.Split("\' or \'");
+                string[] parts = box.Extended.BoxType.Split(new string[] { "\' or \'" }, StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < parts.Length; i++)
                 {
                     string part = parts[i];

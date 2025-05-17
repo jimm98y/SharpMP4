@@ -7,4 +7,50 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+	  <AdditionalFiles Include="Definitions\14496-1-boxes-added.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-boxes-added.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-boxes.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-codecs.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-entity-groups.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-item-properties.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-item-references.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-sample-groups.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-track-groups.json" />
+	  <AdditionalFiles Include="Definitions\14496-12-track-references.json" />
+	  <AdditionalFiles Include="Definitions\14496-15-boxes-added.json" />
+	  <AdditionalFiles Include="Definitions\14496-15-boxes.json" />
+	  <AdditionalFiles Include="Definitions\14496-15-codecs.json" />
+	  <AdditionalFiles Include="Definitions\14496-15-entity-groups.json" />
+	  <AdditionalFiles Include="Definitions\14496-15-sample-groups.json" />
+	  <AdditionalFiles Include="Definitions\14496-15-track-groups.json" />
+	  <AdditionalFiles Include="Definitions\14496-15-track-references.json" />
+	  <AdditionalFiles Include="Definitions\14496-23-boxes-added.json" />
+	  <AdditionalFiles Include="Definitions\14496-3-boxes-added.js" />
+	  <AdditionalFiles Include="Definitions\14496-3-boxes-added.json" />
+	  <AdditionalFiles Include="Definitions\14496-30-boxes.json" />
+	  <AdditionalFiles Include="Definitions\23008-12-boxes.json" />
+	  <AdditionalFiles Include="Definitions\23008-12-entity-groups.json" />
+	  <AdditionalFiles Include="Definitions\23008-12-item-properties.json" />
+	  <AdditionalFiles Include="Definitions\23008-12-item-references.json" />
+	  <AdditionalFiles Include="Definitions\23008-12-sample-groups.json" />
+	  <AdditionalFiles Include="Definitions\Added-boxes.json" />
+	  <AdditionalFiles Include="Definitions\AV1-boxes.json" />
+	  <AdditionalFiles Include="Definitions\AVIF-boxes.json" />
+	  <AdditionalFiles Include="Definitions\Opus-boxes.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BoxGenerator\BoxGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+	<PropertyGroup>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<GeneratedFolder>Generated</GeneratedFolder>
+		<CompilerGeneratedFilesOutputPath>$(GeneratedFolder)\$(TargetFramework)</CompilerGeneratedFilesOutputPath>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+		<None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+	</ItemGroup>
+
 </Project>

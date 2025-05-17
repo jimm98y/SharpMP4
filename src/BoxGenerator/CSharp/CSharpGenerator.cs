@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace BoxGenerator
+namespace BoxGenerator.CSharp
 {
     public class CSharpGenerator : ICodeGenerator
     {
@@ -162,7 +162,7 @@ namespace SharpMP4
 
             switch(fourCC)
             {
-               ";
+";
             foreach (var item in parserDocument.Boxes)
             {
                 string optCondition = "";
@@ -230,7 +230,7 @@ namespace SharpMP4
             }
 
             factory +=
-    @"          }
+@"            }
 
             if(parent == ""ilst"")
             {
@@ -254,7 +254,7 @@ namespace SharpMP4
         {
             switch(fourCC)
             {
-               ";
+";
             foreach (var item in parserDocument.Entries)
             {
                 if (item.Value.Count == 1)
@@ -294,7 +294,7 @@ namespace SharpMP4
             }
 
             factory +=
-    @"          }
+@"            }
 
             //throw new NotImplementedException(fourCC);
             Log.Debug($""Unknown entry: '{fourCC}'"");
@@ -383,7 +383,7 @@ namespace SharpMP4
                     {
                         inType = "IHasBoxChildren";
                     }
-                    cls += $" : {inType}\r\n{{\r\n\t\tpublic StreamMarker Padding {{ get; set; }}\r\n\t\tprotected IMp4Serializable parent = null;\r\n  public IMp4Serializable GetParent() {{ return parent; }}\r\n        public void SetParent(IMp4Serializable parent) {{ this.parent = parent; }}\r\n";
+                    cls += $" : {inType}\r\n{{\r\n\tpublic StreamMarker Padding {{ get; set; }}\r\n\tprotected IMp4Serializable parent = null;\r\n\tpublic IMp4Serializable GetParent() {{ return parent; }}\r\n\tpublic void SetParent(IMp4Serializable parent) {{ this.parent = parent; }}\r\n";
                 }
             }
 
@@ -415,7 +415,7 @@ namespace SharpMP4
                 }
                 else
                 {
-                    string[] tags = b.Extended.DescriptorTag.Split("..");
+                    string[] tags = b.Extended.DescriptorTag.Split(new string[] { ".." }, StringSplitOptions.RemoveEmptyEntries);
                     if (!tags[0].StartsWith("0"))
                     {
                         tags[0] = "DescriptorTags." + tags[0];
@@ -429,7 +429,7 @@ namespace SharpMP4
                 }
             }
 
-            string ov = ((b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName)) || (b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier")) ? "override " : "virtual ";
+            string ov = b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier" ? "override " : "virtual ";
             cls += $"\tpublic {ov}string DisplayName {{ get {{ return \"{b.BoxName}\"; }} }}";
 
             string ctorContent = b.CtorContent;
@@ -462,7 +462,7 @@ namespace SharpMP4
             }
 
             string ctorParams = "";
-            if (!string.IsNullOrEmpty(b.ClassType) || (b.Extended != null && b.Extended.Parameters != null))
+            if (!string.IsNullOrEmpty(b.ClassType) || b.Extended != null && b.Extended.Parameters != null)
             {
                 ctorParams = GetCtorParams(b.ClassType, b.Extended.Parameters);
             }
@@ -523,7 +523,7 @@ namespace SharpMP4
             cls += ctorContent;
             cls += $"\t}}\r\n";
 
-            bool shouldOverride = (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName)) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
+            bool shouldOverride = b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName) || b.BoxName == "BaseDescriptor" || b.BoxName == "QoS_Qualifier";
             cls += "\r\n\tpublic " + (shouldOverride ? "override " : "virtual ") + "ulong Read(IsoStream stream, ulong readSize)\r\n\t{\r\n\t\tulong boxSize = 0;";
 
 
@@ -546,14 +546,14 @@ namespace SharpMP4
 
             if (b.IsContainer)
             {
-                cls += "\r\n" + "boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
+                cls += "\r\n" + "\t\tboxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);";
             }
             else if (hasDescriptors)
             {
                 string objectTypeIndication = "";
                 if (b.BoxName == "DecoderConfigDescriptor")
                     objectTypeIndication = ", objectTypeIndication";
-                cls += "\r\n" + $"boxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this{objectTypeIndication});";
+                cls += "\r\n" + $"\t\tboxSize += stream.ReadDescriptorsTillEnd(boxSize, readSize, this{objectTypeIndication});";
             }
 
             cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
@@ -580,14 +580,14 @@ namespace SharpMP4
 
             if (b.IsContainer)
             {
-                cls += "\r\n" + "boxSize += stream.WriteBoxArrayTillEnd(this);";
+                cls += "\r\n" + "\t\tboxSize += stream.WriteBoxArrayTillEnd(this);";
             }
             else if (hasDescriptors)
             {
                 string objectTypeIndication = "";
                 if (b.BoxName == "DecoderConfigDescriptor")
                     objectTypeIndication = ", objectTypeIndication";
-                cls += "\r\n" + $"boxSize += stream.WriteDescriptorsTillEnd(this{objectTypeIndication});";
+                cls += "\r\n" + $"\t\tboxSize += stream.WriteDescriptorsTillEnd(this{objectTypeIndication});";
             }
 
             cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
@@ -613,14 +613,14 @@ namespace SharpMP4
 
             if (b.IsContainer)
             {
-                cls += "\r\n" + "boxSize += IsoStream.CalculateBoxArray(this);";
+                cls += "\r\n" + "\t\tboxSize += IsoStream.CalculateBoxArray(this);";
             }
             else if (hasDescriptors)
             {
                 string objectTypeIndication = "";
                 if (b.BoxName == "DecoderConfigDescriptor")
                     objectTypeIndication = ", objectTypeIndication";
-                cls += "\r\n" + $"boxSize += IsoStream.CalculateDescriptors(this{objectTypeIndication});";
+                cls += "\r\n" + $"\t\tboxSize += IsoStream.CalculateDescriptors(this{objectTypeIndication});";
             }
 
             cls += "\r\n\t\treturn boxSize;\r\n\t}\r\n";
@@ -661,7 +661,7 @@ namespace SharpMP4
             else
             {
                 // TODO: incorrectly parsed type
-                if (!string.IsNullOrEmpty(value) && (value.StartsWith('[') || value.StartsWith('(')))
+                if (!string.IsNullOrEmpty(value) && (value.StartsWith("[") || value.StartsWith("(")))
                 {
                     value = "";
                 }
@@ -749,8 +749,8 @@ namespace SharpMP4
 
                 string readMethod = GetReadMethod(field as PseudoField);
                 
-                if (((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit") ||
-                    (readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry")) && 
+                if ((readMethod.Contains("ReadBox(") && b.BoxName != "MetaDataAccessUnit" ||
+                    readMethod.Contains("ReadDescriptor(") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry") && 
                     b.BoxName != "SampleGroupDescriptionBox" && 
                     b.BoxName != "SampleGroupDescriptionEntry" && 
                     b.BoxName != "ItemReferenceBox" && 
@@ -761,7 +761,7 @@ namespace SharpMP4
                 {
                     string suffix = fieldType.Contains("[]") ? "" : ".FirstOrDefault()";
                     string ttttt = fieldType.Replace("[]", "");
-                    string ttt = fieldType.Contains("[]") ? ("IEnumerable<" + fieldType.Replace("[]", "") + ">") : fieldType;
+                    string ttt = fieldType.Contains("[]") ? "IEnumerable<" + fieldType.Replace("[]", "") + ">" : fieldType;
                     return $"\tpublic {ttt} {propertyName} {{ get {{ return this.children.OfType<{ttttt}>(){suffix}; }} }}";
                 }
                 else
@@ -835,13 +835,13 @@ namespace SharpMP4
                 };
 
                 if (map.ContainsKey(fieldType))
-                    return map[fieldType];
+                    return $"{spacing}{map[fieldType]}";
                 else
-                    return $"{fieldType};";
+                    return $"{spacing}{fieldType};";
             }
 
             string name = parserDocument.GetFieldName(field as PseudoField);
-            string m = methodType == MethodType.Read ? GetReadMethod(field as PseudoField) : (methodType == MethodType.Write ? GetWriteMethod(field as PseudoField) : GetCalculateSizeMethod(field as PseudoField));
+            string m = methodType == MethodType.Read ? GetReadMethod(field as PseudoField) : methodType == MethodType.Write ? GetWriteMethod(field as PseudoField) : GetCalculateSizeMethod(field as PseudoField);
             string typedef = "";
             typedef = parserDocument.GetFieldTypeDef(field);
 
@@ -854,8 +854,8 @@ namespace SharpMP4
             string boxSize = "boxSize += ";
 
             // comment out all ReadBox/ReadDescriptor, WriteBox/WriteDescriptor and Calculate* methods
-            if ((m.Contains("Box") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox") ||
-                (m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox"))
+            if (m.Contains("Box") && b.BoxName != "MetaDataAccessUnit" && b.BoxName != "SampleGroupDescriptionBox" && b.BoxName != "ItemReferenceBox" && b.BoxName != "IPMPControlBox" && b.BoxName != "IPMPInfoBox" ||
+                m.Contains("Descriptor") && b.BoxName != "ESDBox" && b.BoxName != "MpegSampleEntry" && b.BoxName != "AppleInitialObjectDescriptorBox" && b.BoxName != "MPEG4ExtensionDescriptorsBox")
             {
                 spacing += "// ";
             }
@@ -1078,7 +1078,7 @@ namespace SharpMP4
                                 string variableName = parserDocument.GetFieldName(req) + suffix;
                                 if (variableType.Contains("[]"))
                                 {
-                                    int diff = (indexesType - indexesTypeDef);
+                                    int diff = indexesType - indexesTypeDef;
                                     variableType = variableType.Replace("[]", "");
                                     variableType = $"{variableType}[IsoStream.GetInt({variable})]";
                                     for (int i = 0; i < diff; i++)
@@ -1140,7 +1140,7 @@ namespace SharpMP4
         {
             condition = condition.Substring(1, condition.Length - 2);
 
-            string[] parts = condition.Split(";");
+            string[] parts = condition.Split(';');
 
             // indexes in C# begin at 0 instead of 1, shift the loop condition to this new range
             if (parts[0].Contains("1") && parts[1].Contains("="))
