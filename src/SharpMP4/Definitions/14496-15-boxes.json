@@ -7,56 +7,56 @@
       "description": "SVC region of interest box",
       "containers": ["scif"],
       "type": "Box",
-      "syntax": "class IroiInfoBox extends Box('iroi'){\n\tunsigned int(2) iroi_type;\n\tbit(6) reserved = 0;\n\tif(iroi_type == 0) { \n\t\tunsigned int(8) grid_roi_mb_width;\n\t\tunsigned int(8) grid_roi_mb_height;\n\t}\n\telse if(iroi_type == 1){\n\t\tunsigned int(24) num_roi;\n\t\tfor(i=1; i<= num_roi; i++) {\n\t\t\tunsigned int(32) top_left_mb;\n\t\t\tunsigned int(8) roi_mb_width;\n\t\t\tunsigned int(8) roi_mb_height;\n\t\t}\n\t}\n}"
+      "syntax": "class IroiInfoBox extends Box('iroi'){\r\n\tunsigned int(2) iroi_type;\r\n\tbit(6) reserved = 0;\r\n\tif(iroi_type == 0) { \r\n\t\tunsigned int(8) grid_roi_mb_width;\r\n\t\tunsigned int(8) grid_roi_mb_height;\r\n\t}\r\n\telse if(iroi_type == 1){\r\n\t\tunsigned int(24) num_roi;\r\n\t\tfor(i=1; i<= num_roi; i++) {\r\n\t\t\tunsigned int(32) top_left_mb;\r\n\t\t\tunsigned int(8) roi_mb_width;\r\n\t\t\tunsigned int(8) roi_mb_height;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "ldep",
       "description": "Tier dependency box",
       "containers": ["scif", "mvif"],
       "type": "Box",
-      "syntax": "class TierDependencyBox extends Box('ldep'){\n\tunsigned int(16) entry_count; \n\tfor (i=0; i < entry_count; i++)\n\t\tunsigned int(16) dependencyTierId;\n}"
+      "syntax": "class TierDependencyBox extends Box('ldep'){\r\n\tunsigned int(16) entry_count; \r\n\tfor (i=0; i < entry_count; i++)\r\n\t\tunsigned int(16) dependencyTierId;\r\n}"
     },
     {
       "fourcc": "svdr",
       "description": "SVC dependency range",
       "containers": ["scif"],
       "type": "Box",
-      "syntax": "class SVCDependencyRangeBox extends Box('svdr') {\n\tunsigned int(3) min_dependency_id;\n\tunsigned int(3) min_temporal_id;\n\tbit(6) reserved = 0;\n\tunsigned int(4) min_quality_id;\n\tunsigned int(3) max_dependency_id;\n\tunsigned int(3) max_temporal_id;\n\tbit(6) reserved = 0;\n\tunsigned int(4) max_quality_id;\n}"
+      "syntax": "class SVCDependencyRangeBox extends Box('svdr') {\r\n\tunsigned int(3) min_dependency_id;\r\n\tunsigned int(3) min_temporal_id;\r\n\tbit(6) reserved = 0;\r\n\tunsigned int(4) min_quality_id;\r\n\tunsigned int(3) max_dependency_id;\r\n\tunsigned int(3) max_temporal_id;\r\n\tbit(6) reserved = 0;\r\n\tunsigned int(4) max_quality_id;\r\n}"
     },
     {
       "fourcc": "svip",
       "description": "Initial parameter sets box for tiers",
       "containers": ["scif", "mvif"],
       "type": "Box",
-      "syntax": "class InitialParameterSetBox extends Box ('svip') {\n\tunsigned int(8) sps_id_count;\n\tfor (i=0; i< sps_id_count; i++)\n\t\tunsigned int(8) SPS_index;\n\tunsigned int(8) pps_id_count;\n\tfor (i=0; i< pps_id_count; i++)\n\t\tunsigned int(8) PPS_index;\n}"
+      "syntax": "class InitialParameterSetBox extends Box ('svip') {\r\n\tunsigned int(8) sps_id_count;\r\n\tfor (i=0; i< sps_id_count; i++)\r\n\t\tunsigned int(8) SPS_index;\r\n\tunsigned int(8) pps_id_count;\r\n\tfor (i=0; i< pps_id_count; i++)\r\n\t\tunsigned int(8) PPS_index;\r\n}"
     },
     {
       "fourcc": "svpr",
       "description": "Priority range",
       "containers": ["scif", "mvif"],
       "type": "Box",
-      "syntax": "class PriorityRangeBox extends Box('svpr') {\n\tbit(2) reserved1 = 0;\n\tunsigned int(6) min_priorityId;\n\tbit(2) reserved2 = 0;\n\tunsigned int(6) max_priorityId;\n}"
+      "syntax": "class PriorityRangeBox extends Box('svpr') {\r\n\tbit(2) reserved1 = 0;\r\n\tunsigned int(6) min_priorityId;\r\n\tbit(2) reserved2 = 0;\r\n\tunsigned int(6) max_priorityId;\r\n}"
     },
     {
       "fourcc": "tran",
       "description": "SVC lightweight transcoding",
       "containers": ["scif"],
       "type": "Box",
-      "syntax": "class TranscodingInfoBox extends Box('tran'){\n\tbit(4) reserved = 0;\n\tunsigned int(2) conversion_idc;\n\tunsigned int(1) cavlc_info_present_flag;\n\tunsigned int(1) cabac_info_present_flag;\n\tif(cavlc_info_present_flag){\n\t\tunsigned int(24) cavlc_profile_level_idc;\n\t\tunsigned int(32) cavlc_max_bitrate;\n\t\tunsigned int(32) cavlc_avg_bitrate;\n\t}\n\tif(cabac_info_present_flag){\n\t\tunsigned int(24) cabac_profile_level_idc;\n\t\tunsigned int(32) cabac_max_bitrate;\n\t\tunsigned int(32) cabac_avg_bitrate;\n\t}\n}"
+      "syntax": "class TranscodingInfoBox extends Box('tran'){\r\n\tbit(4) reserved = 0;\r\n\tunsigned int(2) conversion_idc;\r\n\tunsigned int(1) cavlc_info_present_flag;\r\n\tunsigned int(1) cabac_info_present_flag;\r\n\tif(cavlc_info_present_flag){\r\n\t\tunsigned int(24) cavlc_profile_level_idc;\r\n\t\tunsigned int(32) cavlc_max_bitrate;\r\n\t\tunsigned int(32) cavlc_avg_bitrate;\r\n\t}\r\n\tif(cabac_info_present_flag){\r\n\t\tunsigned int(24) cabac_profile_level_idc;\r\n\t\tunsigned int(32) cabac_max_bitrate;\r\n\t\tunsigned int(32) cabac_avg_bitrate;\r\n\t}\r\n}"
     },
     {
       "fourcc": "rrgn",
       "description": "SVC rect region box",
       "containers": ["scif"],
       "type": "Box",
-      "syntax": "class RectRegionBox extends Box('rrgn'){\n\tunsigned int(16) base_region_tierID;\n\tunsigned int(1) dynamic_rect;\n\tbit(7) reserved = 0;\n\tif(dynamic_rect == 0) { \n\t\tunsigned int(16) horizontal_offset;\n\t\tunsigned int(16) vertical_offset;\n\t\tunsigned int(16) region_width;\n\t\tunsigned int(16) region_height;\n\t}\n}"
+      "syntax": "class RectRegionBox extends Box('rrgn'){\r\n\tunsigned int(16) base_region_tierID;\r\n\tunsigned int(1) dynamic_rect;\r\n\tbit(7) reserved = 0;\r\n\tif(dynamic_rect == 0) { \r\n\t\tunsigned int(16) horizontal_offset;\r\n\t\tunsigned int(16) vertical_offset;\r\n\t\tunsigned int(16) region_width;\r\n\t\tunsigned int(16) region_height;\r\n\t}\r\n}"
     },
     {
       "fourcc": "buff",
       "description": "Buffering information",
       "containers": ["scif", "mvif", "mvcg"],
       "type": "Box",
-      "syntax": "class BufferingBox extends Box('buff'){\n\tunsigned int(16) \t\toperating_point_count\n;\tfor (i = 0; i < operating_point_count; i++){\n\t\tunsigned int (32) \tbyte_rate;\n\t\tunsigned int (32) \tcpb_size;\n\t\tunsigned int (32) \tdpb_size;\n\t\tunsigned int (32)\t\tinit_cpb_delay;\n\t\tunsigned int (32) \tinit_dpb_delay;\n\t}\n}"
+      "syntax": "class BufferingBox extends Box('buff'){\r\n\tunsigned int(16) \t\toperating_point_count\r\n;\tfor (i = 0; i < operating_point_count; i++){\r\n\t\tunsigned int (32) \tbyte_rate;\r\n\t\tunsigned int (32) \tcpb_size;\r\n\t\tunsigned int (32) \tdpb_size;\r\n\t\tunsigned int (32)\t\tinit_cpb_delay;\r\n\t\tunsigned int (32) \tinit_dpb_delay;\r\n\t}\r\n}"
     },
     {
       "fourcc": "mstv",
@@ -65,7 +65,7 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class MVCSubTrackViewBox\n\textends FullBox('mstv', 0, 0) {\n\tunsigned int(16) item_count;\n\tfor(i = 0; i< item_count; i++) {\n\t\tunsigned int(10)\tview_id;\n\t\tunsigned int(4)\ttemporal_id;\n\t\tunsigned int(2)\treserved;\n\t}\n}"
+      "syntax": "aligned(8) class MVCSubTrackViewBox\r\n\textends FullBox('mstv', 0, 0) {\r\n\tunsigned int(16) item_count;\r\n\tfor(i = 0; i< item_count; i++) {\r\n\t\tunsigned int(10)\tview_id;\r\n\t\tunsigned int(4)\ttemporal_id;\r\n\t\tunsigned int(2)\treserved;\r\n\t}\r\n}"
     },
     {
       "fourcc": "mvcg",
@@ -74,7 +74,7 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class MultiviewGroupBox extends FullBox('mvcg', version = 0, flags) {\n\tunsigned int(32) multiview_group_id;\n\tunsigned int(16) num_entries;\n\tbit(8) reserved = 0;\n\tfor(i=0; i<num_entries; i++) {\n\t\tunsigned int(8) entry_type;\n\t\tif (entry_type == 0)\n\t\t\tunsigned int(32) track_id;\n\t\telse if (entry_type == 1) {\n\t\t\tunsigned int(32) track_id;\n\t\t\tunsigned int(16) tier_id;\n\t\t}\n\t\telse if (entry_type == 2) {\n\t\t\tbit(6) reserved1 = 0;\n\t\t\tunsigned int(10) output_view_id;\n\t\t}\n\t\telse if (entry_type == 3) {\n\t\t\tbit(6) reserved2 = 0;\n\t\t\tunsigned int(10) start_view_id;\n\t\t\tunsigned int(16) view_count;\n\t\t}\n\t}\n\tTierInfoBox subset_stream_info; \t\t\t// optional\n\tMultiviewRelationAttributeBox relation_attributes; // optional\n\tTierBitRateBox subset_stream_bit_rate; // optional\n\tBufferingBox subset_stream_buffering; \t// optional\n\tMultiviewSceneInfoBox multiview_scene_info; \t\t\t// optional\n}"
+      "syntax": "aligned(8) class MultiviewGroupBox extends FullBox('mvcg', version = 0, flags) {\r\n\tunsigned int(32) multiview_group_id;\r\n\tunsigned int(16) num_entries;\r\n\tbit(8) reserved = 0;\r\n\tfor(i=0; i<num_entries; i++) {\r\n\t\tunsigned int(8) entry_type;\r\n\t\tif (entry_type == 0)\r\n\t\t\tunsigned int(32) track_id;\r\n\t\telse if (entry_type == 1) {\r\n\t\t\tunsigned int(32) track_id;\r\n\t\t\tunsigned int(16) tier_id;\r\n\t\t}\r\n\t\telse if (entry_type == 2) {\r\n\t\t\tbit(6) reserved1 = 0;\r\n\t\t\tunsigned int(10) output_view_id;\r\n\t\t}\r\n\t\telse if (entry_type == 3) {\r\n\t\t\tbit(6) reserved2 = 0;\r\n\t\t\tunsigned int(10) start_view_id;\r\n\t\t\tunsigned int(16) view_count;\r\n\t\t}\r\n\t}\r\n\tTierInfoBox subset_stream_info; \t\t\t// optional\r\n\tMultiviewRelationAttributeBox relation_attributes; // optional\r\n\tTierBitRateBox subset_stream_bit_rate; // optional\r\n\tBufferingBox subset_stream_buffering; \t// optional\r\n\tMultiviewSceneInfoBox multiview_scene_info; \t\t\t// optional\r\n}"
     },
     {
       "fourcc": "mvci",
@@ -83,14 +83,14 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class MultiviewInformationBox\n\textends FullBox('mvci', version = 0, flags) {\n}"
+      "syntax": "aligned(8) class MultiviewInformationBox\r\n\textends FullBox('mvci', version = 0, flags) {\r\n}"
     },
     {
       "fourcc": "3dpr",
       "description": "MVDDepthResolutionBox",
       "containers": ["mvdC", "a3dC"],
       "type": "Box",
-      "syntax": "class MVDDepthResolutionBox extends Box('3dpr')\n{\n\tunsigned int(16) depth_width;\n\tunsigned int(16) depth_height;\n/* The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox). */\n\tunsigned int(16) depth_hor_mult_minus1; // optional\n\tunsigned int(16) depth_ver_mult_minus1; // optional\n\tunsigned int(4) depth_hor_rsh; // optional\n\tunsigned int(4) depth_ver_rsh; // optional\n\tunsigned int(16) grid_pos_num_views; // optional\n\tfor(i = 0; i < grid_pos_num_views; i++) {\n\t\tbit(6) reserved=0;\n\t\tunsigned int(10) grid_pos_view_id[i];\n\t\tsigned int(16) grid_pos_x[grid_pos_view_id[i]];\n\t\tsigned int(16) grid_pos_y[grid_pos_view_id[i]];\n\t}\n}"
+      "syntax": "class MVDDepthResolutionBox extends Box('3dpr')\r\n{\r\n\tunsigned int(16) depth_width;\r\n\tunsigned int(16) depth_height;\r\n/* The following 5 fields are collectively optional; they are either all present or all absent. When grid_pos_num_views is not present, the for loop is not present, equivalent to grid_pos_num_views equal to 0. These fields may be present or absent whenever the box is present (e.g., in MVCDConfigurationBox or A3DConfigurationBox). */\r\n\tunsigned int(16) depth_hor_mult_minus1; // optional\r\n\tunsigned int(16) depth_ver_mult_minus1; // optional\r\n\tunsigned int(4) depth_hor_rsh; // optional\r\n\tunsigned int(4) depth_ver_rsh; // optional\r\n\tunsigned int(16) grid_pos_num_views; // optional\r\n\tfor(i = 0; i < grid_pos_num_views; i++) {\r\n\t\tbit(6) reserved=0;\r\n\t\tunsigned int(10) grid_pos_view_id[i];\r\n\t\tsigned int(16) grid_pos_x[grid_pos_view_id[i]];\r\n\t\tsigned int(16) grid_pos_y[grid_pos_view_id[i]];\r\n\t}\r\n}"
     },
     {
       "fourcc": "mvra",
@@ -99,7 +99,7 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class MultiviewRelationAttributeBox\n\textends FullBox('mvra', version = 0, flags) {\n\tbit(16) reserved1 = 0;\n\tunsigned int(16) num_common_attributes;\n\tfor (i=0; i<num_common_attributes; i++) {\n\t\tunsigned int(32) common_attribute; \n\t\tunsigned int(32) common_value;\n\t}\n\tbit(16) reserved2 = 0;\n\tunsigned int(16) num_differentiating_attributes;\n\tfor (i=0; i<num_differentiating_attributes; i++)\n\t\tunsigned int(32) differentiating_attribute;\n}"
+      "syntax": "aligned(8) class MultiviewRelationAttributeBox\r\n\textends FullBox('mvra', version = 0, flags) {\r\n\tbit(16) reserved1 = 0;\r\n\tunsigned int(16) num_common_attributes;\r\n\tfor (i=0; i<num_common_attributes; i++) {\r\n\t\tunsigned int(32) common_attribute; \r\n\t\tunsigned int(32) common_value;\r\n\t}\r\n\tbit(16) reserved2 = 0;\r\n\tunsigned int(16) num_differentiating_attributes;\r\n\tfor (i=0; i<num_differentiating_attributes; i++)\r\n\t\tunsigned int(32) differentiating_attribute;\r\n}"
     },
     {
       "fourcc": "sdep",
@@ -108,14 +108,14 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class SampleDependencyBox \n\textends FullBox('sdep', version = 0, 0) {\n\tfor (i=0; i < sample_count; i++){\n\t\tunsigned int(16) dependency_count;\n\t\tfor (k=0; k < dependency_count; k++) {\n\t\t\tsigned int(16) relative_sample_number;\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class SampleDependencyBox \r\n\textends FullBox('sdep', version = 0, 0) {\r\n\tfor (i=0; i < sample_count; i++){\r\n\t\tunsigned int(16) dependency_count;\r\n\t\tfor (k=0; k < dependency_count; k++) {\r\n\t\t\tsigned int(16) relative_sample_number;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "seii",
       "description": "SEI information box",
       "containers": ["schi", "VisualSampleEntry"],
       "type": "Box",
-      "syntax": "aligned(8) class SeiInformationBox extends Box('seii') {\n\tunsigned int(16) numRequiredSEIs;\n\tfor (i\u00a0=\u00a00; i\u00a0<\u00a0numRequiredSEIs; i++) {\n\tunsigned int(16) requiredSEI_ID;\n\t}\n\tunsigned int(16) numNotRequiredSEIs;\n\tfor (i\u00a0=\u00a00; i\u00a0<\u00a0numNotRequiredSEIs; i++) {\n\tunsigned int(16) notrequiredSEI_ID;\n\t}\n}"
+      "syntax": "aligned(8) class SeiInformationBox extends Box('seii') {\r\n\tunsigned int(16) numRequiredSEIs;\r\n\tfor (i\u00a0=\u00a00; i\u00a0<\u00a0numRequiredSEIs; i++) {\r\n\tunsigned int(16) requiredSEI_ID;\r\n\t}\r\n\tunsigned int(16) numNotRequiredSEIs;\r\n\tfor (i\u00a0=\u00a00; i\u00a0<\u00a0numNotRequiredSEIs; i++) {\r\n\tunsigned int(16) notrequiredSEI_ID;\r\n\t}\r\n}"
     },
     {
       "fourcc": "sstl",
@@ -124,7 +124,7 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class SVCSubTrackLayerBox\n\textends FullBox('sstl', 0, 0) {\n\tunsigned int(16) item_count;\n\tfor(i = 0; i< item_count; i++) {\n\t\tunsigned int(3)\tdependency_id;\n\t\tunsigned int(4)\tquality_id;\n\t\tunsigned int(3)\ttemporal_id;\n\t\tunsigned int(6)\tpriority_id;\n\t\tunsigned int(2)\tdependency_id_range;\n\t\tunsigned int(2) \tquality_id_range;\n\t\tunsigned int(2)\ttemporal_id_range;\n\t\tunsigned int(2)\tpriority_id_range;\n\t}\n}"
+      "syntax": "aligned(8) class SVCSubTrackLayerBox\r\n\textends FullBox('sstl', 0, 0) {\r\n\tunsigned int(16) item_count;\r\n\tfor(i = 0; i< item_count; i++) {\r\n\t\tunsigned int(3)\tdependency_id;\r\n\t\tunsigned int(4)\tquality_id;\r\n\t\tunsigned int(3)\ttemporal_id;\r\n\t\tunsigned int(6)\tpriority_id;\r\n\t\tunsigned int(2)\tdependency_id_range;\r\n\t\tunsigned int(2) \tquality_id_range;\r\n\t\tunsigned int(2)\ttemporal_id_range;\r\n\t\tunsigned int(2)\tpriority_id_range;\r\n\t}\r\n}"
     },
     {
       "fourcc": "stmg",
@@ -133,7 +133,7 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class MVCSubTrackMultiviewGroupBox\n\textends FullBox('stmg', 0, 0) {\n\tunsigned int(16) item_count;\n\tfor(i = 0; i< item_count; i++) {\n\t\tunsigned int(32)\tMultiviewGroupId;\n\t}\n}"
+      "syntax": "aligned(8) class MVCSubTrackMultiviewGroupBox\r\n\textends FullBox('stmg', 0, 0) {\r\n\tunsigned int(16) item_count;\r\n\tfor(i = 0; i< item_count; i++) {\r\n\t\tunsigned int(32)\tMultiviewGroupId;\r\n\t}\r\n}"
     },
     {
       "fourcc": "stti",
@@ -142,7 +142,7 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class SubTrackTierBox\n\textends FullBox('stti', 0, 0) {\n\tunsigned int(16) item_count;\n\tfor(i = 0; i< item_count; i++) {\n\t\tunsigned int(16)\ttierID;\n\t}\n}"
+      "syntax": "aligned(8) class SubTrackTierBox\r\n\textends FullBox('stti', 0, 0) {\r\n\tunsigned int(16) item_count;\r\n\tfor(i = 0; i< item_count; i++) {\r\n\t\tunsigned int(16)\ttierID;\r\n\t}\r\n}"
     },
     {
       "fourcc": "swtc",
@@ -151,21 +151,21 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class MultiviewGroupRelationBox() extends FullBox('swtc', version = 0, flags) {\n\tunsigned int(32) num_entries;\n\tfor (i=0; i<num_entries; i++)\n\t\tunsigned int(32) multiview_group_id;\n\tMultiviewRelationAttributeBox relation_attributes;\n}"
+      "syntax": "aligned(8) class MultiviewGroupRelationBox() extends FullBox('swtc', version = 0, flags) {\r\n\tunsigned int(32) num_entries;\r\n\tfor (i=0; i<num_entries; i++)\r\n\t\tunsigned int(32) multiview_group_id;\r\n\tMultiviewRelationAttributeBox relation_attributes;\r\n}"
     },
     {
       "fourcc": "tibr",
       "description": "Tier Bit rate",
       "containers": ["scif", "mvif", "mvcg"],
       "type": "Box",
-      "syntax": "class TierBitRateBox extends Box('tibr'){ \n\tunsigned int(32) baseBitRate;\n\tunsigned int(32) maxBitRate;\n\tunsigned int(32) avgBitRate;\n\n\tunsigned int(32) tierBaseBitRate;\n\tunsigned int(32) tierMaxBitRate;\n\tunsigned int(32) tierAvgBitRate;\n}"
+      "syntax": "class TierBitRateBox extends Box('tibr'){ \r\n\tunsigned int(32) baseBitRate;\r\n\tunsigned int(32) maxBitRate;\r\n\tunsigned int(32) avgBitRate;\r\n\r\n\tunsigned int(32) tierBaseBitRate;\r\n\tunsigned int(32) tierMaxBitRate;\r\n\tunsigned int(32) tierAvgBitRate;\r\n}"
     },
     {
       "fourcc": "tiri",
       "description": "Tier Information",
       "containers": ["scif", "mvif", "mvcg"],
       "type": "Box",
-      "syntax": "class TierInfoBox extends Box('tiri'){ //Mandatory Box\n\tunsigned int(16) tierID;\n\tunsigned int(8) profileIndication;\n\tunsigned int(8) profile_compatibility;\n\tunsigned int(8) levelIndication;\n\tbit(8) reserved = 0;\n\n\tunsigned int(16) visualWidth;\n\tunsigned int(16) visualHeight;\n\n\tunsigned int(2) discardable;\n\tunsigned int(2) constantFrameRate;\n\tbit(4) reserved = 0;\n\tunsigned int(16) frameRate;\n}"
+      "syntax": "class TierInfoBox extends Box('tiri'){ //Mandatory Box\r\n\tunsigned int(16) tierID;\r\n\tunsigned int(8) profileIndication;\r\n\tunsigned int(8) profile_compatibility;\r\n\tunsigned int(8) levelIndication;\r\n\tbit(8) reserved = 0;\r\n\r\n\tunsigned int(16) visualWidth;\r\n\tunsigned int(16) visualHeight;\r\n\r\n\tunsigned int(2) discardable;\r\n\tunsigned int(2) constantFrameRate;\r\n\tbit(4) reserved = 0;\r\n\tunsigned int(16) frameRate;\r\n}"
     },
     {
       "fourcc": "tstb",
@@ -174,14 +174,14 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "aligned(8) class TileSubTrackGroupBox extends FullBox('tstb', 0, 0) {\n\tunsigned int(16) item_count;\n\tfor(i = 0; i< item_count; i++) {\n\t\tunsigned int(16) tileGroupID;\n\t}\n}"
+      "syntax": "aligned(8) class TileSubTrackGroupBox extends FullBox('tstb', 0, 0) {\r\n\tunsigned int(16) item_count;\r\n\tfor(i = 0; i< item_count; i++) {\r\n\t\tunsigned int(16) tileGroupID;\r\n\t}\r\n}"
     },
     {
       "fourcc": "vwdi",
       "description": "Multiview Scene Information",
       "containers": ["mvcg"],
       "type": "Box",
-      "syntax": "class MultiviewSceneInfoBox extends Box ('vwdi') \n{\n\tunsigned int(8) \tmax_disparity;\n}"
+      "syntax": "class MultiviewSceneInfoBox extends Box ('vwdi') \r\n{\r\n\tunsigned int(8) \tmax_disparity;\r\n}"
     },
     {
       "fourcc": "mvdC",
@@ -244,7 +244,7 @@
       "type": "FullBox",
       "versions": [0],
       "flags": [],
-      "syntax": "class ViewIdentifierBox extends FullBox ('vwid', version=0, flags) \n{\n\tunsigned int(2) \treserved6 = 0;\n\tunsigned int(3) \tmin_temporal_id;\n\tunsigned int(3) \tmax_temporal_id;\n\tunsigned int(16)\tnum_views;\n\tfor (i=0; i<num_views; i++) {\n\t\tunsigned int(6) \treserved1 = 0;\n\t\tunsigned int(10) \tview_id[i];\n\t\tunsigned int(6) \treserved2 = 0;\n\t\tunsigned int(10) \tview_order_index;\n\t\tunsigned int(1)\ttexture_in_stream[i];\n\t\tunsigned int(1)\ttexture_in_track[i];\n\t\tunsigned int(1)\tdepth_in_stream[i];\n\t\tunsigned int(1)\tdepth_in_track[i];\n\t\tunsigned int(2) \tbase_view_type;\n\t\tunsigned int(10) \tnum_ref_views;\n\t\tfor (j = 0; j < num_ref_views; j++) {\n\t\t\tunsigned int(4) \treserved5 = 0;\n\t\t\tunsigned int(2) \tdependent_component_idc[i][j];\n\t\t\tunsigned int(10) \tref_view_id[i][j];\n\t\t}\n\t}\n}"
+      "syntax": "class ViewIdentifierBox extends FullBox ('vwid', version=0, flags) \r\n{\r\n\tunsigned int(2) \treserved6 = 0;\r\n\tunsigned int(3) \tmin_temporal_id;\r\n\tunsigned int(3) \tmax_temporal_id;\r\n\tunsigned int(16)\tnum_views;\r\n\tfor (i=0; i<num_views; i++) {\r\n\t\tunsigned int(6) \treserved1 = 0;\r\n\t\tunsigned int(10) \tview_id[i];\r\n\t\tunsigned int(6) \treserved2 = 0;\r\n\t\tunsigned int(10) \tview_order_index;\r\n\t\tunsigned int(1)\ttexture_in_stream[i];\r\n\t\tunsigned int(1)\ttexture_in_track[i];\r\n\t\tunsigned int(1)\tdepth_in_stream[i];\r\n\t\tunsigned int(1)\tdepth_in_track[i];\r\n\t\tunsigned int(2) \tbase_view_type;\r\n\t\tunsigned int(10) \tnum_ref_views;\r\n\t\tfor (j = 0; j < num_ref_views; j++) {\r\n\t\t\tunsigned int(4) \treserved5 = 0;\r\n\t\t\tunsigned int(2) \tdependent_component_idc[i][j];\r\n\t\t\tunsigned int(10) \tref_view_id[i][j];\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "mvcC",
@@ -285,7 +285,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class AVCConfigurationBox extends Box('avcC') {\n\tAVCDecoderConfigurationRecord() AVCConfig;\n}"
+      "syntax": "class AVCConfigurationBox extends Box('avcC') {\r\n\tAVCDecoderConfigurationRecord() AVCConfig;\r\n}"
     },
     {
       "fourcc": "hvcC",
@@ -313,7 +313,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class HEVCConfigurationBox extends Box('hvcC') {\n\tHEVCDecoderConfigurationRecord() HEVCConfig;\n}"
+      "syntax": "class HEVCConfigurationBox extends Box('hvcC') {\r\n\tHEVCDecoderConfigurationRecord() HEVCConfig;\r\n}"
     },
     {
       "fourcc": "lhvC",
@@ -344,7 +344,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class LHEVCConfigurationBox extends Box('lhvC') {\n\tLHEVCDecoderConfigurationRecord() LHEVCConfig;\n}"
+      "syntax": "class LHEVCConfigurationBox extends Box('lhvC') {\r\n\tLHEVCDecoderConfigurationRecord() LHEVCConfig;\r\n}"
     },
     {
       "fourcc": "m4ds",
@@ -382,7 +382,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class MPEG4ExtensionDescriptorsBox extends Box('m4ds') {\n\tDescriptor Descr[0 .. 255];\n}"
+      "syntax": "class MPEG4ExtensionDescriptorsBox extends Box('m4ds') {\r\n\tDescriptor Descr[0 .. 255];\r\n}"
     },
     {
       "fourcc": "svcC",
@@ -399,7 +399,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class SVCConfigurationBox extends Box('svcC') {\n\tSVCDecoderConfigurationRecord() SVCConfig;\n}"
+      "syntax": "class SVCConfigurationBox extends Box('svcC') {\r\n\tSVCDecoderConfigurationRecord() SVCConfig;\r\n}"
     },
     {
       "fourcc": "seib",
@@ -416,7 +416,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class ScalabilityInformationSEIBox extends Box('seib', size)\n{\n\tunsigned int(8*size-64)\tscalinfosei; \n}"
+      "syntax": "class ScalabilityInformationSEIBox extends Box('seib', size)\r\n{\r\n\tunsigned int(8*size-64)\tscalinfosei; \r\n}"
     },
     {
       "fourcc": "svcP",
@@ -436,7 +436,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class SVCPriorityAssignmentBox extends Box('svcP')\n{\n\tunsigned int(8)\tmethod_count;\n\tstring PriorityAssignmentURI[method_count]; \n}"
+      "syntax": "class SVCPriorityAssignmentBox extends Box('svcP')\r\n{\r\n\tunsigned int(8)\tmethod_count;\r\n\tstring PriorityAssignmentURI[method_count]; \r\n}"
     },
     {
       "fourcc": "vsib",
@@ -453,7 +453,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class ViewScalabilityInformationSEIBox extends Box('vsib', size)\n{\n\tunsigned int(8*size-64)\tmvcscalinfosei; \n}"
+      "syntax": "class ViewScalabilityInformationSEIBox extends Box('vsib', size)\r\n{\r\n\tunsigned int(8*size-64)\tmvcscalinfosei; \r\n}"
     },
     {
       "fourcc": "3sib",
@@ -476,7 +476,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class MVDScalabilityInformationSEIBox extends Box('3sib', size)\n{\n\tunsigned int(8*size-64)\tmvdscalinfosei;\n}"
+      "syntax": "class MVDScalabilityInformationSEIBox extends Box('3sib', size)\r\n{\r\n\tunsigned int(8*size-64)\tmvdscalinfosei;\r\n}"
     },
     {
       "fourcc": "mvcP",
@@ -493,7 +493,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class MVCViewPriorityAssignmentBox extends Box('mvcP')\n{\n\tunsigned int(8)\tmethod_count;\n\tstring PriorityAssignmentURI[method_count]; \n}"
+      "syntax": "class MVCViewPriorityAssignmentBox extends Box('mvcP')\r\n{\r\n\tunsigned int(8)\tmethod_count;\r\n\tstring PriorityAssignmentURI[method_count]; \r\n}"
     },
     {
       "fourcc": "hvtC",
@@ -510,7 +510,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class HEVCTileConfigurationBox extends Box('hvtC') {\n\tHEVCTileTierLevelConfigurationRecord() HEVCTileTierLevelConfig;\n}"
+      "syntax": "class HEVCTileConfigurationBox extends Box('hvtC') {\r\n\tHEVCTileTierLevelConfigurationRecord() HEVCTileTierLevelConfig;\r\n}"
     },
     {
       "fourcc": "evcC",
@@ -521,7 +521,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class EVCConfigurationBox extends Box('evcC') {\n\tEVCDecoderConfigurationRecord() EVCConfig;\n}"
+      "syntax": "class EVCConfigurationBox extends Box('evcC') {\r\n\tEVCDecoderConfigurationRecord() EVCConfig;\r\n}"
     },
     {
       "fourcc": "qlif",
@@ -532,7 +532,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class SVCPriorityLayerInfoBox extends Box('qlif'){\n\tunsigned int(8) pr_layer_num;\n\tfor(j=0; j< pr_layer_num; j++){\n\t\tunsigned int(8) pr_layer;\n\t\tunsigned int(24) profile_level_idc;\n\t\tunsigned int(32) max_bitrate;\n\t\tunsigned int(32) avg_bitrate;\n\t}\n}"
+      "syntax": "class SVCPriorityLayerInfoBox extends Box('qlif'){\r\n\tunsigned int(8) pr_layer_num;\r\n\tfor(j=0; j< pr_layer_num; j++){\r\n\t\tunsigned int(8) pr_layer;\r\n\t\tunsigned int(24) profile_level_idc;\r\n\t\tunsigned int(32) max_bitrate;\r\n\t\tunsigned int(32) avg_bitrate;\r\n\t}\r\n}"
     },
     {
       "fourcc": "vvcC",
@@ -545,7 +545,7 @@
         }
       ],
       "type": "FullBox",
-      "syntax": "class VvcConfigurationBox extends FullBox('vvcC',version=0,flags) {\n\tVvcDecoderConfigurationRecord() VvcConfig;\n}"
+      "syntax": "class VvcConfigurationBox extends FullBox('vvcC',version=0,flags) {\r\n\tVvcDecoderConfigurationRecord() VvcConfig;\r\n}"
     },
     {
       "fourcc": "vvnC",
@@ -567,7 +567,7 @@
         }
       ],
       "type": "FullBox",
-      "syntax": "class VvcNALUConfigBox extends FullBox('vvnC',version=0,flags) {\n\tunsigned int(6) reserved=0;\n\tunsigned int(2) LengthSizeMinusOne;\n}"
+      "syntax": "class VvcNALUConfigBox extends FullBox('vvnC',version=0,flags) {\r\n\tunsigned int(6) reserved=0;\r\n\tunsigned int(2) LengthSizeMinusOne;\r\n}"
     },
     {
       "fourcc": "dhec",
@@ -580,8 +580,8 @@
         }
       ],
       "type": "FullBox",
-      "originalSyntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\n\tunsigned int(32) num_entries;\n\tfor (i=1; i<= num_entries; i++) { \n\t\tunsigned int(8) constructor_type;\n\t\tunsigned int(8) flags; \n\t\tif( constructor_type == 0 ) \n\t\t\tSampleConstructor();\n\t\telse if( constructor_type == 2 ) \n\t\t\tInlineConstructor();\n\t\telse if( constructor_type == 3 ) \n\t\t\tSampleConstructorFromTrackGroup();\n\t\telse if( constructor_type == 6 ) \n\t\t\tNALUStartInlineConstructor ();\n\t}\n}",
-      "syntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\n\tunsigned int(32) num_entries;\n\tfor (i=1; i<= num_entries; i++) { \n\t\tunsigned int(8) constructor_type;\n\t\tunsigned int(8) constructor_flags; \n\t\tif( constructor_type == 0 ) \n\t\t\tSampleConstructor();\n\t\telse if( constructor_type == 2 ) \n\t\t\tInlineConstructor();\n\t\telse if( constructor_type == 3 ) \n\t\t\tSampleConstructorFromTrackGroup();\n\t\telse if( constructor_type == 6 ) \n\t\t\tNALUStartInlineConstructor ();\n\t}\n}"
+      "originalSyntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\r\n\tunsigned int(32) num_entries;\r\n\tfor (i=1; i<= num_entries; i++) { \r\n\t\tunsigned int(8) constructor_type;\r\n\t\tunsigned int(8) flags; \r\n\t\tif( constructor_type == 0 ) \r\n\t\t\tSampleConstructor();\r\n\t\telse if( constructor_type == 2 ) \r\n\t\t\tInlineConstructor();\r\n\t\telse if( constructor_type == 3 ) \r\n\t\t\tSampleConstructorFromTrackGroup();\r\n\t\telse if( constructor_type == 6 ) \r\n\t\t\tNALUStartInlineConstructor ();\r\n\t}\r\n}",
+      "syntax": "class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){\r\n\tunsigned int(32) num_entries;\r\n\tfor (i=1; i<= num_entries; i++) { \r\n\t\tunsigned int(8) constructor_type;\r\n\t\tunsigned int(8) constructor_flags; \r\n\t\tif( constructor_type == 0 ) \r\n\t\t\tSampleConstructor();\r\n\t\telse if( constructor_type == 2 ) \r\n\t\t\tInlineConstructor();\r\n\t\telse if( constructor_type == 3 ) \r\n\t\t\tSampleConstructorFromTrackGroup();\r\n\t\telse if( constructor_type == 6 ) \r\n\t\t\tNALUStartInlineConstructor ();\r\n\t}\r\n}"
     },
     {
       "fourcc": "svmC",
@@ -594,7 +594,7 @@
         }
       ],
       "type": "FullBox",
-      "syntax": "class SVCMetadataSampleConfigBox extends FullBox('svmC')\n{\n\tint i;\t\t// local variable, not a field\n\tunsigned int(8) sample_statement_type;\t/* normally group, or seq */\n\tunsigned int(8) default_statement_type;\n\tunsigned int(8) default_statement_length;\n\tunsigned int(8) entry_count;\n\tfor (i=1; i<=entry_count; i++) {\n\t\tunsigned int(8) statement_type;\t// from the user extension ranges\n\t\tstring statement_namespace;\n\t}\n}"
+      "syntax": "class SVCMetadataSampleConfigBox extends FullBox('svmC')\r\n{\r\n\tint i;\t\t// local variable, not a field\r\n\tunsigned int(8) sample_statement_type;\t/* normally group, or seq */\r\n\tunsigned int(8) default_statement_type;\r\n\tunsigned int(8) default_statement_length;\r\n\tunsigned int(8) entry_count;\r\n\tfor (i=1; i<=entry_count; i++) {\r\n\t\tunsigned int(8) statement_type;\t// from the user extension ranges\r\n\t\tstring statement_namespace;\r\n\t}\r\n}"
     },
     {
       "fourcc": "evsC",
@@ -605,7 +605,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class EVCSliceComponentTrackConfigurationBox extends Box('evsC') {\n\tEVCSliceComponentTrackConfigurationRecord() config;\n}"
+      "syntax": "class EVCSliceComponentTrackConfigurationBox extends Box('evsC') {\r\n\tEVCSliceComponentTrackConfigurationRecord() config;\r\n}"
     }
   ]
 }

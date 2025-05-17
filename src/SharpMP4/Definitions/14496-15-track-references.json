@@ -7,112 +7,112 @@
       "description": "AVC parameter set stream link",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "deps",
       "description": "track containing the depth view",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "evcr",
       "description": "EVC slice base track",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "mixn",
       "description": "used in indicating combinations that result into mixed network abstraction layer unit types in a coded picture of VVC",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "oref",
       "description": "track that contains an 'oref' sample group",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "recr",
       "description": "resolved by extracting an indicated subset of the referenced VVC track to reconstruct a VVC bitstream",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "sabt",
       "description": "HEVC Tile Track",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "sbas",
       "description": "Scalable base",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "scal",
       "description": "Scalable extraction",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "subp",
       "description": "the referenced VVC subpicture tracks or 'alte' track groups of VVC subpicture tracks are used to reconstruct a VVC bitstream",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "swfr",
       "description": "AVC Switch from",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "swto",
       "description": "AVC Switch to",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "tbas",
       "description": "HEVC Tile track base",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "vref",
       "description": "reference to a track that contains a 'vopi' sample group for VVC video",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "vreg",
       "description": "reference to a VVC operating point entity group",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     },
     {
       "fourcc": "vvcN",
       "description": "the referenced track is a non video coding layer track of VVC",
       "containers": [ "tref" ],
       "type": "TrackReferenceTypeBox",
-      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\n\tunsigned int(32) track_IDs[];\n}"
+      "syntax": "aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends Box(reference_type) {\r\n\tunsigned int(32) track_IDs[];\r\n}"
     }
   ]
 }

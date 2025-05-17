@@ -9,7 +9,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "ster",
@@ -18,7 +18,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "aebr",
@@ -27,7 +27,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "afbr",
@@ -36,7 +36,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "albc",
@@ -45,7 +45,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "brst",
@@ -54,7 +54,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "iaug",
@@ -63,7 +63,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "tsyn",
@@ -72,7 +72,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "dobr",
@@ -81,7 +81,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "favc",
@@ -90,7 +90,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "fobr",
@@ -99,7 +99,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "pano",
@@ -108,7 +108,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     },
     {
       "fourcc": "wbbr",
@@ -117,7 +117,7 @@
       "flags": [],
       "containers": [ "grpl" ],
       "type": "EntityToGroupBox",
-      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\nextends FullBox(grouping_type, version, flags) {\n\tunsigned int(32) group_id;\n\tunsigned int(32) num_entities_in_group;\n\tfor(i=0; i<num_entities_in_group; i++)\n\t\tunsigned int(32) entity_id;\n// the remaining data may be specified for a particular grouping_type\n}"
+      "syntax": "aligned(8) class EntityToGroupBox(grouping_type, version, flags)\r\nextends FullBox(grouping_type, version, flags) {\r\n\tunsigned int(32) group_id;\r\n\tunsigned int(32) num_entities_in_group;\r\n\tfor(i=0; i<num_entities_in_group; i++)\r\n\t\tunsigned int(32) entity_id;\r\n// the remaining data may be specified for a particular grouping_type\r\n}"
     }
   ]
 }

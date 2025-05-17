@@ -11,7 +11,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class ReceivedSsrcBox extends Box('rssr') {\n\tunsigned int(32)\tSSRC\n}"
+      "syntax": "class ReceivedSsrcBox extends Box('rssr') {\r\n\tunsigned int(32)\tSSRC\r\n}"
     },
     {
       "fourcc": "tssy",
@@ -22,7 +22,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class TimestampSynchrony() extends Box('tssy') {\n\tunsigned int(6) reserved;\n\tunsigned int(2) timestamp_sync;\n}"
+      "syntax": "class TimestampSynchrony() extends Box('tssy') {\r\n\tunsigned int(6) reserved;\r\n\tunsigned int(2) timestamp_sync;\r\n}"
     },
     {
       "fourcc": "tims",
@@ -42,7 +42,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\r\n\tuint(32)\ttimescale;\r\n}\r\n\r\nclass TimeOffset() extends Box('tsro') {\r\n\tint(32)\t\toffset;\r\n}\r\n\r\nclass SequenceOffset() extends Box('snro') {\r\n\tint(32)\t\toffset;\r\n}"
     },
     {
       "fourcc": "tsro",
@@ -59,7 +59,7 @@
           "ReceivedRtpHintSampleEntry": [ "rrtp" ]
         }
       ],
-      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\r\n\tuint(32)\ttimescale;\r\n}\r\n\r\nclass TimeOffset() extends Box('tsro') {\r\n\tint(32)\t\toffset;\r\n}\r\n\r\nclass SequenceOffset() extends Box('snro') {\r\n\tint(32)\t\toffset;\r\n}"
     },
     {
       "fourcc": "snro",
@@ -73,112 +73,112 @@
           "SrtpHintSampleEntry": [ "srtp" ]
         }
       ],
-      "syntax": "class TimeScaleEntry() extends Box('tims') {\n\tuint(32)\ttimescale;\n}\n\nclass TimeOffset() extends Box('tsro') {\n\tint(32)\t\toffset;\n}\n\nclass SequenceOffset() extends Box('snro') {\n\tint(32)\t\toffset;\n}"
+      "syntax": "class TimeScaleEntry() extends Box('tims') {\r\n\tuint(32)\ttimescale;\r\n}\r\n\r\nclass TimeOffset() extends Box('tsro') {\r\n\tint(32)\t\toffset;\r\n}\r\n\r\nclass SequenceOffset() extends Box('snro') {\r\n\tint(32)\t\toffset;\r\n}"
     },
     {
       "fourcc": "trpy",
       "description": "total bytes sent, including 12-byte RTP headers",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\r\naligned(8) class hintPacketsSent extends Box('nump') {\r\n\tuint(64)\tpacketssent; }\t// total packets sent\r\naligned(8) class HintBytesSent extends Box('tpyl') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "nump",
       "description": "total packets sent",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\r\naligned(8) class hintPacketsSent extends Box('nump') {\r\n\tuint(64)\tpacketssent; }\t// total packets sent\r\naligned(8) class HintBytesSent extends Box('tpyl') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "tpyl",
       "description": "total bytes sent, not including RTP headers",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('nump') {\n\tuint(64)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpyl') {\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('trpy') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\r\naligned(8) class hintPacketsSent extends Box('nump') {\r\n\tuint(64)\tpacketssent; }\t// total packets sent\r\naligned(8) class HintBytesSent extends Box('tpyl') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "totl",
       "description": "total bytes sent, including 12-byte RTP headers",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\r\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\r\naligned(8) class hintPacketsSent extends Box('npck') {\r\n\tuint(32)\tpacketssent; }\t// total packets sent\r\naligned(8) class HintBytesSent extends Box('tpay') {\r\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "npck",
       "description": "total packets sent",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\r\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\r\naligned(8) class hintPacketsSent extends Box('npck') {\r\n\tuint(32)\tpacketssent; }\t// total packets sent\r\naligned(8) class HintBytesSent extends Box('tpay') {\r\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "tpay",
       "description": "total bytes sent, not including RTP headers",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\naligned(8) class hintPacketsSent extends Box('npck') {\n\tuint(32)\tpacketssent; }\t// total packets sent\naligned(8) class HintBytesSent extends Box('tpay') {\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
+      "syntax": "aligned(8) class HintBytesSent extends Box('totl') {\r\n\tuint(32)\tbytessent; }\t// total bytes sent, including 12-byte RTP headers\r\naligned(8) class hintPacketsSent extends Box('npck') {\r\n\tuint(32)\tpacketssent; }\t// total packets sent\r\naligned(8) class HintBytesSent extends Box('tpay') {\r\n\tuint(32)\tbytessent; }\t// total bytes sent, not including RTP headers"
     },
     {
       "fourcc": "maxr",
       "description": "maximum data rate",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintMaxRate extends Box('maxr') {\t// maximum data rate\n\tuint(32)\tperiod;\t\t\t// in milliseconds\n\tuint(32)\tbytes; }\t\t\t// max bytes sent in any period 'period' long including RTP headers"
+      "syntax": "aligned(8) class HintMaxRate extends Box('maxr') {\t// maximum data rate\r\n\tuint(32)\tperiod;\t\t\t// in milliseconds\r\n\tuint(32)\tbytes; }\t\t\t// max bytes sent in any period 'period' long including RTP headers"
     },
     {
       "fourcc": "dmed",
       "description": "total bytes sent from media tracks",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintmediaBytesSent extends Box('dmed') {\n\tuint(64)\tbytessent; }\t// total bytes sent from media tracks\naligned(8) class hintimmediateBytesSent extends Box('dimm') {\n\tuint(64)\tbytessent; }\t// total bytes sent immediate mode\naligned(8) class hintrepeatedBytesSent extends Box('drep') {\n\tuint(64)\tbytessent; }\t// total bytes in repeated packets"
+      "syntax": "aligned(8) class hintmediaBytesSent extends Box('dmed') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent from media tracks\r\naligned(8) class hintimmediateBytesSent extends Box('dimm') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent immediate mode\r\naligned(8) class hintrepeatedBytesSent extends Box('drep') {\r\n\tuint(64)\tbytessent; }\t// total bytes in repeated packets"
     },
     {
       "fourcc": "dimm",
       "description": "total bytes sent immediate mode",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintmediaBytesSent extends Box('dmed') {\n\tuint(64)\tbytessent; }\t// total bytes sent from media tracks\naligned(8) class hintimmediateBytesSent extends Box('dimm') {\n\tuint(64)\tbytessent; }\t// total bytes sent immediate mode\naligned(8) class hintrepeatedBytesSent extends Box('drep') {\n\tuint(64)\tbytessent; }\t// total bytes in repeated packets"
+      "syntax": "aligned(8) class hintmediaBytesSent extends Box('dmed') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent from media tracks\r\naligned(8) class hintimmediateBytesSent extends Box('dimm') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent immediate mode\r\naligned(8) class hintrepeatedBytesSent extends Box('drep') {\r\n\tuint(64)\tbytessent; }\t// total bytes in repeated packets"
     },
     {
       "fourcc": "drep",
       "description": "total bytes in repeated packets",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class hintmediaBytesSent extends Box('dmed') {\n\tuint(64)\tbytessent; }\t// total bytes sent from media tracks\naligned(8) class hintimmediateBytesSent extends Box('dimm') {\n\tuint(64)\tbytessent; }\t// total bytes sent immediate mode\naligned(8) class hintrepeatedBytesSent extends Box('drep') {\n\tuint(64)\tbytessent; }\t// total bytes in repeated packets"
+      "syntax": "aligned(8) class hintmediaBytesSent extends Box('dmed') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent from media tracks\r\naligned(8) class hintimmediateBytesSent extends Box('dimm') {\r\n\tuint(64)\tbytessent; }\t// total bytes sent immediate mode\r\naligned(8) class hintrepeatedBytesSent extends Box('drep') {\r\n\tuint(64)\tbytessent; }\t// total bytes in repeated packets"
     },
     {
       "fourcc": "tmin",
       "description": "smallest relative transmission time, milliseconds",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintMinRelativeTime extends Box('tmin') {\n\tint(32)\t\ttime; }\t\t// smallest relative transmission time, milliseconds\naligned(8) class HintMaxRelativeTime extends Box('tmax') {\n\tint(32)\t\ttime; }\t\t// largest relative transmission time, milliseconds"
+      "syntax": "aligned(8) class HintMinRelativeTime extends Box('tmin') {\r\n\tint(32)\t\ttime; }\t\t// smallest relative transmission time, milliseconds\r\naligned(8) class HintMaxRelativeTime extends Box('tmax') {\r\n\tint(32)\t\ttime; }\t\t// largest relative transmission time, milliseconds"
     },
     {
       "fourcc": "tmax",
       "description": "largest relative transmission time, milliseconds",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintMinRelativeTime extends Box('tmin') {\n\tint(32)\t\ttime; }\t\t// smallest relative transmission time, milliseconds\naligned(8) class HintMaxRelativeTime extends Box('tmax') {\n\tint(32)\t\ttime; }\t\t// largest relative transmission time, milliseconds"
+      "syntax": "aligned(8) class HintMinRelativeTime extends Box('tmin') {\r\n\tint(32)\t\ttime; }\t\t// smallest relative transmission time, milliseconds\r\naligned(8) class HintMaxRelativeTime extends Box('tmax') {\r\n\tint(32)\t\ttime; }\t\t// largest relative transmission time, milliseconds"
     },
     {
       "fourcc": "pmax",
       "description": "largest packet sent, including RTP header",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintLargestPacket extends Box('pmax') {\n\tuint(32)\tbytes; }\t\t\t// largest packet sent, including RTP header\naligned(8) class HintLongestPacket extends Box('dmax') {\n\tuint(32)\ttime; }\t\t\t// longest packet duration, milliseconds"
+      "syntax": "aligned(8) class HintLargestPacket extends Box('pmax') {\r\n\tuint(32)\tbytes; }\t\t\t// largest packet sent, including RTP header\r\naligned(8) class HintLongestPacket extends Box('dmax') {\r\n\tuint(32)\ttime; }\t\t\t// longest packet duration, milliseconds"
     },
     {
       "fourcc": "dmax",
       "description": "longest packet duration, milliseconds",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintLargestPacket extends Box('pmax') {\n\tuint(32)\tbytes; }\t\t\t// largest packet sent, including RTP header\naligned(8) class HintLongestPacket extends Box('dmax') {\n\tuint(32)\ttime; }\t\t\t// longest packet duration, milliseconds"
+      "syntax": "aligned(8) class HintLargestPacket extends Box('pmax') {\r\n\tuint(32)\tbytes; }\t\t\t// largest packet sent, including RTP header\r\naligned(8) class HintLongestPacket extends Box('dmax') {\r\n\tuint(32)\ttime; }\t\t\t// longest packet duration, milliseconds"
     },
     {
       "fourcc": "payt",
       "description": "payload ID used in RTP packets",
       "type": "Box",
       "containers": [ "hinf" ],
-      "syntax": "aligned(8) class HintPayloadID extends Box('payt') {\n\tuint(32)\tpayloadID;\t\t// payload ID used in RTP packets\n\tuint(8)\t\tcount;\n\tchar\t\trtpmap_string[count]; }"
+      "syntax": "aligned(8) class HintPayloadID extends Box('payt') {\r\n\tuint(32)\tpayloadID;\t\t// payload ID used in RTP packets\r\n\tuint(8)\t\tcount;\r\n\tchar\t\trtpmap_string[count]; }"
     },
     {
       "fourcc": "stvi",
@@ -187,7 +187,7 @@
       "containers": [ "schi" ],
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class StereoVideoBox extends FullBox('stvi', version = 0, 0)\n{\n\ttemplate unsigned int(30) reserved = 0;\n\tunsigned int(2)\tsingle_view_allowed;\n\tunsigned int(32)\tstereo_scheme;\n\tunsigned int(32)\tlength;\n\tunsigned int(8)[length]\tstereo_indication_type;\n\tBox[] any_box; // optional\n}"
+      "syntax": "aligned(8) class StereoVideoBox extends FullBox('stvi', version = 0, 0)\r\n{\r\n\ttemplate unsigned int(30) reserved = 0;\r\n\tunsigned int(2)\tsingle_view_allowed;\r\n\tunsigned int(32)\tstereo_scheme;\r\n\tunsigned int(32)\tlength;\r\n\tunsigned int(8)[length]\tstereo_indication_type;\r\n\tBox[] any_box; // optional\r\n}"
     },
     {
       "fourcc": "elng",
@@ -196,63 +196,63 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class ExtendedLanguageBox extends FullBox('elng', 0, 0) {\n\tutf8string\textended_language;\n}"
+      "syntax": "aligned(8) class ExtendedLanguageBox extends FullBox('elng', 0, 0) {\r\n\tutf8string\textended_language;\r\n}"
     },
     {
       "fourcc": "btrt",
       "description": "Bit-rate information",
       "containers": [ "SampleEntry" ],
       "type": "Box",
-      "syntax": "class BitRateBox extends Box('btrt'){\n\tunsigned int(32) bufferSizeDB;\n\tunsigned int(32) maxBitrate;\n\tunsigned int(32) avgBitrate;\n}"
+      "syntax": "class BitRateBox extends Box('btrt'){\r\n\tunsigned int(32) bufferSizeDB;\r\n\tunsigned int(32) maxBitrate;\r\n\tunsigned int(32) avgBitrate;\r\n}"
     },
     {
       "fourcc": "pasp",
       "description": "Pixel aspect ratio",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "class PixelAspectRatioBox extends Box('pasp'){\n\tunsigned int(32) hSpacing;\n\tunsigned int(32) vSpacing;\n}"
+      "syntax": "class PixelAspectRatioBox extends Box('pasp'){\r\n\tunsigned int(32) hSpacing;\r\n\tunsigned int(32) vSpacing;\r\n}"
     },
     {
       "fourcc": "clap",
       "description": "Clean aperture",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "class CleanApertureBox extends Box('clap'){\n\tunsigned int(32) cleanApertureWidthN;\n\tunsigned int(32) cleanApertureWidthD;\n\n\tunsigned int(32) cleanApertureHeightN;\n\tunsigned int(32) cleanApertureHeightD;\n\n\n\tunsigned int(32) horizOffN;\n\tunsigned int(32) horizOffD;\n\n\n\tunsigned int(32) vertOffN;\n\tunsigned int(32) vertOffD;\n\n}"
+      "syntax": "class CleanApertureBox extends Box('clap'){\r\n\tunsigned int(32) cleanApertureWidthN;\r\n\tunsigned int(32) cleanApertureWidthD;\r\n\r\n\tunsigned int(32) cleanApertureHeightN;\r\n\tunsigned int(32) cleanApertureHeightD;\r\n\r\n\r\n\tunsigned int(32) horizOffN;\r\n\tunsigned int(32) horizOffD;\r\n\r\n\r\n\tunsigned int(32) vertOffN;\r\n\tunsigned int(32) vertOffD;\r\n\r\n}"
     },
     {
       "fourcc": "cclv",
       "description": "Content colour volume",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "class ContentColourVolumeBox extends Box('cclv'){\n\tunsigned int(1) reserved1 = 0;\t// ccv_cancel_flag\n\tunsigned int(1) reserved2 = 0;\t// ccv_persistence_flag\n\tunsigned int(1) ccv_primaries_present_flag;\n\tunsigned int(1) ccv_min_luminance_value_present_flag;\n\tunsigned int(1) ccv_max_luminance_value_present_flag;\n\tunsigned int(1) ccv_avg_luminance_value_present_flag;\n\tunsigned int(2) ccv_reserved_zero_2bits = 0;\n\tif( ccv_primaries_present_flag ) {\n\t\tfor( c = 0; c < 3; c++ ) {\n\t\t\tsigned int(32) ccv_primaries_x[ c ];\n\t\t\tsigned int(32) ccv_primaries_y[ c ];\n\t\t}\n\t}\n\tif( ccv_min_luminance_value_present_flag )\n\t\tunsigned int(32) ccv_min_luminance_value;\n\tif( ccv_max_luminance_value_present_flag )\n \t\tunsigned int(32) ccv_max_luminance_value;\n\tif( ccv_avg_luminance_value_present_flag )\n \t\tunsigned int(32) ccv_avg_luminance_value;\n}"
+      "syntax": "class ContentColourVolumeBox extends Box('cclv'){\r\n\tunsigned int(1) reserved1 = 0;\t// ccv_cancel_flag\r\n\tunsigned int(1) reserved2 = 0;\t// ccv_persistence_flag\r\n\tunsigned int(1) ccv_primaries_present_flag;\r\n\tunsigned int(1) ccv_min_luminance_value_present_flag;\r\n\tunsigned int(1) ccv_max_luminance_value_present_flag;\r\n\tunsigned int(1) ccv_avg_luminance_value_present_flag;\r\n\tunsigned int(2) ccv_reserved_zero_2bits = 0;\r\n\tif( ccv_primaries_present_flag ) {\r\n\t\tfor( c = 0; c < 3; c++ ) {\r\n\t\t\tsigned int(32) ccv_primaries_x[ c ];\r\n\t\t\tsigned int(32) ccv_primaries_y[ c ];\r\n\t\t}\r\n\t}\r\n\tif( ccv_min_luminance_value_present_flag )\r\n\t\tunsigned int(32) ccv_min_luminance_value;\r\n\tif( ccv_max_luminance_value_present_flag )\r\n \t\tunsigned int(32) ccv_max_luminance_value;\r\n\tif( ccv_avg_luminance_value_present_flag )\r\n \t\tunsigned int(32) ccv_avg_luminance_value;\r\n}"
     },
     {
       "fourcc": "colr",
       "description": "Color information",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "class ColourInformationBox extends Box('colr'){\n\tunsigned int(32) colour_type;\n\tif (colour_type == 'nclx' || colour_type == 'nclc')\t/* on-screen colours */\n\t{\n\t\tunsigned int(16) colour_primaries;\n\t\tunsigned int(16) transfer_characteristics;\n\t\tunsigned int(16) matrix_coefficients;\n \t\tif(colour_type == 'nclx') {\n \t\t\tunsigned int(1)  full_range_flag;\n\t\tunsigned int(7)  reserved = 0;\n\t\t}\n\t}\n\telse if (colour_type == 'rICC')\n\t{\n\t\tICC_profile;\t// restricted ICC profile\n\t}\n\telse if (colour_type == 'prof')\n\t{\n\t\tICC_profile;\t// unrestricted ICC profile\n\t}\n}"
+      "syntax": "class ColourInformationBox extends Box('colr'){\r\n\tunsigned int(32) colour_type;\r\n\tif (colour_type == 'nclx' || colour_type == 'nclc')\t/* on-screen colours */\r\n\t{\r\n\t\tunsigned int(16) colour_primaries;\r\n\t\tunsigned int(16) transfer_characteristics;\r\n\t\tunsigned int(16) matrix_coefficients;\r\n \t\tif(colour_type == 'nclx') {\r\n \t\t\tunsigned int(1)  full_range_flag;\r\n\t\tunsigned int(7)  reserved = 0;\r\n\t\t}\r\n\t}\r\n\telse if (colour_type == 'rICC')\r\n\t{\r\n\t\tICC_profile;\t// restricted ICC profile\r\n\t}\r\n\telse if (colour_type == 'prof')\r\n\t{\r\n\t\tICC_profile;\t// unrestricted ICC profile\r\n\t}\r\n}"
     },
     {
       "fourcc": "clli",
       "description": "Content Light Level",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "class ContentLightLevelBox extends Box('clli'){\n\tunsigned int(16) max_content_light_level;\n\tunsigned int(16) max_pic_average_light_level;\n}"
+      "syntax": "class ContentLightLevelBox extends Box('clli'){\r\n\tunsigned int(16) max_content_light_level;\r\n\tunsigned int(16) max_pic_average_light_level;\r\n}"
     },
     {
       "fourcc": "mdcv",
       "description": "Mastering display colour volume",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "class MasteringDisplayColourVolumeBox extends Box('mdcv'){\n\tfor (c = 0; c<3; c++) {\n\t\tunsigned int(16) display_primaries_x;\n\t\tunsigned int(16) display_primaries_y;\n\t}\n\tunsigned int(16) white_point_x;\n\tunsigned int(16) white_point_y;\n\tunsigned int(32) max_display_mastering_luminance;\n\tunsigned int(32) min_display_mastering_luminance;\n}"
+      "syntax": "class MasteringDisplayColourVolumeBox extends Box('mdcv'){\r\n\tfor (c = 0; c<3; c++) {\r\n\t\tunsigned int(16) display_primaries_x;\r\n\t\tunsigned int(16) display_primaries_y;\r\n\t}\r\n\tunsigned int(16) white_point_x;\r\n\tunsigned int(16) white_point_y;\r\n\tunsigned int(32) max_display_mastering_luminance;\r\n\tunsigned int(32) min_display_mastering_luminance;\r\n}"
     },
     {
       "fourcc": "scrb",
       "description": "Scramble scheme information",
       "containers": [ "SampleEntry", "ipco" ],
       "type": "Box",
-      "syntax": "aligned(8) class ScrambleSchemeInfoBox extends Box('scrb') {\n\tSchemeTypeBox scheme_type_box;\n\tSchemeInformationBox info; // optional\n}"
+      "syntax": "aligned(8) class ScrambleSchemeInfoBox extends Box('scrb') {\r\n\tSchemeTypeBox scheme_type_box;\r\n\tSchemeInformationBox info; // optional\r\n}"
     },
     {
       "fourcc": "chnl",
@@ -261,7 +261,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {\tif (version==0) {\n\t\tunsigned int(8) stream_structure;\n\t\tif (stream_structure & channelStructured) {\n\t\t\tunsigned int(8) definedLayout;\n \t\t\tif (definedLayout==0) {\n\t\t\t\tfor (i = 1 ; i <= layout_channel_count ; i++) {\n\t\t\t\t\t//  layout_channel_count comes from the sample entry\n\t\t\t\t\tunsigned int(8) speaker_position;\n\t\t\t\t\tif (speaker_position == 126) {\t// explicit position\n\t\t\t\t\t\tsigned int (16) azimuth;\n\t\t\t\t\t\tsigned int (8)  elevation;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\tunsigned int(64)\tomittedChannelsMap; \n\t\t\t\t\t\t// a \u20181\u2019 bit indicates \u2018not in this track\u2019\n\t\t\t}\n\t\t}\n\t\tif (stream_structure & objectStructured) {\n\t\t\tunsigned int(8) object_count;\n\t\t}\n\t} else {\n\t\tunsigned int(4) stream_structure;\n\t\tunsigned int(4) format_ordering;\n\t\tunsigned int(8) baseChannelCount;\n\t\tif (stream_structure & channelStructured) {\n\t\t\tunsigned int(8) definedLayout;\n\t\t\tif (definedLayout==0) {\n\t\t\t\tunsigned int(8) layout_channel_count;\n\t\t\t\tfor (i = 1 ; i <= layout_channel_count ; i++) {\n\t\t\t\t\tunsigned int(8) speaker_position;\n\t\t\t\t\tif (speaker_position == 126) {\t// explicit position\n\t\t\t\t\t\tsigned int (16) azimuth;\n\t\t\t\t\t\tsigned int (8)  elevation;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t} else {\n\t\t\t\tint(4) reserved = 0;\n\t\t\t\tunsigned int(3) channel_order_definition;\n\t\t\t\tunsigned int(1) omitted_channels_present;\n\t\t\t\tif (omitted_channels_present == 1) {\n\t\t\t\t\tunsigned int(64)\tomittedChannelsMap; \n\t\t\t\t\t\t\t// a \u20181\u2019 bit indicates \u2018not in this track\u2019\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t\tif (stream_structure & objectStructured) {\n\t\t\t\t\t\t\t// object_count is derived from baseChannelCount\n\t\t}\n\t}\n}\n"
+      "syntax": "aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {\tif (version==0) {\r\n\t\tunsigned int(8) stream_structure;\r\n\t\tif (stream_structure & channelStructured) {\r\n\t\t\tunsigned int(8) definedLayout;\r\n \t\t\tif (definedLayout==0) {\r\n\t\t\t\tfor (i = 1 ; i <= layout_channel_count ; i++) {\r\n\t\t\t\t\t//  layout_channel_count comes from the sample entry\r\n\t\t\t\t\tunsigned int(8) speaker_position;\r\n\t\t\t\t\tif (speaker_position == 126) {\t// explicit position\r\n\t\t\t\t\t\tsigned int (16) azimuth;\r\n\t\t\t\t\t\tsigned int (8)  elevation;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t} else {\r\n\t\t\t\tunsigned int(64)\tomittedChannelsMap; \r\n\t\t\t\t\t\t// a \u20181\u2019 bit indicates \u2018not in this track\u2019\r\n\t\t\t}\r\n\t\t}\r\n\t\tif (stream_structure & objectStructured) {\r\n\t\t\tunsigned int(8) object_count;\r\n\t\t}\r\n\t} else {\r\n\t\tunsigned int(4) stream_structure;\r\n\t\tunsigned int(4) format_ordering;\r\n\t\tunsigned int(8) baseChannelCount;\r\n\t\tif (stream_structure & channelStructured) {\r\n\t\t\tunsigned int(8) definedLayout;\r\n\t\t\tif (definedLayout==0) {\r\n\t\t\t\tunsigned int(8) layout_channel_count;\r\n\t\t\t\tfor (i = 1 ; i <= layout_channel_count ; i++) {\r\n\t\t\t\t\tunsigned int(8) speaker_position;\r\n\t\t\t\t\tif (speaker_position == 126) {\t// explicit position\r\n\t\t\t\t\t\tsigned int (16) azimuth;\r\n\t\t\t\t\t\tsigned int (8)  elevation;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t} else {\r\n\t\t\t\tint(4) reserved = 0;\r\n\t\t\t\tunsigned int(3) channel_order_definition;\r\n\t\t\t\tunsigned int(1) omitted_channels_present;\r\n\t\t\t\tif (omitted_channels_present == 1) {\r\n\t\t\t\t\tunsigned int(64)\tomittedChannelsMap; \r\n\t\t\t\t\t\t\t// a \u20181\u2019 bit indicates \u2018not in this track\u2019\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t\tif (stream_structure & objectStructured) {\r\n\t\t\t\t\t\t\t// object_count is derived from baseChannelCount\r\n\t\t}\r\n\t}\r\n}\r\n"
     },
     {
       "fourcc": "dmix",
@@ -270,7 +270,7 @@
       "type": "FullBox",
       "versions": [ 0, 1, 2 ],
       "flags": [],
-      "syntax": "aligned(8) class DownMixInstructions extends FullBox('dmix', version, flags=0) {\n\tif (version >= 1) {\n\t\tbit(1) reserved = 0;\n\t\tbit(7) downmix_instructions_count;\n\t} else {\n\t\tint downmix_instructions_count = 1;\n\t}\n\tfor (a=1; a<=downmix_instructions_count; a++) { \n\t\tunsigned int(8) targetLayout;\n \t\tunsigned int(1) reserved = 0;\n\t\tunsigned int(7) targetChannelCount;\n\t\tbit(1) in_stream; \n\t\tunsigned int(7) downmix_ID;\n\t\tif (in_stream==0) \n\t\t{\t// downmix coefficients are out of stream and supplied here\n\t\t\tint i, j;\n\t\t\tif (version >= 1) {\n\t\t\t\tbit(4) bs_downmix_offset;\n\t\t\t\tint size = 4;\n\t\t\t\tfor (i=1; i <= targetChannelCount; i++){\n\t\t\t\t\tfor (j=1; j <= baseChannelCount; j++) {\n\t\t\t\t\t\tbit(5) bs_downmix_coefficient_v1;\n\t\t\t\t\t\tsize += 5;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t\tbit(8 ceil(size / 8) \u2013 size) reserved = 0; // byte align\n\t\t\t} else {\n\t\t\t\tfor (i=1; i <= targetChannelCount; i++){\n\t\t\t\t\tfor (j=1; j <= baseChannelCount; j++) {\n\t\t\t\t\t\tbit(4) bs_downmix_coefficient;\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class DownMixInstructions extends FullBox('dmix', version, flags=0) {\r\n\tif (version >= 1) {\r\n\t\tbit(1) reserved = 0;\r\n\t\tbit(7) downmix_instructions_count;\r\n\t} else {\r\n\t\tint downmix_instructions_count = 1;\r\n\t}\r\n\tfor (a=1; a<=downmix_instructions_count; a++) { \r\n\t\tunsigned int(8) targetLayout;\r\n \t\tunsigned int(1) reserved = 0;\r\n\t\tunsigned int(7) targetChannelCount;\r\n\t\tbit(1) in_stream; \r\n\t\tunsigned int(7) downmix_ID;\r\n\t\tif (in_stream==0) \r\n\t\t{\t// downmix coefficients are out of stream and supplied here\r\n\t\t\tint i, j;\r\n\t\t\tif (version >= 1) {\r\n\t\t\t\tbit(4) bs_downmix_offset;\r\n\t\t\t\tint size = 4;\r\n\t\t\t\tfor (i=1; i <= targetChannelCount; i++){\r\n\t\t\t\t\tfor (j=1; j <= baseChannelCount; j++) {\r\n\t\t\t\t\t\tbit(5) bs_downmix_coefficient_v1;\r\n\t\t\t\t\t\tsize += 5;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t\tbit(8 ceil(size / 8) \u2013 size) reserved = 0; // byte align\r\n\t\t\t} else {\r\n\t\t\t\tfor (i=1; i <= targetChannelCount; i++){\r\n\t\t\t\t\tfor (j=1; j <= baseChannelCount; j++) {\r\n\t\t\t\t\t\tbit(4) bs_downmix_coefficient;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "srat",
@@ -279,7 +279,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SamplingRateBox extends FullBox('srat') {\n\tunsigned int(32) sampling_rate;\n}"
+      "syntax": "aligned(8) class SamplingRateBox extends FullBox('srat') {\r\n\tunsigned int(32) sampling_rate;\r\n}"
     },
     {
       "fourcc": "txtC",
@@ -298,7 +298,7 @@
         }
       ],
       "type": "FullBox",
-      "syntax": "class TextConfigBox() extends FullBox ('txtC', 0, 0) {\n\tutf8string text_config;\n}"
+      "syntax": "class TextConfigBox() extends FullBox ('txtC', 0, 0) {\r\n\tutf8string text_config;\r\n}"
     },
     {
       "fourcc": "uriI",
@@ -311,7 +311,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class URIInitBox\n\t\textends FullBox('uriI', version = 0, 0) {\n\tunsigned int(8) uri_initialization_data[];\n}"
+      "syntax": "aligned(8) class URIInitBox\r\n\t\textends FullBox('uriI', version = 0, 0) {\r\n\tunsigned int(8) uri_initialization_data[];\r\n}"
     },
     {
       "fourcc": "cprt",
@@ -320,7 +320,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class CopyrightBox\n\textends FullBox('cprt', version = 0, 0) {\n\tconst bit(1) pad = 0;\n\tunsigned int(5)[3] language; // ISO-639-2/T language code\n\tutfstring notice;\n}"
+      "syntax": "aligned(8) class CopyrightBox\r\n\textends FullBox('cprt', version = 0, 0) {\r\n\tconst bit(1) pad = 0;\r\n\tunsigned int(5)[3] language; // ISO-639-2/T language code\r\n\tutfstring notice;\r\n}"
     },
     {
       "fourcc": "kind",
@@ -329,7 +329,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class KindBox extends FullBox('kind', version = 0, 0) {\n\tutf8string schemeURI;\n\tutf8string value;\n}"
+      "syntax": "aligned(8) class KindBox extends FullBox('kind', version = 0, 0) {\r\n\tutf8string schemeURI;\r\n\tutf8string value;\r\n}"
     },
     {
       "fourcc": "tsel",
@@ -338,49 +338,49 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class TrackSelectionBox\n\textends FullBox('tsel', version = 0, 0) {\n\ttemplate int(32) switch_group = 0;\n\tunsigned int(32) attribute_list[];\t\t// to end of the box\n}"
+      "syntax": "aligned(8) class TrackSelectionBox\r\n\textends FullBox('tsel', version = 0, 0) {\r\n\ttemplate int(32) switch_group = 0;\r\n\tunsigned int(32) attribute_list[];\t\t// to end of the box\r\n}"
     },
     {
       "fourcc": "strk",
       "description": "Sub track information",
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class SubTrackBox extends Box('strk') {\n}"
+      "syntax": "aligned(8) class SubTrackBox extends Box('strk') {\r\n}"
     },
     {
       "fourcc": "hnti",
       "description": "Hint information",
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackHintInformation extends Box('hnti') {\n}\n\naligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {\n\tchar\tsdptext[];\n}"
+      "syntax": "aligned(8) class TrackHintInformation extends Box('hnti') {\r\n}\r\n\r\naligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {\r\n\tchar\tsdptext[];\r\n}"
     },
     {
       "fourcc": "sdp ",
       "description": "SDP information",
       "type": "Box",
       "containers": [ "hnti" ],
-      "syntax": "aligned(8) class TrackHintInformation extends Box('hnti') {\n}\n\naligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {\n\tchar\tsdptext[];\n}"
+      "syntax": "aligned(8) class TrackHintInformation extends Box('hnti') {\r\n}\r\n\r\naligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {\r\n\tchar\tsdptext[];\r\n}"
     },
     {
       "fourcc": "rtp ",
       "description": "RTP information",
       "type": "Box",
       "containers": [ "hnti" ],
-      "syntax": "aligned(8) class MovieHintInformation extends Box('hnti') {\n}\n\naligned(8) class RtpMovieHintInformation extends Box('rtp ') {\n\tuint(32) descriptionformat = 'sdp ';\n\tchar  sdptext[];\n}"
+      "syntax": "aligned(8) class MovieHintInformation extends Box('hnti') {\r\n}\r\n\r\naligned(8) class RtpMovieHintInformation extends Box('rtp ') {\r\n\tuint(32) descriptionformat = 'sdp ';\r\n\tchar  sdptext[];\r\n}"
     },
     {
       "fourcc": "hinf",
       "description": "hint information (statistics)",
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class HintStatisticsBox extends Box('hinf') {\n}"
+      "syntax": "aligned(8) class HintStatisticsBox extends Box('hinf') {\r\n}"
     },
     {
       "fourcc": "ludt",
       "description": "Track loudness container",
       "containers": [ "udta" ],
       "type": "Box",
-      "syntax": "aligned(8) class LoudnessBox extends Box('ludt') {\n\t// not more than one TrackLoudnessInfo box with version>=1 is allowed\n\tTrackLoudnessInfo[]\t\t\tloudness;\n\t// not more than one AlbumLoudnessInfo box with version>=1 is allowed\r\n\tAlbumLoudnessInfo[] albumLoudness\t;\n}"
+      "syntax": "aligned(8) class LoudnessBox extends Box('ludt') {\r\n\t// not more than one TrackLoudnessInfo box with version>=1 is allowed\r\n\tTrackLoudnessInfo[]\t\t\tloudness;\r\n\t// not more than one AlbumLoudnessInfo box with version>=1 is allowed\r\n\tAlbumLoudnessInfo[] albumLoudness;\r\n}"
     },
     {
       "fourcc": "tlou",
@@ -409,7 +409,7 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class DataEntryUrlBox (bit(24) flags)\n\textends DataEntryBaseBox('url ', flags) {\n\tutf8string location;\n}"
+      "syntax": "aligned(8) class DataEntryUrlBox (bit(24) flags)\r\n\textends DataEntryBaseBox('url ', flags) {\r\n\tutf8string location;\r\n}"
     },
     {
       "fourcc": "urn ",
@@ -418,7 +418,7 @@
       "type": "DataEntryBaseBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class DataEntryUrnBox (bit(24) flags)\n\textends DataEntryBaseBox('urn ', flags) {\n\tutf8string name;\n\tutf8string location;\n}"
+      "syntax": "aligned(8) class DataEntryUrnBox (bit(24) flags)\r\n\textends DataEntryBaseBox('urn ', flags) {\r\n\tutf8string name;\r\n\tutf8string location;\r\n}"
     },
     {
       "fourcc": "imdt",
@@ -427,7 +427,7 @@
       "type": "DataEntryBaseBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class DataEntryImdaBox (bit(24) flags)\n\textends DataEntryBaseBox('imdt', flags) {\n\tunsigned int(32) imda_ref_identifier;\n}"
+      "syntax": "aligned(8) class DataEntryImdaBox (bit(24) flags)\r\n\textends DataEntryBaseBox('imdt', flags) {\r\n\tunsigned int(32) imda_ref_identifier;\r\n}"
     },
     {
       "fourcc": "snim",
@@ -436,14 +436,14 @@
       "type": "DataEntryBaseBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class DataEntrySeqNumImdaBox (bit(24) flags)\n\textends DataEntryBaseBox ('snim', flags) {\n}"
+      "syntax": "aligned(8) class DataEntrySeqNumImdaBox (bit(24) flags)\r\n\textends DataEntryBaseBox ('snim', flags) {\r\n}"
     },
     {
       "fourcc": "ipco",
       "description": "ItemPropertyContainerBox",
       "containers": [ "iprp" ],
       "type": "Box",
-      "syntax": "aligned(8) class ItemPropertyContainerBox\n\textends Box('ipco')\n{\n\tBox properties[];\t// boxes derived from\n\t\t// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)\n\t\t// to fill the box\n}\n"
+      "syntax": "aligned(8) class ItemPropertyContainerBox\r\n\textends Box('ipco')\r\n{\r\n\tBox properties[];\t// boxes derived from\r\n\t\t// ItemProperty or ItemFullProperty, or FreeSpaceBox(es)\r\n\t\t// to fill the box\r\n}\r\n"
     },
     {
       "fourcc": "ipma",
@@ -452,14 +452,14 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class ItemPropertyAssociationBox\n\textends FullBox('ipma', version, flags)\n{\n\tunsigned int(32) entry_count;\n\tfor(i = 0; i < entry_count; i++) {\n\t\tif (version < 1)\n\t\t\tunsigned int(16)\titem_ID;\n\t\telse\n\t\t\tunsigned int(32)\titem_ID;\n\t\tunsigned int(8) association_count;\n\t\tfor (j=0; j<association_count; j++) {\n\t\t\tbit(1) essential;\n\t\t\tif (flags & 1)\n\t\t\t\tunsigned int(15) property_index;\n\t\t\telse\n\t\t\t\tunsigned int(7) property_index;\n\t\t}\n\t}\n}\n"
+      "syntax": "aligned(8) class ItemPropertyAssociationBox\r\n\textends FullBox('ipma', version, flags)\r\n{\r\n\tunsigned int(32) entry_count;\r\n\tfor(i = 0; i < entry_count; i++) {\r\n\t\tif (version < 1)\r\n\t\t\tunsigned int(16)\titem_ID;\r\n\t\telse\r\n\t\t\tunsigned int(32)\titem_ID;\r\n\t\tunsigned int(8) association_count;\r\n\t\tfor (j=0; j<association_count; j++) {\r\n\t\t\tbit(1) essential;\r\n\t\t\tif (flags & 1)\r\n\t\t\t\tunsigned int(15) property_index;\r\n\t\t\telse\r\n\t\t\t\tunsigned int(7) property_index;\r\n\t\t}\r\n\t}\r\n}\r\n"
     },
     {
       "fourcc": "iprp",
       "description": "Item Properties Box",
       "containers": [ { "FullBox": [ "meta" ] } ],
       "type": "Box",
-      "syntax": "aligned(8) class ItemPropertiesBox\n\t\textends Box('iprp') {\n\tItemPropertyContainerBox property_container;\n\tItemPropertyAssociationBox association[];\n }"
+      "syntax": "aligned(8) class ItemPropertiesBox\r\n\t\textends Box('iprp') {\r\n\tItemPropertyContainerBox property_container;\r\n\tItemPropertyAssociationBox association[];\r\n }"
     },
     {
       "fourcc": "assp",
@@ -468,7 +468,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "class AlternativeStartupSequencePropertiesBox extends FullBox('assp', version, 0) {\n\tif (version == 0) {\n\t\tsigned int(32)\t\tmin_initial_alt_startup_offset;\n\t}\n\telse if (version == 1) {\n\t\tunsigned int(32)\tnum_entries;\n\t\tfor (j=1; j <= num_entries; j++) {\n\t\t\tunsigned int(32)\tgrouping_type_parameter;\n\t\t\tsigned int(32)\t\tmin_initial_alt_startup_offset;\n\t\t}\n\t}\n}"
+      "syntax": "class AlternativeStartupSequencePropertiesBox extends FullBox('assp', version, 0) {\r\n\tif (version == 0) {\r\n\t\tsigned int(32)\t\tmin_initial_alt_startup_offset;\r\n\t}\r\n\telse if (version == 1) {\r\n\t\tunsigned int(32)\tnum_entries;\r\n\t\tfor (j=1; j <= num_entries; j++) {\r\n\t\t\tunsigned int(32)\tgrouping_type_parameter;\r\n\t\t\tsigned int(32)\t\tmin_initial_alt_startup_offset;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "bxml",
@@ -477,7 +477,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class BinaryXMLBox\n\t\textends FullBox('bxml', version = 0, 0) {\n\tunsigned int(8) data[];\t\t// to end of box\n}"
+      "syntax": "aligned(8) class BinaryXMLBox\r\n\t\textends FullBox('bxml', version = 0, 0) {\r\n\tunsigned int(8) data[];\t\t// to end of box\r\n}"
     },
     {
       "fourcc": "cinf",
@@ -488,7 +488,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "aligned(8) class CompleteTrackInfoBox(fmt) extends Box('cinf') {\n\tOriginalFormatBox(fmt)\toriginal_format;\n}"
+      "syntax": "aligned(8) class CompleteTrackInfoBox(fmt) extends Box('cinf') {\r\n\tOriginalFormatBox(fmt)\toriginal_format;\r\n}"
     },
     {
       "fourcc": "co64",
@@ -497,7 +497,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class ChunkLargeOffsetBox\n\textends FullBox('co64', version = 0, 0) {\n\tunsigned int(32)\tentry_count;\n\tfor (i=1; i <= entry_count; i++) {\n\t\tunsigned int(64)\tchunk_offset;\n\t}\n}"
+      "syntax": "aligned(8) class ChunkLargeOffsetBox\r\n\textends FullBox('co64', version = 0, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tunsigned int(64)\tchunk_offset;\r\n\t}\r\n}"
     },
     {
       "fourcc": "csgp",
@@ -506,7 +506,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class CompactSampleToGroupBox\n\textends FullBox('csgp', version, flags)\n{\n\tunsigned int(32) grouping_type;\n\n\tif (grouping_type_parameter_present == 1) {\n\t\tunsigned int(32) grouping_type_parameter;\n\t}\n\tunsigned int(32) pattern_count;\n\ttotalPatternLength = 0;\n\tfor (i=1; i <= pattern_count; i++) {\n\t\tunsigned int(f(pattern_size_code)) pattern_length[i];\n\t\tunsigned int(f(count_size_code)) sample_count[i];\n\t}\n\tfor (j=1; j <= pattern_count; j++) {\n\t\tfor (k=1; k <= pattern_length[j]; k++) {\n\t\t\tunsigned int(f(index_size_code))\n\t\t\t\t\t\t sample_group_description_index[j][k];\n\t\t\t// whose msb might indicate fragment_local or global\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class CompactSampleToGroupBox\r\n\textends FullBox('csgp', version, flags)\r\n{\r\n\tunsigned int(32) grouping_type;\r\n\r\n\tif (grouping_type_parameter_present == 1) {\r\n\t\tunsigned int(32) grouping_type_parameter;\r\n\t}\r\n\tunsigned int(32) pattern_count;\r\n\ttotalPatternLength = 0;\r\n\tfor (i=1; i <= pattern_count; i++) {\r\n\t\tunsigned int(f(pattern_size_code)) pattern_length[i];\r\n\t\tunsigned int(f(count_size_code)) sample_count[i];\r\n\t}\r\n\tfor (j=1; j <= pattern_count; j++) {\r\n\t\tfor (k=1; k <= pattern_length[j]; k++) {\r\n\t\t\tunsigned int(f(index_size_code))\r\n\t\t\t\t\t\t sample_group_description_index[j][k];\r\n\t\t\t// whose msb might indicate fragment_local or global\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "cslg",
@@ -515,7 +515,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "class CompositionToDecodeBox extends FullBox('cslg', version, 0) {\n\tif (version==0) {\n\t\tsigned int(32)\tcompositionToDTSShift;\n\t\tsigned int(32)\tleastDecodeToDisplayDelta;\n\t\tsigned int(32)\tgreatestDecodeToDisplayDelta;\n\t\tsigned int(32)\tcompositionStartTime;\n\t\tsigned int(32)\tcompositionEndTime;\n\t} else {\n\t\tsigned int(64)\tcompositionToDTSShift;\n\t\tsigned int(64)\tleastDecodeToDisplayDelta;\n\t\tsigned int(64)\tgreatestDecodeToDisplayDelta;\n\t\tsigned int(64)\tcompositionStartTime;\n\t\tsigned int(64)\tcompositionEndTime;\n\t}\n}"
+      "syntax": "class CompositionToDecodeBox extends FullBox('cslg', version, 0) {\r\n\tif (version==0) {\r\n\t\tsigned int(32)\tcompositionToDTSShift;\r\n\t\tsigned int(32)\tleastDecodeToDisplayDelta;\r\n\t\tsigned int(32)\tgreatestDecodeToDisplayDelta;\r\n\t\tsigned int(32)\tcompositionStartTime;\r\n\t\tsigned int(32)\tcompositionEndTime;\r\n\t} else {\r\n\t\tsigned int(64)\tcompositionToDTSShift;\r\n\t\tsigned int(64)\tleastDecodeToDisplayDelta;\r\n\t\tsigned int(64)\tgreatestDecodeToDisplayDelta;\r\n\t\tsigned int(64)\tcompositionStartTime;\r\n\t\tsigned int(64)\tcompositionEndTime;\r\n\t}\r\n}"
     },
     {
       "fourcc": "ctts",
@@ -524,7 +524,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class CompositionOffsetBox\n\textends FullBox('ctts', version, 0) {\n\tunsigned int(32)\tentry_count;\n\t\tint i;\n\tif (version==0) {\n\t\tfor (i=0; i < entry_count; i++) {\n\t\t\tunsigned int(32)\tsample_count;\n\t\t\tunsigned int(32)\tsample_offset;\n\t\t}\n\t}\n\telse if (version == 1) {\n\t\tfor (i=0; i < entry_count; i++) {\n\t\t\tunsigned int(32)\tsample_count;\n\t\t\tsigned   int(32)\tsample_offset;\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class CompositionOffsetBox\r\n\textends FullBox('ctts', version, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\t\tint i;\r\n\tif (version==0) {\r\n\t\tfor (i=0; i < entry_count; i++) {\r\n\t\t\tunsigned int(32)\tsample_count;\r\n\t\t\tunsigned int(32)\tsample_offset;\r\n\t\t}\r\n\t}\r\n\telse if (version == 1) {\r\n\t\tfor (i=0; i < entry_count; i++) {\r\n\t\t\tunsigned int(32)\tsample_count;\r\n\t\t\tsigned   int(32)\tsample_offset;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "dinf",
@@ -534,7 +534,7 @@
         "minf"
       ],
       "type": "Box",
-      "syntax": "aligned(8) class DataInformationBox extends Box('dinf') {\n}"
+      "syntax": "aligned(8) class DataInformationBox extends Box('dinf') {\r\n}"
     },
     {
       "fourcc": "dref",
@@ -543,14 +543,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class DataReferenceBox\n\textends FullBox('dref', version = 0, 0) {\n\tunsigned int(32)\tentry_count;\n\tfor (i=1; i <= entry_count; i++) {\n\t\tDataEntryBaseBox(entry_type, entry_flags)\tdata_entry;\n\t}\n}"
+      "syntax": "aligned(8) class DataReferenceBox\r\n\textends FullBox('dref', version = 0, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tDataEntryBaseBox(entry_type, entry_flags)\tdata_entry;\r\n\t}\r\n}"
     },
     {
       "fourcc": "edts",
       "description": "edit list container",
       "containers": [ "trak" ],
       "type": "Box",
-      "syntax": "aligned(8) class EditBox extends Box('edts') {\n}"
+      "syntax": "aligned(8) class EditBox extends Box('edts') {\r\n}"
     },
     {
       "fourcc": "elst",
@@ -565,21 +565,21 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class EditListBox extends FullBox('elst', version, flags) {\n\tunsigned int(32)\tentry_count;\n\tfor (i=1; i <= entry_count; i++) {\n\t\tif (version==1) {\n\t\t\tunsigned int(64) edit_duration;\n\t\t\tint(64) media_time;\n\t\t} else { // version==0\n\t\t\tunsigned int(32) edit_duration;\n\t\t\tint(32)\tmedia_time;\n\t\t}\n\t\tint(16) media_rate_integer;\n\t\tint(16) media_rate_fraction;\n\t}\n}"
+      "syntax": "aligned(8) class EditListBox extends FullBox('elst', version, flags) {\r\n\tunsigned int(32)\tentry_count;\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tif (version==1) {\r\n\t\t\tunsigned int(64) edit_duration;\r\n\t\t\tint(64) media_time;\r\n\t\t} else { // version==0\r\n\t\t\tunsigned int(32) edit_duration;\r\n\t\t\tint(32)\tmedia_time;\r\n\t\t}\r\n\t\tint(16) media_rate_integer;\r\n\t\tint(16) media_rate_fraction;\r\n\t}\r\n}"
     },
     {
       "fourcc": "etyp",
       "description": "extended type and type combination",
       "containers": [ "file", "ipco", "otyp" ],
       "type": "Box",
-      "syntax": "aligned(8) class ExtendedTypeBox extends Box('etyp') {\n\tTypeCombinationBox\tcompatible_combinations[];\t// to end of the box\n}"
+      "syntax": "aligned(8) class ExtendedTypeBox extends Box('etyp') {\r\n\tTypeCombinationBox\tcompatible_combinations[];\t// to end of the box\r\n}"
     },
     {
       "fourcc": "fdel",
       "description": "File delivery information (item info extension)",
       "containers": [ "infe" ],
       "type": "ItemInfoExtension",
-      "syntax": "aligned(8) class FDItemInfoExtension() extends ItemInfoExtension ('fdel') {\n\tutf8string content_location;\n\tutf8string content_MD5;\n\tunsigned int(64) content_length;\n\tunsigned int(64) transfer_length;\n\tunsigned int(8) entry_count;\n\tfor (i=1; i <= entry_count; i++)\n\t\tunsigned int(32) group_id;\n}"
+      "syntax": "aligned(8) class FDItemInfoExtension() extends ItemInfoExtension ('fdel') {\r\n\tutf8string content_location;\r\n\tutf8string content_MD5;\r\n\tunsigned int(64) content_length;\r\n\tunsigned int(64) transfer_length;\r\n\tunsigned int(8) entry_count;\r\n\tfor (i=1; i <= entry_count; i++)\r\n\t\tunsigned int(32) group_id;\r\n}"
     },
     {
       "fourcc": "fecr",
@@ -588,14 +588,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class FECReservoirBox\n\t\textends FullBox('fecr', version, 0) {\n\tif (version == 0) {\n\t\tunsigned int(16)\tentry_count;\n\t} else {\n\t\tunsigned int(32)\tentry_count;\n\t}\n\tfor (i=1; i <= entry_count; i++) {\n\t\tif (version == 0) {\n\t\t\tunsigned int(16)\titem_ID;\n\t\t} else {\n\t\t\tunsigned int(32)\titem_ID;\n\t\t}\n\t\tunsigned int(32)\tsymbol_count;\n\t}\n}"
+      "syntax": "aligned(8) class FECReservoirBox\r\n\t\textends FullBox('fecr', version, 0) {\r\n\tif (version == 0) {\r\n\t\tunsigned int(16)\tentry_count;\r\n\t} else {\r\n\t\tunsigned int(32)\tentry_count;\r\n\t}\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tif (version == 0) {\r\n\t\t\tunsigned int(16)\titem_ID;\r\n\t\t} else {\r\n\t\t\tunsigned int(32)\titem_ID;\r\n\t\t}\r\n\t\tunsigned int(32)\tsymbol_count;\r\n\t}\r\n}"
     },
     {
       "fourcc": "fiin",
       "description": "FD Item Information",
       "containers": [ { "FullBox": [ "meta" ] } ],
       "type": "Box",
-      "syntax": "aligned(8) class PartitionEntry extends Box('paen') {\n\tFilePartitionBox\tblocks_and_symbols;\n\tFECReservoirBox\tFEC_symbol_locations; //optional\n\tFileReservoirBox\tFile_symbol_locations; //optional\n}\n\naligned(8) class FDItemInformationBox\n\t\textends FullBox('fiin', version = 0, 0) {\n\tunsigned int(16)\tentry_count;\n\tPartitionEntry\t\tpartition_entries[ entry_count ];\n\tFDSessionGroupBox\tsession_info;\t\t\t//optional\n\tGroupIdToNameBox\tgroup_id_to_name;\t//optional\n}"
+      "syntax": "aligned(8) class PartitionEntry extends Box('paen') {\r\n\tFilePartitionBox\tblocks_and_symbols;\r\n\tFECReservoirBox\tFEC_symbol_locations; //optional\r\n\tFileReservoirBox\tFile_symbol_locations; //optional\r\n}\r\n\r\naligned(8) class FDItemInformationBox\r\n\t\textends FullBox('fiin', version = 0, 0) {\r\n\tunsigned int(16)\tentry_count;\r\n\tPartitionEntry\t\tpartition_entries[ entry_count ];\r\n\tFDSessionGroupBox\tsession_info;\t\t\t//optional\r\n\tGroupIdToNameBox\tgroup_id_to_name;\t//optional\r\n}"
     },
     {
       "fourcc": "fire",
@@ -604,7 +604,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class FileReservoirBox\n\t\textends FullBox('fire', version, 0) {\n\tif (version == 0) {\n\t\tunsigned int(16)\tentry_count;\n\t} else {\n\t\tunsigned int(32)\tentry_count;\n\t}\n\tfor (i=1; i <= entry_count; i++) {\n\t\tif (version == 0) {\n\t\t\tunsigned int(16)\titem_ID;\n\t\t} else {\n\t\t\tunsigned int(32)\titem_ID;\n\t\t}\n\t\tunsigned int(32)\tsymbol_count;\n\t}\n}"
+      "syntax": "aligned(8) class FileReservoirBox\r\n\t\textends FullBox('fire', version, 0) {\r\n\tif (version == 0) {\r\n\t\tunsigned int(16)\tentry_count;\r\n\t} else {\r\n\t\tunsigned int(32)\tentry_count;\r\n\t}\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tif (version == 0) {\r\n\t\t\tunsigned int(16)\titem_ID;\r\n\t\t} else {\r\n\t\t\tunsigned int(32)\titem_ID;\r\n\t\t}\r\n\t\tunsigned int(32)\tsymbol_count;\r\n\t}\r\n}"
     },
     {
       "fourcc": "fpar",
@@ -613,21 +613,21 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class FilePartitionBox\n\t\textends FullBox('fpar', version, 0) {\n\tif (version == 0) {\n\t\tunsigned int(16)\titem_ID;\n\t} else {\n\t\tunsigned int(32)\titem_ID;\n\t}\n\tunsigned int(16)\tpacket_payload_size;\n\tunsigned int(8)\treserved = 0;\n\tunsigned int(8)\tFEC_encoding_ID;\n\tunsigned int(16)\tFEC_instance_ID;\n\tunsigned int(16)\tmax_source_block_length;\n\tunsigned int(16)\tencoding_symbol_length;\n\tunsigned int(16)\tmax_number_of_encoding_symbols;\n\tbase64string\t\tscheme_specific_info;\n\tif (version == 0) {\n\t\tunsigned int(16)\tentry_count;\n\t} else {\n\t\tunsigned int(32)\tentry_count;\n\t}\n\tfor (i=1; i <= entry_count; i++) {\n\t\tunsigned int(16)\tblock_count;\n\t\tunsigned int(32)\tblock_size;\n\t}\n}"
+      "syntax": "aligned(8) class FilePartitionBox\r\n\t\textends FullBox('fpar', version, 0) {\r\n\tif (version == 0) {\r\n\t\tunsigned int(16)\titem_ID;\r\n\t} else {\r\n\t\tunsigned int(32)\titem_ID;\r\n\t}\r\n\tunsigned int(16)\tpacket_payload_size;\r\n\tunsigned int(8)\treserved = 0;\r\n\tunsigned int(8)\tFEC_encoding_ID;\r\n\tunsigned int(16)\tFEC_instance_ID;\r\n\tunsigned int(16)\tmax_source_block_length;\r\n\tunsigned int(16)\tencoding_symbol_length;\r\n\tunsigned int(16)\tmax_number_of_encoding_symbols;\r\n\tbase64string\t\tscheme_specific_info;\r\n\tif (version == 0) {\r\n\t\tunsigned int(16)\tentry_count;\r\n\t} else {\r\n\t\tunsigned int(32)\tentry_count;\r\n\t}\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tunsigned int(16)\tblock_count;\r\n\t\tunsigned int(32)\tblock_size;\r\n\t}\r\n}"
     },
     {
       "fourcc": "free",
       "description": "free space",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class FreeSpaceBox extends Box('free') {\nunsigned int(8) data[];\n}"
+      "syntax": "aligned(8) class FreeSpaceBox extends Box('free') {\r\nunsigned int(8) data[];\r\n}"
     },
     {
       "fourcc": "frma",
       "description": "original format box",
       "containers": [ "sinf", "rinf" ],
       "type": "Box",
-      "syntax": "aligned(8) class OriginalFormatBox(codingname) extends Box ('frma') {\n\tunsigned int(32)\tdata_format = codingname;\n\t\t\t// format of decrypted, encoded data (in case of protection)\n\t\t\t// or un-transformed sample entry (in case of restriction\n\t\t\t// and complete track information)\n}"
+      "syntax": "aligned(8) class OriginalFormatBox(codingname) extends Box ('frma') {\r\n\tunsigned int(32)\tdata_format = codingname;\r\n\t\t\t// format of decrypted, encoded data (in case of protection)\r\n\t\t\t// or un-transformed sample entry (in case of restriction\r\n\t\t\t// and complete track information)\r\n}"
     },
     {
       "fourcc": "ftyp",
@@ -643,14 +643,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class GroupIdToNameBox\n\t\textends FullBox('gitn', version = 0, 0) {\n\tunsigned int(16)\tentry_count;\n\tfor (i=1; i <= entry_count; i++) {\n\t\tunsigned int(32)\tgroup_ID;\n\t\tutf8string\t\t\tgroup_name;\n\t}\n}"
+      "syntax": "aligned(8) class GroupIdToNameBox\r\n\t\textends FullBox('gitn', version = 0, 0) {\r\n\tunsigned int(16)\tentry_count;\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tunsigned int(32)\tgroup_ID;\r\n\t\tutf8string\t\t\tgroup_name;\r\n\t}\r\n}"
     },
     {
       "fourcc": "grpl",
       "description": "Groups list box",
       "containers": [ { "FullBox": [ "meta" ] } ],
       "type": "Box",
-      "syntax": "aligned(8) class GroupsListBox extends Box('grpl') {\n}"
+      "syntax": "aligned(8) class GroupsListBox extends Box('grpl') {\r\n}"
     },
     {
       "fourcc": "hdlr",
@@ -663,7 +663,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class HandlerBox extends FullBox('hdlr', version = 0, 0) {\n\tunsigned int(32)\tpre_defined = 0;\n\tunsigned int(32)\thandler_type;\n\tconst unsigned int(32)[3]\treserved = 0;\n\tutf8string\tname;\n}"
+      "syntax": "aligned(8) class HandlerBox extends FullBox('hdlr', version = 0, 0) {\r\n\tunsigned int(32)\tpre_defined = 0;\r\n\tunsigned int(32)\thandler_type;\r\n\tconst unsigned int(32)[3]\treserved = 0;\r\n\tutf8string\tname;\r\n}"
     },
     {
       "fourcc": "hmhd",
@@ -672,14 +672,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class HintMediaHeaderBox\n\textends FullBox('hmhd', version = 0, 0) {\n\tunsigned int(16)\tmaxPDUsize;\n\tunsigned int(16)\tavgPDUsize;\n\tunsigned int(32)\tmaxbitrate;\n\tunsigned int(32)\tavgbitrate;\n\tunsigned int(32)\treserved = 0;\n}"
+      "syntax": "aligned(8) class HintMediaHeaderBox\r\n\textends FullBox('hmhd', version = 0, 0) {\r\n\tunsigned int(16)\tmaxPDUsize;\r\n\tunsigned int(16)\tavgPDUsize;\r\n\tunsigned int(32)\tmaxbitrate;\r\n\tunsigned int(32)\tavgbitrate;\r\n\tunsigned int(32)\treserved = 0;\r\n}"
     },
     {
       "fourcc": "idat",
       "description": "Item data",
       "containers": [ { "FullBox": [ "meta" ] } ],
       "type": "Box",
-      "syntax": "aligned(8) class ItemDataBox extends Box('idat') {\n\tbit(8) data[];\n}"
+      "syntax": "aligned(8) class ItemDataBox extends Box('idat') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "iinf",
@@ -688,7 +688,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class ItemInfoBox\n\t\textends FullBox('iinf', version, 0) {\n\tif (version == 0) {\n\t\tunsigned int(16)\tentry_count;\n\t} else {\n\t\tunsigned int(32) entry_count;\n\t}\n\tItemInfoEntry[ entry_count ]\t\titem_infos;\n}"
+      "syntax": "aligned(8) class ItemInfoBox\r\n\t\textends FullBox('iinf', version, 0) {\r\n\tif (version == 0) {\r\n\t\tunsigned int(16)\tentry_count;\r\n\t} else {\r\n\t\tunsigned int(32) entry_count;\r\n\t}\r\n\tItemInfoEntry[ entry_count ]\t\titem_infos;\r\n}"
     },
     {
       "fourcc": "iloc",
@@ -697,14 +697,14 @@
       "flags": [],
       "containers": [ { "FullBox": [ "meta" ] } ],
       "type": "FullBox",
-      "syntax": "aligned(8) class ItemLocationBox extends FullBox('iloc', version, 0) {\n\tunsigned int(4)\toffset_size;\n\tunsigned int(4)\tlength_size;\n\tunsigned int(4)\tbase_offset_size;\n\tif ((version == 1) || (version == 2)) {\n\t\tunsigned int(4)\tindex_size;\n\t} else {\n\t\tunsigned int(4)\treserved;\n\t}\n\tif (version < 2) {\n\t\tunsigned int(16)\titem_count;\n\t} else if (version == 2) {\n\t\tunsigned int(32)\titem_count;\n\t}\n\tfor (i=0; i<item_count; i++) {\n\t\tif (version < 2) {\n\t\t\tunsigned int(16)\titem_ID;\n\t\t} else if (version == 2) {\n\t\t\tunsigned int(32)\titem_ID;\n\t\t}\n\t\tif ((version == 1) || (version == 2)) {\n\t\t\tunsigned int(12)\treserved = 0;\n\t\t\tunsigned int(4)\tconstruction_method;\n\t\t}\n\t\tunsigned int(16)\tdata_reference_index;\n\t\tunsigned int(base_offset_size*8)\tbase_offset;\n\t\tunsigned int(16)\t\textent_count;\n\t\tfor (j=0; j<extent_count; j++) {\n\t\t\tif (((version == 1) || (version == 2)) && (index_size > 0)) {\n\t\t\t\tunsigned int(index_size*8)\titem_reference_index;\n\t\t\t}\n\t\t\tunsigned int(offset_size*8)\textent_offset;\n\t\t\tunsigned int(length_size*8)\textent_length;\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class ItemLocationBox extends FullBox('iloc', version, 0) {\r\n\tunsigned int(4)\toffset_size;\r\n\tunsigned int(4)\tlength_size;\r\n\tunsigned int(4)\tbase_offset_size;\r\n\tif ((version == 1) || (version == 2)) {\r\n\t\tunsigned int(4)\tindex_size;\r\n\t} else {\r\n\t\tunsigned int(4)\treserved;\r\n\t}\r\n\tif (version < 2) {\r\n\t\tunsigned int(16)\titem_count;\r\n\t} else if (version == 2) {\r\n\t\tunsigned int(32)\titem_count;\r\n\t}\r\n\tfor (i=0; i<item_count; i++) {\r\n\t\tif (version < 2) {\r\n\t\t\tunsigned int(16)\titem_ID;\r\n\t\t} else if (version == 2) {\r\n\t\t\tunsigned int(32)\titem_ID;\r\n\t\t}\r\n\t\tif ((version == 1) || (version == 2)) {\r\n\t\t\tunsigned int(12)\treserved = 0;\r\n\t\t\tunsigned int(4)\tconstruction_method;\r\n\t\t}\r\n\t\tunsigned int(16)\tdata_reference_index;\r\n\t\tunsigned int(base_offset_size*8)\tbase_offset;\r\n\t\tunsigned int(16)\t\textent_count;\r\n\t\tfor (j=0; j<extent_count; j++) {\r\n\t\t\tif (((version == 1) || (version == 2)) && (index_size > 0)) {\r\n\t\t\t\tunsigned int(index_size*8)\titem_reference_index;\r\n\t\t\t}\r\n\t\t\tunsigned int(offset_size*8)\textent_offset;\r\n\t\t\tunsigned int(length_size*8)\textent_length;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "imda",
       "description": "Identified media data",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class IdentifiedMediaDataBox extends Box('imda') {\n\tunsigned int(32) imda_identifier;\n\tbit(8) data[]; // until the end of the box\n}"
+      "syntax": "aligned(8) class IdentifiedMediaDataBox extends Box('imda') {\r\n\tunsigned int(32) imda_identifier;\r\n\tbit(8) data[]; // until the end of the box\r\n}"
     },
     {
       "fourcc": "infe",
@@ -719,7 +719,7 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class ItemInfoEntry\n\t\textends FullBox('infe', version, flags) {\n\tif ((version == 0) || (version == 1)) {\n\t\tunsigned int(16) item_ID;\n\t\tunsigned int(16) item_protection_index;\n\t\tutf8string item_name;\n\t\tutf8string content_type;\n\t\tutf8string content_encoding; //optional\n\t}\n\tif (version == 1) {\n\t\tunsigned int(32) extension_type; //optional\n\t\tItemInfoExtension(extension_type); //optional\n\t}\n\tif (version >= 2) {\n\t\tif (version == 2) {\n\t\t\tunsigned int(16) item_ID;\n\t\t} else if (version == 3) {\n\t\t\tunsigned int(32) item_ID;\n\t\t}\n\t\tunsigned int(16) item_protection_index;\n\t\tunsigned int(32) item_type;\n\t\tutf8string item_name;\n\t\tif (item_type=='mime') {\n\t\t\tutf8string content_type;\n\t\t\tutf8string content_encoding; //optional\n\t\t} else if (item_type == 'uri ') {\n\t\t\tutf8string item_uri_type;\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class ItemInfoEntry\r\n\t\textends FullBox('infe', version, flags) {\r\n\tif ((version == 0) || (version == 1)) {\r\n\t\tunsigned int(16) item_ID;\r\n\t\tunsigned int(16) item_protection_index;\r\n\t\tutf8string item_name;\r\n\t\tutf8string content_type;\r\n\t\tutf8string content_encoding; //optional\r\n\t}\r\n\tif (version == 1) {\r\n\t\tunsigned int(32) extension_type; //optional\r\n\t\tItemInfoExtension(extension_type); //optional\r\n\t}\r\n\tif (version >= 2) {\r\n\t\tif (version == 2) {\r\n\t\t\tunsigned int(16) item_ID;\r\n\t\t} else if (version == 3) {\r\n\t\t\tunsigned int(32) item_ID;\r\n\t\t}\r\n\t\tunsigned int(16) item_protection_index;\r\n\t\tunsigned int(32) item_type;\r\n\t\tutf8string item_name;\r\n\t\tif (item_type=='mime') {\r\n\t\t\tutf8string content_type;\r\n\t\t\tutf8string content_encoding; //optional\r\n\t\t} else if (item_type == 'uri ') {\r\n\t\t\tutf8string item_uri_type;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "ipro",
@@ -728,7 +728,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class ItemProtectionBox\n\t\textends FullBox('ipro', version = 0, 0) {\n\tunsigned int(16) protection_count;\n\tfor (i=1; i<=protection_count; i++) {\n\t\tProtectionSchemeInfoBox\tprotection_information;\n\t}\n}"
+      "syntax": "aligned(8) class ItemProtectionBox\r\n\t\textends FullBox('ipro', version = 0, 0) {\r\n\tunsigned int(16) protection_count;\r\n\tfor (i=1; i<=protection_count; i++) {\r\n\t\tProtectionSchemeInfoBox\tprotection_information;\r\n\t}\r\n}"
     },
     {
       "fourcc": "iref",
@@ -737,7 +737,7 @@
       "flags": [],
       "containers": [ { "FullBox": [ "meta" ] } ],
       "type": "FullBox",
-      "syntax": "aligned(8) class ItemReferenceBox extends FullBox('iref', version, 0) {\n\tif (version==0) {\n\t\tSingleItemTypeReferenceBox\t\t\t\treferences[];\n\t} else if (version==1) {\n\t\tSingleItemTypeReferenceBoxLarge\treferences[];\n\t}\n}"
+      "syntax": "aligned(8) class ItemReferenceBox extends FullBox('iref', version, 0) {\r\n\tif (version==0) {\r\n\t\tSingleItemTypeReferenceBox\t\t\t\treferences[];\r\n\t} else if (version==1) {\r\n\t\tSingleItemTypeReferenceBoxLarge\treferences[];\r\n\t}\r\n}"
     },
     {
       "fourcc": "leva",
@@ -746,14 +746,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class LevelAssignmentBox extends FullBox('leva', 0, 0)\n{\n\tunsigned int(8)\tlevel_count;\n\tfor (j=1; j <= level_count; j++) {\n\t\tunsigned int(32)\ttrack_ID;\n\t\tunsigned int(1)\tpadding_flag;\n\t\tunsigned int(7)\tassignment_type;\n\t\tif (assignment_type == 0) {\n\t\t\tunsigned int(32)\tgrouping_type;\n\t\t}\n\t\telse if (assignment_type == 1) {\n\t\t\tunsigned int(32)\tgrouping_type;\n\t\t\tunsigned int(32)\tgrouping_type_parameter;\n\t\t}\n\t\telse if (assignment_type == 2) {}\n\t\t\t// no further syntax elements needed\n\t\telse if (assignment_type == 3) {}\n\t\t\t// no further syntax elements needed\n\t\telse if (assignment_type == 4) {\n\t\t\tunsigned int(32) sub_track_ID;\n\t\t}\n\t\t// other assignment_type values are reserved\n\t}\n}"
+      "syntax": "aligned(8) class LevelAssignmentBox extends FullBox('leva', 0, 0)\r\n{\r\n\tunsigned int(8)\tlevel_count;\r\n\tfor (j=1; j <= level_count; j++) {\r\n\t\tunsigned int(32)\ttrack_ID;\r\n\t\tunsigned int(1)\tpadding_flag;\r\n\t\tunsigned int(7)\tassignment_type;\r\n\t\tif (assignment_type == 0) {\r\n\t\t\tunsigned int(32)\tgrouping_type;\r\n\t\t}\r\n\t\telse if (assignment_type == 1) {\r\n\t\t\tunsigned int(32)\tgrouping_type;\r\n\t\t\tunsigned int(32)\tgrouping_type_parameter;\r\n\t\t}\r\n\t\telse if (assignment_type == 2) {}\r\n\t\t\t// no further syntax elements needed\r\n\t\telse if (assignment_type == 3) {}\r\n\t\t\t// no further syntax elements needed\r\n\t\telse if (assignment_type == 4) {\r\n\t\t\tunsigned int(32) sub_track_ID;\r\n\t\t}\r\n\t\t// other assignment_type values are reserved\r\n\t}\r\n}"
     },
     {
       "fourcc": "mdat",
       "description": "media data container",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class MediaDataBox extends Box('mdat') {\n\tbit(8) data[];\n}"
+      "syntax": "aligned(8) class MediaDataBox extends Box('mdat') {\r\n\tbit(8) data[];\r\n}"
     },
     {
       "fourcc": "mdhd",
@@ -762,14 +762,14 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class MediaHeaderBox extends FullBox('mdhd', version, 0) {\n\tif (version==1) {\n\t\tunsigned int(64)\tcreation_time;\n\t\tunsigned int(64)\tmodification_time;\n\t\tunsigned int(32)\ttimescale;\n\t\tunsigned int(64)\tduration;\n\t} else { // version==0\n\t\tunsigned int(32)\tcreation_time;\n\t\tunsigned int(32)\tmodification_time;\n\t\tunsigned int(32)\ttimescale;\n\t\tunsigned int(32)\tduration;\n\t}\n\tbit(1)\tpad = 0;\n\tunsigned int(5)[3]\tlanguage;\t// ISO-639-2/T language code\n\tunsigned int(16)\tpre_defined = 0;\n}"
+      "syntax": "aligned(8) class MediaHeaderBox extends FullBox('mdhd', version, 0) {\r\n\tif (version==1) {\r\n\t\tunsigned int(64)\tcreation_time;\r\n\t\tunsigned int(64)\tmodification_time;\r\n\t\tunsigned int(32)\ttimescale;\r\n\t\tunsigned int(64)\tduration;\r\n\t} else { // version==0\r\n\t\tunsigned int(32)\tcreation_time;\r\n\t\tunsigned int(32)\tmodification_time;\r\n\t\tunsigned int(32)\ttimescale;\r\n\t\tunsigned int(32)\tduration;\r\n\t}\r\n\tbit(1)\tpad = 0;\r\n\tunsigned int(5)[3]\tlanguage;\t// ISO-639-2/T language code\r\n\tunsigned int(16)\tpre_defined = 0;\r\n}"
     },
     {
       "fourcc": "mdia",
       "description": "container for the media information in a track",
       "containers": [ "trak" ],
       "type": "Box",
-      "syntax": "aligned(8) class MediaBox extends Box('mdia') {\n}"
+      "syntax": "aligned(8) class MediaBox extends Box('mdia') {\r\n}"
     },
     {
       "fourcc": "mehd",
@@ -778,7 +778,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class MovieExtendsHeaderBox extends FullBox('mehd', version, 0) {\n\tif (version==1) {\n\t\tunsigned int(64)\tfragment_duration;\n\t} else { // version==0\n\t\tunsigned int(32)\tfragment_duration;\n\t}\n}"
+      "syntax": "aligned(8) class MovieExtendsHeaderBox extends FullBox('mehd', version, 0) {\r\n\tif (version==1) {\r\n\t\tunsigned int(64)\tfragment_duration;\r\n\t} else { // version==0\r\n\t\tunsigned int(32)\tfragment_duration;\r\n\t}\r\n}"
     },
     {
       "fourcc": "meta",
@@ -787,7 +787,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class MetaBox (handler_type)\n\textends FullBox('meta', version = 0, 0) {\n\tHandlerBox(handler_type)\ttheHandler;\n\tPrimaryItemBox\t\tprimary_resource;\t\t// optional\n\tDataInformationBox\tfile_locations;\t\t// optional\n\tItemLocationBox\t\titem_locations;\t\t// optional\n\tItemProtectionBox\tprotections;\t\t\t// optional\n\tItemInfoBox\t\t\titem_infos;\t\t\t\t// optional\n\tIPMPControlBox\t\tIPMP_control;\t\t\t// optional\n\tItemReferenceBox\t\titem_refs;\t\t\t\t\t// optional\n\tItemDataBox\t\t\titem_data;\t\t\t\t\t// optional\n\tBox\tother_boxes[];\t\t\t\t\t\t\t\t// optional\n}"
+      "syntax": "aligned(8) class MetaBox (handler_type)\r\n\textends FullBox('meta', version = 0, 0) {\r\n\tHandlerBox(handler_type)\ttheHandler;\r\n\tPrimaryItemBox\t\tprimary_resource;\t\t// optional\r\n\tDataInformationBox\tfile_locations;\t\t// optional\r\n\tItemLocationBox\t\titem_locations;\t\t// optional\r\n\tItemProtectionBox\tprotections;\t\t\t// optional\r\n\tItemInfoBox\t\t\titem_infos;\t\t\t\t// optional\r\n\tIPMPControlBox\t\tIPMP_control;\t\t\t// optional\r\n\tItemReferenceBox\t\titem_refs;\t\t\t\t\t// optional\r\n\tItemDataBox\t\t\titem_data;\t\t\t\t\t// optional\r\n\tBox\tother_boxes[];\t\t\t\t\t\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "mfhd",
@@ -796,14 +796,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class MovieFragmentHeaderBox\n\t\t\textends FullBox('mfhd', 0, 0){\n\tunsigned int(32)\tsequence_number;\n}"
+      "syntax": "aligned(8) class MovieFragmentHeaderBox\r\n\t\t\textends FullBox('mfhd', 0, 0){\r\n\tunsigned int(32)\tsequence_number;\r\n}"
     },
     {
       "fourcc": "mfra",
       "description": "Movie fragment random access",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class MovieFragmentRandomAccessBox\n\textends Box('mfra')\n{\n}"
+      "syntax": "aligned(8) class MovieFragmentRandomAccessBox\r\n\textends Box('mfra')\r\n{\r\n}"
     },
     {
       "fourcc": "mfro",
@@ -812,35 +812,35 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class MovieFragmentRandomAccessOffsetBox\n extends FullBox('mfro', version, 0) {\n\tunsigned int(32)\tparent_size;\n}"
+      "syntax": "aligned(8) class MovieFragmentRandomAccessOffsetBox\r\n extends FullBox('mfro', version, 0) {\r\n\tunsigned int(32)\tparent_size;\r\n}"
     },
     {
       "fourcc": "minf",
       "description": "media information container",
       "containers": [ "mdia" ],
       "type": "Box",
-      "syntax": "aligned(8) class MediaInformationBox extends Box('minf') {\n}"
+      "syntax": "aligned(8) class MediaInformationBox extends Box('minf') {\r\n}"
     },
     {
       "fourcc": "moof",
       "description": "movie fragment",
       "containers": [ "file" ],
       "type": "CompressedBox",
-      "syntax": "aligned(8) class CompressedMovieFragmentBox\n\textends CompressedBox('!mof', 'moof') {\n}\n"
+      "syntax": "aligned(8) class CompressedMovieFragmentBox\r\n\textends CompressedBox('!mof', 'moof') {\r\n}\r\n"
     },
     {
       "fourcc": "moov",
       "description": "container for all the meta-data",
       "containers": [ "file" ],
       "type": "Box",
-      "syntax": "aligned(8) class CompressedMovieBox\n\textends CompressedBox('!mov', 'moov') {\n}"
+      "syntax": "aligned(8) class CompressedMovieBox\r\n\textends CompressedBox('!mov', 'moov') {\r\n}"
     },
     {
       "fourcc": "mvex",
       "description": "movie extends box",
       "containers": [ "moov" ],
       "type": "Box",
-      "syntax": "aligned(8) class MovieExtendsBox extends Box('mvex'){\n}"
+      "syntax": "aligned(8) class MovieExtendsBox extends Box('mvex'){\r\n}"
     },
     {
       "fourcc": "mvhd",
@@ -849,7 +849,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class MovieHeaderBox extends FullBox('mvhd', version, 0) {\n\tif (version==1) {\n\t\tunsigned int(64)\tcreation_time;\n\t\tunsigned int(64)\tmodification_time;\n\t\tunsigned int(32)\ttimescale;\n\t\tunsigned int(64)\tduration;\n\t} else { // version==0\n\t\tunsigned int(32)\tcreation_time;\n\t\tunsigned int(32)\tmodification_time;\n\t\tunsigned int(32)\ttimescale;\n\t\tunsigned int(32)\tduration;\n\t}\n\ttemplate int(32)\trate = 0x00010000;\t// typically 1.0\n\ttemplate int(16)\tvolume = 0x0100;\t// typically, full volume\n\tconst bit(16)\treserved = 0;\n\tconst unsigned int(32)[2]\treserved = 0;\n\ttemplate int(32)[9]\tmatrix =\n\t\t{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };\n\t\t// Unity matrix\n\tbit(32)[6]\tpre_defined = 0;\n\tunsigned int(32)\tnext_track_ID;\n}"
+      "syntax": "aligned(8) class MovieHeaderBox extends FullBox('mvhd', version, 0) {\r\n\tif (version==1) {\r\n\t\tunsigned int(64)\tcreation_time;\r\n\t\tunsigned int(64)\tmodification_time;\r\n\t\tunsigned int(32)\ttimescale;\r\n\t\tunsigned int(64)\tduration;\r\n\t} else { // version==0\r\n\t\tunsigned int(32)\tcreation_time;\r\n\t\tunsigned int(32)\tmodification_time;\r\n\t\tunsigned int(32)\ttimescale;\r\n\t\tunsigned int(32)\tduration;\r\n\t}\r\n\ttemplate int(32)\trate = 0x00010000;\t// typically 1.0\r\n\ttemplate int(16)\tvolume = 0x0100;\t// typically, full volume\r\n\tconst bit(16)\treserved = 0;\r\n\tconst unsigned int(32)[2]\treserved = 0;\r\n\ttemplate int(32)[9]\tmatrix =\r\n\t\t{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };\r\n\t\t// Unity matrix\r\n\tbit(32)[6]\tpre_defined = 0;\r\n\tunsigned int(32)\tnext_track_ID;\r\n}"
     },
     {
       "fourcc": "nmhd",
@@ -858,14 +858,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class NullMediaHeaderBox\n\textends FullBox('nmhd', version = 0, flags) {\n}"
+      "syntax": "aligned(8) class NullMediaHeaderBox\r\n\textends FullBox('nmhd', version = 0, flags) {\r\n}"
     },
     {
       "fourcc": "otyp",
       "description": "Original file type",
       "containers": [ "file", "otyp" ],
       "type": "Box",
-      "syntax": "aligned(8) class OriginalFileTypeBox extends Box('otyp') {\n}"
+      "syntax": "aligned(8) class OriginalFileTypeBox extends Box('otyp') {\r\n}"
     },
     {
       "fourcc": "padb",
@@ -874,14 +874,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class PaddingBitsBox extends FullBox('padb', version = 0, 0) {\n\tunsigned int(32)\tsample_count;\n\tint i;\n\tfor (i=0; i < floor((sample_count + 1)/2); i++) {\n\t\tbit(1)\treserved = 0;\n\t\tbit(3)\tpad1;\n\t\tbit(1)\treserved = 0;\n\t\tbit(3)\tpad2;\n\t}\n}"
+      "syntax": "aligned(8) class PaddingBitsBox extends FullBox('padb', version = 0, 0) {\r\n\tunsigned int(32)\tsample_count;\r\n\tint i;\r\n\tfor (i=0; i < floor((sample_count + 1)/2); i++) {\r\n\t\tbit(1)\treserved = 0;\r\n\t\tbit(3)\tpad1;\r\n\t\tbit(1)\treserved = 0;\r\n\t\tbit(3)\tpad2;\r\n\t}\r\n}"
     },
     {
       "fourcc": "paen",
       "description": "Partition Entry",
       "containers": [ "fiin" ],
       "type": "Box",
-      "syntax": "aligned(8) class PartitionEntry extends Box('paen') {\n\tFilePartitionBox\tblocks_and_symbols;\n\tFECReservoirBox\tFEC_symbol_locations; //optional\n\tFileReservoirBox\tFile_symbol_locations; //optional\n}\n\naligned(8) class FDItemInformationBox\n\t\textends FullBox('fiin', version = 0, 0) {\n\tunsigned int(16)\tentry_count;\n\tPartitionEntry\t\tpartition_entries[ entry_count ];\n\tFDSessionGroupBox\tsession_info;\t\t\t//optional\n\tGroupIdToNameBox\tgroup_id_to_name;\t//optional\n}"
+      "syntax": "aligned(8) class PartitionEntry extends Box('paen') {\r\n\tFilePartitionBox\tblocks_and_symbols;\r\n\tFECReservoirBox\tFEC_symbol_locations; //optional\r\n\tFileReservoirBox\tFile_symbol_locations; //optional\r\n}\r\n\r\naligned(8) class FDItemInformationBox\r\n\t\textends FullBox('fiin', version = 0, 0) {\r\n\tunsigned int(16)\tentry_count;\r\n\tPartitionEntry\t\tpartition_entries[ entry_count ];\r\n\tFDSessionGroupBox\tsession_info;\t\t\t//optional\r\n\tGroupIdToNameBox\tgroup_id_to_name;\t//optional\r\n}"
     },
     {
       "fourcc": "pdin",
@@ -890,8 +890,8 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "originalSyntax": "aligned(8) class ProgressiveDownloadInfoBox\n\t\textends FullBox('pdin', version = 0, 0) {\n\tfor (i=0; ; i++) {\t// to end of box\n\t\tunsigned int(32)  rate;\n\t\tunsigned int(32)  initial_delay;\n\t}\n}",
-      "syntax": "aligned(8) class ProgressiveDownloadInfoBox\n\t\textends FullBox('pdin', version = 0, 0) {\r\n\t// to end of box\r\n\tProgressiveDownloadInfoItem items[];\r\n }\r\n aligned(8) class ProgressiveDownloadInfoItem {\r\n \t\tunsigned int(32)  rate;\r\n\t\tunsigned int(32)  initial_delay;\r\n }\r\n"
+      "originalSyntax": "aligned(8) class ProgressiveDownloadInfoBox\r\n\t\textends FullBox('pdin', version = 0, 0) {\r\n\tfor (i=0; ; i++) {\t// to end of box\r\n\t\tunsigned int(32)  rate;\r\n\t\tunsigned int(32)  initial_delay;\r\n\t}\r\n}",
+      "syntax": "aligned(8) class ProgressiveDownloadInfoBox\r\n\t\textends FullBox('pdin', version = 0, 0) {\r\n\t// to end of box\r\n\tProgressiveDownloadInfoItem items[];\r\n }\r\n aligned(8) class ProgressiveDownloadInfoItem {\r\n \t\tunsigned int(32)  rate;\r\n\t\tunsigned int(32)  initial_delay;\r\n }\r\n"
     },
     {
       "fourcc": "pitm",
@@ -900,7 +900,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class PrimaryItemBox\n\t\textends FullBox('pitm', version, 0) {\n\tif (version == 0) {\n\t\tunsigned int(16)\titem_ID;\n\t} else {\n\t\tunsigned int(32)\titem_ID;\n\t}\n}"
+      "syntax": "aligned(8) class PrimaryItemBox\r\n\t\textends FullBox('pitm', version, 0) {\r\n\tif (version == 0) {\r\n\t\tunsigned int(16)\titem_ID;\r\n\t} else {\r\n\t\tunsigned int(32)\titem_ID;\r\n\t}\r\n}"
     },
     {
       "fourcc": "prft",
@@ -909,14 +909,14 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class ProducerReferenceTimeBox\n\textends FullBox('prft', version, flags) {\n\tunsigned int(32) reference_track_ID;\n\tunsigned int(64) ntp_timestamp;\n\tif (version==0) {\n\t\tunsigned int(32) media_time;\n\t} else {\n\t\tunsigned int(64) media_time;\n\t}\n}"
+      "syntax": "aligned(8) class ProducerReferenceTimeBox\r\n\textends FullBox('prft', version, flags) {\r\n\tunsigned int(32) reference_track_ID;\r\n\tunsigned int(64) ntp_timestamp;\r\n\tif (version==0) {\r\n\t\tunsigned int(32) media_time;\r\n\t} else {\r\n\t\tunsigned int(64) media_time;\r\n\t}\r\n}"
     },
     {
       "fourcc": "rinf",
       "description": "restricted scheme information box",
       "containers": [ "SampleEntry", "RestrictedSampleEntry" ],
       "type": "Box",
-      "syntax": "aligned(8) class RestrictedSchemeInfoBox(fmt) extends Box('rinf') {\n\tOriginalFormatBox(fmt)\toriginal_format;\n\tSchemeTypeBox\t\t\tscheme_type_box;\n\tSchemeInformationBox\tinfo;\t\t\t\t// optional\n}"
+      "syntax": "aligned(8) class RestrictedSchemeInfoBox(fmt) extends Box('rinf') {\r\n\tOriginalFormatBox(fmt)\toriginal_format;\r\n\tSchemeTypeBox\t\t\tscheme_type_box;\r\n\tSchemeInformationBox\tinfo;\t\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "saio",
@@ -931,7 +931,7 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class SampleAuxiliaryInformationOffsetsBox\n\textends FullBox('saio', version, flags)\n{\n\tif (flags & 1) {\n\t\tunsigned int(32) aux_info_type;\n\t\tunsigned int(32) aux_info_type_parameter;\n\t}\n\tunsigned int(32) entry_count;\n\tif ( version == 0 ) {\n\t\tunsigned int(32) offset[ entry_count ];\n\t}\n\telse {\n\t\tunsigned int(64) offset[ entry_count ];\n\t}\n}"
+      "syntax": "aligned(8) class SampleAuxiliaryInformationOffsetsBox\r\n\textends FullBox('saio', version, flags)\r\n{\r\n\tif (flags & 1) {\r\n\t\tunsigned int(32) aux_info_type;\r\n\t\tunsigned int(32) aux_info_type_parameter;\r\n\t}\r\n\tunsigned int(32) entry_count;\r\n\tif ( version == 0 ) {\r\n\t\tunsigned int(32) offset[ entry_count ];\r\n\t}\r\n\telse {\r\n\t\tunsigned int(64) offset[ entry_count ];\r\n\t}\r\n}"
     },
     {
       "fourcc": "saiz",
@@ -946,7 +946,7 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class SampleAuxiliaryInformationSizesBox\n\textends FullBox('saiz', version = 0, flags)\n{\n\tif (flags & 1) {\n\t\tunsigned int(32) aux_info_type;\n\t\tunsigned int(32) aux_info_type_parameter;\n\t}\n\tunsigned int(8) default_sample_info_size;\n\tunsigned int(32) sample_count;\n\tif (default_sample_info_size == 0) {\n\t\tunsigned int(8) sample_info_size[ sample_count ];\n\t}\n}"
+      "syntax": "aligned(8) class SampleAuxiliaryInformationSizesBox\r\n\textends FullBox('saiz', version = 0, flags)\r\n{\r\n\tif (flags & 1) {\r\n\t\tunsigned int(32) aux_info_type;\r\n\t\tunsigned int(32) aux_info_type_parameter;\r\n\t}\r\n\tunsigned int(8) default_sample_info_size;\r\n\tunsigned int(32) sample_count;\r\n\tif (default_sample_info_size == 0) {\r\n\t\tunsigned int(8) sample_info_size[ sample_count ];\r\n\t}\r\n}"
     },
     {
       "fourcc": "sbgp",
@@ -955,14 +955,14 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class SampleToGroupBox\n\textends FullBox('sbgp', version, 0)\n{\n\tunsigned int(32)\tgrouping_type;\n\tif (version == 1) {\n\t\tunsigned int(32) grouping_type_parameter;\n\t}\n\tunsigned int(32)\tentry_count;\n\tfor (i=1; i <= entry_count; i++)\n\t{\n\t\tunsigned int(32)\tsample_count;\n\t\tunsigned int(32)\tgroup_description_index;\n\t}\n}"
+      "syntax": "aligned(8) class SampleToGroupBox\r\n\textends FullBox('sbgp', version, 0)\r\n{\r\n\tunsigned int(32)\tgrouping_type;\r\n\tif (version == 1) {\r\n\t\tunsigned int(32) grouping_type_parameter;\r\n\t}\r\n\tunsigned int(32)\tentry_count;\r\n\tfor (i=1; i <= entry_count; i++)\r\n\t{\r\n\t\tunsigned int(32)\tsample_count;\r\n\t\tunsigned int(32)\tgroup_description_index;\r\n\t}\r\n}"
     },
     {
       "fourcc": "schi",
       "description": "scheme information box",
       "containers": [ "sinf", "rinf" ],
       "type": "Box",
-      "syntax": "aligned(8) class SchemeInformationBox extends Box('schi') {\n\tBox\tscheme_specific_data[];\n}"
+      "syntax": "aligned(8) class SchemeInformationBox extends Box('schi') {\r\n\tBox\tscheme_specific_data[];\r\n}"
     },
     {
       "fourcc": "schm",
@@ -977,7 +977,7 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class SchemeTypeBox extends FullBox('schm', 0, flags) {\n\tunsigned int(32) scheme_type; // 4CC identifying the scheme\n\tunsigned int(32) scheme_version; // scheme version\n\tif (flags & 0x000001) {\n\t\tutf8string scheme_uri; // browser uri\n\t}\n}"
+      "syntax": "aligned(8) class SchemeTypeBox extends FullBox('schm', 0, flags) {\r\n\tunsigned int(32) scheme_type; // 4CC identifying the scheme\r\n\tunsigned int(32) scheme_version; // scheme version\r\n\tif (flags & 0x000001) {\r\n\t\tutf8string scheme_uri; // browser uri\r\n\t}\r\n}"
     },
     {
       "fourcc": "csch",
@@ -992,7 +992,7 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class CompatibleSchemeTypeBox extends FullBox('csch', 0, flags) {\n\t// identical syntax to SchemeTypeBox\n\tunsigned int(32)\tscheme_type;\t\t// 4CC identifying the scheme\n\tunsigned int(32)\tscheme_version;\t// scheme version \n\tif (flags & 0x000001) {\n\t\tutf8string scheme_uri;\t\t// browser uri\n\t}\n}\n"
+      "syntax": "aligned(8) class CompatibleSchemeTypeBox extends FullBox('csch', 0, flags) {\r\n\t// identical syntax to SchemeTypeBox\r\n\tunsigned int(32)\tscheme_type;\t\t// 4CC identifying the scheme\r\n\tunsigned int(32)\tscheme_version;\t// scheme version \r\n\tif (flags & 0x000001) {\r\n\t\tutf8string scheme_uri;\t\t// browser uri\r\n\t}\r\n}\r\n"
     },
     {
       "fourcc": "sdtp",
@@ -1001,14 +1001,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SampleDependencyTypeBox\n\textends FullBox('sdtp', version = 0, 0) {\n\tfor (i=0; i < sample_count; i++){\n\t\tunsigned int(2) is_leading;\n\t\tunsigned int(2) sample_depends_on;\n\t\tunsigned int(2) sample_is_depended_on;\n\t\tunsigned int(2) sample_has_redundancy;\n\t}\n}"
+      "syntax": "aligned(8) class SampleDependencyTypeBox\r\n\textends FullBox('sdtp', version = 0, 0) {\r\n\tfor (i=0; i < sample_count; i++){\r\n\t\tunsigned int(2) is_leading;\r\n\t\tunsigned int(2) sample_depends_on;\r\n\t\tunsigned int(2) sample_is_depended_on;\r\n\t\tunsigned int(2) sample_has_redundancy;\r\n\t}\r\n}"
     },
     {
       "fourcc": "segr",
       "description": "file delivery session group",
       "containers": [ "fiin" ],
       "type": "Box",
-      "syntax": "aligned(8) class FDSessionGroupBox extends Box('segr') {\n\tunsigned int(16)\tnum_session_groups;\n\tfor(i=0; i < num_session_groups; i++) {\n\t\tunsigned int(8)\tentry_count;\n\t\tfor (j=0; j < entry_count; j++) {\n\t\t\tunsigned int(32)\tgroup_ID;\n\t\t}\n\t\tunsigned int(16) num_channels_in_session_group;\n\t\tfor(k=0; k < num_channels_in_session_group; k++) {\n\t\t\tunsigned int(32) hint_track_ID;\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class FDSessionGroupBox extends Box('segr') {\r\n\tunsigned int(16)\tnum_session_groups;\r\n\tfor(i=0; i < num_session_groups; i++) {\r\n\t\tunsigned int(8)\tentry_count;\r\n\t\tfor (j=0; j < entry_count; j++) {\r\n\t\t\tunsigned int(32)\tgroup_ID;\r\n\t\t}\r\n\t\tunsigned int(16) num_channels_in_session_group;\r\n\t\tfor(k=0; k < num_channels_in_session_group; k++) {\r\n\t\t\tunsigned int(32) hint_track_ID;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "sgpd",
@@ -1017,7 +1017,7 @@
       "flags": [],
       "containers": [ "stbl", "traf" ],
       "type": "FullBox",
-      "syntax": "aligned(8) class SampleGroupDescriptionBox ()\n\textends FullBox('sgpd', version, flags){\n\tunsigned int(32) grouping_type;\n\tif (version>=1) { unsigned int(32) default_length; }\n\tif (version>=2) {\n\t\tunsigned int(32) default_group_description_index;\n\t}\n\tunsigned int(32) entry_count;\n\tint i;\n\tfor (i = 1 ; i <= entry_count ; i++){\n\t\tif (version>=1) {\n\t\t\tif (default_length==0) {\n\t\t\t\tunsigned int(32) description_length;\n\t\t\t}\n\t\t}\n\t\tSampleGroupDescriptionEntry (grouping_type);\n\t\t// an instance of a class derived from SampleGroupDescriptionEntry\n\t\t//  that is appropriate and permitted for the media type\n\t}\n}"
+      "syntax": "aligned(8) class SampleGroupDescriptionBox ()\r\n\textends FullBox('sgpd', version, flags){\r\n\tunsigned int(32) grouping_type;\r\n\tif (version>=1) { unsigned int(32) default_length; }\r\n\tif (version>=2) {\r\n\t\tunsigned int(32) default_group_description_index;\r\n\t}\r\n\tunsigned int(32) entry_count;\r\n\tint i;\r\n\tfor (i = 1 ; i <= entry_count ; i++){\r\n\t\tif (version>=1) {\r\n\t\t\tif (default_length==0) {\r\n\t\t\t\tunsigned int(32) description_length;\r\n\t\t\t}\r\n\t\t}\r\n\t\tSampleGroupDescriptionEntry (grouping_type);\r\n\t\t// an instance of a class derived from SampleGroupDescriptionEntry\r\n\t\t//  that is appropriate and permitted for the media type\r\n\t}\r\n}"
     },
     {
       "fourcc": "sidx",
@@ -1026,21 +1026,21 @@
       "type": "CompressedBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class CompressedSegmentIndexBox\n\textends CompressedBox('!six', 'sidx') {\n}\n"
+      "syntax": "aligned(8) class CompressedSegmentIndexBox\r\n\textends CompressedBox('!six', 'sidx') {\r\n}\r\n"
     },
     {
       "fourcc": "sinf",
       "description": "protection scheme information box",
       "containers": [ "ipro", "SampleEntry" ],
       "type": "Box",
-      "syntax": "aligned(8) class ProtectionSchemeInfoBox(fmt) extends Box('sinf') {\n\tOriginalFormatBox(fmt)\toriginal_format;\n\n\tSchemeTypeBox\t\t\tscheme_type_box;\t\t// optional\n\tSchemeInformationBox\tinfo;\t\t\t\t\t\t// optional\n}"
+      "syntax": "aligned(8) class ProtectionSchemeInfoBox(fmt) extends Box('sinf') {\r\n\tOriginalFormatBox(fmt)\toriginal_format;\r\n\r\n\tSchemeTypeBox\t\t\tscheme_type_box;\t\t// optional\r\n\tSchemeInformationBox\tinfo;\t\t\t\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "skip",
       "description": "free space",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class FreeSpaceBox extends Box('skip') {\nunsigned int(8) data[];\n}"
+      "syntax": "aligned(8) class FreeSpaceBox extends Box('skip') {\r\nunsigned int(8) data[];\r\n}"
     },
     {
       "fourcc": "smhd",
@@ -1049,7 +1049,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SoundMediaHeaderBox\n\textends FullBox('smhd', version = 0, 0) {\n\ttemplate int(16) balance = 0;\n\tconst unsigned int(16)\treserved = 0;\n}"
+      "syntax": "aligned(8) class SoundMediaHeaderBox\r\n\textends FullBox('smhd', version = 0, 0) {\r\n\ttemplate int(16) balance = 0;\r\n\tconst unsigned int(16)\treserved = 0;\r\n}"
     },
     {
       "fourcc": "srpp",
@@ -1058,7 +1058,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SRTPProcessBox extends FullBox('srpp', version, 0) {\n\tunsigned int(32)\t\tencryption_algorithm_rtp;\n\tunsigned int(32)\t\tencryption_algorithm_rtcp;\n\tunsigned int(32)\t\tintegrity_algorithm_rtp;\n\tunsigned int(32)\t\tintegrity_algorithm_rtcp;\n\tSchemeTypeBox\t\t\tscheme_type_box;\n\tSchemeInformationBox\tinfo;\n}"
+      "syntax": "aligned(8) class SRTPProcessBox extends FullBox('srpp', version, 0) {\r\n\tunsigned int(32)\t\tencryption_algorithm_rtp;\r\n\tunsigned int(32)\t\tencryption_algorithm_rtcp;\r\n\tunsigned int(32)\t\tintegrity_algorithm_rtp;\r\n\tunsigned int(32)\t\tintegrity_algorithm_rtcp;\r\n\tSchemeTypeBox\t\t\tscheme_type_box;\r\n\tSchemeInformationBox\tinfo;\r\n}"
     },
     {
       "fourcc": "ssix",
@@ -1067,14 +1067,14 @@
       "flags": [],
       "containers": [ "file" ],
       "type": "CompressedBox",
-      "syntax": "aligned(8) class CompressedSubsegmentIndexBox\n\textends CompressedBox('!ssx', 'ssix') {\n}"
+      "syntax": "aligned(8) class CompressedSubsegmentIndexBox\r\n\textends CompressedBox('!ssx', 'ssix') {\r\n}"
     },
     {
       "fourcc": "stbl",
       "description": "sample table box, container for the time/space map",
       "containers": [ "minf" ],
       "type": "Box",
-      "syntax": "aligned(8) class SampleTableBox extends Box('stbl') {\n}"
+      "syntax": "aligned(8) class SampleTableBox extends Box('stbl') {\r\n}"
     },
     {
       "fourcc": "stco",
@@ -1083,7 +1083,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class ChunkOffsetBox\n\textends FullBox('stco', version = 0, 0) {\n\tunsigned int(32)\tentry_count;\n\tfor (i=1; i <= entry_count; i++) {\n\t\tunsigned int(32)\tchunk_offset;\n\t}\n}"
+      "syntax": "aligned(8) class ChunkOffsetBox\r\n\textends FullBox('stco', version = 0, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tunsigned int(32)\tchunk_offset;\r\n\t}\r\n}"
     },
     {
       "fourcc": "stdp",
@@ -1092,7 +1092,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class DegradationPriorityBox\n\textends FullBox('stdp', version = 0, 0) {\n\tint i;\n\tfor (i=0; i < sample_count; i++) {\n\t\tunsigned int(16)\tpriority;\n\t}\n}"
+      "syntax": "aligned(8) class DegradationPriorityBox\r\n\textends FullBox('stdp', version = 0, 0) {\r\n\tint i;\r\n\tfor (i=0; i < sample_count; i++) {\r\n\t\tunsigned int(16)\tpriority;\r\n\t}\r\n}"
     },
     {
       "fourcc": "sthd",
@@ -1101,14 +1101,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SubtitleMediaHeaderBox\n\textends FullBox ('sthd', version = 0, flags = 0){\n}"
+      "syntax": "aligned(8) class SubtitleMediaHeaderBox\r\n\textends FullBox ('sthd', version = 0, flags = 0){\r\n}"
     },
     {
       "fourcc": "strd",
       "description": "Sub-track definition",
       "containers": [ "strk" ],
       "type": "Box",
-      "syntax": "aligned(8) class SubTrackDefinitionBox extends Box('strd') {\n}"
+      "syntax": "aligned(8) class SubTrackDefinitionBox extends Box('strd') {\r\n}"
     },
     {
       "fourcc": "stri",
@@ -1117,7 +1117,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SubTrackInformationBox\n\textends FullBox('stri', version = 0, 0){\n\ttemplate int(16)\tswitch_group = 0;\n\ttemplate int(16)\talternate_group = 0;\n\ttemplate unsigned int(32)\tsub_track_ID = 0;\n\tunsigned int(32)\tattribute_list[];\t// to the end of the box\n}"
+      "syntax": "aligned(8) class SubTrackInformationBox\r\n\textends FullBox('stri', version = 0, 0){\r\n\ttemplate int(16)\tswitch_group = 0;\r\n\ttemplate int(16)\talternate_group = 0;\r\n\ttemplate unsigned int(32)\tsub_track_ID = 0;\r\n\tunsigned int(32)\tattribute_list[];\t// to the end of the box\r\n}"
     },
     {
       "fourcc": "stsc",
@@ -1126,7 +1126,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SampleToChunkBox\n\textends FullBox('stsc', version = 0, 0) {\n\tunsigned int(32)\tentry_count;\n\tfor (i=1; i <= entry_count; i++) {\n\t\tunsigned int(32)\tfirst_chunk;\n\t\tunsigned int(32)\tsamples_per_chunk;\n\t\tunsigned int(32)\tsample_description_index;\n\t}\n}"
+      "syntax": "aligned(8) class SampleToChunkBox\r\n\textends FullBox('stsc', version = 0, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\tfor (i=1; i <= entry_count; i++) {\r\n\t\tunsigned int(32)\tfirst_chunk;\r\n\t\tunsigned int(32)\tsamples_per_chunk;\r\n\t\tunsigned int(32)\tsample_description_index;\r\n\t}\r\n}"
     },
     {
       "fourcc": "stsd",
@@ -1135,7 +1135,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SampleDescriptionBox ()\n\textends FullBox('stsd', version, 0){\n\tint i ;\n\tunsigned int(32) entry_count;\n\tfor (i = 1 ; i <= entry_count ; i++){\n\t\tSampleEntry();\t\t// an instance of a class derived from SampleEntry\n\t}\n}"
+      "syntax": "aligned(8) class SampleDescriptionBox ()\r\n\textends FullBox('stsd', version, 0){\r\n\tint i ;\r\n\tunsigned int(32) entry_count;\r\n\tfor (i = 1 ; i <= entry_count ; i++){\r\n\t\tSampleEntry();\t\t// an instance of a class derived from SampleEntry\r\n\t}\r\n}"
     },
     {
       "fourcc": "stsg",
@@ -1144,7 +1144,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SubTrackSampleGroupBox\n\textends FullBox('stsg', 0, 0){\n\tunsigned int(32) grouping_type;\n\tunsigned int(16) item_count;\n\tfor(i = 0; i< item_count; i++)\n\t\tunsigned int(32)\tgroup_description_index;\n}"
+      "syntax": "aligned(8) class SubTrackSampleGroupBox\r\n\textends FullBox('stsg', 0, 0){\r\n\tunsigned int(32) grouping_type;\r\n\tunsigned int(16) item_count;\r\n\tfor(i = 0; i< item_count; i++)\r\n\t\tunsigned int(32)\tgroup_description_index;\r\n}"
     },
     {
       "fourcc": "stsh",
@@ -1153,7 +1153,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class ShadowSyncSampleBox\n\textends FullBox('stsh', version = 0, 0) {\n\tunsigned int(32)\tentry_count;\n\tint i;\n\tfor (i=0; i < entry_count; i++) {\n\t\tunsigned int(32)\tshadowed_sample_number;\n\t\tunsigned int(32)\tsync_sample_number;\n\t}\n}"
+      "syntax": "aligned(8) class ShadowSyncSampleBox\r\n\textends FullBox('stsh', version = 0, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\tint i;\r\n\tfor (i=0; i < entry_count; i++) {\r\n\t\tunsigned int(32)\tshadowed_sample_number;\r\n\t\tunsigned int(32)\tsync_sample_number;\r\n\t}\r\n}"
     },
     {
       "fourcc": "stss",
@@ -1162,7 +1162,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SyncSampleBox\n\textends FullBox('stss', version = 0, 0) {\n\tunsigned int(32)\tentry_count;\n\tint i;\n\tfor (i=0; i < entry_count; i++) {\n\t\tunsigned int(32)\tsample_number;\n\t}\n}"
+      "syntax": "aligned(8) class SyncSampleBox\r\n\textends FullBox('stss', version = 0, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\tint i;\r\n\tfor (i=0; i < entry_count; i++) {\r\n\t\tunsigned int(32)\tsample_number;\r\n\t}\r\n}"
     },
     {
       "fourcc": "stsz",
@@ -1171,7 +1171,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class SampleSizeBox extends FullBox('stsz', version = 0, 0) {\n\tunsigned int(32)\tsample_size;\n\tunsigned int(32)\tsample_count;\n\tif (sample_size==0) {\n\t\tfor (i=1; i <= sample_count; i++) {\n\t\tunsigned int(32)\tentry_size;\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class SampleSizeBox extends FullBox('stsz', version = 0, 0) {\r\n\tunsigned int(32)\tsample_size;\r\n\tunsigned int(32)\tsample_count;\r\n\tif (sample_size==0) {\r\n\t\tfor (i=1; i <= sample_count; i++) {\r\n\t\tunsigned int(32)\tentry_size;\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "stts",
@@ -1180,14 +1180,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class TimeToSampleBox\n\textends FullBox('stts', version = 0, 0) {\n\tunsigned int(32)\tentry_count;\n\t\tint i;\n\tfor (i=0; i < entry_count; i++) {\n\t\tunsigned int(32)\tsample_count;\n\t\tunsigned int(32)\tsample_delta;\n\t}\n}"
+      "syntax": "aligned(8) class TimeToSampleBox\r\n\textends FullBox('stts', version = 0, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\t\tint i;\r\n\tfor (i=0; i < entry_count; i++) {\r\n\t\tunsigned int(32)\tsample_count;\r\n\t\tunsigned int(32)\tsample_delta;\r\n\t}\r\n}"
     },
     {
       "fourcc": "styp",
       "description": "Segment Type Box",
       "containers": [ "file" ],
       "type": "GeneralTypeBox",
-      "syntax": "aligned(8) class SegmentTypeBox extends GeneralTypeBox ('styp')\n{}"
+      "syntax": "aligned(8) class SegmentTypeBox extends GeneralTypeBox ('styp')\r\n{}"
     },
     {
       "fourcc": "stz2",
@@ -1196,7 +1196,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class CompactSampleSizeBox \n\t\textends FullBox('stz2', version = 0, 0) {\n\tunsigned int(24)\treserved = 0;\n\tunsigned int(8)\tfield_size;\n\tunsigned int(32)\tsample_count;\n\tfor (i=1; i <= sample_count; i++) {\n\t\tunsigned int(field_size)\tentry_size;\n\t}\n}"
+      "syntax": "aligned(8) class CompactSampleSizeBox \r\n\t\textends FullBox('stz2', version = 0, 0) {\r\n\tunsigned int(24)\treserved = 0;\r\n\tunsigned int(8)\tfield_size;\r\n\tunsigned int(32)\tsample_count;\r\n\tfor (i=1; i <= sample_count; i++) {\r\n\t\tunsigned int(field_size)\tentry_size;\r\n\t}\r\n}"
     },
     {
       "fourcc": "subs",
@@ -1209,7 +1209,7 @@
           "wildcard": "any"
         }
       ],
-      "syntax": "aligned(8) class SubSampleInformationBox\n\textends FullBox('subs', version, flags) {\n\tunsigned int(32) entry_count;\n\tint i,j;\n\tfor (i=0; i < entry_count; i++) {\n\t\tunsigned int(32) sample_delta;\n\t\tunsigned int(16) subsample_count;\n\t\tif (subsample_count > 0) {\n\t\t\tfor (j=0; j < subsample_count; j++) {\n\t\t\t\tif(version == 1)\n\t\t\t\t{\n\t\t\t\t\tunsigned int(32) subsample_size;\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t{\n\t\t\t\t\tunsigned int(16) subsample_size;\n\t\t\t\t}\n\t\t\t\tunsigned int(8) subsample_priority;\n\t\t\t\tunsigned int(8) discardable;\n\t\t\t\tunsigned int(32) codec_specific_parameters;\n\t\t\t}\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class SubSampleInformationBox\r\n\textends FullBox('subs', version, flags) {\r\n\tunsigned int(32) entry_count;\r\n\tint i,j;\r\n\tfor (i=0; i < entry_count; i++) {\r\n\t\tunsigned int(32) sample_delta;\r\n\t\tunsigned int(16) subsample_count;\r\n\t\tif (subsample_count > 0) {\r\n\t\t\tfor (j=0; j < subsample_count; j++) {\r\n\t\t\t\tif(version == 1)\r\n\t\t\t\t{\r\n\t\t\t\t\tunsigned int(32) subsample_size;\r\n\t\t\t\t}\r\n\t\t\t\telse\r\n\t\t\t\t{\r\n\t\t\t\t\tunsigned int(16) subsample_size;\r\n\t\t\t\t}\r\n\t\t\t\tunsigned int(8) subsample_priority;\r\n\t\t\t\tunsigned int(8) discardable;\r\n\t\t\t\tunsigned int(32) codec_specific_parameters;\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "tfdt",
@@ -1218,7 +1218,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class TrackFragmentBaseMediaDecodeTimeBox\n\textends FullBox('tfdt', version, 0) {\n\tif (version==1) {\n\t\tunsigned int(64) baseMediaDecodeTime;\n\t} else { // version==0\n\t\tunsigned int(32) baseMediaDecodeTime;\n\t}\n}"
+      "syntax": "aligned(8) class TrackFragmentBaseMediaDecodeTimeBox\r\n\textends FullBox('tfdt', version, 0) {\r\n\tif (version==1) {\r\n\t\tunsigned int(64) baseMediaDecodeTime;\r\n\t} else { // version==0\r\n\t\tunsigned int(32) baseMediaDecodeTime;\r\n\t}\r\n}"
     },
     {
       "fourcc": "tfhd",
@@ -1272,7 +1272,7 @@
       "type": "FullBox",
       "versions": [ 0, 1 ],
       "flags": [],
-      "syntax": "aligned(8) class TrackFragmentRandomAccessBox\n extends FullBox('tfra', version, 0) {\n\tunsigned int(32)\ttrack_ID;\n\tconst unsigned int(26)\treserved = 0;\n\tunsigned int(2)\tlength_size_of_traf_num;\n\tunsigned int(2)\tlength_size_of_trun_num;\n\tunsigned int(2)\tlength_size_of_sample_num;\n\tunsigned int(32)\tnumber_of_entry;\n\tfor(i=1; i <= number_of_entry; i++){\n\t\tif(version==1){\n\t\t\tunsigned int(64)\ttime;\n\t\t\tunsigned int(64)\tmoof_offset;\n\t\t}else{\n\t\t\tunsigned int(32)\ttime;\n\t\t\tunsigned int(32)\tmoof_offset;\n\t\t}\n\t\tunsigned int((length_size_of_traf_num+1) * 8)\ttraf_number;\n\t\tunsigned int((length_size_of_trun_num+1) * 8)\ttrun_number;\n\t\tunsigned int((length_size_of_sample_num+1) * 8)\tsample_delta;\n\t}\n}"
+      "syntax": "aligned(8) class TrackFragmentRandomAccessBox\r\n extends FullBox('tfra', version, 0) {\r\n\tunsigned int(32)\ttrack_ID;\r\n\tconst unsigned int(26)\treserved = 0;\r\n\tunsigned int(2)\tlength_size_of_traf_num;\r\n\tunsigned int(2)\tlength_size_of_trun_num;\r\n\tunsigned int(2)\tlength_size_of_sample_num;\r\n\tunsigned int(32)\tnumber_of_entry;\r\n\tfor(i=1; i <= number_of_entry; i++){\r\n\t\tif(version==1){\r\n\t\t\tunsigned int(64)\ttime;\r\n\t\t\tunsigned int(64)\tmoof_offset;\r\n\t\t}else{\r\n\t\t\tunsigned int(32)\ttime;\r\n\t\t\tunsigned int(32)\tmoof_offset;\r\n\t\t}\r\n\t\tunsigned int((length_size_of_traf_num+1) * 8)\ttraf_number;\r\n\t\tunsigned int((length_size_of_trun_num+1) * 8)\ttrun_number;\r\n\t\tunsigned int((length_size_of_sample_num+1) * 8)\tsample_delta;\r\n\t}\r\n}"
     },
     {
       "fourcc": "tkhd",
@@ -1302,28 +1302,28 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class TrackHeaderBox\n\textends FullBox('tkhd', version, flags){\n\tif (version==1) {\n\t\tunsigned int(64)\tcreation_time;\n\t\tunsigned int(64)\tmodification_time;\n\t\tunsigned int(32)\ttrack_ID;\n\t\tconst unsigned int(32)\treserved = 0;\n\t\tunsigned int(64)\tduration;\n\t} else { // version==0\n\t\tunsigned int(32)\tcreation_time;\n\t\tunsigned int(32)\tmodification_time;\n\t\tunsigned int(32)\ttrack_ID;\n\t\tconst unsigned int(32)\treserved = 0;\n\t\tunsigned int(32)\tduration;\n\t}\n\tconst unsigned int(32)[2]\treserved = 0;\n\ttemplate int(16) layer = 0;\n\ttemplate int(16) alternate_group = 0;\n\ttemplate int(16)\tvolume = {if track_is_audio 0x0100 else 0};\n\tconst unsigned int(16)\treserved = 0;\n\ttemplate int(32)[9]\tmatrix=\n\t\t{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };\n\t\t// unity matrix\n\tunsigned int(32) width;\n\tunsigned int(32) height;\n}"
+      "syntax": "aligned(8) class TrackHeaderBox\r\n\textends FullBox('tkhd', version, flags){\r\n\tif (version==1) {\r\n\t\tunsigned int(64)\tcreation_time;\r\n\t\tunsigned int(64)\tmodification_time;\r\n\t\tunsigned int(32)\ttrack_ID;\r\n\t\tconst unsigned int(32)\treserved = 0;\r\n\t\tunsigned int(64)\tduration;\r\n\t} else { // version==0\r\n\t\tunsigned int(32)\tcreation_time;\r\n\t\tunsigned int(32)\tmodification_time;\r\n\t\tunsigned int(32)\ttrack_ID;\r\n\t\tconst unsigned int(32)\treserved = 0;\r\n\t\tunsigned int(32)\tduration;\r\n\t}\r\n\tconst unsigned int(32)[2]\treserved = 0;\r\n\ttemplate int(16) layer = 0;\r\n\ttemplate int(16) alternate_group = 0;\r\n\ttemplate int(16)\tvolume = {if track_is_audio 0x0100 else 0};\r\n\tconst unsigned int(16)\treserved = 0;\r\n\ttemplate int(32)[9]\tmatrix=\r\n\t\t{ 0x00010000,0,0,0,0x00010000,0,0,0,0x40000000 };\r\n\t\t// unity matrix\r\n\tunsigned int(32) width;\r\n\tunsigned int(32) height;\r\n}"
     },
     {
       "fourcc": "traf",
       "description": "Track fragment",
       "containers": [ "moof" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackFragmentBox extends Box('traf'){\n}"
+      "syntax": "aligned(8) class TrackFragmentBox extends Box('traf'){\r\n}"
     },
     {
       "fourcc": "trak",
       "description": "container for an individual track or stream",
       "containers": [ "moov" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackBox extends Box('trak') {\n}"
+      "syntax": "aligned(8) class TrackBox extends Box('trak') {\r\n}"
     },
     {
       "fourcc": "tref",
       "description": "track reference container",
       "containers": [ "trak" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackReferenceBox extends Box('tref') {\n\tTrackReferenceTypeBox [];\n}"
+      "syntax": "aligned(8) class TrackReferenceBox extends Box('tref') {\r\n\tTrackReferenceTypeBox [];\r\n}"
     },
     {
       "fourcc": "trep",
@@ -1332,7 +1332,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "class TrackExtensionPropertiesBox extends FullBox('trep', 0, 0) {\n\tunsigned int(32) track_ID;\n\t// Any number of boxes may follow\n}"
+      "syntax": "class TrackExtensionPropertiesBox extends FullBox('trep', 0, 0) {\r\n\tunsigned int(32) track_ID;\r\n\t// Any number of boxes may follow\r\n}"
     },
     {
       "fourcc": "trex",
@@ -1341,14 +1341,14 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class TrackExtendsBox extends FullBox('trex', 0, 0){\n\tunsigned int(32)\ttrack_ID;\n\tunsigned int(32)\tdefault_sample_description_index;\n\tunsigned int(32)\tdefault_sample_duration;\n\tunsigned int(32)\tdefault_sample_size;\n\tunsigned int(32)\tdefault_sample_flags;\n}"
+      "syntax": "aligned(8) class TrackExtendsBox extends FullBox('trex', 0, 0){\r\n\tunsigned int(32)\ttrack_ID;\r\n\tunsigned int(32)\tdefault_sample_description_index;\r\n\tunsigned int(32)\tdefault_sample_duration;\r\n\tunsigned int(32)\tdefault_sample_size;\r\n\tunsigned int(32)\tdefault_sample_flags;\r\n}"
     },
     {
       "fourcc": "trgr",
       "description": "Track grouping information",
       "containers": [ "trak" ],
       "type": "Box",
-      "syntax": "aligned(8) class TrackGroupBox extends Box('trgr') {\n}"
+      "syntax": "aligned(8) class TrackGroupBox extends Box('trgr') {\r\n}"
     },
     {
       "fourcc": "trun",
@@ -1396,28 +1396,28 @@
       "description": "track type and compatibility",
       "containers": [ "trak" ],
       "type": "GeneralTypeBox",
-      "syntax": "aligned(8) class TrackTypeBox extends GeneralTypeBox ('ttyp')\n{}"
+      "syntax": "aligned(8) class TrackTypeBox extends GeneralTypeBox ('ttyp')\r\n{}"
     },
     {
       "fourcc": "tyco",
       "description": "type and-combination",
       "containers": [ "etyp" ],
       "type": "Box",
-      "syntax": "aligned(8) class TypeCombinationBox extends Box('tyco') {\n\tunsigned int(32)\tcompatible_brands[];\t// to end of the box\n}"
+      "syntax": "aligned(8) class TypeCombinationBox extends Box('tyco') {\r\n\tunsigned int(32)\tcompatible_brands[];\t// to end of the box\r\n}"
     },
     {
       "fourcc": "udta",
       "description": "user-data",
       "containers": [ "moov", "trak", "moof", "traf" ],
       "type": "Box",
-      "syntax": "aligned(8) class UserDataBox extends Box('udta') {\n}"
+      "syntax": "aligned(8) class UserDataBox extends Box('udta') {\r\n}"
     },
     {
       "fourcc": "uuid",
       "description": "user-extension box",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class BoxHeader (\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type) {\n\tunsigned int(32) size;\n\tunsigned int(32) type = boxtype;\n\tif (size==1) {\n\t\tunsigned int(64) largesize;\n\t} else if (size==0) {\n\t\t// box extends to end of file\n\t}\n\tif (type=='uuid') {\n\t\tunsigned int(8)[16] usertype = extended_type;\n\t}\n}"
+      "syntax": "aligned(8) class BoxHeader (\r\n\t\tunsigned int(32) boxtype,\r\n\t\toptional unsigned int(8)[16] extended_type) {\r\n\tunsigned int(32) size;\r\n\tunsigned int(32) type = boxtype;\r\n\tif (size==1) {\r\n\t\tunsigned int(64) largesize;\r\n\t} else if (size==0) {\r\n\t\t// box extends to end of file\r\n\t}\r\n\tif (type=='uuid') {\r\n\t\tunsigned int(8)[16] usertype = extended_type;\r\n\t}\r\n}"
     },
     {
       "fourcc": "vmhd",
@@ -1432,7 +1432,7 @@
           "description": ""
         }
       ],
-      "syntax": "aligned(8) class VideoMediaHeaderBox\n\textends FullBox('vmhd', version = 0, 1) {\n\ttemplate unsigned int(16)\t\tgraphicsmode = 0;\t// copy, see below\n\ttemplate unsigned int(16)[3]\topcolor = {0, 0, 0};\n}"
+      "syntax": "aligned(8) class VideoMediaHeaderBox\r\n\textends FullBox('vmhd', version = 0, 1) {\r\n\ttemplate unsigned int(16)\t\tgraphicsmode = 0;\t// copy, see below\r\n\ttemplate unsigned int(16)[3]\topcolor = {0, 0, 0};\r\n}"
     },
     {
       "fourcc": "xml ",
@@ -1441,42 +1441,42 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class XMLBox\n\textends FullBox('xml ', version = 0, 0) {\n\tutfstring xml;\n}"
+      "syntax": "aligned(8) class XMLBox\r\n\textends FullBox('xml ', version = 0, 0) {\r\n\tutfstring xml;\r\n}"
     },
     {
       "fourcc": "!mof",
       "description": "Compressed movie fragment",
       "containers": [ "file" ],
       "type": "CompressedBox",
-      "syntax": "aligned(8) class CompressedMovieFragmentBox\n\textends CompressedBox('!mof', 'moof') {\n}\n"
+      "syntax": "aligned(8) class CompressedMovieFragmentBox\r\n\textends CompressedBox('!mof', 'moof') {\r\n}\r\n"
     },
     {
       "fourcc": "!mov",
       "description": "Compressed movie",
       "containers": [ "file" ],
       "type": "CompressedBox",
-      "syntax": "aligned(8) class CompressedMovieBox\n\textends CompressedBox('!mov', 'moov') {\n}"
+      "syntax": "aligned(8) class CompressedMovieBox\r\n\textends CompressedBox('!mov', 'moov') {\r\n}"
     },
     {
       "fourcc": "!six",
       "description": "Compressed segment index",
       "containers": [ "file" ],
       "type": "CompressedBox",
-      "syntax": "aligned(8) class CompressedSegmentIndexBox\n\textends CompressedBox('!six', 'sidx') {\n}\n"
+      "syntax": "aligned(8) class CompressedSegmentIndexBox\r\n\textends CompressedBox('!six', 'sidx') {\r\n}\r\n"
     },
     {
       "fourcc": "!ssx",
       "description": "Compressed subsegment index",
       "containers": [ "file" ],
       "type": "CompressedBox",
-      "syntax": "aligned(8) class CompressedSubsegmentIndexBox\n\textends CompressedBox('!ssx', 'ssix') {\n}"
+      "syntax": "aligned(8) class CompressedSubsegmentIndexBox\r\n\textends CompressedBox('!ssx', 'ssix') {\r\n}"
     },
     {
       "fourcc": "amve",
       "description": "",
       "containers": [ "VisualSampleEntry" ],
       "type": "Box",
-      "syntax": "class AmbientViewingEnvironmentBox extends Box('amve'){\n\tunsigned int(32) ambient_illuminance; \n\tunsigned int(16) ambient_light_x;\n\tunsigned int(16) ambient_light_y;\n}"
+      "syntax": "class AmbientViewingEnvironmentBox extends Box('amve'){\r\n\tunsigned int(32) ambient_illuminance; \r\n\tunsigned int(16) ambient_light_x;\r\n\tunsigned int(16) ambient_light_y;\r\n}"
     },
     {
       "fourcc": "keys",
@@ -1500,7 +1500,7 @@
         }
       ],
       "type": "Box",
-      "syntax": "class URIBox extends FullBox('uri ', version = 0, 0) {\n\tutf8string theURI;\n}"
+      "syntax": "class URIBox extends FullBox('uri ', version = 0, 0) {\r\n\tutf8string theURI;\r\n}"
     }
   ]
 }

@@ -9,8 +9,8 @@
       "flags": [],
       "containers": [ "trgr" ],
       "type": "TrackGroupTypeBox",
-      "originalSyntax": "aligned(8) class TrackGroupTypeBox('msrc') extends FullBox('msrc', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}",
-      "syntax": "aligned(8) class TrackGroupTypeBox(boxtype = 'msrc') extends FullBox(boxtype, version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}"
+      "originalSyntax": "aligned(8) class TrackGroupTypeBox('msrc') extends FullBox('msrc', version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) track_group_id;\r\n\t// the remaining data may be specified \r\n\t//  for a particular track_group_type\r\n}",
+      "syntax": "aligned(8) class TrackGroupTypeBox(boxtype = 'msrc') extends FullBox(boxtype, version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) track_group_id;\r\n\t// the remaining data may be specified \r\n\t//  for a particular track_group_type\r\n}"
     },
     {
       "fourcc": "ster",
@@ -19,7 +19,7 @@
       "flags": [],
       "containers": [ "trgr" ],
       "type": "TrackGroupTypeBox",
-      "syntax": "aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster') \n{\n\tunsigned int(1) left_view_flag;\n\tbit(31) reserved;\n}"
+      "syntax": "aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster') \r\n{\r\n\tunsigned int(1) left_view_flag;\r\n\tbit(31) reserved;\r\n}"
     }
   ]
 }

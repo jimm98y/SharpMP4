@@ -451,12 +451,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePartialSyncSamplesBox() extends FullBox('stps', version = 0, 0) {\n\tunsigned int(32)\tentry_count;\n\tint i;\n\tfor (i=0; i < entry_count; i++) {\n\t\tunsigned int(32)\tsample_number;\n\t}\n}"
+      "syntax": "aligned(8) class ApplePartialSyncSamplesBox() extends FullBox('stps', version = 0, 0) {\r\n\tunsigned int(32)\tentry_count;\r\n\tint i;\r\n\tfor (i=0; i < entry_count; i++) {\r\n\t\tunsigned int(32)\tsample_number;\r\n\t}\r\n}"
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {\n\tbit(7)\treserved;\n\tbit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;\n\t}\n}"
+      "syntax": "aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {\r\n\tbit(7)\treserved;\r\n\tbit(1) constrained; unsigned int(8) scaleMethod; signed int(16) displayCenterX; signed int(16) displayCenterY;\r\n\t}\r\n}"
     },
     {
       "containers": [ "*" ],
@@ -889,27 +889,27 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class H263SpecificBox() extends Box('d263') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) level;\r\n unsigned int(8) profile;\r\n } "
+      "syntax": "aligned(8) class H263SpecificBox() extends Box('d263') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) level;\r\n unsigned int(8) profile;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AC3SpecificBox() extends Box('dac3') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(24) flags;\r\n } "
+      "syntax": "aligned(8) class AC3SpecificBox() extends Box('dac3') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(24) flags;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class EVRCSpecificBox() extends Box('devc') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class EVRCSpecificBox() extends Box('devc') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class QCELPSpecificBox() extends Box('dqcp') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class QCELPSpecificBox() extends Box('dqcp') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class SMVSpecificBox() extends Box('dsmv') {\r\n\t unsigned int(32) vendor;\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
+      "syntax": "aligned(8) class SMVSpecificBox() extends Box('dsmv') {\r\n\t unsigned int(32) vendor;\r\n\t unsigned int(8) decoderVersion;\r\n unsigned int(8) framesPerSample;\r\n } "
     },
     {
       "containers": [ "*" ],

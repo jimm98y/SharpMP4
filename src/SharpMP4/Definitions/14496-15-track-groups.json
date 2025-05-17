@@ -15,8 +15,8 @@
           "description": "Indicates the uniqueness of track_group_id"
         }
       ],
-      "originalSyntax": "aligned(8) class TrackGroupTypeBox('alte') extends FullBox('alte', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}",
-      "syntax": "aligned(8) class AlteTrackGroupTypeBox() extends FullBox('alte', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}"
+      "originalSyntax": "aligned(8) class TrackGroupTypeBox('alte') extends FullBox('alte', version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) track_group_id;\r\n\t// the remaining data may be specified \r\n\t//  for a particular track_group_type\r\n}",
+      "syntax": "aligned(8) class AlteTrackGroupTypeBox() extends FullBox('alte', version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) track_group_id;\r\n\t// the remaining data may be specified \r\n\t//  for a particular track_group_type\r\n}"
     },
     {
       "fourcc": "cstg",
@@ -31,8 +31,8 @@
           "description": "Indicates the uniqueness of track_group_id"
         }
       ],
-      "originalSyntax": "aligned(8) class TrackGroupTypeBox('cstg') extends FullBox('cstg', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}",
-      "syntax": "aligned(8) class CstgTrackGroupTypeBox() extends FullBox('cstg', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}"
+      "originalSyntax": "aligned(8) class TrackGroupTypeBox('cstg') extends FullBox('cstg', version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) track_group_id;\r\n\t// the remaining data may be specified \r\n\t//  for a particular track_group_type\r\n}",
+      "syntax": "aligned(8) class CstgTrackGroupTypeBox() extends FullBox('cstg', version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) track_group_id;\r\n\t// the remaining data may be specified \r\n\t//  for a particular track_group_type\r\n}"
     },
     {
       "fourcc": "snut",
@@ -47,8 +47,8 @@
           "description": "Indicates the uniqueness of track_group_id"
         }
       ],
-      "originalSyntax": "aligned(8) class TrackGroupTypeBox('snut') extends FullBox('snut', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}",
-      "syntax": "aligned(8) class SnutTrackGroupTypeBox() extends FullBox('snut', version = 0, flags = 0)\n{\n\tunsigned int(32) track_group_id;\n\t// the remaining data may be specified \n\t//  for a particular track_group_type\n}"
+      "originalSyntax": "aligned(8) class TrackGroupTypeBox('snut') extends FullBox('snut', version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) track_group_id;\r\n\t// the remaining data may be specified \r\n\t//  for a particular track_group_type\r\n}",
+      "syntax": "aligned(8) class SnutTrackGroupTypeBox() extends FullBox('snut', version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) track_group_id;\r\n\t// the remaining data may be specified \r\n\t//  for a particular track_group_type\r\n}"
     }
   ]
 }

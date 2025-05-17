@@ -7,78 +7,78 @@
       "description": "Alternative startup sequence",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "originalSyntax": "class AlternativeStartupEntry() extends VisualSampleGroupEntry ('alst')\n{\n\tunsigned int(16) roll_count;\n\tunsigned int(16) first_output_sample;\n\tfor (i=1; i <= roll_count; i++)\n\t\tunsigned int(32) sample_offset[i];\n\tj=1;\n\tdo { // optional, until the end of the structure\n\t\tunsigned int(16) num_output_samples[j];\n\t\tunsigned int(16) num_total_samples[j];\n\t\tj++;\n\t}\n}",
-      "syntax": "class AlternativeStartupEntry() extends VisualSampleGroupEntry ('alst')\n{\n\tunsigned int(16) roll_count;\n\tunsigned int(16) first_output_sample;\n\tfor (i=1; i <= roll_count; i++)\n\t\tunsigned int(32) sample_offset[i];\n\t // optional, until the end of the structure\r\nAlternativeStartupEntryItem items[];\r\n}\r\n aligned(8) class AlternativeStartupEntryItem() {\r\n\t\tunsigned int(16) num_output_samples;\r\n\t\tunsigned int(16) num_total_samples;\r\n}\r\n"
+      "originalSyntax": "class AlternativeStartupEntry() extends VisualSampleGroupEntry ('alst')\r\n{\r\n\tunsigned int(16) roll_count;\r\n\tunsigned int(16) first_output_sample;\r\n\tfor (i=1; i <= roll_count; i++)\r\n\t\tunsigned int(32) sample_offset[i];\r\n\tj=1;\r\n\tdo { // optional, until the end of the structure\r\n\t\tunsigned int(16) num_output_samples[j];\r\n\t\tunsigned int(16) num_total_samples[j];\r\n\t\tj++;\r\n\t}\r\n}",
+      "syntax": "class AlternativeStartupEntry() extends VisualSampleGroupEntry ('alst')\r\n{\r\n\tunsigned int(16) roll_count;\r\n\tunsigned int(16) first_output_sample;\r\n\tfor (i=1; i <= roll_count; i++)\r\n\t\tunsigned int(32) sample_offset[i];\r\n\t // optional, until the end of the structure\r\nAlternativeStartupEntryItem items[];\r\n}\r\n aligned(8) class AlternativeStartupEntryItem() {\r\n\t\tunsigned int(16) num_output_samples;\r\n\t\tunsigned int(16) num_total_samples;\r\n}\r\n"
     },
     {
       "fourcc": "drap",
       "description": "Dependent random access point",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class VisualDRAPEntry() \nextends VisualSampleGroupEntry('drap') {\n\tunsigned int(3) DRAP_type;\n\tunsigned int(29) reserved = 0;\n}"
+      "syntax": "class VisualDRAPEntry() \r\nextends VisualSampleGroupEntry('drap') {\r\n\tunsigned int(3) DRAP_type;\r\n\tunsigned int(29) reserved = 0;\r\n}"
     },
     {
       "fourcc": "prol",
       "description": "Preroll (audio)",
       "containers": [ "sgpd" ],
       "type": "AudioSampleGroupEntry",
-      "syntax": "class AudioPreRollEntry() extends AudioSampleGroupEntry ('prol')\n{\n\tsigned int(16) roll_distance;\n}"
+      "syntax": "class AudioPreRollEntry() extends AudioSampleGroupEntry ('prol')\r\n{\r\n\tsigned int(16) roll_distance;\r\n}"
     },
     {
       "fourcc": "rap ",
       "description": "Random access point",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class VisualRandomAccessEntry() extends VisualSampleGroupEntry ('rap ')\n{\n\tunsigned int(1) num_leading_samples_known;\n\tunsigned int(7) num_leading_samples;\n}"
+      "syntax": "class VisualRandomAccessEntry() extends VisualSampleGroupEntry ('rap ')\r\n{\r\n\tunsigned int(1) num_leading_samples_known;\r\n\tunsigned int(7) num_leading_samples;\r\n}"
     },
     {
       "fourcc": "rash",
       "description": "Rate share sample group",
       "containers": [ "sgpd" ],
       "type": "SampleGroupDescriptionEntry",
-      "syntax": "class RateShareEntry() extends SampleGroupDescriptionEntry('rash') {\n\tunsigned int(16)\toperation_point_count;\n\tif (operation_point_count == 1) {\n\t\tunsigned int(16)\t\ttarget_rate_share;\n\t}\n\telse {\n\t\tfor (i=0; i < operation_point_count; i++) {\n\t\t\tunsigned int(32)\tavailable_bitrate;\n\t\t\tunsigned int(16)\ttarget_rate_share;\n\t\t}\n\t}\n\tunsigned int(32)\tmaximum_bitrate;\n\tunsigned int(32)\tminimum_bitrate;\n\tunsigned int(8)\tdiscard_priority;\n}"
+      "syntax": "class RateShareEntry() extends SampleGroupDescriptionEntry('rash') {\r\n\tunsigned int(16)\toperation_point_count;\r\n\tif (operation_point_count == 1) {\r\n\t\tunsigned int(16)\t\ttarget_rate_share;\r\n\t}\r\n\telse {\r\n\t\tfor (i=0; i < operation_point_count; i++) {\r\n\t\t\tunsigned int(32)\tavailable_bitrate;\r\n\t\t\tunsigned int(16)\ttarget_rate_share;\r\n\t\t}\r\n\t}\r\n\tunsigned int(32)\tmaximum_bitrate;\r\n\tunsigned int(32)\tminimum_bitrate;\r\n\tunsigned int(8)\tdiscard_priority;\r\n}"
     },
     {
       "fourcc": "roll",
       "description": "Preroll / Postroll group",
       "containers": [ "sgpd" ],
       "type": "AudioSampleGroupEntry",
-      "syntax": "class AudioRollRecoveryEntry() extends AudioSampleGroupEntry ('roll')\n{\n\tsigned int(16) roll_distance;\n}"
+      "syntax": "class AudioRollRecoveryEntry() extends AudioSampleGroupEntry ('roll')\r\n{\r\n\tsigned int(16) roll_distance;\r\n}"
     },
     {
       "fourcc": "sap ",
       "description": "Stream access point",
       "containers": [ "sgpd" ],
       "type": "SampleGroupDescriptionEntry",
-      "syntax": "class SAPEntry() extends  SampleGroupDescriptionEntry('sap ')\n{\n\tunsigned int(1) dependent_flag;\n\tunsigned int(3) reserved;\n\tunsigned int(4) SAP_type;\n}"
+      "syntax": "class SAPEntry() extends  SampleGroupDescriptionEntry('sap ')\r\n{\r\n\tunsigned int(1) dependent_flag;\r\n\tunsigned int(3) reserved;\r\n\tunsigned int(4) SAP_type;\r\n}"
     },
     {
       "fourcc": "stmi",
       "description": "SampleToMetadataItemEntry",
       "containers": [ "sgpd" ],
       "type": "SampleGroupDescriptionEntry",
-      "syntax": "class SampleToMetadataItemEntry() \nextends SampleGroupDescriptionEntry('stmi') {\n\tunsigned int(32) meta_box_handler_type;\n\tunsigned int(32) num_items;\n\tfor(i = 0; i < num_items; i++) {\n\t\tunsigned int(32) item_id[i];\n\t}\n}"
+      "syntax": "class SampleToMetadataItemEntry() \r\nextends SampleGroupDescriptionEntry('stmi') {\r\n\tunsigned int(32) meta_box_handler_type;\r\n\tunsigned int(32) num_items;\r\n\tfor(i = 0; i < num_items; i++) {\r\n\t\tunsigned int(32) item_id[i];\r\n\t}\r\n}"
     },
     {
       "fourcc": "tele",
       "description": "Temporal level sample group",
       "containers": [ "sgpd" ],
       "type": "VisualSampleGroupEntry",
-      "syntax": "class TemporalLevelEntry() extends VisualSampleGroupEntry('tele')\n{\n\tbit(1)\tlevel_independently_decodable;\n\tbit(7)\treserved=0;\n}"
+      "syntax": "class TemporalLevelEntry() extends VisualSampleGroupEntry('tele')\r\n{\r\n\tbit(1)\tlevel_independently_decodable;\r\n\tbit(7)\treserved=0;\r\n}"
     },
     {
       "fourcc": "pasr",
       "description": "Pixel Aspect Ratio Sample Grouping",
       "containers": [ "sgpd" ],
       "type": "PixelAspectRatioEntry",
-      "syntax": "class PixelAspectRatioEntry() extends VisualSampleGroupEntry ('pasr'){\n\tunsigned int(32) hSpacing;\n\tunsigned int(32) vSpacing;\n}"
+      "syntax": "class PixelAspectRatioEntry() extends VisualSampleGroupEntry ('pasr'){\r\n\tunsigned int(32) hSpacing;\r\n\tunsigned int(32) vSpacing;\r\n}"
     },
     {
       "fourcc": "casg",
       "description": "Clean Aperture Sample Grouping",
       "containers": [ "sgpd" ],
       "type": "CleanAperture",
-      "syntax": "class CleanApertureEntry() extends VisualSampleGroupEntry ('casg'){\n\tunsigned int(32) cleanApertureWidthN;\n\tunsigned int(32) cleanApertureWidthD;\n\n\tunsigned int(32) cleanApertureHeightN;\n\tunsigned int(32) cleanApertureHeightD;\n\n\n\tunsigned int(32) horizOffN;\n\tunsigned int(32) horizOffD;\n\n\n\tunsigned int(32) vertOffN;\n\tunsigned int(32) vertOffD;\n\n}"
+      "syntax": "class CleanApertureEntry() extends VisualSampleGroupEntry ('casg'){\r\n\tunsigned int(32) cleanApertureWidthN;\r\n\tunsigned int(32) cleanApertureWidthD;\r\n\r\n\tunsigned int(32) cleanApertureHeightN;\r\n\tunsigned int(32) cleanApertureHeightD;\r\n\r\n\r\n\tunsigned int(32) horizOffN;\r\n\tunsigned int(32) horizOffD;\r\n\r\n\r\n\tunsigned int(32) vertOffN;\r\n\tunsigned int(32) vertOffD;\r\n\r\n}"
     }
   ]
 }

@@ -7,7 +7,7 @@
       "description": "AuxiliaryTypeInfoBox",
       "containers": [ "SampleEntry" ],
       "type": "FullBox",
-      "syntax": "aligned(8) class AuxiliaryTypeInfoBox extends FullBox ('auxi', 0, 0)\n{\n\tstring aux_track_type;\n}"
+      "syntax": "aligned(8) class AuxiliaryTypeInfoBox extends FullBox ('auxi', 0, 0)\r\n{\r\n\tstring aux_track_type;\r\n}"
     },
     {
       "fourcc": "ccst",
@@ -16,7 +16,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "class CodingConstraintsBox extends FullBox('ccst', version = 0, flags = 0){\n\tunsigned int(1) all_ref_pics_intra;\n\tunsigned int(1) intra_pred_used;\n\tunsigned int(4) max_ref_per_pic;\n\tunsigned int(26) reserved;\n}\n"
+      "syntax": "class CodingConstraintsBox extends FullBox('ccst', version = 0, flags = 0){\r\n\tunsigned int(1) all_ref_pics_intra;\r\n\tunsigned int(1) intra_pred_used;\r\n\tunsigned int(4) max_ref_per_pic;\r\n\tunsigned int(26) reserved;\r\n}\r\n"
     },
     {
       "fourcc": "md5i",
@@ -25,7 +25,7 @@
       "type": "FullBox",
       "versions": [ 0 ],
       "flags": [],
-      "syntax": "aligned(8) class MD5IntegrityBox()\nextends FullBox('md5i', version = 0, flags) {\n\tunsigned int(8)[16] input_MD5;\n\tunsigned int(32) input_4cc;\n\tif (input_4cc == 'sgpd') {\n\t\tunsigned int(32) grouping_type;\n\t\tif (flags&1)\n\t\t\tunsigned int(32) grouping_type_parameter;\n\t\tunsigned int(32) num_entries;\n\t\tfor(i=0; i<num_entries; i++) {\n\t\t\tunsigned int(32) group_description_index[i];\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class MD5IntegrityBox()\r\nextends FullBox('md5i', version = 0, flags) {\r\n\tunsigned int(8)[16] input_MD5;\r\n\tunsigned int(32) input_4cc;\r\n\tif (input_4cc == 'sgpd') {\r\n\t\tunsigned int(32) grouping_type;\r\n\t\tif (flags&1)\r\n\t\t\tunsigned int(32) grouping_type_parameter;\r\n\t\tunsigned int(32) num_entries;\r\n\t\tfor(i=0; i<num_entries; i++) {\r\n\t\t\tunsigned int(32) group_description_index[i];\r\n\t\t}\r\n\t}\r\n}"
     }
   ]
 }

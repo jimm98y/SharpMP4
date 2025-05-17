@@ -10,7 +10,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class AuxiliaryTypeProperty\nextends ItemFullProperty('auxC', version = 0, flags) {\n\tstring aux_type;\n\ttemplate unsigned int(8) aux_subtype[];\n\t\t// until the end of the box, the semantics depend on the aux_type value\n}"
+      "syntax": "aligned(8) class AuxiliaryTypeProperty\r\nextends ItemFullProperty('auxC', version = 0, flags) {\r\n\tstring aux_type;\r\n\ttemplate unsigned int(8) aux_subtype[];\r\n\t\t// until the end of the box, the semantics depend on the aux_type value\r\n}"
     },
     {
       "fourcc": "avcC",
@@ -18,7 +18,7 @@
       "description": "AVC Image item configuration",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class AVCConfigurationBox extends Box('avcC') {\n\tAVCDecoderConfigurationRecord() AVCConfig;\n}"
+      "syntax": "class AVCConfigurationBox extends Box('avcC') {\r\n\tAVCDecoderConfigurationRecord() AVCConfig;\r\n}"
     },
     {
       "fourcc": "clap",
@@ -26,7 +26,7 @@
       "description": "Clean aperture",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class CleanApertureBox extends Box('clap'){\n\tunsigned int(32) cleanApertureWidthN;\n\tunsigned int(32) cleanApertureWidthD;\n\n\tunsigned int(32) cleanApertureHeightN;\n\tunsigned int(32) cleanApertureHeightD;\n\n\n\tunsigned int(32) horizOffN;\n\tunsigned int(32) horizOffD;\n\n\n\tunsigned int(32) vertOffN;\n\tunsigned int(32) vertOffD;\n\n}"
+      "syntax": "class CleanApertureBox extends Box('clap'){\r\n\tunsigned int(32) cleanApertureWidthN;\r\n\tunsigned int(32) cleanApertureWidthD;\r\n\r\n\tunsigned int(32) cleanApertureHeightN;\r\n\tunsigned int(32) cleanApertureHeightD;\r\n\r\n\r\n\tunsigned int(32) horizOffN;\r\n\tunsigned int(32) horizOffD;\r\n\r\n\r\n\tunsigned int(32) vertOffN;\r\n\tunsigned int(32) vertOffD;\r\n\r\n}"
     },
     {
       "fourcc": "colr",
@@ -34,7 +34,7 @@
       "description": "Colour information",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class ColourInformationBox extends Box('colr'){\n\tunsigned int(32) colour_type;\n\tif (colour_type == 'nclx')\t/* on-screen colours */\n\t{\n\t\tunsigned int(16) colour_primaries;\n\t\tunsigned int(16) transfer_characteristics;\n\t\tunsigned int(16) matrix_coefficients;\n\t\tunsigned int(1)  full_range_flag;\n\t\tunsigned int(7)  reserved = 0;\n\t}\n\telse if (colour_type == 'rICC')\n\t{\n\t\tICC_profile;\t// restricted ICC profile\n\t}\n\telse if (colour_type == 'prof')\n\t{\n\t\tICC_profile;\t// unrestricted ICC profile\n\t}\n}"
+      "syntax": "class ColourInformationBox extends Box('colr'){\r\n\tunsigned int(32) colour_type;\r\n\tif (colour_type == 'nclx')\t/* on-screen colours */\r\n\t{\r\n\t\tunsigned int(16) colour_primaries;\r\n\t\tunsigned int(16) transfer_characteristics;\r\n\t\tunsigned int(16) matrix_coefficients;\r\n\t\tunsigned int(1)  full_range_flag;\r\n\t\tunsigned int(7)  reserved = 0;\r\n\t}\r\n\telse if (colour_type == 'rICC')\r\n\t{\r\n\t\tICC_profile;\t// restricted ICC profile\r\n\t}\r\n\telse if (colour_type == 'prof')\r\n\t{\r\n\t\tICC_profile;\t// unrestricted ICC profile\r\n\t}\r\n}"
     },
     {
       "fourcc": "hvcC",
@@ -42,7 +42,7 @@
       "description": "HEVC Image item configuration",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class HEVCConfigurationBox extends Box('hvcC') {\n\tHEVCDecoderConfigurationRecord() HEVCConfig;\n}"
+      "syntax": "class HEVCConfigurationBox extends Box('hvcC') {\r\n\tHEVCDecoderConfigurationRecord() HEVCConfig;\r\n}"
     },
     {
       "fourcc": "imir",
@@ -50,7 +50,7 @@
       "description": "Image mirroring",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "aligned(8) class ImageMirror\nextends ItemProperty('imir') {\n\tunsigned int(7) reserved = 0;\n\tunsigned int(1) axis;\n}"
+      "syntax": "aligned(8) class ImageMirror\r\nextends ItemProperty('imir') {\r\n\tunsigned int(7) reserved = 0;\r\n\tunsigned int(1) axis;\r\n}"
     },
     {
       "fourcc": "irot",
@@ -58,7 +58,7 @@
       "description": "Image rotation",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "aligned(8) class ImageRotation\nextends ItemProperty('irot') {\n\tunsigned int(6) reserved = 0;\n\tunsigned int(2) angle;\n}"
+      "syntax": "aligned(8) class ImageRotation\r\nextends ItemProperty('irot') {\r\n\tunsigned int(6) reserved = 0;\r\n\tunsigned int(2) angle;\r\n}"
     },
     {
       "fourcc": "ispe",
@@ -68,7 +68,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class ImageSpatialExtentsProperty\nextends ItemFullProperty('ispe', version = 0, flags = 0) {\n\tunsigned int(32) image_width;\n\tunsigned int(32) image_height;\n}\n"
+      "syntax": "aligned(8) class ImageSpatialExtentsProperty\r\nextends ItemFullProperty('ispe', version = 0, flags = 0) {\r\n\tunsigned int(32) image_width;\r\n\tunsigned int(32) image_height;\r\n}\r\n"
     },
     {
       "fourcc": "jpgC",
@@ -76,7 +76,7 @@
       "description": "JPEG image item configuration",
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class JPEGConfigurationBox extends Box('jpgC') {\n\tunsigned int(8) JPEGprefix[];\n}"
+      "syntax": "class JPEGConfigurationBox extends Box('jpgC') {\r\n\tunsigned int(8) JPEGprefix[];\r\n}"
     },
     {
       "fourcc": "lhvC",
@@ -84,7 +84,7 @@
       "description": "Layered HEVC Image item configuration",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class LHEVCConfigurationBox extends Box('lhvC') {\n\tLHEVCDecoderConfigurationRecord() LHEVCConfig;\n}"
+      "syntax": "class LHEVCConfigurationBox extends Box('lhvC') {\r\n\tLHEVCDecoderConfigurationRecord() LHEVCConfig;\r\n}"
     },
     {
       "fourcc": "lsel",
@@ -92,7 +92,7 @@
       "description": "Layer selection",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "aligned(8) class LayerSelectorProperty\nextends ItemProperty('lsel') {\n\tunsigned int(16) layer_id;\n}"
+      "syntax": "aligned(8) class LayerSelectorProperty\r\nextends ItemProperty('lsel') {\r\n\tunsigned int(16) layer_id;\r\n}"
     },
     {
       "fourcc": "oinf",
@@ -102,7 +102,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class OperatingPointsInformationProperty\nextends ItemFullProperty('oinf', version = 0, flags = 0){\n\tOperatingPointsRecord op_info; // specified in ISO/IEC 14496-15\n}"
+      "syntax": "aligned(8) class OperatingPointsInformationProperty\r\nextends ItemFullProperty('oinf', version = 0, flags = 0){\r\n\tOperatingPointsRecord op_info; // specified in ISO/IEC 14496-15\r\n}"
     },
     {
       "fourcc": "pasp",
@@ -110,7 +110,7 @@
       "description": "Pixel aspect ratio",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class PixelAspectRatioBox extends Box('pasp'){\n\tunsigned int(32) hSpacing;\n\tunsigned int(32) vSpacing;\n}"
+      "syntax": "class PixelAspectRatioBox extends Box('pasp'){\r\n\tunsigned int(32) hSpacing;\r\n\tunsigned int(32) vSpacing;\r\n}"
     },
     {
       "fourcc": "pixi",
@@ -120,7 +120,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class PixelInformationProperty\nextends ItemFullProperty('pixi', version = 0, flags = 0){\n\tunsigned int(8) num_channels;\n\tfor (i=0; i<num_channels; i++) {\n\t\tunsigned int(8) bits_per_channel;\n\t}\n}"
+      "syntax": "aligned(8) class PixelInformationProperty\r\nextends ItemFullProperty('pixi', version = 0, flags = 0){\r\n\tunsigned int(8) num_channels;\r\n\tfor (i=0; i<num_channels; i++) {\r\n\t\tunsigned int(8) bits_per_channel;\r\n\t}\r\n}"
     },
     {
       "fourcc": "rloc",
@@ -130,7 +130,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class RelativeLocationProperty\nextends ItemFullProperty('rloc', version = 0, flags = 0)\n{\n\tunsigned int(32) horizontal_offset;\n\tunsigned int(32) vertical_offset;\n}"
+      "syntax": "aligned(8) class RelativeLocationProperty\r\nextends ItemFullProperty('rloc', version = 0, flags = 0)\r\n{\r\n\tunsigned int(32) horizontal_offset;\r\n\tunsigned int(32) vertical_offset;\r\n}"
     },
     {
       "fourcc": "subs",
@@ -140,7 +140,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "aligned(8) class SubSampleInformationBox\n\textends FullBox('subs', version, flags) {\n\tunsigned int(32) entry_count;\n\tint i,j;\n\tfor (i=0; i < entry_count; i++) {\n\t\tunsigned int(32) sample_delta;\n\t\tunsigned int(16) subsample_count;\n\t\tif (subsample_count > 0) {\n\t\t\tfor (j=0; j < subsample_count; j++) {\n\t\t\t\tif(version == 1)\n\t\t\t\t{\n\t\t\t\t\tunsigned int(32) subsample_size;\n\t\t\t\t}\n\t\t\t\telse\n\t\t\t\t{\n\t\t\t\t\tunsigned int(16) subsample_size;\n\t\t\t\t}\n\t\t\t\tunsigned int(8) subsample_priority;\n\t\t\t\tunsigned int(8) discardable;\n\t\t\t\tunsigned int(32) codec_specific_parameters;\n\t\t\t}\n\t\t}\n\t}\n}"
+      "syntax": "aligned(8) class SubSampleInformationBox\r\n\textends FullBox('subs', version, flags) {\r\n\tunsigned int(32) entry_count;\r\n\tint i,j;\r\n\tfor (i=0; i < entry_count; i++) {\r\n\t\tunsigned int(32) sample_delta;\r\n\t\tunsigned int(16) subsample_count;\r\n\t\tif (subsample_count > 0) {\r\n\t\t\tfor (j=0; j < subsample_count; j++) {\r\n\t\t\t\tif(version == 1)\r\n\t\t\t\t{\r\n\t\t\t\t\tunsigned int(32) subsample_size;\r\n\t\t\t\t}\r\n\t\t\t\telse\r\n\t\t\t\t{\r\n\t\t\t\t\tunsigned int(16) subsample_size;\r\n\t\t\t\t}\r\n\t\t\t\tunsigned int(8) subsample_priority;\r\n\t\t\t\tunsigned int(8) discardable;\r\n\t\t\t\tunsigned int(32) codec_specific_parameters;\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}"
     },
     {
       "fourcc": "tols",
@@ -150,7 +150,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class TargetOlsProperty\nextends ItemFullProperty('tols', version = 0, flags = 0){\n\tunsigned int(16) target_ols_idx;\n}"
+      "syntax": "aligned(8) class TargetOlsProperty\r\nextends ItemFullProperty('tols', version = 0, flags = 0){\r\n\tunsigned int(16) target_ols_idx;\r\n}"
     },
     {
       "fourcc": "aebr",
@@ -160,7 +160,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class AutoExposureBracketingEntry\nextends VisualSampleGroupEntry('aebr') {\n\tint(8) exposure_step;\n\tint(8) exposure_numerator;\n}"
+      "syntax": "aligned(8) class AutoExposureBracketingEntry\r\nextends VisualSampleGroupEntry('aebr') {\r\n\tint(8) exposure_step;\r\n\tint(8) exposure_numerator;\r\n}"
     },
     {
       "fourcc": "afbr",
@@ -170,7 +170,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class FlashExposureBracketingEntry\nextends VisualSampleGroupEntry('afbr') {\n\tint(8) flash_exposure_numerator;\n\tint(8) flash_exposure_denominator;\n}"
+      "syntax": "aligned(8) class FlashExposureBracketingEntry\r\nextends VisualSampleGroupEntry('afbr') {\r\n\tint(8) flash_exposure_numerator;\r\n\tint(8) flash_exposure_denominator;\r\n}"
     },
     {
       "fourcc": "altt",
@@ -180,7 +180,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class AccessibilityTextProperty\nextends ItemFullProperty('altt', version = 0, flags = 0) {\n\tutf8string alt_text;\n\tutf8string alt_lang;\n}\n"
+      "syntax": "aligned(8) class AccessibilityTextProperty\r\nextends ItemFullProperty('altt', version = 0, flags = 0) {\r\n\tutf8string alt_text;\r\n\tutf8string alt_lang;\r\n}\r\n"
     },
     {
       "fourcc": "crtt",
@@ -190,7 +190,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class CreationTimeProperty\nextends ItemFullProperty('crtt', version = 0, flags = 0) {\n\tunsigned int(64)  creation_time;\n}\n"
+      "syntax": "aligned(8) class CreationTimeProperty\r\nextends ItemFullProperty('crtt', version = 0, flags = 0) {\r\n\tunsigned int(64)  creation_time;\r\n}\r\n"
     },
     {
       "fourcc": "dobr",
@@ -198,7 +198,7 @@
       "description": "Depth of field information",
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class DepthOfFieldBracketingEntry\nextends VisualSampleGroupEntry('dobr') {\n\tint(8) f_stop_numerator;\n\tint(8) f_stop_denominator;\n}"
+      "syntax": "aligned(8) class DepthOfFieldBracketingEntry\r\nextends VisualSampleGroupEntry('dobr') {\r\n\tint(8) f_stop_numerator;\r\n\tint(8) f_stop_denominator;\r\n}"
     },
     {
       "fourcc": "fobr",
@@ -206,7 +206,7 @@
       "description": "Focus information",
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class FocusBracketingEntry\nextends VisualSampleGroupEntry('fobr') {\n\tunsigned int(16) focus_distance_numerator;\n\tunsigned int(16) focus_distance_denominator;\n}"
+      "syntax": "aligned(8) class FocusBracketingEntry\r\nextends VisualSampleGroupEntry('fobr') {\r\n\tunsigned int(16) focus_distance_numerator;\r\n\tunsigned int(16) focus_distance_denominator;\r\n}"
     },
     {
       "fourcc": "iscl",
@@ -216,7 +216,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class ImageScaling\nextends ItemFullProperty('iscl', version = 0, flags = 0) {\n\tunsigned int(16) target_width_numerator;\n\tunsigned int(16) target_width_denominator;\n\tunsigned int(16) target_height_numerator;\n\tunsigned int(16) target_height_denominator;\n}"
+      "syntax": "aligned(8) class ImageScaling\r\nextends ItemFullProperty('iscl', version = 0, flags = 0) {\r\n\tunsigned int(16) target_width_numerator;\r\n\tunsigned int(16) target_width_denominator;\r\n\tunsigned int(16) target_height_numerator;\r\n\tunsigned int(16) target_height_denominator;\r\n}"
     },
     {
       "fourcc": "mdft",
@@ -226,7 +226,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class ModificationTimeProperty\nextends ItemFullProperty('mdft', version = 0, flags = 0) {\n\tunsigned int(64)  modification_time;\n}\n"
+      "syntax": "aligned(8) class ModificationTimeProperty\r\nextends ItemFullProperty('mdft', version = 0, flags = 0) {\r\n\tunsigned int(64)  modification_time;\r\n}\r\n"
     },
     {
       "fourcc": "pano",
@@ -234,7 +234,7 @@
       "description": "Panorama information",
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class PanoramaEntry\nextends VisualSampleGroupEntry('pano') {\n\tunsigned int(16) frame_number;\n}\n"
+      "syntax": "aligned(8) class PanoramaEntry\r\nextends VisualSampleGroupEntry('pano') {\r\n\tunsigned int(16) frame_number;\r\n}\r\n"
     },
     {
       "fourcc": "rref",
@@ -244,7 +244,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class RequiredReferenceTypesProperty\nextends ItemFullProperty('rref', version = 0, flags = 0){\n\tunsigned int(8) reference_type_count;\n\tfor (i=0; i< reference_type_count; i++) {\n\t\tunsigned int(32) reference_type[i];\n\t}\n}"
+      "syntax": "aligned(8) class RequiredReferenceTypesProperty\r\nextends ItemFullProperty('rref', version = 0, flags = 0){\r\n\tunsigned int(8) reference_type_count;\r\n\tfor (i=0; i< reference_type_count; i++) {\r\n\t\tunsigned int(32) reference_type[i];\r\n\t}\r\n}"
     },
     {
       "fourcc": "udes",
@@ -254,7 +254,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class UserDescriptionProperty\nextends ItemFullProperty('udes', version = 0, flags = 0){\n\tutf8string lang;\n\tutf8string name;\n\tutf8string description;\n\tutf8string tags;\n}\n"
+      "syntax": "aligned(8) class UserDescriptionProperty\r\nextends ItemFullProperty('udes', version = 0, flags = 0){\r\n\tutf8string lang;\r\n\tutf8string name;\r\n\tutf8string description;\r\n\tutf8string tags;\r\n}\r\n"
     },
     {
       "fourcc": "wbbr",
@@ -262,7 +262,7 @@
       "description": "White balance information",
       "containers": [ "ipco" ],
       "type": "ItemFullProperty",
-      "syntax": "aligned(8) class WhiteBalanceBracketingEntry\nextends VisualSampleGroupEntry('wbbr') {\n\tunsigned int(16) blue_amber;\n\tint(8) green_magenta;\n}"
+      "syntax": "aligned(8) class WhiteBalanceBracketingEntry\r\nextends VisualSampleGroupEntry('wbbr') {\r\n\tunsigned int(16) blue_amber;\r\n\tint(8) green_magenta;\r\n}"
     },
     {
       "fourcc": "cclv",
@@ -270,7 +270,7 @@
       "description": "Content colour volume",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class ContentColourVolumeBox extends Box('cclv'){\n\tunsigned int(1) reserved1 = 0;\t// ccv_cancel_flag\n\tunsigned int(1) reserved2 = 0;\t// ccv_persistence_flag\n\tunsigned int(1) ccv_primaries_present_flag;\n\tunsigned int(1) ccv_min_luminance_value_present_flag;\n\tunsigned int(1) ccv_max_luminance_value_present_flag;\n\tunsigned int(1) ccv_avg_luminance_value_present_flag;\n\tunsigned int(2) ccv_reserved_zero_2bits = 0;\n\tif( ccv_primaries_present_flag ) {\n\t\tfor( c = 0; c < 3; c++ ) {\n\t\t\tsigned int(32) ccv_primaries_x[ c ];\n\t\t\tsigned int(32) ccv_primaries_y[ c ];\n\t\t}\n\t}\n\tif( ccv_min_luminance_value_present_flag )\n\t\tunsigned int(32) ccv_min_luminance_value;\n\tif( ccv_max_luminance_value_present_flag )\n \t\tunsigned int(32) ccv_max_luminance_value;\n\tif( ccv_avg_luminance_value_present_flag )\n \t\tunsigned int(32) ccv_avg_luminance_value;\n}"
+      "syntax": "class ContentColourVolumeBox extends Box('cclv'){\r\n\tunsigned int(1) reserved1 = 0;\t// ccv_cancel_flag\r\n\tunsigned int(1) reserved2 = 0;\t// ccv_persistence_flag\r\n\tunsigned int(1) ccv_primaries_present_flag;\r\n\tunsigned int(1) ccv_min_luminance_value_present_flag;\r\n\tunsigned int(1) ccv_max_luminance_value_present_flag;\r\n\tunsigned int(1) ccv_avg_luminance_value_present_flag;\r\n\tunsigned int(2) ccv_reserved_zero_2bits = 0;\r\n\tif( ccv_primaries_present_flag ) {\r\n\t\tfor( c = 0; c < 3; c++ ) {\r\n\t\t\tsigned int(32) ccv_primaries_x[ c ];\r\n\t\t\tsigned int(32) ccv_primaries_y[ c ];\r\n\t\t}\r\n\t}\r\n\tif( ccv_min_luminance_value_present_flag )\r\n\t\tunsigned int(32) ccv_min_luminance_value;\r\n\tif( ccv_max_luminance_value_present_flag )\r\n \t\tunsigned int(32) ccv_max_luminance_value;\r\n\tif( ccv_avg_luminance_value_present_flag )\r\n \t\tunsigned int(32) ccv_avg_luminance_value;\r\n}"
     },
     {
       "fourcc": "mdcv",
@@ -278,7 +278,7 @@
       "description": "Mastering display colour volume",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class MasteringDisplayColourVolumeBox extends Box('mdcv'){\n\tfor (c = 0; c<3; c++) {\n\t\tunsigned int(16) display_primaries_x;\n\t\tunsigned int(16) display_primaries_y;\n\t}\n\tunsigned int(16) white_point_x;\n\tunsigned int(16) white_point_y;\n\tunsigned int(32) max_display_mastering_luminance;\n\tunsigned int(32) min_display_mastering_luminance;\n}"
+      "syntax": "class MasteringDisplayColourVolumeBox extends Box('mdcv'){\r\n\tfor (c = 0; c<3; c++) {\r\n\t\tunsigned int(16) display_primaries_x;\r\n\t\tunsigned int(16) display_primaries_y;\r\n\t}\r\n\tunsigned int(16) white_point_x;\r\n\tunsigned int(16) white_point_y;\r\n\tunsigned int(32) max_display_mastering_luminance;\r\n\tunsigned int(32) min_display_mastering_luminance;\r\n}"
     },
     {
       "fourcc": "clli",
@@ -286,7 +286,7 @@
       "description": "Content light level",
       "containers": [ "ipco" ],
       "type": "ItemProperty",
-      "syntax": "class ContentLightLevelBox extends Box('clli'){\n\tunsigned int(16) max_content_light_level;\n\tunsigned int(16) max_pic_average_light_level;\n}"
+      "syntax": "class ContentLightLevelBox extends Box('clli'){\r\n\tunsigned int(16) max_content_light_level;\r\n\tunsigned int(16) max_pic_average_light_level;\r\n}"
     },
     {
       "fourcc": "wipe",
@@ -295,7 +295,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class WipeTransitionEffectProperty\nextends ItemFullProperty('wipe', version=0, flags=0) {\n\tunsigned int(8) transition_direction;\n}"
+      "syntax": "class WipeTransitionEffectProperty\r\nextends ItemFullProperty('wipe', version=0, flags=0) {\r\n\tunsigned int(8) transition_direction;\r\n}"
     },
     {
       "fourcc": "zoom",
@@ -304,7 +304,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class ZoomTransitionEffectProperty\nextends ItemFullProperty('zoom', version=0, flags=0) {\n\tunsigned int(1) transition_direction; \n\tunsigned int(7) transition_shape;\n}"
+      "syntax": "class ZoomTransitionEffectProperty\r\nextends ItemFullProperty('zoom', version=0, flags=0) {\r\n\tunsigned int(1) transition_direction; \r\n\tunsigned int(7) transition_shape;\r\n}"
     },
     {
       "fourcc": "fade",
@@ -313,7 +313,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class FadeTransitionEffectProperty\nextends ItemFullProperty('fade', version=0, flags=0) {\n\tunsigned int(8) transition_direction;\n}"
+      "syntax": "class FadeTransitionEffectProperty\r\nextends ItemFullProperty('fade', version=0, flags=0) {\r\n\tunsigned int(8) transition_direction;\r\n}"
     },
     {
       "fourcc": "splt",
@@ -322,7 +322,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class SplitTransitionEffectProperty\nextends ItemFullProperty('splt', version=0, flags=0) {\n\tunsigned int(8) transition_direction;\n}"
+      "syntax": "class SplitTransitionEffectProperty\r\nextends ItemFullProperty('splt', version=0, flags=0) {\r\n\tunsigned int(8) transition_direction;\r\n}"
     },
     {
       "fourcc": "stpe",
@@ -331,7 +331,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class SuggestedTransitionPeriodProperty\nextends ItemFullProperty('stpe', version=0, flags=0) {\n\tunsigned int(8) transition_period;\n}"
+      "syntax": "class SuggestedTransitionPeriodProperty\r\nextends ItemFullProperty('stpe', version=0, flags=0) {\r\n\tunsigned int(8) transition_period;\r\n}"
     },
     {
       "fourcc": "ssld",
@@ -340,7 +340,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class SuggestedTimeDisplayDurationProperty\nextends ItemFullProperty('ssld', version=0, flags=0) {\n\tunsigned int(16) duration;\n}"
+      "syntax": "class SuggestedTimeDisplayDurationProperty\r\nextends ItemFullProperty('ssld', version=0, flags=0) {\r\n\tunsigned int(16) duration;\r\n}"
     },
     {
       "fourcc": "mskC",
@@ -349,7 +349,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class MaskConfigurationProperty\nextends ItemFullProperty('mskC', version = 0, flags = 0){\n\tunsigned int(8) bits_per_pixel;\n}"
+      "syntax": "class MaskConfigurationProperty\r\nextends ItemFullProperty('mskC', version = 0, flags = 0){\r\n\tunsigned int(8) bits_per_pixel;\r\n}"
     },
     {
       "fourcc": "spid",
@@ -358,7 +358,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class VvcSubpicIDProperty\nextends ItemFullProperty('spid', version = 0, flags = 0){\n\tVvcSubpicIDEntry sid_info; // specified in ISO/IEC\u00a014496-15\n}"
+      "syntax": "class VvcSubpicIDProperty\r\nextends ItemFullProperty('spid', version = 0, flags = 0){\r\n\tVvcSubpicIDEntry sid_info; // specified in ISO/IEC\u00a014496-15\r\n}"
     },
     {
       "fourcc": "spor",
@@ -367,7 +367,7 @@
       "flags": [],
       "containers": [ "ipco" ],
       "type": "Box",
-      "syntax": "class VvcSubpicOrderProperty\nextends ItemFullProperty('spor', version = 0, flags = 0){\n\tVvcSubpicOrderEntry sor_info; // specified in ISO/IEC\u00a014496-15\n}"
+      "syntax": "class VvcSubpicOrderProperty\r\nextends ItemFullProperty('spor', version = 0, flags = 0){\r\n\tVvcSubpicOrderEntry sor_info; // specified in ISO/IEC\u00a014496-15\r\n}"
     }
   ]
 }

@@ -252,126 +252,126 @@
       "description": "Advanced Video Coding",
       "containers": [ "stsd" ],
       "type": "AVCSVCSampleEntry",
-      "syntax": "class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+      "syntax": "class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {\r\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\r\n\tScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "avc3",
       "description": "Advanced Video Coding",
       "containers": [ "stsd" ],
       "type": "AVCSVCSampleEntry",
-      "syntax": "class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+      "syntax": "class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {\r\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\r\n\tScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "avc2",
       "description": "Advanced Video Coding",
       "containers": [ "stsd" ],
       "type": "AVC2SVCSampleEntry",
-      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\r\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\r\n\tScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "avc4",
       "description": "Advanced Video Coding",
       "containers": [ "stsd" ],
       "type": "AVC2SVCSampleEntry",
-      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+      "syntax": "class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {\r\n\tSVCConfigurationBox\tsvcconfig;\t\t\t// optional\r\n\tScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "svc1",
       "description": "Scalable Video Coding",
       "containers": [ "stsd" ],
       "type": "SVCSampleEntry",
-      "syntax": "// Use this if the track is NOT AVC compatible\nclass SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {\n\tSVCConfigurationBox\t\tsvcconfig;\n\tMPEG4ExtensionDescriptorsBox descr;\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+      "syntax": "// Use this if the track is NOT AVC compatible\r\nclass SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {\r\n\tSVCConfigurationBox\t\tsvcconfig;\r\n\tMPEG4ExtensionDescriptorsBox descr;\t// optional\r\n\tScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "svc2",
       "description": "Scalable Video Coding",
       "containers": [ "stsd" ],
       "type": "SVCSampleEntry",
-      "syntax": "// Use this if the track is NOT AVC compatible\nclass SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {\n\tSVCConfigurationBox\t\tsvcconfig;\n\tMPEG4ExtensionDescriptorsBox descr;\t// optional\n\tScalabilityInformationSEIBox\tscalability;\t// optional\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\n}"
+      "syntax": "// Use this if the track is NOT AVC compatible\r\nclass SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {\r\n\tSVCConfigurationBox\t\tsvcconfig;\r\n\tMPEG4ExtensionDescriptorsBox descr;\t// optional\r\n\tScalabilityInformationSEIBox\tscalability;\t// optional\r\n\tSVCPriorityAssignmentBox\tmethod;\t\t\t// optional\r\n}"
     },
     {
       "fourcc": "hvt1",
       "description": "HEVC tile tracks",
       "containers": [ "stsd" ],
       "type": "HEVCTileSampleEntry",
-      "syntax": "class HEVCTileSampleEntry() extends VisualSampleEntry ('hvt1'){\n\tHEVCTileConfigurationBox\tconfig(); // optional\n}"
+      "syntax": "class HEVCTileSampleEntry() extends VisualSampleEntry ('hvt1'){\r\n\tHEVCTileConfigurationBox\tconfig(); // optional\r\n}"
     },
     {
       "fourcc": "lht1",
       "description": "Layered HEVC tile tracks",
       "containers": [ "stsd" ],
       "type": "LHEVCTileSampleEntry",
-      "syntax": "class LHEVCTileSampleEntry() extends VisualSampleEntry ('lht1'){\n}"
+      "syntax": "class LHEVCTileSampleEntry() extends VisualSampleEntry ('lht1'){\r\n}"
     },
     {
       "fourcc": "hvt3",
       "description": "HEVC Tile Track with Slice Segment Header Info",
       "containers": [ "stsd" ],
       "type": "HEVCTileSSHInfoSampleEntry",
-      "syntax": "class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){\n\tHEVCTileConfigurationBox config(); // optional \n}"
+      "syntax": "class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){\r\n\tHEVCTileConfigurationBox config(); // optional \r\n}"
     },
     {
       "fourcc": "hvt2",
       "description": "HEVC slice segment data track",
       "containers": [ "stsd" ],
       "type": "HEVCSliceSegmentDataSampleEntry",
-      "syntax": "class HEVCSliceSegmentDataSampleEntry() extends VisualSampleEntry ('hvt2'){\n\tHEVCTileConfigurationBox\tconfig(); // optional\n}"
+      "syntax": "class HEVCSliceSegmentDataSampleEntry() extends VisualSampleEntry ('hvt2'){\r\n\tHEVCTileConfigurationBox\tconfig(); // optional\r\n}"
     },
     {
       "fourcc": "vvc1",
       "description": "Versatile Video Coding with parameter sets only in sample entries",
       "containers": [ "stsd" ],
       "type": "VvcSampleEntry",
-      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\n\tVvcConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\n}"
+      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\r\n\tVvcConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "vvi1",
       "description": "Versatile Video Coding with parameter sets only in sample entries",
       "containers": [ "stsd" ],
       "type": "VvcSampleEntry",
-      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\n\tVvcConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\n}"
+      "syntax": "class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {\r\n\tVvcConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox () descr;\t// optional\r\n}"
     },
     {
       "fourcc": "vvs1",
       "description": "Versatile Video Coding (VVC) subpicture track that does not contain a conforming VVC bitstream",
       "containers": [ "stsd" ],
       "type": "VvcSubpicSampleEntry",
-      "syntax": "class VvcSubpicSampleEntry() extends VisualSampleEntry ('vvs1') {\n\tVvcNALUConfigBox config;\n}"
+      "syntax": "class VvcSubpicSampleEntry() extends VisualSampleEntry ('vvs1') {\r\n\tVvcNALUConfigBox config;\r\n}"
     },
     {
       "fourcc": "vvcN",
       "description": "Versatile Video Coding with non-VCL (Video Coding Layer) NAL (Network Abstraction Layer) units only",
       "containers": [ "stsd" ],
       "type": "VvcNonVCLSampleEntry",
-      "syntax": "class VvcNonVCLSampleEntry() extends VisualSampleEntry ('vvcN') {\n\tVvcNALUConfigBox config;\n}"
+      "syntax": "class VvcNonVCLSampleEntry() extends VisualSampleEntry ('vvcN') {\r\n\tVvcNALUConfigBox config;\r\n}"
     },
     {
       "fourcc": "evc1",
       "description": "Essential Video Coding",
       "containers": [ "stsd" ],
       "type": "EVCSampleEntry",
-      "syntax": "class EVCSampleEntry() extends VisualSampleEntry('evc1'){\n\tEVCConfigurationBox\tconfig;\n\tMPEG4ExtensionDescriptorsBox() descr;\t// optional\n}"
+      "syntax": "class EVCSampleEntry() extends VisualSampleEntry('evc1'){\r\n\tEVCConfigurationBox\tconfig;\r\n\tMPEG4ExtensionDescriptorsBox() descr;\t// optional\r\n}"
     },
     {
       "fourcc": "svcM",
       "description": "SVC metadata",
       "containers": [ "stsd" ],
       "type": "SVCMetaDataSampleEntry",
-      "syntax": "class SVCMetaDataSampleEntry () extends MetaDataSampleEntry('svcM')\n{\n\tSVCMetadataSampleConfigBox\tconfig;\n\tSVCPriorityAssignmentBox\tmethods;\t\t// optional\n\tSVCPriorityLayerInfoBox\t\tpriorities;\t// optional\n}"
+      "syntax": "class SVCMetaDataSampleEntry () extends MetaDataSampleEntry('svcM')\r\n{\r\n\tSVCMetadataSampleConfigBox\tconfig;\r\n\tSVCPriorityAssignmentBox\tmethods;\t\t// optional\r\n\tSVCPriorityLayerInfoBox\t\tpriorities;\t// optional\r\n}"
     },
     {
       "fourcc": "evs1",
       "description": "Essential Video Coding slice component track without parameter sets",
       "containers": [ "stsd" ],
       "type": "EVCSliceComponentTrackSampleEntry",
-      "syntax": "class EVCSliceComponentTrackSampleEntry() \n      extends VisualSampleEntry ('evs1' or 'evs2'){\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\n}"
+      "syntax": "class EVCSliceComponentTrackSampleEntry() \r\n      extends VisualSampleEntry ('evs1' or 'evs2'){\r\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\r\n}"
     },
     {
       "fourcc": "evs2",
       "description": "Essential Video Coding slice component track without parameter sets",
       "containers": [ "stsd" ],
       "type": "EVCSliceComponentTrackSampleEntry",
-      "syntax": "class EVCSliceComponentTrackSampleEntry() \n      extends VisualSampleEntry ('evs1' or 'evs2'){\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\n}"
+      "syntax": "class EVCSliceComponentTrackSampleEntry() \r\n      extends VisualSampleEntry ('evs1' or 'evs2'){\r\n\tEVCSliceComponentTrackConfigurationBox\tconfig;\r\n}"
     }
   ]
 }

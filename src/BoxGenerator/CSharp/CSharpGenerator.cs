@@ -109,7 +109,7 @@ namespace BoxGenerator.CSharp
                 { "samplingFrequencyIndex,\r\n  channelConfiguration,\r\n  audioObjectType", "int samplingFrequencyIndex, int channelConfiguration, byte audioObjectType" },
                 { "unsigned int(32) extension_type",  "uint extension_type" },
                 { "'vvcb', version, flags",           "byte version = 0, uint flags = 0" },
-                { "\n\t\tunsigned int(32) boxtype,\n\t\toptional unsigned int(8)[16] extended_type", "uint boxtype = 0, byte[] extended_type = null" },
+                { "\r\n\t\tunsigned int(32) boxtype,\r\n\t\toptional unsigned int(8)[16] extended_type", "uint boxtype = 0, byte[] extended_type = null" },
                 { "unsigned int(32) grouping_type",   "uint grouping_type" },
                 { "unsigned int(32) boxtype, unsigned int(8) v, bit(24) f", "uint boxtype, byte v = 0, uint f = 0" },
                 { "unsigned int(8) OutputChannelCount", "byte OutputChannelCount" },
@@ -150,7 +150,7 @@ namespace SharpMP4
 ";
             // build box factory
             string factory =
-    @"   public class BoxFactory
+    @"    public class BoxFactory
     {
         public static Func<string, string, byte[], Box> CreateBox = DefaultCreateBox;
         public static Func<string, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;

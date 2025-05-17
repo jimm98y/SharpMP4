@@ -8,7 +8,7 @@
       "type": "GeneralTypeBox",
       "description": "Item brand (type)",
       "containers": [ "ipco" ],
-      "syntax": "aligned(8) class BrandProperty extends GeneralTypeBox ('brnd') \n{ }"
+      "syntax": "aligned(8) class BrandProperty extends GeneralTypeBox ('brnd') \r\n{ }"
     }
   ]
 }

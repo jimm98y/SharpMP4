@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SharpMP4
 {
-   public class BoxFactory
+    public class BoxFactory
     {
         public static Func<string, string, byte[], Box> CreateBox = DefaultCreateBox;
         public static Func<string, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
@@ -6997,7 +6997,7 @@ aligned(8) class LoudnessBox extends Box('ludt') {
 	// not more than one TrackLoudnessInfo box with version>=1 is allowed
 	TrackLoudnessInfo[]			loudness;
 	// not more than one AlbumLoudnessInfo box with version>=1 is allowed
-	AlbumLoudnessInfo[] albumLoudness	;
+	AlbumLoudnessInfo[] albumLoudness;
 }
 */
 public class LoudnessBox : Box
