@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace SharpMP4
+namespace SharpISOBMFF
 {
     public class Mp4 : IMp4Serializable
     {

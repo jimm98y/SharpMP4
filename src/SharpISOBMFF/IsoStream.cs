@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace SharpMP4
+namespace SharpISOBMFF
 {
     public class IsoStream : IDisposable
     {

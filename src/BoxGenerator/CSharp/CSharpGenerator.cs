@@ -145,7 +145,7 @@ namespace BoxGenerator.CSharp
 using System.Linq;
 using System.Collections.Generic;
 
-namespace SharpMP4
+namespace SharpISOBMFF
 {
 ";
             // build box factory

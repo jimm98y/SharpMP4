@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpMP4
+namespace SharpISOBMFF
 {
     public static class Log
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace SharpMP4
+namespace SharpISOBMFF
 {
     public interface IStorage : IDisposable
     {

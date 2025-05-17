@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace SharpMP4
+namespace SharpISOBMFF
 {
     public class BoxFactory
     {

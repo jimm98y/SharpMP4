@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpMP4
+namespace SharpISOBMFF
 {
     /// <summary>
     /// Apple ilst->data dataType.

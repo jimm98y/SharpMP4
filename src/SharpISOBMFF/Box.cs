@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace SharpMP4
+namespace SharpISOBMFF
 {
     public interface IHasBoxChildren : IMp4Serializable
     {
