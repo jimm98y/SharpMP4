@@ -6,7 +6,6 @@ string filePath = args.Length > 0 ? args[0] : null;
 
 if (string.IsNullOrEmpty(filePath))
 {
-    //filePath = "";
     throw new ArgumentNullException("filePath");
 }
 

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ItuGeneratorHost": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\..\\SharpH264\\H264.js"
+    }
+  }
+}
