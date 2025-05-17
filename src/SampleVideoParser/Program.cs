@@ -17,7 +17,7 @@ var logger = new FileLogger("C:\\Temp\\video_debug.txt");
 //Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
 SharpMP4.Log.SinkInfo = (o, e) => 
 { 
-    Console.WriteLine(o);
+    Console.WriteLine($"{DateTime.UtcNow} {o}");
     File.AppendAllText("C:\\Temp\\_decoding_progress.txt", o + "\r\n");
 };
 SharpMP4.Log.SinkError = (o, e) => 
@@ -45,7 +45,7 @@ var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
 
 foreach (var file in files)
 {
-    SharpMP4.Log.Info($"----Reading: {file}");
+    SharpMP4.Log.Info(file);
 
     try
     {
