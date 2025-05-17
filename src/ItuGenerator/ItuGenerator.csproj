@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-	<LangVersion>latest</LangVersion>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<LangVersion>latest</LangVersion>
+	</PropertyGroup>
 
 	<PropertyGroup>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 		<IsRoslynComponent>true</IsRoslynComponent>
 		<PreserveCompilationContext>true</PreserveCompilationContext>
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<CompilerGeneratedFilesOutputPath>Generated</CompilerGeneratedFilesOutputPath>
@@ -25,7 +25,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.5.0" />
 	</ItemGroup>
- 
+
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" GeneratePathProperty="true" PrivateAssets="all" />
 		<PackageReference Include="Pidgin" Version="2.5.0" GeneratePathProperty="true" PrivateAssets="all" />

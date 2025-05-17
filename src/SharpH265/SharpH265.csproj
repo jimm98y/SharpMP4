@@ -1,28 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>disable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+		<!-- Used to enable/disable the source code generator -->
+		<AutoGenerateCode>true</AutoGenerateCode>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SharpH26X\SharpH26X.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\SharpH26X\SharpH26X.csproj" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<AdditionalFiles Include="H265.js" />
 	</ItemGroup>
-	<ItemGroup>
+
+	<ItemGroup Condition="$(AutoGenerateCode) == 'true'">
 		<ProjectReference Include="..\ItuGenerator\ItuGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
+		<None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
 	</ItemGroup>
-	<PropertyGroup>
+	<PropertyGroup Condition="$(AutoGenerateCode) == 'true'">
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<GeneratedFolder>Generated</GeneratedFolder>
 		<CompilerGeneratedFilesOutputPath>$(GeneratedFolder)\$(TargetFramework)</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
-	<ItemGroup>
-		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
-		<None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
-	</ItemGroup>
+
 </Project>
