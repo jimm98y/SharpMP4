@@ -12,18 +12,18 @@ using System.Text;
 
 // .\ffmpeg.exe - i "frag_bunny.mp4" - c:v copy -bsf:v trace_headers -f null -  > log.txt 2>&1
 
-var logger = new FileLogger("C:\\Temp\\video_debug.txt");
+var logger = new FileLogger("C:\\Temp\\video_debug2.txt");
 
 //Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
 SharpISOBMFF.Log.SinkInfo = (o, e) => 
 { 
     Console.WriteLine($"{DateTime.UtcNow} {o}");
-    File.AppendAllText("C:\\Temp\\_decoding_progress.txt", o + "\r\n");
+    File.AppendAllText("C:\\Temp\\_decoding_progress2.txt", o + "\r\n");
 };
 SharpISOBMFF.Log.SinkError = (o, e) => 
 { 
     Debug.WriteLine(o);
-    File.AppendAllText("C:\\Temp\\_decoding_errors.txt", o + "\r\n");
+    File.AppendAllText("C:\\Temp\\_decoding_errors2.txt", o + "\r\n");
 };
 
 SharpISOBMFF.Log.SinkDebug = (o, e) =>
@@ -37,11 +37,12 @@ SharpH26X.Log.SinkInfo = (o, e) =>
     //logger.Log(o + "\r\n");
 };
 
-var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
+//var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
 //var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
 //var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
 //var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
+var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
 
 foreach (var file in files)
 {
@@ -67,6 +68,9 @@ foreach (var file in files)
             VideoFormat format = VideoFormat.Unknown;
             uint videoTrackId = 0;
             uint primaryItemID = 0;
+
+            uint video_dts = 0;
+            uint video_pts = 0;
 
             AVCConfigurationBox avcC = null;
             HEVCConfigurationBox hvcC = null;
@@ -266,23 +270,50 @@ foreach (var file in files)
                     {
                         // fmp4
                         IOrderedEnumerable<TrackRunBox> plan = moof.Children.OfType<TrackFragmentBox>().SelectMany(x => x.Children.OfType<TrackRunBox>()).OrderBy(x => x.DataOffset);
+                        MovieExtendsBox mvex = moov.Children.OfType<MovieExtendsBox>().SingleOrDefault();
+                        TrackExtendsBox trex = null;
+
+                        if (mvex != null)
+                        {
+                            trex = mvex.Children.OfType<TrackExtendsBox>().SingleOrDefault(x => x.TrackID == videoTrackId);
+                        }
 
                         foreach (var trun in plan)
                         {
-                            uint trackId = (trun.GetParent() as TrackFragmentBox).Children.OfType<TrackFragmentHeaderBox>().First().TrackID;
+                            var tfhd = (trun.GetParent() as TrackFragmentBox).Children.OfType<TrackFragmentHeaderBox>().Single();
+                            uint trackId = tfhd.TrackID;
                             bool isVideo = trackId == videoTrackId;
                             if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
 
                             for (int j = 0; j < trun._TrunEntry.Length; j++)
                             {
                                 var entry = trun._TrunEntry[j];
-                                uint sampleSize = entry.SampleSize;
+
+                                uint sampleDuration = tfhd.DefaultSampleDuration;
+                                if ((entry.Flags & 0x100) == 0x100)
+                                    sampleDuration = entry.SampleDuration;
+                                else if ((tfhd.Flags & 0x8) == 0x8)
+                                    sampleDuration = tfhd.DefaultSampleDuration;
+                                else if (trex != null)
+                                    sampleDuration = trex.DefaultSampleDuration;
+                                else
+                                    throw new Exception("Cannot get sample duration");
+
+                                uint sampleSize = tfhd.DefaultSampleSize;
+                                if ((entry.Flags & 0x200) == 0x200)
+                                    sampleSize = entry.SampleSize;
+                                else if ((tfhd.Flags & 0x10) == 0x10)
+                                    sampleSize = tfhd.DefaultSampleSize;
+                                else if (trex != null)
+                                    sampleSize = trex.DefaultSampleSize;
+                                else
+                                    throw new Exception("Cannot get sample size");
 
                                 if (isVideo)
                                 {
                                     try
                                     {
-                                        size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize);
+                                        size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts);
                                     }
                                     catch (Exception ex)
                                     {
@@ -290,6 +321,8 @@ foreach (var file in files)
                                         logger.Flush();
                                         break;
                                     }
+                                    
+                                    video_dts += sampleDuration;
                                 }
                                 else
                                 {
@@ -311,21 +344,35 @@ foreach (var file in files)
                         ChunkLargeOffsetBox chunk_offsets_large_box = sample_table_box.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
                         SampleToChunkBox sample_to_chunks = sample_table_box.Children.OfType<SampleToChunkBox>().Single();
                         SampleSizeBox sample_size_box = sample_table_box.Children.OfType<SampleSizeBox>().Single();
+                        TimeToSampleBox time_to_sample_box = sample_table_box.Children.OfType<TimeToSampleBox>().Single();
+                        CompositionOffsetBox composition_offset_box = sample_table_box.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
                         uint[] sampleSizes = sample_size_box.SampleSize > 0 ? Enumerable.Repeat(sample_size_box.SampleSize, (int)sample_size_box.SampleCount).ToArray() : sample_size_box.EntrySize;
                         ulong[] chunkOffsets = chunk_offsets_box != null ? chunk_offsets_box.ChunkOffset.Select(x => (ulong)x).ToArray() : chunk_offsets_large_box.ChunkOffset;
 
                         // https://developer.apple.com/documentation/quicktime-file-format/sample-to-chunk_atom/sample-to-chunk_table
                         int s2c_index = 0;
-                        uint next_run = 0;
+                        uint s2c_next_run = 0;
+                        uint s2c_samples_per_chunk = 0;
+
+                        int t2s_index = 0;
+                        uint t2s_next_run = 0;
+                        uint t2s_sample_delta = 0;
+
                         int sample_idx = 0;
-                        uint samples_per_chunk = 0;
                         for (int k = 1; k <= chunkOffsets.Length; k++)
                         {
-                            if (k >= next_run)
+                            if (k >= s2c_next_run)
                             {
-                                samples_per_chunk = sample_to_chunks.SamplesPerChunk[s2c_index];
+                                s2c_samples_per_chunk = sample_to_chunks.SamplesPerChunk[s2c_index];
                                 s2c_index += 1;
-                                next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
+                                s2c_next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
+                            }
+
+                            if (k >= t2s_next_run)
+                            {
+                                t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
+                                t2s_index += 1;
+                                t2s_next_run = (t2s_index < time_to_sample_box.SampleDelta.Length) ? time_to_sample_box.SampleDelta[t2s_index] : (uint)(chunkOffsets.Length + 1);
                             }
 
                             long chunkOffset = (long)chunkOffsets[k - 1];
@@ -336,11 +383,12 @@ foreach (var file in files)
                             // read samples in this chunk
                             try
                             {
-
-                                for (int l = 0; l < samples_per_chunk; l++)
+                                for (int l = 0; l < s2c_samples_per_chunk; l++)
                                 {
                                     uint sampleSize = sampleSizes[sample_idx++];
-                                    size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize);
+                                    size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts);
+
+                                    video_dts += t2s_sample_delta;
                                 }
                             }
                             catch (Exception ex)
@@ -376,7 +424,7 @@ foreach (var file in files)
 
                             try
                             {
-                                size += ReadAU(nalLengthSize, context, format, mdat.Data, length);
+                                size += ReadAU(nalLengthSize, context, format, mdat.Data, length, 0);
                             }
                             catch (Exception ex)
                             {
@@ -418,12 +466,12 @@ int GetVariableInt(byte size, byte[] bytes)
     }
 }
 
-static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes)
+static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, uint dts)
 {
     ulong size = 0;
     long offsetInBytes = 0;
 
-    SharpISOBMFF.Log.Debug($"AU begin {sampleSizeInBytes}");
+    SharpISOBMFF.Log.Debug($"AU begin {sampleSizeInBytes}, DTS: {dts}");
 
     do
     {
