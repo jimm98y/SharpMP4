@@ -37,12 +37,12 @@ SharpH26X.Log.SinkInfo = (o, e) =>
     //logger.Log(o + "\r\n");
 };
 
-//var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
+var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
 //var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
 //var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
 //var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
-var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
+//var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
 
 foreach (var file in files)
 {
@@ -57,7 +57,7 @@ foreach (var file in files)
             {
                 inputMp4.Read(new IsoStream(inputFileStream));
             }
-            catch (SharpISOBMFF.IsoEndOfStreamException)
+            catch (IsoEndOfStreamException)
             {
                 SharpISOBMFF.Log.Error($"Invalid file: {file}");
                 continue;
@@ -71,6 +71,9 @@ foreach (var file in files)
 
             long video_dts = 0;
             long video_pts = 0;
+
+            long audio_dts = 0;
+            long audio_pts = 0;
 
             AVCConfigurationBox avcC = null;
             HEVCConfigurationBox hvcC = null;
@@ -164,7 +167,7 @@ foreach (var file in files)
                     {
                         SharpISOBMFF.Log.Error($"---Error (1) reading {file}, exception: {ex.Message}");
                         logger.Flush();
-                        break;
+                        throw;
                     }
                 }
 
@@ -178,7 +181,7 @@ foreach (var file in files)
                     {
                         SharpISOBMFF.Log.Error($"---Error (2) reading {file}, exception: {ex.Message}");
                         logger.Flush();
-                        break;
+                        throw;
                     }
                 }
             }
@@ -201,7 +204,7 @@ foreach (var file in files)
                         {
                             SharpISOBMFF.Log.Error($"---Error (3) reading {file}, exception: {ex.Message}");
                             logger.Flush();
-                            break;
+                            throw;
                         }
                     }
                 }
@@ -225,7 +228,7 @@ foreach (var file in files)
                         {
                             SharpISOBMFF.Log.Error($"---Error (4) reading {file}, exception: {ex.Message}");
                             logger.Flush();
-                            break;
+                            throw;
                         }
                     }
                 }
@@ -289,9 +292,9 @@ foreach (var file in files)
                             if ((trun.Flags & 0x4) != 0x4)
                                 firstSampleFlags = tfhd.DefaultSampleFlags;
 
-                            for (int j = 0; j < trun._TrunEntry.Length; j++)
+                            for (int k = 1; k <= trun._TrunEntry.Length; k++)
                             {
-                                var entry = trun._TrunEntry[j];
+                                var entry = trun._TrunEntry[k - 1];
 
                                 uint sampleDuration = tfhd.DefaultSampleDuration;
                                 if ((entry.Flags & 0x100) == 0x100)
@@ -314,7 +317,7 @@ foreach (var file in files)
                                     throw new Exception("Cannot get sample size");
 
                                 uint sampleFlags = tfhd.DefaultSampleFlags;
-                                if(j == 0)
+                                if(k == 1)
                                     sampleFlags = firstSampleFlags;
                                 else if ((entry.Flags & 0x400) == 0x400)
                                     sampleFlags = entry.SampleFlags;
@@ -341,15 +344,16 @@ foreach (var file in files)
                                     {
                                         SharpISOBMFF.Log.Error($"---Error (5) reading {file}, exception: {ex.Message}");
                                         logger.Flush();
-                                        break;
+                                        throw;
                                     }
 
                                     video_dts += sampleDuration;
                                 }
                                 else
                                 {
-                                    // audio
+                                    audio_pts = audio_dts + sampleCompositionTime;
                                     size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
+                                    audio_dts += sampleDuration;
                                 }
                             }
                         }
@@ -413,25 +417,26 @@ foreach (var file in files)
                             // seek to the chunk offset
                             mdat.Data.Stream.SeekFromBeginning(chunkOffset);
 
-                            // read samples in this chunk
-                            try
+                            // read samples in this chunk                            
+                            for (int l = 0; l < s2c_samples_per_chunk; l++)
                             {
-                                for (int l = 0; l < s2c_samples_per_chunk; l++)
+                                uint sampleSize = sampleSizes[sample_idx++];
+
+                                video_pts = video_dts + co_sample_delta;
+
+                                try
                                 {
-                                    uint sampleSize = sampleSizes[sample_idx++];
-
-                                    video_pts = video_dts + co_sample_delta;
                                     size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts, video_pts, t2s_sample_delta);
-
-                                    video_dts += t2s_sample_delta;
                                 }
-                            }
-                            catch (Exception ex)
-                            {
-                                SharpISOBMFF.Log.Error($"---Error (6) reading {file}, exception: {ex.Message}"); 
-                                logger.Flush();
-                                break;
-                            }
+                                catch (Exception ex)
+                                {
+                                    SharpISOBMFF.Log.Error($"---Error (6) reading {file}, exception: {ex.Message}");
+                                    logger.Flush();
+                                    throw;
+                                }
+
+                                video_dts += t2s_sample_delta;
+                            }                            
                         }
                     }
 
@@ -465,7 +470,7 @@ foreach (var file in files)
                             {
                                 SharpISOBMFF.Log.Error($"---Error (7) reading {file}, exception: {ex.Message}");
                                 logger.Flush();
-                                break;
+                                throw;
                             }
                         }
                     }
@@ -525,7 +530,6 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
             case 4:
                 size += marker.Stream.ReadUInt32(size, (ulong)marker.Length, out nalUnitLength);
                 break;
-
             default:
                 throw new Exception($"NAL unit length {nalLengthSize} not supported!");
         }
@@ -738,7 +742,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                     context.DepthParameterSetRbsp = new DepthParameterSetRbsp();
                     context.DepthParameterSetRbsp.Read(context, stream);
                     context.DepthParameterSetRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
                         throw new Exception($"Failed to write NALu {nu.NalUnitType}");
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED0) // 17
@@ -859,9 +863,8 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.VideoParameterSetRbsp = new SharpH265.VideoParameterSetRbsp();
                     context.VideoParameterSetRbsp.Read(context, stream);
                     context.VideoParameterSetRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
-                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
-                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT) // 33
                 {
@@ -869,9 +872,8 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.SeqParameterSetRbsp = new SharpH265.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
-                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
-                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT) // 34
                 {
@@ -879,9 +881,8 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.PicParameterSetRbsp = new SharpH265.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
-                        //if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
-                            throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
+                        throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT) // 35
                 {
@@ -889,7 +890,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.AccessUnitDelimiterRbsp = new SharpH265.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
                         throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.EOS_NUT) // 36
@@ -925,7 +926,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.SeiRbsp = new SharpH265.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
                         throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SUFFIX_SEI_NUT) // 40
@@ -935,7 +936,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     context.SeiRbsp = new SharpH265.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
-                    if (!ms.ToArray().SequenceEqual(sampleData))
+                    if (!(ms.ToArray().SequenceEqual(sampleData) || ms.ToArray().Concat(new byte[] { 0 }).ToArray().SequenceEqual(sampleData))) // tolerate 1 zero byte padding
                         throw new Exception($"Failed to write NALu {nu.NalUnitHeader.NalUnitType}");
                 }
                 else
