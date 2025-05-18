@@ -1584,6 +1584,7 @@ seq_parameter_set_rbsp() {
 			uint firstSubLayer = 0;
 			int whileIndex = -1;
 			size += stream.ReadUnsignedInt(size, 4, out this.sps_seq_parameter_set_id, "sps_seq_parameter_set_id"); 
+			((H266Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 4, out this.sps_video_parameter_set_id, "sps_video_parameter_set_id"); 
 			size += stream.ReadUnsignedInt(size, 3, out this.sps_max_sublayers_minus1, "sps_max_sublayers_minus1"); 
 			size += stream.ReadUnsignedInt(size, 2, out this.sps_chroma_format_idc, "sps_chroma_format_idc"); 
@@ -2075,6 +2076,7 @@ if (((H266Context)context).num_ref_entries[i] == null)
 			uint firstSubLayer = 0;
 			int whileIndex = -1;
 			size += stream.WriteUnsignedInt(4, this.sps_seq_parameter_set_id, "sps_seq_parameter_set_id"); 
+			((H266Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
 			size += stream.WriteUnsignedInt(4, this.sps_video_parameter_set_id, "sps_video_parameter_set_id"); 
 			size += stream.WriteUnsignedInt(3, this.sps_max_sublayers_minus1, "sps_max_sublayers_minus1"); 
 			size += stream.WriteUnsignedInt(2, this.sps_chroma_format_idc, "sps_chroma_format_idc"); 
@@ -2821,7 +2823,9 @@ pic_parameter_set_rbsp() {
 			uint j = 0;
 			int whileIndex = -1;
 			size += stream.ReadUnsignedInt(size, 6, out this.pps_pic_parameter_set_id, "pps_pic_parameter_set_id"); 
+			((H266Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 4, out this.pps_seq_parameter_set_id, "pps_seq_parameter_set_id"); 
+			((H266Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 1, out this.pps_mixed_nalu_types_in_pic_flag, "pps_mixed_nalu_types_in_pic_flag"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.pps_pic_width_in_luma_samples, "pps_pic_width_in_luma_samples"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.pps_pic_height_in_luma_samples, "pps_pic_height_in_luma_samples"); 
@@ -3071,7 +3075,9 @@ pic_parameter_set_rbsp() {
 			uint j = 0;
 			int whileIndex = -1;
 			size += stream.WriteUnsignedInt(6, this.pps_pic_parameter_set_id, "pps_pic_parameter_set_id"); 
+			((H266Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);
 			size += stream.WriteUnsignedInt(4, this.pps_seq_parameter_set_id, "pps_seq_parameter_set_id"); 
+			((H266Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);
 			size += stream.WriteUnsignedInt(1, this.pps_mixed_nalu_types_in_pic_flag, "pps_mixed_nalu_types_in_pic_flag"); 
 			size += stream.WriteUnsignedIntGolomb( this.pps_pic_width_in_luma_samples, "pps_pic_width_in_luma_samples"); 
 			size += stream.WriteUnsignedIntGolomb( this.pps_pic_height_in_luma_samples, "pps_pic_height_in_luma_samples"); 
@@ -4622,6 +4628,7 @@ ph_extension_data_byte[ i ] u(8)
 				size += stream.ReadUnsignedInt(size, 1, out this.ph_intra_slice_allowed_flag, "ph_intra_slice_allowed_flag"); 
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.ph_pic_parameter_set_id, "ph_pic_parameter_set_id"); 
+			((H266Context)context).SetPhPicParameterSetId(ph_pic_parameter_set_id);
 			size += stream.ReadUnsignedIntVariable(size, ((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4, out this.ph_pic_order_cnt_lsb, "ph_pic_order_cnt_lsb"); 
 
 			if ( ph_gdr_pic_flag != 0 )
@@ -4962,6 +4969,7 @@ ph_extension_data_byte[ i ] u(8)
 				size += stream.WriteUnsignedInt(1, this.ph_intra_slice_allowed_flag, "ph_intra_slice_allowed_flag"); 
 			}
 			size += stream.WriteUnsignedIntGolomb( this.ph_pic_parameter_set_id, "ph_pic_parameter_set_id"); 
+			((H266Context)context).SetPhPicParameterSetId(ph_pic_parameter_set_id);
 			size += stream.WriteUnsignedIntVariable(((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4, this.ph_pic_order_cnt_lsb, "ph_pic_order_cnt_lsb"); 
 
 			if ( ph_gdr_pic_flag != 0 )

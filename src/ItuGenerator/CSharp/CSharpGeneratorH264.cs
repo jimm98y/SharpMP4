@@ -311,6 +311,11 @@ namespace ItuGenerator.CSharp
             {
                 case "sei_payload":
                     return "((H264Context)context).SetSeiPayload(sei_payload);";
+                case "pic_parameter_set_id":
+                    return "((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);";
+                case "seq_parameter_set_id":
+                    return "((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);";
+
                 case "pic_struct":
                     return "((H264Context)context).OnPicStruct(pic_struct);";
                 case "enable_rle_skip_flag":

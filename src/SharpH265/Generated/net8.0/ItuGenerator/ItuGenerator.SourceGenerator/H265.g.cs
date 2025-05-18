@@ -574,7 +574,9 @@ pic_parameter_set_rbsp() {
 			uint i = 0;
 			int whileIndex = -1;
 			size += stream.ReadUnsignedIntGolomb(size, out this.pps_pic_parameter_set_id, "pps_pic_parameter_set_id"); 
+			((H265Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);
 			size += stream.ReadUnsignedIntGolomb(size, out this.pps_seq_parameter_set_id, "pps_seq_parameter_set_id"); 
+			((H265Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 1, out this.dependent_slice_segments_enabled_flag, "dependent_slice_segments_enabled_flag"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.output_flag_present_flag, "output_flag_present_flag"); 
 			size += stream.ReadUnsignedInt(size, 3, out this.num_extra_slice_header_bits, "num_extra_slice_header_bits"); 
@@ -705,7 +707,9 @@ pic_parameter_set_rbsp() {
 			uint i = 0;
 			int whileIndex = -1;
 			size += stream.WriteUnsignedIntGolomb( this.pps_pic_parameter_set_id, "pps_pic_parameter_set_id"); 
+			((H265Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);
 			size += stream.WriteUnsignedIntGolomb( this.pps_seq_parameter_set_id, "pps_seq_parameter_set_id"); 
+			((H265Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);
 			size += stream.WriteUnsignedInt(1, this.dependent_slice_segments_enabled_flag, "dependent_slice_segments_enabled_flag"); 
 			size += stream.WriteUnsignedInt(1, this.output_flag_present_flag, "output_flag_present_flag"); 
 			size += stream.WriteUnsignedInt(3, this.num_extra_slice_header_bits, "num_extra_slice_header_bits"); 
@@ -11469,6 +11473,7 @@ seq_parameter_set_rbsp() {
 				size +=  stream.ReadClass<ProfileTierLevel>(size, context, this.profile_tier_level, "profile_tier_level"); 
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.sps_seq_parameter_set_id, "sps_seq_parameter_set_id"); 
+			((H265Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
 
 			if ( MultiLayerExtSpsFlag != 0 )
 			{
@@ -11669,6 +11674,7 @@ seq_parameter_set_rbsp() {
 				size += stream.WriteClass<ProfileTierLevel>(context, this.profile_tier_level, "profile_tier_level"); 
 			}
 			size += stream.WriteUnsignedIntGolomb( this.sps_seq_parameter_set_id, "sps_seq_parameter_set_id"); 
+			((H265Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);
 
 			if ( MultiLayerExtSpsFlag != 0 )
 			{
@@ -16069,6 +16075,7 @@ slice_segment_header() {
 				size += stream.ReadUnsignedInt(size, 1, out this.no_output_of_prior_pics_flag, "no_output_of_prior_pics_flag"); 
 			}
 			size += stream.ReadUnsignedIntGolomb(size, out this.slice_pic_parameter_set_id, "slice_pic_parameter_set_id"); 
+			((H265Context)context).SetSlicePicParameterSetId(slice_pic_parameter_set_id);
 
 			if (first_slice_segment_in_pic_flag== 0)
 			{
@@ -16415,6 +16422,7 @@ slice_segment_header() {
 				size += stream.WriteUnsignedInt(1, this.no_output_of_prior_pics_flag, "no_output_of_prior_pics_flag"); 
 			}
 			size += stream.WriteUnsignedIntGolomb( this.slice_pic_parameter_set_id, "slice_pic_parameter_set_id"); 
+			((H265Context)context).SetSlicePicParameterSetId(slice_pic_parameter_set_id);
 
 			if (first_slice_segment_in_pic_flag== 0)
 			{

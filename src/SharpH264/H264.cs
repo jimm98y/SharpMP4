@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SharpH264
 {
@@ -64,6 +65,8 @@ namespace SharpH264
     public partial class H264Context
     {
         public SeiPayload SeiPayload { get; set; }
+        public Dictionary<ulong, SeqParameterSetRbsp> SeqParameterSets { get; } = new Dictionary<ulong, SeqParameterSetRbsp>();
+        public Dictionary<ulong, PicParameterSetRbsp> PicParameterSets { get; } = new Dictionary<ulong, PicParameterSetRbsp>();
 
         public int NumClockTS { get; set; }
         public uint AllViewsPairedFlag { get; set; } = 1;
@@ -342,6 +345,65 @@ namespace SharpH264
         public void OnChromaFormatIdc()
         {
             OnSeparateColourPlaneFlag();
+        }
+
+        public void SetSeqParameterSetId(ulong seq_parameter_set_id)
+        {
+            if (SeqParameterSetRbsp == null)
+                return;
+
+            if(!SeqParameterSets.ContainsKey(SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId))
+            {
+                SeqParameterSets.Add(SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId, SeqParameterSetRbsp);
+            }
+
+            if(seq_parameter_set_id != SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId)
+            {
+                if(SeqParameterSets.ContainsKey(seq_parameter_set_id))
+                {
+                    SeqParameterSetRbsp = SeqParameterSets[seq_parameter_set_id];
+                }
+                else
+                {
+                    throw new Exception($"SeqParameterSet with id {seq_parameter_set_id} not found.");
+                }
+            }
+        }
+
+        public void SetPicParameterSetId(ulong pic_parameter_set_id)
+        {
+            if (PicParameterSetRbsp == null)
+                return;
+
+            if (!PicParameterSets.ContainsKey(PicParameterSetRbsp.PicParameterSetId))
+            {
+                PicParameterSets.Add(PicParameterSetRbsp.PicParameterSetId, PicParameterSetRbsp);
+            }
+
+            if (pic_parameter_set_id != PicParameterSetRbsp.PicParameterSetId)
+            {
+                if (PicParameterSets.ContainsKey(pic_parameter_set_id))
+                {
+                    PicParameterSetRbsp = PicParameterSets[pic_parameter_set_id];
+
+                    // set also SPS
+                    if(PicParameterSetRbsp.SeqParameterSetId != SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId)
+                    {
+                        if (SeqParameterSets.ContainsKey(PicParameterSetRbsp.SeqParameterSetId))
+                        {
+                            SeqParameterSetRbsp = SeqParameterSets[PicParameterSetRbsp.SeqParameterSetId];
+                        }
+                        else
+                        {
+                            throw new Exception($"SeqParameterSet with id {PicParameterSetRbsp.SeqParameterSetId} not found.");
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception($"PicParameterSet with id {pic_parameter_set_id} not found.");
+                }
+            }
         }
     }
 }

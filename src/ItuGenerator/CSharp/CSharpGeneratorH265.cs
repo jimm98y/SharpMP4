@@ -257,6 +257,15 @@ namespace ItuGenerator.CSharp
             {
                 case "sei_payload":
                     return "((H265Context)context).SetSeiPayload(sei_payload);";
+                case "pps_pic_parameter_set_id":
+                    return "((H265Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);";
+                case "slice_pic_parameter_set_id":
+                    return "((H265Context)context).SetSlicePicParameterSetId(slice_pic_parameter_set_id);";
+                case "sps_seq_parameter_set_id":
+                    return "((H265Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);";
+                case "pps_seq_parameter_set_id":
+                    return "((H265Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);";
+
                 case "vps_max_layers_minus1":
                     return "((H265Context)context).OnVpsMaxLayersMinus1();";
                 case "num_add_layer_sets":

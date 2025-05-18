@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SharpH266
 {
@@ -78,6 +79,8 @@ namespace SharpH266
 
         public SeiPayload SeiPayload { get; set; }
         public GeneralTimingHrdParameters GeneralTimingHrdParameters { get; set; }
+        public Dictionary<ulong, SeqParameterSetRbsp> SeqParameterSets { get; } = new Dictionary<ulong, SeqParameterSetRbsp>();
+        public Dictionary<ulong, PicParameterSetRbsp> PicParameterSets { get; } = new Dictionary<ulong, PicParameterSetRbsp>();
 
         public uint olsModeIdc { get; set; }
         public uint TotalNumOlss { get; set; }
@@ -1088,6 +1091,71 @@ namespace SharpH266
                 AbsDeltaPocSt[listIdx][rplsIdx][i] = abs_delta_poc_st[listIdx][rplsIdx][i];
             else
                 AbsDeltaPocSt[listIdx][rplsIdx][i] = abs_delta_poc_st[listIdx][rplsIdx][i] + 1;
+        }
+    
+        public void SetSpsSeqParameterSetId(ulong sps_seq_parameter_set_id)
+        {
+            if (SeqParameterSetRbsp == null)
+                return;
+
+            if (!SeqParameterSets.ContainsKey(SeqParameterSetRbsp.SpsSeqParameterSetId))
+            {
+                SeqParameterSets.Add(SeqParameterSetRbsp.SpsSeqParameterSetId, SeqParameterSetRbsp);
+            }
+        }
+
+        public void SetPpsSeqParameterSetId(ulong pps_seq_parameter_set_id)
+        {
+            if (pps_seq_parameter_set_id != SeqParameterSetRbsp.SpsSeqParameterSetId)
+            {
+                if (SeqParameterSets.ContainsKey(pps_seq_parameter_set_id))
+                {
+                    SeqParameterSetRbsp = SeqParameterSets[pps_seq_parameter_set_id];
+                }
+                else
+                {
+                    throw new Exception($"SeqParameterSet with id {pps_seq_parameter_set_id} not found.");
+                }
+            }
+        }
+
+        public void SetPpsPicParameterSetId(ulong pps_pic_parameter_set_id)
+        {
+            if (PicParameterSetRbsp == null)
+                return;
+
+            if (!PicParameterSets.ContainsKey(PicParameterSetRbsp.PpsPicParameterSetId))
+            {
+                PicParameterSets.Add(PicParameterSetRbsp.PpsPicParameterSetId, PicParameterSetRbsp);
+            }
+        }
+
+        public void SetPhPicParameterSetId(ulong ph_pic_parameter_set_id)
+        {
+            if (ph_pic_parameter_set_id != PicParameterSetRbsp.PpsPicParameterSetId)
+            {
+                if (PicParameterSets.ContainsKey(ph_pic_parameter_set_id))
+                {
+                    PicParameterSetRbsp = PicParameterSets[ph_pic_parameter_set_id];
+
+                    // set also SPS
+                    if (PicParameterSetRbsp.PpsSeqParameterSetId != SeqParameterSetRbsp.SpsSeqParameterSetId)
+                    {
+                        if (SeqParameterSets.ContainsKey(PicParameterSetRbsp.PpsSeqParameterSetId))
+                        {
+                            SeqParameterSetRbsp = SeqParameterSets[PicParameterSetRbsp.PpsSeqParameterSetId];
+                        }
+                        else
+                        {
+                            throw new Exception($"SeqParameterSet with id {PicParameterSetRbsp.PpsSeqParameterSetId} not found.");
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception($"PicParameterSet with id {ph_pic_parameter_set_id} not found.");
+                }
+            }
         }
     }
 }

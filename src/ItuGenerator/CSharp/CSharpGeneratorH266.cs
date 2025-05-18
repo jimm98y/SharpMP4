@@ -405,6 +405,15 @@ namespace ItuGenerator.CSharp
             {
                 case "sei_payload":
                     return "((H266Context)context).SetSeiPayload(sei_payload);";
+                case "pps_pic_parameter_set_id":
+                    return "((H266Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);";
+                case "ph_pic_parameter_set_id":
+                    return "((H266Context)context).SetPhPicParameterSetId(ph_pic_parameter_set_id);";
+                case "sps_seq_parameter_set_id":
+                    return "((H266Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);";
+                case "pps_seq_parameter_set_id":
+                    return "((H266Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);";
+
                 case "general_timing_hrd_parameters":
                     return "((H266Context)context).SetGeneralTimingHrdParameters(general_timing_hrd_parameters);";
                 case "vps_num_output_layer_sets_minus2":

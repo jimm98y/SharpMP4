@@ -442,6 +442,7 @@ seq_parameter_set_data() {
 			size += stream.ReadUnsignedInt(size, 2, out this.reserved_zero_2bits, "reserved_zero_2bits"); // equal to 0 
 			size += stream.ReadUnsignedInt(size, 8, out this.level_idc, "level_idc"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 
 			if ( profile_idc  ==  100  ||  profile_idc  ==  110  || 
   profile_idc  ==  122  ||  profile_idc  ==  244  ||  profile_idc  ==  44  || 
@@ -557,6 +558,7 @@ seq_parameter_set_data() {
 			size += stream.WriteUnsignedInt(2, this.reserved_zero_2bits, "reserved_zero_2bits"); // equal to 0 
 			size += stream.WriteUnsignedInt(8, this.level_idc, "level_idc"); 
 			size += stream.WriteUnsignedIntGolomb( this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 
 			if ( profile_idc  ==  100  ||  profile_idc  ==  110  || 
   profile_idc  ==  122  ||  profile_idc  ==  244  ||  profile_idc  ==  44  || 
@@ -793,6 +795,7 @@ seq_parameter_set_extension_rbsp() {
             ulong size = 0;
 
 			size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 			size += stream.ReadUnsignedIntGolomb(size, out this.aux_format_idc, "aux_format_idc"); 
 
 			if ( aux_format_idc  !=  0 )
@@ -814,6 +817,7 @@ seq_parameter_set_extension_rbsp() {
             ulong size = 0;
 
 			size += stream.WriteUnsignedIntGolomb( this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 			size += stream.WriteUnsignedIntGolomb( this.aux_format_idc, "aux_format_idc"); 
 
 			if ( aux_format_idc  !=  0 )
@@ -1165,7 +1169,9 @@ pic_parameter_set_rbsp() {
 			uint iGroup = 0;
 			uint i = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id, "pic_parameter_set_id"); 
+			((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);
 			size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 1, out this.entropy_coding_mode_flag, "entropy_coding_mode_flag"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.bottom_field_pic_order_in_frame_present_flag, "bottom_field_pic_order_in_frame_present_flag"); 
 			size += stream.ReadUnsignedIntGolomb(size, out this.num_slice_groups_minus1, "num_slice_groups_minus1"); 
@@ -1274,7 +1280,9 @@ pic_parameter_set_rbsp() {
 			uint iGroup = 0;
 			uint i = 0;
 			size += stream.WriteUnsignedIntGolomb( this.pic_parameter_set_id, "pic_parameter_set_id"); 
+			((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);
 			size += stream.WriteUnsignedIntGolomb( this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 			size += stream.WriteUnsignedInt(1, this.entropy_coding_mode_flag, "entropy_coding_mode_flag"); 
 			size += stream.WriteUnsignedInt(1, this.bottom_field_pic_order_in_frame_present_flag, "bottom_field_pic_order_in_frame_present_flag"); 
 			size += stream.WriteUnsignedIntGolomb( this.num_slice_groups_minus1, "num_slice_groups_minus1"); 
@@ -2387,6 +2395,7 @@ slice_header() {
 			size += stream.ReadUnsignedIntGolomb(size, out this.slice_type, "slice_type"); 
 			((H264Context)context).OnSliceType(slice_type);
 			size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id, "pic_parameter_set_id"); 
+			((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);
 
 			if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
 			{
@@ -2524,6 +2533,7 @@ slice_header() {
 			size += stream.WriteUnsignedIntGolomb( this.slice_type, "slice_type"); 
 			((H264Context)context).OnSliceType(slice_type);
 			size += stream.WriteUnsignedIntGolomb( this.pic_parameter_set_id, "pic_parameter_set_id"); 
+			((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);
 
 			if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
 			{
@@ -4294,6 +4304,7 @@ buffering_period( payloadSize ) {
 
 			uint SchedSelIdx = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 
 			if ( ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0 )
 			{
@@ -4326,6 +4337,7 @@ buffering_period( payloadSize ) {
 
 			uint SchedSelIdx = 0;
 			size += stream.WriteUnsignedIntGolomb( this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 
 			if ( ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag != 0 )
 			{
@@ -9782,6 +9794,7 @@ slice_header_in_scalable_extension() {
 			size += stream.ReadUnsignedIntGolomb(size, out this.slice_type, "slice_type"); 
 			((H264Context)context).OnSliceType(slice_type);
 			size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id, "pic_parameter_set_id"); 
+			((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);
 
 			if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
 			{
@@ -10002,6 +10015,7 @@ slice_header_in_scalable_extension() {
 			size += stream.WriteUnsignedIntGolomb( this.slice_type, "slice_type"); 
 			((H264Context)context).OnSliceType(slice_type);
 			size += stream.WriteUnsignedIntGolomb( this.pic_parameter_set_id, "pic_parameter_set_id"); 
+			((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);
 
 			if (((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag == 1)
 			{
@@ -12901,6 +12915,7 @@ parallel_decoding_info( payloadSize ) {
 			uint i = 0;
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 
 			this.pdi_init_delay_anchor_minus2_l0 = new ulong[ (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
 			this.pdi_init_delay_anchor_minus2_l1 = new ulong[ (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1 + 1][];
@@ -12951,6 +12966,7 @@ parallel_decoding_info( payloadSize ) {
 			uint i = 0;
 			uint j = 0;
 			size += stream.WriteUnsignedIntGolomb( this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 
 			for ( i = 1; i <= (int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1; i++ )
 			{
@@ -14004,6 +14020,7 @@ view_dependency_change( payloadSize ) {
 			uint i = 0;
 			uint j = 0;
 			size += stream.ReadUnsignedIntGolomb(size, out this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 			size += stream.ReadUnsignedInt(size, 1, out this.anchor_update_flag, "anchor_update_flag"); 
 			size += stream.ReadUnsignedInt(size, 1, out this.non_anchor_update_flag, "non_anchor_update_flag"); 
 
@@ -14061,6 +14078,7 @@ view_dependency_change( payloadSize ) {
 			uint i = 0;
 			uint j = 0;
 			size += stream.WriteUnsignedIntGolomb( this.seq_parameter_set_id, "seq_parameter_set_id"); 
+			((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);
 			size += stream.WriteUnsignedInt(1, this.anchor_update_flag, "anchor_update_flag"); 
 			size += stream.WriteUnsignedInt(1, this.non_anchor_update_flag, "non_anchor_update_flag"); 
 
@@ -18303,6 +18321,7 @@ slice_header_in_3davc_extension() {
 			size += stream.ReadUnsignedIntGolomb(size, out this.slice_type, "slice_type"); 
 			((H264Context)context).OnSliceType(slice_type);
 			size += stream.ReadUnsignedIntGolomb(size, out this.pic_parameter_set_id, "pic_parameter_set_id"); 
+			((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);
 
 			if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
 			{
@@ -18518,6 +18537,7 @@ slice_header_in_3davc_extension() {
 			size += stream.WriteUnsignedIntGolomb( this.slice_type, "slice_type"); 
 			((H264Context)context).OnSliceType(slice_type);
 			size += stream.WriteUnsignedIntGolomb( this.pic_parameter_set_id, "pic_parameter_set_id"); 
+			((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);
 
 			if (((H264Context)context).NalHeader.Avc3dExtensionFlag != 0 && ((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag != 0)
 			{
