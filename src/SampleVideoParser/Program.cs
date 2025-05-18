@@ -272,6 +272,8 @@ foreach (var file in files)
                     if (moof != null)
                     {
                         // fmp4
+                        video_dts = 0;
+
                         IOrderedEnumerable<TrackRunBox> plan = moof.Children.OfType<TrackFragmentBox>().SelectMany(x => x.Children.OfType<TrackRunBox>()).OrderBy(x => x.DataOffset);
                         MovieExtendsBox mvex = moov.Children.OfType<MovieExtendsBox>().SingleOrDefault();
                         TrackExtendsBox trex = null;
@@ -283,9 +285,19 @@ foreach (var file in files)
 
                         foreach (var trun in plan)
                         {
-                            var tfhd = (trun.GetParent() as TrackFragmentBox).Children.OfType<TrackFragmentHeaderBox>().Single();
+                            var traf = trun.GetParent() as TrackFragmentBox;
+                            var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
+                            var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
                             uint trackId = tfhd.TrackID;
                             bool isVideo = trackId == videoTrackId;
+                            if(tfdt != null)
+                            {
+                                if(isVideo)
+                                    video_dts = (long)tfdt.BaseMediaDecodeTime;
+                                else
+                                    audio_dts = (long)tfdt.BaseMediaDecodeTime;
+                            }
+
                             if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
 
                             var firstSampleFlags = trun.FirstSampleFlags;
@@ -357,10 +369,17 @@ foreach (var file in files)
                                 }
                             }
                         }
+
+                        // start looking for next moof/mdat pair
+                        moof = null;
+                        mdat = null; 
                     }
                     else
                     {
                         // mp4
+                        video_dts = 0;
+                        audio_dts = 0;
+
                         SampleTableBox sample_table_box = moov
                             .Children.OfType<TrackBox>().First(x => x.Children.OfType<TrackHeaderBox>().Single().TrackID == videoTrackId)
                             .Children.OfType<MediaBox>().Single()
