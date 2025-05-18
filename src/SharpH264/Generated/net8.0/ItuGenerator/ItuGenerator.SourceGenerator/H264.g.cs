@@ -8885,6 +8885,8 @@ vui_parameters() {
 		public HrdParameters HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
 		private byte vcl_hrd_parameters_present_flag;
 		public byte VclHrdParametersPresentFlag { get { return vcl_hrd_parameters_present_flag; } set { vcl_hrd_parameters_present_flag = value; } }
+		private HrdParameters hrd_parameters0;
+		public HrdParameters HrdParameters0 { get { return hrd_parameters0; } set { hrd_parameters0 = value; } }
 		private byte low_delay_hrd_flag;
 		public byte LowDelayHrdFlag { get { return low_delay_hrd_flag; } set { low_delay_hrd_flag = value; } }
 		private byte pic_struct_present_flag;
@@ -8978,8 +8980,8 @@ vui_parameters() {
 
 			if ( vcl_hrd_parameters_present_flag != 0 )
 			{
-				this.hrd_parameters =  new HrdParameters() ;
-				size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters, "hrd_parameters"); 
+				this.hrd_parameters0 =  new HrdParameters() ;
+				size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters0, "hrd_parameters0"); 
 			}
 
 			if ( nal_hrd_parameters_present_flag != 0  ||  vcl_hrd_parameters_present_flag != 0 )
@@ -9066,7 +9068,7 @@ vui_parameters() {
 
 			if ( vcl_hrd_parameters_present_flag != 0 )
 			{
-				size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters, "hrd_parameters"); 
+				size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters0, "hrd_parameters0"); 
 			}
 
 			if ( nal_hrd_parameters_present_flag != 0  ||  vcl_hrd_parameters_present_flag != 0 )
@@ -11681,6 +11683,8 @@ base_layer_temporal_hrd( payloadSize ) {
 		public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
 		private byte[] sei_vcl_hrd_parameters_present_flag;
 		public byte[] SeiVclHrdParametersPresentFlag { get { return sei_vcl_hrd_parameters_present_flag; } set { sei_vcl_hrd_parameters_present_flag = value; } }
+		private HrdParameters[] hrd_parameters0;
+		public HrdParameters[] HrdParameters0 { get { return hrd_parameters0; } set { hrd_parameters0 = value; } }
 		private byte[] sei_low_delay_hrd_flag;
 		public byte[] SeiLowDelayHrdFlag { get { return sei_low_delay_hrd_flag; } set { sei_low_delay_hrd_flag = value; } }
 		private byte[] sei_pic_struct_present_flag;
@@ -11709,6 +11713,7 @@ base_layer_temporal_hrd( payloadSize ) {
 			this.sei_nal_hrd_parameters_present_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
 			this.hrd_parameters = new HrdParameters[ num_of_temporal_layers_in_base_layer_minus1 + 1];
 			this.sei_vcl_hrd_parameters_present_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
+			this.hrd_parameters0 = new HrdParameters[ num_of_temporal_layers_in_base_layer_minus1 + 1];
 			this.sei_low_delay_hrd_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
 			this.sei_pic_struct_present_flag = new byte[ num_of_temporal_layers_in_base_layer_minus1 + 1];
 			for ( i = 0; i <= num_of_temporal_layers_in_base_layer_minus1; i++ )
@@ -11733,8 +11738,8 @@ base_layer_temporal_hrd( payloadSize ) {
 
 				if ( sei_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					this.hrd_parameters[ i ] =  new HrdParameters() ;
-					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					this.hrd_parameters0[ i ] =  new HrdParameters() ;
+					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( sei_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -11776,7 +11781,7 @@ base_layer_temporal_hrd( payloadSize ) {
 
 				if ( sei_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( sei_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -12162,6 +12167,8 @@ svc_vui_parameters_extension() {
 		public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
 		private byte[] vui_ext_vcl_hrd_parameters_present_flag;
 		public byte[] VuiExtVclHrdParametersPresentFlag { get { return vui_ext_vcl_hrd_parameters_present_flag; } set { vui_ext_vcl_hrd_parameters_present_flag = value; } }
+		private HrdParameters[] hrd_parameters0;
+		public HrdParameters[] HrdParameters0 { get { return hrd_parameters0; } set { hrd_parameters0 = value; } }
 		private byte[] vui_ext_low_delay_hrd_flag;
 		public byte[] VuiExtLowDelayHrdFlag { get { return vui_ext_low_delay_hrd_flag; } set { vui_ext_low_delay_hrd_flag = value; } }
 		private byte[] vui_ext_pic_struct_present_flag;
@@ -12192,6 +12199,7 @@ svc_vui_parameters_extension() {
 			this.vui_ext_nal_hrd_parameters_present_flag = new byte[ vui_ext_num_entries_minus1 + 1];
 			this.hrd_parameters = new HrdParameters[ vui_ext_num_entries_minus1 + 1];
 			this.vui_ext_vcl_hrd_parameters_present_flag = new byte[ vui_ext_num_entries_minus1 + 1];
+			this.hrd_parameters0 = new HrdParameters[ vui_ext_num_entries_minus1 + 1];
 			this.vui_ext_low_delay_hrd_flag = new byte[ vui_ext_num_entries_minus1 + 1];
 			this.vui_ext_pic_struct_present_flag = new byte[ vui_ext_num_entries_minus1 + 1];
 			for ( i = 0; i <= vui_ext_num_entries_minus1; i++ )
@@ -12218,8 +12226,8 @@ svc_vui_parameters_extension() {
 
 				if ( vui_ext_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					this.hrd_parameters[ i ] =  new HrdParameters() ;
-					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					this.hrd_parameters0[ i ] =  new HrdParameters() ;
+					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( vui_ext_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -12263,7 +12271,7 @@ svc_vui_parameters_extension() {
 
 				if ( vui_ext_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( vui_ext_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -14236,6 +14244,8 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
 		public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
 		private byte[] sei_mvc_vcl_hrd_parameters_present_flag;
 		public byte[] SeiMvcVclHrdParametersPresentFlag { get { return sei_mvc_vcl_hrd_parameters_present_flag; } set { sei_mvc_vcl_hrd_parameters_present_flag = value; } }
+		private HrdParameters[] hrd_parameters0;
+		public HrdParameters[] HrdParameters0 { get { return hrd_parameters0; } set { hrd_parameters0 = value; } }
 		private byte[] sei_mvc_low_delay_hrd_flag;
 		public byte[] SeiMvcLowDelayHrdFlag { get { return sei_mvc_low_delay_hrd_flag; } set { sei_mvc_low_delay_hrd_flag = value; } }
 		private byte[] sei_mvc_pic_struct_present_flag;
@@ -14264,6 +14274,7 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
 			this.sei_mvc_nal_hrd_parameters_present_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
 			this.hrd_parameters = new HrdParameters[ num_of_temporal_layers_in_base_view_minus1 + 1];
 			this.sei_mvc_vcl_hrd_parameters_present_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
+			this.hrd_parameters0 = new HrdParameters[ num_of_temporal_layers_in_base_view_minus1 + 1];
 			this.sei_mvc_low_delay_hrd_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
 			this.sei_mvc_pic_struct_present_flag = new byte[ num_of_temporal_layers_in_base_view_minus1 + 1];
 			for ( i = 0; i <= num_of_temporal_layers_in_base_view_minus1; i++ )
@@ -14288,8 +14299,8 @@ sei_mvc_pic_struct_present_flag[ i ] 5 u(1)
 
 				if ( sei_mvc_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					this.hrd_parameters[ i ] =  new HrdParameters() ;
-					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					this.hrd_parameters0[ i ] =  new HrdParameters() ;
+					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( sei_mvc_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -14331,7 +14342,7 @@ sei_mvc_vcl_hrd_parameters_present_flag[ i ] != 0 )
 
 				if ( sei_mvc_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( sei_mvc_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -14465,6 +14476,8 @@ mvc_vui_parameters_extension() {
 		public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
 		private byte[] vui_mvc_vcl_hrd_parameters_present_flag;
 		public byte[] VuiMvcVclHrdParametersPresentFlag { get { return vui_mvc_vcl_hrd_parameters_present_flag; } set { vui_mvc_vcl_hrd_parameters_present_flag = value; } }
+		private HrdParameters[] hrd_parameters0;
+		public HrdParameters[] HrdParameters0 { get { return hrd_parameters0; } set { hrd_parameters0 = value; } }
 		private byte[] vui_mvc_low_delay_hrd_flag;
 		public byte[] VuiMvcLowDelayHrdFlag { get { return vui_mvc_low_delay_hrd_flag; } set { vui_mvc_low_delay_hrd_flag = value; } }
 		private byte[] vui_mvc_pic_struct_present_flag;
@@ -14496,6 +14509,7 @@ mvc_vui_parameters_extension() {
 			this.vui_mvc_nal_hrd_parameters_present_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
 			this.hrd_parameters = new HrdParameters[ vui_mvc_num_ops_minus1 + 1];
 			this.vui_mvc_vcl_hrd_parameters_present_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
+			this.hrd_parameters0 = new HrdParameters[ vui_mvc_num_ops_minus1 + 1];
 			this.vui_mvc_low_delay_hrd_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
 			this.vui_mvc_pic_struct_present_flag = new byte[ vui_mvc_num_ops_minus1 + 1];
 			for ( i = 0; i <= vui_mvc_num_ops_minus1; i++ )
@@ -14527,8 +14541,8 @@ mvc_vui_parameters_extension() {
 
 				if ( vui_mvc_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					this.hrd_parameters[ i ] =  new HrdParameters() ;
-					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					this.hrd_parameters0[ i ] =  new HrdParameters() ;
+					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( vui_mvc_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -14577,7 +14591,7 @@ mvc_vui_parameters_extension() {
 
 				if ( vui_mvc_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( vui_mvc_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -16887,6 +16901,8 @@ mvcd_vui_parameters_extension() {
 		public HrdParameters[] HrdParameters { get { return hrd_parameters; } set { hrd_parameters = value; } }
 		private byte[] vui_mvcd_vcl_hrd_parameters_present_flag;
 		public byte[] VuiMvcdVclHrdParametersPresentFlag { get { return vui_mvcd_vcl_hrd_parameters_present_flag; } set { vui_mvcd_vcl_hrd_parameters_present_flag = value; } }
+		private HrdParameters[] hrd_parameters0;
+		public HrdParameters[] HrdParameters0 { get { return hrd_parameters0; } set { hrd_parameters0 = value; } }
 		private byte[] vui_mvcd_low_delay_hrd_flag;
 		public byte[] VuiMvcdLowDelayHrdFlag { get { return vui_mvcd_low_delay_hrd_flag; } set { vui_mvcd_low_delay_hrd_flag = value; } }
 		private byte[] vui_mvcd_pic_struct_present_flag;
@@ -16920,6 +16936,7 @@ mvcd_vui_parameters_extension() {
 			this.vui_mvcd_nal_hrd_parameters_present_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
 			this.hrd_parameters = new HrdParameters[ vui_mvcd_num_ops_minus1 + 1];
 			this.vui_mvcd_vcl_hrd_parameters_present_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
+			this.hrd_parameters0 = new HrdParameters[ vui_mvcd_num_ops_minus1 + 1];
 			this.vui_mvcd_low_delay_hrd_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
 			this.vui_mvcd_pic_struct_present_flag = new byte[ vui_mvcd_num_ops_minus1 + 1];
 			for ( i = 0; i <= vui_mvcd_num_ops_minus1; i++ )
@@ -16955,8 +16972,8 @@ mvcd_vui_parameters_extension() {
 
 				if ( vui_mvcd_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					this.hrd_parameters[ i ] =  new HrdParameters() ;
-					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					this.hrd_parameters0[ i ] =  new HrdParameters() ;
+					size +=  stream.ReadClass<HrdParameters>(size, context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( vui_mvcd_nal_hrd_parameters_present_flag[ i ] != 0  ||   
@@ -17007,7 +17024,7 @@ mvcd_vui_parameters_extension() {
 
 				if ( vui_mvcd_vcl_hrd_parameters_present_flag[ i ] != 0 )
 				{
-					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters[ i ], "hrd_parameters"); 
+					size += stream.WriteClass<HrdParameters>(context, this.hrd_parameters0[ i ], "hrd_parameters0"); 
 				}
 
 				if ( vui_mvcd_nal_hrd_parameters_present_flag[ i ] != 0  ||   

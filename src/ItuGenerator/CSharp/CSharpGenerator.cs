@@ -1365,10 +1365,21 @@ namespace Sharp{type}
                     {
                         AddNewDuplicatedField(ret, field, name);
                     }
-                    else if(!name.StartsWith("out") && name != "NumDepthViews" && name != "NumOutputLayerSets")
+                    else if(
+                        field.Name == "hrd_parameters"
+                        )
+                    {
+                        AddNewDuplicatedField(ret, field, name);
+                    }
+                    else if (!name.StartsWith("out") && name != "NumDepthViews" && name != "NumOutputLayerSets")
                     {
                         // just log a warning for now
                         Debug.WriteLine($"--Field {field.Name} already exists in {b.ClassName} class. Type: {field.Type}, Value: {field.Value}");
+                    }
+                    else
+                    {
+                        // just log a warning for now
+                        Debug.WriteLine($"-------Field {field.Name} already exists in {b.ClassName} class, possible issue with the value being overwritten! Type: {field.Type}, Value: {field.Value}");
                     }
                 }
                 else if(
