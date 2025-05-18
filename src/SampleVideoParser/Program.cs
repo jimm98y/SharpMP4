@@ -417,28 +417,28 @@ foreach (var file in files)
                                 s2c_next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
                             }
 
-                            if (k >= t2s_next_run)
-                            {
-                                t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
-                                t2s_index += 1;
-                                t2s_next_run = (t2s_index < time_to_sample_box.SampleCount.Length) ? time_to_sample_box.SampleCount[t2s_index] : (uint)(chunkOffsets.Length + 1);
-                            }
-
-                            if (composition_offset_box != null && k >= co_next_run)
-                            {
-                                co_sample_delta = composition_offset_box.Version == 0 ? (int)composition_offset_box.SampleOffset[co_index] : composition_offset_box.SampleOffset0[co_index];
-                                co_index += 1;
-                                co_next_run = (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
-                            }
-
                             long chunkOffset = (long)chunkOffsets[k - 1];
 
                             // seek to the chunk offset
                             mdat.Data.Stream.SeekFromBeginning(chunkOffset);
 
                             // read samples in this chunk                            
-                            for (int l = 0; l < s2c_samples_per_chunk; l++)
+                            for (int l = 1; l <= s2c_samples_per_chunk; l++)
                             {
+                                if (sample_idx >= t2s_next_run)
+                                {
+                                    t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
+                                    t2s_index += 1;
+                                    t2s_next_run += (t2s_index < time_to_sample_box.SampleCount.Length) ? time_to_sample_box.SampleCount[t2s_index] : (uint)(chunkOffsets.Length + 1);
+                                }
+
+                                if (composition_offset_box != null && sample_idx >= co_next_run)
+                                {
+                                    co_sample_delta = composition_offset_box.Version == 0 ? (int)composition_offset_box.SampleOffset[co_index] : composition_offset_box.SampleOffset0[co_index];
+                                    co_index += 1;
+                                    co_next_run += (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
+                                }
+
                                 uint sampleSize = sampleSizes[sample_idx++];
 
                                 video_pts = video_dts + co_sample_delta;
@@ -530,7 +530,7 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
     ulong size = 0;
     long offsetInBytes = 0;
 
-    SharpISOBMFF.Log.Debug($"AU begin {sampleSizeInBytes}, DTS: {dts}, PTS: {pts}, duration: {duration}");
+    SharpISOBMFF.Log.Debug($"AU begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
     do
     {
