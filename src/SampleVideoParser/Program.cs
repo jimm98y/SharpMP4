@@ -69,8 +69,8 @@ foreach (var file in files)
             uint videoTrackId = 0;
             uint primaryItemID = 0;
 
-            uint video_dts = 0;
-            uint video_pts = 0;
+            long video_dts = 0;
+            long video_pts = 0;
 
             AVCConfigurationBox avcC = null;
             HEVCConfigurationBox hvcC = null;
@@ -285,6 +285,10 @@ foreach (var file in files)
                             bool isVideo = trackId == videoTrackId;
                             if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
 
+                            var firstSampleFlags = trun.FirstSampleFlags;
+                            if ((trun.Flags & 0x4) != 0x4)
+                                firstSampleFlags = tfhd.DefaultSampleFlags;
+
                             for (int j = 0; j < trun._TrunEntry.Length; j++)
                             {
                                 var entry = trun._TrunEntry[j];
@@ -309,11 +313,29 @@ foreach (var file in files)
                                 else
                                     throw new Exception("Cannot get sample size");
 
+                                uint sampleFlags = tfhd.DefaultSampleFlags;
+                                if(j == 0)
+                                    sampleFlags = firstSampleFlags;
+                                else if ((entry.Flags & 0x400) == 0x400)
+                                    sampleFlags = entry.SampleFlags;
+
+                                // CTS
+                                int sampleCompositionTime = 0;
+                                if ((entry.Flags & 0x800) == 0x800)
+                                {
+                                    if (entry.Version == 0)
+                                        sampleCompositionTime = (int)entry.SampleCompositionTimeOffset;
+                                    else
+                                        sampleCompositionTime = entry.SampleCompositionTimeOffset0;
+                                }
+
                                 if (isVideo)
                                 {
+                                    video_pts = video_dts + sampleCompositionTime;
+
                                     try
                                     {
-                                        size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts);
+                                        size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts, video_pts, sampleDuration);
                                     }
                                     catch (Exception ex)
                                     {
@@ -321,7 +343,7 @@ foreach (var file in files)
                                         logger.Flush();
                                         break;
                                     }
-                                    
+
                                     video_dts += sampleDuration;
                                 }
                                 else
@@ -358,6 +380,10 @@ foreach (var file in files)
                         uint t2s_next_run = 0;
                         uint t2s_sample_delta = 0;
 
+                        int co_index = 0;
+                        uint co_next_run = 0;
+                        int co_sample_delta = 0;
+
                         int sample_idx = 0;
                         for (int k = 1; k <= chunkOffsets.Length; k++)
                         {
@@ -372,7 +398,14 @@ foreach (var file in files)
                             {
                                 t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
                                 t2s_index += 1;
-                                t2s_next_run = (t2s_index < time_to_sample_box.SampleDelta.Length) ? time_to_sample_box.SampleDelta[t2s_index] : (uint)(chunkOffsets.Length + 1);
+                                t2s_next_run = (t2s_index < time_to_sample_box.SampleCount.Length) ? time_to_sample_box.SampleCount[t2s_index] : (uint)(chunkOffsets.Length + 1);
+                            }
+
+                            if (composition_offset_box != null && k >= co_next_run)
+                            {
+                                co_sample_delta = composition_offset_box.Version == 0 ? (int)composition_offset_box.SampleOffset[co_index] : composition_offset_box.SampleOffset0[co_index];
+                                co_index += 1;
+                                co_next_run = (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
                             }
 
                             long chunkOffset = (long)chunkOffsets[k - 1];
@@ -386,7 +419,9 @@ foreach (var file in files)
                                 for (int l = 0; l < s2c_samples_per_chunk; l++)
                                 {
                                     uint sampleSize = sampleSizes[sample_idx++];
-                                    size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts);
+
+                                    video_pts = video_dts + co_sample_delta;
+                                    size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts, video_pts, t2s_sample_delta);
 
                                     video_dts += t2s_sample_delta;
                                 }
@@ -424,7 +459,7 @@ foreach (var file in files)
 
                             try
                             {
-                                size += ReadAU(nalLengthSize, context, format, mdat.Data, length, 0);
+                                size += ReadAU(nalLengthSize, context, format, mdat.Data, length, video_dts, video_pts, 0);
                             }
                             catch (Exception ex)
                             {
@@ -466,12 +501,12 @@ int GetVariableInt(byte size, byte[] bytes)
     }
 }
 
-static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, uint dts)
+static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     ulong size = 0;
     long offsetInBytes = 0;
 
-    SharpISOBMFF.Log.Debug($"AU begin {sampleSizeInBytes}, DTS: {dts}");
+    SharpISOBMFF.Log.Debug($"AU begin {sampleSizeInBytes}, DTS: {dts}, PTS: {pts}, duration: {duration}");
 
     do
     {
