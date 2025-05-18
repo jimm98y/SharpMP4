@@ -1357,20 +1357,13 @@ namespace Sharp{type}
             }            
 
             string name = field.Name;
-            int index = 0;
             if (!ret.TryAdd(name, field))
             {
                 if (string.IsNullOrEmpty(field.Type))
                 {
                     if (field.Parameter != ret[name].Parameter) // we have to duplicate these
                     {
-                        while (!ret.TryAdd($"{name}{index}", field))
-                        {
-                            index++;
-                        }
-
-                        field.ClassType = field.Name;
-                        field.Name = $"{name}{index}";
+                        AddNewDuplicatedField(ret, field, name);
                     }
                     else if(!name.StartsWith("out") && name != "NumDepthViews" && name != "NumOutputLayerSets")
                     {
@@ -1378,7 +1371,31 @@ namespace Sharp{type}
                         Debug.WriteLine($"--Field {field.Name} already exists in {b.ClassName} class. Type: {field.Type}, Value: {field.Value}");
                     }
                 }
+                else if(
+                    field.Name == "initial_cpb_removal_delay" || // h264
+                    field.Name == "initial_cpb_removal_delay_offset"
+                    )
+                {
+                    AddNewDuplicatedField(ret, field, name);
+                }
+                else
+                {
+                    // just log a warning for now
+                    Debug.WriteLine($"-------Field {field.Name} already exists in {b.ClassName} class, possible issue with the value being overwritten! Type: {field.Type}, Value: {field.Value}");
+                }
             }
+        }
+
+        private static void AddNewDuplicatedField(Dictionary<string, ItuField> ret, ItuField field, string name)
+        {
+            int index = 0;
+            while (!ret.TryAdd($"{name}{index}", field))
+            {
+                index++;
+            }
+
+            field.ClassType = field.Name;
+            field.Name = $"{name}{index}";
         }
     }
 }

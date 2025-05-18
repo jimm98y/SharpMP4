@@ -4289,6 +4289,10 @@ buffering_period( payloadSize ) {
 		public ulong[] InitialCpbRemovalDelay { get { return initial_cpb_removal_delay; } set { initial_cpb_removal_delay = value; } }
 		private ulong[] initial_cpb_removal_delay_offset;
 		public ulong[] InitialCpbRemovalDelayOffset { get { return initial_cpb_removal_delay_offset; } set { initial_cpb_removal_delay_offset = value; } }
+		private ulong[] initial_cpb_removal_delay0;
+		public ulong[] InitialCpbRemovalDelay0 { get { return initial_cpb_removal_delay0; } set { initial_cpb_removal_delay0 = value; } }
+		private ulong[] initial_cpb_removal_delay_offset0;
+		public ulong[] InitialCpbRemovalDelayOffset0 { get { return initial_cpb_removal_delay_offset0; } set { initial_cpb_removal_delay_offset0 = value; } }
 
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
@@ -4321,10 +4325,12 @@ buffering_period( payloadSize ) {
 			if ( ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag != 0 )
 			{
 
+				this.initial_cpb_removal_delay0 = new ulong[ ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
+				this.initial_cpb_removal_delay_offset0 = new ulong[ ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1 + 1];
 				for ( SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++ )
 				{
-					size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay[ SchedSelIdx ], "initial_cpb_removal_delay"); 
-					size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay_offset[ SchedSelIdx ], "initial_cpb_removal_delay_offset"); 
+					size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay0[ SchedSelIdx ], "initial_cpb_removal_delay0"); 
+					size += stream.ReadUnsignedIntVariable(size, ((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), out this.initial_cpb_removal_delay_offset0[ SchedSelIdx ], "initial_cpb_removal_delay_offset0"); 
 				}
 			}
 
@@ -4354,8 +4360,8 @@ buffering_period( payloadSize ) {
 
 				for ( SchedSelIdx = 0; SchedSelIdx <= ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1; SchedSelIdx++ )
 				{
-					size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay[ SchedSelIdx ], "initial_cpb_removal_delay"); 
-					size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay_offset[ SchedSelIdx ], "initial_cpb_removal_delay_offset"); 
+					size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay0[ SchedSelIdx ], "initial_cpb_removal_delay0"); 
+					size += stream.WriteUnsignedIntVariable(((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1), this.initial_cpb_removal_delay_offset0[ SchedSelIdx ], "initial_cpb_removal_delay_offset0"); 
 				}
 			}
 
