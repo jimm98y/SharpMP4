@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BoxGeneratorHost", "BoxGene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpISOBMFF", "SharpISOBMFF\SharpISOBMFF.csproj", "{81237F37-EC70-0D0D-F7AA-2ABEF6402A7B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMP4", "SharpMP4\SharpMP4.csproj", "{4DAF4CE1-194B-4739-8A72-71492790FF44}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +81,10 @@ Global
 		{81237F37-EC70-0D0D-F7AA-2ABEF6402A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81237F37-EC70-0D0D-F7AA-2ABEF6402A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81237F37-EC70-0D0D-F7AA-2ABEF6402A7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DAF4CE1-194B-4739-8A72-71492790FF44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DAF4CE1-194B-4739-8A72-71492790FF44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DAF4CE1-194B-4739-8A72-71492790FF44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DAF4CE1-194B-4739-8A72-71492790FF44}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
