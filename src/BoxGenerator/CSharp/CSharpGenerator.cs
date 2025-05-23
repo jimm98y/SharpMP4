@@ -774,11 +774,18 @@ namespace SharpISOBMFF
                             value = "= new List<Box>()";
                         }
                     }
+                    else if(b.BoxName == "AudioSpecificConfig")
+                    {
+                        if (name == "extensionAudioObjectType")
+                        {
+                            value = "= new GetAudioObjectType()";
+                        }
+                    }
 
                     return
-                        "\r\n" +
-                        $"\tprotected {fieldType} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
-                        $"\tpublic {fieldType} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
+                            "\r\n" +
+                            $"\tprotected {fieldType} {name}{value}; {comment}\r\n" + // must be "protected", derived classes access base members
+                            $"\tpublic {fieldType} {propertyName} {{ get {{ return this.{name}; }} set {{ this.{name} = value; }} }}";
                 }
             }
         }
@@ -993,7 +1000,7 @@ namespace SharpISOBMFF
                     }
                     else
                     {
-                        condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode()");
+                        condition = condition.Replace("bits_to_decode()", "IsoStream.BitsToDecode(boxSize, SizeOfInstance)");
                     }
                 }
 

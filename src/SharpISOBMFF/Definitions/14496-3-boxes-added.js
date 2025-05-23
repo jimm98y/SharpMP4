@@ -1,4 +1,4 @@
-﻿class AudioSpecificConfig() {
+﻿class AudioSpecificConfig() extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag {
   GetAudioObjectType() audioObjectType;
   bslbf(4) samplingFrequencyIndex;
   if(samplingFrequencyIndex == 0xf ) {

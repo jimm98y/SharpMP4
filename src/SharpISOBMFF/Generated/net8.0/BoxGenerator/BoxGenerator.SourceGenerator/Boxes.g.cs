@@ -31604,7 +31604,7 @@ public class SymbolicMusicSpecificConfig : IMp4Serializable
 
 
 /*
-class AudioSpecificConfig() {
+class AudioSpecificConfig() extends BaseDescriptor : bit(8) tag=DecSpecificInfoTag {
   GetAudioObjectType() audioObjectType;
   bslbf(4) samplingFrequencyIndex;
   if(samplingFrequencyIndex == 0xf ) {
@@ -31763,13 +31763,10 @@ class AudioSpecificConfig() {
 
 
 */
-public class AudioSpecificConfig : IMp4Serializable
+public class AudioSpecificConfig : BaseDescriptor
 {
-	public StreamMarker Padding { get; set; }
-	protected IMp4Serializable parent = null;
-	public IMp4Serializable GetParent() { return parent; }
-	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
-	public virtual string DisplayName { get { return "AudioSpecificConfig"; } }
+	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
+	public override string DisplayName { get { return "AudioSpecificConfig"; } }
 
 	protected GetAudioObjectType audioObjectType; 
 	public GetAudioObjectType AudioObjectType { get { return this.audioObjectType; } set { this.audioObjectType = value; } }
@@ -31858,7 +31855,7 @@ public class AudioSpecificConfig : IMp4Serializable
 	protected ushort syncExtensionType; 
 	public ushort SyncExtensionType { get { return this.syncExtensionType; } set { this.syncExtensionType = value; } }
 
-	protected GetAudioObjectType extensionAudioObjectType; 
+	protected GetAudioObjectType extensionAudioObjectType= new GetAudioObjectType(); 
 	public GetAudioObjectType ExtensionAudioObjectType { get { return this.extensionAudioObjectType; } set { this.extensionAudioObjectType = value; } }
 
 	protected bool sbrPresentFlag; 
@@ -31867,13 +31864,14 @@ public class AudioSpecificConfig : IMp4Serializable
 	protected bool psPresentFlag; 
 	public bool PsPresentFlag { get { return this.psPresentFlag; } set { this.psPresentFlag = value; } }
 
-	public AudioSpecificConfig(): base()
+	public AudioSpecificConfig(): base(DescriptorTags.DecSpecificInfoTag)
 	{
 	}
 
-	public virtual ulong Read(IsoStream stream, ulong readSize)
+	public override ulong Read(IsoStream stream, ulong readSize)
 	{
 		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
 		boxSize += stream.ReadClass(boxSize, readSize, this, () => new GetAudioObjectType(),  out this.audioObjectType); 
 		boxSize += stream.ReadBits(boxSize, readSize, 4,  out this.samplingFrequencyIndex); 
 
@@ -32093,9 +32091,10 @@ public class AudioSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong Write(IsoStream stream)
+	public override ulong Write(IsoStream stream)
 	{
 		ulong boxSize = 0;
+		boxSize += base.Write(stream);
 		boxSize += stream.WriteClass( this.audioObjectType); 
 		boxSize += stream.WriteBits(4,  this.samplingFrequencyIndex); 
 
@@ -32262,7 +32261,7 @@ public class AudioSpecificConfig : IMp4Serializable
 
 		}
 
-		if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+		if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode(boxSize, SizeOfInstance) >= 16)
 		{
 			boxSize += stream.WriteBits(11,  this.syncExtensionType); 
 
@@ -32283,7 +32282,7 @@ public class AudioSpecificConfig : IMp4Serializable
 							boxSize += stream.WriteUInt24( this.extensionSamplingFrequency); 
 						}
 
-						if (IsoStream.BitsToDecode() >= 12)
+						if (IsoStream.BitsToDecode(boxSize, SizeOfInstance) >= 12)
 						{
 							boxSize += stream.WriteBits(11,  this.syncExtensionType); 
 
@@ -32315,9 +32314,10 @@ public class AudioSpecificConfig : IMp4Serializable
 		return boxSize;
 	}
 
-	public virtual ulong CalculateSize()
+	public override ulong CalculateSize()
 	{
 		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
 		boxSize += IsoStream.CalculateClassSize(audioObjectType); // audioObjectType
 		boxSize += 4; // samplingFrequencyIndex
 
@@ -32484,7 +32484,7 @@ public class AudioSpecificConfig : IMp4Serializable
 
 		}
 
-		if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode() >= 16)
+		if (extensionAudioObjectType.AudioObjectType != 5 && IsoStream.BitsToDecode(boxSize, SizeOfInstance) >= 16)
 		{
 			boxSize += 11; // syncExtensionType
 
@@ -32505,7 +32505,7 @@ public class AudioSpecificConfig : IMp4Serializable
 							boxSize += 24; // extensionSamplingFrequency
 						}
 
-						if (IsoStream.BitsToDecode() >= 12)
+						if (IsoStream.BitsToDecode(boxSize, SizeOfInstance) >= 12)
 						{
 							boxSize += 11; // syncExtensionType
 

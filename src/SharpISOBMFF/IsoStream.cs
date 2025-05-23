@@ -219,11 +219,6 @@ namespace SharpISOBMFF
             return (int)(readSize - boxSize);
         }
 
-        public static int BitsToDecode()
-        {
-            return int.MaxValue;
-        }
-
         public ulong ReadBit(ulong boxSize, ulong readSize, out bool value)
         {
             value = ReadBit() != 0;
