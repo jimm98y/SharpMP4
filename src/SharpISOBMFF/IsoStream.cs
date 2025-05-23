@@ -2151,19 +2151,33 @@ namespace SharpISOBMFF
     public struct BinaryUTF8String
     {
         public bool IsZeroTerminated { get; set; } = true;
+        
         public int Length { get { return Bytes == null ? 0 : Bytes.Length; } }
+        
         public byte[] Bytes { get; set; }
+
         public BinaryUTF8String(byte[] bytes)
         {
             this.Bytes = bytes;
         }
         public BinaryUTF8String(string text)
         {
-            Bytes = Encoding.UTF8.GetBytes(text);
+            Bytes = GetBytes(text);
         }
+
         public override string ToString()
         {
-            return Encoding.UTF8.GetString(Bytes);
+            return GetString(Bytes);
+        }
+
+        public static byte[] GetBytes(string text)
+        {
+            return Encoding.UTF8.GetBytes(text);
+        }
+
+        public static string GetString(byte[] text)
+        {
+            return Encoding.UTF8.GetString(text);
         }
     }
 
