@@ -100,7 +100,7 @@ namespace SharpISOBMFF
 
         #region Basic read/write operations
 
-        private int ReadBit()
+        private int ReadBitInternal()
         {
             int bytePos = _bitsPosition >> 3;
 
@@ -117,7 +117,7 @@ namespace SharpISOBMFF
             return bit;
         }
 
-        private void WriteBit(int value)
+        private void WriteBitInternal(int value)
         {
             int posInByte = 7 - _bitsPosition % 8;
             int bit = (value & 1) << posInByte;
@@ -221,7 +221,7 @@ namespace SharpISOBMFF
 
         public ulong ReadBit(ulong boxSize, ulong readSize, out bool value)
         {
-            value = ReadBit() != 0;
+            value = ReadBitInternal() != 0;
             return 1;
         }
 
@@ -254,14 +254,14 @@ namespace SharpISOBMFF
             if (count > 16) throw new ArgumentException();
             uint originalCount = count;
 
-            int sign = ReadBit() == 1 ? -1 : 1;
+            int sign = ReadBitInternal() == 1 ? -1 : 1;
             count--;
 
             int res = 0;
             while (count > 0)
             {
                 res = res << 1;
-                int u1 = ReadBit();
+                int u1 = ReadBitInternal();
 
                 if (u1 == -1)
                 {
@@ -284,7 +284,7 @@ namespace SharpISOBMFF
             while (count > 0)
             {
                 res = res << 1;
-                int u1 = ReadBit();
+                int u1 = ReadBitInternal();
 
                 if (u1 == -1)
                 {
@@ -299,9 +299,38 @@ namespace SharpISOBMFF
             return originalCount;
         }
 
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out ulong value)
+        {
+            if (count > 64) throw new ArgumentException();
+            uint originalCount = count;
+            long res = 0;
+            while (count > 0)
+            {
+                res = res << 1;
+                long u1 = ReadBitInternal();
+
+                if (u1 == -1)
+                {
+                    throw new EndOfStreamException();
+                }
+
+                res |= u1;
+                count--;
+            }
+
+            value = (ulong)res;
+            return originalCount;
+        }
+
         public ulong WriteBit(bool value)
         {
-            WriteBit(value ? 1 : 0);
+            WriteBitInternal(value ? 1 : 0);
+            return 1;
+        }
+
+        public ulong WriteBit(byte value)
+        {
+            WriteBitInternal(value);
             return 1;
         }
 
@@ -309,14 +338,14 @@ namespace SharpISOBMFF
         {
             if (count > 8)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            return WriteBits(count, (uint)value);
+            return WriteBits(count, (ulong)value);
         }
 
         public ulong WriteBits(uint count, ushort value)
         {
             if (count > 16)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            return WriteBits(count, (uint)value);
+            return WriteBits(count, (ulong)value);
         }
 
         public ulong WriteBits(uint count, short value)
@@ -330,12 +359,19 @@ namespace SharpISOBMFF
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
+            return WriteBits(count, (ulong)value);
+        }
+
+        public ulong WriteBits(uint count, ulong value)
+        {
+            if (count > 64)
+                throw new ArgumentOutOfRangeException(nameof(count));
             uint originalCount = count;
             while (count > 0)
             {
                 int bits = (int)count - 1;
-                uint mask = 0x1u << bits;
-                WriteBit((int)((value & mask) >> bits));
+                ulong mask = 0x1u << bits;
+                WriteBitInternal((int)((value & mask) >> bits));
                 count--;
             }
             return originalCount;
