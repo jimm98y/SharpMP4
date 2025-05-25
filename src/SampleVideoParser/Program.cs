@@ -578,24 +578,21 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
 
 static void ParseNALU(IItuContext ctx, VideoFormat format, byte[] sampleData)
 {
-    using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
+    if(format == VideoFormat.H264)
     {
-        if(format == VideoFormat.H264)
-        {
-            ParseH264NALU((H264Context)ctx, sampleData);
-        }
-        else if(format == VideoFormat.H265)
-        {
-            ParseH265NALU((H265Context)ctx, sampleData);
-        }
-        else if (format == VideoFormat.H266)
-        {
-            ParseH266NALU((H266Context)ctx, sampleData);
-        }
-        else
-        {
-            throw new NotSupportedException();
-        }
+        ParseH264NALU((H264Context)ctx, sampleData);
+    }
+    else if(format == VideoFormat.H265)
+    {
+        ParseH265NALU((H265Context)ctx, sampleData);
+    }
+    else if (format == VideoFormat.H266)
+    {
+        ParseH266NALU((H266Context)ctx, sampleData);
+    }
+    else
+    {
+        throw new NotSupportedException();
     }
 }
 

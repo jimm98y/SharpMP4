@@ -9,7 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Xml;
 
-string[] files = Directory.GetFiles("C:\\_videoFingerprints\\").ToArray();
+//string[] files = Directory.GetFiles("C:\\_videoFingerprints\\").ToArray();
 //string[] files1 = DirSearch("\\\\HOME-DS\\video").Where(x => x.EndsWith(".mp4")).ToArray();
 //string[] files1 = DirSearch("\\\\192.168.1.250\\misc").Where(x => x.EndsWith(".mp4")).ToArray();
 //string[] files2 = DirSearch("\\\\192.168.1.250\\misc2").Where(x => x.EndsWith(".mp4")).ToArray();
@@ -20,6 +20,7 @@ string[] files = Directory.GetFiles("C:\\_videoFingerprints\\").ToArray();
 //string[] files = [""];
 //string[] files = ["C:\\Users\\lukas\\Downloads\\Arknights - Reimei Zensou - 01 [VVC_1080p_AAC].mp4"];
 //string[] files = DirSearch("C:\\Git\\mp4parser").Where(x => x.EndsWith(".mp4")).ToArray();
+string[] files = ["C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4"];
 
 HttpClient httpClient = new HttpClient();
 foreach (var file in files)

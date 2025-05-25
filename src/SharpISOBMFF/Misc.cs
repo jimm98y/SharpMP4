@@ -7,12 +7,14 @@ namespace SharpISOBMFF
     {
         public const string Video = "vide";
         public const string Sound = "soun";
+        public const string Hint = "hint";
     }
 
     public static class HandlerNames
     {
         public const string Video = "Video Handler\0";
         public const string Sound = "Sound Handler\0";
+        public const string Hint = "Hint Handler\0";
     }
 
     public class SampleFlags
