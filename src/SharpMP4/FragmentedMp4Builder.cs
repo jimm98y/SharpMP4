@@ -20,6 +20,8 @@ namespace SharpMP4
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
+        private readonly List<List<ulong>> _moofOffsets = new List<List<ulong>>();
+        private readonly List<List<ulong>> _moofTime = new List<List<ulong>>();
 
         /// <summary>
         /// Ctor.
@@ -42,6 +44,9 @@ namespace SharpMP4
             _trackEndTimes.Add(0);
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
             track.SetSink(this);
+
+            _moofOffsets.Add(new List<ulong>());
+            _moofTime.Add(new List<ulong>());
         }
 
         public async Task NotifySampleAdded()
@@ -103,6 +108,8 @@ namespace SharpMP4
                 var tmp = this._tracks[1];
                 this._tracks[1] = this._tracks[0];
                 this._tracks[0] = tmp;
+                _moofTime[0].Add(0);
+                _moofTime[1].Add(0);
             }
 
             // all tracks have enough samples to produce a fragment
@@ -127,14 +134,19 @@ namespace SharpMP4
 
                 var fstr = await _output.GetStreamAsync(sequenceNumber);
                 var fragmentStream = new IsoStream(fstr);
+
+                _moofOffsets[i].Add((ulong)fragmentStream.GetCurrentOffset());
+                _moofTime[i].Add(_trackEndTimes[i]);
+
                 fmp4.Write(fragmentStream);
                 await _output.FlushAsync(fstr, sequenceNumber);
-            }            
+            }
         }
 
         private Task CreateMediaInitialization(Mp4 fmp4)
         {
             var ftyp = new FileTypeBox();
+            ftyp.SetParent(fmp4);
             fmp4.Children.Add(ftyp);
 
             ftyp.MajorBrand = IsoStream.FromFourCC("mp42");
@@ -157,6 +169,7 @@ namespace SharpMP4
             ftyp.CompatibleBrands = compatibleBrands.Distinct().Select(IsoStream.FromFourCC).ToArray();
 
             var moov = new MovieBox();
+            moov.SetParent(fmp4);
             fmp4.Children.Add(moov);
 
             var mvhd = new MovieHeaderBox();
@@ -318,6 +331,7 @@ namespace SharpMP4
         private async Task CreateMediaFragment(Mp4 fmp4, TrackBase track, ulong startTime, List<byte[]> fragments, uint sequenceNumber)
         {
             MovieFragmentBox moof = new MovieFragmentBox();
+            moof.SetParent(fmp4);
             fmp4.Children.Add(moof);
             moof.Children = new List<Box>();
 
@@ -396,6 +410,49 @@ namespace SharpMP4
                 await storage.WriteAsync(fragments[i], 0, fragments[i].Length);
             }
             mdat.Data = new StreamMarker(0, storage.GetLength(), new IsoStream(((TemporaryMemory)storage).Stream)); // TODO: Fix this ugly workaround!!!!!!!!!!!!!!!!!!!!!!
+        }
+
+        public async Task FinalizeAsync()
+        {
+            Mp4 fmp4 = new Mp4();
+
+            var mfra = new MovieFragmentRandomAccessBox();
+            mfra.SetParent(fmp4);
+            fmp4.Children.Add(mfra);
+            mfra.Children = new List<Box>();
+
+            for (int i = 0; i < _tracks.Count; i++)
+            {
+                var track = _tracks[i];
+
+                var tfra = new TrackFragmentRandomAccessBox();
+                tfra.SetParent(mfra);
+                mfra.Children.Add(tfra);
+
+                tfra.LengthSizeOfSampleNum = 1;
+                tfra.LengthSizeOfTrafNum = 1;
+                tfra.LengthSizeOfTrunNum = 1;
+                tfra.TrackID = _tracks[i].TrackID;
+
+                tfra.MoofOffset = _moofOffsets[i].ToArray();
+                tfra.Time = _moofTime[i].ToArray();
+                tfra.TrafNumber = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                tfra.TrunNumber = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                tfra.SampleDelta = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+
+                tfra.NumberOfEntry = (uint)_moofOffsets[i].Count;
+            }
+
+            var mfro = new MovieFragmentRandomAccessOffsetBox();
+            mfra.SetParent(mfra);
+            mfra.Children.Add(mfro);
+            mfro.ParentSize = (uint)mfra.CalculateSize() >> 3;
+
+            // final random access box
+            var fstr = await _output.GetStreamAsync(_moofSequenceNumber);
+            var fragmentStream = new IsoStream(fstr);
+            fmp4.Write(fragmentStream);
+            await _output.FlushAsync(fstr, _moofSequenceNumber);
         }
 
         private bool _disposedValue;

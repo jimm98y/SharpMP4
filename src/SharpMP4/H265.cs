@@ -209,14 +209,7 @@ namespace SharpMP4
             if (_nalBuffer.Count == 0 || !_nalBufferContainsVCL)
                 return;
 
-            if ((_nalBuffer[0][2] & 0x80) != 0) 
-            {
-                await CreateSample();
-            }
-            else
-            {
-                if (Log.WarnEnabled) Log.Warn($"Invalid NAL in the buffer");
-            }
+            await CreateSample();
         }
 
         private async Task CreateSample()

@@ -35,6 +35,9 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                 hints.Add(ht);
             }
 
+            // TODO: Recalculate fragments without using floating point math
+
+            // TODO
             hints[0].SampleDuration = 3750;
             hints[1].SampleDuration = 2048;
 
@@ -80,6 +83,7 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
             await audioTrack.FlushAsync();
             await videoTrack.FlushAsync();
             await builder.FlushAsync();
+            await builder.FinalizeAsync();
         }
     }
 }
