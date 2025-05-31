@@ -51,9 +51,11 @@ namespace SharpMP4
             this._sink = fmp4;
         }
 
-        public bool ContainsEnoughSamples(double durationInSeconds)
+        public bool ContainsEnoughSamples(ulong duration)
         {
-            return HasSamples() && Timescale != 0 && ((_samples.Count * SampleDuration) >= (durationInSeconds * Timescale));
+            return
+                HasSamples() && 
+                (((ulong)_samples.Count * SampleDuration * 1000) >= duration);
         }
 
         public bool HasSamples()

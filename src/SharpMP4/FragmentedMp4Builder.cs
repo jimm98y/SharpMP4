@@ -12,10 +12,13 @@ namespace SharpMP4
     /// </summary>
     public class FragmentedMp4Builder : IDisposable
     {
+        private const int MOVIE_TIMESCALE = 1000;
         private IMp4Output _output;
         private uint _moofSequenceNumber = 1;
+        private ulong _fragments;
 
-        private readonly double _maxSampleLengthInSeconds;
+        private readonly ulong _maxSampleLengthInMs;
+        private ulong _movieTime = 0;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
@@ -27,11 +30,11 @@ namespace SharpMP4
         /// Ctor.
         /// </summary>
         /// <param name="output">Output stream. Will be progressively written while recording. <see cref="IMp4Output"/>.</param>
-        /// <param name="maxSampleLengthInSeconds">Maximum duration of 1 sample. Default is 2.66 sec.</param>
-        public FragmentedMp4Builder(IMp4Output output, double maxSampleLengthInSeconds = 2.647)
+        /// <param name="maxSampleLengthInMs">Maximum duration of 1 sample. Default is 2.66 sec.</param>
+        public FragmentedMp4Builder(IMp4Output output, ulong maxSampleLengthInMs = 2666)
         {
             this._output = output;
-            this._maxSampleLengthInSeconds = maxSampleLengthInSeconds;
+            this._maxSampleLengthInMs = maxSampleLengthInMs;
         }
 
         /// <summary>
@@ -46,7 +49,7 @@ namespace SharpMP4
             track.SetSink(this);
 
             _moofOffsets.Add(new List<ulong>());
-            _moofTime.Add(new List<ulong>());
+            _moofTime.Add(new List<ulong>() { 0 }); // initial time is 0
         }
 
         public async Task NotifySampleAdded()
@@ -57,7 +60,7 @@ namespace SharpMP4
             {
                 for (int i = 0; i < _tracks.Count; i++)
                 {
-                    if (!_tracks[i].ContainsEnoughSamples(_maxSampleLengthInSeconds))
+                    if (!_tracks[i].ContainsEnoughSamples(_tracks[i].Timescale * _maxSampleLengthInMs * (_fragments + 1) - (_trackEndTimes[i] * 1000)))
                         return;
                 }
 
@@ -108,18 +111,18 @@ namespace SharpMP4
                 var tmp = this._tracks[1];
                 this._tracks[1] = this._tracks[0];
                 this._tracks[0] = tmp;
-                _moofTime[0].Add(0);
-                _moofTime[1].Add(0);
             }
 
             // all tracks have enough samples to produce a fragment
             for (int i = 0; i < this._tracks.Count; i++)
             {
                 List<byte[]> fragments = new List<byte[]>();
-                double targetDuration = _tracks[i].Timescale * _maxSampleLengthInSeconds;
+
+                ulong currentMovieTimeMs = _tracks[i].Timescale * _maxSampleLengthInMs * _fragments;
+                ulong targetDurationMs = _tracks[i].Timescale * _maxSampleLengthInMs;
                 ulong currentDuration = 0;
 
-                while ((currentDuration < targetDuration || isFlushing) && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
+                while ((((currentDuration + _trackEndTimes[i]) * 1000) < (targetDurationMs + currentMovieTimeMs) || isFlushing) && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
                 {
                     var sample = _tracks[i].ReadSample();
                     currentDuration += _tracks[i].SampleDuration;
@@ -141,6 +144,8 @@ namespace SharpMP4
                 fmp4.Write(fragmentStream);
                 await _output.FlushAsync(fstr, sequenceNumber);
             }
+
+            _fragments++;
         }
 
         private Task CreateMediaInitialization(Mp4 fmp4)
@@ -178,7 +183,7 @@ namespace SharpMP4
             moov.Children.Add(mvhd);
             mvhd.Duration = 60095; // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             mvhd.NextTrackID = 0xFFFFFFFF; // TODO simplify API
-            mvhd.Timescale = 1000; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
+            mvhd.Timescale = MOVIE_TIMESCALE; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
             mvhd.PreDefined = new uint[6]; // TODO simplify API
 
