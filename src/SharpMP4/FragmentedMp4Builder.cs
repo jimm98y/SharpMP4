@@ -13,16 +13,19 @@ namespace SharpMP4
     public class FragmentedMp4Builder : IDisposable
     {
         private const int MOVIE_TIMESCALE = 1000;
-        private IMp4Output _output;
-        private uint _moofSequenceNumber = 1;
-        private ulong _fragments;
 
-        private readonly ulong _maxSampleLengthInMs;
-        private readonly ulong _durationInMS;
+        private IMp4Output _output;
+
+        private ulong _fragmentCount;
+        private readonly ulong _maxFragmentLengthInMs;
+        private readonly ulong _durationInMs;
+        private readonly bool _appendRandomAccessBox;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
+        
+        private uint _moofSequenceNumber = 1;
         private readonly List<List<ulong>> _moofOffsets = new List<List<ulong>>();
         private readonly List<List<ulong>> _moofTime = new List<List<ulong>>();
 
@@ -30,13 +33,15 @@ namespace SharpMP4
         /// Ctor.
         /// </summary>
         /// <param name="output">Output stream. Will be progressively written while recording. <see cref="IMp4Output"/>.</param>
-        /// <param name="maxSampleLengthInMs">Maximum duration of 1 sample. Default is 2.66 sec.</param>
-        /// <param name="durationInMS">Duration of the movie. Default value is 0 for live recordings.</param>
-        public FragmentedMp4Builder(IMp4Output output, ulong maxSampleLengthInMs = 2666, ulong durationInMS = 0)
+        /// <param name="maxFragmentLengthInMs">Maximum duration of 1 sample. Default is 2.66 sec.</param>
+        /// <param name="durationInMs">Duration of the movie. Default value is 0 for live recordings.</param>
+        /// <param name="appendRandomAccessBox">Append random access box at the end.</param>
+        public FragmentedMp4Builder(IMp4Output output, ulong maxFragmentLengthInMs, ulong durationInMs = 0, bool appendRandomAccessBox = true)
         {
             this._output = output;
-            this._maxSampleLengthInMs = maxSampleLengthInMs;
-            this._durationInMS = durationInMS;
+            this._maxFragmentLengthInMs = maxFragmentLengthInMs;
+            this._durationInMs = durationInMs;
+            this._appendRandomAccessBox = appendRandomAccessBox;
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace SharpMP4
             {
                 for (int i = 0; i < _tracks.Count; i++)
                 {
-                    if (!_tracks[i].ContainsEnoughSamples(_tracks[i].Timescale * _maxSampleLengthInMs * (_fragments + 1) - (_trackEndTimes[i] * 1000)))
+                    if (!_tracks[i].ContainsEnoughSamples(_tracks[i].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1) - (_trackEndTimes[i] * 1000)))
                         return;
                 }
 
@@ -108,11 +113,6 @@ namespace SharpMP4
                 IsoStream initializationStream = new IsoStream(str);
                 init.Write(initializationStream);
                 await _output.FlushAsync(str, initializationSegmentNumber);
-
-                // TODO: remove this workaround
-                var tmp = this._tracks[1];
-                this._tracks[1] = this._tracks[0];
-                this._tracks[0] = tmp;
             }
 
             // all tracks have enough samples to produce a fragment
@@ -120,8 +120,8 @@ namespace SharpMP4
             {
                 List<byte[]> fragments = new List<byte[]>();
 
-                ulong currentMovieTimeMs = _tracks[i].Timescale * _maxSampleLengthInMs * _fragments;
-                ulong targetDurationMs = _tracks[i].Timescale * _maxSampleLengthInMs;
+                ulong currentMovieTimeMs = _tracks[i].Timescale * _maxFragmentLengthInMs * _fragmentCount;
+                ulong targetDurationMs = _tracks[i].Timescale * _maxFragmentLengthInMs;
                 ulong currentDuration = 0;
 
                 while ((((currentDuration + _trackEndTimes[i]) * 1000) < (targetDurationMs + currentMovieTimeMs) || isFlushing) && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
@@ -147,7 +147,7 @@ namespace SharpMP4
                 await _output.FlushAsync(fstr, sequenceNumber);
             }
 
-            _fragments++;
+            _fragmentCount++;
         }
 
         private Task CreateMediaInitialization(Mp4 fmp4)
@@ -183,7 +183,7 @@ namespace SharpMP4
             mvhd.SetParent(moov);
             moov.Children = new List<Box>();
             moov.Children.Add(mvhd);
-            mvhd.Duration = _durationInMS * MOVIE_TIMESCALE / 1000;
+            mvhd.Duration = _durationInMs * MOVIE_TIMESCALE / 1000;
             mvhd.NextTrackID = 0xFFFFFFFF; // TODO simplify API
             mvhd.Timescale = MOVIE_TIMESCALE; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
@@ -201,7 +201,7 @@ namespace SharpMP4
                 trak.Children.Add(tkhd);
                 tkhd.TrackID = this._tracks[i].TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Duration = _durationInMS * MOVIE_TIMESCALE / 1000; 
+                tkhd.Duration = _durationInMs * MOVIE_TIMESCALE / 1000; 
                 tkhd.Flags = 0x07;
                 this._tracks[i].FillTkhdBox(tkhd);
 
@@ -317,7 +317,7 @@ namespace SharpMP4
             mehd.SetParent(mvex);
             mvex.Children.Add(mehd);
 
-            mehd.FragmentDuration = _durationInMS * MOVIE_TIMESCALE / 1000;
+            mehd.FragmentDuration = _durationInMs * MOVIE_TIMESCALE / 1000;
 
             for (int i = 0; i < this._tracks.Count; i++)
             {
@@ -420,45 +420,48 @@ namespace SharpMP4
 
         public async Task FinalizeAsync()
         {
-            Mp4 fmp4 = new Mp4();
-
-            var mfra = new MovieFragmentRandomAccessBox();
-            mfra.SetParent(fmp4);
-            fmp4.Children.Add(mfra);
-            mfra.Children = new List<Box>();
-
-            for (int i = 0; i < _tracks.Count; i++)
+            if (_appendRandomAccessBox)
             {
-                var track = _tracks[i];
+                Mp4 fmp4 = new Mp4();
 
-                var tfra = new TrackFragmentRandomAccessBox();
-                tfra.SetParent(mfra);
-                mfra.Children.Add(tfra);
+                var mfra = new MovieFragmentRandomAccessBox();
+                mfra.SetParent(fmp4);
+                fmp4.Children.Add(mfra);
+                mfra.Children = new List<Box>();
 
-                tfra.LengthSizeOfSampleNum = 1;
-                tfra.LengthSizeOfTrafNum = 1;
-                tfra.LengthSizeOfTrunNum = 1;
-                tfra.TrackID = _tracks[i].TrackID;
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    var track = _tracks[i];
 
-                tfra.MoofOffset = _moofOffsets[i].ToArray();
-                tfra.Time = _moofTime[i].ToArray();
-                tfra.TrafNumber = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
-                tfra.TrunNumber = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
-                tfra.SampleDelta = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                    var tfra = new TrackFragmentRandomAccessBox();
+                    tfra.SetParent(mfra);
+                    mfra.Children.Add(tfra);
 
-                tfra.NumberOfEntry = (uint)_moofOffsets[i].Count;
+                    tfra.LengthSizeOfSampleNum = 1;
+                    tfra.LengthSizeOfTrafNum = 1;
+                    tfra.LengthSizeOfTrunNum = 1;
+                    tfra.TrackID = _tracks[i].TrackID;
+
+                    tfra.MoofOffset = _moofOffsets[i].ToArray();
+                    tfra.Time = _moofTime[i].ToArray();
+                    tfra.TrafNumber = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                    tfra.TrunNumber = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                    tfra.SampleDelta = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+
+                    tfra.NumberOfEntry = (uint)_moofOffsets[i].Count;
+                }
+
+                var mfro = new MovieFragmentRandomAccessOffsetBox();
+                mfra.SetParent(mfra);
+                mfra.Children.Add(mfro);
+                mfro.ParentSize = (uint)mfra.CalculateSize() >> 3;
+
+                // final random access box
+                var fstr = await _output.GetStreamAsync(_moofSequenceNumber);
+                var fragmentStream = new IsoStream(fstr);
+                fmp4.Write(fragmentStream);
+                await _output.FlushAsync(fstr, _moofSequenceNumber);
             }
-
-            var mfro = new MovieFragmentRandomAccessOffsetBox();
-            mfra.SetParent(mfra);
-            mfra.Children.Add(mfro);
-            mfro.ParentSize = (uint)mfra.CalculateSize() >> 3;
-
-            // final random access box
-            var fstr = await _output.GetStreamAsync(_moofSequenceNumber);
-            var fragmentStream = new IsoStream(fstr);
-            fmp4.Write(fragmentStream);
-            await _output.FlushAsync(fstr, _moofSequenceNumber);
         }
 
         private bool _disposedValue;

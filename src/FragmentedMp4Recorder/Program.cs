@@ -19,28 +19,40 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
     {
         using (FragmentedMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2666, 60095))
         {
+            var videoTrack = new H264Track();
+            builder.AddTrack(videoTrack);
+
             var sourceAudioTrackInfo = inputAudioTrack.GetAudioSampleEntryBox();
             var audioTrack = new AACTrack((byte)sourceAudioTrackInfo.Channelcount, sourceAudioTrackInfo.Samplerate >> 16, sourceAudioTrackInfo.Samplesize);
             builder.AddTrack(audioTrack);
 
-            var videoTrack = new H264Track();
-            builder.AddTrack(videoTrack);
-
-            List<HintTrack> hints = new List<HintTrack>();
+            List<RtpMovieHintTrack> hints = new List<RtpMovieHintTrack>();
             foreach (var hintTrack in inputHintTracks)
             {
-                var ht = new HintTrack();
+                var ht = new RtpMovieHintTrack();
                 ht.Timescale =  hintTrack.Children.OfType<MediaBox>().Single().Children.OfType<MediaHeaderBox>().Single().Timescale;
                 builder.AddTrack(ht);
                 hints.Add(ht);
+
+                uint trackId = hintTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
+                
+                foreach(var moof in fmp4.Children.OfType<MovieFragmentBox>())
+                {
+                    foreach(var traf in moof.Children.OfType<TrackFragmentBox>())
+                    {
+                        if (traf.Children.OfType<TrackFragmentHeaderBox>().Single().TrackID != trackId)
+                            continue;
+
+                        ht.SampleDuration = traf.Children.OfType<TrackRunBox>().SingleOrDefault()._TrunEntry.FirstOrDefault().SampleDuration;
+                        break;
+                    }
+
+                    if (ht.SampleDuration != 0)
+                        break;
+                }
             }
 
             // TODO: Recalculate fragments without using floating point math
-
-            // TODO
-            hints[0].SampleDuration = 3750;
-            hints[1].SampleDuration = 2048;
-
             for (int t = 0; t < parsedMDAT.Count; t++)
             {
                 var parsedTrack = parsedMDAT[t];

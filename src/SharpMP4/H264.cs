@@ -1,12 +1,10 @@
 ﻿using SharpH264;
 using SharpH26X;
 using SharpISOBMFF;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Log = SharpMP4.Log;
 
 namespace SharpMP4
 {
@@ -21,7 +19,7 @@ namespace SharpMP4
     public class H264Track : TrackBase
     {
         public const string BRAND = "avc1";
-        public override string HandlerName => "Bento4 Video Handler\0"; // HandlerNames.Video;
+        public override string HandlerName => HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "eng";
 

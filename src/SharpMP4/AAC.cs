@@ -18,7 +18,7 @@ namespace SharpMP4
         public uint SamplingRate { get; private set; }
         public ushort SampleSize { get; private set; }
 
-        public override string HandlerName => "Bento4 Sound Handler\0"; // HandlerNames.Sound;
+        public override string HandlerName => HandlerNames.Sound;
         public override string HandlerType => HandlerTypes.Sound;
         public override string Language { get; set; } = "eng";
 
