@@ -12,14 +12,14 @@ namespace SharpMP4
     /// </summary>
     public class FragmentedMp4Builder : IDisposable
     {
-        private const int MOVIE_TIMESCALE = 1000;
+        public uint MovieTimescale { get; set; } = 1000;
 
         private IMp4Output _output;
 
         private ulong _fragmentCount;
         private readonly ulong _maxFragmentLengthInMs;
         private readonly ulong _durationInMs;
-        private readonly bool _appendRandomAccessBox;
+        private readonly bool _appendMovieFragmentRandomAccessBox;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
@@ -35,13 +35,13 @@ namespace SharpMP4
         /// <param name="output">Output stream. Will be progressively written while recording. <see cref="IMp4Output"/>.</param>
         /// <param name="maxFragmentLengthInMs">Maximum duration of 1 sample. Default is 2.66 sec.</param>
         /// <param name="durationInMs">Duration of the movie. Default value is 0 for live recordings.</param>
-        /// <param name="appendRandomAccessBox">Append random access box at the end.</param>
-        public FragmentedMp4Builder(IMp4Output output, ulong maxFragmentLengthInMs, ulong durationInMs = 0, bool appendRandomAccessBox = true)
+        /// <param name="appendMovieFragmentRandomAccessBox">Append Movie Fragment Random Access box at the end of the fragmented MP4.</param>
+        public FragmentedMp4Builder(IMp4Output output, ulong maxFragmentLengthInMs, ulong durationInMs = 0, bool appendMovieFragmentRandomAccessBox = true)
         {
             this._output = output;
             this._maxFragmentLengthInMs = maxFragmentLengthInMs;
             this._durationInMs = durationInMs;
-            this._appendRandomAccessBox = appendRandomAccessBox;
+            this._appendMovieFragmentRandomAccessBox = appendMovieFragmentRandomAccessBox;
         }
 
         /// <summary>
@@ -67,7 +67,10 @@ namespace SharpMP4
             {
                 for (int i = 0; i < _tracks.Count; i++)
                 {
-                    if (!_tracks[i].ContainsEnoughSamples(_tracks[i].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1) - (_trackEndTimes[i] * 1000)))
+                    ulong nextFragmentTime = _tracks[i].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1);
+                    ulong currentFragmentTime = _trackEndTimes[i] * 1000;
+
+                    if (!_tracks[i].ContainsEnoughSamples(nextFragmentTime - currentFragmentTime))
                         return;
                 }
 
@@ -137,14 +140,14 @@ namespace SharpMP4
                 uint sequenceNumber = _moofSequenceNumber++;
                 await CreateMediaFragment(fmp4, _tracks[i], _trackEndTimes[i] - currentDuration, fragments, sequenceNumber);
 
-                var fstr = await _output.GetStreamAsync(sequenceNumber);
-                var fragmentStream = new IsoStream(fstr);
+                var outputStream = await _output.GetStreamAsync(sequenceNumber);
+                var fragmentStream = new IsoStream(outputStream);
 
                 _moofOffsets[i].Add((ulong)fragmentStream.GetCurrentOffset());
                 _moofTime[i].Add(_trackEndTimes[i]);
 
                 fmp4.Write(fragmentStream);
-                await _output.FlushAsync(fstr, sequenceNumber);
+                await _output.FlushAsync(outputStream, sequenceNumber);
             }
 
             _fragmentCount++;
@@ -183,9 +186,9 @@ namespace SharpMP4
             mvhd.SetParent(moov);
             moov.Children = new List<Box>();
             moov.Children.Add(mvhd);
-            mvhd.Duration = _durationInMs * MOVIE_TIMESCALE / 1000;
+            mvhd.Duration = _durationInMs * MovieTimescale / 1000;
             mvhd.NextTrackID = 0xFFFFFFFF; // TODO simplify API
-            mvhd.Timescale = MOVIE_TIMESCALE; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
+            mvhd.Timescale = MovieTimescale; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
             mvhd.PreDefined = new uint[6]; // TODO simplify API
 
@@ -201,7 +204,7 @@ namespace SharpMP4
                 trak.Children.Add(tkhd);
                 tkhd.TrackID = this._tracks[i].TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Duration = _durationInMs * MOVIE_TIMESCALE / 1000; 
+                tkhd.Duration = _durationInMs * MovieTimescale / 1000; 
                 tkhd.Flags = 0x07;
                 this._tracks[i].FillTkhdBox(tkhd);
 
@@ -317,7 +320,7 @@ namespace SharpMP4
             mehd.SetParent(mvex);
             mvex.Children.Add(mehd);
 
-            mehd.FragmentDuration = _durationInMs * MOVIE_TIMESCALE / 1000;
+            mehd.FragmentDuration = _durationInMs * MovieTimescale / 1000;
 
             for (int i = 0; i < this._tracks.Count; i++)
             {
@@ -329,7 +332,6 @@ namespace SharpMP4
                 trex.DefaultSampleDescriptionIndex = 1;
                 trex.DefaultSampleDuration = 0;
                 trex.DefaultSampleSize = 0;
-                // TODO: trex.A = SampleFlags;
             }
 
             return Task.CompletedTask;
@@ -374,11 +376,10 @@ namespace SharpMP4
             TrackRunBox trun = new TrackRunBox();
             trun.SetParent(traf);
 
-            // TODO FirstSampleFlags
             if (track.HandlerType == HandlerTypes.Video)
             {
                 // TODO
-                trun.FirstSampleFlags = 33554432;
+                trun.FirstSampleFlags = 0x02000000;
                 trun.Flags = 0x305;
             }
             else
@@ -415,12 +416,12 @@ namespace SharpMP4
             {
                 await storage.WriteAsync(fragments[i], 0, fragments[i].Length);
             }
-            mdat.Data = new StreamMarker(0, storage.GetLength(), new IsoStream(((TemporaryMemory)storage).Stream)); // TODO: Fix this ugly workaround!!!!!!!!!!!!!!!!!!!!!!
+            mdat.Data = new StreamMarker(0, storage.GetLength(), new IsoStream(((TemporaryMemory)storage).Stream)); // TODO: Fix this ugly workaround!
         }
 
         public async Task FinalizeAsync()
         {
-            if (_appendRandomAccessBox)
+            if (_appendMovieFragmentRandomAccessBox)
             {
                 Mp4 fmp4 = new Mp4();
 
@@ -456,13 +457,14 @@ namespace SharpMP4
                 mfra.Children.Add(mfro);
                 mfro.ParentSize = (uint)mfra.CalculateSize() >> 3;
 
-                // final random access box
                 var fstr = await _output.GetStreamAsync(_moofSequenceNumber);
                 var fragmentStream = new IsoStream(fstr);
                 fmp4.Write(fragmentStream);
                 await _output.FlushAsync(fstr, _moofSequenceNumber);
             }
         }
+
+        #region IDisposable implementation
 
         private bool _disposedValue;
 
@@ -484,5 +486,7 @@ namespace SharpMP4
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
-    }    
+
+        #endregion // IDisposable implementation
+    }
 }

@@ -7,11 +7,12 @@ namespace SharpMP4
 {
     public abstract class TrackBase
     {
+        private ulong _nextFragmentCreateStartTime = 0;
+
         public abstract string HandlerName { get; }
         public abstract string HandlerType { get; }
         public abstract string Language { get; set; }
 
-        private ulong _nextFragmentCreateStartTime = 0;
         public uint Timescale { get; set; }
         public uint TrackID { get; set; } = 1;
         public string CompatibleBrand { get; set; } = null;
@@ -53,9 +54,7 @@ namespace SharpMP4
 
         public bool ContainsEnoughSamples(ulong duration)
         {
-            return
-                HasSamples() && 
-                (((ulong)_samples.Count * SampleDuration * 1000) >= duration);
+            return HasSamples() && (((ulong)_samples.Count * SampleDuration * 1000) >= duration);
         }
 
         public bool HasSamples()
