@@ -17,7 +17,7 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
 
     using (Stream output = new BufferedStream(new FileStream("frag_bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        using (FragmentedMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output)))
+        using (FragmentedMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2666, 60095))
         {
             var sourceAudioTrackInfo = inputAudioTrack.GetAudioSampleEntryBox();
             var audioTrack = new AACTrack((byte)sourceAudioTrackInfo.Channelcount, sourceAudioTrackInfo.Samplerate >> 16, sourceAudioTrackInfo.Samplesize);

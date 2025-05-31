@@ -18,7 +18,7 @@ namespace SharpMP4
         private ulong _fragments;
 
         private readonly ulong _maxSampleLengthInMs;
-        private ulong _movieTime = 0;
+        private readonly ulong _durationInMS;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
@@ -31,10 +31,12 @@ namespace SharpMP4
         /// </summary>
         /// <param name="output">Output stream. Will be progressively written while recording. <see cref="IMp4Output"/>.</param>
         /// <param name="maxSampleLengthInMs">Maximum duration of 1 sample. Default is 2.66 sec.</param>
-        public FragmentedMp4Builder(IMp4Output output, ulong maxSampleLengthInMs = 2666)
+        /// <param name="durationInMS">Duration of the movie. Default value is 0 for live recordings.</param>
+        public FragmentedMp4Builder(IMp4Output output, ulong maxSampleLengthInMs = 2666, ulong durationInMS = 0)
         {
             this._output = output;
             this._maxSampleLengthInMs = maxSampleLengthInMs;
+            this._durationInMS = durationInMS;
         }
 
         /// <summary>
@@ -181,7 +183,7 @@ namespace SharpMP4
             mvhd.SetParent(moov);
             moov.Children = new List<Box>();
             moov.Children.Add(mvhd);
-            mvhd.Duration = 60095; // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            mvhd.Duration = _durationInMS * MOVIE_TIMESCALE / 1000;
             mvhd.NextTrackID = 0xFFFFFFFF; // TODO simplify API
             mvhd.Timescale = MOVIE_TIMESCALE; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
@@ -199,8 +201,8 @@ namespace SharpMP4
                 trak.Children.Add(tkhd);
                 tkhd.TrackID = this._tracks[i].TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Duration = 60095; // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                tkhd.Flags = 7; // TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                tkhd.Duration = _durationInMS * MOVIE_TIMESCALE / 1000; 
+                tkhd.Flags = 0x07;
                 this._tracks[i].FillTkhdBox(tkhd);
 
                 var mdia = new MediaBox();
@@ -315,7 +317,7 @@ namespace SharpMP4
             mehd.SetParent(mvex);
             mvex.Children.Add(mehd);
 
-            mehd.FragmentDuration = 60095; // TODO: investigate
+            mehd.FragmentDuration = _durationInMS * MOVIE_TIMESCALE / 1000;
 
             for (int i = 0; i < this._tracks.Count; i++)
             {
@@ -369,7 +371,6 @@ namespace SharpMP4
             tfdt.Version = 1;
             tfdt.BaseMediaDecodeTime = startTime; // BaseMediaDecodeTime must be in the timescale of the track
 
-            // TODO: review trackIndex == 0 && j == 0
             TrackRunBox trun = new TrackRunBox();
             trun.SetParent(traf);
 
