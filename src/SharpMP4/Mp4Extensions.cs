@@ -389,15 +389,15 @@ namespace SharpMP4
                                 if (sample_idx >= t2s_next_run)
                                 {
                                     t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
-                                    t2s_index += 1;
                                     t2s_next_run += (t2s_index < time_to_sample_box.SampleCount.Length) ? time_to_sample_box.SampleCount[t2s_index] : (uint)(chunkOffsets.Length + 1);
+                                    t2s_index += 1;
                                 }
 
                                 if (composition_offset_box != null && sample_idx >= co_next_run)
                                 {
                                     co_sample_delta = composition_offset_box.Version == 0 ? (int)composition_offset_box.SampleOffset[co_index] : composition_offset_box.SampleOffset0[co_index];
-                                    co_index += 1;
                                     co_next_run += (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
+                                    co_index += 1;
                                 }
 
                                 uint sampleSize = sampleSizes[sample_idx++];

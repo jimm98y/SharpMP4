@@ -10,7 +10,7 @@ namespace SharpMP4
     /// <summary>
     /// Fragmented MP4 (fMP4) builder.
     /// </summary>
-    public class FragmentedMp4Builder : IDisposable
+    public class FragmentedMp4Builder : IDisposable, IMp4Builder
     {
         public uint MovieTimescale { get; set; } = 1000;
 

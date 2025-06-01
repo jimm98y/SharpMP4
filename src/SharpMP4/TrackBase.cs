@@ -21,7 +21,7 @@ namespace SharpMP4
         public uint DefaultSampleFlags { get; set; }
 
         public ConcurrentQueue<byte[]> _samples = new ConcurrentQueue<byte[]>();
-        private FragmentedMp4Builder _sink;
+        private IMp4Builder _sink;
 
         public virtual async Task ProcessSampleAsync(byte[] sample)
         {
@@ -47,7 +47,7 @@ namespace SharpMP4
             throw new Exception();
         }
 
-        public void SetSink(FragmentedMp4Builder fmp4)
+        public void SetSink(IMp4Builder fmp4)
         {
             this._sink = fmp4;
         }

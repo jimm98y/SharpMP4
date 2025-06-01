@@ -52,7 +52,6 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                 }
             }
 
-            // TODO: Recalculate fragments without using floating point math
             for (int t = 0; t < parsedMDAT.Count; t++)
             {
                 var parsedTrack = parsedMDAT[t];

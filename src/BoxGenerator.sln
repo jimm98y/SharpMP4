@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMP4", "SharpMP4\SharpM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FragmentedMp4Recorder", "FragmentedMp4Recorder\FragmentedMp4Recorder.csproj", "{FFB59054-36B8-4475-8D41-CA940BB66DE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mp4Recorder", "Mp4Recorder\Mp4Recorder.csproj", "{95FC6ED0-272D-48E0-84C6-18BE7E7E00D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{FFB59054-36B8-4475-8D41-CA940BB66DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFB59054-36B8-4475-8D41-CA940BB66DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFB59054-36B8-4475-8D41-CA940BB66DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95FC6ED0-272D-48E0-84C6-18BE7E7E00D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95FC6ED0-272D-48E0-84C6-18BE7E7E00D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95FC6ED0-272D-48E0-84C6-18BE7E7E00D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95FC6ED0-272D-48E0-84C6-18BE7E7E00D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{F0FE72F8-09E9-4F9A-9997-2899A7664515} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{123DE15B-FA2B-4D79-8F07-C709B21ADEC9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{FFB59054-36B8-4475-8D41-CA940BB66DE3} = {8623CC82-EE02-4964-8C14-07C3F2BECBB9}
+		{95FC6ED0-272D-48E0-84C6-18BE7E7E00D7} = {8623CC82-EE02-4964-8C14-07C3F2BECBB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CB1F179-0305-4D17-B734-AFADABC7B9BC}
