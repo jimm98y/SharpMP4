@@ -105,7 +105,13 @@ namespace SharpMP4.Builders
                 await WriteMoovAsync(mp4);
 
                 _writeInitialization = false;
-            }                       
+            }
+
+            // write
+            var fstr = await _output.GetStreamAsync(1);
+            var fragmentStream = new IsoStream(fstr);
+            mp4.Write(fragmentStream);
+            await _output.FlushAsync(fstr, 1);
         }
 
         private async Task WriteMoovAsync(Mp4 mp4)
@@ -244,6 +250,10 @@ namespace SharpMP4.Builders
                 sdtp.SetParent(stbl);
                 stbl.Children.Add(sdtp);
                 // TODO: fill values
+                sdtp.IsLeading = new byte[300];
+                sdtp.SampleDependsOn = new byte[300];
+                sdtp.SampleIsDependedOn = new byte[300];
+                sdtp.SampleHasRedundancy = new byte[300];
 
                 var ctts = new CompositionOffsetBox();
                 ctts.SetParent(stbl);

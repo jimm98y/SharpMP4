@@ -39,7 +39,6 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                 }
             }
 
-            await audioTrack.FlushAsync();
             await videoTrack.FlushAsync();
             await builder.FlushAsync();
             await builder.FinalizeAsync();

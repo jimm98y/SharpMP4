@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -254,7 +253,9 @@ namespace SharpMP4.Tracks
             visualSampleEntry.Vertresolution = 72;
             visualSampleEntry.Width = (ushort)dim.Width;
             visualSampleEntry.Height = (ushort)dim.Height;
-            visualSampleEntry.Compressorname = BinaryUTF8String.GetBytes("hevc\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+            visualSampleEntry.ReservedSampleEntry = new byte[6];
+            visualSampleEntry.PreDefined0 = new uint[3];
+            visualSampleEntry.Compressorname = BinaryUTF8String.GetBytes("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
 
             HEVCConfigurationBox hevcConfigurationBox = new HEVCConfigurationBox();
             hevcConfigurationBox.SetParent(visualSampleEntry);
@@ -270,29 +271,38 @@ namespace SharpMP4.Tracks
             hevcConfigurationBox._HEVCConfig.TemporalIdNested = sps.SpsTemporalIdNestingFlag != 0;
             hevcConfigurationBox._HEVCConfig.LengthSizeMinusOne = 3; // 4 bytes size block inserted in between NAL units
 
+            hevcConfigurationBox._HEVCConfig.Reserved4 = new bool[3];
             hevcConfigurationBox._HEVCConfig.NumOfArrays = 3;
             hevcConfigurationBox._HEVCConfig.ArrayCompleteness = new bool[3] { true, true, true };
             hevcConfigurationBox._HEVCConfig.NumNalus = new ushort[3] { (ushort)VpsRaw.Count, (ushort)SpsRaw.Count, (ushort)PpsRaw.Count };
+            hevcConfigurationBox._HEVCConfig.NALUnitType = new byte[3] { (byte)H265NALTypes.VPS_NUT, (byte)H265NALTypes.SPS_NUT, (byte)H265NALTypes.PPS_NUT };
             
             // correct order is VPS, SPS, PPS. Other order produced ffmpeg errors such as "VPS 0 does not exist" and "SPS 0 does not exist."
             hevcConfigurationBox._HEVCConfig.NalUnit = new byte[3][][];
+            hevcConfigurationBox._HEVCConfig.NalUnitLength = new ushort[3][];
             hevcConfigurationBox._HEVCConfig.NalUnit[0] = new byte[VpsRaw.Count][];
             hevcConfigurationBox._HEVCConfig.NalUnit[1] = new byte[SpsRaw.Count][];
             hevcConfigurationBox._HEVCConfig.NalUnit[2] = new byte[PpsRaw.Count][];
+            hevcConfigurationBox._HEVCConfig.NalUnitLength[0] = new ushort[VpsRaw.Count];
+            hevcConfigurationBox._HEVCConfig.NalUnitLength[1] = new ushort[SpsRaw.Count];
+            hevcConfigurationBox._HEVCConfig.NalUnitLength[2] = new ushort[PpsRaw.Count];
 
             for (int i = 0; i < VpsRaw.Count; i++)
             {
                 hevcConfigurationBox._HEVCConfig.NalUnit[0][i] = VpsRaw.Values.ElementAt(i);
+                hevcConfigurationBox._HEVCConfig.NalUnitLength[0][i] = (ushort)VpsRaw.Values.ElementAt(i).Length;
             }
 
             for (int i = 0; i < SpsRaw.Count; i++)
             {
                 hevcConfigurationBox._HEVCConfig.NalUnit[1][i] = SpsRaw.Values.ElementAt(i);
+                hevcConfigurationBox._HEVCConfig.NalUnitLength[1][i] = (ushort)SpsRaw.Values.ElementAt(i).Length;
             }
 
             for (int i = 0; i < PpsRaw.Count; i++)
             {
                 hevcConfigurationBox._HEVCConfig.NalUnit[2][i] = PpsRaw.Values.ElementAt(i);
+                hevcConfigurationBox._HEVCConfig.NalUnitLength[2][i] = (ushort)PpsRaw.Values.ElementAt(i).Length;
             }
                         
             visualSampleEntry.Children.Add(hevcConfigurationBox);
@@ -400,14 +410,12 @@ namespace SharpMP4.Tracks
 
                 var bytes = ms.ToArray();
                 ulong ret =
-                    //((ulong)bytes[0] << 56) +
-                    //((ulong)bytes[1] << 48) +
                     ((ulong)bytes[0] << 40) +
                     ((ulong)bytes[1] << 32) +
                     ((ulong)bytes[2] << 24) +
                     ((ulong)bytes[3] << 16) +
                     ((ulong)bytes[4] << 8) +
-                    bytes[5];
+                    ((ulong)bytes[5]);
                 return ret;
             }
         }
