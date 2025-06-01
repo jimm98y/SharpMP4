@@ -7,7 +7,7 @@ using SharpH265;
 using SharpH26X;
 using SharpISOBMFF;
 
-namespace SharpMP4
+namespace SharpMP4.Tracks
 {
     /// <summary>
     /// H265 track.
@@ -69,8 +69,8 @@ namespace SharpMP4
         /// </summary>
         public H265Track()
         {
-            this.CompatibleBrand = BRAND; // hvc1
-            this.DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
+            CompatibleBrand = BRAND; // hvc1
+            DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
         }
         
         /// <summary>
@@ -86,13 +86,13 @@ namespace SharpMP4
                 // for hvc1, SPS, PPS, VPS should not be in MDAT
                 // for hev1, SPS, PPS, VPS may be in MDAT
                 ulong ituSize = 0;
-                var nu = new SharpH265.NalUnit((uint)sample.Length);
+                var nu = new NalUnit((uint)sample.Length);
                 _context.NalHeader = nu;
                 ituSize += nu.Read(_context, stream);
 
                 if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT)
                 {
-                    _context.SeqParameterSetRbsp = new SharpH265.SeqParameterSetRbsp();
+                    _context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
                     _context.SeqParameterSetRbsp.Read(_context, stream);
                     if (!Sps.ContainsKey(_context.SeqParameterSetRbsp.SpsSeqParameterSetId))
                     {
@@ -127,7 +127,7 @@ namespace SharpMP4
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT)
                 {
-                    _context.PicParameterSetRbsp = new SharpH265.PicParameterSetRbsp();
+                    _context.PicParameterSetRbsp = new PicParameterSetRbsp();
                     _context.PicParameterSetRbsp.Read(_context, stream);
                     if (!Pps.ContainsKey(_context.PicParameterSetRbsp.PpsPicParameterSetId))
                     {
@@ -137,7 +137,7 @@ namespace SharpMP4
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT)
                 {
-                    _context.VideoParameterSetRbsp = new SharpH265.VideoParameterSetRbsp();
+                    _context.VideoParameterSetRbsp = new VideoParameterSetRbsp();
                     _context.VideoParameterSetRbsp.Read(_context, stream);
                     if (!Vps.ContainsKey(_context.VideoParameterSetRbsp.VpsVideoParameterSetId))
                     {
@@ -241,11 +241,12 @@ namespace SharpMP4
 
         public override Box CreateSampleEntryBox()
         {
-            var sps = this.Sps.First().Value;
-            var vps = this.Vps.First().Value;
+            var sps = Sps.First().Value;
+            var vps = Vps.First().Value;
             var dim = CalculateDimensions(sps);
 
             VisualSampleEntry visualSampleEntry = new VisualSampleEntry(IsoStream.FromFourCC(BRAND));
+            visualSampleEntry.Children = new List<Box>();
             visualSampleEntry.DataReferenceIndex = 1;
             visualSampleEntry.Depth = 24;
             visualSampleEntry.FrameCount = 1;
@@ -328,7 +329,7 @@ namespace SharpMP4
                     ((uint)bytes[0] << 24) +
                     ((uint)bytes[1] << 16) +
                     ((uint)bytes[2] << 8) +
-                    ((uint)bytes[3]);
+                    bytes[3];
                 return ret;
             }
         }
@@ -384,7 +385,7 @@ namespace SharpMP4
                     isoStream.WriteBits(43, vps.ProfileTierLevel.GeneralReservedZero43bits);
                 }
 
-                if ((vps.ProfileTierLevel.GeneralProfileIdc >= 1 && vps.ProfileTierLevel.GeneralProfileIdc <= 5) ||
+                if (vps.ProfileTierLevel.GeneralProfileIdc >= 1 && vps.ProfileTierLevel.GeneralProfileIdc <= 5 ||
                     vps.ProfileTierLevel.GeneralProfileIdc == 9 ||
                     vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[1] != 0 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[2] != 0 ||
                     vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[3] != 0 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[4] != 0 ||
@@ -399,14 +400,14 @@ namespace SharpMP4
 
                 var bytes = ms.ToArray();
                 ulong ret =
-                    ((ulong)bytes[0] << 56) +
-                    ((ulong)bytes[1] << 48) +
-                    ((ulong)bytes[2] << 40) +
-                    ((ulong)bytes[3] << 32) +
-                    ((ulong)bytes[4] << 24) +
-                    ((ulong)bytes[5] << 16) +
-                    ((ulong)bytes[6] << 8) +
-                    ((ulong)bytes[7]);
+                    //((ulong)bytes[0] << 56) +
+                    //((ulong)bytes[1] << 48) +
+                    ((ulong)bytes[0] << 40) +
+                    ((ulong)bytes[1] << 32) +
+                    ((ulong)bytes[2] << 24) +
+                    ((ulong)bytes[3] << 16) +
+                    ((ulong)bytes[4] << 8) +
+                    bytes[5];
                 return ret;
             }
         }

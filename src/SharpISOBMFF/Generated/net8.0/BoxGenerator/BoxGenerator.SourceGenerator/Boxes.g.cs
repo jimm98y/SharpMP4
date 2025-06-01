@@ -142,7 +142,7 @@ namespace SharpISOBMFF
                case "cmpd":  return new ComponentDefinitionBox();
                case "cnID":  return new AppleStoreCatalogIDBox();
                case "co64":  return new ChunkLargeOffsetBox();
-               case "CoLL":  return new ContentLightLevelBox_CoLL(); // TODO: fix duplicate
+               case "CoLL":  return new ContentLightLevelBoxCoLLDup(); // TODO: fix duplicate
                case "colr":  return new ColourInformationBox();
                case "covr":  return new AppleCoverArtBox();
                case "cpat":  return new ComponentPatternDefinitionBox();
@@ -241,7 +241,7 @@ namespace SharpISOBMFF
                case "hev1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hev1"));break;
                case "hev2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hev2"));break;
                case "hev3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hev3"));break;
-               case "hind":  return new TrackReferenceTypeBox_hind(); // TODO: fix duplicate
+               case "hind":  return new TrackReferenceTypeBoxhindDup(); // TODO: fix duplicate
                case "hinf":  return new HintStatisticsBox();
                case "hint":  return new HintBox();
                case "hinv":  return new AppleHintVersionBox();
@@ -367,7 +367,7 @@ namespace SharpISOBMFF
                case "name": return new AppleName2Box(); // TODO: box is ambiguous in between AppleName2Box and FairPlayUserNameBox
                case "NCTG":  return new NikonExifBox();
                case "nmhd":  return new NullMediaHeaderBox();
-               case "npck":  return new hintPacketsSent_npck(); // TODO: fix duplicate
+               case "npck":  return new hintPacketsSentnpckDup(); // TODO: fix duplicate
                case "nump":  return new hintPacketsSent();
                case "odaf":  return new OMAAccessUnitFormatBox();
                case "odda":  return new OMAContentObjectBox();
@@ -448,7 +448,7 @@ namespace SharpISOBMFF
                case "sgpd":  return new SampleGroupDescriptionBox();
                case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
                case "sinf":  return new ProtectionSchemeInfoBox();
-               case "skip":  return new FreeSpaceBox_skip(); // TODO: fix duplicate
+               case "skip":  return new FreeSpaceBoxskipDup(); // TODO: fix duplicate
                case "sm2t":  return new MPEG2TSServerSampleEntry();
                case "SmDm":  return new SMPTE2086MasteringDisplayMetadataBox();
                case "smhd":  return new SoundMediaHeaderBox();
@@ -535,9 +535,9 @@ namespace SharpISOBMFF
                case "tmin":  return new HintMinRelativeTime();
                case "tmpo":  return new AppleBeatsPerMinuteBox();
                case "tols":  return new TargetOlsProperty();
-               case "totl":  return new HintBytesSent_totl(); // TODO: fix duplicate
-               case "tpay":  return new HintBytesSent_tpay(); // TODO: fix duplicate
-               case "tpyl":  return new HintBytesSent_tpyl(); // TODO: fix duplicate
+               case "totl":  return new HintBytesSenttotlDup(); // TODO: fix duplicate
+               case "tpay":  return new HintBytesSenttpayDup(); // TODO: fix duplicate
+               case "tpyl":  return new HintBytesSenttpylDup(); // TODO: fix duplicate
                case "traf":  return new TrackFragmentBox();
                case "trak":  return new TrackBox();
                case "tran":  return new TranscodingInfoBox();
@@ -561,7 +561,7 @@ namespace SharpISOBMFF
                case "tvsh":  return new TVShowBox();
                case "tvsn":  return new AppleTVSeasonBox();
                case "twos":  return new TwosBox();
-               case "tx3g":  return new TextSampleEntry_tx3g(); // TODO: fix duplicate
+               case "tx3g":  return new TextSampleEntrytx3gDup(); // TODO: fix duplicate
                case "txtC":  return new TextConfigBox();
                case "tyco":  return new TypeCombinationBox();
                case "udes":  return new UserDescriptionProperty();
@@ -587,7 +587,7 @@ namespace SharpISOBMFF
                case "uuid be7acfcb97a942e89c71999491e3afac":  return new XMPBox();
                case "uuid d08a4f1810f34a82b6c832d8aba183d3":  return new UuidBasedProtectionSystemSpecificHeaderBox();
                case "uuid d4807ef2ca3946958e5426cb9e46a79f":  return new TfrfBox();
-               case "vdep":  return new TrackReferenceTypeBox_vdep(); // TODO: fix duplicate
+               case "vdep":  return new TrackReferenceTypeBoxvdepDup(); // TODO: fix duplicate
                case "vipr":  return new ViewPriorityBox();
                case "vlab":  return new WebVTTSourceLabelBox();
                case "vmhd":  return new VideoMediaHeaderBox();
@@ -595,12 +595,12 @@ namespace SharpISOBMFF
                case "vp09": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vp09"));break;
                case "vp10": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vp10"));break;
                case "vpcC":  return new VPCodecConfigurationBox();
-               case "vplx":  return new TrackReferenceTypeBox_vplx(); // TODO: fix duplicate
+               case "vplx":  return new TrackReferenceTypeBoxvplxDup(); // TODO: fix duplicate
                case "VPRF":  return new PspVprfBox();
                case "vsib":  return new ViewScalabilityInformationSEIBox();
                case "vttC":  return new WebVTTConfigurationBox();
                case "vvc1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vvc1"));break;
-               case "vvcb":  return new EntityToGroupBox_vvcb(); // TODO: fix duplicate
+               case "vvcb":  return new EntityToGroupBoxvvcbDup(); // TODO: fix duplicate
                case "vvcC":  return new VvcConfigurationBox();
                case "vvcN": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vvcN"));break;
                case "vvi1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("vvi1"));break;
@@ -609,7 +609,7 @@ namespace SharpISOBMFF
                case "vwdi":  return new MultiviewSceneInfoBox();
                case "vwid":  return new ViewIdentifierBox();
                case "wave":  return new AppleWaveBox();
-               case "wide":  return new FreeSpaceBox_wide(); // TODO: fix duplicate
+               case "wide":  return new FreeSpaceBoxwideDup(); // TODO: fix duplicate
                case "wipe":  return new WipeTransitionEffectProperty();
                case "WLOC":  return new AppleWLOCBox();
                case "wvtt":  return new WVTTSampleEntry();
@@ -4353,15 +4353,15 @@ public class hintPacketsSent : Box
 aligned(8) class HintBytesSent extends Box('tpyl') {
 	uint(64)	bytessent; }	// total bytes sent, not including RTP headers
 */
-public class HintBytesSent_tpyl : Box
+public class HintBytesSenttpylDup : Box
 {
 	public const string TYPE = "tpyl";
-	public override string DisplayName { get { return "HintBytesSent_tpyl"; } }
+	public override string DisplayName { get { return "HintBytesSenttpylDup"; } }
 
 	protected ulong bytessent; 
 	public ulong Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-	public HintBytesSent_tpyl(): base(IsoStream.FromFourCC("tpyl"))
+	public HintBytesSenttpylDup(): base(IsoStream.FromFourCC("tpyl"))
 	{
 	}
 
@@ -4396,15 +4396,15 @@ aligned(8) class HintBytesSent extends Box('totl') {
 	uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
 */
-public class HintBytesSent_totl : Box
+public class HintBytesSenttotlDup : Box
 {
 	public const string TYPE = "totl";
-	public override string DisplayName { get { return "HintBytesSent_totl"; } }
+	public override string DisplayName { get { return "HintBytesSenttotlDup"; } }
 
 	protected uint bytessent; 
 	public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-	public HintBytesSent_totl(): base(IsoStream.FromFourCC("totl"))
+	public HintBytesSenttotlDup(): base(IsoStream.FromFourCC("totl"))
 	{
 	}
 
@@ -4439,15 +4439,15 @@ aligned(8) class hintPacketsSent extends Box('npck') {
 	uint(32)	packetssent; }	// total packets sent
 
 */
-public class hintPacketsSent_npck : Box
+public class hintPacketsSentnpckDup : Box
 {
 	public const string TYPE = "npck";
-	public override string DisplayName { get { return "hintPacketsSent_npck"; } }
+	public override string DisplayName { get { return "hintPacketsSentnpckDup"; } }
 
 	protected uint packetssent; 
 	public uint Packetssent { get { return this.packetssent; } set { this.packetssent = value; } }
 
-	public hintPacketsSent_npck(): base(IsoStream.FromFourCC("npck"))
+	public hintPacketsSentnpckDup(): base(IsoStream.FromFourCC("npck"))
 	{
 	}
 
@@ -4481,15 +4481,15 @@ public class hintPacketsSent_npck : Box
 aligned(8) class HintBytesSent extends Box('tpay') {
 	uint(32)	bytessent; }	// total bytes sent, not including RTP headers
 */
-public class HintBytesSent_tpay : Box
+public class HintBytesSenttpayDup : Box
 {
 	public const string TYPE = "tpay";
-	public override string DisplayName { get { return "HintBytesSent_tpay"; } }
+	public override string DisplayName { get { return "HintBytesSenttpayDup"; } }
 
 	protected uint bytessent; 
 	public uint Bytessent { get { return this.bytessent; } set { this.bytessent = value; } }
 
-	public HintBytesSent_tpay(): base(IsoStream.FromFourCC("tpay"))
+	public HintBytesSenttpayDup(): base(IsoStream.FromFourCC("tpay"))
 	{
 	}
 
@@ -12958,15 +12958,15 @@ aligned(8) class FreeSpaceBox extends Box('skip') {
 unsigned int(8) data[];
 }
 */
-public class FreeSpaceBox_skip : Box
+public class FreeSpaceBoxskipDup : Box
 {
 	public const string TYPE = "skip";
-	public override string DisplayName { get { return "FreeSpaceBox_skip"; } }
+	public override string DisplayName { get { return "FreeSpaceBoxskipDup"; } }
 
 	protected StreamMarker data; 
 	public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
-	public FreeSpaceBox_skip(): base(IsoStream.FromFourCC("skip"))
+	public FreeSpaceBoxskipDup(): base(IsoStream.FromFourCC("skip"))
 	{
 	}
 
@@ -25208,14 +25208,14 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hvc2'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntry_hvc2 : VisualSampleEntry
+public class HEVCSampleEntryhvc2Dup : VisualSampleEntry
 {
 	public const string TYPE = "hvc2";
-	public override string DisplayName { get { return "HEVCSampleEntry_hvc2"; } }
+	public override string DisplayName { get { return "HEVCSampleEntryhvc2Dup"; } }
 	public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-	public HEVCSampleEntry_hvc2(): base(IsoStream.FromFourCC("hvc2"))
+	public HEVCSampleEntryhvc2Dup(): base(IsoStream.FromFourCC("hvc2"))
 	{
 	}
 
@@ -25257,14 +25257,14 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hvc3'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntry_hvc3 : VisualSampleEntry
+public class HEVCSampleEntryhvc3Dup : VisualSampleEntry
 {
 	public const string TYPE = "hvc3";
-	public override string DisplayName { get { return "HEVCSampleEntry_hvc3"; } }
+	public override string DisplayName { get { return "HEVCSampleEntryhvc3Dup"; } }
 	public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-	public HEVCSampleEntry_hvc3(): base(IsoStream.FromFourCC("hvc3"))
+	public HEVCSampleEntryhvc3Dup(): base(IsoStream.FromFourCC("hvc3"))
 	{
 	}
 
@@ -25355,14 +25355,14 @@ class LHEVCSampleEntry() extends VisualSampleEntry ('lhe1') {
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class LHEVCSampleEntry_lhe1 : VisualSampleEntry
+public class LHEVCSampleEntrylhe1Dup : VisualSampleEntry
 {
 	public const string TYPE = "lhe1";
-	public override string DisplayName { get { return "LHEVCSampleEntry_lhe1"; } }
+	public override string DisplayName { get { return "LHEVCSampleEntrylhe1Dup"; } }
 	public LHEVCConfigurationBox Lhvcconfig { get { return this.children.OfType<LHEVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-	public LHEVCSampleEntry_lhe1(): base(IsoStream.FromFourCC("lhe1"))
+	public LHEVCSampleEntrylhe1Dup(): base(IsoStream.FromFourCC("lhe1"))
 	{
 	}
 
@@ -25404,14 +25404,14 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hev1'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntry_hev1 : VisualSampleEntry
+public class HEVCSampleEntryhev1Dup : VisualSampleEntry
 {
 	public const string TYPE = "hev1";
-	public override string DisplayName { get { return "HEVCSampleEntry_hev1"; } }
+	public override string DisplayName { get { return "HEVCSampleEntryhev1Dup"; } }
 	public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-	public HEVCSampleEntry_hev1(): base(IsoStream.FromFourCC("hev1"))
+	public HEVCSampleEntryhev1Dup(): base(IsoStream.FromFourCC("hev1"))
 	{
 	}
 
@@ -25453,14 +25453,14 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hev2'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntry_hev2 : VisualSampleEntry
+public class HEVCSampleEntryhev2Dup : VisualSampleEntry
 {
 	public const string TYPE = "hev2";
-	public override string DisplayName { get { return "HEVCSampleEntry_hev2"; } }
+	public override string DisplayName { get { return "HEVCSampleEntryhev2Dup"; } }
 	public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-	public HEVCSampleEntry_hev2(): base(IsoStream.FromFourCC("hev2"))
+	public HEVCSampleEntryhev2Dup(): base(IsoStream.FromFourCC("hev2"))
 	{
 	}
 
@@ -25502,14 +25502,14 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hev3'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntry_hev3 : VisualSampleEntry
+public class HEVCSampleEntryhev3Dup : VisualSampleEntry
 {
 	public const string TYPE = "hev3";
-	public override string DisplayName { get { return "HEVCSampleEntry_hev3"; } }
+	public override string DisplayName { get { return "HEVCSampleEntryhev3Dup"; } }
 	public HEVCConfigurationBox Config { get { return this.children.OfType<HEVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-	public HEVCSampleEntry_hev3(): base(IsoStream.FromFourCC("hev3"))
+	public HEVCSampleEntryhev3Dup(): base(IsoStream.FromFourCC("hev3"))
 	{
 	}
 
@@ -25734,10 +25734,10 @@ class AVCMVCSampleEntry() extends AVCSampleEntry ('avc3') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class AVCMVCSampleEntry_avc3 : AVCSampleEntry
+public class AVCMVCSampleEntryavc3Dup : AVCSampleEntry
 {
 	public const string TYPE = "avc3";
-	public override string DisplayName { get { return "AVCMVCSampleEntry_avc3"; } }
+	public override string DisplayName { get { return "AVCMVCSampleEntryavc3Dup"; } }
 	public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
 	public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
@@ -25748,7 +25748,7 @@ public class AVCMVCSampleEntry_avc3 : AVCSampleEntry
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-	public AVCMVCSampleEntry_avc3(): base(IsoStream.FromFourCC("avc3"))
+	public AVCMVCSampleEntryavc3Dup(): base(IsoStream.FromFourCC("avc3"))
 	{
 	}
 
@@ -25950,10 +25950,10 @@ class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc4') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class AVC2MVCSampleEntry_avc4 : AVC2SampleEntry
+public class AVC2MVCSampleEntryavc4Dup : AVC2SampleEntry
 {
 	public const string TYPE = "avc4";
-	public override string DisplayName { get { return "AVC2MVCSampleEntry_avc4"; } }
+	public override string DisplayName { get { return "AVC2MVCSampleEntryavc4Dup"; } }
 	public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
 	public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
@@ -25964,7 +25964,7 @@ public class AVC2MVCSampleEntry_avc4 : AVC2SampleEntry
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-	public AVC2MVCSampleEntry_avc4(): base(IsoStream.FromFourCC("avc4"))
+	public AVC2MVCSampleEntryavc4Dup(): base(IsoStream.FromFourCC("avc4"))
 	{
 	}
 
@@ -26124,10 +26124,10 @@ class MVCSampleEntry() extends VisualSampleEntry ('mvc2') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class MVCSampleEntry_mvc2 : VisualSampleEntry
+public class MVCSampleEntrymvc2Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvc2";
-	public override string DisplayName { get { return "MVCSampleEntry_mvc2"; } }
+	public override string DisplayName { get { return "MVCSampleEntrymvc2Dup"; } }
 	public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
 	public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26139,7 +26139,7 @@ public class MVCSampleEntry_mvc2 : VisualSampleEntry
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-	public MVCSampleEntry_mvc2(): base(IsoStream.FromFourCC("mvc2"))
+	public MVCSampleEntrymvc2Dup(): base(IsoStream.FromFourCC("mvc2"))
 	{
 	}
 
@@ -26213,10 +26213,10 @@ class MVCSampleEntry() extends VisualSampleEntry ('mvc3') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class MVCSampleEntry_mvc3 : VisualSampleEntry
+public class MVCSampleEntrymvc3Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvc3";
-	public override string DisplayName { get { return "MVCSampleEntry_mvc3"; } }
+	public override string DisplayName { get { return "MVCSampleEntrymvc3Dup"; } }
 	public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
 	public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26228,7 +26228,7 @@ public class MVCSampleEntry_mvc3 : VisualSampleEntry
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-	public MVCSampleEntry_mvc3(): base(IsoStream.FromFourCC("mvc3"))
+	public MVCSampleEntrymvc3Dup(): base(IsoStream.FromFourCC("mvc3"))
 	{
 	}
 
@@ -26302,10 +26302,10 @@ class MVCSampleEntry() extends VisualSampleEntry ('mvc4') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class MVCSampleEntry_mvc4 : VisualSampleEntry
+public class MVCSampleEntrymvc4Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvc4";
-	public override string DisplayName { get { return "MVCSampleEntry_mvc4"; } }
+	public override string DisplayName { get { return "MVCSampleEntrymvc4Dup"; } }
 	public MVCConfigurationBox Mvcconfig { get { return this.children.OfType<MVCConfigurationBox>().FirstOrDefault(); } }
 	public ViewScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ViewScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26317,7 +26317,7 @@ public class MVCSampleEntry_mvc4 : VisualSampleEntry
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-	public MVCSampleEntry_mvc4(): base(IsoStream.FromFourCC("mvc4"))
+	public MVCSampleEntrymvc4Dup(): base(IsoStream.FromFourCC("mvc4"))
 	{
 	}
 
@@ -26464,10 +26464,10 @@ class MVCDSampleEntry() extends VisualSampleEntry ('mvd2') {
 }
 
 */
-public class MVCDSampleEntry_mvd2 : VisualSampleEntry
+public class MVCDSampleEntrymvd2Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvd2";
-	public override string DisplayName { get { return "MVCDSampleEntry_mvd2"; } }
+	public override string DisplayName { get { return "MVCDSampleEntrymvd2Dup"; } }
 	public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26476,7 +26476,7 @@ public class MVCDSampleEntry_mvd2 : VisualSampleEntry
 	public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-	public MVCDSampleEntry_mvd2(): base(IsoStream.FromFourCC("mvd2"))
+	public MVCDSampleEntrymvd2Dup(): base(IsoStream.FromFourCC("mvd2"))
 	{
 	}
 
@@ -26539,10 +26539,10 @@ class MVCDSampleEntry() extends VisualSampleEntry ('mvd3') {
 }
 
 */
-public class MVCDSampleEntry_mvd3 : VisualSampleEntry
+public class MVCDSampleEntrymvd3Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvd3";
-	public override string DisplayName { get { return "MVCDSampleEntry_mvd3"; } }
+	public override string DisplayName { get { return "MVCDSampleEntrymvd3Dup"; } }
 	public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26551,7 +26551,7 @@ public class MVCDSampleEntry_mvd3 : VisualSampleEntry
 	public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-	public MVCDSampleEntry_mvd3(): base(IsoStream.FromFourCC("mvd3"))
+	public MVCDSampleEntrymvd3Dup(): base(IsoStream.FromFourCC("mvd3"))
 	{
 	}
 
@@ -26614,10 +26614,10 @@ class MVCDSampleEntry() extends VisualSampleEntry ('mvd4') {
 }
 
 */
-public class MVCDSampleEntry_mvd4 : VisualSampleEntry
+public class MVCDSampleEntrymvd4Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvd4";
-	public override string DisplayName { get { return "MVCDSampleEntry_mvd4"; } }
+	public override string DisplayName { get { return "MVCDSampleEntrymvd4Dup"; } }
 	public MVCDConfigurationBox Mvcdconfig { get { return this.children.OfType<MVCDConfigurationBox>().FirstOrDefault(); } }
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26626,7 +26626,7 @@ public class MVCDSampleEntry_mvd4 : VisualSampleEntry
 	public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 
-	public MVCDSampleEntry_mvd4(): base(IsoStream.FromFourCC("mvd4"))
+	public MVCDSampleEntrymvd4Dup(): base(IsoStream.FromFourCC("mvd4"))
 	{
 	}
 
@@ -26756,10 +26756,10 @@ class A3DSampleEntry() extends VisualSampleEntry ('a3d2') {
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 }
 */
-public class A3DSampleEntry_a3d2 : VisualSampleEntry
+public class A3DSampleEntrya3d2Dup : VisualSampleEntry
 {
 	public const string TYPE = "a3d2";
-	public override string DisplayName { get { return "A3DSampleEntry_a3d2"; } }
+	public override string DisplayName { get { return "A3DSampleEntrya3d2Dup"; } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26767,7 +26767,7 @@ public class A3DSampleEntry_a3d2 : VisualSampleEntry
 	public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
 	public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 
-	public A3DSampleEntry_a3d2(): base(IsoStream.FromFourCC("a3d2"))
+	public A3DSampleEntrya3d2Dup(): base(IsoStream.FromFourCC("a3d2"))
 	{
 	}
 
@@ -26825,10 +26825,10 @@ class A3DSampleEntry() extends VisualSampleEntry ('a3d3') {
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 }
 */
-public class A3DSampleEntry_a3d3 : VisualSampleEntry
+public class A3DSampleEntrya3d3Dup : VisualSampleEntry
 {
 	public const string TYPE = "a3d3";
-	public override string DisplayName { get { return "A3DSampleEntry_a3d3"; } }
+	public override string DisplayName { get { return "A3DSampleEntrya3d3Dup"; } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26836,7 +26836,7 @@ public class A3DSampleEntry_a3d3 : VisualSampleEntry
 	public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
 	public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 
-	public A3DSampleEntry_a3d3(): base(IsoStream.FromFourCC("a3d3"))
+	public A3DSampleEntrya3d3Dup(): base(IsoStream.FromFourCC("a3d3"))
 	{
 	}
 
@@ -26894,10 +26894,10 @@ class A3DSampleEntry() extends VisualSampleEntry ('a3d4') {
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 }
 */
-public class A3DSampleEntry_a3d4 : VisualSampleEntry
+public class A3DSampleEntrya3d4Dup : VisualSampleEntry
 {
 	public const string TYPE = "a3d4";
-	public override string DisplayName { get { return "A3DSampleEntry_a3d4"; } }
+	public override string DisplayName { get { return "A3DSampleEntrya3d4Dup"; } }
 	public A3DConfigurationBox A3dconfig { get { return this.children.OfType<A3DConfigurationBox>().FirstOrDefault(); } }
 	public MVDScalabilityInformationSEIBox Mvdscalinfosei { get { return this.children.OfType<MVDScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public ViewIdentifierBox ViewIdentifiers { get { return this.children.OfType<ViewIdentifierBox>().FirstOrDefault(); } }
@@ -26905,7 +26905,7 @@ public class A3DSampleEntry_a3d4 : VisualSampleEntry
 	public IntrinsicCameraParametersBox IntrinsicCameraParams { get { return this.children.OfType<IntrinsicCameraParametersBox>().FirstOrDefault(); } }
 	public ExtrinsicCameraParametersBox ExtrinsicCameraParams { get { return this.children.OfType<ExtrinsicCameraParametersBox>().FirstOrDefault(); } }
 
-	public A3DSampleEntry_a3d4(): base(IsoStream.FromFourCC("a3d4"))
+	public A3DSampleEntrya3d4Dup(): base(IsoStream.FromFourCC("a3d4"))
 	{
 	}
 
@@ -27010,15 +27010,15 @@ public class AVCSVCSampleEntry : AVCSampleEntry
 /*
 
 */
-public class AVCSVCSampleEntry_avc3 : AVCSampleEntry
+public class AVCSVCSampleEntryavc3Dup : AVCSampleEntry
 {
 	public const string TYPE = "avc3";
-	public override string DisplayName { get { return "AVCSVCSampleEntry_avc3"; } }
+	public override string DisplayName { get { return "AVCSVCSampleEntryavc3Dup"; } }
 	public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
 	public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-	public AVCSVCSampleEntry_avc3(): base(IsoStream.FromFourCC("avc3"))
+	public AVCSVCSampleEntryavc3Dup(): base(IsoStream.FromFourCC("avc3"))
 	{
 	}
 
@@ -27114,15 +27114,15 @@ public class AVC2SVCSampleEntry : AVC2SampleEntry
 /*
 
 */
-public class AVC2SVCSampleEntry_avc4 : AVC2SampleEntry
+public class AVC2SVCSampleEntryavc4Dup : AVC2SampleEntry
 {
 	public const string TYPE = "avc4";
-	public override string DisplayName { get { return "AVC2SVCSampleEntry_avc4"; } }
+	public override string DisplayName { get { return "AVC2SVCSampleEntryavc4Dup"; } }
 	public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
 	public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-	public AVC2SVCSampleEntry_avc4(): base(IsoStream.FromFourCC("avc4"))
+	public AVC2SVCSampleEntryavc4Dup(): base(IsoStream.FromFourCC("avc4"))
 	{
 	}
 
@@ -27224,16 +27224,16 @@ public class SVCSampleEntry : VisualSampleEntry
 /*
 
 */
-public class SVCSampleEntry_svc2 : VisualSampleEntry
+public class SVCSampleEntrysvc2Dup : VisualSampleEntry
 {
 	public const string TYPE = "svc2";
-	public override string DisplayName { get { return "SVCSampleEntry_svc2"; } }
+	public override string DisplayName { get { return "SVCSampleEntrysvc2Dup"; } }
 	public SVCConfigurationBox Svcconfig { get { return this.children.OfType<SVCConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 	public ScalabilityInformationSEIBox Scalability { get { return this.children.OfType<ScalabilityInformationSEIBox>().FirstOrDefault(); } }
 	public SVCPriorityAssignmentBox Method { get { return this.children.OfType<SVCPriorityAssignmentBox>().FirstOrDefault(); } }
 
-	public SVCSampleEntry_svc2(): base(IsoStream.FromFourCC("svc2"))
+	public SVCSampleEntrysvc2Dup(): base(IsoStream.FromFourCC("svc2"))
 	{
 	}
 
@@ -27495,14 +27495,14 @@ public class VvcSampleEntry : VisualSampleEntry
 /*
 
 */
-public class VvcSampleEntry_vvi1 : VisualSampleEntry
+public class VvcSampleEntryvvi1Dup : VisualSampleEntry
 {
 	public const string TYPE = "vvi1";
-	public override string DisplayName { get { return "VvcSampleEntry_vvi1"; } }
+	public override string DisplayName { get { return "VvcSampleEntryvvi1Dup"; } }
 	public VvcConfigurationBox Config { get { return this.children.OfType<VvcConfigurationBox>().FirstOrDefault(); } }
 	public MPEG4ExtensionDescriptorsBox Descr { get { return this.children.OfType<MPEG4ExtensionDescriptorsBox>().FirstOrDefault(); } }
 
-	public VvcSampleEntry_vvi1(): base(IsoStream.FromFourCC("vvi1"))
+	public VvcSampleEntryvvi1Dup(): base(IsoStream.FromFourCC("vvi1"))
 	{
 	}
 
@@ -27778,13 +27778,13 @@ public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
 /*
 
 */
-public class EVCSliceComponentTrackSampleEntry_evs2 : VisualSampleEntry
+public class EVCSliceComponentTrackSampleEntryevs2Dup : VisualSampleEntry
 {
 	public const string TYPE = "evs2";
-	public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntry_evs2"; } }
+	public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntryevs2Dup"; } }
 	public EVCSliceComponentTrackConfigurationBox Config { get { return this.children.OfType<EVCSliceComponentTrackConfigurationBox>().FirstOrDefault(); } }
 
-	public EVCSliceComponentTrackSampleEntry_evs2(): base(IsoStream.FromFourCC("evs2"))
+	public EVCSliceComponentTrackSampleEntryevs2Dup(): base(IsoStream.FromFourCC("evs2"))
 	{
 	}
 
@@ -28576,10 +28576,10 @@ extends FullBox('vvcb', version, flags) {
 // the remaining data may be specified for a particular grouping_type
 }
 */
-public class EntityToGroupBox_vvcb : FullBox
+public class EntityToGroupBoxvvcbDup : FullBox
 {
 	public const string TYPE = "vvcb";
-	public override string DisplayName { get { return "EntityToGroupBox_vvcb"; } }
+	public override string DisplayName { get { return "EntityToGroupBoxvvcbDup"; } }
 
 	protected uint group_id; 
 	public uint GroupId { get { return this.group_id; } set { this.group_id = value; } }
@@ -28590,7 +28590,7 @@ public class EntityToGroupBox_vvcb : FullBox
 	protected uint[] entity_id;  //  the remaining data may be specified for a particular grouping_type
 	public uint[] EntityId { get { return this.entity_id; } set { this.entity_id = value; } }
 
-	public EntityToGroupBox_vvcb(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("vvcb"), version, flags)
+	public EntityToGroupBoxvvcbDup(byte version = 0, uint flags = 0): base(IsoStream.FromFourCC("vvcb"), version, flags)
 	{
 	}
 
@@ -40902,15 +40902,15 @@ aligned(8) class FreeSpaceBox() extends Box('wide') {
  bit(8) data[];
  } 
 */
-public class FreeSpaceBox_wide : Box
+public class FreeSpaceBoxwideDup : Box
 {
 	public const string TYPE = "wide";
-	public override string DisplayName { get { return "FreeSpaceBox_wide"; } }
+	public override string DisplayName { get { return "FreeSpaceBoxwideDup"; } }
 
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
+	protected StreamMarker data; 
+	public StreamMarker Data { get { return this.data; } set { this.data = value; } }
 
-	public FreeSpaceBox_wide(): base(IsoStream.FromFourCC("wide"))
+	public FreeSpaceBoxwideDup(): base(IsoStream.FromFourCC("wide"))
 	{
 	}
 
@@ -47548,10 +47548,10 @@ aligned(8) class TextSampleEntry() extends FullBox('tx3g') {
  }
  
 */
-public class TextSampleEntry_tx3g : FullBox
+public class TextSampleEntrytx3gDup : FullBox
 {
 	public const string TYPE = "tx3g";
-	public override string DisplayName { get { return "TextSampleEntry_tx3g"; } }
+	public override string DisplayName { get { return "TextSampleEntrytx3gDup"; } }
 
 	protected ushort dataReferenceIndex; 
 	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
@@ -47575,7 +47575,7 @@ public class TextSampleEntry_tx3g : FullBox
 	public StyleRecord StyleRecord { get { return this.styleRecord; } set { this.styleRecord = value; } }
 	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-	public TextSampleEntry_tx3g(): base(IsoStream.FromFourCC("tx3g"))
+	public TextSampleEntrytx3gDup(): base(IsoStream.FromFourCC("tx3g"))
 	{
 	}
 
@@ -49616,15 +49616,15 @@ aligned(8) class TrackReferenceTypeBox() extends Box('hind') {
  unsigned int(32) trackIds[];
  } 
 */
-public class TrackReferenceTypeBox_hind : Box
+public class TrackReferenceTypeBoxhindDup : Box
 {
 	public const string TYPE = "hind";
-	public override string DisplayName { get { return "TrackReferenceTypeBox_hind"; } }
+	public override string DisplayName { get { return "TrackReferenceTypeBoxhindDup"; } }
 
 	protected uint[] trackIds; 
 	public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }
 
-	public TrackReferenceTypeBox_hind(): base(IsoStream.FromFourCC("hind"))
+	public TrackReferenceTypeBoxhindDup(): base(IsoStream.FromFourCC("hind"))
 	{
 	}
 
@@ -49659,15 +49659,15 @@ aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {
  unsigned int(32) trackIds[];
  } 
 */
-public class TrackReferenceTypeBox_vdep : Box
+public class TrackReferenceTypeBoxvdepDup : Box
 {
 	public const string TYPE = "vdep";
-	public override string DisplayName { get { return "TrackReferenceTypeBox_vdep"; } }
+	public override string DisplayName { get { return "TrackReferenceTypeBoxvdepDup"; } }
 
 	protected uint[] trackIds; 
 	public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }
 
-	public TrackReferenceTypeBox_vdep(): base(IsoStream.FromFourCC("vdep"))
+	public TrackReferenceTypeBoxvdepDup(): base(IsoStream.FromFourCC("vdep"))
 	{
 	}
 
@@ -49702,15 +49702,15 @@ aligned(8) class TrackReferenceTypeBox() extends Box('vplx') {
  unsigned int(32) trackIds[];
  } 
 */
-public class TrackReferenceTypeBox_vplx : Box
+public class TrackReferenceTypeBoxvplxDup : Box
 {
 	public const string TYPE = "vplx";
-	public override string DisplayName { get { return "TrackReferenceTypeBox_vplx"; } }
+	public override string DisplayName { get { return "TrackReferenceTypeBoxvplxDup"; } }
 
 	protected uint[] trackIds; 
 	public uint[] TrackIds { get { return this.trackIds; } set { this.trackIds = value; } }
 
-	public TrackReferenceTypeBox_vplx(): base(IsoStream.FromFourCC("vplx"))
+	public TrackReferenceTypeBoxvplxDup(): base(IsoStream.FromFourCC("vplx"))
 	{
 	}
 
@@ -49868,10 +49868,10 @@ aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {
  unsigned int(8) maxFALL;
  } 
 */
-public class ContentLightLevelBox_CoLL : FullBox
+public class ContentLightLevelBoxCoLLDup : FullBox
 {
 	public const string TYPE = "CoLL";
-	public override string DisplayName { get { return "ContentLightLevelBox_CoLL"; } }
+	public override string DisplayName { get { return "ContentLightLevelBoxCoLLDup"; } }
 
 	protected ushort maxCLL; 
 	public ushort MaxCLL { get { return this.maxCLL; } set { this.maxCLL = value; } }
@@ -49879,7 +49879,7 @@ public class ContentLightLevelBox_CoLL : FullBox
 	protected byte maxFALL; 
 	public byte MaxFALL { get { return this.maxFALL; } set { this.maxFALL = value; } }
 
-	public ContentLightLevelBox_CoLL(): base(IsoStream.FromFourCC("CoLL"))
+	public ContentLightLevelBoxCoLLDup(): base(IsoStream.FromFourCC("CoLL"))
 	{
 	}
 

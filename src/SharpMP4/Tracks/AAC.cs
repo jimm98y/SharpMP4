@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SharpMP4
+namespace SharpMP4.Tracks
 {
     /// <summary>
     /// AAC Track. Supports AAC-LC (Low Complexity) only. Samples should be provided without ADTS header.
@@ -36,11 +36,11 @@ namespace SharpMP4
             if(sampleSizeInBits % 8 != 0) 
                 throw new ArgumentOutOfRangeException("Invalid sample size!");
 
-            this.Timescale = samplingRateInHz;
-            this.ChannelCount = channelCount;   
-            this.SamplingRate = samplingRateInHz;
-            this.SampleSize = sampleSizeInBits;
-            this.SampleDuration = AAC_SAMPLE_SIZE; // hardcoded for AAC-LC
+            Timescale = samplingRateInHz;
+            ChannelCount = channelCount;   
+            SamplingRate = samplingRateInHz;
+            SampleSize = sampleSizeInBits;
+            SampleDuration = AAC_SAMPLE_SIZE; // hardcoded for AAC-LC
         }
 
         public override Box CreateSampleEntryBox()
@@ -48,10 +48,10 @@ namespace SharpMP4
             AudioSampleEntryV1 audioSampleEntry = new AudioSampleEntryV1(IsoStream.FromFourCC("mp4a"));
             audioSampleEntry.Children = new List<Box>();
 
-            audioSampleEntry.Channelcount = this.ChannelCount;
-            audioSampleEntry.Samplerate = this.SamplingRate << 16; // TODO simplify API
+            audioSampleEntry.Channelcount = ChannelCount;
+            audioSampleEntry.Samplerate = SamplingRate << 16; // TODO simplify API
             audioSampleEntry.DataReferenceIndex = 1;
-            audioSampleEntry.Samplesize = this.SampleSize;
+            audioSampleEntry.Samplesize = SampleSize;
             audioSampleEntry.ReservedSampleEntry = new byte[6]; // TODO simplify API
             audioSampleEntry.Reserved = new ushort[3]; // TODO simplify API
 
@@ -76,11 +76,11 @@ namespace SharpMP4
 
             AudioSpecificConfig audioSpecificConfig = new AudioSpecificConfig() 
             {
-                SamplingFrequencyIndex = (byte)AudioSpecificConfigDescriptor.SamplingFrequencyMap[this.SamplingRate],
-                ChannelConfiguration = this.ChannelCount
+                SamplingFrequencyIndex = (byte)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate],
+                ChannelConfiguration = ChannelCount
             };
             audioSpecificConfig.AudioObjectType = new GetAudioObjectType() { AudioObjectType = AAC_AUDIO_OBJECT_TYPE }; // TODO simplify API
-            audioSpecificConfig._GASpecificConfig = new GASpecificConfig((int)AudioSpecificConfigDescriptor.SamplingFrequencyMap[this.SamplingRate], this.ChannelCount, AAC_AUDIO_OBJECT_TYPE);
+            audioSpecificConfig._GASpecificConfig = new GASpecificConfig((int)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate], ChannelCount, AAC_AUDIO_OBJECT_TYPE);
             audioSpecificConfig.SetParent(decoderConfigDescriptor);
             decoderConfigDescriptor.Children.Add(audioSpecificConfig);
 

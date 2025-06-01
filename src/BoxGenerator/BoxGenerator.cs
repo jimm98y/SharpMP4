@@ -89,7 +89,7 @@ public static class BoxGenerator
                                         LogConsole($"Duplicated and failed to add: {item.BoxName}");
                                     }
                                     // override the name
-                                    item.BoxName = $"{item.BoxName}_{item.Extended.BoxType}";
+                                    item.BoxName = $"{item.BoxName}{item.Extended.BoxType}Dup";
                                 }
                             }
                         }

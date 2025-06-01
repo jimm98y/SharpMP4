@@ -176,7 +176,7 @@ namespace SharpISOBMFF
                     else
                     {
                         string comment = "";
-                        if (item.Value.Single().BoxName.Contains('_'))
+                        if (item.Value.Single().BoxName.EndsWith("Dup"))
                             comment = " // TODO: fix duplicate";
                         string optParams = "";
                         if (item.Value.Single().BoxName == "AudioSampleEntry" || 
@@ -260,7 +260,7 @@ namespace SharpISOBMFF
                 if (item.Value.Count == 1)
                 {
                     string comment = "";
-                    if (item.Value.Single().BoxName.Contains('_'))
+                    if (item.Value.Single().BoxName.EndsWith("Dup"))
                         comment = " // TODO: fix duplicate";
                     string optParams = "";
                     if (item.Value.Single().BoxName == "AudioSampleEntry" ||
@@ -697,7 +697,7 @@ namespace SharpISOBMFF
                     value = "= []";
                 }
 
-                if (fieldType == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "ItemDataBox" || b.BoxName == "FreeSpaceBox_skip" || b.BoxName == "FreeSpaceBox" || b.BoxName == "ZeroBox"))
+                if (fieldType == "byte[]" && (b.BoxName == "MediaDataBox" || b.BoxName == "ItemDataBox" || b.BoxName.StartsWith("FreeSpaceBox") || b.BoxName == "ZeroBox"))
                 {
                     fieldType = "StreamMarker";
                 }

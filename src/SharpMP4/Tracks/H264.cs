@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SharpMP4
+namespace SharpMP4.Tracks
 {
     /// <summary>
     /// H264 track.
@@ -65,8 +65,8 @@ namespace SharpMP4
         /// </summary>
         public H264Track()
         {
-            this.CompatibleBrand = BRAND; // avc1
-            this.DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
+            CompatibleBrand = BRAND; // avc1
+            DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
         }
 
         /// <summary>
@@ -79,13 +79,13 @@ namespace SharpMP4
             using (ItuStream stream = new ItuStream(new MemoryStream(sample)))
             {
                 ulong ituSize = 0;
-                var nu = new SharpH264.NalUnit((uint)sample.Length);
+                var nu = new NalUnit((uint)sample.Length);
                 _context.NalHeader = nu;
                 ituSize += nu.Read(_context, stream);
 
                 if (nu.NalUnitType == H264NALTypes.SPS)
                 {
-                    _context.SeqParameterSetRbsp = new SharpH264.SeqParameterSetRbsp();
+                    _context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
                     _context.SeqParameterSetRbsp.Read(_context, stream);
                     if (!Sps.ContainsKey(_context.SeqParameterSetRbsp.SeqParameterSetData.SeqParameterSetId))
                     {
@@ -120,7 +120,7 @@ namespace SharpMP4
                 }
                 else if (nu.NalUnitType == H264NALTypes.PPS)
                 {
-                    _context.PicParameterSetRbsp = new SharpH264.PicParameterSetRbsp();
+                    _context.PicParameterSetRbsp = new PicParameterSetRbsp();
                     _context.PicParameterSetRbsp.Read(_context, stream);
                     if (!Pps.ContainsKey(_context.PicParameterSetRbsp.PicParameterSetId))
                     {
@@ -200,7 +200,7 @@ namespace SharpMP4
 
         public override Box CreateSampleEntryBox()
         {
-            var sps = this.Sps.First().Value;
+            var sps = Sps.First().Value;
             var dim = CalculateDimensions(sps);
 
             VisualSampleEntry visualSampleEntry = new VisualSampleEntry(IsoStream.FromFourCC(BRAND));
@@ -224,12 +224,12 @@ namespace SharpMP4
 
             avcConfigurationBox._AVCConfig = new AVCDecoderConfigurationRecord();
             avcConfigurationBox._AVCConfig.Reserved0 = 0; // TODO: Investigate this value
-            avcConfigurationBox._AVCConfig.SequenceParameterSetNALUnit = this.SpsRaw.Values.ToArray();
-            avcConfigurationBox._AVCConfig.SequenceParameterSetLength = this.SpsRaw.Values.Select(x => (ushort)x.Length).ToArray();
-            avcConfigurationBox._AVCConfig.NumOfSequenceParameterSets = (byte)this.Sps.Count;
-            avcConfigurationBox._AVCConfig.PictureParameterSetNALUnit = this.PpsRaw.Values.ToArray();
-            avcConfigurationBox._AVCConfig.PictureParameterSetLength = this.PpsRaw.Values.Select(x => (ushort)x.Length).ToArray();
-            avcConfigurationBox._AVCConfig.NumOfPictureParameterSets = (byte)this.Pps.Count;
+            avcConfigurationBox._AVCConfig.SequenceParameterSetNALUnit = SpsRaw.Values.ToArray();
+            avcConfigurationBox._AVCConfig.SequenceParameterSetLength = SpsRaw.Values.Select(x => (ushort)x.Length).ToArray();
+            avcConfigurationBox._AVCConfig.NumOfSequenceParameterSets = (byte)Sps.Count;
+            avcConfigurationBox._AVCConfig.PictureParameterSetNALUnit = PpsRaw.Values.ToArray();
+            avcConfigurationBox._AVCConfig.PictureParameterSetLength = PpsRaw.Values.Select(x => (ushort)x.Length).ToArray();
+            avcConfigurationBox._AVCConfig.NumOfPictureParameterSets = (byte)Pps.Count;
             avcConfigurationBox._AVCConfig._AVCLevelIndication = (byte)sps.SeqParameterSetData.LevelIdc;
             avcConfigurationBox._AVCConfig._AVCProfileIndication = (byte)sps.SeqParameterSetData.ProfileIdc;
             avcConfigurationBox._AVCConfig.BitDepthLumaMinus8 = (byte)sps.SeqParameterSetData.BitDepthLumaMinus8;

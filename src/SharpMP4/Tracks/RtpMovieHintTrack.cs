@@ -1,6 +1,6 @@
 ﻿using SharpISOBMFF;
 
-namespace SharpMP4
+namespace SharpMP4.Tracks
 {
     public class RtpMovieHintTrack : TrackBase
     {

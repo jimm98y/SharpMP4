@@ -1,5 +1,7 @@
 ﻿using SharpISOBMFF;
 using SharpMP4;
+using SharpMP4.Builders;
+using SharpMP4.Tracks;
 using System;
 using System.IO;
 using System.Linq;
@@ -36,6 +38,11 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                     }
                 }
             }
+
+            await audioTrack.FlushAsync();
+            await videoTrack.FlushAsync();
+            await builder.FlushAsync();
+            await builder.FinalizeAsync();
         }
     }
 }

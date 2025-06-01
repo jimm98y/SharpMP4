@@ -1,6 +1,6 @@
 ﻿using SharpISOBMFF;
 
-namespace SharpMP4
+namespace SharpMP4.Tracks
 {
     /// <summary>
     /// Opus Track. 
@@ -50,10 +50,10 @@ namespace SharpMP4
         public override Box CreateSampleEntryBox()
         {
             AudioSampleEntryV1 audioSampleEntry = new AudioSampleEntryV1(IsoStream.FromFourCC("Opus"));
-            audioSampleEntry.Channelcount = this.ChannelCount;
-            audioSampleEntry.Samplerate = this.SamplingRate;
+            audioSampleEntry.Channelcount = ChannelCount;
+            audioSampleEntry.Samplerate = SamplingRate;
             audioSampleEntry.DataReferenceIndex = 1;
-            audioSampleEntry.Samplesize = this.SampleSize;
+            audioSampleEntry.Samplesize = SampleSize;
 
             // TODO: It should be possible to parse the Opus payload and get these parameters
             OpusSpecificBox opusSpecificBox = new OpusSpecificBox();
@@ -61,16 +61,16 @@ namespace SharpMP4
             audioSampleEntry.Children.Add(opusSpecificBox);
 
             opusSpecificBox._Version = 0; // Opus Specific Box version 0
-            opusSpecificBox._OutputChannelCount = this.ChannelCount;
-            opusSpecificBox._PreSkip = this.PreSkip;
-            opusSpecificBox._InputSampleRate = this.SamplingRate;
-            opusSpecificBox._OutputGain = this.OutputGain; // 8.8 fixed-point
-            opusSpecificBox._ChannelMappingFamily = this.ChannelMappingFamily;
-            opusSpecificBox._ChannelMappingTable = new ChannelMappingTable(this.ChannelCount)
+            opusSpecificBox._OutputChannelCount = ChannelCount;
+            opusSpecificBox._PreSkip = PreSkip;
+            opusSpecificBox._InputSampleRate = SamplingRate;
+            opusSpecificBox._OutputGain = OutputGain; // 8.8 fixed-point
+            opusSpecificBox._ChannelMappingFamily = ChannelMappingFamily;
+            opusSpecificBox._ChannelMappingTable = new ChannelMappingTable(ChannelCount)
             {
-                _StreamCount = this.StreamCount,
-                _CoupledCount = this.CoupledCount,
-                _ChannelMapping = this.ChannelMapping
+                _StreamCount = StreamCount,
+                _CoupledCount = CoupledCount,
+                _ChannelMapping = ChannelMapping
             };
 
             return audioSampleEntry;

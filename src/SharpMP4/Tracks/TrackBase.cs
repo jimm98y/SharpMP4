@@ -1,9 +1,10 @@
 ﻿using SharpISOBMFF;
+using SharpMP4.Builders;
 using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace SharpMP4
+namespace SharpMP4.Tracks
 {
     public abstract class TrackBase
     {
@@ -30,11 +31,11 @@ namespace SharpMP4
 
             _nextFragmentCreateStartTime = _nextFragmentCreateStartTime + SampleDuration;
 
-            if (Log.DebugEnabled) Log.Debug($"{this.HandlerType}: {_nextFragmentCreateStartTime / (double)Timescale}");
+            if (Log.DebugEnabled) Log.Debug($"{HandlerType}: {_nextFragmentCreateStartTime / (double)Timescale}");
 
             _samples.Enqueue(sample);
 
-            await _sink.NotifySampleAdded();
+            await _sink.NotifySampleAddedAsync();
         }
 
         public byte[] ReadSample()
@@ -49,12 +50,12 @@ namespace SharpMP4
 
         public void SetSink(IMp4Builder fmp4)
         {
-            this._sink = fmp4;
+            _sink = fmp4;
         }
 
         public bool ContainsEnoughSamples(ulong duration)
         {
-            return HasSamples() && (((ulong)_samples.Count * SampleDuration * 1000) >= duration);
+            return HasSamples() && (ulong)_samples.Count * SampleDuration * 1000 >= duration;
         }
 
         public bool HasSamples()

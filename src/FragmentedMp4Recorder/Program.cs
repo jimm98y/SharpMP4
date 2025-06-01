@@ -1,5 +1,7 @@
 ﻿using SharpISOBMFF;
 using SharpMP4;
+using SharpMP4.Builders;
+using SharpMP4.Tracks;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
