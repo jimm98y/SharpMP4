@@ -14,11 +14,11 @@ namespace SharpMP4.Builders
     /// </summary>
     public class Mp4Builder : IDisposable, IMp4Builder
     {
-        public uint MovieTimescale { get; set; } = 1000;
+        public uint MovieTimescale { get; set; } = 15360;
 
         private IMp4Output _output;
 
-        private readonly ulong _durationInMs;
+        private readonly ulong _durationInMs = 10000;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
@@ -78,7 +78,7 @@ namespace SharpMP4.Builders
                 mp4.Children.Add(ftyp);
 
                 ftyp.MajorBrand = IsoStream.FromFourCC("isom");
-                ftyp.MinorVersion = 1;
+                ftyp.MinorVersion = 512;
 
                 var compatibleBrands = new List<string>()
                 {
@@ -125,7 +125,7 @@ namespace SharpMP4.Builders
             moov.Children = new List<Box>();
             moov.Children.Add(mvhd);
             mvhd.Duration = _durationInMs * MovieTimescale / 1000;
-            mvhd.NextTrackID = 0xFFFFFFFF; // TODO simplify API
+            mvhd.NextTrackID = 2; // TODO 
             mvhd.Timescale = MovieTimescale; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
             mvhd.PreDefined = new uint[6]; // TODO simplify API
@@ -142,9 +142,25 @@ namespace SharpMP4.Builders
                 trak.Children.Add(tkhd);
                 tkhd.TrackID = _tracks[i].TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Duration = _durationInMs * MovieTimescale / 1000;
-                tkhd.Flags = 0x07;
+                tkhd.Duration = _durationInMs * _tracks[i].Timescale / 1000;
+                tkhd.Flags = 0x03;
                 _tracks[i].FillTkhdBox(tkhd);
+
+                // optional Edit Box
+                EditBox edts = new EditBox();
+                edts.SetParent(trak);
+                trak.Children.Add(edts);
+                edts.Children = new List<Box>();
+
+                EditListBox elst = new EditListBox();
+                elst.SetParent(edts);
+                edts.Children.Add(elst);
+                // TODO
+                elst.EditDuration = new ulong[] { _durationInMs };
+                elst.MediaTime = new long[] { 1024 };
+                elst.MediaRateInteger = new short[] { 1 };
+                elst.MediaRateFraction = new short[] { 0 };
+                elst.EntryCount = 1;
 
                 var mdia = new MediaBox();
                 mdia.SetParent(trak);
@@ -154,8 +170,8 @@ namespace SharpMP4.Builders
                 mdhd.SetParent(mdia);
                 mdia.Children = new List<Box>();
                 mdia.Children.Add(mdhd);
-                mdhd.Duration = 0;
-                mdhd.Timescale = _tracks[i].Timescale;
+                mdhd.Duration = _durationInMs * MovieTimescale / 1000;
+                mdhd.Timescale = MovieTimescale; // TODO: is this supposed ot be movie timescale, or track timescale?
                 mdhd.Language = _tracks[i].Language;
 
                 HandlerBox hdlr = new HandlerBox();

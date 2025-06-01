@@ -37,7 +37,7 @@ namespace SharpMP4.Tracks
         public Dictionary<ulong, PicParameterSetRbsp> Pps { get; set; } = new Dictionary<ulong, PicParameterSetRbsp>();
         public Dictionary<ulong, byte[]> PpsRaw { get; set; } = new Dictionary<ulong, byte[]>();
 
-        public override string HandlerName => HandlerNames.Video;
+        public override string HandlerName => "VideoHandler\0"; //HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "und";
 
@@ -249,8 +249,8 @@ namespace SharpMP4.Tracks
             visualSampleEntry.DataReferenceIndex = 1;
             visualSampleEntry.Depth = 24;
             visualSampleEntry.FrameCount = 1;
-            visualSampleEntry.Horizresolution = 72;
-            visualSampleEntry.Vertresolution = 72;
+            visualSampleEntry.Horizresolution = 72 << 16; // TODO simplify API
+            visualSampleEntry.Vertresolution = 72 << 16; // TODO simplify API
             visualSampleEntry.Width = (ushort)dim.Width;
             visualSampleEntry.Height = (ushort)dim.Height;
             visualSampleEntry.ReservedSampleEntry = new byte[6];
@@ -313,8 +313,8 @@ namespace SharpMP4.Tracks
         public override void FillTkhdBox(TrackHeaderBox tkhd)
         {
             var dim = CalculateDimensions(Sps.FirstOrDefault().Value);
-            tkhd.Width = dim.Width;
-            tkhd.Height = dim.Height;
+            tkhd.Width = dim.Width << 16; // TODO: simplify API
+            tkhd.Height = dim.Height << 16; // TODO: simplify API
         }
 
         public (uint Width, uint Height) CalculateDimensions(SeqParameterSetRbsp sps)
