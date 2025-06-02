@@ -205,9 +205,9 @@ namespace SharpMP4.Builders
                 trak.Children.Add(tkhd);
                 tkhd.TrackID = _tracks[i].TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Duration = _durationInMs * _tracks[i].Timescale / 1000; 
                 tkhd.Flags = 0x07;
                 _tracks[i].FillTkhdBox(tkhd);
+                tkhd.Duration = _durationInMs * MovieTimescale / 1000; 
 
                 var mdia = new MediaBox();
                 mdia.SetParent(trak);

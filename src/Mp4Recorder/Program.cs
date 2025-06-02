@@ -21,7 +21,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
     {
         using (Mp4Builder builder = new Mp4Builder(new SingleStreamOutput(output)))
         {
-            var videoTrack = new H265Track() { TimescaleOverride = 1000 };
+            var videoTrack = new H265Track() { TimescaleOverride = 15360 };
             builder.AddTrack(videoTrack);
 
             for (int t = 0; t < parsedMDAT.Count; t++)

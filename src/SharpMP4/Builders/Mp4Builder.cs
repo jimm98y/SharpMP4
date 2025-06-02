@@ -14,7 +14,7 @@ namespace SharpMP4.Builders
     /// </summary>
     public class Mp4Builder : IDisposable, IMp4Builder
     {
-        public uint MovieTimescale { get; set; } = 15360;
+        public uint MovieTimescale { get; set; } = 1000;
 
         private IMp4Output _output;
 
@@ -142,9 +142,9 @@ namespace SharpMP4.Builders
                 trak.Children.Add(tkhd);
                 tkhd.TrackID = _tracks[i].TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Duration = _durationInMs * _tracks[i].Timescale / 1000;
                 tkhd.Flags = 0x03;
                 _tracks[i].FillTkhdBox(tkhd);
+                tkhd.Duration = _durationInMs * MovieTimescale / 1000;
 
                 // optional Edit Box
                 EditBox edts = new EditBox();
@@ -170,8 +170,8 @@ namespace SharpMP4.Builders
                 mdhd.SetParent(mdia);
                 mdia.Children = new List<Box>();
                 mdia.Children.Add(mdhd);
-                mdhd.Duration = _durationInMs * MovieTimescale / 1000;
-                mdhd.Timescale = MovieTimescale; // TODO: is this supposed ot be movie timescale, or track timescale?
+                mdhd.Duration = _durationInMs * _tracks[i].Timescale / 1000;
+                mdhd.Timescale = _tracks[i].Timescale;
                 mdhd.Language = _tracks[i].Language;
 
                 HandlerBox hdlr = new HandlerBox();

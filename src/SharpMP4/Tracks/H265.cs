@@ -37,6 +37,12 @@ namespace SharpMP4.Tracks
         public Dictionary<ulong, PicParameterSetRbsp> Pps { get; set; } = new Dictionary<ulong, PicParameterSetRbsp>();
         public Dictionary<ulong, byte[]> PpsRaw { get; set; } = new Dictionary<ulong, byte[]>();
 
+        /// <summary>
+        /// Prefix SEI (Supplementary Enhancement Information) NAL units.
+        /// </summary>
+        public List<SeiRbsp> PrefixSei { get; set; } = new List<SeiRbsp>();
+        public List<byte[]> PrefixSeiRaw { get; set; } = new List<byte[]>();
+
         public override string HandlerName => "VideoHandler\0"; //HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "und";
@@ -146,6 +152,17 @@ namespace SharpMP4.Tracks
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT || nu.NalUnitHeader.NalUnitType == H265NALTypes.SUFFIX_SEI_NUT)
                 {
+                    if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT)
+                    {
+                        _context.SeiRbsp = new SeiRbsp();
+                        _context.SeiRbsp.Read(_context, stream);
+                        if (!PrefixSei.Contains(_context.SeiRbsp))
+                        {
+                            PrefixSei.Add(_context.SeiRbsp);
+                            PrefixSeiRaw.Add(sample);
+                        }
+                    }
+
                     if (_nalBufferContainsVCL)
                     {
                         await CreateSample();
@@ -271,21 +288,45 @@ namespace SharpMP4.Tracks
             hevcConfigurationBox._HEVCConfig.TemporalIdNested = sps.SpsTemporalIdNestingFlag != 0;
             hevcConfigurationBox._HEVCConfig.LengthSizeMinusOne = 3; // 4 bytes size block inserted in between NAL units
 
-            hevcConfigurationBox._HEVCConfig.Reserved4 = new bool[3];
-            hevcConfigurationBox._HEVCConfig.NumOfArrays = 3;
-            hevcConfigurationBox._HEVCConfig.ArrayCompleteness = new bool[3] { true, true, true };
-            hevcConfigurationBox._HEVCConfig.NumNalus = new ushort[3] { (ushort)VpsRaw.Count, (ushort)SpsRaw.Count, (ushort)PpsRaw.Count };
-            hevcConfigurationBox._HEVCConfig.NALUnitType = new byte[3] { (byte)H265NALTypes.VPS_NUT, (byte)H265NALTypes.SPS_NUT, (byte)H265NALTypes.PPS_NUT };
-            
+            int nalArrayCount = 3 + (PrefixSei.Count > 0 ? 1 : 0);
+
+            hevcConfigurationBox._HEVCConfig.Reserved4 = new bool[nalArrayCount];
+            hevcConfigurationBox._HEVCConfig.NumOfArrays = (byte)nalArrayCount;
+            hevcConfigurationBox._HEVCConfig.ArrayCompleteness = new bool[nalArrayCount];
+            for (int i = 0; i < nalArrayCount; i++) 
+            { 
+                hevcConfigurationBox._HEVCConfig.ArrayCompleteness[i] = true; 
+            }
+            hevcConfigurationBox._HEVCConfig.NumNalus = new ushort[nalArrayCount];
+            hevcConfigurationBox._HEVCConfig.NALUnitType = new byte[nalArrayCount];
+
+            hevcConfigurationBox._HEVCConfig.NumNalus[0] = (ushort)VpsRaw.Count;
+            hevcConfigurationBox._HEVCConfig.NumNalus[1] = (ushort)SpsRaw.Count;
+            hevcConfigurationBox._HEVCConfig.NumNalus[2] = (ushort)PpsRaw.Count;            
+            hevcConfigurationBox._HEVCConfig.NALUnitType[0] = (byte)H265NALTypes.VPS_NUT;
+            hevcConfigurationBox._HEVCConfig.NALUnitType[1] = (byte)H265NALTypes.SPS_NUT;
+            hevcConfigurationBox._HEVCConfig.NALUnitType[2] = (byte)H265NALTypes.PPS_NUT;        
+            if(PrefixSei.Count > 0)
+            {
+                hevcConfigurationBox._HEVCConfig.NumNalus[3] = (ushort)PrefixSei.Count;            
+                hevcConfigurationBox._HEVCConfig.NALUnitType[3] = (byte)H265NALTypes.PREFIX_SEI_NUT;        
+            }
+
             // correct order is VPS, SPS, PPS. Other order produced ffmpeg errors such as "VPS 0 does not exist" and "SPS 0 does not exist."
-            hevcConfigurationBox._HEVCConfig.NalUnit = new byte[3][][];
-            hevcConfigurationBox._HEVCConfig.NalUnitLength = new ushort[3][];
+            hevcConfigurationBox._HEVCConfig.NalUnit = new byte[nalArrayCount][][];
             hevcConfigurationBox._HEVCConfig.NalUnit[0] = new byte[VpsRaw.Count][];
             hevcConfigurationBox._HEVCConfig.NalUnit[1] = new byte[SpsRaw.Count][];
             hevcConfigurationBox._HEVCConfig.NalUnit[2] = new byte[PpsRaw.Count][];
+            hevcConfigurationBox._HEVCConfig.NalUnitLength = new ushort[nalArrayCount][];
             hevcConfigurationBox._HEVCConfig.NalUnitLength[0] = new ushort[VpsRaw.Count];
             hevcConfigurationBox._HEVCConfig.NalUnitLength[1] = new ushort[SpsRaw.Count];
             hevcConfigurationBox._HEVCConfig.NalUnitLength[2] = new ushort[PpsRaw.Count];
+            
+            if(PrefixSei.Count > 0)
+            {
+                hevcConfigurationBox._HEVCConfig.NalUnit[3] = new byte[PrefixSei.Count][];
+                hevcConfigurationBox._HEVCConfig.NalUnitLength[3] = new ushort[PrefixSei.Count];
+            }
 
             for (int i = 0; i < VpsRaw.Count; i++)
             {
@@ -304,7 +345,17 @@ namespace SharpMP4.Tracks
                 hevcConfigurationBox._HEVCConfig.NalUnit[2][i] = PpsRaw.Values.ElementAt(i);
                 hevcConfigurationBox._HEVCConfig.NalUnitLength[2][i] = (ushort)PpsRaw.Values.ElementAt(i).Length;
             }
-                        
+
+            if (PrefixSei.Count > 0)
+            {
+                // optional NALU 39
+                for (int i = 0; i < PrefixSei.Count; i++)
+                {
+                    hevcConfigurationBox._HEVCConfig.NalUnit[3][i] = PrefixSeiRaw.ElementAt(i);
+                    hevcConfigurationBox._HEVCConfig.NalUnitLength[3][i] = (ushort)PrefixSeiRaw.ElementAt(i).Length;
+                }
+            }
+
             visualSampleEntry.Children.Add(hevcConfigurationBox);
 
             return visualSampleEntry;
