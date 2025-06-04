@@ -23,7 +23,8 @@ namespace SharpMP4.Builders
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
-
+        private readonly ulong _fragmentCount;
+        private readonly ulong _maxFragmentLengthInMs = 1000;
         private bool _writeInitialization = true;
 
         /// <summary>
@@ -55,7 +56,10 @@ namespace SharpMP4.Builders
             {
                 for (int i = 0; i < _tracks.Count; i++)
                 {
-                    if (!_tracks[i].ContainsEnoughSamples(1)) // TODO: this should now return true for any sample
+                    ulong nextFragmentTime = _tracks[i].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1);
+                    ulong currentFragmentTime = _trackEndTimes[i] * 1000;
+
+                    if (!_tracks[i].ContainsEnoughSamples(nextFragmentTime - currentFragmentTime)) // TODO: this should now return true for any sample
                         return;
                 }
 
@@ -67,7 +71,7 @@ namespace SharpMP4.Builders
             }
         }
 
-        private async Task WriteSample()
+        private async Task WriteSample(bool isFlushing = false)
         {
             Mp4 mp4 = new Mp4();
 
@@ -104,8 +108,33 @@ namespace SharpMP4.Builders
 
                 await WriteMoovAsync(mp4);
 
+                _storage = TemporaryStorage.Factory.Create();
+                _mdat = new MediaDataBox();
+                _mdat.SetParent(mp4);
+                mp4.Children.Add(_mdat);
+
                 _writeInitialization = false;
             }
+
+            // TODO: review
+            for (int i = 0; i < _tracks.Count; i++)
+            {
+                ulong currentDuration = 0;
+
+                ulong currentMovieTimeMs = _tracks[i].Timescale * _maxFragmentLengthInMs * _fragmentCount;
+                ulong targetDurationMs = _tracks[i].Timescale * _maxFragmentLengthInMs;
+
+                while (((currentDuration + _trackEndTimes[i]) * 1000 < targetDurationMs + currentMovieTimeMs || isFlushing) && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
+                {
+                    var sample = _tracks[i].ReadSample();
+                    currentDuration += _tracks[i].SampleDuration;
+                    await _storage.WriteAsync(sample, 0, sample.Length);
+                }
+
+                _trackEndTimes[i] += currentDuration;
+            }
+
+            _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(((TemporaryMemory)_storage).Stream)); // TODO: Fix this ugly workaround!
 
             // write
             var fstr = await _output.GetStreamAsync(1);
@@ -256,12 +285,15 @@ namespace SharpMP4.Builders
                 stts.SampleCount = new uint[] { 300 };
                 stts.SampleDelta = new uint[] { 512 };
 
-                var stss = new SyncSampleBox();
-                stss.SetParent(stbl);
-                stbl.Children.Add(stss);
-                stss.SampleNumber = new uint[] { 1, 247 }; // TODO: hardcoded now!!!
-                stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
+                // this box is optional, let;s remove it for now
+                //var stss = new SyncSampleBox();
+                //stss.SetParent(stbl);
+                //stbl.Children.Add(stss);
+                //stss.SampleNumber = new uint[] { 1, 247 }; // TODO: hardcoded now!!!
+                //stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
 
+                // this box is optional, let's remove it for now (requires slice header parsing to get depends on/is dependent on
+                /*
                 var sdtp = new SampleDependencyTypeBox();
                 sdtp.SetParent(stbl);
                 stbl.Children.Add(sdtp);
@@ -270,6 +302,7 @@ namespace SharpMP4.Builders
                 sdtp.SampleDependsOn = new byte[300];
                 sdtp.SampleIsDependedOn = new byte[300];
                 sdtp.SampleHasRedundancy = new byte[300];
+                */
 
                 var ctts = new CompositionOffsetBox();
                 ctts.SetParent(stbl);
@@ -318,6 +351,8 @@ namespace SharpMP4.Builders
         #region IDisposable implementation
 
         private bool disposedValue;
+        private ITemporaryStorage _storage;
+        private MediaDataBox _mdat;
 
         protected virtual void Dispose(bool disposing)
         {

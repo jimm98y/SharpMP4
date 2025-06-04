@@ -185,6 +185,8 @@ namespace SharpMP4.Tracks
                         _nalBufferContainsVCL = true;
                     }
 
+
+
                     _nalBuffer.Add(sample);
                 }
             }
