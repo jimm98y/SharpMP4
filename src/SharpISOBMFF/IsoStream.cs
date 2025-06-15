@@ -715,6 +715,7 @@ namespace SharpISOBMFF
             if (value != null)
             {
                 value.SetBoxOffset(headerOffset);
+                value.Size = header.GetBoxSizeInBits() >> 3;
             }
 
             return size;
