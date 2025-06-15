@@ -170,7 +170,15 @@ namespace SharpMP4.Builders
                 trak.Children.Add(tkhd);
                 tkhd.TrackID = _tracks[i].TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Flags = 0x0F; // 0x1 0x2 0x4 0x8
+                if (_tracks[i].HandlerType == HandlerTypes.Video)
+                {
+                    // 0x1 - track enabled, 0x2 - track is used in the movie, 0x4 - track is used in movie's preview, 0x8 - track is used in movie poster
+                    tkhd.Flags = 0x01 | 0x02 | 0x04 | 0x08;
+                }
+                else
+                {
+                    tkhd.Flags = 0x01 | 0x02;
+                }
                 _tracks[i].FillTkhdBox(tkhd);
                 tkhd.Duration = movieDuration * MovieTimescale / 1000;
 
