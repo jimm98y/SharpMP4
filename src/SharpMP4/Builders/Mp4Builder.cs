@@ -3,7 +3,6 @@ using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -61,7 +60,7 @@ namespace SharpMP4.Builders
             {
                 ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1);
                 ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
-
+                var readSample = _tracks[(int)trackID - 1].ReadSample(); // remove sample from the queue
                 await WriteSample(trackID, sample);
             }
             finally
@@ -122,19 +121,14 @@ namespace SharpMP4.Builders
 
             var track = _tracks[(int)trackID - 1];
             ulong currentMovieTimeMs = track.Timescale * _maxFragmentLengthInMs * _fragmentCount;
-            ulong targetDurationMs = track.Timescale * _maxFragmentLengthInMs;
-
-            var readSample = track.ReadSample();            
+            ulong targetDurationMs = track.Timescale * _maxFragmentLengthInMs;            
             _sampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
-
-            await _storage.WriteAsync(readSample, 0, readSample.Length);
-
-            _sampleSizes[(int)trackID - 1].Add((uint)readSample.Length);
-
+            await _storage.WriteAsync(sample, 0, sample.Length);
+            _sampleSizes[(int)trackID - 1].Add((uint)sample.Length);
             _trackEndTimes[(int)trackID - 1] += track.SampleDuration;
         }
 
-        private async Task WriteMoovAsync(Mp4 mp4)
+        private void WriteMoov(Mp4 mp4)
         {
             var moov = new MovieBox();
             moov.SetParent(mp4);
@@ -271,9 +265,8 @@ namespace SharpMP4.Builders
                 var stts = new TimeToSampleBox();
                 stts.SetParent(stbl);
                 stbl.Children.Add(stts);
-                // TODO: hardcoded now!!!
                 stts.SampleCount = new uint[] { (uint)_sampleOffsets[i].Count };
-                stts.SampleDelta = new uint[] { (_tracks[i].HandlerType == HandlerTypes.Video) ? 512u : 1024u };
+                stts.SampleDelta = new uint[] { (uint)(_trackEndTimes[i] / (ulong)_sampleSizes[i].Count) };
                 stts.EntryCount = (uint)stts.SampleCount.Length;
 
                 if (_tracks[i].HandlerType == HandlerTypes.Video)
@@ -286,19 +279,13 @@ namespace SharpMP4.Builders
                     stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
                 }
 
-                //var ctts = new CompositionOffsetBox();
-                //ctts.SetParent(stbl);
-                //stbl.Children.Add(ctts);
-                // TODO: fill values
-
                 var stsc = new SampleToChunkBox();
                 stsc.SetParent(stbl);
                 stbl.Children.Add(stsc);
-
+                // defaults: 1 sample per chunk
                 stsc.FirstChunk = new uint[] { 1 };
                 stsc.SamplesPerChunk = new uint[] { 1 };
-                stsc.SampleDescriptionIndex = new uint[] { 1 };
-                
+                stsc.SampleDescriptionIndex = new uint[] { 1 };                
                 stsc.EntryCount = (uint)stsc.FirstChunk.Length;
 
                 var stsz = new SampleSizeBox();
@@ -326,7 +313,7 @@ namespace SharpMP4.Builders
             mp4.Children.Add(_mdat);
             _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(((TemporaryMemory)_storage).Stream)); // TODO: Fix this ugly workaround!
 
-            await WriteMoovAsync(mp4);
+            WriteMoov(mp4);
             var fstr = await _output.GetStreamAsync(1);
             var fragmentStream = new IsoStream(fstr);
             mp4.Write(fragmentStream);
