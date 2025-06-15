@@ -153,18 +153,18 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// Checks whether the AAC sample has ADTS header.
         /// </summary>
-        /// <param name="sample"></param>
-        /// <returns></returns>
+        /// <param name="sample">AAC sample bytes.</param>
+        /// <returns>true when the ADTS header is present, false otherwise.</returns>
         public static bool HasHeader(byte[] sample)
         {
             return sample.Length > 7 && sample[0] == 0xFF && sample[1] >> 4 == 0xF;
         }
 
         /// <summary>
-        /// Returns the length 
+        /// Returns the length of the ADTS header if present, 0 otherwise.
         /// </summary>
-        /// <param name="sample"></param>
-        /// <returns></returns>
+        /// <param name="sample">AAC sample bytes.</param>
+        /// <returns>Length in bytes of the ADTS header if present, 0 otherwise.</returns>
         public static int GetLength(byte[] sample)
         {
             if (!HasHeader(sample))
@@ -174,10 +174,10 @@ namespace SharpMP4.Tracks
         }
 
         /// <summary>
-        /// Read the header.
+        /// Reads the ADTS header.
         /// </summary>
         /// <param name="sample">AAC sample bytes.</param>
-        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the ADTS header is not present.</exception>
         public void Read(byte[] sample)
         {
             if (sample.Length <= 7)
