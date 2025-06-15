@@ -28,6 +28,7 @@ namespace SharpMP4.Builders
 
         private readonly List<List<uint>> _sampleSizes = new List<List<uint>>();
         private readonly List<List<uint>> _sampleOffsets = new List<List<uint>>();
+        private readonly List<List<uint>> _randomAccessPoints = new List<List<uint>>();
 
         /// <summary>
         /// Ctor.
@@ -48,11 +49,12 @@ namespace SharpMP4.Builders
             _trackEndTimes.Add(0);
             _sampleSizes.Add(new List<uint>());
             _sampleOffsets.Add(new List<uint>());
+            _randomAccessPoints.Add(new List<uint>());
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
             track.SetSink(this);
         }
 
-        public async Task NotifySampleAddedAsync(uint trackID, byte[] sample)
+        public async Task NotifySampleAddedAsync(uint trackID, byte[] sample, bool isRandomAccessPoint)
         {
             // make sure only 1 thread at a time can write
             await _semaphore.WaitAsync();
@@ -61,7 +63,7 @@ namespace SharpMP4.Builders
                 ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1);
                 ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
                 var readSample = _tracks[(int)trackID - 1].ReadSample(); // remove sample from the queue
-                await WriteSample(trackID, sample);
+                await WriteSample(trackID, sample, isRandomAccessPoint);
             }
             finally
             {
@@ -69,7 +71,7 @@ namespace SharpMP4.Builders
             }
         }
 
-        private async Task WriteSample(uint trackID, byte[] sample)
+        private async Task WriteSample(uint trackID, byte[] sample, bool isRandomAccessPoint)
         {
             Mp4 mp4 = new Mp4();
 
@@ -117,15 +119,16 @@ namespace SharpMP4.Builders
                 _writeInitialization = false;
             }
 
-            // TODO: review
-
             var track = _tracks[(int)trackID - 1];
-            ulong currentMovieTimeMs = track.Timescale * _maxFragmentLengthInMs * _fragmentCount;
-            ulong targetDurationMs = track.Timescale * _maxFragmentLengthInMs;            
             _sampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
             await _storage.WriteAsync(sample, 0, sample.Length);
             _sampleSizes[(int)trackID - 1].Add((uint)sample.Length);
             _trackEndTimes[(int)trackID - 1] += track.SampleDuration;
+
+            if(isRandomAccessPoint)
+            {
+                _randomAccessPoints[(int)trackID - 1].Add((uint)_sampleSizes[(int)trackID - 1].Count);
+            }    
         }
 
         private void WriteMoov(Mp4 mp4)
@@ -139,7 +142,7 @@ namespace SharpMP4.Builders
             moov.Children = new List<Box>();
             moov.Children.Add(mvhd);
             mvhd.Duration = _durationInMs * MovieTimescale / 1000;
-            mvhd.NextTrackID = 2; // TODO 
+            mvhd.NextTrackID = (uint)_tracks.Count + 2;
             mvhd.Timescale = MovieTimescale; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
             mvhd.PreDefined = new uint[6]; // TODO simplify API
@@ -159,22 +162,6 @@ namespace SharpMP4.Builders
                 tkhd.Flags = 0x0F; // 0x1 0x2 0x4 0x8
                 _tracks[i].FillTkhdBox(tkhd);
                 tkhd.Duration = _durationInMs * MovieTimescale / 1000;
-
-                // optional Edit Box
-                EditBox edts = new EditBox();
-                edts.SetParent(trak);
-                trak.Children.Add(edts);
-                edts.Children = new List<Box>();
-
-                EditListBox elst = new EditListBox();
-                elst.SetParent(edts);
-                edts.Children.Add(elst);
-                // TODO
-                elst.EditDuration = new ulong[] { _durationInMs };
-                elst.MediaTime = new long[] { 0 };
-                elst.MediaRateInteger = new short[] { 1 };
-                elst.MediaRateFraction = new short[] { 0 };
-                elst.EntryCount = 1;
 
                 var mdia = new MediaBox();
                 mdia.SetParent(trak);
@@ -275,7 +262,7 @@ namespace SharpMP4.Builders
                     var stss = new SyncSampleBox();
                     stss.SetParent(stbl);
                     stbl.Children.Add(stss);
-                    stss.SampleNumber = new uint[] { 1, }; // TODO: hardcoded now!!! 
+                    stss.SampleNumber = _randomAccessPoints[i].ToArray(); // TODO: hardcoded now!!! 
                     stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
                 }
 

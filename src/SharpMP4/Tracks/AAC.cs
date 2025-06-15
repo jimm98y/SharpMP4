@@ -58,7 +58,7 @@ namespace SharpMP4.Tracks
             ChannelConfiguration = channelConfiguration;
         }
 
-        public override Task ProcessSampleAsync(byte[] sample)
+        public override Task ProcessSampleAsync(byte[] sample, bool isRandomAccessPoint = false)
         {
             if (AdtsHeader.HasHeader(sample))
             {
@@ -69,7 +69,7 @@ namespace SharpMP4.Tracks
                 sample = sample.Skip(AdtsHeader.GetLength(sample)).ToArray();
             }
 
-            return base.ProcessSampleAsync(sample);
+            return base.ProcessSampleAsync(sample, false);
         }
 
         public override Box CreateSampleEntryBox()

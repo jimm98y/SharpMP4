@@ -24,7 +24,7 @@ namespace SharpMP4.Tracks
         public ConcurrentQueue<byte[]> _samples = new ConcurrentQueue<byte[]>();
         private IMp4Builder _sink;
 
-        public virtual async Task ProcessSampleAsync(byte[] sample)
+        public virtual async Task ProcessSampleAsync(byte[] sample, bool isRandomAccessPoint)
         {
             if (SampleDuration == 0)
                 throw new InvalidOperationException("SampleDuration must not be 0!");
@@ -35,7 +35,7 @@ namespace SharpMP4.Tracks
 
             _samples.Enqueue(sample);
 
-            await _sink.NotifySampleAddedAsync(TrackID, sample);
+            await _sink.NotifySampleAddedAsync(TrackID, sample, isRandomAccessPoint);
         }
 
         public byte[] ReadSample()

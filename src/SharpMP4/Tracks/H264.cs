@@ -24,7 +24,8 @@ namespace SharpMP4.Tracks
         public override string Language { get; set; } = "eng";
 
         private List<byte[]> _nalBuffer = new List<byte[]>();
-        private bool _nalBufferContainsVCL = false;
+        private bool _nalBufferContainsVCL = false; 
+        private bool _nalBufferContainsIDR = false;
 
         /// <summary>
         /// SPS (Sequence Parameter Set) NAL units.
@@ -74,7 +75,7 @@ namespace SharpMP4.Tracks
         /// </summary>
         /// <param name="sample">NAL bytes.</param>
         /// <returns><see cref="Task"/></returns>
-        public override async Task ProcessSampleAsync(byte[] sample)
+        public override async Task ProcessSampleAsync(byte[] sample, bool isRandomAccessPoint = false)
         {
             using (ItuStream stream = new ItuStream(new MemoryStream(sample)))
             {
@@ -139,8 +140,14 @@ namespace SharpMP4.Tracks
                 }
                 else
                 {
-                    if (nu.NalUnitType >= 1 && nu.NalUnitType <= 5)
+                    if (nu.NalUnitType >= H264NALTypes.SLICE && nu.NalUnitType <= H264NALTypes.IDR_SLICE)
                     {
+                        if (nu.NalUnitType == H264NALTypes.IDR_SLICE)
+                        {
+                            // keyframe
+                            _nalBufferContainsIDR = true;
+                        }
+
                         if ((sample[1] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
                         {
                             if (_nalBufferContainsVCL)
@@ -193,9 +200,10 @@ namespace SharpMP4.Tracks
 
             if (Log.DebugEnabled) Log.Debug($"AU: {_nalBuffer.Count}");
 
-            await base.ProcessSampleAsync(result.ToArray());
+            await base.ProcessSampleAsync(result.ToArray(), _nalBufferContainsIDR);
             _nalBuffer.Clear();
             _nalBufferContainsVCL = false;
+            _nalBufferContainsIDR = false;
         }
 
         public override Box CreateSampleEntryBox()

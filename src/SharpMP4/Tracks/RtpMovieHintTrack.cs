@@ -1,4 +1,5 @@
 ﻿using SharpISOBMFF;
+using System.Threading.Tasks;
 
 namespace SharpMP4.Tracks
 {
@@ -12,6 +13,11 @@ namespace SharpMP4.Tracks
 
         public RtpMovieHintTrack()
         {
+        }
+
+        public override Task ProcessSampleAsync(byte[] sample, bool isRandomAccessPoint = false)
+        {
+            return base.ProcessSampleAsync(sample, false);
         }
 
         public override Box CreateSampleEntryBox()
