@@ -77,7 +77,7 @@ namespace SharpMP4.Tracks
             AudioSpecificConfig audioSpecificConfig = new AudioSpecificConfig() 
             {
                 SamplingFrequencyIndex = (byte)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate],
-                ChannelConfiguration = ChannelCount
+                ChannelConfiguration = 6 // TODO: from the ADTS header
             };
             audioSpecificConfig.AudioObjectType = new GetAudioObjectType() { AudioObjectType = AAC_AUDIO_OBJECT_TYPE }; // TODO simplify API
             audioSpecificConfig._GASpecificConfig = new GASpecificConfig((int)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate], ChannelCount, AAC_AUDIO_OBJECT_TYPE);

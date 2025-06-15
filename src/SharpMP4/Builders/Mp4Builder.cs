@@ -276,24 +276,15 @@ namespace SharpMP4.Builders
                 stts.SampleDelta = new uint[] { (_tracks[i].HandlerType == HandlerTypes.Video) ? 512u : 1024u };
                 stts.EntryCount = (uint)stts.SampleCount.Length;
 
-                // this box is optional, let's remove it for now
-                //var stss = new SyncSampleBox();
-                //stss.SetParent(stbl);
-                //stbl.Children.Add(stss);
-                //stss.SampleNumber = new uint[] { 1, }; // TODO: hardcoded now!!!
-                //stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
-
-                // this box is optional, let's remove it for now (requires slice header parsing to get depends on/is dependent on
-                /*
-                var sdtp = new SampleDependencyTypeBox();
-                sdtp.SetParent(stbl);
-                stbl.Children.Add(sdtp);
-                // TODO: fill values
-                sdtp.IsLeading = new byte[300];
-                sdtp.SampleDependsOn = new byte[300];
-                sdtp.SampleIsDependedOn = new byte[300];
-                sdtp.SampleHasRedundancy = new byte[300];
-                */
+                if (_tracks[i].HandlerType == HandlerTypes.Video)
+                {
+                    // this box is optional, but it allows for seeking without picture artifacts
+                    var stss = new SyncSampleBox();
+                    stss.SetParent(stbl);
+                    stbl.Children.Add(stss);
+                    stss.SampleNumber = new uint[] { 1, }; // TODO: hardcoded now!!! 
+                    stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
+                }
 
                 //var ctts = new CompositionOffsetBox();
                 //ctts.SetParent(stbl);
@@ -304,18 +295,10 @@ namespace SharpMP4.Builders
                 stsc.SetParent(stbl);
                 stbl.Children.Add(stsc);
 
-                if (_tracks[i].HandlerType == HandlerTypes.Video)
-                {
-                    stsc.FirstChunk = new uint[] { 1 };
-                    stsc.SamplesPerChunk = new uint[] { 1 };
-                    stsc.SampleDescriptionIndex = new uint[] { 1 };
-                }
-                else
-                {
-                    stsc.FirstChunk =             new uint[] { 1, 2, 8, 9, 16, 17, 24, 25, 32, 33, 40, 41, 48, 49, 56, 57, 64, 65, 72, 73, 80, 81, 88, 89, 96, 97, 104, 105, 112, 113, 120, 121, 128, 129  };
-                    stsc.SamplesPerChunk =        new uint[] { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
-                    stsc.SampleDescriptionIndex = new uint[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-                }
+                stsc.FirstChunk = new uint[] { 1 };
+                stsc.SamplesPerChunk = new uint[] { 1 };
+                stsc.SampleDescriptionIndex = new uint[] { 1 };
+                
                 stsc.EntryCount = (uint)stsc.FirstChunk.Length;
 
                 var stsz = new SampleSizeBox();
