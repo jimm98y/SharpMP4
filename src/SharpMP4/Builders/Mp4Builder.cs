@@ -17,7 +17,6 @@ namespace SharpMP4.Builders
 
         private IMp4Output _output;
 
-        private readonly ulong _durationInMs = 5312; // TODO: remove hardcoded value
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private bool _disposedValue;
         private ITemporaryStorage _storage;
@@ -141,7 +140,19 @@ namespace SharpMP4.Builders
             mvhd.SetParent(moov);
             moov.Children = new List<Box>();
             moov.Children.Add(mvhd);
-            mvhd.Duration = _durationInMs * MovieTimescale / 1000;
+
+            // maximum duration of all the tracks
+            ulong movieDuration = 0;
+            for (int i = 0; i < _trackEndTimes.Count; i++)
+            {
+                ulong trackDuration = (ulong)Math.Ceiling(_trackEndTimes[i] * 1000 / (double)_tracks[i].Timescale);
+                if (trackDuration > movieDuration)
+                {
+                    movieDuration = trackDuration;
+                }
+            }
+
+            mvhd.Duration = movieDuration * MovieTimescale / 1000;
             mvhd.NextTrackID = (uint)_tracks.Count + 2;
             mvhd.Timescale = MovieTimescale; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
@@ -161,7 +172,7 @@ namespace SharpMP4.Builders
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
                 tkhd.Flags = 0x0F; // 0x1 0x2 0x4 0x8
                 _tracks[i].FillTkhdBox(tkhd);
-                tkhd.Duration = _durationInMs * MovieTimescale / 1000;
+                tkhd.Duration = movieDuration * MovieTimescale / 1000;
 
                 var mdia = new MediaBox();
                 mdia.SetParent(trak);
@@ -171,7 +182,7 @@ namespace SharpMP4.Builders
                 mdhd.SetParent(mdia);
                 mdia.Children = new List<Box>();
                 mdia.Children.Add(mdhd);
-                mdhd.Duration = _durationInMs * _tracks[i].Timescale / 1000;
+                mdhd.Duration = movieDuration * _tracks[i].Timescale / 1000;
                 mdhd.Timescale = _tracks[i].Timescale;
                 mdhd.Language = _tracks[i].Language;
 
