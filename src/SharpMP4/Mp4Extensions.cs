@@ -221,7 +221,12 @@ namespace SharpMP4
                 }
                 else if (inputMp4.Children[i] is MediaDataBox)
                 {
-                    mdat = (MediaDataBox)inputMp4.Children[i];
+                    var currentMdat = (MediaDataBox)inputMp4.Children[i];
+
+                    if (currentMdat.Size > 8)
+                    {
+                        mdat = currentMdat;
+                    }
                 }
                 else if (inputMp4.Children[i] is MetaBox)
                 {
@@ -235,8 +240,6 @@ namespace SharpMP4
                     if (moof != null)
                     {
                         // fmp4
-                        dts[(int)(videoTrackId - 1)] = 0;
-
                         IOrderedEnumerable<TrackRunBox> plan = moof.Children.OfType<TrackFragmentBox>().SelectMany(x => x.Children.OfType<TrackRunBox>()).OrderBy(x => x.DataOffset);
                         MovieExtendsBox mvex = moov.Children.OfType<MovieExtendsBox>().SingleOrDefault();
                         TrackExtendsBox trex = null;
@@ -337,86 +340,97 @@ namespace SharpMP4
                     }
                     else
                     {
-                        // mp4
-                        dts[(int)(videoTrackId - 1)] = 0;
-                        // audio_dts = 0; // TODO
-
-                        SampleTableBox sample_table_box = moov
-                            .Children.OfType<TrackBox>().First(x => x.Children.OfType<TrackHeaderBox>().Single().TrackID == videoTrackId)
-                            .Children.OfType<MediaBox>().Single()
-                            .Children.OfType<MediaInformationBox>().Single()
-                            .Children.OfType<SampleTableBox>().Single();
-                        ChunkOffsetBox chunk_offsets_box = sample_table_box.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
-                        ChunkLargeOffsetBox chunk_offsets_large_box = sample_table_box.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
-                        SampleToChunkBox sample_to_chunks = sample_table_box.Children.OfType<SampleToChunkBox>().Single();
-                        SampleSizeBox sample_size_box = sample_table_box.Children.OfType<SampleSizeBox>().Single();
-                        TimeToSampleBox time_to_sample_box = sample_table_box.Children.OfType<TimeToSampleBox>().Single();
-                        CompositionOffsetBox composition_offset_box = sample_table_box.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
-                        uint[] sampleSizes = sample_size_box.SampleSize > 0 ? Enumerable.Repeat(sample_size_box.SampleSize, (int)sample_size_box.SampleCount).ToArray() : sample_size_box.EntrySize;
-                        ulong[] chunkOffsets = chunk_offsets_box != null ? chunk_offsets_box.ChunkOffset.Select(x => (ulong)x).ToArray() : chunk_offsets_large_box.ChunkOffset;
-
-                        // https://developer.apple.com/documentation/quicktime-file-format/sample-to-chunk_atom/sample-to-chunk_table
-                        int s2c_index = 0;
-                        uint s2c_next_run = 0;
-                        uint s2c_samples_per_chunk = 0;
-
-                        int t2s_index = 0;
-                        uint t2s_next_run = 0;
-                        uint t2s_sample_delta = 0;
-
-                        int co_index = 0;
-                        uint co_next_run = 0;
-                        int co_sample_delta = 0;
-
-                        int sample_idx = 0;
-                        for (int k = 1; k <= chunkOffsets.Length; k++)
+                        foreach (var track in tracks)
                         {
-                            if (k >= s2c_next_run)
+                            // mp4
+                            uint trackId = track.Children.OfType<TrackHeaderBox>().Single().TrackID;
+
+                            SampleTableBox sample_table_box = track
+                                .Children.OfType<MediaBox>().Single()
+                                .Children.OfType<MediaInformationBox>().Single()
+                                .Children.OfType<SampleTableBox>().Single();
+                            ChunkOffsetBox chunk_offsets_box = sample_table_box.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
+                            ChunkLargeOffsetBox chunk_offsets_large_box = sample_table_box.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
+                            SampleToChunkBox sample_to_chunks = sample_table_box.Children.OfType<SampleToChunkBox>().Single();
+                            SampleSizeBox sample_size_box = sample_table_box.Children.OfType<SampleSizeBox>().Single();
+                            TimeToSampleBox time_to_sample_box = sample_table_box.Children.OfType<TimeToSampleBox>().Single();
+                            CompositionOffsetBox composition_offset_box = sample_table_box.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
+                            uint[] sampleSizes = sample_size_box.SampleSize > 0 ? Enumerable.Repeat(sample_size_box.SampleSize, (int)sample_size_box.SampleCount).ToArray() : sample_size_box.EntrySize;
+                            ulong[] chunkOffsets = chunk_offsets_box != null ? chunk_offsets_box.ChunkOffset.Select(x => (ulong)x).ToArray() : chunk_offsets_large_box.ChunkOffset;
+
+                            bool isVideo = trackId == videoTrackId;
+
+                            // https://developer.apple.com/documentation/quicktime-file-format/sample-to-chunk_atom/sample-to-chunk_table
+                            int s2c_index = 0;
+                            uint s2c_next_run = 0;
+                            uint s2c_samples_per_chunk = 0;
+
+                            int t2s_index = 0;
+                            uint t2s_next_run = 0;
+                            uint t2s_sample_delta = 0;
+
+                            int co_index = 0;
+                            uint co_next_run = 0;
+                            int co_sample_delta = 0;
+
+                            int sample_idx = 0;
+                            for (int k = 1; k <= chunkOffsets.Length; k++)
                             {
-                                s2c_samples_per_chunk = sample_to_chunks.SamplesPerChunk[s2c_index];
-                                s2c_index += 1;
-                                s2c_next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
-                            }
-
-                            long chunkOffset = (long)chunkOffsets[k - 1];
-
-                            // seek to the chunk offset
-                            mdat.Data.Stream.SeekFromBeginning(chunkOffset);
-
-                            // read samples in this chunk                            
-                            for (int l = 1; l <= s2c_samples_per_chunk; l++)
-                            {
-                                if (sample_idx >= t2s_next_run)
+                                if (k >= s2c_next_run)
                                 {
-                                    t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
-                                    t2s_next_run += (t2s_index < time_to_sample_box.SampleCount.Length) ? time_to_sample_box.SampleCount[t2s_index] : (uint)(chunkOffsets.Length + 1);
-                                    t2s_index += 1;
+                                    s2c_samples_per_chunk = sample_to_chunks.SamplesPerChunk[s2c_index];
+                                    s2c_index += 1;
+                                    s2c_next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
                                 }
 
-                                if (composition_offset_box != null && sample_idx >= co_next_run)
+                                long chunkOffset = (long)chunkOffsets[k - 1];
+
+                                // seek to the chunk offset
+                                mdat.Data.Stream.SeekFromBeginning(chunkOffset);
+
+                                // read samples in this chunk                            
+                                for (int l = 1; l <= s2c_samples_per_chunk; l++)
                                 {
-                                    co_sample_delta = composition_offset_box.Version == 0 ? (int)composition_offset_box.SampleOffset[co_index] : composition_offset_box.SampleOffset0[co_index];
-                                    co_next_run += (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
-                                    co_index += 1;
+                                    if (sample_idx >= t2s_next_run)
+                                    {
+                                        t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
+                                        t2s_next_run += (t2s_index < time_to_sample_box.SampleCount.Length) ? time_to_sample_box.SampleCount[t2s_index] : (uint)(chunkOffsets.Length + 1);
+                                        t2s_index += 1;
+                                    }
+
+                                    if (composition_offset_box != null && sample_idx >= co_next_run)
+                                    {
+                                        co_sample_delta = composition_offset_box.Version == 0 ? (int)composition_offset_box.SampleOffset[co_index] : composition_offset_box.SampleOffset0[co_index];
+                                        co_next_run += (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
+                                        co_index += 1;
+                                    }
+
+                                    uint sampleSize = sampleSizes[sample_idx++];
+
+                                    pts[trackId - 1] = dts[trackId - 1] + co_sample_delta;
+
+                                    if (isVideo)
+                                    {
+                                        try
+                                        {
+                                            var au = ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, dts[trackId - 1], pts[trackId - 1], t2s_sample_delta);
+                                            size += au.size;
+                                            ret[(int)(trackId - 1)].Add(au.naluList);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            SharpISOBMFF.Log.Error($"---Error (6) reading file, exception: {ex.Message}");
+                                            throw;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
+                                        ret[(int)(trackId - 1)][0].Add(sampleData);
+                                    }
+
+                                    dts[trackId - 1] += t2s_sample_delta;
                                 }
-
-                                uint sampleSize = sampleSizes[sample_idx++];
-
-                                pts[videoTrackId - 1] = dts[videoTrackId - 1] + co_sample_delta;
-
-                                try
-                                {
-                                    var au = ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, dts[videoTrackId - 1], pts[videoTrackId - 1], t2s_sample_delta);
-                                    size += au.size;
-                                    ret[(int)(videoTrackId - 1)].Add(au.naluList);
-                                }
-                                catch (Exception ex)
-                                {
-                                    SharpISOBMFF.Log.Error($"---Error (6) reading file, exception: {ex.Message}");
-                                    throw;
-                                }
-
-                                dts[videoTrackId - 1] += t2s_sample_delta;
                             }
                         }
                     }

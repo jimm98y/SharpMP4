@@ -60,7 +60,7 @@ namespace SharpMP4.Builders
             _moofTime.Add(new List<ulong>() { 0 }); // initial time is 0
         }
 
-        public async Task NotifySampleAddedAsync()
+        public async Task NotifySampleAddedAsync(uint trackID, byte[] sample)
         {
             // make sure only 1 thread at a time can write
             await _semaphore.WaitAsync();

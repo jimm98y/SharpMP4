@@ -18,7 +18,7 @@ namespace SharpMP4.Builders
 
         private IMp4Output _output;
 
-        private readonly ulong _durationInMs = 10000;
+        private readonly ulong _durationInMs = 5312;
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
@@ -26,6 +26,9 @@ namespace SharpMP4.Builders
         private readonly ulong _fragmentCount;
         private readonly ulong _maxFragmentLengthInMs = 1000;
         private bool _writeInitialization = true;
+
+        private readonly List<List<uint>> _sampleSizes = new List<List<uint>>();
+        private readonly List<List<uint>> _sampleOffsets = new List<List<uint>>();
 
         /// <summary>
         /// Ctor.
@@ -44,26 +47,22 @@ namespace SharpMP4.Builders
         {
             _tracks.Add(track);
             _trackEndTimes.Add(0);
+            _sampleSizes.Add(new List<uint>());
+            _sampleOffsets.Add(new List<uint>());
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
             track.SetSink(this);
         }
 
-        public async Task NotifySampleAddedAsync()
+        public async Task NotifySampleAddedAsync(uint trackID, byte[] sample)
         {
             // make sure only 1 thread at a time can write
             await _semaphore.WaitAsync();
             try
             {
-                for (int i = 0; i < _tracks.Count; i++)
-                {
-                    ulong nextFragmentTime = _tracks[i].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1);
-                    ulong currentFragmentTime = _trackEndTimes[i] * 1000;
+                ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1);
+                ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
 
-                    if (!_tracks[i].ContainsEnoughSamples(nextFragmentTime - currentFragmentTime)) // TODO: this should now return true for any sample
-                        return;
-                }
-
-                await WriteSample();
+                await WriteSample(trackID, sample);
             }
             finally
             {
@@ -71,7 +70,7 @@ namespace SharpMP4.Builders
             }
         }
 
-        private async Task WriteSample(bool isFlushing = false)
+        private async Task WriteSample(uint trackID, byte[] sample)
         {
             Mp4 mp4 = new Mp4();
 
@@ -106,41 +105,33 @@ namespace SharpMP4.Builders
                 //free.SetParent(mp4);
                 //mp4.Children.Add(free);
 
-                await WriteMoovAsync(mp4);
-
                 _storage = TemporaryStorage.Factory.Create();
                 _mdat = new MediaDataBox();
                 _mdat.SetParent(mp4);
-                mp4.Children.Add(_mdat);
+
+                // write
+                var fstr = await _output.GetStreamAsync(1);
+                var fragmentStream = new IsoStream(fstr);
+                _size = mp4.Write(fragmentStream) >> 3;
+                await _output.FlushAsync(fstr, 1);
 
                 _writeInitialization = false;
             }
 
             // TODO: review
-            for (int i = 0; i < _tracks.Count; i++)
-            {
-                ulong currentDuration = 0;
 
-                ulong currentMovieTimeMs = _tracks[i].Timescale * _maxFragmentLengthInMs * _fragmentCount;
-                ulong targetDurationMs = _tracks[i].Timescale * _maxFragmentLengthInMs;
+            var track = _tracks[(int)trackID - 1];
+            ulong currentMovieTimeMs = track.Timescale * _maxFragmentLengthInMs * _fragmentCount;
+            ulong targetDurationMs = track.Timescale * _maxFragmentLengthInMs;
 
-                while (((currentDuration + _trackEndTimes[i]) * 1000 < targetDurationMs + currentMovieTimeMs || isFlushing) && _tracks[i].HasSamples()) // HasSamples is necessary in case the synchronization of the tracks is not precisely aligned
-                {
-                    var sample = _tracks[i].ReadSample();
-                    currentDuration += _tracks[i].SampleDuration;
-                    await _storage.WriteAsync(sample, 0, sample.Length);
-                }
+            var readSample = track.ReadSample();            
+            _sampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
 
-                _trackEndTimes[i] += currentDuration;
-            }
+            await _storage.WriteAsync(readSample, 0, readSample.Length);
 
-            _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(((TemporaryMemory)_storage).Stream)); // TODO: Fix this ugly workaround!
+            _sampleSizes[(int)trackID - 1].Add((uint)readSample.Length);
 
-            // write
-            var fstr = await _output.GetStreamAsync(1);
-            var fragmentStream = new IsoStream(fstr);
-            mp4.Write(fragmentStream);
-            await _output.FlushAsync(fstr, 1);
+            _trackEndTimes[(int)trackID - 1] += track.SampleDuration;
         }
 
         private async Task WriteMoovAsync(Mp4 mp4)
@@ -171,7 +162,7 @@ namespace SharpMP4.Builders
                 trak.Children.Add(tkhd);
                 tkhd.TrackID = _tracks[i].TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                tkhd.Flags = 0x03;
+                tkhd.Flags = 0x0F; // 0x1 0x2 0x4 0x8
                 _tracks[i].FillTkhdBox(tkhd);
                 tkhd.Duration = _durationInMs * MovieTimescale / 1000;
 
@@ -186,7 +177,7 @@ namespace SharpMP4.Builders
                 edts.Children.Add(elst);
                 // TODO
                 elst.EditDuration = new ulong[] { _durationInMs };
-                elst.MediaTime = new long[] { 1024 };
+                elst.MediaTime = new long[] { 0 };
                 elst.MediaRateInteger = new short[] { 1 };
                 elst.MediaRateFraction = new short[] { 0 };
                 elst.EntryCount = 1;
@@ -281,15 +272,15 @@ namespace SharpMP4.Builders
                 stts.SetParent(stbl);
                 stbl.Children.Add(stts);
                 // TODO: hardcoded now!!!
-                stts.EntryCount = 1;
-                stts.SampleCount = new uint[] { 300 };
-                stts.SampleDelta = new uint[] { 512 };
+                stts.SampleCount = new uint[] { (uint)_sampleOffsets[i].Count };
+                stts.SampleDelta = new uint[] { (_tracks[i].HandlerType == HandlerTypes.Video) ? 512u : 1024u };
+                stts.EntryCount = (uint)stts.SampleCount.Length;
 
-                // this box is optional, let;s remove it for now
+                // this box is optional, let's remove it for now
                 //var stss = new SyncSampleBox();
                 //stss.SetParent(stbl);
                 //stbl.Children.Add(stss);
-                //stss.SampleNumber = new uint[] { 1, 247 }; // TODO: hardcoded now!!!
+                //stss.SampleNumber = new uint[] { 1, }; // TODO: hardcoded now!!!
                 //stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
 
                 // this box is optional, let's remove it for now (requires slice header parsing to get depends on/is dependent on
@@ -304,48 +295,59 @@ namespace SharpMP4.Builders
                 sdtp.SampleHasRedundancy = new byte[300];
                 */
 
-                var ctts = new CompositionOffsetBox();
-                ctts.SetParent(stbl);
-                stbl.Children.Add(ctts);
+                //var ctts = new CompositionOffsetBox();
+                //ctts.SetParent(stbl);
+                //stbl.Children.Add(ctts);
                 // TODO: fill values
 
                 var stsc = new SampleToChunkBox();
                 stsc.SetParent(stbl);
                 stbl.Children.Add(stsc);
-                // TODO: fill values
+
+                if (_tracks[i].HandlerType == HandlerTypes.Video)
+                {
+                    stsc.FirstChunk = new uint[] { 1 };
+                    stsc.SamplesPerChunk = new uint[] { 1 };
+                    stsc.SampleDescriptionIndex = new uint[] { 1 };
+                }
+                else
+                {
+                    stsc.FirstChunk =             new uint[] { 1, 2, 8, 9, 16, 17, 24, 25, 32, 33, 40, 41, 48, 49, 56, 57, 64, 65, 72, 73, 80, 81, 88, 89, 96, 97, 104, 105, 112, 113, 120, 121, 128, 129  };
+                    stsc.SamplesPerChunk =        new uint[] { 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 };
+                    stsc.SampleDescriptionIndex = new uint[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                }
+                stsc.EntryCount = (uint)stsc.FirstChunk.Length;
 
                 var stsz = new SampleSizeBox();
                 stsz.SetParent(stbl);
                 stbl.Children.Add(stsz);
-                // TODO: fill values
+                stsz.EntrySize = _sampleSizes[i].ToArray();
+                stsz.SampleCount = (uint)_sampleSizes[i].Count;
 
                 var stco = new ChunkOffsetBox();
                 stco.SetParent(stbl);
                 stbl.Children.Add(stco);
-                // TODO: fill values
+                stco.ChunkOffset = _sampleOffsets[i].ToArray();
+                stco.EntryCount = (uint)_sampleOffsets[i].Count;
             }
         }
 
-        public async Task FlushAsync()
-        {
-            // make sure only 1 thread at a time can write
-            await _semaphore.WaitAsync();
-            try
-            {
-                if (_tracks.FirstOrDefault(x => x.HasSamples()) != null)
-                {
-                    await WriteSample();
-                }
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
-
-        public Task FinalizeAsync()
+        public Task FlushAsync()
         {
             return Task.CompletedTask;
+        }
+
+        public async Task FinalizeAsync()
+        {
+            var mp4 = new Mp4();
+            mp4.Children.Add(_mdat);
+            _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(((TemporaryMemory)_storage).Stream)); // TODO: Fix this ugly workaround!
+
+            await WriteMoovAsync(mp4);
+            var fstr = await _output.GetStreamAsync(1);
+            var fragmentStream = new IsoStream(fstr);
+            mp4.Write(fragmentStream);
+            await _output.FlushAsync(fstr, 1);
         }
 
         #region IDisposable implementation
@@ -353,6 +355,7 @@ namespace SharpMP4.Builders
         private bool disposedValue;
         private ITemporaryStorage _storage;
         private MediaDataBox _mdat;
+        private ulong _size;
 
         protected virtual void Dispose(bool disposing)
         {

@@ -35,7 +35,7 @@ namespace SharpMP4.Tracks
 
             _samples.Enqueue(sample);
 
-            await _sink.NotifySampleAddedAsync();
+            await _sink.NotifySampleAddedAsync(TrackID, sample);
         }
 
         public byte[] ReadSample()

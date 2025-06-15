@@ -62,7 +62,7 @@ namespace SharpMP4.Tracks
             ES_Descriptor descriptor = new ES_Descriptor();
             descriptor.Children = new List<Descriptor>();
             esds._ES = descriptor;
-            descriptor.ESID = 0;
+            descriptor.ESID = (ushort)TrackID;
 
             DecoderConfigDescriptor decoderConfigDescriptor = new DecoderConfigDescriptor();
             decoderConfigDescriptor.SetParent(descriptor);

@@ -21,8 +21,11 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
     {
         using (Mp4Builder builder = new Mp4Builder(new SingleStreamOutput(output)))
         {
-            var videoTrack = new H265Track() { TimescaleOverride = 15360 };
+            var videoTrack = new H264Track() { TimescaleOverride = 12800 };
             builder.AddTrack(videoTrack);
+
+            var audioTrack = new AACTrack(2, 48000, 16);
+            builder.AddTrack(audioTrack);
 
             for (int t = 0; t < parsedMDAT.Count; t++)
             {
@@ -36,6 +39,17 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                             await videoTrack.ProcessSampleAsync(nal);
                         }
                     }
+                }
+                else if (t + 1 == inputAudioTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
+                {
+                    for (int i = 0; i < parsedTrack[0].Count; i++)
+                    {
+                        await audioTrack.ProcessSampleAsync(parsedTrack[0][i]);
+                    }
+                }
+                else
+                {
+                    // unknown track
                 }
             }
 
