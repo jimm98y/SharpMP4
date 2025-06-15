@@ -74,6 +74,7 @@ namespace SharpMP4.Tracks
         /// Process 1 NAL (Network Abstraction Layer) unit.
         /// </summary>
         /// <param name="sample">NAL bytes.</param>
+        /// <param name="isRandomAccessPoint">true if this is random access point (e.g. IDR frame).</param>
         /// <returns><see cref="Task"/></returns>
         public override async Task ProcessSampleAsync(byte[] sample, bool isRandomAccessPoint = false)
         {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SharpMP4.Tracks
 {
     /// <summary>
-    /// AAC Track. Supports AAC-LC (Low Complexity) only. Samples should be provided without ADTS header.
+    /// AAC Track. Supports AAC-LC (Low Complexity) only. Samples should be provided with or without ADTS header.
     /// </summary>
     public class AACTrack : TrackBase
     {

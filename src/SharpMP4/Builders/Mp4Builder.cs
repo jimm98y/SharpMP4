@@ -17,13 +17,15 @@ namespace SharpMP4.Builders
 
         private IMp4Output _output;
 
-        private readonly ulong _durationInMs = 5312;
+        private readonly ulong _durationInMs = 5312; // TODO: remove hardcoded value
         private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
+        private bool _disposedValue;
+        private ITemporaryStorage _storage;
+        private MediaDataBox _mdat;
+        private ulong _size;
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
-        private readonly ulong _fragmentCount;
-        private readonly ulong _maxFragmentLengthInMs = 1000;
         private bool _writeInitialization = true;
 
         private readonly List<List<uint>> _sampleSizes = new List<List<uint>>();
@@ -60,8 +62,6 @@ namespace SharpMP4.Builders
             await _semaphore.WaitAsync();
             try
             {
-                ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_fragmentCount + 1);
-                ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
                 var readSample = _tracks[(int)trackID - 1].ReadSample(); // remove sample from the queue
                 await WriteSample(trackID, sample, isRandomAccessPoint);
             }
@@ -182,7 +182,6 @@ namespace SharpMP4.Builders
                 hdlr.Name = new BinaryUTF8String(_tracks[i].HandlerName);
                 hdlr.Reserved = new uint[3]; // TODO simplify API
 
-                // minf
                 MediaInformationBox minf = new MediaInformationBox();
                 minf.SetParent(mdia);
                 mdia.Children.Add(minf);
@@ -218,7 +217,7 @@ namespace SharpMP4.Builders
                         throw new NotSupportedException(_tracks[i].HandlerType);
                 }
 
-                DataInformationBox dinf = new DataInformationBox();
+                var dinf = new DataInformationBox();
                 dinf.SetParent(minf);
                 minf.Children.Add(dinf);
                 dinf.Children = new List<Box>();
@@ -234,7 +233,7 @@ namespace SharpMP4.Builders
                 url.SetParent(dref);
                 dref.Children.Add(url);
 
-                SampleTableBox stbl = new SampleTableBox();
+                var stbl = new SampleTableBox();
                 stbl.SetParent(minf);
                 minf.Children.Add(stbl);
                 stbl.Children = new List<Box>();
@@ -309,21 +308,16 @@ namespace SharpMP4.Builders
 
         #region IDisposable implementation
 
-        private bool disposedValue;
-        private ITemporaryStorage _storage;
-        private MediaDataBox _mdat;
-        private ulong _size;
-
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
                     _semaphore.Dispose();
                 }
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 
