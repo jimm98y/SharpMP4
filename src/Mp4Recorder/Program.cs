@@ -35,7 +35,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                     {
                         foreach (var nal in parsedTrack[i])
                         {
-                            await videoTrack.ProcessSampleAsync(nal);
+                            await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
                         }
                     }
                 }
@@ -43,7 +43,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                 {
                     for (int i = 0; i < parsedTrack[0].Count; i++)
                     {
-                        await audioTrack.ProcessSampleAsync(parsedTrack[0][i]);
+                        await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack[0][i]);
                     }
                 }
                 else
@@ -52,8 +52,6 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                 }
             }
 
-            await videoTrack.FlushAsync();
-            await builder.FlushAsync();
             await builder.FinalizeAsync();
         }
     }

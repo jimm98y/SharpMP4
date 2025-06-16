@@ -644,7 +644,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                     if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
                         throw new Exception($"Failed to write NALu {nu.NalUnitType}");
                 }
-                else if (nu.NalUnitType == H264NALTypes.DPB) // 4
+                else if (nu.NalUnitType == H264NALTypes.DPC) // 4
                 {
                     SharpISOBMFF.Log.Debug($"NALU: 4, coded slice data partition C, {sampleData.Length} bytes");
                     context.SliceDataPartitioncLayerRbsp = new SliceDataPartitioncLayerRbsp();

@@ -63,7 +63,7 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                     {
                         foreach (var nal in parsedTrack[i])
                         {
-                            await videoTrack.ProcessSampleAsync(nal);
+                            await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
                         }
                     }
                 }
@@ -71,7 +71,7 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                 {
                     for (int i = 0; i < parsedTrack[0].Count; i++)
                     {
-                        await audioTrack.ProcessSampleAsync(parsedTrack[0][i]);
+                        await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack[0][i]);
                     }
                 }
                 else if (inputHintTracks.Select(x => x.Children.OfType<TrackHeaderBox>().Single().TrackID).Contains((uint)(t + 1)))
@@ -82,7 +82,7 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                         {
                             for (int i = 0; i < parsedTrack[0].Count; i++)
                             {
-                                await hints[j].ProcessSampleAsync(parsedTrack[0][i]);
+                                await builder.ProcessSampleAsync(hints[j].TrackID, parsedTrack[0][i]);
                             }
                         }
                     }
@@ -93,8 +93,6 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                 }
             }
 
-            await audioTrack.FlushAsync();
-            await videoTrack.FlushAsync();
             await builder.FlushAsync();
             await builder.FinalizeAsync();
         }

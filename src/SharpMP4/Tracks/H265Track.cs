@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using SharpH265;
 using SharpH26X;
 using SharpISOBMFF;
@@ -83,10 +82,26 @@ namespace SharpMP4.Tracks
         /// Process 1 NAL (Network Abstraction Layer) unit.
         /// </summary>
         /// <param name="sample">NAL bytes.</param>
-        /// <param name="isRandomAccessPoint">true if this is random access point (e.g. IDR frame).</param>
-        /// <returns><see cref="Task"/></returns>
-        public override async Task ProcessSampleAsync(byte[] sample, bool isRandomAccessPoint = false)
+        /// <param name="output">Returns a completed sample (1 AU) or null when no sample is currently available.</returns>
+        /// <param name="isRandomAccessPoint">true when the sample contains a keyframe.</param>
+        public override void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
         {
+            isRandomAccessPoint = _nalBufferContainsIDR;
+            output = null;
+
+            if (sample == null)
+            {
+                // flush the last AU
+                if (_nalBuffer.Count > 0 && _nalBufferContainsVCL)
+                {
+                    output = CreateSample(_nalBuffer);
+                    _nalBuffer.Clear();
+                    _nalBufferContainsVCL = false;
+                    _nalBufferContainsIDR = false;
+                }
+                return;
+            }
+
             using (ItuStream stream = new ItuStream(new MemoryStream(sample)))
             {
                 // https://www.bing.com/search?pglt=43&q=hevc+hvc1&cvid=a9d4d6d6a96a4cddb12f3d94ac802bdd&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEEUYPNIBCDMyMjhqMGoxqAIAsAIA&FORM=ANNTA1&PC=U531
@@ -97,7 +112,18 @@ namespace SharpMP4.Tracks
                 _context.NalHeader = nu;
                 ituSize += nu.Read(_context, stream);
 
-                if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT)
+                if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT)
+                {
+                    // access unit delimiter NAL unit with nuh_layer_id equal to 0(when present)
+                    if (_nalBufferContainsVCL && nu.NalUnitHeader.NuhLayerId == 0)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
+                }
+                else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT)
                 {
                     _context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
                     _context.SeqParameterSetRbsp.Read(_context, stream);
@@ -131,6 +157,15 @@ namespace SharpMP4.Tracks
                     {
                         SampleDuration = FrameTickOverride;
                     }
+
+                    // SPS NAL unit with nuh_layer_id equal to 0 (when present)
+                    if (_nalBufferContainsVCL && nu.NalUnitHeader.NuhLayerId == 0)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT)
                 {
@@ -141,6 +176,15 @@ namespace SharpMP4.Tracks
                         Pps.Add(_context.PicParameterSetRbsp.PpsPicParameterSetId, _context.PicParameterSetRbsp);
                         PpsRaw.Add(_context.PicParameterSetRbsp.PpsPicParameterSetId, sample);
                     }
+
+                    // PPS NAL unit with nuh_layer_id equal to 0 (when present)
+                    if (_nalBufferContainsVCL && nu.NalUnitHeader.NuhLayerId == 0)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT)
                 {
@@ -150,6 +194,15 @@ namespace SharpMP4.Tracks
                     {
                         Vps.Add(_context.VideoParameterSetRbsp.VpsVideoParameterSetId, _context.VideoParameterSetRbsp);
                         VpsRaw.Add(_context.VideoParameterSetRbsp.VpsVideoParameterSetId, sample);
+                    }
+
+                    // VPS NAL unit with nuh_layer_id equal to 0 (when present)
+                    if (_nalBufferContainsVCL && nu.NalUnitHeader.NuhLayerId == 0)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
                     }
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT || nu.NalUnitHeader.NalUnitType == H265NALTypes.SUFFIX_SEI_NUT)
@@ -165,12 +218,38 @@ namespace SharpMP4.Tracks
                         }
                     }
 
-                    if (_nalBufferContainsVCL)
+                    // Prefix SEI NAL unit with nuh_layer_id equal to 0 (when present)
+                    if (_nalBufferContainsVCL && nu.NalUnitHeader.NuhLayerId == 0)
                     {
-                        await CreateSample();
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
                     }
 
                     _nalBuffer.Add(sample);
+                }
+                else if(nu.NalUnitHeader.NalUnitType >= H265NALTypes.RSV_NVCL41 && nu.NalUnitHeader.NalUnitType <= H265NALTypes.RSV_NVCL44)
+                {
+                    // NAL units with nal_unit_type in the range of RSV_NVCL41..RSV_NVCL44 with nuh_layer_id equal to 0 (when present)
+                    if (_nalBufferContainsVCL && nu.NalUnitHeader.NuhLayerId == 0)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
+                }
+                else if (nu.NalUnitHeader.NalUnitType >= H265NALTypes.UNSPEC48 && nu.NalUnitHeader.NalUnitType <= H265NALTypes.UNSPEC55)
+                {
+                    // NAL units with nal_unit_type in the range of UNSPEC48..UNSPEC55 with nuh_layer_id equal to 0 (when present)
+                    if (_nalBufferContainsVCL && nu.NalUnitHeader.NuhLayerId == 0)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
                 }
                 else
                 {
@@ -182,11 +261,15 @@ namespace SharpMP4.Tracks
                             _nalBufferContainsIDR = true;
                         }
 
+                        // first VCL NAL unit of the coded picture shall have first_slice_segment_in_pic_flag equal to 1
                         if ((sample[2] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
                         {
                             if (_nalBufferContainsVCL)
                             {
-                                await CreateSample();
+                                output = CreateSample(_nalBuffer);
+                                _nalBuffer.Clear();
+                                _nalBufferContainsVCL = false;
+                                _nalBufferContainsIDR = false;
                             }
                         }
 
@@ -205,7 +288,6 @@ namespace SharpMP4.Tracks
             var vui = sps.VuiParameters;
             if (vui != null && vui.VuiTimingInfoPresentFlag != 0)
             {
-                // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
                 timescale = vui.VuiTimeScale;
                 frametick = vui.VuiNumUnitsInTick;
 
@@ -224,22 +306,10 @@ namespace SharpMP4.Tracks
             return (timescale, frametick);
         }
 
-        /// <summary>
-        /// Flush all remaining NAL units from the buffer.
-        /// </summary>
-        /// <returns><see cref="Task"/></returns>
-        public override async Task FlushAsync()
+        private byte[] CreateSample(List<byte[]> buffer)
         {
-            if (_nalBuffer.Count == 0 || !_nalBufferContainsVCL)
-                return;
-
-            await CreateSample();
-        }
-
-        private async Task CreateSample()
-        {
-            if (_nalBuffer.Count == 0)
-                return;
+            if (buffer.Count == 0)
+                return null;
 
             IEnumerable<byte> result = new byte[0];
 
@@ -259,10 +329,7 @@ namespace SharpMP4.Tracks
                 result = result.Concat(size).Concat(nal);
             }
 
-            await base.ProcessSampleAsync(result.ToArray(), _nalBufferContainsIDR);
-            _nalBuffer.Clear();
-            _nalBufferContainsVCL = false;
-            _nalBufferContainsIDR = false;
+            return result.ToArray();
         }
 
         public override Box CreateSampleEntryBox()

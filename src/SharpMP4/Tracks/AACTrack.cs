@@ -58,18 +58,28 @@ namespace SharpMP4.Tracks
             ChannelConfiguration = channelConfiguration;
         }
 
-        public override Task ProcessSampleAsync(byte[] sample, bool isRandomAccessPoint = false)
+        public override void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
         {
+            isRandomAccessPoint = true; // in case of audio it's implied, no need to signal it
+
+            if(sample == null)
+            {
+                output = null;
+                return;
+            }
+
             if (AdtsHeader.HasHeader(sample))
             {
                 //var header = new AdtsHeader();
                 //header.Read(sample);
 
                 // strip ADTS header
-                sample = sample.Skip(AdtsHeader.GetLength(sample)).ToArray();
+                output = sample.Skip(AdtsHeader.GetLength(sample)).ToArray();
             }
-
-            return base.ProcessSampleAsync(sample, false);
+            else
+            {
+                output = sample;
+            }
         }
 
         public override Box CreateSampleEntryBox()

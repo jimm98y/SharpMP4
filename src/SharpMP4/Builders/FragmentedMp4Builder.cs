@@ -54,7 +54,6 @@ namespace SharpMP4.Builders
             _tracks.Add(track);
             _trackEndTimes.Add(0);
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
-            track.SetSink(this);
 
             _moofOffsets.Add(new List<ulong>());
             _moofTime.Add(new List<ulong>() { 0 }); // initial time is 0
@@ -463,6 +462,11 @@ namespace SharpMP4.Builders
                 fmp4.Write(fragmentStream);
                 await _output.FlushAsync(fstr, _moofSequenceNumber);
             }
+        }
+
+        public Task ProcessSampleAsync(uint trackID, byte[] sample)
+        {
+            throw new NotImplementedException();
         }
 
         #region IDisposable implementation

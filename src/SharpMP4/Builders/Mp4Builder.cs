@@ -52,23 +52,7 @@ namespace SharpMP4.Builders
             _sampleOffsets.Add(new List<uint>());
             _randomAccessPoints.Add(new List<uint>());
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
-            track.SetSink(this);
-        }
-
-        public async Task NotifySampleAddedAsync(uint trackID, byte[] sample, bool isRandomAccessPoint)
-        {
-            // make sure only 1 thread at a time can write
-            await _semaphore.WaitAsync();
-            try
-            {
-                var readSample = _tracks[(int)trackID - 1].ReadSample(); // remove sample from the queue
-                await WriteSample(trackID, sample, isRandomAccessPoint);
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
+        }               
 
         private async Task WriteSample(uint trackID, byte[] sample, bool isRandomAccessPoint)
         {
@@ -127,7 +111,7 @@ namespace SharpMP4.Builders
             if(isRandomAccessPoint)
             {
                 _randomAccessPoints[(int)trackID - 1].Add((uint)_sampleSizes[(int)trackID - 1].Count);
-            }    
+            }
         }
 
         private void WriteMoov(Mp4 mp4)
@@ -307,13 +291,23 @@ namespace SharpMP4.Builders
             }
         }
 
-        public Task FlushAsync()
+        public async Task ProcessSampleAsync(uint trackID, byte[] sample)
         {
-            return Task.CompletedTask;
+            _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
+            if (processedSample != null)
+            {
+                await WriteSample(trackID, processedSample, isRandomAccessPoint);
+            }
         }
 
         public async Task FinalizeAsync()
         {
+            // flush all
+            foreach(var track in _tracks)
+            {
+                await ProcessSampleAsync(track.TrackID, null);
+            }
+
             var mp4 = new Mp4();
             mp4.Children.Add(_mdat);
             _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(((TemporaryMemory)_storage).Stream)); // TODO: Fix this ugly workaround!

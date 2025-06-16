@@ -1,6 +1,7 @@
 ﻿using SharpH264;
 using SharpH26X;
 using SharpISOBMFF;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,6 +27,21 @@ namespace SharpMP4.Tracks
         private List<byte[]> _nalBuffer = new List<byte[]>();
         private bool _nalBufferContainsVCL = false; 
         private bool _nalBufferContainsIDR = false;
+
+        // first VCL detection
+        private ulong last_frame_num;
+        private ulong last_pic_parameter_set_id;
+        private byte last_field_pic_flag;
+        private byte last_bottom_field_flag;
+        private uint last_nal_ref_idc;
+        private ulong last_pic_order_cnt_type;
+        private ulong last_pic_order_cnt_lsb;
+        private long last_delta_pic_order_cnt_bottom;
+        private long last_delta_pic_order_cnt0;
+        private long last_delta_pic_order_cnt1;
+        private uint last_IdrPicFlag;
+        private ulong last_idr_pic_id;
+        private bool last_filled = false;
 
         /// <summary>
         /// SPS (Sequence Parameter Set) NAL units.
@@ -74,10 +90,25 @@ namespace SharpMP4.Tracks
         /// Process 1 NAL (Network Abstraction Layer) unit.
         /// </summary>
         /// <param name="sample">NAL bytes.</param>
-        /// <param name="isRandomAccessPoint">true if this is random access point (e.g. IDR frame).</param>
-        /// <returns><see cref="Task"/></returns>
-        public override async Task ProcessSampleAsync(byte[] sample, bool isRandomAccessPoint = false)
+        /// <param name="isRandomAccessPoint">true when the sample contains a keyframe.</param>
+        public override void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
         {
+            isRandomAccessPoint = _nalBufferContainsIDR;
+            output = null;
+
+            if(sample == null)
+            {
+                // flush the last AU
+                if (_nalBuffer.Count > 0 && _nalBufferContainsVCL)
+                {
+                    output = CreateSample(_nalBuffer);
+                    _nalBuffer.Clear();
+                    _nalBufferContainsVCL = false;
+                    _nalBufferContainsIDR = false;
+                }
+                return;
+            }
+
             using (ItuStream stream = new ItuStream(new MemoryStream(sample)))
             {
                 ulong ituSize = 0;
@@ -85,7 +116,18 @@ namespace SharpMP4.Tracks
                 _context.NalHeader = nu;
                 ituSize += nu.Read(_context, stream);
 
-                if (nu.NalUnitType == H264NALTypes.SPS)
+                if(nu.NalUnitType == H264NALTypes.AUD)
+                {
+                    // access unit delimiter NAL unit(when present)
+                    if (_nalBufferContainsVCL)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
+                }
+                else if (nu.NalUnitType == H264NALTypes.SPS)
                 {
                     _context.SeqParameterSetRbsp = new SeqParameterSetRbsp();
                     _context.SeqParameterSetRbsp.Read(_context, stream);
@@ -119,6 +161,15 @@ namespace SharpMP4.Tracks
                     {
                         SampleDuration = FrameTickOverride;
                     }
+
+                    // sequence parameter set NAL unit (when present)
+                    if (_nalBufferContainsVCL)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
                 }
                 else if (nu.NalUnitType == H264NALTypes.PPS)
                 {
@@ -129,33 +180,148 @@ namespace SharpMP4.Tracks
                         Pps.Add(_context.PicParameterSetRbsp.PicParameterSetId, _context.PicParameterSetRbsp);
                         PpsRaw.Add(_context.PicParameterSetRbsp.PicParameterSetId, sample);
                     }
+
+                    // picture parameter set NAL unit (when present)
+                    if (_nalBufferContainsVCL)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
                 }
                 else if (nu.NalUnitType == H264NALTypes.SEI)
                 {
+                    // SEI NAL unit (when present)
                     if (_nalBufferContainsVCL)
                     {
-                        await CreateSample();
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
                     }
 
                     _nalBuffer.Add(sample);
+                }
+                else if(nu.NalUnitType >= H264NALTypes.PREFIX_NAL && nu.NalUnitType <= H264NALTypes.RESERVED1)
+                {
+                    // NAL units with nal_unit_type in the range of 14 to 18, inclusive (when present),
+                    if (_nalBufferContainsVCL)
+                    {
+                        output = CreateSample(_nalBuffer);
+                        _nalBuffer.Clear();
+                        _nalBufferContainsVCL = false;
+                        _nalBufferContainsIDR = false;
+                    }
                 }
                 else
                 {
                     if (nu.NalUnitType >= H264NALTypes.SLICE && nu.NalUnitType <= H264NALTypes.IDR_SLICE)
                     {
-                        if (nu.NalUnitType == H264NALTypes.IDR_SLICE)
+                        ulong frame_num;
+                        ulong pic_parameter_set_id;
+                        byte field_pic_flag;
+                        byte bottom_field_flag;
+                        uint nal_ref_idc;
+                        ulong pic_order_cnt_type;
+                        ulong pic_order_cnt_lsb;
+                        long delta_pic_order_cnt_bottom;
+                        long delta_pic_order_cnt0;
+                        long delta_pic_order_cnt1;
+                        uint IdrPicFlag;
+                        ulong idr_pic_id;
+
+                        SliceHeader sliceHeader;
+
+                        // first VCL NAL unit of a primary coded picture (always present)
+                        if (nu.NalUnitType == H264NALTypes.SLICE) // 1
+                        {
+                            _context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
+                            _context.SliceLayerWithoutPartitioningRbsp.Read(_context, stream);
+                            sliceHeader = _context.SliceLayerWithoutPartitioningRbsp.SliceHeader;
+                        }
+                        else if (nu.NalUnitType == H264NALTypes.DPA) // 2
+                        {
+                            _context.SliceDataPartitionaLayerRbsp = new SliceDataPartitionaLayerRbsp();
+                            _context.SliceDataPartitionaLayerRbsp.Read(_context, stream);
+                            sliceHeader = _context.SliceDataPartitionaLayerRbsp.SliceHeader;
+                        }
+                        else if (nu.NalUnitType == H264NALTypes.DPB) // 3
+                        {
+                            _context.SliceDataPartitionbLayerRbsp = new SliceDataPartitionbLayerRbsp();
+                            _context.SliceDataPartitionbLayerRbsp.Read(_context, stream);
+                            sliceHeader = _context.SliceDataPartitionaLayerRbsp.SliceHeader;
+                        }
+                        else if (nu.NalUnitType == H264NALTypes.DPC) // 4
+                        {
+                            _context.SliceDataPartitioncLayerRbsp = new SliceDataPartitioncLayerRbsp();
+                            _context.SliceDataPartitioncLayerRbsp.Read(_context, stream);
+                            sliceHeader = _context.SliceDataPartitionaLayerRbsp.SliceHeader;
+                        }
+                        else if (nu.NalUnitType == H264NALTypes.IDR_SLICE) // 5
                         {
                             // keyframe
                             _nalBufferContainsIDR = true;
+
+                            _context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
+                            _context.SliceLayerWithoutPartitioningRbsp.Read(_context, stream);
+                            sliceHeader = _context.SliceLayerWithoutPartitioningRbsp.SliceHeader;
+                        }
+                        else
+                        {
+                            throw new NotSupportedException();
                         }
 
-                        if ((sample[1] & 0x80) != 0) // https://stackoverflow.com/questions/69373668/ffmpeg-error-first-slice-in-a-frame-missing-when-decoding-h-265-stream
+                        frame_num = sliceHeader.FrameNum;
+                        pic_parameter_set_id = sliceHeader.PicParameterSetId;
+                        ulong seq_parameter_set_id = _context.PicParameterSets[pic_parameter_set_id].SeqParameterSetId;
+                        field_pic_flag = sliceHeader.FieldPicFlag;
+                        bottom_field_flag = sliceHeader.BottomFieldFlag;
+                        nal_ref_idc = nu.NalRefIdc;
+                        pic_order_cnt_type = _context.SeqParameterSets[seq_parameter_set_id].SeqParameterSetData.PicOrderCntType;
+                        pic_order_cnt_lsb = sliceHeader.PicOrderCntLsb;
+                        delta_pic_order_cnt_bottom = sliceHeader.DeltaPicOrderCntBottom;
+                        delta_pic_order_cnt0 = sliceHeader.DeltaPicOrderCnt[0];
+                        delta_pic_order_cnt1 = sliceHeader.DeltaPicOrderCnt[1];
+                        IdrPicFlag = _context.IdrPicFlag;
+                        idr_pic_id = sliceHeader.IdrPicId;
+                                               
+                        if (
+                            !last_filled ||
+                            (frame_num != last_frame_num) || // frame_num differs in value
+                            (pic_parameter_set_id != last_pic_parameter_set_id) || // pic_parameter_set_id differs in value
+                            (field_pic_flag != last_field_pic_flag) || // field_pic_flag differs in value
+                            (field_pic_flag != 0 && last_field_pic_flag != 0 && bottom_field_flag != last_bottom_field_flag) || // bottom_field_flag is present in both and differs in value
+                            ((nal_ref_idc == 0 || last_nal_ref_idc == 0) && nal_ref_idc != last_nal_ref_idc) || // nal_ref_idc differs in value with one of the nal_ref_idc values being equal to 0.
+                            (pic_order_cnt_type == 0 && last_pic_order_cnt_type == 0 && (pic_order_cnt_lsb != last_pic_order_cnt_lsb || delta_pic_order_cnt_bottom != last_delta_pic_order_cnt_bottom)) || // pic_order_cnt_type is equal to 0 for both and either pic_order_cnt_lsb differs in value, or delta_pic_order_cnt_bottom differs in value
+                            (pic_order_cnt_type == 1 && last_pic_order_cnt_type == 1 && (delta_pic_order_cnt0 != last_delta_pic_order_cnt0 || delta_pic_order_cnt1 != last_delta_pic_order_cnt1)) || // pic_order_cnt_type is equal to 1 for both and either delta_pic_order_cnt[ 0 ] differs in value, or delta_pic_order_cnt[ 1 ] differs in value
+                            (IdrPicFlag != last_IdrPicFlag) || // IdrPicFlag differs in value
+                            (IdrPicFlag == 1 && last_IdrPicFlag == 1 && idr_pic_id != last_idr_pic_id) // IdrPicFlag is equal to 1 for both and idr_pic_id differs in value
+                            )
                         {
                             if (_nalBufferContainsVCL)
                             {
-                                await CreateSample();
+                                output = CreateSample(_nalBuffer);
+                                _nalBuffer.Clear();
+                                isRandomAccessPoint = _nalBufferContainsIDR;
+                                _nalBufferContainsVCL = false;
+                                _nalBufferContainsIDR = false;
                             }
                         }
+
+                        last_frame_num = frame_num;
+                        last_pic_parameter_set_id = pic_parameter_set_id; 
+                        last_field_pic_flag = field_pic_flag;
+                        last_bottom_field_flag = bottom_field_flag;
+                        last_nal_ref_idc = nal_ref_idc;
+                        last_pic_order_cnt_type = pic_order_cnt_type;
+                        last_pic_order_cnt_lsb = pic_order_cnt_lsb;
+                        last_delta_pic_order_cnt_bottom = delta_pic_order_cnt_bottom;
+                        last_delta_pic_order_cnt0 = delta_pic_order_cnt0;
+                        last_delta_pic_order_cnt1 = delta_pic_order_cnt1;
+                        last_IdrPicFlag = IdrPicFlag;
+                        last_idr_pic_id = idr_pic_id;
+                        last_filled = true;
 
                         _nalBufferContainsVCL = true;
                     }
@@ -165,22 +331,10 @@ namespace SharpMP4.Tracks
             }
         }
 
-        /// <summary>
-        /// Flush all remaining NAL units from the buffer.
-        /// </summary>
-        /// <returns><see cref="Task"/></returns>
-        public override async Task FlushAsync()
+        private byte[] CreateSample(List<byte[]> buffer)
         {
-            if (_nalBuffer.Count == 0 || !_nalBufferContainsVCL)
-                return;
-
-            await CreateSample();
-        }
-
-        private async Task CreateSample()
-        {
-            if (_nalBuffer.Count == 0)
-                return;
+            if (buffer.Count == 0)
+                return null;
 
             IEnumerable<byte> result = new byte[0];
 
@@ -201,10 +355,7 @@ namespace SharpMP4.Tracks
 
             if (Log.DebugEnabled) Log.Debug($"AU: {_nalBuffer.Count}");
 
-            await base.ProcessSampleAsync(result.ToArray(), _nalBufferContainsIDR);
-            _nalBuffer.Clear();
-            _nalBufferContainsVCL = false;
-            _nalBufferContainsIDR = false;
+            return result.ToArray();
         }
 
         public override Box CreateSampleEntryBox()
