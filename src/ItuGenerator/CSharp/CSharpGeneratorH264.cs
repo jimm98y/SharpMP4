@@ -34,6 +34,8 @@ namespace ItuGenerator.CSharp
             {
                 case "chroma_format_idc":
                     return "1";
+                case "delta_pic_order_cnt":
+                    return "new long[2]"; // fixes default allocation missing
 
                 default:
                     return "";

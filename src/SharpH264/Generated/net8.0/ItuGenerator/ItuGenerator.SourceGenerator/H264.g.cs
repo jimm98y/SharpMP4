@@ -2342,7 +2342,7 @@ slice_header() {
 		public ulong PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
 		private long delta_pic_order_cnt_bottom;
 		public long DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
-		private long[] delta_pic_order_cnt;
+		private long[] delta_pic_order_cnt= new long[2];
 		public long[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
 		private ulong redundant_pic_cnt;
 		public ulong RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
@@ -9705,7 +9705,7 @@ slice_header_in_scalable_extension() {
 		public ulong PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
 		private long delta_pic_order_cnt_bottom;
 		public long DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
-		private long[] delta_pic_order_cnt;
+		private long[] delta_pic_order_cnt= new long[2];
 		public long[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
 		private ulong redundant_pic_cnt;
 		public ulong RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
@@ -18297,7 +18297,7 @@ slice_header_in_3davc_extension() {
 		public ulong PicOrderCntLsb { get { return pic_order_cnt_lsb; } set { pic_order_cnt_lsb = value; } }
 		private long delta_pic_order_cnt_bottom;
 		public long DeltaPicOrderCntBottom { get { return delta_pic_order_cnt_bottom; } set { delta_pic_order_cnt_bottom = value; } }
-		private long[] delta_pic_order_cnt;
+		private long[] delta_pic_order_cnt= new long[2];
 		public long[] DeltaPicOrderCnt { get { return delta_pic_order_cnt; } set { delta_pic_order_cnt = value; } }
 		private ulong redundant_pic_cnt;
 		public ulong RedundantPicCnt { get { return redundant_pic_cnt; } set { redundant_pic_cnt = value; } }
