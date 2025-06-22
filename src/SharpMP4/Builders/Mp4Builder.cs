@@ -14,7 +14,7 @@ namespace SharpMP4.Builders
     {
         public uint MovieTimescale { get; set; } = 1000;
 
-        private IMp4Output _output;
+        private readonly IMp4Output _output;
 
         private IStorage _storage;
         private MediaDataBox _mdat;
@@ -22,11 +22,11 @@ namespace SharpMP4.Builders
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
-        private bool _writeInitialization = true;
+        private readonly List<List<uint>> _trackSampleSizes = new List<List<uint>>();
+        private readonly List<List<uint>> _trackSampleOffsets = new List<List<uint>>();
+        private readonly List<List<uint>> _trackRandomAccessPoints = new List<List<uint>>();
 
-        private readonly List<List<uint>> _sampleSizes = new List<List<uint>>();
-        private readonly List<List<uint>> _sampleOffsets = new List<List<uint>>();
-        private readonly List<List<uint>> _randomAccessPoints = new List<List<uint>>();
+        private bool _writeInitialization = true;
 
         /// <summary>
         /// Ctor.
@@ -45,9 +45,9 @@ namespace SharpMP4.Builders
         {
             _tracks.Add(track);
             _trackEndTimes.Add(0);
-            _sampleSizes.Add(new List<uint>());
-            _sampleOffsets.Add(new List<uint>());
-            _randomAccessPoints.Add(new List<uint>());
+            _trackSampleSizes.Add(new List<uint>());
+            _trackSampleOffsets.Add(new List<uint>());
+            _trackRandomAccessPoints.Add(new List<uint>());
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
         }               
 
@@ -100,14 +100,14 @@ namespace SharpMP4.Builders
             }
 
             var track = _tracks[(int)trackID - 1];
-            _sampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
+            _trackSampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
             _storage.Write(sample, 0, sample.Length);
-            _sampleSizes[(int)trackID - 1].Add((uint)sample.Length);
+            _trackSampleSizes[(int)trackID - 1].Add((uint)sample.Length);
             _trackEndTimes[(int)trackID - 1] += track.SampleDuration;
 
             if(isRandomAccessPoint)
             {
-                _randomAccessPoints[(int)trackID - 1].Add((uint)_sampleSizes[(int)trackID - 1].Count);
+                _trackRandomAccessPoints[(int)trackID - 1].Add((uint)_trackSampleSizes[(int)trackID - 1].Count);
             }
         }
 
@@ -251,8 +251,8 @@ namespace SharpMP4.Builders
                 var stts = new TimeToSampleBox();
                 stts.SetParent(stbl);
                 stbl.Children.Add(stts);
-                stts.SampleCount = new uint[] { (uint)_sampleOffsets[i].Count };
-                stts.SampleDelta = new uint[] { (uint)(_trackEndTimes[i] / (ulong)_sampleSizes[i].Count) };
+                stts.SampleCount = new uint[] { (uint)_trackSampleOffsets[i].Count };
+                stts.SampleDelta = new uint[] { (uint)(_trackEndTimes[i] / (ulong)_trackSampleSizes[i].Count) };
                 stts.EntryCount = (uint)stts.SampleCount.Length;
 
                 if (_tracks[i].HandlerType == HandlerTypes.Video)
@@ -261,7 +261,7 @@ namespace SharpMP4.Builders
                     var stss = new SyncSampleBox();
                     stss.SetParent(stbl);
                     stbl.Children.Add(stss);
-                    stss.SampleNumber = _randomAccessPoints[i].ToArray(); // TODO: hardcoded now!!! 
+                    stss.SampleNumber = _trackRandomAccessPoints[i].ToArray(); // TODO: hardcoded now!!! 
                     stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
                 }
 
@@ -277,14 +277,14 @@ namespace SharpMP4.Builders
                 var stsz = new SampleSizeBox();
                 stsz.SetParent(stbl);
                 stbl.Children.Add(stsz);
-                stsz.EntrySize = _sampleSizes[i].ToArray();
-                stsz.SampleCount = (uint)_sampleSizes[i].Count;
+                stsz.EntrySize = _trackSampleSizes[i].ToArray();
+                stsz.SampleCount = (uint)_trackSampleSizes[i].Count;
 
                 var stco = new ChunkOffsetBox();
                 stco.SetParent(stbl);
                 stbl.Children.Add(stco);
-                stco.ChunkOffset = _sampleOffsets[i].ToArray();
-                stco.EntryCount = (uint)_sampleOffsets[i].Count;
+                stco.ChunkOffset = _trackSampleOffsets[i].ToArray();
+                stco.EntryCount = (uint)_trackSampleOffsets[i].Count;
             }
         }
 
@@ -299,7 +299,6 @@ namespace SharpMP4.Builders
 
         public async Task FinalizeAsync()
         {
-            // flush all
             foreach(var track in _tracks)
             {
                 await ProcessSampleAsync(track.TrackID, null);

@@ -30,24 +30,24 @@ namespace SharpMP4.Builders
     {
         public uint MovieTimescale { get; set; } = 1000;
 
-        private IMp4Output _output;
+        private readonly IMp4Output _output;
 
         private readonly ulong _maxFragmentLengthInMs;
-        private readonly ulong _durationInMs;
+        private readonly ulong _durationInMs = 0;
         private readonly bool _appendMovieFragmentRandomAccessBox;
 
         private readonly List<TrackBase> _tracks = new List<TrackBase>();
         private readonly List<ulong> _trackStartTimes = new List<ulong>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
-        private readonly List<List<uint>> _sampleSizes = new List<List<uint>>();
-
-        private readonly List<Queue<Mp4Fragment>> _readyFragments = new List<Queue<Mp4Fragment>>();
-        private List<uint> _trackFragmentCounts = new List<uint>();
+        private readonly List<List<uint>> _trackSampleSizes = new List<List<uint>>();
+        private readonly List<uint> _trackFragmentCounts = new List<uint>();
+        private readonly List<IStorage> _trackCurrentFragments = new List<IStorage>();
+        private readonly List<Queue<Mp4Fragment>> _trackReadyFragments = new List<Queue<Mp4Fragment>>();
+                
+        private readonly List<List<ulong>> _trackMoofOffsets = new List<List<ulong>>();
+        private readonly List<List<ulong>> _trackMoofTime = new List<List<ulong>>();
         
         private uint _moofSequenceNumber = 1;
-        private readonly List<List<ulong>> _moofOffsets = new List<List<ulong>>();
-        private readonly List<List<ulong>> _moofTime = new List<List<ulong>>();
-        private List<IStorage> _trackFragments = new List<IStorage>();
 
         /// <summary>
         /// Ctor.
@@ -74,17 +74,13 @@ namespace SharpMP4.Builders
             _trackStartTimes.Add(0);
             _trackEndTimes.Add(0);
             _trackFragmentCounts.Add(0);
-
-            _sampleSizes.Add(new List<uint>());
-
+            _trackSampleSizes.Add(new List<uint>());
             var storage = TemporaryStorage.Factory.Create();
-            _trackFragments.Add(storage);
-            _readyFragments.Add(new Queue<Mp4Fragment>());
-
+            _trackCurrentFragments.Add(storage);
+            _trackReadyFragments.Add(new Queue<Mp4Fragment>());
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
-
-            _moofOffsets.Add(new List<ulong>());
-            _moofTime.Add(new List<ulong>() { 0 }); // initial time is 0
+            _trackMoofOffsets.Add(new List<ulong>());
+            _trackMoofTime.Add(new List<ulong>() { 0 }); // initial time is 0
         }
 
         public async Task ProcessSampleAsync(uint trackID, byte[] sample)
@@ -92,8 +88,8 @@ namespace SharpMP4.Builders
             _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
             if (processedSample != null)
             {
-                _trackFragments[(int)trackID - 1].Write(processedSample, 0, processedSample.Length);
-                _sampleSizes[(int)trackID - 1].Add((uint)processedSample.Length);
+                _trackCurrentFragments[(int)trackID - 1].Write(processedSample, 0, processedSample.Length);
+                _trackSampleSizes[(int)trackID - 1].Add((uint)processedSample.Length);
                 _trackEndTimes[(int)trackID - 1] += _tracks[(int)trackID - 1].SampleDuration;
 
                 ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[(int)trackID - 1] + 1);
@@ -102,12 +98,12 @@ namespace SharpMP4.Builders
                 if (nextFragmentTime <= currentFragmentTime)
                 {
                     var fragment = CreateNewFragment(trackID);
-                    _readyFragments[(int)trackID - 1].Enqueue(fragment);
+                    _trackReadyFragments[(int)trackID - 1].Enqueue(fragment);
 
                     var storage = TemporaryStorage.Factory.Create();
-                    _trackFragments[(int)trackID - 1] = storage;
+                    _trackCurrentFragments[(int)trackID - 1] = storage;
                     _trackStartTimes[(int)trackID - 1] = _trackEndTimes[(int)trackID - 1];
-                    _sampleSizes[(int)trackID - 1].Clear();
+                    _trackSampleSizes[(int)trackID - 1].Clear();
                     _trackFragmentCounts[(int)trackID - 1]++;
                 }
             }
@@ -115,7 +111,7 @@ namespace SharpMP4.Builders
             bool isFragmentReady = true;
             for (int i = 0; i < _tracks.Count; i++)
             {
-                if (_readyFragments[i].Count == 0)
+                if (_trackReadyFragments[i].Count == 0)
                 {
                     isFragmentReady = false;
                     break;
@@ -129,7 +125,7 @@ namespace SharpMP4.Builders
 
         private Mp4Fragment CreateNewFragment(uint trackID)
         {
-            return new Mp4Fragment(_trackFragments[(int)trackID - 1], _trackStartTimes[(int)trackID - 1], _trackEndTimes[(int)trackID - 1], _sampleSizes[(int)trackID - 1].ToArray());
+            return new Mp4Fragment(_trackCurrentFragments[(int)trackID - 1], _trackStartTimes[(int)trackID - 1], _trackEndTimes[(int)trackID - 1], _trackSampleSizes[(int)trackID - 1].ToArray());
         }
 
         private async Task WriteFragmentAsync(bool isFlushing = false)
@@ -138,7 +134,7 @@ namespace SharpMP4.Builders
             if (_moofSequenceNumber == 1)
             {
                 Mp4 init = new Mp4();
-                await CreateMediaInitializationAsync(init);
+                CreateMediaInitializationAsync(init);
 
                 const uint initializationSegmentNumber = 0; // sequence ID 0 is used to indicate "initialization"
                 var str = await _output.GetStreamAsync(initializationSegmentNumber);
@@ -156,14 +152,14 @@ namespace SharpMP4.Builders
 
                     if (isFlushing)
                     {
-                        if (_readyFragments[i].Count > 0)
+                        if (_trackReadyFragments[i].Count > 0)
                         {
-                            fragment = _readyFragments[i].Dequeue();
+                            fragment = _trackReadyFragments[i].Dequeue();
                         }
-                        else if (_sampleSizes[i].Count > 0)
+                        else if (_trackSampleSizes[i].Count > 0)
                         {
                             fragment = CreateNewFragment((uint)i + 1);
-                            _sampleSizes[i].Clear();
+                            _trackSampleSizes[i].Clear();
                         }
                         else
                         {
@@ -172,7 +168,7 @@ namespace SharpMP4.Builders
                     }
                     else
                     {
-                        fragment = _readyFragments[i].Dequeue();
+                        fragment = _trackReadyFragments[i].Dequeue();
                     }
 
                     Mp4 fmp4 = new Mp4();
@@ -183,17 +179,17 @@ namespace SharpMP4.Builders
                     var outputStream = await _output.GetStreamAsync(sequenceNumber);
                     var fragmentStream = new IsoStream(outputStream);
 
-                    _moofOffsets[i].Add((ulong)fragmentStream.GetCurrentOffset());
-                    _moofTime[i].Add(fragment.EndTime);
+                    _trackMoofOffsets[i].Add((ulong)fragmentStream.GetCurrentOffset());
+                    _trackMoofTime[i].Add(fragment.EndTime);
 
                     fmp4.Write(fragmentStream);
                     await _output.FlushAsync(outputStream, sequenceNumber);
                 }
             }
-            while (isFlushing && (_readyFragments.Any(x => x.Count > 0) || _sampleSizes.Any(x => x.Count > 0)));
+            while (isFlushing && (_trackReadyFragments.Any(x => x.Count > 0) || _trackSampleSizes.Any(x => x.Count > 0)));
         }
 
-        private Task CreateMediaInitializationAsync(Mp4 fmp4)
+        private void CreateMediaInitializationAsync(Mp4 fmp4)
         {
             var ftyp = new FileTypeBox();
             ftyp.SetParent(fmp4);
@@ -358,7 +354,6 @@ namespace SharpMP4.Builders
             var mehd = new MovieExtendsHeaderBox();
             mehd.SetParent(mvex);
             mvex.Children.Add(mehd);
-
             mehd.FragmentDuration = _durationInMs * MovieTimescale / 1000;
 
             for (int i = 0; i < _tracks.Count; i++)
@@ -372,8 +367,6 @@ namespace SharpMP4.Builders
                 trex.DefaultSampleDuration = 0;
                 trex.DefaultSampleSize = 0;
             }
-
-            return Task.CompletedTask;
         }
 
         private void CreateMediaFragmentAsync(Mp4 fmp4, TrackBase track, Mp4Fragment fragment, uint sequenceNumber)
@@ -449,7 +442,7 @@ namespace SharpMP4.Builders
 
         public async Task FinalizeAsync()
         {
-            if (_trackFragments.Any(x => x.GetLength() > 0))
+            if (_trackCurrentFragments.Any(x => x.GetLength() > 0))
             {
                 await WriteFragmentAsync(true);
             }
@@ -476,13 +469,13 @@ namespace SharpMP4.Builders
                     tfra.LengthSizeOfTrunNum = 1;
                     tfra.TrackID = _tracks[i].TrackID;
 
-                    tfra.MoofOffset = _moofOffsets[i].ToArray();
-                    tfra.Time = _moofTime[i].ToArray();
-                    tfra.TrafNumber = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
-                    tfra.TrunNumber = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
-                    tfra.SampleDelta = _moofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                    tfra.MoofOffset = _trackMoofOffsets[i].ToArray();
+                    tfra.Time = _trackMoofTime[i].ToArray();
+                    tfra.TrafNumber = _trackMoofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                    tfra.TrunNumber = _trackMoofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                    tfra.SampleDelta = _trackMoofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
 
-                    tfra.NumberOfEntry = (uint)_moofOffsets[i].Count;
+                    tfra.NumberOfEntry = (uint)_trackMoofOffsets[i].Count;
                 }
 
                 var mfro = new MovieFragmentRandomAccessOffsetBox();
