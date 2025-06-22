@@ -7,27 +7,27 @@ using System.Threading.Tasks;
 
 namespace SharpMP4.Builders
 {
-    public class Mp4Fragment
-    {
-        public Mp4Fragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes)
-        {
-            this.Storage = storage;
-            this.StartTime = startTime;
-            this.EndTime = endTime;
-            this.SampleSizes = sampleSizes;
-        }
-
-        public ulong StartTime { get; set; }
-        public ulong EndTime { get; set; }
-        public uint[] SampleSizes { get; private set; }
-        public IStorage Storage { get; set; }
-    }
-
     /// <summary>
     /// Fragmented MP4 (fMP4) builder.
     /// </summary>
     public class FragmentedMp4Builder : IMp4Builder
     {
+        public class Mp4Fragment
+        {
+            public Mp4Fragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes)
+            {
+                this.Storage = storage;
+                this.StartTime = startTime;
+                this.EndTime = endTime;
+                this.SampleSizes = sampleSizes;
+            }
+
+            public ulong StartTime { get; set; }
+            public ulong EndTime { get; set; }
+            public uint[] SampleSizes { get; set; }
+            public IStorage Storage { get; set; }
+        }
+
         public uint MovieTimescale { get; set; } = 1000;
 
         private readonly IMp4Output _output;
