@@ -75,12 +75,11 @@ namespace SharpMP4.Builders
             _trackEndTimes.Add(0);
             _trackFragmentCounts.Add(0);
             _trackSampleSizes.Add(new List<uint>());
-            var storage = TemporaryStorage.Factory.Create();
-            _trackCurrentFragments.Add(storage);
+            _trackCurrentFragments.Add(TemporaryStorage.Factory.Create());
             _trackReadyFragments.Add(new Queue<Mp4Fragment>());
-            track.TrackID = (uint)_tracks.IndexOf(track) + 1;
             _trackMoofOffsets.Add(new List<ulong>());
             _trackMoofTime.Add(new List<ulong>() { 0 }); // initial time is 0
+            track.TrackID = (uint)_tracks.IndexOf(track) + 1;
         }
 
         public async Task ProcessSampleAsync(uint trackID, byte[] sample)
@@ -100,8 +99,7 @@ namespace SharpMP4.Builders
                     var fragment = CreateNewFragment(trackID);
                     _trackReadyFragments[(int)trackID - 1].Enqueue(fragment);
 
-                    var storage = TemporaryStorage.Factory.Create();
-                    _trackCurrentFragments[(int)trackID - 1] = storage;
+                    _trackCurrentFragments[(int)trackID - 1] = TemporaryStorage.Factory.Create();
                     _trackStartTimes[(int)trackID - 1] = _trackEndTimes[(int)trackID - 1];
                     _trackSampleSizes[(int)trackID - 1].Clear();
                     _trackFragmentCounts[(int)trackID - 1]++;
@@ -436,6 +434,7 @@ namespace SharpMP4.Builders
             trun.DataOffset = (int)offset;
                         
             var mdat = new MediaDataBox();
+            mdat.SetParent(fmp4);
             fmp4.Children.Add(mdat);
             mdat.Data = new StreamMarker(0, fragment.Storage.GetLength(), new IsoStream(fragment.Storage));
         }
