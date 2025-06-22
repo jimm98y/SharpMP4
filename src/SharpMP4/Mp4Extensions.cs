@@ -9,14 +9,6 @@ using SharpISOBMFF;
 
 namespace SharpMP4
 {
-    public enum VideoFormat
-    {
-        Unknown,
-        H264,
-        H265,
-        H266,
-    }
-
     public static class Mp4Extensions
     {
         public static IEnumerable<TrackBox> FindVideoTrack(this Container mp4)
@@ -75,7 +67,6 @@ namespace SharpMP4
 
             int nalLengthSize = 4;
             IItuContext context = null;
-            VideoFormat format = VideoFormat.Unknown;
 
             AVCConfigurationBox avcC = null;
             HEVCConfigurationBox hvcC = null;
@@ -120,7 +111,6 @@ namespace SharpMP4
                     if (avcC != null)
                     {
                         context = new H264Context();
-                        format = VideoFormat.H264;
 
                         nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
 
@@ -128,7 +118,7 @@ namespace SharpMP4
                         {
                             try
                             {
-                                //ParseNALU(context, format, spsBinary);
+                                //ParseNALU(context, spsBinary);
                                 ret[(int)(trackID - 1)][0].Add(spsBinary);
                             }
                             catch (Exception ex)
@@ -142,7 +132,7 @@ namespace SharpMP4
                         {
                             try
                             {
-                                //ParseNALU(context, format, ppsBinary);
+                                //ParseNALU(context, ppsBinary);
                                 ret[(int)(trackID - 1)][0].Add(ppsBinary);
                             }
                             catch (Exception ex)
@@ -155,7 +145,6 @@ namespace SharpMP4
                     else if (hvcC != null)
                     {
                         context = new H265Context();
-                        format = VideoFormat.H265;
 
                         nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
 
@@ -165,7 +154,7 @@ namespace SharpMP4
                             {
                                 try
                                 {
-                                    //ParseNALU(context, format, nalu);
+                                    //ParseNALU(context, nalu);
                                     ret[(int)(trackID - 1)][0].Add(nalu);
                                 }
                                 catch (Exception ex)
@@ -179,7 +168,6 @@ namespace SharpMP4
                     else if (vvcC != null)
                     {
                         context = new H266Context();
-                        format = VideoFormat.H266;
 
                         nalLengthSize = vvcC._VvcConfig._LengthSizeMinusOne + 1; // usually 4 bytes
 
@@ -189,7 +177,7 @@ namespace SharpMP4
                             {
                                 try
                                 {
-                                    //ParseNALU(context, format, nalu);
+                                    //ParseNALU(context, nalu);
                                     ret[(int)(trackID - 1)][0].Add(nalu);
                                 }
                                 catch (Exception ex)
@@ -310,7 +298,7 @@ namespace SharpMP4
                                 {
                                     try
                                     {
-                                        var au = ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, dts[(int)(trackID - 1)], pts[(int)(trackID - 1)], sampleDuration);
+                                        var au = ReadAU(nalLengthSize, context, mdat.Data, sampleSize, dts[(int)(trackID - 1)], pts[(int)(trackID - 1)], sampleDuration);
                                         size += au.size;
                                         ret[(int)(trackID - 1)].Add(au.naluList);
                                     }
@@ -410,7 +398,7 @@ namespace SharpMP4
                                     {
                                         try
                                         {
-                                            var au = ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, dts[trackID - 1], pts[trackID - 1], t2s_sample_delta);
+                                            var au = ReadAU(nalLengthSize, context, mdat.Data, sampleSize, dts[trackID - 1], pts[trackID - 1], t2s_sample_delta);
                                             size += au.size;
                                             ret[(int)(trackID - 1)].Add(au.naluList);
                                         }
@@ -439,7 +427,7 @@ namespace SharpMP4
             return ret;
         }
 
-        static (ulong size, List<byte[]> naluList) ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+        static (ulong size, List<byte[]> naluList) ReadAU(int nalLengthSize, IItuContext context, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
         {
             ulong size = 0;
             long offsetInBytes = 0;
@@ -465,7 +453,7 @@ namespace SharpMP4
 
                 size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData);
                 offsetInBytes += sampleData.Length;
-                //ParseNALU(context, format, sampleData);
+                //ParseNALU(context, sampleData);
                 naluList.Add(sampleData);
             } while (offsetInBytes < sampleSizeInBytes);
 
