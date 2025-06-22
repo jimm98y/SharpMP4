@@ -21,7 +21,7 @@ namespace SharpISOBMFF
         public IsoStream(IStorage stream, ITemporaryStorageFactory storageFactory = null)
         {
             _stream = stream;
-            _storageFactory = storageFactory ?? new TemporaryMemoryStorageFactory();
+            _storageFactory = storageFactory ?? TemporaryStorage.Factory;
         }
 
         private IsoStream GetOrCreateTemporaryStorage()

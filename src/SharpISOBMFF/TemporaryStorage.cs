@@ -3,6 +3,11 @@ using System.IO;
 
 namespace SharpISOBMFF
 {
+    public static class TemporaryStorage
+    {
+        public static ITemporaryStorageFactory Factory { get; set; } = new TemporaryMemoryStorageFactory();
+    }
+
     public interface ITemporaryStorageFactory
     {
         IStorage Create();

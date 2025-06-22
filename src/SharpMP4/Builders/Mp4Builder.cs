@@ -16,8 +16,7 @@ namespace SharpMP4.Builders
 
         private IMp4Output _output;
 
-        private bool _disposedValue;
-        private ITemporaryStorage _storage;
+        private IStorage _storage;
         private MediaDataBox _mdat;
         private ulong _size;
 
@@ -102,7 +101,7 @@ namespace SharpMP4.Builders
 
             var track = _tracks[(int)trackID - 1];
             _sampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
-            await _storage.WriteAsync(sample, 0, sample.Length);
+            _storage.Write(sample, 0, sample.Length);
             _sampleSizes[(int)trackID - 1].Add((uint)sample.Length);
             _trackEndTimes[(int)trackID - 1] += track.SampleDuration;
 
@@ -308,7 +307,7 @@ namespace SharpMP4.Builders
 
             var mp4 = new Mp4();
             mp4.Children.Add(_mdat);
-            _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(((TemporaryMemory)_storage).Stream)); // TODO: Fix this ugly workaround!
+            _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 
             WriteMoov(mp4);
             var fstr = await _output.GetStreamAsync(1);
