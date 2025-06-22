@@ -53,7 +53,7 @@ namespace SharpMP4.Builders
 
         private async Task WriteSample(uint trackID, byte[] sample, bool isRandomAccessPoint)
         {
-            Mp4 mp4 = new Mp4();
+            Container mp4 = new Container();
 
             if (_writeInitialization)
             {
@@ -111,7 +111,7 @@ namespace SharpMP4.Builders
             }
         }
 
-        private void WriteMoov(Mp4 mp4)
+        private void WriteMoov(Container mp4)
         {
             var moov = new MovieBox();
             moov.SetParent(mp4);
@@ -304,7 +304,7 @@ namespace SharpMP4.Builders
                 await ProcessSampleAsync(track.TrackID, null);
             }
 
-            var mp4 = new Mp4();
+            var mp4 = new Container();
             mp4.Children.Add(_mdat);
             _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 

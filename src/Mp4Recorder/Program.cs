@@ -10,7 +10,7 @@ SharpH26X.Log.SinkInfo = (o, e) => { };
 
 using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read))
 {
-    var mp4 = new Mp4();
+    var mp4 = new Container();
     mp4.Read(new IsoStream(inputFileStream));
 
     TrackBox inputVideoTrack = mp4.FindVideoTrack().First();

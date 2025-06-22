@@ -19,7 +19,7 @@ namespace SharpMP4
 
     public static class Mp4Extensions
     {
-        public static IEnumerable<TrackBox> FindVideoTrack(this Mp4 mp4)
+        public static IEnumerable<TrackBox> FindVideoTrack(this Container mp4)
         {
             return mp4.GetMovieBox().GetTracks()
                .Where(x =>
@@ -28,7 +28,7 @@ namespace SharpMP4
                      .HandlerType == IsoStream.FromFourCC(HandlerTypes.Video));
         }
 
-        public static IEnumerable<TrackBox> FindAudioTrack(this Mp4 mp4)
+        public static IEnumerable<TrackBox> FindAudioTrack(this Container mp4)
         {
             return mp4.GetMovieBox().GetTracks()
                 .Where(x =>
@@ -37,7 +37,7 @@ namespace SharpMP4
                      .HandlerType == IsoStream.FromFourCC(HandlerTypes.Sound));
         }
 
-        public static IEnumerable<TrackBox> FindHintTrack(this Mp4 mp4)
+        public static IEnumerable<TrackBox> FindHintTrack(this Container mp4)
         {
             return mp4.GetMovieBox().GetTracks()
                 .Where(x =>
@@ -46,7 +46,7 @@ namespace SharpMP4
                      .HandlerType == IsoStream.FromFourCC(HandlerTypes.Hint));
         }
 
-        public static MovieBox GetMovieBox(this Mp4 mp4)
+        public static MovieBox GetMovieBox(this Container mp4)
         {
             return mp4.Children.OfType<MovieBox>().Single();
         }
@@ -66,7 +66,7 @@ namespace SharpMP4
                 .Children.OfType<AudioSampleEntry>().Single();
         }
 
-        public static List<IList<IList<byte[]>>> ParseMdat(this Mp4 inputMp4)
+        public static List<IList<IList<byte[]>>> ParseMdat(this Container inputMp4)
         {
             List<IList<IList<byte[]>>> ret = new List<IList<IList<byte[]>>>();
 

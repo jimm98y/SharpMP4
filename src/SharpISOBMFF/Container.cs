@@ -4,9 +4,9 @@ using System.IO;
 
 namespace SharpISOBMFF
 {
-    public class Mp4 : IMp4Serializable
+    public class Container : IMp4Serializable
     {
-        public virtual string DisplayName { get { return nameof(Mp4); } }
+        public virtual string DisplayName { get { return nameof(Container); } }
         protected IMp4Serializable parent = null;
         public IMp4Serializable GetParent() { return parent; }
         public void SetParent(IMp4Serializable parent) { this.parent = parent; }

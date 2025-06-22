@@ -52,7 +52,7 @@ foreach (var file in files)
     {
         using (Stream inputFileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
-            var inputMp4 = new Mp4();
+            var inputMp4 = new Container();
             try
             {
                 inputMp4.Read(new IsoStream(inputFileStream));

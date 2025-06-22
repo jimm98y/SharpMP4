@@ -131,7 +131,7 @@ namespace SharpMP4.Builders
             // first check if we need to produce the media initialization segment
             if (_moofSequenceNumber == 1)
             {
-                Mp4 init = new Mp4();
+                Container init = new Container();
                 CreateMediaInitializationAsync(init);
 
                 const uint initializationSegmentNumber = 0; // sequence ID 0 is used to indicate "initialization"
@@ -169,7 +169,7 @@ namespace SharpMP4.Builders
                         fragment = _trackReadyFragments[i].Dequeue();
                     }
 
-                    Mp4 fmp4 = new Mp4();
+                    Container fmp4 = new Container();
                     uint sequenceNumber = _moofSequenceNumber++;
 
                     CreateMediaFragmentAsync(fmp4, _tracks[i], fragment, sequenceNumber);
@@ -187,7 +187,7 @@ namespace SharpMP4.Builders
             while (isFlushing && (_trackReadyFragments.Any(x => x.Count > 0) || _trackSampleSizes.Any(x => x.Count > 0)));
         }
 
-        private void CreateMediaInitializationAsync(Mp4 fmp4)
+        private void CreateMediaInitializationAsync(Container fmp4)
         {
             var ftyp = new FileTypeBox();
             ftyp.SetParent(fmp4);
@@ -367,7 +367,7 @@ namespace SharpMP4.Builders
             }
         }
 
-        private void CreateMediaFragmentAsync(Mp4 fmp4, TrackBase track, Mp4Fragment fragment, uint sequenceNumber)
+        private void CreateMediaFragmentAsync(Container fmp4, TrackBase track, Mp4Fragment fragment, uint sequenceNumber)
         {
             MovieFragmentBox moof = new MovieFragmentBox();
             moof.SetParent(fmp4);
@@ -448,7 +448,7 @@ namespace SharpMP4.Builders
 
             if (_appendMovieFragmentRandomAccessBox)
             {
-                Mp4 fmp4 = new Mp4();
+                Container fmp4 = new Container();
 
                 var mfra = new MovieFragmentRandomAccessBox();
                 mfra.SetParent(fmp4);
