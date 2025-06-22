@@ -17,7 +17,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
     TrackBox inputAudioTrack = mp4.FindAudioTrack().FirstOrDefault();
     var inputHintTracks = mp4.FindHintTrack();
 
-    var parsedMDAT = mp4.ParseMdat();
+    var parsedMDAT = mp4.Parse();
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {

@@ -293,14 +293,14 @@ namespace SharpMP4.Tracks
 
                 if (timescale == 0 || frametick == 0)
                 {
-                    if (Log.WarnEnabled) Log.Warn($"Invalid values in vui: timescale: {timescale} and frametick: {frametick}.");
+                    if (Log.WarnEnabled) Log.Warn($"{nameof(H265Track)}: Invalid values in vui: timescale: {timescale} and frametick: {frametick}.");
                     timescale = 0;
                     frametick = 0;
                 }
             }
             else
             {
-                if (Log.WarnEnabled) Log.Warn("Can't determine frame rate because SPS does not contain vuiParams");
+                if (Log.WarnEnabled) Log.Warn($"{nameof(H265Track)}: Can't determine frame rate because SPS does not contain vuiParams");
             }
 
             return (timescale, frametick);

@@ -352,7 +352,7 @@ namespace SharpMP4.Tracks
                 result = result.Concat(size).Concat(nal);
             }
 
-            if (Log.DebugEnabled) Log.Debug($"AU: {_nalBuffer.Count}");
+            if (Log.DebugEnabled) Log.Debug($"{nameof(H264Track)}: AU: {_nalBuffer.Count}");
 
             return result.ToArray();
         }
@@ -469,14 +469,14 @@ namespace SharpMP4.Tracks
 
                 if (timescale == 0 || frametick == 0)
                 {
-                    if (Log.WarnEnabled) Log.Warn($"Invalid values in vui: timescale: {timescale} and frametick: {frametick}.");
+                    if (Log.WarnEnabled) Log.Warn($"{nameof(H264Track)}: Invalid values in vui: timescale: {timescale} and frametick: {frametick}.");
                     timescale = 0;
                     frametick = 0;
                 }
             }
             else
             {
-                if (Log.WarnEnabled) Log.Warn("Can't determine frame rate because SPS does not contain vuiParams");
+                if (Log.WarnEnabled) Log.Warn($"{nameof(H264Track)}: Can't determine frame rate because SPS does not contain vuiParams");
             }
 
             return (timescale, frametick);

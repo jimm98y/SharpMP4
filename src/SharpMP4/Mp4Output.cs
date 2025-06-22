@@ -78,7 +78,7 @@ namespace SharpMP4
             }
             catch (Exception ex)
             {
-                if (Log.ErrorEnabled) Log.Error($"Failed to create file: {ex.Message}");
+                if (Log.ErrorEnabled) Log.Error($"{nameof(IMp4Output)}: Failed to create file: {ex.Message}");
                 throw;
             }
         }

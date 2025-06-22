@@ -66,7 +66,7 @@ namespace SharpMP4
                 .Children.OfType<AudioSampleEntry>().Single();
         }
 
-        public static List<IList<IList<byte[]>>> ParseMdat(this Container inputMp4)
+        public static List<IList<IList<byte[]>>> Parse(this Container inputMp4)
         {
             List<IList<IList<byte[]>>> ret = new List<IList<IList<byte[]>>>();
 
@@ -83,18 +83,24 @@ namespace SharpMP4
             if (inputMp4.Children.Count == 0)
                 return null;
 
-            var ftypBox = inputMp4.Children.OfType<FileTypeBox>().SingleOrDefault();
-            var movieBox = inputMp4.Children.OfType<MovieBox>().SingleOrDefault();
-            var tracks = movieBox.Children.OfType<TrackBox>();
+            var ftypBox = inputMp4.Children.OfType<FileTypeBox>().Single();
+            var movieBox = inputMp4.Children.OfType<MovieBox>().Single();
+            var tracks = movieBox.Children.OfType<TrackBox>().ToArray();
 
-            long[] dts = new long[tracks.Count()];
-            long[] pts = new long[tracks.Count()];
+            long[] dts = new long[tracks.Length];
+            long[] pts = new long[tracks.Length];
 
-            var videoTrack = inputMp4.FindVideoTrack().First();
+            var videoTrack = inputMp4.FindVideoTrack().FirstOrDefault();
+            if (videoTrack != null)
+            {
+                videoTrackId = videoTrack.Children.OfType<TrackHeaderBox>().First().TrackID;
+            }
+
             var audioTrack = inputMp4.FindAudioTrack().FirstOrDefault();
-            videoTrackId = videoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
-            if(audioTrack != null)
-                audioTrackId = audioTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
+            if (audioTrack != null)
+            {
+                audioTrackId = audioTrack.Children.OfType<TrackHeaderBox>().First().TrackID;
+            }
 
             var visualSample = videoTrack
                 .Children.OfType<MediaBox>().Single()
@@ -105,10 +111,12 @@ namespace SharpMP4
 
             avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
             hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
-            vvcC = visualSample.Children.OfType<VvcConfigurationBox>().SingleOrDefault();            
+            vvcC = visualSample.Children.OfType<VvcConfigurationBox>().SingleOrDefault();
 
-            foreach(var track in tracks)
+            foreach (var track in tracks)
+            {
                 ret.Add(new List<IList<byte[]>>() { new List<byte[]>() });
+            }
 
             if (avcC != null)
             {
@@ -126,7 +134,7 @@ namespace SharpMP4
                     }
                     catch (Exception ex)
                     {
-                        SharpISOBMFF.Log.Error($"---Error (1) reading file, exception: {ex.Message}");
+                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (1) reading file, exception: {ex.Message}");
                         throw;
                     }
                 }
@@ -140,7 +148,7 @@ namespace SharpMP4
                     }
                     catch (Exception ex)
                     {
-                        SharpISOBMFF.Log.Error($"---Error (2) reading file, exception: {ex.Message}");
+                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (2) reading file, exception: {ex.Message}");
                         throw;
                     }
                 }
@@ -163,7 +171,7 @@ namespace SharpMP4
                         }
                         catch (Exception ex)
                         {
-                            SharpISOBMFF.Log.Error($"---Error (3) reading file, exception: {ex.Message}");
+                            if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (3) reading file, exception: {ex.Message}");
                             throw;
                         }
                     }
@@ -187,7 +195,7 @@ namespace SharpMP4
                         }
                         catch (Exception ex)
                         {
-                            SharpISOBMFF.Log.Error($"---Error (4) reading file, exception: {ex.Message}");
+                            if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (4) reading file, exception: {ex.Message}");
                             throw;
                         }
                     }
@@ -196,7 +204,7 @@ namespace SharpMP4
             else
             {
                 //throw new NotSupportedException();
-                SharpISOBMFF.Log.Error($"Error reading file");
+                if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error reading file");
                 return null;
             }
 
@@ -258,7 +266,7 @@ namespace SharpMP4
                                 dts[trackId - 1] = (long)tfdt.BaseMediaDecodeTime;
                             }
 
-                            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
+                            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: TRUN: {(isVideo ? "video" : "audio")}");
 
                             var firstSampleFlags = trun.FirstSampleFlags;
                             if ((trun.Flags & 0x4) != 0x4)
@@ -316,7 +324,7 @@ namespace SharpMP4
                                     }
                                     catch (Exception ex)
                                     {
-                                        SharpISOBMFF.Log.Error($"---Error (5) reading file, exception: {ex.Message}");
+                                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (5) reading file, exception: {ex.Message}");
                                         throw;
                                     }
 
@@ -416,7 +424,7 @@ namespace SharpMP4
                                         }
                                         catch (Exception ex)
                                         {
-                                            SharpISOBMFF.Log.Error($"---Error (6) reading file, exception: {ex.Message}");
+                                            if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (6) reading file, exception: {ex.Message}");
                                             throw;
                                         }
                                     }
@@ -444,7 +452,7 @@ namespace SharpMP4
             ulong size = 0;
             long offsetInBytes = 0;
 
-            SharpISOBMFF.Log.Debug($"AU begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
+            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
             List<byte[]> naluList = new List<byte[]>();
 
@@ -456,7 +464,7 @@ namespace SharpMP4
 
                 if (nalUnitLength > (sampleSizeInBytes - offsetInBytes))
                 {
-                    SharpISOBMFF.Log.Error($"Invalid NALU size: {nalUnitLength}");
+                    if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Invalid NALU size: {nalUnitLength}");
                     nalUnitLength = (uint)(sampleSizeInBytes - offsetInBytes);
                     size += nalUnitLength;
                     offsetInBytes += nalUnitLength;
@@ -472,7 +480,7 @@ namespace SharpMP4
             if (offsetInBytes != sampleSizeInBytes)
                 throw new Exception("Mismatch!");
 
-            SharpISOBMFF.Log.Debug("AU end");
+            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU end");
 
             return (size, naluList);
         }
