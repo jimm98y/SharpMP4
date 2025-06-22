@@ -5,6 +5,9 @@ using SharpMP4.Tracks;
 using System.IO;
 using System.Linq;
 
+SharpH26X.Log.SinkDebug = (o, e) => { };
+SharpH26X.Log.SinkInfo = (o, e) => { };
+
 using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read))
 {
     var mp4 = new Mp4();
@@ -18,7 +21,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        using (Mp4Builder builder = new Mp4Builder(new SingleStreamOutput(output)))
+        Mp4Builder builder = new Mp4Builder(new SingleStreamOutput(output));
         {
             var videoTrack = new H264Track();
             builder.AddTrack(videoTrack);

@@ -3,7 +3,6 @@ using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SharpMP4.Builders
@@ -11,13 +10,12 @@ namespace SharpMP4.Builders
     /// <summary>
     /// MP4 builder.
     /// </summary>
-    public class Mp4Builder : IDisposable, IMp4Builder
+    public class Mp4Builder : IMp4Builder
     {
         public uint MovieTimescale { get; set; } = 1000;
 
         private IMp4Output _output;
 
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1);
         private bool _disposedValue;
         private ITemporaryStorage _storage;
         private MediaDataBox _mdat;
@@ -318,28 +316,5 @@ namespace SharpMP4.Builders
             mp4.Write(fragmentStream);
             await _output.FlushAsync(fstr, 1);
         }
-
-        #region IDisposable implementation
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    _semaphore.Dispose();
-                }
-
-                _disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion // IDisposable implementation
     }
 }
