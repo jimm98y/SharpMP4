@@ -83,12 +83,9 @@ namespace SharpMP4
             if (inputMp4.Children.Count == 0)
                 return null;
 
-            var ftypBox = inputMp4
-                .Children.OfType<FileTypeBox>().SingleOrDefault();
-            var movieBox = inputMp4
-                .Children.OfType<MovieBox>().SingleOrDefault();
-            var tracks = movieBox
-                .Children.OfType<TrackBox>();
+            var ftypBox = inputMp4.Children.OfType<FileTypeBox>().SingleOrDefault();
+            var movieBox = inputMp4.Children.OfType<MovieBox>().SingleOrDefault();
+            var tracks = movieBox.Children.OfType<TrackBox>();
 
             long[] dts = new long[tracks.Count()];
             long[] pts = new long[tracks.Count()];
@@ -454,23 +451,7 @@ namespace SharpMP4
             do
             {
                 uint nalUnitLength = 0;
-                switch (nalLengthSize)
-                {
-                    case 1:
-                        size += marker.Stream.ReadUInt8(size, (ulong)marker.Length, out nalUnitLength);
-                        break;
-                    case 2:
-                        size += marker.Stream.ReadUInt16(size, (ulong)marker.Length, out nalUnitLength);
-                        break;
-                    case 3:
-                        size += marker.Stream.ReadUInt24(size, (ulong)marker.Length, out nalUnitLength);
-                        break;
-                    case 4:
-                        size += marker.Stream.ReadUInt32(size, (ulong)marker.Length, out nalUnitLength);
-                        break;
-                    default:
-                        throw new Exception($"NAL unit length {nalLengthSize} not supported!");
-                }
+                size += marker.Stream.ReadVariableLengthSize((uint)nalLengthSize, out nalUnitLength);
                 offsetInBytes += nalLengthSize;
 
                 if (nalUnitLength > (sampleSizeInBytes - offsetInBytes))

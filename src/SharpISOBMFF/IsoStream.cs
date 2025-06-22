@@ -2128,6 +2128,60 @@ namespace SharpISOBMFF
 
         #endregion Proxy
 
+        #region MDAT
+
+        public ulong ReadVariableLengthSize(uint nalLengthSize, out uint nalUnitLength)
+        {
+            ulong size = 0;
+            switch (nalLengthSize)
+            {
+                case 1:
+                    size += ReadUInt8(size, ulong.MaxValue, out nalUnitLength);
+                    break;
+                case 2:
+                    size += ReadUInt16(size, ulong.MaxValue, out nalUnitLength);
+                    break;
+                case 3:
+                    size += ReadUInt24(size, ulong.MaxValue, out nalUnitLength);
+                    break;
+                case 4:
+                    size += ReadUInt32(size, ulong.MaxValue, out nalUnitLength);
+                    break;
+                default:
+                    throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+            }
+            return size;
+        }
+
+        public ulong WriteVariableLengthSize(uint nalLengthSize, uint nalUnitLength)
+        {
+            ulong size = 0;
+            switch (nalLengthSize)
+            {
+                case 1:
+                    if (nalUnitLength > byte.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                    size += WriteUInt8((byte)nalUnitLength);
+                    break;
+                case 2:
+                    if (nalUnitLength > ushort.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                    size += WriteUInt16(nalUnitLength);
+                    break;
+                case 3:
+                    if (nalUnitLength > 16777215) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                    size += WriteUInt24(nalUnitLength);
+                    break;
+                case 4:
+                    if (nalUnitLength > uint.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                    size += WriteUInt32(nalUnitLength);
+                    break;
+                default:
+                    throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+            }
+            return size;
+        }
+
+        #endregion // MDAT
+
         #region IDisposable
 
         protected virtual void Dispose(bool disposing)
