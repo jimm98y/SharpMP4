@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using SharpH264;
 using SharpH265;
@@ -58,152 +59,168 @@ namespace SharpMP4
                 .Children.OfType<AudioSampleEntry>().Single();
         }
 
-        public static List<IList<IList<byte[]>>> Parse(this Container inputMp4)
+
+        public class TrackParserContext
+        {
+            public IList<byte[]> VideoNALUs { get; set; } = new List<byte[]>();
+            public int NalLengthSize { get; set; } = 4;
+            public IList<byte[]> Samples { get; set; } = new List<byte[]>();
+        }
+
+        public class MdatParserContext
+        {
+            public TrackParserContext[] Tracks { get; set; }
+            public HashSet<uint> VideoTracks { get; set; } = new HashSet<uint>();
+            public HashSet<uint> AudioTracks { get; set; } = new HashSet<uint>();
+        }
+
+        public static MdatParserContext Parse(this Container inputMp4)
         {
             if (inputMp4.Children.Count == 0)
                 return null;
 
-            List<IList<IList<byte[]>>> ret = new List<IList<IList<byte[]>>>();
-
-            int nalLengthSize = 4;
             IItuContext context = null;
 
-            AVCConfigurationBox avcC = null;
-            HEVCConfigurationBox hvcC = null;
-            VvcConfigurationBox vvcC = null;
+            long[] dts = null;
+            long[] pts = null; 
 
-            FileTypeBox ftyp = inputMp4.Children.OfType<FileTypeBox>().Single();
-            MovieBox moov = inputMp4.Children.OfType<MovieBox>().Single();
-            TrackBox[] tracks = moov.Children.OfType<TrackBox>().ToArray();
-
-            long[] dts = new long[tracks.Length];
-            long[] pts = new long[tracks.Length];
-
-            List<uint> videoTracks = new List<uint>();
-            List<uint> audioTracks = new List<uint>();
-
-            foreach (var track in tracks)
-            {
-                ret.Add(new List<IList<byte[]>>() { new List<byte[]>() });
-
-                HandlerBox hdlr = track.Children.OfType<MediaBox>().Single().Children.OfType<HandlerBox>().Single();
-                uint trackID = track.Children.OfType<TrackHeaderBox>().First().TrackID;
-
-                if(hdlr.HandlerType == IsoStream.FromFourCC(HandlerTypes.Sound))
-                {
-                    audioTracks.Add(trackID);
-                }
-                else if (hdlr.HandlerType == IsoStream.FromFourCC(HandlerTypes.Video)) // is video?
-                {
-                    videoTracks.Add(trackID);
-
-                    var visualSample = track
-                        .Children.OfType<MediaBox>().Single()
-                        .Children.OfType<MediaInformationBox>().Single()
-                        .Children.OfType<SampleTableBox>().Single()
-                        .Children.OfType<SampleDescriptionBox>().Single()
-                        .Children.OfType<VisualSampleEntry>().Single();
-
-                    avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
-                    hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
-                    vvcC = visualSample.Children.OfType<VvcConfigurationBox>().SingleOrDefault();
-
-                    if (avcC != null)
-                    {
-                        context = new H264Context();
-
-                        nalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
-
-                        foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
-                        {
-                            try
-                            {
-                                //ParseNALU(context, spsBinary);
-                                ret[(int)(trackID - 1)][0].Add(spsBinary);
-                            }
-                            catch (Exception ex)
-                            {
-                                if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (1) reading file, exception: {ex.Message}");
-                                throw;
-                            }
-                        }
-
-                        foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
-                        {
-                            try
-                            {
-                                //ParseNALU(context, ppsBinary);
-                                ret[(int)(trackID - 1)][0].Add(ppsBinary);
-                            }
-                            catch (Exception ex)
-                            {
-                                if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (2) reading file, exception: {ex.Message}");
-                                throw;
-                            }
-                        }
-                    }
-                    else if (hvcC != null)
-                    {
-                        context = new H265Context();
-
-                        nalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
-
-                        foreach (var nalus in hvcC._HEVCConfig.NalUnit)
-                        {
-                            foreach (var nalu in nalus)
-                            {
-                                try
-                                {
-                                    //ParseNALU(context, nalu);
-                                    ret[(int)(trackID - 1)][0].Add(nalu);
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (3) reading file, exception: {ex.Message}");
-                                    throw;
-                                }
-                            }
-                        }
-                    }
-                    else if (vvcC != null)
-                    {
-                        context = new H266Context();
-
-                        nalLengthSize = vvcC._VvcConfig._LengthSizeMinusOne + 1; // usually 4 bytes
-
-                        foreach (var nalus in vvcC._VvcConfig.NalUnit)
-                        {
-                            foreach (var nalu in nalus)
-                            {
-                                try
-                                {
-                                    //ParseNALU(context, nalu);
-                                    ret[(int)(trackID - 1)][0].Add(nalu);
-                                }
-                                catch (Exception ex)
-                                {
-                                    if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (4) reading file, exception: {ex.Message}");
-                                    throw;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //throw new NotSupportedException();
-                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error reading file");
-                        return null;
-                    }
-                }
-            }
-
+            MdatParserContext ret = new MdatParserContext();
+            FileTypeBox ftyp = null;
+            MovieBox moov = null;
+            TrackBox[] tracks = null;
             MovieFragmentBox moof = null;
             MediaDataBox mdat = null;
             MetaBox meta = null;
             ulong size = 0;
+            
             for (int i = 0; i < inputMp4.Children.Count; i++)
             {
-                if (inputMp4.Children[i] is MovieFragmentBox)
+                if (inputMp4.Children[i] is FileTypeBox)
+                {
+                    ftyp = (FileTypeBox)inputMp4.Children[i];
+                }
+                else if (inputMp4.Children[i] is MovieBox)
+                {
+                    moov = (MovieBox)inputMp4.Children[i];
+                    ftyp = inputMp4.Children.OfType<FileTypeBox>().Single();
+                    tracks = moov.Children.OfType<TrackBox>().ToArray();
+
+                    ret.Tracks = new TrackParserContext[tracks.Length];
+                    dts = new long[tracks.Length];
+                    pts = new long[tracks.Length];
+
+                    foreach (var track in tracks)
+                    {
+                        HandlerBox hdlr = track.Children.OfType<MediaBox>().Single().Children.OfType<HandlerBox>().Single();
+                        uint trackID = track.Children.OfType<TrackHeaderBox>().First().TrackID;
+                        
+                        ret.Tracks[(int)(trackID - 1)] = new TrackParserContext();
+
+                        if (hdlr.HandlerType == IsoStream.FromFourCC(HandlerTypes.Sound))
+                        {
+                            ret.AudioTracks.Add(trackID);
+                        }
+                        else if (hdlr.HandlerType == IsoStream.FromFourCC(HandlerTypes.Video))
+                        {
+                            ret.VideoTracks.Add(trackID);
+
+                            VisualSampleEntry visualSample = track
+                                .Children.OfType<MediaBox>().Single()
+                                .Children.OfType<MediaInformationBox>().Single()
+                                .Children.OfType<SampleTableBox>().Single()
+                                .Children.OfType<SampleDescriptionBox>().Single()
+                                .Children.OfType<VisualSampleEntry>().Single();
+
+                            AVCConfigurationBox avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
+                            HEVCConfigurationBox hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                            VvcConfigurationBox vvcC = visualSample.Children.OfType<VvcConfigurationBox>().SingleOrDefault();
+
+                            if (avcC != null)
+                            {
+                                context = new H264Context();
+                                ret.Tracks[(int)(trackID - 1)].NalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+                                foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
+                                {
+                                    try
+                                    {
+                                        //ParseNALU(context, spsBinary);
+                                        ret.Tracks[(int)(trackID - 1)].VideoNALUs.Add(spsBinary);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (1) reading file, exception: {ex.Message}");
+                                        throw;
+                                    }
+                                }
+
+                                foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
+                                {
+                                    try
+                                    {
+                                        //ParseNALU(context, ppsBinary);
+                                        ret.Tracks[(int)(trackID - 1)].VideoNALUs.Add(ppsBinary);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (2) reading file, exception: {ex.Message}");
+                                        throw;
+                                    }
+                                }
+                            }
+                            else if (hvcC != null)
+                            {
+                                context = new H265Context();
+                                ret.Tracks[(int)(trackID - 1)].NalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+                                foreach (var nalus in hvcC._HEVCConfig.NalUnit)
+                                {
+                                    foreach (var nalu in nalus)
+                                    {
+                                        try
+                                        {
+                                            //ParseNALU(context, nalu);
+                                            ret.Tracks[(int)(trackID - 1)].VideoNALUs.Add(nalu);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (3) reading file, exception: {ex.Message}");
+                                            throw;
+                                        }
+                                    }
+                                }
+                            }
+                            else if (vvcC != null)
+                            {
+                                context = new H266Context();
+                                ret.Tracks[(int)(trackID - 1)].NalLengthSize = vvcC._VvcConfig._LengthSizeMinusOne + 1; // usually 4 bytes
+
+                                foreach (var nalus in vvcC._VvcConfig.NalUnit)
+                                {
+                                    foreach (var nalu in nalus)
+                                    {
+                                        try
+                                        {
+                                            //ParseNALU(context, nalu);
+                                            ret.Tracks[(int)(trackID - 1)].VideoNALUs.Add(nalu);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (4) reading file, exception: {ex.Message}");
+                                            throw;
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error reading file");
+                                return null;
+                            }
+                        }
+                    }
+                }
+                else if (inputMp4.Children[i] is MovieFragmentBox)
                 {
                     moof = (MovieFragmentBox)inputMp4.Children[i];
                 }
@@ -233,22 +250,20 @@ namespace SharpMP4
 
                         foreach (var trun in plan)
                         {
-                            var traf = trun.GetParent() as TrackFragmentBox;
-                            var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
-                            var tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
+                            TrackFragmentBox traf = trun.GetParent() as TrackFragmentBox;
+                            TrackFragmentBaseMediaDecodeTimeBox tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
+                            TrackFragmentHeaderBox tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
                             uint trackID = tfhd.TrackID;
 
                             TrackExtendsBox trex = mvex?.Children.OfType<TrackExtendsBox>().SingleOrDefault(x => x.TrackID == trackID);
 
-                            bool isVideo = videoTracks.Contains(trackID);
+                            bool isVideo = ret.VideoTracks.Contains(trackID);
                             if (tfdt != null)
                             {
                                 dts[trackID - 1] = (long)tfdt.BaseMediaDecodeTime;
                             }
 
-                            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: TRUN: {(isVideo ? "video" : "audio")}");
-
-                            var firstSampleFlags = trun.FirstSampleFlags;
+                            uint firstSampleFlags = trun.FirstSampleFlags;
                             if ((trun.Flags & 0x4) != 0x4)
                                 firstSampleFlags = tfhd.DefaultSampleFlags;
 
@@ -294,26 +309,8 @@ namespace SharpMP4
 
                                 pts[trackID - 1] = dts[trackID - 1] + sampleCompositionTime;
 
-                                if (isVideo)
-                                {
-                                    try
-                                    {
-                                        var au = ReadAU(nalLengthSize, context, mdat.Data, sampleSize, dts[(int)(trackID - 1)], pts[(int)(trackID - 1)], sampleDuration);
-                                        size += au.size;
-                                        ret[(int)(trackID - 1)].Add(au.naluList);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (5) reading file, exception: {ex.Message}");
-                                        throw;
-                                    }
-
-                                }
-                                else
-                                {
-                                    size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
-                                    ret[(int)(trackID - 1)][0].Add(sampleData);
-                                }
+                                size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
+                                ret.Tracks[(int)(trackID - 1)].Samples.Add(sampleData);
 
                                 dts[trackID - 1] += sampleDuration;
                             }
@@ -325,47 +322,47 @@ namespace SharpMP4
                     }
                     else
                     {
+                        // mp4
                         foreach (var track in tracks)
                         {
-                            // mp4
                             uint trackID = track.Children.OfType<TrackHeaderBox>().Single().TrackID;
 
-                            SampleTableBox sample_table_box = track
+                            SampleTableBox stbl = track
                                 .Children.OfType<MediaBox>().Single()
                                 .Children.OfType<MediaInformationBox>().Single()
                                 .Children.OfType<SampleTableBox>().Single();
-                            ChunkOffsetBox chunk_offsets_box = sample_table_box.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
-                            ChunkLargeOffsetBox chunk_offsets_large_box = sample_table_box.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
-                            SampleToChunkBox sample_to_chunks = sample_table_box.Children.OfType<SampleToChunkBox>().Single();
-                            SampleSizeBox sample_size_box = sample_table_box.Children.OfType<SampleSizeBox>().Single();
-                            TimeToSampleBox time_to_sample_box = sample_table_box.Children.OfType<TimeToSampleBox>().Single();
-                            CompositionOffsetBox composition_offset_box = sample_table_box.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
-                            uint[] sampleSizes = sample_size_box.SampleSize > 0 ? Enumerable.Repeat(sample_size_box.SampleSize, (int)sample_size_box.SampleCount).ToArray() : sample_size_box.EntrySize;
-                            ulong[] chunkOffsets = chunk_offsets_box != null ? chunk_offsets_box.ChunkOffset.Select(x => (ulong)x).ToArray() : chunk_offsets_large_box.ChunkOffset;
+                            ChunkOffsetBox stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
+                            ChunkLargeOffsetBox co64 = stbl.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
+                            SampleToChunkBox stsc = stbl.Children.OfType<SampleToChunkBox>().Single();
+                            SampleSizeBox stsz = stbl.Children.OfType<SampleSizeBox>().Single();
+                            TimeToSampleBox stts = stbl.Children.OfType<TimeToSampleBox>().Single();
+                            CompositionOffsetBox ctts = stbl.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
+                            uint[] sampleSizes = stsz.SampleSize > 0 ? Enumerable.Repeat(stsz.SampleSize, (int)stsz.SampleCount).ToArray() : stsz.EntrySize;
+                            ulong[] chunkOffsets = stco != null ? stco.ChunkOffset.Select(x => (ulong)x).ToArray() : co64.ChunkOffset;
 
-                            bool isVideo = videoTracks.Contains(trackID);
+                            bool isVideo = ret.VideoTracks.Contains(trackID);
 
                             // https://developer.apple.com/documentation/quicktime-file-format/sample-to-chunk_atom/sample-to-chunk_table
-                            int s2c_index = 0;
-                            uint s2c_next_run = 0;
-                            uint s2c_samples_per_chunk = 0;
+                            int stscIndex = 0;
+                            uint stscNextRun = 0;
+                            uint stscSamplesPerChunk = 0;
 
-                            int t2s_index = 0;
-                            uint t2s_next_run = 0;
-                            uint t2s_sample_delta = 0;
+                            int sttsIndex = 0;
+                            uint sttsNextRun = 0;
+                            uint sttsSampleDelta = 0;
 
-                            int co_index = 0;
-                            uint co_next_run = 0;
-                            int co_sample_delta = 0;
+                            int cttsIndex = 0;
+                            uint cttsNextRun = 0;
+                            int cttsSampleDelta = 0;
 
                             int sample_idx = 0;
                             for (int k = 1; k <= chunkOffsets.Length; k++)
                             {
-                                if (k >= s2c_next_run)
+                                if (k >= stscNextRun)
                                 {
-                                    s2c_samples_per_chunk = sample_to_chunks.SamplesPerChunk[s2c_index];
-                                    s2c_index += 1;
-                                    s2c_next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
+                                    stscSamplesPerChunk = stsc.SamplesPerChunk[stscIndex];
+                                    stscIndex += 1;
+                                    stscNextRun = (stscIndex < stsc.FirstChunk.Length) ? stsc.FirstChunk[stscIndex] : (uint)(chunkOffsets.Length + 1);
                                 }
 
                                 long chunkOffset = (long)chunkOffsets[k - 1];
@@ -374,47 +371,29 @@ namespace SharpMP4
                                 mdat.Data.Stream.SeekFromBeginning(chunkOffset);
 
                                 // read samples in this chunk                            
-                                for (int l = 1; l <= s2c_samples_per_chunk; l++)
+                                for (int l = 1; l <= stscSamplesPerChunk; l++)
                                 {
-                                    if (sample_idx >= t2s_next_run)
+                                    if (sample_idx >= sttsNextRun)
                                     {
-                                        t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
-                                        t2s_next_run += (t2s_index < time_to_sample_box.SampleCount.Length) ? time_to_sample_box.SampleCount[t2s_index] : (uint)(chunkOffsets.Length + 1);
-                                        t2s_index += 1;
+                                        sttsSampleDelta = stts.SampleDelta[sttsIndex];
+                                        sttsNextRun += (sttsIndex < stts.SampleCount.Length) ? stts.SampleCount[sttsIndex] : (uint)(chunkOffsets.Length + 1);
+                                        sttsIndex += 1;
                                     }
 
-                                    if (composition_offset_box != null && sample_idx >= co_next_run)
+                                    if (ctts != null && sample_idx >= cttsNextRun)
                                     {
-                                        co_sample_delta = composition_offset_box.Version == 0 ? (int)composition_offset_box.SampleOffset[co_index] : composition_offset_box.SampleOffset0[co_index];
-                                        co_next_run += (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
-                                        co_index += 1;
+                                        cttsSampleDelta = ctts.Version == 0 ? (int)ctts.SampleOffset[cttsIndex] : ctts.SampleOffset0[cttsIndex];
+                                        cttsNextRun += (cttsIndex < ctts.SampleCount.Length) ? ctts.SampleCount[cttsIndex] : (uint)(chunkOffsets.Length + 1);
+                                        cttsIndex += 1;
                                     }
 
                                     uint sampleSize = sampleSizes[sample_idx++];
+                                    pts[trackID - 1] = dts[trackID - 1] + cttsSampleDelta;
 
-                                    pts[trackID - 1] = dts[trackID - 1] + co_sample_delta;
+                                    size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
+                                    ret.Tracks[(int)(trackID - 1)].Samples.Add(sampleData);
 
-                                    if (isVideo)
-                                    {
-                                        try
-                                        {
-                                            var au = ReadAU(nalLengthSize, context, mdat.Data, sampleSize, dts[trackID - 1], pts[trackID - 1], t2s_sample_delta);
-                                            size += au.size;
-                                            ret[(int)(trackID - 1)].Add(au.naluList);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Error (6) reading file, exception: {ex.Message}");
-                                            throw;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
-                                        ret[(int)(trackID - 1)][0].Add(sampleData);
-                                    }
-
-                                    dts[trackID - 1] += t2s_sample_delta;
+                                    dts[trackID - 1] += sttsSampleDelta;
                                 }
                             }
                         }
@@ -427,42 +406,44 @@ namespace SharpMP4
             return ret;
         }
 
-        static (ulong size, List<byte[]> naluList) ReadAU(int nalLengthSize, IItuContext context, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+        public static List<byte[]> ReadAU(int nalLengthSize, byte[] sample)
         {
             ulong size = 0;
             long offsetInBytes = 0;
 
-            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
+            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU begin {sample.Length}");
 
             List<byte[]> naluList = new List<byte[]>();
 
-            do
+            using (var markerStream = new IsoStream(new MemoryStream(sample)))
             {
-                uint nalUnitLength = 0;
-                size += marker.Stream.ReadVariableLengthSize((uint)nalLengthSize, out nalUnitLength);
-                offsetInBytes += nalLengthSize;
-
-                if (nalUnitLength > (sampleSizeInBytes - offsetInBytes))
+                do
                 {
-                    if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Invalid NALU size: {nalUnitLength}");
-                    nalUnitLength = (uint)(sampleSizeInBytes - offsetInBytes);
-                    size += nalUnitLength;
-                    offsetInBytes += nalUnitLength;
-                    break;
-                }
+                    uint nalUnitLength = 0;
+                    size += markerStream.ReadVariableLengthSize((uint)nalLengthSize, out nalUnitLength);
+                    offsetInBytes += nalLengthSize;
 
-                size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData);
-                offsetInBytes += sampleData.Length;
-                //ParseNALU(context, sampleData);
-                naluList.Add(sampleData);
-            } while (offsetInBytes < sampleSizeInBytes);
+                    if (nalUnitLength > (sample.Length - offsetInBytes))
+                    {
+                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Invalid NALU size: {nalUnitLength}");
+                        nalUnitLength = (uint)(sample.Length - offsetInBytes);
+                        size += nalUnitLength;
+                        offsetInBytes += nalUnitLength;
+                        break;
+                    }
 
-            if (offsetInBytes != sampleSizeInBytes)
-                throw new Exception("Mismatch!");
+                    size += markerStream.ReadUInt8Array(size, (ulong)sample.Length, nalUnitLength, out byte[] sampleData);
+                    offsetInBytes += sampleData.Length;
+                    naluList.Add(sampleData);
+                } while (offsetInBytes < sample.Length);
 
-            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU end");
+                if (offsetInBytes != sample.Length)
+                    throw new Exception("Mismatch!");
 
-            return (size, naluList);
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU end");
+
+                return naluList;
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
     TrackBox inputAudioTrack = mp4.FindAudioTrack().FirstOrDefault();
     var inputHintTracks = mp4.FindHintTrack();
 
-    var parsedMDAT = mp4.Parse();
+    var parsed = mp4.Parse();
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
@@ -29,14 +29,20 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
             var audioTrack = new AACTrack(2, 48000, 16, 6);
             builder.AddTrack(audioTrack);
 
-            for (int t = 0; t < parsedMDAT.Count; t++)
+            for (int t = 0; t < parsed.Tracks.Length; t++)
             {
-                var parsedTrack = parsedMDAT[t];
+                var parsedTrack = parsed.Tracks[t];
                 if (t + 1 == inputVideoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
                 {
-                    for (int i = 0; i < parsedTrack.Count; i++)
+                    foreach (var nal in parsedTrack.VideoNALUs)
                     {
-                        foreach (var nal in parsedTrack[i])
+                        await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
+                    }
+
+                    for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                    {
+                        var nalus = Mp4Extensions.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i]);
+                        foreach (var nal in nalus)
                         {
                             await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
                         }
@@ -44,9 +50,9 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                 }
                 else if (t + 1 == inputAudioTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
                 {
-                    for (int i = 0; i < parsedTrack[0].Count; i++)
+                    for (int i = 0; i < parsedTrack.Samples.Count; i++)
                     {
-                        await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack[0][i]);
+                        await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack.Samples[i]);
                     }
                 }
                 else
