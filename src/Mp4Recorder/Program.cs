@@ -42,7 +42,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
 
                 for (int i = 0; i < parsedTrack.Samples.Count; i++)
                 {
-                    var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i]);
+                    var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i].Data);
                     foreach (var nal in nalus)
                     {
                         await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
@@ -53,7 +53,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
             {
                 for (int i = 0; i < parsedTrack.Samples.Count; i++)
                 {
-                    await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack.Samples[i]);
+                    await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack.Samples[i].Data);
                 }
             }
             else

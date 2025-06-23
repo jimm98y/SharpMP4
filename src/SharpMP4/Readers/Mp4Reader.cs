@@ -6,6 +6,23 @@ using System.Linq;
 
 namespace SharpMP4.Readers
 {
+    public struct Mp4Sample
+    {
+        public long PTS { get; set; }
+        public long DTS { get; set; }
+        public uint Duration { get; set; }
+        public byte[] Data { get; set; }
+        public bool IsRandomAccessPoint { get; set; }
+        public Mp4Sample(long pts, long dts, uint duration, byte[] data, bool isRandomAccessPoint = true)
+        {
+            this.PTS = pts;
+            this.DTS = dts;
+            this.Duration = duration;
+            this.Data = data;
+            this.IsRandomAccessPoint = isRandomAccessPoint;
+        }
+    }
+
     public class FragmentParserContext
     {
         // fmp4
@@ -21,7 +38,7 @@ namespace SharpMP4.Readers
     {
         public IList<byte[]> VideoNals { get; set; } = new List<byte[]>();
         public int NalLengthSize { get; set; } = 4;
-        public IList<byte[]> Samples { get; set; } = new List<byte[]>();
+        public IList<Mp4Sample> Samples { get; set; } = new List<Mp4Sample>();
 
         // mp4
         public SampleTableBox Stbl { get; set; }
@@ -280,7 +297,7 @@ namespace SharpMP4.Readers
                                     pts[trackID - 1] = dts[trackID - 1] + sampleCompositionTime;
 
                                     size += ret.Mdat.Data.Stream.ReadUInt8Array(size, (ulong)ret.Mdat.Data.Length, sampleSize, out byte[] sampleData);
-                                    ret.Tracks[(int)(trackID - 1)].Samples.Add(sampleData);
+                                    ret.Tracks[(int)(trackID - 1)].Samples.Add(new Mp4Sample(pts[trackID - 1], dts[trackID - 1], sampleDuration, sampleData));
 
                                     dts[trackID - 1] += sampleDuration;
                                 }
@@ -369,7 +386,7 @@ namespace SharpMP4.Readers
                                     pts[trackID - 1] = dts[trackID - 1] + cttsSampleDelta;
 
                                     size += ret.Mdat.Data.Stream.ReadUInt8Array(size, (ulong)ret.Mdat.Data.Length, sampleSize, out byte[] sampleData);
-                                    ret.Tracks[(int)(trackID - 1)].Samples.Add(sampleData);
+                                    ret.Tracks[(int)(trackID - 1)].Samples.Add(new Mp4Sample(pts[trackID - 1], dts[trackID - 1], sttsSampleDelta, sampleData, isRandomAccessPoint));
 
                                     dts[trackID - 1] += sttsSampleDelta;
                                 }
