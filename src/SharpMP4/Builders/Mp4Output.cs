@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace SharpMP4
+namespace SharpMP4.Builders
 {
     public interface IMp4Output
     {
@@ -32,7 +32,7 @@ namespace SharpMP4
         public SingleStreamOutput(Stream output)
         {
             // var output = File.Open("test.mp4", FileMode.Create, FileAccess.Write, FileShare.Read); // record and allow simultaneous playback
-            this._output = output ?? throw new ArgumentNullException(nameof(output));
+            _output = output ?? throw new ArgumentNullException(nameof(output));
         }
 
         public Task<Stream> GetStreamAsync(uint sequenceNumber)
@@ -58,16 +58,16 @@ namespace SharpMP4
 
         public MultiStreamFileOutput(string path, string fileName, string fileExtension = "mp4")
         {
-            this._path = path ?? throw new ArgumentNullException(nameof(path));
-            this._fileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
-            this._fileExtension = fileExtension ?? throw new ArgumentNullException(nameof(fileExtension));
+            _path = path ?? throw new ArgumentNullException(nameof(path));
+            _fileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
+            _fileExtension = fileExtension ?? throw new ArgumentNullException(nameof(fileExtension));
         }
 
         public Task<Stream> GetStreamAsync(uint sequenceNumber)
         {
             try
             {
-                string path = Path.Combine(this._path, $"{_fileName}{sequenceNumber}.{_fileExtension}");
+                string path = Path.Combine(_path, $"{_fileName}{sequenceNumber}.{_fileExtension}");
                 if (!Directory.Exists(_path))
                 {
                     Directory.CreateDirectory(_path);
@@ -97,8 +97,8 @@ namespace SharpMP4
     {
         public FragmentBlobEventArgs(int sequenceNumber, byte[] data)
         {
-            this.SequenceNumber = sequenceNumber;
-            this.Data = data;
+            SequenceNumber = sequenceNumber;
+            Data = data;
         }
 
         public int SequenceNumber { get; private set; }

@@ -1,6 +1,7 @@
 ﻿using SharpISOBMFF;
 using SharpMP4;
 using SharpMP4.Builders;
+using SharpMP4.Readers;
 using SharpMP4.Tracks;
 using System.IO;
 using System.Linq;
@@ -13,11 +14,11 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
     var mp4 = new Container();
     mp4.Read(new IsoStream(inputFileStream));
 
-    TrackBox inputVideoTrack = mp4.FindVideoTrack().First();
-    TrackBox inputAudioTrack = mp4.FindAudioTrack().FirstOrDefault();
-    var inputHintTracks = mp4.FindHintTrack();
+    TrackBox inputVideoTrack = mp4.FindVideoTracks().First();
+    TrackBox inputAudioTrack = mp4.FindAudioTracks().FirstOrDefault();
+    var inputHintTracks = mp4.FindHintTracks();
 
-    var parsed = mp4.Parse();
+    var parsed = Mp4Reader.Parse(mp4);
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
@@ -41,7 +42,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
 
                     for (int i = 0; i < parsedTrack.Samples.Count; i++)
                     {
-                        var nalus = Mp4Extensions.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i]);
+                        var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i]);
                         foreach (var nal in nalus)
                         {
                             await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
