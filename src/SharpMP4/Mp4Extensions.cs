@@ -22,6 +22,13 @@ namespace SharpMP4
         public TrackParserContext[] Tracks { get; set; }
         public HashSet<uint> VideoTracks { get; set; } = new HashSet<uint>();
         public HashSet<uint> AudioTracks { get; set; } = new HashSet<uint>();
+
+        public FileTypeBox Ftyp { get; set; } = null;
+        public MovieBox Moov {get; set; } = null;
+        public TrackBox[] Track {get; set; } = null;
+        public MovieFragmentBox Moof {get; set; } = null;
+        public MediaDataBox Mdat {get; set; } = null;
+        public MetaBox Meta {get; set; } = null;
     }
 
     public static class Mp4Extensions
@@ -84,31 +91,25 @@ namespace SharpMP4
             long[] pts = null; 
 
             ContainerParserContext ret = new ContainerParserContext();
-            FileTypeBox ftyp = null;
-            MovieBox moov = null;
-            TrackBox[] tracks = null;
-            MovieFragmentBox moof = null;
-            MediaDataBox mdat = null;
-            MetaBox meta = null;
             ulong size = 0;
             
             for (int i = 0; i < inputMp4.Children.Count; i++)
             {
                 if (inputMp4.Children[i] is FileTypeBox)
                 {
-                    ftyp = (FileTypeBox)inputMp4.Children[i];
+                    ret.Ftyp = (FileTypeBox)inputMp4.Children[i];
                 }
                 else if (inputMp4.Children[i] is MovieBox)
                 {
-                    moov = (MovieBox)inputMp4.Children[i];
-                    ftyp = inputMp4.Children.OfType<FileTypeBox>().Single();
-                    tracks = moov.Children.OfType<TrackBox>().ToArray();
+                    ret.Moov = (MovieBox)inputMp4.Children[i];
+                    ret.Ftyp = inputMp4.Children.OfType<FileTypeBox>().Single();
+                    ret.Track = ret.Moov.Children.OfType<TrackBox>().ToArray();
 
-                    ret.Tracks = new TrackParserContext[tracks.Length];
-                    dts = new long[tracks.Length];
-                    pts = new long[tracks.Length];
+                    ret.Tracks = new TrackParserContext[ret.Track.Length];
+                    dts = new long[ret.Track.Length];
+                    pts = new long[ret.Track.Length];
 
-                    foreach (var track in tracks)
+                    foreach (var track in ret.Track)
                     {
                         HandlerBox hdlr = track.Children.OfType<MediaBox>().Single().Children.OfType<HandlerBox>().Single();
                         uint trackID = track.Children.OfType<TrackHeaderBox>().First().TrackID;
@@ -217,7 +218,7 @@ namespace SharpMP4
                 }
                 else if (inputMp4.Children[i] is MovieFragmentBox)
                 {
-                    moof = (MovieFragmentBox)inputMp4.Children[i];
+                    ret.Moof = (MovieFragmentBox)inputMp4.Children[i];
                 }
                 else if (inputMp4.Children[i] is MediaDataBox)
                 {
@@ -225,23 +226,23 @@ namespace SharpMP4
 
                     if (currentMdat.Size > 8)
                     {
-                        mdat = currentMdat;
+                        ret.Mdat = currentMdat;
                     }
                 }
                 else if (inputMp4.Children[i] is MetaBox)
                 {
-                    meta = (MetaBox)inputMp4.Children[i];
+                    ret.Meta = (MetaBox)inputMp4.Children[i];
                 }
 
-                if (moov != null && mdat != null)
+                if (ret.Moov != null && ret.Mdat != null)
                 {
-                    mdat.Data.Stream.SeekFromBeginning(mdat.Data.Position);
+                    ret.Mdat.Data.Stream.SeekFromBeginning(ret.Mdat.Data.Position);
 
-                    if (moof != null)
+                    if (ret.Moof != null)
                     {
                         // fmp4
-                        IOrderedEnumerable<TrackRunBox> plan = moof.Children.OfType<TrackFragmentBox>().SelectMany(x => x.Children.OfType<TrackRunBox>()).OrderBy(x => x.DataOffset);
-                        MovieExtendsBox mvex = moov.Children.OfType<MovieExtendsBox>().SingleOrDefault();
+                        IOrderedEnumerable<TrackRunBox> plan = ret.Moof.Children.OfType<TrackFragmentBox>().SelectMany(x => x.Children.OfType<TrackRunBox>()).OrderBy(x => x.DataOffset);
+                        MovieExtendsBox mvex = ret.Moov.Children.OfType<MovieExtendsBox>().SingleOrDefault();
 
                         foreach (var trun in plan)
                         {
@@ -304,7 +305,7 @@ namespace SharpMP4
 
                                 pts[trackID - 1] = dts[trackID - 1] + sampleCompositionTime;
 
-                                size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
+                                size += ret.Mdat.Data.Stream.ReadUInt8Array(size, (ulong)ret.Mdat.Data.Length, sampleSize, out byte[] sampleData);
                                 ret.Tracks[(int)(trackID - 1)].Samples.Add(sampleData);
 
                                 dts[trackID - 1] += sampleDuration;
@@ -312,13 +313,13 @@ namespace SharpMP4
                         }
 
                         // start looking for next moof/mdat pair
-                        moof = null;
-                        mdat = null;
+                        ret.Moof = null;
+                        ret.Mdat = null;
                     }
                     else
                     {
                         // mp4
-                        foreach (var track in tracks)
+                        foreach (var track in ret.Track)
                         {
                             uint trackID = track.Children.OfType<TrackHeaderBox>().Single().TrackID;
 
@@ -332,6 +333,7 @@ namespace SharpMP4
                             SampleSizeBox stsz = stbl.Children.OfType<SampleSizeBox>().Single();
                             TimeToSampleBox stts = stbl.Children.OfType<TimeToSampleBox>().Single();
                             CompositionOffsetBox ctts = stbl.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
+                            SyncSampleBox stss = stbl.Children.OfType<SyncSampleBox>().SingleOrDefault(); // optional
                             uint[] sampleSizes = stsz.SampleSize > 0 ? Enumerable.Repeat(stsz.SampleSize, (int)stsz.SampleCount).ToArray() : stsz.EntrySize;
                             ulong[] chunkOffsets = stco != null ? stco.ChunkOffset.Select(x => (ulong)x).ToArray() : co64.ChunkOffset;
 
@@ -350,7 +352,7 @@ namespace SharpMP4
                             uint cttsNextRun = 0;
                             int cttsSampleDelta = 0;
 
-                            int sample_idx = 0;
+                            int sampleIndex = 0;
                             for (int k = 1; k <= chunkOffsets.Length; k++)
                             {
                                 if (k >= stscNextRun)
@@ -363,29 +365,35 @@ namespace SharpMP4
                                 long chunkOffset = (long)chunkOffsets[k - 1];
 
                                 // seek to the chunk offset
-                                mdat.Data.Stream.SeekFromBeginning(chunkOffset);
+                                ret.Mdat.Data.Stream.SeekFromBeginning(chunkOffset);
 
                                 // read samples in this chunk                            
                                 for (int l = 1; l <= stscSamplesPerChunk; l++)
                                 {
-                                    if (sample_idx >= sttsNextRun)
+                                    if (sampleIndex >= sttsNextRun)
                                     {
                                         sttsSampleDelta = stts.SampleDelta[sttsIndex];
                                         sttsNextRun += (sttsIndex < stts.SampleCount.Length) ? stts.SampleCount[sttsIndex] : (uint)(chunkOffsets.Length + 1);
                                         sttsIndex += 1;
                                     }
 
-                                    if (ctts != null && sample_idx >= cttsNextRun)
+                                    if (ctts != null && sampleIndex >= cttsNextRun)
                                     {
                                         cttsSampleDelta = ctts.Version == 0 ? (int)ctts.SampleOffset[cttsIndex] : ctts.SampleOffset0[cttsIndex];
                                         cttsNextRun += (cttsIndex < ctts.SampleCount.Length) ? ctts.SampleCount[cttsIndex] : (uint)(chunkOffsets.Length + 1);
                                         cttsIndex += 1;
                                     }
 
-                                    uint sampleSize = sampleSizes[sample_idx++];
-                                    pts[trackID - 1] = dts[trackID - 1] + cttsSampleDelta;
+                                    bool isRandomAccessPoint = true;
+                                    if (stss != null)
+                                    {
+                                        isRandomAccessPoint = stss.SampleNumber.Contains((uint)sampleIndex + 1);
+                                    }
 
-                                    size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
+                                    uint sampleSize = sampleSizes[sampleIndex++];
+                                    pts[trackID - 1] = dts[trackID - 1] + cttsSampleDelta;
+                                    
+                                    size += ret.Mdat.Data.Stream.ReadUInt8Array(size, (ulong)ret.Mdat.Data.Length, sampleSize, out byte[] sampleData);
                                     ret.Tracks[(int)(trackID - 1)].Samples.Add(sampleData);
 
                                     dts[trackID - 1] += sttsSampleDelta;
@@ -394,7 +402,7 @@ namespace SharpMP4
                         }
                     }
 
-                    mdat = null;
+                    ret.Mdat = null;
                 }
             }
 
