@@ -34,7 +34,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                 var parsedTrack = parsed.Tracks[t];
                 if (t + 1 == inputVideoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
                 {
-                    foreach (var nal in parsedTrack.VideoNALUs)
+                    foreach (var nal in parsedTrack.VideoNals)
                     {
                         await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
                     }

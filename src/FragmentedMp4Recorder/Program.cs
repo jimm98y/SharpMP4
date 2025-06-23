@@ -62,7 +62,7 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                 var parsedTrack = parsed.Tracks[t];
                 if (t + 1 == inputVideoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
                 {
-                    foreach (var nal in parsedTrack.VideoNALUs)
+                    foreach (var nal in parsedTrack.VideoNals)
                     {
                         await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
                     }

@@ -10,6 +10,20 @@ using SharpISOBMFF;
 
 namespace SharpMP4
 {
+    public class TrackParserContext
+    {
+        public IList<byte[]> VideoNals { get; set; } = new List<byte[]>();
+        public int NalLengthSize { get; set; } = 4;
+        public IList<byte[]> Samples { get; set; } = new List<byte[]>();
+    }
+
+    public class ContainerParserContext
+    {
+        public TrackParserContext[] Tracks { get; set; }
+        public HashSet<uint> VideoTracks { get; set; } = new HashSet<uint>();
+        public HashSet<uint> AudioTracks { get; set; } = new HashSet<uint>();
+    }
+
     public static class Mp4Extensions
     {
         public static IEnumerable<TrackBox> FindVideoTrack(this Container mp4)
@@ -59,22 +73,7 @@ namespace SharpMP4
                 .Children.OfType<AudioSampleEntry>().Single();
         }
 
-
-        public class TrackParserContext
-        {
-            public IList<byte[]> VideoNALUs { get; set; } = new List<byte[]>();
-            public int NalLengthSize { get; set; } = 4;
-            public IList<byte[]> Samples { get; set; } = new List<byte[]>();
-        }
-
-        public class MdatParserContext
-        {
-            public TrackParserContext[] Tracks { get; set; }
-            public HashSet<uint> VideoTracks { get; set; } = new HashSet<uint>();
-            public HashSet<uint> AudioTracks { get; set; } = new HashSet<uint>();
-        }
-
-        public static MdatParserContext Parse(this Container inputMp4)
+        public static ContainerParserContext Parse(this Container inputMp4)
         {
             if (inputMp4.Children.Count == 0)
                 return null;
@@ -84,7 +83,7 @@ namespace SharpMP4
             long[] dts = null;
             long[] pts = null; 
 
-            MdatParserContext ret = new MdatParserContext();
+            ContainerParserContext ret = new ContainerParserContext();
             FileTypeBox ftyp = null;
             MovieBox moov = null;
             TrackBox[] tracks = null;
@@ -144,8 +143,7 @@ namespace SharpMP4
                                 {
                                     try
                                     {
-                                        //ParseNALU(context, spsBinary);
-                                        ret.Tracks[(int)(trackID - 1)].VideoNALUs.Add(spsBinary);
+                                        ret.Tracks[(int)(trackID - 1)].VideoNals.Add(spsBinary);
                                     }
                                     catch (Exception ex)
                                     {
@@ -158,8 +156,7 @@ namespace SharpMP4
                                 {
                                     try
                                     {
-                                        //ParseNALU(context, ppsBinary);
-                                        ret.Tracks[(int)(trackID - 1)].VideoNALUs.Add(ppsBinary);
+                                        ret.Tracks[(int)(trackID - 1)].VideoNals.Add(ppsBinary);
                                     }
                                     catch (Exception ex)
                                     {
@@ -179,8 +176,7 @@ namespace SharpMP4
                                     {
                                         try
                                         {
-                                            //ParseNALU(context, nalu);
-                                            ret.Tracks[(int)(trackID - 1)].VideoNALUs.Add(nalu);
+                                            ret.Tracks[(int)(trackID - 1)].VideoNals.Add(nalu);
                                         }
                                         catch (Exception ex)
                                         {
@@ -201,8 +197,7 @@ namespace SharpMP4
                                     {
                                         try
                                         {
-                                            //ParseNALU(context, nalu);
-                                            ret.Tracks[(int)(trackID - 1)].VideoNALUs.Add(nalu);
+                                            ret.Tracks[(int)(trackID - 1)].VideoNals.Add(nalu);
                                         }
                                         catch (Exception ex)
                                         {
