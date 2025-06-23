@@ -10,25 +10,50 @@ using SharpISOBMFF;
 
 namespace SharpMP4
 {
+    public class FragmentParserContext
+    {
+        // fmp4
+        public IEnumerable<TrackRunBox> Truns { get; set; }
+        public MovieExtendsBox Mvex { get; set; }
+        public TrackFragmentBaseMediaDecodeTimeBox Tfdt { get; set; }
+        public TrackFragmentHeaderBox Tfhd { get; set; }
+        public TrackExtendsBox Trex { get; set; }
+        public IEnumerable<TrackFragmentBox> Trafs { get; set; }
+    }
+
     public class TrackParserContext
     {
         public IList<byte[]> VideoNals { get; set; } = new List<byte[]>();
         public int NalLengthSize { get; set; } = 4;
         public IList<byte[]> Samples { get; set; } = new List<byte[]>();
+
+        // mp4
+        public SampleTableBox Stbl { get; set; }
+        public ChunkOffsetBox Stco { get; set; }
+        public ChunkLargeOffsetBox Co64 { get; set; }
+        public SampleToChunkBox Stsc { get; set; }
+        public SampleSizeBox Stsz { get; set; }
+        public TimeToSampleBox Stts { get; set; }
+        public CompositionOffsetBox Ctts { get; set; }
+        public SyncSampleBox Stss { get; set; }
+
+        // fmp4
+        public FragmentParserContext Fragment { get; set; }
     }
 
     public class ContainerParserContext
     {
-        public TrackParserContext[] Tracks { get; set; }
         public HashSet<uint> VideoTracks { get; set; } = new HashSet<uint>();
         public HashSet<uint> AudioTracks { get; set; } = new HashSet<uint>();
 
-        public FileTypeBox Ftyp { get; set; } = null;
-        public MovieBox Moov {get; set; } = null;
-        public TrackBox[] Track {get; set; } = null;
-        public MovieFragmentBox Moof {get; set; } = null;
-        public MediaDataBox Mdat {get; set; } = null;
-        public MetaBox Meta {get; set; } = null;
+        public FileTypeBox Ftyp { get; set; }
+        public MovieBox Moov {get; set; }
+        public MovieFragmentBox Moof {get; set; }
+        public MediaDataBox Mdat {get; set; } 
+        public MetaBox Meta {get; set; }
+        public TrackBox[] Track {get; set; }
+
+        public TrackParserContext[] Tracks { get; set; }
     }
 
     public static class Mp4Extensions
@@ -240,75 +265,81 @@ namespace SharpMP4
 
                     if (ret.Moof != null)
                     {
+                        FragmentParserContext fragmentContext = new FragmentParserContext();
+
                         // fmp4
-                        IOrderedEnumerable<TrackRunBox> plan = ret.Moof.Children.OfType<TrackFragmentBox>().SelectMany(x => x.Children.OfType<TrackRunBox>()).OrderBy(x => x.DataOffset);
-                        MovieExtendsBox mvex = ret.Moov.Children.OfType<MovieExtendsBox>().SingleOrDefault();
-
-                        foreach (var trun in plan)
+                        fragmentContext.Trafs = ret.Moof.Children.OfType<TrackFragmentBox>();
+                        foreach (var traf in fragmentContext.Trafs)
                         {
-                            TrackFragmentBox traf = trun.GetParent() as TrackFragmentBox;
-                            TrackFragmentBaseMediaDecodeTimeBox tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
-                            TrackFragmentHeaderBox tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
-                            uint trackID = tfhd.TrackID;
+                            fragmentContext.Truns = traf.Children.OfType<TrackRunBox>(); // there can be 1 or multiple trun boxes, depending upon the encoder
+                            fragmentContext.Mvex = ret.Moov.Children.OfType<MovieExtendsBox>().SingleOrDefault();
 
-                            TrackExtendsBox trex = mvex?.Children.OfType<TrackExtendsBox>().SingleOrDefault(x => x.TrackID == trackID);
-
-                            bool isVideo = ret.VideoTracks.Contains(trackID);
-                            if (tfdt != null)
+                            foreach (var trun in fragmentContext.Truns)
                             {
-                                dts[trackID - 1] = (long)tfdt.BaseMediaDecodeTime;
-                            }
+                                fragmentContext.Tfhd = traf.Children.OfType<TrackFragmentHeaderBox>().Single();
+                                uint trackID = fragmentContext.Tfhd.TrackID;
+                                ret.Tracks[trackID - 1].Fragment = fragmentContext;
 
-                            uint firstSampleFlags = trun.FirstSampleFlags;
-                            if ((trun.Flags & 0x4) != 0x4)
-                                firstSampleFlags = tfhd.DefaultSampleFlags;
+                                ret.Tracks[trackID - 1].Fragment.Tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
+                                ret.Tracks[trackID - 1].Fragment.Trex = ret.Tracks[trackID - 1].Fragment.Mvex?.Children.OfType<TrackExtendsBox>().SingleOrDefault(x => x.TrackID == trackID);
 
-                            for (int k = 1; k <= trun._TrunEntry.Length; k++)
-                            {
-                                var entry = trun._TrunEntry[k - 1];
-
-                                uint sampleDuration = tfhd.DefaultSampleDuration;
-                                if ((entry.Flags & 0x100) == 0x100)
-                                    sampleDuration = entry.SampleDuration;
-                                else if ((tfhd.Flags & 0x8) == 0x8)
-                                    sampleDuration = tfhd.DefaultSampleDuration;
-                                else if (trex != null)
-                                    sampleDuration = trex.DefaultSampleDuration;
-                                else
-                                    throw new Exception("Cannot get sample duration");
-
-                                uint sampleSize = tfhd.DefaultSampleSize;
-                                if ((entry.Flags & 0x200) == 0x200)
-                                    sampleSize = entry.SampleSize;
-                                else if ((tfhd.Flags & 0x10) == 0x10)
-                                    sampleSize = tfhd.DefaultSampleSize;
-                                else if (trex != null)
-                                    sampleSize = trex.DefaultSampleSize;
-                                else
-                                    throw new Exception("Cannot get sample size");
-
-                                uint sampleFlags = tfhd.DefaultSampleFlags;
-                                if (k == 1)
-                                    sampleFlags = firstSampleFlags;
-                                else if ((entry.Flags & 0x400) == 0x400)
-                                    sampleFlags = entry.SampleFlags;
-
-                                // CTS
-                                int sampleCompositionTime = 0;
-                                if ((entry.Flags & 0x800) == 0x800)
+                                bool isVideo = ret.VideoTracks.Contains(trackID);
+                                if (ret.Tracks[trackID - 1].Fragment.Tfdt != null)
                                 {
-                                    if (entry.Version == 0)
-                                        sampleCompositionTime = (int)entry.SampleCompositionTimeOffset;
-                                    else
-                                        sampleCompositionTime = entry.SampleCompositionTimeOffset0;
+                                    dts[trackID - 1] = (long)ret.Tracks[trackID - 1].Fragment.Tfdt.BaseMediaDecodeTime;
                                 }
 
-                                pts[trackID - 1] = dts[trackID - 1] + sampleCompositionTime;
+                                uint firstSampleFlags = trun.FirstSampleFlags;
+                                if ((trun.Flags & 0x4) != 0x4)
+                                    firstSampleFlags = ret.Tracks[trackID - 1].Fragment.Tfhd.DefaultSampleFlags;
 
-                                size += ret.Mdat.Data.Stream.ReadUInt8Array(size, (ulong)ret.Mdat.Data.Length, sampleSize, out byte[] sampleData);
-                                ret.Tracks[(int)(trackID - 1)].Samples.Add(sampleData);
+                                for (int k = 1; k <= trun._TrunEntry.Length; k++)
+                                {
+                                    var entry = trun._TrunEntry[k - 1];
 
-                                dts[trackID - 1] += sampleDuration;
+                                    uint sampleDuration = ret.Tracks[trackID - 1].Fragment.Tfhd.DefaultSampleDuration;
+                                    if ((entry.Flags & 0x100) == 0x100)
+                                        sampleDuration = entry.SampleDuration;
+                                    else if ((ret.Tracks[trackID - 1].Fragment.Tfhd.Flags & 0x8) == 0x8)
+                                        sampleDuration = ret.Tracks[trackID - 1].Fragment.Tfhd.DefaultSampleDuration;
+                                    else if (ret.Tracks[trackID - 1].Fragment.Trex != null)
+                                        sampleDuration = ret.Tracks[trackID - 1].Fragment.Trex.DefaultSampleDuration;
+                                    else
+                                        throw new Exception("Cannot get sample duration");
+
+                                    uint sampleSize = ret.Tracks[trackID - 1].Fragment.Tfhd.DefaultSampleSize;
+                                    if ((entry.Flags & 0x200) == 0x200)
+                                        sampleSize = entry.SampleSize;
+                                    else if ((ret.Tracks[trackID - 1].Fragment.Tfhd.Flags & 0x10) == 0x10)
+                                        sampleSize = ret.Tracks[trackID - 1].Fragment.Tfhd.DefaultSampleSize;
+                                    else if (ret.Tracks[trackID - 1].Fragment.Trex != null)
+                                        sampleSize = ret.Tracks[trackID - 1].Fragment.Trex.DefaultSampleSize;
+                                    else
+                                        throw new Exception("Cannot get sample size");
+
+                                    uint sampleFlags = fragmentContext.Tfhd.DefaultSampleFlags;
+                                    if (k == 1)
+                                        sampleFlags = firstSampleFlags;
+                                    else if ((entry.Flags & 0x400) == 0x400)
+                                        sampleFlags = entry.SampleFlags;
+
+                                    // CTS
+                                    int sampleCompositionTime = 0;
+                                    if ((entry.Flags & 0x800) == 0x800)
+                                    {
+                                        if (entry.Version == 0)
+                                            sampleCompositionTime = (int)entry.SampleCompositionTimeOffset;
+                                        else
+                                            sampleCompositionTime = entry.SampleCompositionTimeOffset0;
+                                    }
+
+                                    pts[trackID - 1] = dts[trackID - 1] + sampleCompositionTime;
+
+                                    size += ret.Mdat.Data.Stream.ReadUInt8Array(size, (ulong)ret.Mdat.Data.Length, sampleSize, out byte[] sampleData);
+                                    ret.Tracks[(int)(trackID - 1)].Samples.Add(sampleData);
+
+                                    dts[trackID - 1] += sampleDuration;
+                                }
                             }
                         }
 
@@ -323,19 +354,19 @@ namespace SharpMP4
                         {
                             uint trackID = track.Children.OfType<TrackHeaderBox>().Single().TrackID;
 
-                            SampleTableBox stbl = track
+                            ret.Tracks[trackID - 1].Stbl = track
                                 .Children.OfType<MediaBox>().Single()
                                 .Children.OfType<MediaInformationBox>().Single()
                                 .Children.OfType<SampleTableBox>().Single();
-                            ChunkOffsetBox stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
-                            ChunkLargeOffsetBox co64 = stbl.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
-                            SampleToChunkBox stsc = stbl.Children.OfType<SampleToChunkBox>().Single();
-                            SampleSizeBox stsz = stbl.Children.OfType<SampleSizeBox>().Single();
-                            TimeToSampleBox stts = stbl.Children.OfType<TimeToSampleBox>().Single();
-                            CompositionOffsetBox ctts = stbl.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
-                            SyncSampleBox stss = stbl.Children.OfType<SyncSampleBox>().SingleOrDefault(); // optional
-                            uint[] sampleSizes = stsz.SampleSize > 0 ? Enumerable.Repeat(stsz.SampleSize, (int)stsz.SampleCount).ToArray() : stsz.EntrySize;
-                            ulong[] chunkOffsets = stco != null ? stco.ChunkOffset.Select(x => (ulong)x).ToArray() : co64.ChunkOffset;
+                            ret.Tracks[trackID - 1].Stco = ret.Tracks[trackID - 1].Stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
+                            ret.Tracks[trackID - 1].Co64 = ret.Tracks[trackID - 1].Stbl.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
+                            ret.Tracks[trackID - 1].Stsc = ret.Tracks[trackID - 1].Stbl.Children.OfType<SampleToChunkBox>().Single();
+                            ret.Tracks[trackID - 1].Stsz = ret.Tracks[trackID - 1].Stbl.Children.OfType<SampleSizeBox>().Single();
+                            ret.Tracks[trackID - 1].Stts = ret.Tracks[trackID - 1].Stbl.Children.OfType<TimeToSampleBox>().Single();
+                            ret.Tracks[trackID - 1].Ctts = ret.Tracks[trackID - 1].Stbl.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
+                            ret.Tracks[trackID - 1].Stss = ret.Tracks[trackID - 1].Stbl.Children.OfType<SyncSampleBox>().SingleOrDefault(); // optional
+                            uint[] sampleSizes = ret.Tracks[trackID - 1].Stsz.SampleSize > 0 ? Enumerable.Repeat(ret.Tracks[trackID - 1].Stsz.SampleSize, (int)ret.Tracks[trackID - 1].Stsz.SampleCount).ToArray() : ret.Tracks[trackID - 1].Stsz.EntrySize;
+                            ulong[] chunkOffsets = ret.Tracks[trackID - 1].Stco != null ? ret.Tracks[trackID - 1].Stco.ChunkOffset.Select(x => (ulong)x).ToArray() : ret.Tracks[trackID - 1].Co64.ChunkOffset;
 
                             bool isVideo = ret.VideoTracks.Contains(trackID);
 
@@ -357,9 +388,9 @@ namespace SharpMP4
                             {
                                 if (k >= stscNextRun)
                                 {
-                                    stscSamplesPerChunk = stsc.SamplesPerChunk[stscIndex];
+                                    stscSamplesPerChunk = ret.Tracks[trackID - 1].Stsc.SamplesPerChunk[stscIndex];
                                     stscIndex += 1;
-                                    stscNextRun = (stscIndex < stsc.FirstChunk.Length) ? stsc.FirstChunk[stscIndex] : (uint)(chunkOffsets.Length + 1);
+                                    stscNextRun = (stscIndex < ret.Tracks[trackID - 1].Stsc.FirstChunk.Length) ? ret.Tracks[trackID - 1].Stsc.FirstChunk[stscIndex] : (uint)(chunkOffsets.Length + 1);
                                 }
 
                                 long chunkOffset = (long)chunkOffsets[k - 1];
@@ -372,22 +403,22 @@ namespace SharpMP4
                                 {
                                     if (sampleIndex >= sttsNextRun)
                                     {
-                                        sttsSampleDelta = stts.SampleDelta[sttsIndex];
-                                        sttsNextRun += (sttsIndex < stts.SampleCount.Length) ? stts.SampleCount[sttsIndex] : (uint)(chunkOffsets.Length + 1);
+                                        sttsSampleDelta = ret.Tracks[trackID - 1].Stts.SampleDelta[sttsIndex];
+                                        sttsNextRun += (sttsIndex < ret.Tracks[trackID - 1].Stts.SampleCount.Length) ? ret.Tracks[trackID - 1].Stts.SampleCount[sttsIndex] : (uint)(chunkOffsets.Length + 1);
                                         sttsIndex += 1;
                                     }
 
-                                    if (ctts != null && sampleIndex >= cttsNextRun)
+                                    if (ret.Tracks[trackID - 1].Ctts != null && sampleIndex >= cttsNextRun)
                                     {
-                                        cttsSampleDelta = ctts.Version == 0 ? (int)ctts.SampleOffset[cttsIndex] : ctts.SampleOffset0[cttsIndex];
-                                        cttsNextRun += (cttsIndex < ctts.SampleCount.Length) ? ctts.SampleCount[cttsIndex] : (uint)(chunkOffsets.Length + 1);
+                                        cttsSampleDelta = ret.Tracks[trackID - 1].Ctts.Version == 0 ? (int)ret.Tracks[trackID - 1].Ctts.SampleOffset[cttsIndex] : ret.Tracks[trackID - 1].Ctts.SampleOffset0[cttsIndex];
+                                        cttsNextRun += (cttsIndex < ret.Tracks[trackID - 1].Ctts.SampleCount.Length) ? ret.Tracks[trackID - 1].Ctts.SampleCount[cttsIndex] : (uint)(chunkOffsets.Length + 1);
                                         cttsIndex += 1;
                                     }
 
                                     bool isRandomAccessPoint = true;
-                                    if (stss != null)
+                                    if (ret.Tracks[trackID - 1].Stss != null)
                                     {
-                                        isRandomAccessPoint = stss.SampleNumber.Contains((uint)sampleIndex + 1);
+                                        isRandomAccessPoint = ret.Tracks[trackID - 1].Stss.SampleNumber.Contains((uint)sampleIndex + 1);
                                     }
 
                                     uint sampleSize = sampleSizes[sampleIndex++];
