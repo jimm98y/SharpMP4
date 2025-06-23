@@ -23,87 +23,85 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
 
     using (Stream output = new BufferedStream(new FileStream("frag_bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        FragmentedMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2666, 60095);
+        IMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2666, 60095);
+        var videoTrack = new H264Track();
+        builder.AddTrack(videoTrack);
+
+        var sourceAudioTrackInfo = inputAudioTrack.GetAudioSampleEntryBox();
+        var audioTrack = new AACTrack((byte)sourceAudioTrackInfo.Channelcount, sourceAudioTrackInfo.Samplerate >> 16, sourceAudioTrackInfo.Samplesize);
+        builder.AddTrack(audioTrack);
+
+        List<RtpMovieHintTrack> hints = new List<RtpMovieHintTrack>();
+        foreach (var hintTrack in inputHintTracks)
         {
-            var videoTrack = new H264Track();
-            builder.AddTrack(videoTrack);
+            var ht = new RtpMovieHintTrack();
+            ht.Timescale =  hintTrack.Children.OfType<MediaBox>().Single().Children.OfType<MediaHeaderBox>().Single().Timescale;
+            builder.AddTrack(ht);
+            hints.Add(ht);
 
-            var sourceAudioTrackInfo = inputAudioTrack.GetAudioSampleEntryBox();
-            var audioTrack = new AACTrack((byte)sourceAudioTrackInfo.Channelcount, sourceAudioTrackInfo.Samplerate >> 16, sourceAudioTrackInfo.Samplesize);
-            builder.AddTrack(audioTrack);
-
-            List<RtpMovieHintTrack> hints = new List<RtpMovieHintTrack>();
-            foreach (var hintTrack in inputHintTracks)
-            {
-                var ht = new RtpMovieHintTrack();
-                ht.Timescale =  hintTrack.Children.OfType<MediaBox>().Single().Children.OfType<MediaHeaderBox>().Single().Timescale;
-                builder.AddTrack(ht);
-                hints.Add(ht);
-
-                uint trackId = hintTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
+            uint trackId = hintTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
                 
-                foreach(var moof in fmp4.Children.OfType<MovieFragmentBox>())
-                {
-                    foreach(var traf in moof.Children.OfType<TrackFragmentBox>())
-                    {
-                        if (traf.Children.OfType<TrackFragmentHeaderBox>().Single().TrackID != trackId)
-                            continue;
-
-                        ht.SampleDuration = traf.Children.OfType<TrackRunBox>().SingleOrDefault()._TrunEntry.FirstOrDefault().SampleDuration;
-                        break;
-                    }
-
-                    if (ht.SampleDuration != 0)
-                        break;
-                }
-            }
-
-            for (int t = 0; t < parsed.Tracks.Length; t++)
+            foreach(var moof in fmp4.Children.OfType<MovieFragmentBox>())
             {
-                var parsedTrack = parsed.Tracks[t];
-                if (t + 1 == inputVideoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
+                foreach(var traf in moof.Children.OfType<TrackFragmentBox>())
                 {
-                    foreach (var nal in parsedTrack.VideoNals)
+                    if (traf.Children.OfType<TrackFragmentHeaderBox>().Single().TrackID != trackId)
+                        continue;
+
+                    ht.SampleDuration = traf.Children.OfType<TrackRunBox>().SingleOrDefault()._TrunEntry.FirstOrDefault().SampleDuration;
+                    break;
+                }
+
+                if (ht.SampleDuration != 0)
+                    break;
+            }
+        }
+
+        for (int t = 0; t < parsed.Tracks.Length; t++)
+        {
+            var parsedTrack = parsed.Tracks[t];
+            if (t + 1 == inputVideoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
+            {
+                foreach (var nal in parsedTrack.VideoNals)
+                {
+                    await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
+                }
+
+                for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                {
+                    var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i]);
+                    foreach (var nal in nalus)
                     {
                         await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
                     }
-
-                    for (int i = 0; i < parsedTrack.Samples.Count; i++)
-                    {
-                        var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i]);
-                        foreach (var nal in nalus)
-                        {
-                            await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
-                        }
-                    }
-                }
-                else if (t + 1 == inputAudioTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
-                {
-                    for (int i = 0; i < parsedTrack.Samples.Count; i++)
-                    {
-                        await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack.Samples[i]);
-                    }
-                }
-                else if (inputHintTracks.Select(x => x.Children.OfType<TrackHeaderBox>().Single().TrackID).Contains((uint)(t + 1)))
-                {
-                    for (int j = 0; j < hints.Count; j++)
-                    {
-                        if (hints[j].TrackID == t + 1)
-                        {
-                            for (int i = 0; i < parsedTrack.Samples.Count; i++)
-                            {
-                                await builder.ProcessSampleAsync(hints[j].TrackID, parsedTrack.Samples[i]);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    // unknown track
                 }
             }
-
-            await builder.FinalizeAsync();
+            else if (t + 1 == inputAudioTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
+            {
+                for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                {
+                    await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack.Samples[i]);
+                }
+            }
+            else if (inputHintTracks.Select(x => x.Children.OfType<TrackHeaderBox>().Single().TrackID).Contains((uint)(t + 1)))
+            {
+                for (int j = 0; j < hints.Count; j++)
+                {
+                    if (hints[j].TrackID == t + 1)
+                    {
+                        for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                        {
+                            await builder.ProcessSampleAsync(hints[j].TrackID, parsedTrack.Samples[i]);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // unknown track
+            }
         }
+
+        await builder.FinalizeAsync();
     }
 }
