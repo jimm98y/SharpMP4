@@ -14,24 +14,18 @@ namespace SharpISOBMFF
         public byte[] PaddingBytes { get; set; }
         public List<Box> Children { get; set; } = new List<Box>();
 
-        public ulong Read(IsoStream stream, ulong readSize = 0)
+        public ulong ReadSingleBox(IsoStream stream)
         {
-            Children.Clear();
-            Padding = null;
-
             Box box = null;
             ulong size = 0;
 
             try
             {
-                while (true)
-                {
-                    box = null;
-                    size += stream.ReadBox(size, null, out box);
-                    
-                    if (box == null)
-                        break;
+                box = null;
+                size += stream.ReadBox(size, null, out box);
 
+                if (box != null)
+                {
                     Children.Add(box);
                 }
             }
@@ -40,13 +34,31 @@ namespace SharpISOBMFF
                 Padding = ie.Padding;
                 PaddingBytes = ie.PaddingBytes;
             }
-            catch (EndOfStreamException) 
+            catch (EndOfStreamException)
             {
                 // This is to be expected
             }
             catch (Exception ex)
             {
                 Log.Debug($"Error: {ex.Message}");
+                throw;
+            }
+
+            return size;
+        }
+
+        public ulong Read(IsoStream stream, ulong readSize = 0)
+        {
+            ulong size = 0;
+
+            while (readSize == 0 || size < readSize)
+            {
+                ulong boxSize = ReadSingleBox(stream);
+                if(boxSize == 0)
+                {
+                    break;
+                }
+                size += boxSize;
             }
 
             return size;

@@ -220,10 +220,10 @@ namespace SharpMP4.Readers
 
                     if (ret.Moof != null)
                     {
-                        FragmentParserContext fragmentContext = new FragmentParserContext();
-
                         // fmp4
+                        FragmentParserContext fragmentContext = new FragmentParserContext();
                         fragmentContext.Trafs = ret.Moof.Children.OfType<TrackFragmentBox>();
+
                         foreach (var traf in fragmentContext.Trafs)
                         {
                             fragmentContext.Truns = traf.Children.OfType<TrackRunBox>(); // there can be 1 or multiple trun boxes, depending upon the encoder
