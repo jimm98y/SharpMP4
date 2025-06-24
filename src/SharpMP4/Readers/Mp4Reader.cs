@@ -90,7 +90,6 @@ namespace SharpMP4.Readers
                 else if (inputMp4.Children[i] is MovieBox)
                 {
                     ret.Moov = (MovieBox)inputMp4.Children[i];
-                    ret.Ftyp = inputMp4.Children.OfType<FileTypeBox>().Single();
                     ret.Track = ret.Moov.Children.OfType<TrackBox>().ToArray();
 
                     ret.Tracks = new TrackParserContext[ret.Track.Length];
