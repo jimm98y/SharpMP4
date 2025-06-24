@@ -8,13 +8,15 @@ namespace SharpMP4.Readers
 {
     public struct Mp4Sample
     {
+        public long IDX { get; set; }
         public long PTS { get; set; }
         public long DTS { get; set; }
         public uint Duration { get; set; }
         public byte[] Data { get; set; }
         public bool IsRandomAccessPoint { get; set; }
-        public Mp4Sample(long pts, long dts, uint duration, byte[] data, bool isRandomAccessPoint = true)
+        public Mp4Sample(long idx, long pts, long dts, uint duration, byte[] data, bool isRandomAccessPoint = true)
         {
+            this.IDX = idx;
             this.PTS = pts;
             this.DTS = dts;
             this.Duration = duration;
@@ -36,6 +38,10 @@ namespace SharpMP4.Readers
 
     public class TrackParserContext
     {
+        public long DTS { get; set; }
+        public long PTS { get; set; }
+        public long IDX { get; set; }
+
         public IList<byte[]> VideoNals { get; set; } = new List<byte[]>();
         public int NalLengthSize { get; set; } = 4;
         public IList<Mp4Sample> Samples { get; set; } = new List<Mp4Sample>();
@@ -75,9 +81,6 @@ namespace SharpMP4.Readers
             if (inputMp4.Children.Count == 0)
                 return null;
 
-            long[] dts = null;
-            long[] pts = null;
-
             ContainerParserContext ret = new ContainerParserContext();
             ulong size = 0;
 
@@ -91,10 +94,7 @@ namespace SharpMP4.Readers
                 {
                     ret.Moov = (MovieBox)inputMp4.Children[i];
                     ret.Track = ret.Moov.Children.OfType<TrackBox>().ToArray();
-
                     ret.Tracks = new TrackParserContext[ret.Track.Length];
-                    dts = new long[ret.Track.Length];
-                    pts = new long[ret.Track.Length];
 
                     foreach (var track in ret.Track)
                     {
@@ -243,7 +243,7 @@ namespace SharpMP4.Readers
                                 bool isVideo = ret.VideoTracks.Contains(trackID);
                                 if (fragmentContext.Tfdt != null)
                                 {
-                                    dts[trackID - 1] = (long)fragmentContext.Tfdt.BaseMediaDecodeTime;
+                                    trackContext.DTS = (long)fragmentContext.Tfdt.BaseMediaDecodeTime;
                                 }
 
                                 uint firstSampleFlags = trun.FirstSampleFlags;
@@ -290,12 +290,12 @@ namespace SharpMP4.Readers
                                             sampleCompositionTime = entry.SampleCompositionTimeOffset0;
                                     }
 
-                                    pts[trackID - 1] = dts[trackID - 1] + sampleCompositionTime;
+                                    trackContext.PTS = trackContext.DTS + sampleCompositionTime;
 
                                     size += ret.Mdat.Data.Stream.ReadUInt8Array(size, (ulong)ret.Mdat.Data.Length, sampleSize, out byte[] sampleData);
-                                    trackContext.Samples.Add(new Mp4Sample(pts[trackID - 1], dts[trackID - 1], sampleDuration, sampleData));
+                                    trackContext.Samples.Add(new Mp4Sample(trackContext.IDX++, trackContext.PTS, trackContext.DTS, sampleDuration, sampleData));
 
-                                    dts[trackID - 1] += sampleDuration;
+                                    trackContext.DTS += sampleDuration;
                                 }
                             }
                         }
@@ -380,12 +380,12 @@ namespace SharpMP4.Readers
                                     }
 
                                     uint sampleSize = sampleSizes[sampleIndex++];
-                                    pts[trackID - 1] = dts[trackID - 1] + cttsSampleDelta;
+                                    trackContext.PTS = trackContext.DTS + cttsSampleDelta;
 
                                     size += ret.Mdat.Data.Stream.ReadUInt8Array(size, (ulong)ret.Mdat.Data.Length, sampleSize, out byte[] sampleData);
-                                    ret.Tracks[(int)(trackID - 1)].Samples.Add(new Mp4Sample(pts[trackID - 1], dts[trackID - 1], sttsSampleDelta, sampleData, isRandomAccessPoint));
+                                    trackContext.Samples.Add(new Mp4Sample(trackContext.IDX++, trackContext.PTS, trackContext.DTS, sttsSampleDelta, sampleData, isRandomAccessPoint));
 
-                                    dts[trackID - 1] += sttsSampleDelta;
+                                    trackContext.DTS += sttsSampleDelta;
                                 }
                             }
                         }
