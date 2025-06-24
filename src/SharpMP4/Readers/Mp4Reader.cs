@@ -63,7 +63,6 @@ namespace SharpMP4.Readers
         public MovieBox Moov { get; set; }
         public MovieFragmentBox Moof { get; set; }
         public MediaDataBox Mdat { get; set; }
-        public MetaBox Meta { get; set; }
         public TrackBox[] Track { get; set; }
 
         public TrackParserContext[] Tracks { get; set; }
@@ -214,10 +213,6 @@ namespace SharpMP4.Readers
                     {
                         ret.Mdat = currentMdat;
                     }
-                }
-                else if (inputMp4.Children[i] is MetaBox)
-                {
-                    ret.Meta = (MetaBox)inputMp4.Children[i];
                 }
 
                 if (ret.Moov != null && ret.Mdat != null)
