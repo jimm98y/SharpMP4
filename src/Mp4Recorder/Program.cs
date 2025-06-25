@@ -3,6 +3,7 @@ using SharpMP4;
 using SharpMP4.Builders;
 using SharpMP4.Readers;
 using SharpMP4.Tracks;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -16,9 +17,13 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
 
     TrackBox inputVideoTrack = mp4.FindVideoTracks().First();
     TrackBox inputAudioTrack = mp4.FindAudioTracks().FirstOrDefault();
-    var inputHintTracks = mp4.FindHintTracks();
+    IEnumerable<TrackBox> inputHintTracks = mp4.FindHintTracks();
 
-    var parsed = Mp4Reader.Parse(mp4);
+    ContainerParserContext parsed = Mp4Reader.Parse(mp4);
+    for (int i = 0; i < parsed.Tracks.Length; i++)
+    {
+        Mp4Reader.ReadTrack(parsed, i + 1);
+    }         
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {

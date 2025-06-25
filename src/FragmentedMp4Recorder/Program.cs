@@ -20,6 +20,10 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
     var inputHintTracks = fmp4.FindHintTracks();
 
     var parsed = Mp4Reader.Parse(fmp4);
+    for (int i = 0; i < parsed.Tracks.Length; i++)
+    {
+        Mp4Reader.ReadTrack(parsed, i + 1);
+    }
 
     using (Stream output = new BufferedStream(new FileStream("frag_bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
