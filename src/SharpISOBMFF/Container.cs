@@ -51,14 +51,21 @@ namespace SharpISOBMFF
         {
             ulong size = 0;
 
-            while (readSize == 0 || size < readSize)
+            try
             {
-                ulong boxSize = ReadSingleBox(stream);
-                if(boxSize == 0)
+                while (readSize == 0 || size < readSize)
                 {
-                    break;
+                    ulong boxSize = ReadSingleBox(stream);
+                    if (boxSize == 0)
+                    {
+                        break;
+                    }
+                    size += boxSize;
                 }
-                size += boxSize;
+            }
+            catch(EndOfStreamException)
+            {
+                // This is to be expected
             }
 
             return size;
