@@ -196,7 +196,7 @@ namespace SharpMP4.Readers
             return context;
         }
 
-        public static ContainerContext ReadNextFragment(ContainerContext context, int trackID)
+        public static ContainerContext ReadFragment(ContainerContext context, int trackID)
         {
             if (context.Moov == null)
                 throw new InvalidOperationException();
@@ -225,19 +225,7 @@ namespace SharpMP4.Readers
                             trackContext.Truns = traf.Children.OfType<TrackRunBox>().ToArray(); // there can be 1 or multiple trun boxes, depending upon the encoder
                             var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
 
-                            // pre-calculate DTS and address
-                            long dts = (long)tfdt.BaseMediaDecodeTime;
-                            if (tfdt != null)
-                            {
-                                dts = (long)tfdt.BaseMediaDecodeTime;
-                            }
-
-                            long startAddress = trackContext.Moof.GetBoxOffset();
-                            if ((trackContext.Tfhd.Flags & 0x1) == 0x1)
-                            {
-                                startAddress = (long)trackContext.Tfhd.BaseDataOffset;
-                            }
-
+                            // pre-calculate DTS and address for the fragment
                             int sampleCount = 0;
                             for (int k = 0; k < trackContext.Truns.Length; k++)
                             {
@@ -248,14 +236,40 @@ namespace SharpMP4.Readers
                             }
 
                             trackContext.FragmentSampleCount = sampleCount;
+
+                            long dts = (long)tfdt.BaseMediaDecodeTime;
+                            if (tfdt != null)
+                            {
+                                dts = (long)tfdt.BaseMediaDecodeTime;
+                            }
+
+                            long startAddressBase = 0; // TODO: default?
+                            bool defaultBaseIsMoof = (trackContext.Tfhd.Flags & 0x20000u) == 0x20000u;
+                            if ((trackContext.Tfhd.Flags & 0x1) == 0x1)
+                            {
+                                startAddressBase = (long)trackContext.Tfhd.BaseDataOffset;
+                            }
+                            else if (defaultBaseIsMoof)
+                            {
+                                startAddressBase = trackContext.Moof.GetBoxOffset();
+                            }
+                            else
+                            {
+                                // TODO: review, possibly move to MDAT...
+                                throw new NotSupportedException();
+                            }
+
                             trackContext.FragmentSampleStartAddress = new long[sampleCount];
                             trackContext.FragmentSampleDts = new long[sampleCount];
                             trackContext.FragmentSampleTrunIndex = new int[sampleCount];
                             trackContext.FragmentSampleTrunEntryIndex = new int[sampleCount];
 
                             int sampleIndex = 0;
+                            long startAddress = 0;
                             for (int k = 0; k < trackContext.Truns.Length; k++)
                             {
+                                startAddress = startAddressBase + trackContext.Truns[k].DataOffset;
+
                                 for (int j = 0; j < trackContext.Truns[k]._TrunEntry.Length; j++)
                                 {
                                     var trunEntry = trackContext.Truns[k]._TrunEntry[j];
@@ -288,6 +302,7 @@ namespace SharpMP4.Readers
 
                                     trackContext.FragmentSampleTrunIndex[sampleIndex] = k;
                                     trackContext.FragmentSampleTrunEntryIndex[sampleIndex] = j;
+
                                     sampleIndex++;
                                 }
                             }
@@ -366,7 +381,7 @@ namespace SharpMP4.Readers
 
             long numFramesInChunk = trackContext.FramesInChunkList[chunkIndex];
             long firstFrameInChunk = totalFrames - numFramesInChunk;
-            ulong startAddress = trackContext.ChunkAddressList[chunkIndex];
+            long startAddress = (long)trackContext.ChunkAddressList[chunkIndex];
 
             for (int k = 0; k < numFramesInChunk; k++)
             {
@@ -437,8 +452,10 @@ namespace SharpMP4.Readers
             uint sampleSize = trackContext.SizesList[sampleIndex];
             long pts = dts + cttsSampleDelta;
 
-            // seek to the chunk offset
-            context.Mdat.Data.Stream.SeekFromBeginning((long)startAddress);
+            if (context.Mdat.Data.Stream.GetCurrentOffset() != startAddress)
+            {
+                context.Mdat.Data.Stream.SeekFromBeginning(startAddress);
+            }
 
             ulong size = context.Mdat.Data.Stream.ReadBytes(sampleSize, out byte[] sampleData);
 
@@ -457,7 +474,7 @@ namespace SharpMP4.Readers
                 trackContext.Moof = null;
                 trackContext.Mdat = null;
 
-                context = ReadNextFragment(context, trackID);
+                context = ReadFragment(context, trackID);
 
                 if (trackContext.Moof == null || trackContext.Mdat == null) // no more fragments available
                 {
@@ -512,6 +529,12 @@ namespace SharpMP4.Readers
 
             long dts = trackContext.FragmentSampleDts[trackContext.SampleIndex];
             long pts = dts + sampleCompositionTime;
+
+            long startAddress = trackContext.FragmentSampleStartAddress[trackContext.SampleIndex];
+            if (trackContext.Mdat.Data.Stream.GetCurrentOffset() != startAddress)
+            {
+                trackContext.Mdat.Data.Stream.SeekFromBeginning(startAddress);
+            }
 
             ulong size = trackContext.Mdat.Data.Stream.ReadBytes(sampleSize, out byte[] sampleData);
                         
@@ -599,10 +622,10 @@ namespace SharpMP4.Readers
 
     public class TrackContext
     {
-        public Mp4TrackTypes TrackType { get; set; }
-
-        public int NalLengthSize { get; set; } = 4;
         public uint SampleIndex { get; set; }
+
+        public Mp4TrackTypes TrackType { get; set; }
+        public int NalLengthSize { get; set; } = 4;
         public List<byte[]> VideoNals { get; set; } = new List<byte[]>();
 
         // mp4
