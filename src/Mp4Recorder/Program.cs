@@ -10,7 +10,7 @@ using System.Linq;
 SharpH26X.Log.SinkDebug = (o, e) => { };
 SharpH26X.Log.SinkInfo = (o, e) => { };
 
-using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read))
+using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
     var mp4 = new Container();
     mp4.Read(new IsoStream(inputFileStream));
@@ -19,7 +19,7 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
     TrackBox inputAudioTrack = mp4.FindAudioTracks().FirstOrDefault();
     IEnumerable<TrackBox> inputHintTracks = mp4.FindHintTracks();
 
-    ContainerContext parsed = Mp4Reader.Parse(mp4);       
+    ContainerContext parsed = Mp4Reader.Parse(mp4);
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {

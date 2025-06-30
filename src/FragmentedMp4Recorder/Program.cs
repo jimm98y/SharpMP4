@@ -10,7 +10,7 @@ using System.Linq;
 SharpH26X.Log.SinkDebug = (o, e) => { };
 SharpH26X.Log.SinkInfo = (o, e) => { };
 
-using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read))
+using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
     var fmp4 = new Container();
     fmp4.Read(new IsoStream(inputFileStream));
@@ -35,15 +35,15 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
         foreach (var hintTrack in inputHintTracks)
         {
             var ht = new RtpMovieHintTrack();
-            ht.Timescale =  hintTrack.Children.OfType<MediaBox>().Single().Children.OfType<MediaHeaderBox>().Single().Timescale;
+            ht.Timescale = hintTrack.Children.OfType<MediaBox>().Single().Children.OfType<MediaHeaderBox>().Single().Timescale;
             builder.AddTrack(ht);
             hints.Add(ht);
 
             uint trackId = hintTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
-                
-            foreach(var moof in fmp4.Children.OfType<MovieFragmentBox>())
+
+            foreach (var moof in fmp4.Children.OfType<MovieFragmentBox>())
             {
-                foreach(var traf in moof.Children.OfType<TrackFragmentBox>())
+                foreach (var traf in moof.Children.OfType<TrackFragmentBox>())
                 {
                     if (traf.Children.OfType<TrackFragmentHeaderBox>().Single().TrackID != trackId)
                         continue;
