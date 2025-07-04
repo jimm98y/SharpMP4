@@ -23,7 +23,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
 
     using (Stream output = new BufferedStream(new FileStream("frag_bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        IMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2666, 60095);
+        IMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2666);
         var videoTrack = new H264Track();
         builder.AddTrack(videoTrack);
 

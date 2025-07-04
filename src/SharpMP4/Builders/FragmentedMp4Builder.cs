@@ -349,10 +349,14 @@ namespace SharpMP4.Builders
             moov.Children.Add(mvex);
             mvex.Children = new List<Box>();
 
-            var mehd = new MovieExtendsHeaderBox();
-            mehd.SetParent(mvex);
-            mvex.Children.Add(mehd);
-            mehd.FragmentDuration = _durationInMs * MovieTimescale / 1000;
+            // optional
+            if (_durationInMs != 0)
+            {
+                var mehd = new MovieExtendsHeaderBox();
+                mehd.SetParent(mvex);
+                mvex.Children.Add(mehd);
+                mehd.FragmentDuration = _durationInMs * MovieTimescale / 1000;
+            }
 
             for (int i = 0; i < _tracks.Count; i++)
             {
