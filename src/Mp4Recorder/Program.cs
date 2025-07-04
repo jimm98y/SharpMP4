@@ -3,22 +3,23 @@ using SharpMP4;
 using SharpMP4.Builders;
 using SharpMP4.Readers;
 using SharpMP4.Tracks;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 SharpH26X.Log.SinkDebug = (o, e) => { };
 SharpH26X.Log.SinkInfo = (o, e) => { };
 
-using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read))
+using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
     var mp4 = new Container();
     mp4.Read(new IsoStream(inputFileStream));
 
     TrackBox inputVideoTrack = mp4.FindVideoTracks().First();
     TrackBox inputAudioTrack = mp4.FindAudioTracks().FirstOrDefault();
-    var inputHintTracks = mp4.FindHintTracks();
+    IEnumerable<TrackBox> inputHintTracks = mp4.FindHintTracks();
 
-    var parsed = Mp4Reader.Parse(mp4);
+    ContainerContext parsed = Mp4Reader.Parse(mp4);
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
@@ -40,9 +41,10 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
                     await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
                 }
 
-                for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                Mp4Sample sample = null;
+                while ((sample = Mp4Reader.ReadSample(parsed, t + 1)) != null)
                 {
-                    var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i].Data);
+                    var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, sample.Data);
                     foreach (var nal in nalus)
                     {
                         await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
@@ -51,9 +53,10 @@ using (Stream inputFileStream = new FileStream("bunny.mp4", FileMode.Open, FileA
             }
             else if (t + 1 == inputAudioTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
             {
-                for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                Mp4Sample sample = null;
+                while ((sample = Mp4Reader.ReadSample(parsed, t + 1)) != null)
                 {
-                    await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack.Samples[i].Data);
+                    await builder.ProcessSampleAsync(audioTrack.TrackID, sample.Data);
                 }
             }
             else

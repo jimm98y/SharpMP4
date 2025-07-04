@@ -10,7 +10,7 @@ using System.Linq;
 SharpH26X.Log.SinkDebug = (o, e) => { };
 SharpH26X.Log.SinkInfo = (o, e) => { };
 
-using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read))
+using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
     var fmp4 = new Container();
     fmp4.Read(new IsoStream(inputFileStream));
@@ -23,7 +23,7 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
 
     using (Stream output = new BufferedStream(new FileStream("frag_bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        IMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2666, 60095);
+        IMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2666);
         var videoTrack = new H264Track();
         builder.AddTrack(videoTrack);
 
@@ -35,15 +35,15 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
         foreach (var hintTrack in inputHintTracks)
         {
             var ht = new RtpMovieHintTrack();
-            ht.Timescale =  hintTrack.Children.OfType<MediaBox>().Single().Children.OfType<MediaHeaderBox>().Single().Timescale;
+            ht.Timescale = hintTrack.Children.OfType<MediaBox>().Single().Children.OfType<MediaHeaderBox>().Single().Timescale;
             builder.AddTrack(ht);
             hints.Add(ht);
 
             uint trackId = hintTrack.Children.OfType<TrackHeaderBox>().Single().TrackID;
-                
-            foreach(var moof in fmp4.Children.OfType<MovieFragmentBox>())
+
+            foreach (var moof in fmp4.Children.OfType<MovieFragmentBox>())
             {
-                foreach(var traf in moof.Children.OfType<TrackFragmentBox>())
+                foreach (var traf in moof.Children.OfType<TrackFragmentBox>())
                 {
                     if (traf.Children.OfType<TrackFragmentHeaderBox>().Single().TrackID != trackId)
                         continue;
@@ -67,9 +67,10 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                     await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
                 }
 
-                for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                Mp4Sample sample = null;
+                while ((sample = Mp4Reader.ReadSample(parsed, t + 1)) != null)
                 {
-                    var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, parsedTrack.Samples[i].Data);
+                    var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, sample.Data);
                     foreach (var nal in nalus)
                     {
                         await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
@@ -78,9 +79,10 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
             }
             else if (t + 1 == inputAudioTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
             {
-                for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                Mp4Sample sample = null;
+                while ((sample = Mp4Reader.ReadSample(parsed, t + 1)) != null)
                 {
-                    await builder.ProcessSampleAsync(audioTrack.TrackID, parsedTrack.Samples[i].Data);
+                    await builder.ProcessSampleAsync(audioTrack.TrackID, sample.Data);
                 }
             }
             else if (inputHintTracks.Select(x => x.Children.OfType<TrackHeaderBox>().Single().TrackID).Contains((uint)(t + 1)))
@@ -89,9 +91,10 @@ using (Stream inputFileStream = new FileStream("frag_bunny.mp4", FileMode.Open, 
                 {
                     if (hints[j].TrackID == t + 1)
                     {
-                        for (int i = 0; i < parsedTrack.Samples.Count; i++)
+                        Mp4Sample sample = null;
+                        while ((sample = Mp4Reader.ReadSample(parsed, t + 1)) != null)
                         {
-                            await builder.ProcessSampleAsync(hints[j].TrackID, parsedTrack.Samples[i].Data);
+                            await builder.ProcessSampleAsync(hints[j].TrackID, sample.Data);
                         }
                     }
                 }
