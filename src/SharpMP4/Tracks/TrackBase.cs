@@ -21,7 +21,7 @@ namespace SharpMP4.Tracks
 
         public virtual void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
         {
-            isRandomAccessPoint = false;
+            isRandomAccessPoint = true;
             output = sample;
         }
     }

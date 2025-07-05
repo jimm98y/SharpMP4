@@ -87,14 +87,10 @@ namespace SharpMP4.Builders
             _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
             if (processedSample != null)
             {
-                _trackCurrentFragments[(int)trackID - 1].Write(processedSample, 0, processedSample.Length);
-                _trackSampleSizes[(int)trackID - 1].Add((uint)processedSample.Length);
-                _trackEndTimes[(int)trackID - 1] += _tracks[(int)trackID - 1].SampleDuration;
-
                 ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[(int)trackID - 1] + 1);
                 ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
 
-                if (nextFragmentTime <= currentFragmentTime)
+                if (_trackSampleSizes[(int)trackID - 1].Count > 0 && nextFragmentTime <= currentFragmentTime && isRandomAccessPoint) // fragment on random access points
                 {
                     var fragment = CreateNewFragment(trackID);
                     _trackReadyFragments[(int)trackID - 1].Enqueue(fragment);
@@ -104,6 +100,10 @@ namespace SharpMP4.Builders
                     _trackSampleSizes[(int)trackID - 1].Clear();
                     _trackFragmentCounts[(int)trackID - 1]++;
                 }
+
+                _trackCurrentFragments[(int)trackID - 1].Write(processedSample, 0, processedSample.Length);
+                _trackSampleSizes[(int)trackID - 1].Add((uint)processedSample.Length);
+                _trackEndTimes[(int)trackID - 1] += _tracks[(int)trackID - 1].SampleDuration;
             }
 
             bool isFragmentReady = true;
