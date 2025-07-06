@@ -1,8 +1,8 @@
 ﻿using SharpISOBMFF;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharpMP4.Tracks
 {
@@ -54,8 +54,76 @@ namespace SharpMP4.Tracks
             ChannelCount = channelCount;   
             SamplingRate = samplingRateInHz;
             SampleSize = sampleSizeInBits;
-            SampleDuration = AAC_SAMPLE_SIZE; // hardcoded for AAC-LC
+            DefaultSampleDuration = AAC_SAMPLE_SIZE; // hardcoded for AAC-LC
             ChannelConfiguration = channelConfiguration;
+        }
+
+        /// <summary>
+        /// Ctor with initialization from the <see cref="SampleEntry"/>.
+        /// </summary>
+        /// <param name="sampleEntry"><see cref="SampleEntry"/>.</param>
+        public AACTrack(Box sampleEntry, uint timescale = 0, int sampleDuration = -1)
+        {
+            DefaultSampleDuration = sampleDuration <= 0 ? AAC_SAMPLE_SIZE : sampleDuration;
+
+            ESDBox esd = null;
+
+            if (sampleEntry is AudioSampleEntry audioSampleEntry)
+            {
+                Timescale = timescale == 0 ? audioSampleEntry.Samplerate >> 16 : timescale; 
+                ChannelCount = (byte)audioSampleEntry.Channelcount;
+                SamplingRate = audioSampleEntry.Samplerate >> 16;
+                SampleSize = audioSampleEntry.Samplesize;
+                ChannelConfiguration = (byte)audioSampleEntry.Channelcount;
+                esd = sampleEntry.Children.OfType<ESDBox>().Single();                       
+            }
+            else if(sampleEntry is AudioSampleEntryV1 audioSampleEntryV1)
+            {
+                Timescale = audioSampleEntryV1.Samplerate >> 16;
+                ChannelCount = (byte)audioSampleEntryV1.Channelcount;
+                SamplingRate = audioSampleEntryV1.Samplerate >> 16;
+                SampleSize = audioSampleEntryV1.Samplesize;
+                ChannelConfiguration = (byte)audioSampleEntryV1.Channelcount;
+                esd = sampleEntry.Children.OfType<ESDBox>().Single();
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+
+            if (esd != null)
+            {
+                DecoderConfigDescriptor decoderConfigDescriptor = esd._ES.Children.OfType<DecoderConfigDescriptor>().SingleOrDefault();
+                if (decoderConfigDescriptor != null)
+                {
+                    AudioSpecificConfig audioSpecificConfig = null;
+                    audioSpecificConfig = decoderConfigDescriptor.Children.OfType<AudioSpecificConfig>().SingleOrDefault();
+                    if (audioSpecificConfig == null)
+                    {
+                        // TODO: Fix demuxer
+                        GenericDecoderSpecificInfo genericDecoderSpecificInfo = decoderConfigDescriptor.Children.OfType<GenericDecoderSpecificInfo>().SingleOrDefault();
+                        if(genericDecoderSpecificInfo != null)
+                        {
+                            using(IsoStream isoStream = new IsoStream(new MemoryStream()))
+                            {
+                                genericDecoderSpecificInfo.Write(isoStream);
+                                isoStream.SeekFromBeginning(0);
+                                audioSpecificConfig = new AudioSpecificConfig();
+                                audioSpecificConfig.Read(isoStream, (ulong)isoStream.GetStreamLength() << 3);
+                            }
+                        }
+                    }
+
+                    if (audioSpecificConfig != null)
+                    {
+                        ChannelConfiguration = audioSpecificConfig.ChannelConfiguration;
+                    }
+                }
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
 
         public override void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
@@ -110,8 +178,8 @@ namespace SharpMP4.Tracks
             decoderConfigDescriptor.ObjectTypeIndication = AAC_OBJECT_TYPE_INDICATION; // AAC LC
             decoderConfigDescriptor.StreamType = AAC_STREAM_TYPE;
             decoderConfigDescriptor.MaxBitrate = 0; // this.SamplingRate;
-            decoderConfigDescriptor.AvgBitrate = 64000; // TODO: this.SamplingRate;
-            decoderConfigDescriptor.BufferSizeDB = 6144; // TODO: ???
+            decoderConfigDescriptor.AvgBitrate = 0; // TODO: this.SamplingRate;
+            decoderConfigDescriptor.BufferSizeDB = 0; // TODO: ???
 
             AudioSpecificConfig audioSpecificConfig = new AudioSpecificConfig() 
             {

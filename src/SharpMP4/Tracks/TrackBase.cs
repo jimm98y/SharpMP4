@@ -2,7 +2,7 @@
 
 namespace SharpMP4.Tracks
 {
-    public abstract class TrackBase
+    public abstract class TrackBase : ITrack
     {
         public abstract string HandlerName { get; }
         public abstract string HandlerType { get; }
@@ -12,7 +12,7 @@ namespace SharpMP4.Tracks
         public uint TrackID { get; set; } = 1;
         public string CompatibleBrand { get; set; } = null;
 
-        public uint SampleDuration { get; set; }
+        public int DefaultSampleDuration { get; set; }
         public uint DefaultSampleFlags { get; set; }
 
         public abstract Box CreateSampleEntryBox();

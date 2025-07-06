@@ -20,7 +20,7 @@ namespace SharpMP4.Builders
         private MediaDataBox _mdat;
         private ulong _size;
 
-        private readonly List<TrackBase> _tracks = new List<TrackBase>();
+        private readonly List<ITrack> _tracks = new List<ITrack>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
         private readonly List<List<uint>> _trackSampleSizes = new List<List<uint>>();
         private readonly List<List<uint>> _trackSampleOffsets = new List<List<uint>>();
@@ -41,7 +41,7 @@ namespace SharpMP4.Builders
         /// Add a track to the fMP4.
         /// </summary>
         /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
-        public void AddTrack(TrackBase track)
+        public void AddTrack(ITrack track)
         {
             _tracks.Add(track);
             _trackEndTimes.Add(0);
@@ -51,7 +51,7 @@ namespace SharpMP4.Builders
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
         }               
 
-        private async Task WriteSample(uint trackID, byte[] sample, bool isRandomAccessPoint)
+        private async Task WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
             Container mp4 = new Container();
 
@@ -99,11 +99,13 @@ namespace SharpMP4.Builders
                 _writeInitialization = false;
             }
 
+            uint currentSampleDuration = sampleDuration < 0 ? (uint)_tracks[(int)trackID - 1].DefaultSampleDuration : (uint)sampleDuration;
+
             var track = _tracks[(int)trackID - 1];
             _trackSampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
             _storage.Write(sample, 0, sample.Length);
             _trackSampleSizes[(int)trackID - 1].Add((uint)sample.Length);
-            _trackEndTimes[(int)trackID - 1] += track.SampleDuration;
+            _trackEndTimes[(int)trackID - 1] += currentSampleDuration;
 
             if(isRandomAccessPoint)
             {
@@ -288,12 +290,12 @@ namespace SharpMP4.Builders
             }
         }
 
-        public async Task ProcessSampleAsync(uint trackID, byte[] sample)
+        public async Task ProcessSampleAsync(uint trackID, byte[] sample, int sampleDuration)
         {
             _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
             if (processedSample != null)
             {
-                await WriteSample(trackID, processedSample, isRandomAccessPoint);
+                await WriteSample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
             }
         }
 
@@ -301,7 +303,7 @@ namespace SharpMP4.Builders
         {
             foreach(var track in _tracks)
             {
-                await ProcessSampleAsync(track.TrackID, null);
+                await ProcessSampleAsync(track.TrackID, null, -1);
             }
 
             var mp4 = new Container();

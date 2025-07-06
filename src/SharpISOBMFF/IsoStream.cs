@@ -65,6 +65,10 @@ namespace SharpISOBMFF
             }
         }
 
+        /// <summary>
+        /// Returns stream length in bytes.
+        /// </summary>
+        /// <returns></returns>
         public long GetStreamLength()
         {
             try
@@ -2148,7 +2152,7 @@ namespace SharpISOBMFF
                     size += ReadUInt32(size, ulong.MaxValue, out nalUnitLength);
                     break;
                 default:
-                    throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                    throw new NotSupportedException($"NAL unit length {nalLengthSize} not supported!");
             }
             return size;
         }
@@ -2175,7 +2179,7 @@ namespace SharpISOBMFF
                     size += WriteUInt32(nalUnitLength);
                     break;
                 default:
-                    throw new Exception($"NAL unit length {nalLengthSize} not supported!");
+                    throw new NotSupportedException($"NAL unit length {nalLengthSize} not supported!");
             }
             return size;
         }

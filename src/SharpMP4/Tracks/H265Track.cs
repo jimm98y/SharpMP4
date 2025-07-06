@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using SharpH265;
@@ -11,7 +12,7 @@ namespace SharpMP4.Tracks
     /// H265 track.
     /// </summary>
     /// <remarks>https://www.itu.int/rec/T-REC-H.265/en</remarks>
-    public class H265Track : TrackBase
+    public class H265Track : TrackBase, IH26XTrack
     {
         public const string BRAND = "hvc1";
 
@@ -43,9 +44,10 @@ namespace SharpMP4.Tracks
         public List<SeiRbsp> PrefixSei { get; set; } = new List<SeiRbsp>();
         public List<byte[]> PrefixSeiRaw { get; set; } = new List<byte[]>();
 
-        public override string HandlerName => "VideoHandler\0"; //HandlerNames.Video;
+        public override string HandlerName => HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "und";
+        public int NalLengthSize { get; set; } = 4;
 
         /// <summary>
         /// Overrides any auto-detected timescale.
@@ -55,7 +57,7 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// Overrides any auto-detected frame tick.
         /// </summary>
-        public uint FrameTickOverride { get; set; } = 0;
+        public int FrameTickOverride { get; set; } = 0;
 
         /// <summary>
         /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
@@ -65,7 +67,7 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
         /// </summary>
-        public uint FrameTickFallback { get; set; } = 1001;
+        public int FrameTickFallback { get; set; } = 1001;
 
         private H265Context _context = new H265Context();
 
@@ -76,6 +78,27 @@ namespace SharpMP4.Tracks
         {
             CompatibleBrand = BRAND; // hvc1
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
+        }
+
+        public H265Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
+        {
+            Timescale = timescale;
+            DefaultSampleDuration = sampleDuration;
+
+            VisualSampleEntry visualSampleEntry = (VisualSampleEntry)sampleEntry;
+            HEVCConfigurationBox hvcC = visualSampleEntry.Children.OfType<HEVCConfigurationBox>().Single();
+
+            NalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+            foreach (var nalus in hvcC._HEVCConfig.NalUnit)
+            {
+                foreach (var nalu in nalus)
+                {
+                    ProcessSample(nalu, out _, out _);
+                }
+            }
+
+            // TODO SampleDuration
         }
 
         /// <summary>
@@ -134,18 +157,18 @@ namespace SharpMP4.Tracks
                     }
 
                     // if SPS contains the timescale, set it
-                    if (Timescale == 0 || SampleDuration == 0)
+                    if (Timescale == 0 || DefaultSampleDuration == 0)
                     {
                         var timescale = CalculateTimescale(_context.SeqParameterSetRbsp);
                         if (timescale.Timescale != 0 && timescale.FrameTick != 0)
                         {
                             Timescale = timescale.Timescale;
-                            SampleDuration = timescale.FrameTick;
+                            DefaultSampleDuration = (int)timescale.FrameTick;
                         }
                         else
                         {
                             Timescale = TimescaleFallback;
-                            SampleDuration = FrameTickFallback;
+                            DefaultSampleDuration = FrameTickFallback;
                         }
                     }
 
@@ -155,7 +178,7 @@ namespace SharpMP4.Tracks
                     }
                     if (FrameTickOverride != 0)
                     {
-                        SampleDuration = FrameTickOverride;
+                        DefaultSampleDuration = FrameTickOverride;
                     }
 
                     // SPS NAL unit with nuh_layer_id equal to 0 (when present)
@@ -315,16 +338,60 @@ namespace SharpMP4.Tracks
 
             foreach (var nal in _nalBuffer)
             {
-                int len = nal.Length;
+                uint nalUnitLength = (uint)nal.Length;
 
-                // for each NAL, add 4 byte NAL size
-                byte[] size = new byte[]
+                byte[] size;
+                switch (NalLengthSize)
                 {
-                    (byte)((len & 0xff000000) >> 24),
-                    (byte)((len & 0xff0000) >> 16),
-                    (byte)((len & 0xff00) >> 8),
-                    (byte)(len & 0xff)
-                };
+                    case 1:
+                        {
+                            if (nalUnitLength > byte.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                            size = new byte[]
+                            {
+                                (byte)(nalUnitLength & 0xff)
+                            };
+                        }
+                        break;
+
+                    case 2:
+                        {
+                            if (nalUnitLength > ushort.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                            size = new byte[]
+                            {
+                                (byte)((nalUnitLength & 0xff00) >> 8),
+                                (byte)(nalUnitLength & 0xff)
+                            };
+                        }
+                        break;
+
+                    case 3:
+                        {
+                            if (nalUnitLength > 16777215) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                            size = new byte[]
+                            {
+                                (byte)((nalUnitLength & 0xff0000) >> 16),
+                                (byte)((nalUnitLength & 0xff00) >> 8),
+                                (byte)(nalUnitLength & 0xff)
+                            };
+                        }
+                        break;
+
+                    case 4:
+                        {
+                            if (nalUnitLength > uint.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                            size = new byte[]
+                            {
+                                (byte)((nalUnitLength & 0xff000000) >> 24),
+                                (byte)((nalUnitLength & 0xff0000) >> 16),
+                                (byte)((nalUnitLength & 0xff00) >> 8),
+                                (byte)(nalUnitLength & 0xff)
+                            };
+                        }
+                        break;
+
+                    default:
+                        throw new NotSupportedException($"NAL unit length {NalLengthSize} not supported!");
+                }
 
                 result = result.Concat(size).Concat(nal);
             }
@@ -546,6 +613,11 @@ namespace SharpMP4.Tracks
                     ((ulong)bytes[5]);
                 return ret;
             }
+        }
+
+        public byte[][] GetVideoNALUs()
+        {
+            return VpsRaw.Values.ToArray().Concat(SpsRaw.Values.ToArray()).Concat(PpsRaw.Values.ToArray()).Concat(PrefixSeiRaw).ToArray();
         }
     }
 }

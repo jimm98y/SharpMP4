@@ -1,4 +1,6 @@
 ﻿using SharpISOBMFF;
+using System;
+using System.Linq;
 
 namespace SharpMP4.Tracks
 {
@@ -8,6 +10,8 @@ namespace SharpMP4.Tracks
     /// <remarks>https://opus-codec.org/docs/opus_in_isobmff.html</remarks>
     public class OpusTrack : TrackBase
     {
+        public const int OPUS_SAMPLE_SIZE = 960; // TODO 
+
         public byte ChannelCount { get; private set; }
         public uint SamplingRate { get; private set; }
         public ushort SampleSize { get; private set; }
@@ -45,6 +49,58 @@ namespace SharpMP4.Tracks
             CoupledCount = coupledCount;
             ChannelMappingFamily = channelMappingFamily;
             ChannelMapping = channelMapping;
+        }
+
+        /// <summary>
+        /// Ctor with initialization from the <see cref="SampleEntry"/>.
+        /// </summary>
+        /// <param name="sampleEntry"><see cref="SampleEntry"/>.</param>
+        public OpusTrack(Box sampleEntry, uint timescale = 0, int sampleDuration = -1)
+        {
+            DefaultSampleDuration = sampleDuration <= 0 ? OPUS_SAMPLE_SIZE : sampleDuration;
+
+            OpusSpecificBox opusSpecificBox = null;
+
+            if (sampleEntry is AudioSampleEntry audioSampleEntry)
+            {
+                Timescale = timescale == 0 ? audioSampleEntry.Samplerate >> 16 : timescale;
+                ChannelCount = (byte)audioSampleEntry.Channelcount;
+                SamplingRate = audioSampleEntry.Samplerate >> 16;
+                SampleSize = audioSampleEntry.Samplesize;
+                opusSpecificBox = audioSampleEntry.Children.OfType<OpusSpecificBox>().SingleOrDefault();
+            }
+            else if (sampleEntry is AudioSampleEntryV1 audioSampleEntryV1)
+            {
+                Timescale = audioSampleEntryV1.Samplerate >> 16;
+                ChannelCount = (byte)audioSampleEntryV1.Channelcount;
+                SamplingRate = audioSampleEntryV1.Samplerate >> 16;
+                SampleSize = audioSampleEntryV1.Samplesize;
+                opusSpecificBox = audioSampleEntryV1.Children.OfType<OpusSpecificBox>().SingleOrDefault();
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+
+            if (opusSpecificBox != null)
+            {
+                PreSkip = opusSpecificBox._PreSkip;
+                ChannelMappingFamily = opusSpecificBox._ChannelMappingFamily;
+                if (opusSpecificBox._ChannelMappingTable != null)
+                {
+                    StreamCount = opusSpecificBox._ChannelMappingTable._StreamCount;
+                    CoupledCount = opusSpecificBox._ChannelMappingTable._CoupledCount;
+                    ChannelMapping = opusSpecificBox._ChannelMappingTable._ChannelMapping;
+                }
+                else
+                {
+                    throw new NotSupportedException();
+                }
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
         }
 
         public override Box CreateSampleEntryBox()
