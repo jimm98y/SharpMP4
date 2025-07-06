@@ -9,32 +9,17 @@ namespace SharpMP4.Tracks
 
         public static ITrack DefaultCreateTrack(Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName)
         {
-            if (handlerType == IsoStream.FromFourCC(HandlerTypes.Sound))
-            {
-                return CreateAudioTrack(sampleEntry, timescale, sampleDuration);
-            }
-            else if (handlerType == IsoStream.FromFourCC(HandlerTypes.Video))
+            if (handlerType == IsoStream.FromFourCC(HandlerTypes.Video))
             {
                 return CreateVideoTrack(sampleEntry, timescale, sampleDuration);
+            }
+            else if (handlerType == IsoStream.FromFourCC(HandlerTypes.Sound))
+            {
+                return CreateAudioTrack(sampleEntry, timescale, sampleDuration);
             }
             else
             {
                 return CreateGenericTrack(sampleEntry, timescale, sampleDuration, handlerType, handlerName);
-            }
-        }
-
-        private static ITrack CreateAudioTrack(Box sampleEntry, uint timescale, int sampleDuration)
-        {
-            switch (IsoStream.ToFourCC(sampleEntry.FourCC))
-            {
-                case "mp4a":
-                    return new AACTrack(sampleEntry, timescale, sampleDuration);
-
-                case "Opus":
-                    return new OpusTrack(sampleEntry, timescale, sampleDuration);
-
-                default:
-                    return CreateGenericTrack(sampleEntry, timescale, sampleDuration, IsoStream.FromFourCC(HandlerTypes.Sound), HandlerNames.Sound);
             }
         }
 
@@ -62,6 +47,21 @@ namespace SharpMP4.Tracks
 
                 default:
                     return CreateGenericTrack(sampleEntry, timescale, sampleDuration, IsoStream.FromFourCC(HandlerTypes.Video), HandlerNames.Video);
+            }
+        }
+
+        private static ITrack CreateAudioTrack(Box sampleEntry, uint timescale, int sampleDuration)
+        {
+            switch (IsoStream.ToFourCC(sampleEntry.FourCC))
+            {
+                case "mp4a":
+                    return new AACTrack(sampleEntry, timescale, sampleDuration);
+
+                case "Opus":
+                    return new OpusTrack(sampleEntry, timescale, sampleDuration);
+
+                default:
+                    return CreateGenericTrack(sampleEntry, timescale, sampleDuration, IsoStream.FromFourCC(HandlerTypes.Sound), HandlerNames.Sound);
             }
         }
 

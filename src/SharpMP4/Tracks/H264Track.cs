@@ -105,8 +105,6 @@ namespace SharpMP4.Tracks
             {
                 ProcessSample(ppsBinary, out _, out _);
             }
-
-            // TODO SampleDuration
         }
 
         /// <summary>

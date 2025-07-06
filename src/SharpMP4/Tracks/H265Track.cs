@@ -97,8 +97,6 @@ namespace SharpMP4.Tracks
                     ProcessSample(nalu, out _, out _);
                 }
             }
-
-            // TODO SampleDuration
         }
 
         /// <summary>
