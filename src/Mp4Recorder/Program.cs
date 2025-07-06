@@ -38,7 +38,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
                     var videoNalus = h26xTrack.GetVideoNALUs();
                     foreach (var nal in videoNalus)
                     {
-                        await builder.ProcessSampleAsync(parsedTrack.Track.TrackID, nal);
+                        await builder.ProcessTrackSampleAsync(parsedTrack.Track.TrackID, nal);
                     }
 
                     Mp4Sample sample = null;
@@ -47,7 +47,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
                         var nalus = Mp4Reader.ReadAU(h26xTrack.NalLengthSize, sample.Data);
                         foreach (var nal in nalus)
                         {
-                            await builder.ProcessSampleAsync(parsedTrack.Track.TrackID, nal);
+                            await builder.ProcessTrackSampleAsync(parsedTrack.Track.TrackID, nal);
                         }
                     }
                 }
@@ -62,7 +62,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
                 Mp4Sample sample = null;
                 while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
                 {
-                    await builder.ProcessSampleAsync(parsedTrack.Track.TrackID, sample.Data, -1);
+                    await builder.ProcessTrackSampleAsync(parsedTrack.Track.TrackID, sample.Data, -1);
                 }
             }
             else
@@ -71,7 +71,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
                 Mp4Sample sample = null;
                 while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
                 {
-                    await builder.ProcessSampleAsync(parsedTrack.Track.TrackID, sample.Data, sample.Duration);
+                    await builder.ProcessTrackSampleAsync(parsedTrack.Track.TrackID, sample.Data, sample.Duration);
                 }
             }
         }

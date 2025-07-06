@@ -86,33 +86,41 @@ namespace SharpMP4.Builders
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
         }
 
-        public async Task ProcessSampleAsync(uint trackID, byte[] sample, int sampleDuration = -1)
+        public Task ProcessTrackSampleAsync(uint trackID, byte[] sample, int sampleDuration = -1)
+        {
+            _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
+
+            if (processedSample != null)
+            {
+                return ProcessMp4SampleAsync(trackID, processedSample, sampleDuration, isRandomAccessPoint);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public async Task ProcessMp4SampleAsync(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
             uint currentSampleDuration = sampleDuration < 0 ? (uint)_tracks[(int)trackID - 1].DefaultSampleDuration : (uint)sampleDuration;
 
-            _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
-            if (processedSample != null)
+            ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[(int)trackID - 1] + 1);
+            ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
+
+            if (_trackSampleSizes[(int)trackID - 1].Count > 0 && nextFragmentTime <= currentFragmentTime)
             {
-                ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[(int)trackID - 1] + 1);
-                ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
+                var fragment = CreateNewFragment(trackID);
+                _trackReadyFragments[(int)trackID - 1].Enqueue(fragment);
 
-                if (_trackSampleSizes[(int)trackID - 1].Count > 0 && nextFragmentTime <= currentFragmentTime)
-                {
-                    var fragment = CreateNewFragment(trackID);
-                    _trackReadyFragments[(int)trackID - 1].Enqueue(fragment);
-
-                    _trackCurrentFragments[(int)trackID - 1] = TemporaryStorage.Factory.Create();
-                    _trackStartTimes[(int)trackID - 1] = _trackEndTimes[(int)trackID - 1];
-                    _trackSampleSizes[(int)trackID - 1].Clear();
-                    _trackSampleDurations[(int)trackID - 1].Clear();
-                    _trackFragmentCounts[(int)trackID - 1]++;
-                }
-
-                _trackCurrentFragments[(int)trackID - 1].Write(processedSample, 0, processedSample.Length);
-                _trackSampleSizes[(int)trackID - 1].Add((uint)processedSample.Length);
-                _trackSampleDurations[(int)trackID - 1].Add(currentSampleDuration);
-                _trackEndTimes[(int)trackID - 1] += currentSampleDuration;
+                _trackCurrentFragments[(int)trackID - 1] = TemporaryStorage.Factory.Create();
+                _trackStartTimes[(int)trackID - 1] = _trackEndTimes[(int)trackID - 1];
+                _trackSampleSizes[(int)trackID - 1].Clear();
+                _trackSampleDurations[(int)trackID - 1].Clear();
+                _trackFragmentCounts[(int)trackID - 1]++;
             }
+
+            _trackCurrentFragments[(int)trackID - 1].Write(sample, 0, sample.Length);
+            _trackSampleSizes[(int)trackID - 1].Add((uint)sample.Length);
+            _trackSampleDurations[(int)trackID - 1].Add(currentSampleDuration);
+            _trackEndTimes[(int)trackID - 1] += currentSampleDuration;
 
             bool isFragmentReady = true;
             for (int i = 0; i < _tracks.Count; i++)

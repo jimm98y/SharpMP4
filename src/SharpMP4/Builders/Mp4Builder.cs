@@ -290,20 +290,28 @@ namespace SharpMP4.Builders
             }
         }
 
-        public async Task ProcessSampleAsync(uint trackID, byte[] sample, int sampleDuration)
+        public Task ProcessTrackSampleAsync(uint trackID, byte[] sample, int sampleDuration)
         {
             _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
+
             if (processedSample != null)
             {
-                await WriteSample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
+                return ProcessMp4SampleAsync(trackID, sample, sampleDuration, isRandomAccessPoint);
             }
+
+            return Task.CompletedTask;
+        }
+
+        public Task ProcessMp4SampleAsync(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
+        {
+            return WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint);
         }
 
         public async Task FinalizeAsync()
         {
             foreach(var track in _tracks)
             {
-                await ProcessSampleAsync(track.TrackID, null, -1);
+                await ProcessTrackSampleAsync(track.TrackID, null, -1);
             }
 
             var mp4 = new Container();
