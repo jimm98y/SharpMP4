@@ -19,7 +19,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
 
     using (Stream output = new BufferedStream(new FileStream("frag_bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        IMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2600);
+        IMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2000);
 
         foreach(var track in parsedTracks)
         {

@@ -96,7 +96,7 @@ namespace SharpMP4.Builders
                 ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[(int)trackID - 1] + 1);
                 ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
 
-                if (_trackSampleSizes[(int)trackID - 1].Count > 0 && nextFragmentTime <= currentFragmentTime && isRandomAccessPoint) // fragment on random access points
+                if (_trackSampleSizes[(int)trackID - 1].Count > 0 && nextFragmentTime <= currentFragmentTime)
                 {
                     var fragment = CreateNewFragment(trackID);
                     _trackReadyFragments[(int)trackID - 1].Enqueue(fragment);
@@ -131,7 +131,10 @@ namespace SharpMP4.Builders
 
         private Mp4Fragment CreateNewFragment(uint trackID)
         {
-            return new Mp4Fragment(_trackCurrentFragments[(int)trackID - 1], _trackStartTimes[(int)trackID - 1], _trackEndTimes[(int)trackID - 1], _trackSampleSizes[(int)trackID - 1].ToArray(), _trackSampleDurations[(int)trackID - 1].ToArray());
+            int index = (int)trackID - 1;
+            var ret = new Mp4Fragment(_trackCurrentFragments[index], _trackStartTimes[index], _trackEndTimes[index], _trackSampleSizes[index].ToArray(), _trackSampleDurations[index].ToArray());
+            _trackSampleSizes[index].Clear();
+            return ret;
         }
 
         private async Task WriteFragmentAsync(bool isFlushing = false)
@@ -152,47 +155,76 @@ namespace SharpMP4.Builders
             // all tracks have enough samples to produce a fragment
             do
             {
+                // VLC requires the first MOOF to be video, otherwise we get choppy playback
+                // first video tracks
                 for (int i = 0; i < _tracks.Count; i++)
                 {
-                    Mp4Fragment fragment;
-
-                    if (isFlushing)
+                    if (_tracks[i].HandlerType == HandlerTypes.Video)
                     {
-                        if (_trackReadyFragments[i].Count > 0)
-                        {
-                            fragment = _trackReadyFragments[i].Dequeue();
-                        }
-                        else if (_trackSampleSizes[i].Count > 0)
-                        {
-                            fragment = CreateNewFragment((uint)i + 1);
-                            _trackSampleSizes[i].Clear();
-                        }
-                        else
-                        {
-                            continue; // at the very end we might not have any samples for a track
-                        }
+                        await WriteTrackFragment(isFlushing, i);
                     }
-                    else
+                }
+
+                // then audio tracks
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    if (_tracks[i].HandlerType == HandlerTypes.Sound)
                     {
-                        fragment = _trackReadyFragments[i].Dequeue();
+                        await WriteTrackFragment(isFlushing, i);
                     }
+                }
 
-                    Container fmp4 = new Container();
-                    uint sequenceNumber = _moofSequenceNumber++;
-
-                    CreateMediaFragmentAsync(fmp4, _tracks[i], fragment, sequenceNumber);
-
-                    var outputStream = await _output.GetStreamAsync(sequenceNumber);
-                    var fragmentStream = new IsoStream(outputStream);
-
-                    _trackMoofOffsets[i].Add((ulong)fragmentStream.GetCurrentOffset());
-                    _trackMoofTime[i].Add(fragment.EndTime);
-
-                    fmp4.Write(fragmentStream);
-                    await _output.FlushAsync(outputStream, sequenceNumber);
+                // then the rest
+                for (int i = 0; i < _tracks.Count; i++)
+                {
+                    if (_tracks[i].HandlerType != HandlerTypes.Video && _tracks[i].HandlerType != HandlerTypes.Sound)
+                    {
+                        await WriteTrackFragment(isFlushing, i);
+                    }
                 }
             }
             while (isFlushing && (_trackReadyFragments.Any(x => x.Count > 0) || _trackSampleSizes.Any(x => x.Count > 0)));
+        }
+
+        private async Task WriteTrackFragment(bool isFlushing, int i)
+        {
+            Mp4Fragment fragment;
+
+            if (isFlushing)
+            {
+                if (_trackReadyFragments[i].Count > 0)
+                {
+                    fragment = _trackReadyFragments[i].Dequeue();
+                }
+                else if (_trackSampleSizes[i].Count > 0)
+                {
+                    fragment = CreateNewFragment((uint)i + 1);
+                }
+                else
+                {
+                    // at the very end we might not have any samples for a track
+                    // continue;
+                    return;
+                }
+            }
+            else
+            {
+                fragment = _trackReadyFragments[i].Dequeue();
+            }
+
+            Container fmp4 = new Container();
+            uint sequenceNumber = _moofSequenceNumber++;
+
+            CreateMediaFragmentAsync(fmp4, _tracks[i], fragment, sequenceNumber);
+
+            var outputStream = await _output.GetStreamAsync(sequenceNumber);
+            var fragmentStream = new IsoStream(outputStream);
+
+            _trackMoofOffsets[i].Add((ulong)fragmentStream.GetCurrentOffset());
+            _trackMoofTime[i].Add(fragment.EndTime);
+
+            fmp4.Write(fragmentStream);
+            await _output.FlushAsync(outputStream, sequenceNumber);
         }
 
         private void CreateMediaInitializationAsync(Container fmp4)
