@@ -16,12 +16,13 @@ namespace SharpMP4.Tracks
     /// https://yumichan.net/video-processing/video-compression/introduction-to-h264-nal-unit/
     /// https://stackoverflow.com/questions/38094302/how-to-understand-header-of-h264
     /// </remarks>
-    public class H264Track : TrackBase
+    public class H264Track : TrackBase, IH26XTrack
     {
         public const string BRAND = "avc1";
         public override string HandlerName => HandlerNames.Video;
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "eng";
+        public int NalLengthSize { get; set; } = 4;
 
         private List<byte[]> _nalBuffer = new List<byte[]>();
         private bool _nalBufferContainsVCL = false; 
@@ -85,6 +86,27 @@ namespace SharpMP4.Tracks
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
         }
 
+        public H264Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
+        {
+            Timescale = timescale;
+            DefaultSampleDuration = sampleDuration;
+
+            VisualSampleEntry visualSampleEntry = (VisualSampleEntry)sampleEntry;
+            AVCConfigurationBox avcC = visualSampleEntry.Children.OfType<AVCConfigurationBox>().Single();
+
+            NalLengthSize = avcC._AVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+            foreach (var spsBinary in avcC._AVCConfig.SequenceParameterSetNALUnit)
+            {
+                ProcessSample(spsBinary, out _, out _);
+            }
+
+            foreach (var ppsBinary in avcC._AVCConfig.PictureParameterSetNALUnit)
+            {
+                ProcessSample(ppsBinary, out _, out _);
+            }
+        }
+
         /// <summary>
         /// Process 1 NAL (Network Abstraction Layer) unit.
         /// </summary>
@@ -137,18 +159,18 @@ namespace SharpMP4.Tracks
                     }
 
                     // if SPS contains the timescale, set it
-                    if (Timescale == 0 || SampleDuration == 0)
+                    if (Timescale == 0 || DefaultSampleDuration == 0)
                     {
                         var timescale = CalculateTimescale(_context.SeqParameterSetRbsp);
                         if (timescale.Timescale != 0 && timescale.FrameTick != 0)
                         {
                             Timescale = timescale.Timescale; // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
-                            SampleDuration = timescale.FrameTick * 2;
+                            DefaultSampleDuration = (int)timescale.FrameTick * 2;
                         }
                         else
                         {
                             Timescale = TimescaleFallback;
-                            SampleDuration = FrameTickFallback;
+                            DefaultSampleDuration = (int)FrameTickFallback;
                         }
                     }
 
@@ -158,7 +180,7 @@ namespace SharpMP4.Tracks
                     }
                     if (FrameTickOverride != 0)
                     {
-                        SampleDuration = FrameTickOverride;
+                        DefaultSampleDuration = (int)FrameTickOverride;
                     }
 
                     // sequence parameter set NAL unit (when present)
@@ -339,16 +361,60 @@ namespace SharpMP4.Tracks
 
             foreach (var nal in _nalBuffer)
             {
-                int len = nal.Length;
+                uint nalUnitLength = (uint)nal.Length;
 
-                // for each NAL, add 4 byte NAL size
-                byte[] size = new byte[]
+                byte[] size;
+                switch (NalLengthSize)
                 {
-                    (byte)((len & 0xff000000) >> 24),
-                    (byte)((len & 0xff0000) >> 16),
-                    (byte)((len & 0xff00) >> 8),
-                    (byte)(len & 0xff)
-                };
+                    case 1:
+                        {
+                            if (nalUnitLength > byte.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                            size = new byte[]
+                            {
+                                (byte)(nalUnitLength & 0xff)
+                            };
+                        }
+                        break;
+
+                    case 2:
+                        {
+                            if (nalUnitLength > ushort.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                            size = new byte[]
+                            {
+                                (byte)((nalUnitLength & 0xff00) >> 8),
+                                (byte)(nalUnitLength & 0xff)
+                            };
+                        }
+                        break;
+
+                    case 3:
+                        {
+                            if (nalUnitLength > 16777215) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                            size = new byte[]
+                            {
+                                (byte)((nalUnitLength & 0xff0000) >> 16),
+                                (byte)((nalUnitLength & 0xff00) >> 8),
+                                (byte)(nalUnitLength & 0xff)
+                            };
+                        }
+                        break;
+
+                    case 4:
+                        {
+                            if (nalUnitLength > uint.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
+                            size = new byte[]
+                            {
+                                (byte)((nalUnitLength & 0xff000000) >> 24),
+                                (byte)((nalUnitLength & 0xff0000) >> 16),
+                                (byte)((nalUnitLength & 0xff00) >> 8),
+                                (byte)(nalUnitLength & 0xff)
+                            };
+                        }
+                        break;
+
+                    default:
+                        throw new NotSupportedException($"NAL unit length {NalLengthSize} not supported!");
+                }
                 result = result.Concat(size).Concat(nal);
             }
 
@@ -480,6 +546,11 @@ namespace SharpMP4.Tracks
             }
 
             return (timescale, frametick);
+        }
+
+        public byte[][] GetVideoNALUs()
+        {
+            return SpsRaw.Values.ToArray().Concat(PpsRaw.Values.ToArray()).ToArray();
         }
     }
 }

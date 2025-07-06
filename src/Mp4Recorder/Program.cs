@@ -1,8 +1,8 @@
 ﻿using SharpISOBMFF;
-using SharpMP4;
 using SharpMP4.Builders;
 using SharpMP4.Readers;
 using SharpMP4.Tracks;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,53 +15,64 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
     var mp4 = new Container();
     mp4.Read(new IsoStream(inputFileStream));
 
-    TrackBox inputVideoTrack = mp4.FindVideoTracks().First();
-    TrackBox inputAudioTrack = mp4.FindAudioTracks().FirstOrDefault();
-    IEnumerable<TrackBox> inputHintTracks = mp4.FindHintTracks();
-
     ContainerContext parsed = Mp4Reader.Parse(mp4);
+    IEnumerable<ITrack> parsedTracks = parsed.GetTracks();
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
         IMp4Builder builder = new Mp4Builder(new SingleStreamOutput(output));
 
-        var videoTrack = new H264Track();
-        builder.AddTrack(videoTrack);
+        foreach(var track in parsedTracks)
+        {
+            builder.AddTrack(track);
+        }
 
-        var audioTrack = new AACTrack(2, 48000, 16, 6);
-        builder.AddTrack(audioTrack);
-
-        for (int t = 0; t < parsed.Tracks.Length; t++)
+        for (int t = 0; t < parsedTracks.Count(); t++)
         {
             var parsedTrack = parsed.Tracks[t];
-            if (t + 1 == inputVideoTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
+            if (parsedTrack.Track.HandlerType == HandlerTypes.Video)
             {
-                foreach (var nal in parsedTrack.VideoNals)
+                IH26XTrack h26xTrack = parsedTrack.Track as IH26XTrack;
+                if (h26xTrack != null)
                 {
-                    await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
-                }
-
-                Mp4Sample sample = null;
-                while ((sample = Mp4Reader.ReadSample(parsed, t + 1)) != null)
-                {
-                    var nalus = Mp4Reader.ReadAU(parsedTrack.NalLengthSize, sample.Data);
-                    foreach (var nal in nalus)
+                    var videoNalus = h26xTrack.GetVideoNALUs();
+                    foreach (var nal in videoNalus)
                     {
-                        await builder.ProcessSampleAsync(videoTrack.TrackID, nal);
+                        await builder.ProcessSampleAsync(parsedTrack.Track.TrackID, nal);
+                    }
+
+                    Mp4Sample sample = null;
+                    while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
+                    {
+                        var nalus = Mp4Reader.ReadAU(h26xTrack.NalLengthSize, sample.Data);
+                        foreach (var nal in nalus)
+                        {
+                            await builder.ProcessSampleAsync(parsedTrack.Track.TrackID, nal);
+                        }
                     }
                 }
-            }
-            else if (t + 1 == inputAudioTrack.Children.OfType<TrackHeaderBox>().Single().TrackID)
-            {
-                Mp4Sample sample = null;
-                while ((sample = Mp4Reader.ReadSample(parsed, t + 1)) != null)
+                else
                 {
-                    await builder.ProcessSampleAsync(audioTrack.TrackID, sample.Data);
+                    throw new NotSupportedException();
+                }
+            }
+            else if (parsedTrack.Track.HandlerType == HandlerTypes.Sound)
+            {
+                // sound
+                Mp4Sample sample = null;
+                while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
+                {
+                    await builder.ProcessSampleAsync(parsedTrack.Track.TrackID, sample.Data, -1);
                 }
             }
             else
             {
-                // unknown track
+                // other
+                Mp4Sample sample = null;
+                while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
+                {
+                    await builder.ProcessSampleAsync(parsedTrack.Track.TrackID, sample.Data, sample.Duration);
+                }
             }
         }
 
