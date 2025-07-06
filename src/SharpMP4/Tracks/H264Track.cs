@@ -63,7 +63,7 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// Overrides any auto-detected frame tick.
         /// </summary>
-        public uint FrameTickOverride { get; set; } = 0;
+        public int FrameTickOverride { get; set; } = 0;
 
         /// <summary>
         /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
@@ -73,7 +73,7 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
         /// </summary>
-        public uint FrameTickFallback { get; set; } = 25;
+        public int FrameTickFallback { get; set; } = 25;
 
         private H264Context _context = new H264Context();
 
