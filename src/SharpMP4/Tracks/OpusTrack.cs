@@ -134,7 +134,7 @@ namespace SharpMP4.Tracks
 
         public override void FillTkhdBox(TrackHeaderBox tkhd)
         {
-            tkhd.Volume = 1;
+            tkhd.Volume = 256;
         }
     }
 }

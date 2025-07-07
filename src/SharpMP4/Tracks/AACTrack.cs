@@ -201,9 +201,9 @@ namespace SharpMP4.Tracks
             return audioSampleEntry;
         }
 
-        public override void FillTkhdBox(TrackHeaderBox box)
+        public override void FillTkhdBox(TrackHeaderBox tkhd)
         {
-            box.Volume = 256;
+            tkhd.Volume = 256;
         }
     }
 
