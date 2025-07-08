@@ -399,8 +399,7 @@ namespace SharpMP4.Tracks
 
         public override Box CreateSampleEntryBox()
         {
-            var sps = Sps.First().Value;
-            var vps = Vps.First().Value;
+            var sps = Sps.First().Value; // we need at least SPS
             var dim = CalculateDimensions(sps);
 
             VisualSampleEntry visualSampleEntry = new VisualSampleEntry(IsoStream.FromFourCC(BRAND));
@@ -424,7 +423,7 @@ namespace SharpMP4.Tracks
             hevcConfigurationBox._HEVCConfig.ChromaFormat = (byte)sps.ChromaFormatIdc;
             hevcConfigurationBox._HEVCConfig.GeneralLevelIdc = (byte)sps.ProfileTierLevel.GeneralLevelIdc;
             hevcConfigurationBox._HEVCConfig.GeneralProfileCompatibilityFlags = BuildGeneralProfileCompatibilityFlags(sps);
-            hevcConfigurationBox._HEVCConfig.GeneralConstraintIndicatorFlags = BuildGeneralProfileConstraintIndicatorFlags(vps);
+            hevcConfigurationBox._HEVCConfig.GeneralConstraintIndicatorFlags = BuildGeneralProfileConstraintIndicatorFlags(sps);
             hevcConfigurationBox._HEVCConfig.BitDepthChromaMinus8 = (byte)sps.BitDepthChromaMinus8;
             hevcConfigurationBox._HEVCConfig.BitDepthLumaMinus8 = (byte)sps.BitDepthLumaMinus8;
             hevcConfigurationBox._HEVCConfig.TemporalIdNested = sps.SpsTemporalIdNestingFlag != 0;
@@ -537,68 +536,68 @@ namespace SharpMP4.Tracks
             }
         }
 
-        public ulong BuildGeneralProfileConstraintIndicatorFlags(VideoParameterSetRbsp vps)
+        public ulong BuildGeneralProfileConstraintIndicatorFlags(SeqParameterSetRbsp sps)
         {
             using (var ms = new MemoryStream())
             {
                 IsoStream isoStream = new IsoStream(ms);
-                isoStream.WriteBit(vps.ProfileTierLevel.GeneralProgressiveSourceFlag);
-                isoStream.WriteBit(vps.ProfileTierLevel.GeneralInterlacedSourceFlag);
-                isoStream.WriteBit(vps.ProfileTierLevel.GeneralNonPackedConstraintFlag);
-                isoStream.WriteBit(vps.ProfileTierLevel.GeneralFrameOnlyConstraintFlag);
+                isoStream.WriteBit(sps.ProfileTierLevel.GeneralProgressiveSourceFlag);
+                isoStream.WriteBit(sps.ProfileTierLevel.GeneralInterlacedSourceFlag);
+                isoStream.WriteBit(sps.ProfileTierLevel.GeneralNonPackedConstraintFlag);
+                isoStream.WriteBit(sps.ProfileTierLevel.GeneralFrameOnlyConstraintFlag);
 
-                if (vps.ProfileTierLevel.GeneralProfileIdc == 4 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[4] != 0 ||
-                    vps.ProfileTierLevel.GeneralProfileIdc == 5 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[5] != 0 ||
-                    vps.ProfileTierLevel.GeneralProfileIdc == 6 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[6] != 0 ||
-                    vps.ProfileTierLevel.GeneralProfileIdc == 7 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[7] != 0 ||
-                    vps.ProfileTierLevel.GeneralProfileIdc == 8 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[8] != 0 ||
-                    vps.ProfileTierLevel.GeneralProfileIdc == 9 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[9] != 0 ||
-                    vps.ProfileTierLevel.GeneralProfileIdc == 10 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[10] != 0)
+                if (sps.ProfileTierLevel.GeneralProfileIdc == 4 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[4] != 0 ||
+                    sps.ProfileTierLevel.GeneralProfileIdc == 5 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[5] != 0 ||
+                    sps.ProfileTierLevel.GeneralProfileIdc == 6 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[6] != 0 ||
+                    sps.ProfileTierLevel.GeneralProfileIdc == 7 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[7] != 0 ||
+                    sps.ProfileTierLevel.GeneralProfileIdc == 8 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[8] != 0 ||
+                    sps.ProfileTierLevel.GeneralProfileIdc == 9 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[9] != 0 ||
+                    sps.ProfileTierLevel.GeneralProfileIdc == 10 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[10] != 0)
                 {
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralMax12bitConstraintFlag);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralMax10bitConstraintFlag);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralMax8bitConstraintFlag);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralMax422chromaConstraintFlag);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralMax420chromaConstraintFlag);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralMaxMonochromeConstraintFlag);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralIntraConstraintFlag);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralOnePictureOnlyConstraintFlag);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralLowerBitRateConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralMax12bitConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralMax10bitConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralMax8bitConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralMax422chromaConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralMax420chromaConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralMaxMonochromeConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralIntraConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralOnePictureOnlyConstraintFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralLowerBitRateConstraintFlag);
 
-                    if (vps.ProfileTierLevel.GeneralProfileIdc == 5 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[5] != 0 ||
-                        vps.ProfileTierLevel.GeneralProfileIdc == 9 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[9] != 0 ||
-                        vps.ProfileTierLevel.GeneralProfileIdc == 10 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[10] != 0)
+                    if (sps.ProfileTierLevel.GeneralProfileIdc == 5 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[5] != 0 ||
+                        sps.ProfileTierLevel.GeneralProfileIdc == 9 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[9] != 0 ||
+                        sps.ProfileTierLevel.GeneralProfileIdc == 10 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[10] != 0)
                     {
-                        isoStream.WriteBit(vps.ProfileTierLevel.GeneralMax14bitConstraintFlag);
-                        isoStream.WriteBits(33, vps.ProfileTierLevel.GeneralReservedZero33bits);
+                        isoStream.WriteBit(sps.ProfileTierLevel.GeneralMax14bitConstraintFlag);
+                        isoStream.WriteBits(33, sps.ProfileTierLevel.GeneralReservedZero33bits);
                     }
                     else
                     {
-                        isoStream.WriteBits(34, vps.ProfileTierLevel.GeneralReservedZero34bits);
+                        isoStream.WriteBits(34, sps.ProfileTierLevel.GeneralReservedZero34bits);
                     }
                 }
-                else if (vps.ProfileTierLevel.GeneralProfileIdc == 2 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[2] != 0)
+                else if (sps.ProfileTierLevel.GeneralProfileIdc == 2 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[2] != 0)
                 {
-                    isoStream.WriteBits(7, vps.ProfileTierLevel.GeneralReservedZero7bits);
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralOnePictureOnlyConstraintFlag);
-                    isoStream.WriteBits(35, vps.ProfileTierLevel.GeneralReservedZero35bits);
+                    isoStream.WriteBits(7, sps.ProfileTierLevel.GeneralReservedZero7bits);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralOnePictureOnlyConstraintFlag);
+                    isoStream.WriteBits(35, sps.ProfileTierLevel.GeneralReservedZero35bits);
                 }
                 else
                 {
-                    isoStream.WriteBits(43, vps.ProfileTierLevel.GeneralReservedZero43bits);
+                    isoStream.WriteBits(43, sps.ProfileTierLevel.GeneralReservedZero43bits);
                 }
 
-                if (vps.ProfileTierLevel.GeneralProfileIdc >= 1 && vps.ProfileTierLevel.GeneralProfileIdc <= 5 ||
-                    vps.ProfileTierLevel.GeneralProfileIdc == 9 ||
-                    vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[1] != 0 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[2] != 0 ||
-                    vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[3] != 0 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[4] != 0 ||
-                    vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[5] != 0 || vps.ProfileTierLevel.GeneralProfileCompatibilityFlag[9] != 0)
+                if (sps.ProfileTierLevel.GeneralProfileIdc >= 1 && sps.ProfileTierLevel.GeneralProfileIdc <= 5 ||
+                    sps.ProfileTierLevel.GeneralProfileIdc == 9 ||
+                    sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[1] != 0 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[2] != 0 ||
+                    sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[3] != 0 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[4] != 0 ||
+                    sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[5] != 0 || sps.ProfileTierLevel.GeneralProfileCompatibilityFlag[9] != 0)
                 {
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralInbldFlag);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralInbldFlag);
                 }
                 else
                 {
-                    isoStream.WriteBit(vps.ProfileTierLevel.GeneralReservedZeroBit);
+                    isoStream.WriteBit(sps.ProfileTierLevel.GeneralReservedZeroBit);
                 }
 
                 var bytes = ms.ToArray();

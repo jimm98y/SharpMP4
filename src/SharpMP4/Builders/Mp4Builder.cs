@@ -296,7 +296,7 @@ namespace SharpMP4.Builders
 
             if (processedSample != null)
             {
-                return ProcessMp4SampleAsync(trackID, sample, sampleDuration, isRandomAccessPoint);
+                return ProcessMp4SampleAsync(trackID, processedSample, sampleDuration, isRandomAccessPoint);
             }
 
             return Task.CompletedTask;
