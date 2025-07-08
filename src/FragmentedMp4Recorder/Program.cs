@@ -75,6 +75,6 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
             }
         }
 
-        builder.FinalizeMp4();
+        builder.FinalizeMedia();
     }
 }

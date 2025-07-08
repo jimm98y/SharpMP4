@@ -76,6 +76,6 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
             }
         }
 
-        builder.FinalizeMp4();
+        builder.FinalizeMedia();
     }
 }

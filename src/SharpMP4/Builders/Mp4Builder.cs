@@ -7,7 +7,7 @@ using System.Linq;
 namespace SharpMP4.Builders
 {
     /// <summary>
-    /// MP4 builder.
+    /// Creates MP4 with a MOOV box at the very end of the file.
     /// </summary>
     public class Mp4Builder : IMp4Builder
     {
@@ -37,7 +37,7 @@ namespace SharpMP4.Builders
         }
 
         /// <summary>
-        /// Add a track to the fMP4.
+        /// Add a track to the MP4.
         /// </summary>
         /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
         public void AddTrack(ITrack track)
@@ -90,16 +90,15 @@ namespace SharpMP4.Builders
                 _mdat.SetParent(mp4);
 
                 // write
-                var fstr = _output.GetStream(1);
-                var fragmentStream = new IsoStream(fstr);
+                var stream = _output.GetStream(1);
+                var fragmentStream = new IsoStream(stream);
                 _size = mp4.Write(fragmentStream) >> 3;
-                _output.Flush(fstr, 1);
+                _output.Flush(stream, 1);
 
                 _writeInitialization = false;
             }
 
             uint currentSampleDuration = sampleDuration < 0 ? (uint)_tracks[(int)trackID - 1].DefaultSampleDuration : (uint)sampleDuration;
-
             var track = _tracks[(int)trackID - 1];
             _trackSampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
             _storage.Write(sample, 0, sample.Length);
@@ -262,7 +261,7 @@ namespace SharpMP4.Builders
                     var stss = new SyncSampleBox();
                     stss.SetParent(stbl);
                     stbl.Children.Add(stss);
-                    stss.SampleNumber = _trackRandomAccessPoints[i].ToArray(); // TODO: hardcoded now!!! 
+                    stss.SampleNumber = _trackRandomAccessPoints[i].ToArray(); 
                     stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
                 }
 
@@ -295,16 +294,16 @@ namespace SharpMP4.Builders
 
             if (processedSample != null)
             {
-                ProcessMp4Sample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
+                ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
             }
         }
 
-        public void ProcessMp4Sample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
+        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
             WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint);
         }
 
-        public void FinalizeMp4()
+        public void FinalizeMedia()
         {
             foreach(var track in _tracks)
             {
@@ -316,10 +315,10 @@ namespace SharpMP4.Builders
             _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 
             WriteMoov(mp4);
-            var fstr = _output.GetStream(1);
-            var fragmentStream = new IsoStream(fstr);
+            var stream = _output.GetStream(1);
+            var fragmentStream = new IsoStream(stream);
             mp4.Write(fragmentStream);
-            _output.Flush(fstr, 1);
+            _output.Flush(stream, 1);
         }
     }
 }
