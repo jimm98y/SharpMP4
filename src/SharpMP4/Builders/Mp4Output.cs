@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace SharpMP4.Builders
 {
@@ -11,15 +10,14 @@ namespace SharpMP4.Builders
         /// </summary>
         /// <param name="sequenceNumber">Sequence number. 0 = initialization that contains the MOOV. 1 and onwards = MOOF fragment.</param>
         /// <returns>Stream to store the fragment.</returns>
-        Task<Stream> GetStreamAsync(uint sequenceNumber);
+        Stream GetStream(uint sequenceNumber);
 
         /// <summary>
         /// Flush stream.
         /// </summary>
-        /// <param name="output">Stream returned by <see cref="GetStreamAsync(uint)"/>.</param>
+        /// <param name="output">Stream returned by <see cref="GetStream(uint)"/>.</param>
         /// <param name="sequenceNumber">Sequence number. 0 = initialization that contains the MOOV. 1 and onwards = MOOF fragment.</param>
-        /// <returns><see cref="Task"/></returns>
-        Task FlushAsync(Stream output, uint sequenceNumber);
+        void Flush(Stream output, uint sequenceNumber);
     }
 
     /// <summary>
@@ -35,15 +33,15 @@ namespace SharpMP4.Builders
             _output = output ?? throw new ArgumentNullException(nameof(output));
         }
 
-        public Task<Stream> GetStreamAsync(uint sequenceNumber)
+        public Stream GetStream(uint sequenceNumber)
         {
             // sequence number is ignored, fMP4 is all stored inside a single stream: MOOV, MOOF, MDAT, MOOF, MDAT ...
-            return Task.FromResult(_output);
+            return _output;
         }
 
-        public Task FlushAsync(Stream output, uint sequenceNumber)
+        public void Flush(Stream output, uint sequenceNumber)
         {
-            return output.FlushAsync();
+            output.Flush();
         }
     }
 
@@ -63,7 +61,7 @@ namespace SharpMP4.Builders
             _fileExtension = fileExtension ?? throw new ArgumentNullException(nameof(fileExtension));
         }
 
-        public Task<Stream> GetStreamAsync(uint sequenceNumber)
+        public Stream GetStream(uint sequenceNumber)
         {
             try
             {
@@ -74,7 +72,7 @@ namespace SharpMP4.Builders
                 }
 
                 var outputStream = File.Create(path);
-                return Task.FromResult((Stream)outputStream);
+                return outputStream;
             }
             catch (Exception ex)
             {
@@ -83,12 +81,12 @@ namespace SharpMP4.Builders
             }
         }
 
-        public async Task FlushAsync(Stream output, uint sequenceNumber)
+        public void Flush(Stream output, uint sequenceNumber)
         {
             if (output == null)
                 throw new ArgumentNullException(nameof(output));
 
-            await output.FlushAsync();
+            output.Flush();
             output.Dispose();
         }
     }
@@ -112,15 +110,15 @@ namespace SharpMP4.Builders
         private Stream _currentOutputStream = null;
         private bool _disposedValue;
 
-        public Task<Stream> GetStreamAsync(uint sequenceNumber)
+        public Stream GetStream(uint sequenceNumber)
         {
             _currentSequenceNumber = sequenceNumber;
             MemoryStream outputStream = new MemoryStream();
             _currentOutputStream = outputStream;
-            return Task.FromResult((Stream)outputStream);
+            return outputStream;
         }
 
-        public async Task FlushAsync(Stream output, uint sequenceNumber)
+        public void Flush(Stream output, uint sequenceNumber)
         {
             if (_disposedValue)
                 throw new ObjectDisposedException(nameof(FragmentedBlobOutput));
@@ -135,7 +133,7 @@ namespace SharpMP4.Builders
                 throw new Exception("Threading error, invalid sequence number!");
 
             var outputStream = (MemoryStream)output;
-            await outputStream.FlushAsync();
+            outputStream.Flush();
             var data = outputStream.ToArray();
             outputStream.Dispose();
 

@@ -3,7 +3,6 @@ using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SharpMP4.Builders
 {
@@ -51,7 +50,7 @@ namespace SharpMP4.Builders
             track.TrackID = (uint)_tracks.IndexOf(track) + 1;
         }               
 
-        private async Task WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
+        private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
             Container mp4 = new Container();
 
@@ -91,10 +90,10 @@ namespace SharpMP4.Builders
                 _mdat.SetParent(mp4);
 
                 // write
-                var fstr = await _output.GetStreamAsync(1);
+                var fstr = _output.GetStream(1);
                 var fragmentStream = new IsoStream(fstr);
                 _size = mp4.Write(fragmentStream) >> 3;
-                await _output.FlushAsync(fstr, 1);
+                _output.Flush(fstr, 1);
 
                 _writeInitialization = false;
             }
@@ -290,28 +289,26 @@ namespace SharpMP4.Builders
             }
         }
 
-        public Task ProcessTrackSampleAsync(uint trackID, byte[] sample, int sampleDuration)
+        public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration)
         {
             _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
             if (processedSample != null)
             {
-                return ProcessMp4SampleAsync(trackID, processedSample, sampleDuration, isRandomAccessPoint);
+                ProcessMp4Sample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
             }
-
-            return Task.CompletedTask;
         }
 
-        public Task ProcessMp4SampleAsync(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
+        public void ProcessMp4Sample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
-            return WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint);
+            WriteSample(trackID, sample, sampleDuration, isRandomAccessPoint);
         }
 
-        public async Task FinalizeAsync()
+        public void FinalizeMp4()
         {
             foreach(var track in _tracks)
             {
-                await ProcessTrackSampleAsync(track.TrackID, null, -1);
+                ProcessTrackSample(track.TrackID, null, -1);
             }
 
             var mp4 = new Container();
@@ -319,10 +316,10 @@ namespace SharpMP4.Builders
             _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 
             WriteMoov(mp4);
-            var fstr = await _output.GetStreamAsync(1);
+            var fstr = _output.GetStream(1);
             var fragmentStream = new IsoStream(fstr);
             mp4.Write(fragmentStream);
-            await _output.FlushAsync(fstr, 1);
+            _output.Flush(fstr, 1);
         }
     }
 }

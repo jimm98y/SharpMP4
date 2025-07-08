@@ -37,7 +37,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                     var videoNalus = h26xTrack.GetVideoNALUs();
                     foreach (var nal in videoNalus)
                     {
-                        await builder.ProcessTrackSampleAsync(parsedTrack.Track.TrackID, nal);
+                        builder.ProcessTrackSample(parsedTrack.Track.TrackID, nal);
                     }
 
                     Mp4Sample sample = null;
@@ -46,7 +46,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                         var nalus = Mp4Reader.ReadAU(h26xTrack.NalLengthSize, sample.Data);
                         foreach (var nal in nalus)
                         {
-                            await builder.ProcessTrackSampleAsync(parsedTrack.Track.TrackID, nal);
+                            builder.ProcessTrackSample(parsedTrack.Track.TrackID, nal);
                         }
                     }
                 }
@@ -61,7 +61,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                 Mp4Sample sample = null;
                 while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
                 {
-                    await builder.ProcessTrackSampleAsync(parsedTrack.Track.TrackID, sample.Data);
+                    builder.ProcessTrackSample(parsedTrack.Track.TrackID, sample.Data);
                 }
             }
             else
@@ -70,11 +70,11 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                 Mp4Sample sample = null;
                 while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
                 {
-                    await builder.ProcessTrackSampleAsync(parsedTrack.Track.TrackID, sample.Data, sample.Duration);
+                    builder.ProcessTrackSample(parsedTrack.Track.TrackID, sample.Data, sample.Duration);
                 }
             }
         }
 
-        await builder.FinalizeAsync();
+        builder.FinalizeMp4();
     }
 }
