@@ -438,8 +438,8 @@ namespace SharpMP4.Tracks
             vvcConfigurationBox._VvcConfig.ChromaFormatIdc = (byte)sps.SpsChromaFormatIdc;
             vvcConfigurationBox._VvcConfig.AvgFrameRate = 0;
             vvcConfigurationBox._VvcConfig.ConstantFrameRate = 1;
-            vvcConfigurationBox._VvcConfig.MaxPictureHeight = (ushort)dim.Height; // TODO?
             vvcConfigurationBox._VvcConfig.MaxPictureWidth = (ushort)dim.Width; // TODO?
+            vvcConfigurationBox._VvcConfig.MaxPictureHeight = (ushort)dim.Height; // TODO?
 
             vvcConfigurationBox._VvcConfig.NumSublayers = (byte)(sps.SpsMaxSublayersMinus1 + 1);
             vvcConfigurationBox._VvcConfig.PtlPresentFlag = sps.SpsPtlDpbHrdParamsPresentFlag != 0;
@@ -549,17 +549,16 @@ namespace SharpMP4.Tracks
 
                 if (gci.GciPresentFlag != 0)
                 {
-                    /*  general  */
-
+                    //  general
                     isoStream.WriteBit(gci.GciIntraOnlyConstraintFlag);
                     isoStream.WriteBit(gci.GciAllLayersIndependentConstraintFlag);
                     isoStream.WriteBit(gci.GciOneAuOnlyConstraintFlag);
-                    /*  picture format  */
 
+                    //  picture format
                     isoStream.WriteBits(4, gci.GciSixteenMinusMaxBitdepthConstraintIdc);
                     isoStream.WriteBits(2, gci.GciThreeMinusMaxChromaFormatConstraintIdc);
-                    /*  NAL unit type related  */
 
+                    //  NAL unit type related
                     isoStream.WriteBit(gci.GciNoMixedNaluTypesInPicConstraintFlag);
                     isoStream.WriteBit(gci.GciNoTrailConstraintFlag);
                     isoStream.WriteBit(gci.GciNoStsaConstraintFlag);
@@ -570,30 +569,30 @@ namespace SharpMP4.Tracks
                     isoStream.WriteBit(gci.GciNoGdrConstraintFlag);
                     isoStream.WriteBit(gci.GciNoApsConstraintFlag);
                     isoStream.WriteBit(gci.GciNoIdrRplConstraintFlag);
-                    /*  tile, slice, subpicture partitioning  */
 
+                    //  tile, slice, subpicture partitioning
                     isoStream.WriteBit(gci.GciOneTilePerPicConstraintFlag);
                     isoStream.WriteBit(gci.GciPicHeaderInSliceHeaderConstraintFlag);
                     isoStream.WriteBit(gci.GciOneSlicePerPicConstraintFlag);
                     isoStream.WriteBit(gci.GciNoRectangularSliceConstraintFlag);
                     isoStream.WriteBit(gci.GciOneSlicePerSubpicConstraintFlag);
                     isoStream.WriteBit(gci.GciNoSubpicInfoConstraintFlag);
-                    /*  CTU and block partitioning  */
 
+                    //  CTU and block partitioning
                     isoStream.WriteBits(2, gci.GciThreeMinusMaxLog2CtuSizeConstraintIdc);
                     isoStream.WriteBit(gci.GciNoPartitionConstraintsOverrideConstraintFlag);
                     isoStream.WriteBit(gci.GciNoMttConstraintFlag);
                     isoStream.WriteBit(gci.GciNoQtbttDualTreeIntraConstraintFlag);
-                    /*  intra  */
 
+                    //  intra
                     isoStream.WriteBit(gci.GciNoPaletteConstraintFlag);
                     isoStream.WriteBit(gci.GciNoIbcConstraintFlag);
                     isoStream.WriteBit(gci.GciNoIspConstraintFlag);
                     isoStream.WriteBit(gci.GciNoMrlConstraintFlag);
                     isoStream.WriteBit(gci.GciNoMipConstraintFlag);
                     isoStream.WriteBit(gci.GciNoCclmConstraintFlag);
-                    /*  inter  */
 
+                    //  inter
                     isoStream.WriteBit(gci.GciNoRefPicResamplingConstraintFlag);
                     isoStream.WriteBit(gci.GciNoResChangeInClvsConstraintFlag);
                     isoStream.WriteBit(gci.GciNoWeightedPredictionConstraintFlag);
@@ -610,8 +609,8 @@ namespace SharpMP4.Tracks
                     isoStream.WriteBit(gci.GciNoBcwConstraintFlag);
                     isoStream.WriteBit(gci.GciNoCiipConstraintFlag);
                     isoStream.WriteBit(gci.GciNoGpmConstraintFlag);
-                    /*  transform, quantization, residual  */
 
+                    //  transform, quantization, residual
                     isoStream.WriteBit(gci.GciNoLumaTransformSize64ConstraintFlag);
                     isoStream.WriteBit(gci.GciNoTransformSkipConstraintFlag);
                     isoStream.WriteBit(gci.GciNoBdpcmConstraintFlag);
@@ -625,8 +624,8 @@ namespace SharpMP4.Tracks
                     isoStream.WriteBit(gci.GciNoSignDataHidingConstraintFlag);
                     isoStream.WriteBit(gci.GciNoCuQpDeltaConstraintFlag);
                     isoStream.WriteBit(gci.GciNoChromaQpOffsetConstraintFlag);
-                    /*  loop filter  */
 
+                    //  loop filter
                     isoStream.WriteBit(gci.GciNoSaoConstraintFlag);
                     isoStream.WriteBit(gci.GciNoAlfConstraintFlag);
                     isoStream.WriteBit(gci.GciNoCcalfConstraintFlag);

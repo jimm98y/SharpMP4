@@ -101,7 +101,6 @@ namespace SharpMP4.Builders
         public async Task ProcessMp4SampleAsync(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
             uint currentSampleDuration = sampleDuration < 0 ? (uint)_tracks[(int)trackID - 1].DefaultSampleDuration : (uint)sampleDuration;
-
             ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[(int)trackID - 1] + 1);
             ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
 
@@ -131,6 +130,7 @@ namespace SharpMP4.Builders
                     break;
                 }
             }
+
             if (isFragmentReady)
             {
                 await WriteFragmentAsync();
@@ -247,7 +247,7 @@ namespace SharpMP4.Builders
             var compatibleBrands = new List<string>()
             {
                 "mp42",
-                "iso5", // "isom",
+                "isom",
             };
 
             for (int i = 0; i < _tracks.Count; i++)
@@ -445,7 +445,6 @@ namespace SharpMP4.Builders
             
             if(track.HandlerType == HandlerTypes.Video)
             {
-                // TODO
                 tfhd.Flags = tfhd.Flags | 0x20;
             }
 
@@ -459,7 +458,6 @@ namespace SharpMP4.Builders
             trun.SetParent(traf);
             if (track.HandlerType == HandlerTypes.Video)
             {
-                // TODO
                 trun.FirstSampleFlags = 0x02000000;
                 trun.Flags = 0x305;
             }
@@ -514,12 +512,10 @@ namespace SharpMP4.Builders
                     var tfra = new TrackFragmentRandomAccessBox();
                     tfra.SetParent(mfra);
                     mfra.Children.Add(tfra);
-
                     tfra.LengthSizeOfSampleNum = 1;
                     tfra.LengthSizeOfTrafNum = 1;
                     tfra.LengthSizeOfTrunNum = 1;
                     tfra.TrackID = _tracks[i].TrackID;
-
                     tfra.MoofOffset = _trackMoofOffsets[i].ToArray();
                     tfra.Time = _trackMoofTime[i].ToArray();
                     tfra.TrafNumber = _trackMoofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
