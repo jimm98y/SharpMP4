@@ -1,40 +1,40 @@
-﻿﻿ open_bitstream_unit( sz ) { 
+﻿open_bitstream_unit( sz ) { 
     obu_header()
     if ( obu_has_size_field ) {
        obu_size leb128()
     } else {
        obu_size = sz - 1 - obu_extension_flag
     }
-    startPosition = get_position( )
+    startPosition = get_position()
     if ( obu_type != OBU_SEQUENCE_HEADER && obu_type != OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 ) {
        inTemporalLayer = (OperatingPointIdc >> temporal_id ) & 1
        inSpatialLayer = (OperatingPointIdc >> ( spatial_id + 8 ) ) & 1
        if ( !inTemporalLayer || ! inSpatialLayer ) {
-          drop_obu( )
+          drop_obu()
        return
     }
  }
  if ( obu_type == OBU_SEQUENCE_HEADER )
-    sequence_header_obu( )
+    sequence_header_obu()
  else if ( obu_type == OBU_TEMPORAL_DELIMITER )
-    temporal_delimiter_obu( )
+    temporal_delimiter_obu()
  else if ( obu_type == OBU_FRAME_HEADER )
-    frame_header_obu( )
+    frame_header_obu()
  else if ( obu_type == OBU_REDUNDANT_FRAME_HEADER )
-    frame_header_obu( )
+    frame_header_obu()
  else if ( obu_type == OBU_TILE_GROUP )
     tile_group_obu( obu_size )
  else if ( obu_type == OBU_METADATA )
-    metadata_obu( )
+    metadata_obu()
  else if ( obu_type == OBU_FRAME )
     frame_obu( obu_size )
  else if ( obu_type == OBU_TILE_LIST )
-    tile_list_obu( )
+    tile_list_obu()
  else if ( obu_type == OBU_PADDING )
-    padding_obu( )
+    padding_obu()
  else
-    reserved_obu( )
- currentPosition = get_position( )
+    reserved_obu()
+ currentPosition = get_position()
  payloadBits = currentPosition - startPosition
  if ( obu_size > 0 && obu_type != OBU_TILE_GROUP &&
     obu_type != OBU_TILE_LIST &&
@@ -71,17 +71,17 @@ while ( nbBits > 0 ) {
 }
 
 
- byte_alignment( ) { 
- while ( get_position( ) & 7 )
+byte_alignment() { 
+ while ( get_position() & 7 )
  zero_bit f(1)
- }
+}
 
 
- reserved_obu( ) { 
- }
+reserved_obu() { 
+}
 
 
-  sequence_header_obu( ) { 
+sequence_header_obu() { 
  seq_profile f(3)
  still_picture f(1)
  reduced_still_picture_header f(1)
@@ -98,10 +98,10 @@ while ( nbBits > 0 ) {
  } else {
  timing_info_present_flag f(1)
  if ( timing_info_present_flag ) {
- timing_info( )
+ timing_info()
  decoder_model_info_present_flag f(1)
  if ( decoder_model_info_present_flag ) {
- decoder_model_info( )
+ decoder_model_info()
  }
  } else {
  decoder_model_info_present_flag = 0
@@ -132,7 +132,7 @@ while ( nbBits > 0 ) {
  }
  }
  }
- operatingPoint = choose_operating_point( )
+ operatingPoint = choose_operating_point()
  OperatingPointIdc = operating_point_idc[ operatingPoint ]
  frame_width_bits_minus_1 f(4)
  frame_height_bits_minus_1 f(4)
@@ -177,7 +177,7 @@ while ( nbBits > 0 ) {
  }
  seq_choose_screen_content_tools f(1)
  if ( seq_choose_screen_content_tools ) {
- = SELECT_SCREEN_CONTENT_TOOLS
+seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
  } else {
  seq_force_screen_content_tools f(1)
  }
@@ -201,13 +201,13 @@ while ( nbBits > 0 ) {
  enable_superres f(1)
  enable_cdef f(1)
  enable_restoration f(1)
- color_config( )
+ color_config()
  film_grain_params_present f(1)
- }
+}
 
 
 
-  color_config( ) { 
+color_config() { 
  high_bitdepth f(1)
  if ( seq_profile == 2 && high_bitdepth ) {
  twelve_bit f(1)
@@ -269,76 +269,76 @@ while ( nbBits > 0 ) {
  }
  }
  separate_uv_delta_q f(1)
- }
+}
 
 
-timing_info( ) { 
+timing_info() { 
  num_units_in_display_tick f(32)
  time_scale f(32)
  equal_picture_interval f(1)
  if ( equal_picture_interval )
  num_ticks_per_picture_minus_1 num_ticks_per_picture_minus_1 uvlc()
- }
+}
 
 
-  decoder_model_info( ) { 
+decoder_model_info() { 
  buffer_delay_length_minus_1 f(5)
  num_units_in_decoding_tick f(32)
  buffer_removal_time_length_minus_1 f(5)
  frame_presentation_time_length_minus_1 f(5)
- }
+}
 
 
-  operating_parameters_info( op ) { 
+operating_parameters_info( op ) { 
  n = buffer_delay_length_minus_1 + 1
  decoder_buffer_delay[ op ] f(n)
  encoder_buffer_delay[ op ] f(n)
  low_delay_mode_flag[ op ] f(1)
- }
+}
 
 
-  temporal_delimiter_obu( ) { 
+temporal_delimiter_obu() { 
  SeenFrameHeader = 0
- }
+}
 
 
-  padding_obu( ) { 
+padding_obu() { 
  for ( i = 0; i < obu_padding_length; i++ )
  obu_padding_byte f(8)
- }
+}
 
 
-  metadata_obu( ) { 
+metadata_obu() { 
  metadata_type leb128()
  if ( metadata_type == METADATA_TYPE_ITUT_T35 )
- metadata_itut_t35( )
+ metadata_itut_t35()
  else if ( metadata_type == METADATA_TYPE_HDR_CLL )
- metadata_hdr_cll( )
+ metadata_hdr_cll()
  else if ( metadata_type == METADATA_TYPE_HDR_MDCV )
- metadata_hdr_mdcv( )
+ metadata_hdr_mdcv()
  else if ( metadata_type == METADATA_TYPE_SCALABILITY )
- metadata_scalability( )
+ metadata_scalability()
  else if ( metadata_type == METADATA_TYPE_TIMECODE )
- metadata_timecode( )
+ metadata_timecode()
  }
 
 
- metadata_itut_t35( ) { 
+metadata_itut_t35() { 
  itu_t_t35_country_code f(8)
  if ( itu_t_t35_country_code == 0xFF ) {
  itu_t_t35_country_code_extension_byte f(8)
  }
  itu_t_t35_payload_bytes
- }
+}
 
 
-metadata_hdr_cll( ) { 
+metadata_hdr_cll() { 
  max_cll f(16)
  max_fall f(16)
- }
+}
 
 
-  metadata_hdr_mdcv( ) { 
+metadata_hdr_mdcv() { 
  for ( i = 0; i < 3; i++ ) {
  primary_chromaticity_x[ i ] f(16)
  primary_chromaticity_y[ i ] f(16)
@@ -347,17 +347,17 @@ metadata_hdr_cll( ) {
  white_point_chromaticity_y f(16)
  luminance_max f(32)
  luminance_min f(32)
- }
+}
 
 
-  metadata_scalability( ) { 
+metadata_scalability() { 
  scalability_mode_idc f(8)
  if ( scalability_mode_idc == SCALABILITY_SS )
- scalability_structure( )
- }
+ scalability_structure()
+}
 
 
-  scalability_structure( ) { 
+scalability_structure() { 
  spatial_layers_cnt_minus_1 f(2)
  spatial_layer_dimensions_present_flag f(1)
  spatial_layer_description_present_flag f(1)
@@ -388,7 +388,7 @@ metadata_hdr_cll( ) {
  }
 
 
-  metadata_timecode( ) { 
+metadata_timecode() { 
  counting_type f(5)
  full_timestamp_flag f(1)
  discontinuity_flag f(1)
@@ -419,14 +419,14 @@ metadata_hdr_cll( ) {
  }
 
 
-  frame_header_obu( ) { 
+frame_header_obu() { 
  if ( SeenFrameHeader == 1 ) {
  frame_header_copy()
  } else {
  SeenFrameHeader = 1
- uncompressed_header( )
+ uncompressed_header()
  if ( show_existing_frame ) {
- decode_frame_wrapup( )
+ decode_frame_wrapup()
  SeenFrameHeader = 0
  } else {
  TileNum = 0
@@ -436,10 +436,9 @@ metadata_hdr_cll( ) {
  }
 
 
-  uncompressed_header( ) { 
+uncompressed_header() { 
  if ( frame_id_numbers_present_flag ) {
- idLen = ( additional_frame_id_length_minus_1 +
- delta_frame_id_length_minus_2 + 3 )
+ idLen = ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 )
  }
  allFrames = (1 << NUM_REF_FRAMES) - 1
  if ( reduced_still_picture_header ) {
@@ -453,11 +452,11 @@ metadata_hdr_cll( ) {
  if ( show_existing_frame == 1 ) {
  frame_to_show_map_idx f(3)
  if ( decoder_model_info_present_flag && !equal_picture_interval ) {
- temporal_point_info( )
+ temporal_point_info()
  }
  refresh_frame_flags = 0
  if ( frame_id_numbers_present_flag ) {
- display_frame_id display_frame_id f(idLen)
+ display_frame_id f(idLen)
  }
  frame_type = RefFrameType[ frame_to_show_map_idx ]
  if ( frame_type == KEY_FRAME ) {
@@ -473,7 +472,7 @@ metadata_hdr_cll( ) {
  frame_type == KEY_FRAME)
  show_frame show_frame f(1)
  if ( show_frame && decoder_model_info_present_flag && !equal_picture_interval ) {
- temporal_point_info( )
+ temporal_point_info()
  }
  if ( show_frame ) {
  showable_frame = frame_type != KEY_FRAME
@@ -569,8 +568,8 @@ metadata_hdr_cll( ) {
  }
  }
  if (  FrameIsIntra ) {
- frame_size( )
- render_size( )
+ frame_size()
+ render_size()
  if ( allow_screen_content_tools && UpscaledWidth == FrameWidth ) {
  allow_intrabc f(1)
  }
@@ -592,22 +591,21 @@ metadata_hdr_cll( ) {
  n = delta_frame_id_length_minus_2 + 2
  delta_frame_id_minus_1 f(n)
  DeltaFrameId = delta_frame_id_minus_1 + 1
- expectedFrameId[ i ] = ((current_frame_id + (1 << idLen) 
-DeltaFrameId ) % (1 << idLen))
+ expectedFrameId[ i ] = ((current_frame_id + (1 << idLen) - DeltaFrameId ) % (1 << idLen))
  }
  }
  if ( frame_size_override_flag && !error_resilient_mode ) {
- frame_size_with_refs( )
+ frame_size_with_refs()
  } else {
- frame_size( )
- render_size( )
+ frame_size()
+ render_size()
  }
  if ( force_integer_mv ) {
  allow_high_precision_mv = 0
  } else {
  allow_high_precision_mv f(1)
  }
- read_interpolation_filter( )
+ read_interpolation_filter()
  is_motion_mode_switchable f(1)
  if ( error_resilient_mode || !enable_ref_frame_mvs ) {
  use_ref_frame_mvs = 0
@@ -630,23 +628,23 @@ DeltaFrameId ) % (1 << idLen))
  else
  disable_frame_end_update_cdf f(1)
  if ( primary_ref_frame == PRIMARY_REF_NONE ) {
- init_non_coeff_cdfs( )
- setup_past_independence( )
+ init_non_coeff_cdfs()
+ setup_past_independence()
  } else {
  load_cdfs( ref_frame_idx[ primary_ref_frame ] )
- load_previous( )
+ load_previous()
  }
  if ( use_ref_frame_mvs == 1 )
- motion_field_estimation( )
- tile_info( )
- quantization_params( )
- segmentation_params( )
- delta_q_params( )
- delta_lf_params( )
+ motion_field_estimation()
+ tile_info()
+ quantization_params()
+ segmentation_params()
+ delta_q_params()
+ delta_lf_params()
  if ( primary_ref_frame == PRIMARY_REF_NONE ) {
- init_coeff_cdfs( )
+ init_coeff_cdfs()
  } else {
- load_previous_segment_ids( )
+ load_previous_segment_ids()
  }
  CodedLossless = 1
  for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ ) {
@@ -669,12 +667,12 @@ DeltaFrameId ) % (1 << idLen))
  }
  }
  AllLossless = CodedLossless && ( FrameWidth == UpscaledWidth )
- loop_filter_params( )
- cdef_params( )
- lr_params( )
- read_tx_mode( )
- frame_reference_mode( )
- skip_mode_params( )
+ loop_filter_params()
+ cdef_params()
+ lr_params()
+ read_tx_mode()
+ frame_reference_mode()
+ skip_mode_params()
  if ( FrameIsIntra ||
  error_resilient_mode ||
  !enable_warped_motion )
@@ -682,8 +680,8 @@ DeltaFrameId ) % (1 << idLen))
  else
  allow_warped_motion f(1)
  reduced_tx_set f(1)
- global_motion_params( )
- film_grain_params( )
+ global_motion_params()
+ film_grain_params()
  }
 
 
@@ -715,7 +713,7 @@ DeltaFrameId ) % (1 << idLen))
  }
 
 
-  frame_size( ) { 
+  frame_size() { 
  if ( frame_size_override_flag ) {
  n = frame_width_bits_minus_1 + 1
  frame_width_minus_1 f(n)
@@ -727,12 +725,12 @@ DeltaFrameId ) % (1 << idLen))
  FrameWidth = max_frame_width_minus_1 + 1
  FrameHeight = max_frame_height_minus_1 + 1
  }
- superres_params( )
- compute_image_size( )
+ superres_params()
+ compute_image_size()
  }
 
 
-  render_size( ) { 
+  render_size() { 
  render_and_frame_size_different f(1)
  if ( render_and_frame_size_different == 1 ) {
  render_width_minus_1 f(16)
@@ -746,7 +744,7 @@ DeltaFrameId ) % (1 << idLen))
  }
 
 
-  frame_size_with_refs( ) { 
+  frame_size_with_refs() { 
  for ( i = 0; i < REFS_PER_FRAME; i++ ) {
  found_ref f(1)
  if ( found_ref == 1 ) {
@@ -759,16 +757,16 @@ DeltaFrameId ) % (1 << idLen))
  }
  }
  if ( found_ref == 0 ) {
- frame_size( )
- render_size( )
+ frame_size()
+ render_size()
  } else {
- superres_params( )
- compute_image_size( )
+ superres_params()
+ compute_image_size()
  }
  }
 
 
-  superres_params() { 
+superres_params() { 
  if ( enable_superres )
  use_superres f(1)
  else
@@ -780,18 +778,17 @@ DeltaFrameId ) % (1 << idLen))
  SuperresDenom = SUPERRES_NUM
  }
  UpscaledWidth = FrameWidth
- FrameWidth = (UpscaledWidth * SUPERRES_NUM +
- (SuperresDenom / 2)) / SuperresDenom
+ FrameWidth = (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom
  }
 
 
- compute_image_size( ) { 
+ compute_image_size() { 
  MiCols = 2 * ( ( FrameWidth + 7 ) >> 3 )
  MiRows = 2 * ( ( FrameHeight + 7 ) >> 3 )
  }
 
 
-  read_interpolation_filter( ) { 
+  read_interpolation_filter() { 
  is_filter_switchable f(1)
  if ( is_filter_switchable == 1 ) {
  interpolation_filter = SWITCHABLE
@@ -801,7 +798,7 @@ DeltaFrameId ) % (1 << idLen))
  }
 
 
-  loop_filter_params( ) { 
+  loop_filter_params() { 
  if ( CodedLossless || allow_intrabc ) {
  loop_filter_level[ 0 ] = 0
  loop_filter_level[ 1 ] = 0
@@ -846,19 +843,19 @@ DeltaFrameId ) % (1 << idLen))
  }
 
 
-  quantization_params( ) { 
+  quantization_params() { 
  base_q_idx f(8)
- DeltaQYDc = read_delta_q( )
+ DeltaQYDc = read_delta_q()
  if ( NumPlanes > 1 ) {
  if ( separate_uv_delta_q )
  diff_uv_delta f(1)
  else
  diff_uv_delta = 0
- DeltaQUDc = read_delta_q( )
- DeltaQUAc = read_delta_q( )
+ DeltaQUDc = read_delta_q()
+ DeltaQUAc = read_delta_q()
  if ( diff_uv_delta ) {
- DeltaQVDc = read_delta_q( )
- DeltaQVAc = read_delta_q( )
+ DeltaQVDc = read_delta_q()
+ DeltaQVAc = read_delta_q()
  } else {
  DeltaQVDc = DeltaQUDc
  DeltaQVAc = DeltaQUAc
@@ -881,7 +878,7 @@ DeltaFrameId ) % (1 << idLen))
  }
 
 
- read_delta_q( ) { 
+ read_delta_q() { 
  delta_coded f(1)
  if ( delta_coded ) {
  delta_q su(1+6)
@@ -892,7 +889,7 @@ DeltaFrameId ) % (1 << idLen))
  }
 
 
-  segmentation_params( ) { 
+  segmentation_params() { 
  segmentation_enabled f(1)
  if ( segmentation_enabled == 1 ) {
  if ( primary_ref_frame == PRIMARY_REF_NONE ) {
@@ -950,7 +947,7 @@ DeltaFrameId ) % (1 << idLen))
  }
 
 
-  tile_info ( ) { 
+  tile_info () { 
  sbCols = use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 )
  sbRows = use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 )
  sbShift = use_128x128_superblock ? 5 : 4
@@ -960,8 +957,7 @@ DeltaFrameId ) % (1 << idLen))
  minLog2TileCols = tile_log2(maxTileWidthSb, sbCols)
  maxLog2TileCols = tile_log2(1, Min(sbCols, MAX_TILE_COLS))
  maxLog2TileRows = tile_log2(1, Min(sbRows, MAX_TILE_ROWS))
- minLog2Tiles = Max(minLog2TileCols,
- tile_log2(maxTileAreaSb, sbRows * sbCols))
+ minLog2Tiles = Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols))
  uniform_tile_spacing_flag f(1)
  if ( uniform_tile_spacing_flag ) {
  TileColsLog2 = minLog2TileCols
@@ -1045,7 +1041,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  delta_q_params( ) { 
+  delta_q_params() { 
  delta_q_res = 0
  delta_q_present = 0
  if ( base_q_idx > 0 ) {
@@ -1057,7 +1053,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  delta_lf_params( ) { 
+  delta_lf_params() { 
  delta_lf_present = 0
  delta_lf_res = 0
  delta_lf_multi = 0
@@ -1072,7 +1068,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  cdef_params( ) { 
+  cdef_params() { 
  if ( CodedLossless || allow_intrabc ||
  !enable_cdef) {
  cdef_bits = 0
@@ -1101,7 +1097,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- lr_params( ) { 
+ lr_params() { 
  if ( AllLossless || allow_intrabc ||
  !enable_restoration ) {
  FrameRestorationType[0] = RESTORE_NONE
@@ -1145,7 +1141,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- read_tx_mode( ) { 
+ read_tx_mode() { 
  if ( CodedLossless == 1 ) {
  TxMode = ONLY_4X4
  } else {
@@ -1159,7 +1155,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  skip_mode_params( ) { 
+  skip_mode_params() { 
  if ( FrameIsIntra || !reference_select || !enable_order_hint ) {
  skipModeAllowed = 0
  } else {
@@ -1216,7 +1212,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- frame_reference_mode( ) { 
+ frame_reference_mode() { 
  if ( FrameIsIntra ) {
  reference_select = 0
  } else {
@@ -1225,12 +1221,11 @@ tile_log2( blkSize, target ) {
  }
 
 
-  global_motion_params( ) { 
+global_motion_params() { 
  for ( ref = LAST_FRAME; ref <= ALTREF_FRAME; ref++ ) {
  GmType[ ref ] = IDENTITY
  for ( i = 0; i < 6; i++ ) {
- gm_params[ ref ][ i ] = ( ( i % 3 == 2 ) ?
- 1 << WARPEDMODEL_PREC_BITS : 0 )
+ gm_params[ ref ][ i ] = ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 )
  }
  }
  if ( FrameIsIntra )
@@ -1268,7 +1263,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  read_global_param( type, ref, idx ) { 
+read_global_param( type, ref, idx ) { 
  absBits = GM_ABS_ALPHA_BITS
  precBits = GM_ALPHA_PREC_BITS
  if ( idx < 2 ) {
@@ -1285,18 +1280,17 @@ tile_log2( blkSize, target ) {
  sub = (idx % 3) == 2 ? (1 << precBits) : 0
  mx = (1 << absBits)
  r = (PrevGmParams[ref][idx] >> precDiff) - sub
- gm_params[ref][idx] =
- (decode_signed_subexp_with_ref( -mx, mx + 1, r )<< precDiff) + round
+ gm_params[ref][idx] = (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round
  }
 
 
-  decode_signed_subexp_with_ref( low, high, r ) { 
+decode_signed_subexp_with_ref( low, high, r ) { 
  x = decode_unsigned_subexp_with_ref(high - low, r - low)
  return x + low
- }
+}
 
 
-  decode_unsigned_subexp_with_ref( mx, r ) { 
+decode_unsigned_subexp_with_ref( mx, r ) { 
  v = decode_subexp( mx )
  if ( (r << 1) <= mx ) {
  return inverse_recenter(r, v)
@@ -1306,7 +1300,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  decode_subexp( numSyms ) { 
+decode_subexp( numSyms ) { 
  i = 0
  mk = 0
  k = 3
@@ -1314,7 +1308,7 @@ tile_log2( blkSize, target ) {
  b2 = i ? k + i - 1 : k
  a = 1 << b2
  if ( numSyms <= mk + 3 * a ) {
- subexp_final_bits subexp_final_bits ns(numSyms - mk)
+ subexp_final_bits ns(numSyms - mk)
  return subexp_final_bits + mk
  } else {
  subexp_more_bits f(1)
@@ -1322,7 +1316,7 @@ tile_log2( blkSize, target ) {
  i++
  mk += a
  } else {
- subexp_bits subexp_bits f(b2)
+ subexp_bits f(b2)
  return subexp_bits + mk
  }
  }
@@ -1340,7 +1334,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  film_grain_params( ) { 
+film_grain_params() { 
  if ( !film_grain_params_present ||
  (!show_frame && !showable_frame) ) {
  reset_grain_params()
@@ -1426,17 +1420,17 @@ tile_log2( blkSize, target ) {
  }
 
 
-  temporal_point_info( ) { 
+  temporal_point_info() { 
  n = frame_presentation_time_length_minus_1 + 1
  frame_presentation_time f(n)
  }
 
 
   frame_obu( sz ) { 
- startBitPos = get_position( )
- frame_header_obu( )
- byte_alignment( )
- endBitPos = get_position( )
+ startBitPos = get_position()
+ frame_header_obu()
+ byte_alignment()
+ endBitPos = get_position()
  headerBytes = (endBitPos - startBitPos) / 8
  sz -= headerBytes
  tile_group_obu( sz )
@@ -1445,7 +1439,7 @@ tile_log2( blkSize, target ) {
 
   tile_group_obu( sz ) { 
  NumTiles = TileCols * TileRows
- startBitPos = get_position( )
+ startBitPos = get_position()
  tile_start_and_end_present_flag = 0
  if ( NumTiles > 1 )
  tile_start_and_end_present_flag f(1)
@@ -1457,8 +1451,8 @@ tile_log2( blkSize, target ) {
  tg_start f(tileBits)
  tg_end f(tileBits)
  }
- byte_alignment( )
- endBitPos = get_position( )
+ byte_alignment()
+ endBitPos = get_position()
  headerBytes = (endBitPos - startBitPos) / 8
  sz -= headerBytes
  for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {
@@ -1478,21 +1472,21 @@ tile_log2( blkSize, target ) {
  MiColEnd = MiColStarts[ tileCol + 1 ]
  CurrentQIndex = base_q_idx
  init_symbol( tileSize )
- decode_tile( )
- exit_symbol( )
+ decode_tile()
+ exit_symbol()
  }
  if ( tg_end == NumTiles - 1 ) {
  if ( !disable_frame_end_update_cdf ) {
- frame_end_update_cdf( )
+ frame_end_update_cdf()
  }
- decode_frame_wrapup( )
+ decode_frame_wrapup()
  SeenFrameHeader = 0
  }
  }
 
 
-  decode_tile( ) { 
- clear_above_context( )
+  decode_tile() { 
+ clear_above_context()
  for ( i = 0; i < FRAME_LF_COUNT; i++ )
  DeltaLF[ i ] = 0
  for ( plane = 0; plane < NumPlanes; plane++ ) {
@@ -1506,7 +1500,7 @@ tile_log2( blkSize, target ) {
  sbSize = use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64
  sbSize4 = Num_4x4_Blocks_Wide[ sbSize ]
  for ( r = MiRowStart; r < MiRowEnd; r += sbSize4 ) {
- clear_left_context( )
+ clear_left_context()
  for ( c = MiColStart; c < MiColEnd; c += sbSize4 ) {
  ReadDeltas = delta_q_present
  clear_cdef( r, c )
@@ -1635,9 +1629,9 @@ tile_log2( blkSize, target ) {
  AvailUChroma = 0
  AvailLChroma = 0
  }
- mode_info( )
- palette_tokens( )
- read_block_tx_size( )
+ mode_info()
+ palette_tokens()
+ read_block_tx_size()
  if ( skip )
  reset_block_context( bw4, bh4 )
  isCompound = RefFrame[ 1 ] > INTRA_FRAME
@@ -1662,8 +1656,8 @@ tile_log2( blkSize, target ) {
  }
  }
  }
- compute_prediction( )
- residual( )
+ compute_prediction()
+ residual()
  for ( y = 0; y < bh4; y++ ) {
  for ( x = 0; x < bw4; x++ ) {
  IsInters[ r + y ][ c + x ] = is_inter
@@ -1699,25 +1693,25 @@ tile_log2( blkSize, target ) {
  }
 
 
-  mode_info( ) { 
+  mode_info() { 
  if ( FrameIsIntra )
- intra_frame_mode_info( )
+ intra_frame_mode_info()
  else
- inter_frame_mode_info( )
+ inter_frame_mode_info()
  }
 
 
-  intra_frame_mode_info( ) { 
+  intra_frame_mode_info() { 
  skip = 0
  if ( SegIdPreSkip )
- intra_segment_id( )
+ intra_segment_id()
  skip_mode = 0
- read_skip( )
+ read_skip()
  if ( !SegIdPreSkip )
- intra_segment_id( )
- read_cdef( )
- read_delta_qindex( )
- read_delta_lf( )
+ intra_segment_id()
+ read_cdef()
+ read_delta_qindex()
+ read_delta_lf()
  ReadDeltas = 0
  RefFrame[ 0 ] = INTRA_FRAME
  RefFrame[ 1 ] = NONE
@@ -1742,14 +1736,14 @@ tile_log2( blkSize, target ) {
  is_inter = 0
  intra_frame_y_mode S()
  YMode = intra_frame_y_mode
- intra_angle_info_y( )
+ intra_angle_info_y()
  if ( HasChroma ) {
  uv_mode S()
  UVMode = uv_mode
  if ( UVMode == UV_CFL_PRED ) {
- read_cfl_alphas( )
+ read_cfl_alphas()
  }
- intra_angle_info_uv( )
+ intra_angle_info_uv()
  }
  PaletteSizeY = 0
  PaletteSizeUV = 0
@@ -1757,23 +1751,23 @@ tile_log2( blkSize, target ) {
  Block_Width[ MiSize ] <= 64  &&
  Block_Height[ MiSize ] <= 64 &&
  allow_screen_content_tools ) {
- palette_mode_info( )
+ palette_mode_info()
  }
- filter_intra_mode_info( )
+ filter_intra_mode_info()
  }
  }
 
 
-  intra_segment_id( ) { 
+  intra_segment_id() { 
  if ( segmentation_enabled )
- read_segment_id( )
+ read_segment_id()
  else
  segment_id = 0
  Lossless = LosslessArray[ segment_id ]
  }
 
 
-  read_segment_id( ) { 
+  read_segment_id() { 
  if ( AvailU && AvailL )
  prevUL = SegmentIds[ MiRow - 1 ][ MiCol - 1 ]
  else
@@ -1852,7 +1846,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  read_delta_qindex( ) { 
+  read_delta_qindex() { 
  sbSize = use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64
  if ( MiSize == sbSize && skip )
  return
@@ -1873,7 +1867,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- read_delta_lf( ) { 
+ read_delta_lf() { 
  sbSize = use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64
  if ( MiSize == sbSize && skip )
  return
@@ -1930,7 +1924,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- read_block_tx_size( ) { 
+ read_block_tx_size() { 
  bw4 = Num_4x4_Blocks_Wide[ MiSize ]
  bh4 = Num_4x4_Blocks_High[ MiSize ]
  if ( TxMode == TX_MODE_SELECT &&
@@ -1977,7 +1971,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  inter_frame_mode_info( ) { 
+  inter_frame_mode_info() { 
  use_intrabc = 0
  LeftRefFrame[ 0 ] = AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : INTRA_FRAME
  AboveRefFrame[ 0 ] = AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : INTRA_FRAME
@@ -1989,29 +1983,29 @@ tile_log2( blkSize, target ) {
  AboveSingle = AboveRefFrame[ 1 ] <= INTRA_FRAME
  skip = 0
  inter_segment_id( 1 )
- read_skip_mode( )
+ read_skip_mode()
  if ( skip_mode )
  skip = 1
  else
- read_skip( )
+ read_skip()
  if ( !SegIdPreSkip )
  inter_segment_id( 0 )
  Lossless = LosslessArray[ segment_id ]
- read_cdef( )
- read_delta_qindex( )
- read_delta_lf( )
+ read_cdef()
+ read_delta_qindex()
+ read_delta_lf()
  ReadDeltas = 0
- read_is_inter( )
+ read_is_inter()
  if ( is_inter )
- inter_block_mode_info( )
+ inter_block_mode_info()
  else
- intra_block_mode_info( )
+ intra_block_mode_info()
  }
 
 
   inter_segment_id( preSkip ) { 
  if ( segmentation_enabled ) {
- predictedSegmentId = get_segment_id( )
+ predictedSegmentId = get_segment_id()
  if ( segmentation_update_map ) {
  if ( preSkip && !SegIdPreSkip ) {
  segment_id = 0
@@ -2024,7 +2018,7 @@ tile_log2( blkSize, target ) {
  AboveSegPredContext[ MiCol + i ] = seg_id_predicted
  for ( i = 0; i < Num_4x4_Blocks_High[ MiSize ]; i++ )
  LeftSegPredContext[ MiRow + i ] = seg_id_predicted
- read_segment_id( )
+ read_segment_id()
  return
  }
  }
@@ -2033,13 +2027,13 @@ tile_log2( blkSize, target ) {
  if ( seg_id_predicted )
  segment_id = predictedSegmentId
  else
- read_segment_id( )
+ read_segment_id()
  for ( i = 0; i < Num_4x4_Blocks_Wide[ MiSize ]; i++ )
  AboveSegPredContext[ MiCol + i ] = seg_id_predicted
  for ( i = 0; i < Num_4x4_Blocks_High[ MiSize ]; i++ )
  LeftSegPredContext[ MiRow + i ] = seg_id_predicted
  } else {
- read_segment_id( )
+ read_segment_id()
  }
  } else {
  segment_id = predictedSegmentId
@@ -2050,7 +2044,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  read_is_inter( ) { 
+  read_is_inter() { 
  if ( skip_mode ) {
  is_inter = 1
  } else if ( seg_feature_active ( SEG_LVL_REF_FRAME ) ) {
@@ -2063,7 +2057,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  get_segment_id( ) { 
+  get_segment_id() { 
  bw4 = Num_4x4_Blocks_Wide[ MiSize ]
  bh4 = Num_4x4_Blocks_High[ MiSize ]
  xMis = Min( MiCols - MiCol, bw4 )
@@ -2076,19 +2070,19 @@ tile_log2( blkSize, target ) {
  }
 
 
- intra_block_mode_info( ) { 
+ intra_block_mode_info() { 
  RefFrame[ 0 ] = INTRA_FRAME
  RefFrame[ 1 ] = NONE
  y_mode S()
  YMode = y_mode
- intra_angle_info_y( )
+ intra_angle_info_y()
  if ( HasChroma ) {
   uv_mode S()
  UVMode = uv_mode
  if ( UVMode == UV_CFL_PRED ) {
- read_cfl_alphas( )
+ read_cfl_alphas()
  }
- intra_angle_info_uv( )
+ intra_angle_info_uv()
  }
  PaletteSizeY = 0
  PaletteSizeUV = 0
@@ -2096,15 +2090,15 @@ tile_log2( blkSize, target ) {
  Block_Width[ MiSize ] <= 64  &&
  Block_Height[ MiSize ] <= 64 &&
  allow_screen_content_tools )
- palette_mode_info( )
- filter_intra_mode_info( )
+ palette_mode_info()
+ filter_intra_mode_info()
  }
 
 
-  inter_block_mode_info( ) { 
+  inter_block_mode_info() { 
  PaletteSizeY = 0
  PaletteSizeUV = 0
- read_ref_frames( )
+ read_ref_frames()
  isCompound = RefFrame[ 1 ] > INTRA_FRAME
  find_mv_stack( isCompound )
  if ( skip_mode ) {
@@ -2141,7 +2135,7 @@ tile_log2( blkSize, target ) {
  RefMvIdx = idx + 1
  }
  }
- } else if ( has_nearmv( ) ) {
+ } else if ( has_nearmv() ) {
  RefMvIdx = 1
  for ( idx = 1; idx < 3; idx++ ) {
  if ( NumMvFound > idx + 1 ) {
@@ -2160,7 +2154,7 @@ tile_log2( blkSize, target ) {
  read_compound_type( isCompound )
  if ( interpolation_filter == SWITCHABLE ) {
  for ( dir = 0; dir < ( enable_dual_filter ? 2 : 1 ); dir++ ) {
- if ( needs_interp_filter( ) ) {
+ if ( needs_interp_filter() ) {
  interp_filter[ dir ] S()
  } else {
  interp_filter[ dir ] = EIGHTTAP
@@ -2197,7 +2191,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  filter_intra_mode_info( ) { 
+  filter_intra_mode_info() { 
  use_filter_intra = 0
  if ( enable_filter_intra &&
  YMode == DC_PRED && PaletteSizeY == 0 &&
@@ -2210,7 +2204,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  read_ref_frames( ) { 
+  read_ref_frames() { 
  if ( skip_mode ) {
  RefFrame[ 0 ] = SkipModeFrame[ 0 ]
  RefFrame[ 1 ] = SkipModeFrame[ 1 ]
@@ -2361,7 +2355,7 @@ tile_log2( blkSize, target ) {
  return
  }
  }
- if ( isCompound || RefFrame[ 1 ] == INTRA_FRAME || !has_overlappable_candidates( ) ) {
+ if ( isCompound || RefFrame[ 1 ] == INTRA_FRAME || !has_overlappable_candidates() ) {
  motion_mode = SIMPLE
  return
  }
@@ -2593,7 +2587,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  residual( ) { 
+  residual() { 
  sbMask = use_128x128_superblock ? 31 : 15
  widthChunks = Max( 1, Block_Width[ MiSize ] >> 6 )
  heightChunks = Max( 1, Block_Height[ MiSize ] >> 6 )
@@ -3026,7 +3020,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  intra_angle_info_y( ) { 
+  intra_angle_info_y() { 
  AngleDeltaY = 0
  if ( MiSize >= BLOCK_8X8 ) {
  if ( is_directional_mode( YMode ) ) {
@@ -3037,7 +3031,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- intra_angle_info_uv( ) { 
+ intra_angle_info_uv() { 
  AngleDeltaUV = 0
  if ( MiSize >= BLOCK_8X8 ) {
  if ( is_directional_mode( UVMode ) ) {
@@ -3077,7 +3071,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  palette_mode_info( ) { 
+  palette_mode_info() { 
  bsizeCtx = Mi_Width_Log2[ MiSize ] + Mi_Height_Log2[ MiSize ] - 2
  if ( YMode == DC_PRED ) {
   has_palette_y S()
@@ -3278,7 +3272,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  palette_tokens( ) { 
+  palette_tokens() { 
  blockHeight = Block_Height[ MiSize ]
  blockWidth = Block_Width[ MiSize ]
  onscreenHeight = Min( blockHeight, (MiRows - MiRow) * MI_SIZE )
@@ -3435,7 +3429,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- read_cdef( ) { 
+ read_cdef() { 
  if ( skip || CodedLossless || !enable_cdef || allow_intrabc) {
  return
  }
@@ -3584,16 +3578,16 @@ RefSgrXqd[ plane ][ 0 ] )
  }
 
 
- tile_list_obu( ) {
+ tile_list_obu() {
  output_frame_width_in_tiles_minus_1 f(8)
  output_frame_height_in_tiles_minus_1 f(8)
  tile_count_minus_1 f(16)
  for ( tile = 0; tile <= tile_count_minus_1; tile++ )
- tile_list_entry( )
+ tile_list_entry()
  }
 
 
- tile_list_entry( ) {
+ tile_list_entry() {
  anchor_frame_idx f(8)
  anchor_tile_row f(8)
  anchor_tile_col f(8)
@@ -3603,7 +3597,7 @@ RefSgrXqd[ plane ][ 0 ] )
  }
 
 
-  bitstream( ) { 
+  bitstream() { 
  while ( more_data_in_bitstream() ) {
   temporal_unit_size leb128()
  temporal_unit( temporal_unit_size )

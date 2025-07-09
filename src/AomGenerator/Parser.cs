@@ -9,8 +9,124 @@ namespace AomGenerator
 {
     public class Parser
     {
-        // TODO
-        public static Parser<char, IEnumerable<AomClass>> AomClasses => throw new NotImplementedException();
+        public static Parser<char, string> Identifier => LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_').ManyString(), (first, rest) => first + rest);
+
+        public static Parser<char, string> BlockComment<T, U>(Parser<char, T> blockCommentStart, Parser<char, U> blockCommentEnd)
+        {
+            if (blockCommentStart == null)
+                throw new ArgumentNullException(nameof(blockCommentStart));
+            if (blockCommentEnd == null)
+                throw new ArgumentNullException(nameof(blockCommentEnd));
+            return blockCommentStart.Then(Any.Until(blockCommentEnd), (first, rest) => string.Concat(rest));
+        }
+
+        public static Parser<char, AomCode> Comment =>
+            Map((comment) => new AomComment(comment),
+                BlockComment(String("/*"), String("*/"))
+            ).Select(x => (AomCode)x);
+
+        public static Parser<char, string> AnyCharE => AnyCharExcept('(', ')').AtLeastOnceString();
+        public static Parser<char, string> Expr => OneOf(Rec(() => Parentheses), AnyCharE);
+        public static Parser<char, string> Parentheses => Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");
+        public static Parser<char, IEnumerable<AomCode>> SingleBlock => (Try(BlockDoWhile).Or(Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Field)))).Repeat(1);
+
+        public static Parser<char, string> FieldType => OneOf(
+            Try(String("f(1)")),
+            Try(String("f(2)")),
+            Try(String("f(3)")),
+            Try(String("f(4)")),
+            Try(String("f(5)")),
+            Try(String("f(8)")),
+            Try(String("f(32)")),
+            Try(String("f(n)")),
+            Try(String("f(OrderHintBits)")),
+            Try(String("leb128()"))
+            );
+
+        public static Parser<char, string> FieldValue =>
+            Map((operation, value) => $"{operation} {value}",
+                SkipWhitespaces.Then(OneOf(String("="), String("+="), String("-="))),
+                SkipWhitespaces.Then(Any.Until(EndOfLine)).Select(x => string.Concat(x))
+                );
+
+
+        public static Parser<char, string> AnyCharA => AnyCharExcept('[', ']').AtLeastOnceString();
+        public static Parser<char, string> ExprA => OneOf(Rec(() => FieldArray), AnyCharA);
+        public static Parser<char, string> FieldArray => Char('[').Then(Rec(() => ExprA).Until(Char(']'))).Select(x => $"[{string.Concat(x)}]");
+        public static Parser<char, string> FieldArrays => FieldArray.SeparatedAndTerminated(SkipWhitespaces).Select(x => string.Concat(x));
+
+        public static Parser<char, AomCode> Field =>
+             Map((className, classParameter, classArray, increment, value, comment, type) => new AomField(className, classParameter, classArray, increment, value, comment, type),
+                SkipWhitespaces.Then(Identifier),
+                SkipWhitespaces.Then(Try(Parentheses).Optional()),
+                SkipWhitespaces.Then(Try(FieldArrays).Optional()),
+                OneOf(Try(String("++")), Try(String("--"))).Optional(),
+                SkipWhitespaces.Then(Try(FieldValue).Optional()),
+                SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
+                SkipWhitespaces.Then(Try(FieldType).Optional())
+             ).Select(x => (AomCode)x);
+
+        public static Parser<char, AomCode> BlockIf =>
+            Map((type, condition, comment, content) => new AomBlock(type, condition, comment, content),
+                Try(String("if").Before(SkipWhitespaces).Before(Lookahead(Parentheses))).Before(SkipWhitespaces),
+                Try(Parentheses).Optional(),
+                SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
+                SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
+            ).Select(x => (AomCode)x);
+        public static Parser<char, AomCode> BlockElseIf =>
+            Map((type, condition, comment, content) => new AomBlock(type, condition, comment, content),
+                Try(String("else if").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
+                Try(Parentheses).Optional(),
+                SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
+                SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
+            ).Select(x => (AomCode)x);
+        public static Parser<char, AomCode> BlockElse =>
+            Map((type, condition, comment, content) => new AomBlock(type, condition, comment, content),
+                Try(String("else")).Before(SkipWhitespaces),
+                Try(Parentheses).Optional(),
+                SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
+                SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
+            ).Select(x => (AomCode)x);
+        public static Parser<char, AomCode> BlockIfThenElse =>
+            Map((blockIf, blockElseIf, blockElse) => new AomBlockIfThenElse(blockIf, blockElseIf, blockElse),
+                SkipWhitespaces.Then(Try(BlockIf)),
+                SkipWhitespaces.Then(Try(BlockElseIf).SeparatedAndOptionallyTerminated(SkipWhitespaces)).Optional(),
+                SkipWhitespaces.Then(Try(BlockElse)).Optional()
+            ).Select(x => (AomCode)x);
+
+        public static Parser<char, AomCode> BlockForWhile =>
+            Map((type, condition, comment, content) => new AomBlock(type, condition, comment, content),
+                OneOf(
+                    Try(String("for").Before(SkipWhitespaces).Before(Lookahead(Parentheses))),
+                    Try(String("while").Before(SkipWhitespaces).Before(Lookahead(Parentheses)))
+                    ).Before(SkipWhitespaces),
+                Try(Parentheses).Optional(),
+                SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
+                SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
+            ).Select(x => (AomCode)x);
+
+        public static Parser<char, AomCode> BlockDoWhile =>
+            Map((type, comment, content, condition) => new AomBlock(type, condition, comment, content),
+                String("do").Before(SkipWhitespaces).Before(Lookahead(SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock)))).Before(SkipWhitespaces.Before(String("while"))))).Before(SkipWhitespaces),
+                SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
+                SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock)))),
+                Try(SkipWhitespaces.Then(String("while")).Then(SkipWhitespaces.Then(Parentheses))).Optional()
+            ).Select(x => (AomCode)x);
+
+        public static Parser<char, AomCode> CodeBlock => Try(BlockIfThenElse).Or(Try(BlockDoWhile).Or(Try(BlockForWhile).Or(Try(Field).Or(Comment))));
+
+        public static Parser<char, IEnumerable<AomCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
+
+
+        public static Parser<char, AomClass> AomClass =>
+            Map((className, classParameter, fields, endOffset) => new AomClass(className, classParameter, fields, endOffset),
+                SkipWhitespaces.Then(Identifier),
+                SkipWhitespaces.Then(Parentheses.Optional()).Before(SkipWhitespaces),
+                Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}')),
+                CurrentOffset
+            );
+
+        public static Parser<char, IEnumerable<AomClass>> AomClasses => SkipWhitespaces.Then(AomClass.SeparatedAndOptionallyTerminated(SkipWhitespaces));
     }
 
     [SuppressMessage("naming", "CA1724:The type name conflicts with the namespace name", Justification = "Example code")]
@@ -35,7 +151,7 @@ namespace AomGenerator
         public AomField()
         { }
 
-        public AomField(string name, Maybe<string> parameter, Maybe<string> array, Maybe<string> increment, Maybe<string> value, Maybe<string> comment, Maybe<string> category, Maybe<string> type)
+        public AomField(string name, Maybe<string> parameter, Maybe<string> array, Maybe<string> increment, Maybe<string> value, Maybe<string> comment, Maybe<string> type)
         {
             Name = ClassType = name;
             Increment = increment.GetValueOrDefault();
@@ -43,7 +159,6 @@ namespace AomGenerator
             FieldArray = array.GetValueOrDefault();
             Value = value.GetValueOrDefault();
             Comment = comment.GetValueOrDefault();
-            Category = category.GetValueOrDefault();
             Type = type.GetValueOrDefault();
         }
 
@@ -55,7 +170,6 @@ namespace AomGenerator
         public string Increment { get; set; }
         public string FieldArray { get; set; }
         public string Comment { get; set; }
-        public string Category { get; set; }
 
         public AomBlock Parent { get; internal set; }
         public bool MakeList { get; internal set; }

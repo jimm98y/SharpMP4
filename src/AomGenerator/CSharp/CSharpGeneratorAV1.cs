@@ -88,7 +88,7 @@ namespace AomGenerator.CSharp
 
         public string PreprocessDefinitionsFile(string definitions)
         {
-            throw new NotImplementedException();
+            return definitions;
         }
 
         public string ReplaceParameter(string parameter)
