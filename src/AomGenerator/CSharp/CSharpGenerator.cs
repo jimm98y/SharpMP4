@@ -796,6 +796,24 @@ namespace Sharp{type}
                         ret.Insert(0, "[x]");
                     else if (parent.Condition.Contains("refList =") || parent.Condition.Contains("refList=") || parent.Condition.Contains("refList ="))
                         ret.Insert(0, "[refList]");
+                    else if (parent.Condition.Contains("row =") || parent.Condition.Contains("row=") || parent.Condition.Contains("row ="))
+                        ret.Insert(0, "[row]");
+                    else if (parent.Condition.Contains("col =") || parent.Condition.Contains("col=") || parent.Condition.Contains("col ="))
+                        ret.Insert(0, "[col]");
+                    else if (parent.Condition.Contains("chunkY =") || parent.Condition.Contains("chunkY=") || parent.Condition.Contains("chunkY ="))
+                        ret.Insert(0, "[chunkY]");
+                    else if (parent.Condition.Contains("chunkX =") || parent.Condition.Contains("chunkX=") || parent.Condition.Contains("chunkX ="))
+                        ret.Insert(0, "[chunkX]");
+                    else if (parent.Condition.Contains("txSz =") || parent.Condition.Contains("txSz=") || parent.Condition.Contains("txSz ="))
+                        ret.Insert(0, "[txSz]");
+                    else if (parent.Condition.Contains("k =") || parent.Condition.Contains("k=") || parent.Condition.Contains("k ="))
+                        ret.Insert(0, "[k]");
+                    else if (parent.Condition.Contains("unitRow =") || parent.Condition.Contains("unitRow=") || parent.Condition.Contains("unitRow ="))
+                        ret.Insert(0, "[unitRow]");
+                    else if (parent.Condition.Contains("unitCol =") || parent.Condition.Contains("unitCol=") || parent.Condition.Contains("unitCol ="))
+                        ret.Insert(0, "[unitCol]");
+                    else if (parent.Condition.Contains("tile =") || parent.Condition.Contains("tile=") || parent.Condition.Contains("tile ="))
+                        ret.Insert(0, "[tile]");
                     else
                         throw new Exception();
                 }
@@ -1106,6 +1124,7 @@ namespace Sharp{type}
                 { "f(b2)",                      "uint" },
                 { "f(bitsToRead)",              "uint" },
                 { "f(idLen)",                   "uint" },
+                { "f(N)",                       "uint" },
                 { "f(n)",                       "uint" },
                 { "f(OrderHintBits)",           "uint" },
                 { "f(SUPERRES_DENOM_BITS)",     "uint" },
@@ -1113,15 +1132,23 @@ namespace Sharp{type}
                 { "f(TileRowsLog2+TileColsLog2)", "uint" },
                 { "f(time_offset_length)",      "uint" },
                 { "L(1)",                       "uint" },
+                { "L(2)",                       "uint" },
                 { "L(3)",                       "uint" },
-                { "L(n)",                       "uint" },
+                { "L(b2)",                      "uint" },
+                { "L(BitDepth)",                "uint" },
+                { "L(cdef_bits)",               "uint" },
                 { "L(delta_q_rem_bits)",        "uint" },
+                { "L(n)",                       "uint" },
+                { "L(paletteBits)",             "uint" },
+                { "L(SGRPROJ_PARAMS_BITS)",     "uint" },
                 { "le(TileSizeBytes)",          "uint" },
                 { "leb128()",                   "uint" },
                 { "ns(32)",                     "uint" },
                 { "ns(maxWidth)",               "uint" },
                 { "ns(maxHeight)",              "uint" },
                 { "ns(numSyms - mk)",           "uint" },
+                { "NS(numSyms - mk)",           "uint" },
+                { "NS(PaletteSizeUV)",          "uint" },
                 { "S()",                        "uint" },
                 { "su(32)",                     "int" },
                 { "su(1+6)",                    "uint" },
@@ -1176,6 +1203,9 @@ namespace Sharp{type}
                 case "f(idLen)":
                     return "stream.ReadVariable(size, idLen,";
 
+                case "f(N)":
+                    return "stream.ReadVariable(size, N,";
+
                 case "f(n)":
                     return "stream.ReadVariable(size, n,";
 
@@ -1197,14 +1227,32 @@ namespace Sharp{type}
                 case "L(1)":
                     return "stream.ReadL(size, 1,";
 
+                case "L(2)":
+                    return "stream.ReadL(size, 2,";
+
                 case "L(3)":
                     return "stream.ReadL(size, 3,";
+
+                case "L(b2)":
+                    return "stream.ReadL(size, b2,";
+
+                case "L(BitDepth)":
+                    return "stream.ReadL(size, BitDepth,";
+
+                case "L(cdef_bits)":
+                    return "stream.ReadL(size, cdef_bits,";
+
+                case "L(delta_q_rem_bits)":
+                    return "stream.ReadL(size, delta_q_rem_bits,";
 
                 case "L(n)":
                     return "stream.ReadL(size, n,";
 
-                case "L(delta_q_rem_bits)":
-                    return "stream.ReadL(size, delta_q_rem_bits,";
+                case "L(paletteBits)":
+                    return "stream.ReadL(size, paletteBits,";
+
+                case "L(SGRPROJ_PARAMS_BITS)":
+                    return "stream.ReadL(size, SGRPROJ_PARAMS_BITS,";
 
                 case "le(TileSizeBytes)":
                     return "stream.ReadLeVar(size, TileSizeBytes,";
@@ -1221,8 +1269,12 @@ namespace Sharp{type}
                 case "ns(maxWidth)":
                     return "stream.ReadUnsignedInt(size, maxWidth,";
 
+                case "NS(numSyms - mk)":
                 case "ns(numSyms - mk)":
                     return "stream.ReadUnsignedInt(size, numSyms - mk,";
+
+                case "NS(PaletteSizeUV)":
+                    return "stream.ReadNS(size, PaletteSizeUV,";
 
                 case "S()":
                     return "stream.ReadS(size,";
@@ -1312,8 +1364,14 @@ namespace Sharp{type}
                 case "f(idLen)":
                     return "stream.WriteVariable(idLen,";
 
+                case "f(N)":
+                    return "stream.WriteVariable(N,";
+
                 case "f(n)":
                     return "stream.WriteVariable(n,";
+
+                case "f(paletteBits)":
+                    return "stream.WriteVariable(paletteBits,";
 
                 case "f(OrderHintBits)":
                     return "stream.WriteVariable(OrderHintBits,";
@@ -1333,14 +1391,32 @@ namespace Sharp{type}
                 case "L(1)":
                     return "stream.WriteL(1, ";
 
+                case "L(2)":
+                    return "stream.WriteL(2, ";
+
                 case "L(3)":
                     return "stream.WriteL(3, ";
+
+                case "L(b2)":
+                    return "stream.WriteL(b2, ";
+
+                case "L(BitDepth)":
+                    return "stream.WriteL(BitDepth, ";
+
+                case "L(cdef_bits)":
+                    return "stream.WriteL(cdef_bits, ";
+
+                case "L(delta_q_rem_bits)":
+                    return "stream.WriteL(delta_q_rem_bits, ";
 
                 case "L(n)":
                     return "stream.WriteL(n, ";
 
-                case "L(delta_q_rem_bits)":
-                    return "stream.WriteL(delta_q_rem_bits, ";
+                case "L(paletteBits)":
+                    return "stream.WriteL(paletteBits, ";
+
+                case "L(SGRPROJ_PARAMS_BITS)":
+                    return "stream.WriteL(SGRPROJ_PARAMS_BITS, ";
 
                 case "le(TileSizeBytes)":
                     return "stream.WriteLeVar(TileSizeBytes, ";
@@ -1357,8 +1433,12 @@ namespace Sharp{type}
                 case "ns(maxWidth)":
                     return "stream.WriteUnsignedInt(maxWidth,";
 
+                case "NS(numSyms - mk)":
                 case "ns(numSyms - mk)":
                     return "stream.WriteUnsignedInt(numSyms - mk,";
+
+                case "NS(PaletteSizeUV)":
+                    return "stream.WriteNS(PaletteSizeUV,";
 
                 case "S()":
                     return "stream.WriteS(";

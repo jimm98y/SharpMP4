@@ -96,6 +96,41 @@ namespace AomGenerator.CSharp
                 { "max", "f(32)" },
                 { "feature", "f(32)" },
                 { "allowSelect", "f(32)" },
+                { "row", "f(32)" },
+                { "col", "f(32)" },
+                { "txSz", "f(32)" },
+                { "depth", "f(32)" },
+                { "preSkip", "f(32)" },
+                { "isCompound", "f(32)" },
+                { "refFrame", "f(32)" },
+                { "refList", "f(32)" },
+                { "comp", "f(32)" },
+                { "plane", "f(32)" },
+                { "baseX", "f(32)" },
+                { "baseY", "f(32)" },
+                { "x", "f(32)" },
+                { "y", "f(32)" },
+                { "startX", "f(32)" },
+                { "startY", "f(32)" },
+                { "w", "f(32)" },
+                { "h", "f(32)" },
+                { "subsize", "f(32)" },
+                { "blockX", "f(32)" },
+                { "blockY", "f(32)" },
+                { "txSet", "f(32)" },
+                { "txType", "f(32)" },
+                { "mode", "f(32)" },
+                { "x4", "f(32)" },
+                { "y4", "f(32)" },
+                { "colorMap", "f(32)" },
+                { "n", "f(32)" },
+                { "candidateR", "f(32)" },
+                { "candidateC", "f(32)" },
+                { "mvec", "f(32)" },
+                { "border", "f(32)" },
+                { "unitRow", "f(32)" },
+                { "unitCol", "f(32)" },
+                { "k", "f(32)" },
             };
 
             return map[parameter];
@@ -146,10 +181,10 @@ namespace AomGenerator.CSharp
         public string PreprocessDefinitionsFile(string definitions)
         {
             // rename ref -> refc to avoid C# conflicts with built-in ref keyword
-            definitions = definitions.Replace(" ref = ", " refc = ");
+            definitions = definitions.Replace(" ref ", " refc ");
             definitions = definitions.Replace("[ref]", "[refc]");
-            definitions = definitions.Replace(",ref,", ",refc,");
             definitions = definitions.Replace(", ref,", ", refc,");
+            definitions = definitions.Replace("ref++", "refc++");
             return definitions;
         }
 

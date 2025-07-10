@@ -16,6 +16,7 @@ namespace SharpAV1
 		public FrameHeaderObu FrameHeaderObu { get; set; }
 		public FrameObu FrameObu { get; set; }
 		public TileGroupObu TileGroupObu { get; set; }
+		public TileListObu TileListObu { get; set; }
 
     }
 
@@ -3931,14 +3932,14 @@ return;
 
 
 
-  get_relative_dist( a, b ) { 
+get_relative_dist( a, b ) { 
  if ( !enable_order_hint )
  return 0
  diff = a - b
  m = 1 << (OrderHintBits - 1)
  diff = (diff & (m - 1)) - (diff & m)
  return diff
- }
+}
     */
     public class GetRelativeDist : IAomSerializable
     {
@@ -3997,7 +3998,7 @@ return diff;
 
 
 
-  mark_ref_frames( idLen ) { 
+mark_ref_frames( idLen ) { 
  diffLen = delta_frame_id_length_minus_2 + 2
  for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
  if ( current_frame_id > ( 1 << diffLen ) ) {
@@ -4104,7 +4105,7 @@ return diff;
 
 
 
-  frame_size() { 
+frame_size() { 
  if ( frame_size_override_flag ) {
  n = frame_width_bits_minus_1 + 1
  frame_width_minus_1 f(n)
@@ -4200,7 +4201,7 @@ return diff;
 
 
 
-  render_size() { 
+render_size() { 
  render_and_frame_size_different f(1)
  if ( render_and_frame_size_different == 1 ) {
  render_width_minus_1 f(16)
@@ -4281,7 +4282,7 @@ return diff;
 
 
 
-  frame_size_with_refs() { 
+frame_size_with_refs() { 
  for ( i = 0; i < REFS_PER_FRAME; i++ ) {
  found_ref f(1)
  if ( found_ref == 1 ) {
@@ -4514,7 +4515,7 @@ superres_params() {
 
 
 
- compute_image_size() { 
+compute_image_size() { 
  MiCols = 2 * ( ( FrameWidth + 7 ) >> 3 )
  MiRows = 2 * ( ( FrameHeight + 7 ) >> 3 )
  }
@@ -4557,7 +4558,7 @@ superres_params() {
 
 
 
-  read_interpolation_filter() { 
+read_interpolation_filter() { 
  is_filter_switchable f(1)
  if ( is_filter_switchable == 1 ) {
  interpolation_filter = SWITCHABLE
@@ -4622,7 +4623,7 @@ superres_params() {
 
 
 
-  loop_filter_params() { 
+loop_filter_params() { 
  if ( CodedLossless || allow_intrabc ) {
  loop_filter_level[ 0 ] = 0
  loop_filter_level[ 1 ] = 0
@@ -4850,7 +4851,7 @@ return;
 
 
 
-  quantization_params() { 
+quantization_params() { 
  base_q_idx f(8)
  DeltaQYDc = read_delta_q()
  if ( NumPlanes > 1 ) {
@@ -5042,7 +5043,7 @@ return;
 
 
 
- read_delta_q() { 
+read_delta_q() { 
  delta_coded f(1)
  if ( delta_coded ) {
  delta_q su(1+6)
@@ -5110,7 +5111,7 @@ return delta_q;
 
 
 
-  segmentation_params() { 
+segmentation_params() { 
  segmentation_enabled f(1)
  if ( segmentation_enabled == 1 ) {
  if ( primary_ref_frame == PRIMARY_REF_NONE ) {
@@ -5423,7 +5424,7 @@ return delta_q;
 
 
 
-  tile_info () { 
+tile_info () { 
  sbCols = use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 )
  sbRows = use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 )
  sbShift = use_128x128_superblock ? 5 : 4
@@ -5914,7 +5915,7 @@ return k;
 
 
 
-  delta_q_params() { 
+delta_q_params() { 
  delta_q_res = 0
  delta_q_present = 0
  if ( base_q_idx > 0 ) {
@@ -5987,7 +5988,7 @@ return k;
 
 
 
-  delta_lf_params() { 
+delta_lf_params() { 
  delta_lf_present = 0
  delta_lf_res = 0
  delta_lf_multi = 0
@@ -6079,7 +6080,7 @@ return k;
 
 
 
-  cdef_params() { 
+cdef_params() { 
  if ( CodedLossless || allow_intrabc ||
  !enable_cdef) {
  cdef_bits = 0
@@ -6241,7 +6242,7 @@ return;
 
 
 
- lr_params() { 
+lr_params() { 
  if ( AllLossless || allow_intrabc ||
  !enable_restoration ) {
  FrameRestorationType[0] = RESTORE_NONE
@@ -6457,7 +6458,7 @@ return;
 
 
 
- read_tx_mode() { 
+read_tx_mode() { 
  if ( CodedLossless == 1 ) {
  TxMode = ONLY_4X4
  } else {
@@ -6540,7 +6541,7 @@ return;
 
 
 
-  skip_mode_params() { 
+skip_mode_params() { 
  if ( FrameIsIntra || !reference_select || !enable_order_hint ) {
  skipModeAllowed = 0
  } else {
@@ -6824,7 +6825,7 @@ return;
 
 
 
- frame_reference_mode() { 
+frame_reference_mode() { 
  if ( FrameIsIntra ) {
  reference_select = 0
  } else {
@@ -6885,15 +6886,15 @@ return;
 
 
 global_motion_params() { 
- for ( refc = LAST_FRAME; ref <= ALTREF_FRAME; ref++ ) {
- GmType[ ref ] = IDENTITY
+ for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ ) {
+ GmType[ refc ] = IDENTITY
  for ( i = 0; i < 6; i++ ) {
- gm_params[ ref ][ i ] = ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 )
+ gm_params[ refc ][ i ] = ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 )
  }
  }
  if ( FrameIsIntra )
  return
- for ( refc = LAST_FRAME; ref <= ALTREF_FRAME; ref++ ) {
+ for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ ) {
  is_global f(1)
  if ( is_global ) {
  is_rot_zoom f(1)
@@ -6908,19 +6909,19 @@ global_motion_params() {
  }
  GmType[refc] = type
  if ( type >= ROTZOOM ) {
- read_global_param(type,refc,2)
- read_global_param(type,refc,3)
+ read_global_param(type, refc, 2)
+ read_global_param(type, refc, 3)
  if ( type == AFFINE ) {
- read_global_param(type,refc,4)
- read_global_param(type,refc,5)
+ read_global_param(type, refc, 4)
+ read_global_param(type, refc, 5)
  } else {
  gm_params[refc][4] = -gm_params[refc][3]
  gm_params[refc][5] = gm_params[refc][2]
  }
  }
  if ( type >= TRANSLATION ) {
- read_global_param(type,refc,0)
- read_global_param(type,refc,1)
+ read_global_param(type, refc, 0)
+ read_global_param(type, refc, 1)
  }
  }
  }
@@ -6961,13 +6962,13 @@ global_motion_params() {
 			uint[][] gm_params = null;
 			uint type = 0;
 
-			for ( refc = LAST_FRAME; ref <= ALTREF_FRAME; ref++ )
+			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
 			{
-				GmType[ ref ]= IDENTITY;
+				GmType[ refc ]= IDENTITY;
 
 				for ( i = 0; i < 6; i++ )
 				{
-					gm_params[ ref ][ i ]= ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 );
+					gm_params[ refc ][ i ]= ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 );
 				}
 			}
 
@@ -6985,7 +6986,7 @@ return;
 			this.read_global_param00 = new ReadGlobalParam0[ ALTREF_FRAME];
 			this.read_global_param2 = new ReadGlobalParam[ ALTREF_FRAME];
 			this.read_global_param01 = new ReadGlobalParam0[ ALTREF_FRAME];
-			for ( refc = LAST_FRAME; ref <= ALTREF_FRAME; ref++ )
+			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
 			{
 				size += stream.ReadFixed(size, 1, out this.is_global[ refc ], "is_global"); 
 
@@ -7011,16 +7012,16 @@ return;
 
 				if ( type >= ROTZOOM )
 				{
-					this.read_global_param[ refc ] =  new ReadGlobalParam(type, refc, 2) ;
+					this.read_global_param[ refc ] =  new ReadGlobalParam(type,  refc,  2) ;
 					size +=  stream.ReadClass<ReadGlobalParam>(size, context, this.read_global_param[ refc ], "read_global_param"); 
-					this.read_global_param0[ refc ] =  new ReadGlobalParam(type, refc, 3) ;
+					this.read_global_param0[ refc ] =  new ReadGlobalParam(type,  refc,  3) ;
 					size +=  stream.ReadClass<ReadGlobalParam>(size, context, this.read_global_param0[ refc ], "read_global_param0"); 
 
 					if ( type == AFFINE )
 					{
-						this.read_global_param1[ refc ] =  new ReadGlobalParam(type, refc, 4) ;
+						this.read_global_param1[ refc ] =  new ReadGlobalParam(type,  refc,  4) ;
 						size +=  stream.ReadClass<ReadGlobalParam>(size, context, this.read_global_param1[ refc ], "read_global_param1"); 
-						this.read_global_param00[ refc ] =  new ReadGlobalParam0(type, refc, 5) ;
+						this.read_global_param00[ refc ] =  new ReadGlobalParam0(type,  refc,  5) ;
 						size +=  stream.ReadClass<ReadGlobalParam0>(size, context, this.read_global_param00[ refc ], "read_global_param00"); 
 					}
 					else 
@@ -7032,9 +7033,9 @@ return;
 
 				if ( type >= TRANSLATION )
 				{
-					this.read_global_param2[ refc ] =  new ReadGlobalParam(type, refc, 0) ;
+					this.read_global_param2[ refc ] =  new ReadGlobalParam(type,  refc,  0) ;
 					size +=  stream.ReadClass<ReadGlobalParam>(size, context, this.read_global_param2[ refc ], "read_global_param2"); 
-					this.read_global_param01[ refc ] =  new ReadGlobalParam0(type, refc, 1) ;
+					this.read_global_param01[ refc ] =  new ReadGlobalParam0(type,  refc,  1) ;
 					size +=  stream.ReadClass<ReadGlobalParam0>(size, context, this.read_global_param01[ refc ], "read_global_param01"); 
 				}
 			}
@@ -7052,13 +7053,13 @@ return;
 			uint[][] gm_params = null;
 			uint type = 0;
 
-			for ( refc = LAST_FRAME; ref <= ALTREF_FRAME; ref++ )
+			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
 			{
-				GmType[ ref ]= IDENTITY;
+				GmType[ refc ]= IDENTITY;
 
 				for ( i = 0; i < 6; i++ )
 				{
-					gm_params[ ref ][ i ]= ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 );
+					gm_params[ refc ][ i ]= ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 );
 				}
 			}
 
@@ -7067,7 +7068,7 @@ return;
 return;
 			}
 
-			for ( refc = LAST_FRAME; ref <= ALTREF_FRAME; ref++ )
+			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
 			{
 				size += stream.WriteFixed(1, this.is_global[ refc ], "is_global"); 
 
@@ -8029,7 +8030,7 @@ return;
 
 
 
-  temporal_point_info() { 
+temporal_point_info() { 
  n = frame_presentation_time_length_minus_1 + 1
  frame_presentation_time f(n)
  }
@@ -8072,7 +8073,7 @@ return;
 
 
 
-  frame_obu( sz ) { 
+frame_obu( sz ) { 
  startBitPos = get_position()
  frame_header_obu()
  byte_alignment()
@@ -8143,7 +8144,7 @@ return;
 
 
 
-  tile_group_obu( sz ) { 
+tile_group_obu( sz ) { 
  NumTiles = TileCols * TileRows
  startBitPos = get_position()
  tile_start_and_end_present_flag = 0
@@ -8412,7 +8413,7 @@ return;
 
 
 
-  decode_tile() { 
+decode_tile() { 
  clear_above_context()
  for ( i = 0; i < FRAME_LF_COUNT; i++ )
  DeltaLF[ i ] = 0
@@ -8589,7 +8590,7 @@ return;
 
 
 
- clear_block_decoded_flags( r, c, sbSize4 ) { 
+clear_block_decoded_flags( r, c, sbSize4 ) { 
  for ( plane = 0; plane < NumPlanes; plane++ ) {
  subX = (plane > 0) ? subsampling_x : 0
  subY = (plane > 0) ? subsampling_y : 0
@@ -8722,7 +8723,7 @@ return;
 
 
 
-  decode_partition( r, c, bSize ) { 
+decode_partition( r, c, bSize ) { 
  if ( r >= MiRows || c >= MiCols )
  return 0
  AvailU = is_inside( r - 1, c )
@@ -9171,7 +9172,7 @@ return 0;
 
 
 
- decode_block( r, c, subSize ) { 
+decode_block( r, c, subSize ) { 
  MiRow = r
  MiCol = c
  MiSize = subSize
@@ -9709,7 +9710,7 @@ return 0;
 
 
 
-  mode_info() { 
+mode_info() { 
  if ( FrameIsIntra )
  intra_frame_mode_info()
  else
@@ -9770,7 +9771,7 @@ return 0;
 
 
 
-  intra_frame_mode_info() { 
+intra_frame_mode_info() { 
  skip = 0
  if ( SegIdPreSkip )
  intra_segment_id()
@@ -10071,7 +10072,7 @@ return 0;
 
 
 
-  intra_segment_id() { 
+intra_segment_id() { 
  if ( segmentation_enabled )
  read_segment_id()
  else
@@ -10136,7 +10137,7 @@ return 0;
 
 
 
-  read_segment_id() { 
+read_segment_id() { 
  if ( AvailU && AvailL )
  prevUL = SegmentIds[ MiRow - 1 ][ MiCol - 1 ]
  else
@@ -10306,27 +10307,27 @@ return 0;
 
 
 
-neg_deinterleave(diff,refc,max) {
+neg_deinterleave(diff, refc, max) {
  if (!ref)
  return diff
- if (ref >=(max-1))
- return max-diff-1
- if(2*ref<max){
- if(diff <=2*ref){
- if(diff&1)
- return ref+( (diff+1) >>1)
+ if (ref >= ( max - 1 ))
+ return max - diff - 1
+ if(2 * refc < max){
+ if(diff <= 2 * ref){
+ if(diff & 1)
+ return refc + ( (diff+1) >> 1)
  else 
- return ref-(diff >>1)
+ return refc - (diff >> 1)
  }
  return diff
  } else {
- if (diff <=2*(max-ref-1)){
- if (diff&1)
- return ref+( (diff+1) >>1)
+ if (diff <=2 * (max - refc - 1)){
+ if (diff & 1)
+ return refc + ( (diff + 1) >>1)
  else 
- return ref-(diff >>1)
+ return refc - (diff >> 1 )
  }
- return max-(diff+1)
+ return max - ( diff + 1 )
  }
  }
     */
@@ -10356,24 +10357,24 @@ neg_deinterleave(diff,refc,max) {
 return diff;
 			}
 
-			if (ref >=(max-1))
+			if (ref >= ( max - 1 ))
 			{
-return max-diff-1;
+return max - diff - 1;
 			}
 
-			if (2*ref<max)
+			if (2 * refc < max)
 			{
 
-				if (diff <=2*ref)
+				if (diff <= 2 * ref)
 				{
 
-					if (diff&1 != 0)
+					if (diff & 1 != 0)
 					{
-return ref+( (diff+1) >>1);
+return refc + ( (diff+1) >> 1);
 					}
 					else 
 					{
-return ref-(diff >>1);
+return refc - (diff >> 1);
 					}
 				}
 return diff;
@@ -10381,19 +10382,19 @@ return diff;
 			else 
 			{
 
-				if (diff <=2*(max-ref-1))
+				if (diff <=2 * (max - refc - 1))
 				{
 
-					if (diff&1 != 0)
+					if (diff & 1 != 0)
 					{
-return ref+( (diff+1) >>1);
+return refc + ( (diff + 1) >>1);
 					}
 					else 
 					{
-return ref-(diff >>1);
+return refc - (diff >> 1 );
 					}
 				}
-return max-(diff+1);
+return max - ( diff + 1 );
 			}
 
             return size;
@@ -10409,24 +10410,24 @@ return max-(diff+1);
 return diff;
 			}
 
-			if (ref >=(max-1))
+			if (ref >= ( max - 1 ))
 			{
-return max-diff-1;
+return max - diff - 1;
 			}
 
-			if (2*ref<max)
+			if (2 * refc < max)
 			{
 
-				if (diff <=2*ref)
+				if (diff <= 2 * ref)
 				{
 
-					if (diff&1 != 0)
+					if (diff & 1 != 0)
 					{
-return ref+( (diff+1) >>1);
+return refc + ( (diff+1) >> 1);
 					}
 					else 
 					{
-return ref-(diff >>1);
+return refc - (diff >> 1);
 					}
 				}
 return diff;
@@ -10434,19 +10435,19 @@ return diff;
 			else 
 			{
 
-				if (diff <=2*(max-ref-1))
+				if (diff <=2 * (max - refc - 1))
 				{
 
-					if (diff&1 != 0)
+					if (diff & 1 != 0)
 					{
-return ref+( (diff+1) >>1);
+return refc + ( (diff + 1) >>1);
 					}
 					else 
 					{
-return ref-(diff >>1);
+return refc - (diff >> 1 );
 					}
 				}
-return max-(diff+1);
+return max - ( diff + 1 );
 			}
 
             return size;
@@ -10459,7 +10460,7 @@ return max-(diff+1);
 
 
 
- read_skip_mode() { 
+read_skip_mode() { 
  if ( seg_feature_active( SEG_LVL_SKIP ) ||
  seg_feature_active( SEG_LVL_REF_FRAME ) ||
  seg_feature_active( SEG_LVL_GLOBALMV ) ||
@@ -10534,7 +10535,7 @@ return max-(diff+1);
 
 
 
- read_skip() { 
+read_skip() { 
  if ( SegIdPreSkip && seg_feature_active( SEG_LVL_SKIP ) ) {
  skip = 1
  } else {
@@ -10594,7 +10595,7 @@ return max-(diff+1);
 
 
 
-  read_delta_qindex() { 
+read_delta_qindex() { 
  sbSize = use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64
  if ( MiSize == sbSize && skip )
  return
@@ -10712,7 +10713,7 @@ return;
 
 
 
- read_delta_lf() { 
+read_delta_lf() { 
  sbSize = use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64
  if ( MiSize == sbSize && skip )
  return
@@ -10876,7 +10877,7 @@ return;
 
 
 
-  seg_feature_active_idx( idx, feature ) { 
+seg_feature_active_idx( idx, feature ) { 
  return segmentation_enabled && FeatureEnabled[ idx ][ feature ]
  }
     */
@@ -11037,6 +11038,9460 @@ return;
 				{
 					TxSize= Split_Tx_Size[ TxSize ];
 				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+read_block_tx_size() { 
+ bw4 = Num_4x4_Blocks_Wide[ MiSize ]
+ bh4 = Num_4x4_Blocks_High[ MiSize ]
+ if ( TxMode == TX_MODE_SELECT &&
+ MiSize > BLOCK_4X4 && is_inter &&
+ !skip && !Lossless ) {
+ maxTxSz = Max_Tx_Size_Rect[ MiSize ]
+ txW4 = Tx_Width[ maxTxSz ] / MI_SIZE
+ txH4 = Tx_Height[ maxTxSz ] / MI_SIZE
+ for ( row = MiRow; row < MiRow + bh4; row += txH4 )
+ for ( col = MiCol; col < MiCol + bw4; col += txW4 )
+ read_var_tx_size( row, col, maxTxSz, 0 )
+ } else {
+ read_tx_size(!skip || !is_inter)
+ for ( row = MiRow; row < MiRow + bh4; row++ )
+ for ( col = MiCol; col < MiCol + bw4; col++ )
+ InterTxSizes[ row ][ col ] = TxSize
+ }
+ }
+    */
+    public class ReadBlockTxSize : IAomSerializable
+    {
+		private ReadVarTxSize[][] read_var_tx_size;
+		public ReadVarTxSize[][] ReadVarTxSize { get { return read_var_tx_size; } set { read_var_tx_size = value; } }
+		private ReadTxSize read_tx_size;
+		public ReadTxSize ReadTxSize { get { return read_tx_size; } set { read_tx_size = value; } }
+
+         public ReadBlockTxSize()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bw4 = 0;
+			uint bh4 = 0;
+			uint maxTxSz = 0;
+			uint txW4 = 0;
+			uint txH4 = 0;
+			uint row = 0;
+			uint col = 0;
+			uint[][] InterTxSizes = null;
+			bw4= Num_4x4_Blocks_Wide[ MiSize ];
+			bh4= Num_4x4_Blocks_High[ MiSize ];
+
+			if ( TxMode == TX_MODE_SELECT &&
+ MiSize > BLOCK_4X4 && is_inter != 0 &&
+ skip== 0 && Lossless== 0 )
+			{
+				maxTxSz= Max_Tx_Size_Rect[ MiSize ];
+				txW4= Tx_Width[ maxTxSz ] / MI_SIZE;
+				txH4= Tx_Height[ maxTxSz ] / MI_SIZE;
+
+				this.read_var_tx_size = new ReadVarTxSize[ MiRow + bh4][];
+				for ( row = MiRow; row < MiRow + bh4; row += txH4 )
+				{
+
+					this.read_var_tx_size[ row ] = new ReadVarTxSize[ MiCol + bw4];
+					for ( col = MiCol; col < MiCol + bw4; col += txW4 )
+					{
+						this.read_var_tx_size[ row ][ col ] =  new ReadVarTxSize( row,  col,  maxTxSz,  0 ) ;
+						size +=  stream.ReadClass<ReadVarTxSize>(size, context, this.read_var_tx_size[ row ][ col ], "read_var_tx_size"); 
+					}
+				}
+			}
+			else 
+			{
+				this.read_tx_size =  new ReadTxSize(!skip || !is_inter) ;
+				size +=  stream.ReadClass<ReadTxSize>(size, context, this.read_tx_size, "read_tx_size"); 
+
+				for ( row = MiRow; row < MiRow + bh4; row++ )
+				{
+
+					for ( col = MiCol; col < MiCol + bw4; col++ )
+					{
+						InterTxSizes[ row ][ col ]= TxSize;
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bw4 = 0;
+			uint bh4 = 0;
+			uint maxTxSz = 0;
+			uint txW4 = 0;
+			uint txH4 = 0;
+			uint row = 0;
+			uint col = 0;
+			uint[][] InterTxSizes = null;
+			bw4= Num_4x4_Blocks_Wide[ MiSize ];
+			bh4= Num_4x4_Blocks_High[ MiSize ];
+
+			if ( TxMode == TX_MODE_SELECT &&
+ MiSize > BLOCK_4X4 && is_inter != 0 &&
+ skip== 0 && Lossless== 0 )
+			{
+				maxTxSz= Max_Tx_Size_Rect[ MiSize ];
+				txW4= Tx_Width[ maxTxSz ] / MI_SIZE;
+				txH4= Tx_Height[ maxTxSz ] / MI_SIZE;
+
+				for ( row = MiRow; row < MiRow + bh4; row += txH4 )
+				{
+
+					for ( col = MiCol; col < MiCol + bw4; col += txW4 )
+					{
+						size += stream.WriteClass<ReadVarTxSize>(context, this.read_var_tx_size[ row ][ col ], "read_var_tx_size"); 
+					}
+				}
+			}
+			else 
+			{
+				size += stream.WriteClass<ReadTxSize>(context, this.read_tx_size, "read_tx_size"); 
+
+				for ( row = MiRow; row < MiRow + bh4; row++ )
+				{
+
+					for ( col = MiCol; col < MiCol + bw4; col++ )
+					{
+						InterTxSizes[ row ][ col ]= TxSize;
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+read_var_tx_size( row, col, txSz, depth) { 
+ if ( row >= MiRows || col >= MiCols )
+ return
+ if ( txSz == TX_4X4 || depth == MAX_VARTX_DEPTH ) {
+ txfm_split = 0
+ } else {
+ txfm_split S()
+ }
+ w4 = Tx_Width[ txSz ] / MI_SIZE
+ h4 = Tx_Height[ txSz ] / MI_SIZE
+ if ( txfm_split ) {
+ subTxSz = Split_Tx_Size[ txSz ]
+ stepW = Tx_Width[ subTxSz ] / MI_SIZE
+ stepH = Tx_Height[ subTxSz ] / MI_SIZE
+ for ( i = 0; i < h4; i += stepH )
+ for ( j = 0; j < w4; j += stepW )
+ read_var_tx_size( row + i, col + j, subTxSz, depth+1)
+ } else {
+ for ( i = 0; i < h4; i++ )
+ for ( j = 0; j < w4; j++ )
+ InterTxSizes[ row + i ][ col + j ] = txSz
+ TxSize = txSz
+ }
+ }
+    */
+    public class ReadVarTxSize : IAomSerializable
+    {
+		private uint row;
+		public uint Row { get { return row; } set { row = value; } }
+		private uint col;
+		public uint Col { get { return col; } set { col = value; } }
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+		private uint depth;
+		public uint Depth { get { return depth; } set { depth = value; } }
+		private uint txfm_split;
+		public uint TxfmSplit { get { return txfm_split; } set { txfm_split = value; } }
+		private ReadVarTxSize[][] read_var_tx_size;
+		public ReadVarTxSize[][] _ReadVarTxSize { get { return read_var_tx_size; } set { read_var_tx_size = value; } }
+
+         public ReadVarTxSize(uint row, uint col, uint txSz, uint depth)
+         { 
+			this.row = row;
+			this.col = col;
+			this.txSz = txSz;
+			this.depth = depth;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint txfm_split = 0;
+			uint w4 = 0;
+			uint h4 = 0;
+			uint subTxSz = 0;
+			uint stepW = 0;
+			uint stepH = 0;
+			uint i = 0;
+			uint j = 0;
+			uint[][] InterTxSizes = null;
+			uint TxSize = 0;
+
+			if ( row >= MiRows || col >= MiCols )
+			{
+return;
+			}
+
+			if ( txSz == TX_4X4 || depth == MAX_VARTX_DEPTH )
+			{
+				txfm_split= 0;
+			}
+			else 
+			{
+				size += stream.ReadS(size, out this.txfm_split, "txfm_split"); 
+			}
+			w4= Tx_Width[ txSz ] / MI_SIZE;
+			h4= Tx_Height[ txSz ] / MI_SIZE;
+
+			if ( txfm_split != 0 )
+			{
+				subTxSz= Split_Tx_Size[ txSz ];
+				stepW= Tx_Width[ subTxSz ] / MI_SIZE;
+				stepH= Tx_Height[ subTxSz ] / MI_SIZE;
+
+				this.read_var_tx_size = new ReadVarTxSize[ h4][];
+				for ( i = 0; i < h4; i += stepH )
+				{
+
+					this.read_var_tx_size[ i ] = new ReadVarTxSize[ w4];
+					for ( j = 0; j < w4; j += stepW )
+					{
+						this.read_var_tx_size[ i ][ j ] =  new ReadVarTxSize( row + i,  col + j,  subTxSz,  depth+1) ;
+						size +=  stream.ReadClass<ReadVarTxSize>(size, context, this.read_var_tx_size[ i ][ j ], "read_var_tx_size"); 
+					}
+				}
+			}
+			else 
+			{
+
+				for ( i = 0; i < h4; i++ )
+				{
+
+					for ( j = 0; j < w4; j++ )
+					{
+						InterTxSizes[ row + i ][ col + j ]= txSz;
+					}
+				}
+				TxSize= txSz;
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint txfm_split = 0;
+			uint w4 = 0;
+			uint h4 = 0;
+			uint subTxSz = 0;
+			uint stepW = 0;
+			uint stepH = 0;
+			uint i = 0;
+			uint j = 0;
+			uint[][] InterTxSizes = null;
+			uint TxSize = 0;
+
+			if ( row >= MiRows || col >= MiCols )
+			{
+return;
+			}
+
+			if ( txSz == TX_4X4 || depth == MAX_VARTX_DEPTH )
+			{
+				txfm_split= 0;
+			}
+			else 
+			{
+				size += stream.WriteS( this.txfm_split, "txfm_split"); 
+			}
+			w4= Tx_Width[ txSz ] / MI_SIZE;
+			h4= Tx_Height[ txSz ] / MI_SIZE;
+
+			if ( txfm_split != 0 )
+			{
+				subTxSz= Split_Tx_Size[ txSz ];
+				stepW= Tx_Width[ subTxSz ] / MI_SIZE;
+				stepH= Tx_Height[ subTxSz ] / MI_SIZE;
+
+				for ( i = 0; i < h4; i += stepH )
+				{
+
+					for ( j = 0; j < w4; j += stepW )
+					{
+						size += stream.WriteClass<ReadVarTxSize>(context, this.read_var_tx_size[ i ][ j ], "read_var_tx_size"); 
+					}
+				}
+			}
+			else 
+			{
+
+				for ( i = 0; i < h4; i++ )
+				{
+
+					for ( j = 0; j < w4; j++ )
+					{
+						InterTxSizes[ row + i ][ col + j ]= txSz;
+					}
+				}
+				TxSize= txSz;
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+inter_frame_mode_info() { 
+ use_intrabc = 0
+ LeftRefFrame[ 0 ] = AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : INTRA_FRAME
+ AboveRefFrame[ 0 ] = AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : INTRA_FRAME
+ LeftRefFrame[ 1 ] = AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 1 ] : NONE
+ AboveRefFrame[ 1 ] = AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 1 ] : NONE
+ LeftIntra = LeftRefFrame[ 0 ] <= INTRA_FRAME
+ AboveIntra = AboveRefFrame[ 0 ] <= INTRA_FRAME
+ LeftSingle = LeftRefFrame[ 1 ] <= INTRA_FRAME
+ AboveSingle = AboveRefFrame[ 1 ] <= INTRA_FRAME
+ skip = 0
+ inter_segment_id( 1 )
+ read_skip_mode()
+ if ( skip_mode )
+ skip = 1
+ else
+ read_skip()
+ if ( !SegIdPreSkip )
+ inter_segment_id( 0 )
+ Lossless = LosslessArray[ segment_id ]
+ read_cdef()
+ read_delta_qindex()
+ read_delta_lf()
+ ReadDeltas = 0
+ read_is_inter()
+ if ( is_inter )
+ inter_block_mode_info()
+ else
+ intra_block_mode_info()
+ }
+    */
+    public class InterFrameModeInfo : IAomSerializable
+    {
+		private InterSegmentId inter_segment_id;
+		public InterSegmentId InterSegmentId { get { return inter_segment_id; } set { inter_segment_id = value; } }
+		private ReadSkipMode read_skip_mode;
+		public ReadSkipMode ReadSkipMode { get { return read_skip_mode; } set { read_skip_mode = value; } }
+		private ReadSkip read_skip;
+		public ReadSkip ReadSkip { get { return read_skip; } set { read_skip = value; } }
+		private InterSegmentId inter_segment_id0;
+		public InterSegmentId InterSegmentId0 { get { return inter_segment_id0; } set { inter_segment_id0 = value; } }
+		private ReadCdef read_cdef;
+		public ReadCdef ReadCdef { get { return read_cdef; } set { read_cdef = value; } }
+		private ReadDeltaQindex read_delta_qindex;
+		public ReadDeltaQindex ReadDeltaQindex { get { return read_delta_qindex; } set { read_delta_qindex = value; } }
+		private ReadDeltaLf read_delta_lf;
+		public ReadDeltaLf ReadDeltaLf { get { return read_delta_lf; } set { read_delta_lf = value; } }
+		private ReadIsInter read_is_inter;
+		public ReadIsInter ReadIsInter { get { return read_is_inter; } set { read_is_inter = value; } }
+		private InterBlockModeInfo inter_block_mode_info;
+		public InterBlockModeInfo InterBlockModeInfo { get { return inter_block_mode_info; } set { inter_block_mode_info = value; } }
+		private IntraBlockModeInfo intra_block_mode_info;
+		public IntraBlockModeInfo IntraBlockModeInfo { get { return intra_block_mode_info; } set { intra_block_mode_info = value; } }
+
+         public InterFrameModeInfo()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint use_intrabc = 0;
+			uint[] LeftRefFrame = null;
+			uint[] AboveRefFrame = null;
+			uint LeftIntra = 0;
+			uint AboveIntra = 0;
+			uint LeftSingle = 0;
+			uint AboveSingle = 0;
+			uint skip = 0;
+			uint Lossless = 0;
+			uint ReadDeltas = 0;
+			use_intrabc= 0;
+			LeftRefFrame[ 0 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : INTRA_FRAME;
+			AboveRefFrame[ 0 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : INTRA_FRAME;
+			LeftRefFrame[ 1 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 1 ] : NONE;
+			AboveRefFrame[ 1 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 1 ] : NONE;
+			LeftIntra= LeftRefFrame[ 0 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			AboveIntra= AboveRefFrame[ 0 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			LeftSingle= LeftRefFrame[ 1 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			AboveSingle= AboveRefFrame[ 1 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			skip= 0;
+			this.inter_segment_id =  new InterSegmentId( 1 ) ;
+			size +=  stream.ReadClass<InterSegmentId>(size, context, this.inter_segment_id, "inter_segment_id"); 
+			this.read_skip_mode =  new ReadSkipMode() ;
+			size +=  stream.ReadClass<ReadSkipMode>(size, context, this.read_skip_mode, "read_skip_mode"); 
+
+			if ( skip_mode != 0 )
+			{
+				skip= 1;
+			}
+			else 
+			{
+				this.read_skip =  new ReadSkip() ;
+				size +=  stream.ReadClass<ReadSkip>(size, context, this.read_skip, "read_skip"); 
+			}
+
+			if ( SegIdPreSkip== 0 )
+			{
+				this.inter_segment_id0 =  new InterSegmentId( 0 ) ;
+				size +=  stream.ReadClass<InterSegmentId>(size, context, this.inter_segment_id0, "inter_segment_id0"); 
+			}
+			Lossless= LosslessArray[ segment_id ];
+			this.read_cdef =  new ReadCdef() ;
+			size +=  stream.ReadClass<ReadCdef>(size, context, this.read_cdef, "read_cdef"); 
+			this.read_delta_qindex =  new ReadDeltaQindex() ;
+			size +=  stream.ReadClass<ReadDeltaQindex>(size, context, this.read_delta_qindex, "read_delta_qindex"); 
+			this.read_delta_lf =  new ReadDeltaLf() ;
+			size +=  stream.ReadClass<ReadDeltaLf>(size, context, this.read_delta_lf, "read_delta_lf"); 
+			ReadDeltas= 0;
+			this.read_is_inter =  new ReadIsInter() ;
+			size +=  stream.ReadClass<ReadIsInter>(size, context, this.read_is_inter, "read_is_inter"); 
+
+			if ( is_inter != 0 )
+			{
+				this.inter_block_mode_info =  new InterBlockModeInfo() ;
+				size +=  stream.ReadClass<InterBlockModeInfo>(size, context, this.inter_block_mode_info, "inter_block_mode_info"); 
+			}
+			else 
+			{
+				this.intra_block_mode_info =  new IntraBlockModeInfo() ;
+				size +=  stream.ReadClass<IntraBlockModeInfo>(size, context, this.intra_block_mode_info, "intra_block_mode_info"); 
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint use_intrabc = 0;
+			uint[] LeftRefFrame = null;
+			uint[] AboveRefFrame = null;
+			uint LeftIntra = 0;
+			uint AboveIntra = 0;
+			uint LeftSingle = 0;
+			uint AboveSingle = 0;
+			uint skip = 0;
+			uint Lossless = 0;
+			uint ReadDeltas = 0;
+			use_intrabc= 0;
+			LeftRefFrame[ 0 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : INTRA_FRAME;
+			AboveRefFrame[ 0 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : INTRA_FRAME;
+			LeftRefFrame[ 1 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 1 ] : NONE;
+			AboveRefFrame[ 1 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 1 ] : NONE;
+			LeftIntra= LeftRefFrame[ 0 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			AboveIntra= AboveRefFrame[ 0 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			LeftSingle= LeftRefFrame[ 1 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			AboveSingle= AboveRefFrame[ 1 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			skip= 0;
+			size += stream.WriteClass<InterSegmentId>(context, this.inter_segment_id, "inter_segment_id"); 
+			size += stream.WriteClass<ReadSkipMode>(context, this.read_skip_mode, "read_skip_mode"); 
+
+			if ( skip_mode != 0 )
+			{
+				skip= 1;
+			}
+			else 
+			{
+				size += stream.WriteClass<ReadSkip>(context, this.read_skip, "read_skip"); 
+			}
+
+			if ( SegIdPreSkip== 0 )
+			{
+				size += stream.WriteClass<InterSegmentId>(context, this.inter_segment_id0, "inter_segment_id0"); 
+			}
+			Lossless= LosslessArray[ segment_id ];
+			size += stream.WriteClass<ReadCdef>(context, this.read_cdef, "read_cdef"); 
+			size += stream.WriteClass<ReadDeltaQindex>(context, this.read_delta_qindex, "read_delta_qindex"); 
+			size += stream.WriteClass<ReadDeltaLf>(context, this.read_delta_lf, "read_delta_lf"); 
+			ReadDeltas= 0;
+			size += stream.WriteClass<ReadIsInter>(context, this.read_is_inter, "read_is_inter"); 
+
+			if ( is_inter != 0 )
+			{
+				size += stream.WriteClass<InterBlockModeInfo>(context, this.inter_block_mode_info, "inter_block_mode_info"); 
+			}
+			else 
+			{
+				size += stream.WriteClass<IntraBlockModeInfo>(context, this.intra_block_mode_info, "intra_block_mode_info"); 
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+inter_segment_id( preSkip ) { 
+ if ( segmentation_enabled ) {
+ predictedSegmentId = get_segment_id()
+ if ( segmentation_update_map ) {
+ if ( preSkip && !SegIdPreSkip ) {
+ segment_id = 0
+ return
+ }
+ if ( !preSkip ) {
+ if ( skip ) {
+ seg_id_predicted = 0
+ for ( i = 0; i < Num_4x4_Blocks_Wide[ MiSize ]; i++ )
+ AboveSegPredContext[ MiCol + i ] = seg_id_predicted
+ for ( i = 0; i < Num_4x4_Blocks_High[ MiSize ]; i++ )
+ LeftSegPredContext[ MiRow + i ] = seg_id_predicted
+ read_segment_id()
+ return
+ }
+ }
+ if ( segmentation_temporal_update == 1 ) {
+ seg_id_predicted S()
+ if ( seg_id_predicted )
+ segment_id = predictedSegmentId
+ else
+ read_segment_id()
+ for ( i = 0; i < Num_4x4_Blocks_Wide[ MiSize ]; i++ )
+ AboveSegPredContext[ MiCol + i ] = seg_id_predicted
+ for ( i = 0; i < Num_4x4_Blocks_High[ MiSize ]; i++ )
+ LeftSegPredContext[ MiRow + i ] = seg_id_predicted
+ } else {
+ read_segment_id()
+ }
+ } else {
+ segment_id = predictedSegmentId
+ }
+ } else {
+ segment_id = 0
+ }
+ }
+    */
+    public class InterSegmentId : IAomSerializable
+    {
+		private uint preSkip;
+		public uint PreSkip { get { return preSkip; } set { preSkip = value; } }
+		private ReadSegmentId read_segment_id;
+		public ReadSegmentId ReadSegmentId { get { return read_segment_id; } set { read_segment_id = value; } }
+		private uint seg_id_predicted;
+		public uint SegIdPredicted { get { return seg_id_predicted; } set { seg_id_predicted = value; } }
+
+         public InterSegmentId(uint preSkip)
+         { 
+			this.preSkip = preSkip;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint predictedSegmentId = 0;
+			uint segment_id = 0;
+			uint seg_id_predicted = 0;
+			uint i = 0;
+			uint[] AboveSegPredContext = null;
+			uint[] LeftSegPredContext = null;
+
+			if ( segmentation_enabled != 0 )
+			{
+				predictedSegmentId= get_segment_id();
+
+				if ( segmentation_update_map != 0 )
+				{
+
+					if ( preSkip != 0 && SegIdPreSkip== 0 )
+					{
+						segment_id= 0;
+return;
+					}
+
+					if ( preSkip== 0 )
+					{
+
+						if ( skip != 0 )
+						{
+							seg_id_predicted= 0;
+
+							for ( i = 0; i < Num_4x4_Blocks_Wide[ MiSize ]; i++ )
+							{
+								AboveSegPredContext[ MiCol + i ]= seg_id_predicted;
+							}
+
+							for ( i = 0; i < Num_4x4_Blocks_High[ MiSize ]; i++ )
+							{
+								LeftSegPredContext[ MiRow + i ]= seg_id_predicted;
+							}
+							this.read_segment_id =  new ReadSegmentId() ;
+							size +=  stream.ReadClass<ReadSegmentId>(size, context, this.read_segment_id, "read_segment_id"); 
+return;
+						}
+					}
+
+					if ( segmentation_temporal_update == 1 )
+					{
+						size += stream.ReadS(size, out this.seg_id_predicted, "seg_id_predicted"); 
+
+						if ( seg_id_predicted != 0 )
+						{
+							segment_id= predictedSegmentId;
+						}
+						else 
+						{
+							this.read_segment_id =  new ReadSegmentId() ;
+							size +=  stream.ReadClass<ReadSegmentId>(size, context, this.read_segment_id, "read_segment_id"); 
+						}
+
+						for ( i = 0; i < Num_4x4_Blocks_Wide[ MiSize ]; i++ )
+						{
+							AboveSegPredContext[ MiCol + i ]= seg_id_predicted;
+						}
+
+						for ( i = 0; i < Num_4x4_Blocks_High[ MiSize ]; i++ )
+						{
+							LeftSegPredContext[ MiRow + i ]= seg_id_predicted;
+						}
+					}
+					else 
+					{
+						this.read_segment_id =  new ReadSegmentId() ;
+						size +=  stream.ReadClass<ReadSegmentId>(size, context, this.read_segment_id, "read_segment_id"); 
+					}
+				}
+				else 
+				{
+					segment_id= predictedSegmentId;
+				}
+			}
+			else 
+			{
+				segment_id= 0;
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint predictedSegmentId = 0;
+			uint segment_id = 0;
+			uint seg_id_predicted = 0;
+			uint i = 0;
+			uint[] AboveSegPredContext = null;
+			uint[] LeftSegPredContext = null;
+
+			if ( segmentation_enabled != 0 )
+			{
+				predictedSegmentId= get_segment_id();
+
+				if ( segmentation_update_map != 0 )
+				{
+
+					if ( preSkip != 0 && SegIdPreSkip== 0 )
+					{
+						segment_id= 0;
+return;
+					}
+
+					if ( preSkip== 0 )
+					{
+
+						if ( skip != 0 )
+						{
+							seg_id_predicted= 0;
+
+							for ( i = 0; i < Num_4x4_Blocks_Wide[ MiSize ]; i++ )
+							{
+								AboveSegPredContext[ MiCol + i ]= seg_id_predicted;
+							}
+
+							for ( i = 0; i < Num_4x4_Blocks_High[ MiSize ]; i++ )
+							{
+								LeftSegPredContext[ MiRow + i ]= seg_id_predicted;
+							}
+							size += stream.WriteClass<ReadSegmentId>(context, this.read_segment_id, "read_segment_id"); 
+return;
+						}
+					}
+
+					if ( segmentation_temporal_update == 1 )
+					{
+						size += stream.WriteS( this.seg_id_predicted, "seg_id_predicted"); 
+
+						if ( seg_id_predicted != 0 )
+						{
+							segment_id= predictedSegmentId;
+						}
+						else 
+						{
+							size += stream.WriteClass<ReadSegmentId>(context, this.read_segment_id, "read_segment_id"); 
+						}
+
+						for ( i = 0; i < Num_4x4_Blocks_Wide[ MiSize ]; i++ )
+						{
+							AboveSegPredContext[ MiCol + i ]= seg_id_predicted;
+						}
+
+						for ( i = 0; i < Num_4x4_Blocks_High[ MiSize ]; i++ )
+						{
+							LeftSegPredContext[ MiRow + i ]= seg_id_predicted;
+						}
+					}
+					else 
+					{
+						size += stream.WriteClass<ReadSegmentId>(context, this.read_segment_id, "read_segment_id"); 
+					}
+				}
+				else 
+				{
+					segment_id= predictedSegmentId;
+				}
+			}
+			else 
+			{
+				segment_id= 0;
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+read_is_inter() { 
+ if ( skip_mode ) {
+ is_inter = 1
+ } else if ( seg_feature_active ( SEG_LVL_REF_FRAME ) ) {
+ is_inter = FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ] != INTRA_FRAME
+ } else if ( seg_feature_active ( SEG_LVL_GLOBALMV ) ) {
+ is_inter = 1
+ } else {
+ is_inter S()
+ }
+ }
+    */
+    public class ReadIsInter : IAomSerializable
+    {
+		private uint is_inter;
+		public uint IsInter { get { return is_inter; } set { is_inter = value; } }
+
+         public ReadIsInter()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint is_inter = 0;
+
+			if ( skip_mode != 0 )
+			{
+				is_inter= 1;
+			}
+			else if ( seg_feature_active ( SEG_LVL_REF_FRAME ) )
+			{
+				is_inter= FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ] != INTRA_FRAME;
+			}
+			else if ( seg_feature_active ( SEG_LVL_GLOBALMV ) )
+			{
+				is_inter= 1;
+			}
+			else 
+			{
+				size += stream.ReadS(size, out this.is_inter, "is_inter"); 
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint is_inter = 0;
+
+			if ( skip_mode != 0 )
+			{
+				is_inter= 1;
+			}
+			else if ( seg_feature_active ( SEG_LVL_REF_FRAME ) )
+			{
+				is_inter= FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ] != INTRA_FRAME;
+			}
+			else if ( seg_feature_active ( SEG_LVL_GLOBALMV ) )
+			{
+				is_inter= 1;
+			}
+			else 
+			{
+				size += stream.WriteS( this.is_inter, "is_inter"); 
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+get_segment_id() { 
+ bw4 = Num_4x4_Blocks_Wide[ MiSize ]
+ bh4 = Num_4x4_Blocks_High[ MiSize ]
+ xMis = Min( MiCols - MiCol, bw4 )
+ yMis = Min( MiRows - MiRow, bh4 )
+ seg = 7
+ for ( y = 0; y < yMis; y++ )
+ for ( x = 0; x < xMis; x++ )
+ seg = Min( seg, PrevSegmentIds[ MiRow + y ][ MiCol + x ] )
+ return seg
+ }
+    */
+    public class GetSegmentId : IAomSerializable
+    {
+
+         public GetSegmentId()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bw4 = 0;
+			uint bh4 = 0;
+			uint xMis = 0;
+			uint yMis = 0;
+			uint seg = 0;
+			uint y = 0;
+			uint x = 0;
+			bw4= Num_4x4_Blocks_Wide[ MiSize ];
+			bh4= Num_4x4_Blocks_High[ MiSize ];
+			xMis= Min( MiCols - MiCol, bw4 );
+			yMis= Min( MiRows - MiRow, bh4 );
+			seg= 7;
+
+			for ( y = 0; y < yMis; y++ )
+			{
+
+				for ( x = 0; x < xMis; x++ )
+				{
+					seg= Min( seg, PrevSegmentIds[ MiRow + y ][ MiCol + x ] );
+				}
+			}
+return seg;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bw4 = 0;
+			uint bh4 = 0;
+			uint xMis = 0;
+			uint yMis = 0;
+			uint seg = 0;
+			uint y = 0;
+			uint x = 0;
+			bw4= Num_4x4_Blocks_Wide[ MiSize ];
+			bh4= Num_4x4_Blocks_High[ MiSize ];
+			xMis= Min( MiCols - MiCol, bw4 );
+			yMis= Min( MiRows - MiRow, bh4 );
+			seg= 7;
+
+			for ( y = 0; y < yMis; y++ )
+			{
+
+				for ( x = 0; x < xMis; x++ )
+				{
+					seg= Min( seg, PrevSegmentIds[ MiRow + y ][ MiCol + x ] );
+				}
+			}
+return seg;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+intra_block_mode_info() { 
+ RefFrame[ 0 ] = INTRA_FRAME
+ RefFrame[ 1 ] = NONE
+ y_mode S()
+ YMode = y_mode
+ intra_angle_info_y()
+ if ( HasChroma ) {
+  uv_mode S()
+ UVMode = uv_mode
+ if ( UVMode == UV_CFL_PRED ) {
+ read_cfl_alphas()
+ }
+ intra_angle_info_uv()
+ }
+ PaletteSizeY = 0
+ PaletteSizeUV = 0
+ if ( MiSize >= BLOCK_8X8 &&
+ Block_Width[ MiSize ] <= 64  &&
+ Block_Height[ MiSize ] <= 64 &&
+ allow_screen_content_tools )
+ palette_mode_info()
+ filter_intra_mode_info()
+ }
+    */
+    public class IntraBlockModeInfo : IAomSerializable
+    {
+		private uint y_mode;
+		public uint yMode { get { return y_mode; } set { y_mode = value; } }
+		private IntraAngleInfoy intra_angle_info_y;
+		public IntraAngleInfoy IntraAngleInfoy { get { return intra_angle_info_y; } set { intra_angle_info_y = value; } }
+		private uint uv_mode;
+		public uint UvMode { get { return uv_mode; } set { uv_mode = value; } }
+		private ReadCflAlphas read_cfl_alphas;
+		public ReadCflAlphas ReadCflAlphas { get { return read_cfl_alphas; } set { read_cfl_alphas = value; } }
+		private IntraAngleInfoUv intra_angle_info_uv;
+		public IntraAngleInfoUv IntraAngleInfoUv { get { return intra_angle_info_uv; } set { intra_angle_info_uv = value; } }
+		private PaletteModeInfo palette_mode_info;
+		public PaletteModeInfo PaletteModeInfo { get { return palette_mode_info; } set { palette_mode_info = value; } }
+		private FilterIntraModeInfo filter_intra_mode_info;
+		public FilterIntraModeInfo FilterIntraModeInfo { get { return filter_intra_mode_info; } set { filter_intra_mode_info = value; } }
+
+         public IntraBlockModeInfo()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[] RefFrame = null;
+			uint YMode = 0;
+			uint UVMode = 0;
+			uint PaletteSizeY = 0;
+			uint PaletteSizeUV = 0;
+			RefFrame[ 0 ]= INTRA_FRAME;
+			RefFrame[ 1 ]= NONE;
+			size += stream.ReadS(size, out this.y_mode, "y_mode"); 
+			YMode= y_mode;
+			this.intra_angle_info_y =  new IntraAngleInfoy() ;
+			size +=  stream.ReadClass<IntraAngleInfoy>(size, context, this.intra_angle_info_y, "intra_angle_info_y"); 
+
+			if ( HasChroma != 0 )
+			{
+				size += stream.ReadS(size, out this.uv_mode, "uv_mode"); 
+				UVMode= uv_mode;
+
+				if ( UVMode == UV_CFL_PRED )
+				{
+					this.read_cfl_alphas =  new ReadCflAlphas() ;
+					size +=  stream.ReadClass<ReadCflAlphas>(size, context, this.read_cfl_alphas, "read_cfl_alphas"); 
+				}
+				this.intra_angle_info_uv =  new IntraAngleInfoUv() ;
+				size +=  stream.ReadClass<IntraAngleInfoUv>(size, context, this.intra_angle_info_uv, "intra_angle_info_uv"); 
+			}
+			PaletteSizeY= 0;
+			PaletteSizeUV= 0;
+
+			if ( MiSize >= BLOCK_8X8 &&
+ Block_Width[ MiSize ] <= 64  &&
+ Block_Height[ MiSize ] <= 64 &&
+ allow_screen_content_tools != 0 )
+			{
+				this.palette_mode_info =  new PaletteModeInfo() ;
+				size +=  stream.ReadClass<PaletteModeInfo>(size, context, this.palette_mode_info, "palette_mode_info"); 
+			}
+			this.filter_intra_mode_info =  new FilterIntraModeInfo() ;
+			size +=  stream.ReadClass<FilterIntraModeInfo>(size, context, this.filter_intra_mode_info, "filter_intra_mode_info"); 
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[] RefFrame = null;
+			uint YMode = 0;
+			uint UVMode = 0;
+			uint PaletteSizeY = 0;
+			uint PaletteSizeUV = 0;
+			RefFrame[ 0 ]= INTRA_FRAME;
+			RefFrame[ 1 ]= NONE;
+			size += stream.WriteS( this.y_mode, "y_mode"); 
+			YMode= y_mode;
+			size += stream.WriteClass<IntraAngleInfoy>(context, this.intra_angle_info_y, "intra_angle_info_y"); 
+
+			if ( HasChroma != 0 )
+			{
+				size += stream.WriteS( this.uv_mode, "uv_mode"); 
+				UVMode= uv_mode;
+
+				if ( UVMode == UV_CFL_PRED )
+				{
+					size += stream.WriteClass<ReadCflAlphas>(context, this.read_cfl_alphas, "read_cfl_alphas"); 
+				}
+				size += stream.WriteClass<IntraAngleInfoUv>(context, this.intra_angle_info_uv, "intra_angle_info_uv"); 
+			}
+			PaletteSizeY= 0;
+			PaletteSizeUV= 0;
+
+			if ( MiSize >= BLOCK_8X8 &&
+ Block_Width[ MiSize ] <= 64  &&
+ Block_Height[ MiSize ] <= 64 &&
+ allow_screen_content_tools != 0 )
+			{
+				size += stream.WriteClass<PaletteModeInfo>(context, this.palette_mode_info, "palette_mode_info"); 
+			}
+			size += stream.WriteClass<FilterIntraModeInfo>(context, this.filter_intra_mode_info, "filter_intra_mode_info"); 
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+inter_block_mode_info() { 
+ PaletteSizeY = 0
+ PaletteSizeUV = 0
+ read_ref_frames()
+ isCompound = RefFrame[ 1 ] > INTRA_FRAME
+ find_mv_stack( isCompound )
+ if ( skip_mode ) {
+ YMode = NEAREST_NEARESTMV
+ } else if ( seg_feature_active( SEG_LVL_SKIP ) ||
+ seg_feature_active( SEG_LVL_GLOBALMV ) ) {
+ YMode = GLOBALMV
+ } else if ( isCompound ) {
+ compound_mode S()
+ YMode = NEAREST_NEARESTMV + compound_mode
+ } else {
+ new_mv S()
+ if ( new_mv == 0 ) {
+ YMode = NEWMV
+ } else {
+ zero_mv S()
+ if ( zero_mv == 0 ) {
+ YMode = GLOBALMV
+ } else {
+ ref_mv S()
+ YMode = (ref_mv == 0) ? NEARESTMV : NEARMV
+ }
+ }
+ }
+ RefMvIdx = 0
+ if ( YMode == NEWMV || YMode == NEW_NEWMV ) {
+ for ( idx = 0; idx < 2; idx++ ) {
+ if ( NumMvFound > idx + 1 ) {
+ drl_mode S()
+ if ( drl_mode == 0 ) {
+ RefMvIdx = idx
+ break
+ }
+ RefMvIdx = idx + 1
+ }
+ }
+ } else if ( has_nearmv() ) {
+ RefMvIdx = 1
+ for ( idx = 1; idx < 3; idx++ ) {
+ if ( NumMvFound > idx + 1 ) {
+ drl_mode S()
+ if ( drl_mode == 0 ) {
+ RefMvIdx = idx
+ break
+ }
+ RefMvIdx = idx + 1
+ }
+ }
+ }
+ assign_mv( isCompound )
+ read_interintra_mode( isCompound )
+ read_motion_mode( isCompound )
+ read_compound_type( isCompound )
+ if ( interpolation_filter == SWITCHABLE ) {
+ for ( dir = 0; dir < ( enable_dual_filter ? 2 : 1 ); dir++ ) {
+ if ( needs_interp_filter() ) {
+ interp_filter[ dir ] S()
+ } else {
+ interp_filter[ dir ] = EIGHTTAP
+ }
+ }
+ if ( !enable_dual_filter )
+ interp_filter[ 1 ] = interp_filter[ 0 ]
+ } else {
+ for ( dir = 0; dir < 2; dir++ )
+ interp_filter[ dir ] = interpolation_filter
+ }
+ }
+    */
+    public class InterBlockModeInfo : IAomSerializable
+    {
+		private ReadRefFrames read_ref_frames;
+		public ReadRefFrames ReadRefFrames { get { return read_ref_frames; } set { read_ref_frames = value; } }
+		private FindMvStack find_mv_stack;
+		public FindMvStack FindMvStack { get { return find_mv_stack; } set { find_mv_stack = value; } }
+		private uint compound_mode;
+		public uint CompoundMode { get { return compound_mode; } set { compound_mode = value; } }
+		private uint new_mv;
+		public uint NewMv { get { return new_mv; } set { new_mv = value; } }
+		private uint zero_mv;
+		public uint ZeroMv { get { return zero_mv; } set { zero_mv = value; } }
+		private uint ref_mv;
+		public uint RefMv { get { return ref_mv; } set { ref_mv = value; } }
+		private uint[] drl_mode;
+		public uint[] DrlMode { get { return drl_mode; } set { drl_mode = value; } }
+		private Break[] break;
+		public Break[] Break { get { return break; } set { break = value; } }
+		private AssignMv assign_mv;
+		public AssignMv AssignMv { get { return assign_mv; } set { assign_mv = value; } }
+		private ReadInterintraMode read_interintra_mode;
+		public ReadInterintraMode ReadInterintraMode { get { return read_interintra_mode; } set { read_interintra_mode = value; } }
+		private ReadMotionMode read_motion_mode;
+		public ReadMotionMode ReadMotionMode { get { return read_motion_mode; } set { read_motion_mode = value; } }
+		private ReadCompoundType read_compound_type;
+		public ReadCompoundType ReadCompoundType { get { return read_compound_type; } set { read_compound_type = value; } }
+		private uint[] interp_filter;
+		public uint[] InterpFilter { get { return interp_filter; } set { interp_filter = value; } }
+
+         public InterBlockModeInfo()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint PaletteSizeY = 0;
+			uint PaletteSizeUV = 0;
+			uint isCompound = 0;
+			uint YMode = 0;
+			uint RefMvIdx = 0;
+			uint idx = 0;
+			uint dir = 0;
+			uint[] interp_filter = null;
+			PaletteSizeY= 0;
+			PaletteSizeUV= 0;
+			this.read_ref_frames =  new ReadRefFrames() ;
+			size +=  stream.ReadClass<ReadRefFrames>(size, context, this.read_ref_frames, "read_ref_frames"); 
+			isCompound= RefFrame[ 1 ] > INTRA_FRAME ? (uint)1 : (uint)0;
+			this.find_mv_stack =  new FindMvStack( isCompound ) ;
+			size +=  stream.ReadClass<FindMvStack>(size, context, this.find_mv_stack, "find_mv_stack"); 
+
+			if ( skip_mode != 0 )
+			{
+				YMode= NEAREST_NEARESTMV;
+			}
+			else if ( seg_feature_active( SEG_LVL_SKIP ) ||
+ seg_feature_active( SEG_LVL_GLOBALMV ) )
+			{
+				YMode= GLOBALMV;
+			}
+			else if ( isCompound != 0 )
+			{
+				size += stream.ReadS(size, out this.compound_mode, "compound_mode"); 
+				YMode= NEAREST_NEARESTMV + compound_mode;
+			}
+			else 
+			{
+				size += stream.ReadS(size, out this.new_mv, "new_mv"); 
+
+				if ( new_mv == 0 )
+				{
+					YMode= NEWMV;
+				}
+				else 
+				{
+					size += stream.ReadS(size, out this.zero_mv, "zero_mv"); 
+
+					if ( zero_mv == 0 )
+					{
+						YMode= GLOBALMV;
+					}
+					else 
+					{
+						size += stream.ReadS(size, out this.ref_mv, "ref_mv"); 
+						YMode= (ref_mv == 0) ? NEARESTMV : NEARMV;
+					}
+				}
+			}
+			RefMvIdx= 0;
+
+			if ( YMode == NEWMV || YMode == NEW_NEWMV )
+			{
+
+				this.drl_mode = new uint[ 2];
+				this.break = new Break[ 2];
+				for ( idx = 0; idx < 2; idx++ )
+				{
+
+					if ( NumMvFound > idx + 1 )
+					{
+						size += stream.ReadS(size, out this.drl_mode[ idx ], "drl_mode"); 
+
+						if ( drl_mode[x] == 0 )
+						{
+							RefMvIdx= idx;
+							this.break[ idx ] =  new Break() ;
+							size +=  stream.ReadClass<Break>(size, context, this.break[ idx ], "break"); 
+						}
+						RefMvIdx= idx + 1;
+					}
+				}
+			}
+			else if ( has_nearmv() )
+			{
+				RefMvIdx= 1;
+
+				for ( idx = 1; idx < 3; idx++ )
+				{
+
+					if ( NumMvFound > idx + 1 )
+					{
+						size += stream.ReadS(size, out this.drl_mode[ idx ], "drl_mode"); 
+
+						if ( drl_mode[x] == 0 )
+						{
+							RefMvIdx= idx;
+							this.break[ idx ] =  new Break() ;
+							size +=  stream.ReadClass<Break>(size, context, this.break[ idx ], "break"); 
+						}
+						RefMvIdx= idx + 1;
+					}
+				}
+			}
+			this.assign_mv =  new AssignMv( isCompound ) ;
+			size +=  stream.ReadClass<AssignMv>(size, context, this.assign_mv, "assign_mv"); 
+			this.read_interintra_mode =  new ReadInterintraMode( isCompound ) ;
+			size +=  stream.ReadClass<ReadInterintraMode>(size, context, this.read_interintra_mode, "read_interintra_mode"); 
+			this.read_motion_mode =  new ReadMotionMode( isCompound ) ;
+			size +=  stream.ReadClass<ReadMotionMode>(size, context, this.read_motion_mode, "read_motion_mode"); 
+			this.read_compound_type =  new ReadCompoundType( isCompound ) ;
+			size +=  stream.ReadClass<ReadCompoundType>(size, context, this.read_compound_type, "read_compound_type"); 
+
+			if ( interpolation_filter == SWITCHABLE )
+			{
+
+				this.interp_filter = new uint[ ( enable_dual_filter ? 2 : 1 )];
+				for ( dir = 0; dir < ( enable_dual_filter ? 2 : 1 ); dir++ )
+				{
+
+					if ( needs_interp_filter() )
+					{
+						size += stream.ReadS(size, out this.interp_filter[ dir ], "interp_filter"); 
+					}
+					else 
+					{
+						interp_filter[ dir ]= EIGHTTAP;
+					}
+				}
+
+				if ( enable_dual_filter== 0 )
+				{
+					interp_filter[ 1 ]= interp_filter[ 0 ];
+				}
+			}
+			else 
+			{
+
+				for ( dir = 0; dir < 2; dir++ )
+				{
+					interp_filter[ dir ]= interpolation_filter;
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint PaletteSizeY = 0;
+			uint PaletteSizeUV = 0;
+			uint isCompound = 0;
+			uint YMode = 0;
+			uint RefMvIdx = 0;
+			uint idx = 0;
+			uint dir = 0;
+			uint[] interp_filter = null;
+			PaletteSizeY= 0;
+			PaletteSizeUV= 0;
+			size += stream.WriteClass<ReadRefFrames>(context, this.read_ref_frames, "read_ref_frames"); 
+			isCompound= RefFrame[ 1 ] > INTRA_FRAME ? (uint)1 : (uint)0;
+			size += stream.WriteClass<FindMvStack>(context, this.find_mv_stack, "find_mv_stack"); 
+
+			if ( skip_mode != 0 )
+			{
+				YMode= NEAREST_NEARESTMV;
+			}
+			else if ( seg_feature_active( SEG_LVL_SKIP ) ||
+ seg_feature_active( SEG_LVL_GLOBALMV ) )
+			{
+				YMode= GLOBALMV;
+			}
+			else if ( isCompound != 0 )
+			{
+				size += stream.WriteS( this.compound_mode, "compound_mode"); 
+				YMode= NEAREST_NEARESTMV + compound_mode;
+			}
+			else 
+			{
+				size += stream.WriteS( this.new_mv, "new_mv"); 
+
+				if ( new_mv == 0 )
+				{
+					YMode= NEWMV;
+				}
+				else 
+				{
+					size += stream.WriteS( this.zero_mv, "zero_mv"); 
+
+					if ( zero_mv == 0 )
+					{
+						YMode= GLOBALMV;
+					}
+					else 
+					{
+						size += stream.WriteS( this.ref_mv, "ref_mv"); 
+						YMode= (ref_mv == 0) ? NEARESTMV : NEARMV;
+					}
+				}
+			}
+			RefMvIdx= 0;
+
+			if ( YMode == NEWMV || YMode == NEW_NEWMV )
+			{
+
+				for ( idx = 0; idx < 2; idx++ )
+				{
+
+					if ( NumMvFound > idx + 1 )
+					{
+						size += stream.WriteS( this.drl_mode[ idx ], "drl_mode"); 
+
+						if ( drl_mode[x] == 0 )
+						{
+							RefMvIdx= idx;
+							size += stream.WriteClass<Break>(context, this.break[ idx ], "break"); 
+						}
+						RefMvIdx= idx + 1;
+					}
+				}
+			}
+			else if ( has_nearmv() )
+			{
+				RefMvIdx= 1;
+
+				for ( idx = 1; idx < 3; idx++ )
+				{
+
+					if ( NumMvFound > idx + 1 )
+					{
+						size += stream.WriteS( this.drl_mode[ idx ], "drl_mode"); 
+
+						if ( drl_mode[x] == 0 )
+						{
+							RefMvIdx= idx;
+							size += stream.WriteClass<Break>(context, this.break[ idx ], "break"); 
+						}
+						RefMvIdx= idx + 1;
+					}
+				}
+			}
+			size += stream.WriteClass<AssignMv>(context, this.assign_mv, "assign_mv"); 
+			size += stream.WriteClass<ReadInterintraMode>(context, this.read_interintra_mode, "read_interintra_mode"); 
+			size += stream.WriteClass<ReadMotionMode>(context, this.read_motion_mode, "read_motion_mode"); 
+			size += stream.WriteClass<ReadCompoundType>(context, this.read_compound_type, "read_compound_type"); 
+
+			if ( interpolation_filter == SWITCHABLE )
+			{
+
+				for ( dir = 0; dir < ( enable_dual_filter ? 2 : 1 ); dir++ )
+				{
+
+					if ( needs_interp_filter() )
+					{
+						size += stream.WriteS( this.interp_filter[ dir ], "interp_filter"); 
+					}
+					else 
+					{
+						interp_filter[ dir ]= EIGHTTAP;
+					}
+				}
+
+				if ( enable_dual_filter== 0 )
+				{
+					interp_filter[ 1 ]= interp_filter[ 0 ];
+				}
+			}
+			else 
+			{
+
+				for ( dir = 0; dir < 2; dir++ )
+				{
+					interp_filter[ dir ]= interpolation_filter;
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+
+has_nearmv() {
+ return (YMode== NEARMV||YMode ==NEAR_NEARMV ||YMode ==NEAR_NEWMV ||YMode ==NEW_NEARMV)
+ }
+    */
+    public class HasNearmv : IAomSerializable
+    {
+
+         public HasNearmv()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+return (YMode== NEARMV||YMode ==NEAR_NEARMV ||YMode ==NEAR_NEWMV ||YMode ==NEW_NEARMV);
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+return (YMode== NEARMV||YMode ==NEAR_NEARMV ||YMode ==NEAR_NEWMV ||YMode ==NEW_NEARMV);
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+
+  needs_interp_filter(){
+ large=(Min(Block_Width[MiSize], Block_Height[MiSize]) >=8)
+ if (skip_mode ||motion_mode ==LOCALWARP){
+ return 0
+ } else if(large &&YMode ==GLOBALMV){
+ return GmType[RefFrame[0]]==TRANSLATION
+ } else if(large &&YMode ==GLOBAL_GLOBALMV){
+ return GmType[RefFrame[0]] ==TRANSLATION ||GmType[RefFrame[1]] ==TRANSLATION
+ } else{
+ return 1
+ }
+ }
+    */
+    public class NeedsInterpFilter : IAomSerializable
+    {
+
+         public NeedsInterpFilter()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint large = 0;
+			large= (Min(Block_Width[MiSize], Block_Height[MiSize]) >=8) ? (uint)1 : (uint)0;
+
+			if (skip_mode != 0 ||motion_mode ==LOCALWARP)
+			{
+return 0;
+			}
+			else if (large != 0 &&YMode ==GLOBALMV)
+			{
+return GmType[RefFrame[0]]==TRANSLATION;
+			}
+			else if (large != 0 &&YMode ==GLOBAL_GLOBALMV)
+			{
+return GmType[RefFrame[0]] ==TRANSLATION ||GmType[RefFrame[1]] ==TRANSLATION;
+			}
+			else 
+			{
+return 1;
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint large = 0;
+			large= (Min(Block_Width[MiSize], Block_Height[MiSize]) >=8) ? (uint)1 : (uint)0;
+
+			if (skip_mode != 0 ||motion_mode ==LOCALWARP)
+			{
+return 0;
+			}
+			else if (large != 0 &&YMode ==GLOBALMV)
+			{
+return GmType[RefFrame[0]]==TRANSLATION;
+			}
+			else if (large != 0 &&YMode ==GLOBAL_GLOBALMV)
+			{
+return GmType[RefFrame[0]] ==TRANSLATION ||GmType[RefFrame[1]] ==TRANSLATION;
+			}
+			else 
+			{
+return 1;
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  filter_intra_mode_info() { 
+ use_filter_intra = 0
+ if ( enable_filter_intra &&
+ YMode == DC_PRED && PaletteSizeY == 0 &&
+ Max( Block_Width[ MiSize ], Block_Height[ MiSize ] ) <= 32 ) {
+ use_filter_intra S()
+ if ( use_filter_intra ) {
+ filter_intra_mode S()
+ }
+ }
+ }
+    */
+    public class FilterIntraModeInfo : IAomSerializable
+    {
+		private uint use_filter_intra;
+		public uint UseFilterIntra { get { return use_filter_intra; } set { use_filter_intra = value; } }
+		private uint filter_intra_mode;
+		public uint FilterIntraMode { get { return filter_intra_mode; } set { filter_intra_mode = value; } }
+
+         public FilterIntraModeInfo()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint use_filter_intra = 0;
+			use_filter_intra= 0;
+
+			if ( enable_filter_intra != 0 &&
+ YMode == DC_PRED && PaletteSizeY == 0 &&
+ Max( Block_Width[ MiSize ], Block_Height[ MiSize ] ) <= 32 )
+			{
+				size += stream.ReadS(size, out this.use_filter_intra, "use_filter_intra"); 
+
+				if ( use_filter_intra != 0 )
+				{
+					size += stream.ReadS(size, out this.filter_intra_mode, "filter_intra_mode"); 
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint use_filter_intra = 0;
+			use_filter_intra= 0;
+
+			if ( enable_filter_intra != 0 &&
+ YMode == DC_PRED && PaletteSizeY == 0 &&
+ Max( Block_Width[ MiSize ], Block_Height[ MiSize ] ) <= 32 )
+			{
+				size += stream.WriteS( this.use_filter_intra, "use_filter_intra"); 
+
+				if ( use_filter_intra != 0 )
+				{
+					size += stream.WriteS( this.filter_intra_mode, "filter_intra_mode"); 
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  read_ref_frames() { 
+ if ( skip_mode ) {
+ RefFrame[ 0 ] = SkipModeFrame[ 0 ]
+ RefFrame[ 1 ] = SkipModeFrame[ 1 ]
+ } else if ( seg_feature_active( SEG_LVL_REF_FRAME ) ) {
+ RefFrame[ 0 ] = FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ]
+ RefFrame[ 1 ] = NONE
+ } else if ( seg_feature_active( SEG_LVL_SKIP ) ||
+ seg_feature_active( SEG_LVL_GLOBALMV ) ) {
+ RefFrame[ 0 ] = LAST_FRAME
+ RefFrame[ 1 ] = NONE
+ } else {
+ bw4 = Num_4x4_Blocks_Wide[ MiSize ]
+ bh4 = Num_4x4_Blocks_High[ MiSize ]
+ if ( reference_select && ( Min( bw4, bh4 ) >= 2 ) )
+  comp_mode S()
+ else
+ comp_mode = SINGLE_REFERENCE
+ if ( comp_mode == COMPOUND_REFERENCE ) {
+  comp_ref_type S()
+ if ( comp_ref_type == UNIDIR_COMP_REFERENCE ) {
+  uni_comp_ref S()
+ if ( uni_comp_ref ) {
+ RefFrame[0] = BWDREF_FRAME
+ RefFrame[1] = ALTREF_FRAME
+ } else {
+  uni_comp_ref_p1 S()
+ if ( uni_comp_ref_p1 ) {
+  uni_comp_ref_p2 S()
+ if ( uni_comp_ref_p2 ) {
+ RefFrame[0] = LAST_FRAME
+ RefFrame[1] = GOLDEN_FRAME
+ } else {
+ RefFrame[0] = LAST_FRAME
+ RefFrame[1] = LAST3_FRAME
+ }
+ } else {
+ RefFrame[0] = LAST_FRAME
+ RefFrame[1] = LAST2_FRAME
+ }
+ }
+ } else {
+ comp_ref S()
+ if ( comp_ref == 0 ) {
+ comp_ref_p1 S()
+ RefFrame[ 0 ] = comp_ref_p1 ? LAST2_FRAME : LAST_FRAME
+ } else {
+ comp_ref_p2 S()
+ RefFrame[ 0 ] = comp_ref_p2 ? GOLDEN_FRAME : LAST3_FRAME
+ }
+ comp_bwdref S()
+ if ( comp_bwdref == 0 ) {
+ comp_bwdref_p1 S()
+ RefFrame[ 1 ] = comp_bwdref_p1 ? ALTREF2_FRAME : BWDREF_FRAME
+ } else {
+ RefFrame[ 1 ] = ALTREF_FRAME
+ }
+ }
+ } else {
+ single_ref_p1 S()
+ if ( single_ref_p1 ) {
+ single_ref_p2 S()
+ if ( single_ref_p2 == 0 ) {
+ single_ref_p6 S()
+ RefFrame[ 0 ] = single_ref_p6 ? ALTREF2_FRAME : BWDREF_FRAME
+ } else {
+ RefFrame[ 0 ] = ALTREF_FRAME
+ }
+ } else {
+ single_ref_p3 S()
+ if ( single_ref_p3 ) {
+ single_ref_p5 S()
+ RefFrame[ 0 ] = single_ref_p5 ? GOLDEN_FRAME : LAST3_FRAME
+ } else {
+ single_ref_p4 S()
+ RefFrame[ 0 ] = single_ref_p4 ? LAST2_FRAME : LAST_FRAME
+ }
+ }
+ RefFrame[ 1 ] = NONE
+ }
+ }
+ }
+    */
+    public class ReadRefFrames : IAomSerializable
+    {
+		private uint comp_mode;
+		public uint CompMode { get { return comp_mode; } set { comp_mode = value; } }
+		private uint comp_ref_type;
+		public uint CompRefType { get { return comp_ref_type; } set { comp_ref_type = value; } }
+		private uint uni_comp_ref;
+		public uint UniCompRef { get { return uni_comp_ref; } set { uni_comp_ref = value; } }
+		private uint uni_comp_ref_p1;
+		public uint UniCompRefP1 { get { return uni_comp_ref_p1; } set { uni_comp_ref_p1 = value; } }
+		private uint uni_comp_ref_p2;
+		public uint UniCompRefP2 { get { return uni_comp_ref_p2; } set { uni_comp_ref_p2 = value; } }
+		private uint comp_ref;
+		public uint CompRef { get { return comp_ref; } set { comp_ref = value; } }
+		private uint comp_ref_p1;
+		public uint CompRefP1 { get { return comp_ref_p1; } set { comp_ref_p1 = value; } }
+		private uint comp_ref_p2;
+		public uint CompRefP2 { get { return comp_ref_p2; } set { comp_ref_p2 = value; } }
+		private uint comp_bwdref;
+		public uint CompBwdref { get { return comp_bwdref; } set { comp_bwdref = value; } }
+		private uint comp_bwdref_p1;
+		public uint CompBwdrefP1 { get { return comp_bwdref_p1; } set { comp_bwdref_p1 = value; } }
+		private uint single_ref_p1;
+		public uint SingleRefP1 { get { return single_ref_p1; } set { single_ref_p1 = value; } }
+		private uint single_ref_p2;
+		public uint SingleRefP2 { get { return single_ref_p2; } set { single_ref_p2 = value; } }
+		private uint single_ref_p6;
+		public uint SingleRefP6 { get { return single_ref_p6; } set { single_ref_p6 = value; } }
+		private uint single_ref_p3;
+		public uint SingleRefP3 { get { return single_ref_p3; } set { single_ref_p3 = value; } }
+		private uint single_ref_p5;
+		public uint SingleRefP5 { get { return single_ref_p5; } set { single_ref_p5 = value; } }
+		private uint single_ref_p4;
+		public uint SingleRefP4 { get { return single_ref_p4; } set { single_ref_p4 = value; } }
+
+         public ReadRefFrames()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[] RefFrame = null;
+			uint bw4 = 0;
+			uint bh4 = 0;
+			uint comp_mode = 0;
+
+			if ( skip_mode != 0 )
+			{
+				RefFrame[ 0 ]= SkipModeFrame[ 0 ];
+				RefFrame[ 1 ]= SkipModeFrame[ 1 ];
+			}
+			else if ( seg_feature_active( SEG_LVL_REF_FRAME ) )
+			{
+				RefFrame[ 0 ]= FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ];
+				RefFrame[ 1 ]= NONE;
+			}
+			else if ( seg_feature_active( SEG_LVL_SKIP ) ||
+ seg_feature_active( SEG_LVL_GLOBALMV ) )
+			{
+				RefFrame[ 0 ]= LAST_FRAME;
+				RefFrame[ 1 ]= NONE;
+			}
+			else 
+			{
+				bw4= Num_4x4_Blocks_Wide[ MiSize ];
+				bh4= Num_4x4_Blocks_High[ MiSize ];
+
+				if ( reference_select != 0 && ( Min( bw4, bh4 ) >= 2 ) )
+				{
+					size += stream.ReadS(size, out this.comp_mode, "comp_mode"); 
+				}
+				else 
+				{
+					comp_mode= SINGLE_REFERENCE;
+				}
+
+				if ( comp_mode == COMPOUND_REFERENCE )
+				{
+					size += stream.ReadS(size, out this.comp_ref_type, "comp_ref_type"); 
+
+					if ( comp_ref_type == UNIDIR_COMP_REFERENCE )
+					{
+						size += stream.ReadS(size, out this.uni_comp_ref, "uni_comp_ref"); 
+
+						if ( uni_comp_ref != 0 )
+						{
+							RefFrame[0]= BWDREF_FRAME;
+							RefFrame[1]= ALTREF_FRAME;
+						}
+						else 
+						{
+							size += stream.ReadS(size, out this.uni_comp_ref_p1, "uni_comp_ref_p1"); 
+
+							if ( uni_comp_ref_p1 != 0 )
+							{
+								size += stream.ReadS(size, out this.uni_comp_ref_p2, "uni_comp_ref_p2"); 
+
+								if ( uni_comp_ref_p2 != 0 )
+								{
+									RefFrame[0]= LAST_FRAME;
+									RefFrame[1]= GOLDEN_FRAME;
+								}
+								else 
+								{
+									RefFrame[0]= LAST_FRAME;
+									RefFrame[1]= LAST3_FRAME;
+								}
+							}
+							else 
+							{
+								RefFrame[0]= LAST_FRAME;
+								RefFrame[1]= LAST2_FRAME;
+							}
+						}
+					}
+					else 
+					{
+						size += stream.ReadS(size, out this.comp_ref, "comp_ref"); 
+
+						if ( comp_ref == 0 )
+						{
+							size += stream.ReadS(size, out this.comp_ref_p1, "comp_ref_p1"); 
+							RefFrame[ 0 ]= comp_ref_p1 ? LAST2_FRAME : LAST_FRAME;
+						}
+						else 
+						{
+							size += stream.ReadS(size, out this.comp_ref_p2, "comp_ref_p2"); 
+							RefFrame[ 0 ]= comp_ref_p2 ? GOLDEN_FRAME : LAST3_FRAME;
+						}
+						size += stream.ReadS(size, out this.comp_bwdref, "comp_bwdref"); 
+
+						if ( comp_bwdref == 0 )
+						{
+							size += stream.ReadS(size, out this.comp_bwdref_p1, "comp_bwdref_p1"); 
+							RefFrame[ 1 ]= comp_bwdref_p1 ? ALTREF2_FRAME : BWDREF_FRAME;
+						}
+						else 
+						{
+							RefFrame[ 1 ]= ALTREF_FRAME;
+						}
+					}
+				}
+				else 
+				{
+					size += stream.ReadS(size, out this.single_ref_p1, "single_ref_p1"); 
+
+					if ( single_ref_p1 != 0 )
+					{
+						size += stream.ReadS(size, out this.single_ref_p2, "single_ref_p2"); 
+
+						if ( single_ref_p2 == 0 )
+						{
+							size += stream.ReadS(size, out this.single_ref_p6, "single_ref_p6"); 
+							RefFrame[ 0 ]= single_ref_p6 ? ALTREF2_FRAME : BWDREF_FRAME;
+						}
+						else 
+						{
+							RefFrame[ 0 ]= ALTREF_FRAME;
+						}
+					}
+					else 
+					{
+						size += stream.ReadS(size, out this.single_ref_p3, "single_ref_p3"); 
+
+						if ( single_ref_p3 != 0 )
+						{
+							size += stream.ReadS(size, out this.single_ref_p5, "single_ref_p5"); 
+							RefFrame[ 0 ]= single_ref_p5 ? GOLDEN_FRAME : LAST3_FRAME;
+						}
+						else 
+						{
+							size += stream.ReadS(size, out this.single_ref_p4, "single_ref_p4"); 
+							RefFrame[ 0 ]= single_ref_p4 ? LAST2_FRAME : LAST_FRAME;
+						}
+					}
+					RefFrame[ 1 ]= NONE;
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[] RefFrame = null;
+			uint bw4 = 0;
+			uint bh4 = 0;
+			uint comp_mode = 0;
+
+			if ( skip_mode != 0 )
+			{
+				RefFrame[ 0 ]= SkipModeFrame[ 0 ];
+				RefFrame[ 1 ]= SkipModeFrame[ 1 ];
+			}
+			else if ( seg_feature_active( SEG_LVL_REF_FRAME ) )
+			{
+				RefFrame[ 0 ]= FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ];
+				RefFrame[ 1 ]= NONE;
+			}
+			else if ( seg_feature_active( SEG_LVL_SKIP ) ||
+ seg_feature_active( SEG_LVL_GLOBALMV ) )
+			{
+				RefFrame[ 0 ]= LAST_FRAME;
+				RefFrame[ 1 ]= NONE;
+			}
+			else 
+			{
+				bw4= Num_4x4_Blocks_Wide[ MiSize ];
+				bh4= Num_4x4_Blocks_High[ MiSize ];
+
+				if ( reference_select != 0 && ( Min( bw4, bh4 ) >= 2 ) )
+				{
+					size += stream.WriteS( this.comp_mode, "comp_mode"); 
+				}
+				else 
+				{
+					comp_mode= SINGLE_REFERENCE;
+				}
+
+				if ( comp_mode == COMPOUND_REFERENCE )
+				{
+					size += stream.WriteS( this.comp_ref_type, "comp_ref_type"); 
+
+					if ( comp_ref_type == UNIDIR_COMP_REFERENCE )
+					{
+						size += stream.WriteS( this.uni_comp_ref, "uni_comp_ref"); 
+
+						if ( uni_comp_ref != 0 )
+						{
+							RefFrame[0]= BWDREF_FRAME;
+							RefFrame[1]= ALTREF_FRAME;
+						}
+						else 
+						{
+							size += stream.WriteS( this.uni_comp_ref_p1, "uni_comp_ref_p1"); 
+
+							if ( uni_comp_ref_p1 != 0 )
+							{
+								size += stream.WriteS( this.uni_comp_ref_p2, "uni_comp_ref_p2"); 
+
+								if ( uni_comp_ref_p2 != 0 )
+								{
+									RefFrame[0]= LAST_FRAME;
+									RefFrame[1]= GOLDEN_FRAME;
+								}
+								else 
+								{
+									RefFrame[0]= LAST_FRAME;
+									RefFrame[1]= LAST3_FRAME;
+								}
+							}
+							else 
+							{
+								RefFrame[0]= LAST_FRAME;
+								RefFrame[1]= LAST2_FRAME;
+							}
+						}
+					}
+					else 
+					{
+						size += stream.WriteS( this.comp_ref, "comp_ref"); 
+
+						if ( comp_ref == 0 )
+						{
+							size += stream.WriteS( this.comp_ref_p1, "comp_ref_p1"); 
+							RefFrame[ 0 ]= comp_ref_p1 ? LAST2_FRAME : LAST_FRAME;
+						}
+						else 
+						{
+							size += stream.WriteS( this.comp_ref_p2, "comp_ref_p2"); 
+							RefFrame[ 0 ]= comp_ref_p2 ? GOLDEN_FRAME : LAST3_FRAME;
+						}
+						size += stream.WriteS( this.comp_bwdref, "comp_bwdref"); 
+
+						if ( comp_bwdref == 0 )
+						{
+							size += stream.WriteS( this.comp_bwdref_p1, "comp_bwdref_p1"); 
+							RefFrame[ 1 ]= comp_bwdref_p1 ? ALTREF2_FRAME : BWDREF_FRAME;
+						}
+						else 
+						{
+							RefFrame[ 1 ]= ALTREF_FRAME;
+						}
+					}
+				}
+				else 
+				{
+					size += stream.WriteS( this.single_ref_p1, "single_ref_p1"); 
+
+					if ( single_ref_p1 != 0 )
+					{
+						size += stream.WriteS( this.single_ref_p2, "single_ref_p2"); 
+
+						if ( single_ref_p2 == 0 )
+						{
+							size += stream.WriteS( this.single_ref_p6, "single_ref_p6"); 
+							RefFrame[ 0 ]= single_ref_p6 ? ALTREF2_FRAME : BWDREF_FRAME;
+						}
+						else 
+						{
+							RefFrame[ 0 ]= ALTREF_FRAME;
+						}
+					}
+					else 
+					{
+						size += stream.WriteS( this.single_ref_p3, "single_ref_p3"); 
+
+						if ( single_ref_p3 != 0 )
+						{
+							size += stream.WriteS( this.single_ref_p5, "single_ref_p5"); 
+							RefFrame[ 0 ]= single_ref_p5 ? GOLDEN_FRAME : LAST3_FRAME;
+						}
+						else 
+						{
+							size += stream.WriteS( this.single_ref_p4, "single_ref_p4"); 
+							RefFrame[ 0 ]= single_ref_p4 ? LAST2_FRAME : LAST_FRAME;
+						}
+					}
+					RefFrame[ 1 ]= NONE;
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  assign_mv( isCompound ) { 
+ for ( i = 0; i < 1 + isCompound; i++ ) {
+ if ( use_intrabc ) {
+ compMode = NEWMV
+ } else {
+ compMode = get_mode( i )
+ }
+ if ( use_intrabc ) {
+ PredMv[ 0 ] = RefStackMv[ 0 ][ 0 ]
+ if ( PredMv[ 0 ][ 0 ] == 0 && PredMv[ 0 ][ 1 ] == 0 ) {
+ PredMv[ 0 ] = RefStackMv[ 1 ][ 0 ]
+ }
+ if ( PredMv[ 0 ][ 0 ] == 0 && PredMv[ 0 ][ 1 ] == 0 ) {
+ sbSize = use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64
+ sbSize4 = Num_4x4_Blocks_High[ sbSize ]
+ if ( MiRow - sbSize4 < MiRowStart ) {
+ PredMv[ 0 ][ 0 ] = 0
+ PredMv[ 0 ][ 1 ] = -(sbSize4 * MI_SIZE + INTRABC_DELAY_PIXELS) * 8
+ } else {
+ PredMv[ 0 ][ 0 ] = -(sbSize4 * MI_SIZE * 8)
+ PredMv[ 0 ][ 1 ] = 0
+ }
+ }
+ } else if ( compMode == GLOBALMV ) {
+ PredMv[ i ] = GlobalMvs[ i ]
+ } else {
+ pos = ( compMode == NEARESTMV ) ? 0 : RefMvIdx
+ if ( compMode == NEWMV && NumMvFound <= 1 )
+ pos = 0
+ PredMv[ i ] = RefStackMv[ pos ][ i ]
+ }
+ if ( compMode == NEWMV ) {
+ read_mv( i )
+ } else {
+ Mv[ i ] = PredMv[ i ]
+ }
+ }
+ }
+    */
+    public class AssignMv : IAomSerializable
+    {
+		private uint isCompound;
+		public uint IsCompound { get { return isCompound; } set { isCompound = value; } }
+		private ReadMv[] read_mv;
+		public ReadMv[] ReadMv { get { return read_mv; } set { read_mv = value; } }
+
+         public AssignMv(uint isCompound)
+         { 
+			this.isCompound = isCompound;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint i = 0;
+			uint compMode = 0;
+			uint[] PredMv = null;
+			uint sbSize = 0;
+			uint sbSize4 = 0;
+			uint pos = 0;
+			uint[] Mv = null;
+
+			this.read_mv = new ReadMv[ 1 + isCompound];
+			for ( i = 0; i < 1 + isCompound; i++ )
+			{
+
+				if ( use_intrabc != 0 )
+				{
+					compMode= NEWMV;
+				}
+				else 
+				{
+					compMode= get_mode( i );
+				}
+
+				if ( use_intrabc != 0 )
+				{
+					PredMv[ 0 ]= RefStackMv[ 0 ][ 0 ];
+
+					if ( PredMv[ 0 ][ 0 ] == 0 && PredMv[ 0 ][ 1 ] == 0 )
+					{
+						PredMv[ 0 ]= RefStackMv[ 1 ][ 0 ];
+					}
+
+					if ( PredMv[ 0 ][ 0 ] == 0 && PredMv[ 0 ][ 1 ] == 0 )
+					{
+						sbSize= use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64;
+						sbSize4= Num_4x4_Blocks_High[ sbSize ];
+
+						if ( MiRow - sbSize4 < MiRowStart )
+						{
+							PredMv[ 0 ][ 0 ]= 0;
+							PredMv[ 0 ][ 1 ]= -(sbSize4 * MI_SIZE + INTRABC_DELAY_PIXELS) * 8;
+						}
+						else 
+						{
+							PredMv[ 0 ][ 0 ]= -(sbSize4 * MI_SIZE * 8);
+							PredMv[ 0 ][ 1 ]= 0;
+						}
+					}
+				}
+				else if ( compMode == GLOBALMV )
+				{
+					PredMv[ i ]= GlobalMvs[ i ];
+				}
+				else 
+				{
+					pos= ( compMode == NEARESTMV ) ? 0 : RefMvIdx;
+
+					if ( compMode == NEWMV && NumMvFound <= 1 )
+					{
+						pos= 0;
+					}
+					PredMv[ i ]= RefStackMv[ pos ][ i ];
+				}
+
+				if ( compMode == NEWMV )
+				{
+					this.read_mv[ i ] =  new ReadMv( i ) ;
+					size +=  stream.ReadClass<ReadMv>(size, context, this.read_mv[ i ], "read_mv"); 
+				}
+				else 
+				{
+					Mv[ i ]= PredMv[ i ];
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint i = 0;
+			uint compMode = 0;
+			uint[] PredMv = null;
+			uint sbSize = 0;
+			uint sbSize4 = 0;
+			uint pos = 0;
+			uint[] Mv = null;
+
+			for ( i = 0; i < 1 + isCompound; i++ )
+			{
+
+				if ( use_intrabc != 0 )
+				{
+					compMode= NEWMV;
+				}
+				else 
+				{
+					compMode= get_mode( i );
+				}
+
+				if ( use_intrabc != 0 )
+				{
+					PredMv[ 0 ]= RefStackMv[ 0 ][ 0 ];
+
+					if ( PredMv[ 0 ][ 0 ] == 0 && PredMv[ 0 ][ 1 ] == 0 )
+					{
+						PredMv[ 0 ]= RefStackMv[ 1 ][ 0 ];
+					}
+
+					if ( PredMv[ 0 ][ 0 ] == 0 && PredMv[ 0 ][ 1 ] == 0 )
+					{
+						sbSize= use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64;
+						sbSize4= Num_4x4_Blocks_High[ sbSize ];
+
+						if ( MiRow - sbSize4 < MiRowStart )
+						{
+							PredMv[ 0 ][ 0 ]= 0;
+							PredMv[ 0 ][ 1 ]= -(sbSize4 * MI_SIZE + INTRABC_DELAY_PIXELS) * 8;
+						}
+						else 
+						{
+							PredMv[ 0 ][ 0 ]= -(sbSize4 * MI_SIZE * 8);
+							PredMv[ 0 ][ 1 ]= 0;
+						}
+					}
+				}
+				else if ( compMode == GLOBALMV )
+				{
+					PredMv[ i ]= GlobalMvs[ i ];
+				}
+				else 
+				{
+					pos= ( compMode == NEARESTMV ) ? 0 : RefMvIdx;
+
+					if ( compMode == NEWMV && NumMvFound <= 1 )
+					{
+						pos= 0;
+					}
+					PredMv[ i ]= RefStackMv[ pos ][ i ];
+				}
+
+				if ( compMode == NEWMV )
+				{
+					size += stream.WriteClass<ReadMv>(context, this.read_mv[ i ], "read_mv"); 
+				}
+				else 
+				{
+					Mv[ i ]= PredMv[ i ];
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  read_motion_mode( isCompound ) { 
+ if ( skip_mode ) {
+ motion_mode = SIMPLE
+ return
+ }
+ if ( !is_motion_mode_switchable ) {
+ motion_mode = SIMPLE
+ return
+ }
+ if ( Min( Block_Width[ MiSize ],
+ Block_Height[ MiSize ] ) < 8 ) {
+ motion_mode = SIMPLE
+ return
+ }
+ if ( !force_integer_mv &&
+ ( YMode == GLOBALMV || YMode == GLOBAL_GLOBALMV ) ) {
+ if ( GmType[ RefFrame[ 0 ] ] > TRANSLATION ) {
+ motion_mode = SIMPLE
+ return
+ }
+ }
+ if ( isCompound || RefFrame[ 1 ] == INTRA_FRAME || !has_overlappable_candidates() ) {
+ motion_mode = SIMPLE
+ return
+ }
+ find_warp_samples()
+ if ( force_integer_mv || NumSamples == 0 ||
+ !allow_warped_motion || is_scaled( RefFrame[0] ) ) {
+ use_obmc S()
+ motion_mode = use_obmc ? OBMC : SIMPLE
+ } else {
+ motion_mode S()
+ }
+ }
+    */
+    public class ReadMotionMode : IAomSerializable
+    {
+		private uint isCompound;
+		public uint IsCompound { get { return isCompound; } set { isCompound = value; } }
+		private FindWarpSamples find_warp_samples;
+		public FindWarpSamples FindWarpSamples { get { return find_warp_samples; } set { find_warp_samples = value; } }
+		private uint use_obmc;
+		public uint UseObmc { get { return use_obmc; } set { use_obmc = value; } }
+		private uint motion_mode;
+		public uint MotionMode { get { return motion_mode; } set { motion_mode = value; } }
+
+         public ReadMotionMode(uint isCompound)
+         { 
+			this.isCompound = isCompound;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint motion_mode = 0;
+
+			if ( skip_mode != 0 )
+			{
+				motion_mode= SIMPLE;
+return;
+			}
+
+			if ( is_motion_mode_switchable== 0 )
+			{
+				motion_mode= SIMPLE;
+return;
+			}
+
+			if ( Min( Block_Width[ MiSize ],
+ Block_Height[ MiSize ] ) < 8 )
+			{
+				motion_mode= SIMPLE;
+return;
+			}
+
+			if ( force_integer_mv== 0 &&
+ ( YMode == GLOBALMV || YMode == GLOBAL_GLOBALMV ) )
+			{
+
+				if ( GmType[ RefFrame[ 0 ] ] > TRANSLATION )
+				{
+					motion_mode= SIMPLE;
+return;
+				}
+			}
+
+			if ( isCompound != 0 || RefFrame[ 1 ] == INTRA_FRAME || !has_overlappable_candidates() )
+			{
+				motion_mode= SIMPLE;
+return;
+			}
+			this.find_warp_samples =  new FindWarpSamples() ;
+			size +=  stream.ReadClass<FindWarpSamples>(size, context, this.find_warp_samples, "find_warp_samples"); 
+
+			if ( force_integer_mv != 0 || NumSamples == 0 ||
+ allow_warped_motion== 0 || is_scaled( RefFrame[0] ) )
+			{
+				size += stream.ReadS(size, out this.use_obmc, "use_obmc"); 
+				motion_mode= use_obmc ? OBMC : SIMPLE;
+			}
+			else 
+			{
+				size += stream.ReadS(size, out this.motion_mode, "motion_mode"); 
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint motion_mode = 0;
+
+			if ( skip_mode != 0 )
+			{
+				motion_mode= SIMPLE;
+return;
+			}
+
+			if ( is_motion_mode_switchable== 0 )
+			{
+				motion_mode= SIMPLE;
+return;
+			}
+
+			if ( Min( Block_Width[ MiSize ],
+ Block_Height[ MiSize ] ) < 8 )
+			{
+				motion_mode= SIMPLE;
+return;
+			}
+
+			if ( force_integer_mv== 0 &&
+ ( YMode == GLOBALMV || YMode == GLOBAL_GLOBALMV ) )
+			{
+
+				if ( GmType[ RefFrame[ 0 ] ] > TRANSLATION )
+				{
+					motion_mode= SIMPLE;
+return;
+				}
+			}
+
+			if ( isCompound != 0 || RefFrame[ 1 ] == INTRA_FRAME || !has_overlappable_candidates() )
+			{
+				motion_mode= SIMPLE;
+return;
+			}
+			size += stream.WriteClass<FindWarpSamples>(context, this.find_warp_samples, "find_warp_samples"); 
+
+			if ( force_integer_mv != 0 || NumSamples == 0 ||
+ allow_warped_motion== 0 || is_scaled( RefFrame[0] ) )
+			{
+				size += stream.WriteS( this.use_obmc, "use_obmc"); 
+				motion_mode= use_obmc ? OBMC : SIMPLE;
+			}
+			else 
+			{
+				size += stream.WriteS( this.motion_mode, "motion_mode"); 
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+is_scaled(refFrame) {
+ refIdx=ref_frame_idx[refFrame-LAST_FRAME]
+ xScale=((RefUpscaledWidth[refIdx] <<REF_SCALE_SHIFT)+(FrameWidth/2))//FrameWidth
+ yScale=((RefFrameHeight[refIdx] <<REF_SCALE_SHIFT)+(FrameHeight/2))//FrameHeight
+ noScale=1 <<REF_SCALE_SHIFT
+ return returnxScale !=noScale ||yScale !=noScale
+ }
+    */
+    public class IsScaled : IAomSerializable
+    {
+		private uint refFrame;
+		public uint RefFrame { get { return refFrame; } set { refFrame = value; } }
+
+         public IsScaled(uint refFrame)
+         { 
+			this.refFrame = refFrame;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint refIdx = 0;
+			uint xScale = 0;
+			uint yScale = 0;
+			uint noScale = 0;
+			refIdx= ref_frame_idx[refFrame-LAST_FRAME];
+			xScale= ((RefUpscaledWidth[refIdx] <<REF_SCALE_SHIFT)+(FrameWidth/2))//FrameWidth;
+			yScale= ((RefFrameHeight[refIdx] <<REF_SCALE_SHIFT)+(FrameHeight/2))//FrameHeight;
+			noScale= 1 <<REF_SCALE_SHIFT;
+return returnxScale !=noScale ||yScale !=noScale;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint refIdx = 0;
+			uint xScale = 0;
+			uint yScale = 0;
+			uint noScale = 0;
+			refIdx= ref_frame_idx[refFrame-LAST_FRAME];
+			xScale= ((RefUpscaledWidth[refIdx] <<REF_SCALE_SHIFT)+(FrameWidth/2))//FrameWidth;
+			yScale= ((RefFrameHeight[refIdx] <<REF_SCALE_SHIFT)+(FrameHeight/2))//FrameHeight;
+			noScale= 1 <<REF_SCALE_SHIFT;
+return returnxScale !=noScale ||yScale !=noScale;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  read_interintra_mode( isCompound ) { 
+ if ( !skip_mode && enable_interintra_compound && !isCompound &&
+ MiSize >= BLOCK_8X8 && MiSize <= BLOCK_32X32) {
+ interintra S()
+ if ( interintra ) {
+ interintra_mode S()
+ RefFrame[1] = INTRA_FRAME
+ AngleDeltaY = 0
+ AngleDeltaUV = 0
+ use_filter_intra = 0
+ wedge_interintra S()
+ if ( wedge_interintra ) {
+ wedge_index S()
+ wedge_sign = 0
+ }
+ }
+ } else {
+ interintra = 0
+ }
+ }
+    */
+    public class ReadInterintraMode : IAomSerializable
+    {
+		private uint isCompound;
+		public uint IsCompound { get { return isCompound; } set { isCompound = value; } }
+		private uint interintra;
+		public uint Interintra { get { return interintra; } set { interintra = value; } }
+		private uint interintra_mode;
+		public uint InterintraMode { get { return interintra_mode; } set { interintra_mode = value; } }
+		private uint wedge_interintra;
+		public uint WedgeInterintra { get { return wedge_interintra; } set { wedge_interintra = value; } }
+		private uint wedge_index;
+		public uint WedgeIndex { get { return wedge_index; } set { wedge_index = value; } }
+
+         public ReadInterintraMode(uint isCompound)
+         { 
+			this.isCompound = isCompound;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[] RefFrame = null;
+			uint AngleDeltaY = 0;
+			uint AngleDeltaUV = 0;
+			uint use_filter_intra = 0;
+			uint wedge_sign = 0;
+			uint interintra = 0;
+
+			if ( skip_mode== 0 && enable_interintra_compound != 0 && isCompound== 0 &&
+ MiSize >= BLOCK_8X8 && MiSize <= BLOCK_32X32)
+			{
+				size += stream.ReadS(size, out this.interintra, "interintra"); 
+
+				if ( interintra != 0 )
+				{
+					size += stream.ReadS(size, out this.interintra_mode, "interintra_mode"); 
+					RefFrame[1]= INTRA_FRAME;
+					AngleDeltaY= 0;
+					AngleDeltaUV= 0;
+					use_filter_intra= 0;
+					size += stream.ReadS(size, out this.wedge_interintra, "wedge_interintra"); 
+
+					if ( wedge_interintra != 0 )
+					{
+						size += stream.ReadS(size, out this.wedge_index, "wedge_index"); 
+						wedge_sign= 0;
+					}
+				}
+			}
+			else 
+			{
+				interintra= 0;
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[] RefFrame = null;
+			uint AngleDeltaY = 0;
+			uint AngleDeltaUV = 0;
+			uint use_filter_intra = 0;
+			uint wedge_sign = 0;
+			uint interintra = 0;
+
+			if ( skip_mode== 0 && enable_interintra_compound != 0 && isCompound== 0 &&
+ MiSize >= BLOCK_8X8 && MiSize <= BLOCK_32X32)
+			{
+				size += stream.WriteS( this.interintra, "interintra"); 
+
+				if ( interintra != 0 )
+				{
+					size += stream.WriteS( this.interintra_mode, "interintra_mode"); 
+					RefFrame[1]= INTRA_FRAME;
+					AngleDeltaY= 0;
+					AngleDeltaUV= 0;
+					use_filter_intra= 0;
+					size += stream.WriteS( this.wedge_interintra, "wedge_interintra"); 
+
+					if ( wedge_interintra != 0 )
+					{
+						size += stream.WriteS( this.wedge_index, "wedge_index"); 
+						wedge_sign= 0;
+					}
+				}
+			}
+			else 
+			{
+				interintra= 0;
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  read_compound_type( isCompound ) { 
+ comp_group_idx = 0
+ compound_idx = 1
+ if ( skip_mode ) {
+ compound_type = COMPOUND_AVERAGE
+ return
+ }
+ if ( isCompound ) {
+ n = Wedge_Bits[ MiSize ]
+ if ( enable_masked_compound ) {
+ comp_group_idx S()
+ }
+ if ( comp_group_idx == 0 ) {
+ if ( enable_jnt_comp ) {
+ compound_idx S()
+ compound_type = compound_idx ? COMPOUND_AVERAGE :
+ COMPOUND_DISTANCE
+ } else {
+ compound_type = COMPOUND_AVERAGE
+ }
+ } else {
+ if ( n == 0 ) {
+ compound_type = COMPOUND_DIFFWTD
+ } else {
+ compound_type S()
+ }
+ }
+ if ( compound_type == COMPOUND_WEDGE ) {
+ wedge_index S()
+ wedge_sign L(1)
+ } else if ( compound_type == COMPOUND_DIFFWTD ) {
+ mask_type L(1)
+ }
+ } else {
+ if ( interintra ) {
+ compound_type = wedge_interintra ? COMPOUND_WEDGE : COMPOUND_INTRA
+ } else {
+ compound_type = COMPOUND_AVERAGE
+ }
+ }
+ }
+    */
+    public class ReadCompoundType : IAomSerializable
+    {
+		private uint isCompound;
+		public uint IsCompound { get { return isCompound; } set { isCompound = value; } }
+		private uint comp_group_idx;
+		public uint CompGroupIdx { get { return comp_group_idx; } set { comp_group_idx = value; } }
+		private uint compound_idx;
+		public uint CompoundIdx { get { return compound_idx; } set { compound_idx = value; } }
+		private COMPOUNDDISTANCE cOMPOUND_DISTANCE;
+		public COMPOUNDDISTANCE COMPOUNDDISTANCE { get { return COMPOUND_DISTANCE; } set { COMPOUND_DISTANCE = value; } }
+		private uint compound_type;
+		public uint CompoundType { get { return compound_type; } set { compound_type = value; } }
+		private uint wedge_index;
+		public uint WedgeIndex { get { return wedge_index; } set { wedge_index = value; } }
+		private uint wedge_sign;
+		public uint WedgeSign { get { return wedge_sign; } set { wedge_sign = value; } }
+		private uint mask_type;
+		public uint MaskType { get { return mask_type; } set { mask_type = value; } }
+
+         public ReadCompoundType(uint isCompound)
+         { 
+			this.isCompound = isCompound;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint comp_group_idx = 0;
+			uint compound_idx = 0;
+			uint compound_type = 0;
+			uint n = 0;
+			comp_group_idx= 0;
+			compound_idx= 1;
+
+			if ( skip_mode != 0 )
+			{
+				compound_type= COMPOUND_AVERAGE;
+return;
+			}
+
+			if ( isCompound != 0 )
+			{
+				n= Wedge_Bits[ MiSize ];
+
+				if ( enable_masked_compound != 0 )
+				{
+					size += stream.ReadS(size, out this.comp_group_idx, "comp_group_idx"); 
+				}
+
+				if ( comp_group_idx == 0 )
+				{
+
+					if ( enable_jnt_comp != 0 )
+					{
+						size += stream.ReadS(size, out this.compound_idx, "compound_idx"); 
+						compound_type= compound_idx ? COMPOUND_AVERAGE :;
+						this.COMPOUND_DISTANCE =  new COMPOUNDDISTANCE() ;
+						size +=  stream.ReadClass<COMPOUNDDISTANCE>(size, context, this.COMPOUND_DISTANCE, "COMPOUND_DISTANCE"); 
+					}
+					else 
+					{
+						compound_type= COMPOUND_AVERAGE;
+					}
+				}
+				else 
+				{
+
+					if ( n == 0 )
+					{
+						compound_type= COMPOUND_DIFFWTD;
+					}
+					else 
+					{
+						size += stream.ReadS(size, out this.compound_type, "compound_type"); 
+					}
+				}
+
+				if ( compound_type == COMPOUND_WEDGE )
+				{
+					size += stream.ReadS(size, out this.wedge_index, "wedge_index"); 
+					size += stream.ReadL(size, 1, out this.wedge_sign, "wedge_sign"); 
+				}
+				else if ( compound_type == COMPOUND_DIFFWTD )
+				{
+					size += stream.ReadL(size, 1, out this.mask_type, "mask_type"); 
+				}
+			}
+			else 
+			{
+
+				if ( interintra != 0 )
+				{
+					compound_type= wedge_interintra ? COMPOUND_WEDGE : COMPOUND_INTRA;
+				}
+				else 
+				{
+					compound_type= COMPOUND_AVERAGE;
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint comp_group_idx = 0;
+			uint compound_idx = 0;
+			uint compound_type = 0;
+			uint n = 0;
+			comp_group_idx= 0;
+			compound_idx= 1;
+
+			if ( skip_mode != 0 )
+			{
+				compound_type= COMPOUND_AVERAGE;
+return;
+			}
+
+			if ( isCompound != 0 )
+			{
+				n= Wedge_Bits[ MiSize ];
+
+				if ( enable_masked_compound != 0 )
+				{
+					size += stream.WriteS( this.comp_group_idx, "comp_group_idx"); 
+				}
+
+				if ( comp_group_idx == 0 )
+				{
+
+					if ( enable_jnt_comp != 0 )
+					{
+						size += stream.WriteS( this.compound_idx, "compound_idx"); 
+						compound_type= compound_idx ? COMPOUND_AVERAGE :;
+						size += stream.WriteClass<COMPOUNDDISTANCE>(context, this.COMPOUND_DISTANCE, "COMPOUND_DISTANCE"); 
+					}
+					else 
+					{
+						compound_type= COMPOUND_AVERAGE;
+					}
+				}
+				else 
+				{
+
+					if ( n == 0 )
+					{
+						compound_type= COMPOUND_DIFFWTD;
+					}
+					else 
+					{
+						size += stream.WriteS( this.compound_type, "compound_type"); 
+					}
+				}
+
+				if ( compound_type == COMPOUND_WEDGE )
+				{
+					size += stream.WriteS( this.wedge_index, "wedge_index"); 
+					size += stream.WriteL(1,  this.wedge_sign, "wedge_sign"); 
+				}
+				else if ( compound_type == COMPOUND_DIFFWTD )
+				{
+					size += stream.WriteL(1,  this.mask_type, "mask_type"); 
+				}
+			}
+			else 
+			{
+
+				if ( interintra != 0 )
+				{
+					compound_type= wedge_interintra ? COMPOUND_WEDGE : COMPOUND_INTRA;
+				}
+				else 
+				{
+					compound_type= COMPOUND_AVERAGE;
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+ get_mode( refList ) { 
+ if ( refList == 0 ) {
+ if ( YMode < NEAREST_NEARESTMV )
+ compMode = YMode
+ else if ( YMode == NEW_NEWMV || YMode == NEW_NEARESTMV || YMode == NEW_NEARMV )
+ compMode = NEWMV
+ else if ( YMode == NEAREST_NEARESTMV || YMode == NEAREST_NEWMV )
+ compMode = NEARESTMV
+ else if ( YMode == NEAR_NEARMV || YMode == NEAR_NEWMV )
+ compMode = NEARMV
+ else
+ compMode = GLOBALMV
+ } else {
+ if ( YMode == NEW_NEWMV || YMode == NEAREST_NEWMV || YMode == NEAR_NEWMV )
+ compMode = NEWMV
+ else if ( YMode == NEAREST_NEARESTMV || YMode == NEW_NEARESTMV )
+ compMode = NEARESTMV
+ else if ( YMode == NEAR_NEARMV || YMode == NEW_NEARMV )
+ compMode = NEARMV
+ else
+ compMode = GLOBALMV
+ }
+ return compMode
+ }
+    */
+    public class GetMode : IAomSerializable
+    {
+		private uint refList;
+		public uint RefList { get { return refList; } set { refList = value; } }
+
+         public GetMode(uint refList)
+         { 
+			this.refList = refList;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint compMode = 0;
+
+			if ( refList == 0 )
+			{
+
+				if ( YMode < NEAREST_NEARESTMV )
+				{
+					compMode= YMode;
+				}
+				else if ( YMode == NEW_NEWMV || YMode == NEW_NEARESTMV || YMode == NEW_NEARMV )
+				{
+					compMode= NEWMV;
+				}
+				else if ( YMode == NEAREST_NEARESTMV || YMode == NEAREST_NEWMV )
+				{
+					compMode= NEARESTMV;
+				}
+				else if ( YMode == NEAR_NEARMV || YMode == NEAR_NEWMV )
+				{
+					compMode= NEARMV;
+				}
+				else 
+				{
+					compMode= GLOBALMV;
+				}
+			}
+			else 
+			{
+
+				if ( YMode == NEW_NEWMV || YMode == NEAREST_NEWMV || YMode == NEAR_NEWMV )
+				{
+					compMode= NEWMV;
+				}
+				else if ( YMode == NEAREST_NEARESTMV || YMode == NEW_NEARESTMV )
+				{
+					compMode= NEARESTMV;
+				}
+				else if ( YMode == NEAR_NEARMV || YMode == NEW_NEARMV )
+				{
+					compMode= NEARMV;
+				}
+				else 
+				{
+					compMode= GLOBALMV;
+				}
+			}
+return compMode;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint compMode = 0;
+
+			if ( refList == 0 )
+			{
+
+				if ( YMode < NEAREST_NEARESTMV )
+				{
+					compMode= YMode;
+				}
+				else if ( YMode == NEW_NEWMV || YMode == NEW_NEARESTMV || YMode == NEW_NEARMV )
+				{
+					compMode= NEWMV;
+				}
+				else if ( YMode == NEAREST_NEARESTMV || YMode == NEAREST_NEWMV )
+				{
+					compMode= NEARESTMV;
+				}
+				else if ( YMode == NEAR_NEARMV || YMode == NEAR_NEWMV )
+				{
+					compMode= NEARMV;
+				}
+				else 
+				{
+					compMode= GLOBALMV;
+				}
+			}
+			else 
+			{
+
+				if ( YMode == NEW_NEWMV || YMode == NEAREST_NEWMV || YMode == NEAR_NEWMV )
+				{
+					compMode= NEWMV;
+				}
+				else if ( YMode == NEAREST_NEARESTMV || YMode == NEW_NEARESTMV )
+				{
+					compMode= NEARESTMV;
+				}
+				else if ( YMode == NEAR_NEARMV || YMode == NEW_NEARMV )
+				{
+					compMode= NEARMV;
+				}
+				else 
+				{
+					compMode= GLOBALMV;
+				}
+			}
+return compMode;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  read_mv( refc ) { 
+ diffMv[ 0 ] = 0
+ diffMv[ 1 ] = 0
+ if ( use_intrabc ) {
+ MvCtx = MV_INTRABC_CONTEXT
+ } else {
+ MvCtx = 0
+ }
+ mv_joint S()
+ if ( mv_joint == MV_JOINT_HZVNZ || mv_joint == MV_JOINT_HNZVNZ )
+ diffMv[ 0 ] = read_mv_component( 0 )
+ if ( mv_joint == MV_JOINT_HNZVZ || mv_joint == MV_JOINT_HNZVNZ )
+ diffMv[ 1 ] = read_mv_component( 1 )
+ Mv[ refc ][ 0 ] = PredMv[ refc ][ 0 ] + diffMv[ 0 ]
+ Mv[ refc ][ 1 ] = PredMv[ refc ][ 1 ] + diffMv[ 1 ]
+ }
+    */
+    public class ReadMv : IAomSerializable
+    {
+		private uint refc;
+		public uint Refc { get { return refc; } set { refc = value; } }
+		private uint mv_joint;
+		public uint MvJoint { get { return mv_joint; } set { mv_joint = value; } }
+
+         public ReadMv(uint refc)
+         { 
+			this.refc = refc;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[] diffMv = null;
+			uint MvCtx = 0;
+			uint[][] Mv = null;
+			diffMv[ 0 ]= 0;
+			diffMv[ 1 ]= 0;
+
+			if ( use_intrabc != 0 )
+			{
+				MvCtx= MV_INTRABC_CONTEXT;
+			}
+			else 
+			{
+				MvCtx= 0;
+			}
+			size += stream.ReadS(size, out this.mv_joint, "mv_joint"); 
+
+			if ( mv_joint == MV_JOINT_HZVNZ || mv_joint == MV_JOINT_HNZVNZ )
+			{
+				diffMv[ 0 ]= read_mv_component( 0 );
+			}
+
+			if ( mv_joint == MV_JOINT_HNZVZ || mv_joint == MV_JOINT_HNZVNZ )
+			{
+				diffMv[ 1 ]= read_mv_component( 1 );
+			}
+			Mv[ refc ][ 0 ]= PredMv[ refc ][ 0 ] + diffMv[ 0 ];
+			Mv[ refc ][ 1 ]= PredMv[ refc ][ 1 ] + diffMv[ 1 ];
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[] diffMv = null;
+			uint MvCtx = 0;
+			uint[][] Mv = null;
+			diffMv[ 0 ]= 0;
+			diffMv[ 1 ]= 0;
+
+			if ( use_intrabc != 0 )
+			{
+				MvCtx= MV_INTRABC_CONTEXT;
+			}
+			else 
+			{
+				MvCtx= 0;
+			}
+			size += stream.WriteS( this.mv_joint, "mv_joint"); 
+
+			if ( mv_joint == MV_JOINT_HZVNZ || mv_joint == MV_JOINT_HNZVNZ )
+			{
+				diffMv[ 0 ]= read_mv_component( 0 );
+			}
+
+			if ( mv_joint == MV_JOINT_HNZVZ || mv_joint == MV_JOINT_HNZVNZ )
+			{
+				diffMv[ 1 ]= read_mv_component( 1 );
+			}
+			Mv[ refc ][ 0 ]= PredMv[ refc ][ 0 ] + diffMv[ 0 ];
+			Mv[ refc ][ 1 ]= PredMv[ refc ][ 1 ] + diffMv[ 1 ];
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  read_mv_component( comp ) { 
+  mv_sign S()
+  mv_class S()
+ if ( mv_class == MV_CLASS_0 ) {
+  mv_class0_bit S()
+ if ( force_integer_mv )
+ mv_class0_fr = 3
+ else
+  mv_class0_fr S()
+ if ( allow_high_precision_mv )
+  mv_class0_hp S()
+ else
+ mv_class0_hp = 1
+ mag = ( ( mv_class0_bit << 3 ) | ( mv_class0_fr << 1 ) | mv_class0_hp ) + 1
+ } else {
+ d = 0
+ for ( i = 0; i < mv_class; i++ ) {
+  mv_bit S()
+ d = d | mv_bit << i
+ }
+ mag = CLASS0_SIZE << ( mv_class + 2 )
+ if ( force_integer_mv )
+ mv_fr = 3
+ else
+  mv_fr S()
+ if ( allow_high_precision_mv )
+  mv_hp S()
+ else
+ mv_hp = 1
+ mag += ( ( d << 3 ) | ( mv_fr << 1 ) | mv_hp ) + 1
+ }
+ return mv_sign ? -mag : mag
+ }
+    */
+    public class ReadMvComponent : IAomSerializable
+    {
+		private uint comp;
+		public uint Comp { get { return comp; } set { comp = value; } }
+		private uint mv_sign;
+		public uint MvSign { get { return mv_sign; } set { mv_sign = value; } }
+		private uint mv_class;
+		public uint MvClass { get { return mv_class; } set { mv_class = value; } }
+		private uint mv_class0_bit;
+		public uint MvClass0Bit { get { return mv_class0_bit; } set { mv_class0_bit = value; } }
+		private uint mv_class0_fr;
+		public uint MvClass0Fr { get { return mv_class0_fr; } set { mv_class0_fr = value; } }
+		private uint mv_class0_hp;
+		public uint MvClass0Hp { get { return mv_class0_hp; } set { mv_class0_hp = value; } }
+		private uint[] mv_bit;
+		public uint[] MvBit { get { return mv_bit; } set { mv_bit = value; } }
+		private uint mv_fr;
+		public uint MvFr { get { return mv_fr; } set { mv_fr = value; } }
+		private uint mv_hp;
+		public uint MvHp { get { return mv_hp; } set { mv_hp = value; } }
+
+         public ReadMvComponent(uint comp)
+         { 
+			this.comp = comp;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint mv_class0_fr = 0;
+			uint mv_class0_hp = 0;
+			uint mag = 0;
+			uint d = 0;
+			uint i = 0;
+			uint mv_fr = 0;
+			uint mv_hp = 0;
+			size += stream.ReadS(size, out this.mv_sign, "mv_sign"); 
+			size += stream.ReadS(size, out this.mv_class, "mv_class"); 
+
+			if ( mv_class == MV_CLASS_0 )
+			{
+				size += stream.ReadS(size, out this.mv_class0_bit, "mv_class0_bit"); 
+
+				if ( force_integer_mv != 0 )
+				{
+					mv_class0_fr= 3;
+				}
+				else 
+				{
+					size += stream.ReadS(size, out this.mv_class0_fr, "mv_class0_fr"); 
+				}
+
+				if ( allow_high_precision_mv != 0 )
+				{
+					size += stream.ReadS(size, out this.mv_class0_hp, "mv_class0_hp"); 
+				}
+				else 
+				{
+					mv_class0_hp= 1;
+				}
+				mag= ( ( mv_class0_bit << 3 ) | ( mv_class0_fr << 1 ) | mv_class0_hp ) + 1;
+			}
+			else 
+			{
+				d= 0;
+
+				this.mv_bit = new uint[ mv_class];
+				for ( i = 0; i < mv_class; i++ )
+				{
+					size += stream.ReadS(size, out this.mv_bit[ i ], "mv_bit"); 
+					d= d | mv_bit[i] << i;
+				}
+				mag= CLASS0_SIZE << ( mv_class + 2 );
+
+				if ( force_integer_mv != 0 )
+				{
+					mv_fr= 3;
+				}
+				else 
+				{
+					size += stream.ReadS(size, out this.mv_fr, "mv_fr"); 
+				}
+
+				if ( allow_high_precision_mv != 0 )
+				{
+					size += stream.ReadS(size, out this.mv_hp, "mv_hp"); 
+				}
+				else 
+				{
+					mv_hp= 1;
+				}
+				mag+= ( ( d << 3 ) | ( mv_fr << 1 ) | mv_hp ) + 1;
+			}
+return mv_sign ? -mag : mag;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint mv_class0_fr = 0;
+			uint mv_class0_hp = 0;
+			uint mag = 0;
+			uint d = 0;
+			uint i = 0;
+			uint mv_fr = 0;
+			uint mv_hp = 0;
+			size += stream.WriteS( this.mv_sign, "mv_sign"); 
+			size += stream.WriteS( this.mv_class, "mv_class"); 
+
+			if ( mv_class == MV_CLASS_0 )
+			{
+				size += stream.WriteS( this.mv_class0_bit, "mv_class0_bit"); 
+
+				if ( force_integer_mv != 0 )
+				{
+					mv_class0_fr= 3;
+				}
+				else 
+				{
+					size += stream.WriteS( this.mv_class0_fr, "mv_class0_fr"); 
+				}
+
+				if ( allow_high_precision_mv != 0 )
+				{
+					size += stream.WriteS( this.mv_class0_hp, "mv_class0_hp"); 
+				}
+				else 
+				{
+					mv_class0_hp= 1;
+				}
+				mag= ( ( mv_class0_bit << 3 ) | ( mv_class0_fr << 1 ) | mv_class0_hp ) + 1;
+			}
+			else 
+			{
+				d= 0;
+
+				for ( i = 0; i < mv_class; i++ )
+				{
+					size += stream.WriteS( this.mv_bit[ i ], "mv_bit"); 
+					d= d | mv_bit[i] << i;
+				}
+				mag= CLASS0_SIZE << ( mv_class + 2 );
+
+				if ( force_integer_mv != 0 )
+				{
+					mv_fr= 3;
+				}
+				else 
+				{
+					size += stream.WriteS( this.mv_fr, "mv_fr"); 
+				}
+
+				if ( allow_high_precision_mv != 0 )
+				{
+					size += stream.WriteS( this.mv_hp, "mv_hp"); 
+				}
+				else 
+				{
+					mv_hp= 1;
+				}
+				mag+= ( ( d << 3 ) | ( mv_fr << 1 ) | mv_hp ) + 1;
+			}
+return mv_sign ? -mag : mag;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  compute_prediction() { 
+ sbMask = use_128x128_superblock ? 31 : 15
+ subBlockMiRow = MiRow & sbMask
+ subBlockMiCol = MiCol & sbMask
+ for ( plane = 0; plane < 1 + HasChroma * 2; plane++ ) {
+ planeSz = get_plane_residual_size( MiSize, plane )
+ num4x4W = Num_4x4_Blocks_Wide[ planeSz ]
+ num4x4H = Num_4x4_Blocks_High[ planeSz ]
+ log2W = MI_SIZE_LOG2 + Mi_Width_Log2[ planeSz ]
+ log2H = MI_SIZE_LOG2 + Mi_Height_Log2[ planeSz ]
+ subX = (plane > 0) ? subsampling_x : 0
+ subY = (plane > 0) ? subsampling_y : 0
+ baseX = (MiCol >> subX) * MI_SIZE
+ baseY = (MiRow >> subY) * MI_SIZE
+ candRow = (MiRow >> subY) << subY
+ candCol = (MiCol >> subX) << subX
+ IsInterIntra = ( is_inter && RefFrame[ 1 ] == INTRA_FRAME )
+ if ( IsInterIntra ) {
+ if ( interintra_mode == II_DC_PRED ) mode = DC_PRED
+ else if ( interintra_mode == II_V_PRED ) mode = V_PRED
+ else if ( interintra_mode == II_H_PRED ) mode = H_PRED
+ else mode = SMOOTH_PRED
+ predict_intra( plane, baseX, baseY,
+ plane == 0 ? AvailL : AvailLChroma,
+ plane == 0 ? AvailU : AvailUChroma,
+ BlockDecoded[ plane ]
+ [ ( subBlockMiRow >> subY ) - 1 ]
+ [ ( subBlockMiCol >> subX ) + num4x4W ],
+ BlockDecoded[ plane ]
+ [ ( subBlockMiRow >> subY ) + num4x4H ]
+ [ ( subBlockMiCol >> subX ) - 1 ],
+ mode,
+ log2W, log2H )
+ }
+ if ( is_inter ) {
+ predW = Block_Width[ MiSize ] >> subX
+ predH = Block_Height[ MiSize ] >> subY
+ someUseIntra = 0
+ for ( r = 0; r < (num4x4H << subY); r++ )
+ for ( c = 0; c < (num4x4W << subX); c++ )
+ if ( RefFrames[ candRow + r ][ candCol + c ][ 0 ] == INTRA_FRAME )
+ someUseIntra = 1
+ if ( someUseIntra ) {
+ predW = num4x4W * 4
+ predH = num4x4H * 4
+ candRow = MiRow
+ candCol = MiCol
+ }
+ r = 0
+ for ( y = 0; y < num4x4H * 4; y += predH ) {
+ c = 0
+ for ( x = 0; x < num4x4W * 4; x += predW ) {
+ predict_inter( plane, baseX + x, baseY + y,
+ predW, predH,
+ candRow + r, candCol + c)
+ c++
+ }
+ r++
+ }
+ }
+ }
+ }
+    */
+    public class ComputePrediction : IAomSerializable
+    {
+		private PredictIntra[] predict_intra;
+		public PredictIntra[] PredictIntra { get { return predict_intra; } set { predict_intra = value; } }
+		private PredictInter[][][] predict_inter;
+		public PredictInter[][][] PredictInter { get { return predict_inter; } set { predict_inter = value; } }
+
+         public ComputePrediction()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint sbMask = 0;
+			uint subBlockMiRow = 0;
+			uint subBlockMiCol = 0;
+			uint plane = 0;
+			uint planeSz = 0;
+			uint num4x4W = 0;
+			uint num4x4H = 0;
+			uint log2W = 0;
+			uint log2H = 0;
+			uint subX = 0;
+			uint subY = 0;
+			uint baseX = 0;
+			uint baseY = 0;
+			uint candRow = 0;
+			uint candCol = 0;
+			uint IsInterIntra = 0;
+			uint mode = 0;
+			uint predW = 0;
+			uint predH = 0;
+			uint someUseIntra = 0;
+			uint r = 0;
+			uint c = 0;
+			uint y = 0;
+			uint x = 0;
+			sbMask= use_128x128_superblock ? 31 : 15;
+			subBlockMiRow= MiRow & sbMask;
+			subBlockMiCol= MiCol & sbMask;
+
+			this.predict_intra = new PredictIntra[ 1 + HasChroma * 2];
+			this.predict_inter = new PredictInter[ 1 + HasChroma * 2][][];
+			for ( plane = 0; plane < 1 + HasChroma * 2; plane++ )
+			{
+				planeSz= get_plane_residual_size( MiSize, plane );
+				num4x4W= Num_4x4_Blocks_Wide[ planeSz ];
+				num4x4H= Num_4x4_Blocks_High[ planeSz ];
+				log2W= MI_SIZE_LOG2 + Mi_Width_Log2[ planeSz ];
+				log2H= MI_SIZE_LOG2 + Mi_Height_Log2[ planeSz ];
+				subX= (plane > 0) ? subsampling_x : 0;
+				subY= (plane > 0) ? subsampling_y : 0;
+				baseX= (MiCol >> subX) * MI_SIZE;
+				baseY= (MiRow >> subY) * MI_SIZE;
+				candRow= (MiRow >> subY) << subY;
+				candCol= (MiCol >> subX) << subX;
+				IsInterIntra= ( is_inter && RefFrame[ 1 ] == INTRA_FRAME ) ? (uint)1 : (uint)0;
+
+				if ( IsInterIntra != 0 )
+				{
+
+					if ( interintra_mode == II_DC_PRED )
+					{
+						mode= DC_PRED;
+					}
+					else if ( interintra_mode == II_V_PRED )
+					{
+						mode= V_PRED;
+					}
+					else if ( interintra_mode == II_H_PRED )
+					{
+						mode= H_PRED;
+					}
+					else 
+					{
+						mode= SMOOTH_PRED;
+					}
+					this.predict_intra[ plane ] =  new PredictIntra( plane,  baseX,  baseY,  plane == 0 ? AvailL : AvailLChroma,  plane == 0 ? AvailU : AvailUChroma,  BlockDecoded[ plane ] [ ( subBlockMiRow >> subY ) - 1 ] [ ( subBlockMiCol >> subX ) + num4x4W ],  BlockDecoded[ plane ] [ ( subBlockMiRow >> subY ) + num4x4H ] [ ( subBlockMiCol >> subX ) - 1 ],  mode,  log2W,  log2H ) ;
+					size +=  stream.ReadClass<PredictIntra>(size, context, this.predict_intra[ plane ], "predict_intra"); 
+				}
+
+				if ( is_inter != 0 )
+				{
+					predW= Block_Width[ MiSize ] >> subX;
+					predH= Block_Height[ MiSize ] >> subY;
+					someUseIntra= 0;
+
+					for ( r[plane] = 0; r[plane] < (num4x4H << (int) subY); r++ )
+					{
+
+						for ( c = 0; c < (num4x4W << (int) subX); c++ )
+						{
+
+							if ( RefFrames[ candRow + r[c] ][ candCol + c ][ 0 ] == INTRA_FRAME )
+							{
+								someUseIntra= 1;
+							}
+						}
+					}
+
+					if ( someUseIntra != 0 )
+					{
+						predW= num4x4W * 4;
+						predH= num4x4H * 4;
+						candRow= MiRow;
+						candCol= MiCol;
+					}
+					r= 0;
+
+					this.predict_inter[ plane ] = new PredictInter[ num4x4H * 4][];
+					for ( y = 0; y < num4x4H * 4; y += predH )
+					{
+						c= 0;
+
+						this.predict_inter[ plane ][ y ] = new PredictInter[ num4x4W * 4];
+						for ( x = 0; x < num4x4W * 4; x += predW )
+						{
+							this.predict_inter[ plane ][ y ][ x ] =  new PredictInter( plane,  baseX + x,  baseY + y,  predW,  predH,  candRow + r,  candCol + c) ;
+							size +=  stream.ReadClass<PredictInter>(size, context, this.predict_inter[ plane ][ y ][ x ], "predict_inter"); 
+							c++;
+						}
+						r++;
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint sbMask = 0;
+			uint subBlockMiRow = 0;
+			uint subBlockMiCol = 0;
+			uint plane = 0;
+			uint planeSz = 0;
+			uint num4x4W = 0;
+			uint num4x4H = 0;
+			uint log2W = 0;
+			uint log2H = 0;
+			uint subX = 0;
+			uint subY = 0;
+			uint baseX = 0;
+			uint baseY = 0;
+			uint candRow = 0;
+			uint candCol = 0;
+			uint IsInterIntra = 0;
+			uint mode = 0;
+			uint predW = 0;
+			uint predH = 0;
+			uint someUseIntra = 0;
+			uint r = 0;
+			uint c = 0;
+			uint y = 0;
+			uint x = 0;
+			sbMask= use_128x128_superblock ? 31 : 15;
+			subBlockMiRow= MiRow & sbMask;
+			subBlockMiCol= MiCol & sbMask;
+
+			for ( plane = 0; plane < 1 + HasChroma * 2; plane++ )
+			{
+				planeSz= get_plane_residual_size( MiSize, plane );
+				num4x4W= Num_4x4_Blocks_Wide[ planeSz ];
+				num4x4H= Num_4x4_Blocks_High[ planeSz ];
+				log2W= MI_SIZE_LOG2 + Mi_Width_Log2[ planeSz ];
+				log2H= MI_SIZE_LOG2 + Mi_Height_Log2[ planeSz ];
+				subX= (plane > 0) ? subsampling_x : 0;
+				subY= (plane > 0) ? subsampling_y : 0;
+				baseX= (MiCol >> subX) * MI_SIZE;
+				baseY= (MiRow >> subY) * MI_SIZE;
+				candRow= (MiRow >> subY) << subY;
+				candCol= (MiCol >> subX) << subX;
+				IsInterIntra= ( is_inter && RefFrame[ 1 ] == INTRA_FRAME ) ? (uint)1 : (uint)0;
+
+				if ( IsInterIntra != 0 )
+				{
+
+					if ( interintra_mode == II_DC_PRED )
+					{
+						mode= DC_PRED;
+					}
+					else if ( interintra_mode == II_V_PRED )
+					{
+						mode= V_PRED;
+					}
+					else if ( interintra_mode == II_H_PRED )
+					{
+						mode= H_PRED;
+					}
+					else 
+					{
+						mode= SMOOTH_PRED;
+					}
+					size += stream.WriteClass<PredictIntra>(context, this.predict_intra[ plane ], "predict_intra"); 
+				}
+
+				if ( is_inter != 0 )
+				{
+					predW= Block_Width[ MiSize ] >> subX;
+					predH= Block_Height[ MiSize ] >> subY;
+					someUseIntra= 0;
+
+					for ( r[plane] = 0; r[plane] < (num4x4H << (int) subY); r++ )
+					{
+
+						for ( c = 0; c < (num4x4W << (int) subX); c++ )
+						{
+
+							if ( RefFrames[ candRow + r[c] ][ candCol + c ][ 0 ] == INTRA_FRAME )
+							{
+								someUseIntra= 1;
+							}
+						}
+					}
+
+					if ( someUseIntra != 0 )
+					{
+						predW= num4x4W * 4;
+						predH= num4x4H * 4;
+						candRow= MiRow;
+						candCol= MiCol;
+					}
+					r= 0;
+
+					for ( y = 0; y < num4x4H * 4; y += predH )
+					{
+						c= 0;
+
+						for ( x = 0; x < num4x4W * 4; x += predW )
+						{
+							size += stream.WriteClass<PredictInter>(context, this.predict_inter[ plane ][ y ][ x ], "predict_inter"); 
+							c++;
+						}
+						r++;
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+residual() { 
+ sbMask = use_128x128_superblock ? 31 : 15
+ widthChunks = Max( 1, Block_Width[ MiSize ] >> 6 )
+ heightChunks = Max( 1, Block_Height[ MiSize ] >> 6 )
+ miSizeChunk = ( widthChunks > 1 || heightChunks > 1 ) ? BLOCK_64X64 : MiSize
+ for ( chunkY = 0; chunkY < heightChunks; chunkY++ ) {
+ for ( chunkX = 0; chunkX < widthChunks; chunkX++ ) {
+ miRowChunk = MiRow + ( chunkY << 4 )
+ miColChunk = MiCol + ( chunkX << 4 )
+ subBlockMiRow = miRowChunk & sbMask
+ subBlockMiCol = miColChunk & sbMask
+ for ( plane = 0; plane < 1 + HasChroma * 2; plane++ ) {
+ txSz = Lossless ? TX_4X4 : get_tx_size( plane, TxSize )
+ stepX = Tx_Width[ txSz ] >> 2
+ stepY = Tx_Height[ txSz ] >> 2
+ planeSz = get_plane_residual_size( miSizeChunk, plane )
+ num4x4W = Num_4x4_Blocks_Wide[ planeSz ]
+ num4x4H = Num_4x4_Blocks_High[ planeSz ]
+ subX = (plane > 0) ? subsampling_x : 0
+ subY = (plane > 0) ? subsampling_y : 0
+ baseX = (miColChunk >> subX) * MI_SIZE
+ baseY = (miRowChunk >> subY) * MI_SIZE
+ if ( is_inter && !Lossless && !plane ) {
+ transform_tree( baseX, baseY, num4x4W * 4, num4x4H * 4 )
+ } else {
+ baseXBlock = (MiCol >> subX) * MI_SIZE
+ baseYBlock = (MiRow >> subY) * MI_SIZE
+ for ( y = 0; y < num4x4H; y += stepY )
+ for ( x = 0; x < num4x4W; x += stepX )
+ transform_block( plane, baseXBlock, baseYBlock, txSz,
+ x + ( ( chunkX << 4 ) >> subX ),
+ y + ( ( chunkY << 4 ) >> subY ) )
+ }
+ }
+ }
+ }
+ }
+    */
+    public class Residual : IAomSerializable
+    {
+		private TransformTree[][][] transform_tree;
+		public TransformTree[][][] TransformTree { get { return transform_tree; } set { transform_tree = value; } }
+		private TransformBlock[][][][][] transform_block;
+		public TransformBlock[][][][][] TransformBlock { get { return transform_block; } set { transform_block = value; } }
+
+         public Residual()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint sbMask = 0;
+			uint widthChunks = 0;
+			uint heightChunks = 0;
+			uint miSizeChunk = 0;
+			uint chunkY = 0;
+			uint chunkX = 0;
+			uint miRowChunk = 0;
+			uint miColChunk = 0;
+			uint subBlockMiRow = 0;
+			uint subBlockMiCol = 0;
+			uint plane = 0;
+			uint txSz = 0;
+			uint stepX = 0;
+			uint stepY = 0;
+			uint planeSz = 0;
+			uint num4x4W = 0;
+			uint num4x4H = 0;
+			uint subX = 0;
+			uint subY = 0;
+			uint baseX = 0;
+			uint baseY = 0;
+			uint baseXBlock = 0;
+			uint baseYBlock = 0;
+			uint y = 0;
+			uint x = 0;
+			sbMask= use_128x128_superblock ? 31 : 15;
+			widthChunks= Max( 1, Block_Width[ MiSize ] >> 6 );
+			heightChunks= Max( 1, Block_Height[ MiSize ] >> 6 );
+			miSizeChunk= ( widthChunks > 1 || heightChunks > 1 ) ? BLOCK_64X64 : MiSize;
+
+			this.transform_tree = new TransformTree[ heightChunks][][];
+			this.transform_block = new TransformBlock[ heightChunks][][][][];
+			for ( chunkY = 0; chunkY < heightChunks; chunkY++ )
+			{
+
+				this.transform_tree[ chunkY ] = new TransformTree[ widthChunks][];
+				this.transform_block[ chunkY ] = new TransformBlock[ widthChunks][][][];
+				for ( chunkX = 0; chunkX < widthChunks; chunkX++ )
+				{
+					miRowChunk= MiRow + ( chunkY << 4 );
+					miColChunk= MiCol + ( chunkX << 4 );
+					subBlockMiRow= miRowChunk & sbMask;
+					subBlockMiCol= miColChunk & sbMask;
+
+					this.transform_tree[ chunkY ][ chunkX ] = new TransformTree[ 1 + HasChroma * 2];
+					this.transform_block[ chunkY ][ chunkX ] = new TransformBlock[ 1 + HasChroma * 2][][];
+					for ( plane = 0; plane < 1 + HasChroma * 2; plane++ )
+					{
+						txSz= Lossless ? TX_4X4 : get_tx_size( plane, TxSize );
+						stepX= Tx_Width[ txSz ] >> 2;
+						stepY= Tx_Height[ txSz ] >> 2;
+						planeSz= get_plane_residual_size( miSizeChunk, plane );
+						num4x4W= Num_4x4_Blocks_Wide[ planeSz ];
+						num4x4H= Num_4x4_Blocks_High[ planeSz ];
+						subX= (plane > 0) ? subsampling_x : 0;
+						subY= (plane > 0) ? subsampling_y : 0;
+						baseX= (miColChunk >> subX) * MI_SIZE;
+						baseY= (miRowChunk >> subY) * MI_SIZE;
+
+						if ( is_inter != 0 && Lossless== 0 && plane== 0 )
+						{
+							this.transform_tree[ chunkY ][ chunkX ][ plane ] =  new TransformTree( baseX,  baseY,  num4x4W * 4,  num4x4H * 4 ) ;
+							size +=  stream.ReadClass<TransformTree>(size, context, this.transform_tree[ chunkY ][ chunkX ][ plane ], "transform_tree"); 
+						}
+						else 
+						{
+							baseXBlock= (MiCol >> subX) * MI_SIZE;
+							baseYBlock= (MiRow >> subY) * MI_SIZE;
+
+							this.transform_block[ chunkY ][ chunkX ][ plane ] = new TransformBlock[ num4x4H][];
+							for ( y = 0; y < num4x4H; y += stepY )
+							{
+
+								this.transform_block[ chunkY ][ chunkX ][ plane ][ y ] = new TransformBlock[ num4x4W];
+								for ( x = 0; x < num4x4W; x += stepX )
+								{
+									this.transform_block[ chunkY ][ chunkX ][ plane ][ y ][ x ] =  new TransformBlock( plane,  baseXBlock,  baseYBlock,  txSz,  x + ( ( chunkX << 4 ) >> subX ),  y + ( ( chunkY << 4 ) >> subY ) ) ;
+									size +=  stream.ReadClass<TransformBlock>(size, context, this.transform_block[ chunkY ][ chunkX ][ plane ][ y ][ x ], "transform_block"); 
+								}
+							}
+						}
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint sbMask = 0;
+			uint widthChunks = 0;
+			uint heightChunks = 0;
+			uint miSizeChunk = 0;
+			uint chunkY = 0;
+			uint chunkX = 0;
+			uint miRowChunk = 0;
+			uint miColChunk = 0;
+			uint subBlockMiRow = 0;
+			uint subBlockMiCol = 0;
+			uint plane = 0;
+			uint txSz = 0;
+			uint stepX = 0;
+			uint stepY = 0;
+			uint planeSz = 0;
+			uint num4x4W = 0;
+			uint num4x4H = 0;
+			uint subX = 0;
+			uint subY = 0;
+			uint baseX = 0;
+			uint baseY = 0;
+			uint baseXBlock = 0;
+			uint baseYBlock = 0;
+			uint y = 0;
+			uint x = 0;
+			sbMask= use_128x128_superblock ? 31 : 15;
+			widthChunks= Max( 1, Block_Width[ MiSize ] >> 6 );
+			heightChunks= Max( 1, Block_Height[ MiSize ] >> 6 );
+			miSizeChunk= ( widthChunks > 1 || heightChunks > 1 ) ? BLOCK_64X64 : MiSize;
+
+			for ( chunkY = 0; chunkY < heightChunks; chunkY++ )
+			{
+
+				for ( chunkX = 0; chunkX < widthChunks; chunkX++ )
+				{
+					miRowChunk= MiRow + ( chunkY << 4 );
+					miColChunk= MiCol + ( chunkX << 4 );
+					subBlockMiRow= miRowChunk & sbMask;
+					subBlockMiCol= miColChunk & sbMask;
+
+					for ( plane = 0; plane < 1 + HasChroma * 2; plane++ )
+					{
+						txSz= Lossless ? TX_4X4 : get_tx_size( plane, TxSize );
+						stepX= Tx_Width[ txSz ] >> 2;
+						stepY= Tx_Height[ txSz ] >> 2;
+						planeSz= get_plane_residual_size( miSizeChunk, plane );
+						num4x4W= Num_4x4_Blocks_Wide[ planeSz ];
+						num4x4H= Num_4x4_Blocks_High[ planeSz ];
+						subX= (plane > 0) ? subsampling_x : 0;
+						subY= (plane > 0) ? subsampling_y : 0;
+						baseX= (miColChunk >> subX) * MI_SIZE;
+						baseY= (miRowChunk >> subY) * MI_SIZE;
+
+						if ( is_inter != 0 && Lossless== 0 && plane== 0 )
+						{
+							size += stream.WriteClass<TransformTree>(context, this.transform_tree[ chunkY ][ chunkX ][ plane ], "transform_tree"); 
+						}
+						else 
+						{
+							baseXBlock= (MiCol >> subX) * MI_SIZE;
+							baseYBlock= (MiRow >> subY) * MI_SIZE;
+
+							for ( y = 0; y < num4x4H; y += stepY )
+							{
+
+								for ( x = 0; x < num4x4W; x += stepX )
+								{
+									size += stream.WriteClass<TransformBlock>(context, this.transform_block[ chunkY ][ chunkX ][ plane ][ y ][ x ], "transform_block"); 
+								}
+							}
+						}
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+transform_block(plane, baseX, baseY, txSz, x, y) { 
+ startX = baseX + 4 * x
+ startY = baseY + 4 * y
+ subX = (plane > 0) ? subsampling_x : 0
+ subY = (plane > 0) ? subsampling_y : 0
+ row = ( startY << subY ) >> MI_SIZE_LOG2
+ col = ( startX << subX ) >> MI_SIZE_LOG2
+ sbMask = use_128x128_superblock ? 31 : 15
+ subBlockMiRow = row & sbMask
+ subBlockMiCol = col & sbMask
+ stepX = Tx_Width[ txSz ] >> MI_SIZE_LOG2
+ stepY = Tx_Height[ txSz ] >> MI_SIZE_LOG2
+ maxX = (MiCols * MI_SIZE) >> subX
+ maxY = (MiRows * MI_SIZE) >> subY
+ if ( startX >= maxX || startY >= maxY ) {
+ return
+ }
+ if ( !is_inter ) {
+ if ( ( ( plane == 0 ) && PaletteSizeY ) ||
+ ( ( plane != 0 ) && PaletteSizeUV ) ) {
+ predict_palette( plane, startX, startY, x, y, txSz )
+ } else {
+ isCfl = (plane > 0 && UVMode == UV_CFL_PRED)
+ if ( plane == 0 ) {
+ mode = YMode
+ } else {
+ mode = ( isCfl ) ? DC_PRED : UVMode
+ }
+ log2W = Tx_Width_Log2[ txSz ]
+ log2H = Tx_Height_Log2[ txSz ]
+ predict_intra( plane, startX, startY,
+ ( plane == 0 ? AvailL : AvailLChroma ) || x > 0,
+ ( plane == 0 ? AvailU : AvailUChroma ) || y > 0,
+ BlockDecoded[ plane ]
+ [ ( subBlockMiRow >> subY ) - 1 ]
+ [ ( subBlockMiCol >> subX ) + stepX ],
+ BlockDecoded[ plane ]
+ [ ( subBlockMiRow >> subY ) + stepY ]
+ [ ( subBlockMiCol >> subX ) - 1 ],
+ mode,
+ log2W, log2H )
+ if ( isCfl ) {
+ predict_chroma_from_luma( plane, startX, startY, txSz )
+ }
+ }
+ if ( plane == 0 ) {
+ MaxLumaW = startX + stepX * 4
+ MaxLumaH = startY + stepY * 4
+ }
+ }
+ if ( !skip ) {
+ eob = coeffs( plane, startX, startY, txSz )
+ if ( eob > 0 )
+ reconstruct( plane, startX, startY, txSz )
+ }
+ for ( i = 0; i < stepY; i++ ) {
+ for ( j = 0; j < stepX; j++ ) {
+ LoopfilterTxSizes[ plane ]
+ [ (row >> subY) + i ]
+ [ (col >> subX) + j ] = txSz
+ BlockDecoded[ plane ]
+ [ ( subBlockMiRow >> subY ) + i ]
+ [ ( subBlockMiCol >> subX ) + j ] = 1
+ }
+ }
+ }
+    */
+    public class TransformBlock : IAomSerializable
+    {
+		private uint plane;
+		public uint Plane { get { return plane; } set { plane = value; } }
+		private uint baseX;
+		public uint BaseX { get { return baseX; } set { baseX = value; } }
+		private uint baseY;
+		public uint BaseY { get { return baseY; } set { baseY = value; } }
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+		private uint x;
+		public uint x { get { return x; } set { x = value; } }
+		private uint y;
+		public uint y { get { return y; } set { y = value; } }
+		private PredictPalette predict_palette;
+		public PredictPalette PredictPalette { get { return predict_palette; } set { predict_palette = value; } }
+		private PredictIntra predict_intra;
+		public PredictIntra PredictIntra { get { return predict_intra; } set { predict_intra = value; } }
+		private PredictChromaFromLuma predict_chroma_from_luma;
+		public PredictChromaFromLuma PredictChromaFromLuma { get { return predict_chroma_from_luma; } set { predict_chroma_from_luma = value; } }
+		private Reconstruct reconstruct;
+		public Reconstruct Reconstruct { get { return reconstruct; } set { reconstruct = value; } }
+
+         public TransformBlock(uint plane, uint baseX, uint baseY, uint txSz, uint x, uint y)
+         { 
+			this.plane = plane;
+			this.baseX = baseX;
+			this.baseY = baseY;
+			this.txSz = txSz;
+			this.x = x;
+			this.y = y;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint startX = 0;
+			uint startY = 0;
+			uint subX = 0;
+			uint subY = 0;
+			uint row = 0;
+			uint col = 0;
+			uint sbMask = 0;
+			uint subBlockMiRow = 0;
+			uint subBlockMiCol = 0;
+			uint stepX = 0;
+			uint stepY = 0;
+			uint maxX = 0;
+			uint maxY = 0;
+			uint isCfl = 0;
+			uint mode = 0;
+			uint log2W = 0;
+			uint log2H = 0;
+			uint MaxLumaW = 0;
+			uint MaxLumaH = 0;
+			uint eob = 0;
+			uint i = 0;
+			uint j = 0;
+			uint[][][] LoopfilterTxSizes = null;
+			uint[][][] BlockDecoded = null;
+			startX= baseX + 4 * x;
+			startY= baseY + 4 * y;
+			subX= (plane > 0) ? subsampling_x : 0;
+			subY= (plane > 0) ? subsampling_y : 0;
+			row= ( startY << subY ) >> MI_SIZE_LOG2;
+			col= ( startX << subX ) >> MI_SIZE_LOG2;
+			sbMask= use_128x128_superblock ? 31 : 15;
+			subBlockMiRow= row & sbMask;
+			subBlockMiCol= col & sbMask;
+			stepX= Tx_Width[ txSz ] >> MI_SIZE_LOG2;
+			stepY= Tx_Height[ txSz ] >> MI_SIZE_LOG2;
+			maxX= (MiCols * MI_SIZE) >> subX;
+			maxY= (MiRows * MI_SIZE) >> subY;
+
+			if ( startX >= maxX || startY >= maxY )
+			{
+return;
+			}
+
+			if ( is_inter== 0 )
+			{
+
+				if ( ( ( plane == 0 ) && PaletteSizeY != 0 ) ||
+ ( ( plane != 0 ) && PaletteSizeUV != 0 ) )
+				{
+					this.predict_palette =  new PredictPalette( plane,  startX,  startY,  x,  y,  txSz ) ;
+					size +=  stream.ReadClass<PredictPalette>(size, context, this.predict_palette, "predict_palette"); 
+				}
+				else 
+				{
+					isCfl= (plane > 0 && UVMode == UV_CFL_PRED) ? (uint)1 : (uint)0;
+
+					if ( plane == 0 )
+					{
+						mode= YMode;
+					}
+					else 
+					{
+						mode= ( isCfl ) ? DC_PRED : UVMode;
+					}
+					log2W= Tx_Width_Log2[ txSz ];
+					log2H= Tx_Height_Log2[ txSz ];
+					this.predict_intra =  new PredictIntra( plane,  startX,  startY,  ( plane == 0 ? AvailL : AvailLChroma ) || x > 0,  ( plane == 0 ? AvailU : AvailUChroma ) || y > 0,  BlockDecoded[ plane ] [ ( subBlockMiRow >> subY ) - 1 ] [ ( subBlockMiCol >> subX ) + stepX ],  BlockDecoded[ plane ] [ ( subBlockMiRow >> subY ) + stepY ] [ ( subBlockMiCol >> subX ) - 1 ],  mode,  log2W,  log2H ) ;
+					size +=  stream.ReadClass<PredictIntra>(size, context, this.predict_intra, "predict_intra"); 
+
+					if ( isCfl != 0 )
+					{
+						this.predict_chroma_from_luma =  new PredictChromaFromLuma( plane,  startX,  startY,  txSz ) ;
+						size +=  stream.ReadClass<PredictChromaFromLuma>(size, context, this.predict_chroma_from_luma, "predict_chroma_from_luma"); 
+					}
+				}
+
+				if ( plane == 0 )
+				{
+					MaxLumaW= startX + stepX * 4;
+					MaxLumaH= startY + stepY * 4;
+				}
+			}
+
+			if ( skip== 0 )
+			{
+				eob= coeffs( plane, startX, startY, txSz );
+
+				if ( eob > 0 )
+				{
+					this.reconstruct =  new Reconstruct( plane,  startX,  startY,  txSz ) ;
+					size +=  stream.ReadClass<Reconstruct>(size, context, this.reconstruct, "reconstruct"); 
+				}
+			}
+
+			for ( i = 0; i < stepY; i++ )
+			{
+
+				for ( j = 0; j < stepX; j++ )
+				{
+					LoopfilterTxSizes[ plane ][ (row >> subY) + i ][ (col >> subX) + j ]= txSz;
+					BlockDecoded[ plane ][ ( subBlockMiRow >> subY ) + i ][ ( subBlockMiCol >> subX ) + j ]= 1;
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint startX = 0;
+			uint startY = 0;
+			uint subX = 0;
+			uint subY = 0;
+			uint row = 0;
+			uint col = 0;
+			uint sbMask = 0;
+			uint subBlockMiRow = 0;
+			uint subBlockMiCol = 0;
+			uint stepX = 0;
+			uint stepY = 0;
+			uint maxX = 0;
+			uint maxY = 0;
+			uint isCfl = 0;
+			uint mode = 0;
+			uint log2W = 0;
+			uint log2H = 0;
+			uint MaxLumaW = 0;
+			uint MaxLumaH = 0;
+			uint eob = 0;
+			uint i = 0;
+			uint j = 0;
+			uint[][][] LoopfilterTxSizes = null;
+			uint[][][] BlockDecoded = null;
+			startX= baseX + 4 * x;
+			startY= baseY + 4 * y;
+			subX= (plane > 0) ? subsampling_x : 0;
+			subY= (plane > 0) ? subsampling_y : 0;
+			row= ( startY << subY ) >> MI_SIZE_LOG2;
+			col= ( startX << subX ) >> MI_SIZE_LOG2;
+			sbMask= use_128x128_superblock ? 31 : 15;
+			subBlockMiRow= row & sbMask;
+			subBlockMiCol= col & sbMask;
+			stepX= Tx_Width[ txSz ] >> MI_SIZE_LOG2;
+			stepY= Tx_Height[ txSz ] >> MI_SIZE_LOG2;
+			maxX= (MiCols * MI_SIZE) >> subX;
+			maxY= (MiRows * MI_SIZE) >> subY;
+
+			if ( startX >= maxX || startY >= maxY )
+			{
+return;
+			}
+
+			if ( is_inter== 0 )
+			{
+
+				if ( ( ( plane == 0 ) && PaletteSizeY != 0 ) ||
+ ( ( plane != 0 ) && PaletteSizeUV != 0 ) )
+				{
+					size += stream.WriteClass<PredictPalette>(context, this.predict_palette, "predict_palette"); 
+				}
+				else 
+				{
+					isCfl= (plane > 0 && UVMode == UV_CFL_PRED) ? (uint)1 : (uint)0;
+
+					if ( plane == 0 )
+					{
+						mode= YMode;
+					}
+					else 
+					{
+						mode= ( isCfl ) ? DC_PRED : UVMode;
+					}
+					log2W= Tx_Width_Log2[ txSz ];
+					log2H= Tx_Height_Log2[ txSz ];
+					size += stream.WriteClass<PredictIntra>(context, this.predict_intra, "predict_intra"); 
+
+					if ( isCfl != 0 )
+					{
+						size += stream.WriteClass<PredictChromaFromLuma>(context, this.predict_chroma_from_luma, "predict_chroma_from_luma"); 
+					}
+				}
+
+				if ( plane == 0 )
+				{
+					MaxLumaW= startX + stepX * 4;
+					MaxLumaH= startY + stepY * 4;
+				}
+			}
+
+			if ( skip== 0 )
+			{
+				eob= coeffs( plane, startX, startY, txSz );
+
+				if ( eob > 0 )
+				{
+					size += stream.WriteClass<Reconstruct>(context, this.reconstruct, "reconstruct"); 
+				}
+			}
+
+			for ( i = 0; i < stepY; i++ )
+			{
+
+				for ( j = 0; j < stepX; j++ )
+				{
+					LoopfilterTxSizes[ plane ][ (row >> subY) + i ][ (col >> subX) + j ]= txSz;
+					BlockDecoded[ plane ][ ( subBlockMiRow >> subY ) + i ][ ( subBlockMiCol >> subX ) + j ]= 1;
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+transform_tree( startX, startY, w, h ) { 
+ maxX = MiCols * MI_SIZE
+ maxY = MiRows * MI_SIZE
+ if ( startX >= maxX || startY >= maxY ) {
+ return
+ }
+ row = startY >> MI_SIZE_LOG2
+ col = startX >> MI_SIZE_LOG2
+ lumaTxSz = InterTxSizes[ row ][ col ]
+ lumaW = Tx_Width[ lumaTxSz ]
+ lumaH = Tx_Height[ lumaTxSz ]
+ if ( w <= lumaW && h <= lumaH ) {
+ txSz = find_tx_size( w, h )
+ transform_block( 0, startX, startY, txSz, 0, 0 )
+ } else {
+ if ( w > h ) {
+ transform_tree( startX, startY, w/2, h )
+ transform_tree( startX + w / 2, startY, w/2, h )
+ } else if ( w < h ) {
+ transform_tree( startX, startY, w, h/2 )
+ transform_tree( startX, startY + h/2, w, h/2 )
+ } else {
+ transform_tree( startX, startY, w/2, h/2 )
+ transform_tree( startX + w/2, startY, w/2, h/2 )
+ transform_tree( startX, startY + h/2, w/2, h/2 )
+ transform_tree( startX + w/2, startY + h/2, w/2, h/2 )
+ }
+ }
+ }
+    */
+    public class TransformTree : IAomSerializable
+    {
+		private uint startX;
+		public uint StartX { get { return startX; } set { startX = value; } }
+		private uint startY;
+		public uint StartY { get { return startY; } set { startY = value; } }
+		private uint w;
+		public uint w { get { return w; } set { w = value; } }
+		private uint h;
+		public uint h { get { return h; } set { h = value; } }
+		private TransformBlock transform_block;
+		public TransformBlock TransformBlock { get { return transform_block; } set { transform_block = value; } }
+		private TransformTree transform_tree;
+		public TransformTree _TransformTree { get { return transform_tree; } set { transform_tree = value; } }
+		private TransformTree transform_tree0;
+		public TransformTree TransformTree0 { get { return transform_tree0; } set { transform_tree0 = value; } }
+		private TransformTree transform_tree1;
+		public TransformTree TransformTree1 { get { return transform_tree1; } set { transform_tree1 = value; } }
+		private TransformTree0 transform_tree00;
+		public TransformTree0 TransformTree00 { get { return transform_tree00; } set { transform_tree00 = value; } }
+		private TransformTree transform_tree2;
+		public TransformTree TransformTree2 { get { return transform_tree2; } set { transform_tree2 = value; } }
+		private TransformTree0 transform_tree01;
+		public TransformTree0 TransformTree01 { get { return transform_tree01; } set { transform_tree01 = value; } }
+		private TransformTree1 transform_tree10;
+		public TransformTree1 TransformTree10 { get { return transform_tree10; } set { transform_tree10 = value; } }
+		private TransformTree2 transform_tree20;
+		public TransformTree2 TransformTree20 { get { return transform_tree20; } set { transform_tree20 = value; } }
+
+         public TransformTree(uint startX, uint startY, uint w, uint h)
+         { 
+			this.startX = startX;
+			this.startY = startY;
+			this.w = w;
+			this.h = h;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint maxX = 0;
+			uint maxY = 0;
+			uint row = 0;
+			uint col = 0;
+			uint lumaTxSz = 0;
+			uint lumaW = 0;
+			uint lumaH = 0;
+			uint txSz = 0;
+			maxX= MiCols * MI_SIZE;
+			maxY= MiRows * MI_SIZE;
+
+			if ( startX >= maxX || startY >= maxY )
+			{
+return;
+			}
+			row= startY >> MI_SIZE_LOG2;
+			col= startX >> MI_SIZE_LOG2;
+			lumaTxSz= InterTxSizes[ row ][ col ];
+			lumaW= Tx_Width[ lumaTxSz ];
+			lumaH= Tx_Height[ lumaTxSz ];
+
+			if ( w <= lumaW && h <= lumaH )
+			{
+				txSz= find_tx_size( w, h );
+				this.transform_block =  new TransformBlock( 0,  startX,  startY,  txSz,  0,  0 ) ;
+				size +=  stream.ReadClass<TransformBlock>(size, context, this.transform_block, "transform_block"); 
+			}
+			else 
+			{
+
+				if ( w > h )
+				{
+					this.transform_tree =  new TransformTree( startX,  startY,  w/2,  h ) ;
+					size +=  stream.ReadClass<TransformTree>(size, context, this.transform_tree, "transform_tree"); 
+					this.transform_tree0 =  new TransformTree( startX + w / 2,  startY,  w/2,  h ) ;
+					size +=  stream.ReadClass<TransformTree>(size, context, this.transform_tree0, "transform_tree0"); 
+				}
+				else if ( w < h )
+				{
+					this.transform_tree1 =  new TransformTree( startX,  startY,  w,  h/2 ) ;
+					size +=  stream.ReadClass<TransformTree>(size, context, this.transform_tree1, "transform_tree1"); 
+					this.transform_tree00 =  new TransformTree0( startX,  startY + h/2,  w,  h/2 ) ;
+					size +=  stream.ReadClass<TransformTree0>(size, context, this.transform_tree00, "transform_tree00"); 
+				}
+				else 
+				{
+					this.transform_tree2 =  new TransformTree( startX,  startY,  w/2,  h/2 ) ;
+					size +=  stream.ReadClass<TransformTree>(size, context, this.transform_tree2, "transform_tree2"); 
+					this.transform_tree01 =  new TransformTree0( startX + w/2,  startY,  w/2,  h/2 ) ;
+					size +=  stream.ReadClass<TransformTree0>(size, context, this.transform_tree01, "transform_tree01"); 
+					this.transform_tree10 =  new TransformTree1( startX,  startY + h/2,  w/2,  h/2 ) ;
+					size +=  stream.ReadClass<TransformTree1>(size, context, this.transform_tree10, "transform_tree10"); 
+					this.transform_tree20 =  new TransformTree2( startX + w/2,  startY + h/2,  w/2,  h/2 ) ;
+					size +=  stream.ReadClass<TransformTree2>(size, context, this.transform_tree20, "transform_tree20"); 
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint maxX = 0;
+			uint maxY = 0;
+			uint row = 0;
+			uint col = 0;
+			uint lumaTxSz = 0;
+			uint lumaW = 0;
+			uint lumaH = 0;
+			uint txSz = 0;
+			maxX= MiCols * MI_SIZE;
+			maxY= MiRows * MI_SIZE;
+
+			if ( startX >= maxX || startY >= maxY )
+			{
+return;
+			}
+			row= startY >> MI_SIZE_LOG2;
+			col= startX >> MI_SIZE_LOG2;
+			lumaTxSz= InterTxSizes[ row ][ col ];
+			lumaW= Tx_Width[ lumaTxSz ];
+			lumaH= Tx_Height[ lumaTxSz ];
+
+			if ( w <= lumaW && h <= lumaH )
+			{
+				txSz= find_tx_size( w, h );
+				size += stream.WriteClass<TransformBlock>(context, this.transform_block, "transform_block"); 
+			}
+			else 
+			{
+
+				if ( w > h )
+				{
+					size += stream.WriteClass<TransformTree>(context, this.transform_tree, "transform_tree"); 
+					size += stream.WriteClass<TransformTree>(context, this.transform_tree0, "transform_tree0"); 
+				}
+				else if ( w < h )
+				{
+					size += stream.WriteClass<TransformTree>(context, this.transform_tree1, "transform_tree1"); 
+					size += stream.WriteClass<TransformTree0>(context, this.transform_tree00, "transform_tree00"); 
+				}
+				else 
+				{
+					size += stream.WriteClass<TransformTree>(context, this.transform_tree2, "transform_tree2"); 
+					size += stream.WriteClass<TransformTree0>(context, this.transform_tree01, "transform_tree01"); 
+					size += stream.WriteClass<TransformTree1>(context, this.transform_tree10, "transform_tree10"); 
+					size += stream.WriteClass<TransformTree2>(context, this.transform_tree20, "transform_tree20"); 
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+
+ find_tx_size(w,h){
+ for(txSz=0;txSz<TX_SIZES_ALL;txSz++)
+ if (Tx_Width[txSz]==w && Tx_Height[txSz] ==h)
+ break
+ return txSz
+ }
+    */
+    public class FindTxSize : IAomSerializable
+    {
+		private uint w;
+		public uint w { get { return w; } set { w = value; } }
+		private uint h;
+		public uint h { get { return h; } set { h = value; } }
+		private Break[] break;
+		public Break[] Break { get { return break; } set { break = value; } }
+
+         public FindTxSize(uint w, uint h)
+         { 
+			this.w = w;
+			this.h = h;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint txSz = 0;
+
+			this.break = new Break[TX_SIZES_ALL];
+			for (txSz=0;txSz<TX_SIZES_ALL;txSz++)
+			{
+
+				if (Tx_Width[txSz]==w && Tx_Height[txSz] ==h)
+				{
+					this.break[txSz] =  new Break() ;
+					size +=  stream.ReadClass<Break>(size, context, this.break[txSz], "break"); 
+				}
+			}
+return txSz;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint txSz = 0;
+
+			for (txSz=0;txSz<TX_SIZES_ALL;txSz++)
+			{
+
+				if (Tx_Width[txSz]==w && Tx_Height[txSz] ==h)
+				{
+					size += stream.WriteClass<Break>(context, this.break[txSz], "break"); 
+				}
+			}
+return txSz;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+get_tx_size( plane, txSz ) { 
+ if ( plane == 0 )
+ return txSz
+  uvTx = Max_Tx_Size_Rect[ get_plane_residual_size( MiSize, plane ) ]
+ if ( Tx_Width[ uvTx ] == 64 || Tx_Height[ uvTx ] == 64 ){
+ if ( Tx_Width[ uvTx ] == 16 ) {
+ return TX_16X32
+ }
+ if ( Tx_Height[ uvTx ] == 16 ) {
+ return TX_32X16
+ }
+ return TX_32X32
+ }
+ return uvTx
+ }
+    */
+    public class GetTxSize : IAomSerializable
+    {
+		private uint plane;
+		public uint Plane { get { return plane; } set { plane = value; } }
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+
+         public GetTxSize(uint plane, uint txSz)
+         { 
+			this.plane = plane;
+			this.txSz = txSz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint uvTx = 0;
+
+			if ( plane == 0 )
+			{
+return txSz;
+			}
+			uvTx= Max_Tx_Size_Rect[ get_plane_residual_size( MiSize, plane ) ];
+
+			if ( Tx_Width[ uvTx ] == 64 || Tx_Height[ uvTx ] == 64 )
+			{
+
+				if ( Tx_Width[ uvTx ] == 16 )
+				{
+return TX_16X32;
+				}
+
+				if ( Tx_Height[ uvTx ] == 16 )
+				{
+return TX_32X16;
+				}
+return TX_32X32;
+			}
+return uvTx;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint uvTx = 0;
+
+			if ( plane == 0 )
+			{
+return txSz;
+			}
+			uvTx= Max_Tx_Size_Rect[ get_plane_residual_size( MiSize, plane ) ];
+
+			if ( Tx_Width[ uvTx ] == 64 || Tx_Height[ uvTx ] == 64 )
+			{
+
+				if ( Tx_Width[ uvTx ] == 16 )
+				{
+return TX_16X32;
+				}
+
+				if ( Tx_Height[ uvTx ] == 16 )
+				{
+return TX_32X16;
+				}
+return TX_32X32;
+			}
+return uvTx;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+get_plane_residual_size( subsize, plane ) {
+ Type
+ subx = plane > 0 ? subsampling_x : 0
+ suby = plane > 0 ? subsampling_y : 0
+ return Subsampled_Size[ subsize ][ subx ][ suby ]
+ }
+    */
+    public class GetPlaneResidualSize : IAomSerializable
+    {
+		private uint subsize;
+		public uint Subsize { get { return subsize; } set { subsize = value; } }
+		private uint plane;
+		public uint Plane { get { return plane; } set { plane = value; } }
+		private Type type;
+		public Type Type { get { return Type; } set { Type = value; } }
+
+         public GetPlaneResidualSize(uint subsize, uint plane)
+         { 
+			this.subsize = subsize;
+			this.plane = plane;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint subx = 0;
+			uint suby = 0;
+			this.Type =  new Type() ;
+			size +=  stream.ReadClass<Type>(size, context, this.Type, "Type"); 
+			subx= plane > 0 ? subsampling_x : 0;
+			suby= plane > 0 ? subsampling_y : 0;
+return Subsampled_Size[ subsize ][ subx ][ suby ];
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint subx = 0;
+			uint suby = 0;
+			size += stream.WriteClass<Type>(context, this.Type, "Type"); 
+			subx= plane > 0 ? subsampling_x : 0;
+			suby= plane > 0 ? subsampling_y : 0;
+return Subsampled_Size[ subsize ][ subx ][ suby ];
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  coeffs( plane, startX, startY, txSz ) { 
+ x4 = startX >> 2
+ y4 = startY >> 2
+ w4 = Tx_Width[ txSz ] >> 2
+ h4 = Tx_Height[ txSz ] >> 2
+ txSzCtx = ( Tx_Size_Sqr[txSz] + Tx_Size_Sqr_Up[txSz] + 1 ) >> 1
+ ptype = plane > 0
+ segEob = ( txSz == TX_16X64 || txSz == TX_64X16 ) ? 512 :
+ Min( 1024, Tx_Width[ txSz ] * Tx_Height[ txSz ] )
+ for ( c = 0; c < segEob; c++ )
+ Quant[c] = 0
+ for ( i = 0; i < 64; i++ )
+ for ( j = 0; j < 64; j++ )
+ Dequant[ i ][ j ] = 0
+ eob = 0
+ culLevel = 0
+ dcCategory = 0
+  all_zero S()
+  if ( all_zero ) {
+ c = 0
+ if ( plane == 0 ) {
+ for ( i = 0; i < w4; i++ ) {
+ for ( j = 0; j < h4; j++ ) {
+ TxTypes[ y4 + j ][ x4 + i ] = DCT_DCT
+ }
+ }
+ }
+ } else {
+ if ( plane == 0 )
+ transform_type( x4, y4, txSz )
+ PlaneTxType = compute_tx_type( plane, txSz, x4, y4 )
+ scan = get_scan( txSz )
+ eobMultisize = Min( Tx_Width_Log2[ txSz ], 5) + Min( Tx_Height_Log2[ txSz ], 5) - 4
+ if ( eobMultisize == 0 ) {
+  eob_pt_16 S()
+ eobPt = eob_pt_16 + 1
+ } else if ( eobMultisize == 1 ) {
+  eob_pt_32 S()
+ eobPt = eob_pt_32 + 1
+ } else if ( eobMultisize == 2 ) {
+  eob_pt_64 S()
+ eobPt = eob_pt_64 + 1
+ } else if ( eobMultisize == 3 ) {
+  eob_pt_128 S()
+ eobPt = eob_pt_128 + 1
+ } else if ( eobMultisize == 4 ) {
+  eob_pt_256 S()
+ eobPt = eob_pt_256 + 1
+ } else if ( eobMultisize == 5 ) {
+  eob_pt_512 S()
+ eobPt = eob_pt_512 + 1
+ } else {
+  eob_pt_1024 S()
+ eobPt = eob_pt_1024 + 1
+ }
+ eob = ( eobPt < 2 ) ? eobPt : ( ( 1 << ( eobPt - 2 ) ) + 1 )
+ eobShift = Max( -1, eobPt - 3 )
+ if ( eobShift >= 0 ) {
+  eob_extra S()
+ if ( eob_extra ) {
+ eob += ( 1 << eobShift )
+ }
+ for ( i = 1; i < Max( 0, eobPt - 2 ); i++ ) {
+ eobShift = Max( 0, eobPt - 2 ) - 1 - i
+ eob_extra_bit  L(1)
+ if ( eob_extra_bit ) {
+ eob += ( 1 << eobShift )
+ }
+ }
+ }
+ for ( c = eob - 1; c >= 0; c-- ) {
+ pos = scan[ c ]
+ if ( c == ( eob - 1 ) ) {
+  coeff_base_eob S()
+ level = coeff_base_eob + 1
+ } else {
+  coeff_base S()
+ level = coeff_base
+ }
+ if ( level > NUM_BASE_LEVELS ) {
+ for ( idx = 0;
+ idx < COEFF_BASE_RANGE / ( BR_CDF_SIZE - 1 );
+ idx++ ) {
+  coeff_br S()
+ level += coeff_br
+ if ( coeff_br < ( BR_CDF_SIZE - 1 ) )
+ break
+ }
+ }
+ Quant[ pos ] = level
+ }
+ for ( c = 0; c < eob; c++ ) {
+ pos = scan[ c ]
+ if ( Quant[ pos ] != 0 ) {
+ if ( c == 0 ) {
+  dc_sign S()
+ sign = dc_sign
+ } else {
+  sign_bit L(1)
+ sign = sign_bit
+ }
+ } else {
+ sign = 0
+ }
+ if ( Quant[ pos ] >
+ ( NUM_BASE_LEVELS + COEFF_BASE_RANGE ) ) {
+ length = 0
+ do {
+ length++
+  golomb_length_bit L(1)
+ } while ( !golomb_length_bit )
+ x = 1
+ for ( i = length - 2; i >= 0; i-- ) {
+  golomb_data_bit L(1)
+ x = ( x << 1 ) | golomb_data_bit
+ }
+ Quant[ pos ] = x + COEFF_BASE_RANGE + NUM_BASE_LEVELS
+ }
+ if ( pos == 0 && Quant[ pos ] > 0 ) {
+ dcCategory = sign ? 1 : 2
+ }
+ Quant[ pos ] = Quant[ pos ] & 0xFFFFF
+ culLevel += Quant[ pos ]
+ if ( sign )
+ Quant[ pos ] = - Quant[ pos ]
+ }
+ culLevel = Min( 63, culLevel )
+ }
+ for ( i = 0; i < w4; i++ ) {
+ AboveLevelContext[ plane ][ x4 + i ] = culLevel
+ AboveDcContext[ plane ][ x4 + i ] = dcCategory
+ }
+ for ( i = 0; i < h4; i++ ) {
+ LeftLevelContext[ plane ][ y4 + i ] = culLevel
+ LeftDcContext[ plane ][ y4 + i ] = dcCategory
+ }
+ return eob
+ }
+    */
+    public class Coeffs : IAomSerializable
+    {
+		private uint plane;
+		public uint Plane { get { return plane; } set { plane = value; } }
+		private uint startX;
+		public uint StartX { get { return startX; } set { startX = value; } }
+		private uint startY;
+		public uint StartY { get { return startY; } set { startY = value; } }
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+		private Min min;
+		public Min Min { get { return Min; } set { Min = value; } }
+		private uint all_zero;
+		public uint AllZero { get { return all_zero; } set { all_zero = value; } }
+		private TransformType transform_type;
+		public TransformType TransformType { get { return transform_type; } set { transform_type = value; } }
+		private uint eob_pt_16;
+		public uint EobPt16 { get { return eob_pt_16; } set { eob_pt_16 = value; } }
+		private uint eob_pt_32;
+		public uint EobPt32 { get { return eob_pt_32; } set { eob_pt_32 = value; } }
+		private uint eob_pt_64;
+		public uint EobPt64 { get { return eob_pt_64; } set { eob_pt_64 = value; } }
+		private uint eob_pt_128;
+		public uint EobPt128 { get { return eob_pt_128; } set { eob_pt_128 = value; } }
+		private uint eob_pt_256;
+		public uint EobPt256 { get { return eob_pt_256; } set { eob_pt_256 = value; } }
+		private uint eob_pt_512;
+		public uint EobPt512 { get { return eob_pt_512; } set { eob_pt_512 = value; } }
+		private uint eob_pt_1024;
+		public uint EobPt1024 { get { return eob_pt_1024; } set { eob_pt_1024 = value; } }
+		private uint eob_extra;
+		public uint EobExtra { get { return eob_extra; } set { eob_extra = value; } }
+		private uint[] eob_extra_bit;
+		public uint[] EobExtraBit { get { return eob_extra_bit; } set { eob_extra_bit = value; } }
+		private uint[] coeff_base_eob;
+		public uint[] CoeffBaseEob { get { return coeff_base_eob; } set { coeff_base_eob = value; } }
+		private uint[] coeff_base;
+		public uint[] CoeffBase { get { return coeff_base; } set { coeff_base = value; } }
+		private uint[][] coeff_br;
+		public uint[][] CoeffBr { get { return coeff_br; } set { coeff_br = value; } }
+		private Break[][] break;
+		public Break[][] Break { get { return break; } set { break = value; } }
+		private uint[] dc_sign;
+		public uint[] DcSign { get { return dc_sign; } set { dc_sign = value; } }
+		private uint[] sign_bit;
+		public uint[] SignBit { get { return sign_bit; } set { sign_bit = value; } }
+		private Dictionary<int, uint> golomb_length_bit = new Dictionary<int, uint>();
+		public Dictionary<int, uint> GolombLengthBit { get { return golomb_length_bit; } set { golomb_length_bit = value; } }
+		private uint[][] golomb_data_bit;
+		public uint[][] GolombDataBit { get { return golomb_data_bit; } set { golomb_data_bit = value; } }
+
+         public Coeffs(uint plane, uint startX, uint startY, uint txSz)
+         { 
+			this.plane = plane;
+			this.startX = startX;
+			this.startY = startY;
+			this.txSz = txSz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint x4 = 0;
+			uint y4 = 0;
+			uint w4 = 0;
+			uint h4 = 0;
+			uint txSzCtx = 0;
+			uint ptype = 0;
+			uint segEob = 0;
+			uint c = 0;
+			uint[] Quant = null;
+			uint i = 0;
+			uint j = 0;
+			uint[][] Dequant = null;
+			uint eob = 0;
+			uint culLevel = 0;
+			uint dcCategory = 0;
+			uint[][] TxTypes = null;
+			uint PlaneTxType = 0;
+			uint scan = 0;
+			uint eobMultisize = 0;
+			uint eobPt = 0;
+			uint eobShift = 0;
+			uint pos = 0;
+			uint level = 0;
+			uint idx = 0;
+			uint sign = 0;
+			uint length = 0;
+			int whileIndex = -1;
+			uint x = 0;
+			uint[][] AboveLevelContext = null;
+			uint[][] AboveDcContext = null;
+			uint[][] LeftLevelContext = null;
+			uint[][] LeftDcContext = null;
+			x4= startX >> 2;
+			y4= startY >> 2;
+			w4= Tx_Width[ txSz ] >> 2;
+			h4= Tx_Height[ txSz ] >> 2;
+			txSzCtx= ( Tx_Size_Sqr[txSz] + Tx_Size_Sqr_Up[txSz] + 1 ) >> 1;
+			ptype= plane > 0 ? (uint)1 : (uint)0;
+			segEob= ( txSz == TX_16X64 || txSz == TX_64X16 ) ? 512 :;
+			this.Min =  new Min( 1024,  Tx_Width[ txSz ] * Tx_Height[ txSz ] ) ;
+			size +=  stream.ReadClass<Min>(size, context, this.Min, "Min"); 
+
+			for ( c = 0; c < segEob; c++ )
+			{
+				Quant[c]= 0;
+			}
+
+			for ( i = 0; i < 64; i++ )
+			{
+
+				for ( j = 0; j < 64; j++ )
+				{
+					Dequant[ i ][ j ]= 0;
+				}
+			}
+			eob= 0;
+			culLevel= 0;
+			dcCategory= 0;
+			size += stream.ReadS(size, out this.all_zero, "all_zero"); 
+
+			if ( all_zero != 0 )
+			{
+				c= 0;
+
+				if ( plane == 0 )
+				{
+
+					for ( i = 0; i < w4; i++ )
+					{
+
+						for ( j = 0; j < h4; j++ )
+						{
+							TxTypes[ y4 + j ][ x4 + i ]= DCT_DCT;
+						}
+					}
+				}
+			}
+			else 
+			{
+
+				if ( plane == 0 )
+				{
+					this.transform_type =  new TransformType( x4,  y4,  txSz ) ;
+					size +=  stream.ReadClass<TransformType>(size, context, this.transform_type, "transform_type"); 
+				}
+				PlaneTxType= compute_tx_type( plane, txSz, x4, y4 );
+				scan= get_scan( txSz );
+				eobMultisize= Min( Tx_Width_Log2[ txSz ], 5) + Min( Tx_Height_Log2[ txSz ], 5) - 4;
+
+				if ( eobMultisize == 0 )
+				{
+					size += stream.ReadS(size, out this.eob_pt_16, "eob_pt_16"); 
+					eobPt= eob_pt_16 + 1;
+				}
+				else if ( eobMultisize == 1 )
+				{
+					size += stream.ReadS(size, out this.eob_pt_32, "eob_pt_32"); 
+					eobPt= eob_pt_32 + 1;
+				}
+				else if ( eobMultisize == 2 )
+				{
+					size += stream.ReadS(size, out this.eob_pt_64, "eob_pt_64"); 
+					eobPt= eob_pt_64 + 1;
+				}
+				else if ( eobMultisize == 3 )
+				{
+					size += stream.ReadS(size, out this.eob_pt_128, "eob_pt_128"); 
+					eobPt= eob_pt_128 + 1;
+				}
+				else if ( eobMultisize == 4 )
+				{
+					size += stream.ReadS(size, out this.eob_pt_256, "eob_pt_256"); 
+					eobPt= eob_pt_256 + 1;
+				}
+				else if ( eobMultisize == 5 )
+				{
+					size += stream.ReadS(size, out this.eob_pt_512, "eob_pt_512"); 
+					eobPt= eob_pt_512 + 1;
+				}
+				else 
+				{
+					size += stream.ReadS(size, out this.eob_pt_1024, "eob_pt_1024"); 
+					eobPt= eob_pt_1024 + 1;
+				}
+				eob= ( eobPt < 2 ) ? eobPt : ( ( 1 << ( eobPt - 2 ) ) + 1 );
+				eobShift= Max( -1, eobPt - 3 );
+
+				if ( eobShift >= 0 )
+				{
+					size += stream.ReadS(size, out this.eob_extra, "eob_extra"); 
+
+					if ( eob_extra != 0 )
+					{
+						eob+= ( 1 << eobShift );
+					}
+
+					this.eob_extra_bit = new uint[ Max( 0, eobPt - 2 )];
+					for ( i = 1; i < Max( 0, eobPt - 2 ); i++ )
+					{
+						eobShift= Max( 0, eobPt - 2 ) - 1 - i;
+						size += stream.ReadL(size, 1, out this.eob_extra_bit[ i ], "eob_extra_bit"); 
+
+						if ( eob_extra_bit[i] != 0 )
+						{
+							eob+= ( 1 << eobShift );
+						}
+					}
+				}
+
+				this.coeff_base_eob = new uint[ 0];
+				this.coeff_base = new uint[ 0];
+				this.coeff_br = new uint[ 0][];
+				this.break = new Break[ 0][];
+				for ( c = eob - 1; c >= 0; c-- )
+				{
+					pos= scan[ c ];
+
+					if ( c == ( eob - 1 ) )
+					{
+						size += stream.ReadS(size, out this.coeff_base_eob[ c ], "coeff_base_eob"); 
+						level= coeff_base_eob[c] + 1;
+					}
+					else 
+					{
+						size += stream.ReadS(size, out this.coeff_base[ c ], "coeff_base"); 
+						level= coeff_base[c];
+					}
+
+					if ( level > NUM_BASE_LEVELS )
+					{
+
+						this.coeff_br[ c ] = new uint[ COEFF_BASE_RANGE / ( BR_CDF_SIZE - 1 )];
+						this.break[ c ] = new Break[ COEFF_BASE_RANGE / ( BR_CDF_SIZE - 1 )];
+						for ( idx = 0;
+ idx < COEFF_BASE_RANGE / ( BR_CDF_SIZE - 1 );
+ idx++ )
+						{
+							size += stream.ReadS(size, out this.coeff_br[ c ][ idx ], "coeff_br"); 
+							level+= coeff_br[c][x];
+
+							if ( coeff_br[c][x] < ( BR_CDF_SIZE - 1 ) )
+							{
+								this.break[ c ][ idx ] =  new Break() ;
+								size +=  stream.ReadClass<Break>(size, context, this.break[ c ][ idx ], "break"); 
+							}
+						}
+					}
+					Quant[ pos ]= level;
+				}
+
+				this.dc_sign = new uint[ eob];
+				this.sign_bit = new uint[ eob];
+				this.golomb_data_bit = new uint[ eob][];
+				for ( c = 0; c < eob; c++ )
+				{
+					pos= scan[ c ];
+
+					if ( Quant[ pos ] != 0 )
+					{
+
+						if ( c == 0 )
+						{
+							size += stream.ReadS(size, out this.dc_sign[ c ], "dc_sign"); 
+							sign= dc_sign[c];
+						}
+						else 
+						{
+							size += stream.ReadL(size, 1, out this.sign_bit[ c ], "sign_bit"); 
+							sign= sign_bit[c];
+						}
+					}
+					else 
+					{
+						sign= 0;
+					}
+
+					if ( Quant[ pos ] >
+ ( NUM_BASE_LEVELS + COEFF_BASE_RANGE ) )
+					{
+						length= 0;
+
+						do
+						{
+							whileIndex++;
+
+							length++;
+							size += stream.ReadL(size, 1, whileIndex, this.golomb_length_bit, "golomb_length_bit"); 
+						} while ( golomb_length_bit[whileIndex][c]== 0 );
+						x= 1;
+
+						this.golomb_data_bit[ c ] = new uint[ 0];
+						for ( i = length[c] - 2; i >= 0; i-- )
+						{
+							size += stream.ReadL(size, 1, out this.golomb_data_bit[ c ][ i ], "golomb_data_bit"); 
+							x= ( x << 1 ) | golomb_data_bit[c][i];
+						}
+						Quant[ pos ]= x + COEFF_BASE_RANGE + NUM_BASE_LEVELS;
+					}
+
+					if ( pos == 0 && Quant[ pos ] > 0 )
+					{
+						dcCategory= sign ? 1 : 2;
+					}
+					Quant[ pos ]= Quant[ pos ] & 0xFFFFF;
+					culLevel+= Quant[ pos ];
+
+					if ( sign != 0 )
+					{
+						Quant[ pos ]= - Quant[ pos ];
+					}
+				}
+				culLevel= Min( 63, culLevel );
+			}
+
+			for ( i = 0; i < w4; i++ )
+			{
+				AboveLevelContext[ plane ][ x4 + i ]= culLevel;
+				AboveDcContext[ plane ][ x4 + i ]= dcCategory;
+			}
+
+			for ( i = 0; i < h4; i++ )
+			{
+				LeftLevelContext[ plane ][ y4 + i ]= culLevel;
+				LeftDcContext[ plane ][ y4 + i ]= dcCategory;
+			}
+return eob;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint x4 = 0;
+			uint y4 = 0;
+			uint w4 = 0;
+			uint h4 = 0;
+			uint txSzCtx = 0;
+			uint ptype = 0;
+			uint segEob = 0;
+			uint c = 0;
+			uint[] Quant = null;
+			uint i = 0;
+			uint j = 0;
+			uint[][] Dequant = null;
+			uint eob = 0;
+			uint culLevel = 0;
+			uint dcCategory = 0;
+			uint[][] TxTypes = null;
+			uint PlaneTxType = 0;
+			uint scan = 0;
+			uint eobMultisize = 0;
+			uint eobPt = 0;
+			uint eobShift = 0;
+			uint pos = 0;
+			uint level = 0;
+			uint idx = 0;
+			uint sign = 0;
+			uint length = 0;
+			int whileIndex = -1;
+			uint x = 0;
+			uint[][] AboveLevelContext = null;
+			uint[][] AboveDcContext = null;
+			uint[][] LeftLevelContext = null;
+			uint[][] LeftDcContext = null;
+			x4= startX >> 2;
+			y4= startY >> 2;
+			w4= Tx_Width[ txSz ] >> 2;
+			h4= Tx_Height[ txSz ] >> 2;
+			txSzCtx= ( Tx_Size_Sqr[txSz] + Tx_Size_Sqr_Up[txSz] + 1 ) >> 1;
+			ptype= plane > 0 ? (uint)1 : (uint)0;
+			segEob= ( txSz == TX_16X64 || txSz == TX_64X16 ) ? 512 :;
+			size += stream.WriteClass<Min>(context, this.Min, "Min"); 
+
+			for ( c = 0; c < segEob; c++ )
+			{
+				Quant[c]= 0;
+			}
+
+			for ( i = 0; i < 64; i++ )
+			{
+
+				for ( j = 0; j < 64; j++ )
+				{
+					Dequant[ i ][ j ]= 0;
+				}
+			}
+			eob= 0;
+			culLevel= 0;
+			dcCategory= 0;
+			size += stream.WriteS( this.all_zero, "all_zero"); 
+
+			if ( all_zero != 0 )
+			{
+				c= 0;
+
+				if ( plane == 0 )
+				{
+
+					for ( i = 0; i < w4; i++ )
+					{
+
+						for ( j = 0; j < h4; j++ )
+						{
+							TxTypes[ y4 + j ][ x4 + i ]= DCT_DCT;
+						}
+					}
+				}
+			}
+			else 
+			{
+
+				if ( plane == 0 )
+				{
+					size += stream.WriteClass<TransformType>(context, this.transform_type, "transform_type"); 
+				}
+				PlaneTxType= compute_tx_type( plane, txSz, x4, y4 );
+				scan= get_scan( txSz );
+				eobMultisize= Min( Tx_Width_Log2[ txSz ], 5) + Min( Tx_Height_Log2[ txSz ], 5) - 4;
+
+				if ( eobMultisize == 0 )
+				{
+					size += stream.WriteS( this.eob_pt_16, "eob_pt_16"); 
+					eobPt= eob_pt_16 + 1;
+				}
+				else if ( eobMultisize == 1 )
+				{
+					size += stream.WriteS( this.eob_pt_32, "eob_pt_32"); 
+					eobPt= eob_pt_32 + 1;
+				}
+				else if ( eobMultisize == 2 )
+				{
+					size += stream.WriteS( this.eob_pt_64, "eob_pt_64"); 
+					eobPt= eob_pt_64 + 1;
+				}
+				else if ( eobMultisize == 3 )
+				{
+					size += stream.WriteS( this.eob_pt_128, "eob_pt_128"); 
+					eobPt= eob_pt_128 + 1;
+				}
+				else if ( eobMultisize == 4 )
+				{
+					size += stream.WriteS( this.eob_pt_256, "eob_pt_256"); 
+					eobPt= eob_pt_256 + 1;
+				}
+				else if ( eobMultisize == 5 )
+				{
+					size += stream.WriteS( this.eob_pt_512, "eob_pt_512"); 
+					eobPt= eob_pt_512 + 1;
+				}
+				else 
+				{
+					size += stream.WriteS( this.eob_pt_1024, "eob_pt_1024"); 
+					eobPt= eob_pt_1024 + 1;
+				}
+				eob= ( eobPt < 2 ) ? eobPt : ( ( 1 << ( eobPt - 2 ) ) + 1 );
+				eobShift= Max( -1, eobPt - 3 );
+
+				if ( eobShift >= 0 )
+				{
+					size += stream.WriteS( this.eob_extra, "eob_extra"); 
+
+					if ( eob_extra != 0 )
+					{
+						eob+= ( 1 << eobShift );
+					}
+
+					for ( i = 1; i < Max( 0, eobPt - 2 ); i++ )
+					{
+						eobShift= Max( 0, eobPt - 2 ) - 1 - i;
+						size += stream.WriteL(1,  this.eob_extra_bit[ i ], "eob_extra_bit"); 
+
+						if ( eob_extra_bit[i] != 0 )
+						{
+							eob+= ( 1 << eobShift );
+						}
+					}
+				}
+
+				for ( c = eob - 1; c >= 0; c-- )
+				{
+					pos= scan[ c ];
+
+					if ( c == ( eob - 1 ) )
+					{
+						size += stream.WriteS( this.coeff_base_eob[ c ], "coeff_base_eob"); 
+						level= coeff_base_eob[c] + 1;
+					}
+					else 
+					{
+						size += stream.WriteS( this.coeff_base[ c ], "coeff_base"); 
+						level= coeff_base[c];
+					}
+
+					if ( level > NUM_BASE_LEVELS )
+					{
+
+						for ( idx = 0;
+ idx < COEFF_BASE_RANGE / ( BR_CDF_SIZE - 1 );
+ idx++ )
+						{
+							size += stream.WriteS( this.coeff_br[ c ][ idx ], "coeff_br"); 
+							level+= coeff_br[c][x];
+
+							if ( coeff_br[c][x] < ( BR_CDF_SIZE - 1 ) )
+							{
+								size += stream.WriteClass<Break>(context, this.break[ c ][ idx ], "break"); 
+							}
+						}
+					}
+					Quant[ pos ]= level;
+				}
+
+				for ( c = 0; c < eob; c++ )
+				{
+					pos= scan[ c ];
+
+					if ( Quant[ pos ] != 0 )
+					{
+
+						if ( c == 0 )
+						{
+							size += stream.WriteS( this.dc_sign[ c ], "dc_sign"); 
+							sign= dc_sign[c];
+						}
+						else 
+						{
+							size += stream.WriteL(1,  this.sign_bit[ c ], "sign_bit"); 
+							sign= sign_bit[c];
+						}
+					}
+					else 
+					{
+						sign= 0;
+					}
+
+					if ( Quant[ pos ] >
+ ( NUM_BASE_LEVELS + COEFF_BASE_RANGE ) )
+					{
+						length= 0;
+
+						do
+						{
+							whileIndex++;
+
+							length++;
+							size += stream.WriteL(1,  whileIndex, this.golomb_length_bit, "golomb_length_bit"); 
+						} while ( golomb_length_bit[whileIndex][c]== 0 );
+						x= 1;
+
+						for ( i = length[c] - 2; i >= 0; i-- )
+						{
+							size += stream.WriteL(1,  this.golomb_data_bit[ c ][ i ], "golomb_data_bit"); 
+							x= ( x << 1 ) | golomb_data_bit[c][i];
+						}
+						Quant[ pos ]= x + COEFF_BASE_RANGE + NUM_BASE_LEVELS;
+					}
+
+					if ( pos == 0 && Quant[ pos ] > 0 )
+					{
+						dcCategory= sign ? 1 : 2;
+					}
+					Quant[ pos ]= Quant[ pos ] & 0xFFFFF;
+					culLevel+= Quant[ pos ];
+
+					if ( sign != 0 )
+					{
+						Quant[ pos ]= - Quant[ pos ];
+					}
+				}
+				culLevel= Min( 63, culLevel );
+			}
+
+			for ( i = 0; i < w4; i++ )
+			{
+				AboveLevelContext[ plane ][ x4 + i ]= culLevel;
+				AboveDcContext[ plane ][ x4 + i ]= dcCategory;
+			}
+
+			for ( i = 0; i < h4; i++ )
+			{
+				LeftLevelContext[ plane ][ y4 + i ]= culLevel;
+				LeftDcContext[ plane ][ y4 + i ]= dcCategory;
+			}
+return eob;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+ compute_tx_type( plane, txSz, blockX, blockY ) { 
+ txSzSqrUp = Tx_Size_Sqr_Up[ txSz ]
+ if ( Lossless || txSzSqrUp > TX_32X32 )
+ return DCT_DCT
+ txSet = get_tx_set( txSz )
+ if ( plane == 0 ) {
+ return TxTypes[ blockY ][ blockX ]
+ }
+ if ( is_inter ) {
+ x4 = Max( MiCol, blockX << subsampling_x )
+ y4 = Max( MiRow, blockY << subsampling_y )
+ txType = TxTypes[ y4 ][ x4 ]
+ if ( !is_tx_type_in_set( txSet, txType ) )
+ return DCT_DCT
+ return txType
+ }
+ txType = Mode_To_Txfm[ UVMode ]
+ if ( !is_tx_type_in_set( txSet, txType ) )
+ return DCT_DCT
+ return txType
+ }
+    */
+    public class ComputeTxType : IAomSerializable
+    {
+		private uint plane;
+		public uint Plane { get { return plane; } set { plane = value; } }
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+		private uint blockX;
+		public uint BlockX { get { return blockX; } set { blockX = value; } }
+		private uint blockY;
+		public uint BlockY { get { return blockY; } set { blockY = value; } }
+
+         public ComputeTxType(uint plane, uint txSz, uint blockX, uint blockY)
+         { 
+			this.plane = plane;
+			this.txSz = txSz;
+			this.blockX = blockX;
+			this.blockY = blockY;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint txSzSqrUp = 0;
+			uint txSet = 0;
+			uint x4 = 0;
+			uint y4 = 0;
+			uint txType = 0;
+			txSzSqrUp= Tx_Size_Sqr_Up[ txSz ];
+
+			if ( Lossless != 0 || txSzSqrUp > TX_32X32 )
+			{
+return DCT_DCT;
+			}
+			txSet= get_tx_set( txSz );
+
+			if ( plane == 0 )
+			{
+return TxTypes[ blockY ][ blockX ];
+			}
+
+			if ( is_inter != 0 )
+			{
+				x4= Max( MiCol, blockX << subsampling_x );
+				y4= Max( MiRow, blockY << subsampling_y );
+				txType= TxTypes[ y4 ][ x4 ];
+
+				if ( !is_tx_type_in_set( txSet, txType ) )
+				{
+return DCT_DCT;
+				}
+return txType;
+			}
+			txType= Mode_To_Txfm[ UVMode ];
+
+			if ( !is_tx_type_in_set( txSet, txType ) )
+			{
+return DCT_DCT;
+			}
+return txType;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint txSzSqrUp = 0;
+			uint txSet = 0;
+			uint x4 = 0;
+			uint y4 = 0;
+			uint txType = 0;
+			txSzSqrUp= Tx_Size_Sqr_Up[ txSz ];
+
+			if ( Lossless != 0 || txSzSqrUp > TX_32X32 )
+			{
+return DCT_DCT;
+			}
+			txSet= get_tx_set( txSz );
+
+			if ( plane == 0 )
+			{
+return TxTypes[ blockY ][ blockX ];
+			}
+
+			if ( is_inter != 0 )
+			{
+				x4= Max( MiCol, blockX << subsampling_x );
+				y4= Max( MiRow, blockY << subsampling_y );
+				txType= TxTypes[ y4 ][ x4 ];
+
+				if ( !is_tx_type_in_set( txSet, txType ) )
+				{
+return DCT_DCT;
+				}
+return txType;
+			}
+			txType= Mode_To_Txfm[ UVMode ];
+
+			if ( !is_tx_type_in_set( txSet, txType ) )
+			{
+return DCT_DCT;
+			}
+return txType;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+ is_tx_type_in_set( txSet, txType ) {
+ return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] :
+ Tx_Type_In_Set_Intra[ txSet ][ txType ]
+ }
+    */
+    public class IsTxTypeInSet : IAomSerializable
+    {
+		private uint txSet;
+		public uint TxSet { get { return txSet; } set { txSet = value; } }
+		private uint txType;
+		public uint TxType { get { return txType; } set { txType = value; } }
+		private TxTypeInSetIntra tx_Type_In_Set_Intra;
+		public TxTypeInSetIntra TxTypeInSetIntra { get { return Tx_Type_In_Set_Intra; } set { Tx_Type_In_Set_Intra = value; } }
+
+         public IsTxTypeInSet(uint txSet, uint txType)
+         { 
+			this.txSet = txSet;
+			this.txType = txType;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] :;
+			this.Tx_Type_In_Set_Intra[ txSet ][ txType ] =  new TxTypeInSetIntra() ;
+			size +=  stream.ReadClass<TxTypeInSetIntra>(size, context, this.Tx_Type_In_Set_Intra[ txSet ][ txType ], "Tx_Type_In_Set_Intra"); 
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] :;
+			size += stream.WriteClass<TxTypeInSetIntra>(context, this.Tx_Type_In_Set_Intra[ txSet ][ txType ], "Tx_Type_In_Set_Intra"); 
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  get_mrow_scan( txSz ) { 
+ if ( txSz == TX_4X4 )
+ return Mrow_Scan_4x4
+ else if ( txSz == TX_4X8 )
+ return Mrow_Scan_4x8
+ else if ( txSz == TX_8X4 )
+ return Mrow_Scan_8x4
+ else if ( txSz == TX_8X8 )
+ return Mrow_Scan_8x8
+ else if ( txSz == TX_8X16 )
+ return Mrow_Scan_8x16
+ else if ( txSz == TX_16X8 )
+ return Mrow_Scan_16x8
+ else if ( txSz == TX_16X16 )
+ return Mrow_Scan_16x16
+ else if ( txSz == TX_4X16 )
+ return Mrow_Scan_4x16
+ return Mrow_Scan_16x4
+ }
+    */
+    public class GetMrowScan : IAomSerializable
+    {
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+
+         public GetMrowScan(uint txSz)
+         { 
+			this.txSz = txSz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+
+			if ( txSz == TX_4X4 )
+			{
+return Mrow_Scan_4x4;
+			}
+			else if ( txSz == TX_4X8 )
+			{
+return Mrow_Scan_4x8;
+			}
+			else if ( txSz == TX_8X4 )
+			{
+return Mrow_Scan_8x4;
+			}
+			else if ( txSz == TX_8X8 )
+			{
+return Mrow_Scan_8x8;
+			}
+			else if ( txSz == TX_8X16 )
+			{
+return Mrow_Scan_8x16;
+			}
+			else if ( txSz == TX_16X8 )
+			{
+return Mrow_Scan_16x8;
+			}
+			else if ( txSz == TX_16X16 )
+			{
+return Mrow_Scan_16x16;
+			}
+			else if ( txSz == TX_4X16 )
+			{
+return Mrow_Scan_4x16;
+			}
+return Mrow_Scan_16x4;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+
+			if ( txSz == TX_4X4 )
+			{
+return Mrow_Scan_4x4;
+			}
+			else if ( txSz == TX_4X8 )
+			{
+return Mrow_Scan_4x8;
+			}
+			else if ( txSz == TX_8X4 )
+			{
+return Mrow_Scan_8x4;
+			}
+			else if ( txSz == TX_8X8 )
+			{
+return Mrow_Scan_8x8;
+			}
+			else if ( txSz == TX_8X16 )
+			{
+return Mrow_Scan_8x16;
+			}
+			else if ( txSz == TX_16X8 )
+			{
+return Mrow_Scan_16x8;
+			}
+			else if ( txSz == TX_16X16 )
+			{
+return Mrow_Scan_16x16;
+			}
+			else if ( txSz == TX_4X16 )
+			{
+return Mrow_Scan_4x16;
+			}
+return Mrow_Scan_16x4;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+ get_mcol_scan( txSz ) {
+ if ( txSz == TX_4X4 )
+ return Mcol_Scan_4x4
+ else if ( txSz == TX_4X8 )
+ return Mcol_Scan_4x8
+ else if ( txSz == TX_8X4 )
+ return Mcol_Scan_8x4
+ else if ( txSz == TX_8X8 )
+ return Mcol_Scan_8x8
+ else if ( txSz == TX_8X16 )
+ return Mcol_Scan_8x16
+ else if ( txSz == TX_16X8 )
+ return Mcol_Scan_16x8
+ else if ( txSz == TX_16X16 )
+ return Mcol_Scan_16x16
+ else if ( txSz == TX_4X16 )
+ return Mcol_Scan_4x16
+ return Mcol_Scan_16x4
+ }
+    */
+    public class GetMcolScan : IAomSerializable
+    {
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+
+         public GetMcolScan(uint txSz)
+         { 
+			this.txSz = txSz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+
+			if ( txSz == TX_4X4 )
+			{
+return Mcol_Scan_4x4;
+			}
+			else if ( txSz == TX_4X8 )
+			{
+return Mcol_Scan_4x8;
+			}
+			else if ( txSz == TX_8X4 )
+			{
+return Mcol_Scan_8x4;
+			}
+			else if ( txSz == TX_8X8 )
+			{
+return Mcol_Scan_8x8;
+			}
+			else if ( txSz == TX_8X16 )
+			{
+return Mcol_Scan_8x16;
+			}
+			else if ( txSz == TX_16X8 )
+			{
+return Mcol_Scan_16x8;
+			}
+			else if ( txSz == TX_16X16 )
+			{
+return Mcol_Scan_16x16;
+			}
+			else if ( txSz == TX_4X16 )
+			{
+return Mcol_Scan_4x16;
+			}
+return Mcol_Scan_16x4;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+
+			if ( txSz == TX_4X4 )
+			{
+return Mcol_Scan_4x4;
+			}
+			else if ( txSz == TX_4X8 )
+			{
+return Mcol_Scan_4x8;
+			}
+			else if ( txSz == TX_8X4 )
+			{
+return Mcol_Scan_8x4;
+			}
+			else if ( txSz == TX_8X8 )
+			{
+return Mcol_Scan_8x8;
+			}
+			else if ( txSz == TX_8X16 )
+			{
+return Mcol_Scan_8x16;
+			}
+			else if ( txSz == TX_16X8 )
+			{
+return Mcol_Scan_16x8;
+			}
+			else if ( txSz == TX_16X16 )
+			{
+return Mcol_Scan_16x16;
+			}
+			else if ( txSz == TX_4X16 )
+			{
+return Mcol_Scan_4x16;
+			}
+return Mcol_Scan_16x4;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+ get_default_scan( txSz ) {
+ if ( txSz == TX_4X4 )
+ return Default_Scan_4x4
+ else if ( txSz == TX_4X8 )
+ return Default_Scan_4x8
+ else if ( txSz == TX_8X4 )
+ return Default_Scan_8x4
+ else if ( txSz == TX_8X8 )
+ return Default_Scan_8x8
+ else if ( txSz == TX_8X16 )
+ return Default_Scan_8x16
+ else if ( txSz == TX_16X8 )
+ return Default_Scan_16x8
+ else if ( txSz == TX_16X16 )
+ return Default_Scan_16x16
+ else if ( txSz == TX_16X32 )
+ return Default_Scan_16x32
+ else if ( txSz == TX_32X16 )
+ return Default_Scan_32x16
+ else if ( txSz == TX_4X16 )
+ return Default_Scan_4x16
+ else if ( txSz == TX_16X4 )
+ return Default_Scan_16x4
+ else if ( txSz == TX_8X32 )
+ return Default_Scan_8x32
+ else if ( txSz == TX_32X8 )
+ return Default_Scan_32x8
+ return Default_Scan_32x32
+ }
+    */
+    public class GetDefaultScan : IAomSerializable
+    {
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+
+         public GetDefaultScan(uint txSz)
+         { 
+			this.txSz = txSz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+
+			if ( txSz == TX_4X4 )
+			{
+return Default_Scan_4x4;
+			}
+			else if ( txSz == TX_4X8 )
+			{
+return Default_Scan_4x8;
+			}
+			else if ( txSz == TX_8X4 )
+			{
+return Default_Scan_8x4;
+			}
+			else if ( txSz == TX_8X8 )
+			{
+return Default_Scan_8x8;
+			}
+			else if ( txSz == TX_8X16 )
+			{
+return Default_Scan_8x16;
+			}
+			else if ( txSz == TX_16X8 )
+			{
+return Default_Scan_16x8;
+			}
+			else if ( txSz == TX_16X16 )
+			{
+return Default_Scan_16x16;
+			}
+			else if ( txSz == TX_16X32 )
+			{
+return Default_Scan_16x32;
+			}
+			else if ( txSz == TX_32X16 )
+			{
+return Default_Scan_32x16;
+			}
+			else if ( txSz == TX_4X16 )
+			{
+return Default_Scan_4x16;
+			}
+			else if ( txSz == TX_16X4 )
+			{
+return Default_Scan_16x4;
+			}
+			else if ( txSz == TX_8X32 )
+			{
+return Default_Scan_8x32;
+			}
+			else if ( txSz == TX_32X8 )
+			{
+return Default_Scan_32x8;
+			}
+return Default_Scan_32x32;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+
+			if ( txSz == TX_4X4 )
+			{
+return Default_Scan_4x4;
+			}
+			else if ( txSz == TX_4X8 )
+			{
+return Default_Scan_4x8;
+			}
+			else if ( txSz == TX_8X4 )
+			{
+return Default_Scan_8x4;
+			}
+			else if ( txSz == TX_8X8 )
+			{
+return Default_Scan_8x8;
+			}
+			else if ( txSz == TX_8X16 )
+			{
+return Default_Scan_8x16;
+			}
+			else if ( txSz == TX_16X8 )
+			{
+return Default_Scan_16x8;
+			}
+			else if ( txSz == TX_16X16 )
+			{
+return Default_Scan_16x16;
+			}
+			else if ( txSz == TX_16X32 )
+			{
+return Default_Scan_16x32;
+			}
+			else if ( txSz == TX_32X16 )
+			{
+return Default_Scan_32x16;
+			}
+			else if ( txSz == TX_4X16 )
+			{
+return Default_Scan_4x16;
+			}
+			else if ( txSz == TX_16X4 )
+			{
+return Default_Scan_16x4;
+			}
+			else if ( txSz == TX_8X32 )
+			{
+return Default_Scan_8x32;
+			}
+			else if ( txSz == TX_32X8 )
+			{
+return Default_Scan_32x8;
+			}
+return Default_Scan_32x32;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+ get_scan( txSz ) {
+ if ( txSz == TX_16X64 ) {
+ return Default_Scan_16x32
+ }
+ if ( txSz == TX_64X16 ) {
+ return Default_Scan_32x16
+ }
+ if ( Tx_Size_Sqr_Up[ txSz ] == TX_64X64 ) {
+ return Default_Scan_32x32
+ }
+ if ( PlaneTxType == IDTX ) {
+ return get_default_scan( txSz )
+ }
+ preferRow = ( PlaneTxType == V_DCT ||
+ PlaneTxType == V_ADST ||
+ PlaneTxType == V_FLIPADST )
+ preferCol = ( PlaneTxType == H_DCT ||
+ PlaneTxType == H_ADST ||
+ PlaneTxType == H_FLIPADST )
+ if ( preferRow ) {
+ return get_mrow_scan( txSz )
+ } else if ( preferCol ) {
+ return get_mcol_scan( txSz )
+ }
+ return get_default_scan( txSz )
+ }
+    */
+    public class GetScan : IAomSerializable
+    {
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+
+         public GetScan(uint txSz)
+         { 
+			this.txSz = txSz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint preferRow = 0;
+			uint PlaneTxType = 0;
+			uint preferCol = 0;
+
+			if ( txSz == TX_16X64 )
+			{
+return Default_Scan_16x32;
+			}
+
+			if ( txSz == TX_64X16 )
+			{
+return Default_Scan_32x16;
+			}
+
+			if ( Tx_Size_Sqr_Up[ txSz ] == TX_64X64 )
+			{
+return Default_Scan_32x32;
+			}
+
+			if ( PlaneTxType == IDTX )
+			{
+return get_default_scan( txSz );
+			}
+			preferRow= ( PlaneTxType == V_DCT || ? (uint)1 : (uint)0;
+			PlaneTxType= = V_ADST ||;
+			PlaneTxType= = V_FLIPADST );
+			preferCol= ( PlaneTxType == H_DCT || ? (uint)1 : (uint)0;
+			PlaneTxType= = H_ADST ||;
+			PlaneTxType= = H_FLIPADST );
+
+			if ( preferRow != 0 )
+			{
+return get_mrow_scan( txSz );
+			}
+			else if ( preferCol != 0 )
+			{
+return get_mcol_scan( txSz );
+			}
+return get_default_scan( txSz );
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint preferRow = 0;
+			uint PlaneTxType = 0;
+			uint preferCol = 0;
+
+			if ( txSz == TX_16X64 )
+			{
+return Default_Scan_16x32;
+			}
+
+			if ( txSz == TX_64X16 )
+			{
+return Default_Scan_32x16;
+			}
+
+			if ( Tx_Size_Sqr_Up[ txSz ] == TX_64X64 )
+			{
+return Default_Scan_32x32;
+			}
+
+			if ( PlaneTxType == IDTX )
+			{
+return get_default_scan( txSz );
+			}
+			preferRow= ( PlaneTxType == V_DCT || ? (uint)1 : (uint)0;
+			PlaneTxType= = V_ADST ||;
+			PlaneTxType= = V_FLIPADST );
+			preferCol= ( PlaneTxType == H_DCT || ? (uint)1 : (uint)0;
+			PlaneTxType= = H_ADST ||;
+			PlaneTxType= = H_FLIPADST );
+
+			if ( preferRow != 0 )
+			{
+return get_mrow_scan( txSz );
+			}
+			else if ( preferCol != 0 )
+			{
+return get_mcol_scan( txSz );
+			}
+return get_default_scan( txSz );
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+  intra_angle_info_y() { 
+ AngleDeltaY = 0
+ if ( MiSize >= BLOCK_8X8 ) {
+ if ( is_directional_mode( YMode ) ) {
+ angle_delta_y S()
+ AngleDeltaY = angle_delta_y - MAX_ANGLE_DELTA
+ }
+ }
+ }
+    */
+    public class IntraAngleInfoy : IAomSerializable
+    {
+		private uint angle_delta_y;
+		public uint AngleDeltay { get { return angle_delta_y; } set { angle_delta_y = value; } }
+
+         public IntraAngleInfoy()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint AngleDeltaY = 0;
+			AngleDeltaY= 0;
+
+			if ( MiSize >= BLOCK_8X8 )
+			{
+
+				if ( is_directional_mode( YMode ) )
+				{
+					size += stream.ReadS(size, out this.angle_delta_y, "angle_delta_y"); 
+					AngleDeltaY= angle_delta_y - MAX_ANGLE_DELTA;
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint AngleDeltaY = 0;
+			AngleDeltaY= 0;
+
+			if ( MiSize >= BLOCK_8X8 )
+			{
+
+				if ( is_directional_mode( YMode ) )
+				{
+					size += stream.WriteS( this.angle_delta_y, "angle_delta_y"); 
+					AngleDeltaY= angle_delta_y - MAX_ANGLE_DELTA;
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+ intra_angle_info_uv() { 
+ AngleDeltaUV = 0
+ if ( MiSize >= BLOCK_8X8 ) {
+ if ( is_directional_mode( UVMode ) ) {
+ angle_delta_uv S()
+ AngleDeltaUV = angle_delta_uv - MAX_ANGLE_DELTA
+ }
+ }
+ }
+    */
+    public class IntraAngleInfoUv : IAomSerializable
+    {
+		private uint angle_delta_uv;
+		public uint AngleDeltaUv { get { return angle_delta_uv; } set { angle_delta_uv = value; } }
+
+         public IntraAngleInfoUv()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint AngleDeltaUV = 0;
+			AngleDeltaUV= 0;
+
+			if ( MiSize >= BLOCK_8X8 )
+			{
+
+				if ( is_directional_mode( UVMode ) )
+				{
+					size += stream.ReadS(size, out this.angle_delta_uv, "angle_delta_uv"); 
+					AngleDeltaUV= angle_delta_uv - MAX_ANGLE_DELTA;
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint AngleDeltaUV = 0;
+			AngleDeltaUV= 0;
+
+			if ( MiSize >= BLOCK_8X8 )
+			{
+
+				if ( is_directional_mode( UVMode ) )
+				{
+					size += stream.WriteS( this.angle_delta_uv, "angle_delta_uv"); 
+					AngleDeltaUV= angle_delta_uv - MAX_ANGLE_DELTA;
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+ is_directional_mode( mode ) { 
+ if ( ( mode >= V_PRED ) && ( mode <= D67_PRED ) ) {
+ return 1
+ }
+ return 0
+ }
+    */
+    public class IsDirectionalMode : IAomSerializable
+    {
+		private uint mode;
+		public uint Mode { get { return mode; } set { mode = value; } }
+
+         public IsDirectionalMode(uint mode)
+         { 
+			this.mode = mode;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+
+			if ( ( mode >= V_PRED ) && ( mode <= D67_PRED ) )
+			{
+return 1;
+			}
+return 0;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+
+			if ( ( mode >= V_PRED ) && ( mode <= D67_PRED ) )
+			{
+return 1;
+			}
+return 0;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+ read_cfl_alphas() { 
+ cfl_alpha_signs cfl_alpha_signs S()
+ signU = (cfl_alpha_signs + 1 ) / 3
+ signV = (cfl_alpha_signs + 1 ) % 3
+ if ( signU != CFL_SIGN_ZERO ) {
+ cfl_alpha_u cfl_alpha_u S()
+ CflAlphaU = 1 + cfl_alpha_u
+ if ( signU == CFL_SIGN_NEG )
+ CflAlphaU = -CflAlphaU
+ } else {
+ CflAlphaU = 0
+ }
+ if ( signV != CFL_SIGN_ZERO ) {
+ cfl_alpha_v S()
+ CflAlphaV = 1 + cfl_alpha_v
+ if ( signV == CFL_SIGN_NEG )
+ CflAlphaV = -CflAlphaV
+ } else {
+ CflAlphaV = 0
+ }
+ }
+    */
+    public class ReadCflAlphas : IAomSerializable
+    {
+		private CflAlphaSigns cfl_alpha_signs;
+		public CflAlphaSigns CflAlphaSigns { get { return cfl_alpha_signs; } set { cfl_alpha_signs = value; } }
+		private CflAlphau cfl_alpha_u;
+		public CflAlphau CflAlphau { get { return cfl_alpha_u; } set { cfl_alpha_u = value; } }
+		private uint cfl_alpha_v;
+		public uint CflAlphav { get { return cfl_alpha_v; } set { cfl_alpha_v = value; } }
+
+         public ReadCflAlphas()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint signU = 0;
+			uint signV = 0;
+			uint CflAlphaU = 0;
+			uint CflAlphaV = 0;
+			this.cfl_alpha_signs =  new CflAlphaSigns() ;
+			size +=  stream.ReadClass<CflAlphaSigns>(size, context, this.cfl_alpha_signs, "cfl_alpha_signs"); 
+			size += stream.ReadS(size, out this.cfl_alpha_signs, "cfl_alpha_signs"); 
+			signU= (cfl_alpha_signs + 1 ) / 3;
+			signV= (cfl_alpha_signs + 1 ) % 3;
+
+			if ( signU != CFL_SIGN_ZERO )
+			{
+				this.cfl_alpha_u =  new CflAlphau() ;
+				size +=  stream.ReadClass<CflAlphau>(size, context, this.cfl_alpha_u, "cfl_alpha_u"); 
+				size += stream.ReadS(size, out this.cfl_alpha_u, "cfl_alpha_u"); 
+				CflAlphaU= 1 + cfl_alpha_u;
+
+				if ( signU == CFL_SIGN_NEG )
+				{
+					CflAlphaU= -CflAlphaU;
+				}
+			}
+			else 
+			{
+				CflAlphaU= 0;
+			}
+
+			if ( signV != CFL_SIGN_ZERO )
+			{
+				size += stream.ReadS(size, out this.cfl_alpha_v, "cfl_alpha_v"); 
+				CflAlphaV= 1 + cfl_alpha_v;
+
+				if ( signV == CFL_SIGN_NEG )
+				{
+					CflAlphaV= -CflAlphaV;
+				}
+			}
+			else 
+			{
+				CflAlphaV= 0;
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint signU = 0;
+			uint signV = 0;
+			uint CflAlphaU = 0;
+			uint CflAlphaV = 0;
+			size += stream.WriteClass<CflAlphaSigns>(context, this.cfl_alpha_signs, "cfl_alpha_signs"); 
+			size += stream.WriteS( this.cfl_alpha_signs, "cfl_alpha_signs"); 
+			signU= (cfl_alpha_signs + 1 ) / 3;
+			signV= (cfl_alpha_signs + 1 ) % 3;
+
+			if ( signU != CFL_SIGN_ZERO )
+			{
+				size += stream.WriteClass<CflAlphau>(context, this.cfl_alpha_u, "cfl_alpha_u"); 
+				size += stream.WriteS( this.cfl_alpha_u, "cfl_alpha_u"); 
+				CflAlphaU= 1 + cfl_alpha_u;
+
+				if ( signU == CFL_SIGN_NEG )
+				{
+					CflAlphaU= -CflAlphaU;
+				}
+			}
+			else 
+			{
+				CflAlphaU= 0;
+			}
+
+			if ( signV != CFL_SIGN_ZERO )
+			{
+				size += stream.WriteS( this.cfl_alpha_v, "cfl_alpha_v"); 
+				CflAlphaV= 1 + cfl_alpha_v;
+
+				if ( signV == CFL_SIGN_NEG )
+				{
+					CflAlphaV= -CflAlphaV;
+				}
+			}
+			else 
+			{
+				CflAlphaV= 0;
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+palette_mode_info() { 
+ bsizeCtx = Mi_Width_Log2[ MiSize ] + Mi_Height_Log2[ MiSize ] - 2
+ if ( YMode == DC_PRED ) {
+  has_palette_y S()
+ if ( has_palette_y ) {
+  palette_size_y_minus_2 S()
+ PaletteSizeY = palette_size_y_minus_2 + 2
+ cacheN = get_palette_cache( 0 )
+ idx = 0
+ for ( i = 0; i < cacheN && idx < PaletteSizeY; i++ ) {
+  use_palette_color_cache_y L(1)
+ if ( use_palette_color_cache_y ) {
+ palette_colors_y[ idx ] = PaletteCache[ i ]
+ idx++
+ }
+ }
+ if ( idx < PaletteSizeY ) {
+ palette_colors_y[ idx ] L(BitDepth)
+ idx++
+ }
+ if ( idx < PaletteSizeY ) {
+ minBits = BitDepth - 3
+  palette_num_extra_bits_y L(2)
+ paletteBits = minBits + palette_num_extra_bits_y
+ }
+ while ( idx < PaletteSizeY ) {
+ palette_delta_y  L(paletteBits)
+ palette_delta_y++
+ palette_colors_y[ idx ] = Clip1( palette_colors_y[ idx - 1 ] + palette_delta_y )
+ range = ( 1 << BitDepth ) - palette_colors_y[ idx ] - 1
+ paletteBits = Min( paletteBits, CeilLog2( range ) )
+ idx++
+ }
+ sort( palette_colors_y, 0, PaletteSizeY - 1 )
+ }
+ }
+ if ( HasChroma && UVMode == DC_PRED ) {
+  has_palette_uv S()
+ if ( has_palette_uv ) {
+ palette_size_uv_minus_2 S()
+ PaletteSizeUV = palette_size_uv_minus_2 + 2
+ cacheN = get_palette_cache( 1 )
+ idx = 0
+ for ( i = 0; i < cacheN && idx < PaletteSizeUV; i++ ) {
+ use_palette_color_cache_u use_palette_color_cache_u L(1)
+ if ( use_palette_color_cache_u ) {
+ palette_colors_u[ idx ] = PaletteCache[ i ]
+ idx++
+ }
+ }
+ if ( idx < PaletteSizeUV ) {
+  palette_colors_u[ idx ] L(BitDepth)
+ idx++
+ }
+ if ( idx < PaletteSizeUV ) {
+ minBits = BitDepth - 3
+ palette_num_extra_bits_u L(2)
+ paletteBits = minBits + palette_num_extra_bits_u
+ }
+ while ( idx < PaletteSizeUV ) {
+ palette_delta_u palette_delta_u L(paletteBits)
+ palette_colors_u[ idx ] =
+ Clip1( palette_colors_u[ idx - 1 ] + palette_delta_u )
+ range = ( 1 << BitDepth ) - palette_colors_u[ idx ]
+ paletteBits = Min( paletteBits, CeilLog2( range ) )
+ idx++
+ }
+ sort( palette_colors_u, 0, PaletteSizeUV - 1 )
+ delta_encode_palette_colors_v L(1)
+ if ( delta_encode_palette_colors_v ) {
+ minBits = BitDepth - 4
+ maxVal = 1 << BitDepth
+ palette_num_extra_bits_v L(2)
+ paletteBits = minBits + palette_num_extra_bits_v
+ palette_colors_v[ 0 ] L(BitDepth)
+ for ( idx = 1; idx < PaletteSizeUV; idx++ ) {
+ palette_delta_v L(paletteBits)
+ if ( palette_delta_v ) {
+ palette_delta_sign_bit_v L(1)
+ if ( palette_delta_sign_bit_v ) {
+ palette_delta_v = -palette_delta_v
+ }
+ }
+ val = palette_colors_v[ idx - 1 ] + palette_delta_v
+ if ( val < 0 ) val += maxVal
+ if ( val >= maxVal ) val -= maxVal
+ palette_colors_v[ idx ] = Clip1( val )
+ }
+ } else {
+ for ( idx = 0; idx < PaletteSizeUV; idx++ ) {
+  palette_colors_v[ idx ] L(BitDepth)
+ }
+ }
+ }
+ }
+ }
+    */
+    public class PaletteModeInfo : IAomSerializable
+    {
+		private uint has_palette_y;
+		public uint HasPalettey { get { return has_palette_y; } set { has_palette_y = value; } }
+		private uint palette_size_y_minus_2;
+		public uint PaletteSizeyMinus2 { get { return palette_size_y_minus_2; } set { palette_size_y_minus_2 = value; } }
+		private uint[] use_palette_color_cache_y;
+		public uint[] UsePaletteColorCachey { get { return use_palette_color_cache_y; } set { use_palette_color_cache_y = value; } }
+		private uint[] palette_colors_y;
+		public uint[] PaletteColorsy { get { return palette_colors_y; } set { palette_colors_y = value; } }
+		private uint palette_num_extra_bits_y;
+		public uint PaletteNumExtraBitsy { get { return palette_num_extra_bits_y; } set { palette_num_extra_bits_y = value; } }
+		private Dictionary<int, uint> palette_delta_y = new Dictionary<int, uint>();
+		public Dictionary<int, uint> PaletteDeltay { get { return palette_delta_y; } set { palette_delta_y = value; } }
+		private Sort sort;
+		public Sort Sort { get { return sort; } set { sort = value; } }
+		private uint has_palette_uv;
+		public uint HasPaletteUv { get { return has_palette_uv; } set { has_palette_uv = value; } }
+		private uint palette_size_uv_minus_2;
+		public uint PaletteSizeUvMinus2 { get { return palette_size_uv_minus_2; } set { palette_size_uv_minus_2 = value; } }
+		private UsePaletteColorCacheu[] use_palette_color_cache_u;
+		public UsePaletteColorCacheu[] UsePaletteColorCacheu { get { return use_palette_color_cache_u; } set { use_palette_color_cache_u = value; } }
+		private uint[] palette_colors_u;
+		public uint[] PaletteColorsu { get { return palette_colors_u; } set { palette_colors_u = value; } }
+		private uint palette_num_extra_bits_u;
+		public uint PaletteNumExtraBitsu { get { return palette_num_extra_bits_u; } set { palette_num_extra_bits_u = value; } }
+		private Dictionary<int, PaletteDeltau> palette_delta_u = new Dictionary<int, PaletteDeltau>();
+		public Dictionary<int, PaletteDeltau> PaletteDeltau { get { return palette_delta_u; } set { palette_delta_u = value; } }
+		private Sort sort0;
+		public Sort Sort0 { get { return sort0; } set { sort0 = value; } }
+		private uint delta_encode_palette_colors_v;
+		public uint DeltaEncodePaletteColorsv { get { return delta_encode_palette_colors_v; } set { delta_encode_palette_colors_v = value; } }
+		private uint palette_num_extra_bits_v;
+		public uint PaletteNumExtraBitsv { get { return palette_num_extra_bits_v; } set { palette_num_extra_bits_v = value; } }
+		private uint[] palette_colors_v;
+		public uint[] PaletteColorsv { get { return palette_colors_v; } set { palette_colors_v = value; } }
+		private uint[] palette_delta_v;
+		public uint[] PaletteDeltav { get { return palette_delta_v; } set { palette_delta_v = value; } }
+		private uint[] palette_delta_sign_bit_v;
+		public uint[] PaletteDeltaSignBitv { get { return palette_delta_sign_bit_v; } set { palette_delta_sign_bit_v = value; } }
+
+         public PaletteModeInfo()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bsizeCtx = 0;
+			uint PaletteSizeY = 0;
+			uint cacheN = 0;
+			uint idx = 0;
+			uint i = 0;
+			uint[] palette_colors_y = null;
+			uint minBits = 0;
+			uint paletteBits = 0;
+			int whileIndex = -1;
+			uint range = 0;
+			uint PaletteSizeUV = 0;
+			uint[] palette_colors_u = null;
+			uint maxVal = 0;
+			uint palette_delta_v = 0;
+			uint val = 0;
+			uint[] palette_colors_v = null;
+			bsizeCtx= Mi_Width_Log2[ MiSize ] + Mi_Height_Log2[ MiSize ] - 2;
+
+			if ( YMode == DC_PRED )
+			{
+				size += stream.ReadS(size, out this.has_palette_y, "has_palette_y"); 
+
+				if ( has_palette_y != 0 )
+				{
+					size += stream.ReadS(size, out this.palette_size_y_minus_2, "palette_size_y_minus_2"); 
+					PaletteSizeY= palette_size_y_minus_2 + 2;
+					cacheN= get_palette_cache( 0 );
+					idx= 0;
+
+					this.use_palette_color_cache_y = new uint[ cacheN && idx < PaletteSizeY];
+					for ( i = 0; i < cacheN && idx < PaletteSizeY; i++ )
+					{
+						size += stream.ReadL(size, 1, out this.use_palette_color_cache_y[ i ], "use_palette_color_cache_y"); 
+
+						if ( use_palette_color_cache_y[i] != 0 )
+						{
+							palette_colors_y[ idx ]= PaletteCache[ i ];
+							idx++;
+						}
+					}
+
+					if ( idx < PaletteSizeY )
+					{
+						size += stream.ReadL(size, BitDepth, out this.palette_colors_y[ idx ], "palette_colors_y"); 
+						idx++;
+					}
+
+					if ( idx < PaletteSizeY )
+					{
+						minBits= BitDepth - 3;
+						size += stream.ReadL(size, 2, out this.palette_num_extra_bits_y, "palette_num_extra_bits_y"); 
+						paletteBits= minBits + palette_num_extra_bits_y;
+					}
+
+					while ( idx[whileIndex] < PaletteSizeY )
+					{
+						whileIndex++;
+
+						size += stream.ReadL(size, paletteBits, whileIndex, this.palette_delta_y, "palette_delta_y"); 
+						palette_delta_y++;
+						palette_colors_y[ idx ]= Clip1( palette_colors_y[ idx[whileIndex] - 1 ] + palette_delta_y[whileIndex] );
+						range= ( 1 << BitDepth ) - palette_colors_y[ idx[whileIndex] ] - 1;
+						paletteBits= Min( paletteBits, CeilLog2( range ) );
+						idx++;
+					}
+					this.sort =  new Sort( palette_colors_y,  0,  PaletteSizeY - 1 ) ;
+					size +=  stream.ReadClass<Sort>(size, context, this.sort, "sort"); 
+				}
+			}
+
+			if ( HasChroma != 0 && UVMode == DC_PRED )
+			{
+				size += stream.ReadS(size, out this.has_palette_uv, "has_palette_uv"); 
+
+				if ( has_palette_uv != 0 )
+				{
+					size += stream.ReadS(size, out this.palette_size_uv_minus_2, "palette_size_uv_minus_2"); 
+					PaletteSizeUV= palette_size_uv_minus_2 + 2;
+					cacheN= get_palette_cache( 1 );
+					idx= 0;
+
+					this.use_palette_color_cache_u = new UsePaletteColorCacheu[ cacheN && idx < PaletteSizeUV];
+					for ( i = 0; i < cacheN && idx < PaletteSizeUV; i++ )
+					{
+						this.use_palette_color_cache_u[ i ] =  new UsePaletteColorCacheu() ;
+						size +=  stream.ReadClass<UsePaletteColorCacheu>(size, context, this.use_palette_color_cache_u[ i ], "use_palette_color_cache_u"); 
+						size += stream.ReadL(size, 1, out this.use_palette_color_cache_u[ i ], "use_palette_color_cache_u"); 
+
+						if ( use_palette_color_cache_u[i] != 0 )
+						{
+							palette_colors_u[ idx ]= PaletteCache[ i ];
+							idx++;
+						}
+					}
+
+					if ( idx < PaletteSizeUV )
+					{
+						size += stream.ReadL(size, BitDepth, out this.palette_colors_u[ idx ], "palette_colors_u"); 
+						idx++;
+					}
+
+					if ( idx < PaletteSizeUV )
+					{
+						minBits= BitDepth - 3;
+						size += stream.ReadL(size, 2, out this.palette_num_extra_bits_u, "palette_num_extra_bits_u"); 
+						paletteBits= minBits + palette_num_extra_bits_u;
+					}
+
+					while ( idx[whileIndex] < PaletteSizeUV )
+					{
+						whileIndex++;
+
+						this.palette_delta_u.Add(whileIndex,  new PaletteDeltau() );
+						size +=  stream.ReadClass<PaletteDeltau>(size, context, this.palette_delta_u[whileIndex], "palette_delta_u"); 
+						size += stream.ReadL(size, paletteBits, whileIndex, this.palette_delta_u, "palette_delta_u"); 
+						palette_colors_u[ idx ]= Clip1( palette_colors_u[ idx[whileIndex] - 1 ] + palette_delta_u[whileIndex] );
+						range= ( 1 << BitDepth ) - palette_colors_u[ idx[whileIndex] ];
+						paletteBits= Min( paletteBits, CeilLog2( range ) );
+						idx++;
+					}
+					this.sort0 =  new Sort( palette_colors_u,  0,  PaletteSizeUV - 1 ) ;
+					size +=  stream.ReadClass<Sort>(size, context, this.sort0, "sort0"); 
+					size += stream.ReadL(size, 1, out this.delta_encode_palette_colors_v, "delta_encode_palette_colors_v"); 
+
+					if ( delta_encode_palette_colors_v != 0 )
+					{
+						minBits= BitDepth - 4;
+						maxVal= 1 << BitDepth;
+						size += stream.ReadL(size, 2, out this.palette_num_extra_bits_v, "palette_num_extra_bits_v"); 
+						paletteBits= minBits + palette_num_extra_bits_v;
+						size += stream.ReadL(size, BitDepth, out this.palette_colors_v[ 0 ], "palette_colors_v"); 
+
+						this.palette_delta_v = new uint[ PaletteSizeUV];
+						this.palette_delta_sign_bit_v = new uint[ PaletteSizeUV];
+						for ( idx = 1; idx < PaletteSizeUV; idx++ )
+						{
+							size += stream.ReadL(size, paletteBits, out this.palette_delta_v[ idx ], "palette_delta_v"); 
+
+							if ( palette_delta_v[x] != 0 )
+							{
+								size += stream.ReadL(size, 1, out this.palette_delta_sign_bit_v[ idx ], "palette_delta_sign_bit_v"); 
+
+								if ( palette_delta_sign_bit_v[x] != 0 )
+								{
+									palette_delta_v= -palette_delta_v[x];
+								}
+							}
+							val= palette_colors_v[ idx - 1 ] + palette_delta_v[x];
+
+							if ( val < 0 )
+							{
+								val+= maxVal;
+							}
+
+							if ( val >= maxVal )
+							{
+								val-= maxVal;
+							}
+							palette_colors_v[ idx ]= Clip1( val );
+						}
+					}
+					else 
+					{
+
+						for ( idx = 0; idx < PaletteSizeUV; idx++ )
+						{
+							size += stream.ReadL(size, BitDepth, out this.palette_colors_v[ idx ], "palette_colors_v"); 
+						}
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bsizeCtx = 0;
+			uint PaletteSizeY = 0;
+			uint cacheN = 0;
+			uint idx = 0;
+			uint i = 0;
+			uint[] palette_colors_y = null;
+			uint minBits = 0;
+			uint paletteBits = 0;
+			int whileIndex = -1;
+			uint range = 0;
+			uint PaletteSizeUV = 0;
+			uint[] palette_colors_u = null;
+			uint maxVal = 0;
+			uint palette_delta_v = 0;
+			uint val = 0;
+			uint[] palette_colors_v = null;
+			bsizeCtx= Mi_Width_Log2[ MiSize ] + Mi_Height_Log2[ MiSize ] - 2;
+
+			if ( YMode == DC_PRED )
+			{
+				size += stream.WriteS( this.has_palette_y, "has_palette_y"); 
+
+				if ( has_palette_y != 0 )
+				{
+					size += stream.WriteS( this.palette_size_y_minus_2, "palette_size_y_minus_2"); 
+					PaletteSizeY= palette_size_y_minus_2 + 2;
+					cacheN= get_palette_cache( 0 );
+					idx= 0;
+
+					for ( i = 0; i < cacheN && idx < PaletteSizeY; i++ )
+					{
+						size += stream.WriteL(1,  this.use_palette_color_cache_y[ i ], "use_palette_color_cache_y"); 
+
+						if ( use_palette_color_cache_y[i] != 0 )
+						{
+							palette_colors_y[ idx ]= PaletteCache[ i ];
+							idx++;
+						}
+					}
+
+					if ( idx < PaletteSizeY )
+					{
+						size += stream.WriteL(BitDepth,  this.palette_colors_y[ idx ], "palette_colors_y"); 
+						idx++;
+					}
+
+					if ( idx < PaletteSizeY )
+					{
+						minBits= BitDepth - 3;
+						size += stream.WriteL(2,  this.palette_num_extra_bits_y, "palette_num_extra_bits_y"); 
+						paletteBits= minBits + palette_num_extra_bits_y;
+					}
+
+					while ( idx[whileIndex] < PaletteSizeY )
+					{
+						whileIndex++;
+
+						size += stream.WriteL(paletteBits,  whileIndex, this.palette_delta_y, "palette_delta_y"); 
+						palette_delta_y++;
+						palette_colors_y[ idx ]= Clip1( palette_colors_y[ idx[whileIndex] - 1 ] + palette_delta_y[whileIndex] );
+						range= ( 1 << BitDepth ) - palette_colors_y[ idx[whileIndex] ] - 1;
+						paletteBits= Min( paletteBits, CeilLog2( range ) );
+						idx++;
+					}
+					size += stream.WriteClass<Sort>(context, this.sort, "sort"); 
+				}
+			}
+
+			if ( HasChroma != 0 && UVMode == DC_PRED )
+			{
+				size += stream.WriteS( this.has_palette_uv, "has_palette_uv"); 
+
+				if ( has_palette_uv != 0 )
+				{
+					size += stream.WriteS( this.palette_size_uv_minus_2, "palette_size_uv_minus_2"); 
+					PaletteSizeUV= palette_size_uv_minus_2 + 2;
+					cacheN= get_palette_cache( 1 );
+					idx= 0;
+
+					for ( i = 0; i < cacheN && idx < PaletteSizeUV; i++ )
+					{
+						size += stream.WriteClass<UsePaletteColorCacheu>(context, this.use_palette_color_cache_u[ i ], "use_palette_color_cache_u"); 
+						size += stream.WriteL(1,  this.use_palette_color_cache_u[ i ], "use_palette_color_cache_u"); 
+
+						if ( use_palette_color_cache_u[i] != 0 )
+						{
+							palette_colors_u[ idx ]= PaletteCache[ i ];
+							idx++;
+						}
+					}
+
+					if ( idx < PaletteSizeUV )
+					{
+						size += stream.WriteL(BitDepth,  this.palette_colors_u[ idx ], "palette_colors_u"); 
+						idx++;
+					}
+
+					if ( idx < PaletteSizeUV )
+					{
+						minBits= BitDepth - 3;
+						size += stream.WriteL(2,  this.palette_num_extra_bits_u, "palette_num_extra_bits_u"); 
+						paletteBits= minBits + palette_num_extra_bits_u;
+					}
+
+					while ( idx[whileIndex] < PaletteSizeUV )
+					{
+						whileIndex++;
+
+						size += stream.WriteClass<PaletteDeltau>(context, whileIndex, this.palette_delta_u, "palette_delta_u"); 
+						size += stream.WriteL(paletteBits,  whileIndex, this.palette_delta_u, "palette_delta_u"); 
+						palette_colors_u[ idx ]= Clip1( palette_colors_u[ idx[whileIndex] - 1 ] + palette_delta_u[whileIndex] );
+						range= ( 1 << BitDepth ) - palette_colors_u[ idx[whileIndex] ];
+						paletteBits= Min( paletteBits, CeilLog2( range ) );
+						idx++;
+					}
+					size += stream.WriteClass<Sort>(context, this.sort0, "sort0"); 
+					size += stream.WriteL(1,  this.delta_encode_palette_colors_v, "delta_encode_palette_colors_v"); 
+
+					if ( delta_encode_palette_colors_v != 0 )
+					{
+						minBits= BitDepth - 4;
+						maxVal= 1 << BitDepth;
+						size += stream.WriteL(2,  this.palette_num_extra_bits_v, "palette_num_extra_bits_v"); 
+						paletteBits= minBits + palette_num_extra_bits_v;
+						size += stream.WriteL(BitDepth,  this.palette_colors_v[ 0 ], "palette_colors_v"); 
+
+						for ( idx = 1; idx < PaletteSizeUV; idx++ )
+						{
+							size += stream.WriteL(paletteBits,  this.palette_delta_v[ idx ], "palette_delta_v"); 
+
+							if ( palette_delta_v[x] != 0 )
+							{
+								size += stream.WriteL(1,  this.palette_delta_sign_bit_v[ idx ], "palette_delta_sign_bit_v"); 
+
+								if ( palette_delta_sign_bit_v[x] != 0 )
+								{
+									palette_delta_v= -palette_delta_v[x];
+								}
+							}
+							val= palette_colors_v[ idx - 1 ] + palette_delta_v[x];
+
+							if ( val < 0 )
+							{
+								val+= maxVal;
+							}
+
+							if ( val >= maxVal )
+							{
+								val-= maxVal;
+							}
+							palette_colors_v[ idx ]= Clip1( val );
+						}
+					}
+					else 
+					{
+
+						for ( idx = 0; idx < PaletteSizeUV; idx++ )
+						{
+							size += stream.WriteL(BitDepth,  this.palette_colors_v[ idx ], "palette_colors_v"); 
+						}
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+get_palette_cache( plane ) { 
+ aboveN = 0
+ if ( ( MiRow * MI_SIZE ) % 64 ) {
+ aboveN = PaletteSizes[ plane ][ MiRow - 1 ][ MiCol ]
+ }
+ leftN = 0
+ if ( AvailL ) {
+ leftN = PaletteSizes[ plane ][ MiRow ][ MiCol - 1 ]
+ }
+ aboveIdx = 0
+ leftIdx = 0
+ n = 0
+ while ( aboveIdx < aboveN  && leftIdx < leftN ) {
+ aboveC = PaletteColors[ plane ][ MiRow - 1 ][ MiCol ][ aboveIdx ]
+ leftC = PaletteColors[ plane ][ MiRow ][ MiCol - 1 ][ leftIdx ]
+ if ( leftC < aboveC ) {
+ if ( n == 0 || leftC != PaletteCache[ n - 1 ] ) {
+ PaletteCache[ n ] = leftC
+ n++
+ }
+ leftIdx++
+ } else {
+ if ( n == 0 || aboveC != PaletteCache[ n - 1 ] ) {
+ PaletteCache[ n ] = aboveC
+ n++
+ }
+ aboveIdx++
+ if ( leftC == aboveC ) {
+ leftIdx++
+ }
+ }
+ }
+ while ( aboveIdx < aboveN ) {
+ val = PaletteColors[ plane ][ MiRow - 1 ][ MiCol ][ aboveIdx ]
+ aboveIdx++
+ if ( n == 0 || val != PaletteCache[ n - 1 ] ) {
+ PaletteCache[ n ] = val
+ n++
+ }
+ }
+ while ( leftIdx < leftN ) {
+ val = PaletteColors[ plane ][ MiRow ][ MiCol - 1 ][ leftIdx ]
+ leftIdx++
+ if ( n == 0 || val != PaletteCache[ n - 1 ] ) {
+ PaletteCache[ n ] = val
+ n++
+ }
+ }
+ return n
+ }
+    */
+    public class GetPaletteCache : IAomSerializable
+    {
+		private uint plane;
+		public uint Plane { get { return plane; } set { plane = value; } }
+
+         public GetPaletteCache(uint plane)
+         { 
+			this.plane = plane;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint aboveN = 0;
+			uint leftN = 0;
+			uint aboveIdx = 0;
+			uint leftIdx = 0;
+			uint n = 0;
+			int whileIndex = -1;
+			uint aboveC = 0;
+			uint leftC = 0;
+			uint[] PaletteCache = null;
+			uint val = 0;
+			aboveN= 0;
+
+			if ( ( MiRow * MI_SIZE ) % 64 != 0 )
+			{
+				aboveN= PaletteSizes[ plane ][ MiRow - 1 ][ MiCol ];
+			}
+			leftN= 0;
+
+			if ( AvailL != 0 )
+			{
+				leftN= PaletteSizes[ plane ][ MiRow ][ MiCol - 1 ];
+			}
+			aboveIdx= 0;
+			leftIdx= 0;
+			n= 0;
+
+			while ( aboveIdx < aboveN  && leftIdx < leftN )
+			{
+				whileIndex++;
+
+				aboveC= PaletteColors[ plane ][ MiRow - 1 ][ MiCol ][ aboveIdx ];
+				leftC= PaletteColors[ plane ][ MiRow ][ MiCol - 1 ][ leftIdx ];
+
+				if ( leftC < aboveC )
+				{
+
+					if ( n == 0 || leftC != PaletteCache[ n - 1 ] )
+					{
+						PaletteCache[ n ]= leftC;
+						n++;
+					}
+					leftIdx++;
+				}
+				else 
+				{
+
+					if ( n == 0 || aboveC != PaletteCache[ n - 1 ] )
+					{
+						PaletteCache[ n ]= aboveC;
+						n++;
+					}
+					aboveIdx++;
+
+					if ( leftC == aboveC )
+					{
+						leftIdx++;
+					}
+				}
+			}
+
+			while ( aboveIdx < aboveN )
+			{
+				whileIndex++;
+
+				val= PaletteColors[ plane ][ MiRow - 1 ][ MiCol ][ aboveIdx[whileIndex] ];
+				aboveIdx++;
+
+				if ( n == 0 || val != PaletteCache[ n - 1 ] )
+				{
+					PaletteCache[ n ]= val;
+					n++;
+				}
+			}
+
+			while ( leftIdx < leftN )
+			{
+				whileIndex++;
+
+				val= PaletteColors[ plane ][ MiRow ][ MiCol - 1 ][ leftIdx[whileIndex] ];
+				leftIdx++;
+
+				if ( n == 0 || val != PaletteCache[ n - 1 ] )
+				{
+					PaletteCache[ n ]= val;
+					n++;
+				}
+			}
+return n;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint aboveN = 0;
+			uint leftN = 0;
+			uint aboveIdx = 0;
+			uint leftIdx = 0;
+			uint n = 0;
+			int whileIndex = -1;
+			uint aboveC = 0;
+			uint leftC = 0;
+			uint[] PaletteCache = null;
+			uint val = 0;
+			aboveN= 0;
+
+			if ( ( MiRow * MI_SIZE ) % 64 != 0 )
+			{
+				aboveN= PaletteSizes[ plane ][ MiRow - 1 ][ MiCol ];
+			}
+			leftN= 0;
+
+			if ( AvailL != 0 )
+			{
+				leftN= PaletteSizes[ plane ][ MiRow ][ MiCol - 1 ];
+			}
+			aboveIdx= 0;
+			leftIdx= 0;
+			n= 0;
+
+			while ( aboveIdx < aboveN  && leftIdx < leftN )
+			{
+				whileIndex++;
+
+				aboveC= PaletteColors[ plane ][ MiRow - 1 ][ MiCol ][ aboveIdx ];
+				leftC= PaletteColors[ plane ][ MiRow ][ MiCol - 1 ][ leftIdx ];
+
+				if ( leftC < aboveC )
+				{
+
+					if ( n == 0 || leftC != PaletteCache[ n - 1 ] )
+					{
+						PaletteCache[ n ]= leftC;
+						n++;
+					}
+					leftIdx++;
+				}
+				else 
+				{
+
+					if ( n == 0 || aboveC != PaletteCache[ n - 1 ] )
+					{
+						PaletteCache[ n ]= aboveC;
+						n++;
+					}
+					aboveIdx++;
+
+					if ( leftC == aboveC )
+					{
+						leftIdx++;
+					}
+				}
+			}
+
+			while ( aboveIdx < aboveN )
+			{
+				whileIndex++;
+
+				val= PaletteColors[ plane ][ MiRow - 1 ][ MiCol ][ aboveIdx[whileIndex] ];
+				aboveIdx++;
+
+				if ( n == 0 || val != PaletteCache[ n - 1 ] )
+				{
+					PaletteCache[ n ]= val;
+					n++;
+				}
+			}
+
+			while ( leftIdx < leftN )
+			{
+				whileIndex++;
+
+				val= PaletteColors[ plane ][ MiRow ][ MiCol - 1 ][ leftIdx[whileIndex] ];
+				leftIdx++;
+
+				if ( n == 0 || val != PaletteCache[ n - 1 ] )
+				{
+					PaletteCache[ n ]= val;
+					n++;
+				}
+			}
+return n;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+transform_type( x4, y4, txSz ) { 
+ set = get_tx_set( txSz )
+ if ( set > 0 &&
+ ( segmentation_enabled ? get_qindex( 1, segment_id ) : base_q_idx ) > 0 ) {
+ if ( is_inter ) {
+  inter_tx_type S()
+ if ( set == TX_SET_INTER_1 )
+ TxType = Tx_Type_Inter_Inv_Set1[ inter_tx_type ]
+ else if ( set == TX_SET_INTER_2 )
+ TxType = Tx_Type_Inter_Inv_Set2[ inter_tx_type ]
+ else
+ TxType = Tx_Type_Inter_Inv_Set3[ inter_tx_type ]
+ } else {
+  intra_tx_type S()
+ if ( set == TX_SET_INTRA_1 )
+ TxType = Tx_Type_Intra_Inv_Set1[ intra_tx_type ]
+ else
+ TxType = Tx_Type_Intra_Inv_Set2[ intra_tx_type ]
+ }
+ } else {
+ TxType = DCT_DCT
+ }
+ for ( i = 0; i < ( Tx_Width[ txSz ] >> 2 ); i++ ) {
+ for ( j = 0; j < ( Tx_Height[ txSz ] >> 2 ); j++ ) {
+ TxTypes[ y4 + j ][ x4 + i ] = TxType
+ }
+ }
+ }
+    */
+    public class TransformType : IAomSerializable
+    {
+		private uint x4;
+		public uint X4 { get { return x4; } set { x4 = value; } }
+		private uint y4;
+		public uint Y4 { get { return y4; } set { y4 = value; } }
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+		private uint inter_tx_type;
+		public uint InterTxType { get { return inter_tx_type; } set { inter_tx_type = value; } }
+		private uint intra_tx_type;
+		public uint IntraTxType { get { return intra_tx_type; } set { intra_tx_type = value; } }
+
+         public TransformType(uint x4, uint y4, uint txSz)
+         { 
+			this.x4 = x4;
+			this.y4 = y4;
+			this.txSz = txSz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint set = 0;
+			uint TxType = 0;
+			uint i = 0;
+			uint j = 0;
+			uint[][] TxTypes = null;
+			set= get_tx_set( txSz );
+
+			if ( set > 0 &&
+ ( segmentation_enabled ? get_qindex( 1, segment_id ) : base_q_idx ) > 0 )
+			{
+
+				if ( is_inter != 0 )
+				{
+					size += stream.ReadS(size, out this.inter_tx_type, "inter_tx_type"); 
+
+					if ( set == TX_SET_INTER_1 )
+					{
+						TxType= Tx_Type_Inter_Inv_Set1[ inter_tx_type ];
+					}
+					else if ( set == TX_SET_INTER_2 )
+					{
+						TxType= Tx_Type_Inter_Inv_Set2[ inter_tx_type ];
+					}
+					else 
+					{
+						TxType= Tx_Type_Inter_Inv_Set3[ inter_tx_type ];
+					}
+				}
+				else 
+				{
+					size += stream.ReadS(size, out this.intra_tx_type, "intra_tx_type"); 
+
+					if ( set == TX_SET_INTRA_1 )
+					{
+						TxType= Tx_Type_Intra_Inv_Set1[ intra_tx_type ];
+					}
+					else 
+					{
+						TxType= Tx_Type_Intra_Inv_Set2[ intra_tx_type ];
+					}
+				}
+			}
+			else 
+			{
+				TxType= DCT_DCT;
+			}
+
+			for ( i = 0; i < ( Tx_Width[ txSz ] >> 2 ); i++ )
+			{
+
+				for ( j = 0; j < ( Tx_Height[ txSz ] >> 2 ); j++ )
+				{
+					TxTypes[ y4 + j ][ x4 + i ]= TxType;
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint set = 0;
+			uint TxType = 0;
+			uint i = 0;
+			uint j = 0;
+			uint[][] TxTypes = null;
+			set= get_tx_set( txSz );
+
+			if ( set > 0 &&
+ ( segmentation_enabled ? get_qindex( 1, segment_id ) : base_q_idx ) > 0 )
+			{
+
+				if ( is_inter != 0 )
+				{
+					size += stream.WriteS( this.inter_tx_type, "inter_tx_type"); 
+
+					if ( set == TX_SET_INTER_1 )
+					{
+						TxType= Tx_Type_Inter_Inv_Set1[ inter_tx_type ];
+					}
+					else if ( set == TX_SET_INTER_2 )
+					{
+						TxType= Tx_Type_Inter_Inv_Set2[ inter_tx_type ];
+					}
+					else 
+					{
+						TxType= Tx_Type_Inter_Inv_Set3[ inter_tx_type ];
+					}
+				}
+				else 
+				{
+					size += stream.WriteS( this.intra_tx_type, "intra_tx_type"); 
+
+					if ( set == TX_SET_INTRA_1 )
+					{
+						TxType= Tx_Type_Intra_Inv_Set1[ intra_tx_type ];
+					}
+					else 
+					{
+						TxType= Tx_Type_Intra_Inv_Set2[ intra_tx_type ];
+					}
+				}
+			}
+			else 
+			{
+				TxType= DCT_DCT;
+			}
+
+			for ( i = 0; i < ( Tx_Width[ txSz ] >> 2 ); i++ )
+			{
+
+				for ( j = 0; j < ( Tx_Height[ txSz ] >> 2 ); j++ )
+				{
+					TxTypes[ y4 + j ][ x4 + i ]= TxType;
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+get_tx_set( txSz ) { 
+ txSzSqr = Tx_Size_Sqr[ txSz ]
+ txSzSqrUp = Tx_Size_Sqr_Up[ txSz ]
+ if ( txSzSqrUp > TX_32X32 )
+ return TX_SET_DCTONLY
+ if ( is_inter ) {
+ if ( reduced_tx_set || txSzSqrUp == TX_32X32 ) return TX_SET_INTER_3
+ else if ( txSzSqr == TX_16X16 ) return TX_SET_INTER_2
+ return TX_SET_INTER_1
+ } else {
+ if ( txSzSqrUp == TX_32X32 ) return TX_SET_DCTONLY
+ else if ( reduced_tx_set ) return TX_SET_INTRA_2
+ else if ( txSzSqr == TX_16X16 ) return TX_SET_INTRA_2
+ return TX_SET_INTRA_1
+ }
+ }
+    */
+    public class GetTxSet : IAomSerializable
+    {
+		private uint txSz;
+		public uint TxSz { get { return txSz; } set { txSz = value; } }
+
+         public GetTxSet(uint txSz)
+         { 
+			this.txSz = txSz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint txSzSqr = 0;
+			uint txSzSqrUp = 0;
+			txSzSqr= Tx_Size_Sqr[ txSz ];
+			txSzSqrUp= Tx_Size_Sqr_Up[ txSz ];
+
+			if ( txSzSqrUp > TX_32X32 )
+			{
+return TX_SET_DCTONLY;
+			}
+
+			if ( is_inter != 0 )
+			{
+
+				if ( reduced_tx_set != 0 || txSzSqrUp == TX_32X32 )
+				{
+return TX_SET_INTER_3;
+				}
+				else if ( txSzSqr == TX_16X16 )
+				{
+return TX_SET_INTER_2;
+				}
+return TX_SET_INTER_1;
+			}
+			else 
+			{
+
+				if ( txSzSqrUp == TX_32X32 )
+				{
+return TX_SET_DCTONLY;
+				}
+				else if ( reduced_tx_set != 0 )
+				{
+return TX_SET_INTRA_2;
+				}
+				else if ( txSzSqr == TX_16X16 )
+				{
+return TX_SET_INTRA_2;
+				}
+return TX_SET_INTRA_1;
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint txSzSqr = 0;
+			uint txSzSqrUp = 0;
+			txSzSqr= Tx_Size_Sqr[ txSz ];
+			txSzSqrUp= Tx_Size_Sqr_Up[ txSz ];
+
+			if ( txSzSqrUp > TX_32X32 )
+			{
+return TX_SET_DCTONLY;
+			}
+
+			if ( is_inter != 0 )
+			{
+
+				if ( reduced_tx_set != 0 || txSzSqrUp == TX_32X32 )
+				{
+return TX_SET_INTER_3;
+				}
+				else if ( txSzSqr == TX_16X16 )
+				{
+return TX_SET_INTER_2;
+				}
+return TX_SET_INTER_1;
+			}
+			else 
+			{
+
+				if ( txSzSqrUp == TX_32X32 )
+				{
+return TX_SET_DCTONLY;
+				}
+				else if ( reduced_tx_set != 0 )
+				{
+return TX_SET_INTRA_2;
+				}
+				else if ( txSzSqr == TX_16X16 )
+				{
+return TX_SET_INTRA_2;
+				}
+return TX_SET_INTRA_1;
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+palette_tokens() { 
+ blockHeight = Block_Height[ MiSize ]
+ blockWidth = Block_Width[ MiSize ]
+ onscreenHeight = Min( blockHeight, (MiRows - MiRow) * MI_SIZE )
+ onscreenWidth = Min( blockWidth, (MiCols - MiCol) * MI_SIZE )
+ if ( PaletteSizeY ) {
+  color_index_map_y NS(PaletteSizeY)
+ ColorMapY[0][0] = color_index_map_y
+ for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ ) {
+ for ( j = Min( i, onscreenWidth - 1 );
+ j >= Max( 0, i - onscreenHeight + 1 ); j-- ) {
+ get_palette_color_context(
+ ColorMapY, ( i - j ), j, PaletteSizeY )
+  palette_color_idx_y S()
+ ColorMapY[ i - j ][ j ] = ColorOrder[ palette_color_idx_y ]
+ }
+ }
+ for ( i = 0; i < onscreenHeight; i++ ) {
+ for ( j = onscreenWidth; j < blockWidth; j++ ) {
+ ColorMapY[ i ][ j ] = ColorMapY[ i ][ onscreenWidth - 1 ]
+ }
+ }
+ for ( i = onscreenHeight; i < blockHeight; i++ ) {
+ for ( j = 0; j < blockWidth; j++ ) {
+ ColorMapY[ i ][ j ] = ColorMapY[ onscreenHeight - 1 ][ j ]
+ }
+ }
+ }
+ if ( PaletteSizeUV ) {
+  color_index_map_uv NS(PaletteSizeUV)
+ ColorMapUV[0][0] = color_index_map_uv
+ blockHeight = blockHeight >> subsampling_y
+ blockWidth = blockWidth >> subsampling_x
+ onscreenHeight = onscreenHeight >> subsampling_y
+ onscreenWidth = onscreenWidth >> subsampling_x
+ if ( blockWidth < 4 ) {
+ blockWidth += 2
+ onscreenWidth += 2
+ }
+ if ( blockHeight < 4 ) {
+ blockHeight += 2
+ onscreenHeight += 2
+ }
+ for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ ) {
+ for ( j = Min( i, onscreenWidth - 1 );
+ j >= Max( 0, i - onscreenHeight + 1 ); j-- ) {
+ get_palette_color_context(
+ ColorMapUV, ( i - j ), j, PaletteSizeUV )
+  palette_color_idx_uv S()
+ ColorMapUV[ i - j ][ j ] = ColorOrder[ palette_color_idx_uv ]
+ }
+ }
+ for ( i = 0; i < onscreenHeight; i++ ) {
+ for ( j = onscreenWidth; j < blockWidth; j++ ) {
+ ColorMapUV[ i ][ j ] = ColorMapUV[ i ][ onscreenWidth - 1 ]
+ }
+ }
+ for ( i = onscreenHeight; i < blockHeight; i++ ) {
+ for ( j = 0; j < blockWidth; j++ ) {
+ ColorMapUV[ i ][ j ] = ColorMapUV[ onscreenHeight - 1 ][ j ]
+ }
+ }
+ }
+ }
+    */
+    public class PaletteTokens : IAomSerializable
+    {
+		private ColorIndexMapy color_index_map_y;
+		public ColorIndexMapy ColorIndexMapy { get { return color_index_map_y; } set { color_index_map_y = value; } }
+		private NS nS;
+		public NS NS { get { return NS; } set { NS = value; } }
+		private GetPaletteColorContext[][] get_palette_color_context;
+		public GetPaletteColorContext[][] GetPaletteColorContext { get { return get_palette_color_context; } set { get_palette_color_context = value; } }
+		private uint[][] palette_color_idx_y;
+		public uint[][] PaletteColorIdxy { get { return palette_color_idx_y; } set { palette_color_idx_y = value; } }
+		private uint color_index_map_uv;
+		public uint ColorIndexMapUv { get { return color_index_map_uv; } set { color_index_map_uv = value; } }
+		private GetPaletteColorContext[][] get_palette_color_context0;
+		public GetPaletteColorContext[][] GetPaletteColorContext0 { get { return get_palette_color_context0; } set { get_palette_color_context0 = value; } }
+		private uint[][] palette_color_idx_uv;
+		public uint[][] PaletteColorIdxUv { get { return palette_color_idx_uv; } set { palette_color_idx_uv = value; } }
+
+         public PaletteTokens()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint blockHeight = 0;
+			uint blockWidth = 0;
+			uint onscreenHeight = 0;
+			uint onscreenWidth = 0;
+			uint[][] ColorMapY = null;
+			uint i = 0;
+			uint j = 0;
+			uint[][] ColorMapUV = null;
+			blockHeight= Block_Height[ MiSize ];
+			blockWidth= Block_Width[ MiSize ];
+			onscreenHeight= Min( blockHeight, (MiRows - MiRow) * MI_SIZE );
+			onscreenWidth= Min( blockWidth, (MiCols - MiCol) * MI_SIZE );
+
+			if ( PaletteSizeY != 0 )
+			{
+				this.color_index_map_y =  new ColorIndexMapy() ;
+				size +=  stream.ReadClass<ColorIndexMapy>(size, context, this.color_index_map_y, "color_index_map_y"); 
+				this.NS =  new NS(PaletteSizeY) ;
+				size +=  stream.ReadClass<NS>(size, context, this.NS, "NS"); 
+				ColorMapY[0][0]= color_index_map_y;
+
+				this.get_palette_color_context = new GetPaletteColorContext[ onscreenHeight + onscreenWidth - 1][];
+				this.palette_color_idx_y = new uint[ onscreenHeight + onscreenWidth - 1][];
+				for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ )
+				{
+
+					this.get_palette_color_context[ i ] = new GetPaletteColorContext[ Max( 0, i - onscreenHeight + 1 )];
+					this.palette_color_idx_y[ i ] = new uint[ Max( 0, i - onscreenHeight + 1 )];
+					for ( j = Min( i, onscreenWidth - 1 );
+ j >= Max( 0, i - onscreenHeight + 1 ); j-- )
+					{
+						this.get_palette_color_context[ i ][ j ] =  new GetPaletteColorContext( ColorMapY,  ( i - j ),  j,  PaletteSizeY ) ;
+						size +=  stream.ReadClass<GetPaletteColorContext>(size, context, this.get_palette_color_context[ i ][ j ], "get_palette_color_context"); 
+						size += stream.ReadS(size, out this.palette_color_idx_y[ i ][ j ], "palette_color_idx_y"); 
+						ColorMapY[ i - j ][ j ]= ColorOrder[ palette_color_idx_y[i][j] ];
+					}
+				}
+
+				for ( i = 0; i < onscreenHeight; i++ )
+				{
+
+					for ( j = onscreenWidth; j < blockWidth; j++ )
+					{
+						ColorMapY[ i ][ j ]= ColorMapY[ i ][ onscreenWidth - 1 ];
+					}
+				}
+
+				for ( i = onscreenHeight; i < blockHeight; i++ )
+				{
+
+					for ( j = 0; j < blockWidth; j++ )
+					{
+						ColorMapY[ i ][ j ]= ColorMapY[ onscreenHeight - 1 ][ j ];
+					}
+				}
+			}
+
+			if ( PaletteSizeUV != 0 )
+			{
+				size += stream.ReadNS(size, PaletteSizeUV, out this.color_index_map_uv, "color_index_map_uv"); 
+				ColorMapUV[0][0]= color_index_map_uv;
+				blockHeight= blockHeight >> subsampling_y;
+				blockWidth= blockWidth >> subsampling_x;
+				onscreenHeight= onscreenHeight >> subsampling_y;
+				onscreenWidth= onscreenWidth >> subsampling_x;
+
+				if ( blockWidth < 4 )
+				{
+					blockWidth+= 2;
+					onscreenWidth+= 2;
+				}
+
+				if ( blockHeight < 4 )
+				{
+					blockHeight+= 2;
+					onscreenHeight+= 2;
+				}
+
+				this.get_palette_color_context0 = new GetPaletteColorContext[ onscreenHeight + onscreenWidth - 1][];
+				this.palette_color_idx_uv = new uint[ onscreenHeight + onscreenWidth - 1][];
+				for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ )
+				{
+
+					this.get_palette_color_context0[ i ] = new GetPaletteColorContext[ Max( 0, i - onscreenHeight + 1 )];
+					this.palette_color_idx_uv[ i ] = new uint[ Max( 0, i - onscreenHeight + 1 )];
+					for ( j = Min( i, onscreenWidth - 1 );
+ j >= Max( 0, i - onscreenHeight + 1 ); j-- )
+					{
+						this.get_palette_color_context0[ i ][ j ] =  new GetPaletteColorContext( ColorMapUV,  ( i - j ),  j,  PaletteSizeUV ) ;
+						size +=  stream.ReadClass<GetPaletteColorContext>(size, context, this.get_palette_color_context0[ i ][ j ], "get_palette_color_context0"); 
+						size += stream.ReadS(size, out this.palette_color_idx_uv[ i ][ j ], "palette_color_idx_uv"); 
+						ColorMapUV[ i - j ][ j ]= ColorOrder[ palette_color_idx_uv[i][j] ];
+					}
+				}
+
+				for ( i = 0; i < onscreenHeight; i++ )
+				{
+
+					for ( j = onscreenWidth; j < blockWidth; j++ )
+					{
+						ColorMapUV[ i ][ j ]= ColorMapUV[ i ][ onscreenWidth - 1 ];
+					}
+				}
+
+				for ( i = onscreenHeight; i < blockHeight; i++ )
+				{
+
+					for ( j = 0; j < blockWidth; j++ )
+					{
+						ColorMapUV[ i ][ j ]= ColorMapUV[ onscreenHeight - 1 ][ j ];
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint blockHeight = 0;
+			uint blockWidth = 0;
+			uint onscreenHeight = 0;
+			uint onscreenWidth = 0;
+			uint[][] ColorMapY = null;
+			uint i = 0;
+			uint j = 0;
+			uint[][] ColorMapUV = null;
+			blockHeight= Block_Height[ MiSize ];
+			blockWidth= Block_Width[ MiSize ];
+			onscreenHeight= Min( blockHeight, (MiRows - MiRow) * MI_SIZE );
+			onscreenWidth= Min( blockWidth, (MiCols - MiCol) * MI_SIZE );
+
+			if ( PaletteSizeY != 0 )
+			{
+				size += stream.WriteClass<ColorIndexMapy>(context, this.color_index_map_y, "color_index_map_y"); 
+				size += stream.WriteClass<NS>(context, this.NS, "NS"); 
+				ColorMapY[0][0]= color_index_map_y;
+
+				for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ )
+				{
+
+					for ( j = Min( i, onscreenWidth - 1 );
+ j >= Max( 0, i - onscreenHeight + 1 ); j-- )
+					{
+						size += stream.WriteClass<GetPaletteColorContext>(context, this.get_palette_color_context[ i ][ j ], "get_palette_color_context"); 
+						size += stream.WriteS( this.palette_color_idx_y[ i ][ j ], "palette_color_idx_y"); 
+						ColorMapY[ i - j ][ j ]= ColorOrder[ palette_color_idx_y[i][j] ];
+					}
+				}
+
+				for ( i = 0; i < onscreenHeight; i++ )
+				{
+
+					for ( j = onscreenWidth; j < blockWidth; j++ )
+					{
+						ColorMapY[ i ][ j ]= ColorMapY[ i ][ onscreenWidth - 1 ];
+					}
+				}
+
+				for ( i = onscreenHeight; i < blockHeight; i++ )
+				{
+
+					for ( j = 0; j < blockWidth; j++ )
+					{
+						ColorMapY[ i ][ j ]= ColorMapY[ onscreenHeight - 1 ][ j ];
+					}
+				}
+			}
+
+			if ( PaletteSizeUV != 0 )
+			{
+				size += stream.WriteNS(PaletteSizeUV, this.color_index_map_uv, "color_index_map_uv"); 
+				ColorMapUV[0][0]= color_index_map_uv;
+				blockHeight= blockHeight >> subsampling_y;
+				blockWidth= blockWidth >> subsampling_x;
+				onscreenHeight= onscreenHeight >> subsampling_y;
+				onscreenWidth= onscreenWidth >> subsampling_x;
+
+				if ( blockWidth < 4 )
+				{
+					blockWidth+= 2;
+					onscreenWidth+= 2;
+				}
+
+				if ( blockHeight < 4 )
+				{
+					blockHeight+= 2;
+					onscreenHeight+= 2;
+				}
+
+				for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ )
+				{
+
+					for ( j = Min( i, onscreenWidth - 1 );
+ j >= Max( 0, i - onscreenHeight + 1 ); j-- )
+					{
+						size += stream.WriteClass<GetPaletteColorContext>(context, this.get_palette_color_context0[ i ][ j ], "get_palette_color_context0"); 
+						size += stream.WriteS( this.palette_color_idx_uv[ i ][ j ], "palette_color_idx_uv"); 
+						ColorMapUV[ i - j ][ j ]= ColorOrder[ palette_color_idx_uv[i][j] ];
+					}
+				}
+
+				for ( i = 0; i < onscreenHeight; i++ )
+				{
+
+					for ( j = onscreenWidth; j < blockWidth; j++ )
+					{
+						ColorMapUV[ i ][ j ]= ColorMapUV[ i ][ onscreenWidth - 1 ];
+					}
+				}
+
+				for ( i = onscreenHeight; i < blockHeight; i++ )
+				{
+
+					for ( j = 0; j < blockWidth; j++ )
+					{
+						ColorMapUV[ i ][ j ]= ColorMapUV[ onscreenHeight - 1 ][ j ];
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+get_palette_color_context( colorMap, r, c, n ) { 
+ for ( i = 0; i < PALETTE_COLORS; i++ ) {
+ scores[ i ] = 0
+ ColorOrder[i] = i
+ }
+ if ( c > 0 ) {
+ neighbor = colorMap[ r ][ c - 1 ]
+ scores[ neighbor ] += 2
+ }
+ if ( ( r > 0 ) && ( c > 0 ) ) {
+ neighbor = colorMap[ r - 1 ][ c - 1 ]
+ scores[ neighbor ] += 1
+ }
+ if ( r > 0 ) {
+ neighbor = colorMap[ r - 1 ][ c ]
+ scores[ neighbor ] += 2
+ }
+ for ( i = 0; i < PALETTE_NUM_NEIGHBORS; i++ ) {
+ maxScore = scores[ i ]
+ maxIdx = i
+ for ( j = i + 1; j < n; j++ ) {
+ if ( scores[ j ] > maxScore ) {
+ maxScore = scores[ j ]
+ maxIdx = j
+ }
+ }
+ if ( maxIdx != i ) {
+ maxScore = scores[ maxIdx ]
+ maxColorOrder = ColorOrder[ maxIdx ]
+ for ( k = maxIdx; k > i; k-- ) {
+ scores[ k ] = scores[ k - 1 ]
+ ColorOrder[ k ] = ColorOrder[ k - 1 ]
+ }
+ scores[ i ] = maxScore
+ ColorOrder[ i ] = maxColorOrder
+ }
+ }
+ ColorContextHash = 0
+ for ( i = 0; i < PALETTE_NUM_NEIGHBORS; i++ ) {
+ ColorContextHash += scores[ i ] * Palette_Color_Hash_Multipliers[ i ]
+ }
+ }
+    */
+    public class GetPaletteColorContext : IAomSerializable
+    {
+		private uint colorMap;
+		public uint ColorMap { get { return colorMap; } set { colorMap = value; } }
+		private uint r;
+		public uint r { get { return r; } set { r = value; } }
+		private uint c;
+		public uint c { get { return c; } set { c = value; } }
+		private uint n;
+		public uint n { get { return n; } set { n = value; } }
+
+         public GetPaletteColorContext(uint colorMap, uint r, uint c, uint n)
+         { 
+			this.colorMap = colorMap;
+			this.r = r;
+			this.c = c;
+			this.n = n;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint i = 0;
+			uint[] scores = null;
+			uint[] ColorOrder = null;
+			uint neighbor = 0;
+			uint maxScore = 0;
+			uint maxIdx = 0;
+			uint j = 0;
+			uint maxColorOrder = 0;
+			uint k = 0;
+			uint ColorContextHash = 0;
+
+			for ( i = 0; i < PALETTE_COLORS; i++ )
+			{
+				scores[ i ]= 0;
+				ColorOrder[i]= i;
+			}
+
+			if ( c > 0 )
+			{
+				neighbor= colorMap[ r ][ c - 1 ];
+				scores[ neighbor ]+= 2;
+			}
+
+			if ( ( r > 0 ) && ( c > 0 ) )
+			{
+				neighbor= colorMap[ r - 1 ][ c - 1 ];
+				scores[ neighbor ]+= 1;
+			}
+
+			if ( r > 0 )
+			{
+				neighbor= colorMap[ r - 1 ][ c ];
+				scores[ neighbor ]+= 2;
+			}
+
+			for ( i = 0; i < PALETTE_NUM_NEIGHBORS; i++ )
+			{
+				maxScore= scores[ i ];
+				maxIdx= i;
+
+				for ( j = i + 1; j < n; j++ )
+				{
+
+					if ( scores[ j ] > maxScore )
+					{
+						maxScore= scores[ j ];
+						maxIdx= j;
+					}
+				}
+
+				if ( maxIdx != i )
+				{
+					maxScore= scores[ maxIdx ];
+					maxColorOrder= ColorOrder[ maxIdx ];
+
+					for ( k = maxIdx; k > i; k-- )
+					{
+						scores[ k ]= scores[ k - 1 ];
+						ColorOrder[ k ]= ColorOrder[ k - 1 ];
+					}
+					scores[ i ]= maxScore;
+					ColorOrder[ i ]= maxColorOrder;
+				}
+			}
+			ColorContextHash= 0;
+
+			for ( i = 0; i < PALETTE_NUM_NEIGHBORS; i++ )
+			{
+				ColorContextHash+= scores[ i ] * Palette_Color_Hash_Multipliers[ i ];
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint i = 0;
+			uint[] scores = null;
+			uint[] ColorOrder = null;
+			uint neighbor = 0;
+			uint maxScore = 0;
+			uint maxIdx = 0;
+			uint j = 0;
+			uint maxColorOrder = 0;
+			uint k = 0;
+			uint ColorContextHash = 0;
+
+			for ( i = 0; i < PALETTE_COLORS; i++ )
+			{
+				scores[ i ]= 0;
+				ColorOrder[i]= i;
+			}
+
+			if ( c > 0 )
+			{
+				neighbor= colorMap[ r ][ c - 1 ];
+				scores[ neighbor ]+= 2;
+			}
+
+			if ( ( r > 0 ) && ( c > 0 ) )
+			{
+				neighbor= colorMap[ r - 1 ][ c - 1 ];
+				scores[ neighbor ]+= 1;
+			}
+
+			if ( r > 0 )
+			{
+				neighbor= colorMap[ r - 1 ][ c ];
+				scores[ neighbor ]+= 2;
+			}
+
+			for ( i = 0; i < PALETTE_NUM_NEIGHBORS; i++ )
+			{
+				maxScore= scores[ i ];
+				maxIdx= i;
+
+				for ( j = i + 1; j < n; j++ )
+				{
+
+					if ( scores[ j ] > maxScore )
+					{
+						maxScore= scores[ j ];
+						maxIdx= j;
+					}
+				}
+
+				if ( maxIdx != i )
+				{
+					maxScore= scores[ maxIdx ];
+					maxColorOrder= ColorOrder[ maxIdx ];
+
+					for ( k = maxIdx; k > i; k-- )
+					{
+						scores[ k ]= scores[ k - 1 ];
+						ColorOrder[ k ]= ColorOrder[ k - 1 ];
+					}
+					scores[ i ]= maxScore;
+					ColorOrder[ i ]= maxColorOrder;
+				}
+			}
+			ColorContextHash= 0;
+
+			for ( i = 0; i < PALETTE_NUM_NEIGHBORS; i++ )
+			{
+				ColorContextHash+= scores[ i ] * Palette_Color_Hash_Multipliers[ i ];
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+is_inside( candidateR, candidateC ) { 
+ return ( candidateC >= MiColStart && candidateC < MiColEnd && candidateR >= MiRowStart && candidateR < MiRowEnd )
+ }
+    */
+    public class IsInside : IAomSerializable
+    {
+		private uint candidateR;
+		public uint CandidateR { get { return candidateR; } set { candidateR = value; } }
+		private uint candidateC;
+		public uint CandidateC { get { return candidateC; } set { candidateC = value; } }
+
+         public IsInside(uint candidateR, uint candidateC)
+         { 
+			this.candidateR = candidateR;
+			this.candidateC = candidateC;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+return ( candidateC >= MiColStart && candidateC < MiColEnd && candidateR >= MiRowStart && candidateR < MiRowEnd );
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+return ( candidateC >= MiColStart && candidateC < MiColEnd && candidateR >= MiRowStart && candidateR < MiRowEnd );
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+is_inside_filter_region( candidateR, candidateC ) { 
+ colStart = 0
+ colEnd = MiCols
+ rowStart = 0
+ rowEnd = MiRows
+ return (candidateC >= colStart && candidateC < colEnd && candidateR >= rowStart && candidateR < rowEnd)
+ }
+    */
+    public class IsInsideFilterRegion : IAomSerializable
+    {
+		private uint candidateR;
+		public uint CandidateR { get { return candidateR; } set { candidateR = value; } }
+		private uint candidateC;
+		public uint CandidateC { get { return candidateC; } set { candidateC = value; } }
+
+         public IsInsideFilterRegion(uint candidateR, uint candidateC)
+         { 
+			this.candidateR = candidateR;
+			this.candidateC = candidateC;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint colStart = 0;
+			uint colEnd = 0;
+			uint rowStart = 0;
+			uint rowEnd = 0;
+			colStart= 0;
+			colEnd= MiCols;
+			rowStart= 0;
+			rowEnd= MiRows;
+return (candidateC >= colStart && candidateC < colEnd && candidateR >= rowStart && candidateR < rowEnd);
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint colStart = 0;
+			uint colEnd = 0;
+			uint rowStart = 0;
+			uint rowEnd = 0;
+			colStart= 0;
+			colEnd= MiCols;
+			rowStart= 0;
+			rowEnd= MiRows;
+return (candidateC >= colStart && candidateC < colEnd && candidateR >= rowStart && candidateR < rowEnd);
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+clamp_mv_row( mvec, border ) { 
+ bh4 = Num_4x4_Blocks_High[ MiSize ]
+ mbToTopEdge = -((MiRow * MI_SIZE) * 8)
+ mbToBottomEdge = ((MiRows - bh4 - MiRow) * MI_SIZE) * 8
+ return Clip3( mbToTopEdge - border, mbToBottomEdge + border, mvec )
+ }
+    */
+    public class ClampMvRow : IAomSerializable
+    {
+		private uint mvec;
+		public uint Mvec { get { return mvec; } set { mvec = value; } }
+		private uint border;
+		public uint Border { get { return border; } set { border = value; } }
+
+         public ClampMvRow(uint mvec, uint border)
+         { 
+			this.mvec = mvec;
+			this.border = border;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bh4 = 0;
+			uint mbToTopEdge = 0;
+			uint mbToBottomEdge = 0;
+			bh4= Num_4x4_Blocks_High[ MiSize ];
+			mbToTopEdge= -((MiRow * MI_SIZE) * 8);
+			mbToBottomEdge= ((MiRows - bh4 - MiRow) * MI_SIZE) * 8;
+return Clip3( mbToTopEdge - border, mbToBottomEdge + border, mvec );
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bh4 = 0;
+			uint mbToTopEdge = 0;
+			uint mbToBottomEdge = 0;
+			bh4= Num_4x4_Blocks_High[ MiSize ];
+			mbToTopEdge= -((MiRow * MI_SIZE) * 8);
+			mbToBottomEdge= ((MiRows - bh4 - MiRow) * MI_SIZE) * 8;
+return Clip3( mbToTopEdge - border, mbToBottomEdge + border, mvec );
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+clamp_mv_col( mvec, border ) { 
+ bw4 = Num_4x4_Blocks_Wide[ MiSize ]
+ mbToLeftEdge = -((MiCol * MI_SIZE) * 8)
+ mbToRightEdge = ((MiCols - bw4 - MiCol) * MI_SIZE) * 8
+ return Clip3( mbToLeftEdge - border, mbToRightEdge + border, mvec )
+ }
+    */
+    public class ClampMvCol : IAomSerializable
+    {
+		private uint mvec;
+		public uint Mvec { get { return mvec; } set { mvec = value; } }
+		private uint border;
+		public uint Border { get { return border; } set { border = value; } }
+
+         public ClampMvCol(uint mvec, uint border)
+         { 
+			this.mvec = mvec;
+			this.border = border;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bw4 = 0;
+			uint mbToLeftEdge = 0;
+			uint mbToRightEdge = 0;
+			bw4= Num_4x4_Blocks_Wide[ MiSize ];
+			mbToLeftEdge= -((MiCol * MI_SIZE) * 8);
+			mbToRightEdge= ((MiCols - bw4 - MiCol) * MI_SIZE) * 8;
+return Clip3( mbToLeftEdge - border, mbToRightEdge + border, mvec );
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint bw4 = 0;
+			uint mbToLeftEdge = 0;
+			uint mbToRightEdge = 0;
+			bw4= Num_4x4_Blocks_Wide[ MiSize ];
+			mbToLeftEdge= -((MiCol * MI_SIZE) * 8);
+			mbToRightEdge= ((MiCols - bw4 - MiCol) * MI_SIZE) * 8;
+return Clip3( mbToLeftEdge - border, mbToRightEdge + border, mvec );
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+clear_cdef( r, c ) { 
+ cdef_idx[ r ][ c ] = -1
+ if ( use_128x128_superblock ) {
+ cdefSize4 = Num_4x4_Blocks_Wide[ BLOCK_64X64 ]
+ cdef_idx[ r ][ c + cdefSize4 ] = -1
+ cdef_idx[ r + cdefSize4][ c ] = -1
+ cdef_idx[ r + cdefSize4][ c + cdefSize4 ] = -1
+ }
+ }
+    */
+    public class ClearCdef : IAomSerializable
+    {
+		private uint r;
+		public uint r { get { return r; } set { r = value; } }
+		private uint c;
+		public uint c { get { return c; } set { c = value; } }
+
+         public ClearCdef(uint r, uint c)
+         { 
+			this.r = r;
+			this.c = c;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[][] cdef_idx = null;
+			uint cdefSize4 = 0;
+			cdef_idx[ r ][ c ]= -1;
+
+			if ( use_128x128_superblock != 0 )
+			{
+				cdefSize4= Num_4x4_Blocks_Wide[ BLOCK_64X64 ];
+				cdef_idx[ r ][ c + cdefSize4 ]= -1;
+				cdef_idx[ r + cdefSize4][ c ]= -1;
+				cdef_idx[ r + cdefSize4][ c + cdefSize4 ]= -1;
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint[][] cdef_idx = null;
+			uint cdefSize4 = 0;
+			cdef_idx[ r ][ c ]= -1;
+
+			if ( use_128x128_superblock != 0 )
+			{
+				cdefSize4= Num_4x4_Blocks_Wide[ BLOCK_64X64 ];
+				cdef_idx[ r ][ c + cdefSize4 ]= -1;
+				cdef_idx[ r + cdefSize4][ c ]= -1;
+				cdef_idx[ r + cdefSize4][ c + cdefSize4 ]= -1;
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+read_cdef() { 
+ if ( skip || CodedLossless || !enable_cdef || allow_intrabc) {
+ return
+ }
+ cdefSize4 = Num_4x4_Blocks_Wide[ BLOCK_64X64 ]
+ cdefMask4 = ~(cdefSize4 - 1)
+ r = MiRow & cdefMask4
+ c = MiCol & cdefMask4
+ if ( cdef_idx[ r ][ c ] == -1 ) {
+  cdef_idx[ r ][ c ] L(cdef_bits)
+ w4 = Num_4x4_Blocks_Wide[ MiSize ]
+ h4 = Num_4x4_Blocks_High[ MiSize ]
+ for ( i = r; i < r + h4 ; i += cdefSize4 ) {
+ for ( j = c; j < c + w4 ; j += cdefSize4 ) {
+ cdef_idx[ i ][ j ] = cdef_idx[ r ][ c ]
+ }
+ }
+ }
+ }
+    */
+    public class ReadCdef : IAomSerializable
+    {
+		private uint[][] cdef_idx;
+		public uint[][] CdefIdx { get { return cdef_idx; } set { cdef_idx = value; } }
+
+         public ReadCdef()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint cdefSize4 = 0;
+			uint cdefMask4 = 0;
+			uint r = 0;
+			uint c = 0;
+			uint w4 = 0;
+			uint h4 = 0;
+			uint i = 0;
+			uint j = 0;
+			uint[][] cdef_idx = null;
+
+			if ( skip != 0 || CodedLossless != 0 || enable_cdef== 0 || allow_intrabc != 0)
+			{
+return;
+			}
+			cdefSize4= Num_4x4_Blocks_Wide[ BLOCK_64X64 ];
+			cdefMask4= ~(cdefSize4 - 1);
+			r= MiRow & cdefMask4;
+			c= MiCol & cdefMask4;
+
+			if ( cdef_idx[ r ][ c ] == -1 )
+			{
+				size += stream.ReadL(size, cdef_bits, out this.cdef_idx[ r ][ c ], "cdef_idx"); 
+				w4= Num_4x4_Blocks_Wide[ MiSize ];
+				h4= Num_4x4_Blocks_High[ MiSize ];
+
+				for ( i = r; i < r + h4 ; i += cdefSize4 )
+				{
+
+					for ( j = c; j < c + w4 ; j += cdefSize4 )
+					{
+						cdef_idx[ i ][ j ]= cdef_idx[ r ][ c ];
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint cdefSize4 = 0;
+			uint cdefMask4 = 0;
+			uint r = 0;
+			uint c = 0;
+			uint w4 = 0;
+			uint h4 = 0;
+			uint i = 0;
+			uint j = 0;
+			uint[][] cdef_idx = null;
+
+			if ( skip != 0 || CodedLossless != 0 || enable_cdef== 0 || allow_intrabc != 0)
+			{
+return;
+			}
+			cdefSize4= Num_4x4_Blocks_Wide[ BLOCK_64X64 ];
+			cdefMask4= ~(cdefSize4 - 1);
+			r= MiRow & cdefMask4;
+			c= MiCol & cdefMask4;
+
+			if ( cdef_idx[ r ][ c ] == -1 )
+			{
+				size += stream.WriteL(cdef_bits,  this.cdef_idx[ r ][ c ], "cdef_idx"); 
+				w4= Num_4x4_Blocks_Wide[ MiSize ];
+				h4= Num_4x4_Blocks_High[ MiSize ];
+
+				for ( i = r; i < r + h4 ; i += cdefSize4 )
+				{
+
+					for ( j = c; j < c + w4 ; j += cdefSize4 )
+					{
+						cdef_idx[ i ][ j ]= cdef_idx[ r ][ c ];
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+read_lr( r, c, bSize ) { 
+ if ( allow_intrabc ) {
+ return
+ }
+ w = Num_4x4_Blocks_Wide[ bSize ]
+ h = Num_4x4_Blocks_High[ bSize ]
+ for ( plane = 0; plane < NumPlanes; plane++ ) {
+ if ( FrameRestorationType[ plane ] != RESTORE_NONE ) {
+ subX = (plane == 0) ? 0 : subsampling_x
+ subY = (plane == 0) ? 0 : subsampling_y
+ unitSize = LoopRestorationSize[ plane ]
+ unitRows = count_units_in_frame( unitSize, Round2( FrameHeight, subY) )
+ unitCols = count_units_in_frame( unitSize, Round2( UpscaledWidth, subX) )
+ unitRowStart = ( r * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize
+ unitRowEnd = Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize)
+ if ( use_superres ) {
+ numerator = (MI_SIZE >> subX) * SuperresDenom
+ denominator = unitSize * SUPERRES_NUM
+ } else {
+ numerator = MI_SIZE >> subX
+ denominator = unitSize
+ }
+ unitColStart = ( c * numerator + denominator - 1 ) / denominator
+ unitColEnd = Min( unitCols, ( (c + w) * numerator + denominator - 1 ) / denominator)
+ for ( unitRow = unitRowStart; unitRow < unitRowEnd; unitRow++ ) {
+ for ( unitCol = unitColStart; unitCol < unitColEnd; unitCol++ ) {
+ read_lr_unit(plane, unitRow, unitCol)
+ }
+ }
+ }
+ }
+ }
+    */
+    public class ReadLr : IAomSerializable
+    {
+		private uint r;
+		public uint r { get { return r; } set { r = value; } }
+		private uint c;
+		public uint c { get { return c; } set { c = value; } }
+		private uint bSize;
+		public uint BSize { get { return bSize; } set { bSize = value; } }
+		private ReadLrUnit[][][] read_lr_unit;
+		public ReadLrUnit[][][] ReadLrUnit { get { return read_lr_unit; } set { read_lr_unit = value; } }
+
+         public ReadLr(uint r, uint c, uint bSize)
+         { 
+			this.r = r;
+			this.c = c;
+			this.bSize = bSize;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint w = 0;
+			uint h = 0;
+			uint plane = 0;
+			uint subX = 0;
+			uint subY = 0;
+			uint unitSize = 0;
+			uint unitRows = 0;
+			uint unitCols = 0;
+			uint unitRowStart = 0;
+			uint unitRowEnd = 0;
+			uint numerator = 0;
+			uint denominator = 0;
+			uint unitColStart = 0;
+			uint unitColEnd = 0;
+			uint unitRow = 0;
+			uint unitCol = 0;
+
+			if ( allow_intrabc != 0 )
+			{
+return;
+			}
+			w= Num_4x4_Blocks_Wide[ bSize ];
+			h= Num_4x4_Blocks_High[ bSize ];
+
+			this.read_lr_unit = new ReadLrUnit[ NumPlanes][][];
+			for ( plane = 0; plane < NumPlanes; plane++ )
+			{
+
+				if ( FrameRestorationType[ plane ] != RESTORE_NONE )
+				{
+					subX= (plane == 0) ? 0 : subsampling_x;
+					subY= (plane == 0) ? 0 : subsampling_y;
+					unitSize= LoopRestorationSize[ plane ];
+					unitRows= count_units_in_frame( unitSize, Round2( FrameHeight, subY) );
+					unitCols= count_units_in_frame( unitSize, Round2( UpscaledWidth, subX) );
+					unitRowStart= ( r * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize;
+					unitRowEnd= Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize);
+
+					if ( use_superres != 0 )
+					{
+						numerator= (MI_SIZE >> subX) * SuperresDenom;
+						denominator= unitSize * SUPERRES_NUM;
+					}
+					else 
+					{
+						numerator= MI_SIZE >> subX;
+						denominator= unitSize;
+					}
+					unitColStart= ( c * numerator + denominator - 1 ) / denominator;
+					unitColEnd= Min( unitCols, ( (c + w) * numerator + denominator - 1 ) / denominator);
+
+					this.read_lr_unit[ plane ] = new ReadLrUnit[ unitRowEnd][];
+					for ( unitRow = unitRowStart; unitRow < unitRowEnd; unitRow++ )
+					{
+
+						this.read_lr_unit[ plane ][ unitRow ] = new ReadLrUnit[ unitColEnd];
+						for ( unitCol = unitColStart; unitCol < unitColEnd; unitCol++ )
+						{
+							this.read_lr_unit[ plane ][ unitRow ][ unitCol ] =  new ReadLrUnit(plane,  unitRow,  unitCol) ;
+							size +=  stream.ReadClass<ReadLrUnit>(size, context, this.read_lr_unit[ plane ][ unitRow ][ unitCol ], "read_lr_unit"); 
+						}
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint w = 0;
+			uint h = 0;
+			uint plane = 0;
+			uint subX = 0;
+			uint subY = 0;
+			uint unitSize = 0;
+			uint unitRows = 0;
+			uint unitCols = 0;
+			uint unitRowStart = 0;
+			uint unitRowEnd = 0;
+			uint numerator = 0;
+			uint denominator = 0;
+			uint unitColStart = 0;
+			uint unitColEnd = 0;
+			uint unitRow = 0;
+			uint unitCol = 0;
+
+			if ( allow_intrabc != 0 )
+			{
+return;
+			}
+			w= Num_4x4_Blocks_Wide[ bSize ];
+			h= Num_4x4_Blocks_High[ bSize ];
+
+			for ( plane = 0; plane < NumPlanes; plane++ )
+			{
+
+				if ( FrameRestorationType[ plane ] != RESTORE_NONE )
+				{
+					subX= (plane == 0) ? 0 : subsampling_x;
+					subY= (plane == 0) ? 0 : subsampling_y;
+					unitSize= LoopRestorationSize[ plane ];
+					unitRows= count_units_in_frame( unitSize, Round2( FrameHeight, subY) );
+					unitCols= count_units_in_frame( unitSize, Round2( UpscaledWidth, subX) );
+					unitRowStart= ( r * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize;
+					unitRowEnd= Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize);
+
+					if ( use_superres != 0 )
+					{
+						numerator= (MI_SIZE >> subX) * SuperresDenom;
+						denominator= unitSize * SUPERRES_NUM;
+					}
+					else 
+					{
+						numerator= MI_SIZE >> subX;
+						denominator= unitSize;
+					}
+					unitColStart= ( c * numerator + denominator - 1 ) / denominator;
+					unitColEnd= Min( unitCols, ( (c + w) * numerator + denominator - 1 ) / denominator);
+
+					for ( unitRow = unitRowStart; unitRow < unitRowEnd; unitRow++ )
+					{
+
+						for ( unitCol = unitColStart; unitCol < unitColEnd; unitCol++ )
+						{
+							size += stream.WriteClass<ReadLrUnit>(context, this.read_lr_unit[ plane ][ unitRow ][ unitCol ], "read_lr_unit"); 
+						}
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+read_lr_unit(plane, unitRow, unitCol) { 
+ if ( FrameRestorationType[ plane ] == RESTORE_WIENER ) {
+ use_wiener  S()
+ restoration_type = use_wiener ? RESTORE_WIENER : RESTORE_NONE
+ } else if ( FrameRestorationType[ plane ] == RESTORE_SGRPROJ ) {
+ use_sgrproj  S()
+ restoration_type = use_sgrproj ? RESTORE_SGRPROJ : RESTORE_NONE
+ } else {
+ restoration_type  S()
+ }
+ LrType[ plane ][ unitRow ][ unitCol ] = restoration_type
+ if ( restoration_type == RESTORE_WIENER ) {
+ for ( pass = 0; pass < 2; pass++ ) {
+ if ( plane ) {
+ firstCoeff = 1
+ LrWiener[ plane ]
+ [ unitRow ][ unitCol ][ pass ][0] = 0
+ } else {
+ firstCoeff = 0
+ }
+ for ( j = firstCoeff; j < 3; j++ ) {
+ min = Wiener_Taps_Min[ j ]
+ max = Wiener_Taps_Max[ j ]
+ k = Wiener_Taps_K[ j ]
+ v = decode_signed_subexp_with_ref_bool( min, max + 1, k, RefLrWiener[ plane ][ pass ][ j ] )
+ LrWiener[ plane ]
+ [ unitRow ][ unitCol ][ pass ][ j ] = v
+ RefLrWiener[ plane ][ pass ][ j ] = v
+ }
+ }
+ } else if ( restoration_type == RESTORE_SGRPROJ ) {
+ lr_sgr_set L(SGRPROJ_PARAMS_BITS)
+ LrSgrSet[ plane ][ unitRow ][ unitCol ] = lr_sgr_set
+ for ( i = 0; i < 2; i++ ) {
+ radius = Sgr_Params[ lr_sgr_set ][ i * 2 ]
+ min = Sgrproj_Xqd_Min[i]
+ max = Sgrproj_Xqd_Max[i]
+ if ( radius ) {
+ v = decode_signed_subexp_with_ref_bool( min, max + 1, SGRPROJ_PRJ_SUBEXP_K, RefSgrXqd[ plane ][ i ])
+ } else {
+ v = 0
+ if ( i == 1 ) {
+ v = Clip3( min, max, (1 << SGRPROJ_PRJ_BITS) RefSgrXqd[ plane ][ 0 ] )
+ }
+ }
+ LrSgrXqd[ plane ][ unitRow ][ unitCol ][ i ] = v
+ RefSgrXqd[ plane ][ i ] = v
+ }
+ }
+ }
+    */
+    public class ReadLrUnit : IAomSerializable
+    {
+		private uint plane;
+		public uint Plane { get { return plane; } set { plane = value; } }
+		private uint unitRow;
+		public uint UnitRow { get { return unitRow; } set { unitRow = value; } }
+		private uint unitCol;
+		public uint UnitCol { get { return unitCol; } set { unitCol = value; } }
+		private uint use_wiener;
+		public uint UseWiener { get { return use_wiener; } set { use_wiener = value; } }
+		private uint use_sgrproj;
+		public uint UseSgrproj { get { return use_sgrproj; } set { use_sgrproj = value; } }
+		private uint restoration_type;
+		public uint RestorationType { get { return restoration_type; } set { restoration_type = value; } }
+		private uint lr_sgr_set;
+		public uint LrSgrSet { get { return lr_sgr_set; } set { lr_sgr_set = value; } }
+
+         public ReadLrUnit(uint plane, uint unitRow, uint unitCol)
+         { 
+			this.plane = plane;
+			this.unitRow = unitRow;
+			this.unitCol = unitCol;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint restoration_type = 0;
+			uint[][][] LrType = null;
+			uint pass = 0;
+			uint firstCoeff = 0;
+			uint[][][][][] LrWiener = null;
+			uint j = 0;
+			uint min = 0;
+			uint max = 0;
+			uint k = 0;
+			uint v = 0;
+			uint[][][] RefLrWiener = null;
+			uint[][][] LrSgrSet = null;
+			uint i = 0;
+			uint radius = 0;
+			uint[][][][] LrSgrXqd = null;
+			uint[][] RefSgrXqd = null;
+
+			if ( FrameRestorationType[ plane ] == RESTORE_WIENER )
+			{
+				size += stream.ReadS(size, out this.use_wiener, "use_wiener"); 
+				restoration_type= use_wiener ? RESTORE_WIENER : RESTORE_NONE;
+			}
+			else if ( FrameRestorationType[ plane ] == RESTORE_SGRPROJ )
+			{
+				size += stream.ReadS(size, out this.use_sgrproj, "use_sgrproj"); 
+				restoration_type= use_sgrproj ? RESTORE_SGRPROJ : RESTORE_NONE;
+			}
+			else 
+			{
+				size += stream.ReadS(size, out this.restoration_type, "restoration_type"); 
+			}
+			LrType[ plane ][ unitRow ][ unitCol ]= restoration_type;
+
+			if ( restoration_type == RESTORE_WIENER )
+			{
+
+				for ( pass = 0; pass < 2; pass++ )
+				{
+
+					if ( plane != 0 )
+					{
+						firstCoeff= 1;
+						LrWiener[ plane ][ unitRow ][ unitCol ][ pass ][0]= 0;
+					}
+					else 
+					{
+						firstCoeff= 0;
+					}
+
+					for ( j = firstCoeff; j < 3; j++ )
+					{
+						min= Wiener_Taps_Min[ j ];
+						max= Wiener_Taps_Max[ j ];
+						k= Wiener_Taps_K[ j ];
+						v= decode_signed_subexp_with_ref_bool( min, max + 1, k, RefLrWiener[ plane ][ pass ][ j ] );
+						LrWiener[ plane ][ unitRow ][ unitCol ][ pass ][ j ]= v;
+						RefLrWiener[ plane ][ pass ][ j ]= v;
+					}
+				}
+			}
+			else if ( restoration_type == RESTORE_SGRPROJ )
+			{
+				size += stream.ReadL(size, SGRPROJ_PARAMS_BITS, out this.lr_sgr_set, "lr_sgr_set"); 
+				LrSgrSet[ plane ][ unitRow ][ unitCol ]= lr_sgr_set;
+
+				for ( i = 0; i < 2; i++ )
+				{
+					radius= Sgr_Params[ lr_sgr_set ][ i * 2 ];
+					min= Sgrproj_Xqd_Min[i];
+					max= Sgrproj_Xqd_Max[i];
+
+					if ( radius != 0 )
+					{
+						v= decode_signed_subexp_with_ref_bool( min, max + 1, SGRPROJ_PRJ_SUBEXP_K, RefSgrXqd[ plane ][ i ]);
+					}
+					else 
+					{
+						v= 0;
+
+						if ( i == 1 )
+						{
+							v= Clip3( min, max, (1 << SGRPROJ_PRJ_BITS) RefSgrXqd[ plane ][ 0 ] );
+						}
+					}
+					LrSgrXqd[ plane ][ unitRow ][ unitCol ][ i ]= v;
+					RefSgrXqd[ plane ][ i ]= v;
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint restoration_type = 0;
+			uint[][][] LrType = null;
+			uint pass = 0;
+			uint firstCoeff = 0;
+			uint[][][][][] LrWiener = null;
+			uint j = 0;
+			uint min = 0;
+			uint max = 0;
+			uint k = 0;
+			uint v = 0;
+			uint[][][] RefLrWiener = null;
+			uint[][][] LrSgrSet = null;
+			uint i = 0;
+			uint radius = 0;
+			uint[][][][] LrSgrXqd = null;
+			uint[][] RefSgrXqd = null;
+
+			if ( FrameRestorationType[ plane ] == RESTORE_WIENER )
+			{
+				size += stream.WriteS( this.use_wiener, "use_wiener"); 
+				restoration_type= use_wiener ? RESTORE_WIENER : RESTORE_NONE;
+			}
+			else if ( FrameRestorationType[ plane ] == RESTORE_SGRPROJ )
+			{
+				size += stream.WriteS( this.use_sgrproj, "use_sgrproj"); 
+				restoration_type= use_sgrproj ? RESTORE_SGRPROJ : RESTORE_NONE;
+			}
+			else 
+			{
+				size += stream.WriteS( this.restoration_type, "restoration_type"); 
+			}
+			LrType[ plane ][ unitRow ][ unitCol ]= restoration_type;
+
+			if ( restoration_type == RESTORE_WIENER )
+			{
+
+				for ( pass = 0; pass < 2; pass++ )
+				{
+
+					if ( plane != 0 )
+					{
+						firstCoeff= 1;
+						LrWiener[ plane ][ unitRow ][ unitCol ][ pass ][0]= 0;
+					}
+					else 
+					{
+						firstCoeff= 0;
+					}
+
+					for ( j = firstCoeff; j < 3; j++ )
+					{
+						min= Wiener_Taps_Min[ j ];
+						max= Wiener_Taps_Max[ j ];
+						k= Wiener_Taps_K[ j ];
+						v= decode_signed_subexp_with_ref_bool( min, max + 1, k, RefLrWiener[ plane ][ pass ][ j ] );
+						LrWiener[ plane ][ unitRow ][ unitCol ][ pass ][ j ]= v;
+						RefLrWiener[ plane ][ pass ][ j ]= v;
+					}
+				}
+			}
+			else if ( restoration_type == RESTORE_SGRPROJ )
+			{
+				size += stream.WriteL(SGRPROJ_PARAMS_BITS,  this.lr_sgr_set, "lr_sgr_set"); 
+				LrSgrSet[ plane ][ unitRow ][ unitCol ]= lr_sgr_set;
+
+				for ( i = 0; i < 2; i++ )
+				{
+					radius= Sgr_Params[ lr_sgr_set ][ i * 2 ];
+					min= Sgrproj_Xqd_Min[i];
+					max= Sgrproj_Xqd_Max[i];
+
+					if ( radius != 0 )
+					{
+						v= decode_signed_subexp_with_ref_bool( min, max + 1, SGRPROJ_PRJ_SUBEXP_K, RefSgrXqd[ plane ][ i ]);
+					}
+					else 
+					{
+						v= 0;
+
+						if ( i == 1 )
+						{
+							v= Clip3( min, max, (1 << SGRPROJ_PRJ_BITS) RefSgrXqd[ plane ][ 0 ] );
+						}
+					}
+					LrSgrXqd[ plane ][ unitRow ][ unitCol ][ i ]= v;
+					RefSgrXqd[ plane ][ i ]= v;
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+decode_signed_subexp_with_ref_bool( low, high, k, r ) { 
+ x = decode_unsigned_subexp_with_ref_bool(high - low, k, r - low)
+ return x + low
+ }
+    */
+    public class DecodeSignedSubexpWithRefBool : IAomSerializable
+    {
+		private uint low;
+		public uint Low { get { return low; } set { low = value; } }
+		private uint high;
+		public uint High { get { return high; } set { high = value; } }
+		private uint k;
+		public uint k { get { return k; } set { k = value; } }
+		private uint r;
+		public uint r { get { return r; } set { r = value; } }
+
+         public DecodeSignedSubexpWithRefBool(uint low, uint high, uint k, uint r)
+         { 
+			this.low = low;
+			this.high = high;
+			this.k = k;
+			this.r = r;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint x = 0;
+			x= decode_unsigned_subexp_with_ref_bool(high - low, k, r - low);
+return x + low;
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint x = 0;
+			x= decode_unsigned_subexp_with_ref_bool(high - low, k, r - low);
+return x + low;
+
+            return size;
+         }
+
+    }
+
+    /*
+
+ decode_unsigned_subexp_with_ref_bool( mx, k, r ) {
+ v = decode_subexp_bool( mx, k )
+ if ( (r << 1) <= mx ) {
+ return inverse_recenter(r, v)
+ } else {
+ return mx - 1 - inverse_recenter(mx - 1 - r, v)
+ }
+ }
+    */
+    public class DecodeUnsignedSubexpWithRefBool : IAomSerializable
+    {
+		private uint mx;
+		public uint Mx { get { return mx; } set { mx = value; } }
+		private uint k;
+		public uint k { get { return k; } set { k = value; } }
+		private uint r;
+		public uint r { get { return r; } set { r = value; } }
+
+         public DecodeUnsignedSubexpWithRefBool(uint mx, uint k, uint r)
+         { 
+			this.mx = mx;
+			this.k = k;
+			this.r = r;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint v = 0;
+			v= decode_subexp_bool( mx, k );
+
+			if ( (r << (int) 1) <= mx )
+			{
+return inverse_recenter(r, v);
+			}
+			else 
+			{
+return mx - 1 - inverse_recenter(mx - 1 - r, v);
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint v = 0;
+			v= decode_subexp_bool( mx, k );
+
+			if ( (r << (int) 1) <= mx )
+			{
+return inverse_recenter(r, v);
+			}
+			else 
+			{
+return mx - 1 - inverse_recenter(mx - 1 - r, v);
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+ decode_subexp_bool( numSyms, k ) {
+ i = 0
+ mk = 0
+ while ( 1 ) {
+ b2 = i ? k + i - 1 : k
+ a = 1 << b2
+ if ( numSyms <= mk + 3 * a ) {
+ subexp_unif_bools  NS(numSyms - mk)
+ return subexp_unif_bools + mk
+ } else {
+ subexp_more_bools  L(1)
+ if ( subexp_more_bools ) {
+ i++
+ mk += a
+ } else {
+ subexp_bools  L(b2)
+ return subexp_bools + mk
+ }
+ }
+ }
+ }
+    */
+    public class DecodeSubexpBool : IAomSerializable
+    {
+		private uint numSyms;
+		public uint NumSyms { get { return numSyms; } set { numSyms = value; } }
+		private uint k;
+		public uint k { get { return k; } set { k = value; } }
+		private Dictionary<int, uint> subexp_unif_bools = new Dictionary<int, uint>();
+		public Dictionary<int, uint> SubexpUnifBools { get { return subexp_unif_bools; } set { subexp_unif_bools = value; } }
+		private Dictionary<int, uint> subexp_more_bools = new Dictionary<int, uint>();
+		public Dictionary<int, uint> SubexpMoreBools { get { return subexp_more_bools; } set { subexp_more_bools = value; } }
+		private Dictionary<int, uint> subexp_bools = new Dictionary<int, uint>();
+		public Dictionary<int, uint> SubexpBools { get { return subexp_bools; } set { subexp_bools = value; } }
+
+         public DecodeSubexpBool(uint numSyms, uint k)
+         { 
+			this.numSyms = numSyms;
+			this.k = k;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint i = 0;
+			uint mk = 0;
+			int whileIndex = -1;
+			uint b2 = 0;
+			uint a = 0;
+			i= 0;
+			mk= 0;
+
+			while ( 1 != 0 )
+			{
+				whileIndex++;
+
+				b2= i ? k + i - 1 : k;
+				a= 1 << b2;
+
+				if ( numSyms <= mk + 3 * a )
+				{
+					size += stream.ReadUnsignedInt(size, numSyms - mk, whileIndex, this.subexp_unif_bools, "subexp_unif_bools"); 
+return subexp_unif_bools + mk;
+				}
+				else 
+				{
+					size += stream.ReadL(size, 1, whileIndex, this.subexp_more_bools, "subexp_more_bools"); 
+
+					if ( subexp_more_bools[whileIndex] != 0 )
+					{
+						i++;
+						mk+= a;
+					}
+					else 
+					{
+						size += stream.ReadL(size, b2, whileIndex, this.subexp_bools, "subexp_bools"); 
+return subexp_bools + mk;
+					}
+				}
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint i = 0;
+			uint mk = 0;
+			int whileIndex = -1;
+			uint b2 = 0;
+			uint a = 0;
+			i= 0;
+			mk= 0;
+
+			while ( 1 != 0 )
+			{
+				whileIndex++;
+
+				b2= i ? k + i - 1 : k;
+				a= 1 << b2;
+
+				if ( numSyms <= mk + 3 * a )
+				{
+					size += stream.WriteUnsignedInt(numSyms - mk, whileIndex, this.subexp_unif_bools, "subexp_unif_bools"); 
+return subexp_unif_bools + mk;
+				}
+				else 
+				{
+					size += stream.WriteL(1,  whileIndex, this.subexp_more_bools, "subexp_more_bools"); 
+
+					if ( subexp_more_bools[whileIndex] != 0 )
+					{
+						i++;
+						mk+= a;
+					}
+					else 
+					{
+						size += stream.WriteL(b2,  whileIndex, this.subexp_bools, "subexp_bools"); 
+return subexp_bools + mk;
+					}
+				}
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+tile_list_obu() {
+ output_frame_width_in_tiles_minus_1 f(8)
+ output_frame_height_in_tiles_minus_1 f(8)
+ tile_count_minus_1 f(16)
+ for ( tile = 0; tile <= tile_count_minus_1; tile++ )
+ tile_list_entry()
+ }
+    */
+    public class TileListObu : IAomSerializable
+    {
+		private uint output_frame_width_in_tiles_minus_1;
+		public uint OutputFrameWidthInTilesMinus1 { get { return output_frame_width_in_tiles_minus_1; } set { output_frame_width_in_tiles_minus_1 = value; } }
+		private uint output_frame_height_in_tiles_minus_1;
+		public uint OutputFrameHeightInTilesMinus1 { get { return output_frame_height_in_tiles_minus_1; } set { output_frame_height_in_tiles_minus_1 = value; } }
+		private uint tile_count_minus_1;
+		public uint TileCountMinus1 { get { return tile_count_minus_1; } set { tile_count_minus_1 = value; } }
+		private TileListEntry[] tile_list_entry;
+		public TileListEntry[] TileListEntry { get { return tile_list_entry; } set { tile_list_entry = value; } }
+
+         public TileListObu()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint tile = 0;
+			size += stream.ReadFixed(size, 8, out this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
+			size += stream.ReadFixed(size, 8, out this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
+			size += stream.ReadFixed(size, 16, out this.tile_count_minus_1, "tile_count_minus_1"); 
+
+			this.tile_list_entry = new TileListEntry[ tile_count_minus_1];
+			for ( tile = 0; tile <= tile_count_minus_1; tile++ )
+			{
+				this.tile_list_entry[ tile ] =  new TileListEntry() ;
+				size +=  stream.ReadClass<TileListEntry>(size, context, this.tile_list_entry[ tile ], "tile_list_entry"); 
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint tile = 0;
+			size += stream.WriteFixed(8, this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
+			size += stream.WriteFixed(8, this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
+			size += stream.WriteFixed(16, this.tile_count_minus_1, "tile_count_minus_1"); 
+
+			for ( tile = 0; tile <= tile_count_minus_1; tile++ )
+			{
+				size += stream.WriteClass<TileListEntry>(context, this.tile_list_entry[ tile ], "tile_list_entry"); 
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+tile_list_entry() {
+ anchor_frame_idx f(8)
+ anchor_tile_row f(8)
+ anchor_tile_col f(8)
+ tile_data_size_minus_1 f(16)
+ N = 8 * (tile_data_size_minus_1 + 1)
+ coded_tile_data f(N)
+ }
+    */
+    public class TileListEntry : IAomSerializable
+    {
+		private uint anchor_frame_idx;
+		public uint AnchorFrameIdx { get { return anchor_frame_idx; } set { anchor_frame_idx = value; } }
+		private uint anchor_tile_row;
+		public uint AnchorTileRow { get { return anchor_tile_row; } set { anchor_tile_row = value; } }
+		private uint anchor_tile_col;
+		public uint AnchorTileCol { get { return anchor_tile_col; } set { anchor_tile_col = value; } }
+		private uint tile_data_size_minus_1;
+		public uint TileDataSizeMinus1 { get { return tile_data_size_minus_1; } set { tile_data_size_minus_1 = value; } }
+		private uint coded_tile_data;
+		public uint CodedTileData { get { return coded_tile_data; } set { coded_tile_data = value; } }
+
+         public TileListEntry()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint N = 0;
+			size += stream.ReadFixed(size, 8, out this.anchor_frame_idx, "anchor_frame_idx"); 
+			size += stream.ReadFixed(size, 8, out this.anchor_tile_row, "anchor_tile_row"); 
+			size += stream.ReadFixed(size, 8, out this.anchor_tile_col, "anchor_tile_col"); 
+			size += stream.ReadFixed(size, 16, out this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
+			N= 8 * (tile_data_size_minus_1 + 1);
+			size += stream.ReadVariable(size, N, out this.coded_tile_data, "coded_tile_data"); 
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			uint N = 0;
+			size += stream.WriteFixed(8, this.anchor_frame_idx, "anchor_frame_idx"); 
+			size += stream.WriteFixed(8, this.anchor_tile_row, "anchor_tile_row"); 
+			size += stream.WriteFixed(8, this.anchor_tile_col, "anchor_tile_col"); 
+			size += stream.WriteFixed(16, this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
+			N= 8 * (tile_data_size_minus_1 + 1);
+			size += stream.WriteVariable(N, this.coded_tile_data, "coded_tile_data"); 
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+bitstream() { 
+ while ( more_data_in_bitstream() ) {
+  temporal_unit_size leb128()
+ temporal_unit( temporal_unit_size )
+ }
+ }
+    */
+    public class Bitstream : IAomSerializable
+    {
+		private Dictionary<int, uint> temporal_unit_size = new Dictionary<int, uint>();
+		public Dictionary<int, uint> TemporalUnitSize { get { return temporal_unit_size; } set { temporal_unit_size = value; } }
+		private Dictionary<int, TemporalUnit> temporal_unit = new Dictionary<int, TemporalUnit>();
+		public Dictionary<int, TemporalUnit> TemporalUnit { get { return temporal_unit; } set { temporal_unit = value; } }
+
+         public Bitstream()
+         { 
+
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			int whileIndex = -1;
+
+			while ( more_data_in_bitstream() )
+			{
+				whileIndex++;
+
+				size += stream.ReadLeb128(size,  whileIndex, this.temporal_unit_size, "temporal_unit_size"); 
+				this.temporal_unit.Add(whileIndex,  new TemporalUnit( temporal_unit_size ) );
+				size +=  stream.ReadClass<TemporalUnit>(size, context, this.temporal_unit[whileIndex], "temporal_unit"); 
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			int whileIndex = -1;
+
+			while ( more_data_in_bitstream() )
+			{
+				whileIndex++;
+
+				size += stream.WriteLeb128( whileIndex, this.temporal_unit_size, "temporal_unit_size"); 
+				size += stream.WriteClass<TemporalUnit>(context, whileIndex, this.temporal_unit, "temporal_unit"); 
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+temporal_unit( sz ) { 
+ while ( sz > 0 ) {
+  frame_unit_size leb128()
+ sz -= Leb128Bytes
+ frame_unit( frame_unit_size )
+ sz -= frame_unit_size
+ }
+ }
+    */
+    public class TemporalUnit : IAomSerializable
+    {
+		private uint sz;
+		public uint Sz { get { return sz; } set { sz = value; } }
+		private Dictionary<int, uint> frame_unit_size = new Dictionary<int, uint>();
+		public Dictionary<int, uint> FrameUnitSize { get { return frame_unit_size; } set { frame_unit_size = value; } }
+		private Dictionary<int, FrameUnit> frame_unit = new Dictionary<int, FrameUnit>();
+		public Dictionary<int, FrameUnit> FrameUnit { get { return frame_unit; } set { frame_unit = value; } }
+
+         public TemporalUnit(uint sz)
+         { 
+			this.sz = sz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			int whileIndex = -1;
+
+			while ( sz > 0 )
+			{
+				whileIndex++;
+
+				size += stream.ReadLeb128(size,  whileIndex, this.frame_unit_size, "frame_unit_size"); 
+				sz-= Leb128Bytes;
+				this.frame_unit.Add(whileIndex,  new FrameUnit( frame_unit_size ) );
+				size +=  stream.ReadClass<FrameUnit>(size, context, this.frame_unit[whileIndex], "frame_unit"); 
+				sz-= frame_unit[whileIndex]_size[whileIndex];
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			int whileIndex = -1;
+
+			while ( sz > 0 )
+			{
+				whileIndex++;
+
+				size += stream.WriteLeb128( whileIndex, this.frame_unit_size, "frame_unit_size"); 
+				sz-= Leb128Bytes;
+				size += stream.WriteClass<FrameUnit>(context, whileIndex, this.frame_unit, "frame_unit"); 
+				sz-= frame_unit[whileIndex]_size[whileIndex];
+			}
+
+            return size;
+         }
+
+    }
+
+    /*
+
+
+
+frame_unit( sz ) { 
+ while ( sz > 0 ) {
+  obu_length leb128()
+ sz -= Leb128Bytes
+ open_bitstream_unit( obu_length )
+ sz -= obu_length
+ }
+ }
+    */
+    public class FrameUnit : IAomSerializable
+    {
+		private uint sz;
+		public uint Sz { get { return sz; } set { sz = value; } }
+		private Dictionary<int, uint> obu_length = new Dictionary<int, uint>();
+		public Dictionary<int, uint> ObuLength { get { return obu_length; } set { obu_length = value; } }
+		private Dictionary<int, OpenBitstreamUnit> open_bitstream_unit = new Dictionary<int, OpenBitstreamUnit>();
+		public Dictionary<int, OpenBitstreamUnit> OpenBitstreamUnit { get { return open_bitstream_unit; } set { open_bitstream_unit = value; } }
+
+         public FrameUnit(uint sz)
+         { 
+			this.sz = sz;
+         }
+
+         public ulong Read(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			int whileIndex = -1;
+
+			while ( sz > 0 )
+			{
+				whileIndex++;
+
+				size += stream.ReadLeb128(size,  whileIndex, this.obu_length, "obu_length"); 
+				sz-= Leb128Bytes;
+				this.open_bitstream_unit.Add(whileIndex,  new OpenBitstreamUnit( obu_length ) );
+				size +=  stream.ReadClass<OpenBitstreamUnit>(size, context, this.open_bitstream_unit[whileIndex], "open_bitstream_unit"); 
+				sz-= obu_length[whileIndex];
+			}
+
+            return size;
+         }
+
+         public ulong Write(IAomContext context, AomStream stream)
+         {
+            ulong size = 0;
+
+			int whileIndex = -1;
+
+			while ( sz > 0 )
+			{
+				whileIndex++;
+
+				size += stream.WriteLeb128( whileIndex, this.obu_length, "obu_length"); 
+				sz-= Leb128Bytes;
+				size += stream.WriteClass<OpenBitstreamUnit>(context, whileIndex, this.open_bitstream_unit, "open_bitstream_unit"); 
+				sz-= obu_length[whileIndex];
 			}
 
             return size;

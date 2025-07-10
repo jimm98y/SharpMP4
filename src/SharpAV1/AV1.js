@@ -1245,19 +1245,19 @@ global_motion_params() {
  }
  GmType[ref] = type
  if ( type >= ROTZOOM ) {
- read_global_param(type,ref,2)
- read_global_param(type,ref,3)
+ read_global_param(type, ref, 2)
+ read_global_param(type, ref, 3)
  if ( type == AFFINE ) {
- read_global_param(type,ref,4)
- read_global_param(type,ref,5)
+ read_global_param(type, ref, 4)
+ read_global_param(type, ref, 5)
  } else {
  gm_params[ref][4] = -gm_params[ref][3]
  gm_params[ref][5] = gm_params[ref][2]
  }
  }
  if ( type >= TRANSLATION ) {
- read_global_param(type,ref,0)
- read_global_param(type,ref,1)
+ read_global_param(type, ref, 0)
+ read_global_param(type, ref, 1)
  }
  }
  }
@@ -1796,27 +1796,27 @@ read_segment_id() {
 
 
 
-neg_deinterleave(diff,ref,max) {
+neg_deinterleave(diff, ref, max) {
  if (!ref)
  return diff
- if (ref >=(max-1))
- return max-diff-1
- if(2*ref<max){
- if(diff <=2*ref){
- if(diff&1)
- return ref+( (diff+1) >>1)
+ if (ref >= ( max - 1 ))
+ return max - diff - 1
+ if(2 * ref < max){
+ if(diff <= 2 * ref){
+ if(diff & 1)
+ return ref + ( (diff+1) >> 1)
  else 
- return ref-(diff >>1)
+ return ref - (diff >> 1)
  }
  return diff
  } else {
- if (diff <=2*(max-ref-1)){
- if (diff&1)
- return ref+( (diff+1) >>1)
+ if (diff <=2 * (max - ref - 1)){
+ if (diff & 1)
+ return ref + ( (diff + 1) >>1)
  else 
- return ref-(diff >>1)
+ return ref - (diff >> 1 )
  }
- return max-(diff+1)
+ return max - ( diff + 1 )
  }
  }
 
@@ -1915,7 +1915,6 @@ seg_feature_active_idx( idx, feature ) {
  tx_depth S()
  for ( i = 0; i < tx_depth; i++ )
  TxSize = Split_Tx_Size[ TxSize ]
- }
  }
  }
 
@@ -2166,9 +2165,8 @@ inter_block_mode_info() {
 
 
 
-has_nearmv(){
- return (YMode== NEARMV||YMode ==NEAR_NEARMV
- ||YMode ==NEAR_NEWMV ||YMode ==NEW_NEARMV)
+has_nearmv() {
+ return (YMode== NEARMV||YMode ==NEAR_NEARMV ||YMode ==NEAR_NEWMV ||YMode ==NEW_NEARMV)
  }
 
 
@@ -2245,18 +2243,15 @@ has_nearmv(){
  comp_ref S()
  if ( comp_ref == 0 ) {
  comp_ref_p1 S()
- RefFrame[ 0 ] = comp_ref_p1 ?
- LAST2_FRAME : LAST_FRAME
+ RefFrame[ 0 ] = comp_ref_p1 ? LAST2_FRAME : LAST_FRAME
  } else {
  comp_ref_p2 S()
- RefFrame[ 0 ] = comp_ref_p2 ?
- GOLDEN_FRAME : LAST3_FRAME
+ RefFrame[ 0 ] = comp_ref_p2 ? GOLDEN_FRAME : LAST3_FRAME
  }
  comp_bwdref S()
  if ( comp_bwdref == 0 ) {
  comp_bwdref_p1 S()
- RefFrame[ 1 ] = comp_bwdref_p1 ?
- ALTREF2_FRAME : BWDREF_FRAME
+ RefFrame[ 1 ] = comp_bwdref_p1 ? ALTREF2_FRAME : BWDREF_FRAME
  } else {
  RefFrame[ 1 ] = ALTREF_FRAME
  }
@@ -2267,8 +2262,7 @@ has_nearmv(){
  single_ref_p2 S()
  if ( single_ref_p2 == 0 ) {
  single_ref_p6 S()
- RefFrame[ 0 ] = single_ref_p6 ?
- ALTREF2_FRAME : BWDREF_FRAME
+ RefFrame[ 0 ] = single_ref_p6 ? ALTREF2_FRAME : BWDREF_FRAME
  } else {
  RefFrame[ 0 ] = ALTREF_FRAME
  }
@@ -2276,12 +2270,10 @@ has_nearmv(){
  single_ref_p3 S()
  if ( single_ref_p3 ) {
  single_ref_p5 S()
- RefFrame[ 0 ] = single_ref_p5 ?
- GOLDEN_FRAME : LAST3_FRAME
+ RefFrame[ 0 ] = single_ref_p5 ? GOLDEN_FRAME : LAST3_FRAME
  } else {
  single_ref_p4 S()
- RefFrame[ 0 ] = single_ref_p4 ?
- LAST2_FRAME : LAST_FRAME
+ RefFrame[ 0 ] = single_ref_p4 ? LAST2_FRAME : LAST_FRAME
  }
  }
  RefFrame[ 1 ] = NONE
@@ -2364,12 +2356,13 @@ has_nearmv(){
  motion_mode S()
  }
  }
-  is_scaled((refFrame)){{
- refIdx==ref_frame_idx[[refFrame--LAST_FRAME]]
- xScale==((((RefUpscaledWidth[[refIdx]]<< <<REF_SCALE_SHIFT))++((FrameWidth//22))))//FrameWidth
- yScale==((((RefFrameHeight[[refIdx]]<< <<REF_SCALE_SHIFT))++((FrameHeight//22))))//FrameHeight
- noScale==11<< <<REF_SCALE_SHIFT
- return returnxScale!= !=noScale|| ||yScale!= !=noScale
+
+is_scaled(refFrame) {
+ refIdx=ref_frame_idx[refFrame-LAST_FRAME]
+ xScale=((RefUpscaledWidth[refIdx] <<REF_SCALE_SHIFT)+(FrameWidth/2))//FrameWidth
+ yScale=((RefFrameHeight[refIdx] <<REF_SCALE_SHIFT)+(FrameHeight/2))//FrameHeight
+ noScale=1 <<REF_SCALE_SHIFT
+ return returnxScale !=noScale ||yScale !=noScale
  }
 
 
@@ -2495,14 +2488,12 @@ has_nearmv(){
   mv_class0_hp S()
  else
  mv_class0_hp = 1
- mag = ( ( mv_class0_bit << 3 ) |
- ( mv_class0_fr << 1 ) |
- mv_class0_hp ) + 1
+ mag = ( ( mv_class0_bit << 3 ) | ( mv_class0_fr << 1 ) | mv_class0_hp ) + 1
  } else {
  d = 0
  for ( i = 0; i < mv_class; i++ ) {
   mv_bit S()
- d |= mv_bit << i
+ d = d | mv_bit << i
  }
  mag = CLASS0_SIZE << ( mv_class + 2 )
  if ( force_integer_mv )
@@ -3065,6 +3056,7 @@ get_plane_residual_size( subsize, plane ) {
  } else {
  CflAlphaV = 0
  }
+ }
 
 
 palette_mode_info() { 
@@ -3095,9 +3087,7 @@ palette_mode_info() {
  while ( idx < PaletteSizeY ) {
  palette_delta_y  L(paletteBits)
  palette_delta_y++
- palette_colors_y[ idx ] =
- Clip1( palette_colors_y[ idx - 1 ] +
- palette_delta_y )
+ palette_colors_y[ idx ] = Clip1( palette_colors_y[ idx - 1 ] + palette_delta_y )
  range = ( 1 << BitDepth ) - palette_colors_y[ idx ] - 1
  paletteBits = Min( paletteBits, CeilLog2( range ) )
  idx++
@@ -3131,8 +3121,7 @@ palette_mode_info() {
  while ( idx < PaletteSizeUV ) {
  palette_delta_u palette_delta_u L(paletteBits)
  palette_colors_u[ idx ] =
- Clip1( palette_colors_u[ idx - 1 ] +
- palette_delta_u )
+ Clip1( palette_colors_u[ idx - 1 ] + palette_delta_u )
  range = ( 1 << BitDepth ) - palette_colors_u[ idx ]
  paletteBits = Min( paletteBits, CeilLog2( range ) )
  idx++
@@ -3144,9 +3133,9 @@ palette_mode_info() {
  maxVal = 1 << BitDepth
  palette_num_extra_bits_v L(2)
  paletteBits = minBits + palette_num_extra_bits_v
- palette_colors_v[ 0 ] palette_colors_v[ 0 ] L(BitDepth)
+ palette_colors_v[ 0 ] L(BitDepth)
  for ( idx = 1; idx < PaletteSizeUV; idx++ ) {
- palette_delta_v palette_delta_v L(paletteBits)
+ palette_delta_v L(paletteBits)
  if ( palette_delta_v ) {
  palette_delta_sign_bit_v L(1)
  if ( palette_delta_sign_bit_v ) {
@@ -3379,10 +3368,7 @@ get_palette_color_context( colorMap, r, c, n ) {
 
 
 is_inside( candidateR, candidateC ) { 
- return ( candidateC >= MiColStart &&
- candidateC < MiColEnd &&
- candidateR >= MiRowStart &&
- candidateR < MiRowEnd )
+ return ( candidateC >= MiColStart && candidateC < MiColEnd && candidateR >= MiRowStart && candidateR < MiRowEnd )
  }
 
 
@@ -3391,10 +3377,7 @@ is_inside_filter_region( candidateR, candidateC ) {
  colEnd = MiCols
  rowStart = 0
  rowEnd = MiRows
- return (candidateC >= colStart &&
- candidateC < colEnd &&
- candidateR >= rowStart &&
- candidateR < rowEnd)
+ return (candidateC >= colStart && candidateC < colEnd && candidateR >= rowStart && candidateR < rowEnd)
  }
 
 
@@ -3459,10 +3442,8 @@ read_lr( r, c, bSize ) {
  unitSize = LoopRestorationSize[ plane ]
  unitRows = count_units_in_frame( unitSize, Round2( FrameHeight, subY) )
  unitCols = count_units_in_frame( unitSize, Round2( UpscaledWidth, subX) )
- unitRowStart = ( r * ( MI_SIZE >> subY) +
- unitSize - 1 ) / unitSize
- unitRowEnd = Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) +
- unitSize - 1 ) / unitSize)
+ unitRowStart = ( r * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize
+ unitRowEnd = Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize)
  if ( use_superres ) {
  numerator = (MI_SIZE >> subX) * SuperresDenom
  denominator = unitSize * SUPERRES_NUM
@@ -3471,8 +3452,7 @@ read_lr( r, c, bSize ) {
  denominator = unitSize
  }
  unitColStart = ( c * numerator + denominator - 1 ) / denominator
- unitColEnd = Min( unitCols, ( (c + w) * numerator +
- denominator - 1 ) / denominator)
+ unitColEnd = Min( unitCols, ( (c + w) * numerator + denominator - 1 ) / denominator)
  for ( unitRow = unitRowStart; unitRow < unitRowEnd; unitRow++ ) {
  for ( unitCol = unitColStart; unitCol < unitColEnd; unitCol++ ) {
  read_lr_unit(plane, unitRow, unitCol)
@@ -3507,8 +3487,7 @@ read_lr_unit(plane, unitRow, unitCol) {
  min = Wiener_Taps_Min[ j ]
  max = Wiener_Taps_Max[ j ]
  k = Wiener_Taps_K[ j ]
- v = decode_signed_subexp_with_ref_bool(
- min, max + 1, k, RefLrWiener[ plane ][ pass ][ j ] )
+ v = decode_signed_subexp_with_ref_bool( min, max + 1, k, RefLrWiener[ plane ][ pass ][ j ] )
  LrWiener[ plane ]
  [ unitRow ][ unitCol ][ pass ][ j ] = v
  RefLrWiener[ plane ][ pass ][ j ] = v
@@ -3522,14 +3501,11 @@ read_lr_unit(plane, unitRow, unitCol) {
  min = Sgrproj_Xqd_Min[i]
  max = Sgrproj_Xqd_Max[i]
  if ( radius ) {
- v = decode_signed_subexp_with_ref_bool(
- min, max + 1, SGRPROJ_PRJ_SUBEXP_K,
- RefSgrXqd[ plane ][ i ])
+ v = decode_signed_subexp_with_ref_bool( min, max + 1, SGRPROJ_PRJ_SUBEXP_K, RefSgrXqd[ plane ][ i ])
  } else {
  v = 0
  if ( i == 1 ) {
- v = Clip3( min, max, (1 << SGRPROJ_PRJ_BITS) 
-RefSgrXqd[ plane ][ 0 ] )
+ v = Clip3( min, max, (1 << SGRPROJ_PRJ_BITS) RefSgrXqd[ plane ][ 0 ] )
  }
  }
  LrSgrXqd[ plane ][ unitRow ][ unitCol ][ i ] = v
