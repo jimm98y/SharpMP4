@@ -593,6 +593,12 @@ namespace Sharp{type}
                 return BuildReturn(b, parent, retrn, level, methodType);
             }
 
+            var brk = field as AomBreak;
+            if (brk != null)
+            {
+                return "break;";
+            }
+
             if ((field as AomField).Type == null && (!string.IsNullOrWhiteSpace((field as AomField).Value) || !string.IsNullOrWhiteSpace((field as AomField).Increment)))
             {
                 return BuildStatement(b, parent, field as AomField, level, methodType);

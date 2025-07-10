@@ -4307,8 +4307,6 @@ frame_size_with_refs() {
     {
 		private uint[] found_ref;
 		public uint[] FoundRef { get { return found_ref; } set { found_ref = value; } }
-		private Break[] break;
-		public Break[] Break { get { return break; } set { break = value; } }
 		private FrameSize frame_size;
 		public FrameSize FrameSize { get { return frame_size; } set { frame_size = value; } }
 		private RenderSize render_size;
@@ -4335,7 +4333,6 @@ frame_size_with_refs() {
 			uint RenderHeight = 0;
 
 			this.found_ref = new uint[ REFS_PER_FRAME];
-			this.break = new Break[ REFS_PER_FRAME];
 			for ( i = 0; i < REFS_PER_FRAME; i++ )
 			{
 				size += stream.ReadFixed(size, 1, out this.found_ref[ i ], "found_ref"); 
@@ -4347,8 +4344,7 @@ frame_size_with_refs() {
 					FrameHeight= RefFrameHeight[ ref_frame_idx[ i ] ];
 					RenderWidth= RefRenderWidth[ ref_frame_idx[ i ] ];
 					RenderHeight= RefRenderHeight[ ref_frame_idx[ i ] ];
-					this.break[ i ] =  new Break() ;
-					size +=  stream.ReadClass<Break>(size, context, this.break[ i ], "break"); 
+break;
 				}
 			}
 
@@ -4392,7 +4388,7 @@ frame_size_with_refs() {
 					FrameHeight= RefFrameHeight[ ref_frame_idx[ i ] ];
 					RenderWidth= RefRenderWidth[ ref_frame_idx[ i ] ];
 					RenderHeight= RefRenderHeight[ ref_frame_idx[ i ] ];
-					size += stream.WriteClass<Break>(context, this.break[ i ], "break"); 
+break;
 				}
 			}
 
@@ -5516,8 +5512,6 @@ tile_info () {
 		public uint UniformTileSpacingFlag { get { return uniform_tile_spacing_flag; } set { uniform_tile_spacing_flag = value; } }
 		private Dictionary<int, uint> increment_tile_cols_log2 = new Dictionary<int, uint>();
 		public Dictionary<int, uint> IncrementTileColsLog2 { get { return increment_tile_cols_log2; } set { increment_tile_cols_log2 = value; } }
-		private Dictionary<int, Break> break = new Dictionary<int, Break>();
-		public Dictionary<int, Break> Break { get { return break; } set { break = value; } }
 		private Dictionary<int, uint> increment_tile_rows_log2 = new Dictionary<int, uint>();
 		public Dictionary<int, uint> IncrementTileRowsLog2 { get { return increment_tile_rows_log2; } set { increment_tile_rows_log2 = value; } }
 		private uint[] width_in_sbs_minus_1;
@@ -5595,8 +5589,7 @@ tile_info () {
 					}
 					else 
 					{
-						this.break.Add(whileIndex,  new Break() );
-						size +=  stream.ReadClass<Break>(size, context, this.break[whileIndex], "break"); 
+break;
 					}
 				}
 				tileWidthSb= (sbCols + (1 << TileColsLog2) - 1) >> TileColsLog2;
@@ -5624,8 +5617,7 @@ tile_info () {
 					}
 					else 
 					{
-						this.break.Add(whileIndex,  new Break() );
-						size +=  stream.ReadClass<Break>(size, context, this.break[whileIndex], "break"); 
+break;
 					}
 				}
 				tileHeightSb= (sbRows + (1 << TileRowsLog2) - 1) >> TileRowsLog2;
@@ -5758,7 +5750,7 @@ tile_info () {
 					}
 					else 
 					{
-						size += stream.WriteClass<Break>(context, whileIndex, this.break, "break"); 
+break;
 					}
 				}
 				tileWidthSb= (sbCols + (1 << TileColsLog2) - 1) >> TileColsLog2;
@@ -5786,7 +5778,7 @@ tile_info () {
 					}
 					else 
 					{
-						size += stream.WriteClass<Break>(context, whileIndex, this.break, "break"); 
+break;
 					}
 				}
 				tileHeightSb= (sbRows + (1 << TileRowsLog2) - 1) >> TileRowsLog2;
@@ -12194,8 +12186,6 @@ inter_block_mode_info() {
 		public uint RefMv { get { return ref_mv; } set { ref_mv = value; } }
 		private uint[] drl_mode;
 		public uint[] DrlMode { get { return drl_mode; } set { drl_mode = value; } }
-		private Break[] break;
-		public Break[] Break { get { return break; } set { break = value; } }
 		private AssignMv assign_mv;
 		public AssignMv AssignMv { get { return assign_mv; } set { assign_mv = value; } }
 		private ReadInterintraMode read_interintra_mode;
@@ -12275,7 +12265,6 @@ inter_block_mode_info() {
 			{
 
 				this.drl_mode = new uint[ 2];
-				this.break = new Break[ 2];
 				for ( idx = 0; idx < 2; idx++ )
 				{
 
@@ -12286,8 +12275,7 @@ inter_block_mode_info() {
 						if ( drl_mode[x] == 0 )
 						{
 							RefMvIdx= idx;
-							this.break[ idx ] =  new Break() ;
-							size +=  stream.ReadClass<Break>(size, context, this.break[ idx ], "break"); 
+break;
 						}
 						RefMvIdx= idx + 1;
 					}
@@ -12307,8 +12295,7 @@ inter_block_mode_info() {
 						if ( drl_mode[x] == 0 )
 						{
 							RefMvIdx= idx;
-							this.break[ idx ] =  new Break() ;
-							size +=  stream.ReadClass<Break>(size, context, this.break[ idx ], "break"); 
+break;
 						}
 						RefMvIdx= idx + 1;
 					}
@@ -12427,7 +12414,7 @@ inter_block_mode_info() {
 						if ( drl_mode[x] == 0 )
 						{
 							RefMvIdx= idx;
-							size += stream.WriteClass<Break>(context, this.break[ idx ], "break"); 
+break;
 						}
 						RefMvIdx= idx + 1;
 					}
@@ -12447,7 +12434,7 @@ inter_block_mode_info() {
 						if ( drl_mode[x] == 0 )
 						{
 							RefMvIdx= idx;
-							size += stream.WriteClass<Break>(context, this.break[ idx ], "break"); 
+break;
 						}
 						RefMvIdx= idx + 1;
 					}
@@ -15445,8 +15432,6 @@ return;
 		public uint w { get { return w; } set { w = value; } }
 		private uint h;
 		public uint h { get { return h; } set { h = value; } }
-		private Break[] break;
-		public Break[] Break { get { return break; } set { break = value; } }
 
          public FindTxSize(uint w, uint h)
          { 
@@ -15460,14 +15445,12 @@ return;
 
 			uint txSz = 0;
 
-			this.break = new Break[TX_SIZES_ALL];
 			for (txSz=0;txSz<TX_SIZES_ALL;txSz++)
 			{
 
 				if (Tx_Width[txSz]==w && Tx_Height[txSz] ==h)
 				{
-					this.break[txSz] =  new Break() ;
-					size +=  stream.ReadClass<Break>(size, context, this.break[txSz], "break"); 
+break;
 				}
 			}
 return txSz;
@@ -15486,7 +15469,7 @@ return txSz;
 
 				if (Tx_Width[txSz]==w && Tx_Height[txSz] ==h)
 				{
-					size += stream.WriteClass<Break>(context, this.break[txSz], "break"); 
+break;
 				}
 			}
 return txSz;
@@ -15832,8 +15815,6 @@ return Subsampled_Size[ subsize ][ subx ][ suby ];
 		public uint[] CoeffBase { get { return coeff_base; } set { coeff_base = value; } }
 		private uint[][] coeff_br;
 		public uint[][] CoeffBr { get { return coeff_br; } set { coeff_br = value; } }
-		private Break[][] break;
-		public Break[][] Break { get { return break; } set { break = value; } }
 		private uint[] dc_sign;
 		public uint[] DcSign { get { return dc_sign; } set { dc_sign = value; } }
 		private uint[] sign_bit;
@@ -16007,7 +15988,6 @@ return Subsampled_Size[ subsize ][ subx ][ suby ];
 				this.coeff_base_eob = new uint[ 0];
 				this.coeff_base = new uint[ 0];
 				this.coeff_br = new uint[ 0][];
-				this.break = new Break[ 0][];
 				for ( c = eob - 1; c >= 0; c-- )
 				{
 					pos= scan[ c ];
@@ -16027,7 +16007,6 @@ return Subsampled_Size[ subsize ][ subx ][ suby ];
 					{
 
 						this.coeff_br[ c ] = new uint[ COEFF_BASE_RANGE / ( BR_CDF_SIZE - 1 )];
-						this.break[ c ] = new Break[ COEFF_BASE_RANGE / ( BR_CDF_SIZE - 1 )];
 						for ( idx = 0;
  idx < COEFF_BASE_RANGE / ( BR_CDF_SIZE - 1 );
  idx++ )
@@ -16037,8 +16016,7 @@ return Subsampled_Size[ subsize ][ subx ][ suby ];
 
 							if ( coeff_br[c][x] < ( BR_CDF_SIZE - 1 ) )
 							{
-								this.break[ c ][ idx ] =  new Break() ;
-								size +=  stream.ReadClass<Break>(size, context, this.break[ c ][ idx ], "break"); 
+break;
 							}
 						}
 					}
@@ -16302,7 +16280,7 @@ return eob;
 
 							if ( coeff_br[c][x] < ( BR_CDF_SIZE - 1 ) )
 							{
-								size += stream.WriteClass<Break>(context, this.break[ c ][ idx ], "break"); 
+break;
 							}
 						}
 					}
