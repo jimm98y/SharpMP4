@@ -72,7 +72,7 @@ namespace Sharp{type}
         private string GenerateContext(string type, IEnumerable<AomClass> aomClasses)
         {
             string ret = @$"
-    public partial class {type}Context : IItuContext
+    public partial class {type}Context : IAomContext
     {{
         public ObuHeader ObuHeader {{ get; set; }}
 ";

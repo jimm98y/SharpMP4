@@ -78,7 +78,7 @@ namespace AomGenerator.CSharp
                 { "blkSize", "f(32)" },
                 { "target", "f(32)" },
                 { "type", "f(32)" },
-                { "ref", "f(32)" },
+                { "refc", "f(32)" },
                 { "idx", "f(32)" },
                 { "low", "f(32)" },
                 { "high", "f(32)" },
@@ -145,6 +145,11 @@ namespace AomGenerator.CSharp
 
         public string PreprocessDefinitionsFile(string definitions)
         {
+            // rename ref -> refc to avoid C# conflicts with built-in ref keyword
+            definitions = definitions.Replace(" ref = ", " refc = ");
+            definitions = definitions.Replace("[ref]", "[refc]");
+            definitions = definitions.Replace(",ref,", ",refc,");
+            definitions = definitions.Replace(", ref,", ", refc,");
             return definitions;
         }
 
