@@ -685,17 +685,17 @@ uncompressed_header() {
  }
 
 
-  get_relative_dist( a, b ) { 
+get_relative_dist( a, b ) { 
  if ( !enable_order_hint )
  return 0
  diff = a - b
  m = 1 << (OrderHintBits - 1)
  diff = (diff & (m - 1)) - (diff & m)
  return diff
- }
+}
 
 
-  mark_ref_frames( idLen ) { 
+mark_ref_frames( idLen ) { 
  diffLen = delta_frame_id_length_minus_2 + 2
  for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
  if ( current_frame_id > ( 1 << diffLen ) ) {
@@ -713,7 +713,7 @@ uncompressed_header() {
  }
 
 
-  frame_size() { 
+frame_size() { 
  if ( frame_size_override_flag ) {
  n = frame_width_bits_minus_1 + 1
  frame_width_minus_1 f(n)
@@ -730,7 +730,7 @@ uncompressed_header() {
  }
 
 
-  render_size() { 
+render_size() { 
  render_and_frame_size_different f(1)
  if ( render_and_frame_size_different == 1 ) {
  render_width_minus_1 f(16)
@@ -744,7 +744,7 @@ uncompressed_header() {
  }
 
 
-  frame_size_with_refs() { 
+frame_size_with_refs() { 
  for ( i = 0; i < REFS_PER_FRAME; i++ ) {
  found_ref f(1)
  if ( found_ref == 1 ) {
@@ -782,13 +782,13 @@ superres_params() {
  }
 
 
- compute_image_size() { 
+compute_image_size() { 
  MiCols = 2 * ( ( FrameWidth + 7 ) >> 3 )
  MiRows = 2 * ( ( FrameHeight + 7 ) >> 3 )
  }
 
 
-  read_interpolation_filter() { 
+read_interpolation_filter() { 
  is_filter_switchable f(1)
  if ( is_filter_switchable == 1 ) {
  interpolation_filter = SWITCHABLE
@@ -798,7 +798,7 @@ superres_params() {
  }
 
 
-  loop_filter_params() { 
+loop_filter_params() { 
  if ( CodedLossless || allow_intrabc ) {
  loop_filter_level[ 0 ] = 0
  loop_filter_level[ 1 ] = 0
@@ -843,7 +843,7 @@ superres_params() {
  }
 
 
-  quantization_params() { 
+quantization_params() { 
  base_q_idx f(8)
  DeltaQYDc = read_delta_q()
  if ( NumPlanes > 1 ) {
@@ -878,7 +878,7 @@ superres_params() {
  }
 
 
- read_delta_q() { 
+read_delta_q() { 
  delta_coded f(1)
  if ( delta_coded ) {
  delta_q su(1+6)
@@ -889,7 +889,7 @@ superres_params() {
  }
 
 
-  segmentation_params() { 
+segmentation_params() { 
  segmentation_enabled f(1)
  if ( segmentation_enabled == 1 ) {
  if ( primary_ref_frame == PRIMARY_REF_NONE ) {
@@ -947,7 +947,7 @@ superres_params() {
  }
 
 
-  tile_info () { 
+tile_info () { 
  sbCols = use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 )
  sbRows = use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 )
  sbShift = use_128x128_superblock ? 5 : 4
@@ -1041,7 +1041,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  delta_q_params() { 
+delta_q_params() { 
  delta_q_res = 0
  delta_q_present = 0
  if ( base_q_idx > 0 ) {
@@ -1053,7 +1053,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  delta_lf_params() { 
+delta_lf_params() { 
  delta_lf_present = 0
  delta_lf_res = 0
  delta_lf_multi = 0
@@ -1068,7 +1068,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  cdef_params() { 
+cdef_params() { 
  if ( CodedLossless || allow_intrabc ||
  !enable_cdef) {
  cdef_bits = 0
@@ -1097,7 +1097,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- lr_params() { 
+lr_params() { 
  if ( AllLossless || allow_intrabc ||
  !enable_restoration ) {
  FrameRestorationType[0] = RESTORE_NONE
@@ -1141,7 +1141,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- read_tx_mode() { 
+read_tx_mode() { 
  if ( CodedLossless == 1 ) {
  TxMode = ONLY_4X4
  } else {
@@ -1155,7 +1155,7 @@ tile_log2( blkSize, target ) {
  }
 
 
-  skip_mode_params() { 
+skip_mode_params() { 
  if ( FrameIsIntra || !reference_select || !enable_order_hint ) {
  skipModeAllowed = 0
  } else {
@@ -1212,7 +1212,7 @@ tile_log2( blkSize, target ) {
  }
 
 
- frame_reference_mode() { 
+frame_reference_mode() { 
  if ( FrameIsIntra ) {
  reference_select = 0
  } else {
@@ -1420,13 +1420,13 @@ film_grain_params() {
  }
 
 
-  temporal_point_info() { 
+temporal_point_info() { 
  n = frame_presentation_time_length_minus_1 + 1
  frame_presentation_time f(n)
  }
 
 
-  frame_obu( sz ) { 
+frame_obu( sz ) { 
  startBitPos = get_position()
  frame_header_obu()
  byte_alignment()
@@ -1437,7 +1437,7 @@ film_grain_params() {
  }
 
 
-  tile_group_obu( sz ) { 
+tile_group_obu( sz ) { 
  NumTiles = TileCols * TileRows
  startBitPos = get_position()
  tile_start_and_end_present_flag = 0
@@ -1485,7 +1485,7 @@ film_grain_params() {
  }
 
 
-  decode_tile() { 
+decode_tile() { 
  clear_above_context()
  for ( i = 0; i < FRAME_LF_COUNT; i++ )
  DeltaLF[ i ] = 0
@@ -1512,7 +1512,7 @@ film_grain_params() {
  }
 
 
- clear_block_decoded_flags( r, c, sbSize4 ) { 
+clear_block_decoded_flags( r, c, sbSize4 ) { 
  for ( plane = 0; plane < NumPlanes; plane++ ) {
  subX = (plane > 0) ? subsampling_x : 0
  subY = (plane > 0) ? subsampling_y : 0
@@ -1532,7 +1532,7 @@ film_grain_params() {
  }
 
 
-  decode_partition( r, c, bSize ) { 
+decode_partition( r, c, bSize ) { 
  if ( r >= MiRows || c >= MiCols )
  return 0
  AvailU = is_inside( r - 1, c )
@@ -1604,7 +1604,7 @@ film_grain_params() {
  }
 
 
- decode_block( r, c, subSize ) { 
+decode_block( r, c, subSize ) { 
  MiRow = r
  MiCol = c
  MiSize = subSize
@@ -1693,7 +1693,7 @@ film_grain_params() {
  }
 
 
-  mode_info() { 
+mode_info() { 
  if ( FrameIsIntra )
  intra_frame_mode_info()
  else
@@ -1701,7 +1701,7 @@ film_grain_params() {
  }
 
 
-  intra_frame_mode_info() { 
+intra_frame_mode_info() { 
  skip = 0
  if ( SegIdPreSkip )
  intra_segment_id()
@@ -1758,7 +1758,7 @@ film_grain_params() {
  }
 
 
-  intra_segment_id() { 
+intra_segment_id() { 
  if ( segmentation_enabled )
  read_segment_id()
  else
@@ -1767,7 +1767,7 @@ film_grain_params() {
  }
 
 
-  read_segment_id() { 
+read_segment_id() { 
  if ( AvailU && AvailL )
  prevUL = SegmentIds[ MiRow - 1 ][ MiCol - 1 ]
  else
@@ -1822,7 +1822,7 @@ neg_deinterleave(diff,ref,max) {
 
 
 
- read_skip_mode() { 
+read_skip_mode() { 
  if ( seg_feature_active( SEG_LVL_SKIP ) ||
  seg_feature_active( SEG_LVL_REF_FRAME ) ||
  seg_feature_active( SEG_LVL_GLOBALMV ) ||
@@ -1836,7 +1836,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
- read_skip() { 
+read_skip() { 
  if ( SegIdPreSkip && seg_feature_active( SEG_LVL_SKIP ) ) {
  skip = 1
  } else {
@@ -1845,7 +1845,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  read_delta_qindex() { 
+read_delta_qindex() { 
  sbSize = use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64
  if ( MiSize == sbSize && skip )
  return
@@ -1866,7 +1866,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
- read_delta_lf() { 
+read_delta_lf() { 
  sbSize = use_128x128_superblock ? BLOCK_128X128 : BLOCK_64X64
  if ( MiSize == sbSize && skip )
  return
@@ -1895,7 +1895,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  seg_feature_active_idx( idx, feature ) { 
+seg_feature_active_idx( idx, feature ) { 
  return segmentation_enabled && FeatureEnabled[ idx ][ feature ]
  }
  seg_feature_active( feature ) {
@@ -1920,7 +1920,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
- read_block_tx_size() { 
+read_block_tx_size() { 
  bw4 = Num_4x4_Blocks_Wide[ MiSize ]
  bh4 = Num_4x4_Blocks_High[ MiSize ]
  if ( TxMode == TX_MODE_SELECT &&
@@ -1941,7 +1941,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  read_var_tx_size( row, col, txSz, depth) { 
+read_var_tx_size( row, col, txSz, depth) { 
  if ( row >= MiRows || col >= MiCols )
  return
  if ( txSz == TX_4X4 || depth == MAX_VARTX_DEPTH ) {
@@ -1967,7 +1967,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  inter_frame_mode_info() { 
+inter_frame_mode_info() { 
  use_intrabc = 0
  LeftRefFrame[ 0 ] = AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : INTRA_FRAME
  AboveRefFrame[ 0 ] = AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : INTRA_FRAME
@@ -1999,7 +1999,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  inter_segment_id( preSkip ) { 
+inter_segment_id( preSkip ) { 
  if ( segmentation_enabled ) {
  predictedSegmentId = get_segment_id()
  if ( segmentation_update_map ) {
@@ -2040,7 +2040,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  read_is_inter() { 
+read_is_inter() { 
  if ( skip_mode ) {
  is_inter = 1
  } else if ( seg_feature_active ( SEG_LVL_REF_FRAME ) ) {
@@ -2053,7 +2053,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  get_segment_id() { 
+get_segment_id() { 
  bw4 = Num_4x4_Blocks_Wide[ MiSize ]
  bh4 = Num_4x4_Blocks_High[ MiSize ]
  xMis = Min( MiCols - MiCol, bw4 )
@@ -2066,7 +2066,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
- intra_block_mode_info() { 
+intra_block_mode_info() { 
  RefFrame[ 0 ] = INTRA_FRAME
  RefFrame[ 1 ] = NONE
  y_mode S()
@@ -2091,7 +2091,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  inter_block_mode_info() { 
+inter_block_mode_info() { 
  PaletteSizeY = 0
  PaletteSizeUV = 0
  read_ref_frames()
@@ -2166,24 +2166,24 @@ neg_deinterleave(diff,ref,max) {
 
 
 
-  has_nearmv(()){{
- return return((YMode== ==NEARMV|| ||YMode== ==NEAR_NEARMV
- || ||YMode== ==NEAR_NEWMV|| ||YMode== ==NEW_NEARMV))
- }}
+has_nearmv(){
+ return (YMode== NEARMV||YMode ==NEAR_NEARMV
+ ||YMode ==NEAR_NEWMV ||YMode ==NEW_NEARMV)
+ }
 
 
 
-  needs_interp_filter(()){{
- large==((Min((Block_Width[[MiSize], ],Block_Height[[MiSize]) ])>= >=88))
- if if((skip_mode|| ||motion_mode== ==LOCALWARP)){{
- return return00
- }}else elseif if((large&& &&YMode== ==GLOBALMV)){{
- return returnGmType[[RefFrame[[00]]]]== ==TRANSLATION
- }}else elseif if((large&& &&YMode== ==GLOBAL_GLOBALMV)){{
- return returnGmType[[RefFrame[[00]]]]== ==TRANSLATION|| ||GmType[[RefFrame[[11]]]]== ==TRANSLATION
- }}else else{{
- return return11
- }}
+  needs_interp_filter(){
+ large=(Min(Block_Width[MiSize], Block_Height[MiSize]) >=8)
+ if (skip_mode ||motion_mode ==LOCALWARP){
+ return 0
+ } else if(large &&YMode ==GLOBALMV){
+ return GmType[RefFrame[0]]==TRANSLATION
+ } else if(large &&YMode ==GLOBAL_GLOBALMV){
+ return GmType[RefFrame[0]] ==TRANSLATION ||GmType[RefFrame[1]] ==TRANSLATION
+ } else{
+ return 1
+ }
  }
 
 
@@ -2583,7 +2583,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  residual() { 
+residual() { 
  sbMask = use_128x128_superblock ? 31 : 15
  widthChunks = Max( 1, Block_Width[ MiSize ] >> 6 )
  heightChunks = Max( 1, Block_Height[ MiSize ] >> 6 )
@@ -2622,7 +2622,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  transform_block(plane, baseX, baseY, txSz, x, y) { 
+transform_block(plane, baseX, baseY, txSz, x, y) { 
  startX = baseX + 4 * x
  startY = baseY + 4 * y
  subX = (plane > 0) ? subsampling_x : 0
@@ -2690,7 +2690,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  transform_tree( startX, startY, w, h ) { 
+transform_tree( startX, startY, w, h ) { 
  maxX = MiCols * MI_SIZE
  maxY = MiRows * MI_SIZE
  if ( startX >= maxX || startY >= maxY ) {
@@ -2722,15 +2722,15 @@ neg_deinterleave(diff,ref,max) {
 
 
 
-  find_tx_size((w,,h)){{
- for for((txSz==00;;txSz<<TX_SIZES_ALL;;txSz++ ++))
- if if((Tx_Width[[txSz]]== ==w&& &&Tx_Height[[txSz]]== ==h))
- break break
- return returntxSz
- }}
+ find_tx_size(w,h){
+ for(txSz=0;txSz<TX_SIZES_ALL;txSz++)
+ if (Tx_Width[txSz]==w && Tx_Height[txSz] ==h)
+ break
+ return txSz
+ }
 
 
-  get_tx_size( plane, txSz ) { 
+get_tx_size( plane, txSz ) { 
  if ( plane == 0 )
  return txSz
   uvTx = Max_Tx_Size_Rect[ get_plane_residual_size( MiSize, plane ) ]
@@ -2746,7 +2746,7 @@ neg_deinterleave(diff,ref,max) {
  return uvTx
  }
 
-  get_plane_residual_size( subsize, plane ) {
+get_plane_residual_size( subsize, plane ) {
  Type
  subx = plane > 0 ? subsampling_x : 0
  suby = plane > 0 ? subsampling_y : 0
@@ -3067,7 +3067,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  palette_mode_info() { 
+palette_mode_info() { 
  bsizeCtx = Mi_Width_Log2[ MiSize ] + Mi_Height_Log2[ MiSize ] - 2
  if ( YMode == DC_PRED ) {
   has_palette_y S()
@@ -3168,7 +3168,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  get_palette_cache( plane ) { 
+get_palette_cache( plane ) { 
  aboveN = 0
  if ( ( MiRow * MI_SIZE ) % 64 ) {
  aboveN = PaletteSizes[ plane ][ MiRow - 1 ][ MiCol ]
@@ -3220,7 +3220,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  transform_type( x4, y4, txSz ) { 
+transform_type( x4, y4, txSz ) { 
  set = get_tx_set( txSz )
  if ( set > 0 &&
  ( segmentation_enabled ? get_qindex( 1, segment_id ) : base_q_idx ) > 0 ) {
@@ -3250,7 +3250,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  get_tx_set( txSz ) { 
+get_tx_set( txSz ) { 
  txSzSqr = Tx_Size_Sqr[ txSz ]
  txSzSqrUp = Tx_Size_Sqr_Up[ txSz ]
  if ( txSzSqrUp > TX_32X32 )
@@ -3268,7 +3268,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  palette_tokens() { 
+palette_tokens() { 
  blockHeight = Block_Height[ MiSize ]
  blockWidth = Block_Width[ MiSize ]
  onscreenHeight = Min( blockHeight, (MiRows - MiRow) * MI_SIZE )
@@ -3334,7 +3334,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
- get_palette_color_context( colorMap, r, c, n ) { 
+get_palette_color_context( colorMap, r, c, n ) { 
  for ( i = 0; i < PALETTE_COLORS; i++ ) {
  scores[ i ] = 0
  ColorOrder[i] = i
@@ -3378,7 +3378,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
- is_inside( candidateR, candidateC ) { 
+is_inside( candidateR, candidateC ) { 
  return ( candidateC >= MiColStart &&
  candidateC < MiColEnd &&
  candidateR >= MiRowStart &&
@@ -3386,7 +3386,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  is_inside_filter_region( candidateR, candidateC ) { 
+is_inside_filter_region( candidateR, candidateC ) { 
  colStart = 0
  colEnd = MiCols
  rowStart = 0
@@ -3398,7 +3398,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  clamp_mv_row( mvec, border ) { 
+clamp_mv_row( mvec, border ) { 
  bh4 = Num_4x4_Blocks_High[ MiSize ]
  mbToTopEdge = -((MiRow * MI_SIZE) * 8)
  mbToBottomEdge = ((MiRows - bh4 - MiRow) * MI_SIZE) * 8
@@ -3406,7 +3406,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  clamp_mv_col( mvec, border ) { 
+clamp_mv_col( mvec, border ) { 
  bw4 = Num_4x4_Blocks_Wide[ MiSize ]
  mbToLeftEdge = -((MiCol * MI_SIZE) * 8)
  mbToRightEdge = ((MiCols - bw4 - MiCol) * MI_SIZE) * 8
@@ -3414,7 +3414,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
- clear_cdef( r, c ) { 
+clear_cdef( r, c ) { 
  cdef_idx[ r ][ c ] = -1
  if ( use_128x128_superblock ) {
  cdefSize4 = Num_4x4_Blocks_Wide[ BLOCK_64X64 ]
@@ -3425,7 +3425,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
- read_cdef() { 
+read_cdef() { 
  if ( skip || CodedLossless || !enable_cdef || allow_intrabc) {
  return
  }
@@ -3446,7 +3446,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  read_lr( r, c, bSize ) { 
+read_lr( r, c, bSize ) { 
  if ( allow_intrabc ) {
  return
  }
@@ -3483,7 +3483,7 @@ neg_deinterleave(diff,ref,max) {
  }
 
 
-  read_lr_unit(plane, unitRow, unitCol) { 
+read_lr_unit(plane, unitRow, unitCol) { 
  if ( FrameRestorationType[ plane ] == RESTORE_WIENER ) {
  use_wiener  S()
  restoration_type = use_wiener ? RESTORE_WIENER : RESTORE_NONE
@@ -3539,7 +3539,7 @@ RefSgrXqd[ plane ][ 0 ] )
  }
 
 
-  decode_signed_subexp_with_ref_bool( low, high, k, r ) { 
+decode_signed_subexp_with_ref_bool( low, high, k, r ) { 
  x = decode_unsigned_subexp_with_ref_bool(high - low, k, r - low)
  return x + low
  }
@@ -3574,7 +3574,7 @@ RefSgrXqd[ plane ][ 0 ] )
  }
 
 
- tile_list_obu() {
+tile_list_obu() {
  output_frame_width_in_tiles_minus_1 f(8)
  output_frame_height_in_tiles_minus_1 f(8)
  tile_count_minus_1 f(16)
@@ -3583,7 +3583,7 @@ RefSgrXqd[ plane ][ 0 ] )
  }
 
 
- tile_list_entry() {
+tile_list_entry() {
  anchor_frame_idx f(8)
  anchor_tile_row f(8)
  anchor_tile_col f(8)
@@ -3593,7 +3593,7 @@ RefSgrXqd[ plane ][ 0 ] )
  }
 
 
-  bitstream() { 
+bitstream() { 
  while ( more_data_in_bitstream() ) {
   temporal_unit_size leb128()
  temporal_unit( temporal_unit_size )
@@ -3601,7 +3601,7 @@ RefSgrXqd[ plane ][ 0 ] )
  }
 
 
- temporal_unit( sz ) { 
+temporal_unit( sz ) { 
  while ( sz > 0 ) {
   frame_unit_size leb128()
  sz -= Leb128Bytes
@@ -3611,7 +3611,7 @@ RefSgrXqd[ plane ][ 0 ] )
  }
 
 
- frame_unit( sz ) { 
+frame_unit( sz ) { 
  while ( sz > 0 ) {
   obu_length leb128()
  sz -= Leb128Bytes
