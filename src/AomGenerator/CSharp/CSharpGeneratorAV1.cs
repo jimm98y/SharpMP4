@@ -8,77 +8,134 @@ namespace AomGenerator.CSharp
     {
         public string AppendMethod(AomCode field, MethodType methodType, string spacing, string retm)
         {
-            throw new NotImplementedException();
+            return retm;
         }
 
         public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
         {
-            throw new NotImplementedException();
+            return "";
         }
 
         public string FixAppendType(string appendType, string variableName)
         {
-            throw new NotImplementedException();
+            return appendType;
         }
 
         public void FixClassParameters(AomClass ituClass)
         {
-            throw new NotImplementedException();
+            
         }
 
         public string FixCondition(string condition, MethodType methodType)
         {
-            throw new NotImplementedException();
+            return condition;
         }
 
         public string FixFieldValue(string fieldValue)
         {
-            throw new NotImplementedException();
+            return fieldValue;
         }
 
         public void FixMethodAllocation(string name, ref string method, ref string typedef)
         {
-            throw new NotImplementedException();
+            
         }
 
         public string FixMissingParameters(AomClass b, string parameter, string classType)
         {
-            throw new NotImplementedException();
+            if (parameter == null) return "";
+            return parameter;
         }
 
         public void FixNestedIndexes(List<string> ret, AomField field)
         {
-            throw new NotImplementedException();
+            // nothing to do
         }
 
         public string FixStatement(string fieldValue)
         {
-            throw new NotImplementedException();
+            return fieldValue;
         }
 
         public string FixVariableType(string variableType)
         {
-            throw new NotImplementedException();
+            return variableType;
         }
 
         public string GetCtorParameterType(string parameter)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(parameter))
+                return "";
+
+            Dictionary<string, string> map = new Dictionary<string, string>()
+            {
+                { "sz", "f(32)" },
+                { "nbBits", "f(32)" },
+                { "op", "f(32)" },
+                { "a", "f(32)" },
+                { "b", "f(32)" },
+                { "idLen", "f(32)" },
+                { "blkSize", "f(32)" },
+                { "target", "f(32)" },
+                { "type", "f(32)" },
+                { "ref", "f(32)" },
+                { "idx", "f(32)" },
+                { "low", "f(32)" },
+                { "high", "f(32)" },
+                { "r", "f(32)" },
+                { "mx", "f(32)" },
+                { "numSyms", "f(32)" },
+                { "v", "f(32)" },
+                { "c", "f(32)" },
+                { "sbSize4", "f(32)" },
+                { "bSize", "f(32)" },
+                { "subSize", "f(32)" },
+                { "bw4", "f(32)" },
+                { "bh4", "f(32)" },
+                { "diff", "f(32)" },
+                { "max", "f(32)" },
+                { "feature", "f(32)" },
+                { "allowSelect", "f(32)" },
+            };
+
+            return map[parameter];
         }
 
-        public string GetDerivedVariables(string name)
+        public string GetDerivedVariables(string field)
         {
-            throw new NotImplementedException();
+            switch (field)
+            {
+                default:
+                    return "";
+            }
         }
 
         public string GetFieldDefaultValue(AomField field)
         {
-            throw new NotImplementedException();
+            switch (field.Name)
+            {
+                default:
+                    return "";
+            }
         }
 
         public string GetParameterType(string parameter)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(parameter))
+                return "";
+
+            Dictionary<string, string> map = new Dictionary<string, string>()
+            {
+                { "operating_point_idc", "f(32)[]" },
+                { "seq_tier", "f(32)[]" },
+                { "decoder_model_present_for_this_op", "f(32)[]" },
+                { "initial_display_delay_present_for_this_op", "f(32)[]" },
+            };
+
+            if (map.ContainsKey(parameter))
+                return map[parameter];
+            else
+                return "f(32)";
         }
 
         public string GetVariableSize(string parameter)
@@ -93,7 +150,12 @@ namespace AomGenerator.CSharp
 
         public string ReplaceParameter(string parameter)
         {
-            throw new NotImplementedException();
+            switch (parameter)
+            {
+                default:
+                    //throw new NotImplementedException(parameter);
+                    return parameter;
+            }
         }
     }
 }
