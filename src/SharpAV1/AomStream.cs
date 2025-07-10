@@ -88,5 +88,66 @@ namespace SharpAV1
         {
             throw new NotImplementedException();
         }
+
+
+        public ulong ReadSignedIntVar(ulong size, int length, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteSignedIntVar(int length, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ulong ReadS(ulong size, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+        public ulong WriteS(uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ulong ReadL(ulong size, uint length, int whileIndex, Dictionary<int, uint> value, string name)
+        {
+            throw new NotImplementedException();
+        }
+        public ulong WriteL(int length, int whileIndex, Dictionary<int, uint> value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ulong ReadUnsignedInt(ulong size, uint length, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+        public ulong WriteUnsignedInt(uint length, int whileIndex, Dictionary<int, uint> value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ulong ReadNS(ulong size, int length, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+        internal ulong WriteNS(int length, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public ulong ReadLeVar(ulong size, int length, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+        public ulong WriteLeVar(int length, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
