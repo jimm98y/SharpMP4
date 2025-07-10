@@ -1324,13 +1324,13 @@ decode_subexp( numSyms ) {
  }
 
 
- inverse_recenter( r, v ) { 
+inverse_recenter( r, v ) { 
  if ( v > 2 * r )
- return v
+    return v
  else if ( v & 1 )
- return r - ((v + 1) >> 1)
+    return r - ((v + 1) >> 1)
  else
- return r + (v >> 1)
+    return r + (v >> 1)
  }
 
 
@@ -1790,36 +1790,35 @@ film_grain_params() {
  segment_id = pred
  } else {
  segment_id S()
- segment_id = neg_deinterleave( segment_id, pred,
- LastActiveSegId + 1 )
+ segment_id = neg_deinterleave( segment_id, pred, LastActiveSegId + 1 )
  }
  }
 
 
 
-  neg_deinterleave((diff,,ref,,max)){{
- if if((!!ref))
- return returndiff
- if if((ref>= >=((max--11))))
- return returnmax--diff--11
- if if((22**ref<<max)){{
- if if((diff<= <=22**ref)){{
- if if((diff&&11))
- return returnref++(( ((diff++11))>> >>11))
- else else
- return returnref--((diff>> >>11))
- }}
- return returndiff
- }}else else{{
- if if((diff<= <=22**((max--ref--11)))){{
- if if((diff&&11))
- return returnref++(( ((diff++11))>> >>11))
- else else
- return returnref--((diff>> >>11))
- }}
- return returnmax--((diff++11))
- }}
- }}
+neg_deinterleave(diff,ref,max) {
+ if (!ref)
+ return diff
+ if (ref >=(max-1))
+ return max-diff-1
+ if(2*ref<max){
+ if(diff <=2*ref){
+ if(diff&1)
+ return ref+( (diff+1) >>1)
+ else 
+ return ref-(diff >>1)
+ }
+ return diff
+ } else {
+ if (diff <=2*(max-ref-1)){
+ if (diff&1)
+ return ref+( (diff+1) >>1)
+ else 
+ return ref-(diff >>1)
+ }
+ return max-(diff+1)
+ }
+ }
 
 
 
@@ -1882,17 +1881,14 @@ film_grain_params() {
  delta_lf_rem_bits L(3)
  n = delta_lf_rem_bits + 1
  delta_lf_abs_bits L(n)
- deltaLfAbs = delta_lf_abs_bits +
- ( 1 << n ) + 1
+ deltaLfAbs = delta_lf_abs_bits + ( 1 << n ) + 1
  } else {
  deltaLfAbs = delta_lf_abs
  }
  if ( deltaLfAbs ) {
  delta_lf_sign_bit L(1)
- reducedDeltaLfLevel = delta_lf_sign_bit ?-deltaLfAbs :
- deltaLfAbs
- DeltaLF[ i ] = Clip3( -MAX_LOOP_FILTER, MAX_LOOP_FILTER, DeltaLF[ i ] +
- (reducedDeltaLfLevel << delta_lf_res) )
+ reducedDeltaLfLevel = delta_lf_sign_bit ?-deltaLfAbs : deltaLfAbs
+ DeltaLF[ i ] = Clip3( -MAX_LOOP_FILTER, MAX_LOOP_FILTER, DeltaLF[ i ] + (reducedDeltaLfLevel << delta_lf_res) )
  }
  }
  }
