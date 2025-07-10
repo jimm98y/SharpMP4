@@ -38,5 +38,55 @@ namespace SharpAV1
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        public ulong ReadClass<T>(ulong size, IAomContext context, T value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteClass<T>(IAomContext context, T value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong ReadLeb128(ulong size, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteLeb128(uint size, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong ReadFixed(ulong size, int length, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteFixed(int length, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong ReadVariable(ulong size, uint length, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteVariable(uint length, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong ReadUvlc(ulong size, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteUvlc(uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

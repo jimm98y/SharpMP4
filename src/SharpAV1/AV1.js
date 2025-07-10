@@ -2403,8 +2403,7 @@ is_scaled(refFrame) {
  if ( comp_group_idx == 0 ) {
  if ( enable_jnt_comp ) {
  compound_idx S()
- compound_type = compound_idx ? COMPOUND_AVERAGE :
- COMPOUND_DISTANCE
+ compound_type = compound_idx ? COMPOUND_AVERAGE : COMPOUND_DISTANCE
  } else {
  compound_type = COMPOUND_AVERAGE
  }
@@ -2907,8 +2906,7 @@ get_plane_residual_size( subsize, plane ) {
  return txType
  }
  is_tx_type_in_set( txSet, txType ) {
- return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] :
- Tx_Type_In_Set_Intra[ txSet ][ txType ]
+ return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] : Tx_Type_In_Set_Intra[ txSet ][ txType ]
  }
 
 

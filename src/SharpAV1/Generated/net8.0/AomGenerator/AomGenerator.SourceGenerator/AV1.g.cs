@@ -13693,8 +13693,7 @@ return returnxScale !=noScale ||yScale !=noScale;
  if ( comp_group_idx == 0 ) {
  if ( enable_jnt_comp ) {
  compound_idx S()
- compound_type = compound_idx ? COMPOUND_AVERAGE :
- COMPOUND_DISTANCE
+ compound_type = compound_idx ? COMPOUND_AVERAGE : COMPOUND_DISTANCE
  } else {
  compound_type = COMPOUND_AVERAGE
  }
@@ -13728,8 +13727,6 @@ return returnxScale !=noScale ||yScale !=noScale;
 		public uint CompGroupIdx { get { return comp_group_idx; } set { comp_group_idx = value; } }
 		private uint compound_idx;
 		public uint CompoundIdx { get { return compound_idx; } set { compound_idx = value; } }
-		private COMPOUNDDISTANCE cOMPOUND_DISTANCE;
-		public COMPOUNDDISTANCE COMPOUNDDISTANCE { get { return COMPOUND_DISTANCE; } set { COMPOUND_DISTANCE = value; } }
 		private uint compound_type;
 		public uint CompoundType { get { return compound_type; } set { compound_type = value; } }
 		private uint wedge_index;
@@ -13776,9 +13773,7 @@ return;
 					if ( enable_jnt_comp != 0 )
 					{
 						size += stream.ReadS(size, out this.compound_idx, "compound_idx"); 
-						compound_type= compound_idx ? COMPOUND_AVERAGE :;
-						this.COMPOUND_DISTANCE =  new COMPOUNDDISTANCE() ;
-						size +=  stream.ReadClass<COMPOUNDDISTANCE>(size, context, this.COMPOUND_DISTANCE, "COMPOUND_DISTANCE"); 
+						compound_type= compound_idx ? COMPOUND_AVERAGE : COMPOUND_DISTANCE;
 					}
 					else 
 					{
@@ -13856,8 +13851,7 @@ return;
 					if ( enable_jnt_comp != 0 )
 					{
 						size += stream.WriteS( this.compound_idx, "compound_idx"); 
-						compound_type= compound_idx ? COMPOUND_AVERAGE :;
-						size += stream.WriteClass<COMPOUNDDISTANCE>(context, this.COMPOUND_DISTANCE, "COMPOUND_DISTANCE"); 
+						compound_type= compound_idx ? COMPOUND_AVERAGE : COMPOUND_DISTANCE;
 					}
 					else 
 					{
@@ -16533,8 +16527,7 @@ return txType;
     /*
 
  is_tx_type_in_set( txSet, txType ) {
- return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] :
- Tx_Type_In_Set_Intra[ txSet ][ txType ]
+ return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] : Tx_Type_In_Set_Intra[ txSet ][ txType ]
  }
     */
     public class IsTxTypeInSet : IAomSerializable
@@ -16543,8 +16536,6 @@ return txType;
 		public uint TxSet { get { return txSet; } set { txSet = value; } }
 		private uint txType;
 		public uint TxType { get { return txType; } set { txType = value; } }
-		private TxTypeInSetIntra tx_Type_In_Set_Intra;
-		public TxTypeInSetIntra TxTypeInSetIntra { get { return Tx_Type_In_Set_Intra; } set { Tx_Type_In_Set_Intra = value; } }
 
          public IsTxTypeInSet(uint txSet, uint txType)
          { 
@@ -16556,9 +16547,7 @@ return txType;
          {
             ulong size = 0;
 
-return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] :;
-			this.Tx_Type_In_Set_Intra[ txSet ][ txType ] =  new TxTypeInSetIntra() ;
-			size +=  stream.ReadClass<TxTypeInSetIntra>(size, context, this.Tx_Type_In_Set_Intra[ txSet ][ txType ], "Tx_Type_In_Set_Intra"); 
+return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] : Tx_Type_In_Set_Intra[ txSet ][ txType ];
 
             return size;
          }
@@ -16567,8 +16556,7 @@ return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] :;
          {
             ulong size = 0;
 
-return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] :;
-			size += stream.WriteClass<TxTypeInSetIntra>(context, this.Tx_Type_In_Set_Intra[ txSet ][ txType ], "Tx_Type_In_Set_Intra"); 
+return is_inter ? Tx_Type_In_Set_Inter[ txSet ][ txType ] : Tx_Type_In_Set_Intra[ txSet ][ txType ];
 
             return size;
          }

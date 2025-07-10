@@ -22,4 +22,5 @@
 		<GeneratedFolder>Generated</GeneratedFolder>
 		<CompilerGeneratedFilesOutputPath>$(GeneratedFolder)\$(TargetFramework)</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
+	
 </Project>
