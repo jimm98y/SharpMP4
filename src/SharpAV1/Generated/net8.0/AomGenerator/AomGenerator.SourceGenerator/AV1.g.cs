@@ -2639,8 +2639,7 @@ uncompressed_header() {
  return
  }
  frame_type f(2)
- FrameIsIntra = (frame_type == INTRA_ONLY_FRAME ||
- frame_type == KEY_FRAME)
+ FrameIsIntra = (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME)
  show_frame show_frame f(1)
  if ( show_frame && decoder_model_info_present_flag && !equal_picture_interval ) {
  temporal_point_info()
@@ -2650,8 +2649,7 @@ uncompressed_header() {
  } else {
  showable_frame f(1)
  }
- if ( frame_type == SWITCH_FRAME ||
- ( frame_type == KEY_FRAME && show_frame ) )
+ if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame ) )
  error_resilient_mode = 1
  else
  error_resilient_mode f(1)
@@ -2844,9 +2842,7 @@ uncompressed_header() {
  read_tx_mode()
  frame_reference_mode()
  skip_mode_params()
- if ( FrameIsIntra ||
- error_resilient_mode ||
- !enable_warped_motion )
+ if ( FrameIsIntra || error_resilient_mode || !enable_warped_motion )
  allow_warped_motion = 0
  else
  allow_warped_motion f(1)
@@ -3076,8 +3072,7 @@ uncompressed_header() {
 return;
 				}
 				size += stream.ReadFixed(size, 2, out this.frame_type, "frame_type"); 
-				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || ? (uint)1 : (uint)0;
-				frame_type= = KEY_FRAME);
+				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? (uint)1 : (uint)0;
 				this.show_frame =  new ShowFrame() ;
 				size +=  stream.ReadClass<ShowFrame>(size, context, this.show_frame, "show_frame"); 
 				size += stream.ReadFixed(size, 1, out this.show_frame, "show_frame"); 
@@ -3097,8 +3092,7 @@ return;
 					size += stream.ReadFixed(size, 1, out this.showable_frame, "showable_frame"); 
 				}
 
-				if ( frame_type == SWITCH_FRAME ||
- ( frame_type == KEY_FRAME && show_frame != 0 ) )
+				if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame != 0 ) )
 				{
 					error_resilient_mode= 1;
 				}
@@ -3119,7 +3113,7 @@ return;
 
 				for ( i = 0; i < REFS_PER_FRAME; i++ )
 				{
-					OrderHints[ LAST_FRAME + i ]= 0;
+					OrderHints[ AV1RefFrames.LAST_FRAME + i ]= 0;
 				}
 			}
 			size += stream.ReadFixed(size, 1, out this.disable_cdf_update, "disable_cdf_update"); 
@@ -3343,7 +3337,7 @@ return;
 
 				for ( i = 0; i < REFS_PER_FRAME; i++ )
 				{
-					refFrame= LAST_FRAME + i;
+					refFrame= AV1RefFrames.LAST_FRAME + i;
 					hint= RefOrderHint[ ref_frame_idx[ i ] ];
 					OrderHints[ refFrame ]= hint;
 
@@ -3453,9 +3447,7 @@ return;
 			this.skip_mode_params =  new SkipModeParams() ;
 			size +=  stream.ReadClass<SkipModeParams>(size, context, this.skip_mode_params, "skip_mode_params"); 
 
-			if ( FrameIsIntra != 0 ||
- error_resilient_mode != 0 ||
- enable_warped_motion== 0 )
+			if ( FrameIsIntra != 0 || error_resilient_mode != 0 || enable_warped_motion== 0 )
 			{
 				allow_warped_motion= 0;
 			}
@@ -3567,8 +3559,7 @@ return;
 return;
 				}
 				size += stream.WriteFixed(2, this.frame_type, "frame_type"); 
-				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || ? (uint)1 : (uint)0;
-				frame_type= = KEY_FRAME);
+				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? (uint)1 : (uint)0;
 				size += stream.WriteClass<ShowFrame>(context, this.show_frame, "show_frame"); 
 				size += stream.WriteFixed(1, this.show_frame, "show_frame"); 
 
@@ -3586,8 +3577,7 @@ return;
 					size += stream.WriteFixed(1, this.showable_frame, "showable_frame"); 
 				}
 
-				if ( frame_type == SWITCH_FRAME ||
- ( frame_type == KEY_FRAME && show_frame != 0 ) )
+				if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame != 0 ) )
 				{
 					error_resilient_mode= 1;
 				}
@@ -3608,7 +3598,7 @@ return;
 
 				for ( i = 0; i < REFS_PER_FRAME; i++ )
 				{
-					OrderHints[ LAST_FRAME + i ]= 0;
+					OrderHints[ AV1RefFrames.LAST_FRAME + i ]= 0;
 				}
 			}
 			size += stream.WriteFixed(1, this.disable_cdf_update, "disable_cdf_update"); 
@@ -3817,7 +3807,7 @@ return;
 
 				for ( i = 0; i < REFS_PER_FRAME; i++ )
 				{
-					refFrame= LAST_FRAME + i;
+					refFrame= AV1RefFrames.LAST_FRAME + i;
 					hint= RefOrderHint[ ref_frame_idx[ i ] ];
 					OrderHints[ refFrame ]= hint;
 
@@ -3909,9 +3899,7 @@ return;
 			size += stream.WriteClass<FrameReferenceMode>(context, this.frame_reference_mode, "frame_reference_mode"); 
 			size += stream.WriteClass<SkipModeParams>(context, this.skip_mode_params, "skip_mode_params"); 
 
-			if ( FrameIsIntra != 0 ||
- error_resilient_mode != 0 ||
- enable_warped_motion== 0 )
+			if ( FrameIsIntra != 0 || error_resilient_mode != 0 || enable_warped_motion== 0 )
 			{
 				allow_warped_motion= 0;
 			}
@@ -4700,14 +4688,14 @@ loop_filter_params() {
 			{
 				loop_filter_level[ 0 ]= 0;
 				loop_filter_level[ 1 ]= 0;
-				loop_filter_ref_deltas[ INTRA_FRAME ]= 1;
-				loop_filter_ref_deltas[ LAST_FRAME ]= 0;
-				loop_filter_ref_deltas[ LAST2_FRAME ]= 0;
-				loop_filter_ref_deltas[ LAST3_FRAME ]= 0;
-				loop_filter_ref_deltas[ BWDREF_FRAME ]= 0;
-				loop_filter_ref_deltas[ GOLDEN_FRAME ]= -1;
-				loop_filter_ref_deltas[ ALTREF_FRAME ]= -1;
-				loop_filter_ref_deltas[ ALTREF2_FRAME ]= -1;
+				loop_filter_ref_deltas[ AV1RefFrames.INTRA_FRAME ]= 1;
+				loop_filter_ref_deltas[ AV1RefFrames.LAST_FRAME ]= 0;
+				loop_filter_ref_deltas[ AV1RefFrames.LAST2_FRAME ]= 0;
+				loop_filter_ref_deltas[ AV1RefFrames.LAST3_FRAME ]= 0;
+				loop_filter_ref_deltas[ AV1RefFrames.BWDREF_FRAME ]= 0;
+				loop_filter_ref_deltas[ AV1RefFrames.GOLDEN_FRAME ]= -1;
+				loop_filter_ref_deltas[ AV1RefFrames.ALTREF_FRAME ]= -1;
+				loop_filter_ref_deltas[ AV1RefFrames.ALTREF2_FRAME ]= -1;
 
 				for ( i = 0; i < 2; i++ )
 				{
@@ -4779,14 +4767,14 @@ return;
 			{
 				loop_filter_level[ 0 ]= 0;
 				loop_filter_level[ 1 ]= 0;
-				loop_filter_ref_deltas[ INTRA_FRAME ]= 1;
-				loop_filter_ref_deltas[ LAST_FRAME ]= 0;
-				loop_filter_ref_deltas[ LAST2_FRAME ]= 0;
-				loop_filter_ref_deltas[ LAST3_FRAME ]= 0;
-				loop_filter_ref_deltas[ BWDREF_FRAME ]= 0;
-				loop_filter_ref_deltas[ GOLDEN_FRAME ]= -1;
-				loop_filter_ref_deltas[ ALTREF_FRAME ]= -1;
-				loop_filter_ref_deltas[ ALTREF2_FRAME ]= -1;
+				loop_filter_ref_deltas[ AV1RefFrames.INTRA_FRAME ]= 1;
+				loop_filter_ref_deltas[ AV1RefFrames.LAST_FRAME ]= 0;
+				loop_filter_ref_deltas[ AV1RefFrames.LAST2_FRAME ]= 0;
+				loop_filter_ref_deltas[ AV1RefFrames.LAST3_FRAME ]= 0;
+				loop_filter_ref_deltas[ AV1RefFrames.BWDREF_FRAME ]= 0;
+				loop_filter_ref_deltas[ AV1RefFrames.GOLDEN_FRAME ]= -1;
+				loop_filter_ref_deltas[ AV1RefFrames.ALTREF_FRAME ]= -1;
+				loop_filter_ref_deltas[ AV1RefFrames.ALTREF2_FRAME ]= -1;
 
 				for ( i = 0; i < 2; i++ )
 				{
@@ -5568,9 +5556,9 @@ tile_info () {
 			maxTileWidthSb= MAX_TILE_WIDTH >> sbSize;
 			maxTileAreaSb= MAX_TILE_AREA >> ( 2 * sbSize );
 			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= tile_log2(1, Min(sbCols, MAX_TILE_COLS));
-			maxLog2TileRows= tile_log2(1, Min(sbRows, MAX_TILE_ROWS));
-			minLog2Tiles= Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
+			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
+			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
+			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
 			size += stream.ReadFixed(size, 1, out this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
@@ -5602,7 +5590,7 @@ break;
 				}
 				MiColStarts[i]= MiCols;
 				TileCols= i;
-				minLog2TileRows= Max( minLog2Tiles - TileColsLog2, 0);
+				minLog2TileRows= Math.Max( minLog2Tiles - TileColsLog2, 0);
 				TileRowsLog2= minLog2TileRows;
 
 				while ( TileRowsLog2 < maxLog2TileRows )
@@ -5640,10 +5628,10 @@ break;
 				for ( i = 0; startSb < sbCols; i++ )
 				{
 					MiColStarts[ i ]= startSb << sbShift;
-					maxWidth= Min(sbCols - startSb, maxTileWidthSb);
+					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
 					size += stream.ReadUnsignedInt(size, maxWidth, out this.width_in_sbs_minus_1[ i ], "width_in_sbs_minus_1"); 
 					sizeSb= width_in_sbs_minus_1[i] + 1;
-					widestTileSb= Max( sizeSb, widestTileSb );
+					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
 				}
 				MiColStarts[i]= MiCols;
@@ -5658,14 +5646,14 @@ break;
 				{
 					maxTileAreaSb= sbRows * sbCols;
 				}
-				maxTileHeightSb= Max( maxTileAreaSb / widestTileSb, 1 );
+				maxTileHeightSb= Math.Max( maxTileAreaSb / widestTileSb, 1 );
 				startSb= 0;
 
 				this.height_in_sbs_minus_1 = new uint[ sbRows];
 				for ( i = 0; startSb < sbRows; i++ )
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
-					maxHeight= Min(sbRows - startSb, maxTileHeightSb);
+					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
 					size += stream.ReadUnsignedInt(size, maxHeight, out this.height_in_sbs_minus_1[ i ], "height_in_sbs_minus_1"); 
 					sizeSb= height_in_sbs_minus_1[i] + 1;
 					startSb+= sizeSb;
@@ -5729,9 +5717,9 @@ break;
 			maxTileWidthSb= MAX_TILE_WIDTH >> sbSize;
 			maxTileAreaSb= MAX_TILE_AREA >> ( 2 * sbSize );
 			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= tile_log2(1, Min(sbCols, MAX_TILE_COLS));
-			maxLog2TileRows= tile_log2(1, Min(sbRows, MAX_TILE_ROWS));
-			minLog2Tiles= Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
+			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
+			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
+			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
 			size += stream.WriteFixed(1, this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
@@ -5763,7 +5751,7 @@ break;
 				}
 				MiColStarts[i]= MiCols;
 				TileCols= i;
-				minLog2TileRows= Max( minLog2Tiles - TileColsLog2, 0);
+				minLog2TileRows= Math.Max( minLog2Tiles - TileColsLog2, 0);
 				TileRowsLog2= minLog2TileRows;
 
 				while ( TileRowsLog2 < maxLog2TileRows )
@@ -5800,10 +5788,10 @@ break;
 				for ( i = 0; startSb < sbCols; i++ )
 				{
 					MiColStarts[ i ]= startSb << sbShift;
-					maxWidth= Min(sbCols - startSb, maxTileWidthSb);
+					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
 					size += stream.WriteUnsignedInt(maxWidth, this.width_in_sbs_minus_1[ i ], "width_in_sbs_minus_1"); 
 					sizeSb= width_in_sbs_minus_1[i] + 1;
-					widestTileSb= Max( sizeSb, widestTileSb );
+					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
 				}
 				MiColStarts[i]= MiCols;
@@ -5818,13 +5806,13 @@ break;
 				{
 					maxTileAreaSb= sbRows * sbCols;
 				}
-				maxTileHeightSb= Max( maxTileAreaSb / widestTileSb, 1 );
+				maxTileHeightSb= Math.Max( maxTileAreaSb / widestTileSb, 1 );
 				startSb= 0;
 
 				for ( i = 0; startSb < sbRows; i++ )
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
-					maxHeight= Min(sbRows - startSb, maxTileHeightSb);
+					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
 					size += stream.WriteUnsignedInt(maxHeight, this.height_in_sbs_minus_1[ i ], "height_in_sbs_minus_1"); 
 					sizeSb= height_in_sbs_minus_1[i] + 1;
 					startSb+= sizeSb;
@@ -6657,8 +6645,8 @@ skip_mode_params() {
 				else if ( backwardIdx >= 0 )
 				{
 					skipModeAllowed= 1;
-					SkipModeFrame[ 0 ]= LAST_FRAME + Min(forwardIdx, backwardIdx);
-					SkipModeFrame[ 1 ]= LAST_FRAME + Max(forwardIdx, backwardIdx);
+					SkipModeFrame[ 0 ]= AV1RefFrames.LAST_FRAME + Math.Min(forwardIdx, backwardIdx);
+					SkipModeFrame[ 1 ]= AV1RefFrames.LAST_FRAME + Math.Max(forwardIdx, backwardIdx);
 				}
 				else 
 				{
@@ -6687,8 +6675,8 @@ skip_mode_params() {
 					else 
 					{
 						skipModeAllowed= 1;
-						SkipModeFrame[ 0 ]= LAST_FRAME + Min(forwardIdx, secondForwardIdx);
-						SkipModeFrame[ 1 ]= LAST_FRAME + Max(forwardIdx, secondForwardIdx);
+						SkipModeFrame[ 0 ]= AV1RefFrames.LAST_FRAME + Math.Min(forwardIdx, secondForwardIdx);
+						SkipModeFrame[ 1 ]= AV1RefFrames.LAST_FRAME + Math.Max(forwardIdx, secondForwardIdx);
 					}
 				}
 			}
@@ -6763,8 +6751,8 @@ skip_mode_params() {
 				else if ( backwardIdx >= 0 )
 				{
 					skipModeAllowed= 1;
-					SkipModeFrame[ 0 ]= LAST_FRAME + Min(forwardIdx, backwardIdx);
-					SkipModeFrame[ 1 ]= LAST_FRAME + Max(forwardIdx, backwardIdx);
+					SkipModeFrame[ 0 ]= AV1RefFrames.LAST_FRAME + Math.Min(forwardIdx, backwardIdx);
+					SkipModeFrame[ 1 ]= AV1RefFrames.LAST_FRAME + Math.Max(forwardIdx, backwardIdx);
 				}
 				else 
 				{
@@ -6793,8 +6781,8 @@ skip_mode_params() {
 					else 
 					{
 						skipModeAllowed= 1;
-						SkipModeFrame[ 0 ]= LAST_FRAME + Min(forwardIdx, secondForwardIdx);
-						SkipModeFrame[ 1 ]= LAST_FRAME + Max(forwardIdx, secondForwardIdx);
+						SkipModeFrame[ 0 ]= AV1RefFrames.LAST_FRAME + Math.Min(forwardIdx, secondForwardIdx);
+						SkipModeFrame[ 1 ]= AV1RefFrames.LAST_FRAME + Math.Max(forwardIdx, secondForwardIdx);
 					}
 				}
 			}
@@ -6951,7 +6939,7 @@ global_motion_params() {
 			uint refc = 0;
 			uint[] GmType = null;
 			uint i = 0;
-			uint[][] gm_params = null;
+			int[][] gm_params = null;
 			uint type = 0;
 
 			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
@@ -7042,7 +7030,7 @@ return;
 			uint refc = 0;
 			uint[] GmType = null;
 			uint i = 0;
-			uint[][] gm_params = null;
+			int[][] gm_params = null;
 			uint type = 0;
 
 			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
@@ -7164,7 +7152,7 @@ read_global_param( type, refc, idx ) {
 			uint sub = 0;
 			uint mx = 0;
 			uint r = 0;
-			uint[][] gm_params = null;
+			int[][] gm_params = null;
 			absBits= GM_ABS_ALPHA_BITS;
 			precBits= GM_ALPHA_PREC_BITS;
 
@@ -7203,7 +7191,7 @@ read_global_param( type, refc, idx ) {
 			uint sub = 0;
 			uint mx = 0;
 			uint r = 0;
-			uint[][] gm_params = null;
+			int[][] gm_params = null;
 			absBits= GM_ABS_ALPHA_BITS;
 			precBits= GM_ALPHA_PREC_BITS;
 
@@ -9355,7 +9343,7 @@ decode_block( r, c, subSize ) {
 				this.reset_block_context =  new ResetBlockContext( bw4,  bh4 ) ;
 				size +=  stream.ReadClass<ResetBlockContext>(size, context, this.reset_block_context, "reset_block_context"); 
 			}
-			isCompound= RefFrame[ 1 ] > INTRA_FRAME ? (uint)1 : (uint)0;
+			isCompound= RefFrame[ 1 ] > AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
 
 			for ( y = 0; y < bh4; y++ )
 			{
@@ -9519,7 +9507,7 @@ decode_block( r, c, subSize ) {
 			{
 				size += stream.WriteClass<ResetBlockContext>(context, this.reset_block_context, "reset_block_context"); 
 			}
-			isCompound= RefFrame[ 1 ] > INTRA_FRAME ? (uint)1 : (uint)0;
+			isCompound= RefFrame[ 1 ] > AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
 
 			for ( y = 0; y < bh4; y++ )
 			{
@@ -9897,7 +9885,7 @@ intra_frame_mode_info() {
 			this.read_delta_lf =  new ReadDeltaLf() ;
 			size +=  stream.ReadClass<ReadDeltaLf>(size, context, this.read_delta_lf, "read_delta_lf"); 
 			ReadDeltas= 0;
-			RefFrame[ 0 ]= INTRA_FRAME;
+			RefFrame[ 0 ]= AV1RefFrames.INTRA_FRAME;
 			RefFrame[ 1 ]= NONE;
 
 			if ( allow_intrabc != 0 )
@@ -9998,7 +9986,7 @@ intra_frame_mode_info() {
 			size += stream.WriteClass<ReadDeltaQindex>(context, this.read_delta_qindex, "read_delta_qindex"); 
 			size += stream.WriteClass<ReadDeltaLf>(context, this.read_delta_lf, "read_delta_lf"); 
 			ReadDeltas= 0;
-			RefFrame[ 0 ]= INTRA_FRAME;
+			RefFrame[ 0 ]= AV1RefFrames.INTRA_FRAME;
 			RefFrame[ 1 ]= NONE;
 
 			if ( allow_intrabc != 0 )
@@ -10300,12 +10288,12 @@ read_segment_id() {
 
 
 neg_deinterleave(diff, refc, max) {
- if (!ref)
+ if (! refc )
  return diff
- if (ref >= ( max - 1 ))
+ if ( refc >= ( max - 1 ))
  return max - diff - 1
  if(2 * refc < max){
- if(diff <= 2 * ref){
+ if(diff <= 2 * refc ){
  if(diff & 1)
  return refc + ( (diff+1) >> 1)
  else 
@@ -10344,12 +10332,12 @@ neg_deinterleave(diff, refc, max) {
             ulong size = 0;
 
 
-			if (ref== 0)
+			if ( refc== 0 )
 			{
 return diff;
 			}
 
-			if (ref >= ( max - 1 ))
+			if ( refc >= ( max - 1 ))
 			{
 return max - diff - 1;
 			}
@@ -10357,7 +10345,7 @@ return max - diff - 1;
 			if (2 * refc < max)
 			{
 
-				if (diff <= 2 * ref)
+				if (diff <= 2 * refc )
 				{
 
 					if (diff & 1 != 0)
@@ -10397,12 +10385,12 @@ return max - ( diff + 1 );
             ulong size = 0;
 
 
-			if (ref== 0)
+			if ( refc== 0 )
 			{
 return diff;
 			}
 
-			if (ref >= ( max - 1 ))
+			if ( refc >= ( max - 1 ))
 			{
 return max - diff - 1;
 			}
@@ -10410,7 +10398,7 @@ return max - diff - 1;
 			if (2 * refc < max)
 			{
 
-				if (diff <= 2 * ref)
+				if (diff <= 2 * refc )
 				{
 
 					if (diff & 1 != 0)
@@ -11438,14 +11426,14 @@ inter_frame_mode_info() {
 			uint Lossless = 0;
 			uint ReadDeltas = 0;
 			use_intrabc= 0;
-			LeftRefFrame[ 0 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : INTRA_FRAME;
-			AboveRefFrame[ 0 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : INTRA_FRAME;
+			LeftRefFrame[ 0 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : AV1RefFrames.INTRA_FRAME;
+			AboveRefFrame[ 0 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : AV1RefFrames.INTRA_FRAME;
 			LeftRefFrame[ 1 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 1 ] : NONE;
 			AboveRefFrame[ 1 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 1 ] : NONE;
-			LeftIntra= LeftRefFrame[ 0 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
-			AboveIntra= AboveRefFrame[ 0 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
-			LeftSingle= LeftRefFrame[ 1 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
-			AboveSingle= AboveRefFrame[ 1 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			LeftIntra= LeftRefFrame[ 0 ] <= AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
+			AboveIntra= AboveRefFrame[ 0 ] <= AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
+			LeftSingle= LeftRefFrame[ 1 ] <= AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
+			AboveSingle= AboveRefFrame[ 1 ] <= AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
 			skip= 0;
 			this.inter_segment_id =  new InterSegmentId( 1 ) ;
 			size +=  stream.ReadClass<InterSegmentId>(size, context, this.inter_segment_id, "inter_segment_id"); 
@@ -11507,14 +11495,14 @@ inter_frame_mode_info() {
 			uint Lossless = 0;
 			uint ReadDeltas = 0;
 			use_intrabc= 0;
-			LeftRefFrame[ 0 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : INTRA_FRAME;
-			AboveRefFrame[ 0 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : INTRA_FRAME;
+			LeftRefFrame[ 0 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 0 ] : AV1RefFrames.INTRA_FRAME;
+			AboveRefFrame[ 0 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 0 ] : AV1RefFrames.INTRA_FRAME;
 			LeftRefFrame[ 1 ]= AvailL ? RefFrames[ MiRow ][ MiCol-1 ][ 1 ] : NONE;
 			AboveRefFrame[ 1 ]= AvailU ? RefFrames[ MiRow-1 ][ MiCol ][ 1 ] : NONE;
-			LeftIntra= LeftRefFrame[ 0 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
-			AboveIntra= AboveRefFrame[ 0 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
-			LeftSingle= LeftRefFrame[ 1 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
-			AboveSingle= AboveRefFrame[ 1 ] <= INTRA_FRAME ? (uint)1 : (uint)0;
+			LeftIntra= LeftRefFrame[ 0 ] <= AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
+			AboveIntra= AboveRefFrame[ 0 ] <= AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
+			LeftSingle= LeftRefFrame[ 1 ] <= AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
+			AboveSingle= AboveRefFrame[ 1 ] <= AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
 			skip= 0;
 			size += stream.WriteClass<InterSegmentId>(context, this.inter_segment_id, "inter_segment_id"); 
 			size += stream.WriteClass<ReadSkipMode>(context, this.read_skip_mode, "read_skip_mode"); 
@@ -11826,7 +11814,7 @@ read_is_inter() {
 			}
 			else if ( seg_feature_active ( SEG_LVL_REF_FRAME ) )
 			{
-				is_inter= FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ] != INTRA_FRAME;
+				is_inter= FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ] != AV1RefFrames.INTRA_FRAME;
 			}
 			else if ( seg_feature_active ( SEG_LVL_GLOBALMV ) )
 			{
@@ -11852,7 +11840,7 @@ read_is_inter() {
 			}
 			else if ( seg_feature_active ( SEG_LVL_REF_FRAME ) )
 			{
-				is_inter= FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ] != INTRA_FRAME;
+				is_inter= FeatureData[ segment_id ][ SEG_LVL_REF_FRAME ] != AV1RefFrames.INTRA_FRAME;
 			}
 			else if ( seg_feature_active ( SEG_LVL_GLOBALMV ) )
 			{
@@ -11905,8 +11893,8 @@ get_segment_id() {
 			uint x = 0;
 			bw4= Num_4x4_Blocks_Wide[ MiSize ];
 			bh4= Num_4x4_Blocks_High[ MiSize ];
-			xMis= Min( MiCols - MiCol, bw4 );
-			yMis= Min( MiRows - MiRow, bh4 );
+			xMis= Math.Min( MiCols - MiCol, bw4 );
+			yMis= Math.Min( MiRows - MiRow, bh4 );
 			seg= 7;
 
 			for ( y = 0; y < yMis; y++ )
@@ -11914,7 +11902,7 @@ get_segment_id() {
 
 				for ( x = 0; x < xMis; x++ )
 				{
-					seg= Min( seg, PrevSegmentIds[ MiRow + y ][ MiCol + x ] );
+					seg= Math.Min( seg, PrevSegmentIds[ MiRow + y ][ MiCol + x ] );
 				}
 			}
 return seg;
@@ -11935,8 +11923,8 @@ return seg;
 			uint x = 0;
 			bw4= Num_4x4_Blocks_Wide[ MiSize ];
 			bh4= Num_4x4_Blocks_High[ MiSize ];
-			xMis= Min( MiCols - MiCol, bw4 );
-			yMis= Min( MiRows - MiRow, bh4 );
+			xMis= Math.Min( MiCols - MiCol, bw4 );
+			yMis= Math.Min( MiRows - MiRow, bh4 );
 			seg= 7;
 
 			for ( y = 0; y < yMis; y++ )
@@ -11944,7 +11932,7 @@ return seg;
 
 				for ( x = 0; x < xMis; x++ )
 				{
-					seg= Min( seg, PrevSegmentIds[ MiRow + y ][ MiCol + x ] );
+					seg= Math.Min( seg, PrevSegmentIds[ MiRow + y ][ MiCol + x ] );
 				}
 			}
 return seg;
@@ -12013,7 +12001,7 @@ intra_block_mode_info() {
 			uint UVMode = 0;
 			uint PaletteSizeY = 0;
 			uint PaletteSizeUV = 0;
-			RefFrame[ 0 ]= INTRA_FRAME;
+			RefFrame[ 0 ]= AV1RefFrames.INTRA_FRAME;
 			RefFrame[ 1 ]= NONE;
 			size += stream.ReadS(size, out this.y_mode, "y_mode"); 
 			YMode= y_mode;
@@ -12059,7 +12047,7 @@ intra_block_mode_info() {
 			uint UVMode = 0;
 			uint PaletteSizeY = 0;
 			uint PaletteSizeUV = 0;
-			RefFrame[ 0 ]= INTRA_FRAME;
+			RefFrame[ 0 ]= AV1RefFrames.INTRA_FRAME;
 			RefFrame[ 1 ]= NONE;
 			size += stream.WriteS( this.y_mode, "y_mode"); 
 			YMode= y_mode;
@@ -12218,7 +12206,7 @@ inter_block_mode_info() {
 			PaletteSizeUV= 0;
 			this.read_ref_frames =  new ReadRefFrames() ;
 			size +=  stream.ReadClass<ReadRefFrames>(size, context, this.read_ref_frames, "read_ref_frames"); 
-			isCompound= RefFrame[ 1 ] > INTRA_FRAME ? (uint)1 : (uint)0;
+			isCompound= RefFrame[ 1 ] > AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
 			this.find_mv_stack =  new FindMvStack( isCompound ) ;
 			size +=  stream.ReadClass<FindMvStack>(size, context, this.find_mv_stack, "find_mv_stack"); 
 
@@ -12359,7 +12347,7 @@ break;
 			PaletteSizeY= 0;
 			PaletteSizeUV= 0;
 			size += stream.WriteClass<ReadRefFrames>(context, this.read_ref_frames, "read_ref_frames"); 
-			isCompound= RefFrame[ 1 ] > INTRA_FRAME ? (uint)1 : (uint)0;
+			isCompound= RefFrame[ 1 ] > AV1RefFrames.INTRA_FRAME ? (uint)1 : (uint)0;
 			size += stream.WriteClass<FindMvStack>(context, this.find_mv_stack, "find_mv_stack"); 
 
 			if ( skip_mode != 0 )
@@ -12548,7 +12536,7 @@ return (YMode== NEARMV||YMode ==NEAR_NEARMV ||YMode ==NEAR_NEWMV ||YMode ==NEW_N
             ulong size = 0;
 
 			uint large = 0;
-			large= (Min(Block_Width[MiSize], Block_Height[MiSize]) >=8) ? (uint)1 : (uint)0;
+			large= (Math.Min(Block_Width[MiSize], Block_Height[MiSize]) >=8) ? (uint)1 : (uint)0;
 
 			if (skip_mode != 0 ||motion_mode ==LOCALWARP)
 			{
@@ -12575,7 +12563,7 @@ return 1;
             ulong size = 0;
 
 			uint large = 0;
-			large= (Min(Block_Width[MiSize], Block_Height[MiSize]) >=8) ? (uint)1 : (uint)0;
+			large= (Math.Min(Block_Width[MiSize], Block_Height[MiSize]) >=8) ? (uint)1 : (uint)0;
 
 			if (skip_mode != 0 ||motion_mode ==LOCALWARP)
 			{
@@ -12636,7 +12624,7 @@ return 1;
 
 			if ( enable_filter_intra != 0 &&
  YMode == DC_PRED && PaletteSizeY == 0 &&
- Max( Block_Width[ MiSize ], Block_Height[ MiSize ] ) <= 32 )
+ Math.Max( Block_Width[ MiSize ], Block_Height[ MiSize ] ) <= 32 )
 			{
 				size += stream.ReadS(size, out this.use_filter_intra, "use_filter_intra"); 
 
@@ -12658,7 +12646,7 @@ return 1;
 
 			if ( enable_filter_intra != 0 &&
  YMode == DC_PRED && PaletteSizeY == 0 &&
- Max( Block_Width[ MiSize ], Block_Height[ MiSize ] ) <= 32 )
+ Math.Max( Block_Width[ MiSize ], Block_Height[ MiSize ] ) <= 32 )
 			{
 				size += stream.WriteS( this.use_filter_intra, "use_filter_intra"); 
 
@@ -12822,7 +12810,7 @@ return 1;
 			else if ( seg_feature_active( SEG_LVL_SKIP ) ||
  seg_feature_active( SEG_LVL_GLOBALMV ) )
 			{
-				RefFrame[ 0 ]= LAST_FRAME;
+				RefFrame[ 0 ]= AV1RefFrames.LAST_FRAME;
 				RefFrame[ 1 ]= NONE;
 			}
 			else 
@@ -12830,7 +12818,7 @@ return 1;
 				bw4= Num_4x4_Blocks_Wide[ MiSize ];
 				bh4= Num_4x4_Blocks_High[ MiSize ];
 
-				if ( reference_select != 0 && ( Min( bw4, bh4 ) >= 2 ) )
+				if ( reference_select != 0 && ( Math.Min( bw4, bh4 ) >= 2 ) )
 				{
 					size += stream.ReadS(size, out this.comp_mode, "comp_mode"); 
 				}
@@ -12849,8 +12837,8 @@ return 1;
 
 						if ( uni_comp_ref != 0 )
 						{
-							RefFrame[0]= BWDREF_FRAME;
-							RefFrame[1]= ALTREF_FRAME;
+							RefFrame[0]= AV1RefFrames.BWDREF_FRAME;
+							RefFrame[1]= AV1RefFrames.ALTREF_FRAME;
 						}
 						else 
 						{
@@ -12862,19 +12850,19 @@ return 1;
 
 								if ( uni_comp_ref_p2 != 0 )
 								{
-									RefFrame[0]= LAST_FRAME;
-									RefFrame[1]= GOLDEN_FRAME;
+									RefFrame[0]= AV1RefFrames.LAST_FRAME;
+									RefFrame[1]= AV1RefFrames.GOLDEN_FRAME;
 								}
 								else 
 								{
-									RefFrame[0]= LAST_FRAME;
-									RefFrame[1]= LAST3_FRAME;
+									RefFrame[0]= AV1RefFrames.LAST_FRAME;
+									RefFrame[1]= AV1RefFrames.LAST3_FRAME;
 								}
 							}
 							else 
 							{
-								RefFrame[0]= LAST_FRAME;
-								RefFrame[1]= LAST2_FRAME;
+								RefFrame[0]= AV1RefFrames.LAST_FRAME;
+								RefFrame[1]= AV1RefFrames.LAST2_FRAME;
 							}
 						}
 					}
@@ -12885,23 +12873,23 @@ return 1;
 						if ( comp_ref == 0 )
 						{
 							size += stream.ReadS(size, out this.comp_ref_p1, "comp_ref_p1"); 
-							RefFrame[ 0 ]= comp_ref_p1 ? LAST2_FRAME : LAST_FRAME;
+							RefFrame[ 0 ]= comp_ref_p1 ? AV1RefFrames.LAST2_FRAME : AV1RefFrames.LAST_FRAME;
 						}
 						else 
 						{
 							size += stream.ReadS(size, out this.comp_ref_p2, "comp_ref_p2"); 
-							RefFrame[ 0 ]= comp_ref_p2 ? GOLDEN_FRAME : LAST3_FRAME;
+							RefFrame[ 0 ]= comp_ref_p2 ? AV1RefFrames.GOLDEN_FRAME : AV1RefFrames.LAST3_FRAME;
 						}
 						size += stream.ReadS(size, out this.comp_bwdref, "comp_bwdref"); 
 
 						if ( comp_bwdref == 0 )
 						{
 							size += stream.ReadS(size, out this.comp_bwdref_p1, "comp_bwdref_p1"); 
-							RefFrame[ 1 ]= comp_bwdref_p1 ? ALTREF2_FRAME : BWDREF_FRAME;
+							RefFrame[ 1 ]= comp_bwdref_p1 ? AV1RefFrames.ALTREF2_FRAME : AV1RefFrames.BWDREF_FRAME;
 						}
 						else 
 						{
-							RefFrame[ 1 ]= ALTREF_FRAME;
+							RefFrame[ 1 ]= AV1RefFrames.ALTREF_FRAME;
 						}
 					}
 				}
@@ -12916,11 +12904,11 @@ return 1;
 						if ( single_ref_p2 == 0 )
 						{
 							size += stream.ReadS(size, out this.single_ref_p6, "single_ref_p6"); 
-							RefFrame[ 0 ]= single_ref_p6 ? ALTREF2_FRAME : BWDREF_FRAME;
+							RefFrame[ 0 ]= single_ref_p6 ? AV1RefFrames.ALTREF2_FRAME : AV1RefFrames.BWDREF_FRAME;
 						}
 						else 
 						{
-							RefFrame[ 0 ]= ALTREF_FRAME;
+							RefFrame[ 0 ]= AV1RefFrames.ALTREF_FRAME;
 						}
 					}
 					else 
@@ -12930,12 +12918,12 @@ return 1;
 						if ( single_ref_p3 != 0 )
 						{
 							size += stream.ReadS(size, out this.single_ref_p5, "single_ref_p5"); 
-							RefFrame[ 0 ]= single_ref_p5 ? GOLDEN_FRAME : LAST3_FRAME;
+							RefFrame[ 0 ]= single_ref_p5 ? AV1RefFrames.GOLDEN_FRAME : AV1RefFrames.LAST3_FRAME;
 						}
 						else 
 						{
 							size += stream.ReadS(size, out this.single_ref_p4, "single_ref_p4"); 
-							RefFrame[ 0 ]= single_ref_p4 ? LAST2_FRAME : LAST_FRAME;
+							RefFrame[ 0 ]= single_ref_p4 ? AV1RefFrames.LAST2_FRAME : AV1RefFrames.LAST_FRAME;
 						}
 					}
 					RefFrame[ 1 ]= NONE;
@@ -12967,7 +12955,7 @@ return 1;
 			else if ( seg_feature_active( SEG_LVL_SKIP ) ||
  seg_feature_active( SEG_LVL_GLOBALMV ) )
 			{
-				RefFrame[ 0 ]= LAST_FRAME;
+				RefFrame[ 0 ]= AV1RefFrames.LAST_FRAME;
 				RefFrame[ 1 ]= NONE;
 			}
 			else 
@@ -12975,7 +12963,7 @@ return 1;
 				bw4= Num_4x4_Blocks_Wide[ MiSize ];
 				bh4= Num_4x4_Blocks_High[ MiSize ];
 
-				if ( reference_select != 0 && ( Min( bw4, bh4 ) >= 2 ) )
+				if ( reference_select != 0 && ( Math.Min( bw4, bh4 ) >= 2 ) )
 				{
 					size += stream.WriteS( this.comp_mode, "comp_mode"); 
 				}
@@ -12994,8 +12982,8 @@ return 1;
 
 						if ( uni_comp_ref != 0 )
 						{
-							RefFrame[0]= BWDREF_FRAME;
-							RefFrame[1]= ALTREF_FRAME;
+							RefFrame[0]= AV1RefFrames.BWDREF_FRAME;
+							RefFrame[1]= AV1RefFrames.ALTREF_FRAME;
 						}
 						else 
 						{
@@ -13007,19 +12995,19 @@ return 1;
 
 								if ( uni_comp_ref_p2 != 0 )
 								{
-									RefFrame[0]= LAST_FRAME;
-									RefFrame[1]= GOLDEN_FRAME;
+									RefFrame[0]= AV1RefFrames.LAST_FRAME;
+									RefFrame[1]= AV1RefFrames.GOLDEN_FRAME;
 								}
 								else 
 								{
-									RefFrame[0]= LAST_FRAME;
-									RefFrame[1]= LAST3_FRAME;
+									RefFrame[0]= AV1RefFrames.LAST_FRAME;
+									RefFrame[1]= AV1RefFrames.LAST3_FRAME;
 								}
 							}
 							else 
 							{
-								RefFrame[0]= LAST_FRAME;
-								RefFrame[1]= LAST2_FRAME;
+								RefFrame[0]= AV1RefFrames.LAST_FRAME;
+								RefFrame[1]= AV1RefFrames.LAST2_FRAME;
 							}
 						}
 					}
@@ -13030,23 +13018,23 @@ return 1;
 						if ( comp_ref == 0 )
 						{
 							size += stream.WriteS( this.comp_ref_p1, "comp_ref_p1"); 
-							RefFrame[ 0 ]= comp_ref_p1 ? LAST2_FRAME : LAST_FRAME;
+							RefFrame[ 0 ]= comp_ref_p1 ? AV1RefFrames.LAST2_FRAME : AV1RefFrames.LAST_FRAME;
 						}
 						else 
 						{
 							size += stream.WriteS( this.comp_ref_p2, "comp_ref_p2"); 
-							RefFrame[ 0 ]= comp_ref_p2 ? GOLDEN_FRAME : LAST3_FRAME;
+							RefFrame[ 0 ]= comp_ref_p2 ? AV1RefFrames.GOLDEN_FRAME : AV1RefFrames.LAST3_FRAME;
 						}
 						size += stream.WriteS( this.comp_bwdref, "comp_bwdref"); 
 
 						if ( comp_bwdref == 0 )
 						{
 							size += stream.WriteS( this.comp_bwdref_p1, "comp_bwdref_p1"); 
-							RefFrame[ 1 ]= comp_bwdref_p1 ? ALTREF2_FRAME : BWDREF_FRAME;
+							RefFrame[ 1 ]= comp_bwdref_p1 ? AV1RefFrames.ALTREF2_FRAME : AV1RefFrames.BWDREF_FRAME;
 						}
 						else 
 						{
-							RefFrame[ 1 ]= ALTREF_FRAME;
+							RefFrame[ 1 ]= AV1RefFrames.ALTREF_FRAME;
 						}
 					}
 				}
@@ -13061,11 +13049,11 @@ return 1;
 						if ( single_ref_p2 == 0 )
 						{
 							size += stream.WriteS( this.single_ref_p6, "single_ref_p6"); 
-							RefFrame[ 0 ]= single_ref_p6 ? ALTREF2_FRAME : BWDREF_FRAME;
+							RefFrame[ 0 ]= single_ref_p6 ? AV1RefFrames.ALTREF2_FRAME : AV1RefFrames.BWDREF_FRAME;
 						}
 						else 
 						{
-							RefFrame[ 0 ]= ALTREF_FRAME;
+							RefFrame[ 0 ]= AV1RefFrames.ALTREF_FRAME;
 						}
 					}
 					else 
@@ -13075,12 +13063,12 @@ return 1;
 						if ( single_ref_p3 != 0 )
 						{
 							size += stream.WriteS( this.single_ref_p5, "single_ref_p5"); 
-							RefFrame[ 0 ]= single_ref_p5 ? GOLDEN_FRAME : LAST3_FRAME;
+							RefFrame[ 0 ]= single_ref_p5 ? AV1RefFrames.GOLDEN_FRAME : AV1RefFrames.LAST3_FRAME;
 						}
 						else 
 						{
 							size += stream.WriteS( this.single_ref_p4, "single_ref_p4"); 
-							RefFrame[ 0 ]= single_ref_p4 ? LAST2_FRAME : LAST_FRAME;
+							RefFrame[ 0 ]= single_ref_p4 ? AV1RefFrames.LAST2_FRAME : AV1RefFrames.LAST_FRAME;
 						}
 					}
 					RefFrame[ 1 ]= NONE;
@@ -13380,7 +13368,7 @@ return;
 return;
 			}
 
-			if ( Min( Block_Width[ MiSize ],
+			if ( Math.Min( Block_Width[ MiSize ],
  Block_Height[ MiSize ] ) < 8 )
 			{
 				motion_mode= SIMPLE;
@@ -13438,7 +13426,7 @@ return;
 return;
 			}
 
-			if ( Min( Block_Width[ MiSize ],
+			if ( Math.Min( Block_Width[ MiSize ],
  Block_Height[ MiSize ] ) < 8 )
 			{
 				motion_mode= SIMPLE;
@@ -13508,7 +13496,7 @@ is_scaled(refFrame) {
 			uint xScale = 0;
 			uint yScale = 0;
 			uint noScale = 0;
-			refIdx= ref_frame_idx[refFrame-LAST_FRAME];
+			refIdx= ref_frame_idx[refFrame-AV1RefFrames.LAST_FRAME];
 			xScale= ((RefUpscaledWidth[refIdx] <<REF_SCALE_SHIFT)+(FrameWidth/2))//FrameWidth;
 			yScale= ((RefFrameHeight[refIdx] <<REF_SCALE_SHIFT)+(FrameHeight/2))//FrameHeight;
 			noScale= 1 <<REF_SCALE_SHIFT;
@@ -13525,7 +13513,7 @@ return returnxScale !=noScale ||yScale !=noScale;
 			uint xScale = 0;
 			uint yScale = 0;
 			uint noScale = 0;
-			refIdx= ref_frame_idx[refFrame-LAST_FRAME];
+			refIdx= ref_frame_idx[refFrame-AV1RefFrames.LAST_FRAME];
 			xScale= ((RefUpscaledWidth[refIdx] <<REF_SCALE_SHIFT)+(FrameWidth/2))//FrameWidth;
 			yScale= ((RefFrameHeight[refIdx] <<REF_SCALE_SHIFT)+(FrameHeight/2))//FrameHeight;
 			noScale= 1 <<REF_SCALE_SHIFT;
@@ -13598,7 +13586,7 @@ return returnxScale !=noScale ||yScale !=noScale;
 				if ( interintra != 0 )
 				{
 					size += stream.ReadS(size, out this.interintra_mode, "interintra_mode"); 
-					RefFrame[1]= INTRA_FRAME;
+					RefFrame[1]= AV1RefFrames.INTRA_FRAME;
 					AngleDeltaY= 0;
 					AngleDeltaUV= 0;
 					use_filter_intra= 0;
@@ -13638,7 +13626,7 @@ return returnxScale !=noScale ||yScale !=noScale;
 				if ( interintra != 0 )
 				{
 					size += stream.WriteS( this.interintra_mode, "interintra_mode"); 
-					RefFrame[1]= INTRA_FRAME;
+					RefFrame[1]= AV1RefFrames.INTRA_FRAME;
 					AngleDeltaY= 0;
 					AngleDeltaUV= 0;
 					use_filter_intra= 0;
@@ -14479,7 +14467,7 @@ return mv_sign ? -mag : mag;
 				baseY= (MiRow >> subY) * MI_SIZE;
 				candRow= (MiRow >> subY) << subY;
 				candCol= (MiCol >> subX) << subX;
-				IsInterIntra= ( is_inter && RefFrame[ 1 ] == INTRA_FRAME ) ? (uint)1 : (uint)0;
+				IsInterIntra= ( is_inter && RefFrame[ 1 ] == AV1RefFrames.INTRA_FRAME ) ? (uint)1 : (uint)0;
 
 				if ( IsInterIntra != 0 )
 				{
@@ -14597,7 +14585,7 @@ return mv_sign ? -mag : mag;
 				baseY= (MiRow >> subY) * MI_SIZE;
 				candRow= (MiRow >> subY) << subY;
 				candCol= (MiCol >> subX) << subX;
-				IsInterIntra= ( is_inter && RefFrame[ 1 ] == INTRA_FRAME ) ? (uint)1 : (uint)0;
+				IsInterIntra= ( is_inter && RefFrame[ 1 ] == AV1RefFrames.INTRA_FRAME ) ? (uint)1 : (uint)0;
 
 				if ( IsInterIntra != 0 )
 				{
@@ -14752,8 +14740,8 @@ residual() {
 			uint y = 0;
 			uint x = 0;
 			sbMask= use_128x128_superblock ? 31 : 15;
-			widthChunks= Max( 1, Block_Width[ MiSize ] >> 6 );
-			heightChunks= Max( 1, Block_Height[ MiSize ] >> 6 );
+			widthChunks= Math.Max( 1, Block_Width[ MiSize ] >> 6 );
+			heightChunks= Math.Max( 1, Block_Height[ MiSize ] >> 6 );
 			miSizeChunk= ( widthChunks > 1 || heightChunks > 1 ) ? BLOCK_64X64 : MiSize;
 
 			this.transform_tree = new TransformTree[ heightChunks][][];
@@ -14844,8 +14832,8 @@ residual() {
 			uint y = 0;
 			uint x = 0;
 			sbMask= use_128x128_superblock ? 31 : 15;
-			widthChunks= Max( 1, Block_Width[ MiSize ] >> 6 );
-			heightChunks= Max( 1, Block_Height[ MiSize ] >> 6 );
+			widthChunks= Math.Max( 1, Block_Width[ MiSize ] >> 6 );
+			heightChunks= Math.Max( 1, Block_Height[ MiSize ] >> 6 );
 			miSizeChunk= ( widthChunks > 1 || heightChunks > 1 ) ? BLOCK_64X64 : MiSize;
 
 			for ( chunkY = 0; chunkY < heightChunks; chunkY++ )
@@ -15923,7 +15911,7 @@ return Subsampled_Size[ subsize ][ subx ][ suby ];
 				}
 				PlaneTxType= compute_tx_type( plane, txSz, x4, y4 );
 				scan= get_scan( txSz );
-				eobMultisize= Min( Tx_Width_Log2[ txSz ], 5) + Min( Tx_Height_Log2[ txSz ], 5) - 4;
+				eobMultisize= Math.Min( Tx_Width_Log2[ txSz ], 5) + Math.Min( Tx_Height_Log2[ txSz ], 5) - 4;
 
 				if ( eobMultisize == 0 )
 				{
@@ -15961,7 +15949,7 @@ return Subsampled_Size[ subsize ][ subx ][ suby ];
 					eobPt= eob_pt_1024 + 1;
 				}
 				eob= ( eobPt < 2 ) ? eobPt : ( ( 1 << ( eobPt - 2 ) ) + 1 );
-				eobShift= Max( -1, eobPt - 3 );
+				eobShift= Math.Max( -1, eobPt - 3 );
 
 				if ( eobShift >= 0 )
 				{
@@ -15972,10 +15960,10 @@ return Subsampled_Size[ subsize ][ subx ][ suby ];
 						eob+= ( 1 << eobShift );
 					}
 
-					this.eob_extra_bit = new uint[ Max( 0, eobPt - 2 )];
-					for ( i = 1; i < Max( 0, eobPt - 2 ); i++ )
+					this.eob_extra_bit = new uint[ Math.Max( 0, eobPt - 2 )];
+					for ( i = 1; i < Math.Max( 0, eobPt - 2 ); i++ )
 					{
-						eobShift= Max( 0, eobPt - 2 ) - 1 - i;
+						eobShift= Math.Max( 0, eobPt - 2 ) - 1 - i;
 						size += stream.ReadL(size, 1, out this.eob_extra_bit[ i ], "eob_extra_bit"); 
 
 						if ( eob_extra_bit[i] != 0 )
@@ -16084,7 +16072,7 @@ break;
 						Quant[ pos ]= - Quant[ pos ];
 					}
 				}
-				culLevel= Min( 63, culLevel );
+				culLevel= Math.Min( 63, culLevel );
 			}
 
 			for ( i = 0; i < w4; i++ )
@@ -16192,7 +16180,7 @@ return eob;
 				}
 				PlaneTxType= compute_tx_type( plane, txSz, x4, y4 );
 				scan= get_scan( txSz );
-				eobMultisize= Min( Tx_Width_Log2[ txSz ], 5) + Min( Tx_Height_Log2[ txSz ], 5) - 4;
+				eobMultisize= Math.Min( Tx_Width_Log2[ txSz ], 5) + Math.Min( Tx_Height_Log2[ txSz ], 5) - 4;
 
 				if ( eobMultisize == 0 )
 				{
@@ -16230,7 +16218,7 @@ return eob;
 					eobPt= eob_pt_1024 + 1;
 				}
 				eob= ( eobPt < 2 ) ? eobPt : ( ( 1 << ( eobPt - 2 ) ) + 1 );
-				eobShift= Max( -1, eobPt - 3 );
+				eobShift= Math.Max( -1, eobPt - 3 );
 
 				if ( eobShift >= 0 )
 				{
@@ -16241,9 +16229,9 @@ return eob;
 						eob+= ( 1 << eobShift );
 					}
 
-					for ( i = 1; i < Max( 0, eobPt - 2 ); i++ )
+					for ( i = 1; i < Math.Max( 0, eobPt - 2 ); i++ )
 					{
-						eobShift= Max( 0, eobPt - 2 ) - 1 - i;
+						eobShift= Math.Max( 0, eobPt - 2 ) - 1 - i;
 						size += stream.WriteL(1,  this.eob_extra_bit[ i ], "eob_extra_bit"); 
 
 						if ( eob_extra_bit[i] != 0 )
@@ -16344,7 +16332,7 @@ break;
 						Quant[ pos ]= - Quant[ pos ];
 					}
 				}
-				culLevel= Min( 63, culLevel );
+				culLevel= Math.Min( 63, culLevel );
 			}
 
 			for ( i = 0; i < w4; i++ )
@@ -16434,8 +16422,8 @@ return TxTypes[ blockY ][ blockX ];
 
 			if ( is_inter != 0 )
 			{
-				x4= Max( MiCol, blockX << subsampling_x );
-				y4= Max( MiRow, blockY << subsampling_y );
+				x4= Math.Max( MiCol, blockX << subsampling_x );
+				y4= Math.Max( MiRow, blockY << subsampling_y );
 				txType= TxTypes[ y4 ][ x4 ];
 
 				if ( !is_tx_type_in_set( txSet, txType ) )
@@ -16479,8 +16467,8 @@ return TxTypes[ blockY ][ blockX ];
 
 			if ( is_inter != 0 )
 			{
-				x4= Max( MiCol, blockX << subsampling_x );
-				y4= Max( MiRow, blockY << subsampling_y );
+				x4= Math.Max( MiCol, blockX << subsampling_x );
+				y4= Math.Max( MiRow, blockY << subsampling_y );
 				txType= TxTypes[ y4 ][ x4 ];
 
 				if ( !is_tx_type_in_set( txSet, txType ) )
@@ -16962,12 +16950,8 @@ return Default_Scan_32x32;
  if ( PlaneTxType == IDTX ) {
  return get_default_scan( txSz )
  }
- preferRow = ( PlaneTxType == V_DCT ||
- PlaneTxType == V_ADST ||
- PlaneTxType == V_FLIPADST )
- preferCol = ( PlaneTxType == H_DCT ||
- PlaneTxType == H_ADST ||
- PlaneTxType == H_FLIPADST )
+ preferRow = ( PlaneTxType == V_DCT || PlaneTxType == V_ADST || PlaneTxType == V_FLIPADST )
+ preferCol = ( PlaneTxType == H_DCT || PlaneTxType == H_ADST || PlaneTxType == H_FLIPADST )
  if ( preferRow ) {
  return get_mrow_scan( txSz )
  } else if ( preferCol ) {
@@ -16991,7 +16975,6 @@ return Default_Scan_32x32;
             ulong size = 0;
 
 			uint preferRow = 0;
-			uint PlaneTxType = 0;
 			uint preferCol = 0;
 
 			if ( txSz == TX_16X64 )
@@ -17013,12 +16996,8 @@ return Default_Scan_32x32;
 			{
 return get_default_scan( txSz );
 			}
-			preferRow= ( PlaneTxType == V_DCT || ? (uint)1 : (uint)0;
-			PlaneTxType= = V_ADST ||;
-			PlaneTxType= = V_FLIPADST );
-			preferCol= ( PlaneTxType == H_DCT || ? (uint)1 : (uint)0;
-			PlaneTxType= = H_ADST ||;
-			PlaneTxType= = H_FLIPADST );
+			preferRow= ( PlaneTxType == V_DCT || PlaneTxType == V_ADST || PlaneTxType == V_FLIPADST ) ? (uint)1 : (uint)0;
+			preferCol= ( PlaneTxType == H_DCT || PlaneTxType == H_ADST || PlaneTxType == H_FLIPADST ) ? (uint)1 : (uint)0;
 
 			if ( preferRow != 0 )
 			{
@@ -17038,7 +17017,6 @@ return get_default_scan( txSz );
             ulong size = 0;
 
 			uint preferRow = 0;
-			uint PlaneTxType = 0;
 			uint preferCol = 0;
 
 			if ( txSz == TX_16X64 )
@@ -17060,12 +17038,8 @@ return Default_Scan_32x32;
 			{
 return get_default_scan( txSz );
 			}
-			preferRow= ( PlaneTxType == V_DCT || ? (uint)1 : (uint)0;
-			PlaneTxType= = V_ADST ||;
-			PlaneTxType= = V_FLIPADST );
-			preferCol= ( PlaneTxType == H_DCT || ? (uint)1 : (uint)0;
-			PlaneTxType= = H_ADST ||;
-			PlaneTxType= = H_FLIPADST );
+			preferRow= ( PlaneTxType == V_DCT || PlaneTxType == V_ADST || PlaneTxType == V_FLIPADST ) ? (uint)1 : (uint)0;
+			preferCol= ( PlaneTxType == H_DCT || PlaneTxType == H_ADST || PlaneTxType == H_FLIPADST ) ? (uint)1 : (uint)0;
 
 			if ( preferRow != 0 )
 			{
@@ -17615,7 +17589,7 @@ palette_mode_info() {
 						palette_delta_y++;
 						palette_colors_y[ idx ]= Clip1( palette_colors_y[ idx[whileIndex] - 1 ] + palette_delta_y[whileIndex] );
 						range= ( 1 << BitDepth ) - palette_colors_y[ idx[whileIndex] ] - 1;
-						paletteBits= Min( paletteBits, CeilLog2( range ) );
+						paletteBits= Math.Min( paletteBits, CeilLog2( range ) );
 						idx++;
 					}
 					this.sort =  new Sort( palette_colors_y,  0,  PaletteSizeY - 1 ) ;
@@ -17670,7 +17644,7 @@ palette_mode_info() {
 						size += stream.ReadL(size, paletteBits, whileIndex, this.palette_delta_u, "palette_delta_u"); 
 						palette_colors_u[ idx ]= Clip1( palette_colors_u[ idx[whileIndex] - 1 ] + palette_delta_u[whileIndex] );
 						range= ( 1 << BitDepth ) - palette_colors_u[ idx[whileIndex] ];
-						paletteBits= Min( paletteBits, CeilLog2( range ) );
+						paletteBits= Math.Min( paletteBits, CeilLog2( range ) );
 						idx++;
 					}
 					this.sort0 =  new Sort( palette_colors_u,  0,  PaletteSizeUV - 1 ) ;
@@ -17793,7 +17767,7 @@ palette_mode_info() {
 						palette_delta_y++;
 						palette_colors_y[ idx ]= Clip1( palette_colors_y[ idx[whileIndex] - 1 ] + palette_delta_y[whileIndex] );
 						range= ( 1 << BitDepth ) - palette_colors_y[ idx[whileIndex] ] - 1;
-						paletteBits= Min( paletteBits, CeilLog2( range ) );
+						paletteBits= Math.Min( paletteBits, CeilLog2( range ) );
 						idx++;
 					}
 					size += stream.WriteClass<Sort>(context, this.sort, "sort"); 
@@ -17844,7 +17818,7 @@ palette_mode_info() {
 						size += stream.WriteL(paletteBits,  whileIndex, this.palette_delta_u, "palette_delta_u"); 
 						palette_colors_u[ idx ]= Clip1( palette_colors_u[ idx[whileIndex] - 1 ] + palette_delta_u[whileIndex] );
 						range= ( 1 << BitDepth ) - palette_colors_u[ idx[whileIndex] ];
-						paletteBits= Min( paletteBits, CeilLog2( range ) );
+						paletteBits= Math.Min( paletteBits, CeilLog2( range ) );
 						idx++;
 					}
 					size += stream.WriteClass<Sort>(context, this.sort0, "sort0"); 
@@ -18575,8 +18549,8 @@ palette_tokens() {
 			uint[][] ColorMapUV = null;
 			blockHeight= Block_Height[ MiSize ];
 			blockWidth= Block_Width[ MiSize ];
-			onscreenHeight= Min( blockHeight, (MiRows - MiRow) * MI_SIZE );
-			onscreenWidth= Min( blockWidth, (MiCols - MiCol) * MI_SIZE );
+			onscreenHeight= Math.Min( blockHeight, (MiRows - MiRow) * MI_SIZE );
+			onscreenWidth= Math.Min( blockWidth, (MiCols - MiCol) * MI_SIZE );
 
 			if ( PaletteSizeY != 0 )
 			{
@@ -18591,10 +18565,10 @@ palette_tokens() {
 				for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ )
 				{
 
-					this.get_palette_color_context[ i ] = new GetPaletteColorContext[ Max( 0, i - onscreenHeight + 1 )];
-					this.palette_color_idx_y[ i ] = new uint[ Max( 0, i - onscreenHeight + 1 )];
-					for ( j = Min( i, onscreenWidth - 1 );
- j >= Max( 0, i - onscreenHeight + 1 ); j-- )
+					this.get_palette_color_context[ i ] = new GetPaletteColorContext[ Math.Max( 0, i - onscreenHeight + 1 )];
+					this.palette_color_idx_y[ i ] = new uint[ Math.Max( 0, i - onscreenHeight + 1 )];
+					for ( j = Math.Min( i, onscreenWidth - 1 );
+ j >= Math.Max( 0, i - onscreenHeight + 1 ); j-- )
 					{
 						this.get_palette_color_context[ i ][ j ] =  new GetPaletteColorContext( ColorMapY,  ( i - j ),  j,  PaletteSizeY ) ;
 						size +=  stream.ReadClass<GetPaletteColorContext>(size, context, this.get_palette_color_context[ i ][ j ], "get_palette_color_context"); 
@@ -18648,10 +18622,10 @@ palette_tokens() {
 				for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ )
 				{
 
-					this.get_palette_color_context0[ i ] = new GetPaletteColorContext[ Max( 0, i - onscreenHeight + 1 )];
-					this.palette_color_idx_uv[ i ] = new uint[ Max( 0, i - onscreenHeight + 1 )];
-					for ( j = Min( i, onscreenWidth - 1 );
- j >= Max( 0, i - onscreenHeight + 1 ); j-- )
+					this.get_palette_color_context0[ i ] = new GetPaletteColorContext[ Math.Max( 0, i - onscreenHeight + 1 )];
+					this.palette_color_idx_uv[ i ] = new uint[ Math.Max( 0, i - onscreenHeight + 1 )];
+					for ( j = Math.Min( i, onscreenWidth - 1 );
+ j >= Math.Max( 0, i - onscreenHeight + 1 ); j-- )
 					{
 						this.get_palette_color_context0[ i ][ j ] =  new GetPaletteColorContext( ColorMapUV,  ( i - j ),  j,  PaletteSizeUV ) ;
 						size +=  stream.ReadClass<GetPaletteColorContext>(size, context, this.get_palette_color_context0[ i ][ j ], "get_palette_color_context0"); 
@@ -18696,8 +18670,8 @@ palette_tokens() {
 			uint[][] ColorMapUV = null;
 			blockHeight= Block_Height[ MiSize ];
 			blockWidth= Block_Width[ MiSize ];
-			onscreenHeight= Min( blockHeight, (MiRows - MiRow) * MI_SIZE );
-			onscreenWidth= Min( blockWidth, (MiCols - MiCol) * MI_SIZE );
+			onscreenHeight= Math.Min( blockHeight, (MiRows - MiRow) * MI_SIZE );
+			onscreenWidth= Math.Min( blockWidth, (MiCols - MiCol) * MI_SIZE );
 
 			if ( PaletteSizeY != 0 )
 			{
@@ -18708,8 +18682,8 @@ palette_tokens() {
 				for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ )
 				{
 
-					for ( j = Min( i, onscreenWidth - 1 );
- j >= Max( 0, i - onscreenHeight + 1 ); j-- )
+					for ( j = Math.Min( i, onscreenWidth - 1 );
+ j >= Math.Max( 0, i - onscreenHeight + 1 ); j-- )
 					{
 						size += stream.WriteClass<GetPaletteColorContext>(context, this.get_palette_color_context[ i ][ j ], "get_palette_color_context"); 
 						size += stream.WriteS( this.palette_color_idx_y[ i ][ j ], "palette_color_idx_y"); 
@@ -18760,8 +18734,8 @@ palette_tokens() {
 				for ( i = 1; i < onscreenHeight + onscreenWidth - 1; i++ )
 				{
 
-					for ( j = Min( i, onscreenWidth - 1 );
- j >= Max( 0, i - onscreenHeight + 1 ); j-- )
+					for ( j = Math.Min( i, onscreenWidth - 1 );
+ j >= Math.Max( 0, i - onscreenHeight + 1 ); j-- )
 					{
 						size += stream.WriteClass<GetPaletteColorContext>(context, this.get_palette_color_context0[ i ][ j ], "get_palette_color_context0"); 
 						size += stream.WriteS( this.palette_color_idx_uv[ i ][ j ], "palette_color_idx_uv"); 
@@ -19513,7 +19487,7 @@ return;
 					unitRows= count_units_in_frame( unitSize, Round2( FrameHeight, subY) );
 					unitCols= count_units_in_frame( unitSize, Round2( UpscaledWidth, subX) );
 					unitRowStart= ( r * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize;
-					unitRowEnd= Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize);
+					unitRowEnd= Math.Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize);
 
 					if ( use_superres != 0 )
 					{
@@ -19526,7 +19500,7 @@ return;
 						denominator= unitSize;
 					}
 					unitColStart= ( c * numerator + denominator - 1 ) / denominator;
-					unitColEnd= Min( unitCols, ( (c + w) * numerator + denominator - 1 ) / denominator);
+					unitColEnd= Math.Min( unitCols, ( (c + w) * numerator + denominator - 1 ) / denominator);
 
 					this.read_lr_unit[ plane ] = new ReadLrUnit[ unitRowEnd][];
 					for ( unitRow = unitRowStart; unitRow < unitRowEnd; unitRow++ )
@@ -19584,7 +19558,7 @@ return;
 					unitRows= count_units_in_frame( unitSize, Round2( FrameHeight, subY) );
 					unitCols= count_units_in_frame( unitSize, Round2( UpscaledWidth, subX) );
 					unitRowStart= ( r * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize;
-					unitRowEnd= Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize);
+					unitRowEnd= Math.Min( unitRows, ( (r + h) * ( MI_SIZE >> subY) + unitSize - 1 ) / unitSize);
 
 					if ( use_superres != 0 )
 					{
@@ -19597,7 +19571,7 @@ return;
 						denominator= unitSize;
 					}
 					unitColStart= ( c * numerator + denominator - 1 ) / denominator;
-					unitColEnd= Min( unitCols, ( (c + w) * numerator + denominator - 1 ) / denominator);
+					unitColEnd= Math.Min( unitCols, ( (c + w) * numerator + denominator - 1 ) / denominator);
 
 					for ( unitRow = unitRowStart; unitRow < unitRowEnd; unitRow++ )
 					{

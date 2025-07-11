@@ -28,6 +28,9 @@ namespace AomGenerator.CSharp
 
         public string FixCondition(string condition, MethodType methodType)
         {
+            condition = condition.Replace("Min(", "Math.Min(");
+            condition = condition.Replace("Max(", "Math.Max(");
+
             return condition;
         }
 
@@ -54,6 +57,19 @@ namespace AomGenerator.CSharp
 
         public string FixStatement(string fieldValue)
         {
+            fieldValue = fieldValue.Replace("Min(", "Math.Min(");
+            fieldValue = fieldValue.Replace("Max(", "Math.Max(");
+
+            fieldValue = fieldValue.Replace(" NONE ", " AV1RefFrames.NONE ");
+            fieldValue = fieldValue.Replace("INTRA_FRAME", "AV1RefFrames.INTRA_FRAME");
+            fieldValue = fieldValue.Replace("LAST_FRAME", "AV1RefFrames.LAST_FRAME");
+            fieldValue = fieldValue.Replace("LAST2_FRAME", "AV1RefFrames.LAST2_FRAME");
+            fieldValue = fieldValue.Replace("LAST3_FRAME", "AV1RefFrames.LAST3_FRAME");
+            fieldValue = fieldValue.Replace("GOLDEN_FRAME", "AV1RefFrames.GOLDEN_FRAME");
+            fieldValue = fieldValue.Replace("BWDREF_FRAME", "AV1RefFrames.BWDREF_FRAME");
+            fieldValue = fieldValue.Replace("ALTREF2_FRAME", "AV1RefFrames.ALTREF2_FRAME");
+            fieldValue = fieldValue.Replace("ALTREF_FRAME", "AV1RefFrames.ALTREF_FRAME");
+
             return fieldValue;
         }
 
@@ -165,6 +181,7 @@ namespace AomGenerator.CSharp
                 { "seq_tier", "f(32)[]" },
                 { "decoder_model_present_for_this_op", "f(32)[]" },
                 { "initial_display_delay_present_for_this_op", "f(32)[]" },
+                { "gm_params", "su(32)" },
             };
 
             if (map.ContainsKey(parameter))

@@ -699,6 +699,9 @@ namespace Sharp{type}
             string fieldValue = field.Value;
             string fieldArray = field.FieldArray;
 
+            if (!string.IsNullOrEmpty(fieldArray))
+                fieldArray = specificGenerator.FixStatement(fieldArray);
+
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 fieldValue = specificGenerator.FixStatement(fieldValue);

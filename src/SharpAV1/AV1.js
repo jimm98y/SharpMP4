@@ -205,7 +205,27 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
  film_grain_params_present f(1)
 }
 
+timing_info() { 
+ num_units_in_display_tick f(32)
+ time_scale f(32)
+ equal_picture_interval f(1)
+ if ( equal_picture_interval )
+ num_ticks_per_picture_minus_1 num_ticks_per_picture_minus_1 uvlc()
+}
 
+decoder_model_info() { 
+ buffer_delay_length_minus_1 f(5)
+ num_units_in_decoding_tick f(32)
+ buffer_removal_time_length_minus_1 f(5)
+ frame_presentation_time_length_minus_1 f(5)
+}
+
+operating_parameters_info( op ) { 
+ n = buffer_delay_length_minus_1 + 1
+ decoder_buffer_delay[ op ] f(n)
+ encoder_buffer_delay[ op ] f(n)
+ low_delay_mode_flag[ op ] f(1)
+}
 
 color_config() { 
  high_bitdepth f(1)
@@ -271,154 +291,6 @@ color_config() {
  separate_uv_delta_q f(1)
 }
 
-
-timing_info() { 
- num_units_in_display_tick f(32)
- time_scale f(32)
- equal_picture_interval f(1)
- if ( equal_picture_interval )
- num_ticks_per_picture_minus_1 num_ticks_per_picture_minus_1 uvlc()
-}
-
-
-decoder_model_info() { 
- buffer_delay_length_minus_1 f(5)
- num_units_in_decoding_tick f(32)
- buffer_removal_time_length_minus_1 f(5)
- frame_presentation_time_length_minus_1 f(5)
-}
-
-
-operating_parameters_info( op ) { 
- n = buffer_delay_length_minus_1 + 1
- decoder_buffer_delay[ op ] f(n)
- encoder_buffer_delay[ op ] f(n)
- low_delay_mode_flag[ op ] f(1)
-}
-
-
-temporal_delimiter_obu() { 
- SeenFrameHeader = 0
-}
-
-
-padding_obu() { 
- for ( i = 0; i < obu_padding_length; i++ )
- obu_padding_byte f(8)
-}
-
-
-metadata_obu() { 
- metadata_type leb128()
- if ( metadata_type == METADATA_TYPE_ITUT_T35 )
- metadata_itut_t35()
- else if ( metadata_type == METADATA_TYPE_HDR_CLL )
- metadata_hdr_cll()
- else if ( metadata_type == METADATA_TYPE_HDR_MDCV )
- metadata_hdr_mdcv()
- else if ( metadata_type == METADATA_TYPE_SCALABILITY )
- metadata_scalability()
- else if ( metadata_type == METADATA_TYPE_TIMECODE )
- metadata_timecode()
- }
-
-
-metadata_itut_t35() { 
- itu_t_t35_country_code f(8)
- if ( itu_t_t35_country_code == 0xFF ) {
- itu_t_t35_country_code_extension_byte f(8)
- }
- itu_t_t35_payload_bytes
-}
-
-
-metadata_hdr_cll() { 
- max_cll f(16)
- max_fall f(16)
-}
-
-
-metadata_hdr_mdcv() { 
- for ( i = 0; i < 3; i++ ) {
- primary_chromaticity_x[ i ] f(16)
- primary_chromaticity_y[ i ] f(16)
- }
- white_point_chromaticity_x f(16)
- white_point_chromaticity_y f(16)
- luminance_max f(32)
- luminance_min f(32)
-}
-
-
-metadata_scalability() { 
- scalability_mode_idc f(8)
- if ( scalability_mode_idc == SCALABILITY_SS )
- scalability_structure()
-}
-
-
-scalability_structure() { 
- spatial_layers_cnt_minus_1 f(2)
- spatial_layer_dimensions_present_flag f(1)
- spatial_layer_description_present_flag f(1)
- temporal_group_description_present_flag f(1)
- scalability_structure_reserved_3bits f(3)
- if ( spatial_layer_dimensions_present_flag ) {
- for ( i = 0; i <= spatial_layers_cnt_minus_1 ; i++ ) {
-  spatial_layer_max_width[ i ] f(16)
-  spatial_layer_max_height[ i ] f(16)
- }
- }
- if ( spatial_layer_description_present_flag ) {
- for ( i = 0; i <= spatial_layers_cnt_minus_1; i++ )
-  spatial_layer_ref_id[ i ] f(8)
- }
- if ( temporal_group_description_present_flag ) {
- temporal_group_size f(8)
- for ( i = 0; i < temporal_group_size; i++ ) {
- temporal_group_temporal_id[ i ] f(3)
- temporal_group_temporal_switching_up_point_flag[ i ] f(1)
- temporal_group_spatial_switching_up_point_flag[ i ] f(1)
- temporal_group_ref_cnt[ i ] f(3)
- for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ ) {
- temporal_group_ref_pic_diff[ i ][ j ] f(8)
- }
- }
- }
- }
-
-
-metadata_timecode() { 
- counting_type f(5)
- full_timestamp_flag f(1)
- discontinuity_flag f(1)
- cnt_dropped_flag f(1)
- n_frames f(9)
- if ( full_timestamp_flag ) {
- seconds_value f(6)
- minutes_value f(6)
- hours_value f(5)
- } else {
- seconds_flag f(1)
- if ( seconds_flag ) {
- seconds_value f(6)
- minutes_flag f(1)
- if ( minutes_flag ) {
- minutes_value f(6)
- hours_flag f(1)
- if ( hours_flag ) {
- hours_value f(5)
- }
- }
- }
- }
- time_offset_length f(5)
- if ( time_offset_length > 0 ) {
- time_offset_value f(time_offset_length)
- }
- }
-
-
 frame_header_obu() { 
  if ( SeenFrameHeader == 1 ) {
  frame_header_copy()
@@ -435,8 +307,7 @@ frame_header_obu() {
  }
  }
 
-
-uncompressed_header() { 
+ uncompressed_header() { 
  if ( frame_id_numbers_present_flag ) {
  idLen = ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 )
  }
@@ -468,8 +339,7 @@ uncompressed_header() {
  return
  }
  frame_type f(2)
- FrameIsIntra = (frame_type == INTRA_ONLY_FRAME ||
- frame_type == KEY_FRAME)
+ FrameIsIntra = (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME)
  show_frame show_frame f(1)
  if ( show_frame && decoder_model_info_present_flag && !equal_picture_interval ) {
  temporal_point_info()
@@ -479,8 +349,7 @@ uncompressed_header() {
  } else {
  showable_frame f(1)
  }
- if ( frame_type == SWITCH_FRAME ||
- ( frame_type == KEY_FRAME && show_frame ) )
+ if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame ) )
  error_resilient_mode = 1
  else
  error_resilient_mode f(1)
@@ -649,9 +518,7 @@ uncompressed_header() {
  CodedLossless = 1
  for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ ) {
  qindex = get_qindex( 1, segmentId )
- LosslessArray[ segmentId ] = qindex == 0 && DeltaQYDc == 0 &&
- DeltaQUAc == 0 && DeltaQUDc == 0 &&
- DeltaQVAc == 0 && DeltaQVDc == 0
+ LosslessArray[ segmentId ] = qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0
  if ( !LosslessArray[ segmentId ] )
  CodedLossless = 0
  if ( using_qmatrix ) {
@@ -673,9 +540,7 @@ uncompressed_header() {
  read_tx_mode()
  frame_reference_mode()
  skip_mode_params()
- if ( FrameIsIntra ||
- error_resilient_mode ||
- !enable_warped_motion )
+ if ( FrameIsIntra || error_resilient_mode || !enable_warped_motion )
  allow_warped_motion = 0
  else
  allow_warped_motion f(1)
@@ -684,18 +549,12 @@ uncompressed_header() {
  film_grain_params()
  }
 
+ temporal_point_info() { 
+ n = frame_presentation_time_length_minus_1 + 1
+ frame_presentation_time f(n)
+ }
 
-get_relative_dist( a, b ) { 
- if ( !enable_order_hint )
- return 0
- diff = a - b
- m = 1 << (OrderHintBits - 1)
- diff = (diff & (m - 1)) - (diff & m)
- return diff
-}
-
-
-mark_ref_frames( idLen ) { 
+ mark_ref_frames( idLen ) { 
  diffLen = delta_frame_id_length_minus_2 + 2
  for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
  if ( current_frame_id > ( 1 << diffLen ) ) {
@@ -712,8 +571,7 @@ mark_ref_frames( idLen ) {
  }
  }
 
-
-frame_size() { 
+ frame_size() { 
  if ( frame_size_override_flag ) {
  n = frame_width_bits_minus_1 + 1
  frame_width_minus_1 f(n)
@@ -729,8 +587,7 @@ frame_size() {
  compute_image_size()
  }
 
-
-render_size() { 
+ render_size() { 
  render_and_frame_size_different f(1)
  if ( render_and_frame_size_different == 1 ) {
  render_width_minus_1 f(16)
@@ -743,8 +600,7 @@ render_size() {
  }
  }
 
-
-frame_size_with_refs() { 
+ frame_size_with_refs() { 
  for ( i = 0; i < REFS_PER_FRAME; i++ ) {
  found_ref f(1)
  if ( found_ref == 1 ) {
@@ -765,30 +621,7 @@ frame_size_with_refs() {
  }
  }
 
-
-superres_params() { 
- if ( enable_superres )
- use_superres f(1)
- else
- use_superres = 0
- if ( use_superres ) {
- coded_denom f(SUPERRES_DENOM_BITS)
- SuperresDenom = coded_denom + SUPERRES_DENOM_MIN
- } else {
- SuperresDenom = SUPERRES_NUM
- }
- UpscaledWidth = FrameWidth
- FrameWidth = (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom
- }
-
-
-compute_image_size() { 
- MiCols = 2 * ( ( FrameWidth + 7 ) >> 3 )
- MiRows = 2 * ( ( FrameHeight + 7 ) >> 3 )
- }
-
-
-read_interpolation_filter() { 
+ read_interpolation_filter() { 
  is_filter_switchable f(1)
  if ( is_filter_switchable == 1 ) {
  interpolation_filter = SWITCHABLE
@@ -797,155 +630,14 @@ read_interpolation_filter() {
  }
  }
 
-
-loop_filter_params() { 
- if ( CodedLossless || allow_intrabc ) {
- loop_filter_level[ 0 ] = 0
- loop_filter_level[ 1 ] = 0
- loop_filter_ref_deltas[ INTRA_FRAME ] = 1
- loop_filter_ref_deltas[ LAST_FRAME ] = 0
- loop_filter_ref_deltas[ LAST2_FRAME ] = 0
- loop_filter_ref_deltas[ LAST3_FRAME ] = 0
- loop_filter_ref_deltas[ BWDREF_FRAME ] = 0
- loop_filter_ref_deltas[ GOLDEN_FRAME ] = -1
- loop_filter_ref_deltas[ ALTREF_FRAME ] = -1
- loop_filter_ref_deltas[ ALTREF2_FRAME ] = -1
- for ( i = 0; i < 2; i++ ) {
- loop_filter_mode_deltas[ i ] = 0
- }
- return
- }
- loop_filter_level[ 0 ] f(6)
- loop_filter_level[ 1 ] f(6)
- if ( NumPlanes > 1 ) {
- if ( loop_filter_level[ 0 ] || loop_filter_level[ 1 ] ) {
- loop_filter_level[ 2 ] f(6)
- loop_filter_level[ 3 ] f(6)
- }
- }
- loop_filter_sharpness f(3)
- loop_filter_delta_enabled f(1)
- if ( loop_filter_delta_enabled == 1 ) {
- loop_filter_delta_update f(1)
- if ( loop_filter_delta_update == 1 ) {
- for ( i = 0; i < TOTAL_REFS_PER_FRAME; i++ ) {
- update_ref_delta f(1)
- if ( update_ref_delta == 1 )
- loop_filter_ref_deltas[ i ] su(1+6)
- }
- for ( i = 0; i < 2; i++ ) {
- update_mode_delta f(1)
- if ( update_mode_delta == 1 )
- loop_filter_mode_deltas[ i ] su(1+6)
- }
- }
- }
- }
-
-
-quantization_params() { 
- base_q_idx f(8)
- DeltaQYDc = read_delta_q()
- if ( NumPlanes > 1 ) {
- if ( separate_uv_delta_q )
- diff_uv_delta f(1)
- else
- diff_uv_delta = 0
- DeltaQUDc = read_delta_q()
- DeltaQUAc = read_delta_q()
- if ( diff_uv_delta ) {
- DeltaQVDc = read_delta_q()
- DeltaQVAc = read_delta_q()
- } else {
- DeltaQVDc = DeltaQUDc
- DeltaQVAc = DeltaQUAc
- }
- } else {
- DeltaQUDc = 0
- DeltaQUAc = 0
- DeltaQVDc = 0
- DeltaQVAc = 0
- }
- using_qmatrix f(1)
- if ( using_qmatrix ) {
- qm_y f(4)
- qm_u f(4)
- if ( !separate_uv_delta_q )
- qm_v = qm_u
- else
- qm_v f(4)
- }
- }
-
-
-read_delta_q() { 
- delta_coded f(1)
- if ( delta_coded ) {
- delta_q su(1+6)
- } else {
- delta_q = 0
- }
- return delta_q
- }
-
-
-segmentation_params() { 
- segmentation_enabled f(1)
- if ( segmentation_enabled == 1 ) {
- if ( primary_ref_frame == PRIMARY_REF_NONE ) {
- segmentation_update_map = 1
- segmentation_temporal_update = 0
- segmentation_update_data = 1
- } else {
- segmentation_update_map f(1)
- if ( segmentation_update_map == 1 )
- segmentation_temporal_update f(1)
- segmentation_update_data f(1)
- }
- if ( segmentation_update_data == 1 ) {
- for ( i = 0; i < MAX_SEGMENTS; i++ ) {
- for ( j = 0; j < SEG_LVL_MAX; j++ ) {
- feature_value = 0
- feature_enabled f(1)
- FeatureEnabled[ i ][ j ] = feature_enabled
- clippedValue = 0
- if ( feature_enabled == 1 ) {
- bitsToRead = Segmentation_Feature_Bits[ j ]
- limit = Segmentation_Feature_Max[ j ]
- if ( Segmentation_Feature_Signed[ j ] == 1 ) {
- feature_value feature_value su(1+bitsToRead)
- clippedValue = Clip3( -limit, limit, feature_value)
- } else {
- feature_value feature_value f(bitsToRead)
- clippedValue = Clip3( 0, limit, feature_value)
- }
- }
- FeatureData[ i ][ j ] = clippedValue
- }
- }
- }
- } else {
- for ( i = 0; i < MAX_SEGMENTS; i++ ) {
- for ( j = 0; j < SEG_LVL_MAX; j++ ) {
- FeatureEnabled[ i ][ j ] = 0
- FeatureData[ i ][ j ] = 0
- }
- }
- }
- SegIdPreSkip = 0
- LastActiveSegId = 0
- for ( i = 0; i < MAX_SEGMENTS; i++ ) {
- for ( j = 0; j < SEG_LVL_MAX; j++ ) {
- if ( FeatureEnabled[ i ][ j ] ) {
- LastActiveSegId = i
- if ( j >= SEG_LVL_REF_FRAME ) {
- SegIdPreSkip = 1
- }
- }
- }
- }
- }
-
+ get_relative_dist( a, b ) { 
+ if ( !enable_order_hint )
+ return 0
+ diff = a - b
+ m = 1 << (OrderHintBits - 1)
+ diff = (diff & (m - 1)) - (diff & m)
+ return diff
+}
 
 tile_info () { 
  sbCols = use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 )
@@ -1040,6 +732,106 @@ tile_log2( blkSize, target ) {
  return k
  }
 
+ quantization_params() { 
+ base_q_idx f(8)
+ DeltaQYDc = read_delta_q()
+ if ( NumPlanes > 1 ) {
+ if ( separate_uv_delta_q )
+ diff_uv_delta f(1)
+ else
+ diff_uv_delta = 0
+ DeltaQUDc = read_delta_q()
+ DeltaQUAc = read_delta_q()
+ if ( diff_uv_delta ) {
+ DeltaQVDc = read_delta_q()
+ DeltaQVAc = read_delta_q()
+ } else {
+ DeltaQVDc = DeltaQUDc
+ DeltaQVAc = DeltaQUAc
+ }
+ } else {
+ DeltaQUDc = 0
+ DeltaQUAc = 0
+ DeltaQVDc = 0
+ DeltaQVAc = 0
+ }
+ using_qmatrix f(1)
+ if ( using_qmatrix ) {
+ qm_y f(4)
+ qm_u f(4)
+ if ( !separate_uv_delta_q )
+ qm_v = qm_u
+ else
+ qm_v f(4)
+ }
+ }
+
+ read_delta_q() { 
+ delta_coded f(1)
+ if ( delta_coded ) {
+ delta_q su(1+6)
+ } else {
+ delta_q = 0
+ }
+ return delta_q
+ }
+
+ segmentation_params() { 
+ segmentation_enabled f(1)
+ if ( segmentation_enabled == 1 ) {
+ if ( primary_ref_frame == PRIMARY_REF_NONE ) {
+ segmentation_update_map = 1
+ segmentation_temporal_update = 0
+ segmentation_update_data = 1
+ } else {
+ segmentation_update_map f(1)
+ if ( segmentation_update_map == 1 )
+ segmentation_temporal_update f(1)
+ segmentation_update_data f(1)
+ }
+ if ( segmentation_update_data == 1 ) {
+ for ( i = 0; i < MAX_SEGMENTS; i++ ) {
+ for ( j = 0; j < SEG_LVL_MAX; j++ ) {
+ feature_value = 0
+ feature_enabled f(1)
+ FeatureEnabled[ i ][ j ] = feature_enabled
+ clippedValue = 0
+ if ( feature_enabled == 1 ) {
+ bitsToRead = Segmentation_Feature_Bits[ j ]
+ limit = Segmentation_Feature_Max[ j ]
+ if ( Segmentation_Feature_Signed[ j ] == 1 ) {
+ feature_value feature_value su(1+bitsToRead)
+ clippedValue = Clip3( -limit, limit, feature_value)
+ } else {
+ feature_value feature_value f(bitsToRead)
+ clippedValue = Clip3( 0, limit, feature_value)
+ }
+ }
+ FeatureData[ i ][ j ] = clippedValue
+ }
+ }
+ }
+ } else {
+ for ( i = 0; i < MAX_SEGMENTS; i++ ) {
+ for ( j = 0; j < SEG_LVL_MAX; j++ ) {
+ FeatureEnabled[ i ][ j ] = 0
+ FeatureData[ i ][ j ] = 0
+ }
+ }
+ }
+ SegIdPreSkip = 0
+ LastActiveSegId = 0
+ for ( i = 0; i < MAX_SEGMENTS; i++ ) {
+ for ( j = 0; j < SEG_LVL_MAX; j++ ) {
+ if ( FeatureEnabled[ i ][ j ] ) {
+ LastActiveSegId = i
+ if ( j >= SEG_LVL_REF_FRAME ) {
+ SegIdPreSkip = 1
+ }
+ }
+ }
+ }
+ }
 
 delta_q_params() { 
  delta_q_res = 0
@@ -1051,7 +843,6 @@ delta_q_params() {
  delta_q_res f(2)
  }
  }
-
 
 delta_lf_params() { 
  delta_lf_present = 0
@@ -1066,7 +857,6 @@ delta_lf_params() {
  }
  }
  }
-
 
 cdef_params() { 
  if ( CodedLossless || allow_intrabc ||
@@ -1140,8 +930,51 @@ lr_params() {
  }
  }
 
+ loop_filter_params() { 
+ if ( CodedLossless || allow_intrabc ) {
+ loop_filter_level[ 0 ] = 0
+ loop_filter_level[ 1 ] = 0
+ loop_filter_ref_deltas[ INTRA_FRAME ] = 1
+ loop_filter_ref_deltas[ LAST_FRAME ] = 0
+ loop_filter_ref_deltas[ LAST2_FRAME ] = 0
+ loop_filter_ref_deltas[ LAST3_FRAME ] = 0
+ loop_filter_ref_deltas[ BWDREF_FRAME ] = 0
+ loop_filter_ref_deltas[ GOLDEN_FRAME ] = -1
+ loop_filter_ref_deltas[ ALTREF_FRAME ] = -1
+ loop_filter_ref_deltas[ ALTREF2_FRAME ] = -1
+ for ( i = 0; i < 2; i++ ) {
+ loop_filter_mode_deltas[ i ] = 0
+ }
+ return
+ }
+ loop_filter_level[ 0 ] f(6)
+ loop_filter_level[ 1 ] f(6)
+ if ( NumPlanes > 1 ) {
+ if ( loop_filter_level[ 0 ] || loop_filter_level[ 1 ] ) {
+ loop_filter_level[ 2 ] f(6)
+ loop_filter_level[ 3 ] f(6)
+ }
+ }
+ loop_filter_sharpness f(3)
+ loop_filter_delta_enabled f(1)
+ if ( loop_filter_delta_enabled == 1 ) {
+ loop_filter_delta_update f(1)
+ if ( loop_filter_delta_update == 1 ) {
+ for ( i = 0; i < TOTAL_REFS_PER_FRAME; i++ ) {
+ update_ref_delta f(1)
+ if ( update_ref_delta == 1 )
+ loop_filter_ref_deltas[ i ] su(1+6)
+ }
+ for ( i = 0; i < 2; i++ ) {
+ update_mode_delta f(1)
+ if ( update_mode_delta == 1 )
+ loop_filter_mode_deltas[ i ] su(1+6)
+ }
+ }
+ }
+ }
 
-read_tx_mode() { 
+ read_tx_mode() { 
  if ( CodedLossless == 1 ) {
  TxMode = ONLY_4X4
  } else {
@@ -1154,8 +987,15 @@ read_tx_mode() {
  }
  }
 
+ frame_reference_mode() { 
+ if ( FrameIsIntra ) {
+ reference_select = 0
+ } else {
+ reference_select f(1)
+ }
+ }
 
-skip_mode_params() { 
+ skip_mode_params() { 
  if ( FrameIsIntra || !reference_select || !enable_order_hint ) {
  skipModeAllowed = 0
  } else {
@@ -1211,17 +1051,7 @@ skip_mode_params() {
  }
  }
 
-
-frame_reference_mode() { 
- if ( FrameIsIntra ) {
- reference_select = 0
- } else {
- reference_select f(1)
- }
- }
-
-
-global_motion_params() { 
+ global_motion_params() { 
  for ( ref = LAST_FRAME; ref <= ALTREF_FRAME; ref++ ) {
  GmType[ ref ] = IDENTITY
  for ( i = 0; i < 6; i++ ) {
@@ -1262,7 +1092,6 @@ global_motion_params() {
  }
  }
 
-
 read_global_param( type, ref, idx ) { 
  absBits = GM_ABS_ALPHA_BITS
  precBits = GM_ALPHA_PREC_BITS
@@ -1283,58 +1112,7 @@ read_global_param( type, ref, idx ) {
  gm_params[ref][idx] = (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round
  }
 
-
-decode_signed_subexp_with_ref( low, high, r ) { 
- x = decode_unsigned_subexp_with_ref(high - low, r - low)
- return x + low
-}
-
-
-decode_unsigned_subexp_with_ref( mx, r ) { 
- v = decode_subexp( mx )
- if ( (r << 1) <= mx ) {
- return inverse_recenter(r, v)
- } else {
- return mx - 1 - inverse_recenter(mx - 1 - r, v)
- }
- }
-
-
-decode_subexp( numSyms ) { 
- i = 0
- mk = 0
- k = 3
- while ( 1 ) {
- b2 = i ? k + i - 1 : k
- a = 1 << b2
- if ( numSyms <= mk + 3 * a ) {
- subexp_final_bits ns(numSyms - mk)
- return subexp_final_bits + mk
- } else {
- subexp_more_bits f(1)
- if ( subexp_more_bits ) {
- i++
- mk += a
- } else {
- subexp_bits f(b2)
- return subexp_bits + mk
- }
- }
- }
- }
-
-
-inverse_recenter( r, v ) { 
- if ( v > 2 * r )
-    return v
- else if ( v & 1 )
-    return r - ((v + 1) >> 1)
- else
-    return r + (v >> 1)
- }
-
-
-film_grain_params() { 
+ film_grain_params() { 
  if ( !film_grain_params_present ||
  (!show_frame && !showable_frame) ) {
  reset_grain_params()
@@ -1419,14 +1197,192 @@ film_grain_params() {
  clip_to_restricted_range f(1)
  }
 
+superres_params() { 
+ if ( enable_superres )
+ use_superres f(1)
+ else
+ use_superres = 0
+ if ( use_superres ) {
+ coded_denom f(SUPERRES_DENOM_BITS)
+ SuperresDenom = coded_denom + SUPERRES_DENOM_MIN
+ } else {
+ SuperresDenom = SUPERRES_NUM
+ }
+ UpscaledWidth = FrameWidth
+ FrameWidth = (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom
+ }
 
-temporal_point_info() { 
- n = frame_presentation_time_length_minus_1 + 1
- frame_presentation_time f(n)
+ compute_image_size() { 
+ MiCols = 2 * ( ( FrameWidth + 7 ) >> 3 )
+ MiRows = 2 * ( ( FrameHeight + 7 ) >> 3 )
+ }
+
+ decode_signed_subexp_with_ref( low, high, r ) { 
+ x = decode_unsigned_subexp_with_ref(high - low, r - low)
+ return x + low
+}
+
+decode_unsigned_subexp_with_ref( mx, r ) { 
+ v = decode_subexp( mx )
+ if ( (r << 1) <= mx ) {
+ return inverse_recenter(r, v)
+ } else {
+ return mx - 1 - inverse_recenter(mx - 1 - r, v)
+ }
+ }
+
+decode_subexp( numSyms ) { 
+ i = 0
+ mk = 0
+ k = 3
+ while ( 1 ) {
+ b2 = i ? k + i - 1 : k
+ a = 1 << b2
+ if ( numSyms <= mk + 3 * a ) {
+ subexp_final_bits ns(numSyms - mk)
+ return subexp_final_bits + mk
+ } else {
+ subexp_more_bits f(1)
+ if ( subexp_more_bits ) {
+ i++
+ mk += a
+ } else {
+ subexp_bits f(b2)
+ return subexp_bits + mk
+ }
+ }
+ }
+ }
+
+inverse_recenter( r, v ) { 
+ if ( v > 2 * r )
+    return v
+ else if ( v & 1 )
+    return r - ((v + 1) >> 1)
+ else
+    return r + (v >> 1)
+ }
+
+temporal_delimiter_obu() { 
+ SeenFrameHeader = 0
+}
+
+padding_obu() { 
+ for ( i = 0; i < obu_padding_length; i++ )
+ obu_padding_byte f(8)
+}
+
+metadata_obu() { 
+ metadata_type leb128()
+ if ( metadata_type == METADATA_TYPE_ITUT_T35 )
+ metadata_itut_t35()
+ else if ( metadata_type == METADATA_TYPE_HDR_CLL )
+ metadata_hdr_cll()
+ else if ( metadata_type == METADATA_TYPE_HDR_MDCV )
+ metadata_hdr_mdcv()
+ else if ( metadata_type == METADATA_TYPE_SCALABILITY )
+ metadata_scalability()
+ else if ( metadata_type == METADATA_TYPE_TIMECODE )
+ metadata_timecode()
  }
 
 
-frame_obu( sz ) { 
+metadata_itut_t35() { 
+ itu_t_t35_country_code f(8)
+ if ( itu_t_t35_country_code == 0xFF ) {
+ itu_t_t35_country_code_extension_byte f(8)
+ }
+ itu_t_t35_payload_bytes
+}
+
+
+metadata_hdr_cll() { 
+ max_cll f(16)
+ max_fall f(16)
+}
+
+
+metadata_hdr_mdcv() { 
+ for ( i = 0; i < 3; i++ ) {
+ primary_chromaticity_x[ i ] f(16)
+ primary_chromaticity_y[ i ] f(16)
+ }
+ white_point_chromaticity_x f(16)
+ white_point_chromaticity_y f(16)
+ luminance_max f(32)
+ luminance_min f(32)
+}
+
+
+metadata_scalability() { 
+ scalability_mode_idc f(8)
+ if ( scalability_mode_idc == SCALABILITY_SS )
+ scalability_structure()
+}
+
+
+scalability_structure() { 
+ spatial_layers_cnt_minus_1 f(2)
+ spatial_layer_dimensions_present_flag f(1)
+ spatial_layer_description_present_flag f(1)
+ temporal_group_description_present_flag f(1)
+ scalability_structure_reserved_3bits f(3)
+ if ( spatial_layer_dimensions_present_flag ) {
+ for ( i = 0; i <= spatial_layers_cnt_minus_1 ; i++ ) {
+  spatial_layer_max_width[ i ] f(16)
+  spatial_layer_max_height[ i ] f(16)
+ }
+ }
+ if ( spatial_layer_description_present_flag ) {
+ for ( i = 0; i <= spatial_layers_cnt_minus_1; i++ )
+  spatial_layer_ref_id[ i ] f(8)
+ }
+ if ( temporal_group_description_present_flag ) {
+ temporal_group_size f(8)
+ for ( i = 0; i < temporal_group_size; i++ ) {
+ temporal_group_temporal_id[ i ] f(3)
+ temporal_group_temporal_switching_up_point_flag[ i ] f(1)
+ temporal_group_spatial_switching_up_point_flag[ i ] f(1)
+ temporal_group_ref_cnt[ i ] f(3)
+ for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ ) {
+ temporal_group_ref_pic_diff[ i ][ j ] f(8)
+ }
+ }
+ }
+ }
+
+
+metadata_timecode() { 
+ counting_type f(5)
+ full_timestamp_flag f(1)
+ discontinuity_flag f(1)
+ cnt_dropped_flag f(1)
+ n_frames f(9)
+ if ( full_timestamp_flag ) {
+ seconds_value f(6)
+ minutes_value f(6)
+ hours_value f(5)
+ } else {
+ seconds_flag f(1)
+ if ( seconds_flag ) {
+ seconds_value f(6)
+ minutes_flag f(1)
+ if ( minutes_flag ) {
+ minutes_value f(6)
+ hours_flag f(1)
+ if ( hours_flag ) {
+ hours_value f(5)
+ }
+ }
+ }
+ }
+ time_offset_length f(5)
+ if ( time_offset_length > 0 ) {
+ time_offset_value f(time_offset_length)
+ }
+ }
+
+ frame_obu( sz ) { 
  startBitPos = get_position()
  frame_header_obu()
  byte_alignment()
@@ -1436,8 +1392,7 @@ frame_obu( sz ) {
  tile_group_obu( sz )
  }
 
-
-tile_group_obu( sz ) { 
+ tile_group_obu( sz ) { 
  NumTiles = TileCols * TileRows
  startBitPos = get_position()
  tile_start_and_end_present_flag = 0
@@ -1483,6 +1438,69 @@ tile_group_obu( sz ) {
  SeenFrameHeader = 0
  }
  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 decode_tile() { 
@@ -1797,12 +1815,12 @@ read_segment_id() {
 
 
 neg_deinterleave(diff, ref, max) {
- if (!ref)
+ if (! ref )
  return diff
- if (ref >= ( max - 1 ))
+ if ( ref >= ( max - 1 ))
  return max - diff - 1
  if(2 * ref < max){
- if(diff <= 2 * ref){
+ if(diff <= 2 * ref ){
  if(diff & 1)
  return ref + ( (diff+1) >> 1)
  else 
@@ -2990,12 +3008,8 @@ get_plane_residual_size( subsize, plane ) {
  if ( PlaneTxType == IDTX ) {
  return get_default_scan( txSz )
  }
- preferRow = ( PlaneTxType == V_DCT ||
- PlaneTxType == V_ADST ||
- PlaneTxType == V_FLIPADST )
- preferCol = ( PlaneTxType == H_DCT ||
- PlaneTxType == H_ADST ||
- PlaneTxType == H_FLIPADST )
+ preferRow = ( PlaneTxType == V_DCT || PlaneTxType == V_ADST || PlaneTxType == V_FLIPADST )
+ preferCol = ( PlaneTxType == H_DCT || PlaneTxType == H_ADST || PlaneTxType == H_FLIPADST )
  if ( preferRow ) {
  return get_mrow_scan( txSz )
  } else if ( preferCol ) {
