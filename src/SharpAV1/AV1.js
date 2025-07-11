@@ -1439,7 +1439,23 @@ metadata_timecode() {
  }
  }
 
+ tile_list_obu() {
+ output_frame_width_in_tiles_minus_1 f(8)
+ output_frame_height_in_tiles_minus_1 f(8)
+ tile_count_minus_1 f(16)
+ for ( tile = 0; tile <= tile_count_minus_1; tile++ )
+ tile_list_entry()
+ }
 
+
+tile_list_entry() {
+ anchor_frame_idx f(8)
+ anchor_tile_row f(8)
+ anchor_tile_col f(8)
+ tile_data_size_minus_1 f(16)
+ N = 8 * (tile_data_size_minus_1 + 1)
+ coded_tile_data f(N)
+ }
 
 
 
@@ -3562,23 +3578,7 @@ decode_signed_subexp_with_ref_bool( low, high, k, r ) {
  }
 
 
-tile_list_obu() {
- output_frame_width_in_tiles_minus_1 f(8)
- output_frame_height_in_tiles_minus_1 f(8)
- tile_count_minus_1 f(16)
- for ( tile = 0; tile <= tile_count_minus_1; tile++ )
- tile_list_entry()
- }
 
-
-tile_list_entry() {
- anchor_frame_idx f(8)
- anchor_tile_row f(8)
- anchor_tile_col f(8)
- tile_data_size_minus_1 f(16)
- N = 8 * (tile_data_size_minus_1 + 1)
- coded_tile_data f(N)
- }
 
 
 bitstream() { 
