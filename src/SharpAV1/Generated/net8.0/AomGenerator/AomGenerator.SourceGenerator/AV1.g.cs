@@ -6033,7 +6033,7 @@ return;
 			int[][] gm_params = null;
 			uint type = 0;
 
-			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
+			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
 				GmType[ refc ]= IDENTITY;
 
@@ -6048,16 +6048,16 @@ return;
 return;
 			}
 
-			this.is_global = new uint[ ALTREF_FRAME];
-			this.is_rot_zoom = new uint[ ALTREF_FRAME];
-			this.is_translation = new uint[ ALTREF_FRAME];
-			this.read_global_param = new ReadGlobalParam[ ALTREF_FRAME];
-			this.read_global_param0 = new ReadGlobalParam[ ALTREF_FRAME];
-			this.read_global_param1 = new ReadGlobalParam[ ALTREF_FRAME];
-			this.read_global_param00 = new ReadGlobalParam0[ ALTREF_FRAME];
-			this.read_global_param2 = new ReadGlobalParam[ ALTREF_FRAME];
-			this.read_global_param01 = new ReadGlobalParam0[ ALTREF_FRAME];
-			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
+			this.is_global = new uint[ AV1RefFrames.ALTREF_FRAME];
+			this.is_rot_zoom = new uint[ AV1RefFrames.ALTREF_FRAME];
+			this.is_translation = new uint[ AV1RefFrames.ALTREF_FRAME];
+			this.read_global_param = new ReadGlobalParam[ AV1RefFrames.ALTREF_FRAME];
+			this.read_global_param0 = new ReadGlobalParam[ AV1RefFrames.ALTREF_FRAME];
+			this.read_global_param1 = new ReadGlobalParam[ AV1RefFrames.ALTREF_FRAME];
+			this.read_global_param00 = new ReadGlobalParam0[ AV1RefFrames.ALTREF_FRAME];
+			this.read_global_param2 = new ReadGlobalParam[ AV1RefFrames.ALTREF_FRAME];
+			this.read_global_param01 = new ReadGlobalParam0[ AV1RefFrames.ALTREF_FRAME];
+			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
 				size += stream.ReadFixed(size, 1, out this.is_global[ refc ], "is_global"); 
 
@@ -6124,7 +6124,7 @@ return;
 			int[][] gm_params = null;
 			uint type = 0;
 
-			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
+			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
 				GmType[ refc ]= IDENTITY;
 
@@ -6139,7 +6139,7 @@ return;
 return;
 			}
 
-			for ( refc = LAST_FRAME; refc <= ALTREF_FRAME; refc++ )
+			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
 				size += stream.WriteFixed(1, this.is_global[ refc ], "is_global"); 
 

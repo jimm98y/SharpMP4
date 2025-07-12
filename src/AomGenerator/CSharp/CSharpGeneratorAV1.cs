@@ -31,6 +31,17 @@ namespace AomGenerator.CSharp
             condition = condition.Replace("Min(", "Math.Min(");
             condition = condition.Replace("Max(", "Math.Max(");
 
+            condition = condition.Replace("INTRA_FRAME", "AV1RefFrames.INTRA_FRAME");
+            condition = condition.Replace(" NONE ", " AV1RefFrames.NONE ");
+            condition = condition.Replace("LAST_FRAME", "AV1RefFrames.LAST_FRAME");
+            condition = condition.Replace("LAST2_FRAME", "AV1RefFrames.LAST2_FRAME");
+            condition = condition.Replace("LAST3_FRAME", "AV1RefFrames.LAST3_FRAME");
+            condition = condition.Replace("GOLDEN_FRAME", "AV1RefFrames.GOLDEN_FRAME");
+            condition = condition.Replace("BWDREF_FRAME", "AV1RefFrames.BWDREF_FRAME");
+            condition = condition.Replace("ALTREF2_FRAME", "AV1RefFrames.ALTREF2_FRAME");
+            condition = condition.Replace("ALTREF_FRAME", "AV1RefFrames.ALTREF_FRAME");
+
+
             return condition;
         }
 
