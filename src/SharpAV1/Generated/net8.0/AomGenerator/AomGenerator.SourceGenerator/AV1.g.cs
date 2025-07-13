@@ -8,8 +8,8 @@ namespace SharpAV1
     public partial class AV1Context : IAomContext
     {
         AomStream stream = null;
-        private void ReadDropObu() { };
-        private void WriteDropObu() { };
+        private void ReadDropObu() { }
+        private void WriteDropObu() { }
 
     /*
 open_bitstream_unit( sz ) { 
@@ -58,9 +58,24 @@ open_bitstream_unit( sz ) {
 }
     */
 		private uint sz;
-		public uint Sz { get { return sz; } set { sz = value; } }
+		private int obu_header;
 		private uint obu_size;
-		public uint ObuSize { get { return obu_size; } set { obu_size = value; } }
+		private int startPosition;
+		private int inTemporalLayer;
+		private int inSpatialLayer;
+		private int drop_obu;
+		private int sequence_header_obu;
+		private int temporal_delimiter_obu;
+		private int frame_header_obu;
+		private int tile_group_obu;
+		private int metadata_obu;
+		private int frame_obu;
+		private int tile_list_obu;
+		private int padding_obu;
+		private int reserved_obu;
+		private int currentPosition;
+		private int payloadBits;
+		private int trailing_bits;
 
          public void ReadOpenBitstreamUnit(uint sz)
          {
@@ -75,17 +90,17 @@ open_bitstream_unit( sz ) {
 			{
 				obu_size= sz - 1 - obu_extension_flag;
 			}
-			uint startPosition= stream.GetPosition();
+			startPosition= stream.GetPosition();
 
 			if ( obu_type != AV1ObuTypes.OBU_SEQUENCE_HEADER && obu_type != AV1ObuTypes.OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 )
 			{
-				inTemporalLayer= (OperatingPointIdc >> temporal_id ) & 1;
-				inSpatialLayer= (OperatingPointIdc >> ( spatial_id + 8 ) ) & 1;
+				inTemporalLayer= (OperatingPointIdc >> (int)temporal_id ) & 1;
+				inSpatialLayer= (OperatingPointIdc >> (int)( spatial_id + 8 ) ) & 1;
 
 				if ( inTemporalLayer== 0 ||  inSpatialLayer== 0 )
 				{
 					ReadDropObu(); 
-return;
+					return;
 				}
 			}
 
@@ -129,8 +144,8 @@ return;
 			{
 				ReadReservedObu(); 
 			}
-			uint currentPosition= stream.GetPosition();
-			uint payloadBits= currentPosition - startPosition;
+			currentPosition= stream.GetPosition();
+			payloadBits= currentPosition - startPosition;
 
 			if ( obu_size > 0 && obu_type != AV1ObuTypes.OBU_TILE_GROUP &&
     obu_type != AV1ObuTypes.OBU_TILE_LIST &&
@@ -153,17 +168,17 @@ return;
 			{
 				obu_size= sz - 1 - obu_extension_flag;
 			}
-			uint startPosition= stream.GetPosition();
+			startPosition= stream.GetPosition();
 
 			if ( obu_type != AV1ObuTypes.OBU_SEQUENCE_HEADER && obu_type != AV1ObuTypes.OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 )
 			{
-				inTemporalLayer= (OperatingPointIdc >> temporal_id ) & 1;
-				inSpatialLayer= (OperatingPointIdc >> ( spatial_id + 8 ) ) & 1;
+				inTemporalLayer= (OperatingPointIdc >> (int)temporal_id ) & 1;
+				inSpatialLayer= (OperatingPointIdc >> (int)( spatial_id + 8 ) ) & 1;
 
 				if ( inTemporalLayer== 0 ||  inSpatialLayer== 0 )
 				{
 					WriteDropObu(); 
-return;
+					return;
 				}
 			}
 
@@ -207,8 +222,8 @@ return;
 			{
 				WriteReservedObu(); 
 			}
-			uint currentPosition= stream.GetPosition();
-			uint payloadBits= currentPosition - startPosition;
+			currentPosition= stream.GetPosition();
+			payloadBits= currentPosition - startPosition;
 
 			if ( obu_size > 0 && obu_type != AV1ObuTypes.OBU_TILE_GROUP &&
     obu_type != AV1ObuTypes.OBU_TILE_LIST &&
@@ -232,15 +247,11 @@ obu_header() {
 }
     */
 		private uint obu_forbidden_bit;
-		public uint ObuForbiddenBit { get { return obu_forbidden_bit; } set { obu_forbidden_bit = value; } }
 		private uint obu_type;
-		public uint ObuType { get { return obu_type; } set { obu_type = value; } }
 		private uint obu_extension_flag;
-		public uint ObuExtensionFlag { get { return obu_extension_flag; } set { obu_extension_flag = value; } }
 		private uint obu_has_size_field;
-		public uint ObuHasSizeField { get { return obu_has_size_field; } set { obu_has_size_field = value; } }
 		private uint obu_reserved_1bit;
-		public uint ObuReserved1bit { get { return obu_reserved_1bit; } set { obu_reserved_1bit = value; } }
+		private int obu_extension_header;
 
          public void ReadObuHeader()
          {
@@ -283,11 +294,8 @@ obu_header() {
  }
     */
 		private uint temporal_id;
-		public uint TemporalId { get { return temporal_id; } set { temporal_id = value; } }
 		private uint spatial_id;
-		public uint SpatialId { get { return spatial_id; } set { spatial_id = value; } }
 		private uint extension_header_reserved_3bits;
-		public uint ExtensionHeaderReserved3bits { get { return extension_header_reserved_3bits; } set { extension_header_reserved_3bits = value; } }
 
          public void ReadObuExtensionHeader()
          {
@@ -318,15 +326,11 @@ while ( nbBits > 0 ) {
 }
 }
     */
-		private uint nbBits;
-		public uint NbBits { get { return nbBits; } set { nbBits = value; } }
+		private long nbBits;
 		private uint trailing_one_bit;
-		public uint TrailingOneBit { get { return trailing_one_bit; } set { trailing_one_bit = value; } }
-		private Dictionary<int, uint> trailing_zero_bit = new Dictionary<int, uint>();
-		public Dictionary<int, uint> TrailingZeroBit { get { return trailing_zero_bit; } set { trailing_zero_bit = value; } }
+		private uint trailing_zero_bit;
 
-			int whileIndex = -1;
-         public void ReadTrailingBits(uint nbBits)
+         public void ReadTrailingBits(long nbBits)
          {
 
 			stream.ReadFixed(1, out this.trailing_one_bit, "trailing_one_bit"); 
@@ -334,14 +338,12 @@ while ( nbBits > 0 ) {
 
 			while ( nbBits > 0 )
 			{
-				whileIndex++;
-
 				stream.ReadFixed(1, out this.trailing_zero_bit, "trailing_zero_bit"); 
 				nbBits--;
 			}
          }
 
-         public void WriteTrailingBits(uint nbBits)
+         public void WriteTrailingBits(long nbBits)
          {
 
 			stream.WriteFixed(1, this.trailing_one_bit, "trailing_one_bit"); 
@@ -349,8 +351,6 @@ while ( nbBits > 0 ) {
 
 			while ( nbBits > 0 )
 			{
-				whileIndex++;
-
 				stream.WriteFixed(1, this.trailing_zero_bit, "trailing_zero_bit"); 
 				nbBits--;
 			}
@@ -365,18 +365,14 @@ byte_alignment() {
  zero_bit f(1)
 }
     */
-		private Dictionary<int, uint> zero_bit = new Dictionary<int, uint>();
-		public Dictionary<int, uint> ZeroBit { get { return zero_bit; } set { zero_bit = value; } }
+		private uint zero_bit;
 
-			int whileIndex = -1;
          public void ReadByteAlignment()
          {
 
 
-			while ( get_position() & 7 )
+			while ( (stream.GetPosition() & 7) != 0 )
 			{
-				whileIndex++;
-
 				stream.ReadFixed(1, out this.zero_bit, "zero_bit"); 
 			}
          }
@@ -385,10 +381,8 @@ byte_alignment() {
          {
 
 
-			while ( get_position() & 7 )
+			while ( (stream.GetPosition() & 7) != 0 )
 			{
-				whileIndex++;
-
 				stream.WriteFixed(1, this.zero_bit, "zero_bit"); 
 			}
          }
@@ -540,83 +534,52 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 }
     */
 		private uint seq_profile;
-		public uint SeqProfile { get { return seq_profile; } set { seq_profile = value; } }
 		private uint still_picture;
-		public uint StillPicture { get { return still_picture; } set { still_picture = value; } }
 		private uint reduced_still_picture_header;
-		public uint ReducedStillPictureHeader { get { return reduced_still_picture_header; } set { reduced_still_picture_header = value; } }
+		private int timing_info_present_flag;
+		private int decoder_model_info_present_flag;
+		private int initial_display_delay_present_flag;
+		private int operating_points_cnt_minus_1;
+		private int[] operating_point_idc;
 		private uint[] seq_level_idx;
-		public uint[] SeqLevelIdx { get { return seq_level_idx; } set { seq_level_idx = value; } }
-		private uint timing_info_present_flag;
-		public uint TimingInfoPresentFlag { get { return timing_info_present_flag; } set { timing_info_present_flag = value; } }
-		private uint decoder_model_info_present_flag;
-		public uint DecoderModelInfoPresentFlag { get { return decoder_model_info_present_flag; } set { decoder_model_info_present_flag = value; } }
-		private uint initial_display_delay_present_flag;
-		public uint InitialDisplayDelayPresentFlag { get { return initial_display_delay_present_flag; } set { initial_display_delay_present_flag = value; } }
-		private uint operating_points_cnt_minus_1;
-		public uint OperatingPointsCntMinus1 { get { return operating_points_cnt_minus_1; } set { operating_points_cnt_minus_1 = value; } }
-		private uint[] operating_point_idc;
-		public uint[] OperatingPointIdc { get { return operating_point_idc; } set { operating_point_idc = value; } }
-		private uint[] seq_tier;
-		public uint[] SeqTier { get { return seq_tier; } set { seq_tier = value; } }
-		private uint[] decoder_model_present_for_this_op;
-		public uint[] DecoderModelPresentForThisOp { get { return decoder_model_present_for_this_op; } set { decoder_model_present_for_this_op = value; } }
-		private uint[] initial_display_delay_present_for_this_op;
-		public uint[] InitialDisplayDelayPresentForThisOp { get { return initial_display_delay_present_for_this_op; } set { initial_display_delay_present_for_this_op = value; } }
-		private uint[] initial_display_delay_minus_1;
-		public uint[] InitialDisplayDelayMinus1 { get { return initial_display_delay_minus_1; } set { initial_display_delay_minus_1 = value; } }
+		private int[] seq_tier;
+		private int[] decoder_model_present_for_this_op;
+		private int[] initial_display_delay_present_for_this_op;
+		private int timing_info;
+		private int decoder_model_info;
+		private int operating_parameters_info;
+		private int[] initial_display_delay_minus_1;
+		private int operatingPoint;
+		private int OperatingPointIdc;
 		private uint frame_width_bits_minus_1;
-		public uint FrameWidthBitsMinus1 { get { return frame_width_bits_minus_1; } set { frame_width_bits_minus_1 = value; } }
 		private uint frame_height_bits_minus_1;
-		public uint FrameHeightBitsMinus1 { get { return frame_height_bits_minus_1; } set { frame_height_bits_minus_1 = value; } }
+		private int n;
 		private uint max_frame_width_minus_1;
-		public uint MaxFrameWidthMinus1 { get { return max_frame_width_minus_1; } set { max_frame_width_minus_1 = value; } }
 		private uint max_frame_height_minus_1;
-		public uint MaxFrameHeightMinus1 { get { return max_frame_height_minus_1; } set { max_frame_height_minus_1 = value; } }
-		private uint frame_id_numbers_present_flag;
-		public uint FrameIdNumbersPresentFlag { get { return frame_id_numbers_present_flag; } set { frame_id_numbers_present_flag = value; } }
+		private int frame_id_numbers_present_flag;
 		private uint delta_frame_id_length_minus_2;
-		public uint DeltaFrameIdLengthMinus2 { get { return delta_frame_id_length_minus_2; } set { delta_frame_id_length_minus_2 = value; } }
 		private uint additional_frame_id_length_minus_1;
-		public uint AdditionalFrameIdLengthMinus1 { get { return additional_frame_id_length_minus_1; } set { additional_frame_id_length_minus_1 = value; } }
 		private uint use_128x128_superblock;
-		public uint Use128x128Superblock { get { return use_128x128_superblock; } set { use_128x128_superblock = value; } }
 		private uint enable_filter_intra;
-		public uint EnableFilterIntra { get { return enable_filter_intra; } set { enable_filter_intra = value; } }
 		private uint enable_intra_edge_filter;
-		public uint EnableIntraEdgeFilter { get { return enable_intra_edge_filter; } set { enable_intra_edge_filter = value; } }
-		private uint enable_interintra_compound;
-		public uint EnableInterintraCompound { get { return enable_interintra_compound; } set { enable_interintra_compound = value; } }
-		private uint enable_masked_compound;
-		public uint EnableMaskedCompound { get { return enable_masked_compound; } set { enable_masked_compound = value; } }
-		private uint enable_warped_motion;
-		public uint EnableWarpedMotion { get { return enable_warped_motion; } set { enable_warped_motion = value; } }
-		private uint enable_dual_filter;
-		public uint EnableDualFilter { get { return enable_dual_filter; } set { enable_dual_filter = value; } }
-		private uint enable_order_hint;
-		public uint EnableOrderHint { get { return enable_order_hint; } set { enable_order_hint = value; } }
-		private uint enable_jnt_comp;
-		public uint EnableJntComp { get { return enable_jnt_comp; } set { enable_jnt_comp = value; } }
-		private uint enable_ref_frame_mvs;
-		public uint EnableRefFrameMvs { get { return enable_ref_frame_mvs; } set { enable_ref_frame_mvs = value; } }
+		private int enable_interintra_compound;
+		private int enable_masked_compound;
+		private int enable_warped_motion;
+		private int enable_dual_filter;
+		private int enable_order_hint;
+		private int enable_jnt_comp;
+		private int enable_ref_frame_mvs;
+		private int seq_force_screen_content_tools;
+		private int seq_force_integer_mv;
+		private int OrderHintBits;
 		private uint seq_choose_screen_content_tools;
-		public uint SeqChooseScreenContentTools { get { return seq_choose_screen_content_tools; } set { seq_choose_screen_content_tools = value; } }
-		private uint seq_force_screen_content_tools;
-		public uint SeqForceScreenContentTools { get { return seq_force_screen_content_tools; } set { seq_force_screen_content_tools = value; } }
 		private uint seq_choose_integer_mv;
-		public uint SeqChooseIntegerMv { get { return seq_choose_integer_mv; } set { seq_choose_integer_mv = value; } }
-		private uint seq_force_integer_mv;
-		public uint SeqForceIntegerMv { get { return seq_force_integer_mv; } set { seq_force_integer_mv = value; } }
 		private uint order_hint_bits_minus_1;
-		public uint OrderHintBitsMinus1 { get { return order_hint_bits_minus_1; } set { order_hint_bits_minus_1 = value; } }
 		private uint enable_superres;
-		public uint EnableSuperres { get { return enable_superres; } set { enable_superres = value; } }
 		private uint enable_cdef;
-		public uint EnableCdef { get { return enable_cdef; } set { enable_cdef = value; } }
 		private uint enable_restoration;
-		public uint EnableRestoration { get { return enable_restoration; } set { enable_restoration = value; } }
+		private int color_config;
 		private uint film_grain_params_present;
-		public uint FilmGrainParamsPresent { get { return film_grain_params_present; } set { film_grain_params_present = value; } }
 
 			uint i = 0;
          public void ReadSequenceHeaderObu()
@@ -659,11 +622,6 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				stream.ReadFixed(1, out this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
 				stream.ReadFixed(5, out this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
 
-				this.operating_point_idc = new uint[ operating_points_cnt_minus_1];
-				this.seq_tier = new uint[ operating_points_cnt_minus_1];
-				this.decoder_model_present_for_this_op = new uint[ operating_points_cnt_minus_1];
-				this.initial_display_delay_present_for_this_op = new uint[ operating_points_cnt_minus_1];
-				this.initial_display_delay_minus_1 = new uint[ operating_points_cnt_minus_1];
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
 					ReadOperatingPointIdc; 
@@ -705,11 +663,11 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					}
 				}
 			}
-			uint operatingPoint= choose_operating_point();
-			uint OperatingPointIdc= operating_point_idc[ operatingPoint ];
+			operatingPoint= choose_operating_point();
+			OperatingPointIdc= operating_point_idc[ operatingPoint ];
 			stream.ReadFixed(4, out this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
 			stream.ReadFixed(4, out this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
-			uint n= frame_width_bits_minus_1 + 1;
+			n= frame_width_bits_minus_1 + 1;
 			stream.ReadVariable(n, out this.max_frame_width_minus_1, "max_frame_width_minus_1"); 
 			n= frame_height_bits_minus_1 + 1;
 			stream.ReadVariable(n, out this.max_frame_height_minus_1, "max_frame_height_minus_1"); 
@@ -890,11 +848,11 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					}
 				}
 			}
-			uint operatingPoint= choose_operating_point();
-			uint OperatingPointIdc= operating_point_idc[ operatingPoint ];
+			operatingPoint= choose_operating_point();
+			OperatingPointIdc= operating_point_idc[ operatingPoint ];
 			stream.WriteFixed(4, this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
 			stream.WriteFixed(4, this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
-			uint n= frame_width_bits_minus_1 + 1;
+			n= frame_width_bits_minus_1 + 1;
 			stream.WriteVariable(n, this.max_frame_width_minus_1, "max_frame_width_minus_1"); 
 			n= frame_height_bits_minus_1 + 1;
 			stream.WriteVariable(n, this.max_frame_height_minus_1, "max_frame_height_minus_1"); 
@@ -1006,13 +964,9 @@ timing_info() {
 }
     */
 		private uint num_units_in_display_tick;
-		public uint NumUnitsInDisplayTick { get { return num_units_in_display_tick; } set { num_units_in_display_tick = value; } }
 		private uint time_scale;
-		public uint TimeScale { get { return time_scale; } set { time_scale = value; } }
 		private uint equal_picture_interval;
-		public uint EqualPictureInterval { get { return equal_picture_interval; } set { equal_picture_interval = value; } }
-		private uint num_ticks_per_picture_minus_1;
-		public uint NumTicksPerPictureMinus1 { get { return num_ticks_per_picture_minus_1; } set { num_ticks_per_picture_minus_1 = value; } }
+		private int num_ticks_per_picture_minus_1;
 
          public void ReadTimingInfo()
          {
@@ -1053,13 +1007,9 @@ decoder_model_info() {
 }
     */
 		private uint buffer_delay_length_minus_1;
-		public uint BufferDelayLengthMinus1 { get { return buffer_delay_length_minus_1; } set { buffer_delay_length_minus_1 = value; } }
 		private uint num_units_in_decoding_tick;
-		public uint NumUnitsInDecodingTick { get { return num_units_in_decoding_tick; } set { num_units_in_decoding_tick = value; } }
 		private uint buffer_removal_time_length_minus_1;
-		public uint BufferRemovalTimeLengthMinus1 { get { return buffer_removal_time_length_minus_1; } set { buffer_removal_time_length_minus_1 = value; } }
 		private uint frame_presentation_time_length_minus_1;
-		public uint FramePresentationTimeLengthMinus1 { get { return frame_presentation_time_length_minus_1; } set { frame_presentation_time_length_minus_1 = value; } }
 
          public void ReadDecoderModelInfo()
          {
@@ -1090,18 +1040,14 @@ operating_parameters_info( op ) {
 }
     */
 		private uint op;
-		public uint Op { get { return op; } set { op = value; } }
 		private uint[] decoder_buffer_delay;
-		public uint[] DecoderBufferDelay { get { return decoder_buffer_delay; } set { decoder_buffer_delay = value; } }
 		private uint[] encoder_buffer_delay;
-		public uint[] EncoderBufferDelay { get { return encoder_buffer_delay; } set { encoder_buffer_delay = value; } }
 		private uint[] low_delay_mode_flag;
-		public uint[] LowDelayModeFlag { get { return low_delay_mode_flag; } set { low_delay_mode_flag = value; } }
 
          public void ReadOperatingParametersInfo(uint op)
          {
 
-			uint n= buffer_delay_length_minus_1 + 1;
+			n= buffer_delay_length_minus_1 + 1;
 			stream.ReadVariable(n, out this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
 			stream.ReadVariable(n, out this.encoder_buffer_delay[ op ], "encoder_buffer_delay"); 
 			stream.ReadFixed(1, out this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
@@ -1110,7 +1056,7 @@ operating_parameters_info( op ) {
          public void WriteOperatingParametersInfo(uint op)
          {
 
-			uint n= buffer_delay_length_minus_1 + 1;
+			n= buffer_delay_length_minus_1 + 1;
 			stream.WriteVariable(n, this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
 			stream.WriteVariable(n, this.encoder_buffer_delay[ op ], "encoder_buffer_delay"); 
 			stream.WriteFixed(1, this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
@@ -1184,29 +1130,19 @@ color_config() {
 }
     */
 		private uint high_bitdepth;
-		public uint HighBitdepth { get { return high_bitdepth; } set { high_bitdepth = value; } }
 		private uint twelve_bit;
-		public uint TwelveBit { get { return twelve_bit; } set { twelve_bit = value; } }
-		private uint mono_chrome;
-		public uint MonoChrome { get { return mono_chrome; } set { mono_chrome = value; } }
+		private int BitDepth;
+		private int mono_chrome;
+		private int NumPlanes;
 		private uint color_description_present_flag;
-		public uint ColorDescriptionPresentFlag { get { return color_description_present_flag; } set { color_description_present_flag = value; } }
 		private uint color_primaries;
-		public uint ColorPrimaries { get { return color_primaries; } set { color_primaries = value; } }
 		private uint transfer_characteristics;
-		public uint TransferCharacteristics { get { return transfer_characteristics; } set { transfer_characteristics = value; } }
 		private uint matrix_coefficients;
-		public uint MatrixCoefficients { get { return matrix_coefficients; } set { matrix_coefficients = value; } }
 		private uint color_range;
-		public uint ColorRange { get { return color_range; } set { color_range = value; } }
-		private uint subsampling_x;
-		public uint Subsamplingx { get { return subsampling_x; } set { subsampling_x = value; } }
-		private uint subsampling_y;
-		public uint Subsamplingy { get { return subsampling_y; } set { subsampling_y = value; } }
-		private uint chroma_sample_position;
-		public uint ChromaSamplePosition { get { return chroma_sample_position; } set { chroma_sample_position = value; } }
-		private uint separate_uv_delta_q;
-		public uint SeparateUvDeltaq { get { return separate_uv_delta_q; } set { separate_uv_delta_q = value; } }
+		private int subsampling_x;
+		private int subsampling_y;
+		private int chroma_sample_position;
+		private int separate_uv_delta_q;
 
          public void ReadColorConfig()
          {
@@ -1231,7 +1167,7 @@ color_config() {
 			{
 				stream.ReadFixed(1, out this.mono_chrome, "mono_chrome"); 
 			}
-			uint NumPlanes= mono_chrome ? 1 : 3;
+			NumPlanes= mono_chrome ? 1 : 3;
 			stream.ReadFixed(1, out this.color_description_present_flag, "color_description_present_flag"); 
 
 			if ( color_description_present_flag != 0 )
@@ -1254,7 +1190,7 @@ color_config() {
 				subsampling_y= 1;
 				chroma_sample_position= CSP_UNKNOWN;
 				separate_uv_delta_q= 0;
-return;
+				return;
 			}
 			else if ( color_primaries == CP_BT_709 &&
  transfer_characteristics == TC_SRGB &&
@@ -1332,7 +1268,7 @@ return;
 			{
 				stream.WriteFixed(1, this.mono_chrome, "mono_chrome"); 
 			}
-			uint NumPlanes= mono_chrome ? 1 : 3;
+			NumPlanes= mono_chrome ? 1 : 3;
 			stream.WriteFixed(1, this.color_description_present_flag, "color_description_present_flag"); 
 
 			if ( color_description_present_flag != 0 )
@@ -1355,7 +1291,7 @@ return;
 				subsampling_y= 1;
 				chroma_sample_position= CSP_UNKNOWN;
 				separate_uv_delta_q= 0;
-return;
+				return;
 			}
 			else if ( color_primaries == CP_BT_709 &&
  transfer_characteristics == TC_SRGB &&
@@ -1429,6 +1365,11 @@ frame_header_obu() {
  }
  }
     */
+		private int frame_header_copy;
+		private int SeenFrameHeader;
+		private int uncompressed_header;
+		private int decode_frame_wrapup;
+		private int TileNum;
 
          public void ReadFrameHeaderObu()
          {
@@ -1727,68 +1668,84 @@ frame_header_obu() {
  film_grain_params()
  }
     */
-		private uint show_existing_frame;
-		public uint ShowExistingFrame { get { return show_existing_frame; } set { show_existing_frame = value; } }
+		private int idLen;
+		private int allFrames;
+		private int show_existing_frame;
+		private int frame_type;
+		private int FrameIsIntra;
+		private int show_frame;
+		private int showable_frame;
 		private uint frame_to_show_map_idx;
-		public uint FrameToShowMapIdx { get { return frame_to_show_map_idx; } set { frame_to_show_map_idx = value; } }
+		private int temporal_point_info;
+		private int refresh_frame_flags;
 		private uint display_frame_id;
-		public uint DisplayFrameId { get { return display_frame_id; } set { display_frame_id = value; } }
-		private uint frame_type;
-		public uint FrameType { get { return frame_type; } set { frame_type = value; } }
-		private uint show_frame;
-		public uint ShowFrame { get { return show_frame; } set { show_frame = value; } }
-		private uint showable_frame;
-		public uint ShowableFrame { get { return showable_frame; } set { showable_frame = value; } }
-		private uint error_resilient_mode;
-		public uint ErrorResilientMode { get { return error_resilient_mode; } set { error_resilient_mode = value; } }
+		private int load_grain_params;
+		private int error_resilient_mode;
+		private int[] RefValid;
+		private int[] RefOrderHint;
+		private int[] OrderHints;
 		private uint disable_cdf_update;
-		public uint DisableCdfUpdate { get { return disable_cdf_update; } set { disable_cdf_update = value; } }
 		private uint allow_screen_content_tools;
-		public uint AllowScreenContentTools { get { return allow_screen_content_tools; } set { allow_screen_content_tools = value; } }
 		private uint force_integer_mv;
-		public uint ForceIntegerMv { get { return force_integer_mv; } set { force_integer_mv = value; } }
-		private uint current_frame_id;
-		public uint CurrentFrameId { get { return current_frame_id; } set { current_frame_id = value; } }
-		private uint frame_size_override_flag;
-		public uint FrameSizeOverrideFlag { get { return frame_size_override_flag; } set { frame_size_override_flag = value; } }
-		private uint order_hint;
-		public uint OrderHint { get { return order_hint; } set { order_hint = value; } }
-		private uint primary_ref_frame;
-		public uint PrimaryRefFrame { get { return primary_ref_frame; } set { primary_ref_frame = value; } }
+		private int PrevFrameID;
+		private int current_frame_id;
+		private int mark_ref_frames;
+		private int frame_size_override_flag;
+		private int order_hint;
+		private int OrderHint;
+		private int primary_ref_frame;
 		private uint buffer_removal_time_present_flag;
-		public uint BufferRemovalTimePresentFlag { get { return buffer_removal_time_present_flag; } set { buffer_removal_time_present_flag = value; } }
+		private int opPtIdc;
 		private uint[] buffer_removal_time;
-		public uint[] BufferRemovalTime { get { return buffer_removal_time; } set { buffer_removal_time = value; } }
-		private uint refresh_frame_flags;
-		public uint RefreshFrameFlags { get { return refresh_frame_flags; } set { refresh_frame_flags = value; } }
-		private uint[] ref_order_hint;
-		public uint[] RefOrderHint { get { return ref_order_hint; } set { ref_order_hint = value; } }
-		private uint allow_intrabc;
-		public uint AllowIntrabc { get { return allow_intrabc; } set { allow_intrabc = value; } }
-		private uint frame_refs_short_signaling;
-		public uint FrameRefsShortSignaling { get { return frame_refs_short_signaling; } set { frame_refs_short_signaling = value; } }
+		private int allow_high_precision_mv;
+		private int use_ref_frame_mvs;
+		private int allow_intrabc;
+		private int[] ref_order_hint;
+		private int frame_size;
+		private int render_size;
+		private int frame_refs_short_signaling;
 		private uint last_frame_idx;
-		public uint LastFrameIdx { get { return last_frame_idx; } set { last_frame_idx = value; } }
 		private uint gold_frame_idx;
-		public uint GoldFrameIdx { get { return gold_frame_idx; } set { gold_frame_idx = value; } }
+		private int set_frame_refs;
 		private uint[] ref_frame_idx;
-		public uint[] RefFrameIdx { get { return ref_frame_idx; } set { ref_frame_idx = value; } }
-		private uint[] delta_frame_id_minus_1;
-		public uint[] DeltaFrameIdMinus1 { get { return delta_frame_id_minus_1; } set { delta_frame_id_minus_1 = value; } }
-		private uint allow_high_precision_mv;
-		public uint AllowHighPrecisionMv { get { return allow_high_precision_mv; } set { allow_high_precision_mv = value; } }
+		private uint delta_frame_id_minus_1;
+		private int DeltaFrameId;
+		private int[] expectedFrameId;
+		private int frame_size_with_refs;
+		private int read_interpolation_filter;
 		private uint is_motion_mode_switchable;
-		public uint IsMotionModeSwitchable { get { return is_motion_mode_switchable; } set { is_motion_mode_switchable = value; } }
-		private uint use_ref_frame_mvs;
-		public uint UseRefFrameMvs { get { return use_ref_frame_mvs; } set { use_ref_frame_mvs = value; } }
-		private uint disable_frame_end_update_cdf;
-		public uint DisableFrameEndUpdateCdf { get { return disable_frame_end_update_cdf; } set { disable_frame_end_update_cdf = value; } }
-		private uint allow_warped_motion;
-		public uint AllowWarpedMotion { get { return allow_warped_motion; } set { allow_warped_motion = value; } }
+		private int refFrame;
+		private int hint;
+		private int[] RefFrameSignBias;
+		private int disable_frame_end_update_cdf;
+		private int init_non_coeff_cdfs;
+		private int setup_past_independence;
+		private int load_cdfs;
+		private int load_previous;
+		private int motion_field_estimation;
+		private int tile_info;
+		private int quantization_params;
+		private int segmentation_params;
+		private int delta_q_params;
+		private int delta_lf_params;
+		private int init_coeff_cdfs;
+		private int load_previous_segment_ids;
+		private int CodedLossless;
+		private int qindex;
+		private int[] LosslessArray;
+		private int[][] SegQMLevel;
+		private int AllLossless;
+		private int loop_filter_params;
+		private int cdef_params;
+		private int lr_params;
+		private int read_tx_mode;
+		private int frame_reference_mode;
+		private int skip_mode_params;
+		private int allow_warped_motion;
 		private uint reduced_tx_set;
-		public uint ReducedTxSet { get { return reduced_tx_set; } set { reduced_tx_set = value; } }
+		private int global_motion_params;
+		private int film_grain_params;
 
-			uint i = 0;
 			uint opNum = 0;
 			uint segmentId = 0;
          public void ReadUncompressedHeader()
@@ -1799,7 +1756,7 @@ frame_header_obu() {
 			{
 				idLen= ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 );
 			}
-			uint allFrames= (1 << NUM_REF_FRAMES) - 1;
+			allFrames= (1 << NUM_REF_FRAMES) - 1;
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -1838,7 +1795,7 @@ frame_header_obu() {
 					{
 						ReadLoadGrainParams( frame_to_show_map_idx ); 
 					}
-return;
+					return;
 				}
 				stream.ReadFixed(2, out this.frame_type, "frame_type"); 
 				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? (uint)1 : (uint)0;
@@ -1942,7 +1899,7 @@ return;
 			}
 			ReadOrderHint; 
 			stream.ReadVariable(OrderHintBits, out this.order_hint, "order_hint"); 
-			uint OrderHint= order_hint;
+			OrderHint= order_hint;
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 )
 			{
@@ -1960,19 +1917,18 @@ return;
 				if ( buffer_removal_time_present_flag != 0 )
 				{
 
-					this.buffer_removal_time = new uint[ operating_points_cnt_minus_1];
 					for ( opNum = 0; opNum <= operating_points_cnt_minus_1; opNum++ )
 					{
 
 						if ( decoder_model_present_for_this_op[ opNum ] != 0 )
 						{
 							opPtIdc= operating_point_idc[ opNum ];
-							inTemporalLayer= ( opPtIdc >> temporal_id ) & 1;
-							inSpatialLayer= ( opPtIdc >> ( spatial_id + 8 ) ) & 1;
+							inTemporalLayer= ( opPtIdc >> (int)temporal_id ) & 1;
+							inSpatialLayer= ( opPtIdc >> (int)( spatial_id + 8 ) ) & 1;
 
 							if ( opPtIdc == 0 || ( inTemporalLayer != 0 && inSpatialLayer != 0 ) )
 							{
-								n= buffer_removal_time[opNum]_length_minus_1 + 1;
+								n= buffer_removal_time_length_minus_1 + 1;
 								stream.ReadVariable(n, out this.buffer_removal_time[ opNum ], "buffer_removal_time"); 
 							}
 						}
@@ -1999,7 +1955,6 @@ return;
 				if ( error_resilient_mode != 0 && enable_order_hint != 0 )
 				{
 
-					this.ref_order_hint = new uint[ NUM_REF_FRAMES];
 					for ( i = 0; i < NUM_REF_FRAMES; i++)
 					{
 						ReadRefOrderHint; 
@@ -2042,8 +1997,6 @@ return;
 					}
 				}
 
-				this.ref_frame_idx = new uint[ REFS_PER_FRAME];
-				this.delta_frame_id_minus_1 = new uint[ REFS_PER_FRAME];
 				for ( i = 0; i < REFS_PER_FRAME; i++ )
 				{
 
@@ -2055,8 +2008,8 @@ return;
 					if ( frame_id_numbers_present_flag != 0 )
 					{
 						n= delta_frame_id_length_minus_2 + 2;
-						stream.ReadVariable(n, out this.delta_frame_id_minus_1[ i ], "delta_frame_id_minus_1"); 
-						DeltaFrameId= delta_frame_id_minus_1[i] + 1;
+						stream.ReadVariable(n, out this.delta_frame_id_minus_1, "delta_frame_id_minus_1"); 
+						DeltaFrameId= delta_frame_id_minus_1 + 1;
 						expectedFrameId[ i ]= ((current_frame_id + (1 << idLen) - DeltaFrameId ) % (1 << idLen));
 					}
 				}
@@ -2146,7 +2099,7 @@ return;
 			{
 				ReadLoadPreviousSegmentIds(); 
 			}
-			uint CodedLossless= 1;
+			CodedLossless= 1;
 
 			for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ )
 			{
@@ -2175,7 +2128,7 @@ return;
 					}
 				}
 			}
-			uint AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
+			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
 			ReadLoopFilterParams(); 
 			ReadCdefParams(); 
 			ReadLrParams(); 
@@ -2204,7 +2157,7 @@ return;
 			{
 				idLen= ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 );
 			}
-			uint allFrames= (1 << NUM_REF_FRAMES) - 1;
+			allFrames= (1 << NUM_REF_FRAMES) - 1;
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -2243,7 +2196,7 @@ return;
 					{
 						WriteLoadGrainParams( frame_to_show_map_idx ); 
 					}
-return;
+					return;
 				}
 				stream.WriteFixed(2, this.frame_type, "frame_type"); 
 				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? (uint)1 : (uint)0;
@@ -2347,7 +2300,7 @@ return;
 			}
 			WriteOrderHint; 
 			stream.WriteVariable(OrderHintBits, this.order_hint, "order_hint"); 
-			uint OrderHint= order_hint;
+			OrderHint= order_hint;
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 )
 			{
@@ -2371,12 +2324,12 @@ return;
 						if ( decoder_model_present_for_this_op[ opNum ] != 0 )
 						{
 							opPtIdc= operating_point_idc[ opNum ];
-							inTemporalLayer= ( opPtIdc >> temporal_id ) & 1;
-							inSpatialLayer= ( opPtIdc >> ( spatial_id + 8 ) ) & 1;
+							inTemporalLayer= ( opPtIdc >> (int)temporal_id ) & 1;
+							inSpatialLayer= ( opPtIdc >> (int)( spatial_id + 8 ) ) & 1;
 
 							if ( opPtIdc == 0 || ( inTemporalLayer != 0 && inSpatialLayer != 0 ) )
 							{
-								n= buffer_removal_time[opNum]_length_minus_1 + 1;
+								n= buffer_removal_time_length_minus_1 + 1;
 								stream.WriteVariable(n, this.buffer_removal_time[ opNum ], "buffer_removal_time"); 
 							}
 						}
@@ -2456,8 +2409,8 @@ return;
 					if ( frame_id_numbers_present_flag != 0 )
 					{
 						n= delta_frame_id_length_minus_2 + 2;
-						stream.WriteVariable(n, this.delta_frame_id_minus_1[ i ], "delta_frame_id_minus_1"); 
-						DeltaFrameId= delta_frame_id_minus_1[i] + 1;
+						stream.WriteVariable(n, this.delta_frame_id_minus_1, "delta_frame_id_minus_1"); 
+						DeltaFrameId= delta_frame_id_minus_1 + 1;
 						expectedFrameId[ i ]= ((current_frame_id + (1 << idLen) - DeltaFrameId ) % (1 << idLen));
 					}
 				}
@@ -2547,7 +2500,7 @@ return;
 			{
 				WriteLoadPreviousSegmentIds(); 
 			}
-			uint CodedLossless= 1;
+			CodedLossless= 1;
 
 			for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ )
 			{
@@ -2576,7 +2529,7 @@ return;
 					}
 				}
 			}
-			uint AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
+			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
 			WriteLoopFilterParams(); 
 			WriteCdefParams(); 
 			WriteLrParams(); 
@@ -2606,19 +2559,18 @@ return;
  }
     */
 		private uint frame_presentation_time;
-		public uint FramePresentationTime { get { return frame_presentation_time; } set { frame_presentation_time = value; } }
 
          public void ReadTemporalPointInfo()
          {
 
-			uint n= frame_presentation_time_length_minus_1 + 1;
+			n= frame_presentation_time_length_minus_1 + 1;
 			stream.ReadVariable(n, out this.frame_presentation_time, "frame_presentation_time"); 
          }
 
          public void WriteTemporalPointInfo()
          {
 
-			uint n= frame_presentation_time_length_minus_1 + 1;
+			n= frame_presentation_time_length_minus_1 + 1;
 			stream.WriteVariable(n, this.frame_presentation_time, "frame_presentation_time"); 
          }
 
@@ -2642,14 +2594,12 @@ return;
  }
  }
     */
-		private uint idLen;
-		public uint IdLen { get { return idLen; } set { idLen = value; } }
+		private int diffLen;
 
-			uint i = 0;
          public void ReadMarkRefFrames(uint idLen)
          {
 
-			uint diffLen= delta_frame_id_length_minus_2 + 2;
+			diffLen= delta_frame_id_length_minus_2 + 2;
 
 			for ( i = 0; i < NUM_REF_FRAMES; i++ )
 			{
@@ -2680,7 +2630,7 @@ return;
          public void WriteMarkRefFrames(uint idLen)
          {
 
-			uint diffLen= delta_frame_id_length_minus_2 + 2;
+			diffLen= delta_frame_id_length_minus_2 + 2;
 
 			for ( i = 0; i < NUM_REF_FRAMES; i++ )
 			{
@@ -2728,9 +2678,11 @@ return;
  }
     */
 		private uint frame_width_minus_1;
-		public uint FrameWidthMinus1 { get { return frame_width_minus_1; } set { frame_width_minus_1 = value; } }
 		private uint frame_height_minus_1;
-		public uint FrameHeightMinus1 { get { return frame_height_minus_1; } set { frame_height_minus_1 = value; } }
+		private int FrameWidth;
+		private int FrameHeight;
+		private int superres_params;
+		private int compute_image_size;
 
          public void ReadFrameSize()
          {
@@ -2793,11 +2745,10 @@ return;
  }
     */
 		private uint render_and_frame_size_different;
-		public uint RenderAndFrameSizeDifferent { get { return render_and_frame_size_different; } set { render_and_frame_size_different = value; } }
 		private uint render_width_minus_1;
-		public uint RenderWidthMinus1 { get { return render_width_minus_1; } set { render_width_minus_1 = value; } }
 		private uint render_height_minus_1;
-		public uint RenderHeightMinus1 { get { return render_height_minus_1; } set { render_height_minus_1 = value; } }
+		private int RenderWidth;
+		private int RenderHeight;
 
          public void ReadRenderSize()
          {
@@ -2861,27 +2812,25 @@ return;
  }
  }
     */
-		private uint[] found_ref;
-		public uint[] FoundRef { get { return found_ref; } set { found_ref = value; } }
+		private uint found_ref;
+		private int UpscaledWidth;
 
-			uint i = 0;
          public void ReadFrameSizeWithRefs()
          {
 
 
-			this.found_ref = new uint[ REFS_PER_FRAME];
 			for ( i = 0; i < REFS_PER_FRAME; i++ )
 			{
-				stream.ReadFixed(1, out this.found_ref[ i ], "found_ref"); 
+				stream.ReadFixed(1, out this.found_ref, "found_ref"); 
 
-				if ( found_ref[i] == 1 )
+				if ( found_ref == 1 )
 				{
 					UpscaledWidth= RefUpscaledWidth[ ref_frame_idx[ i ] ];
 					FrameWidth= UpscaledWidth;
 					FrameHeight= RefFrameHeight[ ref_frame_idx[ i ] ];
 					RenderWidth= RefRenderWidth[ ref_frame_idx[ i ] ];
 					RenderHeight= RefRenderHeight[ ref_frame_idx[ i ] ];
-break;
+					break;
 				}
 			}
 
@@ -2903,16 +2852,16 @@ break;
 
 			for ( i = 0; i < REFS_PER_FRAME; i++ )
 			{
-				stream.WriteFixed(1, this.found_ref[ i ], "found_ref"); 
+				stream.WriteFixed(1, this.found_ref, "found_ref"); 
 
-				if ( found_ref[i] == 1 )
+				if ( found_ref == 1 )
 				{
 					UpscaledWidth= RefUpscaledWidth[ ref_frame_idx[ i ] ];
 					FrameWidth= UpscaledWidth;
 					FrameHeight= RefFrameHeight[ ref_frame_idx[ i ] ];
 					RenderWidth= RefRenderWidth[ ref_frame_idx[ i ] ];
 					RenderHeight= RefRenderHeight[ ref_frame_idx[ i ] ];
-break;
+					break;
 				}
 			}
 
@@ -2941,9 +2890,7 @@ break;
  }
     */
 		private uint is_filter_switchable;
-		public uint IsFilterSwitchable { get { return is_filter_switchable; } set { is_filter_switchable = value; } }
-		private uint interpolation_filter;
-		public uint InterpolationFilter { get { return interpolation_filter; } set { interpolation_filter = value; } }
+		private int interpolation_filter;
 
          public void ReadReadInterpolationFilter()
          {
@@ -2988,9 +2935,9 @@ break;
 }
     */
 		private uint a;
-		public uint a { get { return a; } set { a = value; } }
 		private uint b;
-		public uint b { get { return b; } set { b = value; } }
+		private int diff;
+		private int m;
 
          public void ReadGetRelativeDist(uint a, uint b)
          {
@@ -2998,12 +2945,12 @@ break;
 
 			if ( enable_order_hint== 0 )
 			{
-return 0;
+				return 0;
 			}
-			uint diff= a - b;
-			uint m= 1 << (OrderHintBits - 1);
+			diff= a - b;
+			m= 1 << (OrderHintBits - 1);
 			diff= (diff & (m - 1)) - (diff & m);
-return diff;
+			return diff;
          }
 
          public void WriteGetRelativeDist(uint a, uint b)
@@ -3012,12 +2959,12 @@ return diff;
 
 			if ( enable_order_hint== 0 )
 			{
-return 0;
+				return 0;
 			}
-			uint diff= a - b;
-			uint m= 1 << (OrderHintBits - 1);
+			diff= a - b;
+			m= 1 << (OrderHintBits - 1);
 			diff= (diff & (m - 1)) - (diff & m);
-return diff;
+			return diff;
          }
 
     /*
@@ -3109,37 +3056,53 @@ tile_info () {
  }
  }
     */
+		private int sbCols;
+		private int sbRows;
+		private int sbShift;
+		private int sbSize;
+		private int maxTileWidthSb;
+		private int maxTileAreaSb;
+		private int minLog2TileCols;
+		private int maxLog2TileCols;
+		private int maxLog2TileRows;
+		private int minLog2Tiles;
 		private uint uniform_tile_spacing_flag;
-		public uint UniformTileSpacingFlag { get { return uniform_tile_spacing_flag; } set { uniform_tile_spacing_flag = value; } }
-		private Dictionary<int, uint> increment_tile_cols_log2 = new Dictionary<int, uint>();
-		public Dictionary<int, uint> IncrementTileColsLog2 { get { return increment_tile_cols_log2; } set { increment_tile_cols_log2 = value; } }
-		private Dictionary<int, uint> increment_tile_rows_log2 = new Dictionary<int, uint>();
-		public Dictionary<int, uint> IncrementTileRowsLog2 { get { return increment_tile_rows_log2; } set { increment_tile_rows_log2 = value; } }
-		private uint[] width_in_sbs_minus_1;
-		public uint[] WidthInSbsMinus1 { get { return width_in_sbs_minus_1; } set { width_in_sbs_minus_1 = value; } }
-		private uint[] height_in_sbs_minus_1;
-		public uint[] HeightInSbsMinus1 { get { return height_in_sbs_minus_1; } set { height_in_sbs_minus_1 = value; } }
+		private int TileColsLog2;
+		private uint increment_tile_cols_log2;
+		private int tileWidthSb;
+		private int[] MiColStarts;
+		private int TileCols;
+		private int minLog2TileRows;
+		private int TileRowsLog2;
+		private uint increment_tile_rows_log2;
+		private int tileHeightSb;
+		private int[] MiRowStarts;
+		private int TileRows;
+		private int widestTileSb;
+		private int startSb;
+		private int maxWidth;
+		private uint width_in_sbs_minus_1;
+		private int sizeSb;
+		private int maxTileHeightSb;
+		private int maxHeight;
+		private uint height_in_sbs_minus_1;
 		private uint context_update_tile_id;
-		public uint ContextUpdateTileId { get { return context_update_tile_id; } set { context_update_tile_id = value; } }
 		private uint tile_size_bytes_minus_1;
-		public uint TileSizeBytesMinus1 { get { return tile_size_bytes_minus_1; } set { tile_size_bytes_minus_1 = value; } }
+		private int TileSizeBytes;
 
-			int whileIndex = -1;
-			uint startSb = 0;
-			uint i = 0;
          public void ReadTileInfo()
          {
 
-			uint sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 );
-			uint sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 );
-			uint sbShift= use_128x128_superblock ? 5 : 4;
-			uint sbSize= sbShift + 2;
-			uint maxTileWidthSb= MAX_TILE_WIDTH >> sbSize;
-			uint maxTileAreaSb= MAX_TILE_AREA >> ( 2 * sbSize );
-			uint minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			uint maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
-			uint maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
-			uint minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
+			sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
+			sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
+			sbShift= use_128x128_superblock ? 5 : 4;
+			sbSize= sbShift + 2;
+			maxTileWidthSb= MAX_TILE_WIDTH >> (int)sbSize;
+			maxTileAreaSb= MAX_TILE_AREA >> (int)( 2 * sbSize );
+			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
+			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
+			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
+			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
 			stream.ReadFixed(1, out this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
@@ -3148,20 +3111,18 @@ tile_info () {
 
 				while ( TileColsLog2 < maxLog2TileCols )
 				{
-					whileIndex++;
-
 					stream.ReadFixed(1, out this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
 
-					if ( increment_tile_cols_log2[whileIndex] == 1 )
+					if ( increment_tile_cols_log2 == 1 )
 					{
 						TileColsLog2++;
 					}
 					else 
 					{
-break;
+						break;
 					}
 				}
-				tileWidthSb= (sbCols + (1 << TileColsLog2) - 1) >> TileColsLog2;
+				tileWidthSb= (sbCols + (1 << TileColsLog2) - 1) >> (int)TileColsLog2;
 				i= 0;
 
 				for ( startSb = 0; startSb < sbCols; startSb += tileWidthSb )
@@ -3176,20 +3137,18 @@ break;
 
 				while ( TileRowsLog2 < maxLog2TileRows )
 				{
-					whileIndex++;
-
 					stream.ReadFixed(1, out this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
 
-					if ( increment_tile_rows_log2[whileIndex] == 1 )
+					if ( increment_tile_rows_log2 == 1 )
 					{
 						TileRowsLog2++;
 					}
 					else 
 					{
-break;
+						break;
 					}
 				}
-				tileHeightSb= (sbRows + (1 << TileRowsLog2) - 1) >> TileRowsLog2;
+				tileHeightSb= (sbRows + (1 << TileRowsLog2) - 1) >> (int)TileRowsLog2;
 				i= 0;
 
 				for ( startSb = 0; startSb < sbRows; startSb += tileHeightSb )
@@ -3205,13 +3164,12 @@ break;
 				widestTileSb= 0;
 				startSb= 0;
 
-				this.width_in_sbs_minus_1 = new uint[ sbCols];
 				for ( i = 0; startSb < sbCols; i++ )
 				{
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
-					stream.ReadUnsignedInt(maxWidth, out this.width_in_sbs_minus_1[ i ], "width_in_sbs_minus_1"); 
-					sizeSb= width_in_sbs_minus_1[i] + 1;
+					stream.ReadUnsignedInt(maxWidth, out this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
+					sizeSb= width_in_sbs_minus_1 + 1;
 					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
 				}
@@ -3221,7 +3179,7 @@ break;
 
 				if ( minLog2Tiles > 0 )
 				{
-					maxTileAreaSb= (sbRows * sbCols) >> (minLog2Tiles + 1);
+					maxTileAreaSb= (sbRows * sbCols) >> (int)(minLog2Tiles + 1);
 				}
 				else 
 				{
@@ -3230,13 +3188,12 @@ break;
 				maxTileHeightSb= Math.Max( maxTileAreaSb / widestTileSb, 1 );
 				startSb= 0;
 
-				this.height_in_sbs_minus_1 = new uint[ sbRows];
 				for ( i = 0; startSb < sbRows; i++ )
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
-					stream.ReadUnsignedInt(maxHeight, out this.height_in_sbs_minus_1[ i ], "height_in_sbs_minus_1"); 
-					sizeSb= height_in_sbs_minus_1[i] + 1;
+					stream.ReadUnsignedInt(maxHeight, out this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
+					sizeSb= height_in_sbs_minus_1 + 1;
 					startSb+= sizeSb;
 				}
 				MiRowStarts[ i ]= MiRows;
@@ -3259,16 +3216,16 @@ break;
          public void WriteTileInfo()
          {
 
-			uint sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 );
-			uint sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 );
-			uint sbShift= use_128x128_superblock ? 5 : 4;
-			uint sbSize= sbShift + 2;
-			uint maxTileWidthSb= MAX_TILE_WIDTH >> sbSize;
-			uint maxTileAreaSb= MAX_TILE_AREA >> ( 2 * sbSize );
-			uint minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			uint maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
-			uint maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
-			uint minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
+			sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
+			sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
+			sbShift= use_128x128_superblock ? 5 : 4;
+			sbSize= sbShift + 2;
+			maxTileWidthSb= MAX_TILE_WIDTH >> (int)sbSize;
+			maxTileAreaSb= MAX_TILE_AREA >> (int)( 2 * sbSize );
+			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
+			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
+			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
+			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
 			stream.WriteFixed(1, this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
@@ -3277,20 +3234,18 @@ break;
 
 				while ( TileColsLog2 < maxLog2TileCols )
 				{
-					whileIndex++;
-
 					stream.WriteFixed(1, this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
 
-					if ( increment_tile_cols_log2[whileIndex] == 1 )
+					if ( increment_tile_cols_log2 == 1 )
 					{
 						TileColsLog2++;
 					}
 					else 
 					{
-break;
+						break;
 					}
 				}
-				tileWidthSb= (sbCols + (1 << TileColsLog2) - 1) >> TileColsLog2;
+				tileWidthSb= (sbCols + (1 << TileColsLog2) - 1) >> (int)TileColsLog2;
 				i= 0;
 
 				for ( startSb = 0; startSb < sbCols; startSb += tileWidthSb )
@@ -3305,20 +3260,18 @@ break;
 
 				while ( TileRowsLog2 < maxLog2TileRows )
 				{
-					whileIndex++;
-
 					stream.WriteFixed(1, this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
 
-					if ( increment_tile_rows_log2[whileIndex] == 1 )
+					if ( increment_tile_rows_log2 == 1 )
 					{
 						TileRowsLog2++;
 					}
 					else 
 					{
-break;
+						break;
 					}
 				}
-				tileHeightSb= (sbRows + (1 << TileRowsLog2) - 1) >> TileRowsLog2;
+				tileHeightSb= (sbRows + (1 << TileRowsLog2) - 1) >> (int)TileRowsLog2;
 				i= 0;
 
 				for ( startSb = 0; startSb < sbRows; startSb += tileHeightSb )
@@ -3338,8 +3291,8 @@ break;
 				{
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
-					stream.WriteUnsignedInt(maxWidth, this.width_in_sbs_minus_1[ i ], "width_in_sbs_minus_1"); 
-					sizeSb= width_in_sbs_minus_1[i] + 1;
+					stream.WriteUnsignedInt(maxWidth, this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
+					sizeSb= width_in_sbs_minus_1 + 1;
 					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
 				}
@@ -3349,7 +3302,7 @@ break;
 
 				if ( minLog2Tiles > 0 )
 				{
-					maxTileAreaSb= (sbRows * sbCols) >> (minLog2Tiles + 1);
+					maxTileAreaSb= (sbRows * sbCols) >> (int)(minLog2Tiles + 1);
 				}
 				else 
 				{
@@ -3362,8 +3315,8 @@ break;
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
-					stream.WriteUnsignedInt(maxHeight, this.height_in_sbs_minus_1[ i ], "height_in_sbs_minus_1"); 
-					sizeSb= height_in_sbs_minus_1[i] + 1;
+					stream.WriteUnsignedInt(maxHeight, this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
+					sizeSb= height_in_sbs_minus_1 + 1;
 					startSb+= sizeSb;
 				}
 				MiRowStarts[ i ]= MiRows;
@@ -3394,9 +3347,7 @@ tile_log2( blkSize, target ) {
  }
     */
 		private uint blkSize;
-		public uint BlkSize { get { return blkSize; } set { blkSize = value; } }
 		private uint target;
-		public uint Target { get { return target; } set { target = value; } }
 
 			uint k = 0;
          public void ReadTileLog2(uint blkSize, uint target)
@@ -3406,7 +3357,7 @@ tile_log2( blkSize, target ) {
 			for ( k = 0; (blkSize << (int) k) < target; k++ )
 			{
 			}
-return k;
+			return k;
          }
 
          public void WriteTileLog2(uint blkSize, uint target)
@@ -3416,7 +3367,7 @@ return k;
 			for ( k = 0; (blkSize << (int) k) < target; k++ )
 			{
 			}
-return k;
+			return k;
          }
 
     /*
@@ -3457,23 +3408,22 @@ return k;
  }
     */
 		private uint base_q_idx;
-		public uint BaseqIdx { get { return base_q_idx; } set { base_q_idx = value; } }
+		private int DeltaQYDc;
 		private uint diff_uv_delta;
-		public uint DiffUvDelta { get { return diff_uv_delta; } set { diff_uv_delta = value; } }
+		private int DeltaQUDc;
+		private int DeltaQUAc;
+		private int DeltaQVDc;
+		private int DeltaQVAc;
 		private uint using_qmatrix;
-		public uint UsingQmatrix { get { return using_qmatrix; } set { using_qmatrix = value; } }
 		private uint qm_y;
-		public uint Qmy { get { return qm_y; } set { qm_y = value; } }
 		private uint qm_u;
-		public uint Qmu { get { return qm_u; } set { qm_u = value; } }
-		private uint qm_v;
-		public uint Qmv { get { return qm_v; } set { qm_v = value; } }
+		private int qm_v;
 
          public void ReadQuantizationParams()
          {
 
 			stream.ReadFixed(8, out this.base_q_idx, "base_q_idx"); 
-			uint DeltaQYDc= read_delta_q();
+			DeltaQYDc= read_delta_q();
 
 			if ( NumPlanes > 1 )
 			{
@@ -3529,7 +3479,7 @@ return k;
          {
 
 			stream.WriteFixed(8, this.base_q_idx, "base_q_idx"); 
-			uint DeltaQYDc= read_delta_q();
+			DeltaQYDc= read_delta_q();
 
 			if ( NumPlanes > 1 )
 			{
@@ -3595,9 +3545,7 @@ return k;
  }
     */
 		private uint delta_coded;
-		public uint DeltaCoded { get { return delta_coded; } set { delta_coded = value; } }
 		private uint delta_q;
-		public uint Deltaq { get { return delta_q; } set { delta_q = value; } }
 
          public void ReadReadDeltaq()
          {
@@ -3612,7 +3560,7 @@ return k;
 			{
 				delta_q= 0;
 			}
-return delta_q;
+			return delta_q;
          }
 
          public void WriteReadDeltaq()
@@ -3628,7 +3576,7 @@ return delta_q;
 			{
 				delta_q= 0;
 			}
-return delta_q;
+			return delta_q;
          }
 
     /*
@@ -3658,10 +3606,10 @@ return delta_q;
  bitsToRead = Segmentation_Feature_Bits[ j ]
  limit = Segmentation_Feature_Max[ j ]
  if ( Segmentation_Feature_Signed[ j ] == 1 ) {
- feature_value feature_value su(1+bitsToRead)
+ feature_value su(1+bitsToRead)
  clippedValue = Clip3( -limit, limit, feature_value)
  } else {
- feature_value feature_value f(bitsToRead)
+ feature_value f(bitsToRead)
  clippedValue = Clip3( 0, limit, feature_value)
  }
  }
@@ -3692,19 +3640,19 @@ return delta_q;
  }
     */
 		private uint segmentation_enabled;
-		public uint SegmentationEnabled { get { return segmentation_enabled; } set { segmentation_enabled = value; } }
-		private uint segmentation_update_map;
-		public uint SegmentationUpdateMap { get { return segmentation_update_map; } set { segmentation_update_map = value; } }
-		private uint segmentation_temporal_update;
-		public uint SegmentationTemporalUpdate { get { return segmentation_temporal_update; } set { segmentation_temporal_update = value; } }
-		private uint segmentation_update_data;
-		public uint SegmentationUpdateData { get { return segmentation_update_data; } set { segmentation_update_data = value; } }
-		private uint[][] feature_enabled;
-		public uint[][] FeatureEnabled { get { return feature_enabled; } set { feature_enabled = value; } }
-		private uint[][] feature_value;
-		public uint[][] FeatureValue { get { return feature_value; } set { feature_value = value; } }
+		private int segmentation_update_map;
+		private int segmentation_temporal_update;
+		private int segmentation_update_data;
+		private int feature_value;
+		private uint feature_enabled;
+		private int[][] FeatureEnabled;
+		private int clippedValue;
+		private int bitsToRead;
+		private int limit;
+		private int[][] FeatureData;
+		private int SegIdPreSkip;
+		private int LastActiveSegId;
 
-			uint i = 0;
 			uint j = 0;
          public void ReadSegmentationParams()
          {
@@ -3734,36 +3682,30 @@ return delta_q;
 				if ( segmentation_update_data == 1 )
 				{
 
-					this.feature_enabled = new uint[ MAX_SEGMENTS][];
-					this.feature_value = new uint[ MAX_SEGMENTS][];
 					for ( i = 0; i < MAX_SEGMENTS; i++ )
 					{
 
-						this.feature_enabled[ i ] = new uint[ SEG_LVL_MAX];
-						this.feature_value[ i ] = new uint[ SEG_LVL_MAX];
 						for ( j = 0; j < SEG_LVL_MAX; j++ )
 						{
 							feature_value= 0;
-							stream.ReadFixed(1, out this.feature_enabled[ i ][ j ], "feature_enabled"); 
-							FeatureEnabled[ i ][ j ]= feature_enabled[i][j];
+							stream.ReadFixed(1, out this.feature_enabled, "feature_enabled"); 
+							FeatureEnabled[ i ][ j ]= feature_enabled;
 							clippedValue= 0;
 
-							if ( feature_enabled[i][j] == 1 )
+							if ( feature_enabled == 1 )
 							{
 								bitsToRead= Segmentation_Feature_Bits[ j ];
 								limit= Segmentation_Feature_Max[ j ];
 
 								if ( Segmentation_Feature_Signed[ j ] == 1 )
 								{
-									ReadFeatureValue; 
-									stream.ReadSignedIntVar(1+bitsToRead, out this.feature_value[ i ][ j ], "feature_value"); 
-									clippedValue= Clip3( -limit, limit, feature_value[i][j]);
+									stream.ReadSignedIntVar(1+bitsToRead, out this.feature_value, "feature_value"); 
+									clippedValue= Clip3( -limit, limit, feature_value);
 								}
 								else 
 								{
-									ReadFeatureValue; 
-									stream.ReadVariable(bitsToRead, out this.feature_value[ i ][ j ], "feature_value"); 
-									clippedValue= Clip3( 0, limit, feature_value[i][j]);
+									stream.ReadVariable(bitsToRead, out this.feature_value, "feature_value"); 
+									clippedValue= Clip3( 0, limit, feature_value);
 								}
 							}
 							FeatureData[ i ][ j ]= clippedValue;
@@ -3784,8 +3726,8 @@ return delta_q;
 					}
 				}
 			}
-			uint SegIdPreSkip= 0;
-			uint LastActiveSegId= 0;
+			SegIdPreSkip= 0;
+			LastActiveSegId= 0;
 
 			for ( i = 0; i < MAX_SEGMENTS; i++ )
 			{
@@ -3840,26 +3782,24 @@ return delta_q;
 						for ( j = 0; j < SEG_LVL_MAX; j++ )
 						{
 							feature_value= 0;
-							stream.WriteFixed(1, this.feature_enabled[ i ][ j ], "feature_enabled"); 
-							FeatureEnabled[ i ][ j ]= feature_enabled[i][j];
+							stream.WriteFixed(1, this.feature_enabled, "feature_enabled"); 
+							FeatureEnabled[ i ][ j ]= feature_enabled;
 							clippedValue= 0;
 
-							if ( feature_enabled[i][j] == 1 )
+							if ( feature_enabled == 1 )
 							{
 								bitsToRead= Segmentation_Feature_Bits[ j ];
 								limit= Segmentation_Feature_Max[ j ];
 
 								if ( Segmentation_Feature_Signed[ j ] == 1 )
 								{
-									WriteFeatureValue; 
-									stream.WriteSignedIntVar(1+bitsToRead, this.feature_value[ i ][ j ], "feature_value"); 
-									clippedValue= Clip3( -limit, limit, feature_value[i][j]);
+									stream.WriteSignedIntVar(1+bitsToRead, this.feature_value, "feature_value"); 
+									clippedValue= Clip3( -limit, limit, feature_value);
 								}
 								else 
 								{
-									WriteFeatureValue; 
-									stream.WriteVariable(bitsToRead, this.feature_value[ i ][ j ], "feature_value"); 
-									clippedValue= Clip3( 0, limit, feature_value[i][j]);
+									stream.WriteVariable(bitsToRead, this.feature_value, "feature_value"); 
+									clippedValue= Clip3( 0, limit, feature_value);
 								}
 							}
 							FeatureData[ i ][ j ]= clippedValue;
@@ -3880,8 +3820,8 @@ return delta_q;
 					}
 				}
 			}
-			uint SegIdPreSkip= 0;
-			uint LastActiveSegId= 0;
+			SegIdPreSkip= 0;
+			LastActiveSegId= 0;
 
 			for ( i = 0; i < MAX_SEGMENTS; i++ )
 			{
@@ -3916,10 +3856,8 @@ delta_q_params() {
  }
  }
     */
-		private uint delta_q_present;
-		public uint DeltaqPresent { get { return delta_q_present; } set { delta_q_present = value; } }
-		private uint delta_q_res;
-		public uint DeltaqRes { get { return delta_q_res; } set { delta_q_res = value; } }
+		private int delta_q_res;
+		private int delta_q_present;
 
          public void ReadDeltaqParams()
          {
@@ -3972,12 +3910,9 @@ delta_lf_params() {
  }
  }
     */
-		private uint delta_lf_present;
-		public uint DeltaLfPresent { get { return delta_lf_present; } set { delta_lf_present = value; } }
-		private uint delta_lf_res;
-		public uint DeltaLfRes { get { return delta_lf_res; } set { delta_lf_res = value; } }
-		private uint delta_lf_multi;
-		public uint DeltaLfMulti { get { return delta_lf_multi; } set { delta_lf_multi = value; } }
+		private int delta_lf_present;
+		private int delta_lf_res;
+		private int delta_lf_multi;
 
          public void ReadDeltaLfParams()
          {
@@ -4056,20 +3991,14 @@ cdef_params() {
  }
  }
     */
+		private int cdef_bits;
+		private int[] cdef_y_pri_strength;
+		private int[] cdef_y_sec_strength;
+		private int[] cdef_uv_pri_strength;
+		private int[] cdef_uv_sec_strength;
+		private int CdefDamping;
 		private uint cdef_damping_minus_3;
-		public uint CdefDampingMinus3 { get { return cdef_damping_minus_3; } set { cdef_damping_minus_3 = value; } }
-		private uint cdef_bits;
-		public uint CdefBits { get { return cdef_bits; } set { cdef_bits = value; } }
-		private uint[] cdef_y_pri_strength;
-		public uint[] CdefyPriStrength { get { return cdef_y_pri_strength; } set { cdef_y_pri_strength = value; } }
-		private uint[] cdef_y_sec_strength;
-		public uint[] CdefySecStrength { get { return cdef_y_sec_strength; } set { cdef_y_sec_strength = value; } }
-		private uint[] cdef_uv_pri_strength;
-		public uint[] CdefUvPriStrength { get { return cdef_uv_pri_strength; } set { cdef_uv_pri_strength = value; } }
-		private uint[] cdef_uv_sec_strength;
-		public uint[] CdefUvSecStrength { get { return cdef_uv_sec_strength; } set { cdef_uv_sec_strength = value; } }
 
-			uint i = 0;
          public void ReadCdefParams()
          {
 
@@ -4083,16 +4012,12 @@ cdef_params() {
 				cdef_uv_pri_strength[0]= 0;
 				cdef_uv_sec_strength[0]= 0;
 				CdefDamping= 3;
-return;
+				return;
 			}
 			stream.ReadFixed(2, out this.cdef_damping_minus_3, "cdef_damping_minus_3"); 
-			uint CdefDamping= cdef_damping_minus_3 + 3;
+			CdefDamping= cdef_damping_minus_3 + 3;
 			stream.ReadFixed(2, out this.cdef_bits, "cdef_bits"); 
 
-			this.cdef_y_pri_strength = new uint[ (1 << (int) cdef_bits)];
-			this.cdef_y_sec_strength = new uint[ (1 << (int) cdef_bits)];
-			this.cdef_uv_pri_strength = new uint[ (1 << (int) cdef_bits)];
-			this.cdef_uv_sec_strength = new uint[ (1 << (int) cdef_bits)];
 			for ( i = 0; i < (1 << (int) cdef_bits); i++ )
 			{
 				stream.ReadFixed(4, out this.cdef_y_pri_strength[i], "cdef_y_pri_strength"); 
@@ -4129,10 +4054,10 @@ return;
 				cdef_uv_pri_strength[0]= 0;
 				cdef_uv_sec_strength[0]= 0;
 				CdefDamping= 3;
-return;
+				return;
 			}
 			stream.WriteFixed(2, this.cdef_damping_minus_3, "cdef_damping_minus_3"); 
-			uint CdefDamping= cdef_damping_minus_3 + 3;
+			CdefDamping= cdef_damping_minus_3 + 3;
 			stream.WriteFixed(2, this.cdef_bits, "cdef_bits"); 
 
 			for ( i = 0; i < (1 << (int) cdef_bits); i++ )
@@ -4205,16 +4130,15 @@ lr_params() {
  }
  }
     */
-		private uint[] lr_type;
-		public uint[] LrType { get { return lr_type; } set { lr_type = value; } }
+		private int[] FrameRestorationType;
+		private int UsesLr;
+		private int usesChromaLr;
+		private uint lr_type;
 		private uint lr_unit_shift;
-		public uint LrUnitShift { get { return lr_unit_shift; } set { lr_unit_shift = value; } }
 		private uint lr_unit_extra_shift;
-		public uint LrUnitExtraShift { get { return lr_unit_extra_shift; } set { lr_unit_extra_shift = value; } }
+		private int[] LoopRestorationSize;
 		private uint lr_uv_shift;
-		public uint LrUvShift { get { return lr_uv_shift; } set { lr_uv_shift = value; } }
 
-			uint i = 0;
          public void ReadLrParams()
          {
 
@@ -4226,16 +4150,15 @@ lr_params() {
 				FrameRestorationType[1]= RESTORE_NONE;
 				FrameRestorationType[2]= RESTORE_NONE;
 				UsesLr= 0;
-return;
+				return;
 			}
-			uint UsesLr= 0;
-			uint usesChromaLr= 0;
+			UsesLr= 0;
+			usesChromaLr= 0;
 
-			this.lr_type = new uint[ NumPlanes];
 			for ( i = 0; i < NumPlanes; i++ )
 			{
-				stream.ReadFixed(2, out this.lr_type[ i ], "lr_type"); 
-				FrameRestorationType[i]= Remap_Lr_Type[lr_type[i]];
+				stream.ReadFixed(2, out this.lr_type, "lr_type"); 
+				FrameRestorationType[i]= Remap_Lr_Type[lr_type];
 
 				if ( FrameRestorationType[i] != RESTORE_NONE )
 				{
@@ -4266,7 +4189,7 @@ return;
 						lr_unit_shift+= lr_unit_extra_shift;
 					}
 				}
-				LoopRestorationSize[ 0 ]= RESTORATION_TILESIZE_MAX >> (2 - lr_unit_shift);
+				LoopRestorationSize[ 0 ]= RESTORATION_TILESIZE_MAX >> (int)(2 - lr_unit_shift);
 
 				if ( subsampling_x != 0 && subsampling_y != 0 && usesChromaLr != 0 )
 				{
@@ -4276,8 +4199,8 @@ return;
 				{
 					lr_uv_shift= 0;
 				}
-				LoopRestorationSize[ 1 ]= LoopRestorationSize[ 0 ] >> lr_uv_shift;
-				LoopRestorationSize[ 2 ]= LoopRestorationSize[ 0 ] >> lr_uv_shift;
+				LoopRestorationSize[ 1 ]= LoopRestorationSize[ 0 ] >> (int)lr_uv_shift;
+				LoopRestorationSize[ 2 ]= LoopRestorationSize[ 0 ] >> (int)lr_uv_shift;
 			}
          }
 
@@ -4292,15 +4215,15 @@ return;
 				FrameRestorationType[1]= RESTORE_NONE;
 				FrameRestorationType[2]= RESTORE_NONE;
 				UsesLr= 0;
-return;
+				return;
 			}
-			uint UsesLr= 0;
-			uint usesChromaLr= 0;
+			UsesLr= 0;
+			usesChromaLr= 0;
 
 			for ( i = 0; i < NumPlanes; i++ )
 			{
-				stream.WriteFixed(2, this.lr_type[ i ], "lr_type"); 
-				FrameRestorationType[i]= Remap_Lr_Type[lr_type[i]];
+				stream.WriteFixed(2, this.lr_type, "lr_type"); 
+				FrameRestorationType[i]= Remap_Lr_Type[lr_type];
 
 				if ( FrameRestorationType[i] != RESTORE_NONE )
 				{
@@ -4331,7 +4254,7 @@ return;
 						lr_unit_shift+= lr_unit_extra_shift;
 					}
 				}
-				LoopRestorationSize[ 0 ]= RESTORATION_TILESIZE_MAX >> (2 - lr_unit_shift);
+				LoopRestorationSize[ 0 ]= RESTORATION_TILESIZE_MAX >> (int)(2 - lr_unit_shift);
 
 				if ( subsampling_x != 0 && subsampling_y != 0 && usesChromaLr != 0 )
 				{
@@ -4341,8 +4264,8 @@ return;
 				{
 					lr_uv_shift= 0;
 				}
-				LoopRestorationSize[ 1 ]= LoopRestorationSize[ 0 ] >> lr_uv_shift;
-				LoopRestorationSize[ 2 ]= LoopRestorationSize[ 0 ] >> lr_uv_shift;
+				LoopRestorationSize[ 1 ]= LoopRestorationSize[ 0 ] >> (int)lr_uv_shift;
+				LoopRestorationSize[ 2 ]= LoopRestorationSize[ 0 ] >> (int)lr_uv_shift;
 			}
          }
 
@@ -4393,24 +4316,15 @@ return;
  }
  }
     */
-		private uint[] loop_filter_level;
-		public uint[] LoopFilterLevel { get { return loop_filter_level; } set { loop_filter_level = value; } }
+		private int[] loop_filter_level;
+		private int[] loop_filter_ref_deltas;
+		private int[] loop_filter_mode_deltas;
 		private uint loop_filter_sharpness;
-		public uint LoopFilterSharpness { get { return loop_filter_sharpness; } set { loop_filter_sharpness = value; } }
 		private uint loop_filter_delta_enabled;
-		public uint LoopFilterDeltaEnabled { get { return loop_filter_delta_enabled; } set { loop_filter_delta_enabled = value; } }
 		private uint loop_filter_delta_update;
-		public uint LoopFilterDeltaUpdate { get { return loop_filter_delta_update; } set { loop_filter_delta_update = value; } }
-		private uint[] update_ref_delta;
-		public uint[] UpdateRefDelta { get { return update_ref_delta; } set { update_ref_delta = value; } }
-		private uint[] loop_filter_ref_deltas;
-		public uint[] LoopFilterRefDeltas { get { return loop_filter_ref_deltas; } set { loop_filter_ref_deltas = value; } }
-		private uint[] update_mode_delta;
-		public uint[] UpdateModeDelta { get { return update_mode_delta; } set { update_mode_delta = value; } }
-		private uint[] loop_filter_mode_deltas;
-		public uint[] LoopFilterModeDeltas { get { return loop_filter_mode_deltas; } set { loop_filter_mode_deltas = value; } }
+		private uint update_ref_delta;
+		private uint update_mode_delta;
 
-			uint i = 0;
          public void ReadLoopFilterParams()
          {
 
@@ -4432,7 +4346,7 @@ return;
 				{
 					loop_filter_mode_deltas[ i ]= 0;
 				}
-return;
+				return;
 			}
 			stream.ReadFixed(6, out this.loop_filter_level[ 0 ], "loop_filter_level"); 
 			stream.ReadFixed(6, out this.loop_filter_level[ 1 ], "loop_filter_level"); 
@@ -4456,25 +4370,21 @@ return;
 				if ( loop_filter_delta_update == 1 )
 				{
 
-					this.update_ref_delta = new uint[ TOTAL_REFS_PER_FRAME];
-					this.loop_filter_ref_deltas = new uint[ TOTAL_REFS_PER_FRAME];
 					for ( i = 0; i < TOTAL_REFS_PER_FRAME; i++ )
 					{
-						stream.ReadFixed(1, out this.update_ref_delta[ i ], "update_ref_delta"); 
+						stream.ReadFixed(1, out this.update_ref_delta, "update_ref_delta"); 
 
-						if ( update_ref_delta[i] == 1 )
+						if ( update_ref_delta == 1 )
 						{
 							stream.ReadSignedIntVar(1+6, out this.loop_filter_ref_deltas[ i ], "loop_filter_ref_deltas"); 
 						}
 					}
 
-					this.update_mode_delta = new uint[ 2];
-					this.loop_filter_mode_deltas = new uint[ 2];
 					for ( i = 0; i < 2; i++ )
 					{
-						stream.ReadFixed(1, out this.update_mode_delta[ i ], "update_mode_delta"); 
+						stream.ReadFixed(1, out this.update_mode_delta, "update_mode_delta"); 
 
-						if ( update_mode_delta[i] == 1 )
+						if ( update_mode_delta == 1 )
 						{
 							stream.ReadSignedIntVar(1+6, out this.loop_filter_mode_deltas[ i ], "loop_filter_mode_deltas"); 
 						}
@@ -4504,7 +4414,7 @@ return;
 				{
 					loop_filter_mode_deltas[ i ]= 0;
 				}
-return;
+				return;
 			}
 			stream.WriteFixed(6, this.loop_filter_level[ 0 ], "loop_filter_level"); 
 			stream.WriteFixed(6, this.loop_filter_level[ 1 ], "loop_filter_level"); 
@@ -4530,9 +4440,9 @@ return;
 
 					for ( i = 0; i < TOTAL_REFS_PER_FRAME; i++ )
 					{
-						stream.WriteFixed(1, this.update_ref_delta[ i ], "update_ref_delta"); 
+						stream.WriteFixed(1, this.update_ref_delta, "update_ref_delta"); 
 
-						if ( update_ref_delta[i] == 1 )
+						if ( update_ref_delta == 1 )
 						{
 							stream.WriteSignedIntVar(1+6, this.loop_filter_ref_deltas[ i ], "loop_filter_ref_deltas"); 
 						}
@@ -4540,9 +4450,9 @@ return;
 
 					for ( i = 0; i < 2; i++ )
 					{
-						stream.WriteFixed(1, this.update_mode_delta[ i ], "update_mode_delta"); 
+						stream.WriteFixed(1, this.update_mode_delta, "update_mode_delta"); 
 
-						if ( update_mode_delta[i] == 1 )
+						if ( update_mode_delta == 1 )
 						{
 							stream.WriteSignedIntVar(1+6, this.loop_filter_mode_deltas[ i ], "loop_filter_mode_deltas"); 
 						}
@@ -4567,8 +4477,8 @@ return;
  }
  }
     */
+		private int TxMode;
 		private uint tx_mode_select;
-		public uint TxModeSelect { get { return tx_mode_select; } set { tx_mode_select = value; } }
 
          public void ReadReadTxMode()
          {
@@ -4627,8 +4537,7 @@ return;
  }
  }
     */
-		private uint reference_select;
-		public uint ReferenceSelect { get { return reference_select; } set { reference_select = value; } }
+		private int reference_select;
 
          public void ReadFrameReferenceMode()
          {
@@ -4717,10 +4626,17 @@ return;
  }
  }
     */
+		private int skipModeAllowed;
+		private int forwardIdx;
+		private int backwardIdx;
+		private int refHint;
+		private int forwardHint;
+		private int backwardHint;
+		private int[] SkipModeFrame;
+		private int secondForwardIdx;
+		private int secondForwardHint;
 		private uint skip_mode_present;
-		public uint SkipModePresent { get { return skip_mode_present; } set { skip_mode_present = value; } }
 
-			uint i = 0;
          public void ReadSkipModeParams()
          {
 
@@ -4949,15 +4865,20 @@ return;
  }
  }
     */
-		private uint[] is_global;
-		public uint[] IsGlobal { get { return is_global; } set { is_global = value; } }
-		private uint[] is_rot_zoom;
-		public uint[] IsRotZoom { get { return is_rot_zoom; } set { is_rot_zoom = value; } }
-		private uint[] is_translation;
-		public uint[] IsTranslation { get { return is_translation; } set { is_translation = value; } }
+		private int[] GmType;
+		private int[][] gm_params;
+		private uint is_global;
+		private uint is_rot_zoom;
+		private int type;
+		private uint is_translation;
+		private int read_global_param;
+		private int read_global_param0;
+		private int read_global_param1;
+		private int read_global_param00;
+		private int read_global_param2;
+		private int read_global_param01;
 
 			uint refc = 0;
-			uint i = 0;
          public void ReadGlobalMotionParams()
          {
 
@@ -4974,28 +4895,25 @@ return;
 
 			if ( FrameIsIntra != 0 )
 			{
-return;
+				return;
 			}
 
-			this.is_global = new uint[ AV1RefFrames.ALTREF_FRAME];
-			this.is_rot_zoom = new uint[ AV1RefFrames.ALTREF_FRAME];
-			this.is_translation = new uint[ AV1RefFrames.ALTREF_FRAME];
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
-				stream.ReadFixed(1, out this.is_global[ refc ], "is_global"); 
+				stream.ReadFixed(1, out this.is_global, "is_global"); 
 
-				if ( is_global[c] != 0 )
+				if ( is_global != 0 )
 				{
-					stream.ReadFixed(1, out this.is_rot_zoom[ refc ], "is_rot_zoom"); 
+					stream.ReadFixed(1, out this.is_rot_zoom, "is_rot_zoom"); 
 
-					if ( is_rot_zoom[c] != 0 )
+					if ( is_rot_zoom != 0 )
 					{
 						type= ROTZOOM;
 					}
 					else 
 					{
-						stream.ReadFixed(1, out this.is_translation[ refc ], "is_translation"); 
-						type= is_translation[c] ? TRANSLATION : AFFINE;
+						stream.ReadFixed(1, out this.is_translation, "is_translation"); 
+						type= is_translation ? TRANSLATION : AFFINE;
 					}
 				}
 				else 
@@ -5012,7 +4930,7 @@ return;
 					if ( type == AFFINE )
 					{
 						ReadReadGlobalParam(type, refc, 4); 
-						ReadReadGlobalParam(type, refc, 5); 
+						ReadReadGlobalParam0(type, refc, 5); 
 					}
 					else 
 					{
@@ -5024,7 +4942,7 @@ return;
 				if ( type >= TRANSLATION )
 				{
 					ReadReadGlobalParam(type, refc, 0); 
-					ReadReadGlobalParam(type, refc, 1); 
+					ReadReadGlobalParam0(type, refc, 1); 
 				}
 			}
          }
@@ -5045,25 +4963,25 @@ return;
 
 			if ( FrameIsIntra != 0 )
 			{
-return;
+				return;
 			}
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
-				stream.WriteFixed(1, this.is_global[ refc ], "is_global"); 
+				stream.WriteFixed(1, this.is_global, "is_global"); 
 
-				if ( is_global[c] != 0 )
+				if ( is_global != 0 )
 				{
-					stream.WriteFixed(1, this.is_rot_zoom[ refc ], "is_rot_zoom"); 
+					stream.WriteFixed(1, this.is_rot_zoom, "is_rot_zoom"); 
 
-					if ( is_rot_zoom[c] != 0 )
+					if ( is_rot_zoom != 0 )
 					{
 						type= ROTZOOM;
 					}
 					else 
 					{
-						stream.WriteFixed(1, this.is_translation[ refc ], "is_translation"); 
-						type= is_translation[c] ? TRANSLATION : AFFINE;
+						stream.WriteFixed(1, this.is_translation, "is_translation"); 
+						type= is_translation ? TRANSLATION : AFFINE;
 					}
 				}
 				else 
@@ -5080,7 +4998,7 @@ return;
 					if ( type == AFFINE )
 					{
 						WriteReadGlobalParam(type, refc, 4); 
-						WriteReadGlobalParam(type, refc, 5); 
+						WriteReadGlobalParam0(type, refc, 5); 
 					}
 					else 
 					{
@@ -5092,7 +5010,7 @@ return;
 				if ( type >= TRANSLATION )
 				{
 					WriteReadGlobalParam(type, refc, 0); 
-					WriteReadGlobalParam(type, refc, 1); 
+					WriteReadGlobalParam0(type, refc, 1); 
 				}
 			}
          }
@@ -5120,18 +5038,20 @@ read_global_param( type, refc, idx ) {
  gm_params[refc][idx] = (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round
  }
     */
-		private uint type;
-		public uint Type { get { return type; } set { type = value; } }
-		private uint refc;
-		public uint Refc { get { return refc; } set { refc = value; } }
 		private uint idx;
-		public uint Idx { get { return idx; } set { idx = value; } }
+		private int absBits;
+		private int precBits;
+		private int precDiff;
+		private int round;
+		private int sub;
+		private int mx;
+		private int r;
 
          public void ReadReadGlobalParam(uint type, uint refc, uint idx)
          {
 
-			uint absBits= GM_ABS_ALPHA_BITS;
-			uint precBits= GM_ALPHA_PREC_BITS;
+			absBits= GM_ABS_ALPHA_BITS;
+			precBits= GM_ALPHA_PREC_BITS;
 
 			if ( idx < 2 )
 			{
@@ -5147,19 +5067,19 @@ read_global_param( type, refc, idx ) {
 					precBits= GM_TRANS_PREC_BITS;
 				}
 			}
-			uint precDiff= WARPEDMODEL_PREC_BITS - precBits;
-			uint round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
-			uint sub= (idx % 3) == 2 ? (1 << precBits) : 0;
-			uint mx= (1 << absBits);
-			uint r= (PrevGmParams[refc][idx] >> precDiff) - sub;
-			uint gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
+			precDiff= WARPEDMODEL_PREC_BITS - precBits;
+			round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
+			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
+			mx= (1 << absBits);
+			r= (PrevGmParams[refc][idx] >> (int)precDiff) - sub;
+			gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
          }
 
          public void WriteReadGlobalParam(uint type, uint refc, uint idx)
          {
 
-			uint absBits= GM_ABS_ALPHA_BITS;
-			uint precBits= GM_ALPHA_PREC_BITS;
+			absBits= GM_ABS_ALPHA_BITS;
+			precBits= GM_ALPHA_PREC_BITS;
 
 			if ( idx < 2 )
 			{
@@ -5175,12 +5095,12 @@ read_global_param( type, refc, idx ) {
 					precBits= GM_TRANS_PREC_BITS;
 				}
 			}
-			uint precDiff= WARPEDMODEL_PREC_BITS - precBits;
-			uint round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
-			uint sub= (idx % 3) == 2 ? (1 << precBits) : 0;
-			uint mx= (1 << absBits);
-			uint r= (PrevGmParams[refc][idx] >> precDiff) - sub;
-			uint gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
+			precDiff= WARPEDMODEL_PREC_BITS - precBits;
+			round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
+			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
+			mx= (1 << absBits);
+			r= (PrevGmParams[refc][idx] >> (int)precDiff) - sub;
+			gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
          }
 
     /*
@@ -5271,66 +5191,40 @@ read_global_param( type, refc, idx ) {
  clip_to_restricted_range f(1)
  }
     */
+		private int reset_grain_params;
 		private uint apply_grain;
-		public uint ApplyGrain { get { return apply_grain; } set { apply_grain = value; } }
 		private uint grain_seed;
-		public uint GrainSeed { get { return grain_seed; } set { grain_seed = value; } }
 		private uint update_grain;
-		public uint UpdateGrain { get { return update_grain; } set { update_grain = value; } }
 		private uint film_grain_params_ref_idx;
-		public uint FilmGrainParamsRefIdx { get { return film_grain_params_ref_idx; } set { film_grain_params_ref_idx = value; } }
+		private int tempGrainSeed;
 		private uint num_y_points;
-		public uint NumyPoints { get { return num_y_points; } set { num_y_points = value; } }
 		private uint[] point_y_value;
-		public uint[] PointyValue { get { return point_y_value; } set { point_y_value = value; } }
 		private uint[] point_y_scaling;
-		public uint[] PointyScaling { get { return point_y_scaling; } set { point_y_scaling = value; } }
-		private uint chroma_scaling_from_luma;
-		public uint ChromaScalingFromLuma { get { return chroma_scaling_from_luma; } set { chroma_scaling_from_luma = value; } }
-		private uint num_cb_points;
-		public uint NumCbPoints { get { return num_cb_points; } set { num_cb_points = value; } }
+		private int chroma_scaling_from_luma;
+		private int num_cb_points;
+		private int num_cr_points;
 		private uint[] point_cb_value;
-		public uint[] PointCbValue { get { return point_cb_value; } set { point_cb_value = value; } }
 		private uint[] point_cb_scaling;
-		public uint[] PointCbScaling { get { return point_cb_scaling; } set { point_cb_scaling = value; } }
-		private uint num_cr_points;
-		public uint NumCrPoints { get { return num_cr_points; } set { num_cr_points = value; } }
 		private uint[] point_cr_value;
-		public uint[] PointCrValue { get { return point_cr_value; } set { point_cr_value = value; } }
 		private uint[] point_cr_scaling;
-		public uint[] PointCrScaling { get { return point_cr_scaling; } set { point_cr_scaling = value; } }
 		private uint grain_scaling_minus_8;
-		public uint GrainScalingMinus8 { get { return grain_scaling_minus_8; } set { grain_scaling_minus_8 = value; } }
 		private uint ar_coeff_lag;
-		public uint ArCoeffLag { get { return ar_coeff_lag; } set { ar_coeff_lag = value; } }
+		private int numPosLuma;
+		private int numPosChroma;
 		private uint[] ar_coeffs_y_plus_128;
-		public uint[] ArCoeffsyPlus128 { get { return ar_coeffs_y_plus_128; } set { ar_coeffs_y_plus_128 = value; } }
 		private uint[] ar_coeffs_cb_plus_128;
-		public uint[] ArCoeffsCbPlus128 { get { return ar_coeffs_cb_plus_128; } set { ar_coeffs_cb_plus_128 = value; } }
 		private uint[] ar_coeffs_cr_plus_128;
-		public uint[] ArCoeffsCrPlus128 { get { return ar_coeffs_cr_plus_128; } set { ar_coeffs_cr_plus_128 = value; } }
 		private uint ar_coeff_shift_minus_6;
-		public uint ArCoeffShiftMinus6 { get { return ar_coeff_shift_minus_6; } set { ar_coeff_shift_minus_6 = value; } }
 		private uint grain_scale_shift;
-		public uint GrainScaleShift { get { return grain_scale_shift; } set { grain_scale_shift = value; } }
 		private uint cb_mult;
-		public uint CbMult { get { return cb_mult; } set { cb_mult = value; } }
 		private uint cb_luma_mult;
-		public uint CbLumaMult { get { return cb_luma_mult; } set { cb_luma_mult = value; } }
 		private uint cb_offset;
-		public uint CbOffset { get { return cb_offset; } set { cb_offset = value; } }
 		private uint cr_mult;
-		public uint CrMult { get { return cr_mult; } set { cr_mult = value; } }
 		private uint cr_luma_mult;
-		public uint CrLumaMult { get { return cr_luma_mult; } set { cr_luma_mult = value; } }
 		private uint cr_offset;
-		public uint CrOffset { get { return cr_offset; } set { cr_offset = value; } }
 		private uint overlap_flag;
-		public uint OverlapFlag { get { return overlap_flag; } set { overlap_flag = value; } }
 		private uint clip_to_restricted_range;
-		public uint ClipToRestrictedRange { get { return clip_to_restricted_range; } set { clip_to_restricted_range = value; } }
 
-			uint i = 0;
          public void ReadFilmGrainParams()
          {
 
@@ -5339,14 +5233,14 @@ read_global_param( type, refc, idx ) {
  (show_frame == 0 && showable_frame== 0) )
 			{
 				ReadResetGrainParams(); 
-return;
+				return;
 			}
 			stream.ReadFixed(1, out this.apply_grain, "apply_grain"); 
 
 			if ( apply_grain== 0 )
 			{
 				ReadResetGrainParams(); 
-return;
+				return;
 			}
 			stream.ReadFixed(16, out this.grain_seed, "grain_seed"); 
 
@@ -5365,12 +5259,10 @@ return;
 				tempGrainSeed= grain_seed;
 				ReadLoadGrainParams( film_grain_params_ref_idx ); 
 				grain_seed= tempGrainSeed;
-return;
+				return;
 			}
 			stream.ReadFixed(4, out this.num_y_points, "num_y_points"); 
 
-			this.point_y_value = new uint[ num_y_points];
-			this.point_y_scaling = new uint[ num_y_points];
 			for ( i = 0; i < num_y_points; i++ )
 			{
 				stream.ReadFixed(8, out this.point_y_value[ i ], "point_y_value"); 
@@ -5398,8 +5290,6 @@ return;
 			{
 				stream.ReadFixed(4, out this.num_cb_points, "num_cb_points"); 
 
-				this.point_cb_value = new uint[ num_cb_points];
-				this.point_cb_scaling = new uint[ num_cb_points];
 				for ( i = 0; i < num_cb_points; i++ )
 				{
 					stream.ReadFixed(8, out this.point_cb_value[ i ], "point_cb_value"); 
@@ -5407,8 +5297,6 @@ return;
 				}
 				stream.ReadFixed(4, out this.num_cr_points, "num_cr_points"); 
 
-				this.point_cr_value = new uint[ num_cr_points];
-				this.point_cr_scaling = new uint[ num_cr_points];
 				for ( i = 0; i < num_cr_points; i++ )
 				{
 					stream.ReadFixed(8, out this.point_cr_value[ i ], "point_cr_value"); 
@@ -5417,13 +5305,12 @@ return;
 			}
 			stream.ReadFixed(2, out this.grain_scaling_minus_8, "grain_scaling_minus_8"); 
 			stream.ReadFixed(2, out this.ar_coeff_lag, "ar_coeff_lag"); 
-			uint numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
+			numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
 
 			if ( num_y_points != 0 )
 			{
 				numPosChroma= numPosLuma + 1;
 
-				this.ar_coeffs_y_plus_128 = new uint[ numPosLuma];
 				for ( i = 0; i < numPosLuma; i++ )
 				{
 					stream.ReadFixed(8, out this.ar_coeffs_y_plus_128[ i ], "ar_coeffs_y_plus_128"); 
@@ -5437,7 +5324,6 @@ return;
 			if ( chroma_scaling_from_luma != 0 || num_cb_points != 0 )
 			{
 
-				this.ar_coeffs_cb_plus_128 = new uint[ numPosChroma];
 				for ( i = 0; i < numPosChroma; i++ )
 				{
 					stream.ReadFixed(8, out this.ar_coeffs_cb_plus_128[ i ], "ar_coeffs_cb_plus_128"); 
@@ -5447,7 +5333,6 @@ return;
 			if ( chroma_scaling_from_luma != 0 || num_cr_points != 0 )
 			{
 
-				this.ar_coeffs_cr_plus_128 = new uint[ numPosChroma];
 				for ( i = 0; i < numPosChroma; i++ )
 				{
 					stream.ReadFixed(8, out this.ar_coeffs_cr_plus_128[ i ], "ar_coeffs_cr_plus_128"); 
@@ -5481,14 +5366,14 @@ return;
  (show_frame == 0 && showable_frame== 0) )
 			{
 				WriteResetGrainParams(); 
-return;
+				return;
 			}
 			stream.WriteFixed(1, this.apply_grain, "apply_grain"); 
 
 			if ( apply_grain== 0 )
 			{
 				WriteResetGrainParams(); 
-return;
+				return;
 			}
 			stream.WriteFixed(16, this.grain_seed, "grain_seed"); 
 
@@ -5507,7 +5392,7 @@ return;
 				tempGrainSeed= grain_seed;
 				WriteLoadGrainParams( film_grain_params_ref_idx ); 
 				grain_seed= tempGrainSeed;
-return;
+				return;
 			}
 			stream.WriteFixed(4, this.num_y_points, "num_y_points"); 
 
@@ -5553,7 +5438,7 @@ return;
 			}
 			stream.WriteFixed(2, this.grain_scaling_minus_8, "grain_scaling_minus_8"); 
 			stream.WriteFixed(2, this.ar_coeff_lag, "ar_coeff_lag"); 
-			uint numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
+			numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
 
 			if ( num_y_points != 0 )
 			{
@@ -5625,9 +5510,8 @@ superres_params() {
  }
     */
 		private uint use_superres;
-		public uint UseSuperres { get { return use_superres; } set { use_superres = value; } }
 		private uint coded_denom;
-		public uint CodedDenom { get { return coded_denom; } set { coded_denom = value; } }
+		private int SuperresDenom;
 
          public void ReadSuperresParams()
          {
@@ -5651,8 +5535,8 @@ superres_params() {
 			{
 				SuperresDenom= SUPERRES_NUM;
 			}
-			uint UpscaledWidth= FrameWidth;
-			uint FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
+			UpscaledWidth= FrameWidth;
+			FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
          }
 
          public void WriteSuperresParams()
@@ -5677,8 +5561,8 @@ superres_params() {
 			{
 				SuperresDenom= SUPERRES_NUM;
 			}
-			uint UpscaledWidth= FrameWidth;
-			uint FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
+			UpscaledWidth= FrameWidth;
+			FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
          }
 
     /*
@@ -5689,19 +5573,21 @@ superres_params() {
  MiRows = 2 * ( ( FrameHeight + 7 ) >> 3 )
  }
     */
+		private int MiCols;
+		private int MiRows;
 
          public void ReadComputeImageSize()
          {
 
-			uint MiCols= 2 * ( ( FrameWidth + 7 ) >> 3 );
-			uint MiRows= 2 * ( ( FrameHeight + 7 ) >> 3 );
+			MiCols= 2 * ( ( FrameWidth + 7 ) >> (int)3 );
+			MiRows= 2 * ( ( FrameHeight + 7 ) >> (int)3 );
          }
 
          public void WriteComputeImageSize()
          {
 
-			uint MiCols= 2 * ( ( FrameWidth + 7 ) >> 3 );
-			uint MiRows= 2 * ( ( FrameHeight + 7 ) >> 3 );
+			MiCols= 2 * ( ( FrameWidth + 7 ) >> (int)3 );
+			MiRows= 2 * ( ( FrameHeight + 7 ) >> (int)3 );
          }
 
     /*
@@ -5713,24 +5599,21 @@ superres_params() {
 }
     */
 		private uint low;
-		public uint Low { get { return low; } set { low = value; } }
 		private uint high;
-		public uint High { get { return high; } set { high = value; } }
-		private uint r;
-		public uint r { get { return r; } set { r = value; } }
+		private int x;
 
          public void ReadDecodeSignedSubexpWithRef(uint low, uint high, uint r)
          {
 
-			uint x= decode_unsigned_subexp_with_ref(high - low, r - low);
-return x + low;
+			x= decode_unsigned_subexp_with_ref(high - low, r - low);
+			return x + low;
          }
 
          public void WriteDecodeSignedSubexpWithRef(uint low, uint high, uint r)
          {
 
-			uint x= decode_unsigned_subexp_with_ref(high - low, r - low);
-return x + low;
+			x= decode_unsigned_subexp_with_ref(high - low, r - low);
+			return x + low;
          }
 
     /*
@@ -5745,38 +5628,35 @@ decode_unsigned_subexp_with_ref( mx, r ) {
  }
  }
     */
-		private uint mx;
-		public uint Mx { get { return mx; } set { mx = value; } }
-		private uint r;
-		public uint r { get { return r; } set { r = value; } }
+		private int v;
 
          public void ReadDecodeUnsignedSubexpWithRef(uint mx, uint r)
          {
 
-			uint v= decode_subexp( mx );
+			v= decode_subexp( mx );
 
 			if ( (r << (int) 1) <= mx )
 			{
-return inverse_recenter(r, v);
+				return inverse_recenter(r, v);
 			}
 			else 
 			{
-return mx - 1 - inverse_recenter(mx - 1 - r, v);
+				return mx - 1 - inverse_recenter(mx - 1 - r, v);
 			}
          }
 
          public void WriteDecodeUnsignedSubexpWithRef(uint mx, uint r)
          {
 
-			uint v= decode_subexp( mx );
+			v= decode_subexp( mx );
 
 			if ( (r << (int) 1) <= mx )
 			{
-return inverse_recenter(r, v);
+				return inverse_recenter(r, v);
 			}
 			else 
 			{
-return mx - 1 - inverse_recenter(mx - 1 - r, v);
+				return mx - 1 - inverse_recenter(mx - 1 - r, v);
 			}
          }
 
@@ -5807,39 +5687,34 @@ decode_subexp( numSyms ) {
  }
     */
 		private uint numSyms;
-		public uint NumSyms { get { return numSyms; } set { numSyms = value; } }
-		private Dictionary<int, uint> subexp_final_bits = new Dictionary<int, uint>();
-		public Dictionary<int, uint> SubexpFinalBits { get { return subexp_final_bits; } set { subexp_final_bits = value; } }
-		private Dictionary<int, uint> subexp_more_bits = new Dictionary<int, uint>();
-		public Dictionary<int, uint> SubexpMoreBits { get { return subexp_more_bits; } set { subexp_more_bits = value; } }
-		private Dictionary<int, uint> subexp_bits = new Dictionary<int, uint>();
-		public Dictionary<int, uint> SubexpBits { get { return subexp_bits; } set { subexp_bits = value; } }
+		private int mk;
+		private int b2;
+		private uint subexp_final_bits;
+		private uint subexp_more_bits;
+		private uint subexp_bits;
 
-			int whileIndex = -1;
          public void ReadDecodeSubexp(uint numSyms)
          {
 
-			uint i= 0;
-			uint mk= 0;
-			uint k= 3;
+			i= 0;
+			mk= 0;
+			k= 3;
 
 			while ( 1 != 0 )
 			{
-				whileIndex++;
-
 				b2= i ? k + i - 1 : k;
 				a= 1 << b2;
 
 				if ( numSyms <= mk + 3 * a )
 				{
 					stream.ReadUnsignedInt(numSyms - mk, out this.subexp_final_bits, "subexp_final_bits"); 
-return subexp_final_bits + mk;
+					return subexp_final_bits + mk;
 				}
 				else 
 				{
 					stream.ReadFixed(1, out this.subexp_more_bits, "subexp_more_bits"); 
 
-					if ( subexp_more_bits[whileIndex] != 0 )
+					if ( subexp_more_bits != 0 )
 					{
 						i++;
 						mk+= a;
@@ -5847,7 +5722,7 @@ return subexp_final_bits + mk;
 					else 
 					{
 						stream.ReadVariable(b2, out this.subexp_bits, "subexp_bits"); 
-return subexp_bits + mk;
+						return subexp_bits + mk;
 					}
 				}
 			}
@@ -5856,27 +5731,25 @@ return subexp_bits + mk;
          public void WriteDecodeSubexp(uint numSyms)
          {
 
-			uint i= 0;
-			uint mk= 0;
-			uint k= 3;
+			i= 0;
+			mk= 0;
+			k= 3;
 
 			while ( 1 != 0 )
 			{
-				whileIndex++;
-
 				b2= i ? k + i - 1 : k;
 				a= 1 << b2;
 
 				if ( numSyms <= mk + 3 * a )
 				{
 					stream.WriteUnsignedInt(numSyms - mk, this.subexp_final_bits, "subexp_final_bits"); 
-return subexp_final_bits + mk;
+					return subexp_final_bits + mk;
 				}
 				else 
 				{
 					stream.WriteFixed(1, this.subexp_more_bits, "subexp_more_bits"); 
 
-					if ( subexp_more_bits[whileIndex] != 0 )
+					if ( subexp_more_bits != 0 )
 					{
 						i++;
 						mk+= a;
@@ -5884,7 +5757,7 @@ return subexp_final_bits + mk;
 					else 
 					{
 						stream.WriteVariable(b2, this.subexp_bits, "subexp_bits"); 
-return subexp_bits + mk;
+						return subexp_bits + mk;
 					}
 				}
 			}
@@ -5902,10 +5775,6 @@ inverse_recenter( r, v ) {
     return r + (v >> 1)
  }
     */
-		private uint r;
-		public uint r { get { return r; } set { r = value; } }
-		private uint v;
-		public uint v { get { return v; } set { v = value; } }
 
          public void ReadInverseRecenter(uint r, uint v)
          {
@@ -5913,15 +5782,15 @@ inverse_recenter( r, v ) {
 
 			if ( v > 2 * r )
 			{
-return v;
+				return v;
 			}
 			else if ( v & 1 != 0 )
 			{
-return r - ((v + 1) >> 1);
+				return r - ((v + 1) >> 1);
 			}
 			else 
 			{
-return r + (v >> 1);
+				return r + (v >> 1);
 			}
          }
 
@@ -5931,15 +5800,15 @@ return r + (v >> 1);
 
 			if ( v > 2 * r )
 			{
-return v;
+				return v;
 			}
 			else if ( v & 1 != 0 )
 			{
-return r - ((v + 1) >> 1);
+				return r - ((v + 1) >> 1);
 			}
 			else 
 			{
-return r + (v >> 1);
+				return r + (v >> 1);
 			}
          }
 
@@ -5954,13 +5823,13 @@ temporal_delimiter_obu() {
          public void ReadTemporalDelimiterObu()
          {
 
-			uint SeenFrameHeader= 0;
+			SeenFrameHeader= 0;
          }
 
          public void WriteTemporalDelimiterObu()
          {
 
-			uint SeenFrameHeader= 0;
+			SeenFrameHeader= 0;
          }
 
     /*
@@ -5971,18 +5840,15 @@ padding_obu() {
  obu_padding_byte f(8)
 }
     */
-		private uint[] obu_padding_byte;
-		public uint[] ObuPaddingByte { get { return obu_padding_byte; } set { obu_padding_byte = value; } }
+		private uint obu_padding_byte;
 
-			uint i = 0;
          public void ReadPaddingObu()
          {
 
 
-			this.obu_padding_byte = new uint[ obu_padding_length];
 			for ( i = 0; i < obu_padding_length; i++ )
 			{
-				stream.ReadFixed(8, out this.obu_padding_byte[ i ], "obu_padding_byte"); 
+				stream.ReadFixed(8, out this.obu_padding_byte, "obu_padding_byte"); 
 			}
          }
 
@@ -5992,7 +5858,7 @@ padding_obu() {
 
 			for ( i = 0; i < obu_padding_length; i++ )
 			{
-				stream.WriteFixed(8, this.obu_padding_byte[ i ], "obu_padding_byte"); 
+				stream.WriteFixed(8, this.obu_padding_byte, "obu_padding_byte"); 
 			}
          }
 
@@ -6014,7 +5880,11 @@ metadata_obu() {
  }
     */
 		private uint metadata_type;
-		public uint MetadataType { get { return metadata_type; } set { metadata_type = value; } }
+		private int metadata_itut_t35;
+		private int metadata_hdr_cll;
+		private int metadata_hdr_mdcv;
+		private int metadata_scalability;
+		private int metadata_timecode;
 
          public void ReadMetadataObu()
          {
@@ -6083,9 +5953,8 @@ metadata_itut_t35() {
 }
     */
 		private uint itu_t_t35_country_code;
-		public uint ItutT35CountryCode { get { return itu_t_t35_country_code; } set { itu_t_t35_country_code = value; } }
 		private uint itu_t_t35_country_code_extension_byte;
-		public uint ItutT35CountryCodeExtensionByte { get { return itu_t_t35_country_code_extension_byte; } set { itu_t_t35_country_code_extension_byte = value; } }
+		private int itu_t_t35_payload_bytes;
 
          public void ReadMetadataItutT35()
          {
@@ -6121,9 +5990,7 @@ metadata_hdr_cll() {
 }
     */
 		private uint max_cll;
-		public uint MaxCll { get { return max_cll; } set { max_cll = value; } }
 		private uint max_fall;
-		public uint MaxFall { get { return max_fall; } set { max_fall = value; } }
 
          public void ReadMetadataHdrCll()
          {
@@ -6155,25 +6022,16 @@ metadata_hdr_mdcv() {
 }
     */
 		private uint[] primary_chromaticity_x;
-		public uint[] PrimaryChromaticityx { get { return primary_chromaticity_x; } set { primary_chromaticity_x = value; } }
 		private uint[] primary_chromaticity_y;
-		public uint[] PrimaryChromaticityy { get { return primary_chromaticity_y; } set { primary_chromaticity_y = value; } }
 		private uint white_point_chromaticity_x;
-		public uint WhitePointChromaticityx { get { return white_point_chromaticity_x; } set { white_point_chromaticity_x = value; } }
 		private uint white_point_chromaticity_y;
-		public uint WhitePointChromaticityy { get { return white_point_chromaticity_y; } set { white_point_chromaticity_y = value; } }
 		private uint luminance_max;
-		public uint LuminanceMax { get { return luminance_max; } set { luminance_max = value; } }
 		private uint luminance_min;
-		public uint LuminanceMin { get { return luminance_min; } set { luminance_min = value; } }
 
-			uint i = 0;
          public void ReadMetadataHdrMdcv()
          {
 
 
-			this.primary_chromaticity_x = new uint[ 3];
-			this.primary_chromaticity_y = new uint[ 3];
 			for ( i = 0; i < 3; i++ )
 			{
 				stream.ReadFixed(16, out this.primary_chromaticity_x[ i ], "primary_chromaticity_x"); 
@@ -6211,7 +6069,7 @@ metadata_scalability() {
 }
     */
 		private uint scalability_mode_idc;
-		public uint ScalabilityModeIdc { get { return scalability_mode_idc; } set { scalability_mode_idc = value; } }
+		private int scalability_structure;
 
          public void ReadMetadataScalability()
          {
@@ -6270,36 +6128,20 @@ scalability_structure() {
  }
     */
 		private uint spatial_layers_cnt_minus_1;
-		public uint SpatialLayersCntMinus1 { get { return spatial_layers_cnt_minus_1; } set { spatial_layers_cnt_minus_1 = value; } }
 		private uint spatial_layer_dimensions_present_flag;
-		public uint SpatialLayerDimensionsPresentFlag { get { return spatial_layer_dimensions_present_flag; } set { spatial_layer_dimensions_present_flag = value; } }
 		private uint spatial_layer_description_present_flag;
-		public uint SpatialLayerDescriptionPresentFlag { get { return spatial_layer_description_present_flag; } set { spatial_layer_description_present_flag = value; } }
 		private uint temporal_group_description_present_flag;
-		public uint TemporalGroupDescriptionPresentFlag { get { return temporal_group_description_present_flag; } set { temporal_group_description_present_flag = value; } }
 		private uint scalability_structure_reserved_3bits;
-		public uint ScalabilityStructureReserved3bits { get { return scalability_structure_reserved_3bits; } set { scalability_structure_reserved_3bits = value; } }
 		private uint[] spatial_layer_max_width;
-		public uint[] SpatialLayerMaxWidth { get { return spatial_layer_max_width; } set { spatial_layer_max_width = value; } }
 		private uint[] spatial_layer_max_height;
-		public uint[] SpatialLayerMaxHeight { get { return spatial_layer_max_height; } set { spatial_layer_max_height = value; } }
 		private uint[] spatial_layer_ref_id;
-		public uint[] SpatialLayerRefId { get { return spatial_layer_ref_id; } set { spatial_layer_ref_id = value; } }
 		private uint temporal_group_size;
-		public uint TemporalGroupSize { get { return temporal_group_size; } set { temporal_group_size = value; } }
 		private uint[] temporal_group_temporal_id;
-		public uint[] TemporalGroupTemporalId { get { return temporal_group_temporal_id; } set { temporal_group_temporal_id = value; } }
 		private uint[] temporal_group_temporal_switching_up_point_flag;
-		public uint[] TemporalGroupTemporalSwitchingUpPointFlag { get { return temporal_group_temporal_switching_up_point_flag; } set { temporal_group_temporal_switching_up_point_flag = value; } }
 		private uint[] temporal_group_spatial_switching_up_point_flag;
-		public uint[] TemporalGroupSpatialSwitchingUpPointFlag { get { return temporal_group_spatial_switching_up_point_flag; } set { temporal_group_spatial_switching_up_point_flag = value; } }
 		private uint[] temporal_group_ref_cnt;
-		public uint[] TemporalGroupRefCnt { get { return temporal_group_ref_cnt; } set { temporal_group_ref_cnt = value; } }
 		private uint[][] temporal_group_ref_pic_diff;
-		public uint[][] TemporalGroupRefPicDiff { get { return temporal_group_ref_pic_diff; } set { temporal_group_ref_pic_diff = value; } }
 
-			uint i = 0;
-			uint j = 0;
          public void ReadScalabilityStructure()
          {
 
@@ -6312,8 +6154,6 @@ scalability_structure() {
 			if ( spatial_layer_dimensions_present_flag != 0 )
 			{
 
-				this.spatial_layer_max_width = new uint[ spatial_layers_cnt_minus_1 ];
-				this.spatial_layer_max_height = new uint[ spatial_layers_cnt_minus_1 ];
 				for ( i = 0; i <= spatial_layers_cnt_minus_1 ; i++ )
 				{
 					stream.ReadFixed(16, out this.spatial_layer_max_width[ i ], "spatial_layer_max_width"); 
@@ -6324,7 +6164,6 @@ scalability_structure() {
 			if ( spatial_layer_description_present_flag != 0 )
 			{
 
-				this.spatial_layer_ref_id = new uint[ spatial_layers_cnt_minus_1];
 				for ( i = 0; i <= spatial_layers_cnt_minus_1; i++ )
 				{
 					stream.ReadFixed(8, out this.spatial_layer_ref_id[ i ], "spatial_layer_ref_id"); 
@@ -6335,11 +6174,6 @@ scalability_structure() {
 			{
 				stream.ReadFixed(8, out this.temporal_group_size, "temporal_group_size"); 
 
-				this.temporal_group_temporal_id = new uint[ temporal_group_size];
-				this.temporal_group_temporal_switching_up_point_flag = new uint[ temporal_group_size];
-				this.temporal_group_spatial_switching_up_point_flag = new uint[ temporal_group_size];
-				this.temporal_group_ref_cnt = new uint[ temporal_group_size];
-				this.temporal_group_ref_pic_diff = new uint[ temporal_group_size][];
 				for ( i = 0; i < temporal_group_size; i++ )
 				{
 					stream.ReadFixed(3, out this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
@@ -6347,7 +6181,6 @@ scalability_structure() {
 					stream.ReadFixed(1, out this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
 					stream.ReadFixed(3, out this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
 
-					this.temporal_group_ref_pic_diff[ i ] = new uint[ temporal_group_ref_cnt[ i ]];
 					for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ )
 					{
 						stream.ReadFixed(8, out this.temporal_group_ref_pic_diff[ i ][ j ], "temporal_group_ref_pic_diff"); 
@@ -6438,31 +6271,18 @@ metadata_timecode() {
  }
     */
 		private uint counting_type;
-		public uint CountingType { get { return counting_type; } set { counting_type = value; } }
 		private uint full_timestamp_flag;
-		public uint FullTimestampFlag { get { return full_timestamp_flag; } set { full_timestamp_flag = value; } }
 		private uint discontinuity_flag;
-		public uint DiscontinuityFlag { get { return discontinuity_flag; } set { discontinuity_flag = value; } }
 		private uint cnt_dropped_flag;
-		public uint CntDroppedFlag { get { return cnt_dropped_flag; } set { cnt_dropped_flag = value; } }
 		private uint n_frames;
-		public uint nFrames { get { return n_frames; } set { n_frames = value; } }
 		private uint seconds_value;
-		public uint SecondsValue { get { return seconds_value; } set { seconds_value = value; } }
 		private uint minutes_value;
-		public uint MinutesValue { get { return minutes_value; } set { minutes_value = value; } }
 		private uint hours_value;
-		public uint HoursValue { get { return hours_value; } set { hours_value = value; } }
 		private uint seconds_flag;
-		public uint SecondsFlag { get { return seconds_flag; } set { seconds_flag = value; } }
 		private uint minutes_flag;
-		public uint MinutesFlag { get { return minutes_flag; } set { minutes_flag = value; } }
 		private uint hours_flag;
-		public uint HoursFlag { get { return hours_flag; } set { hours_flag = value; } }
 		private uint time_offset_length;
-		public uint TimeOffsetLength { get { return time_offset_length; } set { time_offset_length = value; } }
 		private uint time_offset_value;
-		public uint TimeOffsetValue { get { return time_offset_value; } set { time_offset_value = value; } }
 
          public void ReadMetadataTimecode()
          {
@@ -6565,17 +6385,19 @@ metadata_timecode() {
  tile_group_obu( sz )
  }
     */
-		private uint sz;
-		public uint Sz { get { return sz; } set { sz = value; } }
+		private int startBitPos;
+		private int byte_alignment;
+		private int endBitPos;
+		private int headerBytes;
 
          public void ReadFrameObu(uint sz)
          {
 
-			uint startBitPos= stream.GetPosition();
+			startBitPos= stream.GetPosition();
 			ReadFrameHeaderObu(); 
 			ReadByteAlignment(); 
-			uint endBitPos= stream.GetPosition();
-			uint headerBytes= (endBitPos - startBitPos) / 8;
+			endBitPos= stream.GetPosition();
+			headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
 			ReadTileGroupObu( sz ); 
          }
@@ -6583,11 +6405,11 @@ metadata_timecode() {
          public void WriteFrameObu(uint sz)
          {
 
-			uint startBitPos= stream.GetPosition();
+			startBitPos= stream.GetPosition();
 			WriteFrameHeaderObu(); 
 			WriteByteAlignment(); 
-			uint endBitPos= stream.GetPosition();
-			uint headerBytes= (endBitPos - startBitPos) / 8;
+			endBitPos= stream.GetPosition();
+			headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
 			WriteTileGroupObu( sz ); 
          }
@@ -6642,23 +6464,31 @@ metadata_timecode() {
  }
  }
     */
-		private uint sz;
-		public uint Sz { get { return sz; } set { sz = value; } }
-		private uint tile_start_and_end_present_flag;
-		public uint TileStartAndEndPresentFlag { get { return tile_start_and_end_present_flag; } set { tile_start_and_end_present_flag = value; } }
-		private uint tg_start;
-		public uint TgStart { get { return tg_start; } set { tg_start = value; } }
-		private uint tg_end;
-		public uint TgEnd { get { return tg_end; } set { tg_end = value; } }
-		private uint[] tile_size_minus_1;
-		public uint[] TileSizeMinus1 { get { return tile_size_minus_1; } set { tile_size_minus_1 = value; } }
+		private int NumTiles;
+		private int tile_start_and_end_present_flag;
+		private int tg_start;
+		private int tg_end;
+		private int tileBits;
+		private int tileRow;
+		private int tileCol;
+		private int lastTile;
+		private int tileSize;
+		private uint tile_size_minus_1;
+		private int MiRowStart;
+		private int MiRowEnd;
+		private int MiColStart;
+		private int MiColEnd;
+		private int CurrentQIndex;
+		private int init_symbol;
+		private int decode_tile;
+		private int exit_symbol;
+		private int frame_end_update_cdf;
 
-			uint TileNum = 0;
          public void ReadTileGroupObu(uint sz)
          {
 
-			uint NumTiles= TileCols * TileRows;
-			uint startBitPos= stream.GetPosition();
+			NumTiles= TileCols * TileRows;
+			startBitPos= stream.GetPosition();
 			tile_start_and_end_present_flag= 0;
 
 			if ( NumTiles > 1 )
@@ -6678,11 +6508,10 @@ metadata_timecode() {
 				stream.ReadVariable(tileBits, out this.tg_end, "tg_end"); 
 			}
 			ReadByteAlignment(); 
-			uint endBitPos= stream.GetPosition();
-			uint headerBytes= (endBitPos - startBitPos) / 8;
+			endBitPos= stream.GetPosition();
+			headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
 
-			this.tile_size_minus_1 = new uint[ tg_end];
 			for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ )
 			{
 				tileRow= TileNum / TileCols;
@@ -6695,8 +6524,8 @@ metadata_timecode() {
 				}
 				else 
 				{
-					stream.ReadLeVar(TileSizeBytes, out this.tile_size_minus_1[ TileNum ], "tile_size_minus_1"); 
-					tileSize= tile_size_minus_1[TileNum] + 1;
+					stream.ReadLeVar(TileSizeBytes, out this.tile_size_minus_1, "tile_size_minus_1"); 
+					tileSize= tile_size_minus_1 + 1;
 					sz-= tileSize + TileSizeBytes;
 				}
 				MiRowStart= MiRowStarts[ tileRow ];
@@ -6724,8 +6553,8 @@ metadata_timecode() {
          public void WriteTileGroupObu(uint sz)
          {
 
-			uint NumTiles= TileCols * TileRows;
-			uint startBitPos= stream.GetPosition();
+			NumTiles= TileCols * TileRows;
+			startBitPos= stream.GetPosition();
 			tile_start_and_end_present_flag= 0;
 
 			if ( NumTiles > 1 )
@@ -6745,8 +6574,8 @@ metadata_timecode() {
 				stream.WriteVariable(tileBits, this.tg_end, "tg_end"); 
 			}
 			WriteByteAlignment(); 
-			uint endBitPos= stream.GetPosition();
-			uint headerBytes= (endBitPos - startBitPos) / 8;
+			endBitPos= stream.GetPosition();
+			headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
 
 			for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ )
@@ -6761,8 +6590,8 @@ metadata_timecode() {
 				}
 				else 
 				{
-					stream.WriteLeVar(TileSizeBytes,  this.tile_size_minus_1[ TileNum ], "tile_size_minus_1"); 
-					tileSize= tile_size_minus_1[TileNum] + 1;
+					stream.WriteLeVar(TileSizeBytes,  this.tile_size_minus_1, "tile_size_minus_1"); 
+					tileSize= tile_size_minus_1 + 1;
 					sz-= tileSize + TileSizeBytes;
 				}
 				MiRowStart= MiRowStarts[ tileRow ];
@@ -6799,11 +6628,9 @@ metadata_timecode() {
  }
     */
 		private uint output_frame_width_in_tiles_minus_1;
-		public uint OutputFrameWidthInTilesMinus1 { get { return output_frame_width_in_tiles_minus_1; } set { output_frame_width_in_tiles_minus_1 = value; } }
 		private uint output_frame_height_in_tiles_minus_1;
-		public uint OutputFrameHeightInTilesMinus1 { get { return output_frame_height_in_tiles_minus_1; } set { output_frame_height_in_tiles_minus_1 = value; } }
 		private uint tile_count_minus_1;
-		public uint TileCountMinus1 { get { return tile_count_minus_1; } set { tile_count_minus_1 = value; } }
+		private int tile_list_entry;
 
 			uint tile = 0;
          public void ReadTileListObu()
@@ -6846,15 +6673,11 @@ tile_list_entry() {
  }
     */
 		private uint anchor_frame_idx;
-		public uint AnchorFrameIdx { get { return anchor_frame_idx; } set { anchor_frame_idx = value; } }
 		private uint anchor_tile_row;
-		public uint AnchorTileRow { get { return anchor_tile_row; } set { anchor_tile_row = value; } }
 		private uint anchor_tile_col;
-		public uint AnchorTileCol { get { return anchor_tile_col; } set { anchor_tile_col = value; } }
 		private uint tile_data_size_minus_1;
-		public uint TileDataSizeMinus1 { get { return tile_data_size_minus_1; } set { tile_data_size_minus_1 = value; } }
+		private int N;
 		private uint coded_tile_data;
-		public uint CodedTileData { get { return coded_tile_data; } set { coded_tile_data = value; } }
 
          public void ReadTileListEntry()
          {
@@ -6863,7 +6686,7 @@ tile_list_entry() {
 			stream.ReadFixed(8, out this.anchor_tile_row, "anchor_tile_row"); 
 			stream.ReadFixed(8, out this.anchor_tile_col, "anchor_tile_col"); 
 			stream.ReadFixed(16, out this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
-			uint N= 8 * (tile_data_size_minus_1 + 1);
+			N= 8 * (tile_data_size_minus_1 + 1);
 			stream.ReadVariable(N, out this.coded_tile_data, "coded_tile_data"); 
          }
 
@@ -6874,7 +6697,7 @@ tile_list_entry() {
 			stream.WriteFixed(8, this.anchor_tile_row, "anchor_tile_row"); 
 			stream.WriteFixed(8, this.anchor_tile_col, "anchor_tile_col"); 
 			stream.WriteFixed(16, this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
-			uint N= 8 * (tile_data_size_minus_1 + 1);
+			N= 8 * (tile_data_size_minus_1 + 1);
 			stream.WriteVariable(N, this.coded_tile_data, "coded_tile_data"); 
          }
 

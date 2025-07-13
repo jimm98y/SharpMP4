@@ -64,7 +64,17 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
+        public ulong ReadFixed(int length, out int value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public ulong WriteFixed(int length, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteFixed(int length, int value, string name)
         {
             throw new NotImplementedException();
         }
@@ -150,7 +160,7 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        internal uint GetPosition()
+        public int GetPosition()
         {
             throw new NotImplementedException();
         }

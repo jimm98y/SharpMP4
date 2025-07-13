@@ -800,10 +800,10 @@ tile_log2( blkSize, target ) {
  bitsToRead = Segmentation_Feature_Bits[ j ]
  limit = Segmentation_Feature_Max[ j ]
  if ( Segmentation_Feature_Signed[ j ] == 1 ) {
- feature_value feature_value su(1+bitsToRead)
+ feature_value su(1+bitsToRead)
  clippedValue = Clip3( -limit, limit, feature_value)
  } else {
- feature_value feature_value f(bitsToRead)
+ feature_value f(bitsToRead)
  clippedValue = Clip3( 0, limit, feature_value)
  }
  }

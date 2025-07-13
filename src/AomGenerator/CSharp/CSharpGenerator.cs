@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace AomGenerator.CSharp
 {
@@ -34,6 +32,8 @@ namespace AomGenerator.CSharp
     {
         private ICustomGenerator specificGenerator = null;
 
+        private HashSet<string> _fields = new HashSet<string>();
+
         public CSharpGenerator(ICustomGenerator specificGenerator)
         {
             this.specificGenerator = specificGenerator ?? throw new ArgumentNullException(nameof(specificGenerator));
@@ -53,8 +53,8 @@ namespace Sharp{type}
     public partial class {type}Context : IAomContext
     {{
         AomStream stream = null;
-        private void ReadDropObu() {{ }};
-        private void WriteDropObu() {{ }};
+        private void ReadDropObu() {{ }}
+        private void WriteDropObu() {{ }}
 ";
 
             foreach (var ituClass in aomClasses)
@@ -81,7 +81,7 @@ namespace Sharp{type}
             resultCode += GenerateFields(aomClass);
 
 
-            string[] ctorParameters = GetCtorParameters(aomClass);
+            string[] ctorParameters = GetMethodParameters(aomClass);
             var typeMappings = GetCSharpTypeMapping();
             string[] ctorParameterDefs = ctorParameters.Select(x => $"{(typeMappings.ContainsKey(specificGenerator.GetCtorParameterType(x)) ? typeMappings[specificGenerator.GetCtorParameterType(x)] : "")} {x}").ToArray();
             string ituClassParameters = $"{string.Join(", ", ctorParameterDefs)}";
@@ -92,7 +92,6 @@ namespace Sharp{type}
          public void Read{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
          {{
 ";
-
             foreach (var field in aomClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(aomClass, null, field, 3, MethodType.Read);
@@ -117,7 +116,7 @@ namespace Sharp{type}
             return resultCode;
         }
 
-        private string[] GetCtorParameters(AomClass aomClass)
+        private string[] GetMethodParameters(AomClass aomClass)
         {
             var parameters = aomClass.ClassParameter.Substring(1, aomClass.ClassParameter.Length - 2).Split(',').Select(x => x.Trim()).ToArray();
             if (parameters.Length == 1 && string.IsNullOrEmpty(parameters[0]))
@@ -147,7 +146,7 @@ namespace Sharp{type}
             if (parent == null)
             {
                 // add also ctor params as fields
-                string[] ctorParams = GetCtorParameters(b);
+                string[] ctorParams = GetMethodParameters(b);
                 for (int i = 0; i < ctorParams.Length; i++)
                 {
                     var f = new AomField()
@@ -203,15 +202,6 @@ namespace Sharp{type}
                         }
                     }
 
-                    if (block.Type == "while")
-                    {
-                        if (b.RequiresDefinition.FirstOrDefault(x => x.Name == "whileIndex") == null)
-                        {
-                            var f = new AomField() { Name = "whileIndex", Type = "su(32)", Value = "= -1" };
-                            b.RequiresDefinition.Add(f);
-                        }
-                    }
-
                     var blockFields = FlattenFields(b, block.Content, block);
                     foreach (var blockField in blockFields)
                     {
@@ -256,11 +246,6 @@ namespace Sharp{type}
 
         private void AddAndResolveDuplicates(AomClass b, Dictionary<string, AomField> ret, AomField field)
         {
-            if (string.IsNullOrEmpty(field.Type))
-            {
-                return;
-            }
-
             string name = field.Name;
             if (!ret.TryAdd(name, field))
             {
@@ -296,12 +281,15 @@ namespace Sharp{type}
             field.Name = $"{name}{index}";
         }
 
-        private static string BuildRequiredVariables(AomClass aomClass)
+        private string BuildRequiredVariables(AomClass aomClass)
         {
             string resultCode = "";
 
             foreach (var v in aomClass.RequiresDefinition)
             {
+                if (!_fields.Add(v.Name))
+                    continue;
+
                 string type = GetCSharpTypeMapping()[v.Type];
                 if (string.IsNullOrEmpty(v.FieldArray))
                 {
@@ -374,40 +362,20 @@ namespace Sharp{type}
             string defaultInitializer = specificGenerator.GetFieldDefaultValue(field);
             string initializer = string.IsNullOrEmpty(defaultInitializer) ? "" : $"= {defaultInitializer}";
 
-            if (field.MakeList)
-            {
-                type = $"Dictionary<int, {type}>";
-                initializer = $" = new {type}()";
-            }
-            else
-            {
-
-                int nestingLevel = GetLoopNestingLevel(field);
-                if (nestingLevel > 0)
-                {
-                    nestingLevel = GetNestedInLoopSuffix(field, field.FieldArray, out _);
-
-                    AddRequiresAllocation(field);
-
-                    if (nestingLevel > 0)
-                    {
-                        // change the type
-                        for (int i = 0; i < nestingLevel; i++)
-                        {
-                            type += "[]";
-                            initializer = "";
-                        }
-                    }
-                }
-            }
-
             string propertyName = field.Name.ToPropertyCase();
             if (propertyName == ituClass.ClassName.ToPropertyCase())
             {
                 propertyName = $"_{propertyName}";
             }
 
-            return $"\t\tprivate {type} {field.Name.ToFirstLower()}{initializer};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
+            if (_fields.Add(field.Name))
+            {
+                return $"\t\tprivate {type} {field.Name}{initializer};\r\n";
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public void AddRequiresAllocation(AomField field)
@@ -449,42 +417,6 @@ namespace Sharp{type}
             return ret;
         }
 
-        private int GetNestedInLoopSuffix(AomCode code, string currentSuffix, out string result)
-        {
-            List<string> ret = new List<string>();
-            AomBlock parent = null;
-            var field = code as AomField;
-            if (field != null)
-                parent = field.Parent;
-            var block = code as AomBlock;
-            if (block != null)
-                parent = block.Parent;
-
-            while (parent != null)
-            {
-                if (parent.Type == "for")
-                {
-                    ret.Insert(0, $"[{parent.Condition.Substring(1, parent.Condition.Length - 2).Split(';').First().Split('=').First()}]");
-                }
-                else if (parent.Type == "while")
-                {
-                    ret.Insert(0, $"[whileIndex]");
-                }
-
-                parent = parent.Parent;
-            }
-
-            specificGenerator.FixNestedIndexes(ret, field);
-
-            foreach (var suffix in ret.ToArray())
-            {
-                if (!string.IsNullOrEmpty(currentSuffix) && currentSuffix.Replace(" ", "").Replace("-2", "").Contains(suffix.Replace(" ", "")))
-                    ret.Remove(suffix);
-            }
-
-            result = string.Concat(ret);
-            return ret.Count;
-        }
         private string GetSpacing(int level)
         {
             string ret = "";
@@ -534,7 +466,7 @@ namespace Sharp{type}
             var brk = field as AomBreak;
             if (brk != null)
             {
-                return "break;";
+                return $"{GetSpacing(level)}break;";
             }
 
             if ((field as AomField).Type == null && (!string.IsNullOrWhiteSpace((field as AomField).Value) || !string.IsNullOrWhiteSpace((field as AomField).Increment)))
@@ -551,20 +483,6 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty((field as AomField)?.Comment))
             {
                 fieldComment = "//" + (field as AomField).Comment;
-            }
-
-            if (GetLoopNestingLevel(field) > 0)
-            {
-                if (!(field as AomField).MakeList)
-                {
-                    string suffix;
-                    GetNestedInLoopSuffix(field, typedef, out suffix);
-                    typedef += suffix;
-
-                    m = FixNestedInLoopVariables(field, m, "(", ",");
-                    m = FixNestedInLoopVariables(field, m, ")", ","); // when casting
-                    m = FixNestedInLoopVariables(field, m, "", " ");
-                }
             }
 
             string retm = "";
@@ -592,7 +510,7 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(retrn.Parameter))
                 p = retrn.Parameter;
 
-            return "return" + p + ";";
+            return $"{GetSpacing(level)}return" + p + ";";
         }
 
         private string BuildStatement(AomClass b, AomBlock parent, AomField field, int level, MethodType methodType)
@@ -621,7 +539,6 @@ namespace Sharp{type}
                     fieldValue += " ? (uint)1 : (uint)0";
 
                 fieldValue = FixMissingFields(b, fieldValue);
-                fieldValue = FixNestedInLoopVariables(field, fieldValue);
             }
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
@@ -660,139 +577,6 @@ namespace Sharp{type}
             return condition;
         }
 
-        public string FixNestedInLoopVariables(AomCode code, string condition, string prefix = "", string suffix = "")
-        {
-            if (string.IsNullOrEmpty(condition))
-                return condition;
-
-            List<string> ret = new List<string>();
-            AomBlock parent = null;
-            var field = code as AomField;
-            if (field != null)
-                parent = field.Parent;
-            var block = code as AomBlock;
-            if (block != null)
-                parent = block.Parent;
-
-            while (parent != null)
-            {
-                if (parent.Type == "for")
-                {
-                    if (parent.Condition.Contains("i =") || parent.Condition.Contains("i=") || parent.Condition.Contains("i =") || parent.Condition.Contains("i++"))
-                        ret.Insert(0, "[i]");
-                    else if (parent.Condition.Contains("j =") || parent.Condition.Contains("j=") || parent.Condition.Contains("j ="))
-                        ret.Insert(0, "[j]");
-                    else if (parent.Condition.Contains("opNum =") || parent.Condition.Contains("opNum=") || parent.Condition.Contains("opNum ="))
-                        ret.Insert(0, "[opNum]");
-                    else if (parent.Condition.Contains("segmentId =") || parent.Condition.Contains("segmentId=") || parent.Condition.Contains("segmentId ="))
-                        ret.Insert(0, "[segmentId]");
-                    else if (parent.Condition.Contains("startSb =") || parent.Condition.Contains("startSb=") || parent.Condition.Contains("startSb ="))
-                        ret.Insert(0, "[startSb]");
-                    else if (parent.Condition.Contains("ref =") || parent.Condition.Contains("ref=") || parent.Condition.Contains("ref ="))
-                        ret.Insert(0, "[ref]");
-                    else if (parent.Condition.Contains("TileNum =") || parent.Condition.Contains("TileNum=") || parent.Condition.Contains("TileNum ="))
-                        ret.Insert(0, "[TileNum]");
-                    else if (parent.Condition.Contains("plane =") || parent.Condition.Contains("plane=") || parent.Condition.Contains("plane ="))
-                        ret.Insert(0, "[plane]");
-                    else if (parent.Condition.Contains("pass =") || parent.Condition.Contains("pass=") || parent.Condition.Contains("pass ="))
-                        ret.Insert(0, "[pass]");
-                    else if (parent.Condition.Contains("r =") || parent.Condition.Contains("r=") || parent.Condition.Contains("r ="))
-                        ret.Insert(0, "[r]");
-                    else if (parent.Condition.Contains("c =") || parent.Condition.Contains("c=") || parent.Condition.Contains("c ="))
-                        ret.Insert(0, "[c]");
-                    else if (parent.Condition.Contains("y =") || parent.Condition.Contains("y=") || parent.Condition.Contains("y ="))
-                        ret.Insert(0, "[y]");
-                    else if (parent.Condition.Contains("x =") || parent.Condition.Contains("x=") || parent.Condition.Contains("x ="))
-                        ret.Insert(0, "[x]");
-                    else if (parent.Condition.Contains("refList =") || parent.Condition.Contains("refList=") || parent.Condition.Contains("refList ="))
-                        ret.Insert(0, "[refList]");
-                    else if (parent.Condition.Contains("row =") || parent.Condition.Contains("row=") || parent.Condition.Contains("row ="))
-                        ret.Insert(0, "[row]");
-                    else if (parent.Condition.Contains("col =") || parent.Condition.Contains("col=") || parent.Condition.Contains("col ="))
-                        ret.Insert(0, "[col]");
-                    else if (parent.Condition.Contains("chunkY =") || parent.Condition.Contains("chunkY=") || parent.Condition.Contains("chunkY ="))
-                        ret.Insert(0, "[chunkY]");
-                    else if (parent.Condition.Contains("chunkX =") || parent.Condition.Contains("chunkX=") || parent.Condition.Contains("chunkX ="))
-                        ret.Insert(0, "[chunkX]");
-                    else if (parent.Condition.Contains("txSz =") || parent.Condition.Contains("txSz=") || parent.Condition.Contains("txSz ="))
-                        ret.Insert(0, "[txSz]");
-                    else if (parent.Condition.Contains("k =") || parent.Condition.Contains("k=") || parent.Condition.Contains("k ="))
-                        ret.Insert(0, "[k]");
-                    else if (parent.Condition.Contains("unitRow =") || parent.Condition.Contains("unitRow=") || parent.Condition.Contains("unitRow ="))
-                        ret.Insert(0, "[unitRow]");
-                    else if (parent.Condition.Contains("unitCol =") || parent.Condition.Contains("unitCol=") || parent.Condition.Contains("unitCol ="))
-                        ret.Insert(0, "[unitCol]");
-                    else if (parent.Condition.Contains("tile =") || parent.Condition.Contains("tile=") || parent.Condition.Contains("tile ="))
-                        ret.Insert(0, "[tile]");
-                    else
-                        throw new Exception();
-                }
-                else if (parent.Type == "while")
-                {
-                    ret.Insert(0, "[whileIndex]");
-                }
-
-                parent = parent.Parent;
-            }
-
-            if (block != null && (block.Type == "while"))
-            {
-                ret.Insert(0, "[whileIndex]");
-            }
-
-            if (field != null)
-                parent = field.Parent;
-            if (block != null)
-                parent = block.Parent;
-
-            int level = 0;
-            while (parent != null)
-            {
-                string str = string.Concat(ret.Skip(level));
-
-                if (parent.Type == "for")
-                {
-                    level++;
-                }
-                else if (parent.Type == "while")
-                {
-                    level++;
-                }
-
-                foreach (var f in parent.Content)
-                {
-                    if (f is AomField ff)
-                    {
-                        if (string.IsNullOrWhiteSpace(ff.Name) || !string.IsNullOrEmpty(ff.Value))
-                            continue;
-                        if (condition.Contains(prefix + ff.Name + suffix) && !condition.Contains(prefix + ff.Name + "["))
-                        {
-                            condition = condition.Replace(prefix + ff.Name + suffix, prefix + ff.Name + str + suffix);
-                        }
-                    }
-                    else if (f is AomBlock bb)
-                    {
-                        foreach (var fff in bb.Content)
-                        {
-                            if (fff is AomField ffff)
-                            {
-                                if (string.IsNullOrWhiteSpace(ffff.Name) || !string.IsNullOrEmpty(ffff.Value))
-                                    continue;
-                                if (condition.Contains(prefix + ffff.Name + suffix) && !condition.Contains(prefix + ffff.Name + "["))
-                                {
-                                    condition = condition.Replace(prefix + ffff.Name + suffix, prefix + ffff.Name + str + suffix);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                parent = parent.Parent;
-            }
-
-            return condition;
-        }
-
         private string BuildComment(AomClass b, AomComment comment, int level, MethodType methodType)
         {
             return $"/* {comment.Comment} */\r\n";
@@ -823,100 +607,9 @@ namespace Sharp{type}
                 condition = condition.Replace("<<", "<< (int)");
 
                 condition = FixMissingFields(b, condition);
-
-                int nestedLevel = GetLoopNestingLevel(block);
-                condition = FixNestedInLoopVariables(block, condition, "", ";");
-                condition = FixNestedInLoopVariables(block, condition, "", "=");
-                condition = FixNestedInLoopVariables(block, condition, "", " ");
-                condition = FixNestedInLoopVariables(block, condition, "", ")");
-                condition = FixNestedInLoopVariables(block, condition, "", ",");
-            }
-
-            if (methodType == MethodType.Read)
-            {
-                if (block.RequiresAllocation.Count > 0)
-                {
-                    if (block.Type == "for")
-                    {
-                        string[] parts = condition.Substring(1, condition.Length - 2).Split(';');
-
-                        var conditionChars = new char[] { '<', '=', '>', '!' };
-                        int variableIndex = parts[1].IndexOfAny(conditionChars);
-                        if (variableIndex != -1)
-                        {
-                            string variable = parts[1].Substring(variableIndex).TrimStart(conditionChars);
-
-                            if (!string.IsNullOrWhiteSpace(variable))
-                            {
-                                foreach (var req in block.RequiresAllocation)
-                                {
-                                    string suffix;
-                                    int blockSuffixLevel = GetNestedInLoopSuffix(block, "", out suffix);
-                                    int fieldSuffixLevel = GetNestedInLoopSuffix(req, "", out _);
-
-                                    string appendType = "";
-                                    if (fieldSuffixLevel - blockSuffixLevel > 1)
-                                    {
-                                        int count = fieldSuffixLevel - blockSuffixLevel - 1;
-
-                                        for (int i = 0; i < count; i++)
-                                        {
-                                            appendType += "[]";
-                                        }
-                                    }
-
-                                    string variableType = GetCSharpType(req);
-                                    int indexesTypeDef = req.FieldArray.Count(x => x == '[');
-                                    int indexesType = variableType.Count(x => x == '[');
-                                    string variableName = req.Name + suffix;
-
-                                    if (variableType.Contains("[]"))
-                                    {
-                                        int diff = indexesType - indexesTypeDef;
-                                        variableType = variableType.Replace("[]", "");
-                                        variableType = $"{variableType}[{variable}]";
-                                        for (int i = 0; i < diff; i++)
-                                        {
-                                            variableType += "[]";
-                                        }
-                                    }
-                                    else
-                                    {
-                                        variableType = variableType + $"[{variable}]";
-                                    }
-
-                                    appendType = specificGenerator.FixAppendType(appendType, variableName);
-
-                                    variableType = specificGenerator.FixVariableType(variableType);
-
-                                    if (methodType == MethodType.Read)
-                                    {
-                                        string fixedAllocations = specificGenerator.FixAllocations(spacing, appendType, variableType, variableName);
-                                        if (!string.IsNullOrEmpty(fixedAllocations))
-                                        {
-                                            ret += fixedAllocations;
-                                        }
-
-                                        if (fixedAllocations == "") // when null, don't append anything
-                                        {
-                                            ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("allocation for block other than for");
-                    }
-                }
             }
 
             ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
-
-            if (blockType == "while")
-                ret += $"\r\n{spacing}\twhileIndex++;\r\n";
 
             foreach (var field in block.Content)
             {
@@ -970,15 +663,55 @@ namespace Sharp{type}
 
         private string GetCSharpType(AomField field)
         {
+            Dictionary<string, string> map = GetCSharpTypeMapping();
+
             if (string.IsNullOrWhiteSpace(field.Type))
             {
-                if (!string.IsNullOrEmpty(field.ClassType))
-                    return field.ClassType.ToPropertyCase();
-                else
-                    return field.Name.ToPropertyCase();
-            }
+                if (
+                    field.ClassType == "operating_point_idc" ||
+                    field.ClassType == "decoder_model_present_for_this_op" ||
+                    field.ClassType == "initial_display_delay_present_for_this_op" ||
+                    field.ClassType == "decoder_model_present_for_this_op" ||
+                    field.ClassType == "seq_tier" ||
+                    field.ClassType == "cdef_y_pri_strength" ||
+                    field.ClassType == "cdef_y_sec_strength" ||
+                    field.ClassType == "cdef_uv_pri_strength" ||
+                    field.ClassType == "cdef_uv_sec_strength" ||
+                    field.ClassType == "cdef_damping_minus_3" ||
+                    field.ClassType == "loop_filter_level" ||
+                    field.ClassType == "loop_filter_ref_deltas" ||
+                    field.ClassType == "GmType" ||
+                    field.ClassType == "tile_size_minus_1" ||
+                    field.ClassType == "initial_display_delay_minus_1" ||
+                    field.ClassType == "RefValid" ||
+                    field.ClassType == "RefOrderHint" ||
+                    field.ClassType == "OrderHints" ||
+                    field.ClassType == "ref_order_hint" ||
+                    field.ClassType == "expectedFrameId" ||
+                    field.ClassType == "RefFrameSignBias" ||
+                    field.ClassType == "LoopRestorationSize" ||
+                    field.ClassType == "FrameRestorationType" ||
+                    field.ClassType == "MiColStarts" ||
+                    field.ClassType == "MiRowStarts" ||
+                    field.ClassType == "loop_filter_mode_deltas" ||
+                    field.ClassType == "LosslessArray" ||
+                    field.ClassType == "SkipModeFrame"
+                    )
+                {
+                    return map["su(32)[]"];
+                }
+                else if(
+                    field.ClassType == "FeatureEnabled" ||
+                    field.ClassType == "FeatureData" ||
+                    field.ClassType == "gm_params" ||
+                    field.ClassType == "SegQMLevel" 
+                    )
+                {
+                    return map["su(32)[][]"];
+                }
 
-            Dictionary<string, string> map = GetCSharpTypeMapping();
+                    return map["su(32)"];
+            }
 
             int arrayDimensions = 0;
             if (!string.IsNullOrEmpty(field.FieldArray))
@@ -1056,6 +789,9 @@ namespace Sharp{type}
                 { "NS(PaletteSizeUV)",          "uint" },
                 { "S()",                        "uint" },
                 { "su(32)",                     "int" },
+                { "su(32)[]",                   "int[]" },
+                { "su(32)[][]",                 "int[][]" },
+                { "su(64)",                     "long" },
                 { "su(1+6)",                    "uint" },
                 { "su(1+bitsToRead)",           "uint" },
                 { "uvlc()",                     "uint" },
@@ -1186,6 +922,12 @@ namespace Sharp{type}
                     return "stream.ReadS(size,";
 
                 case "su(32)":
+                    return "stream.ReadSignedInt32(size,";
+
+                case "su(32)[]":
+                    return "stream.ReadSignedInt32(size,";
+
+                case "su(32)[][]":
                     return "stream.ReadSignedInt32(size,";
 
                 case "su(1+6)":
@@ -1332,6 +1074,12 @@ namespace Sharp{type}
                     return "stream.WriteS(";
 
                 case "su(32)":
+                    return "stream.WriteSignedInt32(";
+
+                case "su(32)[]":
+                    return "stream.WriteSignedInt32(";
+
+                case "su(32)[][]":
                     return "stream.WriteSignedInt32(";
 
                 case "su(1+6)":

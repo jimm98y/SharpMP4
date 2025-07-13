@@ -24,6 +24,9 @@ namespace AomGenerator.CSharp
         {
             condition = condition.Replace("Min(", "Math.Min(");
             condition = condition.Replace("Max(", "Math.Max(");
+            condition = condition.Replace(" >> ", " >> (int)");
+
+            condition = condition.Replace("get_position() & 7", "(stream.GetPosition() & 7) != 0");
 
             condition = condition.Replace("INTRA_FRAME", "AV1RefFrames.INTRA_FRAME");
             condition = condition.Replace(" NONE ", " AV1RefFrames.NONE ");
@@ -44,6 +47,7 @@ namespace AomGenerator.CSharp
             condition = condition.Replace("OBU_TILE_LIST", "AV1ObuTypes.OBU_TILE_LIST");
             condition = condition.Replace("OBU_PADDING", "AV1ObuTypes.OBU_PADDING");
 
+            condition = condition.Replace("get_position", "stream.GetPosition");
 
             return condition;
         }
@@ -62,6 +66,7 @@ namespace AomGenerator.CSharp
         {
             fieldValue = fieldValue.Replace("Min(", "Math.Min(");
             fieldValue = fieldValue.Replace("Max(", "Math.Max(");
+            fieldValue = fieldValue.Replace(" >> ", " >> (int)");
 
             fieldValue = fieldValue.Replace(" NONE ", " AV1RefFrames.NONE ");
             fieldValue = fieldValue.Replace("INTRA_FRAME", "AV1RefFrames.INTRA_FRAME");
@@ -100,7 +105,7 @@ namespace AomGenerator.CSharp
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
                 { "sz", "f(32)" },
-                { "nbBits", "f(32)" },
+                { "nbBits", "su(64)" },
                 { "op", "f(32)" },
                 { "a", "f(32)" },
                 { "b", "f(32)" },
