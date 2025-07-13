@@ -7,18 +7,9 @@ namespace SharpAV1
 
     public partial class AV1Context : IAomContext
     {
-        public ObuHeader ObuHeader { get; set; }
-		public ReservedObu ReservedObu { get; set; }
-		public SequenceHeaderObu SequenceHeaderObu { get; set; }
-		public FrameHeaderObu FrameHeaderObu { get; set; }
-		public TemporalDelimiterObu TemporalDelimiterObu { get; set; }
-		public PaddingObu PaddingObu { get; set; }
-		public MetadataObu MetadataObu { get; set; }
-		public FrameObu FrameObu { get; set; }
-		public TileGroupObu TileGroupObu { get; set; }
-		public TileListObu TileListObu { get; set; }
-
-    }
+        AomStream stream = null;
+        private void ReadDropObu() { };
+        private void WriteDropObu() { };
 
     /*
 open_bitstream_unit( sz ) { 
@@ -66,230 +57,166 @@ open_bitstream_unit( sz ) {
  }
 }
     */
-    public class OpenBitstreamUnit : IAomSerializable
-    {
 		private uint sz;
 		public uint Sz { get { return sz; } set { sz = value; } }
-		private ObuHeader obu_header;
-		public ObuHeader ObuHeader { get { return obu_header; } set { obu_header = value; } }
 		private uint obu_size;
 		public uint ObuSize { get { return obu_size; } set { obu_size = value; } }
-		private DropObu drop_obu;
-		public DropObu DropObu { get { return drop_obu; } set { drop_obu = value; } }
-		private SequenceHeaderObu sequence_header_obu;
-		public SequenceHeaderObu SequenceHeaderObu { get { return sequence_header_obu; } set { sequence_header_obu = value; } }
-		private TemporalDelimiterObu temporal_delimiter_obu;
-		public TemporalDelimiterObu TemporalDelimiterObu { get { return temporal_delimiter_obu; } set { temporal_delimiter_obu = value; } }
-		private FrameHeaderObu frame_header_obu;
-		public FrameHeaderObu FrameHeaderObu { get { return frame_header_obu; } set { frame_header_obu = value; } }
-		private TileGroupObu tile_group_obu;
-		public TileGroupObu TileGroupObu { get { return tile_group_obu; } set { tile_group_obu = value; } }
-		private MetadataObu metadata_obu;
-		public MetadataObu MetadataObu { get { return metadata_obu; } set { metadata_obu = value; } }
-		private FrameObu frame_obu;
-		public FrameObu FrameObu { get { return frame_obu; } set { frame_obu = value; } }
-		private TileListObu tile_list_obu;
-		public TileListObu TileListObu { get { return tile_list_obu; } set { tile_list_obu = value; } }
-		private PaddingObu padding_obu;
-		public PaddingObu PaddingObu { get { return padding_obu; } set { padding_obu = value; } }
-		private ReservedObu reserved_obu;
-		public ReservedObu ReservedObu { get { return reserved_obu; } set { reserved_obu = value; } }
-		private TrailingBits trailing_bits;
-		public TrailingBits TrailingBits { get { return trailing_bits; } set { trailing_bits = value; } }
 
-         public OpenBitstreamUnit(uint sz)
-         { 
-			this.sz = sz;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadOpenBitstreamUnit(uint sz)
          {
-            ulong size = 0;
 
-			uint obu_size = 0;
-			uint startPosition = 0;
-			uint inTemporalLayer = 0;
-			uint inSpatialLayer = 0;
-			uint currentPosition = 0;
-			uint payloadBits = 0;
-			this.obu_header =  new ObuHeader() ;
-			size +=  stream.ReadClass<ObuHeader>(size, context, this.obu_header, "obu_header"); 
+			ReadObuHeader(); 
 
 			if ( obu_has_size_field != 0 )
 			{
-				size += stream.ReadLeb128(size,  out this.obu_size, "obu_size"); 
+				stream.ReadLeb128( out this.obu_size, "obu_size"); 
 			}
 			else 
 			{
 				obu_size= sz - 1 - obu_extension_flag;
 			}
-			startPosition= get_position();
+			uint startPosition= stream.GetPosition();
 
-			if ( obu_type != OBU_SEQUENCE_HEADER && obu_type != OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 )
+			if ( obu_type != AV1ObuTypes.OBU_SEQUENCE_HEADER && obu_type != AV1ObuTypes.OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 )
 			{
 				inTemporalLayer= (OperatingPointIdc >> temporal_id ) & 1;
 				inSpatialLayer= (OperatingPointIdc >> ( spatial_id + 8 ) ) & 1;
 
 				if ( inTemporalLayer== 0 ||  inSpatialLayer== 0 )
 				{
-					this.drop_obu =  new DropObu() ;
-					size +=  stream.ReadClass<DropObu>(size, context, this.drop_obu, "drop_obu"); 
+					ReadDropObu(); 
 return;
 				}
 			}
 
-			if ( obu_type == OBU_SEQUENCE_HEADER )
+			if ( obu_type == AV1ObuTypes.OBU_SEQUENCE_HEADER )
 			{
-				this.sequence_header_obu =  new SequenceHeaderObu() ;
-				size +=  stream.ReadClass<SequenceHeaderObu>(size, context, this.sequence_header_obu, "sequence_header_obu"); 
+				ReadSequenceHeaderObu(); 
 			}
-			else if ( obu_type == OBU_TEMPORAL_DELIMITER )
+			else if ( obu_type == AV1ObuTypes.OBU_TEMPORAL_DELIMITER )
 			{
-				this.temporal_delimiter_obu =  new TemporalDelimiterObu() ;
-				size +=  stream.ReadClass<TemporalDelimiterObu>(size, context, this.temporal_delimiter_obu, "temporal_delimiter_obu"); 
+				ReadTemporalDelimiterObu(); 
 			}
-			else if ( obu_type == OBU_FRAME_HEADER )
+			else if ( obu_type == AV1ObuTypes.OBU_FRAME_HEADER )
 			{
-				this.frame_header_obu =  new FrameHeaderObu() ;
-				size +=  stream.ReadClass<FrameHeaderObu>(size, context, this.frame_header_obu, "frame_header_obu"); 
+				ReadFrameHeaderObu(); 
 			}
-			else if ( obu_type == OBU_REDUNDANT_FRAME_HEADER )
+			else if ( obu_type == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER )
 			{
-				this.frame_header_obu =  new FrameHeaderObu() ;
-				size +=  stream.ReadClass<FrameHeaderObu>(size, context, this.frame_header_obu, "frame_header_obu"); 
+				ReadFrameHeaderObu(); 
 			}
-			else if ( obu_type == OBU_TILE_GROUP )
+			else if ( obu_type == AV1ObuTypes.OBU_TILE_GROUP )
 			{
-				this.tile_group_obu =  new TileGroupObu( obu_size ) ;
-				size +=  stream.ReadClass<TileGroupObu>(size, context, this.tile_group_obu, "tile_group_obu"); 
+				ReadTileGroupObu( obu_size ); 
 			}
-			else if ( obu_type == OBU_METADATA )
+			else if ( obu_type == AV1ObuTypes.OBU_METADATA )
 			{
-				this.metadata_obu =  new MetadataObu() ;
-				size +=  stream.ReadClass<MetadataObu>(size, context, this.metadata_obu, "metadata_obu"); 
+				ReadMetadataObu(); 
 			}
-			else if ( obu_type == OBU_FRAME )
+			else if ( obu_type == AV1ObuTypes.OBU_FRAME )
 			{
-				this.frame_obu =  new FrameObu( obu_size ) ;
-				size +=  stream.ReadClass<FrameObu>(size, context, this.frame_obu, "frame_obu"); 
+				ReadFrameObu( obu_size ); 
 			}
-			else if ( obu_type == OBU_TILE_LIST )
+			else if ( obu_type == AV1ObuTypes.OBU_TILE_LIST )
 			{
-				this.tile_list_obu =  new TileListObu() ;
-				size +=  stream.ReadClass<TileListObu>(size, context, this.tile_list_obu, "tile_list_obu"); 
+				ReadTileListObu(); 
 			}
-			else if ( obu_type == OBU_PADDING )
+			else if ( obu_type == AV1ObuTypes.OBU_PADDING )
 			{
-				this.padding_obu =  new PaddingObu() ;
-				size +=  stream.ReadClass<PaddingObu>(size, context, this.padding_obu, "padding_obu"); 
+				ReadPaddingObu(); 
 			}
 			else 
 			{
-				this.reserved_obu =  new ReservedObu() ;
-				size +=  stream.ReadClass<ReservedObu>(size, context, this.reserved_obu, "reserved_obu"); 
+				ReadReservedObu(); 
 			}
-			currentPosition= get_position();
-			payloadBits= currentPosition - startPosition;
+			uint currentPosition= stream.GetPosition();
+			uint payloadBits= currentPosition - startPosition;
 
-			if ( obu_size > 0 && obu_type != OBU_TILE_GROUP &&
-    obu_type != OBU_TILE_LIST &&
-    obu_type != OBU_FRAME )
+			if ( obu_size > 0 && obu_type != AV1ObuTypes.OBU_TILE_GROUP &&
+    obu_type != AV1ObuTypes.OBU_TILE_LIST &&
+    obu_type != AV1ObuTypes.OBU_FRAME )
 			{
-				this.trailing_bits =  new TrailingBits( obu_size * 8 - payloadBits ) ;
-				size +=  stream.ReadClass<TrailingBits>(size, context, this.trailing_bits, "trailing_bits"); 
+				ReadTrailingBits( obu_size * 8 - payloadBits ); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteOpenBitstreamUnit(uint sz)
          {
-            ulong size = 0;
 
-			uint obu_size = 0;
-			uint startPosition = 0;
-			uint inTemporalLayer = 0;
-			uint inSpatialLayer = 0;
-			uint currentPosition = 0;
-			uint payloadBits = 0;
-			size += stream.WriteClass<ObuHeader>(context, this.obu_header, "obu_header"); 
+			WriteObuHeader(); 
 
 			if ( obu_has_size_field != 0 )
 			{
-				size += stream.WriteLeb128( this.obu_size, "obu_size"); 
+				stream.WriteLeb128( this.obu_size, "obu_size"); 
 			}
 			else 
 			{
 				obu_size= sz - 1 - obu_extension_flag;
 			}
-			startPosition= get_position();
+			uint startPosition= stream.GetPosition();
 
-			if ( obu_type != OBU_SEQUENCE_HEADER && obu_type != OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 )
+			if ( obu_type != AV1ObuTypes.OBU_SEQUENCE_HEADER && obu_type != AV1ObuTypes.OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 )
 			{
 				inTemporalLayer= (OperatingPointIdc >> temporal_id ) & 1;
 				inSpatialLayer= (OperatingPointIdc >> ( spatial_id + 8 ) ) & 1;
 
 				if ( inTemporalLayer== 0 ||  inSpatialLayer== 0 )
 				{
-					size += stream.WriteClass<DropObu>(context, this.drop_obu, "drop_obu"); 
+					WriteDropObu(); 
 return;
 				}
 			}
 
-			if ( obu_type == OBU_SEQUENCE_HEADER )
+			if ( obu_type == AV1ObuTypes.OBU_SEQUENCE_HEADER )
 			{
-				size += stream.WriteClass<SequenceHeaderObu>(context, this.sequence_header_obu, "sequence_header_obu"); 
+				WriteSequenceHeaderObu(); 
 			}
-			else if ( obu_type == OBU_TEMPORAL_DELIMITER )
+			else if ( obu_type == AV1ObuTypes.OBU_TEMPORAL_DELIMITER )
 			{
-				size += stream.WriteClass<TemporalDelimiterObu>(context, this.temporal_delimiter_obu, "temporal_delimiter_obu"); 
+				WriteTemporalDelimiterObu(); 
 			}
-			else if ( obu_type == OBU_FRAME_HEADER )
+			else if ( obu_type == AV1ObuTypes.OBU_FRAME_HEADER )
 			{
-				size += stream.WriteClass<FrameHeaderObu>(context, this.frame_header_obu, "frame_header_obu"); 
+				WriteFrameHeaderObu(); 
 			}
-			else if ( obu_type == OBU_REDUNDANT_FRAME_HEADER )
+			else if ( obu_type == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER )
 			{
-				size += stream.WriteClass<FrameHeaderObu>(context, this.frame_header_obu, "frame_header_obu"); 
+				WriteFrameHeaderObu(); 
 			}
-			else if ( obu_type == OBU_TILE_GROUP )
+			else if ( obu_type == AV1ObuTypes.OBU_TILE_GROUP )
 			{
-				size += stream.WriteClass<TileGroupObu>(context, this.tile_group_obu, "tile_group_obu"); 
+				WriteTileGroupObu( obu_size ); 
 			}
-			else if ( obu_type == OBU_METADATA )
+			else if ( obu_type == AV1ObuTypes.OBU_METADATA )
 			{
-				size += stream.WriteClass<MetadataObu>(context, this.metadata_obu, "metadata_obu"); 
+				WriteMetadataObu(); 
 			}
-			else if ( obu_type == OBU_FRAME )
+			else if ( obu_type == AV1ObuTypes.OBU_FRAME )
 			{
-				size += stream.WriteClass<FrameObu>(context, this.frame_obu, "frame_obu"); 
+				WriteFrameObu( obu_size ); 
 			}
-			else if ( obu_type == OBU_TILE_LIST )
+			else if ( obu_type == AV1ObuTypes.OBU_TILE_LIST )
 			{
-				size += stream.WriteClass<TileListObu>(context, this.tile_list_obu, "tile_list_obu"); 
+				WriteTileListObu(); 
 			}
-			else if ( obu_type == OBU_PADDING )
+			else if ( obu_type == AV1ObuTypes.OBU_PADDING )
 			{
-				size += stream.WriteClass<PaddingObu>(context, this.padding_obu, "padding_obu"); 
+				WritePaddingObu(); 
 			}
 			else 
 			{
-				size += stream.WriteClass<ReservedObu>(context, this.reserved_obu, "reserved_obu"); 
+				WriteReservedObu(); 
 			}
-			currentPosition= get_position();
-			payloadBits= currentPosition - startPosition;
+			uint currentPosition= stream.GetPosition();
+			uint payloadBits= currentPosition - startPosition;
 
-			if ( obu_size > 0 && obu_type != OBU_TILE_GROUP &&
-    obu_type != OBU_TILE_LIST &&
-    obu_type != OBU_FRAME )
+			if ( obu_size > 0 && obu_type != AV1ObuTypes.OBU_TILE_GROUP &&
+    obu_type != AV1ObuTypes.OBU_TILE_LIST &&
+    obu_type != AV1ObuTypes.OBU_FRAME )
 			{
-				size += stream.WriteClass<TrailingBits>(context, this.trailing_bits, "trailing_bits"); 
+				WriteTrailingBits( obu_size * 8 - payloadBits ); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -304,8 +231,6 @@ obu_header() {
   obu_extension_header()
 }
     */
-    public class ObuHeader : IAomSerializable
-    {
 		private uint obu_forbidden_bit;
 		public uint ObuForbiddenBit { get { return obu_forbidden_bit; } set { obu_forbidden_bit = value; } }
 		private uint obu_type;
@@ -316,52 +241,36 @@ obu_header() {
 		public uint ObuHasSizeField { get { return obu_has_size_field; } set { obu_has_size_field = value; } }
 		private uint obu_reserved_1bit;
 		public uint ObuReserved1bit { get { return obu_reserved_1bit; } set { obu_reserved_1bit = value; } }
-		private ObuExtensionHeader obu_extension_header;
-		public ObuExtensionHeader ObuExtensionHeader { get { return obu_extension_header; } set { obu_extension_header = value; } }
 
-         public ObuHeader()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadObuHeader()
          {
-            ulong size = 0;
 
-			size += stream.ReadFixed(size, 1, out this.obu_forbidden_bit, "obu_forbidden_bit"); 
-			size += stream.ReadFixed(size, 4, out this.obu_type, "obu_type"); 
-			size += stream.ReadFixed(size, 1, out this.obu_extension_flag, "obu_extension_flag"); 
-			size += stream.ReadFixed(size, 1, out this.obu_has_size_field, "obu_has_size_field"); 
-			size += stream.ReadFixed(size, 1, out this.obu_reserved_1bit, "obu_reserved_1bit"); 
+			stream.ReadFixed(1, out this.obu_forbidden_bit, "obu_forbidden_bit"); 
+			stream.ReadFixed(4, out this.obu_type, "obu_type"); 
+			stream.ReadFixed(1, out this.obu_extension_flag, "obu_extension_flag"); 
+			stream.ReadFixed(1, out this.obu_has_size_field, "obu_has_size_field"); 
+			stream.ReadFixed(1, out this.obu_reserved_1bit, "obu_reserved_1bit"); 
 
 			if ( obu_extension_flag == 1 )
 			{
-				this.obu_extension_header =  new ObuExtensionHeader() ;
-				size +=  stream.ReadClass<ObuExtensionHeader>(size, context, this.obu_extension_header, "obu_extension_header"); 
+				ReadObuExtensionHeader(); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteObuHeader()
          {
-            ulong size = 0;
 
-			size += stream.WriteFixed(1, this.obu_forbidden_bit, "obu_forbidden_bit"); 
-			size += stream.WriteFixed(4, this.obu_type, "obu_type"); 
-			size += stream.WriteFixed(1, this.obu_extension_flag, "obu_extension_flag"); 
-			size += stream.WriteFixed(1, this.obu_has_size_field, "obu_has_size_field"); 
-			size += stream.WriteFixed(1, this.obu_reserved_1bit, "obu_reserved_1bit"); 
+			stream.WriteFixed(1, this.obu_forbidden_bit, "obu_forbidden_bit"); 
+			stream.WriteFixed(4, this.obu_type, "obu_type"); 
+			stream.WriteFixed(1, this.obu_extension_flag, "obu_extension_flag"); 
+			stream.WriteFixed(1, this.obu_has_size_field, "obu_has_size_field"); 
+			stream.WriteFixed(1, this.obu_reserved_1bit, "obu_reserved_1bit"); 
 
 			if ( obu_extension_flag == 1 )
 			{
-				size += stream.WriteClass<ObuExtensionHeader>(context, this.obu_extension_header, "obu_extension_header"); 
+				WriteObuExtensionHeader(); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -373,8 +282,6 @@ obu_header() {
  extension_header_reserved_3bits f(3)
  }
     */
-    public class ObuExtensionHeader : IAomSerializable
-    {
 		private uint temporal_id;
 		public uint TemporalId { get { return temporal_id; } set { temporal_id = value; } }
 		private uint spatial_id;
@@ -382,34 +289,21 @@ obu_header() {
 		private uint extension_header_reserved_3bits;
 		public uint ExtensionHeaderReserved3bits { get { return extension_header_reserved_3bits; } set { extension_header_reserved_3bits = value; } }
 
-         public ObuExtensionHeader()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadObuExtensionHeader()
          {
-            ulong size = 0;
 
-			size += stream.ReadFixed(size, 3, out this.temporal_id, "temporal_id"); 
-			size += stream.ReadFixed(size, 2, out this.spatial_id, "spatial_id"); 
-			size += stream.ReadFixed(size, 3, out this.extension_header_reserved_3bits, "extension_header_reserved_3bits"); 
-
-            return size;
+			stream.ReadFixed(3, out this.temporal_id, "temporal_id"); 
+			stream.ReadFixed(2, out this.spatial_id, "spatial_id"); 
+			stream.ReadFixed(3, out this.extension_header_reserved_3bits, "extension_header_reserved_3bits"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteObuExtensionHeader()
          {
-            ulong size = 0;
 
-			size += stream.WriteFixed(3, this.temporal_id, "temporal_id"); 
-			size += stream.WriteFixed(2, this.spatial_id, "spatial_id"); 
-			size += stream.WriteFixed(3, this.extension_header_reserved_3bits, "extension_header_reserved_3bits"); 
-
-            return size;
+			stream.WriteFixed(3, this.temporal_id, "temporal_id"); 
+			stream.WriteFixed(2, this.spatial_id, "spatial_id"); 
+			stream.WriteFixed(3, this.extension_header_reserved_3bits, "extension_header_reserved_3bits"); 
          }
-
-    }
 
     /*
 
@@ -424,8 +318,6 @@ while ( nbBits > 0 ) {
 }
 }
     */
-    public class TrailingBits : IAomSerializable
-    {
 		private uint nbBits;
 		public uint NbBits { get { return nbBits; } set { nbBits = value; } }
 		private uint trailing_one_bit;
@@ -433,50 +325,36 @@ while ( nbBits > 0 ) {
 		private Dictionary<int, uint> trailing_zero_bit = new Dictionary<int, uint>();
 		public Dictionary<int, uint> TrailingZeroBit { get { return trailing_zero_bit; } set { trailing_zero_bit = value; } }
 
-         public TrailingBits(uint nbBits)
-         { 
-			this.nbBits = nbBits;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
 			int whileIndex = -1;
-			size += stream.ReadFixed(size, 1, out this.trailing_one_bit, "trailing_one_bit"); 
+         public void ReadTrailingBits(uint nbBits)
+         {
+
+			stream.ReadFixed(1, out this.trailing_one_bit, "trailing_one_bit"); 
 			nbBits--;
 
 			while ( nbBits > 0 )
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 1, whileIndex, this.trailing_zero_bit, "trailing_zero_bit"); 
+				stream.ReadFixed(1, out this.trailing_zero_bit, "trailing_zero_bit"); 
 				nbBits--;
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteTrailingBits(uint nbBits)
          {
-            ulong size = 0;
 
-			int whileIndex = -1;
-			size += stream.WriteFixed(1, this.trailing_one_bit, "trailing_one_bit"); 
+			stream.WriteFixed(1, this.trailing_one_bit, "trailing_one_bit"); 
 			nbBits--;
 
 			while ( nbBits > 0 )
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(1, whileIndex, this.trailing_zero_bit, "trailing_zero_bit"); 
+				stream.WriteFixed(1, this.trailing_zero_bit, "trailing_zero_bit"); 
 				nbBits--;
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -487,49 +365,33 @@ byte_alignment() {
  zero_bit f(1)
 }
     */
-    public class ByteAlignment : IAomSerializable
-    {
 		private Dictionary<int, uint> zero_bit = new Dictionary<int, uint>();
 		public Dictionary<int, uint> ZeroBit { get { return zero_bit; } set { zero_bit = value; } }
 
-         public ByteAlignment()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
 			int whileIndex = -1;
+         public void ReadByteAlignment()
+         {
+
 
 			while ( get_position() & 7 )
 			{
 				whileIndex++;
 
-				size += stream.ReadFixed(size, 1, whileIndex, this.zero_bit, "zero_bit"); 
+				stream.ReadFixed(1, out this.zero_bit, "zero_bit"); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteByteAlignment()
          {
-            ulong size = 0;
 
-			int whileIndex = -1;
 
 			while ( get_position() & 7 )
 			{
 				whileIndex++;
 
-				size += stream.WriteFixed(1, whileIndex, this.zero_bit, "zero_bit"); 
+				stream.WriteFixed(1, this.zero_bit, "zero_bit"); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -538,31 +400,16 @@ byte_alignment() {
 reserved_obu() { 
 }
     */
-    public class ReservedObu : IAomSerializable
-    {
 
-         public ReservedObu()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadReservedObu()
          {
-            ulong size = 0;
 
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteReservedObu()
          {
-            ulong size = 0;
 
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -692,8 +539,6 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
  film_grain_params_present f(1)
 }
     */
-    public class SequenceHeaderObu : IAomSerializable
-    {
 		private uint seq_profile;
 		public uint SeqProfile { get { return seq_profile; } set { seq_profile = value; } }
 		private uint still_picture;
@@ -704,28 +549,22 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		public uint[] SeqLevelIdx { get { return seq_level_idx; } set { seq_level_idx = value; } }
 		private uint timing_info_present_flag;
 		public uint TimingInfoPresentFlag { get { return timing_info_present_flag; } set { timing_info_present_flag = value; } }
-		private TimingInfo timing_info;
-		public TimingInfo TimingInfo { get { return timing_info; } set { timing_info = value; } }
 		private uint decoder_model_info_present_flag;
 		public uint DecoderModelInfoPresentFlag { get { return decoder_model_info_present_flag; } set { decoder_model_info_present_flag = value; } }
-		private DecoderModelInfo decoder_model_info;
-		public DecoderModelInfo DecoderModelInfo { get { return decoder_model_info; } set { decoder_model_info = value; } }
 		private uint initial_display_delay_present_flag;
 		public uint InitialDisplayDelayPresentFlag { get { return initial_display_delay_present_flag; } set { initial_display_delay_present_flag = value; } }
 		private uint operating_points_cnt_minus_1;
 		public uint OperatingPointsCntMinus1 { get { return operating_points_cnt_minus_1; } set { operating_points_cnt_minus_1 = value; } }
-		private OperatingPointIdc operating_point_idc;
-		public OperatingPointIdc OperatingPointIdc { get { return operating_point_idc; } set { operating_point_idc = value; } }
+		private uint[] operating_point_idc;
+		public uint[] OperatingPointIdc { get { return operating_point_idc; } set { operating_point_idc = value; } }
 		private uint[] seq_tier;
 		public uint[] SeqTier { get { return seq_tier; } set { seq_tier = value; } }
 		private uint[] decoder_model_present_for_this_op;
 		public uint[] DecoderModelPresentForThisOp { get { return decoder_model_present_for_this_op; } set { decoder_model_present_for_this_op = value; } }
-		private OperatingParametersInfo[] operating_parameters_info;
-		public OperatingParametersInfo[] OperatingParametersInfo { get { return operating_parameters_info; } set { operating_parameters_info = value; } }
 		private uint[] initial_display_delay_present_for_this_op;
 		public uint[] InitialDisplayDelayPresentForThisOp { get { return initial_display_delay_present_for_this_op; } set { initial_display_delay_present_for_this_op = value; } }
-		private InitialDisplayDelayMinus1 initial_display_delay_minus_1;
-		public InitialDisplayDelayMinus1 InitialDisplayDelayMinus1 { get { return initial_display_delay_minus_1; } set { initial_display_delay_minus_1 = value; } }
+		private uint[] initial_display_delay_minus_1;
+		public uint[] InitialDisplayDelayMinus1 { get { return initial_display_delay_minus_1; } set { initial_display_delay_minus_1 = value; } }
 		private uint frame_width_bits_minus_1;
 		public uint FrameWidthBitsMinus1 { get { return frame_width_bits_minus_1; } set { frame_width_bits_minus_1 = value; } }
 		private uint frame_height_bits_minus_1;
@@ -776,46 +615,16 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		public uint EnableCdef { get { return enable_cdef; } set { enable_cdef = value; } }
 		private uint enable_restoration;
 		public uint EnableRestoration { get { return enable_restoration; } set { enable_restoration = value; } }
-		private ColorConfig color_config;
-		public ColorConfig ColorConfig { get { return color_config; } set { color_config = value; } }
 		private uint film_grain_params_present;
 		public uint FilmGrainParamsPresent { get { return film_grain_params_present; } set { film_grain_params_present = value; } }
 
-         public SequenceHeaderObu()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint timing_info_present_flag = 0;
-			uint decoder_model_info_present_flag = 0;
-			uint initial_display_delay_present_flag = 0;
-			uint operating_points_cnt_minus_1 = 0;
-			uint[][] operating_point_idc = null;
-			uint[][] seq_tier = null;
-			uint[][] decoder_model_present_for_this_op = null;
-			uint[][] initial_display_delay_present_for_this_op = null;
 			uint i = 0;
-			uint operatingPoint = 0;
-			uint OperatingPointIdc = 0;
-			uint n = 0;
-			uint frame_id_numbers_present_flag = 0;
-			uint enable_interintra_compound = 0;
-			uint enable_masked_compound = 0;
-			uint enable_warped_motion = 0;
-			uint enable_dual_filter = 0;
-			uint enable_order_hint = 0;
-			uint enable_jnt_comp = 0;
-			uint enable_ref_frame_mvs = 0;
-			uint seq_force_screen_content_tools = 0;
-			uint seq_force_integer_mv = 0;
-			uint OrderHintBits = 0;
-			size += stream.ReadFixed(size, 3, out this.seq_profile, "seq_profile"); 
-			size += stream.ReadFixed(size, 1, out this.still_picture, "still_picture"); 
-			size += stream.ReadFixed(size, 1, out this.reduced_still_picture_header, "reduced_still_picture_header"); 
+         public void ReadSequenceHeaderObu()
+         {
+
+			stream.ReadFixed(3, out this.seq_profile, "seq_profile"); 
+			stream.ReadFixed(1, out this.still_picture, "still_picture"); 
+			stream.ReadFixed(1, out this.reduced_still_picture_header, "reduced_still_picture_header"); 
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -824,50 +633,46 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				initial_display_delay_present_flag= 0;
 				operating_points_cnt_minus_1= 0;
 				operating_point_idc[ 0 ]= 0;
-				size += stream.ReadFixed(size, 5, out this.seq_level_idx[ 0 ], "seq_level_idx"); 
+				stream.ReadFixed(5, out this.seq_level_idx[ 0 ], "seq_level_idx"); 
 				seq_tier[ 0 ]= 0;
 				decoder_model_present_for_this_op[ 0 ]= 0;
 				initial_display_delay_present_for_this_op[ 0 ]= 0;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.timing_info_present_flag, "timing_info_present_flag"); 
+				stream.ReadFixed(1, out this.timing_info_present_flag, "timing_info_present_flag"); 
 
 				if ( timing_info_present_flag != 0 )
 				{
-					this.timing_info =  new TimingInfo() ;
-					size +=  stream.ReadClass<TimingInfo>(size, context, this.timing_info, "timing_info"); 
-					size += stream.ReadFixed(size, 1, out this.decoder_model_info_present_flag, "decoder_model_info_present_flag"); 
+					ReadTimingInfo(); 
+					stream.ReadFixed(1, out this.decoder_model_info_present_flag, "decoder_model_info_present_flag"); 
 
 					if ( decoder_model_info_present_flag != 0 )
 					{
-						this.decoder_model_info =  new DecoderModelInfo() ;
-						size +=  stream.ReadClass<DecoderModelInfo>(size, context, this.decoder_model_info, "decoder_model_info"); 
+						ReadDecoderModelInfo(); 
 					}
 				}
 				else 
 				{
 					decoder_model_info_present_flag= 0;
 				}
-				size += stream.ReadFixed(size, 1, out this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
-				size += stream.ReadFixed(size, 5, out this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
+				stream.ReadFixed(1, out this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
+				stream.ReadFixed(5, out this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
 
-				this.operating_point_idc = new OperatingPointIdc[ operating_points_cnt_minus_1];
+				this.operating_point_idc = new uint[ operating_points_cnt_minus_1];
 				this.seq_tier = new uint[ operating_points_cnt_minus_1];
 				this.decoder_model_present_for_this_op = new uint[ operating_points_cnt_minus_1];
-				this.operating_parameters_info = new OperatingParametersInfo[ operating_points_cnt_minus_1];
 				this.initial_display_delay_present_for_this_op = new uint[ operating_points_cnt_minus_1];
-				this.initial_display_delay_minus_1 = new InitialDisplayDelayMinus1[ operating_points_cnt_minus_1];
+				this.initial_display_delay_minus_1 = new uint[ operating_points_cnt_minus_1];
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
-					this.operating_point_idc[ i ] =  new OperatingPointIdc() ;
-					size +=  stream.ReadClass<OperatingPointIdc>(size, context, this.operating_point_idc[ i ], "operating_point_idc"); 
-					size += stream.ReadFixed(size, 12, out this.operating_point_idc[ i ], "operating_point_idc"); 
-					size += stream.ReadFixed(size, 5, out this.seq_level_idx[ i ], "seq_level_idx"); 
+					ReadOperatingPointIdc; 
+					stream.ReadFixed(12, out this.operating_point_idc[ i ], "operating_point_idc"); 
+					stream.ReadFixed(5, out this.seq_level_idx[ i ], "seq_level_idx"); 
 
 					if ( seq_level_idx[ i ] > 7 )
 					{
-						size += stream.ReadFixed(size, 1, out this.seq_tier[ i ], "seq_tier"); 
+						stream.ReadFixed(1, out this.seq_tier[ i ], "seq_tier"); 
 					}
 					else 
 					{
@@ -876,12 +681,11 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 					if ( decoder_model_info_present_flag != 0 )
 					{
-						size += stream.ReadFixed(size, 1, out this.decoder_model_present_for_this_op[ i ], "decoder_model_present_for_this_op"); 
+						stream.ReadFixed(1, out this.decoder_model_present_for_this_op[ i ], "decoder_model_present_for_this_op"); 
 
 						if ( decoder_model_present_for_this_op[ i ] != 0 )
 						{
-							this.operating_parameters_info[ i ] =  new OperatingParametersInfo( i ) ;
-							size +=  stream.ReadClass<OperatingParametersInfo>(size, context, this.operating_parameters_info[ i ], "operating_parameters_info"); 
+							ReadOperatingParametersInfo( i ); 
 						}
 					}
 					else 
@@ -891,25 +695,24 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 					if ( initial_display_delay_present_flag != 0 )
 					{
-						size += stream.ReadFixed(size, 1, out this.initial_display_delay_present_for_this_op[ i ], "initial_display_delay_present_for_this_op"); 
+						stream.ReadFixed(1, out this.initial_display_delay_present_for_this_op[ i ], "initial_display_delay_present_for_this_op"); 
 
 						if ( initial_display_delay_present_for_this_op[ i ] != 0 )
 						{
-							this.initial_display_delay_minus_1[ i ] =  new InitialDisplayDelayMinus1() ;
-							size +=  stream.ReadClass<InitialDisplayDelayMinus1>(size, context, this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
-							size += stream.ReadFixed(size, 4, out this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
+							ReadInitialDisplayDelayMinus1; 
+							stream.ReadFixed(4, out this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
 						}
 					}
 				}
 			}
-			operatingPoint= choose_operating_point();
-			OperatingPointIdc= operating_point_idc[ operatingPoint ];
-			size += stream.ReadFixed(size, 4, out this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
-			size += stream.ReadFixed(size, 4, out this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
-			n= frame_width_bits_minus_1 + 1;
-			size += stream.ReadVariable(size, n, out this.max_frame_width_minus_1, "max_frame_width_minus_1"); 
+			uint operatingPoint= choose_operating_point();
+			uint OperatingPointIdc= operating_point_idc[ operatingPoint ];
+			stream.ReadFixed(4, out this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
+			stream.ReadFixed(4, out this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
+			uint n= frame_width_bits_minus_1 + 1;
+			stream.ReadVariable(n, out this.max_frame_width_minus_1, "max_frame_width_minus_1"); 
 			n= frame_height_bits_minus_1 + 1;
-			size += stream.ReadVariable(size, n, out this.max_frame_height_minus_1, "max_frame_height_minus_1"); 
+			stream.ReadVariable(n, out this.max_frame_height_minus_1, "max_frame_height_minus_1"); 
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -917,17 +720,17 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.frame_id_numbers_present_flag, "frame_id_numbers_present_flag"); 
+				stream.ReadFixed(1, out this.frame_id_numbers_present_flag, "frame_id_numbers_present_flag"); 
 			}
 
 			if ( frame_id_numbers_present_flag != 0 )
 			{
-				size += stream.ReadFixed(size, 4, out this.delta_frame_id_length_minus_2, "delta_frame_id_length_minus_2"); 
-				size += stream.ReadFixed(size, 3, out this.additional_frame_id_length_minus_1, "additional_frame_id_length_minus_1"); 
+				stream.ReadFixed(4, out this.delta_frame_id_length_minus_2, "delta_frame_id_length_minus_2"); 
+				stream.ReadFixed(3, out this.additional_frame_id_length_minus_1, "additional_frame_id_length_minus_1"); 
 			}
-			size += stream.ReadFixed(size, 1, out this.use_128x128_superblock, "use_128x128_superblock"); 
-			size += stream.ReadFixed(size, 1, out this.enable_filter_intra, "enable_filter_intra"); 
-			size += stream.ReadFixed(size, 1, out this.enable_intra_edge_filter, "enable_intra_edge_filter"); 
+			stream.ReadFixed(1, out this.use_128x128_superblock, "use_128x128_superblock"); 
+			stream.ReadFixed(1, out this.enable_filter_intra, "enable_filter_intra"); 
+			stream.ReadFixed(1, out this.enable_intra_edge_filter, "enable_intra_edge_filter"); 
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -944,23 +747,23 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.enable_interintra_compound, "enable_interintra_compound"); 
-				size += stream.ReadFixed(size, 1, out this.enable_masked_compound, "enable_masked_compound"); 
-				size += stream.ReadFixed(size, 1, out this.enable_warped_motion, "enable_warped_motion"); 
-				size += stream.ReadFixed(size, 1, out this.enable_dual_filter, "enable_dual_filter"); 
-				size += stream.ReadFixed(size, 1, out this.enable_order_hint, "enable_order_hint"); 
+				stream.ReadFixed(1, out this.enable_interintra_compound, "enable_interintra_compound"); 
+				stream.ReadFixed(1, out this.enable_masked_compound, "enable_masked_compound"); 
+				stream.ReadFixed(1, out this.enable_warped_motion, "enable_warped_motion"); 
+				stream.ReadFixed(1, out this.enable_dual_filter, "enable_dual_filter"); 
+				stream.ReadFixed(1, out this.enable_order_hint, "enable_order_hint"); 
 
 				if ( enable_order_hint != 0 )
 				{
-					size += stream.ReadFixed(size, 1, out this.enable_jnt_comp, "enable_jnt_comp"); 
-					size += stream.ReadFixed(size, 1, out this.enable_ref_frame_mvs, "enable_ref_frame_mvs"); 
+					stream.ReadFixed(1, out this.enable_jnt_comp, "enable_jnt_comp"); 
+					stream.ReadFixed(1, out this.enable_ref_frame_mvs, "enable_ref_frame_mvs"); 
 				}
 				else 
 				{
 					enable_jnt_comp= 0;
 					enable_ref_frame_mvs= 0;
 				}
-				size += stream.ReadFixed(size, 1, out this.seq_choose_screen_content_tools, "seq_choose_screen_content_tools"); 
+				stream.ReadFixed(1, out this.seq_choose_screen_content_tools, "seq_choose_screen_content_tools"); 
 
 				if ( seq_choose_screen_content_tools != 0 )
 				{
@@ -968,12 +771,12 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, out this.seq_force_screen_content_tools, "seq_force_screen_content_tools"); 
+					stream.ReadFixed(1, out this.seq_force_screen_content_tools, "seq_force_screen_content_tools"); 
 				}
 
 				if ( seq_force_screen_content_tools > 0 )
 				{
-					size += stream.ReadFixed(size, 1, out this.seq_choose_integer_mv, "seq_choose_integer_mv"); 
+					stream.ReadFixed(1, out this.seq_choose_integer_mv, "seq_choose_integer_mv"); 
 
 					if ( seq_choose_integer_mv != 0 )
 					{
@@ -981,7 +784,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					}
 					else 
 					{
-						size += stream.ReadFixed(size, 1, out this.seq_force_integer_mv, "seq_force_integer_mv"); 
+						stream.ReadFixed(1, out this.seq_force_integer_mv, "seq_force_integer_mv"); 
 					}
 				}
 				else 
@@ -991,7 +794,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 				if ( enable_order_hint != 0 )
 				{
-					size += stream.ReadFixed(size, 3, out this.order_hint_bits_minus_1, "order_hint_bits_minus_1"); 
+					stream.ReadFixed(3, out this.order_hint_bits_minus_1, "order_hint_bits_minus_1"); 
 					OrderHintBits= order_hint_bits_minus_1 + 1;
 				}
 				else 
@@ -999,46 +802,19 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					OrderHintBits= 0;
 				}
 			}
-			size += stream.ReadFixed(size, 1, out this.enable_superres, "enable_superres"); 
-			size += stream.ReadFixed(size, 1, out this.enable_cdef, "enable_cdef"); 
-			size += stream.ReadFixed(size, 1, out this.enable_restoration, "enable_restoration"); 
-			this.color_config =  new ColorConfig() ;
-			size +=  stream.ReadClass<ColorConfig>(size, context, this.color_config, "color_config"); 
-			size += stream.ReadFixed(size, 1, out this.film_grain_params_present, "film_grain_params_present"); 
-
-            return size;
+			stream.ReadFixed(1, out this.enable_superres, "enable_superres"); 
+			stream.ReadFixed(1, out this.enable_cdef, "enable_cdef"); 
+			stream.ReadFixed(1, out this.enable_restoration, "enable_restoration"); 
+			ReadColorConfig(); 
+			stream.ReadFixed(1, out this.film_grain_params_present, "film_grain_params_present"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteSequenceHeaderObu()
          {
-            ulong size = 0;
 
-			uint timing_info_present_flag = 0;
-			uint decoder_model_info_present_flag = 0;
-			uint initial_display_delay_present_flag = 0;
-			uint operating_points_cnt_minus_1 = 0;
-			uint[][] operating_point_idc = null;
-			uint[][] seq_tier = null;
-			uint[][] decoder_model_present_for_this_op = null;
-			uint[][] initial_display_delay_present_for_this_op = null;
-			uint i = 0;
-			uint operatingPoint = 0;
-			uint OperatingPointIdc = 0;
-			uint n = 0;
-			uint frame_id_numbers_present_flag = 0;
-			uint enable_interintra_compound = 0;
-			uint enable_masked_compound = 0;
-			uint enable_warped_motion = 0;
-			uint enable_dual_filter = 0;
-			uint enable_order_hint = 0;
-			uint enable_jnt_comp = 0;
-			uint enable_ref_frame_mvs = 0;
-			uint seq_force_screen_content_tools = 0;
-			uint seq_force_integer_mv = 0;
-			uint OrderHintBits = 0;
-			size += stream.WriteFixed(3, this.seq_profile, "seq_profile"); 
-			size += stream.WriteFixed(1, this.still_picture, "still_picture"); 
-			size += stream.WriteFixed(1, this.reduced_still_picture_header, "reduced_still_picture_header"); 
+			stream.WriteFixed(3, this.seq_profile, "seq_profile"); 
+			stream.WriteFixed(1, this.still_picture, "still_picture"); 
+			stream.WriteFixed(1, this.reduced_still_picture_header, "reduced_still_picture_header"); 
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -1047,41 +823,41 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				initial_display_delay_present_flag= 0;
 				operating_points_cnt_minus_1= 0;
 				operating_point_idc[ 0 ]= 0;
-				size += stream.WriteFixed(5, this.seq_level_idx[ 0 ], "seq_level_idx"); 
+				stream.WriteFixed(5, this.seq_level_idx[ 0 ], "seq_level_idx"); 
 				seq_tier[ 0 ]= 0;
 				decoder_model_present_for_this_op[ 0 ]= 0;
 				initial_display_delay_present_for_this_op[ 0 ]= 0;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.timing_info_present_flag, "timing_info_present_flag"); 
+				stream.WriteFixed(1, this.timing_info_present_flag, "timing_info_present_flag"); 
 
 				if ( timing_info_present_flag != 0 )
 				{
-					size += stream.WriteClass<TimingInfo>(context, this.timing_info, "timing_info"); 
-					size += stream.WriteFixed(1, this.decoder_model_info_present_flag, "decoder_model_info_present_flag"); 
+					WriteTimingInfo(); 
+					stream.WriteFixed(1, this.decoder_model_info_present_flag, "decoder_model_info_present_flag"); 
 
 					if ( decoder_model_info_present_flag != 0 )
 					{
-						size += stream.WriteClass<DecoderModelInfo>(context, this.decoder_model_info, "decoder_model_info"); 
+						WriteDecoderModelInfo(); 
 					}
 				}
 				else 
 				{
 					decoder_model_info_present_flag= 0;
 				}
-				size += stream.WriteFixed(1, this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
-				size += stream.WriteFixed(5, this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
+				stream.WriteFixed(1, this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
+				stream.WriteFixed(5, this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
 
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
-					size += stream.WriteClass<OperatingPointIdc>(context, this.operating_point_idc[ i ], "operating_point_idc"); 
-					size += stream.WriteFixed(12, this.operating_point_idc[ i ], "operating_point_idc"); 
-					size += stream.WriteFixed(5, this.seq_level_idx[ i ], "seq_level_idx"); 
+					WriteOperatingPointIdc; 
+					stream.WriteFixed(12, this.operating_point_idc[ i ], "operating_point_idc"); 
+					stream.WriteFixed(5, this.seq_level_idx[ i ], "seq_level_idx"); 
 
 					if ( seq_level_idx[ i ] > 7 )
 					{
-						size += stream.WriteFixed(1, this.seq_tier[ i ], "seq_tier"); 
+						stream.WriteFixed(1, this.seq_tier[ i ], "seq_tier"); 
 					}
 					else 
 					{
@@ -1090,11 +866,11 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 					if ( decoder_model_info_present_flag != 0 )
 					{
-						size += stream.WriteFixed(1, this.decoder_model_present_for_this_op[ i ], "decoder_model_present_for_this_op"); 
+						stream.WriteFixed(1, this.decoder_model_present_for_this_op[ i ], "decoder_model_present_for_this_op"); 
 
 						if ( decoder_model_present_for_this_op[ i ] != 0 )
 						{
-							size += stream.WriteClass<OperatingParametersInfo>(context, this.operating_parameters_info[ i ], "operating_parameters_info"); 
+							WriteOperatingParametersInfo( i ); 
 						}
 					}
 					else 
@@ -1104,24 +880,24 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 					if ( initial_display_delay_present_flag != 0 )
 					{
-						size += stream.WriteFixed(1, this.initial_display_delay_present_for_this_op[ i ], "initial_display_delay_present_for_this_op"); 
+						stream.WriteFixed(1, this.initial_display_delay_present_for_this_op[ i ], "initial_display_delay_present_for_this_op"); 
 
 						if ( initial_display_delay_present_for_this_op[ i ] != 0 )
 						{
-							size += stream.WriteClass<InitialDisplayDelayMinus1>(context, this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
-							size += stream.WriteFixed(4, this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
+							WriteInitialDisplayDelayMinus1; 
+							stream.WriteFixed(4, this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
 						}
 					}
 				}
 			}
-			operatingPoint= choose_operating_point();
-			OperatingPointIdc= operating_point_idc[ operatingPoint ];
-			size += stream.WriteFixed(4, this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
-			size += stream.WriteFixed(4, this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
-			n= frame_width_bits_minus_1 + 1;
-			size += stream.WriteVariable(n, this.max_frame_width_minus_1, "max_frame_width_minus_1"); 
+			uint operatingPoint= choose_operating_point();
+			uint OperatingPointIdc= operating_point_idc[ operatingPoint ];
+			stream.WriteFixed(4, this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
+			stream.WriteFixed(4, this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
+			uint n= frame_width_bits_minus_1 + 1;
+			stream.WriteVariable(n, this.max_frame_width_minus_1, "max_frame_width_minus_1"); 
 			n= frame_height_bits_minus_1 + 1;
-			size += stream.WriteVariable(n, this.max_frame_height_minus_1, "max_frame_height_minus_1"); 
+			stream.WriteVariable(n, this.max_frame_height_minus_1, "max_frame_height_minus_1"); 
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -1129,17 +905,17 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.frame_id_numbers_present_flag, "frame_id_numbers_present_flag"); 
+				stream.WriteFixed(1, this.frame_id_numbers_present_flag, "frame_id_numbers_present_flag"); 
 			}
 
 			if ( frame_id_numbers_present_flag != 0 )
 			{
-				size += stream.WriteFixed(4, this.delta_frame_id_length_minus_2, "delta_frame_id_length_minus_2"); 
-				size += stream.WriteFixed(3, this.additional_frame_id_length_minus_1, "additional_frame_id_length_minus_1"); 
+				stream.WriteFixed(4, this.delta_frame_id_length_minus_2, "delta_frame_id_length_minus_2"); 
+				stream.WriteFixed(3, this.additional_frame_id_length_minus_1, "additional_frame_id_length_minus_1"); 
 			}
-			size += stream.WriteFixed(1, this.use_128x128_superblock, "use_128x128_superblock"); 
-			size += stream.WriteFixed(1, this.enable_filter_intra, "enable_filter_intra"); 
-			size += stream.WriteFixed(1, this.enable_intra_edge_filter, "enable_intra_edge_filter"); 
+			stream.WriteFixed(1, this.use_128x128_superblock, "use_128x128_superblock"); 
+			stream.WriteFixed(1, this.enable_filter_intra, "enable_filter_intra"); 
+			stream.WriteFixed(1, this.enable_intra_edge_filter, "enable_intra_edge_filter"); 
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -1156,23 +932,23 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.enable_interintra_compound, "enable_interintra_compound"); 
-				size += stream.WriteFixed(1, this.enable_masked_compound, "enable_masked_compound"); 
-				size += stream.WriteFixed(1, this.enable_warped_motion, "enable_warped_motion"); 
-				size += stream.WriteFixed(1, this.enable_dual_filter, "enable_dual_filter"); 
-				size += stream.WriteFixed(1, this.enable_order_hint, "enable_order_hint"); 
+				stream.WriteFixed(1, this.enable_interintra_compound, "enable_interintra_compound"); 
+				stream.WriteFixed(1, this.enable_masked_compound, "enable_masked_compound"); 
+				stream.WriteFixed(1, this.enable_warped_motion, "enable_warped_motion"); 
+				stream.WriteFixed(1, this.enable_dual_filter, "enable_dual_filter"); 
+				stream.WriteFixed(1, this.enable_order_hint, "enable_order_hint"); 
 
 				if ( enable_order_hint != 0 )
 				{
-					size += stream.WriteFixed(1, this.enable_jnt_comp, "enable_jnt_comp"); 
-					size += stream.WriteFixed(1, this.enable_ref_frame_mvs, "enable_ref_frame_mvs"); 
+					stream.WriteFixed(1, this.enable_jnt_comp, "enable_jnt_comp"); 
+					stream.WriteFixed(1, this.enable_ref_frame_mvs, "enable_ref_frame_mvs"); 
 				}
 				else 
 				{
 					enable_jnt_comp= 0;
 					enable_ref_frame_mvs= 0;
 				}
-				size += stream.WriteFixed(1, this.seq_choose_screen_content_tools, "seq_choose_screen_content_tools"); 
+				stream.WriteFixed(1, this.seq_choose_screen_content_tools, "seq_choose_screen_content_tools"); 
 
 				if ( seq_choose_screen_content_tools != 0 )
 				{
@@ -1180,12 +956,12 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, this.seq_force_screen_content_tools, "seq_force_screen_content_tools"); 
+					stream.WriteFixed(1, this.seq_force_screen_content_tools, "seq_force_screen_content_tools"); 
 				}
 
 				if ( seq_force_screen_content_tools > 0 )
 				{
-					size += stream.WriteFixed(1, this.seq_choose_integer_mv, "seq_choose_integer_mv"); 
+					stream.WriteFixed(1, this.seq_choose_integer_mv, "seq_choose_integer_mv"); 
 
 					if ( seq_choose_integer_mv != 0 )
 					{
@@ -1193,7 +969,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					}
 					else 
 					{
-						size += stream.WriteFixed(1, this.seq_force_integer_mv, "seq_force_integer_mv"); 
+						stream.WriteFixed(1, this.seq_force_integer_mv, "seq_force_integer_mv"); 
 					}
 				}
 				else 
@@ -1203,7 +979,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 				if ( enable_order_hint != 0 )
 				{
-					size += stream.WriteFixed(3, this.order_hint_bits_minus_1, "order_hint_bits_minus_1"); 
+					stream.WriteFixed(3, this.order_hint_bits_minus_1, "order_hint_bits_minus_1"); 
 					OrderHintBits= order_hint_bits_minus_1 + 1;
 				}
 				else 
@@ -1211,16 +987,12 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					OrderHintBits= 0;
 				}
 			}
-			size += stream.WriteFixed(1, this.enable_superres, "enable_superres"); 
-			size += stream.WriteFixed(1, this.enable_cdef, "enable_cdef"); 
-			size += stream.WriteFixed(1, this.enable_restoration, "enable_restoration"); 
-			size += stream.WriteClass<ColorConfig>(context, this.color_config, "color_config"); 
-			size += stream.WriteFixed(1, this.film_grain_params_present, "film_grain_params_present"); 
-
-            return size;
+			stream.WriteFixed(1, this.enable_superres, "enable_superres"); 
+			stream.WriteFixed(1, this.enable_cdef, "enable_cdef"); 
+			stream.WriteFixed(1, this.enable_restoration, "enable_restoration"); 
+			WriteColorConfig(); 
+			stream.WriteFixed(1, this.film_grain_params_present, "film_grain_params_present"); 
          }
-
-    }
 
     /*
 
@@ -1233,58 +1005,42 @@ timing_info() {
  num_ticks_per_picture_minus_1 num_ticks_per_picture_minus_1 uvlc()
 }
     */
-    public class TimingInfo : IAomSerializable
-    {
 		private uint num_units_in_display_tick;
 		public uint NumUnitsInDisplayTick { get { return num_units_in_display_tick; } set { num_units_in_display_tick = value; } }
 		private uint time_scale;
 		public uint TimeScale { get { return time_scale; } set { time_scale = value; } }
 		private uint equal_picture_interval;
 		public uint EqualPictureInterval { get { return equal_picture_interval; } set { equal_picture_interval = value; } }
-		private NumTicksPerPictureMinus1 num_ticks_per_picture_minus_1;
-		public NumTicksPerPictureMinus1 NumTicksPerPictureMinus1 { get { return num_ticks_per_picture_minus_1; } set { num_ticks_per_picture_minus_1 = value; } }
+		private uint num_ticks_per_picture_minus_1;
+		public uint NumTicksPerPictureMinus1 { get { return num_ticks_per_picture_minus_1; } set { num_ticks_per_picture_minus_1 = value; } }
 
-         public TimingInfo()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadTimingInfo()
          {
-            ulong size = 0;
 
-			size += stream.ReadFixed(size, 32, out this.num_units_in_display_tick, "num_units_in_display_tick"); 
-			size += stream.ReadFixed(size, 32, out this.time_scale, "time_scale"); 
-			size += stream.ReadFixed(size, 1, out this.equal_picture_interval, "equal_picture_interval"); 
+			stream.ReadFixed(32, out this.num_units_in_display_tick, "num_units_in_display_tick"); 
+			stream.ReadFixed(32, out this.time_scale, "time_scale"); 
+			stream.ReadFixed(1, out this.equal_picture_interval, "equal_picture_interval"); 
 
 			if ( equal_picture_interval != 0 )
 			{
-				this.num_ticks_per_picture_minus_1 =  new NumTicksPerPictureMinus1() ;
-				size +=  stream.ReadClass<NumTicksPerPictureMinus1>(size, context, this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
+				ReadNumTicksPerPictureMinus1; 
 			}
-			size += stream.ReadUvlc(size,  out this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
-
-            return size;
+			stream.ReadUvlc( out this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteTimingInfo()
          {
-            ulong size = 0;
 
-			size += stream.WriteFixed(32, this.num_units_in_display_tick, "num_units_in_display_tick"); 
-			size += stream.WriteFixed(32, this.time_scale, "time_scale"); 
-			size += stream.WriteFixed(1, this.equal_picture_interval, "equal_picture_interval"); 
+			stream.WriteFixed(32, this.num_units_in_display_tick, "num_units_in_display_tick"); 
+			stream.WriteFixed(32, this.time_scale, "time_scale"); 
+			stream.WriteFixed(1, this.equal_picture_interval, "equal_picture_interval"); 
 
 			if ( equal_picture_interval != 0 )
 			{
-				size += stream.WriteClass<NumTicksPerPictureMinus1>(context, this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
+				WriteNumTicksPerPictureMinus1; 
 			}
-			size += stream.WriteUvlc( this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
-
-            return size;
+			stream.WriteUvlc( this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
          }
-
-    }
 
     /*
 
@@ -1296,8 +1052,6 @@ decoder_model_info() {
  frame_presentation_time_length_minus_1 f(5)
 }
     */
-    public class DecoderModelInfo : IAomSerializable
-    {
 		private uint buffer_delay_length_minus_1;
 		public uint BufferDelayLengthMinus1 { get { return buffer_delay_length_minus_1; } set { buffer_delay_length_minus_1 = value; } }
 		private uint num_units_in_decoding_tick;
@@ -1307,36 +1061,23 @@ decoder_model_info() {
 		private uint frame_presentation_time_length_minus_1;
 		public uint FramePresentationTimeLengthMinus1 { get { return frame_presentation_time_length_minus_1; } set { frame_presentation_time_length_minus_1 = value; } }
 
-         public DecoderModelInfo()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadDecoderModelInfo()
          {
-            ulong size = 0;
 
-			size += stream.ReadFixed(size, 5, out this.buffer_delay_length_minus_1, "buffer_delay_length_minus_1"); 
-			size += stream.ReadFixed(size, 32, out this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
-			size += stream.ReadFixed(size, 5, out this.buffer_removal_time_length_minus_1, "buffer_removal_time_length_minus_1"); 
-			size += stream.ReadFixed(size, 5, out this.frame_presentation_time_length_minus_1, "frame_presentation_time_length_minus_1"); 
-
-            return size;
+			stream.ReadFixed(5, out this.buffer_delay_length_minus_1, "buffer_delay_length_minus_1"); 
+			stream.ReadFixed(32, out this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
+			stream.ReadFixed(5, out this.buffer_removal_time_length_minus_1, "buffer_removal_time_length_minus_1"); 
+			stream.ReadFixed(5, out this.frame_presentation_time_length_minus_1, "frame_presentation_time_length_minus_1"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteDecoderModelInfo()
          {
-            ulong size = 0;
 
-			size += stream.WriteFixed(5, this.buffer_delay_length_minus_1, "buffer_delay_length_minus_1"); 
-			size += stream.WriteFixed(32, this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
-			size += stream.WriteFixed(5, this.buffer_removal_time_length_minus_1, "buffer_removal_time_length_minus_1"); 
-			size += stream.WriteFixed(5, this.frame_presentation_time_length_minus_1, "frame_presentation_time_length_minus_1"); 
-
-            return size;
+			stream.WriteFixed(5, this.buffer_delay_length_minus_1, "buffer_delay_length_minus_1"); 
+			stream.WriteFixed(32, this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
+			stream.WriteFixed(5, this.buffer_removal_time_length_minus_1, "buffer_removal_time_length_minus_1"); 
+			stream.WriteFixed(5, this.frame_presentation_time_length_minus_1, "frame_presentation_time_length_minus_1"); 
          }
-
-    }
 
     /*
 
@@ -1348,8 +1089,6 @@ operating_parameters_info( op ) {
  low_delay_mode_flag[ op ] f(1)
 }
     */
-    public class OperatingParametersInfo : IAomSerializable
-    {
 		private uint op;
 		public uint Op { get { return op; } set { op = value; } }
 		private uint[] decoder_buffer_delay;
@@ -1359,38 +1098,23 @@ operating_parameters_info( op ) {
 		private uint[] low_delay_mode_flag;
 		public uint[] LowDelayModeFlag { get { return low_delay_mode_flag; } set { low_delay_mode_flag = value; } }
 
-         public OperatingParametersInfo(uint op)
-         { 
-			this.op = op;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadOperatingParametersInfo(uint op)
          {
-            ulong size = 0;
 
-			uint n = 0;
-			n= buffer_delay_length_minus_1 + 1;
-			size += stream.ReadVariable(size, n, out this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
-			size += stream.ReadVariable(size, n, out this.encoder_buffer_delay[ op ], "encoder_buffer_delay"); 
-			size += stream.ReadFixed(size, 1, out this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
-
-            return size;
+			uint n= buffer_delay_length_minus_1 + 1;
+			stream.ReadVariable(n, out this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
+			stream.ReadVariable(n, out this.encoder_buffer_delay[ op ], "encoder_buffer_delay"); 
+			stream.ReadFixed(1, out this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteOperatingParametersInfo(uint op)
          {
-            ulong size = 0;
 
-			uint n = 0;
-			n= buffer_delay_length_minus_1 + 1;
-			size += stream.WriteVariable(n, this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
-			size += stream.WriteVariable(n, this.encoder_buffer_delay[ op ], "encoder_buffer_delay"); 
-			size += stream.WriteFixed(1, this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
-
-            return size;
+			uint n= buffer_delay_length_minus_1 + 1;
+			stream.WriteVariable(n, this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
+			stream.WriteVariable(n, this.encoder_buffer_delay[ op ], "encoder_buffer_delay"); 
+			stream.WriteFixed(1, this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
          }
-
-    }
 
     /*
 
@@ -1459,8 +1183,6 @@ color_config() {
  separate_uv_delta_q f(1)
 }
     */
-    public class ColorConfig : IAomSerializable
-    {
 		private uint high_bitdepth;
 		public uint HighBitdepth { get { return high_bitdepth; } set { high_bitdepth = value; } }
 		private uint twelve_bit;
@@ -1486,31 +1208,14 @@ color_config() {
 		private uint separate_uv_delta_q;
 		public uint SeparateUvDeltaq { get { return separate_uv_delta_q; } set { separate_uv_delta_q = value; } }
 
-         public ColorConfig()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadColorConfig()
          {
-            ulong size = 0;
 
-			uint BitDepth = 0;
-			uint mono_chrome = 0;
-			uint NumPlanes = 0;
-			uint color_primaries = 0;
-			uint transfer_characteristics = 0;
-			uint matrix_coefficients = 0;
-			uint subsampling_x = 0;
-			uint subsampling_y = 0;
-			uint chroma_sample_position = 0;
-			uint separate_uv_delta_q = 0;
-			uint color_range = 0;
-			size += stream.ReadFixed(size, 1, out this.high_bitdepth, "high_bitdepth"); 
+			stream.ReadFixed(1, out this.high_bitdepth, "high_bitdepth"); 
 
 			if ( seq_profile == 2 && high_bitdepth != 0 )
 			{
-				size += stream.ReadFixed(size, 1, out this.twelve_bit, "twelve_bit"); 
+				stream.ReadFixed(1, out this.twelve_bit, "twelve_bit"); 
 				BitDepth= twelve_bit ? 12 : 10;
 			}
 			else if ( seq_profile <= 2 )
@@ -1524,16 +1229,16 @@ color_config() {
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.mono_chrome, "mono_chrome"); 
+				stream.ReadFixed(1, out this.mono_chrome, "mono_chrome"); 
 			}
-			NumPlanes= mono_chrome ? 1 : 3;
-			size += stream.ReadFixed(size, 1, out this.color_description_present_flag, "color_description_present_flag"); 
+			uint NumPlanes= mono_chrome ? 1 : 3;
+			stream.ReadFixed(1, out this.color_description_present_flag, "color_description_present_flag"); 
 
 			if ( color_description_present_flag != 0 )
 			{
-				size += stream.ReadFixed(size, 8, out this.color_primaries, "color_primaries"); 
-				size += stream.ReadFixed(size, 8, out this.transfer_characteristics, "transfer_characteristics"); 
-				size += stream.ReadFixed(size, 8, out this.matrix_coefficients, "matrix_coefficients"); 
+				stream.ReadFixed(8, out this.color_primaries, "color_primaries"); 
+				stream.ReadFixed(8, out this.transfer_characteristics, "transfer_characteristics"); 
+				stream.ReadFixed(8, out this.matrix_coefficients, "matrix_coefficients"); 
 			}
 			else 
 			{
@@ -1544,7 +1249,7 @@ color_config() {
 
 			if ( mono_chrome != 0 )
 			{
-				size += stream.ReadFixed(size, 1, out this.color_range, "color_range"); 
+				stream.ReadFixed(1, out this.color_range, "color_range"); 
 				subsampling_x= 1;
 				subsampling_y= 1;
 				chroma_sample_position= CSP_UNKNOWN;
@@ -1561,7 +1266,7 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.color_range, "color_range"); 
+				stream.ReadFixed(1, out this.color_range, "color_range"); 
 
 				if ( seq_profile == 0 )
 				{
@@ -1578,11 +1283,11 @@ return;
 
 					if ( BitDepth == 12 )
 					{
-						size += stream.ReadFixed(size, 1, out this.subsampling_x, "subsampling_x"); 
+						stream.ReadFixed(1, out this.subsampling_x, "subsampling_x"); 
 
 						if ( subsampling_x != 0 )
 						{
-							size += stream.ReadFixed(size, 1, out this.subsampling_y, "subsampling_y"); 
+							stream.ReadFixed(1, out this.subsampling_y, "subsampling_y"); 
 						}
 						else 
 						{
@@ -1598,34 +1303,20 @@ return;
 
 				if ( subsampling_x != 0 && subsampling_y != 0 )
 				{
-					size += stream.ReadFixed(size, 2, out this.chroma_sample_position, "chroma_sample_position"); 
+					stream.ReadFixed(2, out this.chroma_sample_position, "chroma_sample_position"); 
 				}
 			}
-			size += stream.ReadFixed(size, 1, out this.separate_uv_delta_q, "separate_uv_delta_q"); 
-
-            return size;
+			stream.ReadFixed(1, out this.separate_uv_delta_q, "separate_uv_delta_q"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteColorConfig()
          {
-            ulong size = 0;
 
-			uint BitDepth = 0;
-			uint mono_chrome = 0;
-			uint NumPlanes = 0;
-			uint color_primaries = 0;
-			uint transfer_characteristics = 0;
-			uint matrix_coefficients = 0;
-			uint subsampling_x = 0;
-			uint subsampling_y = 0;
-			uint chroma_sample_position = 0;
-			uint separate_uv_delta_q = 0;
-			uint color_range = 0;
-			size += stream.WriteFixed(1, this.high_bitdepth, "high_bitdepth"); 
+			stream.WriteFixed(1, this.high_bitdepth, "high_bitdepth"); 
 
 			if ( seq_profile == 2 && high_bitdepth != 0 )
 			{
-				size += stream.WriteFixed(1, this.twelve_bit, "twelve_bit"); 
+				stream.WriteFixed(1, this.twelve_bit, "twelve_bit"); 
 				BitDepth= twelve_bit ? 12 : 10;
 			}
 			else if ( seq_profile <= 2 )
@@ -1639,16 +1330,16 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.mono_chrome, "mono_chrome"); 
+				stream.WriteFixed(1, this.mono_chrome, "mono_chrome"); 
 			}
-			NumPlanes= mono_chrome ? 1 : 3;
-			size += stream.WriteFixed(1, this.color_description_present_flag, "color_description_present_flag"); 
+			uint NumPlanes= mono_chrome ? 1 : 3;
+			stream.WriteFixed(1, this.color_description_present_flag, "color_description_present_flag"); 
 
 			if ( color_description_present_flag != 0 )
 			{
-				size += stream.WriteFixed(8, this.color_primaries, "color_primaries"); 
-				size += stream.WriteFixed(8, this.transfer_characteristics, "transfer_characteristics"); 
-				size += stream.WriteFixed(8, this.matrix_coefficients, "matrix_coefficients"); 
+				stream.WriteFixed(8, this.color_primaries, "color_primaries"); 
+				stream.WriteFixed(8, this.transfer_characteristics, "transfer_characteristics"); 
+				stream.WriteFixed(8, this.matrix_coefficients, "matrix_coefficients"); 
 			}
 			else 
 			{
@@ -1659,7 +1350,7 @@ return;
 
 			if ( mono_chrome != 0 )
 			{
-				size += stream.WriteFixed(1, this.color_range, "color_range"); 
+				stream.WriteFixed(1, this.color_range, "color_range"); 
 				subsampling_x= 1;
 				subsampling_y= 1;
 				chroma_sample_position= CSP_UNKNOWN;
@@ -1676,7 +1367,7 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.color_range, "color_range"); 
+				stream.WriteFixed(1, this.color_range, "color_range"); 
 
 				if ( seq_profile == 0 )
 				{
@@ -1693,11 +1384,11 @@ return;
 
 					if ( BitDepth == 12 )
 					{
-						size += stream.WriteFixed(1, this.subsampling_x, "subsampling_x"); 
+						stream.WriteFixed(1, this.subsampling_x, "subsampling_x"); 
 
 						if ( subsampling_x != 0 )
 						{
-							size += stream.WriteFixed(1, this.subsampling_y, "subsampling_y"); 
+							stream.WriteFixed(1, this.subsampling_y, "subsampling_y"); 
 						}
 						else 
 						{
@@ -1713,15 +1404,11 @@ return;
 
 				if ( subsampling_x != 0 && subsampling_y != 0 )
 				{
-					size += stream.WriteFixed(2, this.chroma_sample_position, "chroma_sample_position"); 
+					stream.WriteFixed(2, this.chroma_sample_position, "chroma_sample_position"); 
 				}
 			}
-			size += stream.WriteFixed(1, this.separate_uv_delta_q, "separate_uv_delta_q"); 
-
-            return size;
+			stream.WriteFixed(1, this.separate_uv_delta_q, "separate_uv_delta_q"); 
          }
-
-    }
 
     /*
 
@@ -1742,42 +1429,23 @@ frame_header_obu() {
  }
  }
     */
-    public class FrameHeaderObu : IAomSerializable
-    {
-		private FrameHeaderCopy frame_header_copy;
-		public FrameHeaderCopy FrameHeaderCopy { get { return frame_header_copy; } set { frame_header_copy = value; } }
-		private UncompressedHeader uncompressed_header;
-		public UncompressedHeader UncompressedHeader { get { return uncompressed_header; } set { uncompressed_header = value; } }
-		private DecodeFrameWrapup decode_frame_wrapup;
-		public DecodeFrameWrapup DecodeFrameWrapup { get { return decode_frame_wrapup; } set { decode_frame_wrapup = value; } }
 
-         public FrameHeaderObu()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadFrameHeaderObu()
          {
-            ulong size = 0;
 
-			uint SeenFrameHeader = 0;
-			uint TileNum = 0;
 
 			if ( SeenFrameHeader == 1 )
 			{
-				this.frame_header_copy =  new FrameHeaderCopy() ;
-				size +=  stream.ReadClass<FrameHeaderCopy>(size, context, this.frame_header_copy, "frame_header_copy"); 
+				ReadFrameHeaderCopy(); 
 			}
 			else 
 			{
 				SeenFrameHeader= 1;
-				this.uncompressed_header =  new UncompressedHeader() ;
-				size +=  stream.ReadClass<UncompressedHeader>(size, context, this.uncompressed_header, "uncompressed_header"); 
+				ReadUncompressedHeader(); 
 
 				if ( show_existing_frame != 0 )
 				{
-					this.decode_frame_wrapup =  new DecodeFrameWrapup() ;
-					size +=  stream.ReadClass<DecodeFrameWrapup>(size, context, this.decode_frame_wrapup, "decode_frame_wrapup"); 
+					ReadDecodeFrameWrapup(); 
 					SeenFrameHeader= 0;
 				}
 				else 
@@ -1786,29 +1454,24 @@ frame_header_obu() {
 					SeenFrameHeader= 1;
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteFrameHeaderObu()
          {
-            ulong size = 0;
 
-			uint SeenFrameHeader = 0;
-			uint TileNum = 0;
 
 			if ( SeenFrameHeader == 1 )
 			{
-				size += stream.WriteClass<FrameHeaderCopy>(context, this.frame_header_copy, "frame_header_copy"); 
+				WriteFrameHeaderCopy(); 
 			}
 			else 
 			{
 				SeenFrameHeader= 1;
-				size += stream.WriteClass<UncompressedHeader>(context, this.uncompressed_header, "uncompressed_header"); 
+				WriteUncompressedHeader(); 
 
 				if ( show_existing_frame != 0 )
 				{
-					size += stream.WriteClass<DecodeFrameWrapup>(context, this.decode_frame_wrapup, "decode_frame_wrapup"); 
+					WriteDecodeFrameWrapup(); 
 					SeenFrameHeader= 0;
 				}
 				else 
@@ -1817,11 +1480,7 @@ frame_header_obu() {
 					SeenFrameHeader= 1;
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -2068,22 +1727,16 @@ frame_header_obu() {
  film_grain_params()
  }
     */
-    public class UncompressedHeader : IAomSerializable
-    {
 		private uint show_existing_frame;
 		public uint ShowExistingFrame { get { return show_existing_frame; } set { show_existing_frame = value; } }
 		private uint frame_to_show_map_idx;
 		public uint FrameToShowMapIdx { get { return frame_to_show_map_idx; } set { frame_to_show_map_idx = value; } }
-		private TemporalPointInfo temporal_point_info;
-		public TemporalPointInfo TemporalPointInfo { get { return temporal_point_info; } set { temporal_point_info = value; } }
 		private uint display_frame_id;
 		public uint DisplayFrameId { get { return display_frame_id; } set { display_frame_id = value; } }
-		private LoadGrainParams load_grain_params;
-		public LoadGrainParams LoadGrainParams { get { return load_grain_params; } set { load_grain_params = value; } }
 		private uint frame_type;
 		public uint FrameType { get { return frame_type; } set { frame_type = value; } }
-		private ShowFrame show_frame;
-		public ShowFrame ShowFrame { get { return show_frame; } set { show_frame = value; } }
+		private uint show_frame;
+		public uint ShowFrame { get { return show_frame; } set { show_frame = value; } }
 		private uint showable_frame;
 		public uint ShowableFrame { get { return showable_frame; } set { showable_frame = value; } }
 		private uint error_resilient_mode;
@@ -2094,14 +1747,12 @@ frame_header_obu() {
 		public uint AllowScreenContentTools { get { return allow_screen_content_tools; } set { allow_screen_content_tools = value; } }
 		private uint force_integer_mv;
 		public uint ForceIntegerMv { get { return force_integer_mv; } set { force_integer_mv = value; } }
-		private CurrentFrameId current_frame_id;
-		public CurrentFrameId CurrentFrameId { get { return current_frame_id; } set { current_frame_id = value; } }
-		private MarkRefFrames mark_ref_frames;
-		public MarkRefFrames MarkRefFrames { get { return mark_ref_frames; } set { mark_ref_frames = value; } }
+		private uint current_frame_id;
+		public uint CurrentFrameId { get { return current_frame_id; } set { current_frame_id = value; } }
 		private uint frame_size_override_flag;
 		public uint FrameSizeOverrideFlag { get { return frame_size_override_flag; } set { frame_size_override_flag = value; } }
-		private OrderHint order_hint;
-		public OrderHint OrderHint { get { return order_hint; } set { order_hint = value; } }
+		private uint order_hint;
+		public uint OrderHint { get { return order_hint; } set { order_hint = value; } }
 		private uint primary_ref_frame;
 		public uint PrimaryRefFrame { get { return primary_ref_frame; } set { primary_ref_frame = value; } }
 		private uint buffer_removal_time_present_flag;
@@ -2110,12 +1761,8 @@ frame_header_obu() {
 		public uint[] BufferRemovalTime { get { return buffer_removal_time; } set { buffer_removal_time = value; } }
 		private uint refresh_frame_flags;
 		public uint RefreshFrameFlags { get { return refresh_frame_flags; } set { refresh_frame_flags = value; } }
-		private RefOrderHint ref_order_hint;
-		public RefOrderHint RefOrderHint { get { return ref_order_hint; } set { ref_order_hint = value; } }
-		private FrameSize frame_size;
-		public FrameSize FrameSize { get { return frame_size; } set { frame_size = value; } }
-		private RenderSize render_size;
-		public RenderSize RenderSize { get { return render_size; } set { render_size = value; } }
+		private uint[] ref_order_hint;
+		public uint[] RefOrderHint { get { return ref_order_hint; } set { ref_order_hint = value; } }
 		private uint allow_intrabc;
 		public uint AllowIntrabc { get { return allow_intrabc; } set { allow_intrabc = value; } }
 		private uint frame_refs_short_signaling;
@@ -2124,126 +1771,35 @@ frame_header_obu() {
 		public uint LastFrameIdx { get { return last_frame_idx; } set { last_frame_idx = value; } }
 		private uint gold_frame_idx;
 		public uint GoldFrameIdx { get { return gold_frame_idx; } set { gold_frame_idx = value; } }
-		private SetFrameRefs set_frame_refs;
-		public SetFrameRefs SetFrameRefs { get { return set_frame_refs; } set { set_frame_refs = value; } }
 		private uint[] ref_frame_idx;
 		public uint[] RefFrameIdx { get { return ref_frame_idx; } set { ref_frame_idx = value; } }
 		private uint[] delta_frame_id_minus_1;
 		public uint[] DeltaFrameIdMinus1 { get { return delta_frame_id_minus_1; } set { delta_frame_id_minus_1 = value; } }
-		private FrameSizeWithRefs frame_size_with_refs;
-		public FrameSizeWithRefs FrameSizeWithRefs { get { return frame_size_with_refs; } set { frame_size_with_refs = value; } }
 		private uint allow_high_precision_mv;
 		public uint AllowHighPrecisionMv { get { return allow_high_precision_mv; } set { allow_high_precision_mv = value; } }
-		private ReadInterpolationFilter read_interpolation_filter;
-		public ReadInterpolationFilter ReadInterpolationFilter { get { return read_interpolation_filter; } set { read_interpolation_filter = value; } }
 		private uint is_motion_mode_switchable;
 		public uint IsMotionModeSwitchable { get { return is_motion_mode_switchable; } set { is_motion_mode_switchable = value; } }
 		private uint use_ref_frame_mvs;
 		public uint UseRefFrameMvs { get { return use_ref_frame_mvs; } set { use_ref_frame_mvs = value; } }
 		private uint disable_frame_end_update_cdf;
 		public uint DisableFrameEndUpdateCdf { get { return disable_frame_end_update_cdf; } set { disable_frame_end_update_cdf = value; } }
-		private InitNonCoeffCdfs init_non_coeff_cdfs;
-		public InitNonCoeffCdfs InitNonCoeffCdfs { get { return init_non_coeff_cdfs; } set { init_non_coeff_cdfs = value; } }
-		private SetupPastIndependence setup_past_independence;
-		public SetupPastIndependence SetupPastIndependence { get { return setup_past_independence; } set { setup_past_independence = value; } }
-		private LoadCdfs load_cdfs;
-		public LoadCdfs LoadCdfs { get { return load_cdfs; } set { load_cdfs = value; } }
-		private LoadPrevious load_previous;
-		public LoadPrevious LoadPrevious { get { return load_previous; } set { load_previous = value; } }
-		private MotionFieldEstimation motion_field_estimation;
-		public MotionFieldEstimation MotionFieldEstimation { get { return motion_field_estimation; } set { motion_field_estimation = value; } }
-		private TileInfo tile_info;
-		public TileInfo TileInfo { get { return tile_info; } set { tile_info = value; } }
-		private QuantizationParams quantization_params;
-		public QuantizationParams QuantizationParams { get { return quantization_params; } set { quantization_params = value; } }
-		private SegmentationParams segmentation_params;
-		public SegmentationParams SegmentationParams { get { return segmentation_params; } set { segmentation_params = value; } }
-		private DeltaqParams delta_q_params;
-		public DeltaqParams DeltaqParams { get { return delta_q_params; } set { delta_q_params = value; } }
-		private DeltaLfParams delta_lf_params;
-		public DeltaLfParams DeltaLfParams { get { return delta_lf_params; } set { delta_lf_params = value; } }
-		private InitCoeffCdfs init_coeff_cdfs;
-		public InitCoeffCdfs InitCoeffCdfs { get { return init_coeff_cdfs; } set { init_coeff_cdfs = value; } }
-		private LoadPreviousSegmentIds load_previous_segment_ids;
-		public LoadPreviousSegmentIds LoadPreviousSegmentIds { get { return load_previous_segment_ids; } set { load_previous_segment_ids = value; } }
-		private LoopFilterParams loop_filter_params;
-		public LoopFilterParams LoopFilterParams { get { return loop_filter_params; } set { loop_filter_params = value; } }
-		private CdefParams cdef_params;
-		public CdefParams CdefParams { get { return cdef_params; } set { cdef_params = value; } }
-		private LrParams lr_params;
-		public LrParams LrParams { get { return lr_params; } set { lr_params = value; } }
-		private ReadTxMode read_tx_mode;
-		public ReadTxMode ReadTxMode { get { return read_tx_mode; } set { read_tx_mode = value; } }
-		private FrameReferenceMode frame_reference_mode;
-		public FrameReferenceMode FrameReferenceMode { get { return frame_reference_mode; } set { frame_reference_mode = value; } }
-		private SkipModeParams skip_mode_params;
-		public SkipModeParams SkipModeParams { get { return skip_mode_params; } set { skip_mode_params = value; } }
 		private uint allow_warped_motion;
 		public uint AllowWarpedMotion { get { return allow_warped_motion; } set { allow_warped_motion = value; } }
 		private uint reduced_tx_set;
 		public uint ReducedTxSet { get { return reduced_tx_set; } set { reduced_tx_set = value; } }
-		private GlobalMotionParams global_motion_params;
-		public GlobalMotionParams GlobalMotionParams { get { return global_motion_params; } set { global_motion_params = value; } }
-		private FilmGrainParams film_grain_params;
-		public FilmGrainParams FilmGrainParams { get { return film_grain_params; } set { film_grain_params = value; } }
 
-         public UncompressedHeader()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint idLen = 0;
-			uint allFrames = 0;
-			uint show_existing_frame = 0;
-			uint frame_type = 0;
-			uint FrameIsIntra = 0;
-			uint show_frame = 0;
-			uint showable_frame = 0;
-			uint refresh_frame_flags = 0;
-			uint error_resilient_mode = 0;
 			uint i = 0;
-			uint[] RefValid = null;
-			uint[] RefOrderHint = null;
-			uint[] OrderHints = null;
-			uint allow_screen_content_tools = 0;
-			uint force_integer_mv = 0;
-			uint PrevFrameID = 0;
-			uint current_frame_id = 0;
-			uint frame_size_override_flag = 0;
-			uint OrderHint = 0;
-			uint primary_ref_frame = 0;
 			uint opNum = 0;
-			uint opPtIdc = 0;
-			uint inTemporalLayer = 0;
-			uint inSpatialLayer = 0;
-			uint n = 0;
-			uint allow_high_precision_mv = 0;
-			uint use_ref_frame_mvs = 0;
-			uint allow_intrabc = 0;
-			uint frame_refs_short_signaling = 0;
-			uint DeltaFrameId = 0;
-			uint[] expectedFrameId = null;
-			uint refFrame = 0;
-			uint hint = 0;
-			uint[] RefFrameSignBias = null;
-			uint disable_frame_end_update_cdf = 0;
-			uint CodedLossless = 0;
 			uint segmentId = 0;
-			uint qindex = 0;
-			uint[] LosslessArray = null;
-			uint[][] SegQMLevel = null;
-			uint AllLossless = 0;
-			uint allow_warped_motion = 0;
+         public void ReadUncompressedHeader()
+         {
+
 
 			if ( frame_id_numbers_present_flag != 0 )
 			{
 				idLen= ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 );
 			}
-			allFrames= (1 << NUM_REF_FRAMES) - 1;
+			uint allFrames= (1 << NUM_REF_FRAMES) - 1;
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -2255,22 +1811,21 @@ frame_header_obu() {
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.show_existing_frame, "show_existing_frame"); 
+				stream.ReadFixed(1, out this.show_existing_frame, "show_existing_frame"); 
 
 				if ( show_existing_frame == 1 )
 				{
-					size += stream.ReadFixed(size, 3, out this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
+					stream.ReadFixed(3, out this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
 
 					if ( decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
 					{
-						this.temporal_point_info =  new TemporalPointInfo() ;
-						size +=  stream.ReadClass<TemporalPointInfo>(size, context, this.temporal_point_info, "temporal_point_info"); 
+						ReadTemporalPointInfo(); 
 					}
 					refresh_frame_flags= 0;
 
 					if ( frame_id_numbers_present_flag != 0 )
 					{
-						size += stream.ReadVariable(size, idLen, out this.display_frame_id, "display_frame_id"); 
+						stream.ReadVariable(idLen, out this.display_frame_id, "display_frame_id"); 
 					}
 					frame_type= RefFrameType[ frame_to_show_map_idx ];
 
@@ -2281,21 +1836,18 @@ frame_header_obu() {
 
 					if ( film_grain_params_present != 0 )
 					{
-						this.load_grain_params =  new LoadGrainParams( frame_to_show_map_idx ) ;
-						size +=  stream.ReadClass<LoadGrainParams>(size, context, this.load_grain_params, "load_grain_params"); 
+						ReadLoadGrainParams( frame_to_show_map_idx ); 
 					}
 return;
 				}
-				size += stream.ReadFixed(size, 2, out this.frame_type, "frame_type"); 
+				stream.ReadFixed(2, out this.frame_type, "frame_type"); 
 				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? (uint)1 : (uint)0;
-				this.show_frame =  new ShowFrame() ;
-				size +=  stream.ReadClass<ShowFrame>(size, context, this.show_frame, "show_frame"); 
-				size += stream.ReadFixed(size, 1, out this.show_frame, "show_frame"); 
+				ReadShowFrame; 
+				stream.ReadFixed(1, out this.show_frame, "show_frame"); 
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
 				{
-					this.temporal_point_info =  new TemporalPointInfo() ;
-					size +=  stream.ReadClass<TemporalPointInfo>(size, context, this.temporal_point_info, "temporal_point_info"); 
+					ReadTemporalPointInfo(); 
 				}
 
 				if ( show_frame != 0 )
@@ -2304,7 +1856,7 @@ return;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, out this.showable_frame, "showable_frame"); 
+					stream.ReadFixed(1, out this.showable_frame, "showable_frame"); 
 				}
 
 				if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame != 0 ) )
@@ -2313,7 +1865,7 @@ return;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, out this.error_resilient_mode, "error_resilient_mode"); 
+					stream.ReadFixed(1, out this.error_resilient_mode, "error_resilient_mode"); 
 				}
 			}
 
@@ -2331,11 +1883,11 @@ return;
 					OrderHints[ AV1RefFrames.LAST_FRAME + i ]= 0;
 				}
 			}
-			size += stream.ReadFixed(size, 1, out this.disable_cdf_update, "disable_cdf_update"); 
+			stream.ReadFixed(1, out this.disable_cdf_update, "disable_cdf_update"); 
 
 			if ( seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS )
 			{
-				size += stream.ReadFixed(size, 1, out this.allow_screen_content_tools, "allow_screen_content_tools"); 
+				stream.ReadFixed(1, out this.allow_screen_content_tools, "allow_screen_content_tools"); 
 			}
 			else 
 			{
@@ -2347,7 +1899,7 @@ return;
 
 				if ( seq_force_integer_mv == SELECT_INTEGER_MV )
 				{
-					size += stream.ReadFixed(size, 1, out this.force_integer_mv, "force_integer_mv"); 
+					stream.ReadFixed(1, out this.force_integer_mv, "force_integer_mv"); 
 				}
 				else 
 				{
@@ -2367,11 +1919,9 @@ return;
 			if ( frame_id_numbers_present_flag != 0 )
 			{
 				PrevFrameID= current_frame_id;
-				this.current_frame_id =  new CurrentFrameId() ;
-				size +=  stream.ReadClass<CurrentFrameId>(size, context, this.current_frame_id, "current_frame_id"); 
-				size += stream.ReadVariable(size, idLen, out this.current_frame_id, "current_frame_id"); 
-				this.mark_ref_frames =  new MarkRefFrames( idLen ) ;
-				size +=  stream.ReadClass<MarkRefFrames>(size, context, this.mark_ref_frames, "mark_ref_frames"); 
+				ReadCurrentFrameId; 
+				stream.ReadVariable(idLen, out this.current_frame_id, "current_frame_id"); 
+				ReadMarkRefFrames( idLen ); 
 			}
 			else 
 			{
@@ -2388,12 +1938,11 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.frame_size_override_flag, "frame_size_override_flag"); 
+				stream.ReadFixed(1, out this.frame_size_override_flag, "frame_size_override_flag"); 
 			}
-			this.order_hint =  new OrderHint() ;
-			size +=  stream.ReadClass<OrderHint>(size, context, this.order_hint, "order_hint"); 
-			size += stream.ReadVariable(size, OrderHintBits, out this.order_hint, "order_hint"); 
-			OrderHint= order_hint;
+			ReadOrderHint; 
+			stream.ReadVariable(OrderHintBits, out this.order_hint, "order_hint"); 
+			uint OrderHint= order_hint;
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 )
 			{
@@ -2401,12 +1950,12 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 3, out this.primary_ref_frame, "primary_ref_frame"); 
+				stream.ReadFixed(3, out this.primary_ref_frame, "primary_ref_frame"); 
 			}
 
 			if ( decoder_model_info_present_flag != 0 )
 			{
-				size += stream.ReadFixed(size, 1, out this.buffer_removal_time_present_flag, "buffer_removal_time_present_flag"); 
+				stream.ReadFixed(1, out this.buffer_removal_time_present_flag, "buffer_removal_time_present_flag"); 
 
 				if ( buffer_removal_time_present_flag != 0 )
 				{
@@ -2424,7 +1973,7 @@ return;
 							if ( opPtIdc == 0 || ( inTemporalLayer != 0 && inSpatialLayer != 0 ) )
 							{
 								n= buffer_removal_time[opNum]_length_minus_1 + 1;
-								size += stream.ReadVariable(size, n, out this.buffer_removal_time[ opNum ], "buffer_removal_time"); 
+								stream.ReadVariable(n, out this.buffer_removal_time[ opNum ], "buffer_removal_time"); 
 							}
 						}
 					}
@@ -2441,7 +1990,7 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 8, out this.refresh_frame_flags, "refresh_frame_flags"); 
+				stream.ReadFixed(8, out this.refresh_frame_flags, "refresh_frame_flags"); 
 			}
 
 			if ( FrameIsIntra== 0 || refresh_frame_flags != allFrames )
@@ -2450,12 +1999,11 @@ return;
 				if ( error_resilient_mode != 0 && enable_order_hint != 0 )
 				{
 
-					this.ref_order_hint = new RefOrderHint[ NUM_REF_FRAMES];
+					this.ref_order_hint = new uint[ NUM_REF_FRAMES];
 					for ( i = 0; i < NUM_REF_FRAMES; i++)
 					{
-						this.ref_order_hint[ i ] =  new RefOrderHint() ;
-						size +=  stream.ReadClass<RefOrderHint>(size, context, this.ref_order_hint[ i ], "ref_order_hint"); 
-						size += stream.ReadVariable(size, OrderHintBits, out this.ref_order_hint[ i ], "ref_order_hint"); 
+						ReadRefOrderHint; 
+						stream.ReadVariable(OrderHintBits, out this.ref_order_hint[ i ], "ref_order_hint"); 
 
 						if ( ref_order_hint[ i ] != RefOrderHint[ i ] )
 						{
@@ -2467,14 +2015,12 @@ return;
 
 			if (  FrameIsIntra != 0 )
 			{
-				this.frame_size =  new FrameSize() ;
-				size +=  stream.ReadClass<FrameSize>(size, context, this.frame_size, "frame_size"); 
-				this.render_size =  new RenderSize() ;
-				size +=  stream.ReadClass<RenderSize>(size, context, this.render_size, "render_size"); 
+				ReadFrameSize(); 
+				ReadRenderSize(); 
 
 				if ( allow_screen_content_tools != 0 && UpscaledWidth == FrameWidth )
 				{
-					size += stream.ReadFixed(size, 1, out this.allow_intrabc, "allow_intrabc"); 
+					stream.ReadFixed(1, out this.allow_intrabc, "allow_intrabc"); 
 				}
 			}
 			else 
@@ -2486,14 +2032,13 @@ return;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, out this.frame_refs_short_signaling, "frame_refs_short_signaling"); 
+					stream.ReadFixed(1, out this.frame_refs_short_signaling, "frame_refs_short_signaling"); 
 
 					if ( frame_refs_short_signaling != 0 )
 					{
-						size += stream.ReadFixed(size, 3, out this.last_frame_idx, "last_frame_idx"); 
-						size += stream.ReadFixed(size, 3, out this.gold_frame_idx, "gold_frame_idx"); 
-						this.set_frame_refs =  new SetFrameRefs() ;
-						size +=  stream.ReadClass<SetFrameRefs>(size, context, this.set_frame_refs, "set_frame_refs"); 
+						stream.ReadFixed(3, out this.last_frame_idx, "last_frame_idx"); 
+						stream.ReadFixed(3, out this.gold_frame_idx, "gold_frame_idx"); 
+						ReadSetFrameRefs(); 
 					}
 				}
 
@@ -2504,13 +2049,13 @@ return;
 
 					if ( frame_refs_short_signaling== 0 )
 					{
-						size += stream.ReadFixed(size, 3, out this.ref_frame_idx[ i ], "ref_frame_idx"); 
+						stream.ReadFixed(3, out this.ref_frame_idx[ i ], "ref_frame_idx"); 
 					}
 
 					if ( frame_id_numbers_present_flag != 0 )
 					{
 						n= delta_frame_id_length_minus_2 + 2;
-						size += stream.ReadVariable(size, n, out this.delta_frame_id_minus_1[ i ], "delta_frame_id_minus_1"); 
+						stream.ReadVariable(n, out this.delta_frame_id_minus_1[ i ], "delta_frame_id_minus_1"); 
 						DeltaFrameId= delta_frame_id_minus_1[i] + 1;
 						expectedFrameId[ i ]= ((current_frame_id + (1 << idLen) - DeltaFrameId ) % (1 << idLen));
 					}
@@ -2518,15 +2063,12 @@ return;
 
 				if ( frame_size_override_flag != 0 && error_resilient_mode== 0 )
 				{
-					this.frame_size_with_refs =  new FrameSizeWithRefs() ;
-					size +=  stream.ReadClass<FrameSizeWithRefs>(size, context, this.frame_size_with_refs, "frame_size_with_refs"); 
+					ReadFrameSizeWithRefs(); 
 				}
 				else 
 				{
-					this.frame_size =  new FrameSize() ;
-					size +=  stream.ReadClass<FrameSize>(size, context, this.frame_size, "frame_size"); 
-					this.render_size =  new RenderSize() ;
-					size +=  stream.ReadClass<RenderSize>(size, context, this.render_size, "render_size"); 
+					ReadFrameSize(); 
+					ReadRenderSize(); 
 				}
 
 				if ( force_integer_mv != 0 )
@@ -2535,11 +2077,10 @@ return;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, out this.allow_high_precision_mv, "allow_high_precision_mv"); 
+					stream.ReadFixed(1, out this.allow_high_precision_mv, "allow_high_precision_mv"); 
 				}
-				this.read_interpolation_filter =  new ReadInterpolationFilter() ;
-				size +=  stream.ReadClass<ReadInterpolationFilter>(size, context, this.read_interpolation_filter, "read_interpolation_filter"); 
-				size += stream.ReadFixed(size, 1, out this.is_motion_mode_switchable, "is_motion_mode_switchable"); 
+				ReadReadInterpolationFilter(); 
+				stream.ReadFixed(1, out this.is_motion_mode_switchable, "is_motion_mode_switchable"); 
 
 				if ( error_resilient_mode != 0 || enable_ref_frame_mvs== 0 )
 				{
@@ -2547,7 +2088,7 @@ return;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, out this.use_ref_frame_mvs, "use_ref_frame_mvs"); 
+					stream.ReadFixed(1, out this.use_ref_frame_mvs, "use_ref_frame_mvs"); 
 				}
 
 				for ( i = 0; i < REFS_PER_FRAME; i++ )
@@ -2573,51 +2114,39 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.disable_frame_end_update_cdf, "disable_frame_end_update_cdf"); 
+				stream.ReadFixed(1, out this.disable_frame_end_update_cdf, "disable_frame_end_update_cdf"); 
 			}
 
 			if ( primary_ref_frame == PRIMARY_REF_NONE )
 			{
-				this.init_non_coeff_cdfs =  new InitNonCoeffCdfs() ;
-				size +=  stream.ReadClass<InitNonCoeffCdfs>(size, context, this.init_non_coeff_cdfs, "init_non_coeff_cdfs"); 
-				this.setup_past_independence =  new SetupPastIndependence() ;
-				size +=  stream.ReadClass<SetupPastIndependence>(size, context, this.setup_past_independence, "setup_past_independence"); 
+				ReadInitNonCoeffCdfs(); 
+				ReadSetupPastIndependence(); 
 			}
 			else 
 			{
-				this.load_cdfs =  new LoadCdfs( ref_frame_idx[ primary_ref_frame ] ) ;
-				size +=  stream.ReadClass<LoadCdfs>(size, context, this.load_cdfs, "load_cdfs"); 
-				this.load_previous =  new LoadPrevious() ;
-				size +=  stream.ReadClass<LoadPrevious>(size, context, this.load_previous, "load_previous"); 
+				ReadLoadCdfs( ref_frame_idx[ primary_ref_frame ] ); 
+				ReadLoadPrevious(); 
 			}
 
 			if ( use_ref_frame_mvs == 1 )
 			{
-				this.motion_field_estimation =  new MotionFieldEstimation() ;
-				size +=  stream.ReadClass<MotionFieldEstimation>(size, context, this.motion_field_estimation, "motion_field_estimation"); 
+				ReadMotionFieldEstimation(); 
 			}
-			this.tile_info =  new TileInfo() ;
-			size +=  stream.ReadClass<TileInfo>(size, context, this.tile_info, "tile_info"); 
-			this.quantization_params =  new QuantizationParams() ;
-			size +=  stream.ReadClass<QuantizationParams>(size, context, this.quantization_params, "quantization_params"); 
-			this.segmentation_params =  new SegmentationParams() ;
-			size +=  stream.ReadClass<SegmentationParams>(size, context, this.segmentation_params, "segmentation_params"); 
-			this.delta_q_params =  new DeltaqParams() ;
-			size +=  stream.ReadClass<DeltaqParams>(size, context, this.delta_q_params, "delta_q_params"); 
-			this.delta_lf_params =  new DeltaLfParams() ;
-			size +=  stream.ReadClass<DeltaLfParams>(size, context, this.delta_lf_params, "delta_lf_params"); 
+			ReadTileInfo(); 
+			ReadQuantizationParams(); 
+			ReadSegmentationParams(); 
+			ReadDeltaqParams(); 
+			ReadDeltaLfParams(); 
 
 			if ( primary_ref_frame == PRIMARY_REF_NONE )
 			{
-				this.init_coeff_cdfs =  new InitCoeffCdfs() ;
-				size +=  stream.ReadClass<InitCoeffCdfs>(size, context, this.init_coeff_cdfs, "init_coeff_cdfs"); 
+				ReadInitCoeffCdfs(); 
 			}
 			else 
 			{
-				this.load_previous_segment_ids =  new LoadPreviousSegmentIds() ;
-				size +=  stream.ReadClass<LoadPreviousSegmentIds>(size, context, this.load_previous_segment_ids, "load_previous_segment_ids"); 
+				ReadLoadPreviousSegmentIds(); 
 			}
-			CodedLossless= 1;
+			uint CodedLossless= 1;
 
 			for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ )
 			{
@@ -2646,19 +2175,13 @@ return;
 					}
 				}
 			}
-			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
-			this.loop_filter_params =  new LoopFilterParams() ;
-			size +=  stream.ReadClass<LoopFilterParams>(size, context, this.loop_filter_params, "loop_filter_params"); 
-			this.cdef_params =  new CdefParams() ;
-			size +=  stream.ReadClass<CdefParams>(size, context, this.cdef_params, "cdef_params"); 
-			this.lr_params =  new LrParams() ;
-			size +=  stream.ReadClass<LrParams>(size, context, this.lr_params, "lr_params"); 
-			this.read_tx_mode =  new ReadTxMode() ;
-			size +=  stream.ReadClass<ReadTxMode>(size, context, this.read_tx_mode, "read_tx_mode"); 
-			this.frame_reference_mode =  new FrameReferenceMode() ;
-			size +=  stream.ReadClass<FrameReferenceMode>(size, context, this.frame_reference_mode, "frame_reference_mode"); 
-			this.skip_mode_params =  new SkipModeParams() ;
-			size +=  stream.ReadClass<SkipModeParams>(size, context, this.skip_mode_params, "skip_mode_params"); 
+			uint AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
+			ReadLoopFilterParams(); 
+			ReadCdefParams(); 
+			ReadLrParams(); 
+			ReadReadTxMode(); 
+			ReadFrameReferenceMode(); 
+			ReadSkipModeParams(); 
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 || enable_warped_motion== 0 )
 			{
@@ -2666,69 +2189,22 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.allow_warped_motion, "allow_warped_motion"); 
+				stream.ReadFixed(1, out this.allow_warped_motion, "allow_warped_motion"); 
 			}
-			size += stream.ReadFixed(size, 1, out this.reduced_tx_set, "reduced_tx_set"); 
-			this.global_motion_params =  new GlobalMotionParams() ;
-			size +=  stream.ReadClass<GlobalMotionParams>(size, context, this.global_motion_params, "global_motion_params"); 
-			this.film_grain_params =  new FilmGrainParams() ;
-			size +=  stream.ReadClass<FilmGrainParams>(size, context, this.film_grain_params, "film_grain_params"); 
-
-            return size;
+			stream.ReadFixed(1, out this.reduced_tx_set, "reduced_tx_set"); 
+			ReadGlobalMotionParams(); 
+			ReadFilmGrainParams(); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteUncompressedHeader()
          {
-            ulong size = 0;
 
-			uint idLen = 0;
-			uint allFrames = 0;
-			uint show_existing_frame = 0;
-			uint frame_type = 0;
-			uint FrameIsIntra = 0;
-			uint show_frame = 0;
-			uint showable_frame = 0;
-			uint refresh_frame_flags = 0;
-			uint error_resilient_mode = 0;
-			uint i = 0;
-			uint[] RefValid = null;
-			uint[] RefOrderHint = null;
-			uint[] OrderHints = null;
-			uint allow_screen_content_tools = 0;
-			uint force_integer_mv = 0;
-			uint PrevFrameID = 0;
-			uint current_frame_id = 0;
-			uint frame_size_override_flag = 0;
-			uint OrderHint = 0;
-			uint primary_ref_frame = 0;
-			uint opNum = 0;
-			uint opPtIdc = 0;
-			uint inTemporalLayer = 0;
-			uint inSpatialLayer = 0;
-			uint n = 0;
-			uint allow_high_precision_mv = 0;
-			uint use_ref_frame_mvs = 0;
-			uint allow_intrabc = 0;
-			uint frame_refs_short_signaling = 0;
-			uint DeltaFrameId = 0;
-			uint[] expectedFrameId = null;
-			uint refFrame = 0;
-			uint hint = 0;
-			uint[] RefFrameSignBias = null;
-			uint disable_frame_end_update_cdf = 0;
-			uint CodedLossless = 0;
-			uint segmentId = 0;
-			uint qindex = 0;
-			uint[] LosslessArray = null;
-			uint[][] SegQMLevel = null;
-			uint AllLossless = 0;
-			uint allow_warped_motion = 0;
 
 			if ( frame_id_numbers_present_flag != 0 )
 			{
 				idLen= ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 );
 			}
-			allFrames= (1 << NUM_REF_FRAMES) - 1;
+			uint allFrames= (1 << NUM_REF_FRAMES) - 1;
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -2740,21 +2216,21 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.show_existing_frame, "show_existing_frame"); 
+				stream.WriteFixed(1, this.show_existing_frame, "show_existing_frame"); 
 
 				if ( show_existing_frame == 1 )
 				{
-					size += stream.WriteFixed(3, this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
+					stream.WriteFixed(3, this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
 
 					if ( decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
 					{
-						size += stream.WriteClass<TemporalPointInfo>(context, this.temporal_point_info, "temporal_point_info"); 
+						WriteTemporalPointInfo(); 
 					}
 					refresh_frame_flags= 0;
 
 					if ( frame_id_numbers_present_flag != 0 )
 					{
-						size += stream.WriteVariable(idLen, this.display_frame_id, "display_frame_id"); 
+						stream.WriteVariable(idLen, this.display_frame_id, "display_frame_id"); 
 					}
 					frame_type= RefFrameType[ frame_to_show_map_idx ];
 
@@ -2765,18 +2241,18 @@ return;
 
 					if ( film_grain_params_present != 0 )
 					{
-						size += stream.WriteClass<LoadGrainParams>(context, this.load_grain_params, "load_grain_params"); 
+						WriteLoadGrainParams( frame_to_show_map_idx ); 
 					}
 return;
 				}
-				size += stream.WriteFixed(2, this.frame_type, "frame_type"); 
+				stream.WriteFixed(2, this.frame_type, "frame_type"); 
 				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? (uint)1 : (uint)0;
-				size += stream.WriteClass<ShowFrame>(context, this.show_frame, "show_frame"); 
-				size += stream.WriteFixed(1, this.show_frame, "show_frame"); 
+				WriteShowFrame; 
+				stream.WriteFixed(1, this.show_frame, "show_frame"); 
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
 				{
-					size += stream.WriteClass<TemporalPointInfo>(context, this.temporal_point_info, "temporal_point_info"); 
+					WriteTemporalPointInfo(); 
 				}
 
 				if ( show_frame != 0 )
@@ -2785,7 +2261,7 @@ return;
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, this.showable_frame, "showable_frame"); 
+					stream.WriteFixed(1, this.showable_frame, "showable_frame"); 
 				}
 
 				if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame != 0 ) )
@@ -2794,7 +2270,7 @@ return;
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, this.error_resilient_mode, "error_resilient_mode"); 
+					stream.WriteFixed(1, this.error_resilient_mode, "error_resilient_mode"); 
 				}
 			}
 
@@ -2812,11 +2288,11 @@ return;
 					OrderHints[ AV1RefFrames.LAST_FRAME + i ]= 0;
 				}
 			}
-			size += stream.WriteFixed(1, this.disable_cdf_update, "disable_cdf_update"); 
+			stream.WriteFixed(1, this.disable_cdf_update, "disable_cdf_update"); 
 
 			if ( seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS )
 			{
-				size += stream.WriteFixed(1, this.allow_screen_content_tools, "allow_screen_content_tools"); 
+				stream.WriteFixed(1, this.allow_screen_content_tools, "allow_screen_content_tools"); 
 			}
 			else 
 			{
@@ -2828,7 +2304,7 @@ return;
 
 				if ( seq_force_integer_mv == SELECT_INTEGER_MV )
 				{
-					size += stream.WriteFixed(1, this.force_integer_mv, "force_integer_mv"); 
+					stream.WriteFixed(1, this.force_integer_mv, "force_integer_mv"); 
 				}
 				else 
 				{
@@ -2848,9 +2324,9 @@ return;
 			if ( frame_id_numbers_present_flag != 0 )
 			{
 				PrevFrameID= current_frame_id;
-				size += stream.WriteClass<CurrentFrameId>(context, this.current_frame_id, "current_frame_id"); 
-				size += stream.WriteVariable(idLen, this.current_frame_id, "current_frame_id"); 
-				size += stream.WriteClass<MarkRefFrames>(context, this.mark_ref_frames, "mark_ref_frames"); 
+				WriteCurrentFrameId; 
+				stream.WriteVariable(idLen, this.current_frame_id, "current_frame_id"); 
+				WriteMarkRefFrames( idLen ); 
 			}
 			else 
 			{
@@ -2867,11 +2343,11 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.frame_size_override_flag, "frame_size_override_flag"); 
+				stream.WriteFixed(1, this.frame_size_override_flag, "frame_size_override_flag"); 
 			}
-			size += stream.WriteClass<OrderHint>(context, this.order_hint, "order_hint"); 
-			size += stream.WriteVariable(OrderHintBits, this.order_hint, "order_hint"); 
-			OrderHint= order_hint;
+			WriteOrderHint; 
+			stream.WriteVariable(OrderHintBits, this.order_hint, "order_hint"); 
+			uint OrderHint= order_hint;
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 )
 			{
@@ -2879,12 +2355,12 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(3, this.primary_ref_frame, "primary_ref_frame"); 
+				stream.WriteFixed(3, this.primary_ref_frame, "primary_ref_frame"); 
 			}
 
 			if ( decoder_model_info_present_flag != 0 )
 			{
-				size += stream.WriteFixed(1, this.buffer_removal_time_present_flag, "buffer_removal_time_present_flag"); 
+				stream.WriteFixed(1, this.buffer_removal_time_present_flag, "buffer_removal_time_present_flag"); 
 
 				if ( buffer_removal_time_present_flag != 0 )
 				{
@@ -2901,7 +2377,7 @@ return;
 							if ( opPtIdc == 0 || ( inTemporalLayer != 0 && inSpatialLayer != 0 ) )
 							{
 								n= buffer_removal_time[opNum]_length_minus_1 + 1;
-								size += stream.WriteVariable(n, this.buffer_removal_time[ opNum ], "buffer_removal_time"); 
+								stream.WriteVariable(n, this.buffer_removal_time[ opNum ], "buffer_removal_time"); 
 							}
 						}
 					}
@@ -2918,7 +2394,7 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(8, this.refresh_frame_flags, "refresh_frame_flags"); 
+				stream.WriteFixed(8, this.refresh_frame_flags, "refresh_frame_flags"); 
 			}
 
 			if ( FrameIsIntra== 0 || refresh_frame_flags != allFrames )
@@ -2929,8 +2405,8 @@ return;
 
 					for ( i = 0; i < NUM_REF_FRAMES; i++)
 					{
-						size += stream.WriteClass<RefOrderHint>(context, this.ref_order_hint[ i ], "ref_order_hint"); 
-						size += stream.WriteVariable(OrderHintBits, this.ref_order_hint[ i ], "ref_order_hint"); 
+						WriteRefOrderHint; 
+						stream.WriteVariable(OrderHintBits, this.ref_order_hint[ i ], "ref_order_hint"); 
 
 						if ( ref_order_hint[ i ] != RefOrderHint[ i ] )
 						{
@@ -2942,12 +2418,12 @@ return;
 
 			if (  FrameIsIntra != 0 )
 			{
-				size += stream.WriteClass<FrameSize>(context, this.frame_size, "frame_size"); 
-				size += stream.WriteClass<RenderSize>(context, this.render_size, "render_size"); 
+				WriteFrameSize(); 
+				WriteRenderSize(); 
 
 				if ( allow_screen_content_tools != 0 && UpscaledWidth == FrameWidth )
 				{
-					size += stream.WriteFixed(1, this.allow_intrabc, "allow_intrabc"); 
+					stream.WriteFixed(1, this.allow_intrabc, "allow_intrabc"); 
 				}
 			}
 			else 
@@ -2959,13 +2435,13 @@ return;
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, this.frame_refs_short_signaling, "frame_refs_short_signaling"); 
+					stream.WriteFixed(1, this.frame_refs_short_signaling, "frame_refs_short_signaling"); 
 
 					if ( frame_refs_short_signaling != 0 )
 					{
-						size += stream.WriteFixed(3, this.last_frame_idx, "last_frame_idx"); 
-						size += stream.WriteFixed(3, this.gold_frame_idx, "gold_frame_idx"); 
-						size += stream.WriteClass<SetFrameRefs>(context, this.set_frame_refs, "set_frame_refs"); 
+						stream.WriteFixed(3, this.last_frame_idx, "last_frame_idx"); 
+						stream.WriteFixed(3, this.gold_frame_idx, "gold_frame_idx"); 
+						WriteSetFrameRefs(); 
 					}
 				}
 
@@ -2974,13 +2450,13 @@ return;
 
 					if ( frame_refs_short_signaling== 0 )
 					{
-						size += stream.WriteFixed(3, this.ref_frame_idx[ i ], "ref_frame_idx"); 
+						stream.WriteFixed(3, this.ref_frame_idx[ i ], "ref_frame_idx"); 
 					}
 
 					if ( frame_id_numbers_present_flag != 0 )
 					{
 						n= delta_frame_id_length_minus_2 + 2;
-						size += stream.WriteVariable(n, this.delta_frame_id_minus_1[ i ], "delta_frame_id_minus_1"); 
+						stream.WriteVariable(n, this.delta_frame_id_minus_1[ i ], "delta_frame_id_minus_1"); 
 						DeltaFrameId= delta_frame_id_minus_1[i] + 1;
 						expectedFrameId[ i ]= ((current_frame_id + (1 << idLen) - DeltaFrameId ) % (1 << idLen));
 					}
@@ -2988,12 +2464,12 @@ return;
 
 				if ( frame_size_override_flag != 0 && error_resilient_mode== 0 )
 				{
-					size += stream.WriteClass<FrameSizeWithRefs>(context, this.frame_size_with_refs, "frame_size_with_refs"); 
+					WriteFrameSizeWithRefs(); 
 				}
 				else 
 				{
-					size += stream.WriteClass<FrameSize>(context, this.frame_size, "frame_size"); 
-					size += stream.WriteClass<RenderSize>(context, this.render_size, "render_size"); 
+					WriteFrameSize(); 
+					WriteRenderSize(); 
 				}
 
 				if ( force_integer_mv != 0 )
@@ -3002,10 +2478,10 @@ return;
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, this.allow_high_precision_mv, "allow_high_precision_mv"); 
+					stream.WriteFixed(1, this.allow_high_precision_mv, "allow_high_precision_mv"); 
 				}
-				size += stream.WriteClass<ReadInterpolationFilter>(context, this.read_interpolation_filter, "read_interpolation_filter"); 
-				size += stream.WriteFixed(1, this.is_motion_mode_switchable, "is_motion_mode_switchable"); 
+				WriteReadInterpolationFilter(); 
+				stream.WriteFixed(1, this.is_motion_mode_switchable, "is_motion_mode_switchable"); 
 
 				if ( error_resilient_mode != 0 || enable_ref_frame_mvs== 0 )
 				{
@@ -3013,7 +2489,7 @@ return;
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, this.use_ref_frame_mvs, "use_ref_frame_mvs"); 
+					stream.WriteFixed(1, this.use_ref_frame_mvs, "use_ref_frame_mvs"); 
 				}
 
 				for ( i = 0; i < REFS_PER_FRAME; i++ )
@@ -3039,39 +2515,39 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.disable_frame_end_update_cdf, "disable_frame_end_update_cdf"); 
+				stream.WriteFixed(1, this.disable_frame_end_update_cdf, "disable_frame_end_update_cdf"); 
 			}
 
 			if ( primary_ref_frame == PRIMARY_REF_NONE )
 			{
-				size += stream.WriteClass<InitNonCoeffCdfs>(context, this.init_non_coeff_cdfs, "init_non_coeff_cdfs"); 
-				size += stream.WriteClass<SetupPastIndependence>(context, this.setup_past_independence, "setup_past_independence"); 
+				WriteInitNonCoeffCdfs(); 
+				WriteSetupPastIndependence(); 
 			}
 			else 
 			{
-				size += stream.WriteClass<LoadCdfs>(context, this.load_cdfs, "load_cdfs"); 
-				size += stream.WriteClass<LoadPrevious>(context, this.load_previous, "load_previous"); 
+				WriteLoadCdfs( ref_frame_idx[ primary_ref_frame ] ); 
+				WriteLoadPrevious(); 
 			}
 
 			if ( use_ref_frame_mvs == 1 )
 			{
-				size += stream.WriteClass<MotionFieldEstimation>(context, this.motion_field_estimation, "motion_field_estimation"); 
+				WriteMotionFieldEstimation(); 
 			}
-			size += stream.WriteClass<TileInfo>(context, this.tile_info, "tile_info"); 
-			size += stream.WriteClass<QuantizationParams>(context, this.quantization_params, "quantization_params"); 
-			size += stream.WriteClass<SegmentationParams>(context, this.segmentation_params, "segmentation_params"); 
-			size += stream.WriteClass<DeltaqParams>(context, this.delta_q_params, "delta_q_params"); 
-			size += stream.WriteClass<DeltaLfParams>(context, this.delta_lf_params, "delta_lf_params"); 
+			WriteTileInfo(); 
+			WriteQuantizationParams(); 
+			WriteSegmentationParams(); 
+			WriteDeltaqParams(); 
+			WriteDeltaLfParams(); 
 
 			if ( primary_ref_frame == PRIMARY_REF_NONE )
 			{
-				size += stream.WriteClass<InitCoeffCdfs>(context, this.init_coeff_cdfs, "init_coeff_cdfs"); 
+				WriteInitCoeffCdfs(); 
 			}
 			else 
 			{
-				size += stream.WriteClass<LoadPreviousSegmentIds>(context, this.load_previous_segment_ids, "load_previous_segment_ids"); 
+				WriteLoadPreviousSegmentIds(); 
 			}
-			CodedLossless= 1;
+			uint CodedLossless= 1;
 
 			for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ )
 			{
@@ -3100,13 +2576,13 @@ return;
 					}
 				}
 			}
-			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
-			size += stream.WriteClass<LoopFilterParams>(context, this.loop_filter_params, "loop_filter_params"); 
-			size += stream.WriteClass<CdefParams>(context, this.cdef_params, "cdef_params"); 
-			size += stream.WriteClass<LrParams>(context, this.lr_params, "lr_params"); 
-			size += stream.WriteClass<ReadTxMode>(context, this.read_tx_mode, "read_tx_mode"); 
-			size += stream.WriteClass<FrameReferenceMode>(context, this.frame_reference_mode, "frame_reference_mode"); 
-			size += stream.WriteClass<SkipModeParams>(context, this.skip_mode_params, "skip_mode_params"); 
+			uint AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
+			WriteLoopFilterParams(); 
+			WriteCdefParams(); 
+			WriteLrParams(); 
+			WriteReadTxMode(); 
+			WriteFrameReferenceMode(); 
+			WriteSkipModeParams(); 
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 || enable_warped_motion== 0 )
 			{
@@ -3114,16 +2590,12 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.allow_warped_motion, "allow_warped_motion"); 
+				stream.WriteFixed(1, this.allow_warped_motion, "allow_warped_motion"); 
 			}
-			size += stream.WriteFixed(1, this.reduced_tx_set, "reduced_tx_set"); 
-			size += stream.WriteClass<GlobalMotionParams>(context, this.global_motion_params, "global_motion_params"); 
-			size += stream.WriteClass<FilmGrainParams>(context, this.film_grain_params, "film_grain_params"); 
-
-            return size;
+			stream.WriteFixed(1, this.reduced_tx_set, "reduced_tx_set"); 
+			WriteGlobalMotionParams(); 
+			WriteFilmGrainParams(); 
          }
-
-    }
 
     /*
 
@@ -3133,39 +2605,22 @@ return;
  frame_presentation_time f(n)
  }
     */
-    public class TemporalPointInfo : IAomSerializable
-    {
 		private uint frame_presentation_time;
 		public uint FramePresentationTime { get { return frame_presentation_time; } set { frame_presentation_time = value; } }
 
-         public TemporalPointInfo()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadTemporalPointInfo()
          {
-            ulong size = 0;
 
-			uint n = 0;
-			n= frame_presentation_time_length_minus_1 + 1;
-			size += stream.ReadVariable(size, n, out this.frame_presentation_time, "frame_presentation_time"); 
-
-            return size;
+			uint n= frame_presentation_time_length_minus_1 + 1;
+			stream.ReadVariable(n, out this.frame_presentation_time, "frame_presentation_time"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteTemporalPointInfo()
          {
-            ulong size = 0;
 
-			uint n = 0;
-			n= frame_presentation_time_length_minus_1 + 1;
-			size += stream.WriteVariable(n, this.frame_presentation_time, "frame_presentation_time"); 
-
-            return size;
+			uint n= frame_presentation_time_length_minus_1 + 1;
+			stream.WriteVariable(n, this.frame_presentation_time, "frame_presentation_time"); 
          }
-
-    }
 
     /*
 
@@ -3187,24 +2642,14 @@ return;
  }
  }
     */
-    public class MarkRefFrames : IAomSerializable
-    {
 		private uint idLen;
 		public uint IdLen { get { return idLen; } set { idLen = value; } }
 
-         public MarkRefFrames(uint idLen)
-         { 
-			this.idLen = idLen;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint diffLen = 0;
 			uint i = 0;
-			uint[] RefValid = null;
-			diffLen= delta_frame_id_length_minus_2 + 2;
+         public void ReadMarkRefFrames(uint idLen)
+         {
+
+			uint diffLen= delta_frame_id_length_minus_2 + 2;
 
 			for ( i = 0; i < NUM_REF_FRAMES; i++ )
 			{
@@ -3230,18 +2675,12 @@ return;
 					}
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteMarkRefFrames(uint idLen)
          {
-            ulong size = 0;
 
-			uint diffLen = 0;
-			uint i = 0;
-			uint[] RefValid = null;
-			diffLen= delta_frame_id_length_minus_2 + 2;
+			uint diffLen= delta_frame_id_length_minus_2 + 2;
 
 			for ( i = 0; i < NUM_REF_FRAMES; i++ )
 			{
@@ -3267,11 +2706,7 @@ return;
 					}
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -3292,36 +2727,21 @@ return;
  compute_image_size()
  }
     */
-    public class FrameSize : IAomSerializable
-    {
 		private uint frame_width_minus_1;
 		public uint FrameWidthMinus1 { get { return frame_width_minus_1; } set { frame_width_minus_1 = value; } }
 		private uint frame_height_minus_1;
 		public uint FrameHeightMinus1 { get { return frame_height_minus_1; } set { frame_height_minus_1 = value; } }
-		private SuperresParams superres_params;
-		public SuperresParams SuperresParams { get { return superres_params; } set { superres_params = value; } }
-		private ComputeImageSize compute_image_size;
-		public ComputeImageSize ComputeImageSize { get { return compute_image_size; } set { compute_image_size = value; } }
 
-         public FrameSize()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadFrameSize()
          {
-            ulong size = 0;
 
-			uint n = 0;
-			uint FrameWidth = 0;
-			uint FrameHeight = 0;
 
 			if ( frame_size_override_flag != 0 )
 			{
 				n= frame_width_bits_minus_1 + 1;
-				size += stream.ReadVariable(size, n, out this.frame_width_minus_1, "frame_width_minus_1"); 
+				stream.ReadVariable(n, out this.frame_width_minus_1, "frame_width_minus_1"); 
 				n= frame_height_bits_minus_1 + 1;
-				size += stream.ReadVariable(size, n, out this.frame_height_minus_1, "frame_height_minus_1"); 
+				stream.ReadVariable(n, out this.frame_height_minus_1, "frame_height_minus_1"); 
 				FrameWidth= frame_width_minus_1 + 1;
 				FrameHeight= frame_height_minus_1 + 1;
 			}
@@ -3330,28 +2750,20 @@ return;
 				FrameWidth= max_frame_width_minus_1 + 1;
 				FrameHeight= max_frame_height_minus_1 + 1;
 			}
-			this.superres_params =  new SuperresParams() ;
-			size +=  stream.ReadClass<SuperresParams>(size, context, this.superres_params, "superres_params"); 
-			this.compute_image_size =  new ComputeImageSize() ;
-			size +=  stream.ReadClass<ComputeImageSize>(size, context, this.compute_image_size, "compute_image_size"); 
-
-            return size;
+			ReadSuperresParams(); 
+			ReadComputeImageSize(); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteFrameSize()
          {
-            ulong size = 0;
 
-			uint n = 0;
-			uint FrameWidth = 0;
-			uint FrameHeight = 0;
 
 			if ( frame_size_override_flag != 0 )
 			{
 				n= frame_width_bits_minus_1 + 1;
-				size += stream.WriteVariable(n, this.frame_width_minus_1, "frame_width_minus_1"); 
+				stream.WriteVariable(n, this.frame_width_minus_1, "frame_width_minus_1"); 
 				n= frame_height_bits_minus_1 + 1;
-				size += stream.WriteVariable(n, this.frame_height_minus_1, "frame_height_minus_1"); 
+				stream.WriteVariable(n, this.frame_height_minus_1, "frame_height_minus_1"); 
 				FrameWidth= frame_width_minus_1 + 1;
 				FrameHeight= frame_height_minus_1 + 1;
 			}
@@ -3360,13 +2772,9 @@ return;
 				FrameWidth= max_frame_width_minus_1 + 1;
 				FrameHeight= max_frame_height_minus_1 + 1;
 			}
-			size += stream.WriteClass<SuperresParams>(context, this.superres_params, "superres_params"); 
-			size += stream.WriteClass<ComputeImageSize>(context, this.compute_image_size, "compute_image_size"); 
-
-            return size;
+			WriteSuperresParams(); 
+			WriteComputeImageSize(); 
          }
-
-    }
 
     /*
 
@@ -3384,8 +2792,6 @@ return;
  }
  }
     */
-    public class RenderSize : IAomSerializable
-    {
 		private uint render_and_frame_size_different;
 		public uint RenderAndFrameSizeDifferent { get { return render_and_frame_size_different; } set { render_and_frame_size_different = value; } }
 		private uint render_width_minus_1;
@@ -3393,23 +2799,15 @@ return;
 		private uint render_height_minus_1;
 		public uint RenderHeightMinus1 { get { return render_height_minus_1; } set { render_height_minus_1 = value; } }
 
-         public RenderSize()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadRenderSize()
          {
-            ulong size = 0;
 
-			uint RenderWidth = 0;
-			uint RenderHeight = 0;
-			size += stream.ReadFixed(size, 1, out this.render_and_frame_size_different, "render_and_frame_size_different"); 
+			stream.ReadFixed(1, out this.render_and_frame_size_different, "render_and_frame_size_different"); 
 
 			if ( render_and_frame_size_different == 1 )
 			{
-				size += stream.ReadFixed(size, 16, out this.render_width_minus_1, "render_width_minus_1"); 
-				size += stream.ReadFixed(size, 16, out this.render_height_minus_1, "render_height_minus_1"); 
+				stream.ReadFixed(16, out this.render_width_minus_1, "render_width_minus_1"); 
+				stream.ReadFixed(16, out this.render_height_minus_1, "render_height_minus_1"); 
 				RenderWidth= render_width_minus_1 + 1;
 				RenderHeight= render_height_minus_1 + 1;
 			}
@@ -3418,22 +2816,17 @@ return;
 				RenderWidth= UpscaledWidth;
 				RenderHeight= FrameHeight;
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteRenderSize()
          {
-            ulong size = 0;
 
-			uint RenderWidth = 0;
-			uint RenderHeight = 0;
-			size += stream.WriteFixed(1, this.render_and_frame_size_different, "render_and_frame_size_different"); 
+			stream.WriteFixed(1, this.render_and_frame_size_different, "render_and_frame_size_different"); 
 
 			if ( render_and_frame_size_different == 1 )
 			{
-				size += stream.WriteFixed(16, this.render_width_minus_1, "render_width_minus_1"); 
-				size += stream.WriteFixed(16, this.render_height_minus_1, "render_height_minus_1"); 
+				stream.WriteFixed(16, this.render_width_minus_1, "render_width_minus_1"); 
+				stream.WriteFixed(16, this.render_height_minus_1, "render_height_minus_1"); 
 				RenderWidth= render_width_minus_1 + 1;
 				RenderHeight= render_height_minus_1 + 1;
 			}
@@ -3442,11 +2835,7 @@ return;
 				RenderWidth= UpscaledWidth;
 				RenderHeight= FrameHeight;
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -3472,39 +2861,18 @@ return;
  }
  }
     */
-    public class FrameSizeWithRefs : IAomSerializable
-    {
 		private uint[] found_ref;
 		public uint[] FoundRef { get { return found_ref; } set { found_ref = value; } }
-		private FrameSize frame_size;
-		public FrameSize FrameSize { get { return frame_size; } set { frame_size = value; } }
-		private RenderSize render_size;
-		public RenderSize RenderSize { get { return render_size; } set { render_size = value; } }
-		private SuperresParams superres_params;
-		public SuperresParams SuperresParams { get { return superres_params; } set { superres_params = value; } }
-		private ComputeImageSize compute_image_size;
-		public ComputeImageSize ComputeImageSize { get { return compute_image_size; } set { compute_image_size = value; } }
-
-         public FrameSizeWithRefs()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
 
 			uint i = 0;
-			uint UpscaledWidth = 0;
-			uint FrameWidth = 0;
-			uint FrameHeight = 0;
-			uint RenderWidth = 0;
-			uint RenderHeight = 0;
+         public void ReadFrameSizeWithRefs()
+         {
+
 
 			this.found_ref = new uint[ REFS_PER_FRAME];
 			for ( i = 0; i < REFS_PER_FRAME; i++ )
 			{
-				size += stream.ReadFixed(size, 1, out this.found_ref[ i ], "found_ref"); 
+				stream.ReadFixed(1, out this.found_ref[ i ], "found_ref"); 
 
 				if ( found_ref[i] == 1 )
 				{
@@ -3519,36 +2887,23 @@ break;
 
 			if ( found_ref == 0 )
 			{
-				this.frame_size =  new FrameSize() ;
-				size +=  stream.ReadClass<FrameSize>(size, context, this.frame_size, "frame_size"); 
-				this.render_size =  new RenderSize() ;
-				size +=  stream.ReadClass<RenderSize>(size, context, this.render_size, "render_size"); 
+				ReadFrameSize(); 
+				ReadRenderSize(); 
 			}
 			else 
 			{
-				this.superres_params =  new SuperresParams() ;
-				size +=  stream.ReadClass<SuperresParams>(size, context, this.superres_params, "superres_params"); 
-				this.compute_image_size =  new ComputeImageSize() ;
-				size +=  stream.ReadClass<ComputeImageSize>(size, context, this.compute_image_size, "compute_image_size"); 
+				ReadSuperresParams(); 
+				ReadComputeImageSize(); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteFrameSizeWithRefs()
          {
-            ulong size = 0;
 
-			uint i = 0;
-			uint UpscaledWidth = 0;
-			uint FrameWidth = 0;
-			uint FrameHeight = 0;
-			uint RenderWidth = 0;
-			uint RenderHeight = 0;
 
 			for ( i = 0; i < REFS_PER_FRAME; i++ )
 			{
-				size += stream.WriteFixed(1, this.found_ref[ i ], "found_ref"); 
+				stream.WriteFixed(1, this.found_ref[ i ], "found_ref"); 
 
 				if ( found_ref[i] == 1 )
 				{
@@ -3563,19 +2918,15 @@ break;
 
 			if ( found_ref == 0 )
 			{
-				size += stream.WriteClass<FrameSize>(context, this.frame_size, "frame_size"); 
-				size += stream.WriteClass<RenderSize>(context, this.render_size, "render_size"); 
+				WriteFrameSize(); 
+				WriteRenderSize(); 
 			}
 			else 
 			{
-				size += stream.WriteClass<SuperresParams>(context, this.superres_params, "superres_params"); 
-				size += stream.WriteClass<ComputeImageSize>(context, this.compute_image_size, "compute_image_size"); 
+				WriteSuperresParams(); 
+				WriteComputeImageSize(); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -3589,24 +2940,15 @@ break;
  }
  }
     */
-    public class ReadInterpolationFilter : IAomSerializable
-    {
 		private uint is_filter_switchable;
 		public uint IsFilterSwitchable { get { return is_filter_switchable; } set { is_filter_switchable = value; } }
 		private uint interpolation_filter;
 		public uint InterpolationFilter { get { return interpolation_filter; } set { interpolation_filter = value; } }
 
-         public ReadInterpolationFilter()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadReadInterpolationFilter()
          {
-            ulong size = 0;
 
-			uint interpolation_filter = 0;
-			size += stream.ReadFixed(size, 1, out this.is_filter_switchable, "is_filter_switchable"); 
+			stream.ReadFixed(1, out this.is_filter_switchable, "is_filter_switchable"); 
 
 			if ( is_filter_switchable == 1 )
 			{
@@ -3614,18 +2956,14 @@ break;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 2, out this.interpolation_filter, "interpolation_filter"); 
+				stream.ReadFixed(2, out this.interpolation_filter, "interpolation_filter"); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteReadInterpolationFilter()
          {
-            ulong size = 0;
 
-			uint interpolation_filter = 0;
-			size += stream.WriteFixed(1, this.is_filter_switchable, "is_filter_switchable"); 
+			stream.WriteFixed(1, this.is_filter_switchable, "is_filter_switchable"); 
 
 			if ( is_filter_switchable == 1 )
 			{
@@ -3633,13 +2971,9 @@ break;
 			}
 			else 
 			{
-				size += stream.WriteFixed(2, this.interpolation_filter, "interpolation_filter"); 
+				stream.WriteFixed(2, this.interpolation_filter, "interpolation_filter"); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -3653,58 +2987,38 @@ break;
  return diff
 }
     */
-    public class GetRelativeDist : IAomSerializable
-    {
 		private uint a;
 		public uint a { get { return a; } set { a = value; } }
 		private uint b;
 		public uint b { get { return b; } set { b = value; } }
 
-         public GetRelativeDist(uint a, uint b)
-         { 
-			this.a = a;
-			this.b = b;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadGetRelativeDist(uint a, uint b)
          {
-            ulong size = 0;
 
-			uint diff = 0;
-			uint m = 0;
 
 			if ( enable_order_hint== 0 )
 			{
 return 0;
 			}
-			diff= a - b;
-			m= 1 << (OrderHintBits - 1);
+			uint diff= a - b;
+			uint m= 1 << (OrderHintBits - 1);
 			diff= (diff & (m - 1)) - (diff & m);
 return diff;
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteGetRelativeDist(uint a, uint b)
          {
-            ulong size = 0;
 
-			uint diff = 0;
-			uint m = 0;
 
 			if ( enable_order_hint== 0 )
 			{
 return 0;
 			}
-			diff= a - b;
-			m= 1 << (OrderHintBits - 1);
+			uint diff= a - b;
+			uint m= 1 << (OrderHintBits - 1);
 			diff= (diff & (m - 1)) - (diff & m);
 return diff;
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -3795,8 +3109,6 @@ tile_info () {
  }
  }
     */
-    public class TileInfo : IAomSerializable
-    {
 		private uint uniform_tile_spacing_flag;
 		public uint UniformTileSpacingFlag { get { return uniform_tile_spacing_flag; } set { uniform_tile_spacing_flag = value; } }
 		private Dictionary<int, uint> increment_tile_cols_log2 = new Dictionary<int, uint>();
@@ -3812,55 +3124,23 @@ tile_info () {
 		private uint tile_size_bytes_minus_1;
 		public uint TileSizeBytesMinus1 { get { return tile_size_bytes_minus_1; } set { tile_size_bytes_minus_1 = value; } }
 
-         public TileInfo()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint sbCols = 0;
-			uint sbRows = 0;
-			uint sbShift = 0;
-			uint sbSize = 0;
-			uint maxTileWidthSb = 0;
-			uint maxTileAreaSb = 0;
-			uint minLog2TileCols = 0;
-			uint maxLog2TileCols = 0;
-			uint maxLog2TileRows = 0;
-			uint minLog2Tiles = 0;
-			uint TileColsLog2 = 0;
 			int whileIndex = -1;
-			uint tileWidthSb = 0;
-			uint i = 0;
 			uint startSb = 0;
-			uint[] MiColStarts = null;
-			uint TileCols = 0;
-			uint minLog2TileRows = 0;
-			uint TileRowsLog2 = 0;
-			uint tileHeightSb = 0;
-			uint[] MiRowStarts = null;
-			uint TileRows = 0;
-			uint widestTileSb = 0;
-			uint maxWidth = 0;
-			uint sizeSb = 0;
-			uint maxTileHeightSb = 0;
-			uint maxHeight = 0;
-			uint TileSizeBytes = 0;
-			uint context_update_tile_id = 0;
-			sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 );
-			sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 );
-			sbShift= use_128x128_superblock ? 5 : 4;
-			sbSize= sbShift + 2;
-			maxTileWidthSb= MAX_TILE_WIDTH >> sbSize;
-			maxTileAreaSb= MAX_TILE_AREA >> ( 2 * sbSize );
-			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
-			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
-			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
-			size += stream.ReadFixed(size, 1, out this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
+			uint i = 0;
+         public void ReadTileInfo()
+         {
+
+			uint sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 );
+			uint sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 );
+			uint sbShift= use_128x128_superblock ? 5 : 4;
+			uint sbSize= sbShift + 2;
+			uint maxTileWidthSb= MAX_TILE_WIDTH >> sbSize;
+			uint maxTileAreaSb= MAX_TILE_AREA >> ( 2 * sbSize );
+			uint minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
+			uint maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
+			uint maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
+			uint minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
+			stream.ReadFixed(1, out this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
 			{
@@ -3870,7 +3150,7 @@ tile_info () {
 				{
 					whileIndex++;
 
-					size += stream.ReadFixed(size, 1, whileIndex, this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
+					stream.ReadFixed(1, out this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
 
 					if ( increment_tile_cols_log2[whileIndex] == 1 )
 					{
@@ -3898,7 +3178,7 @@ break;
 				{
 					whileIndex++;
 
-					size += stream.ReadFixed(size, 1, whileIndex, this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
+					stream.ReadFixed(1, out this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
 
 					if ( increment_tile_rows_log2[whileIndex] == 1 )
 					{
@@ -3930,7 +3210,7 @@ break;
 				{
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
-					size += stream.ReadUnsignedInt(size, maxWidth, out this.width_in_sbs_minus_1[ i ], "width_in_sbs_minus_1"); 
+					stream.ReadUnsignedInt(maxWidth, out this.width_in_sbs_minus_1[ i ], "width_in_sbs_minus_1"); 
 					sizeSb= width_in_sbs_minus_1[i] + 1;
 					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
@@ -3955,7 +3235,7 @@ break;
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
-					size += stream.ReadUnsignedInt(size, maxHeight, out this.height_in_sbs_minus_1[ i ], "height_in_sbs_minus_1"); 
+					stream.ReadUnsignedInt(maxHeight, out this.height_in_sbs_minus_1[ i ], "height_in_sbs_minus_1"); 
 					sizeSb= height_in_sbs_minus_1[i] + 1;
 					startSb+= sizeSb;
 				}
@@ -3966,62 +3246,30 @@ break;
 
 			if ( TileColsLog2 > 0 || TileRowsLog2 > 0 )
 			{
-				size += stream.ReadVariable(size, TileRowsLog2+TileColsLog2, out this.context_update_tile_id, "context_update_tile_id"); 
-				size += stream.ReadFixed(size, 2, out this.tile_size_bytes_minus_1, "tile_size_bytes_minus_1"); 
+				stream.ReadVariable(TileRowsLog2+TileColsLog2, out this.context_update_tile_id, "context_update_tile_id"); 
+				stream.ReadFixed(2, out this.tile_size_bytes_minus_1, "tile_size_bytes_minus_1"); 
 				TileSizeBytes= tile_size_bytes_minus_1 + 1;
 			}
 			else 
 			{
 				context_update_tile_id= 0;
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteTileInfo()
          {
-            ulong size = 0;
 
-			uint sbCols = 0;
-			uint sbRows = 0;
-			uint sbShift = 0;
-			uint sbSize = 0;
-			uint maxTileWidthSb = 0;
-			uint maxTileAreaSb = 0;
-			uint minLog2TileCols = 0;
-			uint maxLog2TileCols = 0;
-			uint maxLog2TileRows = 0;
-			uint minLog2Tiles = 0;
-			uint TileColsLog2 = 0;
-			int whileIndex = -1;
-			uint tileWidthSb = 0;
-			uint i = 0;
-			uint startSb = 0;
-			uint[] MiColStarts = null;
-			uint TileCols = 0;
-			uint minLog2TileRows = 0;
-			uint TileRowsLog2 = 0;
-			uint tileHeightSb = 0;
-			uint[] MiRowStarts = null;
-			uint TileRows = 0;
-			uint widestTileSb = 0;
-			uint maxWidth = 0;
-			uint sizeSb = 0;
-			uint maxTileHeightSb = 0;
-			uint maxHeight = 0;
-			uint TileSizeBytes = 0;
-			uint context_update_tile_id = 0;
-			sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 );
-			sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 );
-			sbShift= use_128x128_superblock ? 5 : 4;
-			sbSize= sbShift + 2;
-			maxTileWidthSb= MAX_TILE_WIDTH >> sbSize;
-			maxTileAreaSb= MAX_TILE_AREA >> ( 2 * sbSize );
-			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
-			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
-			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
-			size += stream.WriteFixed(1, this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
+			uint sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 );
+			uint sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 );
+			uint sbShift= use_128x128_superblock ? 5 : 4;
+			uint sbSize= sbShift + 2;
+			uint maxTileWidthSb= MAX_TILE_WIDTH >> sbSize;
+			uint maxTileAreaSb= MAX_TILE_AREA >> ( 2 * sbSize );
+			uint minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
+			uint maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
+			uint maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
+			uint minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
+			stream.WriteFixed(1, this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
 			{
@@ -4031,7 +3279,7 @@ break;
 				{
 					whileIndex++;
 
-					size += stream.WriteFixed(1, whileIndex, this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
+					stream.WriteFixed(1, this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
 
 					if ( increment_tile_cols_log2[whileIndex] == 1 )
 					{
@@ -4059,7 +3307,7 @@ break;
 				{
 					whileIndex++;
 
-					size += stream.WriteFixed(1, whileIndex, this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
+					stream.WriteFixed(1, this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
 
 					if ( increment_tile_rows_log2[whileIndex] == 1 )
 					{
@@ -4090,7 +3338,7 @@ break;
 				{
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
-					size += stream.WriteUnsignedInt(maxWidth, this.width_in_sbs_minus_1[ i ], "width_in_sbs_minus_1"); 
+					stream.WriteUnsignedInt(maxWidth, this.width_in_sbs_minus_1[ i ], "width_in_sbs_minus_1"); 
 					sizeSb= width_in_sbs_minus_1[i] + 1;
 					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
@@ -4114,7 +3362,7 @@ break;
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
-					size += stream.WriteUnsignedInt(maxHeight, this.height_in_sbs_minus_1[ i ], "height_in_sbs_minus_1"); 
+					stream.WriteUnsignedInt(maxHeight, this.height_in_sbs_minus_1[ i ], "height_in_sbs_minus_1"); 
 					sizeSb= height_in_sbs_minus_1[i] + 1;
 					startSb+= sizeSb;
 				}
@@ -4125,19 +3373,15 @@ break;
 
 			if ( TileColsLog2 > 0 || TileRowsLog2 > 0 )
 			{
-				size += stream.WriteVariable(TileRowsLog2+TileColsLog2, this.context_update_tile_id, "context_update_tile_id"); 
-				size += stream.WriteFixed(2, this.tile_size_bytes_minus_1, "tile_size_bytes_minus_1"); 
+				stream.WriteVariable(TileRowsLog2+TileColsLog2, this.context_update_tile_id, "context_update_tile_id"); 
+				stream.WriteFixed(2, this.tile_size_bytes_minus_1, "tile_size_bytes_minus_1"); 
 				TileSizeBytes= tile_size_bytes_minus_1 + 1;
 			}
 			else 
 			{
 				context_update_tile_id= 0;
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -4149,48 +3393,31 @@ tile_log2( blkSize, target ) {
  return k
  }
     */
-    public class TileLog2 : IAomSerializable
-    {
 		private uint blkSize;
 		public uint BlkSize { get { return blkSize; } set { blkSize = value; } }
 		private uint target;
 		public uint Target { get { return target; } set { target = value; } }
 
-         public TileLog2(uint blkSize, uint target)
-         { 
-			this.blkSize = blkSize;
-			this.target = target;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
 			uint k = 0;
+         public void ReadTileLog2(uint blkSize, uint target)
+         {
+
 
 			for ( k = 0; (blkSize << (int) k) < target; k++ )
 			{
 			}
 return k;
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteTileLog2(uint blkSize, uint target)
          {
-            ulong size = 0;
 
-			uint k = 0;
 
 			for ( k = 0; (blkSize << (int) k) < target; k++ )
 			{
 			}
 return k;
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -4229,8 +3456,6 @@ return k;
  }
  }
     */
-    public class QuantizationParams : IAomSerializable
-    {
 		private uint base_q_idx;
 		public uint BaseqIdx { get { return base_q_idx; } set { base_q_idx = value; } }
 		private uint diff_uv_delta;
@@ -4244,31 +3469,18 @@ return k;
 		private uint qm_v;
 		public uint Qmv { get { return qm_v; } set { qm_v = value; } }
 
-         public QuantizationParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadQuantizationParams()
          {
-            ulong size = 0;
 
-			uint DeltaQYDc = 0;
-			uint diff_uv_delta = 0;
-			uint DeltaQUDc = 0;
-			uint DeltaQUAc = 0;
-			uint DeltaQVDc = 0;
-			uint DeltaQVAc = 0;
-			uint qm_v = 0;
-			size += stream.ReadFixed(size, 8, out this.base_q_idx, "base_q_idx"); 
-			DeltaQYDc= read_delta_q();
+			stream.ReadFixed(8, out this.base_q_idx, "base_q_idx"); 
+			uint DeltaQYDc= read_delta_q();
 
 			if ( NumPlanes > 1 )
 			{
 
 				if ( separate_uv_delta_q != 0 )
 				{
-					size += stream.ReadFixed(size, 1, out this.diff_uv_delta, "diff_uv_delta"); 
+					stream.ReadFixed(1, out this.diff_uv_delta, "diff_uv_delta"); 
 				}
 				else 
 				{
@@ -4295,12 +3507,12 @@ return k;
 				DeltaQVDc= 0;
 				DeltaQVAc= 0;
 			}
-			size += stream.ReadFixed(size, 1, out this.using_qmatrix, "using_qmatrix"); 
+			stream.ReadFixed(1, out this.using_qmatrix, "using_qmatrix"); 
 
 			if ( using_qmatrix != 0 )
 			{
-				size += stream.ReadFixed(size, 4, out this.qm_y, "qm_y"); 
-				size += stream.ReadFixed(size, 4, out this.qm_u, "qm_u"); 
+				stream.ReadFixed(4, out this.qm_y, "qm_y"); 
+				stream.ReadFixed(4, out this.qm_u, "qm_u"); 
 
 				if ( separate_uv_delta_q== 0 )
 				{
@@ -4308,33 +3520,23 @@ return k;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 4, out this.qm_v, "qm_v"); 
+					stream.ReadFixed(4, out this.qm_v, "qm_v"); 
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteQuantizationParams()
          {
-            ulong size = 0;
 
-			uint DeltaQYDc = 0;
-			uint diff_uv_delta = 0;
-			uint DeltaQUDc = 0;
-			uint DeltaQUAc = 0;
-			uint DeltaQVDc = 0;
-			uint DeltaQVAc = 0;
-			uint qm_v = 0;
-			size += stream.WriteFixed(8, this.base_q_idx, "base_q_idx"); 
-			DeltaQYDc= read_delta_q();
+			stream.WriteFixed(8, this.base_q_idx, "base_q_idx"); 
+			uint DeltaQYDc= read_delta_q();
 
 			if ( NumPlanes > 1 )
 			{
 
 				if ( separate_uv_delta_q != 0 )
 				{
-					size += stream.WriteFixed(1, this.diff_uv_delta, "diff_uv_delta"); 
+					stream.WriteFixed(1, this.diff_uv_delta, "diff_uv_delta"); 
 				}
 				else 
 				{
@@ -4361,12 +3563,12 @@ return k;
 				DeltaQVDc= 0;
 				DeltaQVAc= 0;
 			}
-			size += stream.WriteFixed(1, this.using_qmatrix, "using_qmatrix"); 
+			stream.WriteFixed(1, this.using_qmatrix, "using_qmatrix"); 
 
 			if ( using_qmatrix != 0 )
 			{
-				size += stream.WriteFixed(4, this.qm_y, "qm_y"); 
-				size += stream.WriteFixed(4, this.qm_u, "qm_u"); 
+				stream.WriteFixed(4, this.qm_y, "qm_y"); 
+				stream.WriteFixed(4, this.qm_u, "qm_u"); 
 
 				if ( separate_uv_delta_q== 0 )
 				{
@@ -4374,14 +3576,10 @@ return k;
 				}
 				else 
 				{
-					size += stream.WriteFixed(4, this.qm_v, "qm_v"); 
+					stream.WriteFixed(4, this.qm_v, "qm_v"); 
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -4396,59 +3594,42 @@ return k;
  return delta_q
  }
     */
-    public class ReadDeltaq : IAomSerializable
-    {
 		private uint delta_coded;
 		public uint DeltaCoded { get { return delta_coded; } set { delta_coded = value; } }
 		private uint delta_q;
 		public uint Deltaq { get { return delta_q; } set { delta_q = value; } }
 
-         public ReadDeltaq()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadReadDeltaq()
          {
-            ulong size = 0;
 
-			uint delta_q = 0;
-			size += stream.ReadFixed(size, 1, out this.delta_coded, "delta_coded"); 
+			stream.ReadFixed(1, out this.delta_coded, "delta_coded"); 
 
 			if ( delta_coded != 0 )
 			{
-				size += stream.ReadSignedIntVar(size, 1+6, out this.delta_q, "delta_q"); 
+				stream.ReadSignedIntVar(1+6, out this.delta_q, "delta_q"); 
 			}
 			else 
 			{
 				delta_q= 0;
 			}
 return delta_q;
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteReadDeltaq()
          {
-            ulong size = 0;
 
-			uint delta_q = 0;
-			size += stream.WriteFixed(1, this.delta_coded, "delta_coded"); 
+			stream.WriteFixed(1, this.delta_coded, "delta_coded"); 
 
 			if ( delta_coded != 0 )
 			{
-				size += stream.WriteSignedIntVar(1+6, this.delta_q, "delta_q"); 
+				stream.WriteSignedIntVar(1+6, this.delta_q, "delta_q"); 
 			}
 			else 
 			{
 				delta_q= 0;
 			}
 return delta_q;
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -4510,8 +3691,6 @@ return delta_q;
  }
  }
     */
-    public class SegmentationParams : IAomSerializable
-    {
 		private uint segmentation_enabled;
 		public uint SegmentationEnabled { get { return segmentation_enabled; } set { segmentation_enabled = value; } }
 		private uint segmentation_update_map;
@@ -4522,32 +3701,15 @@ return delta_q;
 		public uint SegmentationUpdateData { get { return segmentation_update_data; } set { segmentation_update_data = value; } }
 		private uint[][] feature_enabled;
 		public uint[][] FeatureEnabled { get { return feature_enabled; } set { feature_enabled = value; } }
-		private FeatureValue[][] feature_value;
-		public FeatureValue[][] FeatureValue { get { return feature_value; } set { feature_value = value; } }
+		private uint[][] feature_value;
+		public uint[][] FeatureValue { get { return feature_value; } set { feature_value = value; } }
 
-         public SegmentationParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint segmentation_update_map = 0;
-			uint segmentation_temporal_update = 0;
-			uint segmentation_update_data = 0;
 			uint i = 0;
 			uint j = 0;
-			uint feature_value = 0;
-			uint[][] FeatureEnabled = null;
-			uint clippedValue = 0;
-			uint bitsToRead = 0;
-			uint limit = 0;
-			uint[][] FeatureData = null;
-			uint SegIdPreSkip = 0;
-			uint LastActiveSegId = 0;
-			size += stream.ReadFixed(size, 1, out this.segmentation_enabled, "segmentation_enabled"); 
+         public void ReadSegmentationParams()
+         {
+
+			stream.ReadFixed(1, out this.segmentation_enabled, "segmentation_enabled"); 
 
 			if ( segmentation_enabled == 1 )
 			{
@@ -4560,29 +3722,29 @@ return delta_q;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, out this.segmentation_update_map, "segmentation_update_map"); 
+					stream.ReadFixed(1, out this.segmentation_update_map, "segmentation_update_map"); 
 
 					if ( segmentation_update_map == 1 )
 					{
-						size += stream.ReadFixed(size, 1, out this.segmentation_temporal_update, "segmentation_temporal_update"); 
+						stream.ReadFixed(1, out this.segmentation_temporal_update, "segmentation_temporal_update"); 
 					}
-					size += stream.ReadFixed(size, 1, out this.segmentation_update_data, "segmentation_update_data"); 
+					stream.ReadFixed(1, out this.segmentation_update_data, "segmentation_update_data"); 
 				}
 
 				if ( segmentation_update_data == 1 )
 				{
 
 					this.feature_enabled = new uint[ MAX_SEGMENTS][];
-					this.feature_value = new FeatureValue[ MAX_SEGMENTS][];
+					this.feature_value = new uint[ MAX_SEGMENTS][];
 					for ( i = 0; i < MAX_SEGMENTS; i++ )
 					{
 
 						this.feature_enabled[ i ] = new uint[ SEG_LVL_MAX];
-						this.feature_value[ i ] = new FeatureValue[ SEG_LVL_MAX];
+						this.feature_value[ i ] = new uint[ SEG_LVL_MAX];
 						for ( j = 0; j < SEG_LVL_MAX; j++ )
 						{
 							feature_value= 0;
-							size += stream.ReadFixed(size, 1, out this.feature_enabled[ i ][ j ], "feature_enabled"); 
+							stream.ReadFixed(1, out this.feature_enabled[ i ][ j ], "feature_enabled"); 
 							FeatureEnabled[ i ][ j ]= feature_enabled[i][j];
 							clippedValue= 0;
 
@@ -4593,16 +3755,14 @@ return delta_q;
 
 								if ( Segmentation_Feature_Signed[ j ] == 1 )
 								{
-									this.feature_value[ i ][ j ] =  new FeatureValue() ;
-									size +=  stream.ReadClass<FeatureValue>(size, context, this.feature_value[ i ][ j ], "feature_value"); 
-									size += stream.ReadSignedIntVar(size, 1+bitsToRead, out this.feature_value[ i ][ j ], "feature_value"); 
+									ReadFeatureValue; 
+									stream.ReadSignedIntVar(1+bitsToRead, out this.feature_value[ i ][ j ], "feature_value"); 
 									clippedValue= Clip3( -limit, limit, feature_value[i][j]);
 								}
 								else 
 								{
-									this.feature_value[ i ][ j ] =  new FeatureValue() ;
-									size +=  stream.ReadClass<FeatureValue>(size, context, this.feature_value[ i ][ j ], "feature_value"); 
-									size += stream.ReadVariable(size, bitsToRead, out this.feature_value[ i ][ j ], "feature_value"); 
+									ReadFeatureValue; 
+									stream.ReadVariable(bitsToRead, out this.feature_value[ i ][ j ], "feature_value"); 
 									clippedValue= Clip3( 0, limit, feature_value[i][j]);
 								}
 							}
@@ -4624,8 +3784,8 @@ return delta_q;
 					}
 				}
 			}
-			SegIdPreSkip= 0;
-			LastActiveSegId= 0;
+			uint SegIdPreSkip= 0;
+			uint LastActiveSegId= 0;
 
 			for ( i = 0; i < MAX_SEGMENTS; i++ )
 			{
@@ -4644,28 +3804,12 @@ return delta_q;
 					}
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteSegmentationParams()
          {
-            ulong size = 0;
 
-			uint segmentation_update_map = 0;
-			uint segmentation_temporal_update = 0;
-			uint segmentation_update_data = 0;
-			uint i = 0;
-			uint j = 0;
-			uint feature_value = 0;
-			uint[][] FeatureEnabled = null;
-			uint clippedValue = 0;
-			uint bitsToRead = 0;
-			uint limit = 0;
-			uint[][] FeatureData = null;
-			uint SegIdPreSkip = 0;
-			uint LastActiveSegId = 0;
-			size += stream.WriteFixed(1, this.segmentation_enabled, "segmentation_enabled"); 
+			stream.WriteFixed(1, this.segmentation_enabled, "segmentation_enabled"); 
 
 			if ( segmentation_enabled == 1 )
 			{
@@ -4678,13 +3822,13 @@ return delta_q;
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, this.segmentation_update_map, "segmentation_update_map"); 
+					stream.WriteFixed(1, this.segmentation_update_map, "segmentation_update_map"); 
 
 					if ( segmentation_update_map == 1 )
 					{
-						size += stream.WriteFixed(1, this.segmentation_temporal_update, "segmentation_temporal_update"); 
+						stream.WriteFixed(1, this.segmentation_temporal_update, "segmentation_temporal_update"); 
 					}
-					size += stream.WriteFixed(1, this.segmentation_update_data, "segmentation_update_data"); 
+					stream.WriteFixed(1, this.segmentation_update_data, "segmentation_update_data"); 
 				}
 
 				if ( segmentation_update_data == 1 )
@@ -4696,7 +3840,7 @@ return delta_q;
 						for ( j = 0; j < SEG_LVL_MAX; j++ )
 						{
 							feature_value= 0;
-							size += stream.WriteFixed(1, this.feature_enabled[ i ][ j ], "feature_enabled"); 
+							stream.WriteFixed(1, this.feature_enabled[ i ][ j ], "feature_enabled"); 
 							FeatureEnabled[ i ][ j ]= feature_enabled[i][j];
 							clippedValue= 0;
 
@@ -4707,14 +3851,14 @@ return delta_q;
 
 								if ( Segmentation_Feature_Signed[ j ] == 1 )
 								{
-									size += stream.WriteClass<FeatureValue>(context, this.feature_value[ i ][ j ], "feature_value"); 
-									size += stream.WriteSignedIntVar(1+bitsToRead, this.feature_value[ i ][ j ], "feature_value"); 
+									WriteFeatureValue; 
+									stream.WriteSignedIntVar(1+bitsToRead, this.feature_value[ i ][ j ], "feature_value"); 
 									clippedValue= Clip3( -limit, limit, feature_value[i][j]);
 								}
 								else 
 								{
-									size += stream.WriteClass<FeatureValue>(context, this.feature_value[ i ][ j ], "feature_value"); 
-									size += stream.WriteVariable(bitsToRead, this.feature_value[ i ][ j ], "feature_value"); 
+									WriteFeatureValue; 
+									stream.WriteVariable(bitsToRead, this.feature_value[ i ][ j ], "feature_value"); 
 									clippedValue= Clip3( 0, limit, feature_value[i][j]);
 								}
 							}
@@ -4736,8 +3880,8 @@ return delta_q;
 					}
 				}
 			}
-			SegIdPreSkip= 0;
-			LastActiveSegId= 0;
+			uint SegIdPreSkip= 0;
+			uint LastActiveSegId= 0;
 
 			for ( i = 0; i < MAX_SEGMENTS; i++ )
 			{
@@ -4756,11 +3900,7 @@ return delta_q;
 					}
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -4776,63 +3916,44 @@ delta_q_params() {
  }
  }
     */
-    public class DeltaqParams : IAomSerializable
-    {
 		private uint delta_q_present;
 		public uint DeltaqPresent { get { return delta_q_present; } set { delta_q_present = value; } }
 		private uint delta_q_res;
 		public uint DeltaqRes { get { return delta_q_res; } set { delta_q_res = value; } }
 
-         public DeltaqParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadDeltaqParams()
          {
-            ulong size = 0;
 
-			uint delta_q_res = 0;
-			uint delta_q_present = 0;
 			delta_q_res= 0;
 			delta_q_present= 0;
 
 			if ( base_q_idx > 0 )
 			{
-				size += stream.ReadFixed(size, 1, out this.delta_q_present, "delta_q_present"); 
+				stream.ReadFixed(1, out this.delta_q_present, "delta_q_present"); 
 			}
 
 			if ( delta_q_present != 0 )
 			{
-				size += stream.ReadFixed(size, 2, out this.delta_q_res, "delta_q_res"); 
+				stream.ReadFixed(2, out this.delta_q_res, "delta_q_res"); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteDeltaqParams()
          {
-            ulong size = 0;
 
-			uint delta_q_res = 0;
-			uint delta_q_present = 0;
 			delta_q_res= 0;
 			delta_q_present= 0;
 
 			if ( base_q_idx > 0 )
 			{
-				size += stream.WriteFixed(1, this.delta_q_present, "delta_q_present"); 
+				stream.WriteFixed(1, this.delta_q_present, "delta_q_present"); 
 			}
 
 			if ( delta_q_present != 0 )
 			{
-				size += stream.WriteFixed(2, this.delta_q_res, "delta_q_res"); 
+				stream.WriteFixed(2, this.delta_q_res, "delta_q_res"); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -4851,8 +3972,6 @@ delta_lf_params() {
  }
  }
     */
-    public class DeltaLfParams : IAomSerializable
-    {
 		private uint delta_lf_present;
 		public uint DeltaLfPresent { get { return delta_lf_present; } set { delta_lf_present = value; } }
 		private uint delta_lf_res;
@@ -4860,18 +3979,9 @@ delta_lf_params() {
 		private uint delta_lf_multi;
 		public uint DeltaLfMulti { get { return delta_lf_multi; } set { delta_lf_multi = value; } }
 
-         public DeltaLfParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadDeltaLfParams()
          {
-            ulong size = 0;
 
-			uint delta_lf_present = 0;
-			uint delta_lf_res = 0;
-			uint delta_lf_multi = 0;
 			delta_lf_present= 0;
 			delta_lf_res= 0;
 			delta_lf_multi= 0;
@@ -4881,26 +3991,20 @@ delta_lf_params() {
 
 				if ( allow_intrabc== 0 )
 				{
-					size += stream.ReadFixed(size, 1, out this.delta_lf_present, "delta_lf_present"); 
+					stream.ReadFixed(1, out this.delta_lf_present, "delta_lf_present"); 
 				}
 
 				if ( delta_lf_present != 0 )
 				{
-					size += stream.ReadFixed(size, 2, out this.delta_lf_res, "delta_lf_res"); 
-					size += stream.ReadFixed(size, 1, out this.delta_lf_multi, "delta_lf_multi"); 
+					stream.ReadFixed(2, out this.delta_lf_res, "delta_lf_res"); 
+					stream.ReadFixed(1, out this.delta_lf_multi, "delta_lf_multi"); 
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteDeltaLfParams()
          {
-            ulong size = 0;
 
-			uint delta_lf_present = 0;
-			uint delta_lf_res = 0;
-			uint delta_lf_multi = 0;
 			delta_lf_present= 0;
 			delta_lf_res= 0;
 			delta_lf_multi= 0;
@@ -4910,20 +4014,16 @@ delta_lf_params() {
 
 				if ( allow_intrabc== 0 )
 				{
-					size += stream.WriteFixed(1, this.delta_lf_present, "delta_lf_present"); 
+					stream.WriteFixed(1, this.delta_lf_present, "delta_lf_present"); 
 				}
 
 				if ( delta_lf_present != 0 )
 				{
-					size += stream.WriteFixed(2, this.delta_lf_res, "delta_lf_res"); 
-					size += stream.WriteFixed(1, this.delta_lf_multi, "delta_lf_multi"); 
+					stream.WriteFixed(2, this.delta_lf_res, "delta_lf_res"); 
+					stream.WriteFixed(1, this.delta_lf_multi, "delta_lf_multi"); 
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -4956,8 +4056,6 @@ cdef_params() {
  }
  }
     */
-    public class CdefParams : IAomSerializable
-    {
 		private uint cdef_damping_minus_3;
 		public uint CdefDampingMinus3 { get { return cdef_damping_minus_3; } set { cdef_damping_minus_3 = value; } }
 		private uint cdef_bits;
@@ -4971,22 +4069,10 @@ cdef_params() {
 		private uint[] cdef_uv_sec_strength;
 		public uint[] CdefUvSecStrength { get { return cdef_uv_sec_strength; } set { cdef_uv_sec_strength = value; } }
 
-         public CdefParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint cdef_bits = 0;
-			uint[] cdef_y_pri_strength = null;
-			uint[] cdef_y_sec_strength = null;
-			uint[] cdef_uv_pri_strength = null;
-			uint[] cdef_uv_sec_strength = null;
-			uint CdefDamping = 0;
 			uint i = 0;
+         public void ReadCdefParams()
+         {
+
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 ||
  enable_cdef== 0)
@@ -4999,9 +4085,9 @@ cdef_params() {
 				CdefDamping= 3;
 return;
 			}
-			size += stream.ReadFixed(size, 2, out this.cdef_damping_minus_3, "cdef_damping_minus_3"); 
-			CdefDamping= cdef_damping_minus_3 + 3;
-			size += stream.ReadFixed(size, 2, out this.cdef_bits, "cdef_bits"); 
+			stream.ReadFixed(2, out this.cdef_damping_minus_3, "cdef_damping_minus_3"); 
+			uint CdefDamping= cdef_damping_minus_3 + 3;
+			stream.ReadFixed(2, out this.cdef_bits, "cdef_bits"); 
 
 			this.cdef_y_pri_strength = new uint[ (1 << (int) cdef_bits)];
 			this.cdef_y_sec_strength = new uint[ (1 << (int) cdef_bits)];
@@ -5009,8 +4095,8 @@ return;
 			this.cdef_uv_sec_strength = new uint[ (1 << (int) cdef_bits)];
 			for ( i = 0; i < (1 << (int) cdef_bits); i++ )
 			{
-				size += stream.ReadFixed(size, 4, out this.cdef_y_pri_strength[i], "cdef_y_pri_strength"); 
-				size += stream.ReadFixed(size, 2, out this.cdef_y_sec_strength[i], "cdef_y_sec_strength"); 
+				stream.ReadFixed(4, out this.cdef_y_pri_strength[i], "cdef_y_pri_strength"); 
+				stream.ReadFixed(2, out this.cdef_y_sec_strength[i], "cdef_y_sec_strength"); 
 
 				if ( cdef_y_sec_strength[i] == 3 )
 				{
@@ -5019,8 +4105,8 @@ return;
 
 				if ( NumPlanes > 1 )
 				{
-					size += stream.ReadFixed(size, 4, out this.cdef_uv_pri_strength[i], "cdef_uv_pri_strength"); 
-					size += stream.ReadFixed(size, 2, out this.cdef_uv_sec_strength[i], "cdef_uv_sec_strength"); 
+					stream.ReadFixed(4, out this.cdef_uv_pri_strength[i], "cdef_uv_pri_strength"); 
+					stream.ReadFixed(2, out this.cdef_uv_sec_strength[i], "cdef_uv_sec_strength"); 
 
 					if ( cdef_uv_sec_strength[i] == 3 )
 					{
@@ -5028,21 +4114,11 @@ return;
 					}
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteCdefParams()
          {
-            ulong size = 0;
 
-			uint cdef_bits = 0;
-			uint[] cdef_y_pri_strength = null;
-			uint[] cdef_y_sec_strength = null;
-			uint[] cdef_uv_pri_strength = null;
-			uint[] cdef_uv_sec_strength = null;
-			uint CdefDamping = 0;
-			uint i = 0;
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 ||
  enable_cdef== 0)
@@ -5055,14 +4131,14 @@ return;
 				CdefDamping= 3;
 return;
 			}
-			size += stream.WriteFixed(2, this.cdef_damping_minus_3, "cdef_damping_minus_3"); 
-			CdefDamping= cdef_damping_minus_3 + 3;
-			size += stream.WriteFixed(2, this.cdef_bits, "cdef_bits"); 
+			stream.WriteFixed(2, this.cdef_damping_minus_3, "cdef_damping_minus_3"); 
+			uint CdefDamping= cdef_damping_minus_3 + 3;
+			stream.WriteFixed(2, this.cdef_bits, "cdef_bits"); 
 
 			for ( i = 0; i < (1 << (int) cdef_bits); i++ )
 			{
-				size += stream.WriteFixed(4, this.cdef_y_pri_strength[i], "cdef_y_pri_strength"); 
-				size += stream.WriteFixed(2, this.cdef_y_sec_strength[i], "cdef_y_sec_strength"); 
+				stream.WriteFixed(4, this.cdef_y_pri_strength[i], "cdef_y_pri_strength"); 
+				stream.WriteFixed(2, this.cdef_y_sec_strength[i], "cdef_y_sec_strength"); 
 
 				if ( cdef_y_sec_strength[i] == 3 )
 				{
@@ -5071,8 +4147,8 @@ return;
 
 				if ( NumPlanes > 1 )
 				{
-					size += stream.WriteFixed(4, this.cdef_uv_pri_strength[i], "cdef_uv_pri_strength"); 
-					size += stream.WriteFixed(2, this.cdef_uv_sec_strength[i], "cdef_uv_sec_strength"); 
+					stream.WriteFixed(4, this.cdef_uv_pri_strength[i], "cdef_uv_pri_strength"); 
+					stream.WriteFixed(2, this.cdef_uv_sec_strength[i], "cdef_uv_sec_strength"); 
 
 					if ( cdef_uv_sec_strength[i] == 3 )
 					{
@@ -5080,11 +4156,7 @@ return;
 					}
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -5133,8 +4205,6 @@ lr_params() {
  }
  }
     */
-    public class LrParams : IAomSerializable
-    {
 		private uint[] lr_type;
 		public uint[] LrType { get { return lr_type; } set { lr_type = value; } }
 		private uint lr_unit_shift;
@@ -5144,22 +4214,10 @@ lr_params() {
 		private uint lr_uv_shift;
 		public uint LrUvShift { get { return lr_uv_shift; } set { lr_uv_shift = value; } }
 
-         public LrParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint[] FrameRestorationType = null;
-			uint UsesLr = 0;
-			uint usesChromaLr = 0;
 			uint i = 0;
-			uint lr_unit_shift = 0;
-			uint[] LoopRestorationSize = null;
-			uint lr_uv_shift = 0;
+         public void ReadLrParams()
+         {
+
 
 			if ( AllLossless != 0 || allow_intrabc != 0 ||
  enable_restoration== 0 )
@@ -5170,13 +4228,13 @@ lr_params() {
 				UsesLr= 0;
 return;
 			}
-			UsesLr= 0;
-			usesChromaLr= 0;
+			uint UsesLr= 0;
+			uint usesChromaLr= 0;
 
 			this.lr_type = new uint[ NumPlanes];
 			for ( i = 0; i < NumPlanes; i++ )
 			{
-				size += stream.ReadFixed(size, 2, out this.lr_type[ i ], "lr_type"); 
+				stream.ReadFixed(2, out this.lr_type[ i ], "lr_type"); 
 				FrameRestorationType[i]= Remap_Lr_Type[lr_type[i]];
 
 				if ( FrameRestorationType[i] != RESTORE_NONE )
@@ -5195,16 +4253,16 @@ return;
 
 				if ( use_128x128_superblock != 0 )
 				{
-					size += stream.ReadFixed(size, 1, out this.lr_unit_shift, "lr_unit_shift"); 
+					stream.ReadFixed(1, out this.lr_unit_shift, "lr_unit_shift"); 
 					lr_unit_shift++;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, out this.lr_unit_shift, "lr_unit_shift"); 
+					stream.ReadFixed(1, out this.lr_unit_shift, "lr_unit_shift"); 
 
 					if ( lr_unit_shift != 0 )
 					{
-						size += stream.ReadFixed(size, 1, out this.lr_unit_extra_shift, "lr_unit_extra_shift"); 
+						stream.ReadFixed(1, out this.lr_unit_extra_shift, "lr_unit_extra_shift"); 
 						lr_unit_shift+= lr_unit_extra_shift;
 					}
 				}
@@ -5212,7 +4270,7 @@ return;
 
 				if ( subsampling_x != 0 && subsampling_y != 0 && usesChromaLr != 0 )
 				{
-					size += stream.ReadFixed(size, 1, out this.lr_uv_shift, "lr_uv_shift"); 
+					stream.ReadFixed(1, out this.lr_uv_shift, "lr_uv_shift"); 
 				}
 				else 
 				{
@@ -5221,21 +4279,11 @@ return;
 				LoopRestorationSize[ 1 ]= LoopRestorationSize[ 0 ] >> lr_uv_shift;
 				LoopRestorationSize[ 2 ]= LoopRestorationSize[ 0 ] >> lr_uv_shift;
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteLrParams()
          {
-            ulong size = 0;
 
-			uint[] FrameRestorationType = null;
-			uint UsesLr = 0;
-			uint usesChromaLr = 0;
-			uint i = 0;
-			uint lr_unit_shift = 0;
-			uint[] LoopRestorationSize = null;
-			uint lr_uv_shift = 0;
 
 			if ( AllLossless != 0 || allow_intrabc != 0 ||
  enable_restoration== 0 )
@@ -5246,12 +4294,12 @@ return;
 				UsesLr= 0;
 return;
 			}
-			UsesLr= 0;
-			usesChromaLr= 0;
+			uint UsesLr= 0;
+			uint usesChromaLr= 0;
 
 			for ( i = 0; i < NumPlanes; i++ )
 			{
-				size += stream.WriteFixed(2, this.lr_type[ i ], "lr_type"); 
+				stream.WriteFixed(2, this.lr_type[ i ], "lr_type"); 
 				FrameRestorationType[i]= Remap_Lr_Type[lr_type[i]];
 
 				if ( FrameRestorationType[i] != RESTORE_NONE )
@@ -5270,16 +4318,16 @@ return;
 
 				if ( use_128x128_superblock != 0 )
 				{
-					size += stream.WriteFixed(1, this.lr_unit_shift, "lr_unit_shift"); 
+					stream.WriteFixed(1, this.lr_unit_shift, "lr_unit_shift"); 
 					lr_unit_shift++;
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, this.lr_unit_shift, "lr_unit_shift"); 
+					stream.WriteFixed(1, this.lr_unit_shift, "lr_unit_shift"); 
 
 					if ( lr_unit_shift != 0 )
 					{
-						size += stream.WriteFixed(1, this.lr_unit_extra_shift, "lr_unit_extra_shift"); 
+						stream.WriteFixed(1, this.lr_unit_extra_shift, "lr_unit_extra_shift"); 
 						lr_unit_shift+= lr_unit_extra_shift;
 					}
 				}
@@ -5287,7 +4335,7 @@ return;
 
 				if ( subsampling_x != 0 && subsampling_y != 0 && usesChromaLr != 0 )
 				{
-					size += stream.WriteFixed(1, this.lr_uv_shift, "lr_uv_shift"); 
+					stream.WriteFixed(1, this.lr_uv_shift, "lr_uv_shift"); 
 				}
 				else 
 				{
@@ -5296,11 +4344,7 @@ return;
 				LoopRestorationSize[ 1 ]= LoopRestorationSize[ 0 ] >> lr_uv_shift;
 				LoopRestorationSize[ 2 ]= LoopRestorationSize[ 0 ] >> lr_uv_shift;
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -5349,8 +4393,6 @@ return;
  }
  }
     */
-    public class LoopFilterParams : IAomSerializable
-    {
 		private uint[] loop_filter_level;
 		public uint[] LoopFilterLevel { get { return loop_filter_level; } set { loop_filter_level = value; } }
 		private uint loop_filter_sharpness;
@@ -5368,19 +4410,10 @@ return;
 		private uint[] loop_filter_mode_deltas;
 		public uint[] LoopFilterModeDeltas { get { return loop_filter_mode_deltas; } set { loop_filter_mode_deltas = value; } }
 
-         public LoopFilterParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint[] loop_filter_level = null;
-			uint[] loop_filter_ref_deltas = null;
 			uint i = 0;
-			uint[] loop_filter_mode_deltas = null;
+         public void ReadLoopFilterParams()
+         {
+
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 )
 			{
@@ -5401,24 +4434,24 @@ return;
 				}
 return;
 			}
-			size += stream.ReadFixed(size, 6, out this.loop_filter_level[ 0 ], "loop_filter_level"); 
-			size += stream.ReadFixed(size, 6, out this.loop_filter_level[ 1 ], "loop_filter_level"); 
+			stream.ReadFixed(6, out this.loop_filter_level[ 0 ], "loop_filter_level"); 
+			stream.ReadFixed(6, out this.loop_filter_level[ 1 ], "loop_filter_level"); 
 
 			if ( NumPlanes > 1 )
 			{
 
 				if ( loop_filter_level[ 0 ] != 0 || loop_filter_level[ 1 ] != 0 )
 				{
-					size += stream.ReadFixed(size, 6, out this.loop_filter_level[ 2 ], "loop_filter_level"); 
-					size += stream.ReadFixed(size, 6, out this.loop_filter_level[ 3 ], "loop_filter_level"); 
+					stream.ReadFixed(6, out this.loop_filter_level[ 2 ], "loop_filter_level"); 
+					stream.ReadFixed(6, out this.loop_filter_level[ 3 ], "loop_filter_level"); 
 				}
 			}
-			size += stream.ReadFixed(size, 3, out this.loop_filter_sharpness, "loop_filter_sharpness"); 
-			size += stream.ReadFixed(size, 1, out this.loop_filter_delta_enabled, "loop_filter_delta_enabled"); 
+			stream.ReadFixed(3, out this.loop_filter_sharpness, "loop_filter_sharpness"); 
+			stream.ReadFixed(1, out this.loop_filter_delta_enabled, "loop_filter_delta_enabled"); 
 
 			if ( loop_filter_delta_enabled == 1 )
 			{
-				size += stream.ReadFixed(size, 1, out this.loop_filter_delta_update, "loop_filter_delta_update"); 
+				stream.ReadFixed(1, out this.loop_filter_delta_update, "loop_filter_delta_update"); 
 
 				if ( loop_filter_delta_update == 1 )
 				{
@@ -5427,11 +4460,11 @@ return;
 					this.loop_filter_ref_deltas = new uint[ TOTAL_REFS_PER_FRAME];
 					for ( i = 0; i < TOTAL_REFS_PER_FRAME; i++ )
 					{
-						size += stream.ReadFixed(size, 1, out this.update_ref_delta[ i ], "update_ref_delta"); 
+						stream.ReadFixed(1, out this.update_ref_delta[ i ], "update_ref_delta"); 
 
 						if ( update_ref_delta[i] == 1 )
 						{
-							size += stream.ReadSignedIntVar(size, 1+6, out this.loop_filter_ref_deltas[ i ], "loop_filter_ref_deltas"); 
+							stream.ReadSignedIntVar(1+6, out this.loop_filter_ref_deltas[ i ], "loop_filter_ref_deltas"); 
 						}
 					}
 
@@ -5439,27 +4472,20 @@ return;
 					this.loop_filter_mode_deltas = new uint[ 2];
 					for ( i = 0; i < 2; i++ )
 					{
-						size += stream.ReadFixed(size, 1, out this.update_mode_delta[ i ], "update_mode_delta"); 
+						stream.ReadFixed(1, out this.update_mode_delta[ i ], "update_mode_delta"); 
 
 						if ( update_mode_delta[i] == 1 )
 						{
-							size += stream.ReadSignedIntVar(size, 1+6, out this.loop_filter_mode_deltas[ i ], "loop_filter_mode_deltas"); 
+							stream.ReadSignedIntVar(1+6, out this.loop_filter_mode_deltas[ i ], "loop_filter_mode_deltas"); 
 						}
 					}
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteLoopFilterParams()
          {
-            ulong size = 0;
 
-			uint[] loop_filter_level = null;
-			uint[] loop_filter_ref_deltas = null;
-			uint i = 0;
-			uint[] loop_filter_mode_deltas = null;
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 )
 			{
@@ -5480,54 +4506,50 @@ return;
 				}
 return;
 			}
-			size += stream.WriteFixed(6, this.loop_filter_level[ 0 ], "loop_filter_level"); 
-			size += stream.WriteFixed(6, this.loop_filter_level[ 1 ], "loop_filter_level"); 
+			stream.WriteFixed(6, this.loop_filter_level[ 0 ], "loop_filter_level"); 
+			stream.WriteFixed(6, this.loop_filter_level[ 1 ], "loop_filter_level"); 
 
 			if ( NumPlanes > 1 )
 			{
 
 				if ( loop_filter_level[ 0 ] != 0 || loop_filter_level[ 1 ] != 0 )
 				{
-					size += stream.WriteFixed(6, this.loop_filter_level[ 2 ], "loop_filter_level"); 
-					size += stream.WriteFixed(6, this.loop_filter_level[ 3 ], "loop_filter_level"); 
+					stream.WriteFixed(6, this.loop_filter_level[ 2 ], "loop_filter_level"); 
+					stream.WriteFixed(6, this.loop_filter_level[ 3 ], "loop_filter_level"); 
 				}
 			}
-			size += stream.WriteFixed(3, this.loop_filter_sharpness, "loop_filter_sharpness"); 
-			size += stream.WriteFixed(1, this.loop_filter_delta_enabled, "loop_filter_delta_enabled"); 
+			stream.WriteFixed(3, this.loop_filter_sharpness, "loop_filter_sharpness"); 
+			stream.WriteFixed(1, this.loop_filter_delta_enabled, "loop_filter_delta_enabled"); 
 
 			if ( loop_filter_delta_enabled == 1 )
 			{
-				size += stream.WriteFixed(1, this.loop_filter_delta_update, "loop_filter_delta_update"); 
+				stream.WriteFixed(1, this.loop_filter_delta_update, "loop_filter_delta_update"); 
 
 				if ( loop_filter_delta_update == 1 )
 				{
 
 					for ( i = 0; i < TOTAL_REFS_PER_FRAME; i++ )
 					{
-						size += stream.WriteFixed(1, this.update_ref_delta[ i ], "update_ref_delta"); 
+						stream.WriteFixed(1, this.update_ref_delta[ i ], "update_ref_delta"); 
 
 						if ( update_ref_delta[i] == 1 )
 						{
-							size += stream.WriteSignedIntVar(1+6, this.loop_filter_ref_deltas[ i ], "loop_filter_ref_deltas"); 
+							stream.WriteSignedIntVar(1+6, this.loop_filter_ref_deltas[ i ], "loop_filter_ref_deltas"); 
 						}
 					}
 
 					for ( i = 0; i < 2; i++ )
 					{
-						size += stream.WriteFixed(1, this.update_mode_delta[ i ], "update_mode_delta"); 
+						stream.WriteFixed(1, this.update_mode_delta[ i ], "update_mode_delta"); 
 
 						if ( update_mode_delta[i] == 1 )
 						{
-							size += stream.WriteSignedIntVar(1+6, this.loop_filter_mode_deltas[ i ], "loop_filter_mode_deltas"); 
+							stream.WriteSignedIntVar(1+6, this.loop_filter_mode_deltas[ i ], "loop_filter_mode_deltas"); 
 						}
 					}
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -5545,21 +4567,12 @@ return;
  }
  }
     */
-    public class ReadTxMode : IAomSerializable
-    {
 		private uint tx_mode_select;
 		public uint TxModeSelect { get { return tx_mode_select; } set { tx_mode_select = value; } }
 
-         public ReadTxMode()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadReadTxMode()
          {
-            ulong size = 0;
 
-			uint TxMode = 0;
 
 			if ( CodedLossless == 1 )
 			{
@@ -5567,7 +4580,7 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.tx_mode_select, "tx_mode_select"); 
+				stream.ReadFixed(1, out this.tx_mode_select, "tx_mode_select"); 
 
 				if ( tx_mode_select != 0 )
 				{
@@ -5578,15 +4591,11 @@ return;
 					TxMode= TX_MODE_LARGEST;
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteReadTxMode()
          {
-            ulong size = 0;
 
-			uint TxMode = 0;
 
 			if ( CodedLossless == 1 )
 			{
@@ -5594,7 +4603,7 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.tx_mode_select, "tx_mode_select"); 
+				stream.WriteFixed(1, this.tx_mode_select, "tx_mode_select"); 
 
 				if ( tx_mode_select != 0 )
 				{
@@ -5605,11 +4614,7 @@ return;
 					TxMode= TX_MODE_LARGEST;
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -5622,21 +4627,12 @@ return;
  }
  }
     */
-    public class FrameReferenceMode : IAomSerializable
-    {
 		private uint reference_select;
 		public uint ReferenceSelect { get { return reference_select; } set { reference_select = value; } }
 
-         public FrameReferenceMode()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadFrameReferenceMode()
          {
-            ulong size = 0;
 
-			uint reference_select = 0;
 
 			if ( FrameIsIntra != 0 )
 			{
@@ -5644,17 +4640,13 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.reference_select, "reference_select"); 
+				stream.ReadFixed(1, out this.reference_select, "reference_select"); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteFrameReferenceMode()
          {
-            ulong size = 0;
 
-			uint reference_select = 0;
 
 			if ( FrameIsIntra != 0 )
 			{
@@ -5662,13 +4654,9 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.reference_select, "reference_select"); 
+				stream.WriteFixed(1, this.reference_select, "reference_select"); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -5729,31 +4717,13 @@ return;
  }
  }
     */
-    public class SkipModeParams : IAomSerializable
-    {
 		private uint skip_mode_present;
 		public uint SkipModePresent { get { return skip_mode_present; } set { skip_mode_present = value; } }
 
-         public SkipModeParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint skipModeAllowed = 0;
-			uint forwardIdx = 0;
-			uint backwardIdx = 0;
 			uint i = 0;
-			uint refHint = 0;
-			uint forwardHint = 0;
-			uint backwardHint = 0;
-			uint[] SkipModeFrame = null;
-			uint secondForwardIdx = 0;
-			uint secondForwardHint = 0;
-			uint skip_mode_present = 0;
+         public void ReadSkipModeParams()
+         {
+
 
 			if ( FrameIsIntra != 0 || reference_select== 0 || enable_order_hint== 0 )
 			{
@@ -5835,31 +4805,17 @@ return;
 
 			if ( skipModeAllowed != 0 )
 			{
-				size += stream.ReadFixed(size, 1, out this.skip_mode_present, "skip_mode_present"); 
+				stream.ReadFixed(1, out this.skip_mode_present, "skip_mode_present"); 
 			}
 			else 
 			{
 				skip_mode_present= 0;
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteSkipModeParams()
          {
-            ulong size = 0;
 
-			uint skipModeAllowed = 0;
-			uint forwardIdx = 0;
-			uint backwardIdx = 0;
-			uint i = 0;
-			uint refHint = 0;
-			uint forwardHint = 0;
-			uint backwardHint = 0;
-			uint[] SkipModeFrame = null;
-			uint secondForwardIdx = 0;
-			uint secondForwardHint = 0;
-			uint skip_mode_present = 0;
 
 			if ( FrameIsIntra != 0 || reference_select== 0 || enable_order_hint== 0 )
 			{
@@ -5941,17 +4897,13 @@ return;
 
 			if ( skipModeAllowed != 0 )
 			{
-				size += stream.WriteFixed(1, this.skip_mode_present, "skip_mode_present"); 
+				stream.WriteFixed(1, this.skip_mode_present, "skip_mode_present"); 
 			}
 			else 
 			{
 				skip_mode_present= 0;
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -5997,41 +4949,18 @@ return;
  }
  }
     */
-    public class GlobalMotionParams : IAomSerializable
-    {
 		private uint[] is_global;
 		public uint[] IsGlobal { get { return is_global; } set { is_global = value; } }
 		private uint[] is_rot_zoom;
 		public uint[] IsRotZoom { get { return is_rot_zoom; } set { is_rot_zoom = value; } }
 		private uint[] is_translation;
 		public uint[] IsTranslation { get { return is_translation; } set { is_translation = value; } }
-		private ReadGlobalParam[] read_global_param;
-		public ReadGlobalParam[] ReadGlobalParam { get { return read_global_param; } set { read_global_param = value; } }
-		private ReadGlobalParam[] read_global_param0;
-		public ReadGlobalParam[] ReadGlobalParam0 { get { return read_global_param0; } set { read_global_param0 = value; } }
-		private ReadGlobalParam[] read_global_param1;
-		public ReadGlobalParam[] ReadGlobalParam1 { get { return read_global_param1; } set { read_global_param1 = value; } }
-		private ReadGlobalParam0[] read_global_param00;
-		public ReadGlobalParam0[] ReadGlobalParam00 { get { return read_global_param00; } set { read_global_param00 = value; } }
-		private ReadGlobalParam[] read_global_param2;
-		public ReadGlobalParam[] ReadGlobalParam2 { get { return read_global_param2; } set { read_global_param2 = value; } }
-		private ReadGlobalParam0[] read_global_param01;
-		public ReadGlobalParam0[] ReadGlobalParam01 { get { return read_global_param01; } set { read_global_param01 = value; } }
-
-         public GlobalMotionParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
 
 			uint refc = 0;
-			uint[] GmType = null;
 			uint i = 0;
-			int[][] gm_params = null;
-			uint type = 0;
+         public void ReadGlobalMotionParams()
+         {
+
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
@@ -6051,19 +4980,13 @@ return;
 			this.is_global = new uint[ AV1RefFrames.ALTREF_FRAME];
 			this.is_rot_zoom = new uint[ AV1RefFrames.ALTREF_FRAME];
 			this.is_translation = new uint[ AV1RefFrames.ALTREF_FRAME];
-			this.read_global_param = new ReadGlobalParam[ AV1RefFrames.ALTREF_FRAME];
-			this.read_global_param0 = new ReadGlobalParam[ AV1RefFrames.ALTREF_FRAME];
-			this.read_global_param1 = new ReadGlobalParam[ AV1RefFrames.ALTREF_FRAME];
-			this.read_global_param00 = new ReadGlobalParam0[ AV1RefFrames.ALTREF_FRAME];
-			this.read_global_param2 = new ReadGlobalParam[ AV1RefFrames.ALTREF_FRAME];
-			this.read_global_param01 = new ReadGlobalParam0[ AV1RefFrames.ALTREF_FRAME];
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
-				size += stream.ReadFixed(size, 1, out this.is_global[ refc ], "is_global"); 
+				stream.ReadFixed(1, out this.is_global[ refc ], "is_global"); 
 
 				if ( is_global[c] != 0 )
 				{
-					size += stream.ReadFixed(size, 1, out this.is_rot_zoom[ refc ], "is_rot_zoom"); 
+					stream.ReadFixed(1, out this.is_rot_zoom[ refc ], "is_rot_zoom"); 
 
 					if ( is_rot_zoom[c] != 0 )
 					{
@@ -6071,7 +4994,7 @@ return;
 					}
 					else 
 					{
-						size += stream.ReadFixed(size, 1, out this.is_translation[ refc ], "is_translation"); 
+						stream.ReadFixed(1, out this.is_translation[ refc ], "is_translation"); 
 						type= is_translation[c] ? TRANSLATION : AFFINE;
 					}
 				}
@@ -6083,17 +5006,13 @@ return;
 
 				if ( type >= ROTZOOM )
 				{
-					this.read_global_param[ refc ] =  new ReadGlobalParam(type,  refc,  2) ;
-					size +=  stream.ReadClass<ReadGlobalParam>(size, context, this.read_global_param[ refc ], "read_global_param"); 
-					this.read_global_param0[ refc ] =  new ReadGlobalParam(type,  refc,  3) ;
-					size +=  stream.ReadClass<ReadGlobalParam>(size, context, this.read_global_param0[ refc ], "read_global_param0"); 
+					ReadReadGlobalParam(type, refc, 2); 
+					ReadReadGlobalParam(type, refc, 3); 
 
 					if ( type == AFFINE )
 					{
-						this.read_global_param1[ refc ] =  new ReadGlobalParam(type,  refc,  4) ;
-						size +=  stream.ReadClass<ReadGlobalParam>(size, context, this.read_global_param1[ refc ], "read_global_param1"); 
-						this.read_global_param00[ refc ] =  new ReadGlobalParam0(type,  refc,  5) ;
-						size +=  stream.ReadClass<ReadGlobalParam0>(size, context, this.read_global_param00[ refc ], "read_global_param00"); 
+						ReadReadGlobalParam(type, refc, 4); 
+						ReadReadGlobalParam(type, refc, 5); 
 					}
 					else 
 					{
@@ -6104,25 +5023,15 @@ return;
 
 				if ( type >= TRANSLATION )
 				{
-					this.read_global_param2[ refc ] =  new ReadGlobalParam(type,  refc,  0) ;
-					size +=  stream.ReadClass<ReadGlobalParam>(size, context, this.read_global_param2[ refc ], "read_global_param2"); 
-					this.read_global_param01[ refc ] =  new ReadGlobalParam0(type,  refc,  1) ;
-					size +=  stream.ReadClass<ReadGlobalParam0>(size, context, this.read_global_param01[ refc ], "read_global_param01"); 
+					ReadReadGlobalParam(type, refc, 0); 
+					ReadReadGlobalParam(type, refc, 1); 
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteGlobalMotionParams()
          {
-            ulong size = 0;
 
-			uint refc = 0;
-			uint[] GmType = null;
-			uint i = 0;
-			int[][] gm_params = null;
-			uint type = 0;
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
@@ -6141,11 +5050,11 @@ return;
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
-				size += stream.WriteFixed(1, this.is_global[ refc ], "is_global"); 
+				stream.WriteFixed(1, this.is_global[ refc ], "is_global"); 
 
 				if ( is_global[c] != 0 )
 				{
-					size += stream.WriteFixed(1, this.is_rot_zoom[ refc ], "is_rot_zoom"); 
+					stream.WriteFixed(1, this.is_rot_zoom[ refc ], "is_rot_zoom"); 
 
 					if ( is_rot_zoom[c] != 0 )
 					{
@@ -6153,7 +5062,7 @@ return;
 					}
 					else 
 					{
-						size += stream.WriteFixed(1, this.is_translation[ refc ], "is_translation"); 
+						stream.WriteFixed(1, this.is_translation[ refc ], "is_translation"); 
 						type= is_translation[c] ? TRANSLATION : AFFINE;
 					}
 				}
@@ -6165,13 +5074,13 @@ return;
 
 				if ( type >= ROTZOOM )
 				{
-					size += stream.WriteClass<ReadGlobalParam>(context, this.read_global_param[ refc ], "read_global_param"); 
-					size += stream.WriteClass<ReadGlobalParam>(context, this.read_global_param0[ refc ], "read_global_param0"); 
+					WriteReadGlobalParam(type, refc, 2); 
+					WriteReadGlobalParam(type, refc, 3); 
 
 					if ( type == AFFINE )
 					{
-						size += stream.WriteClass<ReadGlobalParam>(context, this.read_global_param1[ refc ], "read_global_param1"); 
-						size += stream.WriteClass<ReadGlobalParam0>(context, this.read_global_param00[ refc ], "read_global_param00"); 
+						WriteReadGlobalParam(type, refc, 4); 
+						WriteReadGlobalParam(type, refc, 5); 
 					}
 					else 
 					{
@@ -6182,15 +5091,11 @@ return;
 
 				if ( type >= TRANSLATION )
 				{
-					size += stream.WriteClass<ReadGlobalParam>(context, this.read_global_param2[ refc ], "read_global_param2"); 
-					size += stream.WriteClass<ReadGlobalParam0>(context, this.read_global_param01[ refc ], "read_global_param01"); 
+					WriteReadGlobalParam(type, refc, 0); 
+					WriteReadGlobalParam(type, refc, 1); 
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -6215,8 +5120,6 @@ read_global_param( type, refc, idx ) {
  gm_params[refc][idx] = (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round
  }
     */
-    public class ReadGlobalParam : IAomSerializable
-    {
 		private uint type;
 		public uint Type { get { return type; } set { type = value; } }
 		private uint refc;
@@ -6224,27 +5127,11 @@ read_global_param( type, refc, idx ) {
 		private uint idx;
 		public uint Idx { get { return idx; } set { idx = value; } }
 
-         public ReadGlobalParam(uint type, uint refc, uint idx)
-         { 
-			this.type = type;
-			this.refc = refc;
-			this.idx = idx;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadReadGlobalParam(uint type, uint refc, uint idx)
          {
-            ulong size = 0;
 
-			uint absBits = 0;
-			uint precBits = 0;
-			uint precDiff = 0;
-			uint round = 0;
-			uint sub = 0;
-			uint mx = 0;
-			uint r = 0;
-			int[][] gm_params = null;
-			absBits= GM_ABS_ALPHA_BITS;
-			precBits= GM_ALPHA_PREC_BITS;
+			uint absBits= GM_ABS_ALPHA_BITS;
+			uint precBits= GM_ALPHA_PREC_BITS;
 
 			if ( idx < 2 )
 			{
@@ -6260,30 +5147,19 @@ read_global_param( type, refc, idx ) {
 					precBits= GM_TRANS_PREC_BITS;
 				}
 			}
-			precDiff= WARPEDMODEL_PREC_BITS - precBits;
-			round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
-			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
-			mx= (1 << absBits);
-			r= (PrevGmParams[refc][idx] >> precDiff) - sub;
-			gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
-
-            return size;
+			uint precDiff= WARPEDMODEL_PREC_BITS - precBits;
+			uint round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
+			uint sub= (idx % 3) == 2 ? (1 << precBits) : 0;
+			uint mx= (1 << absBits);
+			uint r= (PrevGmParams[refc][idx] >> precDiff) - sub;
+			uint gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteReadGlobalParam(uint type, uint refc, uint idx)
          {
-            ulong size = 0;
 
-			uint absBits = 0;
-			uint precBits = 0;
-			uint precDiff = 0;
-			uint round = 0;
-			uint sub = 0;
-			uint mx = 0;
-			uint r = 0;
-			int[][] gm_params = null;
-			absBits= GM_ABS_ALPHA_BITS;
-			precBits= GM_ALPHA_PREC_BITS;
+			uint absBits= GM_ABS_ALPHA_BITS;
+			uint precBits= GM_ALPHA_PREC_BITS;
 
 			if ( idx < 2 )
 			{
@@ -6299,17 +5175,13 @@ read_global_param( type, refc, idx ) {
 					precBits= GM_TRANS_PREC_BITS;
 				}
 			}
-			precDiff= WARPEDMODEL_PREC_BITS - precBits;
-			round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
-			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
-			mx= (1 << absBits);
-			r= (PrevGmParams[refc][idx] >> precDiff) - sub;
-			gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
-
-            return size;
+			uint precDiff= WARPEDMODEL_PREC_BITS - precBits;
+			uint round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
+			uint sub= (idx % 3) == 2 ? (1 << precBits) : 0;
+			uint mx= (1 << absBits);
+			uint r= (PrevGmParams[refc][idx] >> precDiff) - sub;
+			uint gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
          }
-
-    }
 
     /*
 
@@ -6399,10 +5271,6 @@ read_global_param( type, refc, idx ) {
  clip_to_restricted_range f(1)
  }
     */
-    public class FilmGrainParams : IAomSerializable
-    {
-		private ResetGrainParams reset_grain_params;
-		public ResetGrainParams ResetGrainParams { get { return reset_grain_params; } set { reset_grain_params = value; } }
 		private uint apply_grain;
 		public uint ApplyGrain { get { return apply_grain; } set { apply_grain = value; } }
 		private uint grain_seed;
@@ -6411,8 +5279,6 @@ read_global_param( type, refc, idx ) {
 		public uint UpdateGrain { get { return update_grain; } set { update_grain = value; } }
 		private uint film_grain_params_ref_idx;
 		public uint FilmGrainParamsRefIdx { get { return film_grain_params_ref_idx; } set { film_grain_params_ref_idx = value; } }
-		private LoadGrainParams load_grain_params;
-		public LoadGrainParams LoadGrainParams { get { return load_grain_params; } set { load_grain_params = value; } }
 		private uint num_y_points;
 		public uint NumyPoints { get { return num_y_points; } set { num_y_points = value; } }
 		private uint[] point_y_value;
@@ -6464,45 +5330,29 @@ read_global_param( type, refc, idx ) {
 		private uint clip_to_restricted_range;
 		public uint ClipToRestrictedRange { get { return clip_to_restricted_range; } set { clip_to_restricted_range = value; } }
 
-         public FilmGrainParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint update_grain = 0;
-			uint tempGrainSeed = 0;
-			uint grain_seed = 0;
 			uint i = 0;
-			uint chroma_scaling_from_luma = 0;
-			uint num_cb_points = 0;
-			uint num_cr_points = 0;
-			uint numPosLuma = 0;
-			uint numPosChroma = 0;
+         public void ReadFilmGrainParams()
+         {
+
 
 			if ( film_grain_params_present== 0 ||
  (show_frame == 0 && showable_frame== 0) )
 			{
-				this.reset_grain_params =  new ResetGrainParams() ;
-				size +=  stream.ReadClass<ResetGrainParams>(size, context, this.reset_grain_params, "reset_grain_params"); 
+				ReadResetGrainParams(); 
 return;
 			}
-			size += stream.ReadFixed(size, 1, out this.apply_grain, "apply_grain"); 
+			stream.ReadFixed(1, out this.apply_grain, "apply_grain"); 
 
 			if ( apply_grain== 0 )
 			{
-				this.reset_grain_params =  new ResetGrainParams() ;
-				size +=  stream.ReadClass<ResetGrainParams>(size, context, this.reset_grain_params, "reset_grain_params"); 
+				ReadResetGrainParams(); 
 return;
 			}
-			size += stream.ReadFixed(size, 16, out this.grain_seed, "grain_seed"); 
+			stream.ReadFixed(16, out this.grain_seed, "grain_seed"); 
 
 			if ( frame_type == INTER_FRAME )
 			{
-				size += stream.ReadFixed(size, 1, out this.update_grain, "update_grain"); 
+				stream.ReadFixed(1, out this.update_grain, "update_grain"); 
 			}
 			else 
 			{
@@ -6511,21 +5361,20 @@ return;
 
 			if ( update_grain== 0 )
 			{
-				size += stream.ReadFixed(size, 3, out this.film_grain_params_ref_idx, "film_grain_params_ref_idx"); 
+				stream.ReadFixed(3, out this.film_grain_params_ref_idx, "film_grain_params_ref_idx"); 
 				tempGrainSeed= grain_seed;
-				this.load_grain_params =  new LoadGrainParams( film_grain_params_ref_idx ) ;
-				size +=  stream.ReadClass<LoadGrainParams>(size, context, this.load_grain_params, "load_grain_params"); 
+				ReadLoadGrainParams( film_grain_params_ref_idx ); 
 				grain_seed= tempGrainSeed;
 return;
 			}
-			size += stream.ReadFixed(size, 4, out this.num_y_points, "num_y_points"); 
+			stream.ReadFixed(4, out this.num_y_points, "num_y_points"); 
 
 			this.point_y_value = new uint[ num_y_points];
 			this.point_y_scaling = new uint[ num_y_points];
 			for ( i = 0; i < num_y_points; i++ )
 			{
-				size += stream.ReadFixed(size, 8, out this.point_y_value[ i ], "point_y_value"); 
-				size += stream.ReadFixed(size, 8, out this.point_y_scaling[ i ], "point_y_scaling"); 
+				stream.ReadFixed(8, out this.point_y_value[ i ], "point_y_value"); 
+				stream.ReadFixed(8, out this.point_y_scaling[ i ], "point_y_scaling"); 
 			}
 
 			if ( mono_chrome != 0 )
@@ -6534,7 +5383,7 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.chroma_scaling_from_luma, "chroma_scaling_from_luma"); 
+				stream.ReadFixed(1, out this.chroma_scaling_from_luma, "chroma_scaling_from_luma"); 
 			}
 
 			if ( mono_chrome != 0 || chroma_scaling_from_luma != 0 ||
@@ -6547,28 +5396,28 @@ return;
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 4, out this.num_cb_points, "num_cb_points"); 
+				stream.ReadFixed(4, out this.num_cb_points, "num_cb_points"); 
 
 				this.point_cb_value = new uint[ num_cb_points];
 				this.point_cb_scaling = new uint[ num_cb_points];
 				for ( i = 0; i < num_cb_points; i++ )
 				{
-					size += stream.ReadFixed(size, 8, out this.point_cb_value[ i ], "point_cb_value"); 
-					size += stream.ReadFixed(size, 8, out this.point_cb_scaling[ i ], "point_cb_scaling"); 
+					stream.ReadFixed(8, out this.point_cb_value[ i ], "point_cb_value"); 
+					stream.ReadFixed(8, out this.point_cb_scaling[ i ], "point_cb_scaling"); 
 				}
-				size += stream.ReadFixed(size, 4, out this.num_cr_points, "num_cr_points"); 
+				stream.ReadFixed(4, out this.num_cr_points, "num_cr_points"); 
 
 				this.point_cr_value = new uint[ num_cr_points];
 				this.point_cr_scaling = new uint[ num_cr_points];
 				for ( i = 0; i < num_cr_points; i++ )
 				{
-					size += stream.ReadFixed(size, 8, out this.point_cr_value[ i ], "point_cr_value"); 
-					size += stream.ReadFixed(size, 8, out this.point_cr_scaling[ i ], "point_cr_scaling"); 
+					stream.ReadFixed(8, out this.point_cr_value[ i ], "point_cr_value"); 
+					stream.ReadFixed(8, out this.point_cr_scaling[ i ], "point_cr_scaling"); 
 				}
 			}
-			size += stream.ReadFixed(size, 2, out this.grain_scaling_minus_8, "grain_scaling_minus_8"); 
-			size += stream.ReadFixed(size, 2, out this.ar_coeff_lag, "ar_coeff_lag"); 
-			numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
+			stream.ReadFixed(2, out this.grain_scaling_minus_8, "grain_scaling_minus_8"); 
+			stream.ReadFixed(2, out this.ar_coeff_lag, "ar_coeff_lag"); 
+			uint numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
 
 			if ( num_y_points != 0 )
 			{
@@ -6577,7 +5426,7 @@ return;
 				this.ar_coeffs_y_plus_128 = new uint[ numPosLuma];
 				for ( i = 0; i < numPosLuma; i++ )
 				{
-					size += stream.ReadFixed(size, 8, out this.ar_coeffs_y_plus_128[ i ], "ar_coeffs_y_plus_128"); 
+					stream.ReadFixed(8, out this.ar_coeffs_y_plus_128[ i ], "ar_coeffs_y_plus_128"); 
 				}
 			}
 			else 
@@ -6591,7 +5440,7 @@ return;
 				this.ar_coeffs_cb_plus_128 = new uint[ numPosChroma];
 				for ( i = 0; i < numPosChroma; i++ )
 				{
-					size += stream.ReadFixed(size, 8, out this.ar_coeffs_cb_plus_128[ i ], "ar_coeffs_cb_plus_128"); 
+					stream.ReadFixed(8, out this.ar_coeffs_cb_plus_128[ i ], "ar_coeffs_cb_plus_128"); 
 				}
 			}
 
@@ -6601,63 +5450,51 @@ return;
 				this.ar_coeffs_cr_plus_128 = new uint[ numPosChroma];
 				for ( i = 0; i < numPosChroma; i++ )
 				{
-					size += stream.ReadFixed(size, 8, out this.ar_coeffs_cr_plus_128[ i ], "ar_coeffs_cr_plus_128"); 
+					stream.ReadFixed(8, out this.ar_coeffs_cr_plus_128[ i ], "ar_coeffs_cr_plus_128"); 
 				}
 			}
-			size += stream.ReadFixed(size, 2, out this.ar_coeff_shift_minus_6, "ar_coeff_shift_minus_6"); 
-			size += stream.ReadFixed(size, 2, out this.grain_scale_shift, "grain_scale_shift"); 
+			stream.ReadFixed(2, out this.ar_coeff_shift_minus_6, "ar_coeff_shift_minus_6"); 
+			stream.ReadFixed(2, out this.grain_scale_shift, "grain_scale_shift"); 
 
 			if ( num_cb_points != 0 )
 			{
-				size += stream.ReadFixed(size, 8, out this.cb_mult, "cb_mult"); 
-				size += stream.ReadFixed(size, 8, out this.cb_luma_mult, "cb_luma_mult"); 
-				size += stream.ReadFixed(size, 9, out this.cb_offset, "cb_offset"); 
+				stream.ReadFixed(8, out this.cb_mult, "cb_mult"); 
+				stream.ReadFixed(8, out this.cb_luma_mult, "cb_luma_mult"); 
+				stream.ReadFixed(9, out this.cb_offset, "cb_offset"); 
 			}
 
 			if ( num_cr_points != 0 )
 			{
-				size += stream.ReadFixed(size, 8, out this.cr_mult, "cr_mult"); 
-				size += stream.ReadFixed(size, 8, out this.cr_luma_mult, "cr_luma_mult"); 
-				size += stream.ReadFixed(size, 9, out this.cr_offset, "cr_offset"); 
+				stream.ReadFixed(8, out this.cr_mult, "cr_mult"); 
+				stream.ReadFixed(8, out this.cr_luma_mult, "cr_luma_mult"); 
+				stream.ReadFixed(9, out this.cr_offset, "cr_offset"); 
 			}
-			size += stream.ReadFixed(size, 1, out this.overlap_flag, "overlap_flag"); 
-			size += stream.ReadFixed(size, 1, out this.clip_to_restricted_range, "clip_to_restricted_range"); 
-
-            return size;
+			stream.ReadFixed(1, out this.overlap_flag, "overlap_flag"); 
+			stream.ReadFixed(1, out this.clip_to_restricted_range, "clip_to_restricted_range"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteFilmGrainParams()
          {
-            ulong size = 0;
 
-			uint update_grain = 0;
-			uint tempGrainSeed = 0;
-			uint grain_seed = 0;
-			uint i = 0;
-			uint chroma_scaling_from_luma = 0;
-			uint num_cb_points = 0;
-			uint num_cr_points = 0;
-			uint numPosLuma = 0;
-			uint numPosChroma = 0;
 
 			if ( film_grain_params_present== 0 ||
  (show_frame == 0 && showable_frame== 0) )
 			{
-				size += stream.WriteClass<ResetGrainParams>(context, this.reset_grain_params, "reset_grain_params"); 
+				WriteResetGrainParams(); 
 return;
 			}
-			size += stream.WriteFixed(1, this.apply_grain, "apply_grain"); 
+			stream.WriteFixed(1, this.apply_grain, "apply_grain"); 
 
 			if ( apply_grain== 0 )
 			{
-				size += stream.WriteClass<ResetGrainParams>(context, this.reset_grain_params, "reset_grain_params"); 
+				WriteResetGrainParams(); 
 return;
 			}
-			size += stream.WriteFixed(16, this.grain_seed, "grain_seed"); 
+			stream.WriteFixed(16, this.grain_seed, "grain_seed"); 
 
 			if ( frame_type == INTER_FRAME )
 			{
-				size += stream.WriteFixed(1, this.update_grain, "update_grain"); 
+				stream.WriteFixed(1, this.update_grain, "update_grain"); 
 			}
 			else 
 			{
@@ -6666,18 +5503,18 @@ return;
 
 			if ( update_grain== 0 )
 			{
-				size += stream.WriteFixed(3, this.film_grain_params_ref_idx, "film_grain_params_ref_idx"); 
+				stream.WriteFixed(3, this.film_grain_params_ref_idx, "film_grain_params_ref_idx"); 
 				tempGrainSeed= grain_seed;
-				size += stream.WriteClass<LoadGrainParams>(context, this.load_grain_params, "load_grain_params"); 
+				WriteLoadGrainParams( film_grain_params_ref_idx ); 
 				grain_seed= tempGrainSeed;
 return;
 			}
-			size += stream.WriteFixed(4, this.num_y_points, "num_y_points"); 
+			stream.WriteFixed(4, this.num_y_points, "num_y_points"); 
 
 			for ( i = 0; i < num_y_points; i++ )
 			{
-				size += stream.WriteFixed(8, this.point_y_value[ i ], "point_y_value"); 
-				size += stream.WriteFixed(8, this.point_y_scaling[ i ], "point_y_scaling"); 
+				stream.WriteFixed(8, this.point_y_value[ i ], "point_y_value"); 
+				stream.WriteFixed(8, this.point_y_scaling[ i ], "point_y_scaling"); 
 			}
 
 			if ( mono_chrome != 0 )
@@ -6686,7 +5523,7 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.chroma_scaling_from_luma, "chroma_scaling_from_luma"); 
+				stream.WriteFixed(1, this.chroma_scaling_from_luma, "chroma_scaling_from_luma"); 
 			}
 
 			if ( mono_chrome != 0 || chroma_scaling_from_luma != 0 ||
@@ -6699,24 +5536,24 @@ return;
 			}
 			else 
 			{
-				size += stream.WriteFixed(4, this.num_cb_points, "num_cb_points"); 
+				stream.WriteFixed(4, this.num_cb_points, "num_cb_points"); 
 
 				for ( i = 0; i < num_cb_points; i++ )
 				{
-					size += stream.WriteFixed(8, this.point_cb_value[ i ], "point_cb_value"); 
-					size += stream.WriteFixed(8, this.point_cb_scaling[ i ], "point_cb_scaling"); 
+					stream.WriteFixed(8, this.point_cb_value[ i ], "point_cb_value"); 
+					stream.WriteFixed(8, this.point_cb_scaling[ i ], "point_cb_scaling"); 
 				}
-				size += stream.WriteFixed(4, this.num_cr_points, "num_cr_points"); 
+				stream.WriteFixed(4, this.num_cr_points, "num_cr_points"); 
 
 				for ( i = 0; i < num_cr_points; i++ )
 				{
-					size += stream.WriteFixed(8, this.point_cr_value[ i ], "point_cr_value"); 
-					size += stream.WriteFixed(8, this.point_cr_scaling[ i ], "point_cr_scaling"); 
+					stream.WriteFixed(8, this.point_cr_value[ i ], "point_cr_value"); 
+					stream.WriteFixed(8, this.point_cr_scaling[ i ], "point_cr_scaling"); 
 				}
 			}
-			size += stream.WriteFixed(2, this.grain_scaling_minus_8, "grain_scaling_minus_8"); 
-			size += stream.WriteFixed(2, this.ar_coeff_lag, "ar_coeff_lag"); 
-			numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
+			stream.WriteFixed(2, this.grain_scaling_minus_8, "grain_scaling_minus_8"); 
+			stream.WriteFixed(2, this.ar_coeff_lag, "ar_coeff_lag"); 
+			uint numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
 
 			if ( num_y_points != 0 )
 			{
@@ -6724,7 +5561,7 @@ return;
 
 				for ( i = 0; i < numPosLuma; i++ )
 				{
-					size += stream.WriteFixed(8, this.ar_coeffs_y_plus_128[ i ], "ar_coeffs_y_plus_128"); 
+					stream.WriteFixed(8, this.ar_coeffs_y_plus_128[ i ], "ar_coeffs_y_plus_128"); 
 				}
 			}
 			else 
@@ -6737,7 +5574,7 @@ return;
 
 				for ( i = 0; i < numPosChroma; i++ )
 				{
-					size += stream.WriteFixed(8, this.ar_coeffs_cb_plus_128[ i ], "ar_coeffs_cb_plus_128"); 
+					stream.WriteFixed(8, this.ar_coeffs_cb_plus_128[ i ], "ar_coeffs_cb_plus_128"); 
 				}
 			}
 
@@ -6746,32 +5583,28 @@ return;
 
 				for ( i = 0; i < numPosChroma; i++ )
 				{
-					size += stream.WriteFixed(8, this.ar_coeffs_cr_plus_128[ i ], "ar_coeffs_cr_plus_128"); 
+					stream.WriteFixed(8, this.ar_coeffs_cr_plus_128[ i ], "ar_coeffs_cr_plus_128"); 
 				}
 			}
-			size += stream.WriteFixed(2, this.ar_coeff_shift_minus_6, "ar_coeff_shift_minus_6"); 
-			size += stream.WriteFixed(2, this.grain_scale_shift, "grain_scale_shift"); 
+			stream.WriteFixed(2, this.ar_coeff_shift_minus_6, "ar_coeff_shift_minus_6"); 
+			stream.WriteFixed(2, this.grain_scale_shift, "grain_scale_shift"); 
 
 			if ( num_cb_points != 0 )
 			{
-				size += stream.WriteFixed(8, this.cb_mult, "cb_mult"); 
-				size += stream.WriteFixed(8, this.cb_luma_mult, "cb_luma_mult"); 
-				size += stream.WriteFixed(9, this.cb_offset, "cb_offset"); 
+				stream.WriteFixed(8, this.cb_mult, "cb_mult"); 
+				stream.WriteFixed(8, this.cb_luma_mult, "cb_luma_mult"); 
+				stream.WriteFixed(9, this.cb_offset, "cb_offset"); 
 			}
 
 			if ( num_cr_points != 0 )
 			{
-				size += stream.WriteFixed(8, this.cr_mult, "cr_mult"); 
-				size += stream.WriteFixed(8, this.cr_luma_mult, "cr_luma_mult"); 
-				size += stream.WriteFixed(9, this.cr_offset, "cr_offset"); 
+				stream.WriteFixed(8, this.cr_mult, "cr_mult"); 
+				stream.WriteFixed(8, this.cr_luma_mult, "cr_luma_mult"); 
+				stream.WriteFixed(9, this.cr_offset, "cr_offset"); 
 			}
-			size += stream.WriteFixed(1, this.overlap_flag, "overlap_flag"); 
-			size += stream.WriteFixed(1, this.clip_to_restricted_range, "clip_to_restricted_range"); 
-
-            return size;
+			stream.WriteFixed(1, this.overlap_flag, "overlap_flag"); 
+			stream.WriteFixed(1, this.clip_to_restricted_range, "clip_to_restricted_range"); 
          }
-
-    }
 
     /*
 
@@ -6791,30 +5624,18 @@ superres_params() {
  FrameWidth = (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom
  }
     */
-    public class SuperresParams : IAomSerializable
-    {
 		private uint use_superres;
 		public uint UseSuperres { get { return use_superres; } set { use_superres = value; } }
 		private uint coded_denom;
 		public uint CodedDenom { get { return coded_denom; } set { coded_denom = value; } }
 
-         public SuperresParams()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadSuperresParams()
          {
-            ulong size = 0;
 
-			uint use_superres = 0;
-			uint SuperresDenom = 0;
-			uint UpscaledWidth = 0;
-			uint FrameWidth = 0;
 
 			if ( enable_superres != 0 )
 			{
-				size += stream.ReadFixed(size, 1, out this.use_superres, "use_superres"); 
+				stream.ReadFixed(1, out this.use_superres, "use_superres"); 
 			}
 			else 
 			{
@@ -6823,31 +5644,24 @@ superres_params() {
 
 			if ( use_superres != 0 )
 			{
-				size += stream.ReadVariable(size, SUPERRES_DENOM_BITS, out this.coded_denom, "coded_denom"); 
+				stream.ReadVariable(SUPERRES_DENOM_BITS, out this.coded_denom, "coded_denom"); 
 				SuperresDenom= coded_denom + SUPERRES_DENOM_MIN;
 			}
 			else 
 			{
 				SuperresDenom= SUPERRES_NUM;
 			}
-			UpscaledWidth= FrameWidth;
-			FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
-
-            return size;
+			uint UpscaledWidth= FrameWidth;
+			uint FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteSuperresParams()
          {
-            ulong size = 0;
 
-			uint use_superres = 0;
-			uint SuperresDenom = 0;
-			uint UpscaledWidth = 0;
-			uint FrameWidth = 0;
 
 			if ( enable_superres != 0 )
 			{
-				size += stream.WriteFixed(1, this.use_superres, "use_superres"); 
+				stream.WriteFixed(1, this.use_superres, "use_superres"); 
 			}
 			else 
 			{
@@ -6856,20 +5670,16 @@ superres_params() {
 
 			if ( use_superres != 0 )
 			{
-				size += stream.WriteVariable(SUPERRES_DENOM_BITS, this.coded_denom, "coded_denom"); 
+				stream.WriteVariable(SUPERRES_DENOM_BITS, this.coded_denom, "coded_denom"); 
 				SuperresDenom= coded_denom + SUPERRES_DENOM_MIN;
 			}
 			else 
 			{
 				SuperresDenom= SUPERRES_NUM;
 			}
-			UpscaledWidth= FrameWidth;
-			FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
-
-            return size;
+			uint UpscaledWidth= FrameWidth;
+			uint FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
          }
-
-    }
 
     /*
 
@@ -6879,39 +5689,20 @@ superres_params() {
  MiRows = 2 * ( ( FrameHeight + 7 ) >> 3 )
  }
     */
-    public class ComputeImageSize : IAomSerializable
-    {
 
-         public ComputeImageSize()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadComputeImageSize()
          {
-            ulong size = 0;
 
-			uint MiCols = 0;
-			uint MiRows = 0;
-			MiCols= 2 * ( ( FrameWidth + 7 ) >> 3 );
-			MiRows= 2 * ( ( FrameHeight + 7 ) >> 3 );
-
-            return size;
+			uint MiCols= 2 * ( ( FrameWidth + 7 ) >> 3 );
+			uint MiRows= 2 * ( ( FrameHeight + 7 ) >> 3 );
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteComputeImageSize()
          {
-            ulong size = 0;
 
-			uint MiCols = 0;
-			uint MiRows = 0;
-			MiCols= 2 * ( ( FrameWidth + 7 ) >> 3 );
-			MiRows= 2 * ( ( FrameHeight + 7 ) >> 3 );
-
-            return size;
+			uint MiCols= 2 * ( ( FrameWidth + 7 ) >> 3 );
+			uint MiRows= 2 * ( ( FrameHeight + 7 ) >> 3 );
          }
-
-    }
 
     /*
 
@@ -6921,8 +5712,6 @@ superres_params() {
  return x + low
 }
     */
-    public class DecodeSignedSubexpWithRef : IAomSerializable
-    {
 		private uint low;
 		public uint Low { get { return low; } set { low = value; } }
 		private uint high;
@@ -6930,36 +5719,19 @@ superres_params() {
 		private uint r;
 		public uint r { get { return r; } set { r = value; } }
 
-         public DecodeSignedSubexpWithRef(uint low, uint high, uint r)
-         { 
-			this.low = low;
-			this.high = high;
-			this.r = r;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadDecodeSignedSubexpWithRef(uint low, uint high, uint r)
          {
-            ulong size = 0;
 
-			uint x = 0;
-			x= decode_unsigned_subexp_with_ref(high - low, r - low);
+			uint x= decode_unsigned_subexp_with_ref(high - low, r - low);
 return x + low;
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteDecodeSignedSubexpWithRef(uint low, uint high, uint r)
          {
-            ulong size = 0;
 
-			uint x = 0;
-			x= decode_unsigned_subexp_with_ref(high - low, r - low);
+			uint x= decode_unsigned_subexp_with_ref(high - low, r - low);
 return x + low;
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -6973,25 +5745,15 @@ decode_unsigned_subexp_with_ref( mx, r ) {
  }
  }
     */
-    public class DecodeUnsignedSubexpWithRef : IAomSerializable
-    {
 		private uint mx;
 		public uint Mx { get { return mx; } set { mx = value; } }
 		private uint r;
 		public uint r { get { return r; } set { r = value; } }
 
-         public DecodeUnsignedSubexpWithRef(uint mx, uint r)
-         { 
-			this.mx = mx;
-			this.r = r;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadDecodeUnsignedSubexpWithRef(uint mx, uint r)
          {
-            ulong size = 0;
 
-			uint v = 0;
-			v= decode_subexp( mx );
+			uint v= decode_subexp( mx );
 
 			if ( (r << (int) 1) <= mx )
 			{
@@ -7001,16 +5763,12 @@ return inverse_recenter(r, v);
 			{
 return mx - 1 - inverse_recenter(mx - 1 - r, v);
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteDecodeUnsignedSubexpWithRef(uint mx, uint r)
          {
-            ulong size = 0;
 
-			uint v = 0;
-			v= decode_subexp( mx );
+			uint v= decode_subexp( mx );
 
 			if ( (r << (int) 1) <= mx )
 			{
@@ -7020,11 +5778,7 @@ return inverse_recenter(r, v);
 			{
 return mx - 1 - inverse_recenter(mx - 1 - r, v);
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -7052,8 +5806,6 @@ decode_subexp( numSyms ) {
  }
  }
     */
-    public class DecodeSubexp : IAomSerializable
-    {
 		private uint numSyms;
 		public uint NumSyms { get { return numSyms; } set { numSyms = value; } }
 		private Dictionary<int, uint> subexp_final_bits = new Dictionary<int, uint>();
@@ -7063,24 +5815,13 @@ decode_subexp( numSyms ) {
 		private Dictionary<int, uint> subexp_bits = new Dictionary<int, uint>();
 		public Dictionary<int, uint> SubexpBits { get { return subexp_bits; } set { subexp_bits = value; } }
 
-         public DecodeSubexp(uint numSyms)
-         { 
-			this.numSyms = numSyms;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint i = 0;
-			uint mk = 0;
-			uint k = 0;
 			int whileIndex = -1;
-			uint b2 = 0;
-			uint a = 0;
-			i= 0;
-			mk= 0;
-			k= 3;
+         public void ReadDecodeSubexp(uint numSyms)
+         {
+
+			uint i= 0;
+			uint mk= 0;
+			uint k= 3;
 
 			while ( 1 != 0 )
 			{
@@ -7091,12 +5832,12 @@ decode_subexp( numSyms ) {
 
 				if ( numSyms <= mk + 3 * a )
 				{
-					size += stream.ReadUnsignedInt(size, numSyms - mk, whileIndex, this.subexp_final_bits, "subexp_final_bits"); 
+					stream.ReadUnsignedInt(numSyms - mk, out this.subexp_final_bits, "subexp_final_bits"); 
 return subexp_final_bits + mk;
 				}
 				else 
 				{
-					size += stream.ReadFixed(size, 1, whileIndex, this.subexp_more_bits, "subexp_more_bits"); 
+					stream.ReadFixed(1, out this.subexp_more_bits, "subexp_more_bits"); 
 
 					if ( subexp_more_bits[whileIndex] != 0 )
 					{
@@ -7105,28 +5846,19 @@ return subexp_final_bits + mk;
 					}
 					else 
 					{
-						size += stream.ReadVariable(size, b2, whileIndex, this.subexp_bits, "subexp_bits"); 
+						stream.ReadVariable(b2, out this.subexp_bits, "subexp_bits"); 
 return subexp_bits + mk;
 					}
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteDecodeSubexp(uint numSyms)
          {
-            ulong size = 0;
 
-			uint i = 0;
-			uint mk = 0;
-			uint k = 0;
-			int whileIndex = -1;
-			uint b2 = 0;
-			uint a = 0;
-			i= 0;
-			mk= 0;
-			k= 3;
+			uint i= 0;
+			uint mk= 0;
+			uint k= 3;
 
 			while ( 1 != 0 )
 			{
@@ -7137,12 +5869,12 @@ return subexp_bits + mk;
 
 				if ( numSyms <= mk + 3 * a )
 				{
-					size += stream.WriteUnsignedInt(numSyms - mk, whileIndex, this.subexp_final_bits, "subexp_final_bits"); 
+					stream.WriteUnsignedInt(numSyms - mk, this.subexp_final_bits, "subexp_final_bits"); 
 return subexp_final_bits + mk;
 				}
 				else 
 				{
-					size += stream.WriteFixed(1, whileIndex, this.subexp_more_bits, "subexp_more_bits"); 
+					stream.WriteFixed(1, this.subexp_more_bits, "subexp_more_bits"); 
 
 					if ( subexp_more_bits[whileIndex] != 0 )
 					{
@@ -7151,16 +5883,12 @@ return subexp_final_bits + mk;
 					}
 					else 
 					{
-						size += stream.WriteVariable(b2, whileIndex, this.subexp_bits, "subexp_bits"); 
+						stream.WriteVariable(b2, this.subexp_bits, "subexp_bits"); 
 return subexp_bits + mk;
 					}
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -7174,22 +5902,13 @@ inverse_recenter( r, v ) {
     return r + (v >> 1)
  }
     */
-    public class InverseRecenter : IAomSerializable
-    {
 		private uint r;
 		public uint r { get { return r; } set { r = value; } }
 		private uint v;
 		public uint v { get { return v; } set { v = value; } }
 
-         public InverseRecenter(uint r, uint v)
-         { 
-			this.r = r;
-			this.v = v;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadInverseRecenter(uint r, uint v)
          {
-            ulong size = 0;
 
 
 			if ( v > 2 * r )
@@ -7204,13 +5923,10 @@ return r - ((v + 1) >> 1);
 			{
 return r + (v >> 1);
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteInverseRecenter(uint r, uint v)
          {
-            ulong size = 0;
 
 
 			if ( v > 2 * r )
@@ -7225,11 +5941,7 @@ return r - ((v + 1) >> 1);
 			{
 return r + (v >> 1);
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -7238,35 +5950,18 @@ temporal_delimiter_obu() {
  SeenFrameHeader = 0
 }
     */
-    public class TemporalDelimiterObu : IAomSerializable
-    {
 
-         public TemporalDelimiterObu()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadTemporalDelimiterObu()
          {
-            ulong size = 0;
 
-			uint SeenFrameHeader = 0;
-			SeenFrameHeader= 0;
-
-            return size;
+			uint SeenFrameHeader= 0;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteTemporalDelimiterObu()
          {
-            ulong size = 0;
 
-			uint SeenFrameHeader = 0;
-			SeenFrameHeader= 0;
-
-            return size;
+			uint SeenFrameHeader= 0;
          }
-
-    }
 
     /*
 
@@ -7276,46 +5971,30 @@ padding_obu() {
  obu_padding_byte f(8)
 }
     */
-    public class PaddingObu : IAomSerializable
-    {
 		private uint[] obu_padding_byte;
 		public uint[] ObuPaddingByte { get { return obu_padding_byte; } set { obu_padding_byte = value; } }
 
-         public PaddingObu()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
 			uint i = 0;
+         public void ReadPaddingObu()
+         {
+
 
 			this.obu_padding_byte = new uint[ obu_padding_length];
 			for ( i = 0; i < obu_padding_length; i++ )
 			{
-				size += stream.ReadFixed(size, 8, out this.obu_padding_byte[ i ], "obu_padding_byte"); 
+				stream.ReadFixed(8, out this.obu_padding_byte[ i ], "obu_padding_byte"); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WritePaddingObu()
          {
-            ulong size = 0;
 
-			uint i = 0;
 
 			for ( i = 0; i < obu_padding_length; i++ )
 			{
-				size += stream.WriteFixed(8, this.obu_padding_byte[ i ], "obu_padding_byte"); 
+				stream.WriteFixed(8, this.obu_padding_byte[ i ], "obu_padding_byte"); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -7334,92 +6013,62 @@ metadata_obu() {
  metadata_timecode()
  }
     */
-    public class MetadataObu : IAomSerializable
-    {
 		private uint metadata_type;
 		public uint MetadataType { get { return metadata_type; } set { metadata_type = value; } }
-		private MetadataItutT35 metadata_itut_t35;
-		public MetadataItutT35 MetadataItutT35 { get { return metadata_itut_t35; } set { metadata_itut_t35 = value; } }
-		private MetadataHdrCll metadata_hdr_cll;
-		public MetadataHdrCll MetadataHdrCll { get { return metadata_hdr_cll; } set { metadata_hdr_cll = value; } }
-		private MetadataHdrMdcv metadata_hdr_mdcv;
-		public MetadataHdrMdcv MetadataHdrMdcv { get { return metadata_hdr_mdcv; } set { metadata_hdr_mdcv = value; } }
-		private MetadataScalability metadata_scalability;
-		public MetadataScalability MetadataScalability { get { return metadata_scalability; } set { metadata_scalability = value; } }
-		private MetadataTimecode metadata_timecode;
-		public MetadataTimecode MetadataTimecode { get { return metadata_timecode; } set { metadata_timecode = value; } }
 
-         public MetadataObu()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadMetadataObu()
          {
-            ulong size = 0;
 
-			size += stream.ReadLeb128(size,  out this.metadata_type, "metadata_type"); 
+			stream.ReadLeb128( out this.metadata_type, "metadata_type"); 
 
 			if ( metadata_type == METADATA_TYPE_ITUT_T35 )
 			{
-				this.metadata_itut_t35 =  new MetadataItutT35() ;
-				size +=  stream.ReadClass<MetadataItutT35>(size, context, this.metadata_itut_t35, "metadata_itut_t35"); 
+				ReadMetadataItutT35(); 
 			}
 			else if ( metadata_type == METADATA_TYPE_HDR_CLL )
 			{
-				this.metadata_hdr_cll =  new MetadataHdrCll() ;
-				size +=  stream.ReadClass<MetadataHdrCll>(size, context, this.metadata_hdr_cll, "metadata_hdr_cll"); 
+				ReadMetadataHdrCll(); 
 			}
 			else if ( metadata_type == METADATA_TYPE_HDR_MDCV )
 			{
-				this.metadata_hdr_mdcv =  new MetadataHdrMdcv() ;
-				size +=  stream.ReadClass<MetadataHdrMdcv>(size, context, this.metadata_hdr_mdcv, "metadata_hdr_mdcv"); 
+				ReadMetadataHdrMdcv(); 
 			}
 			else if ( metadata_type == METADATA_TYPE_SCALABILITY )
 			{
-				this.metadata_scalability =  new MetadataScalability() ;
-				size +=  stream.ReadClass<MetadataScalability>(size, context, this.metadata_scalability, "metadata_scalability"); 
+				ReadMetadataScalability(); 
 			}
 			else if ( metadata_type == METADATA_TYPE_TIMECODE )
 			{
-				this.metadata_timecode =  new MetadataTimecode() ;
-				size +=  stream.ReadClass<MetadataTimecode>(size, context, this.metadata_timecode, "metadata_timecode"); 
+				ReadMetadataTimecode(); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteMetadataObu()
          {
-            ulong size = 0;
 
-			size += stream.WriteLeb128( this.metadata_type, "metadata_type"); 
+			stream.WriteLeb128( this.metadata_type, "metadata_type"); 
 
 			if ( metadata_type == METADATA_TYPE_ITUT_T35 )
 			{
-				size += stream.WriteClass<MetadataItutT35>(context, this.metadata_itut_t35, "metadata_itut_t35"); 
+				WriteMetadataItutT35(); 
 			}
 			else if ( metadata_type == METADATA_TYPE_HDR_CLL )
 			{
-				size += stream.WriteClass<MetadataHdrCll>(context, this.metadata_hdr_cll, "metadata_hdr_cll"); 
+				WriteMetadataHdrCll(); 
 			}
 			else if ( metadata_type == METADATA_TYPE_HDR_MDCV )
 			{
-				size += stream.WriteClass<MetadataHdrMdcv>(context, this.metadata_hdr_mdcv, "metadata_hdr_mdcv"); 
+				WriteMetadataHdrMdcv(); 
 			}
 			else if ( metadata_type == METADATA_TYPE_SCALABILITY )
 			{
-				size += stream.WriteClass<MetadataScalability>(context, this.metadata_scalability, "metadata_scalability"); 
+				WriteMetadataScalability(); 
 			}
 			else if ( metadata_type == METADATA_TYPE_TIMECODE )
 			{
-				size += stream.WriteClass<MetadataTimecode>(context, this.metadata_timecode, "metadata_timecode"); 
+				WriteMetadataTimecode(); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -7433,52 +6082,34 @@ metadata_itut_t35() {
  itu_t_t35_payload_bytes
 }
     */
-    public class MetadataItutT35 : IAomSerializable
-    {
 		private uint itu_t_t35_country_code;
 		public uint ItutT35CountryCode { get { return itu_t_t35_country_code; } set { itu_t_t35_country_code = value; } }
 		private uint itu_t_t35_country_code_extension_byte;
 		public uint ItutT35CountryCodeExtensionByte { get { return itu_t_t35_country_code_extension_byte; } set { itu_t_t35_country_code_extension_byte = value; } }
-		private ItutT35PayloadBytes itu_t_t35_payload_bytes;
-		public ItutT35PayloadBytes ItutT35PayloadBytes { get { return itu_t_t35_payload_bytes; } set { itu_t_t35_payload_bytes = value; } }
 
-         public MetadataItutT35()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadMetadataItutT35()
          {
-            ulong size = 0;
 
-			size += stream.ReadFixed(size, 8, out this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
+			stream.ReadFixed(8, out this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
 
 			if ( itu_t_t35_country_code == 0xFF )
 			{
-				size += stream.ReadFixed(size, 8, out this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
+				stream.ReadFixed(8, out this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
 			}
-			this.itu_t_t35_payload_bytes =  new ItutT35PayloadBytes() ;
-			size +=  stream.ReadClass<ItutT35PayloadBytes>(size, context, this.itu_t_t35_payload_bytes, "itu_t_t35_payload_bytes"); 
-
-            return size;
+			ReadItutT35PayloadBytes; 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteMetadataItutT35()
          {
-            ulong size = 0;
 
-			size += stream.WriteFixed(8, this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
+			stream.WriteFixed(8, this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
 
 			if ( itu_t_t35_country_code == 0xFF )
 			{
-				size += stream.WriteFixed(8, this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
+				stream.WriteFixed(8, this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
 			}
-			size += stream.WriteClass<ItutT35PayloadBytes>(context, this.itu_t_t35_payload_bytes, "itu_t_t35_payload_bytes"); 
-
-            return size;
+			WriteItutT35PayloadBytes; 
          }
-
-    }
 
     /*
 
@@ -7489,39 +6120,24 @@ metadata_hdr_cll() {
  max_fall f(16)
 }
     */
-    public class MetadataHdrCll : IAomSerializable
-    {
 		private uint max_cll;
 		public uint MaxCll { get { return max_cll; } set { max_cll = value; } }
 		private uint max_fall;
 		public uint MaxFall { get { return max_fall; } set { max_fall = value; } }
 
-         public MetadataHdrCll()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadMetadataHdrCll()
          {
-            ulong size = 0;
 
-			size += stream.ReadFixed(size, 16, out this.max_cll, "max_cll"); 
-			size += stream.ReadFixed(size, 16, out this.max_fall, "max_fall"); 
-
-            return size;
+			stream.ReadFixed(16, out this.max_cll, "max_cll"); 
+			stream.ReadFixed(16, out this.max_fall, "max_fall"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteMetadataHdrCll()
          {
-            ulong size = 0;
 
-			size += stream.WriteFixed(16, this.max_cll, "max_cll"); 
-			size += stream.WriteFixed(16, this.max_fall, "max_fall"); 
-
-            return size;
+			stream.WriteFixed(16, this.max_cll, "max_cll"); 
+			stream.WriteFixed(16, this.max_fall, "max_fall"); 
          }
-
-    }
 
     /*
 
@@ -7538,8 +6154,6 @@ metadata_hdr_mdcv() {
  luminance_min f(32)
 }
     */
-    public class MetadataHdrMdcv : IAomSerializable
-    {
 		private uint[] primary_chromaticity_x;
 		public uint[] PrimaryChromaticityx { get { return primary_chromaticity_x; } set { primary_chromaticity_x = value; } }
 		private uint[] primary_chromaticity_y;
@@ -7553,52 +6167,38 @@ metadata_hdr_mdcv() {
 		private uint luminance_min;
 		public uint LuminanceMin { get { return luminance_min; } set { luminance_min = value; } }
 
-         public MetadataHdrMdcv()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
 			uint i = 0;
+         public void ReadMetadataHdrMdcv()
+         {
+
 
 			this.primary_chromaticity_x = new uint[ 3];
 			this.primary_chromaticity_y = new uint[ 3];
 			for ( i = 0; i < 3; i++ )
 			{
-				size += stream.ReadFixed(size, 16, out this.primary_chromaticity_x[ i ], "primary_chromaticity_x"); 
-				size += stream.ReadFixed(size, 16, out this.primary_chromaticity_y[ i ], "primary_chromaticity_y"); 
+				stream.ReadFixed(16, out this.primary_chromaticity_x[ i ], "primary_chromaticity_x"); 
+				stream.ReadFixed(16, out this.primary_chromaticity_y[ i ], "primary_chromaticity_y"); 
 			}
-			size += stream.ReadFixed(size, 16, out this.white_point_chromaticity_x, "white_point_chromaticity_x"); 
-			size += stream.ReadFixed(size, 16, out this.white_point_chromaticity_y, "white_point_chromaticity_y"); 
-			size += stream.ReadFixed(size, 32, out this.luminance_max, "luminance_max"); 
-			size += stream.ReadFixed(size, 32, out this.luminance_min, "luminance_min"); 
-
-            return size;
+			stream.ReadFixed(16, out this.white_point_chromaticity_x, "white_point_chromaticity_x"); 
+			stream.ReadFixed(16, out this.white_point_chromaticity_y, "white_point_chromaticity_y"); 
+			stream.ReadFixed(32, out this.luminance_max, "luminance_max"); 
+			stream.ReadFixed(32, out this.luminance_min, "luminance_min"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteMetadataHdrMdcv()
          {
-            ulong size = 0;
 
-			uint i = 0;
 
 			for ( i = 0; i < 3; i++ )
 			{
-				size += stream.WriteFixed(16, this.primary_chromaticity_x[ i ], "primary_chromaticity_x"); 
-				size += stream.WriteFixed(16, this.primary_chromaticity_y[ i ], "primary_chromaticity_y"); 
+				stream.WriteFixed(16, this.primary_chromaticity_x[ i ], "primary_chromaticity_x"); 
+				stream.WriteFixed(16, this.primary_chromaticity_y[ i ], "primary_chromaticity_y"); 
 			}
-			size += stream.WriteFixed(16, this.white_point_chromaticity_x, "white_point_chromaticity_x"); 
-			size += stream.WriteFixed(16, this.white_point_chromaticity_y, "white_point_chromaticity_y"); 
-			size += stream.WriteFixed(32, this.luminance_max, "luminance_max"); 
-			size += stream.WriteFixed(32, this.luminance_min, "luminance_min"); 
-
-            return size;
+			stream.WriteFixed(16, this.white_point_chromaticity_x, "white_point_chromaticity_x"); 
+			stream.WriteFixed(16, this.white_point_chromaticity_y, "white_point_chromaticity_y"); 
+			stream.WriteFixed(32, this.luminance_max, "luminance_max"); 
+			stream.WriteFixed(32, this.luminance_min, "luminance_min"); 
          }
-
-    }
 
     /*
 
@@ -7610,48 +6210,30 @@ metadata_scalability() {
  scalability_structure()
 }
     */
-    public class MetadataScalability : IAomSerializable
-    {
 		private uint scalability_mode_idc;
 		public uint ScalabilityModeIdc { get { return scalability_mode_idc; } set { scalability_mode_idc = value; } }
-		private ScalabilityStructure scalability_structure;
-		public ScalabilityStructure ScalabilityStructure { get { return scalability_structure; } set { scalability_structure = value; } }
 
-         public MetadataScalability()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadMetadataScalability()
          {
-            ulong size = 0;
 
-			size += stream.ReadFixed(size, 8, out this.scalability_mode_idc, "scalability_mode_idc"); 
+			stream.ReadFixed(8, out this.scalability_mode_idc, "scalability_mode_idc"); 
 
 			if ( scalability_mode_idc == SCALABILITY_SS )
 			{
-				this.scalability_structure =  new ScalabilityStructure() ;
-				size +=  stream.ReadClass<ScalabilityStructure>(size, context, this.scalability_structure, "scalability_structure"); 
+				ReadScalabilityStructure(); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteMetadataScalability()
          {
-            ulong size = 0;
 
-			size += stream.WriteFixed(8, this.scalability_mode_idc, "scalability_mode_idc"); 
+			stream.WriteFixed(8, this.scalability_mode_idc, "scalability_mode_idc"); 
 
 			if ( scalability_mode_idc == SCALABILITY_SS )
 			{
-				size += stream.WriteClass<ScalabilityStructure>(context, this.scalability_structure, "scalability_structure"); 
+				WriteScalabilityStructure(); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -7687,8 +6269,6 @@ scalability_structure() {
  }
  }
     */
-    public class ScalabilityStructure : IAomSerializable
-    {
 		private uint spatial_layers_cnt_minus_1;
 		public uint SpatialLayersCntMinus1 { get { return spatial_layers_cnt_minus_1; } set { spatial_layers_cnt_minus_1 = value; } }
 		private uint spatial_layer_dimensions_present_flag;
@@ -7718,22 +6298,16 @@ scalability_structure() {
 		private uint[][] temporal_group_ref_pic_diff;
 		public uint[][] TemporalGroupRefPicDiff { get { return temporal_group_ref_pic_diff; } set { temporal_group_ref_pic_diff = value; } }
 
-         public ScalabilityStructure()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
 			uint i = 0;
 			uint j = 0;
-			size += stream.ReadFixed(size, 2, out this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); 
-			size += stream.ReadFixed(size, 1, out this.spatial_layer_dimensions_present_flag, "spatial_layer_dimensions_present_flag"); 
-			size += stream.ReadFixed(size, 1, out this.spatial_layer_description_present_flag, "spatial_layer_description_present_flag"); 
-			size += stream.ReadFixed(size, 1, out this.temporal_group_description_present_flag, "temporal_group_description_present_flag"); 
-			size += stream.ReadFixed(size, 3, out this.scalability_structure_reserved_3bits, "scalability_structure_reserved_3bits"); 
+         public void ReadScalabilityStructure()
+         {
+
+			stream.ReadFixed(2, out this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); 
+			stream.ReadFixed(1, out this.spatial_layer_dimensions_present_flag, "spatial_layer_dimensions_present_flag"); 
+			stream.ReadFixed(1, out this.spatial_layer_description_present_flag, "spatial_layer_description_present_flag"); 
+			stream.ReadFixed(1, out this.temporal_group_description_present_flag, "temporal_group_description_present_flag"); 
+			stream.ReadFixed(3, out this.scalability_structure_reserved_3bits, "scalability_structure_reserved_3bits"); 
 
 			if ( spatial_layer_dimensions_present_flag != 0 )
 			{
@@ -7742,8 +6316,8 @@ scalability_structure() {
 				this.spatial_layer_max_height = new uint[ spatial_layers_cnt_minus_1 ];
 				for ( i = 0; i <= spatial_layers_cnt_minus_1 ; i++ )
 				{
-					size += stream.ReadFixed(size, 16, out this.spatial_layer_max_width[ i ], "spatial_layer_max_width"); 
-					size += stream.ReadFixed(size, 16, out this.spatial_layer_max_height[ i ], "spatial_layer_max_height"); 
+					stream.ReadFixed(16, out this.spatial_layer_max_width[ i ], "spatial_layer_max_width"); 
+					stream.ReadFixed(16, out this.spatial_layer_max_height[ i ], "spatial_layer_max_height"); 
 				}
 			}
 
@@ -7753,13 +6327,13 @@ scalability_structure() {
 				this.spatial_layer_ref_id = new uint[ spatial_layers_cnt_minus_1];
 				for ( i = 0; i <= spatial_layers_cnt_minus_1; i++ )
 				{
-					size += stream.ReadFixed(size, 8, out this.spatial_layer_ref_id[ i ], "spatial_layer_ref_id"); 
+					stream.ReadFixed(8, out this.spatial_layer_ref_id[ i ], "spatial_layer_ref_id"); 
 				}
 			}
 
 			if ( temporal_group_description_present_flag != 0 )
 			{
-				size += stream.ReadFixed(size, 8, out this.temporal_group_size, "temporal_group_size"); 
+				stream.ReadFixed(8, out this.temporal_group_size, "temporal_group_size"); 
 
 				this.temporal_group_temporal_id = new uint[ temporal_group_size];
 				this.temporal_group_temporal_switching_up_point_flag = new uint[ temporal_group_size];
@@ -7768,41 +6342,36 @@ scalability_structure() {
 				this.temporal_group_ref_pic_diff = new uint[ temporal_group_size][];
 				for ( i = 0; i < temporal_group_size; i++ )
 				{
-					size += stream.ReadFixed(size, 3, out this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
-					size += stream.ReadFixed(size, 1, out this.temporal_group_temporal_switching_up_point_flag[ i ], "temporal_group_temporal_switching_up_point_flag"); 
-					size += stream.ReadFixed(size, 1, out this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
-					size += stream.ReadFixed(size, 3, out this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
+					stream.ReadFixed(3, out this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
+					stream.ReadFixed(1, out this.temporal_group_temporal_switching_up_point_flag[ i ], "temporal_group_temporal_switching_up_point_flag"); 
+					stream.ReadFixed(1, out this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
+					stream.ReadFixed(3, out this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
 
 					this.temporal_group_ref_pic_diff[ i ] = new uint[ temporal_group_ref_cnt[ i ]];
 					for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ )
 					{
-						size += stream.ReadFixed(size, 8, out this.temporal_group_ref_pic_diff[ i ][ j ], "temporal_group_ref_pic_diff"); 
+						stream.ReadFixed(8, out this.temporal_group_ref_pic_diff[ i ][ j ], "temporal_group_ref_pic_diff"); 
 					}
 				}
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteScalabilityStructure()
          {
-            ulong size = 0;
 
-			uint i = 0;
-			uint j = 0;
-			size += stream.WriteFixed(2, this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); 
-			size += stream.WriteFixed(1, this.spatial_layer_dimensions_present_flag, "spatial_layer_dimensions_present_flag"); 
-			size += stream.WriteFixed(1, this.spatial_layer_description_present_flag, "spatial_layer_description_present_flag"); 
-			size += stream.WriteFixed(1, this.temporal_group_description_present_flag, "temporal_group_description_present_flag"); 
-			size += stream.WriteFixed(3, this.scalability_structure_reserved_3bits, "scalability_structure_reserved_3bits"); 
+			stream.WriteFixed(2, this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); 
+			stream.WriteFixed(1, this.spatial_layer_dimensions_present_flag, "spatial_layer_dimensions_present_flag"); 
+			stream.WriteFixed(1, this.spatial_layer_description_present_flag, "spatial_layer_description_present_flag"); 
+			stream.WriteFixed(1, this.temporal_group_description_present_flag, "temporal_group_description_present_flag"); 
+			stream.WriteFixed(3, this.scalability_structure_reserved_3bits, "scalability_structure_reserved_3bits"); 
 
 			if ( spatial_layer_dimensions_present_flag != 0 )
 			{
 
 				for ( i = 0; i <= spatial_layers_cnt_minus_1 ; i++ )
 				{
-					size += stream.WriteFixed(16, this.spatial_layer_max_width[ i ], "spatial_layer_max_width"); 
-					size += stream.WriteFixed(16, this.spatial_layer_max_height[ i ], "spatial_layer_max_height"); 
+					stream.WriteFixed(16, this.spatial_layer_max_width[ i ], "spatial_layer_max_width"); 
+					stream.WriteFixed(16, this.spatial_layer_max_height[ i ], "spatial_layer_max_height"); 
 				}
 			}
 
@@ -7811,32 +6380,28 @@ scalability_structure() {
 
 				for ( i = 0; i <= spatial_layers_cnt_minus_1; i++ )
 				{
-					size += stream.WriteFixed(8, this.spatial_layer_ref_id[ i ], "spatial_layer_ref_id"); 
+					stream.WriteFixed(8, this.spatial_layer_ref_id[ i ], "spatial_layer_ref_id"); 
 				}
 			}
 
 			if ( temporal_group_description_present_flag != 0 )
 			{
-				size += stream.WriteFixed(8, this.temporal_group_size, "temporal_group_size"); 
+				stream.WriteFixed(8, this.temporal_group_size, "temporal_group_size"); 
 
 				for ( i = 0; i < temporal_group_size; i++ )
 				{
-					size += stream.WriteFixed(3, this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
-					size += stream.WriteFixed(1, this.temporal_group_temporal_switching_up_point_flag[ i ], "temporal_group_temporal_switching_up_point_flag"); 
-					size += stream.WriteFixed(1, this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
-					size += stream.WriteFixed(3, this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
+					stream.WriteFixed(3, this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
+					stream.WriteFixed(1, this.temporal_group_temporal_switching_up_point_flag[ i ], "temporal_group_temporal_switching_up_point_flag"); 
+					stream.WriteFixed(1, this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
+					stream.WriteFixed(3, this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
 
 					for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ )
 					{
-						size += stream.WriteFixed(8, this.temporal_group_ref_pic_diff[ i ][ j ], "temporal_group_ref_pic_diff"); 
+						stream.WriteFixed(8, this.temporal_group_ref_pic_diff[ i ][ j ], "temporal_group_ref_pic_diff"); 
 					}
 				}
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -7872,8 +6437,6 @@ metadata_timecode() {
  }
  }
     */
-    public class MetadataTimecode : IAomSerializable
-    {
 		private uint counting_type;
 		public uint CountingType { get { return counting_type; } set { counting_type = value; } }
 		private uint full_timestamp_flag;
@@ -7901,106 +6464,93 @@ metadata_timecode() {
 		private uint time_offset_value;
 		public uint TimeOffsetValue { get { return time_offset_value; } set { time_offset_value = value; } }
 
-         public MetadataTimecode()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadMetadataTimecode()
          {
-            ulong size = 0;
 
-			size += stream.ReadFixed(size, 5, out this.counting_type, "counting_type"); 
-			size += stream.ReadFixed(size, 1, out this.full_timestamp_flag, "full_timestamp_flag"); 
-			size += stream.ReadFixed(size, 1, out this.discontinuity_flag, "discontinuity_flag"); 
-			size += stream.ReadFixed(size, 1, out this.cnt_dropped_flag, "cnt_dropped_flag"); 
-			size += stream.ReadFixed(size, 9, out this.n_frames, "n_frames"); 
+			stream.ReadFixed(5, out this.counting_type, "counting_type"); 
+			stream.ReadFixed(1, out this.full_timestamp_flag, "full_timestamp_flag"); 
+			stream.ReadFixed(1, out this.discontinuity_flag, "discontinuity_flag"); 
+			stream.ReadFixed(1, out this.cnt_dropped_flag, "cnt_dropped_flag"); 
+			stream.ReadFixed(9, out this.n_frames, "n_frames"); 
 
 			if ( full_timestamp_flag != 0 )
 			{
-				size += stream.ReadFixed(size, 6, out this.seconds_value, "seconds_value"); 
-				size += stream.ReadFixed(size, 6, out this.minutes_value, "minutes_value"); 
-				size += stream.ReadFixed(size, 5, out this.hours_value, "hours_value"); 
+				stream.ReadFixed(6, out this.seconds_value, "seconds_value"); 
+				stream.ReadFixed(6, out this.minutes_value, "minutes_value"); 
+				stream.ReadFixed(5, out this.hours_value, "hours_value"); 
 			}
 			else 
 			{
-				size += stream.ReadFixed(size, 1, out this.seconds_flag, "seconds_flag"); 
+				stream.ReadFixed(1, out this.seconds_flag, "seconds_flag"); 
 
 				if ( seconds_flag != 0 )
 				{
-					size += stream.ReadFixed(size, 6, out this.seconds_value, "seconds_value"); 
-					size += stream.ReadFixed(size, 1, out this.minutes_flag, "minutes_flag"); 
+					stream.ReadFixed(6, out this.seconds_value, "seconds_value"); 
+					stream.ReadFixed(1, out this.minutes_flag, "minutes_flag"); 
 
 					if ( minutes_flag != 0 )
 					{
-						size += stream.ReadFixed(size, 6, out this.minutes_value, "minutes_value"); 
-						size += stream.ReadFixed(size, 1, out this.hours_flag, "hours_flag"); 
+						stream.ReadFixed(6, out this.minutes_value, "minutes_value"); 
+						stream.ReadFixed(1, out this.hours_flag, "hours_flag"); 
 
 						if ( hours_flag != 0 )
 						{
-							size += stream.ReadFixed(size, 5, out this.hours_value, "hours_value"); 
+							stream.ReadFixed(5, out this.hours_value, "hours_value"); 
 						}
 					}
 				}
 			}
-			size += stream.ReadFixed(size, 5, out this.time_offset_length, "time_offset_length"); 
+			stream.ReadFixed(5, out this.time_offset_length, "time_offset_length"); 
 
 			if ( time_offset_length > 0 )
 			{
-				size += stream.ReadVariable(size, time_offset_length, out this.time_offset_value, "time_offset_value"); 
+				stream.ReadVariable(time_offset_length, out this.time_offset_value, "time_offset_value"); 
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteMetadataTimecode()
          {
-            ulong size = 0;
 
-			size += stream.WriteFixed(5, this.counting_type, "counting_type"); 
-			size += stream.WriteFixed(1, this.full_timestamp_flag, "full_timestamp_flag"); 
-			size += stream.WriteFixed(1, this.discontinuity_flag, "discontinuity_flag"); 
-			size += stream.WriteFixed(1, this.cnt_dropped_flag, "cnt_dropped_flag"); 
-			size += stream.WriteFixed(9, this.n_frames, "n_frames"); 
+			stream.WriteFixed(5, this.counting_type, "counting_type"); 
+			stream.WriteFixed(1, this.full_timestamp_flag, "full_timestamp_flag"); 
+			stream.WriteFixed(1, this.discontinuity_flag, "discontinuity_flag"); 
+			stream.WriteFixed(1, this.cnt_dropped_flag, "cnt_dropped_flag"); 
+			stream.WriteFixed(9, this.n_frames, "n_frames"); 
 
 			if ( full_timestamp_flag != 0 )
 			{
-				size += stream.WriteFixed(6, this.seconds_value, "seconds_value"); 
-				size += stream.WriteFixed(6, this.minutes_value, "minutes_value"); 
-				size += stream.WriteFixed(5, this.hours_value, "hours_value"); 
+				stream.WriteFixed(6, this.seconds_value, "seconds_value"); 
+				stream.WriteFixed(6, this.minutes_value, "minutes_value"); 
+				stream.WriteFixed(5, this.hours_value, "hours_value"); 
 			}
 			else 
 			{
-				size += stream.WriteFixed(1, this.seconds_flag, "seconds_flag"); 
+				stream.WriteFixed(1, this.seconds_flag, "seconds_flag"); 
 
 				if ( seconds_flag != 0 )
 				{
-					size += stream.WriteFixed(6, this.seconds_value, "seconds_value"); 
-					size += stream.WriteFixed(1, this.minutes_flag, "minutes_flag"); 
+					stream.WriteFixed(6, this.seconds_value, "seconds_value"); 
+					stream.WriteFixed(1, this.minutes_flag, "minutes_flag"); 
 
 					if ( minutes_flag != 0 )
 					{
-						size += stream.WriteFixed(6, this.minutes_value, "minutes_value"); 
-						size += stream.WriteFixed(1, this.hours_flag, "hours_flag"); 
+						stream.WriteFixed(6, this.minutes_value, "minutes_value"); 
+						stream.WriteFixed(1, this.hours_flag, "hours_flag"); 
 
 						if ( hours_flag != 0 )
 						{
-							size += stream.WriteFixed(5, this.hours_value, "hours_value"); 
+							stream.WriteFixed(5, this.hours_value, "hours_value"); 
 						}
 					}
 				}
 			}
-			size += stream.WriteFixed(5, this.time_offset_length, "time_offset_length"); 
+			stream.WriteFixed(5, this.time_offset_length, "time_offset_length"); 
 
 			if ( time_offset_length > 0 )
 			{
-				size += stream.WriteVariable(time_offset_length, this.time_offset_value, "time_offset_value"); 
+				stream.WriteVariable(time_offset_length, this.time_offset_value, "time_offset_value"); 
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -8015,62 +6565,32 @@ metadata_timecode() {
  tile_group_obu( sz )
  }
     */
-    public class FrameObu : IAomSerializable
-    {
 		private uint sz;
 		public uint Sz { get { return sz; } set { sz = value; } }
-		private FrameHeaderObu frame_header_obu;
-		public FrameHeaderObu FrameHeaderObu { get { return frame_header_obu; } set { frame_header_obu = value; } }
-		private ByteAlignment byte_alignment;
-		public ByteAlignment ByteAlignment { get { return byte_alignment; } set { byte_alignment = value; } }
-		private TileGroupObu tile_group_obu;
-		public TileGroupObu TileGroupObu { get { return tile_group_obu; } set { tile_group_obu = value; } }
 
-         public FrameObu(uint sz)
-         { 
-			this.sz = sz;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadFrameObu(uint sz)
          {
-            ulong size = 0;
 
-			uint startBitPos = 0;
-			uint endBitPos = 0;
-			uint headerBytes = 0;
-			startBitPos= get_position();
-			this.frame_header_obu =  new FrameHeaderObu() ;
-			size +=  stream.ReadClass<FrameHeaderObu>(size, context, this.frame_header_obu, "frame_header_obu"); 
-			this.byte_alignment =  new ByteAlignment() ;
-			size +=  stream.ReadClass<ByteAlignment>(size, context, this.byte_alignment, "byte_alignment"); 
-			endBitPos= get_position();
-			headerBytes= (endBitPos - startBitPos) / 8;
+			uint startBitPos= stream.GetPosition();
+			ReadFrameHeaderObu(); 
+			ReadByteAlignment(); 
+			uint endBitPos= stream.GetPosition();
+			uint headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
-			this.tile_group_obu =  new TileGroupObu( sz ) ;
-			size +=  stream.ReadClass<TileGroupObu>(size, context, this.tile_group_obu, "tile_group_obu"); 
-
-            return size;
+			ReadTileGroupObu( sz ); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteFrameObu(uint sz)
          {
-            ulong size = 0;
 
-			uint startBitPos = 0;
-			uint endBitPos = 0;
-			uint headerBytes = 0;
-			startBitPos= get_position();
-			size += stream.WriteClass<FrameHeaderObu>(context, this.frame_header_obu, "frame_header_obu"); 
-			size += stream.WriteClass<ByteAlignment>(context, this.byte_alignment, "byte_alignment"); 
-			endBitPos= get_position();
-			headerBytes= (endBitPos - startBitPos) / 8;
+			uint startBitPos= stream.GetPosition();
+			WriteFrameHeaderObu(); 
+			WriteByteAlignment(); 
+			uint endBitPos= stream.GetPosition();
+			uint headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
-			size += stream.WriteClass<TileGroupObu>(context, this.tile_group_obu, "tile_group_obu"); 
-
-            return size;
+			WriteTileGroupObu( sz ); 
          }
-
-    }
 
     /*
 
@@ -8122,8 +6642,6 @@ metadata_timecode() {
  }
  }
     */
-    public class TileGroupObu : IAomSerializable
-    {
 		private uint sz;
 		public uint Sz { get { return sz; } set { sz = value; } }
 		private uint tile_start_and_end_present_flag;
@@ -8132,56 +6650,20 @@ metadata_timecode() {
 		public uint TgStart { get { return tg_start; } set { tg_start = value; } }
 		private uint tg_end;
 		public uint TgEnd { get { return tg_end; } set { tg_end = value; } }
-		private ByteAlignment byte_alignment;
-		public ByteAlignment ByteAlignment { get { return byte_alignment; } set { byte_alignment = value; } }
 		private uint[] tile_size_minus_1;
 		public uint[] TileSizeMinus1 { get { return tile_size_minus_1; } set { tile_size_minus_1 = value; } }
-		private InitSymbol[] init_symbol;
-		public InitSymbol[] InitSymbol { get { return init_symbol; } set { init_symbol = value; } }
-		private DecodeTile[] decode_tile;
-		public DecodeTile[] DecodeTile { get { return decode_tile; } set { decode_tile = value; } }
-		private ExitSymbol[] exit_symbol;
-		public ExitSymbol[] ExitSymbol { get { return exit_symbol; } set { exit_symbol = value; } }
-		private FrameEndUpdateCdf frame_end_update_cdf;
-		public FrameEndUpdateCdf FrameEndUpdateCdf { get { return frame_end_update_cdf; } set { frame_end_update_cdf = value; } }
-		private DecodeFrameWrapup decode_frame_wrapup;
-		public DecodeFrameWrapup DecodeFrameWrapup { get { return decode_frame_wrapup; } set { decode_frame_wrapup = value; } }
 
-         public TileGroupObu(uint sz)
-         { 
-			this.sz = sz;
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
-
-			uint NumTiles = 0;
-			uint startBitPos = 0;
-			uint tile_start_and_end_present_flag = 0;
-			uint tg_start = 0;
-			uint tg_end = 0;
-			uint tileBits = 0;
-			uint endBitPos = 0;
-			uint headerBytes = 0;
 			uint TileNum = 0;
-			uint tileRow = 0;
-			uint tileCol = 0;
-			uint lastTile = 0;
-			uint tileSize = 0;
-			uint MiRowStart = 0;
-			uint MiRowEnd = 0;
-			uint MiColStart = 0;
-			uint MiColEnd = 0;
-			uint CurrentQIndex = 0;
-			uint SeenFrameHeader = 0;
-			NumTiles= TileCols * TileRows;
-			startBitPos= get_position();
+         public void ReadTileGroupObu(uint sz)
+         {
+
+			uint NumTiles= TileCols * TileRows;
+			uint startBitPos= stream.GetPosition();
 			tile_start_and_end_present_flag= 0;
 
 			if ( NumTiles > 1 )
 			{
-				size += stream.ReadFixed(size, 1, out this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
+				stream.ReadFixed(1, out this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
 			}
 
 			if ( NumTiles == 1 || tile_start_and_end_present_flag== 0 )
@@ -8192,19 +6674,15 @@ metadata_timecode() {
 			else 
 			{
 				tileBits= TileColsLog2 + TileRowsLog2;
-				size += stream.ReadVariable(size, tileBits, out this.tg_start, "tg_start"); 
-				size += stream.ReadVariable(size, tileBits, out this.tg_end, "tg_end"); 
+				stream.ReadVariable(tileBits, out this.tg_start, "tg_start"); 
+				stream.ReadVariable(tileBits, out this.tg_end, "tg_end"); 
 			}
-			this.byte_alignment =  new ByteAlignment() ;
-			size +=  stream.ReadClass<ByteAlignment>(size, context, this.byte_alignment, "byte_alignment"); 
-			endBitPos= get_position();
-			headerBytes= (endBitPos - startBitPos) / 8;
+			ReadByteAlignment(); 
+			uint endBitPos= stream.GetPosition();
+			uint headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
 
 			this.tile_size_minus_1 = new uint[ tg_end];
-			this.init_symbol = new InitSymbol[ tg_end];
-			this.decode_tile = new DecodeTile[ tg_end];
-			this.exit_symbol = new ExitSymbol[ tg_end];
 			for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ )
 			{
 				tileRow= TileNum / TileCols;
@@ -8217,7 +6695,7 @@ metadata_timecode() {
 				}
 				else 
 				{
-					size += stream.ReadLeVar(size, TileSizeBytes, out this.tile_size_minus_1[ TileNum ], "tile_size_minus_1"); 
+					stream.ReadLeVar(TileSizeBytes, out this.tile_size_minus_1[ TileNum ], "tile_size_minus_1"); 
 					tileSize= tile_size_minus_1[TileNum] + 1;
 					sz-= tileSize + TileSizeBytes;
 				}
@@ -8226,12 +6704,9 @@ metadata_timecode() {
 				MiColStart= MiColStarts[ tileCol ];
 				MiColEnd= MiColStarts[ tileCol + 1 ];
 				CurrentQIndex= base_q_idx;
-				this.init_symbol[ TileNum ] =  new InitSymbol( tileSize ) ;
-				size +=  stream.ReadClass<InitSymbol>(size, context, this.init_symbol[ TileNum ], "init_symbol"); 
-				this.decode_tile[ TileNum ] =  new DecodeTile() ;
-				size +=  stream.ReadClass<DecodeTile>(size, context, this.decode_tile[ TileNum ], "decode_tile"); 
-				this.exit_symbol[ TileNum ] =  new ExitSymbol() ;
-				size +=  stream.ReadClass<ExitSymbol>(size, context, this.exit_symbol[ TileNum ], "exit_symbol"); 
+				ReadInitSymbol( tileSize ); 
+				ReadDecodeTile(); 
+				ReadExitSymbol(); 
 			}
 
 			if ( tg_end == NumTiles - 1 )
@@ -8239,47 +6714,23 @@ metadata_timecode() {
 
 				if ( disable_frame_end_update_cdf== 0 )
 				{
-					this.frame_end_update_cdf =  new FrameEndUpdateCdf() ;
-					size +=  stream.ReadClass<FrameEndUpdateCdf>(size, context, this.frame_end_update_cdf, "frame_end_update_cdf"); 
+					ReadFrameEndUpdateCdf(); 
 				}
-				this.decode_frame_wrapup =  new DecodeFrameWrapup() ;
-				size +=  stream.ReadClass<DecodeFrameWrapup>(size, context, this.decode_frame_wrapup, "decode_frame_wrapup"); 
+				ReadDecodeFrameWrapup(); 
 				SeenFrameHeader= 0;
 			}
-
-            return size;
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteTileGroupObu(uint sz)
          {
-            ulong size = 0;
 
-			uint NumTiles = 0;
-			uint startBitPos = 0;
-			uint tile_start_and_end_present_flag = 0;
-			uint tg_start = 0;
-			uint tg_end = 0;
-			uint tileBits = 0;
-			uint endBitPos = 0;
-			uint headerBytes = 0;
-			uint TileNum = 0;
-			uint tileRow = 0;
-			uint tileCol = 0;
-			uint lastTile = 0;
-			uint tileSize = 0;
-			uint MiRowStart = 0;
-			uint MiRowEnd = 0;
-			uint MiColStart = 0;
-			uint MiColEnd = 0;
-			uint CurrentQIndex = 0;
-			uint SeenFrameHeader = 0;
-			NumTiles= TileCols * TileRows;
-			startBitPos= get_position();
+			uint NumTiles= TileCols * TileRows;
+			uint startBitPos= stream.GetPosition();
 			tile_start_and_end_present_flag= 0;
 
 			if ( NumTiles > 1 )
 			{
-				size += stream.WriteFixed(1, this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
+				stream.WriteFixed(1, this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
 			}
 
 			if ( NumTiles == 1 || tile_start_and_end_present_flag== 0 )
@@ -8290,12 +6741,12 @@ metadata_timecode() {
 			else 
 			{
 				tileBits= TileColsLog2 + TileRowsLog2;
-				size += stream.WriteVariable(tileBits, this.tg_start, "tg_start"); 
-				size += stream.WriteVariable(tileBits, this.tg_end, "tg_end"); 
+				stream.WriteVariable(tileBits, this.tg_start, "tg_start"); 
+				stream.WriteVariable(tileBits, this.tg_end, "tg_end"); 
 			}
-			size += stream.WriteClass<ByteAlignment>(context, this.byte_alignment, "byte_alignment"); 
-			endBitPos= get_position();
-			headerBytes= (endBitPos - startBitPos) / 8;
+			WriteByteAlignment(); 
+			uint endBitPos= stream.GetPosition();
+			uint headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
 
 			for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ )
@@ -8310,7 +6761,7 @@ metadata_timecode() {
 				}
 				else 
 				{
-					size += stream.WriteLeVar(TileSizeBytes,  this.tile_size_minus_1[ TileNum ], "tile_size_minus_1"); 
+					stream.WriteLeVar(TileSizeBytes,  this.tile_size_minus_1[ TileNum ], "tile_size_minus_1"); 
 					tileSize= tile_size_minus_1[TileNum] + 1;
 					sz-= tileSize + TileSizeBytes;
 				}
@@ -8319,9 +6770,9 @@ metadata_timecode() {
 				MiColStart= MiColStarts[ tileCol ];
 				MiColEnd= MiColStarts[ tileCol + 1 ];
 				CurrentQIndex= base_q_idx;
-				size += stream.WriteClass<InitSymbol>(context, this.init_symbol[ TileNum ], "init_symbol"); 
-				size += stream.WriteClass<DecodeTile>(context, this.decode_tile[ TileNum ], "decode_tile"); 
-				size += stream.WriteClass<ExitSymbol>(context, this.exit_symbol[ TileNum ], "exit_symbol"); 
+				WriteInitSymbol( tileSize ); 
+				WriteDecodeTile(); 
+				WriteExitSymbol(); 
 			}
 
 			if ( tg_end == NumTiles - 1 )
@@ -8329,16 +6780,12 @@ metadata_timecode() {
 
 				if ( disable_frame_end_update_cdf== 0 )
 				{
-					size += stream.WriteClass<FrameEndUpdateCdf>(context, this.frame_end_update_cdf, "frame_end_update_cdf"); 
+					WriteFrameEndUpdateCdf(); 
 				}
-				size += stream.WriteClass<DecodeFrameWrapup>(context, this.decode_frame_wrapup, "decode_frame_wrapup"); 
+				WriteDecodeFrameWrapup(); 
 				SeenFrameHeader= 0;
 			}
-
-            return size;
          }
-
-    }
 
     /*
 
@@ -8351,59 +6798,39 @@ metadata_timecode() {
  tile_list_entry()
  }
     */
-    public class TileListObu : IAomSerializable
-    {
 		private uint output_frame_width_in_tiles_minus_1;
 		public uint OutputFrameWidthInTilesMinus1 { get { return output_frame_width_in_tiles_minus_1; } set { output_frame_width_in_tiles_minus_1 = value; } }
 		private uint output_frame_height_in_tiles_minus_1;
 		public uint OutputFrameHeightInTilesMinus1 { get { return output_frame_height_in_tiles_minus_1; } set { output_frame_height_in_tiles_minus_1 = value; } }
 		private uint tile_count_minus_1;
 		public uint TileCountMinus1 { get { return tile_count_minus_1; } set { tile_count_minus_1 = value; } }
-		private TileListEntry[] tile_list_entry;
-		public TileListEntry[] TileListEntry { get { return tile_list_entry; } set { tile_list_entry = value; } }
-
-         public TileListObu()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
-         {
-            ulong size = 0;
 
 			uint tile = 0;
-			size += stream.ReadFixed(size, 8, out this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
-			size += stream.ReadFixed(size, 8, out this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
-			size += stream.ReadFixed(size, 16, out this.tile_count_minus_1, "tile_count_minus_1"); 
-
-			this.tile_list_entry = new TileListEntry[ tile_count_minus_1];
-			for ( tile = 0; tile <= tile_count_minus_1; tile++ )
-			{
-				this.tile_list_entry[ tile ] =  new TileListEntry() ;
-				size +=  stream.ReadClass<TileListEntry>(size, context, this.tile_list_entry[ tile ], "tile_list_entry"); 
-			}
-
-            return size;
-         }
-
-         public ulong Write(IAomContext context, AomStream stream)
+         public void ReadTileListObu()
          {
-            ulong size = 0;
 
-			uint tile = 0;
-			size += stream.WriteFixed(8, this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
-			size += stream.WriteFixed(8, this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
-			size += stream.WriteFixed(16, this.tile_count_minus_1, "tile_count_minus_1"); 
+			stream.ReadFixed(8, out this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
+			stream.ReadFixed(8, out this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
+			stream.ReadFixed(16, out this.tile_count_minus_1, "tile_count_minus_1"); 
 
 			for ( tile = 0; tile <= tile_count_minus_1; tile++ )
 			{
-				size += stream.WriteClass<TileListEntry>(context, this.tile_list_entry[ tile ], "tile_list_entry"); 
+				ReadTileListEntry(); 
 			}
-
-            return size;
          }
 
-    }
+         public void WriteTileListObu()
+         {
+
+			stream.WriteFixed(8, this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
+			stream.WriteFixed(8, this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
+			stream.WriteFixed(16, this.tile_count_minus_1, "tile_count_minus_1"); 
+
+			for ( tile = 0; tile <= tile_count_minus_1; tile++ )
+			{
+				WriteTileListEntry(); 
+			}
+         }
 
     /*
 
@@ -8418,8 +6845,6 @@ tile_list_entry() {
  coded_tile_data f(N)
  }
     */
-    public class TileListEntry : IAomSerializable
-    {
 		private uint anchor_frame_idx;
 		public uint AnchorFrameIdx { get { return anchor_frame_idx; } set { anchor_frame_idx = value; } }
 		private uint anchor_tile_row;
@@ -8431,41 +6856,27 @@ tile_list_entry() {
 		private uint coded_tile_data;
 		public uint CodedTileData { get { return coded_tile_data; } set { coded_tile_data = value; } }
 
-         public TileListEntry()
-         { 
-
-         }
-
-         public ulong Read(IAomContext context, AomStream stream)
+         public void ReadTileListEntry()
          {
-            ulong size = 0;
 
-			uint N = 0;
-			size += stream.ReadFixed(size, 8, out this.anchor_frame_idx, "anchor_frame_idx"); 
-			size += stream.ReadFixed(size, 8, out this.anchor_tile_row, "anchor_tile_row"); 
-			size += stream.ReadFixed(size, 8, out this.anchor_tile_col, "anchor_tile_col"); 
-			size += stream.ReadFixed(size, 16, out this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
-			N= 8 * (tile_data_size_minus_1 + 1);
-			size += stream.ReadVariable(size, N, out this.coded_tile_data, "coded_tile_data"); 
-
-            return size;
+			stream.ReadFixed(8, out this.anchor_frame_idx, "anchor_frame_idx"); 
+			stream.ReadFixed(8, out this.anchor_tile_row, "anchor_tile_row"); 
+			stream.ReadFixed(8, out this.anchor_tile_col, "anchor_tile_col"); 
+			stream.ReadFixed(16, out this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
+			uint N= 8 * (tile_data_size_minus_1 + 1);
+			stream.ReadVariable(N, out this.coded_tile_data, "coded_tile_data"); 
          }
 
-         public ulong Write(IAomContext context, AomStream stream)
+         public void WriteTileListEntry()
          {
-            ulong size = 0;
 
-			uint N = 0;
-			size += stream.WriteFixed(8, this.anchor_frame_idx, "anchor_frame_idx"); 
-			size += stream.WriteFixed(8, this.anchor_tile_row, "anchor_tile_row"); 
-			size += stream.WriteFixed(8, this.anchor_tile_col, "anchor_tile_col"); 
-			size += stream.WriteFixed(16, this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
-			N= 8 * (tile_data_size_minus_1 + 1);
-			size += stream.WriteVariable(N, this.coded_tile_data, "coded_tile_data"); 
-
-            return size;
+			stream.WriteFixed(8, this.anchor_frame_idx, "anchor_frame_idx"); 
+			stream.WriteFixed(8, this.anchor_tile_row, "anchor_tile_row"); 
+			stream.WriteFixed(8, this.anchor_tile_col, "anchor_tile_col"); 
+			stream.WriteFixed(16, this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
+			uint N= 8 * (tile_data_size_minus_1 + 1);
+			stream.WriteVariable(N, this.coded_tile_data, "coded_tile_data"); 
          }
 
+        }
     }
-
-}

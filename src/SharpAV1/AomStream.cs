@@ -39,7 +39,7 @@ namespace SharpAV1
             GC.SuppressFinalize(this);
         }
 
-        public ulong ReadClass<T>(ulong size, IAomContext context, T value, string name)
+        public ulong ReadClass<T>(IAomContext context, T value, string name)
         {
             throw new NotImplementedException();
         }
@@ -49,7 +49,7 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadLeb128(ulong size, out uint value, string name)
+        public ulong ReadLeb128(out uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -59,7 +59,7 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadFixed(ulong size, int length, out uint value, string name)
+        public ulong ReadFixed(int length, out uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -69,7 +69,7 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadVariable(ulong size, uint length, out uint value, string name)
+        public ulong ReadVariable(uint length, out uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -79,7 +79,7 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadUvlc(ulong size, out uint value, string name)
+        public ulong ReadUvlc(out uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -90,7 +90,7 @@ namespace SharpAV1
         }
 
 
-        public ulong ReadSignedIntVar(ulong size, int length, out uint value, string name)
+        public ulong ReadSignedIntVar(int length, out uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -101,7 +101,7 @@ namespace SharpAV1
         }
 
 
-        public ulong ReadS(ulong size, out uint value, string name)
+        public ulong ReadS(out uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -111,7 +111,7 @@ namespace SharpAV1
         }
 
 
-        public ulong ReadL(ulong size, uint length, int whileIndex, Dictionary<int, uint> value, string name)
+        public ulong ReadL(uint length, int whileIndex, Dictionary<int, uint> value, string name)
         {
             throw new NotImplementedException();
         }
@@ -121,7 +121,7 @@ namespace SharpAV1
         }
 
 
-        public ulong ReadUnsignedInt(ulong size, uint length, out uint value, string name)
+        public ulong ReadUnsignedInt(uint length, out uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -131,7 +131,7 @@ namespace SharpAV1
         }
 
 
-        public ulong ReadNS(ulong size, int length, out uint value, string name)
+        public ulong ReadNS(int length, out uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -141,11 +141,16 @@ namespace SharpAV1
         }
 
 
-        public ulong ReadLeVar(ulong size, int length, out uint value, string name)
+        public ulong ReadLeVar(int length, out uint value, string name)
         {
             throw new NotImplementedException();
         }
         public ulong WriteLeVar(int length, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal uint GetPosition()
         {
             throw new NotImplementedException();
         }

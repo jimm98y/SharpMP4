@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AomGenerator.CSharp
 {
     public class CSharpGeneratorAV1 : ICustomGenerator
     {
-        public string AppendMethod(AomCode field, MethodType methodType, string spacing, string retm)
-        {
-            return retm;
-        }
-
         public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
         {
             return "";
@@ -40,6 +34,15 @@ namespace AomGenerator.CSharp
             condition = condition.Replace("BWDREF_FRAME", "AV1RefFrames.BWDREF_FRAME");
             condition = condition.Replace("ALTREF2_FRAME", "AV1RefFrames.ALTREF2_FRAME");
             condition = condition.Replace("ALTREF_FRAME", "AV1RefFrames.ALTREF_FRAME");
+            condition = condition.Replace("OBU_SEQUENCE_HEADER", "AV1ObuTypes.OBU_SEQUENCE_HEADER");
+            condition = condition.Replace("OBU_TEMPORAL_DELIMITER", "AV1ObuTypes.OBU_TEMPORAL_DELIMITER");
+            //condition = condition.Replace("OBU_FRAME_HEADER", "AV1ObuTypes.OBU_FRAME_HEADER");
+            condition = condition.Replace("OBU_TILE_GROUP", "AV1ObuTypes.OBU_TILE_GROUP");
+            condition = condition.Replace("OBU_METADATA", "AV1ObuTypes.OBU_METADATA");
+            condition = condition.Replace("OBU_FRAME", "AV1ObuTypes.OBU_FRAME");
+            condition = condition.Replace("OBU_REDUNDANT_FRAME_HEADER", "AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER");
+            condition = condition.Replace("OBU_TILE_LIST", "AV1ObuTypes.OBU_TILE_LIST");
+            condition = condition.Replace("OBU_PADDING", "AV1ObuTypes.OBU_PADDING");
 
 
             return condition;
@@ -48,17 +51,6 @@ namespace AomGenerator.CSharp
         public string FixFieldValue(string fieldValue)
         {
             return fieldValue;
-        }
-
-        public void FixMethodAllocation(string name, ref string method, ref string typedef)
-        {
-            
-        }
-
-        public string FixMissingParameters(AomClass b, string parameter, string classType)
-        {
-            if (parameter == null) return "";
-            return parameter;
         }
 
         public void FixNestedIndexes(List<string> ret, AomField field)
@@ -80,6 +72,17 @@ namespace AomGenerator.CSharp
             fieldValue = fieldValue.Replace("BWDREF_FRAME", "AV1RefFrames.BWDREF_FRAME");
             fieldValue = fieldValue.Replace("ALTREF2_FRAME", "AV1RefFrames.ALTREF2_FRAME");
             fieldValue = fieldValue.Replace("ALTREF_FRAME", "AV1RefFrames.ALTREF_FRAME");
+            fieldValue = fieldValue.Replace("OBU_SEQUENCE_HEADER", "AV1ObuTypes.OBU_SEQUENCE_HEADER");
+            fieldValue = fieldValue.Replace("OBU_TEMPORAL_DELIMITER", "AV1ObuTypes.OBU_TEMPORAL_DELIMITER");
+            //fieldValue = fieldValue.Replace("OBU_FRAME_HEADER", "AV1ObuTypes.OBU_FRAME_HEADER");
+            fieldValue = fieldValue.Replace("OBU_TILE_GROUP", "AV1ObuTypes.OBU_TILE_GROUP");
+            fieldValue = fieldValue.Replace("OBU_METADATA", "AV1ObuTypes.OBU_METADATA");
+            fieldValue = fieldValue.Replace("OBU_FRAME", "AV1ObuTypes.OBU_FRAME");
+            fieldValue = fieldValue.Replace("OBU_REDUNDANT_FRAME_HEADER", "AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER");
+            fieldValue = fieldValue.Replace("OBU_TILE_LIST", "AV1ObuTypes.OBU_TILE_LIST");
+            fieldValue = fieldValue.Replace("OBU_PADDING", "AV1ObuTypes.OBU_PADDING");
+            
+            fieldValue = fieldValue.Replace("get_position", "stream.GetPosition");
 
             return fieldValue;
         }
@@ -163,15 +166,6 @@ namespace AomGenerator.CSharp
             return map[parameter];
         }
 
-        public string GetDerivedVariables(string field)
-        {
-            switch (field)
-            {
-                default:
-                    return "";
-            }
-        }
-
         public string GetFieldDefaultValue(AomField field)
         {
             switch (field.Name)
@@ -179,31 +173,6 @@ namespace AomGenerator.CSharp
                 default:
                     return "";
             }
-        }
-
-        public string GetParameterType(string parameter)
-        {
-            if (string.IsNullOrWhiteSpace(parameter))
-                return "";
-
-            Dictionary<string, string> map = new Dictionary<string, string>()
-            {
-                { "operating_point_idc", "f(32)[]" },
-                { "seq_tier", "f(32)[]" },
-                { "decoder_model_present_for_this_op", "f(32)[]" },
-                { "initial_display_delay_present_for_this_op", "f(32)[]" },
-                { "gm_params", "su(32)" },
-            };
-
-            if (map.ContainsKey(parameter))
-                return map[parameter];
-            else
-                return "f(32)";
-        }
-
-        public string GetVariableSize(string parameter)
-        {
-            throw new NotImplementedException();
         }
 
         public string PreprocessDefinitionsFile(string definitions)

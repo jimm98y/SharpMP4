@@ -18,21 +18,15 @@ namespace AomGenerator.CSharp
     {
         string FixVariableType(string variableType);
         string FixAppendType(string appendType, string variableName);
-        string GetParameterType(string parameter);
         string FixAllocations(string spacing, string appendType, string variableType, string variableName);
-        string AppendMethod(AomCode field, MethodType methodType, string spacing, string retm);
         string PreprocessDefinitionsFile(string definitions);
         string GetFieldDefaultValue(AomField field);
         void FixClassParameters(AomClass ituClass);
         string ReplaceParameter(string parameter);
-        string GetVariableSize(string parameter);
-        string FixMissingParameters(AomClass b, string parameter, string classType);
         string FixCondition(string condition, MethodType methodType);
         string FixStatement(string fieldValue);
         string GetCtorParameterType(string parameter);
         string FixFieldValue(string fieldValue);
-        void FixMethodAllocation(string name, ref string method, ref string typedef);
-        string GetDerivedVariables(string name);
         void FixNestedIndexes(List<string> ret, AomField field);
     }
 
@@ -55,40 +49,27 @@ using System.Numerics;
 namespace Sharp{type}
 {{
 ";
-            resultCode += GenerateContext(type, aomClasses);
+            resultCode += @$"
+    public partial class {type}Context : IAomContext
+    {{
+        AomStream stream = null;
+        private void ReadDropObu() {{ }};
+        private void WriteDropObu() {{ }};
+";
 
             foreach (var ituClass in aomClasses)
             {
-                resultCode += GenerateClass(ituClass);
+                resultCode += GenerateMethods(ituClass);
             }
 
-            resultCode +=
-                @"
-}
+            resultCode += @$"
+        }}
+    }}
 ";
             return resultCode;
         }
 
-        private string GenerateContext(string type, IEnumerable<AomClass> aomClasses)
-        {
-            string ret = @$"
-    public partial class {type}Context : IAomContext
-    {{
-        public ObuHeader ObuHeader {{ get; set; }}
-";
-            var obu = aomClasses.Where(x => x.ClassName.EndsWith("_obu")).ToArray();
-            foreach (var cls in obu)
-            {
-                ret += $"\t\tpublic {cls.ClassName.ToPropertyCase()} {cls.ClassName.ToPropertyCase()} {{ get; set; }}\r\n";
-            }
-
-            ret += @$"
-    }}
-";
-            return ret;
-        }
-
-        private string GenerateClass(AomClass aomClass)
+        private string GenerateMethods(AomClass aomClass)
         {
             specificGenerator.FixClassParameters(aomClass);
 
@@ -96,19 +77,21 @@ namespace Sharp{type}
     /*
 {aomClass.Syntax.Replace("*/", "*//*")}
     */
-    public class {aomClass.ClassName.ToPropertyCase()} : IAomSerializable
-    {{
 ";
             resultCode += GenerateFields(aomClass);
 
-            resultCode += GenerateCtor(aomClass);
+
+            string[] ctorParameters = GetCtorParameters(aomClass);
+            var typeMappings = GetCSharpTypeMapping();
+            string[] ctorParameterDefs = ctorParameters.Select(x => $"{(typeMappings.ContainsKey(specificGenerator.GetCtorParameterType(x)) ? typeMappings[specificGenerator.GetCtorParameterType(x)] : "")} {x}").ToArray();
+            string ituClassParameters = $"{string.Join(", ", ctorParameterDefs)}";
+
+            resultCode += BuildRequiredVariables(aomClass);
 
             resultCode += $@"
-         public ulong Read(IAomContext context, AomStream stream)
+         public void Read{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
          {{
-            ulong size = 0;
 ";
-            resultCode += BuildRequiredVariables(aomClass);
 
             foreach (var field in aomClass.Fields)
             {
@@ -116,50 +99,21 @@ namespace Sharp{type}
             }
             aomClass.AddedFields.Clear();
             resultCode += $@"
-
-            return size;
          }}
 ";
-
             resultCode += $@"
-         public ulong Write(IAomContext context, AomStream stream)
+         public void Write{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
          {{
-            ulong size = 0;
 ";
-            resultCode += BuildRequiredVariables(aomClass);
-
             foreach (var field in aomClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(aomClass, null, field, 3, MethodType.Write);
             }
             aomClass.AddedFields.Clear();
             resultCode += $@"
-
-            return size;
          }}
 ";
 
-            resultCode += $@"
-    }}
-";
-            return resultCode;
-        }
-
-        private string GenerateCtor(AomClass aomClass)
-        {
-            string[] ctorParameters = GetCtorParameters(aomClass);
-            var typeMappings = GetCSharpTypeMapping();
-            string[] ctorParameterDefs = ctorParameters.Select(x => $"{(typeMappings.ContainsKey(specificGenerator.GetCtorParameterType(x)) ? typeMappings[specificGenerator.GetCtorParameterType(x)] : "")} {x}").ToArray();
-            string ituClassParameters = $"({string.Join(", ", ctorParameterDefs)})";
-
-            string ctorInitializer = string.Join("\r\n", ctorParameters.Select(x => $"\t\t\tthis.{x.ToFirstLower()} = {x};"));
-
-            string resultCode = $@"
-         public {aomClass.ClassName.ToPropertyCase()}{ituClassParameters}
-         {{ 
-{ctorInitializer}
-         }}
-";
             return resultCode;
         }
 
@@ -215,7 +169,7 @@ namespace Sharp{type}
                     var p = parent;
                     while (p != null)
                     {
-                        if (p.Type == "do" || p.Type == "while")
+                        if (p.Type == "while")
                         {
                             field.MakeList = true;
                             Debug.WriteLine($"Field {field.Name} is a list");
@@ -249,7 +203,7 @@ namespace Sharp{type}
                         }
                     }
 
-                    if (block.Type == "do" || block.Type == "while")
+                    if (block.Type == "while")
                     {
                         if (b.RequiresDefinition.FirstOrDefault(x => x.Name == "whileIndex") == null)
                         {
@@ -304,23 +258,7 @@ namespace Sharp{type}
         {
             if (string.IsNullOrEmpty(field.Type))
             {
-                if (!string.IsNullOrEmpty(field.Increment))
-                {
-                    return;
-                }
-                else if (!string.IsNullOrEmpty(field.Value) && b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null)
-                {
-                    if (b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
-                    {
-                        string requiredType = specificGenerator.GetParameterType(field.Name);
-                        if (!string.IsNullOrEmpty(requiredType))
-                        {
-                            b.RequiresDefinition.Add(new AomField() { Name = field.Name, Type = requiredType, FieldArray = field.FieldArray });
-                        }
-                    }
-
-                    return;
-                }
+                return;
             }
 
             string name = field.Name;
@@ -503,7 +441,7 @@ namespace Sharp{type}
 
             while (parent != null)
             {
-                if (parent.Type == "for" || parent.Type == "do" || parent.Type == "while")
+                if (parent.Type == "for" || parent.Type == "while")
                     ret++;
                 parent = parent.Parent;
             }
@@ -528,7 +466,7 @@ namespace Sharp{type}
                 {
                     ret.Insert(0, $"[{parent.Condition.Substring(1, parent.Condition.Length - 2).Split(';').First().Split('=').First()}]");
                 }
-                else if (parent.Type == "do" || parent.Type == "while")
+                else if (parent.Type == "while")
                 {
                     ret.Insert(0, $"[whileIndex]");
                 }
@@ -615,8 +553,6 @@ namespace Sharp{type}
                 fieldComment = "//" + (field as AomField).Comment;
             }
 
-            string boxSize = "size += ";
-
             if (GetLoopNestingLevel(field) > 0)
             {
                 if (!(field as AomField).MakeList)
@@ -633,53 +569,18 @@ namespace Sharp{type}
 
             string retm = "";
 
-            if (m.Contains("###value###") && methodType == MethodType.Read)
+            if ((field as AomField).Type != null)
             {
-                specificGenerator.FixMethodAllocation(name, ref m, ref typedef);
-
-                if ((field as AomField).MakeList)
-                {
-                    // special case, create class first, then read it
-                    m = m.Replace("###value###", $"{spacing}this.{name}{typedef}.Add(whileIndex, ");
-                    m = m.Replace("###size###", $");\r\n{spacing}{boxSize}");
-                    retm = $"{m} this.{name}{typedef}[whileIndex], \"{name}\"); {fieldComment}";
-                }
+                if (methodType == MethodType.Read)
+                    retm = $"{spacing}{m} out this.{name}{typedef}, \"{name}\"); {fieldComment}";
+                else if (methodType == MethodType.Write)
+                    retm = $"{spacing}{m} this.{name}{typedef}, \"{name}\"); {fieldComment}";
                 else
-                {
-                    // special case, create class first, then read it
-                    m = m.Replace("###value###", $"{spacing}this.{name}{typedef} = ");
-                    m = m.Replace("###size###", $";\r\n{spacing}{boxSize}");
-                    retm = $"{m} this.{name}{typedef}, \"{name}\"); {fieldComment}";
-                }
+                    throw new NotSupportedException();
             }
             else
             {
-                if ((field as AomField).MakeList)
-                {
-                    if (methodType == MethodType.Read)
-                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}, \"{name}\"); {fieldComment}";
-                    else if (methodType == MethodType.Write)
-                        retm = $"{spacing}{boxSize}{m} whileIndex, this.{name}{typedef}, \"{name}\"); {fieldComment}";
-                    else
-                        throw new NotSupportedException();
-                }
-                else
-                {
-                    if (methodType == MethodType.Read)
-                        retm = $"{spacing}{boxSize}{m} out this.{name}{typedef}, \"{name}\"); {fieldComment}";
-                    else if (methodType == MethodType.Write)
-                        retm = $"{spacing}{boxSize}{m} this.{name}{typedef}, \"{name}\"); {fieldComment}";
-                    else
-                        throw new NotSupportedException();
-                }
-            }
-
-            retm = specificGenerator.AppendMethod(field, methodType, spacing, retm);
-
-            string hookDerivedVariables = specificGenerator.GetDerivedVariables(name);
-            if (!string.IsNullOrEmpty(hookDerivedVariables))
-            {
-                retm += $"\r\n{spacing}{hookDerivedVariables}";
+                retm = $"{spacing}{m}; {fieldComment}";
             }
 
             return retm;
@@ -826,7 +727,7 @@ namespace Sharp{type}
                     else
                         throw new Exception();
                 }
-                else if (parent.Type == "do" || parent.Type == "while")
+                else if (parent.Type == "while")
                 {
                     ret.Insert(0, "[whileIndex]");
                 }
@@ -834,7 +735,7 @@ namespace Sharp{type}
                 parent = parent.Parent;
             }
 
-            if (block != null && (block.Type == "do" || block.Type == "while"))
+            if (block != null && (block.Type == "while"))
             {
                 ret.Insert(0, "[whileIndex]");
             }
@@ -853,7 +754,7 @@ namespace Sharp{type}
                 {
                     level++;
                 }
-                else if (parent.Type == "do" || parent.Type == "while")
+                else if (parent.Type == "while")
                 {
                     level++;
                 }
@@ -907,7 +808,7 @@ namespace Sharp{type}
 
             if (!string.IsNullOrEmpty(condition))
             {
-                if (blockType == "if" || blockType == "else if" || blockType == "while" || blockType == "do")
+                if (blockType == "if" || blockType == "else if" || blockType == "while")
                 {
                     condition = FixCondition(b, condition, methodType);
                 }
@@ -1012,12 +913,9 @@ namespace Sharp{type}
                 }
             }
 
-            if (block.Type == "do")
-                ret += $"\r\n{spacing}{blockType}\r\n{spacing}{{";
-            else
-                ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
+            ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
 
-            if (blockType == "do" || blockType == "while")
+            if (blockType == "while")
                 ret += $"\r\n{spacing}\twhileIndex++;\r\n";
 
             foreach (var field in block.Content)
@@ -1026,9 +924,6 @@ namespace Sharp{type}
             }
 
             ret += $"\r\n{spacing}}}";
-
-            if (block.Type == "do")
-                ret += $" while {condition};";
 
             return ret;
         }
@@ -1127,6 +1022,7 @@ namespace Sharp{type}
                 { "f(6)",                       "uint" },
                 { "f(8)",                       "uint" },
                 { "f(9)",                       "uint" },
+                { "f(12)",                      "uint" },
                 { "f(16)",                      "uint" },
                 { "f(32)",                      "uint" },
                 { "f(32)[]",                    "uint[]" },
@@ -1161,6 +1057,7 @@ namespace Sharp{type}
                 { "S()",                        "uint" },
                 { "su(32)",                     "int" },
                 { "su(1+6)",                    "uint" },
+                { "su(1+bitsToRead)",           "uint" },
                 { "uvlc()",                     "uint" },
             };
             return map;
@@ -1171,119 +1068,119 @@ namespace Sharp{type}
             switch (aomField.Type)
             {
                 case "f(1)":
-                    return "stream.ReadFixed(size, 1,";
+                    return "stream.ReadFixed(1,";
                 
                 case "f(2)":
-                    return "stream.ReadFixed(size, 2,";
+                    return "stream.ReadFixed(2,";
                 
                 case "f(3)":
-                    return "stream.ReadFixed(size, 3,";
+                    return "stream.ReadFixed(3,";
 
                 case "f(4)":
-                    return "stream.ReadFixed(size, 4,";
+                    return "stream.ReadFixed(4,";
 
                 case "f(5)":
-                    return "stream.ReadFixed(size, 5,";
+                    return "stream.ReadFixed(5,";
 
                 case "f(6)":
-                    return "stream.ReadFixed(size, 6,";
+                    return "stream.ReadFixed(6,";
 
                 case "f(8)":
-                    return "stream.ReadFixed(size, 8,";
+                    return "stream.ReadFixed(8,";
 
                 case "f(9)":
-                    return "stream.ReadFixed(size, 9,";
+                    return "stream.ReadFixed(9,";
 
                 case "f(12)":
-                    return "stream.ReadFixed(size, 12,";
+                    return "stream.ReadFixed(12,";
 
                 case "f(16)":
-                    return "stream.ReadFixed(size, 16,";
+                    return "stream.ReadFixed(16,";
 
                 case "f(32)":
-                    return "stream.ReadFixed(size, 32,";
+                    return "stream.ReadFixed(32,";
 
                 case "f(b2)":
-                    return "stream.ReadVariable(size, b2,";
+                    return "stream.ReadVariable(b2,";
 
                 case "f(bitsToRead)":
-                    return "stream.ReadVariable(size, bitsToRead,";
+                    return "stream.ReadVariable(bitsToRead,";
 
                 case "f(idLen)":
-                    return "stream.ReadVariable(size, idLen,";
+                    return "stream.ReadVariable(idLen,";
 
                 case "f(N)":
-                    return "stream.ReadVariable(size, N,";
+                    return "stream.ReadVariable(N,";
 
                 case "f(n)":
-                    return "stream.ReadVariable(size, n,";
+                    return "stream.ReadVariable(n,";
 
                 case "f(OrderHintBits)":
-                    return "stream.ReadVariable(size, OrderHintBits,";
+                    return "stream.ReadVariable(OrderHintBits,";
 
                 case "f(SUPERRES_DENOM_BITS)":
-                    return "stream.ReadVariable(size, SUPERRES_DENOM_BITS,";
+                    return "stream.ReadVariable(SUPERRES_DENOM_BITS,";
 
                 case "f(tileBits)":
-                    return "stream.ReadVariable(size, tileBits,";
+                    return "stream.ReadVariable(tileBits,";
 
                 case "f(TileRowsLog2+TileColsLog2)":
-                    return "stream.ReadVariable(size, TileRowsLog2+TileColsLog2,";
+                    return "stream.ReadVariable(TileRowsLog2+TileColsLog2,";
 
                 case "f(time_offset_length)":
-                    return "stream.ReadVariable(size, time_offset_length,";
+                    return "stream.ReadVariable(time_offset_length,";
 
                 case "L(1)":
-                    return "stream.ReadL(size, 1,";
+                    return "stream.ReadL(1,";
 
                 case "L(2)":
-                    return "stream.ReadL(size, 2,";
+                    return "stream.ReadL(2,";
 
                 case "L(3)":
-                    return "stream.ReadL(size, 3,";
+                    return "stream.ReadL(3,";
 
                 case "L(b2)":
-                    return "stream.ReadL(size, b2,";
+                    return "stream.ReadL(b2,";
 
                 case "L(BitDepth)":
-                    return "stream.ReadL(size, BitDepth,";
+                    return "stream.ReadL(BitDepth,";
 
                 case "L(cdef_bits)":
-                    return "stream.ReadL(size, cdef_bits,";
+                    return "stream.ReadL(cdef_bits,";
 
                 case "L(delta_q_rem_bits)":
-                    return "stream.ReadL(size, delta_q_rem_bits,";
+                    return "stream.ReadL(delta_q_rem_bits,";
 
                 case "L(n)":
-                    return "stream.ReadL(size, n,";
+                    return "stream.ReadL(n,";
 
                 case "L(paletteBits)":
-                    return "stream.ReadL(size, paletteBits,";
+                    return "stream.ReadL(paletteBits,";
 
                 case "L(SGRPROJ_PARAMS_BITS)":
-                    return "stream.ReadL(size, SGRPROJ_PARAMS_BITS,";
+                    return "stream.ReadL(SGRPROJ_PARAMS_BITS,";
 
                 case "le(TileSizeBytes)":
-                    return "stream.ReadLeVar(size, TileSizeBytes,";
+                    return "stream.ReadLeVar(TileSizeBytes,";
 
                 case "leb128()":
-                    return "stream.ReadLeb128(size, ";
+                    return "stream.ReadLeb128(";
 
                 case "ns(32)":
                     return "stream.ReadUnsignedInt32(size,";
 
                 case "ns(maxHeight)":
-                    return "stream.ReadUnsignedInt(size, maxHeight,";
+                    return "stream.ReadUnsignedInt(maxHeight,";
 
                 case "ns(maxWidth)":
-                    return "stream.ReadUnsignedInt(size, maxWidth,";
+                    return "stream.ReadUnsignedInt(maxWidth,";
 
                 case "NS(numSyms - mk)":
                 case "ns(numSyms - mk)":
-                    return "stream.ReadUnsignedInt(size, numSyms - mk,";
+                    return "stream.ReadUnsignedInt(numSyms - mk,";
 
                 case "NS(PaletteSizeUV)":
-                    return "stream.ReadNS(size, PaletteSizeUV,";
+                    return "stream.ReadNS(PaletteSizeUV,";
 
                 case "S()":
                     return "stream.ReadS(size,";
@@ -1292,36 +1189,18 @@ namespace Sharp{type}
                     return "stream.ReadSignedInt32(size,";
 
                 case "su(1+6)":
-                    return "stream.ReadSignedIntVar(size, 1+6,";
+                    return "stream.ReadSignedIntVar(1+6,";
 
                 case "su(1+bitsToRead)":
-                    return "stream.ReadSignedIntVar(size, 1+bitsToRead,";
+                    return "stream.ReadSignedIntVar(1+bitsToRead,";
 
                 case "uvlc()":
-                    return "stream.ReadUvlc(size, ";
+                    return "stream.ReadUvlc(";
 
                 default:
                     if (aomField.Type == null)
                     {
-
-                        string par = specificGenerator.FixMissingParameters(b, aomField.Parameter, aomField.ClassType);
-                        string[] parameters = par.TrimStart('(').TrimEnd(')').Split(new char[] { ',' });
-                        for (int i = 0; i < parameters.Length; i++)
-                        {
-                            if (!parameters[i].Contains(' ') && !parameters[i].Contains('\"'))
-                                parameters[i] = specificGenerator.ReplaceParameter(parameters[i].Trim());
-                            else
-                            {
-                                string[] parts = parameters[i].Split(new char[] { ' ' });
-                                for (int j = 0; j < parts.Length; j++)
-                                {
-                                    parts[j] = specificGenerator.ReplaceParameter(parts[j].Trim());
-                                }
-                                parameters[i] = string.Join(" ", parts);
-                            }
-                        }
-                        par = $"({string.Join(", ", parameters)})";
-                        return $"###value### new {aomField.ClassType.ToPropertyCase()}{par} ###size### stream.ReadClass<{aomField.ClassType.ToPropertyCase()}>(size, context,";
+                        return $"Read{aomField.ClassType.ToPropertyCase()}{aomField.Parameter}";
                     }
                     throw new NotImplementedException();
             }
@@ -1467,7 +1346,7 @@ namespace Sharp{type}
                 default:
                     if (aomField.Type == null)
                     {
-                        return $"stream.WriteClass<{aomField.ClassType.ToPropertyCase()}>(context,";
+                        return $"Write{aomField.ClassType.ToPropertyCase()}{aomField.Parameter}";
                     }
                     throw new NotImplementedException();
             }

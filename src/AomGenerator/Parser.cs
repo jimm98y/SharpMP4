@@ -28,7 +28,7 @@ namespace AomGenerator
         public static Parser<char, string> AnyCharE => AnyCharExcept('(', ')').AtLeastOnceString();
         public static Parser<char, string> Expr => OneOf(Rec(() => Parentheses), AnyCharE);
         public static Parser<char, string> Parentheses => Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");
-        public static Parser<char, IEnumerable<AomCode>> SingleBlock => (Try(BlockDoWhile).Or(Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Try(BreakStatement).Or(Try(ReturnStatement).Or(Field)))))).Repeat(1);
+        public static Parser<char, IEnumerable<AomCode>> SingleBlock => (Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Try(BreakStatement).Or(Try(ReturnStatement).Or(Field))))).Repeat(1);
 
         public static Parser<char, string> FieldType => OneOf(
             Try(String("f(1)")),
@@ -147,15 +147,7 @@ namespace AomGenerator
                 SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock))))
             ).Select(x => (AomCode)x);
 
-        public static Parser<char, AomCode> BlockDoWhile =>
-            Map((type, comment, content, condition) => new AomBlock(type, condition, comment, content),
-                String("do").Before(SkipWhitespaces).Before(Lookahead(SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock)))).Before(SkipWhitespaces.Before(String("while"))))).Before(SkipWhitespaces),
-                SkipWhitespaces.Then(Try(BlockComment(String("/*"), String("*/"))).Optional()),
-                SkipWhitespaces.Then(Try(Rec(() => CodeBlocks).Between(Char('{'), Char('}'))).Or(Try(Rec(() => SingleBlock)))),
-                Try(SkipWhitespaces.Then(String("while")).Then(SkipWhitespaces.Then(Parentheses))).Optional()
-            ).Select(x => (AomCode)x);
-
-        public static Parser<char, AomCode> CodeBlock => Try(BlockIfThenElse).Or(Try(BlockDoWhile).Or(Try(BlockForWhile).Or(Try(BreakStatement).Or(Try(ReturnStatement).Or(Try(Field).Or(Comment))))));
+        public static Parser<char, AomCode> CodeBlock => Try(BlockIfThenElse).Or(Try(BlockForWhile).Or(Try(BreakStatement).Or(Try(ReturnStatement).Or(Try(Field).Or(Comment)))));
 
         public static Parser<char, IEnumerable<AomCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
