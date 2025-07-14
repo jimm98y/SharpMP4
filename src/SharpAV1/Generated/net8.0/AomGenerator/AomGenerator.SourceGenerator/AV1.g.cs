@@ -699,8 +699,8 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				enable_order_hint= 0;
 				enable_jnt_comp= 0;
 				enable_ref_frame_mvs= 0;
-				seq_force_screen_content_tools= SELECT_SCREEN_CONTENT_TOOLS;
-				seq_force_integer_mv= SELECT_INTEGER_MV;
+				seq_force_screen_content_tools= AV1Constants.SELECT_SCREEN_CONTENT_TOOLS;
+				seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
 				OrderHintBits= 0;
 			}
 			else 
@@ -725,7 +725,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 				if ( seq_choose_screen_content_tools != 0 )
 				{
-					seq_force_screen_content_tools= SELECT_SCREEN_CONTENT_TOOLS;
+					seq_force_screen_content_tools= AV1Constants.SELECT_SCREEN_CONTENT_TOOLS;
 				}
 				else 
 				{
@@ -738,7 +738,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 					if ( seq_choose_integer_mv != 0 )
 					{
-						seq_force_integer_mv= SELECT_INTEGER_MV;
+						seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
 					}
 					else 
 					{
@@ -747,7 +747,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				}
 				else 
 				{
-					seq_force_integer_mv= SELECT_INTEGER_MV;
+					seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
 				}
 
 				if ( enable_order_hint != 0 )
@@ -884,8 +884,8 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				enable_order_hint= 0;
 				enable_jnt_comp= 0;
 				enable_ref_frame_mvs= 0;
-				seq_force_screen_content_tools= SELECT_SCREEN_CONTENT_TOOLS;
-				seq_force_integer_mv= SELECT_INTEGER_MV;
+				seq_force_screen_content_tools= AV1Constants.SELECT_SCREEN_CONTENT_TOOLS;
+				seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
 				OrderHintBits= 0;
 			}
 			else 
@@ -910,7 +910,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 				if ( seq_choose_screen_content_tools != 0 )
 				{
-					seq_force_screen_content_tools= SELECT_SCREEN_CONTENT_TOOLS;
+					seq_force_screen_content_tools= AV1Constants.SELECT_SCREEN_CONTENT_TOOLS;
 				}
 				else 
 				{
@@ -923,7 +923,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 					if ( seq_choose_integer_mv != 0 )
 					{
-						seq_force_integer_mv= SELECT_INTEGER_MV;
+						seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
 					}
 					else 
 					{
@@ -932,7 +932,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 				}
 				else 
 				{
-					seq_force_integer_mv= SELECT_INTEGER_MV;
+					seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
 				}
 
 				if ( enable_order_hint != 0 )
@@ -1178,9 +1178,9 @@ color_config() {
 			}
 			else 
 			{
-				color_primaries= CP_UNSPECIFIED;
+				color_primaries= AV1ColorPrimaries.CP_UNSPECIFIED;
 				transfer_characteristics= TC_UNSPECIFIED;
-				matrix_coefficients= MC_UNSPECIFIED;
+				matrix_coefficients= AV1MatrixCoefficients.MC_UNSPECIFIED;
 			}
 
 			if ( mono_chrome != 0 )
@@ -1188,13 +1188,13 @@ color_config() {
 				stream.ReadFixed(1, out this.color_range, "color_range"); 
 				subsampling_x= 1;
 				subsampling_y= 1;
-				chroma_sample_position= CSP_UNKNOWN;
+				chroma_sample_position= AV1ChromaSamplePosition.CSP_UNKNOWN;
 				separate_uv_delta_q= 0;
 				return;
 			}
-			else if ( color_primaries == CP_BT_709 &&
- transfer_characteristics == TC_SRGB &&
- matrix_coefficients == MC_IDENTITY )
+			else if ( color_primaries == AV1ColorPrimaries.CP_BT_709 &&
+ transfer_characteristics == AV1TransferCharacteristics.TC_SRGB &&
+ matrix_coefficients == MC_AV1Constants.IDENTITY )
 			{
 				color_range= 1;
 				subsampling_x= 0;
@@ -1279,9 +1279,9 @@ color_config() {
 			}
 			else 
 			{
-				color_primaries= CP_UNSPECIFIED;
+				color_primaries= AV1ColorPrimaries.CP_UNSPECIFIED;
 				transfer_characteristics= TC_UNSPECIFIED;
-				matrix_coefficients= MC_UNSPECIFIED;
+				matrix_coefficients= AV1MatrixCoefficients.MC_UNSPECIFIED;
 			}
 
 			if ( mono_chrome != 0 )
@@ -1289,13 +1289,13 @@ color_config() {
 				stream.WriteFixed(1, this.color_range, "color_range"); 
 				subsampling_x= 1;
 				subsampling_y= 1;
-				chroma_sample_position= CSP_UNKNOWN;
+				chroma_sample_position= AV1ChromaSamplePosition.CSP_UNKNOWN;
 				separate_uv_delta_q= 0;
 				return;
 			}
-			else if ( color_primaries == CP_BT_709 &&
- transfer_characteristics == TC_SRGB &&
- matrix_coefficients == MC_IDENTITY )
+			else if ( color_primaries == AV1ColorPrimaries.CP_BT_709 &&
+ transfer_characteristics == AV1TransferCharacteristics.TC_SRGB &&
+ matrix_coefficients == MC_AV1Constants.IDENTITY )
 			{
 				color_range= 1;
 				subsampling_x= 0;
@@ -1756,7 +1756,7 @@ frame_header_obu() {
 			{
 				idLen= ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 );
 			}
-			allFrames= (1 << NUM_REF_FRAMES) - 1;
+			allFrames= (1 << AV1Constants.NUM_REF_FRAMES) - 1;
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -1829,20 +1829,20 @@ frame_header_obu() {
 			if ( frame_type == KEY_FRAME && show_frame != 0 )
 			{
 
-				for ( i = 0; i < NUM_REF_FRAMES; i++ )
+				for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
 				{
 					RefValid[ i ]= 0;
 					RefOrderHint[ i ]= 0;
 				}
 
-				for ( i = 0; i < REFS_PER_FRAME; i++ )
+				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 				{
 					OrderHints[ AV1RefFrames.LAST_FRAME + i ]= 0;
 				}
 			}
 			stream.ReadFixed(1, out this.disable_cdf_update, "disable_cdf_update"); 
 
-			if ( seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS )
+			if ( seq_force_screen_content_tools == AV1Constants.SELECT_SCREEN_CONTENT_TOOLS )
 			{
 				stream.ReadFixed(1, out this.allow_screen_content_tools, "allow_screen_content_tools"); 
 			}
@@ -1854,7 +1854,7 @@ frame_header_obu() {
 			if ( allow_screen_content_tools != 0 )
 			{
 
-				if ( seq_force_integer_mv == SELECT_INTEGER_MV )
+				if ( seq_force_integer_mv == AV1Constants.SELECT_INTEGER_MV )
 				{
 					stream.ReadFixed(1, out this.force_integer_mv, "force_integer_mv"); 
 				}
@@ -1903,7 +1903,7 @@ frame_header_obu() {
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 )
 			{
-				primary_ref_frame= PRIMARY_REF_NONE;
+				primary_ref_frame= AV1Constants.PRIMARY_REF_NONE;
 			}
 			else 
 			{
@@ -1955,7 +1955,7 @@ frame_header_obu() {
 				if ( error_resilient_mode != 0 && enable_order_hint != 0 )
 				{
 
-					for ( i = 0; i < NUM_REF_FRAMES; i++)
+					for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
 					{
 						ReadRefOrderHint; 
 						stream.ReadVariable(OrderHintBits, out this.ref_order_hint[ i ], "ref_order_hint"); 
@@ -1997,7 +1997,7 @@ frame_header_obu() {
 					}
 				}
 
-				for ( i = 0; i < REFS_PER_FRAME; i++ )
+				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 				{
 
 					if ( frame_refs_short_signaling== 0 )
@@ -2044,7 +2044,7 @@ frame_header_obu() {
 					stream.ReadFixed(1, out this.use_ref_frame_mvs, "use_ref_frame_mvs"); 
 				}
 
-				for ( i = 0; i < REFS_PER_FRAME; i++ )
+				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 				{
 					refFrame= AV1RefFrames.LAST_FRAME + i;
 					hint= RefOrderHint[ ref_frame_idx[ i ] ];
@@ -2070,7 +2070,7 @@ frame_header_obu() {
 				stream.ReadFixed(1, out this.disable_frame_end_update_cdf, "disable_frame_end_update_cdf"); 
 			}
 
-			if ( primary_ref_frame == PRIMARY_REF_NONE )
+			if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
 			{
 				ReadInitNonCoeffCdfs(); 
 				ReadSetupPastIndependence(); 
@@ -2091,7 +2091,7 @@ frame_header_obu() {
 			ReadDeltaqParams(); 
 			ReadDeltaLfParams(); 
 
-			if ( primary_ref_frame == PRIMARY_REF_NONE )
+			if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
 			{
 				ReadInitCoeffCdfs(); 
 			}
@@ -2101,7 +2101,7 @@ frame_header_obu() {
 			}
 			CodedLossless= 1;
 
-			for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ )
+			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
 				qindex= get_qindex( 1, segmentId );
 				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0 ? (uint)1 : (uint)0;
@@ -2157,7 +2157,7 @@ frame_header_obu() {
 			{
 				idLen= ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 );
 			}
-			allFrames= (1 << NUM_REF_FRAMES) - 1;
+			allFrames= (1 << AV1Constants.NUM_REF_FRAMES) - 1;
 
 			if ( reduced_still_picture_header != 0 )
 			{
@@ -2230,20 +2230,20 @@ frame_header_obu() {
 			if ( frame_type == KEY_FRAME && show_frame != 0 )
 			{
 
-				for ( i = 0; i < NUM_REF_FRAMES; i++ )
+				for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
 				{
 					RefValid[ i ]= 0;
 					RefOrderHint[ i ]= 0;
 				}
 
-				for ( i = 0; i < REFS_PER_FRAME; i++ )
+				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 				{
 					OrderHints[ AV1RefFrames.LAST_FRAME + i ]= 0;
 				}
 			}
 			stream.WriteFixed(1, this.disable_cdf_update, "disable_cdf_update"); 
 
-			if ( seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS )
+			if ( seq_force_screen_content_tools == AV1Constants.SELECT_SCREEN_CONTENT_TOOLS )
 			{
 				stream.WriteFixed(1, this.allow_screen_content_tools, "allow_screen_content_tools"); 
 			}
@@ -2255,7 +2255,7 @@ frame_header_obu() {
 			if ( allow_screen_content_tools != 0 )
 			{
 
-				if ( seq_force_integer_mv == SELECT_INTEGER_MV )
+				if ( seq_force_integer_mv == AV1Constants.SELECT_INTEGER_MV )
 				{
 					stream.WriteFixed(1, this.force_integer_mv, "force_integer_mv"); 
 				}
@@ -2304,7 +2304,7 @@ frame_header_obu() {
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 )
 			{
-				primary_ref_frame= PRIMARY_REF_NONE;
+				primary_ref_frame= AV1Constants.PRIMARY_REF_NONE;
 			}
 			else 
 			{
@@ -2356,7 +2356,7 @@ frame_header_obu() {
 				if ( error_resilient_mode != 0 && enable_order_hint != 0 )
 				{
 
-					for ( i = 0; i < NUM_REF_FRAMES; i++)
+					for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
 					{
 						WriteRefOrderHint; 
 						stream.WriteVariable(OrderHintBits, this.ref_order_hint[ i ], "ref_order_hint"); 
@@ -2398,7 +2398,7 @@ frame_header_obu() {
 					}
 				}
 
-				for ( i = 0; i < REFS_PER_FRAME; i++ )
+				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 				{
 
 					if ( frame_refs_short_signaling== 0 )
@@ -2445,7 +2445,7 @@ frame_header_obu() {
 					stream.WriteFixed(1, this.use_ref_frame_mvs, "use_ref_frame_mvs"); 
 				}
 
-				for ( i = 0; i < REFS_PER_FRAME; i++ )
+				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 				{
 					refFrame= AV1RefFrames.LAST_FRAME + i;
 					hint= RefOrderHint[ ref_frame_idx[ i ] ];
@@ -2471,7 +2471,7 @@ frame_header_obu() {
 				stream.WriteFixed(1, this.disable_frame_end_update_cdf, "disable_frame_end_update_cdf"); 
 			}
 
-			if ( primary_ref_frame == PRIMARY_REF_NONE )
+			if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
 			{
 				WriteInitNonCoeffCdfs(); 
 				WriteSetupPastIndependence(); 
@@ -2492,7 +2492,7 @@ frame_header_obu() {
 			WriteDeltaqParams(); 
 			WriteDeltaLfParams(); 
 
-			if ( primary_ref_frame == PRIMARY_REF_NONE )
+			if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
 			{
 				WriteInitCoeffCdfs(); 
 			}
@@ -2502,7 +2502,7 @@ frame_header_obu() {
 			}
 			CodedLossless= 1;
 
-			for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ )
+			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
 				qindex= get_qindex( 1, segmentId );
 				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0 ? (uint)1 : (uint)0;
@@ -2601,7 +2601,7 @@ frame_header_obu() {
 
 			diffLen= delta_frame_id_length_minus_2 + 2;
 
-			for ( i = 0; i < NUM_REF_FRAMES; i++ )
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
 			{
 
 				if ( current_frame_id > ( 1 << (int) diffLen ) )
@@ -2632,7 +2632,7 @@ frame_header_obu() {
 
 			diffLen= delta_frame_id_length_minus_2 + 2;
 
-			for ( i = 0; i < NUM_REF_FRAMES; i++ )
+			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
 			{
 
 				if ( current_frame_id > ( 1 << (int) diffLen ) )
@@ -2819,7 +2819,7 @@ frame_header_obu() {
          {
 
 
-			for ( i = 0; i < REFS_PER_FRAME; i++ )
+			for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 			{
 				stream.ReadFixed(1, out this.found_ref, "found_ref"); 
 
@@ -2850,7 +2850,7 @@ frame_header_obu() {
          {
 
 
-			for ( i = 0; i < REFS_PER_FRAME; i++ )
+			for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 			{
 				stream.WriteFixed(1, this.found_ref, "found_ref"); 
 
@@ -3097,11 +3097,11 @@ tile_info () {
 			sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
 			sbShift= use_128x128_superblock ? 5 : 4;
 			sbSize= sbShift + 2;
-			maxTileWidthSb= MAX_TILE_WIDTH >> (int)sbSize;
-			maxTileAreaSb= MAX_TILE_AREA >> (int)( 2 * sbSize );
+			maxTileWidthSb= AV1Constants.MAX_TILE_WIDTH >> (int)sbSize;
+			maxTileAreaSb= AV1Constants.MAX_TILE_AREA >> (int)( 2 * sbSize );
 			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
-			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
+			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
+			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
 			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
 			stream.ReadFixed(1, out this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
@@ -3220,11 +3220,11 @@ tile_info () {
 			sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
 			sbShift= use_128x128_superblock ? 5 : 4;
 			sbSize= sbShift + 2;
-			maxTileWidthSb= MAX_TILE_WIDTH >> (int)sbSize;
-			maxTileAreaSb= MAX_TILE_AREA >> (int)( 2 * sbSize );
+			maxTileWidthSb= AV1Constants.MAX_TILE_WIDTH >> (int)sbSize;
+			maxTileAreaSb= AV1Constants.MAX_TILE_AREA >> (int)( 2 * sbSize );
 			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, MAX_TILE_COLS));
-			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, MAX_TILE_ROWS));
+			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
+			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
 			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
 			stream.WriteFixed(1, this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
@@ -3662,7 +3662,7 @@ tile_log2( blkSize, target ) {
 			if ( segmentation_enabled == 1 )
 			{
 
-				if ( primary_ref_frame == PRIMARY_REF_NONE )
+				if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
 				{
 					segmentation_update_map= 1;
 					segmentation_temporal_update= 0;
@@ -3682,10 +3682,10 @@ tile_log2( blkSize, target ) {
 				if ( segmentation_update_data == 1 )
 				{
 
-					for ( i = 0; i < MAX_SEGMENTS; i++ )
+					for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
 					{
 
-						for ( j = 0; j < SEG_LVL_MAX; j++ )
+						for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
 						{
 							feature_value= 0;
 							stream.ReadFixed(1, out this.feature_enabled, "feature_enabled"); 
@@ -3716,10 +3716,10 @@ tile_log2( blkSize, target ) {
 			else 
 			{
 
-				for ( i = 0; i < MAX_SEGMENTS; i++ )
+				for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
 				{
 
-					for ( j = 0; j < SEG_LVL_MAX; j++ )
+					for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
 					{
 						FeatureEnabled[ i ][ j ]= 0;
 						FeatureData[ i ][ j ]= 0;
@@ -3729,17 +3729,17 @@ tile_log2( blkSize, target ) {
 			SegIdPreSkip= 0;
 			LastActiveSegId= 0;
 
-			for ( i = 0; i < MAX_SEGMENTS; i++ )
+			for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
 			{
 
-				for ( j = 0; j < SEG_LVL_MAX; j++ )
+				for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
 				{
 
 					if ( FeatureEnabled[ i ][ j ] != 0 )
 					{
 						LastActiveSegId= i;
 
-						if ( j >= SEG_LVL_REF_FRAME )
+						if ( j >= AV1Constants.SEG_LVL_REF_FRAME )
 						{
 							SegIdPreSkip= 1;
 						}
@@ -3756,7 +3756,7 @@ tile_log2( blkSize, target ) {
 			if ( segmentation_enabled == 1 )
 			{
 
-				if ( primary_ref_frame == PRIMARY_REF_NONE )
+				if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
 				{
 					segmentation_update_map= 1;
 					segmentation_temporal_update= 0;
@@ -3776,10 +3776,10 @@ tile_log2( blkSize, target ) {
 				if ( segmentation_update_data == 1 )
 				{
 
-					for ( i = 0; i < MAX_SEGMENTS; i++ )
+					for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
 					{
 
-						for ( j = 0; j < SEG_LVL_MAX; j++ )
+						for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
 						{
 							feature_value= 0;
 							stream.WriteFixed(1, this.feature_enabled, "feature_enabled"); 
@@ -3810,10 +3810,10 @@ tile_log2( blkSize, target ) {
 			else 
 			{
 
-				for ( i = 0; i < MAX_SEGMENTS; i++ )
+				for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
 				{
 
-					for ( j = 0; j < SEG_LVL_MAX; j++ )
+					for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
 					{
 						FeatureEnabled[ i ][ j ]= 0;
 						FeatureData[ i ][ j ]= 0;
@@ -3823,17 +3823,17 @@ tile_log2( blkSize, target ) {
 			SegIdPreSkip= 0;
 			LastActiveSegId= 0;
 
-			for ( i = 0; i < MAX_SEGMENTS; i++ )
+			for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
 			{
 
-				for ( j = 0; j < SEG_LVL_MAX; j++ )
+				for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
 				{
 
 					if ( FeatureEnabled[ i ][ j ] != 0 )
 					{
 						LastActiveSegId= i;
 
-						if ( j >= SEG_LVL_REF_FRAME )
+						if ( j >= AV1Constants.SEG_LVL_REF_FRAME )
 						{
 							SegIdPreSkip= 1;
 						}
@@ -4189,7 +4189,7 @@ lr_params() {
 						lr_unit_shift+= lr_unit_extra_shift;
 					}
 				}
-				LoopRestorationSize[ 0 ]= RESTORATION_TILESIZE_MAX >> (int)(2 - lr_unit_shift);
+				LoopRestorationSize[ 0 ]= AV1Constants.RESTORATION_TILESIZE_MAX >> (int)(2 - lr_unit_shift);
 
 				if ( subsampling_x != 0 && subsampling_y != 0 && usesChromaLr != 0 )
 				{
@@ -4254,7 +4254,7 @@ lr_params() {
 						lr_unit_shift+= lr_unit_extra_shift;
 					}
 				}
-				LoopRestorationSize[ 0 ]= RESTORATION_TILESIZE_MAX >> (int)(2 - lr_unit_shift);
+				LoopRestorationSize[ 0 ]= AV1Constants.RESTORATION_TILESIZE_MAX >> (int)(2 - lr_unit_shift);
 
 				if ( subsampling_x != 0 && subsampling_y != 0 && usesChromaLr != 0 )
 				{
@@ -4370,7 +4370,7 @@ lr_params() {
 				if ( loop_filter_delta_update == 1 )
 				{
 
-					for ( i = 0; i < TOTAL_REFS_PER_FRAME; i++ )
+					for ( i = 0; i < TOTAL_AV1Constants.REFS_PER_FRAME; i++ )
 					{
 						stream.ReadFixed(1, out this.update_ref_delta, "update_ref_delta"); 
 
@@ -4438,7 +4438,7 @@ lr_params() {
 				if ( loop_filter_delta_update == 1 )
 				{
 
-					for ( i = 0; i < TOTAL_REFS_PER_FRAME; i++ )
+					for ( i = 0; i < TOTAL_AV1Constants.REFS_PER_FRAME; i++ )
 					{
 						stream.WriteFixed(1, this.update_ref_delta, "update_ref_delta"); 
 
@@ -4650,7 +4650,7 @@ lr_params() {
 				forwardIdx= -1;
 				backwardIdx= -1;
 
-				for ( i = 0; i < REFS_PER_FRAME; i++ )
+				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 				{
 					refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
@@ -4690,7 +4690,7 @@ lr_params() {
 				{
 					secondForwardIdx= -1;
 
-					for ( i = 0; i < REFS_PER_FRAME; i++ )
+					for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 					{
 						refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
@@ -4742,7 +4742,7 @@ lr_params() {
 				forwardIdx= -1;
 				backwardIdx= -1;
 
-				for ( i = 0; i < REFS_PER_FRAME; i++ )
+				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 				{
 					refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
@@ -4782,7 +4782,7 @@ lr_params() {
 				{
 					secondForwardIdx= -1;
 
-					for ( i = 0; i < REFS_PER_FRAME; i++ )
+					for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
 					{
 						refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
@@ -4885,11 +4885,11 @@ lr_params() {
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
-				GmType[ refc ]= IDENTITY;
+				GmType[ refc ]= AV1Constants.IDENTITY;
 
 				for ( i = 0; i < 6; i++ )
 				{
-					gm_params[ refc ][ i ]= ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 );
+					gm_params[ refc ][ i ]= ( ( i % 3 == 2 ) ? 1 << AV1Constants.WARPEDMODEL_PREC_BITS : 0 );
 				}
 			}
 
@@ -4908,26 +4908,26 @@ lr_params() {
 
 					if ( is_rot_zoom != 0 )
 					{
-						type= ROTZOOM;
+						type= AV1Constants.ROTZOOM;
 					}
 					else 
 					{
 						stream.ReadFixed(1, out this.is_translation, "is_translation"); 
-						type= is_translation ? TRANSLATION : AFFINE;
+						type= is_translation ? AV1Constants.TRANSLATION : AV1Constants.AFFINE;
 					}
 				}
 				else 
 				{
-					type= IDENTITY;
+					type= AV1Constants.IDENTITY;
 				}
 				GmType[refc]= type;
 
-				if ( type >= ROTZOOM )
+				if ( type >= AV1Constants.ROTZOOM )
 				{
 					ReadReadGlobalParam(type, refc, 2); 
 					ReadReadGlobalParam(type, refc, 3); 
 
-					if ( type == AFFINE )
+					if ( type == AV1Constants.AFFINE )
 					{
 						ReadReadGlobalParam(type, refc, 4); 
 						ReadReadGlobalParam0(type, refc, 5); 
@@ -4939,7 +4939,7 @@ lr_params() {
 					}
 				}
 
-				if ( type >= TRANSLATION )
+				if ( type >= AV1Constants.TRANSLATION )
 				{
 					ReadReadGlobalParam(type, refc, 0); 
 					ReadReadGlobalParam0(type, refc, 1); 
@@ -4953,11 +4953,11 @@ lr_params() {
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
 			{
-				GmType[ refc ]= IDENTITY;
+				GmType[ refc ]= AV1Constants.IDENTITY;
 
 				for ( i = 0; i < 6; i++ )
 				{
-					gm_params[ refc ][ i ]= ( ( i % 3 == 2 ) ? 1 << WARPEDMODEL_PREC_BITS : 0 );
+					gm_params[ refc ][ i ]= ( ( i % 3 == 2 ) ? 1 << AV1Constants.WARPEDMODEL_PREC_BITS : 0 );
 				}
 			}
 
@@ -4976,26 +4976,26 @@ lr_params() {
 
 					if ( is_rot_zoom != 0 )
 					{
-						type= ROTZOOM;
+						type= AV1Constants.ROTZOOM;
 					}
 					else 
 					{
 						stream.WriteFixed(1, this.is_translation, "is_translation"); 
-						type= is_translation ? TRANSLATION : AFFINE;
+						type= is_translation ? AV1Constants.TRANSLATION : AV1Constants.AFFINE;
 					}
 				}
 				else 
 				{
-					type= IDENTITY;
+					type= AV1Constants.IDENTITY;
 				}
 				GmType[refc]= type;
 
-				if ( type >= ROTZOOM )
+				if ( type >= AV1Constants.ROTZOOM )
 				{
 					WriteReadGlobalParam(type, refc, 2); 
 					WriteReadGlobalParam(type, refc, 3); 
 
-					if ( type == AFFINE )
+					if ( type == AV1Constants.AFFINE )
 					{
 						WriteReadGlobalParam(type, refc, 4); 
 						WriteReadGlobalParam0(type, refc, 5); 
@@ -5007,7 +5007,7 @@ lr_params() {
 					}
 				}
 
-				if ( type >= TRANSLATION )
+				if ( type >= AV1Constants.TRANSLATION )
 				{
 					WriteReadGlobalParam(type, refc, 0); 
 					WriteReadGlobalParam0(type, refc, 1); 
@@ -5050,25 +5050,25 @@ read_global_param( type, refc, idx ) {
          public void ReadReadGlobalParam(uint type, uint refc, uint idx)
          {
 
-			absBits= GM_ABS_ALPHA_BITS;
-			precBits= GM_ALPHA_PREC_BITS;
+			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
+			precBits= AV1Constants.GM_ALPHA_PREC_BITS;
 
 			if ( idx < 2 )
 			{
 
-				if ( type == TRANSLATION )
+				if ( type == AV1Constants.TRANSLATION )
 				{
-					absBits= GM_ABS_TRANS_ONLY_BITS - !allow_high_precision_mv;
-					precBits= GM_TRANS_ONLY_PREC_BITS - !allow_high_precision_mv;
+					absBits= AV1Constants.GM_ABS_TRANS_ONLY_BITS - !allow_high_precision_mv;
+					precBits= AV1Constants.GM_TRANS_ONLY_PREC_BITS - !allow_high_precision_mv;
 				}
 				else 
 				{
-					absBits= GM_ABS_TRANS_BITS;
-					precBits= GM_TRANS_PREC_BITS;
+					absBits= AV1Constants.GM_ABS_TRANS_BITS;
+					precBits= AV1Constants.GM_TRANS_PREC_BITS;
 				}
 			}
-			precDiff= WARPEDMODEL_PREC_BITS - precBits;
-			round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
+			precDiff= AV1Constants.WARPEDMODEL_PREC_BITS - precBits;
+			round= (idx % 3) == 2 ? (1 << AV1Constants.WARPEDMODEL_PREC_BITS) : 0;
 			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
 			mx= (1 << absBits);
 			r= (PrevGmParams[refc][idx] >> (int)precDiff) - sub;
@@ -5078,25 +5078,25 @@ read_global_param( type, refc, idx ) {
          public void WriteReadGlobalParam(uint type, uint refc, uint idx)
          {
 
-			absBits= GM_ABS_ALPHA_BITS;
-			precBits= GM_ALPHA_PREC_BITS;
+			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
+			precBits= AV1Constants.GM_ALPHA_PREC_BITS;
 
 			if ( idx < 2 )
 			{
 
-				if ( type == TRANSLATION )
+				if ( type == AV1Constants.TRANSLATION )
 				{
-					absBits= GM_ABS_TRANS_ONLY_BITS - !allow_high_precision_mv;
-					precBits= GM_TRANS_ONLY_PREC_BITS - !allow_high_precision_mv;
+					absBits= AV1Constants.GM_ABS_TRANS_ONLY_BITS - !allow_high_precision_mv;
+					precBits= AV1Constants.GM_TRANS_ONLY_PREC_BITS - !allow_high_precision_mv;
 				}
 				else 
 				{
-					absBits= GM_ABS_TRANS_BITS;
-					precBits= GM_TRANS_PREC_BITS;
+					absBits= AV1Constants.GM_ABS_TRANS_BITS;
+					precBits= AV1Constants.GM_TRANS_PREC_BITS;
 				}
 			}
-			precDiff= WARPEDMODEL_PREC_BITS - precBits;
-			round= (idx % 3) == 2 ? (1 << WARPEDMODEL_PREC_BITS) : 0;
+			precDiff= AV1Constants.WARPEDMODEL_PREC_BITS - precBits;
+			round= (idx % 3) == 2 ? (1 << AV1Constants.WARPEDMODEL_PREC_BITS) : 0;
 			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
 			mx= (1 << absBits);
 			r= (PrevGmParams[refc][idx] >> (int)precDiff) - sub;
@@ -5529,14 +5529,14 @@ superres_params() {
 			if ( use_superres != 0 )
 			{
 				stream.ReadVariable(SUPERRES_DENOM_BITS, out this.coded_denom, "coded_denom"); 
-				SuperresDenom= coded_denom + SUPERRES_DENOM_MIN;
+				SuperresDenom= coded_denom + AV1Constants.SUPERRES_DENOM_MIN;
 			}
 			else 
 			{
-				SuperresDenom= SUPERRES_NUM;
+				SuperresDenom= AV1Constants.SUPERRES_NUM;
 			}
 			UpscaledWidth= FrameWidth;
-			FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
+			FrameWidth= (UpscaledWidth * AV1Constants.SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
          }
 
          public void WriteSuperresParams()
@@ -5555,14 +5555,14 @@ superres_params() {
 			if ( use_superres != 0 )
 			{
 				stream.WriteVariable(SUPERRES_DENOM_BITS, this.coded_denom, "coded_denom"); 
-				SuperresDenom= coded_denom + SUPERRES_DENOM_MIN;
+				SuperresDenom= coded_denom + AV1Constants.SUPERRES_DENOM_MIN;
 			}
 			else 
 			{
-				SuperresDenom= SUPERRES_NUM;
+				SuperresDenom= AV1Constants.SUPERRES_NUM;
 			}
 			UpscaledWidth= FrameWidth;
-			FrameWidth= (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
+			FrameWidth= (UpscaledWidth * AV1Constants.SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
          }
 
     /*
