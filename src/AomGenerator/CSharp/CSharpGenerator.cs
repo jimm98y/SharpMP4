@@ -22,7 +22,7 @@ namespace AomGenerator.CSharp
         void FixClassParameters(AomClass ituClass);
         string ReplaceParameter(string parameter);
         string FixCondition(string condition, MethodType methodType);
-        string FixStatement(string fieldValue);
+        string FixStatement(string fieldValue, MethodType methodType);
         string GetCtorParameterType(string parameter);
         string FixFieldValue(string fieldValue);
         void FixNestedIndexes(List<string> ret, AomField field);
@@ -53,8 +53,16 @@ namespace Sharp{type}
     public partial class {type}Context : IAomContext
     {{
         AomStream stream = null;
+        int obu_padding_length = 0;
         private void ReadDropObu() {{ }}
         private void WriteDropObu() {{ }}
+        private void ReadSetFrameRefs() {{ }}
+        private void WriteSetFrameRefs() {{ }}
+        private void ReadResetGrainParams() {{ }}
+        private void WriteResetGrainParams() {{ }}
+        private void ReadLoadGrainParams(uint p) {{ }}
+        private void WriteLoadGrainParams(uint p) {{ }}
+        private int ChooseOperatingPoint() {{ throw new NotImplementedException(); }}
 ";
 
             foreach (var ituClass in aomClasses)
@@ -253,6 +261,9 @@ namespace Sharp{type}
                 {
                     if (field.Parameter != ret[name].Parameter) // we have to duplicate these
                     {
+                        if (field.Name == "read_global_param")
+                            return;
+
                         AddNewDuplicatedField(ret, field, name);
                     }
                     else
@@ -508,7 +519,7 @@ namespace Sharp{type}
         {
             string p = "";
             if (!string.IsNullOrEmpty(retrn.Parameter))
-                p = retrn.Parameter;
+                p = specificGenerator.FixStatement(retrn.Parameter, methodType);
 
             return $"{GetSpacing(level)}return" + p + ";";
         }
@@ -519,11 +530,11 @@ namespace Sharp{type}
             string fieldArray = field.FieldArray;
 
             if (!string.IsNullOrEmpty(fieldArray))
-                fieldArray = specificGenerator.FixStatement(fieldArray);
+                fieldArray = specificGenerator.FixStatement(fieldArray, methodType);
 
             if (!string.IsNullOrEmpty(fieldValue))
             {
-                fieldValue = specificGenerator.FixStatement(fieldValue);
+                fieldValue = specificGenerator.FixStatement(fieldValue, methodType);
                 fieldValue = specificGenerator.FixFieldValue(fieldValue);
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });

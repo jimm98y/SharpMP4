@@ -254,6 +254,11 @@
 
     public static class AV1TransferCharacteristics
     {
+        public const int TC_RESERVED_0 = 0;
+        public const int TC_BT_709 = 1;
+        public const int TC_UNSPECIFIED = 2;
+        public const int TC_RESERVED_3 = 3;
+        public const int TC_BT_470_M = 4;
         public const int TC_BT_470_B_G = 5;
         public const int TC_BT_601 = 6;
         public const int TC_SMPTE_240 = 7;
@@ -360,5 +365,14 @@
         public const int ONLY_4X4 = 0;
         public const int TX_MODE_LARGEST = 1;
         public const int TX_MODE_SELECT = 2;
+    }
+
+    public static class AV1InterpolationFilter
+    {
+        public const int EIGHTTAP = 0;
+        public const int EIGHTTAP_SMOOTH = 1;
+        public const int EIGHTTAP_SHARP = 2;
+        public const int BILINEAR = 3;
+        public const int SWITCHABLE = 4;
     }
 }

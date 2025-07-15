@@ -109,7 +109,7 @@ sequence_header_obu() {
  initial_display_delay_present_flag f(1)
  operating_points_cnt_minus_1 f(5)
  for ( i = 0; i <= operating_points_cnt_minus_1; i++ ) {
- operating_point_idc[ i ] operating_point_idc[ i ] f(12)
+ operating_point_idc[ i ] f(12)
  seq_level_idx[ i ] f(5)
  if ( seq_level_idx[ i ] > 7 ) {
  seq_tier[ i ] f(1)
@@ -340,7 +340,7 @@ frame_header_obu() {
  }
  frame_type f(2)
  FrameIsIntra = (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME)
- show_frame show_frame f(1)
+ show_frame f(1)
  if ( show_frame && decoder_model_info_present_flag && !equal_picture_interval ) {
  temporal_point_info()
  }
@@ -383,7 +383,7 @@ frame_header_obu() {
  }
  if ( frame_id_numbers_present_flag ) {
  PrevFrameID = current_frame_id
- current_frame_id current_frame_id f(idLen)
+ current_frame_id f(idLen)
  mark_ref_frames( idLen )
  } else {
  current_frame_id = 0
@@ -394,7 +394,7 @@ frame_header_obu() {
  frame_size_override_flag = 0
  else
  frame_size_override_flag f(1)
- order_hint order_hint f(OrderHintBits)
+ order_hint f(OrderHintBits)
  OrderHint = order_hint
  if ( FrameIsIntra || error_resilient_mode ) {
  primary_ref_frame = PRIMARY_REF_NONE
@@ -429,7 +429,7 @@ frame_header_obu() {
  if ( !FrameIsIntra || refresh_frame_flags != allFrames ) {
  if ( error_resilient_mode && enable_order_hint ) {
  for ( i = 0; i < NUM_REF_FRAMES; i++) {
- ref_order_hint[ i ] ref_order_hint[ i ] f(OrderHintBits)
+ ref_order_hint[ i ] f(OrderHintBits)
  if ( ref_order_hint[ i ] != RefOrderHint[ i ] ) {
  RefValid[ i ] = 0
  }
@@ -552,23 +552,6 @@ frame_header_obu() {
  temporal_point_info() { 
  n = frame_presentation_time_length_minus_1 + 1
  frame_presentation_time f(n)
- }
-
- mark_ref_frames( idLen ) { 
- diffLen = delta_frame_id_length_minus_2 + 2
- for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
- if ( current_frame_id > ( 1 << diffLen ) ) {
- if ( RefFrameId[ i ] > current_frame_id ||
- RefFrameId[ i ] < ( current_frame_id - ( 1 << diffLen ) ) )
- RefValid[ i ] = 0
- } else {
- if ( RefFrameId[ i ] > current_frame_id &&
- RefFrameId[ i ] < ( ( 1 << idLen ) +
- current_frame_id 
-( 1 << diffLen ) ) )
- RefValid[ i ] = 0
- }
- }
  }
 
  frame_size() { 

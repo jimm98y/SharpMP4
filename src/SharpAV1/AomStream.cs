@@ -104,12 +104,12 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadUvlc(out uint value, string name)
+        public ulong ReadUvlc(out int value, string name)
         {
             throw new NotImplementedException();
         }
 
-        public ulong WriteUvlc(uint value, string name)
+        public ulong WriteUvlc(int value, string name)
         {
             throw new NotImplementedException();
         }
@@ -151,7 +151,12 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong WriteUnsignedInt(int length, int whileIndex, uint value, string name)
+        public ulong ReadUnsignedInt(int length, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteUnsignedInt(int length, uint value, string name)
         {
             throw new NotImplementedException();
         }
@@ -177,6 +182,21 @@ namespace SharpAV1
         }
 
         public int GetPosition()
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static byte TileLog2(int maxTileAreaSb, int v)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static int Clip3(int v, int limit, int feature_value)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static int GetQIndex(int v, uint segmentId)
         {
             throw new NotImplementedException();
         }

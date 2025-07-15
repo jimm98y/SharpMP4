@@ -8,8 +8,16 @@ namespace SharpAV1
     public partial class AV1Context : IAomContext
     {
         AomStream stream = null;
+        int obu_padding_length = 0;
         private void ReadDropObu() { }
         private void WriteDropObu() { }
+        private void ReadSetFrameRefs() { }
+        private void WriteSetFrameRefs() { }
+        private void ReadResetGrainParams() { }
+        private void WriteResetGrainParams() { }
+        private void ReadLoadGrainParams(uint p) { }
+        private void WriteLoadGrainParams(uint p) { }
+        private int ChooseOperatingPoint() { throw new NotImplementedException(); }
 
     /*
 open_bitstream_unit( sz ) { 
@@ -437,7 +445,7 @@ sequence_header_obu() {
  initial_display_delay_present_flag f(1)
  operating_points_cnt_minus_1 f(5)
  for ( i = 0; i <= operating_points_cnt_minus_1; i++ ) {
- operating_point_idc[ i ] operating_point_idc[ i ] f(12)
+ operating_point_idc[ i ] f(12)
  seq_level_idx[ i ] f(5)
  if ( seq_level_idx[ i ] > 7 ) {
  seq_tier[ i ] f(1)
@@ -624,7 +632,6 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
-					ReadOperatingPointIdc; 
 					stream.ReadFixed(12, out this.operating_point_idc[ i ], "operating_point_idc"); 
 					stream.ReadFixed(5, out this.seq_level_idx[ i ], "seq_level_idx"); 
 
@@ -663,7 +670,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					}
 				}
 			}
-			operatingPoint= choose_operating_point();
+			operatingPoint= ChooseOperatingPoint();
 			OperatingPointIdc= operating_point_idc[ operatingPoint ];
 			stream.ReadFixed(4, out this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
 			stream.ReadFixed(4, out this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
@@ -809,7 +816,6 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
-					WriteOperatingPointIdc; 
 					stream.WriteFixed(12, this.operating_point_idc[ i ], "operating_point_idc"); 
 					stream.WriteFixed(5, this.seq_level_idx[ i ], "seq_level_idx"); 
 
@@ -848,7 +854,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					}
 				}
 			}
-			operatingPoint= choose_operating_point();
+			operatingPoint= ChooseOperatingPoint();
 			OperatingPointIdc= operating_point_idc[ operatingPoint ];
 			stream.WriteFixed(4, this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
 			stream.WriteFixed(4, this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
@@ -1179,7 +1185,7 @@ color_config() {
 			else 
 			{
 				color_primaries= AV1ColorPrimaries.CP_UNSPECIFIED;
-				transfer_characteristics= TC_UNSPECIFIED;
+				transfer_characteristics= AV1TransferCharacteristics.TC_UNSPECIFIED;
 				matrix_coefficients= AV1MatrixCoefficients.MC_UNSPECIFIED;
 			}
 
@@ -1280,7 +1286,7 @@ color_config() {
 			else 
 			{
 				color_primaries= AV1ColorPrimaries.CP_UNSPECIFIED;
-				transfer_characteristics= TC_UNSPECIFIED;
+				transfer_characteristics= AV1TransferCharacteristics.TC_UNSPECIFIED;
 				matrix_coefficients= AV1MatrixCoefficients.MC_UNSPECIFIED;
 			}
 
@@ -1459,7 +1465,7 @@ frame_header_obu() {
  }
  frame_type f(2)
  FrameIsIntra = (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME)
- show_frame show_frame f(1)
+ show_frame f(1)
  if ( show_frame && decoder_model_info_present_flag && !equal_picture_interval ) {
  temporal_point_info()
  }
@@ -1502,7 +1508,7 @@ frame_header_obu() {
  }
  if ( frame_id_numbers_present_flag ) {
  PrevFrameID = current_frame_id
- current_frame_id current_frame_id f(idLen)
+ current_frame_id f(idLen)
  mark_ref_frames( idLen )
  } else {
  current_frame_id = 0
@@ -1513,7 +1519,7 @@ frame_header_obu() {
  frame_size_override_flag = 0
  else
  frame_size_override_flag f(1)
- order_hint order_hint f(OrderHintBits)
+ order_hint f(OrderHintBits)
  OrderHint = order_hint
  if ( FrameIsIntra || error_resilient_mode ) {
  primary_ref_frame = PRIMARY_REF_NONE
@@ -1548,7 +1554,7 @@ frame_header_obu() {
  if ( !FrameIsIntra || refresh_frame_flags != allFrames ) {
  if ( error_resilient_mode && enable_order_hint ) {
  for ( i = 0; i < NUM_REF_FRAMES; i++) {
- ref_order_hint[ i ] ref_order_hint[ i ] f(OrderHintBits)
+ ref_order_hint[ i ] f(OrderHintBits)
  if ( ref_order_hint[ i ] != RefOrderHint[ i ] ) {
  RefValid[ i ] = 0
  }
@@ -1688,10 +1694,10 @@ frame_header_obu() {
 		private uint allow_screen_content_tools;
 		private uint force_integer_mv;
 		private int PrevFrameID;
-		private int current_frame_id;
+		private uint current_frame_id;
 		private int mark_ref_frames;
 		private int frame_size_override_flag;
-		private int order_hint;
+		private uint order_hint;
 		private int OrderHint;
 		private int primary_ref_frame;
 		private uint buffer_removal_time_present_flag;
@@ -1700,7 +1706,7 @@ frame_header_obu() {
 		private int allow_high_precision_mv;
 		private int use_ref_frame_mvs;
 		private int allow_intrabc;
-		private int[] ref_order_hint;
+		private uint[] ref_order_hint;
 		private int frame_size;
 		private int render_size;
 		private int frame_refs_short_signaling;
@@ -1799,7 +1805,6 @@ frame_header_obu() {
 				}
 				stream.ReadFixed(2, out this.frame_type, "frame_type"); 
 				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? (uint)1 : (uint)0;
-				ReadShowFrame; 
 				stream.ReadFixed(1, out this.show_frame, "show_frame"); 
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
@@ -1876,7 +1881,6 @@ frame_header_obu() {
 			if ( frame_id_numbers_present_flag != 0 )
 			{
 				PrevFrameID= current_frame_id;
-				ReadCurrentFrameId; 
 				stream.ReadVariable(idLen, out this.current_frame_id, "current_frame_id"); 
 				ReadMarkRefFrames( idLen ); 
 			}
@@ -1897,7 +1901,6 @@ frame_header_obu() {
 			{
 				stream.ReadFixed(1, out this.frame_size_override_flag, "frame_size_override_flag"); 
 			}
-			ReadOrderHint; 
 			stream.ReadVariable(OrderHintBits, out this.order_hint, "order_hint"); 
 			OrderHint= order_hint;
 
@@ -1957,7 +1960,6 @@ frame_header_obu() {
 
 					for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
 					{
-						ReadRefOrderHint; 
 						stream.ReadVariable(OrderHintBits, out this.ref_order_hint[ i ], "ref_order_hint"); 
 
 						if ( ref_order_hint[ i ] != RefOrderHint[ i ] )
@@ -2056,7 +2058,7 @@ frame_header_obu() {
 					}
 					else 
 					{
-						RefFrameSignBias[ refFrame ]= get_relative_dist( hint, OrderHint) > 0 ? (uint)1 : (uint)0;
+						RefFrameSignBias[ refFrame ]= ReadGetRelativeDist( hint, OrderHint) > 0 ? (uint)1 : (uint)0;
 					}
 				}
 			}
@@ -2103,7 +2105,7 @@ frame_header_obu() {
 
 			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
-				qindex= get_qindex( 1, segmentId );
+				qindex= AomStream.GetQIndex( 1, segmentId );
 				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0 ? (uint)1 : (uint)0;
 
 				if ( LosslessArray[ segmentId ]== 0 )
@@ -2200,7 +2202,6 @@ frame_header_obu() {
 				}
 				stream.WriteFixed(2, this.frame_type, "frame_type"); 
 				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? (uint)1 : (uint)0;
-				WriteShowFrame; 
 				stream.WriteFixed(1, this.show_frame, "show_frame"); 
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
@@ -2277,7 +2278,6 @@ frame_header_obu() {
 			if ( frame_id_numbers_present_flag != 0 )
 			{
 				PrevFrameID= current_frame_id;
-				WriteCurrentFrameId; 
 				stream.WriteVariable(idLen, this.current_frame_id, "current_frame_id"); 
 				WriteMarkRefFrames( idLen ); 
 			}
@@ -2298,7 +2298,6 @@ frame_header_obu() {
 			{
 				stream.WriteFixed(1, this.frame_size_override_flag, "frame_size_override_flag"); 
 			}
-			WriteOrderHint; 
 			stream.WriteVariable(OrderHintBits, this.order_hint, "order_hint"); 
 			OrderHint= order_hint;
 
@@ -2358,7 +2357,6 @@ frame_header_obu() {
 
 					for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
 					{
-						WriteRefOrderHint; 
 						stream.WriteVariable(OrderHintBits, this.ref_order_hint[ i ], "ref_order_hint"); 
 
 						if ( ref_order_hint[ i ] != RefOrderHint[ i ] )
@@ -2457,7 +2455,7 @@ frame_header_obu() {
 					}
 					else 
 					{
-						RefFrameSignBias[ refFrame ]= get_relative_dist( hint, OrderHint) > 0 ? (uint)1 : (uint)0;
+						RefFrameSignBias[ refFrame ]= WriteGetRelativeDist( hint, OrderHint) > 0 ? (uint)1 : (uint)0;
 					}
 				}
 			}
@@ -2504,7 +2502,7 @@ frame_header_obu() {
 
 			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
-				qindex= get_qindex( 1, segmentId );
+				qindex= AomStream.GetQIndex( 1, segmentId );
 				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0 ? (uint)1 : (uint)0;
 
 				if ( LosslessArray[ segmentId ]== 0 )
@@ -2572,90 +2570,6 @@ frame_header_obu() {
 
 			n= frame_presentation_time_length_minus_1 + 1;
 			stream.WriteVariable(n, this.frame_presentation_time, "frame_presentation_time"); 
-         }
-
-    /*
-
-
- mark_ref_frames( idLen ) { 
- diffLen = delta_frame_id_length_minus_2 + 2
- for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
- if ( current_frame_id > ( 1 << diffLen ) ) {
- if ( RefFrameId[ i ] > current_frame_id ||
- RefFrameId[ i ] < ( current_frame_id - ( 1 << diffLen ) ) )
- RefValid[ i ] = 0
- } else {
- if ( RefFrameId[ i ] > current_frame_id &&
- RefFrameId[ i ] < ( ( 1 << idLen ) +
- current_frame_id 
-( 1 << diffLen ) ) )
- RefValid[ i ] = 0
- }
- }
- }
-    */
-		private int diffLen;
-
-         public void ReadMarkRefFrames(uint idLen)
-         {
-
-			diffLen= delta_frame_id_length_minus_2 + 2;
-
-			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
-			{
-
-				if ( current_frame_id > ( 1 << (int) diffLen ) )
-				{
-
-					if ( RefFrameId[ i ] > current_frame_id ||
- RefFrameId[ i ] < ( current_frame_id - ( 1 << (int) diffLen ) ) )
-					{
-						RefValid[ i ]= 0;
-					}
-				}
-				else 
-				{
-
-					if ( RefFrameId[ i ] > current_frame_id &&
- RefFrameId[ i ] < ( ( 1 << (int) idLen ) +
- current_frame_id 
-( 1 << (int) diffLen ) ) )
-					{
-						RefValid[ i ]= 0;
-					}
-				}
-			}
-         }
-
-         public void WriteMarkRefFrames(uint idLen)
-         {
-
-			diffLen= delta_frame_id_length_minus_2 + 2;
-
-			for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
-			{
-
-				if ( current_frame_id > ( 1 << (int) diffLen ) )
-				{
-
-					if ( RefFrameId[ i ] > current_frame_id ||
- RefFrameId[ i ] < ( current_frame_id - ( 1 << (int) diffLen ) ) )
-					{
-						RefValid[ i ]= 0;
-					}
-				}
-				else 
-				{
-
-					if ( RefFrameId[ i ] > current_frame_id &&
- RefFrameId[ i ] < ( ( 1 << (int) idLen ) +
- current_frame_id 
-( 1 << (int) diffLen ) ) )
-					{
-						RefValid[ i ]= 0;
-					}
-				}
-			}
          }
 
     /*
@@ -2899,7 +2813,7 @@ frame_header_obu() {
 
 			if ( is_filter_switchable == 1 )
 			{
-				interpolation_filter= SWITCHABLE;
+				interpolation_filter= AV1InterpolationFilter.SWITCHABLE;
 			}
 			else 
 			{
@@ -2914,7 +2828,7 @@ frame_header_obu() {
 
 			if ( is_filter_switchable == 1 )
 			{
-				interpolation_filter= SWITCHABLE;
+				interpolation_filter= AV1InterpolationFilter.SWITCHABLE;
 			}
 			else 
 			{
@@ -3099,10 +3013,10 @@ tile_info () {
 			sbSize= sbShift + 2;
 			maxTileWidthSb= AV1Constants.MAX_TILE_WIDTH >> (int)sbSize;
 			maxTileAreaSb= AV1Constants.MAX_TILE_AREA >> (int)( 2 * sbSize );
-			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
-			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
-			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
+			minLog2TileCols= ReadTileLog2(maxTileWidthSb, sbCols);
+			maxLog2TileCols= ReadTileLog2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
+			maxLog2TileRows= ReadTileLog2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
+			minLog2Tiles= Math.Max(minLog2TileCols, ReadTileLog2(maxTileAreaSb, sbRows * sbCols));
 			stream.ReadFixed(1, out this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
@@ -3175,7 +3089,7 @@ tile_info () {
 				}
 				MiColStarts[i]= MiCols;
 				TileCols= i;
-				TileColsLog2= tile_log2(1, TileCols);
+				TileColsLog2= ReadTileLog2(1, TileCols);
 
 				if ( minLog2Tiles > 0 )
 				{
@@ -3198,7 +3112,7 @@ tile_info () {
 				}
 				MiRowStarts[ i ]= MiRows;
 				TileRows= i;
-				TileRowsLog2= tile_log2(1, TileRows);
+				TileRowsLog2= ReadTileLog2(1, TileRows);
 			}
 
 			if ( TileColsLog2 > 0 || TileRowsLog2 > 0 )
@@ -3222,10 +3136,10 @@ tile_info () {
 			sbSize= sbShift + 2;
 			maxTileWidthSb= AV1Constants.MAX_TILE_WIDTH >> (int)sbSize;
 			maxTileAreaSb= AV1Constants.MAX_TILE_AREA >> (int)( 2 * sbSize );
-			minLog2TileCols= tile_log2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= tile_log2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
-			maxLog2TileRows= tile_log2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
-			minLog2Tiles= Math.Max(minLog2TileCols, tile_log2(maxTileAreaSb, sbRows * sbCols));
+			minLog2TileCols= WriteTileLog2(maxTileWidthSb, sbCols);
+			maxLog2TileCols= WriteTileLog2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
+			maxLog2TileRows= WriteTileLog2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
+			minLog2Tiles= Math.Max(minLog2TileCols, WriteTileLog2(maxTileAreaSb, sbRows * sbCols));
 			stream.WriteFixed(1, this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
@@ -3298,7 +3212,7 @@ tile_info () {
 				}
 				MiColStarts[i]= MiCols;
 				TileCols= i;
-				TileColsLog2= tile_log2(1, TileCols);
+				TileColsLog2= WriteTileLog2(1, TileCols);
 
 				if ( minLog2Tiles > 0 )
 				{
@@ -3321,7 +3235,7 @@ tile_info () {
 				}
 				MiRowStarts[ i ]= MiRows;
 				TileRows= i;
-				TileRowsLog2= tile_log2(1, TileRows);
+				TileRowsLog2= WriteTileLog2(1, TileRows);
 			}
 
 			if ( TileColsLog2 > 0 || TileRowsLog2 > 0 )
@@ -3423,7 +3337,7 @@ tile_log2( blkSize, target ) {
          {
 
 			stream.ReadFixed(8, out this.base_q_idx, "base_q_idx"); 
-			DeltaQYDc= read_delta_q();
+			DeltaQYDc= ReadReadDeltaq();
 
 			if ( NumPlanes > 1 )
 			{
@@ -3436,13 +3350,13 @@ tile_log2( blkSize, target ) {
 				{
 					diff_uv_delta= 0;
 				}
-				DeltaQUDc= read_delta_q();
-				DeltaQUAc= read_delta_q();
+				DeltaQUDc= ReadReadDeltaq();
+				DeltaQUAc= ReadReadDeltaq();
 
 				if ( diff_uv_delta != 0 )
 				{
-					DeltaQVDc= read_delta_q();
-					DeltaQVAc= read_delta_q();
+					DeltaQVDc= ReadReadDeltaq();
+					DeltaQVAc= ReadReadDeltaq();
 				}
 				else 
 				{
@@ -3479,7 +3393,7 @@ tile_log2( blkSize, target ) {
          {
 
 			stream.WriteFixed(8, this.base_q_idx, "base_q_idx"); 
-			DeltaQYDc= read_delta_q();
+			DeltaQYDc= WriteReadDeltaq();
 
 			if ( NumPlanes > 1 )
 			{
@@ -3492,13 +3406,13 @@ tile_log2( blkSize, target ) {
 				{
 					diff_uv_delta= 0;
 				}
-				DeltaQUDc= read_delta_q();
-				DeltaQUAc= read_delta_q();
+				DeltaQUDc= WriteReadDeltaq();
+				DeltaQUAc= WriteReadDeltaq();
 
 				if ( diff_uv_delta != 0 )
 				{
-					DeltaQVDc= read_delta_q();
-					DeltaQVAc= read_delta_q();
+					DeltaQVDc= WriteReadDeltaq();
+					DeltaQVAc= WriteReadDeltaq();
 				}
 				else 
 				{
@@ -3700,12 +3614,12 @@ tile_log2( blkSize, target ) {
 								if ( Segmentation_Feature_Signed[ j ] == 1 )
 								{
 									stream.ReadSignedIntVar(1+bitsToRead, out this.feature_value, "feature_value"); 
-									clippedValue= Clip3( -limit, limit, feature_value);
+									clippedValue= AomStream.Clip3( -limit, limit, feature_value);
 								}
 								else 
 								{
 									stream.ReadVariable(bitsToRead, out this.feature_value, "feature_value"); 
-									clippedValue= Clip3( 0, limit, feature_value);
+									clippedValue= AomStream.Clip3( 0, limit, feature_value);
 								}
 							}
 							FeatureData[ i ][ j ]= clippedValue;
@@ -3794,12 +3708,12 @@ tile_log2( blkSize, target ) {
 								if ( Segmentation_Feature_Signed[ j ] == 1 )
 								{
 									stream.WriteSignedIntVar(1+bitsToRead, this.feature_value, "feature_value"); 
-									clippedValue= Clip3( -limit, limit, feature_value);
+									clippedValue= AomStream.Clip3( -limit, limit, feature_value);
 								}
 								else 
 								{
 									stream.WriteVariable(bitsToRead, this.feature_value, "feature_value"); 
-									clippedValue= Clip3( 0, limit, feature_value);
+									clippedValue= AomStream.Clip3( 0, limit, feature_value);
 								}
 							}
 							FeatureData[ i ][ j ]= clippedValue;
@@ -4654,21 +4568,21 @@ lr_params() {
 				{
 					refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
-					if ( get_relative_dist( refHint, OrderHint ) < 0 )
+					if ( ReadGetRelativeDist( refHint, OrderHint ) < 0 )
 					{
 
 						if ( forwardIdx < 0 ||
- get_relative_dist( refHint, forwardHint) > 0 )
+ ReadGetRelativeDist( refHint, forwardHint) > 0 )
 						{
 							forwardIdx= i;
 							forwardHint= refHint;
 						}
 					}
-					else if ( get_relative_dist( refHint, OrderHint) > 0 )
+					else if ( ReadGetRelativeDist( refHint, OrderHint) > 0 )
 					{
 
 						if ( backwardIdx < 0 ||
- get_relative_dist( refHint, backwardHint) < 0 )
+ ReadGetRelativeDist( refHint, backwardHint) < 0 )
 						{
 							backwardIdx= i;
 							backwardHint= refHint;
@@ -4694,11 +4608,11 @@ lr_params() {
 					{
 						refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
-						if ( get_relative_dist( refHint, forwardHint ) < 0 )
+						if ( ReadGetRelativeDist( refHint, forwardHint ) < 0 )
 						{
 
 							if ( secondForwardIdx < 0 ||
- get_relative_dist( refHint, secondForwardHint ) > 0 )
+ ReadGetRelativeDist( refHint, secondForwardHint ) > 0 )
 							{
 								secondForwardIdx= i;
 								secondForwardHint= refHint;
@@ -4746,21 +4660,21 @@ lr_params() {
 				{
 					refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
-					if ( get_relative_dist( refHint, OrderHint ) < 0 )
+					if ( WriteGetRelativeDist( refHint, OrderHint ) < 0 )
 					{
 
 						if ( forwardIdx < 0 ||
- get_relative_dist( refHint, forwardHint) > 0 )
+ WriteGetRelativeDist( refHint, forwardHint) > 0 )
 						{
 							forwardIdx= i;
 							forwardHint= refHint;
 						}
 					}
-					else if ( get_relative_dist( refHint, OrderHint) > 0 )
+					else if ( WriteGetRelativeDist( refHint, OrderHint) > 0 )
 					{
 
 						if ( backwardIdx < 0 ||
- get_relative_dist( refHint, backwardHint) < 0 )
+ WriteGetRelativeDist( refHint, backwardHint) < 0 )
 						{
 							backwardIdx= i;
 							backwardHint= refHint;
@@ -4786,11 +4700,11 @@ lr_params() {
 					{
 						refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
-						if ( get_relative_dist( refHint, forwardHint ) < 0 )
+						if ( WriteGetRelativeDist( refHint, forwardHint ) < 0 )
 						{
 
 							if ( secondForwardIdx < 0 ||
- get_relative_dist( refHint, secondForwardHint ) > 0 )
+ WriteGetRelativeDist( refHint, secondForwardHint ) > 0 )
 							{
 								secondForwardIdx= i;
 								secondForwardHint= refHint;
@@ -4872,11 +4786,6 @@ lr_params() {
 		private int type;
 		private uint is_translation;
 		private int read_global_param;
-		private int read_global_param0;
-		private int read_global_param1;
-		private int read_global_param00;
-		private int read_global_param2;
-		private int read_global_param01;
 
 			uint refc = 0;
          public void ReadGlobalMotionParams()
@@ -4930,7 +4839,7 @@ lr_params() {
 					if ( type == AV1Constants.AFFINE )
 					{
 						ReadReadGlobalParam(type, refc, 4); 
-						ReadReadGlobalParam0(type, refc, 5); 
+						ReadReadGlobalParam(type, refc, 5); 
 					}
 					else 
 					{
@@ -4942,7 +4851,7 @@ lr_params() {
 				if ( type >= AV1Constants.TRANSLATION )
 				{
 					ReadReadGlobalParam(type, refc, 0); 
-					ReadReadGlobalParam0(type, refc, 1); 
+					ReadReadGlobalParam(type, refc, 1); 
 				}
 			}
          }
@@ -4998,7 +4907,7 @@ lr_params() {
 					if ( type == AV1Constants.AFFINE )
 					{
 						WriteReadGlobalParam(type, refc, 4); 
-						WriteReadGlobalParam0(type, refc, 5); 
+						WriteReadGlobalParam(type, refc, 5); 
 					}
 					else 
 					{
@@ -5010,7 +4919,7 @@ lr_params() {
 				if ( type >= AV1Constants.TRANSLATION )
 				{
 					WriteReadGlobalParam(type, refc, 0); 
-					WriteReadGlobalParam0(type, refc, 1); 
+					WriteReadGlobalParam(type, refc, 1); 
 				}
 			}
          }
@@ -5047,7 +4956,7 @@ read_global_param( type, refc, idx ) {
 		private int mx;
 		private int r;
 
-         public void ReadReadGlobalParam(uint type, uint refc, uint idx)
+         public void ReadReadGlobalParam(int type, uint refc, uint idx)
          {
 
 			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
@@ -5072,10 +4981,10 @@ read_global_param( type, refc, idx ) {
 			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
 			mx= (1 << absBits);
 			r= (PrevGmParams[refc][idx] >> (int)precDiff) - sub;
-			gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
+			gm_params[refc][idx]= (ReadDecodeSignedSubexpWithRef( -mx, mx + 1, r ) << precDiff) + round;
          }
 
-         public void WriteReadGlobalParam(uint type, uint refc, uint idx)
+         public void WriteReadGlobalParam(int type, uint refc, uint idx)
          {
 
 			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
@@ -5100,7 +5009,7 @@ read_global_param( type, refc, idx ) {
 			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
 			mx= (1 << absBits);
 			r= (PrevGmParams[refc][idx] >> (int)precDiff) - sub;
-			gm_params[refc][idx]= (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round;
+			gm_params[refc][idx]= (WriteDecodeSignedSubexpWithRef( -mx, mx + 1, r ) << precDiff) + round;
          }
 
     /*
@@ -5598,21 +5507,21 @@ superres_params() {
  return x + low
 }
     */
-		private uint low;
-		private uint high;
+		private int low;
+		private int high;
 		private int x;
 
-         public void ReadDecodeSignedSubexpWithRef(uint low, uint high, uint r)
+         public void ReadDecodeSignedSubexpWithRef(int low, int high, int r)
          {
 
-			x= decode_unsigned_subexp_with_ref(high - low, r - low);
+			x= ReadDecodeUnsignedSubexpWithRef(high - low, r - low);
 			return x + low;
          }
 
-         public void WriteDecodeSignedSubexpWithRef(uint low, uint high, uint r)
+         public void WriteDecodeSignedSubexpWithRef(int low, int high, int r)
          {
 
-			x= decode_unsigned_subexp_with_ref(high - low, r - low);
+			x= WriteDecodeUnsignedSubexpWithRef(high - low, r - low);
 			return x + low;
          }
 
@@ -5630,33 +5539,33 @@ decode_unsigned_subexp_with_ref( mx, r ) {
     */
 		private int v;
 
-         public void ReadDecodeUnsignedSubexpWithRef(uint mx, uint r)
+         public void ReadDecodeUnsignedSubexpWithRef(uint mx, int r)
          {
 
-			v= decode_subexp( mx );
+			v= ReadDecodeSubexp( mx );
 
 			if ( (r << (int) 1) <= mx )
 			{
-				return inverse_recenter(r, v);
+				return ReadInverseRecenter(r, v);
 			}
 			else 
 			{
-				return mx - 1 - inverse_recenter(mx - 1 - r, v);
+				return mx - 1 - ReadInverseRecenter(mx - 1 - r, v);
 			}
          }
 
-         public void WriteDecodeUnsignedSubexpWithRef(uint mx, uint r)
+         public void WriteDecodeUnsignedSubexpWithRef(uint mx, int r)
          {
 
-			v= decode_subexp( mx );
+			v= WriteDecodeSubexp( mx );
 
 			if ( (r << (int) 1) <= mx )
 			{
-				return inverse_recenter(r, v);
+				return WriteInverseRecenter(r, v);
 			}
 			else 
 			{
-				return mx - 1 - inverse_recenter(mx - 1 - r, v);
+				return mx - 1 - WriteInverseRecenter(mx - 1 - r, v);
 			}
          }
 
@@ -5776,7 +5685,7 @@ inverse_recenter( r, v ) {
  }
     */
 
-         public void ReadInverseRecenter(uint r, uint v)
+         public void ReadInverseRecenter(int r, uint v)
          {
 
 
@@ -5786,15 +5695,15 @@ inverse_recenter( r, v ) {
 			}
 			else if ( v & 1 != 0 )
 			{
-				return r - ((v + 1) >> 1);
+				return r - ((v + 1) >> (int)1);
 			}
 			else 
 			{
-				return r + (v >> 1);
+				return r + (v >> (int)1);
 			}
          }
 
-         public void WriteInverseRecenter(uint r, uint v)
+         public void WriteInverseRecenter(int r, uint v)
          {
 
 
@@ -5804,11 +5713,11 @@ inverse_recenter( r, v ) {
 			}
 			else if ( v & 1 != 0 )
 			{
-				return r - ((v + 1) >> 1);
+				return r - ((v + 1) >> (int)1);
 			}
 			else 
 			{
-				return r + (v >> 1);
+				return r + (v >> (int)1);
 			}
          }
 

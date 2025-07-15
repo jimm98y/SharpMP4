@@ -22,7 +22,7 @@ namespace AomGenerator.CSharp
 
         public string FixCondition(string value, MethodType methodType)
         {
-            return FixStatement(value);
+            return FixStatement(value, methodType);
         }
 
         public string FixFieldValue(string fieldValue)
@@ -35,8 +35,10 @@ namespace AomGenerator.CSharp
             // nothing to do
         }
 
-        public string FixStatement(string value)
+        public string FixStatement(string value, MethodType methodType)
         {
+            string methodPrefix = methodType == MethodType.Read ? "Read" : "Write";
+
             value = value.Replace("Min(", "Math.Min(");
             value = value.Replace("Max(", "Math.Max(");
             value = value.Replace(" >> ", " >> (int)");
@@ -262,6 +264,11 @@ namespace AomGenerator.CSharp
             value = value.Replace("CP_SMPTE_432", "AV1ColorPrimaries.CP_SMPTE_432");
             value = value.Replace("CP_EBU_3213", "AV1ColorPrimaries.CP_EBU_3213");
 
+            value = value.Replace("TC_RESERVED_0", "AV1TransferCharacteristics.TC_RESERVED_0");
+            value = value.Replace("TC_BT_709", "AV1TransferCharacteristics.TC_BT_709");
+            value = value.Replace("TC_UNSPECIFIED", "AV1TransferCharacteristics.TC_UNSPECIFIED");
+            value = value.Replace("TC_RESERVED_3", "AV1TransferCharacteristics.TC_RESERVED_3");
+            value = value.Replace("TC_BT_470_M", "AV1TransferCharacteristics.TC_BT_470_M");
             value = value.Replace("TC_BT_470_B_G", "AV1TransferCharacteristics.TC_BT_470_B_G");
             value = value.Replace("TC_BT_601", "AV1TransferCharacteristics.TC_BT_601");
             value = value.Replace("TC_SMPTE_240", "AV1TransferCharacteristics.TC_SMPTE_240");
@@ -348,6 +355,25 @@ namespace AomGenerator.CSharp
             value = value.Replace("TX_MODE_LARGEST", "AV1TxModes.TX_MODE_LARGEST");
             value = value.Replace("TX_MODE_SELECT", "AV1TxModes.TX_MODE_SELECT");
 
+            value = value.Replace(" EIGHTTAP", " AV1InterpolationFilter.EIGHTTAP");
+            value = value.Replace("EIGHTTAP_SMOOTH", "AV1InterpolationFilter.EIGHTTAP_SMOOTH");
+            value = value.Replace("EIGHTTAP_SHARP", "AV1InterpolationFilter.EIGHTTAP_SHARP");
+            value = value.Replace("BILINEAR", "AV1InterpolationFilter.BILINEAR");
+            value = value.Replace("SWITCHABLE", "AV1InterpolationFilter.SWITCHABLE");
+
+            value = value.Replace("choose_operating_point", "ChooseOperatingPoint");
+            value = value.Replace("Clip3", "AomStream.Clip3");
+            value = value.Replace("get_qindex", "AomStream.GetQIndex");
+            value = value.Replace("mark_ref_frames", "AomStream.MarkRefFrames");
+
+            value = value.Replace("tile_log2", methodType + "TileLog2");
+            value = value.Replace("read_delta_q", methodType + "ReadDeltaq");
+            value = value.Replace("inverse_recenter", methodType + "InverseRecenter");
+            value = value.Replace("get_relative_dist", methodType + "GetRelativeDist");
+            value = value.Replace("decode_unsigned_subexp_with_ref", methodType + "DecodeUnsignedSubexpWithRef");
+            value = value.Replace("decode_signed_subexp_with_ref", methodType + "DecodeSignedSubexpWithRef");
+            value = value.Replace("decode_subexp", methodType + "DecodeSubexp");
+
             return value;
         }
 
@@ -368,15 +394,15 @@ namespace AomGenerator.CSharp
                 { "op", "f(32)" },
                 { "a", "f(32)" },
                 { "b", "f(32)" },
-                { "idLen", "f(32)" },
+                { "idLen", "su(32)" },
                 { "blkSize", "f(32)" },
                 { "target", "f(32)" },
-                { "type", "f(32)" },
+                { "type", "su(32)" },
                 { "refc", "f(32)" },
                 { "idx", "f(32)" },
-                { "low", "f(32)" },
-                { "high", "f(32)" },
-                { "r", "f(32)" },
+                { "low", "su(32)" },
+                { "high", "su(32)" },
+                { "r", "su(32)" },
                 { "mx", "f(32)" },
                 { "numSyms", "f(32)" },
                 { "v", "f(32)" },
