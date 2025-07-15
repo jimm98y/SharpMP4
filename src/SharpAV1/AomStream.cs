@@ -84,7 +84,22 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong WriteVariable(uint length, uint value, string name)
+        public ulong ReadVariable(int length, out uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong ReadVariable(int length, out int value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteVariable(int length, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ulong WriteVariable(int length, int value, string name)
         {
             throw new NotImplementedException();
         }
@@ -135,16 +150,17 @@ namespace SharpAV1
         {
             throw new NotImplementedException();
         }
-        public ulong WriteUnsignedInt(uint length, int whileIndex, Dictionary<int, uint> value, string name)
+
+        public ulong WriteUnsignedInt(int length, int whileIndex, uint value, string name)
         {
             throw new NotImplementedException();
         }
-
 
         public ulong ReadNS(int length, out uint value, string name)
         {
             throw new NotImplementedException();
         }
+
         internal ulong WriteNS(int length, uint value, string name)
         {
             throw new NotImplementedException();

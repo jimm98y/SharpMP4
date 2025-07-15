@@ -371,7 +371,7 @@ byte_alignment() {
          {
 
 
-			while ( (stream.GetPosition() & 7) != 0 )
+			while ( stream.GetPosition() & 7 )
 			{
 				stream.ReadFixed(1, out this.zero_bit, "zero_bit"); 
 			}
@@ -381,7 +381,7 @@ byte_alignment() {
          {
 
 
-			while ( (stream.GetPosition() & 7) != 0 )
+			while ( stream.GetPosition() & 7 )
 			{
 				stream.WriteFixed(1, this.zero_bit, "zero_bit"); 
 			}
@@ -1194,7 +1194,7 @@ color_config() {
 			}
 			else if ( color_primaries == AV1ColorPrimaries.CP_BT_709 &&
  transfer_characteristics == AV1TransferCharacteristics.TC_SRGB &&
- matrix_coefficients == MC_AV1Constants.IDENTITY )
+ matrix_coefficients == AV1MatrixCoefficients.MC_IDENTITY )
 			{
 				color_range= 1;
 				subsampling_x= 0;
@@ -1295,7 +1295,7 @@ color_config() {
 			}
 			else if ( color_primaries == AV1ColorPrimaries.CP_BT_709 &&
  transfer_characteristics == AV1TransferCharacteristics.TC_SRGB &&
- matrix_coefficients == MC_AV1Constants.IDENTITY )
+ matrix_coefficients == AV1MatrixCoefficients.MC_IDENTITY )
 			{
 				color_range= 1;
 				subsampling_x= 0;
@@ -1761,7 +1761,7 @@ frame_header_obu() {
 			if ( reduced_still_picture_header != 0 )
 			{
 				show_existing_frame= 0;
-				frame_type= KEY_FRAME;
+				frame_type= AV1FrameTypes.KEY_FRAME;
 				FrameIsIntra= 1;
 				show_frame= 1;
 				showable_frame= 0;
@@ -1786,7 +1786,7 @@ frame_header_obu() {
 					}
 					frame_type= RefFrameType[ frame_to_show_map_idx ];
 
-					if ( frame_type == KEY_FRAME )
+					if ( frame_type == AV1FrameTypes.KEY_FRAME )
 					{
 						refresh_frame_flags= allFrames;
 					}
@@ -1798,7 +1798,7 @@ frame_header_obu() {
 					return;
 				}
 				stream.ReadFixed(2, out this.frame_type, "frame_type"); 
-				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? (uint)1 : (uint)0;
+				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? (uint)1 : (uint)0;
 				ReadShowFrame; 
 				stream.ReadFixed(1, out this.show_frame, "show_frame"); 
 
@@ -1809,14 +1809,14 @@ frame_header_obu() {
 
 				if ( show_frame != 0 )
 				{
-					showable_frame= frame_type != KEY_FRAME;
+					showable_frame= frame_type != AV1FrameTypes.KEY_FRAME;
 				}
 				else 
 				{
 					stream.ReadFixed(1, out this.showable_frame, "showable_frame"); 
 				}
 
-				if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame != 0 ) )
+				if ( frame_type == AV1FrameTypes.SWITCH_FRAME || ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
 				{
 					error_resilient_mode= 1;
 				}
@@ -1826,7 +1826,7 @@ frame_header_obu() {
 				}
 			}
 
-			if ( frame_type == KEY_FRAME && show_frame != 0 )
+			if ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 )
 			{
 
 				for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
@@ -1885,7 +1885,7 @@ frame_header_obu() {
 				current_frame_id= 0;
 			}
 
-			if ( frame_type == SWITCH_FRAME )
+			if ( frame_type == AV1FrameTypes.SWITCH_FRAME )
 			{
 				frame_size_override_flag= 1;
 			}
@@ -1939,8 +1939,8 @@ frame_header_obu() {
 			use_ref_frame_mvs= 0;
 			allow_intrabc= 0;
 
-			if ( frame_type == SWITCH_FRAME ||
- ( frame_type == KEY_FRAME && show_frame != 0 ) )
+			if ( frame_type == AV1FrameTypes.SWITCH_FRAME ||
+ ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
 			{
 				refresh_frame_flags= allFrames;
 			}
@@ -2162,7 +2162,7 @@ frame_header_obu() {
 			if ( reduced_still_picture_header != 0 )
 			{
 				show_existing_frame= 0;
-				frame_type= KEY_FRAME;
+				frame_type= AV1FrameTypes.KEY_FRAME;
 				FrameIsIntra= 1;
 				show_frame= 1;
 				showable_frame= 0;
@@ -2187,7 +2187,7 @@ frame_header_obu() {
 					}
 					frame_type= RefFrameType[ frame_to_show_map_idx ];
 
-					if ( frame_type == KEY_FRAME )
+					if ( frame_type == AV1FrameTypes.KEY_FRAME )
 					{
 						refresh_frame_flags= allFrames;
 					}
@@ -2199,7 +2199,7 @@ frame_header_obu() {
 					return;
 				}
 				stream.WriteFixed(2, this.frame_type, "frame_type"); 
-				FrameIsIntra= (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? (uint)1 : (uint)0;
+				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? (uint)1 : (uint)0;
 				WriteShowFrame; 
 				stream.WriteFixed(1, this.show_frame, "show_frame"); 
 
@@ -2210,14 +2210,14 @@ frame_header_obu() {
 
 				if ( show_frame != 0 )
 				{
-					showable_frame= frame_type != KEY_FRAME;
+					showable_frame= frame_type != AV1FrameTypes.KEY_FRAME;
 				}
 				else 
 				{
 					stream.WriteFixed(1, this.showable_frame, "showable_frame"); 
 				}
 
-				if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame != 0 ) )
+				if ( frame_type == AV1FrameTypes.SWITCH_FRAME || ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
 				{
 					error_resilient_mode= 1;
 				}
@@ -2227,7 +2227,7 @@ frame_header_obu() {
 				}
 			}
 
-			if ( frame_type == KEY_FRAME && show_frame != 0 )
+			if ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 )
 			{
 
 				for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
@@ -2286,7 +2286,7 @@ frame_header_obu() {
 				current_frame_id= 0;
 			}
 
-			if ( frame_type == SWITCH_FRAME )
+			if ( frame_type == AV1FrameTypes.SWITCH_FRAME )
 			{
 				frame_size_override_flag= 1;
 			}
@@ -2340,8 +2340,8 @@ frame_header_obu() {
 			use_ref_frame_mvs= 0;
 			allow_intrabc= 0;
 
-			if ( frame_type == SWITCH_FRAME ||
- ( frame_type == KEY_FRAME && show_frame != 0 ) )
+			if ( frame_type == AV1FrameTypes.SWITCH_FRAME ||
+ ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
 			{
 				refresh_frame_flags= allFrames;
 			}
@@ -4146,9 +4146,9 @@ lr_params() {
 			if ( AllLossless != 0 || allow_intrabc != 0 ||
  enable_restoration== 0 )
 			{
-				FrameRestorationType[0]= RESTORE_NONE;
-				FrameRestorationType[1]= RESTORE_NONE;
-				FrameRestorationType[2]= RESTORE_NONE;
+				FrameRestorationType[0]= AV1FrameRestorationType.RESTORE_NONE;
+				FrameRestorationType[1]= AV1FrameRestorationType.RESTORE_NONE;
+				FrameRestorationType[2]= AV1FrameRestorationType.RESTORE_NONE;
 				UsesLr= 0;
 				return;
 			}
@@ -4160,7 +4160,7 @@ lr_params() {
 				stream.ReadFixed(2, out this.lr_type, "lr_type"); 
 				FrameRestorationType[i]= Remap_Lr_Type[lr_type];
 
-				if ( FrameRestorationType[i] != RESTORE_NONE )
+				if ( FrameRestorationType[i] != AV1FrameRestorationType.RESTORE_NONE )
 				{
 					UsesLr= 1;
 
@@ -4211,9 +4211,9 @@ lr_params() {
 			if ( AllLossless != 0 || allow_intrabc != 0 ||
  enable_restoration== 0 )
 			{
-				FrameRestorationType[0]= RESTORE_NONE;
-				FrameRestorationType[1]= RESTORE_NONE;
-				FrameRestorationType[2]= RESTORE_NONE;
+				FrameRestorationType[0]= AV1FrameRestorationType.RESTORE_NONE;
+				FrameRestorationType[1]= AV1FrameRestorationType.RESTORE_NONE;
+				FrameRestorationType[2]= AV1FrameRestorationType.RESTORE_NONE;
 				UsesLr= 0;
 				return;
 			}
@@ -4225,7 +4225,7 @@ lr_params() {
 				stream.WriteFixed(2, this.lr_type, "lr_type"); 
 				FrameRestorationType[i]= Remap_Lr_Type[lr_type];
 
-				if ( FrameRestorationType[i] != RESTORE_NONE )
+				if ( FrameRestorationType[i] != AV1FrameRestorationType.RESTORE_NONE )
 				{
 					UsesLr= 1;
 
@@ -4370,7 +4370,7 @@ lr_params() {
 				if ( loop_filter_delta_update == 1 )
 				{
 
-					for ( i = 0; i < TOTAL_AV1Constants.REFS_PER_FRAME; i++ )
+					for ( i = 0; i < AV1Constants.TOTAL_REFS_PER_FRAME; i++ )
 					{
 						stream.ReadFixed(1, out this.update_ref_delta, "update_ref_delta"); 
 
@@ -4438,7 +4438,7 @@ lr_params() {
 				if ( loop_filter_delta_update == 1 )
 				{
 
-					for ( i = 0; i < TOTAL_AV1Constants.REFS_PER_FRAME; i++ )
+					for ( i = 0; i < AV1Constants.TOTAL_REFS_PER_FRAME; i++ )
 					{
 						stream.WriteFixed(1, this.update_ref_delta, "update_ref_delta"); 
 
@@ -4486,7 +4486,7 @@ lr_params() {
 
 			if ( CodedLossless == 1 )
 			{
-				TxMode= ONLY_4X4;
+				TxMode= AV1TxModes.ONLY_4X4;
 			}
 			else 
 			{
@@ -4494,11 +4494,11 @@ lr_params() {
 
 				if ( tx_mode_select != 0 )
 				{
-					TxMode= TX_MODE_SELECT;
+					TxMode= AV1TxModes.TX_MODE_SELECT;
 				}
 				else 
 				{
-					TxMode= TX_MODE_LARGEST;
+					TxMode= AV1TxModes.TX_MODE_LARGEST;
 				}
 			}
          }
@@ -4509,7 +4509,7 @@ lr_params() {
 
 			if ( CodedLossless == 1 )
 			{
-				TxMode= ONLY_4X4;
+				TxMode= AV1TxModes.ONLY_4X4;
 			}
 			else 
 			{
@@ -4517,11 +4517,11 @@ lr_params() {
 
 				if ( tx_mode_select != 0 )
 				{
-					TxMode= TX_MODE_SELECT;
+					TxMode= AV1TxModes.TX_MODE_SELECT;
 				}
 				else 
 				{
-					TxMode= TX_MODE_LARGEST;
+					TxMode= AV1TxModes.TX_MODE_LARGEST;
 				}
 			}
          }
@@ -5244,7 +5244,7 @@ read_global_param( type, refc, idx ) {
 			}
 			stream.ReadFixed(16, out this.grain_seed, "grain_seed"); 
 
-			if ( frame_type == INTER_FRAME )
+			if ( frame_type == AV1FrameTypes.INTER_FRAME )
 			{
 				stream.ReadFixed(1, out this.update_grain, "update_grain"); 
 			}
@@ -5377,7 +5377,7 @@ read_global_param( type, refc, idx ) {
 			}
 			stream.WriteFixed(16, this.grain_seed, "grain_seed"); 
 
-			if ( frame_type == INTER_FRAME )
+			if ( frame_type == AV1FrameTypes.INTER_FRAME )
 			{
 				stream.WriteFixed(1, this.update_grain, "update_grain"); 
 			}
@@ -5891,23 +5891,23 @@ metadata_obu() {
 
 			stream.ReadLeb128( out this.metadata_type, "metadata_type"); 
 
-			if ( metadata_type == METADATA_TYPE_ITUT_T35 )
+			if ( metadata_type == AV1MetadataType.METADATA_TYPE_ITUT_T35 )
 			{
 				ReadMetadataItutT35(); 
 			}
-			else if ( metadata_type == METADATA_TYPE_HDR_CLL )
+			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_HDR_CLL )
 			{
 				ReadMetadataHdrCll(); 
 			}
-			else if ( metadata_type == METADATA_TYPE_HDR_MDCV )
+			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_HDR_MDCV )
 			{
 				ReadMetadataHdrMdcv(); 
 			}
-			else if ( metadata_type == METADATA_TYPE_SCALABILITY )
+			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_SCALABILITY )
 			{
 				ReadMetadataScalability(); 
 			}
-			else if ( metadata_type == METADATA_TYPE_TIMECODE )
+			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_TIMECODE )
 			{
 				ReadMetadataTimecode(); 
 			}
@@ -5918,23 +5918,23 @@ metadata_obu() {
 
 			stream.WriteLeb128( this.metadata_type, "metadata_type"); 
 
-			if ( metadata_type == METADATA_TYPE_ITUT_T35 )
+			if ( metadata_type == AV1MetadataType.METADATA_TYPE_ITUT_T35 )
 			{
 				WriteMetadataItutT35(); 
 			}
-			else if ( metadata_type == METADATA_TYPE_HDR_CLL )
+			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_HDR_CLL )
 			{
 				WriteMetadataHdrCll(); 
 			}
-			else if ( metadata_type == METADATA_TYPE_HDR_MDCV )
+			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_HDR_MDCV )
 			{
 				WriteMetadataHdrMdcv(); 
 			}
-			else if ( metadata_type == METADATA_TYPE_SCALABILITY )
+			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_SCALABILITY )
 			{
 				WriteMetadataScalability(); 
 			}
-			else if ( metadata_type == METADATA_TYPE_TIMECODE )
+			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_TIMECODE )
 			{
 				WriteMetadataTimecode(); 
 			}
@@ -6076,7 +6076,7 @@ metadata_scalability() {
 
 			stream.ReadFixed(8, out this.scalability_mode_idc, "scalability_mode_idc"); 
 
-			if ( scalability_mode_idc == SCALABILITY_SS )
+			if ( scalability_mode_idc == AV1ScalabilityModeIdc.SCALABILITY_SS )
 			{
 				ReadScalabilityStructure(); 
 			}
@@ -6087,7 +6087,7 @@ metadata_scalability() {
 
 			stream.WriteFixed(8, this.scalability_mode_idc, "scalability_mode_idc"); 
 
-			if ( scalability_mode_idc == SCALABILITY_SS )
+			if ( scalability_mode_idc == AV1ScalabilityModeIdc.SCALABILITY_SS )
 			{
 				WriteScalabilityStructure(); 
 			}

@@ -296,4 +296,69 @@
         public const int CSP_COLOCATED = 2;
         public const int CSP_RESERVED = 3;
     }
+
+    public static class AV1FrameTypes
+    {
+        public const int KEY_FRAME = 0;
+        public const int INTER_FRAME = 1;
+        public const int INTRA_ONLY_FRAME = 2;
+        public const int SWITCH_FRAME = 3;
+    }
+
+    public static class AV1MetadataType
+    {
+        public const int METADATA_TYPE_HDR_CLL = 1;
+        public const int METADATA_TYPE_HDR_MDCV = 2;
+        public const int METADATA_TYPE_SCALABILITY = 3;
+        public const int METADATA_TYPE_ITUT_T35 = 4;
+        public const int METADATA_TYPE_TIMECODE = 5;
+    }
+
+    public static class AV1FrameRestorationType
+    {
+        public const int RESTORE_NONE = 0;
+        public const int RESTORE_SWITCHABLE = 3;
+        public const int RESTORE_WIENER = 1;
+        public const int RESTORE_SGRPROJ = 2;
+    }
+
+    public static class AV1ScalabilityModeIdc
+    {
+        public const int SCALABILITY_L1T2 = 0;
+        public const int SCALABILITY_L1T3 = 1;
+        public const int SCALABILITY_L2T1 = 2;
+        public const int SCALABILITY_L2T2 = 3;
+        public const int SCALABILITY_L2T3 = 4;
+        public const int SCALABILITY_S2T1 = 5;
+        public const int SCALABILITY_S2T2 = 6;
+        public const int SCALABILITY_S2T3 = 7;
+        public const int SCALABILITY_L2T1h = 8;
+        public const int SCALABILITY_L2T2h = 9;
+        public const int SCALABILITY_L2T3h = 10;
+        public const int SCALABILITY_S2T1h = 11;
+        public const int SCALABILITY_S2T2h = 12;
+        public const int SCALABILITY_S2T3h = 13;
+        public const int SCALABILITY_SS = 14;
+        public const int SCALABILITY_L3T1 = 15;
+        public const int SCALABILITY_L3T2 = 16;
+        public const int SCALABILITY_L3T3 = 17;
+        public const int SCALABILITY_S3T1 = 18;
+        public const int SCALABILITY_S3T2 = 19;
+        public const int SCALABILITY_S3T3 = 20;
+        public const int SCALABILITY_L3T2_KEY = 21;
+        public const int SCALABILITY_L3T3_KEY = 22;
+        public const int SCALABILITY_L4T5_KEY = 23;
+        public const int SCALABILITY_L4T7_KEY = 24;
+        public const int SCALABILITY_L3T2_KEY_SHIFT = 25;
+        public const int SCALABILITY_L3T3_KEY_SHIFT = 26;
+        public const int SCALABILITY_L4T5_KEY_SHIFT = 27;
+        public const int SCALABILITY_L4T7_KEY_SHIFT = 28;
+    }
+
+    public static class AV1TxModes
+    {
+        public const int ONLY_4X4 = 0;
+        public const int TX_MODE_LARGEST = 1;
+        public const int TX_MODE_SELECT = 2;
+    }
 }
