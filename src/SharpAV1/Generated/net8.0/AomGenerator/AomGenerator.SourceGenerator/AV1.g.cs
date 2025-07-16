@@ -17,6 +17,23 @@ namespace SharpAV1
         private void WriteResetGrainParams() { }
         private void ReadLoadGrainParams(uint p) { }
         private void WriteLoadGrainParams(uint p) { }
+        
+        private void WriteInitNonCoeffCdfs() { }
+        private void WriteSetupPastIndependence() { }
+        private void WriteLoadCdfs( uint value ) { }
+        private void WriteLoadPrevious() { }
+        private void WriteMotionFieldEstimation() { }
+        private void WriteInitCoeffCdfs() { }
+        private void WriteLoadPreviousSegmentIds() { }
+
+        private void ReadInitNonCoeffCdfs() { }
+        private void ReadSetupPastIndependence() { }
+        private void ReadLoadCdfs( uint value ) { }
+        private void ReadLoadPrevious() { }
+        private void ReadMotionFieldEstimation() { }
+        private void ReadInitCoeffCdfs() { }
+        private void ReadLoadPreviousSegmentIds() { }
+
         private int ChooseOperatingPoint() { throw new NotImplementedException(); }
 
     /*
@@ -562,8 +579,8 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		private uint frame_width_bits_minus_1;
 		private uint frame_height_bits_minus_1;
 		private int n;
-		private uint max_frame_width_minus_1;
-		private uint max_frame_height_minus_1;
+		private int max_frame_width_minus_1;
+		private int max_frame_height_minus_1;
 		private int frame_id_numbers_present_flag;
 		private uint delta_frame_id_length_minus_2;
 		private uint additional_frame_id_length_minus_1;
@@ -1046,8 +1063,8 @@ operating_parameters_info( op ) {
 }
     */
 		private uint op;
-		private uint[] decoder_buffer_delay;
-		private uint[] encoder_buffer_delay;
+		private int[] decoder_buffer_delay;
+		private int[] encoder_buffer_delay;
 		private uint[] low_delay_mode_flag;
 
          public void ReadOperatingParametersInfo(uint op)
@@ -1684,7 +1701,7 @@ frame_header_obu() {
 		private uint frame_to_show_map_idx;
 		private int temporal_point_info;
 		private int refresh_frame_flags;
-		private uint display_frame_id;
+		private int display_frame_id;
 		private int load_grain_params;
 		private int error_resilient_mode;
 		private int[] RefValid;
@@ -1694,19 +1711,19 @@ frame_header_obu() {
 		private uint allow_screen_content_tools;
 		private uint force_integer_mv;
 		private int PrevFrameID;
-		private uint current_frame_id;
+		private int current_frame_id;
 		private int mark_ref_frames;
 		private int frame_size_override_flag;
-		private uint order_hint;
+		private int order_hint;
 		private int OrderHint;
 		private int primary_ref_frame;
 		private uint buffer_removal_time_present_flag;
 		private int opPtIdc;
-		private uint[] buffer_removal_time;
+		private int[] buffer_removal_time;
 		private int allow_high_precision_mv;
 		private int use_ref_frame_mvs;
 		private int allow_intrabc;
-		private uint[] ref_order_hint;
+		private int[] ref_order_hint;
 		private int frame_size;
 		private int render_size;
 		private int frame_refs_short_signaling;
@@ -1714,7 +1731,7 @@ frame_header_obu() {
 		private uint gold_frame_idx;
 		private int set_frame_refs;
 		private uint[] ref_frame_idx;
-		private uint delta_frame_id_minus_1;
+		private int delta_frame_id_minus_1;
 		private int DeltaFrameId;
 		private int[] expectedFrameId;
 		private int frame_size_with_refs;
@@ -2556,7 +2573,7 @@ frame_header_obu() {
  frame_presentation_time f(n)
  }
     */
-		private uint frame_presentation_time;
+		private int frame_presentation_time;
 
          public void ReadTemporalPointInfo()
          {
@@ -2591,8 +2608,8 @@ frame_header_obu() {
  compute_image_size()
  }
     */
-		private uint frame_width_minus_1;
-		private uint frame_height_minus_1;
+		private int frame_width_minus_1;
+		private int frame_height_minus_1;
 		private int FrameWidth;
 		private int FrameHeight;
 		private int superres_params;
@@ -3000,7 +3017,7 @@ tile_info () {
 		private int maxTileHeightSb;
 		private int maxHeight;
 		private uint height_in_sbs_minus_1;
-		private uint context_update_tile_id;
+		private int context_update_tile_id;
 		private uint tile_size_bytes_minus_1;
 		private int TileSizeBytes;
 
@@ -3260,11 +3277,11 @@ tile_log2( blkSize, target ) {
  return k
  }
     */
-		private uint blkSize;
+		private int blkSize;
 		private int target;
 
 			uint k = 0;
-         public void ReadTileLog2(uint blkSize, int target)
+         public void ReadTileLog2(int blkSize, int target)
          {
 
 
@@ -3274,7 +3291,7 @@ tile_log2( blkSize, target ) {
 			return k;
          }
 
-         public void WriteTileLog2(uint blkSize, int target)
+         public void WriteTileLog2(int blkSize, int target)
          {
 
 
@@ -5419,7 +5436,7 @@ superres_params() {
  }
     */
 		private uint use_superres;
-		private uint coded_denom;
+		private int coded_denom;
 		private int SuperresDenom;
 
          public void ReadSuperresParams()
@@ -5539,7 +5556,7 @@ decode_unsigned_subexp_with_ref( mx, r ) {
     */
 		private int v;
 
-         public void ReadDecodeUnsignedSubexpWithRef(uint mx, int r)
+         public void ReadDecodeUnsignedSubexpWithRef(int mx, int r)
          {
 
 			v= ReadDecodeSubexp( mx );
@@ -5554,7 +5571,7 @@ decode_unsigned_subexp_with_ref( mx, r ) {
 			}
          }
 
-         public void WriteDecodeUnsignedSubexpWithRef(uint mx, int r)
+         public void WriteDecodeUnsignedSubexpWithRef(int mx, int r)
          {
 
 			v= WriteDecodeSubexp( mx );
@@ -5600,7 +5617,7 @@ decode_subexp( numSyms ) {
 		private int b2;
 		private uint subexp_final_bits;
 		private uint subexp_more_bits;
-		private uint subexp_bits;
+		private int subexp_bits;
 
          public void ReadDecodeSubexp(uint numSyms)
          {
@@ -5685,7 +5702,7 @@ inverse_recenter( r, v ) {
  }
     */
 
-         public void ReadInverseRecenter(int r, uint v)
+         public void ReadInverseRecenter(int r, int v)
          {
 
 
@@ -5703,7 +5720,7 @@ inverse_recenter( r, v ) {
 			}
          }
 
-         public void WriteInverseRecenter(int r, uint v)
+         public void WriteInverseRecenter(int r, int v)
          {
 
 
@@ -6191,7 +6208,7 @@ metadata_timecode() {
 		private uint minutes_flag;
 		private uint hours_flag;
 		private uint time_offset_length;
-		private uint time_offset_value;
+		private int time_offset_value;
 
          public void ReadMetadataTimecode()
          {
@@ -6586,7 +6603,7 @@ tile_list_entry() {
 		private uint anchor_tile_col;
 		private uint tile_data_size_minus_1;
 		private int N;
-		private uint coded_tile_data;
+		private int coded_tile_data;
 
          public void ReadTileListEntry()
          {

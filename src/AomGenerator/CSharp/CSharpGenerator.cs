@@ -62,6 +62,23 @@ namespace Sharp{type}
         private void WriteResetGrainParams() {{ }}
         private void ReadLoadGrainParams(uint p) {{ }}
         private void WriteLoadGrainParams(uint p) {{ }}
+        
+        private void WriteInitNonCoeffCdfs() {{ }}
+        private void WriteSetupPastIndependence() {{ }}
+        private void WriteLoadCdfs( uint value ) {{ }}
+        private void WriteLoadPrevious() {{ }}
+        private void WriteMotionFieldEstimation() {{ }}
+        private void WriteInitCoeffCdfs() {{ }}
+        private void WriteLoadPreviousSegmentIds() {{ }}
+
+        private void ReadInitNonCoeffCdfs() {{ }}
+        private void ReadSetupPastIndependence() {{ }}
+        private void ReadLoadCdfs( uint value ) {{ }}
+        private void ReadLoadPrevious() {{ }}
+        private void ReadMotionFieldEstimation() {{ }}
+        private void ReadInitCoeffCdfs() {{ }}
+        private void ReadLoadPreviousSegmentIds() {{ }}
+
         private int ChooseOperatingPoint() {{ throw new NotImplementedException(); }}
 ";
 
@@ -558,7 +575,7 @@ namespace Sharp{type}
                 if (b.AddedFields.FirstOrDefault(x => x.Name == field.Name) == null && b.RequiresDefinition.FirstOrDefault(x => x.Name == field.Name) == null)
                 {
                     b.AddedFields.Add(new AomField() { Name = field.Name, Value = fieldValue });
-                    return $"{GetSpacing(level)}uint {field.Name}{fieldArray}{fieldValue}".TrimEnd() + ";";
+                    return $"{GetSpacing(level)}int {field.Name}{fieldArray}{fieldValue}".TrimEnd() + ";";
                 }
                 else
                 {
@@ -718,7 +735,7 @@ namespace Sharp{type}
                     return map["su(32)[][]"];
                 }
 
-                    return map["su(32)"];
+                return map["su(32)"];
             }
 
             int arrayDimensions = 0;
@@ -767,16 +784,16 @@ namespace Sharp{type}
                 { "f(16)",                      "uint" },
                 { "f(32)",                      "uint" },
                 { "f(32)[]",                    "uint[]" },
-                { "f(b2)",                      "uint" },
-                { "f(bitsToRead)",              "uint" },
-                { "f(idLen)",                   "uint" },
-                { "f(N)",                       "uint" },
-                { "f(n)",                       "uint" },
-                { "f(OrderHintBits)",           "uint" },
-                { "f(SUPERRES_DENOM_BITS)",     "uint" },
-                { "f(tileBits)",                "uint" },
-                { "f(TileRowsLog2+TileColsLog2)", "uint" },
-                { "f(time_offset_length)",      "uint" },
+                { "f(b2)",                      "int" },
+                { "f(bitsToRead)",              "int" },
+                { "f(idLen)",                   "int" },
+                { "f(N)",                       "int" },
+                { "f(n)",                       "int" },
+                { "f(OrderHintBits)",           "int" },
+                { "f(SUPERRES_DENOM_BITS)",     "int" },
+                { "f(tileBits)",                "int" },
+                { "f(TileRowsLog2+TileColsLog2)", "int" },
+                { "f(time_offset_length)",      "int" },
                 { "L(1)",                       "uint" },
                 { "L(2)",                       "uint" },
                 { "L(3)",                       "uint" },

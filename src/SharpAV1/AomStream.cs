@@ -69,27 +69,12 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadVariable(uint length, out uint value, string name)
+        public ulong ReadVariable(long length, out int value, string name)
         {
             throw new NotImplementedException();
         }
 
-        public ulong ReadVariable(int length, out uint value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ulong ReadVariable(int length, out int value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ulong WriteVariable(int length, uint value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ulong WriteVariable(int length, int value, string name)
+        public ulong WriteVariable(long length, int value, string name)
         {
             throw new NotImplementedException();
         }
