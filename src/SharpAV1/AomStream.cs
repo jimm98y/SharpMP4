@@ -115,12 +115,12 @@ namespace SharpAV1
         }
 
 
-        public ulong ReadSignedIntVar(int length, out uint value, string name)
+        public ulong ReadSignedIntVar(int length, out int value, string name)
         {
             throw new NotImplementedException();
         }
 
-        public ulong WriteSignedIntVar(int length, uint value, string name)
+        public ulong WriteSignedIntVar(int length, int value, string name)
         {
             throw new NotImplementedException();
         }

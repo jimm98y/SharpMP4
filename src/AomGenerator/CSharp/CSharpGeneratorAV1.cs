@@ -392,11 +392,11 @@ namespace AomGenerator.CSharp
                 { "sz", "f(32)" },
                 { "nbBits", "su(64)" },
                 { "op", "f(32)" },
-                { "a", "f(32)" },
-                { "b", "f(32)" },
+                { "a", "su(32)" },
+                { "b", "su(32)" },
                 { "idLen", "su(32)" },
                 { "blkSize", "f(32)" },
-                { "target", "f(32)" },
+                { "target", "su(32)" },
                 { "type", "su(32)" },
                 { "refc", "f(32)" },
                 { "idx", "f(32)" },
@@ -472,6 +472,15 @@ namespace AomGenerator.CSharp
             definitions = definitions.Replace("[ref]", "[refc]");
             definitions = definitions.Replace(", ref,", ", refc,");
             definitions = definitions.Replace("ref++", "refc++");
+
+            // TODO: ternary operator support
+            definitions = definitions.Replace("twelve_bit ?", "twelve_bit != 0 ?");
+            definitions = definitions.Replace("high_bitdepth ?", "high_bitdepth != 0 ?");
+            definitions = definitions.Replace("mono_chrome ?", "mono_chrome != 0 ?");
+            definitions = definitions.Replace("use_128x128_superblock ?", "use_128x128_superblock != 0 ?");
+            definitions = definitions.Replace("is_translation ?", "is_translation != 0 ?");
+            definitions = definitions.Replace(" i ?", " i != 0 ?");
+
             return definitions;
         }
 

@@ -1075,16 +1075,16 @@ color_config() {
  high_bitdepth f(1)
  if ( seq_profile == 2 && high_bitdepth ) {
  twelve_bit f(1)
- BitDepth = twelve_bit ? 12 : 10
+ BitDepth = twelve_bit != 0 ? 12 : 10
  } else if ( seq_profile <= 2 ) {
- BitDepth = high_bitdepth ? 10 : 8
+ BitDepth = high_bitdepth != 0 ? 10 : 8
  }
  if ( seq_profile == 1 ) {
  mono_chrome = 0
  } else {
  mono_chrome f(1)
  }
- NumPlanes = mono_chrome ? 1 : 3
+ NumPlanes = mono_chrome != 0 ? 1 : 3
  color_description_present_flag f(1)
  if ( color_description_present_flag ) {
  color_primaries f(8)
@@ -1158,11 +1158,11 @@ color_config() {
 			if ( seq_profile == 2 && high_bitdepth != 0 )
 			{
 				stream.ReadFixed(1, out this.twelve_bit, "twelve_bit"); 
-				BitDepth= twelve_bit ? 12 : 10;
+				BitDepth= twelve_bit != 0 ? 12 : 10;
 			}
 			else if ( seq_profile <= 2 )
 			{
-				BitDepth= high_bitdepth ? 10 : 8;
+				BitDepth= high_bitdepth != 0 ? 10 : 8;
 			}
 
 			if ( seq_profile == 1 )
@@ -1173,7 +1173,7 @@ color_config() {
 			{
 				stream.ReadFixed(1, out this.mono_chrome, "mono_chrome"); 
 			}
-			NumPlanes= mono_chrome ? 1 : 3;
+			NumPlanes= mono_chrome != 0 ? 1 : 3;
 			stream.ReadFixed(1, out this.color_description_present_flag, "color_description_present_flag"); 
 
 			if ( color_description_present_flag != 0 )
@@ -1259,11 +1259,11 @@ color_config() {
 			if ( seq_profile == 2 && high_bitdepth != 0 )
 			{
 				stream.WriteFixed(1, this.twelve_bit, "twelve_bit"); 
-				BitDepth= twelve_bit ? 12 : 10;
+				BitDepth= twelve_bit != 0 ? 12 : 10;
 			}
 			else if ( seq_profile <= 2 )
 			{
-				BitDepth= high_bitdepth ? 10 : 8;
+				BitDepth= high_bitdepth != 0 ? 10 : 8;
 			}
 
 			if ( seq_profile == 1 )
@@ -1274,7 +1274,7 @@ color_config() {
 			{
 				stream.WriteFixed(1, this.mono_chrome, "mono_chrome"); 
 			}
-			NumPlanes= mono_chrome ? 1 : 3;
+			NumPlanes= mono_chrome != 0 ? 1 : 3;
 			stream.WriteFixed(1, this.color_description_present_flag, "color_description_present_flag"); 
 
 			if ( color_description_present_flag != 0 )
@@ -1804,7 +1804,7 @@ frame_header_obu() {
 					return;
 				}
 				stream.ReadFixed(2, out this.frame_type, "frame_type"); 
-				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? (uint)1 : (uint)0;
+				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME);
 				stream.ReadFixed(1, out this.show_frame, "show_frame"); 
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
@@ -2058,7 +2058,7 @@ frame_header_obu() {
 					}
 					else 
 					{
-						RefFrameSignBias[ refFrame ]= ReadGetRelativeDist( hint, OrderHint) > 0 ? (uint)1 : (uint)0;
+						RefFrameSignBias[ refFrame ]= ReadGetRelativeDist( hint, OrderHint) > 0;
 					}
 				}
 			}
@@ -2106,7 +2106,7 @@ frame_header_obu() {
 			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
 				qindex= AomStream.GetQIndex( 1, segmentId );
-				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0 ? (uint)1 : (uint)0;
+				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0;
 
 				if ( LosslessArray[ segmentId ]== 0 )
 				{
@@ -2130,7 +2130,7 @@ frame_header_obu() {
 					}
 				}
 			}
-			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
+			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth );
 			ReadLoopFilterParams(); 
 			ReadCdefParams(); 
 			ReadLrParams(); 
@@ -2201,7 +2201,7 @@ frame_header_obu() {
 					return;
 				}
 				stream.WriteFixed(2, this.frame_type, "frame_type"); 
-				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? (uint)1 : (uint)0;
+				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME);
 				stream.WriteFixed(1, this.show_frame, "show_frame"); 
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
@@ -2455,7 +2455,7 @@ frame_header_obu() {
 					}
 					else 
 					{
-						RefFrameSignBias[ refFrame ]= WriteGetRelativeDist( hint, OrderHint) > 0 ? (uint)1 : (uint)0;
+						RefFrameSignBias[ refFrame ]= WriteGetRelativeDist( hint, OrderHint) > 0;
 					}
 				}
 			}
@@ -2503,7 +2503,7 @@ frame_header_obu() {
 			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
 				qindex= AomStream.GetQIndex( 1, segmentId );
-				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0 ? (uint)1 : (uint)0;
+				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0;
 
 				if ( LosslessArray[ segmentId ]== 0 )
 				{
@@ -2527,7 +2527,7 @@ frame_header_obu() {
 					}
 				}
 			}
-			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth ) ? (uint)1 : (uint)0;
+			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth );
 			WriteLoopFilterParams(); 
 			WriteCdefParams(); 
 			WriteLrParams(); 
@@ -2848,12 +2848,12 @@ frame_header_obu() {
  return diff
 }
     */
-		private uint a;
-		private uint b;
+		private int a;
+		private int b;
 		private int diff;
 		private int m;
 
-         public void ReadGetRelativeDist(uint a, uint b)
+         public void ReadGetRelativeDist(int a, int b)
          {
 
 
@@ -2867,7 +2867,7 @@ frame_header_obu() {
 			return diff;
          }
 
-         public void WriteGetRelativeDist(uint a, uint b)
+         public void WriteGetRelativeDist(int a, int b)
          {
 
 
@@ -2885,9 +2885,9 @@ frame_header_obu() {
 
 
 tile_info () { 
- sbCols = use_128x128_superblock ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 )
- sbRows = use_128x128_superblock ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 )
- sbShift = use_128x128_superblock ? 5 : 4
+ sbCols = use_128x128_superblock != 0 ? ( ( MiCols + 31 ) >> 5 ) : ( ( MiCols + 15 ) >> 4 )
+ sbRows = use_128x128_superblock != 0 ? ( ( MiRows + 31 ) >> 5 ) : ( ( MiRows + 15 ) >> 4 )
+ sbShift = use_128x128_superblock != 0 ? 5 : 4
  sbSize = sbShift + 2
  maxTileWidthSb = MAX_TILE_WIDTH >> sbSize
  maxTileAreaSb = MAX_TILE_AREA >> ( 2 * sbSize )
@@ -3007,9 +3007,9 @@ tile_info () {
          public void ReadTileInfo()
          {
 
-			sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
-			sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
-			sbShift= use_128x128_superblock ? 5 : 4;
+			sbCols= use_128x128_superblock != 0 ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
+			sbRows= use_128x128_superblock != 0 ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
+			sbShift= use_128x128_superblock != 0 ? 5 : 4;
 			sbSize= sbShift + 2;
 			maxTileWidthSb= AV1Constants.MAX_TILE_WIDTH >> (int)sbSize;
 			maxTileAreaSb= AV1Constants.MAX_TILE_AREA >> (int)( 2 * sbSize );
@@ -3130,9 +3130,9 @@ tile_info () {
          public void WriteTileInfo()
          {
 
-			sbCols= use_128x128_superblock ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
-			sbRows= use_128x128_superblock ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
-			sbShift= use_128x128_superblock ? 5 : 4;
+			sbCols= use_128x128_superblock != 0 ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
+			sbRows= use_128x128_superblock != 0 ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
+			sbShift= use_128x128_superblock != 0 ? 5 : 4;
 			sbSize= sbShift + 2;
 			maxTileWidthSb= AV1Constants.MAX_TILE_WIDTH >> (int)sbSize;
 			maxTileAreaSb= AV1Constants.MAX_TILE_AREA >> (int)( 2 * sbSize );
@@ -3261,10 +3261,10 @@ tile_log2( blkSize, target ) {
  }
     */
 		private uint blkSize;
-		private uint target;
+		private int target;
 
 			uint k = 0;
-         public void ReadTileLog2(uint blkSize, uint target)
+         public void ReadTileLog2(uint blkSize, int target)
          {
 
 
@@ -3274,7 +3274,7 @@ tile_log2( blkSize, target ) {
 			return k;
          }
 
-         public void WriteTileLog2(uint blkSize, uint target)
+         public void WriteTileLog2(uint blkSize, int target)
          {
 
 
@@ -4755,7 +4755,7 @@ lr_params() {
  type = ROTZOOM
  } else {
  is_translation f(1)
- type = is_translation ? TRANSLATION : AFFINE
+ type = is_translation != 0 ? TRANSLATION : AFFINE
  }
  } else {
  type = IDENTITY
@@ -4822,7 +4822,7 @@ lr_params() {
 					else 
 					{
 						stream.ReadFixed(1, out this.is_translation, "is_translation"); 
-						type= is_translation ? AV1Constants.TRANSLATION : AV1Constants.AFFINE;
+						type= is_translation != 0 ? AV1Constants.TRANSLATION : AV1Constants.AFFINE;
 					}
 				}
 				else 
@@ -4890,7 +4890,7 @@ lr_params() {
 					else 
 					{
 						stream.WriteFixed(1, this.is_translation, "is_translation"); 
-						type= is_translation ? AV1Constants.TRANSLATION : AV1Constants.AFFINE;
+						type= is_translation != 0 ? AV1Constants.TRANSLATION : AV1Constants.AFFINE;
 					}
 				}
 				else 
@@ -5577,7 +5577,7 @@ decode_subexp( numSyms ) {
  mk = 0
  k = 3
  while ( 1 ) {
- b2 = i ? k + i - 1 : k
+ b2 = i != 0 ? k + i - 1 : k
  a = 1 << b2
  if ( numSyms <= mk + 3 * a ) {
  subexp_final_bits ns(numSyms - mk)
@@ -5611,7 +5611,7 @@ decode_subexp( numSyms ) {
 
 			while ( 1 != 0 )
 			{
-				b2= i ? k + i - 1 : k;
+				b2= i != 0 ? k + i - 1 : k;
 				a= 1 << b2;
 
 				if ( numSyms <= mk + 3 * a )
@@ -5646,7 +5646,7 @@ decode_subexp( numSyms ) {
 
 			while ( 1 != 0 )
 			{
-				b2= i ? k + i - 1 : k;
+				b2= i != 0 ? k + i - 1 : k;
 				a= 1 << b2;
 
 				if ( numSyms <= mk + 3 * a )
@@ -6425,7 +6425,7 @@ metadata_timecode() {
 			{
 				tileRow= TileNum / TileCols;
 				tileCol= TileNum % TileCols;
-				lastTile= TileNum == tg_end ? (uint)1 : (uint)0;
+				lastTile= TileNum == tg_end;
 
 				if ( lastTile != 0 )
 				{
@@ -6491,7 +6491,7 @@ metadata_timecode() {
 			{
 				tileRow= TileNum / TileCols;
 				tileCol= TileNum % TileCols;
-				lastTile= TileNum == tg_end ? (uint)1 : (uint)0;
+				lastTile= TileNum == tg_end;
 
 				if ( lastTile != 0 )
 				{

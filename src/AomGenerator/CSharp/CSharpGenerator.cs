@@ -546,9 +546,6 @@ namespace Sharp{type}
                 if (fieldValue.Contains("flag") && !fieldValue.Contains(")"))
                     fieldValue = fieldValue.Replace("||", "|").Replace("&&", "&");
 
-                if ((fieldValue.Contains("==") || fieldValue.Contains(">") || fieldValue.Contains("<")) && !fieldValue.Contains("?") && !fieldValue.Contains("<<") && !fieldValue.Contains(">>"))
-                    fieldValue += " ? (uint)1 : (uint)0";
-
                 fieldValue = FixMissingFields(b, fieldValue);
             }
 
