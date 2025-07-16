@@ -39,16 +39,6 @@ namespace SharpAV1
             GC.SuppressFinalize(this);
         }
 
-        public ulong ReadClass<T>(IAomContext context, T value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ulong WriteClass<T>(IAomContext context, T value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
         public ulong ReadLeb128(out uint value, string name)
         {
             throw new NotImplementedException();
@@ -114,7 +104,6 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-
         public ulong ReadSignedIntVar(int length, out int value, string name)
         {
             throw new NotImplementedException();
@@ -124,27 +113,6 @@ namespace SharpAV1
         {
             throw new NotImplementedException();
         }
-
-
-        public ulong ReadS(out uint value, string name)
-        {
-            throw new NotImplementedException();
-        }
-        public ulong WriteS(uint value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public ulong ReadL(uint length, int whileIndex, Dictionary<int, uint> value, string name)
-        {
-            throw new NotImplementedException();
-        }
-        public ulong WriteL(int length, int whileIndex, Dictionary<int, uint> value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
 
         public ulong ReadUnsignedInt(uint length, out uint value, string name)
         {
@@ -161,32 +129,17 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadNS(int length, out uint value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal ulong WriteNS(int length, uint value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-
         public ulong ReadLeVar(int length, out uint value, string name)
         {
             throw new NotImplementedException();
         }
+
         public ulong WriteLeVar(int length, uint value, string name)
         {
             throw new NotImplementedException();
         }
 
         public int GetPosition()
-        {
-            throw new NotImplementedException();
-        }
-
-        internal static byte TileLog2(int maxTileAreaSb, int v)
         {
             throw new NotImplementedException();
         }

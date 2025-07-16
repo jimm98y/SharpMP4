@@ -3459,7 +3459,7 @@ tile_log2( blkSize, target ) {
  }
     */
 		private uint delta_coded;
-		private uint delta_q;
+		private int delta_q;
 
          public void ReadReadDeltaq()
          {

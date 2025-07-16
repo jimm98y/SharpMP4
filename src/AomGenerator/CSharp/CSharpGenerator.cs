@@ -800,8 +800,8 @@ namespace Sharp{type}
                 { "su(32)[]",                   "int[]" },
                 { "su(32)[][]",                 "int[][]" },
                 { "su(64)",                     "long" },
-                { "su(1+6)",                    "uint" },
-                { "su(1+bitsToRead)",           "uint" },
+                { "su(1+6)",                    "int" },
+                { "su(1+bitsToRead)",           "int" },
                 { "uvlc()",                     "uint" },
             };
             return map;
