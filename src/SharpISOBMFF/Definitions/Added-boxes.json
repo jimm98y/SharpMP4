@@ -573,6 +573,16 @@
     {
       "containers": [ "*" ],
       "type": "Box",
+      "syntax": "aligned(8) class CmIDBox() extends Box('cmID') {\r\n\t Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PlIDBox() extends Box('plID') {\r\n\t Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
       "syntax": "aligned(8) class PodcastBox() extends Box('pcst') {\r\n Box boxes[]; \r\n }"
     },
     {
@@ -1321,6 +1331,64 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class MiniBox() extends Box('mini') {\r\n\t bit(8) data[];\r\n } "
+    },
+
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class IpcmBox() extends Box('ipcm') {\r\n\t Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class FpcmBox() extends Box('fpcm') {\r\n\t Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PcmCBox() extends FullBox('pcmC') {\r\n\t unsigned int(8) formatFlags;\r\n\t unsigned int(8) pcmSampleSize;\r\n } "
+    },
+
+
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SmrdBox() extends Box('smrd') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SmtaBox() extends Box('smta') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SDLNBox() extends Box('SDLN') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MoatBox() extends Box('moat') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SeigBox() extends Box('seig') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class UratBox() extends Box('urat') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class OrieBox() extends Box('orie') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class NoneBox() extends Box('NONE') {\r\n\t bit(8) data[];\r\n } "
     }
   ]
 }
