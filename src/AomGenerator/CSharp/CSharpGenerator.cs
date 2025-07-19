@@ -917,7 +917,7 @@ namespace Sharp{type}
                     return "stream.ReadVariable(OrderHintBits,";
 
                 case "f(SUPERRES_DENOM_BITS)":
-                    return "stream.ReadVariable(SUPERRES_DENOM_BITS,";
+                    return "stream.ReadVariable(AV1Constants.SUPERRES_DENOM_BITS,";
 
                 case "f(tileBits)":
                     return "stream.ReadVariable(tileBits,";
@@ -1069,7 +1069,7 @@ namespace Sharp{type}
                     return "stream.WriteVariable(OrderHintBits,";
 
                 case "f(SUPERRES_DENOM_BITS)":
-                    return "stream.WriteVariable(SUPERRES_DENOM_BITS,";
+                    return "stream.WriteVariable(AV1Constants.SUPERRES_DENOM_BITS,";
 
                 case "f(tileBits)":
                     return "stream.WriteVariable(tileBits,";

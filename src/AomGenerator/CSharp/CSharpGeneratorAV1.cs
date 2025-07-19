@@ -486,6 +486,16 @@ namespace AomGenerator.CSharp
             definitions = definitions.Replace(" v & 1 ", "( v & 1 ) != 0");
             definitions = definitions.Replace("return subexp_final_bits", "return (int)subexp_final_bits");
             definitions = definitions.Replace("itu_t_t35_payload_bytes", "itu_t_t35_payload_bytes()");
+            
+            definitions = definitions.Replace("height_in_sbs_minus_1 + 1", "(int)(height_in_sbs_minus_1 + 1)");
+            definitions = definitions.Replace("width_in_sbs_minus_1 + 1", "(int)(width_in_sbs_minus_1 + 1)");
+
+            definitions = definitions.Replace("CodedLossless && ( FrameWidth == UpscaledWidth )", "(CodedLossless != 0 && ( FrameWidth == UpscaledWidth )) ? 1 : 0");
+            definitions = definitions.Replace("TileNum == tg_end", "(TileNum == tg_end) ? 1 : 0");
+            definitions = definitions.Replace("qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0", "(qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0) ? 1 : 0");
+            definitions = definitions.Replace("frame_type != KEY_FRAME", "(frame_type != KEY_FRAME) ? 1 : 0");
+            definitions = definitions.Replace("get_relative_dist( hint, OrderHint) > 0", "(get_relative_dist( hint, OrderHint) > 0) ? 1 : 0");
+            definitions = definitions.Replace("frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME", "(frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? 1 : 0");
 
             return definitions;
         }

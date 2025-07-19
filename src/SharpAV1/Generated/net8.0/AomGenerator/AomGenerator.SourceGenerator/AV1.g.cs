@@ -1504,13 +1504,13 @@ frame_header_obu() {
  return
  }
  frame_type f(2)
- FrameIsIntra = (frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME)
+ FrameIsIntra = ((frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? 1 : 0)
  show_frame f(1)
  if ( show_frame && decoder_model_info_present_flag && !equal_picture_interval ) {
  temporal_point_info()
  }
  if ( show_frame ) {
- showable_frame = frame_type != KEY_FRAME
+ showable_frame = (frame_type != KEY_FRAME) ? 1 : 0
  } else {
  showable_frame f(1)
  }
@@ -1653,7 +1653,7 @@ frame_header_obu() {
  if ( !enable_order_hint ) {
  RefFrameSignBias[ refFrame ] = 0
  } else {
- RefFrameSignBias[ refFrame ] = get_relative_dist( hint, OrderHint) > 0
+ RefFrameSignBias[ refFrame ] = (get_relative_dist( hint, OrderHint) > 0) ? 1 : 0
  }
  }
  }
@@ -1683,7 +1683,7 @@ frame_header_obu() {
  CodedLossless = 1
  for ( segmentId = 0; segmentId < MAX_SEGMENTS; segmentId++ ) {
  qindex = get_qindex( 1, segmentId )
- LosslessArray[ segmentId ] = qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0
+ LosslessArray[ segmentId ] = (qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0) ? 1 : 0
  if ( !LosslessArray[ segmentId ] )
  CodedLossless = 0
  if ( using_qmatrix ) {
@@ -1698,7 +1698,7 @@ frame_header_obu() {
  }
  }
  }
- AllLossless = CodedLossless && ( FrameWidth == UpscaledWidth )
+ AllLossless = (CodedLossless != 0 && ( FrameWidth == UpscaledWidth )) ? 1 : 0
  loop_filter_params()
  cdef_params()
  lr_params()
@@ -1844,7 +1844,7 @@ frame_header_obu() {
 					return;
 				}
 				stream.ReadFixed(2, out this.frame_type, "frame_type"); 
-				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME);
+				FrameIsIntra= ((frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? 1 : 0);
 				stream.ReadFixed(1, out this.show_frame, "show_frame"); 
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
@@ -1854,7 +1854,7 @@ frame_header_obu() {
 
 				if ( show_frame != 0 )
 				{
-					showable_frame= frame_type != AV1FrameTypes.KEY_FRAME;
+					showable_frame= (frame_type != AV1FrameTypes.KEY_FRAME) ? 1 : 0;
 				}
 				else 
 				{
@@ -2098,7 +2098,7 @@ frame_header_obu() {
 					}
 					else 
 					{
-						RefFrameSignBias[ refFrame ]= ReadGetRelativeDist( hint, OrderHint) > 0;
+						RefFrameSignBias[ refFrame ]= (ReadGetRelativeDist( hint, OrderHint) > 0) ? 1 : 0;
 					}
 				}
 			}
@@ -2146,7 +2146,7 @@ frame_header_obu() {
 			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
 				qindex= AomStream.GetQIndex( 1, segmentId );
-				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0;
+				LosslessArray[ segmentId ]= (qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0) ? 1 : 0;
 
 				if ( LosslessArray[ segmentId ]== 0 )
 				{
@@ -2170,7 +2170,7 @@ frame_header_obu() {
 					}
 				}
 			}
-			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth );
+			AllLossless= (CodedLossless != 0 && ( FrameWidth == UpscaledWidth )) ? 1 : 0;
 			ReadLoopFilterParams(); 
 			ReadCdefParams(); 
 			ReadLrParams(); 
@@ -2241,7 +2241,7 @@ frame_header_obu() {
 					return;
 				}
 				stream.WriteFixed(2, this.frame_type, "frame_type"); 
-				FrameIsIntra= (frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME);
+				FrameIsIntra= ((frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? 1 : 0);
 				stream.WriteFixed(1, this.show_frame, "show_frame"); 
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
@@ -2251,7 +2251,7 @@ frame_header_obu() {
 
 				if ( show_frame != 0 )
 				{
-					showable_frame= frame_type != AV1FrameTypes.KEY_FRAME;
+					showable_frame= (frame_type != AV1FrameTypes.KEY_FRAME) ? 1 : 0;
 				}
 				else 
 				{
@@ -2495,7 +2495,7 @@ frame_header_obu() {
 					}
 					else 
 					{
-						RefFrameSignBias[ refFrame ]= WriteGetRelativeDist( hint, OrderHint) > 0;
+						RefFrameSignBias[ refFrame ]= (WriteGetRelativeDist( hint, OrderHint) > 0) ? 1 : 0;
 					}
 				}
 			}
@@ -2543,7 +2543,7 @@ frame_header_obu() {
 			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
 				qindex= AomStream.GetQIndex( 1, segmentId );
-				LosslessArray[ segmentId ]= qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0;
+				LosslessArray[ segmentId ]= (qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0) ? 1 : 0;
 
 				if ( LosslessArray[ segmentId ]== 0 )
 				{
@@ -2567,7 +2567,7 @@ frame_header_obu() {
 					}
 				}
 			}
-			AllLossless= CodedLossless && ( FrameWidth == UpscaledWidth );
+			AllLossless= (CodedLossless != 0 && ( FrameWidth == UpscaledWidth )) ? 1 : 0;
 			WriteLoopFilterParams(); 
 			WriteCdefParams(); 
 			WriteLrParams(); 
@@ -2977,7 +2977,7 @@ tile_info () {
  MiColStarts[ i ] = startSb << sbShift
  maxWidth = Min(sbCols - startSb, maxTileWidthSb)
  width_in_sbs_minus_1 ns(maxWidth)
- sizeSb = width_in_sbs_minus_1 + 1
+ sizeSb = (int)(width_in_sbs_minus_1 + 1)
  widestTileSb = Max( sizeSb, widestTileSb )
  startSb += sizeSb
  }
@@ -2994,7 +2994,7 @@ tile_info () {
  MiRowStarts[ i ] = startSb << sbShift
  maxHeight = Min(sbRows - startSb, maxTileHeightSb)
  height_in_sbs_minus_1 ns(maxHeight)
- sizeSb = height_in_sbs_minus_1 + 1
+ sizeSb = (int)(height_in_sbs_minus_1 + 1)
  startSb += sizeSb
  }
  MiRowStarts[ i ] = MiRows
@@ -3123,7 +3123,7 @@ tile_info () {
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
 					stream.ReadUnsignedInt(maxWidth, out this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
-					sizeSb= width_in_sbs_minus_1 + 1;
+					sizeSb= (int)(width_in_sbs_minus_1 + 1);
 					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
 				}
@@ -3147,7 +3147,7 @@ tile_info () {
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
 					stream.ReadUnsignedInt(maxHeight, out this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
-					sizeSb= height_in_sbs_minus_1 + 1;
+					sizeSb= (int)(height_in_sbs_minus_1 + 1);
 					startSb+= sizeSb;
 				}
 				MiRowStarts[ i ]= MiRows;
@@ -3246,7 +3246,7 @@ tile_info () {
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
 					stream.WriteUnsignedInt(maxWidth, this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
-					sizeSb= width_in_sbs_minus_1 + 1;
+					sizeSb= (int)(width_in_sbs_minus_1 + 1);
 					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
 				}
@@ -3270,7 +3270,7 @@ tile_info () {
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
 					stream.WriteUnsignedInt(maxHeight, this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
-					sizeSb= height_in_sbs_minus_1 + 1;
+					sizeSb= (int)(height_in_sbs_minus_1 + 1);
 					startSb+= sizeSb;
 				}
 				MiRowStarts[ i ]= MiRows;
@@ -5477,7 +5477,7 @@ superres_params() {
 
 			if ( use_superres != 0 )
 			{
-				stream.ReadVariable(SUPERRES_DENOM_BITS, out this.coded_denom, "coded_denom"); 
+				stream.ReadVariable(AV1Constants.SUPERRES_DENOM_BITS, out this.coded_denom, "coded_denom"); 
 				SuperresDenom= coded_denom + AV1Constants.SUPERRES_DENOM_MIN;
 			}
 			else 
@@ -5503,7 +5503,7 @@ superres_params() {
 
 			if ( use_superres != 0 )
 			{
-				stream.WriteVariable(SUPERRES_DENOM_BITS, this.coded_denom, "coded_denom"); 
+				stream.WriteVariable(AV1Constants.SUPERRES_DENOM_BITS, this.coded_denom, "coded_denom"); 
 				SuperresDenom= coded_denom + AV1Constants.SUPERRES_DENOM_MIN;
 			}
 			else 
@@ -6387,7 +6387,7 @@ metadata_timecode() {
  for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {
  tileRow = TileNum / TileCols
  tileCol = TileNum % TileCols
- lastTile = TileNum == tg_end
+ lastTile = (TileNum == tg_end) ? 1 : 0
  if ( lastTile ) {
  tileSize = sz
  } else {
@@ -6465,7 +6465,7 @@ metadata_timecode() {
 			{
 				tileRow= TileNum / TileCols;
 				tileCol= TileNum % TileCols;
-				lastTile= TileNum == tg_end;
+				lastTile= (TileNum == tg_end) ? 1 : 0;
 
 				if ( lastTile != 0 )
 				{
@@ -6531,7 +6531,7 @@ metadata_timecode() {
 			{
 				tileRow= TileNum / TileCols;
 				tileCol= TileNum % TileCols;
-				lastTile= TileNum == tg_end;
+				lastTile= (TileNum == tg_end) ? 1 : 0;
 
 				if ( lastTile != 0 )
 				{
