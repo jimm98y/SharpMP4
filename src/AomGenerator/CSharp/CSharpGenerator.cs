@@ -52,61 +52,6 @@ namespace Sharp{type}
             resultCode += @$"
     public partial class {type}Context : IAomContext
     {{
-        AomStream stream = null;
-        int obu_padding_length = 0;
-        public int[][] PrevGmParams {{ get; set; }}
-        public int[] RefFrameHeight {{ get; set; }}
-        public int[] RefFrameType {{ get; set; }}
-        public int[] RefRenderWidth {{ get; set; }}
-        public int[] RefRenderHeight {{ get; set; }}
-        public int[] RefUpscaledWidth {{ get; set; }}
-        public int[] Remap_Lr_Type {{ get; set; }}
-        public int[] Segmentation_Feature_Bits {{ get; set; }}
-        public int[] Segmentation_Feature_Max {{ get; set; }}
-        public int[] Segmentation_Feature_Signed {{ get; set; }}
-
-        private void ReadDropObu() {{ throw new NotImplementedException(); }}
-        private void WriteDropObu() {{ throw new NotImplementedException(); }}
-        private void ReadSetFrameRefs() {{ throw new NotImplementedException(); }}
-        private void WriteSetFrameRefs() {{ throw new NotImplementedException(); }}
-        private void ReadResetGrainParams() {{ throw new NotImplementedException(); }}
-        private void WriteResetGrainParams() {{ throw new NotImplementedException(); }}
-        private void ReadLoadGrainParams(int p) {{ throw new NotImplementedException(); }}
-        private void WriteLoadGrainParams(int p) {{ throw new NotImplementedException(); }}
-        
-        private void WriteInitNonCoeffCdfs() {{ throw new NotImplementedException(); }}
-        private void WriteSetupPastIndependence() {{ throw new NotImplementedException(); }}
-        private void WriteLoadCdfs( int value ) {{ throw new NotImplementedException(); }}
-        private void WriteLoadPrevious() {{ throw new NotImplementedException(); }}
-        private void WriteMotionFieldEstimation() {{ throw new NotImplementedException(); }}
-        private void WriteInitCoeffCdfs() {{ throw new NotImplementedException(); }}
-        private void WriteLoadPreviousSegmentIds() {{ throw new NotImplementedException(); }}
-
-        private void ReadInitNonCoeffCdfs() {{ throw new NotImplementedException(); }}
-        private void ReadSetupPastIndependence() {{ throw new NotImplementedException(); }}
-        private void ReadLoadCdfs( int value ) {{ throw new NotImplementedException(); }}
-        private void ReadLoadPrevious() {{ throw new NotImplementedException(); }}
-        private void ReadMotionFieldEstimation() {{ throw new NotImplementedException(); }}
-        private void ReadInitCoeffCdfs() {{ throw new NotImplementedException(); }}
-        private void ReadLoadPreviousSegmentIds() {{ throw new NotImplementedException(); }}
-        private void ReadMarkRefFrames(int idLen) {{ throw new NotImplementedException(); }}
-        private void WriteMarkRefFrames(int idLen) {{ throw new NotImplementedException(); }}
-        private void ReadItutT35PayloadBytes() {{ throw new NotImplementedException(); }}
-        private void WriteItutT35PayloadBytes() {{ throw new NotImplementedException(); }}
-        private void ReadFrameEndUpdateCdf() {{ throw new NotImplementedException(); }}
-        private void WriteFrameEndUpdateCdf() {{ throw new NotImplementedException(); }}
-        private void ReadExitSymbol() {{ throw new NotImplementedException(); }}
-        private void WriteExitSymbol() {{ throw new NotImplementedException(); }}
-        private void ReadDecodeTile() {{ throw new NotImplementedException(); }}
-        private void WriteDecodeTile() {{ throw new NotImplementedException(); }}
-        private void ReadFrameHeaderCopy() {{ throw new NotImplementedException(); }}
-        private void WriteFrameHeaderCopy() {{ throw new NotImplementedException(); }}
-        private void ReadDecodeFrameWrapup() {{ throw new NotImplementedException(); }}
-        private void WriteDecodeFrameWrapup() {{ throw new NotImplementedException(); }}
-        private void ReadInitSymbol(int tileSize) {{ throw new NotImplementedException(); }}
-        private void WriteInitSymbol(int tileSize) {{ throw new NotImplementedException(); }}
-
-        private int ChooseOperatingPoint() {{ throw new NotImplementedException(); }}
 ";
 
             foreach (var ituClass in aomClasses)
