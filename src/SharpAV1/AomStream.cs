@@ -39,12 +39,12 @@ namespace SharpAV1
             GC.SuppressFinalize(this);
         }
 
-        public ulong ReadLeb128(out uint value, string name)
+        public ulong ReadLeb128(out int value, string name)
         {
             throw new NotImplementedException();
         }
 
-        public ulong WriteLeb128(uint size, string name)
+        public ulong WriteLeb128(int value, string name)
         {
             throw new NotImplementedException();
         }
@@ -114,12 +114,12 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadLeVar(int length, out uint value, string name)
+        public ulong ReadLeVar(int length, out int value, string name)
         {
             throw new NotImplementedException();
         }
 
-        public ulong WriteLeVar(int length, uint value, string name)
+        public ulong WriteLeVar(int length, int value, string name)
         {
             throw new NotImplementedException();
         }
@@ -129,12 +129,12 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        internal static int Clip3(int v, int limit, int feature_value)
+        public static int Clip3(int v, int limit, int feature_value)
         {
             throw new NotImplementedException();
         }
 
-        internal static int GetQIndex(int v, uint segmentId)
+        public static int GetQIndex(int v, int segmentId)
         {
             throw new NotImplementedException();
         }

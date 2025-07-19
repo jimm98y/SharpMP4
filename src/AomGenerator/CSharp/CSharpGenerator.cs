@@ -73,7 +73,7 @@ namespace Sharp{type}
 
         private void ReadInitNonCoeffCdfs() {{ }}
         private void ReadSetupPastIndependence() {{ }}
-        private void ReadLoadCdfs( uint value ) {{ }}
+        private void ReadLoadCdfs( int value ) {{ }}
         private void ReadLoadPrevious() {{ }}
         private void ReadMotionFieldEstimation() {{ }}
         private void ReadInitCoeffCdfs() {{ }}
@@ -804,18 +804,18 @@ namespace Sharp{type}
                 { "f(tileBits)",                "int" },
                 { "f(TileRowsLog2+TileColsLog2)", "int" },
                 { "f(time_offset_length)",      "int" },
-                { "L(1)",                       "uint" },
-                { "L(2)",                       "uint" },
-                { "L(3)",                       "uint" },
-                { "L(b2)",                      "uint" },
-                { "L(BitDepth)",                "uint" },
-                { "L(cdef_bits)",               "uint" },
-                { "L(delta_q_rem_bits)",        "uint" },
-                { "L(n)",                       "uint" },
-                { "L(paletteBits)",             "uint" },
-                { "L(SGRPROJ_PARAMS_BITS)",     "uint" },
-                { "le(TileSizeBytes)",          "uint" },
-                { "leb128()",                   "uint" },
+                { "L(1)",                       "int" },
+                { "L(2)",                       "int" },
+                { "L(3)",                       "int" },
+                { "L(b2)",                      "int" },
+                { "L(BitDepth)",                "int" },
+                { "L(cdef_bits)",               "int" },
+                { "L(delta_q_rem_bits)",        "int" },
+                { "L(n)",                       "int" },
+                { "L(paletteBits)",             "int" },
+                { "L(SGRPROJ_PARAMS_BITS)",     "int" },
+                { "le(TileSizeBytes)",          "int" },
+                { "leb128()",                   "int" },
                 { "ns(32)",                     "uint" },
                 { "ns(maxWidth)",               "uint" },
                 { "ns(maxHeight)",              "uint" },

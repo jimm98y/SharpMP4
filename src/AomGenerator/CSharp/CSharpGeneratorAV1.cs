@@ -480,6 +480,9 @@ namespace AomGenerator.CSharp
             definitions = definitions.Replace("use_128x128_superblock ?", "use_128x128_superblock != 0 ?");
             definitions = definitions.Replace("is_translation ?", "is_translation != 0 ?");
             definitions = definitions.Replace(" i ?", " i != 0 ?");
+            
+            definitions = definitions.Replace("!allow_high_precision_mv", "(allow_high_precision_mv == 0 ? 1 : 0)");
+            definitions = definitions.Replace("get_position() & 7", "(get_position() & 7) == 7");
 
             return definitions;
         }

@@ -28,7 +28,7 @@ namespace SharpAV1
 
         private void ReadInitNonCoeffCdfs() { }
         private void ReadSetupPastIndependence() { }
-        private void ReadLoadCdfs( uint value ) { }
+        private void ReadLoadCdfs( int value ) { }
         private void ReadLoadPrevious() { }
         private void ReadMotionFieldEstimation() { }
         private void ReadInitCoeffCdfs() { }
@@ -84,7 +84,7 @@ open_bitstream_unit( sz ) {
     */
 		private int sz;
 		private int obu_header;
-		private uint obu_size;
+		private int obu_size;
 		private int startPosition;
 		private int inTemporalLayer;
 		private int inSpatialLayer;
@@ -386,7 +386,7 @@ while ( nbBits > 0 ) {
 
 
 byte_alignment() { 
- while ( get_position() & 7 )
+ while ( (get_position() & 7) == 7 )
  zero_bit f(1)
 }
     */
@@ -396,7 +396,7 @@ byte_alignment() {
          {
 
 
-			while ( stream.GetPosition() & 7 )
+			while ( (stream.GetPosition() & 7) == 7 )
 			{
 				stream.ReadFixed(1, out this.zero_bit, "zero_bit"); 
 			}
@@ -406,7 +406,7 @@ byte_alignment() {
          {
 
 
-			while ( stream.GetPosition() & 7 )
+			while ( (stream.GetPosition() & 7) == 7 )
 			{
 				stream.WriteFixed(1, this.zero_bit, "zero_bit"); 
 			}
@@ -4949,8 +4949,8 @@ read_global_param( type, refc, idx ) {
  precBits = GM_ALPHA_PREC_BITS
  if ( idx < 2 ) {
  if ( type == TRANSLATION ) {
- absBits = GM_ABS_TRANS_ONLY_BITS - !allow_high_precision_mv
- precBits = GM_TRANS_ONLY_PREC_BITS - !allow_high_precision_mv
+ absBits = GM_ABS_TRANS_ONLY_BITS - (allow_high_precision_mv == 0 ? 1 : 0)
+ precBits = GM_TRANS_ONLY_PREC_BITS - (allow_high_precision_mv == 0 ? 1 : 0)
  } else {
  absBits = GM_ABS_TRANS_BITS
  precBits = GM_TRANS_PREC_BITS
@@ -4984,8 +4984,8 @@ read_global_param( type, refc, idx ) {
 
 				if ( type == AV1Constants.TRANSLATION )
 				{
-					absBits= AV1Constants.GM_ABS_TRANS_ONLY_BITS - !allow_high_precision_mv;
-					precBits= AV1Constants.GM_TRANS_ONLY_PREC_BITS - !allow_high_precision_mv;
+					absBits= AV1Constants.GM_ABS_TRANS_ONLY_BITS - (allow_high_precision_mv == 0 ? 1 : 0);
+					precBits= AV1Constants.GM_TRANS_ONLY_PREC_BITS - (allow_high_precision_mv == 0 ? 1 : 0);
 				}
 				else 
 				{
@@ -5012,8 +5012,8 @@ read_global_param( type, refc, idx ) {
 
 				if ( type == AV1Constants.TRANSLATION )
 				{
-					absBits= AV1Constants.GM_ABS_TRANS_ONLY_BITS - !allow_high_precision_mv;
-					precBits= AV1Constants.GM_TRANS_ONLY_PREC_BITS - !allow_high_precision_mv;
+					absBits= AV1Constants.GM_ABS_TRANS_ONLY_BITS - (allow_high_precision_mv == 0 ? 1 : 0);
+					precBits= AV1Constants.GM_TRANS_ONLY_PREC_BITS - (allow_high_precision_mv == 0 ? 1 : 0);
 				}
 				else 
 				{
@@ -5805,7 +5805,7 @@ metadata_obu() {
  metadata_timecode()
  }
     */
-		private uint metadata_type;
+		private int metadata_type;
 		private int metadata_itut_t35;
 		private int metadata_hdr_cll;
 		private int metadata_hdr_mdcv;
@@ -6399,7 +6399,7 @@ metadata_timecode() {
 		private int tileCol;
 		private int lastTile;
 		private int tileSize;
-		private uint tile_size_minus_1;
+		private int tile_size_minus_1;
 		private int MiRowStart;
 		private int MiRowEnd;
 		private int MiColStart;
