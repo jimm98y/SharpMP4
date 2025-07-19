@@ -60,12 +60,12 @@ namespace Sharp{type}
         private void WriteSetFrameRefs() {{ }}
         private void ReadResetGrainParams() {{ }}
         private void WriteResetGrainParams() {{ }}
-        private void ReadLoadGrainParams(uint p) {{ }}
-        private void WriteLoadGrainParams(uint p) {{ }}
+        private void ReadLoadGrainParams(int p) {{ }}
+        private void WriteLoadGrainParams(int p) {{ }}
         
         private void WriteInitNonCoeffCdfs() {{ }}
         private void WriteSetupPastIndependence() {{ }}
-        private void WriteLoadCdfs( uint value ) {{ }}
+        private void WriteLoadCdfs( int value ) {{ }}
         private void WriteLoadPrevious() {{ }}
         private void WriteMotionFieldEstimation() {{ }}
         private void WriteInitCoeffCdfs() {{ }}
@@ -228,7 +228,7 @@ namespace Sharp{type}
 
                             if (b.RequiresDefinition.FirstOrDefault(x => x.Name == variable) == null && b.AddedFields.FirstOrDefault(x => x.Name == variable) == null)
                             {
-                                b.RequiresDefinition.Add(new AomField() { Name = variable, Type = "ns(32)" });
+                                b.RequiresDefinition.Add(new AomField() { Name = variable, Type = "su(32)" });
                             }
                         }
                     }
@@ -782,18 +782,18 @@ namespace Sharp{type}
         {
             Dictionary<string, string> map = new Dictionary<string, string>()
             {
-                { "f(1)",                       "uint" },
-                { "f(2)",                       "uint" },
-                { "f(3)",                       "uint" },
-                { "f(4)",                       "uint" },
-                { "f(5)",                       "uint" },
-                { "f(6)",                       "uint" },
-                { "f(8)",                       "uint" },
-                { "f(9)",                       "uint" },
-                { "f(12)",                      "uint" },
-                { "f(16)",                      "uint" },
-                { "f(32)",                      "uint" },
-                { "f(32)[]",                    "uint[]" },
+                { "f(1)",                       "int" },
+                { "f(2)",                       "int" },
+                { "f(3)",                       "int" },
+                { "f(4)",                       "int" },
+                { "f(5)",                       "int" },
+                { "f(6)",                       "int" },
+                { "f(8)",                       "int" },
+                { "f(9)",                       "int" },
+                { "f(12)",                      "int" },
+                { "f(16)",                      "int" },
+                { "f(32)",                      "int" },
+                { "f(32)[]",                    "int[]" },
                 { "f(b2)",                      "int" },
                 { "f(bitsToRead)",              "int" },
                 { "f(idLen)",                   "int" },

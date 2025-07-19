@@ -15,12 +15,12 @@ namespace SharpAV1
         private void WriteSetFrameRefs() { }
         private void ReadResetGrainParams() { }
         private void WriteResetGrainParams() { }
-        private void ReadLoadGrainParams(uint p) { }
-        private void WriteLoadGrainParams(uint p) { }
+        private void ReadLoadGrainParams(int p) { }
+        private void WriteLoadGrainParams(int p) { }
         
         private void WriteInitNonCoeffCdfs() { }
         private void WriteSetupPastIndependence() { }
-        private void WriteLoadCdfs( uint value ) { }
+        private void WriteLoadCdfs( int value ) { }
         private void WriteLoadPrevious() { }
         private void WriteMotionFieldEstimation() { }
         private void WriteInitCoeffCdfs() { }
@@ -82,7 +82,7 @@ open_bitstream_unit( sz ) {
  }
 }
     */
-		private uint sz;
+		private int sz;
 		private int obu_header;
 		private uint obu_size;
 		private int startPosition;
@@ -102,7 +102,7 @@ open_bitstream_unit( sz ) {
 		private int payloadBits;
 		private int trailing_bits;
 
-         public void ReadOpenBitstreamUnit(uint sz)
+         public void ReadOpenBitstreamUnit(int sz)
          {
 
 			ReadObuHeader(); 
@@ -180,7 +180,7 @@ open_bitstream_unit( sz ) {
 			}
          }
 
-         public void WriteOpenBitstreamUnit(uint sz)
+         public void WriteOpenBitstreamUnit(int sz)
          {
 
 			WriteObuHeader(); 
@@ -271,11 +271,11 @@ obu_header() {
   obu_extension_header()
 }
     */
-		private uint obu_forbidden_bit;
-		private uint obu_type;
-		private uint obu_extension_flag;
-		private uint obu_has_size_field;
-		private uint obu_reserved_1bit;
+		private int obu_forbidden_bit;
+		private int obu_type;
+		private int obu_extension_flag;
+		private int obu_has_size_field;
+		private int obu_reserved_1bit;
 		private int obu_extension_header;
 
          public void ReadObuHeader()
@@ -318,9 +318,9 @@ obu_header() {
  extension_header_reserved_3bits f(3)
  }
     */
-		private uint temporal_id;
-		private uint spatial_id;
-		private uint extension_header_reserved_3bits;
+		private int temporal_id;
+		private int spatial_id;
+		private int extension_header_reserved_3bits;
 
          public void ReadObuExtensionHeader()
          {
@@ -352,8 +352,8 @@ while ( nbBits > 0 ) {
 }
     */
 		private long nbBits;
-		private uint trailing_one_bit;
-		private uint trailing_zero_bit;
+		private int trailing_one_bit;
+		private int trailing_zero_bit;
 
          public void ReadTrailingBits(long nbBits)
          {
@@ -390,7 +390,7 @@ byte_alignment() {
  zero_bit f(1)
 }
     */
-		private uint zero_bit;
+		private int zero_bit;
 
          public void ReadByteAlignment()
          {
@@ -558,15 +558,15 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
  film_grain_params_present f(1)
 }
     */
-		private uint seq_profile;
-		private uint still_picture;
-		private uint reduced_still_picture_header;
+		private int seq_profile;
+		private int still_picture;
+		private int reduced_still_picture_header;
 		private int timing_info_present_flag;
 		private int decoder_model_info_present_flag;
 		private int initial_display_delay_present_flag;
 		private int operating_points_cnt_minus_1;
 		private int[] operating_point_idc;
-		private uint[] seq_level_idx;
+		private int[] seq_level_idx;
 		private int[] seq_tier;
 		private int[] decoder_model_present_for_this_op;
 		private int[] initial_display_delay_present_for_this_op;
@@ -576,17 +576,17 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		private int[] initial_display_delay_minus_1;
 		private int operatingPoint;
 		private int OperatingPointIdc;
-		private uint frame_width_bits_minus_1;
-		private uint frame_height_bits_minus_1;
+		private int frame_width_bits_minus_1;
+		private int frame_height_bits_minus_1;
 		private int n;
 		private int max_frame_width_minus_1;
 		private int max_frame_height_minus_1;
 		private int frame_id_numbers_present_flag;
-		private uint delta_frame_id_length_minus_2;
-		private uint additional_frame_id_length_minus_1;
-		private uint use_128x128_superblock;
-		private uint enable_filter_intra;
-		private uint enable_intra_edge_filter;
+		private int delta_frame_id_length_minus_2;
+		private int additional_frame_id_length_minus_1;
+		private int use_128x128_superblock;
+		private int enable_filter_intra;
+		private int enable_intra_edge_filter;
 		private int enable_interintra_compound;
 		private int enable_masked_compound;
 		private int enable_warped_motion;
@@ -597,16 +597,16 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		private int seq_force_screen_content_tools;
 		private int seq_force_integer_mv;
 		private int OrderHintBits;
-		private uint seq_choose_screen_content_tools;
-		private uint seq_choose_integer_mv;
-		private uint order_hint_bits_minus_1;
-		private uint enable_superres;
-		private uint enable_cdef;
-		private uint enable_restoration;
+		private int seq_choose_screen_content_tools;
+		private int seq_choose_integer_mv;
+		private int order_hint_bits_minus_1;
+		private int enable_superres;
+		private int enable_cdef;
+		private int enable_restoration;
 		private int color_config;
-		private uint film_grain_params_present;
+		private int film_grain_params_present;
 
-			uint i = 0;
+			int i = 0;
          public void ReadSequenceHeaderObu()
          {
 
@@ -986,9 +986,9 @@ timing_info() {
  num_ticks_per_picture_minus_1 num_ticks_per_picture_minus_1 uvlc()
 }
     */
-		private uint num_units_in_display_tick;
-		private uint time_scale;
-		private uint equal_picture_interval;
+		private int num_units_in_display_tick;
+		private int time_scale;
+		private int equal_picture_interval;
 		private int num_ticks_per_picture_minus_1;
 
          public void ReadTimingInfo()
@@ -1029,10 +1029,10 @@ decoder_model_info() {
  frame_presentation_time_length_minus_1 f(5)
 }
     */
-		private uint buffer_delay_length_minus_1;
-		private uint num_units_in_decoding_tick;
-		private uint buffer_removal_time_length_minus_1;
-		private uint frame_presentation_time_length_minus_1;
+		private int buffer_delay_length_minus_1;
+		private int num_units_in_decoding_tick;
+		private int buffer_removal_time_length_minus_1;
+		private int frame_presentation_time_length_minus_1;
 
          public void ReadDecoderModelInfo()
          {
@@ -1062,12 +1062,12 @@ operating_parameters_info( op ) {
  low_delay_mode_flag[ op ] f(1)
 }
     */
-		private uint op;
+		private int op;
 		private int[] decoder_buffer_delay;
 		private int[] encoder_buffer_delay;
-		private uint[] low_delay_mode_flag;
+		private int[] low_delay_mode_flag;
 
-         public void ReadOperatingParametersInfo(uint op)
+         public void ReadOperatingParametersInfo(int op)
          {
 
 			n= buffer_delay_length_minus_1 + 1;
@@ -1076,7 +1076,7 @@ operating_parameters_info( op ) {
 			stream.ReadFixed(1, out this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
          }
 
-         public void WriteOperatingParametersInfo(uint op)
+         public void WriteOperatingParametersInfo(int op)
          {
 
 			n= buffer_delay_length_minus_1 + 1;
@@ -1152,16 +1152,16 @@ color_config() {
  separate_uv_delta_q f(1)
 }
     */
-		private uint high_bitdepth;
-		private uint twelve_bit;
+		private int high_bitdepth;
+		private int twelve_bit;
 		private int BitDepth;
 		private int mono_chrome;
 		private int NumPlanes;
-		private uint color_description_present_flag;
-		private uint color_primaries;
-		private uint transfer_characteristics;
-		private uint matrix_coefficients;
-		private uint color_range;
+		private int color_description_present_flag;
+		private int color_primaries;
+		private int transfer_characteristics;
+		private int matrix_coefficients;
+		private int color_range;
 		private int subsampling_x;
 		private int subsampling_y;
 		private int chroma_sample_position;
@@ -1698,7 +1698,7 @@ frame_header_obu() {
 		private int FrameIsIntra;
 		private int show_frame;
 		private int showable_frame;
-		private uint frame_to_show_map_idx;
+		private int frame_to_show_map_idx;
 		private int temporal_point_info;
 		private int refresh_frame_flags;
 		private int display_frame_id;
@@ -1707,9 +1707,9 @@ frame_header_obu() {
 		private int[] RefValid;
 		private int[] RefOrderHint;
 		private int[] OrderHints;
-		private uint disable_cdf_update;
-		private uint allow_screen_content_tools;
-		private uint force_integer_mv;
+		private int disable_cdf_update;
+		private int allow_screen_content_tools;
+		private int force_integer_mv;
 		private int PrevFrameID;
 		private int current_frame_id;
 		private int mark_ref_frames;
@@ -1717,7 +1717,7 @@ frame_header_obu() {
 		private int order_hint;
 		private int OrderHint;
 		private int primary_ref_frame;
-		private uint buffer_removal_time_present_flag;
+		private int buffer_removal_time_present_flag;
 		private int opPtIdc;
 		private int[] buffer_removal_time;
 		private int allow_high_precision_mv;
@@ -1727,16 +1727,16 @@ frame_header_obu() {
 		private int frame_size;
 		private int render_size;
 		private int frame_refs_short_signaling;
-		private uint last_frame_idx;
-		private uint gold_frame_idx;
+		private int last_frame_idx;
+		private int gold_frame_idx;
 		private int set_frame_refs;
-		private uint[] ref_frame_idx;
+		private int[] ref_frame_idx;
 		private int delta_frame_id_minus_1;
 		private int DeltaFrameId;
 		private int[] expectedFrameId;
 		private int frame_size_with_refs;
 		private int read_interpolation_filter;
-		private uint is_motion_mode_switchable;
+		private int is_motion_mode_switchable;
 		private int refFrame;
 		private int hint;
 		private int[] RefFrameSignBias;
@@ -1765,12 +1765,12 @@ frame_header_obu() {
 		private int frame_reference_mode;
 		private int skip_mode_params;
 		private int allow_warped_motion;
-		private uint reduced_tx_set;
+		private int reduced_tx_set;
 		private int global_motion_params;
 		private int film_grain_params;
 
-			uint opNum = 0;
-			uint segmentId = 0;
+			int opNum = 0;
+			int segmentId = 0;
          public void ReadUncompressedHeader()
          {
 
@@ -2675,9 +2675,9 @@ frame_header_obu() {
  }
  }
     */
-		private uint render_and_frame_size_different;
-		private uint render_width_minus_1;
-		private uint render_height_minus_1;
+		private int render_and_frame_size_different;
+		private int render_width_minus_1;
+		private int render_height_minus_1;
 		private int RenderWidth;
 		private int RenderHeight;
 
@@ -2743,7 +2743,7 @@ frame_header_obu() {
  }
  }
     */
-		private uint found_ref;
+		private int found_ref;
 		private int UpscaledWidth;
 
          public void ReadFrameSizeWithRefs()
@@ -2820,7 +2820,7 @@ frame_header_obu() {
  }
  }
     */
-		private uint is_filter_switchable;
+		private int is_filter_switchable;
 		private int interpolation_filter;
 
          public void ReadReadInterpolationFilter()
@@ -2997,15 +2997,15 @@ tile_info () {
 		private int maxLog2TileCols;
 		private int maxLog2TileRows;
 		private int minLog2Tiles;
-		private uint uniform_tile_spacing_flag;
+		private int uniform_tile_spacing_flag;
 		private int TileColsLog2;
-		private uint increment_tile_cols_log2;
+		private int increment_tile_cols_log2;
 		private int tileWidthSb;
 		private int[] MiColStarts;
 		private int TileCols;
 		private int minLog2TileRows;
 		private int TileRowsLog2;
-		private uint increment_tile_rows_log2;
+		private int increment_tile_rows_log2;
 		private int tileHeightSb;
 		private int[] MiRowStarts;
 		private int TileRows;
@@ -3018,7 +3018,7 @@ tile_info () {
 		private int maxHeight;
 		private uint height_in_sbs_minus_1;
 		private int context_update_tile_id;
-		private uint tile_size_bytes_minus_1;
+		private int tile_size_bytes_minus_1;
 		private int TileSizeBytes;
 
          public void ReadTileInfo()
@@ -3280,7 +3280,7 @@ tile_log2( blkSize, target ) {
 		private int blkSize;
 		private int target;
 
-			uint k = 0;
+			int k = 0;
          public int ReadTileLog2(int blkSize, int target)
          {
 
@@ -3338,16 +3338,16 @@ tile_log2( blkSize, target ) {
  }
  }
     */
-		private uint base_q_idx;
+		private int base_q_idx;
 		private int DeltaQYDc;
-		private uint diff_uv_delta;
+		private int diff_uv_delta;
 		private int DeltaQUDc;
 		private int DeltaQUAc;
 		private int DeltaQVDc;
 		private int DeltaQVAc;
-		private uint using_qmatrix;
-		private uint qm_y;
-		private uint qm_u;
+		private int using_qmatrix;
+		private int qm_y;
+		private int qm_u;
 		private int qm_v;
 
          public void ReadQuantizationParams()
@@ -3475,7 +3475,7 @@ tile_log2( blkSize, target ) {
  return delta_q
  }
     */
-		private uint delta_coded;
+		private int delta_coded;
 		private int delta_q;
 
          public int ReadReadDeltaq()
@@ -3570,12 +3570,12 @@ tile_log2( blkSize, target ) {
  }
  }
     */
-		private uint segmentation_enabled;
+		private int segmentation_enabled;
 		private int segmentation_update_map;
 		private int segmentation_temporal_update;
 		private int segmentation_update_data;
 		private int feature_value;
-		private uint feature_enabled;
+		private int feature_enabled;
 		private int[][] FeatureEnabled;
 		private int clippedValue;
 		private int bitsToRead;
@@ -3584,7 +3584,7 @@ tile_log2( blkSize, target ) {
 		private int SegIdPreSkip;
 		private int LastActiveSegId;
 
-			uint j = 0;
+			int j = 0;
          public void ReadSegmentationParams()
          {
 
@@ -3928,7 +3928,7 @@ cdef_params() {
 		private int[] cdef_uv_pri_strength;
 		private int[] cdef_uv_sec_strength;
 		private int CdefDamping;
-		private uint cdef_damping_minus_3;
+		private int cdef_damping_minus_3;
 
          public void ReadCdefParams()
          {
@@ -4064,11 +4064,11 @@ lr_params() {
 		private int[] FrameRestorationType;
 		private int UsesLr;
 		private int usesChromaLr;
-		private uint lr_type;
-		private uint lr_unit_shift;
-		private uint lr_unit_extra_shift;
+		private int lr_type;
+		private int lr_unit_shift;
+		private int lr_unit_extra_shift;
 		private int[] LoopRestorationSize;
-		private uint lr_uv_shift;
+		private int lr_uv_shift;
 
          public void ReadLrParams()
          {
@@ -4250,11 +4250,11 @@ lr_params() {
 		private int[] loop_filter_level;
 		private int[] loop_filter_ref_deltas;
 		private int[] loop_filter_mode_deltas;
-		private uint loop_filter_sharpness;
-		private uint loop_filter_delta_enabled;
-		private uint loop_filter_delta_update;
-		private uint update_ref_delta;
-		private uint update_mode_delta;
+		private int loop_filter_sharpness;
+		private int loop_filter_delta_enabled;
+		private int loop_filter_delta_update;
+		private int update_ref_delta;
+		private int update_mode_delta;
 
          public void ReadLoopFilterParams()
          {
@@ -4409,7 +4409,7 @@ lr_params() {
  }
     */
 		private int TxMode;
-		private uint tx_mode_select;
+		private int tx_mode_select;
 
          public void ReadReadTxMode()
          {
@@ -4566,7 +4566,7 @@ lr_params() {
 		private int[] SkipModeFrame;
 		private int secondForwardIdx;
 		private int secondForwardHint;
-		private uint skip_mode_present;
+		private int skip_mode_present;
 
          public void ReadSkipModeParams()
          {
@@ -4798,13 +4798,13 @@ lr_params() {
     */
 		private int[] GmType;
 		private int[][] gm_params;
-		private uint is_global;
-		private uint is_rot_zoom;
+		private int is_global;
+		private int is_rot_zoom;
 		private int type;
-		private uint is_translation;
+		private int is_translation;
 		private int read_global_param;
 
-			uint refc = 0;
+			int refc = 0;
          public void ReadGlobalMotionParams()
          {
 
@@ -4964,7 +4964,7 @@ read_global_param( type, refc, idx ) {
  gm_params[refc][idx] = (decode_signed_subexp_with_ref( -mx, mx + 1, r ) << precDiff) + round
  }
     */
-		private uint idx;
+		private int idx;
 		private int absBits;
 		private int precBits;
 		private int precDiff;
@@ -4973,7 +4973,7 @@ read_global_param( type, refc, idx ) {
 		private int mx;
 		private int r;
 
-         public void ReadReadGlobalParam(int type, uint refc, uint idx)
+         public void ReadReadGlobalParam(int type, int refc, int idx)
          {
 
 			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
@@ -5001,7 +5001,7 @@ read_global_param( type, refc, idx ) {
 			gm_params[refc][idx]= (ReadDecodeSignedSubexpWithRef( -mx, mx + 1, r ) << precDiff) + round;
          }
 
-         public void WriteReadGlobalParam(int type, uint refc, uint idx)
+         public void WriteReadGlobalParam(int type, int refc, int idx)
          {
 
 			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
@@ -5118,38 +5118,38 @@ read_global_param( type, refc, idx ) {
  }
     */
 		private int reset_grain_params;
-		private uint apply_grain;
-		private uint grain_seed;
-		private uint update_grain;
-		private uint film_grain_params_ref_idx;
+		private int apply_grain;
+		private int grain_seed;
+		private int update_grain;
+		private int film_grain_params_ref_idx;
 		private int tempGrainSeed;
-		private uint num_y_points;
-		private uint[] point_y_value;
-		private uint[] point_y_scaling;
+		private int num_y_points;
+		private int[] point_y_value;
+		private int[] point_y_scaling;
 		private int chroma_scaling_from_luma;
 		private int num_cb_points;
 		private int num_cr_points;
-		private uint[] point_cb_value;
-		private uint[] point_cb_scaling;
-		private uint[] point_cr_value;
-		private uint[] point_cr_scaling;
-		private uint grain_scaling_minus_8;
-		private uint ar_coeff_lag;
+		private int[] point_cb_value;
+		private int[] point_cb_scaling;
+		private int[] point_cr_value;
+		private int[] point_cr_scaling;
+		private int grain_scaling_minus_8;
+		private int ar_coeff_lag;
 		private int numPosLuma;
 		private int numPosChroma;
-		private uint[] ar_coeffs_y_plus_128;
-		private uint[] ar_coeffs_cb_plus_128;
-		private uint[] ar_coeffs_cr_plus_128;
-		private uint ar_coeff_shift_minus_6;
-		private uint grain_scale_shift;
-		private uint cb_mult;
-		private uint cb_luma_mult;
-		private uint cb_offset;
-		private uint cr_mult;
-		private uint cr_luma_mult;
-		private uint cr_offset;
-		private uint overlap_flag;
-		private uint clip_to_restricted_range;
+		private int[] ar_coeffs_y_plus_128;
+		private int[] ar_coeffs_cb_plus_128;
+		private int[] ar_coeffs_cr_plus_128;
+		private int ar_coeff_shift_minus_6;
+		private int grain_scale_shift;
+		private int cb_mult;
+		private int cb_luma_mult;
+		private int cb_offset;
+		private int cr_mult;
+		private int cr_luma_mult;
+		private int cr_offset;
+		private int overlap_flag;
+		private int clip_to_restricted_range;
 
          public void ReadFilmGrainParams()
          {
@@ -5435,7 +5435,7 @@ superres_params() {
  FrameWidth = (UpscaledWidth * SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom
  }
     */
-		private uint use_superres;
+		private int use_superres;
 		private int coded_denom;
 		private int SuperresDenom;
 
@@ -5616,7 +5616,7 @@ decode_subexp( numSyms ) {
 		private int mk;
 		private int b2;
 		private uint subexp_final_bits;
-		private uint subexp_more_bits;
+		private int subexp_more_bits;
 		private int subexp_bits;
 
          public int ReadDecodeSubexp(int numSyms)
@@ -5766,7 +5766,7 @@ padding_obu() {
  obu_padding_byte f(8)
 }
     */
-		private uint obu_padding_byte;
+		private int obu_padding_byte;
 
          public void ReadPaddingObu()
          {
@@ -5878,8 +5878,8 @@ metadata_itut_t35() {
  itu_t_t35_payload_bytes
 }
     */
-		private uint itu_t_t35_country_code;
-		private uint itu_t_t35_country_code_extension_byte;
+		private int itu_t_t35_country_code;
+		private int itu_t_t35_country_code_extension_byte;
 		private int itu_t_t35_payload_bytes;
 
          public void ReadMetadataItutT35()
@@ -5915,8 +5915,8 @@ metadata_hdr_cll() {
  max_fall f(16)
 }
     */
-		private uint max_cll;
-		private uint max_fall;
+		private int max_cll;
+		private int max_fall;
 
          public void ReadMetadataHdrCll()
          {
@@ -5947,12 +5947,12 @@ metadata_hdr_mdcv() {
  luminance_min f(32)
 }
     */
-		private uint[] primary_chromaticity_x;
-		private uint[] primary_chromaticity_y;
-		private uint white_point_chromaticity_x;
-		private uint white_point_chromaticity_y;
-		private uint luminance_max;
-		private uint luminance_min;
+		private int[] primary_chromaticity_x;
+		private int[] primary_chromaticity_y;
+		private int white_point_chromaticity_x;
+		private int white_point_chromaticity_y;
+		private int luminance_max;
+		private int luminance_min;
 
          public void ReadMetadataHdrMdcv()
          {
@@ -5994,7 +5994,7 @@ metadata_scalability() {
  scalability_structure()
 }
     */
-		private uint scalability_mode_idc;
+		private int scalability_mode_idc;
 		private int scalability_structure;
 
          public void ReadMetadataScalability()
@@ -6053,20 +6053,20 @@ scalability_structure() {
  }
  }
     */
-		private uint spatial_layers_cnt_minus_1;
-		private uint spatial_layer_dimensions_present_flag;
-		private uint spatial_layer_description_present_flag;
-		private uint temporal_group_description_present_flag;
-		private uint scalability_structure_reserved_3bits;
-		private uint[] spatial_layer_max_width;
-		private uint[] spatial_layer_max_height;
-		private uint[] spatial_layer_ref_id;
-		private uint temporal_group_size;
-		private uint[] temporal_group_temporal_id;
-		private uint[] temporal_group_temporal_switching_up_point_flag;
-		private uint[] temporal_group_spatial_switching_up_point_flag;
-		private uint[] temporal_group_ref_cnt;
-		private uint[][] temporal_group_ref_pic_diff;
+		private int spatial_layers_cnt_minus_1;
+		private int spatial_layer_dimensions_present_flag;
+		private int spatial_layer_description_present_flag;
+		private int temporal_group_description_present_flag;
+		private int scalability_structure_reserved_3bits;
+		private int[] spatial_layer_max_width;
+		private int[] spatial_layer_max_height;
+		private int[] spatial_layer_ref_id;
+		private int temporal_group_size;
+		private int[] temporal_group_temporal_id;
+		private int[] temporal_group_temporal_switching_up_point_flag;
+		private int[] temporal_group_spatial_switching_up_point_flag;
+		private int[] temporal_group_ref_cnt;
+		private int[][] temporal_group_ref_pic_diff;
 
          public void ReadScalabilityStructure()
          {
@@ -6196,18 +6196,18 @@ metadata_timecode() {
  }
  }
     */
-		private uint counting_type;
-		private uint full_timestamp_flag;
-		private uint discontinuity_flag;
-		private uint cnt_dropped_flag;
-		private uint n_frames;
-		private uint seconds_value;
-		private uint minutes_value;
-		private uint hours_value;
-		private uint seconds_flag;
-		private uint minutes_flag;
-		private uint hours_flag;
-		private uint time_offset_length;
+		private int counting_type;
+		private int full_timestamp_flag;
+		private int discontinuity_flag;
+		private int cnt_dropped_flag;
+		private int n_frames;
+		private int seconds_value;
+		private int minutes_value;
+		private int hours_value;
+		private int seconds_flag;
+		private int minutes_flag;
+		private int hours_flag;
+		private int time_offset_length;
 		private int time_offset_value;
 
          public void ReadMetadataTimecode()
@@ -6316,7 +6316,7 @@ metadata_timecode() {
 		private int endBitPos;
 		private int headerBytes;
 
-         public void ReadFrameObu(uint sz)
+         public void ReadFrameObu(int sz)
          {
 
 			startBitPos= stream.GetPosition();
@@ -6328,7 +6328,7 @@ metadata_timecode() {
 			ReadTileGroupObu( sz ); 
          }
 
-         public void WriteFrameObu(uint sz)
+         public void WriteFrameObu(int sz)
          {
 
 			startBitPos= stream.GetPosition();
@@ -6410,7 +6410,7 @@ metadata_timecode() {
 		private int exit_symbol;
 		private int frame_end_update_cdf;
 
-         public void ReadTileGroupObu(uint sz)
+         public void ReadTileGroupObu(int sz)
          {
 
 			NumTiles= TileCols * TileRows;
@@ -6476,7 +6476,7 @@ metadata_timecode() {
 			}
          }
 
-         public void WriteTileGroupObu(uint sz)
+         public void WriteTileGroupObu(int sz)
          {
 
 			NumTiles= TileCols * TileRows;
@@ -6553,12 +6553,12 @@ metadata_timecode() {
  tile_list_entry()
  }
     */
-		private uint output_frame_width_in_tiles_minus_1;
-		private uint output_frame_height_in_tiles_minus_1;
-		private uint tile_count_minus_1;
+		private int output_frame_width_in_tiles_minus_1;
+		private int output_frame_height_in_tiles_minus_1;
+		private int tile_count_minus_1;
 		private int tile_list_entry;
 
-			uint tile = 0;
+			int tile = 0;
          public void ReadTileListObu()
          {
 
@@ -6598,10 +6598,10 @@ tile_list_entry() {
  coded_tile_data f(N)
  }
     */
-		private uint anchor_frame_idx;
-		private uint anchor_tile_row;
-		private uint anchor_tile_col;
-		private uint tile_data_size_minus_1;
+		private int anchor_frame_idx;
+		private int anchor_tile_row;
+		private int anchor_tile_col;
+		private int tile_data_size_minus_1;
 		private int N;
 		private int coded_tile_data;
 
