@@ -78,6 +78,22 @@ namespace Sharp{type}
         private void ReadMotionFieldEstimation() {{ }}
         private void ReadInitCoeffCdfs() {{ }}
         private void ReadLoadPreviousSegmentIds() {{ }}
+        private void ReadMarkRefFrames(int idLen) {{ throw new NotImplementedException(); }}
+        private void WriteMarkRefFrames(int idLen) {{ throw new NotImplementedException(); }}
+        private void ReadItutT35PayloadBytes() {{ throw new NotImplementedException(); }}
+        private void WriteItutT35PayloadBytes() {{ throw new NotImplementedException(); }}
+        private void ReadFrameEndUpdateCdf() {{ throw new NotImplementedException(); }}
+        private void WriteFrameEndUpdateCdf() {{ throw new NotImplementedException(); }}
+        private void ReadExitSymbol() {{ throw new NotImplementedException(); }}
+        private void WriteExitSymbol() {{ throw new NotImplementedException(); }}
+        private void ReadDecodeTile() {{ throw new NotImplementedException(); }}
+        private void WriteDecodeTile() {{ throw new NotImplementedException(); }}
+        private void ReadFrameHeaderCopy() {{ throw new NotImplementedException(); }}
+        private void WriteFrameHeaderCopy() {{ throw new NotImplementedException(); }}
+        private void ReadDecodeFrameWrapup() {{ throw new NotImplementedException(); }}
+        private void WriteDecodeFrameWrapup() {{ throw new NotImplementedException(); }}
+        private void ReadInitSymbol(int tileSize) {{ throw new NotImplementedException(); }}
+        private void WriteInitSymbol(int tileSize) {{ throw new NotImplementedException(); }}
 
         private int ChooseOperatingPoint() {{ throw new NotImplementedException(); }}
 ";

@@ -33,6 +33,22 @@ namespace SharpAV1
         private void ReadMotionFieldEstimation() { }
         private void ReadInitCoeffCdfs() { }
         private void ReadLoadPreviousSegmentIds() { }
+        private void ReadMarkRefFrames(int idLen) { throw new NotImplementedException(); }
+        private void WriteMarkRefFrames(int idLen) { throw new NotImplementedException(); }
+        private void ReadItutT35PayloadBytes() { throw new NotImplementedException(); }
+        private void WriteItutT35PayloadBytes() { throw new NotImplementedException(); }
+        private void ReadFrameEndUpdateCdf() { throw new NotImplementedException(); }
+        private void WriteFrameEndUpdateCdf() { throw new NotImplementedException(); }
+        private void ReadExitSymbol() { throw new NotImplementedException(); }
+        private void WriteExitSymbol() { throw new NotImplementedException(); }
+        private void ReadDecodeTile() { throw new NotImplementedException(); }
+        private void WriteDecodeTile() { throw new NotImplementedException(); }
+        private void ReadFrameHeaderCopy() { throw new NotImplementedException(); }
+        private void WriteFrameHeaderCopy() { throw new NotImplementedException(); }
+        private void ReadDecodeFrameWrapup() { throw new NotImplementedException(); }
+        private void WriteDecodeFrameWrapup() { throw new NotImplementedException(); }
+        private void ReadInitSymbol(int tileSize) { throw new NotImplementedException(); }
+        private void WriteInitSymbol(int tileSize) { throw new NotImplementedException(); }
 
         private int ChooseOperatingPoint() { throw new NotImplementedException(); }
 
@@ -480,7 +496,7 @@ sequence_header_obu() {
  if ( initial_display_delay_present_flag ) {
  initial_display_delay_present_for_this_op[ i ] f(1)
  if ( initial_display_delay_present_for_this_op[ i ] ) {
- initial_display_delay_minus_1[ i ] initial_display_delay_minus_1[ i ] f(4)
+ initial_display_delay_minus_1[ i ] f(4)
  }
  }
  }
@@ -681,7 +697,6 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 						if ( initial_display_delay_present_for_this_op[ i ] != 0 )
 						{
-							ReadInitialDisplayDelayMinus1; 
 							stream.ReadFixed(4, out this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
 						}
 					}
@@ -865,7 +880,6 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 						if ( initial_display_delay_present_for_this_op[ i ] != 0 )
 						{
-							WriteInitialDisplayDelayMinus1; 
 							stream.WriteFixed(4, this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
 						}
 					}
@@ -983,13 +997,13 @@ timing_info() {
  time_scale f(32)
  equal_picture_interval f(1)
  if ( equal_picture_interval )
- num_ticks_per_picture_minus_1 num_ticks_per_picture_minus_1 uvlc()
+ num_ticks_per_picture_minus_1 uvlc()
 }
     */
 		private int num_units_in_display_tick;
 		private int time_scale;
 		private int equal_picture_interval;
-		private int num_ticks_per_picture_minus_1;
+		private uint num_ticks_per_picture_minus_1;
 
          public void ReadTimingInfo()
          {
@@ -1000,9 +1014,8 @@ timing_info() {
 
 			if ( equal_picture_interval != 0 )
 			{
-				ReadNumTicksPerPictureMinus1; 
+				stream.ReadUvlc( out this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
 			}
-			stream.ReadUvlc( out this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
          }
 
          public void WriteTimingInfo()
@@ -1014,9 +1027,8 @@ timing_info() {
 
 			if ( equal_picture_interval != 0 )
 			{
-				WriteNumTicksPerPictureMinus1; 
+				stream.WriteUvlc( this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
 			}
-			stream.WriteUvlc( this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
          }
 
     /*
@@ -5598,7 +5610,7 @@ decode_subexp( numSyms ) {
  a = 1 << b2
  if ( numSyms <= mk + 3 * a ) {
  subexp_final_bits ns(numSyms - mk)
- return subexp_final_bits + mk
+ return (int)subexp_final_bits + mk
  } else {
  subexp_more_bits f(1)
  if ( subexp_more_bits ) {
@@ -5634,7 +5646,7 @@ decode_subexp( numSyms ) {
 				if ( numSyms <= mk + 3 * a )
 				{
 					stream.ReadUnsignedInt(numSyms - mk, out this.subexp_final_bits, "subexp_final_bits"); 
-					return subexp_final_bits + mk;
+					return (int)subexp_final_bits + mk;
 				}
 				else 
 				{
@@ -5669,7 +5681,7 @@ decode_subexp( numSyms ) {
 				if ( numSyms <= mk + 3 * a )
 				{
 					stream.WriteUnsignedInt(numSyms - mk, this.subexp_final_bits, "subexp_final_bits"); 
-					return subexp_final_bits + mk;
+					return (int)subexp_final_bits + mk;
 				}
 				else 
 				{
@@ -5695,7 +5707,7 @@ decode_subexp( numSyms ) {
 inverse_recenter( r, v ) { 
  if ( v > 2 * r )
     return v
- else if ( v & 1 )
+ else if (( v & 1 ) != 0)
     return r - ((v + 1) >> 1)
  else
     return r + (v >> 1)
@@ -5710,7 +5722,7 @@ inverse_recenter( r, v ) {
 			{
 				return v;
 			}
-			else if ( v & 1 != 0 )
+			else if (( v & 1 ) != 0)
 			{
 				return r - ((v + 1) >> (int)1);
 			}
@@ -5728,7 +5740,7 @@ inverse_recenter( r, v ) {
 			{
 				return v;
 			}
-			else if ( v & 1 != 0 )
+			else if (( v & 1 ) != 0)
 			{
 				return r - ((v + 1) >> (int)1);
 			}
@@ -5875,7 +5887,7 @@ metadata_itut_t35() {
  if ( itu_t_t35_country_code == 0xFF ) {
  itu_t_t35_country_code_extension_byte f(8)
  }
- itu_t_t35_payload_bytes
+ itu_t_t35_payload_bytes()
 }
     */
 		private int itu_t_t35_country_code;
@@ -5891,7 +5903,7 @@ metadata_itut_t35() {
 			{
 				stream.ReadFixed(8, out this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
 			}
-			ReadItutT35PayloadBytes; 
+			ReadItutT35PayloadBytes(); 
          }
 
          public void WriteMetadataItutT35()
@@ -5903,7 +5915,7 @@ metadata_itut_t35() {
 			{
 				stream.WriteFixed(8, this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
 			}
-			WriteItutT35PayloadBytes; 
+			WriteItutT35PayloadBytes(); 
          }
 
     /*

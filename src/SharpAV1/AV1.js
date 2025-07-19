@@ -127,7 +127,7 @@ sequence_header_obu() {
  if ( initial_display_delay_present_flag ) {
  initial_display_delay_present_for_this_op[ i ] f(1)
  if ( initial_display_delay_present_for_this_op[ i ] ) {
- initial_display_delay_minus_1[ i ] initial_display_delay_minus_1[ i ] f(4)
+ initial_display_delay_minus_1[ i ] f(4)
  }
  }
  }
@@ -210,7 +210,7 @@ timing_info() {
  time_scale f(32)
  equal_picture_interval f(1)
  if ( equal_picture_interval )
- num_ticks_per_picture_minus_1 num_ticks_per_picture_minus_1 uvlc()
+ num_ticks_per_picture_minus_1 uvlc()
 }
 
 decoder_model_info() { 

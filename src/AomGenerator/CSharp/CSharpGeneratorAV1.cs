@@ -483,6 +483,9 @@ namespace AomGenerator.CSharp
             
             definitions = definitions.Replace("!allow_high_precision_mv", "(allow_high_precision_mv == 0 ? 1 : 0)");
             definitions = definitions.Replace("get_position() & 7", "(get_position() & 7) == 7");
+            definitions = definitions.Replace(" v & 1 ", "( v & 1 ) != 0");
+            definitions = definitions.Replace("return subexp_final_bits", "return (int)subexp_final_bits");
+            definitions = definitions.Replace("itu_t_t35_payload_bytes", "itu_t_t35_payload_bytes()");
 
             return definitions;
         }

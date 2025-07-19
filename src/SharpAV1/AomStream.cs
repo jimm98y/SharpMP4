@@ -79,12 +79,12 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadUvlc(out int value, string name)
+        public ulong ReadUvlc(out uint value, string name)
         {
             throw new NotImplementedException();
         }
 
-        public ulong WriteUvlc(int value, string name)
+        public ulong WriteUvlc(uint value, string name)
         {
             throw new NotImplementedException();
         }
