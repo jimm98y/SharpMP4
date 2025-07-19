@@ -65,30 +65,30 @@ namespace Sharp{type}
         public int[] Segmentation_Feature_Max {{ get; set; }}
         public int[] Segmentation_Feature_Signed {{ get; set; }}
 
-        private void ReadDropObu() {{ }}
-        private void WriteDropObu() {{ }}
-        private void ReadSetFrameRefs() {{ }}
-        private void WriteSetFrameRefs() {{ }}
-        private void ReadResetGrainParams() {{ }}
-        private void WriteResetGrainParams() {{ }}
-        private void ReadLoadGrainParams(int p) {{ }}
-        private void WriteLoadGrainParams(int p) {{ }}
+        private void ReadDropObu() {{ throw new NotImplementedException(); }}
+        private void WriteDropObu() {{ throw new NotImplementedException(); }}
+        private void ReadSetFrameRefs() {{ throw new NotImplementedException(); }}
+        private void WriteSetFrameRefs() {{ throw new NotImplementedException(); }}
+        private void ReadResetGrainParams() {{ throw new NotImplementedException(); }}
+        private void WriteResetGrainParams() {{ throw new NotImplementedException(); }}
+        private void ReadLoadGrainParams(int p) {{ throw new NotImplementedException(); }}
+        private void WriteLoadGrainParams(int p) {{ throw new NotImplementedException(); }}
         
-        private void WriteInitNonCoeffCdfs() {{ }}
-        private void WriteSetupPastIndependence() {{ }}
-        private void WriteLoadCdfs( int value ) {{ }}
-        private void WriteLoadPrevious() {{ }}
-        private void WriteMotionFieldEstimation() {{ }}
-        private void WriteInitCoeffCdfs() {{ }}
-        private void WriteLoadPreviousSegmentIds() {{ }}
+        private void WriteInitNonCoeffCdfs() {{ throw new NotImplementedException(); }}
+        private void WriteSetupPastIndependence() {{ throw new NotImplementedException(); }}
+        private void WriteLoadCdfs( int value ) {{ throw new NotImplementedException(); }}
+        private void WriteLoadPrevious() {{ throw new NotImplementedException(); }}
+        private void WriteMotionFieldEstimation() {{ throw new NotImplementedException(); }}
+        private void WriteInitCoeffCdfs() {{ throw new NotImplementedException(); }}
+        private void WriteLoadPreviousSegmentIds() {{ throw new NotImplementedException(); }}
 
-        private void ReadInitNonCoeffCdfs() {{ }}
-        private void ReadSetupPastIndependence() {{ }}
-        private void ReadLoadCdfs( int value ) {{ }}
-        private void ReadLoadPrevious() {{ }}
-        private void ReadMotionFieldEstimation() {{ }}
-        private void ReadInitCoeffCdfs() {{ }}
-        private void ReadLoadPreviousSegmentIds() {{ }}
+        private void ReadInitNonCoeffCdfs() {{ throw new NotImplementedException(); }}
+        private void ReadSetupPastIndependence() {{ throw new NotImplementedException(); }}
+        private void ReadLoadCdfs( int value ) {{ throw new NotImplementedException(); }}
+        private void ReadLoadPrevious() {{ throw new NotImplementedException(); }}
+        private void ReadMotionFieldEstimation() {{ throw new NotImplementedException(); }}
+        private void ReadInitCoeffCdfs() {{ throw new NotImplementedException(); }}
+        private void ReadLoadPreviousSegmentIds() {{ throw new NotImplementedException(); }}
         private void ReadMarkRefFrames(int idLen) {{ throw new NotImplementedException(); }}
         private void WriteMarkRefFrames(int idLen) {{ throw new NotImplementedException(); }}
         private void ReadItutT35PayloadBytes() {{ throw new NotImplementedException(); }}

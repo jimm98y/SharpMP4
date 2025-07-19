@@ -375,4 +375,9 @@
         public const int BILINEAR = 3;
         public const int SWITCHABLE = 4;
     }
+
+    public partial class AV1Context
+    {
+
+    }
 }
