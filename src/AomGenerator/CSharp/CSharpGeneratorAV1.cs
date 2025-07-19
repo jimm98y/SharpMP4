@@ -404,7 +404,7 @@ namespace AomGenerator.CSharp
                 { "high", "su(32)" },
                 { "r", "su(32)" },
                 { "mx", "su(32)" },
-                { "numSyms", "f(32)" },
+                { "numSyms", "su(32)" },
                 { "v", "su(32)" },
                 { "c", "f(32)" },
                 { "sbSize4", "f(32)" },

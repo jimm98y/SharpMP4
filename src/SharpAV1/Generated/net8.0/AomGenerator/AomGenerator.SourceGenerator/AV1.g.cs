@@ -2870,7 +2870,7 @@ frame_header_obu() {
 		private int diff;
 		private int m;
 
-         public void ReadGetRelativeDist(int a, int b)
+         public int ReadGetRelativeDist(int a, int b)
          {
 
 
@@ -2884,7 +2884,7 @@ frame_header_obu() {
 			return diff;
          }
 
-         public void WriteGetRelativeDist(int a, int b)
+         public int WriteGetRelativeDist(int a, int b)
          {
 
 
@@ -3281,7 +3281,7 @@ tile_log2( blkSize, target ) {
 		private int target;
 
 			uint k = 0;
-         public void ReadTileLog2(int blkSize, int target)
+         public int ReadTileLog2(int blkSize, int target)
          {
 
 
@@ -3291,7 +3291,7 @@ tile_log2( blkSize, target ) {
 			return k;
          }
 
-         public void WriteTileLog2(int blkSize, int target)
+         public int WriteTileLog2(int blkSize, int target)
          {
 
 
@@ -3478,7 +3478,7 @@ tile_log2( blkSize, target ) {
 		private uint delta_coded;
 		private int delta_q;
 
-         public void ReadReadDeltaq()
+         public int ReadReadDeltaq()
          {
 
 			stream.ReadFixed(1, out this.delta_coded, "delta_coded"); 
@@ -3494,7 +3494,7 @@ tile_log2( blkSize, target ) {
 			return delta_q;
          }
 
-         public void WriteReadDeltaq()
+         public int WriteReadDeltaq()
          {
 
 			stream.WriteFixed(1, this.delta_coded, "delta_coded"); 
@@ -5528,14 +5528,14 @@ superres_params() {
 		private int high;
 		private int x;
 
-         public void ReadDecodeSignedSubexpWithRef(int low, int high, int r)
+         public int ReadDecodeSignedSubexpWithRef(int low, int high, int r)
          {
 
 			x= ReadDecodeUnsignedSubexpWithRef(high - low, r - low);
 			return x + low;
          }
 
-         public void WriteDecodeSignedSubexpWithRef(int low, int high, int r)
+         public int WriteDecodeSignedSubexpWithRef(int low, int high, int r)
          {
 
 			x= WriteDecodeUnsignedSubexpWithRef(high - low, r - low);
@@ -5556,7 +5556,7 @@ decode_unsigned_subexp_with_ref( mx, r ) {
     */
 		private int v;
 
-         public void ReadDecodeUnsignedSubexpWithRef(int mx, int r)
+         public int ReadDecodeUnsignedSubexpWithRef(int mx, int r)
          {
 
 			v= ReadDecodeSubexp( mx );
@@ -5571,7 +5571,7 @@ decode_unsigned_subexp_with_ref( mx, r ) {
 			}
          }
 
-         public void WriteDecodeUnsignedSubexpWithRef(int mx, int r)
+         public int WriteDecodeUnsignedSubexpWithRef(int mx, int r)
          {
 
 			v= WriteDecodeSubexp( mx );
@@ -5612,14 +5612,14 @@ decode_subexp( numSyms ) {
  }
  }
     */
-		private uint numSyms;
+		private int numSyms;
 		private int mk;
 		private int b2;
 		private uint subexp_final_bits;
 		private uint subexp_more_bits;
 		private int subexp_bits;
 
-         public void ReadDecodeSubexp(uint numSyms)
+         public int ReadDecodeSubexp(int numSyms)
          {
 
 			i= 0;
@@ -5654,7 +5654,7 @@ decode_subexp( numSyms ) {
 			}
          }
 
-         public void WriteDecodeSubexp(uint numSyms)
+         public int WriteDecodeSubexp(int numSyms)
          {
 
 			i= 0;
@@ -5702,7 +5702,7 @@ inverse_recenter( r, v ) {
  }
     */
 
-         public void ReadInverseRecenter(int r, int v)
+         public int ReadInverseRecenter(int r, int v)
          {
 
 
@@ -5720,7 +5720,7 @@ inverse_recenter( r, v ) {
 			}
          }
 
-         public void WriteInverseRecenter(int r, int v)
+         public int WriteInverseRecenter(int r, int v)
          {
 
 

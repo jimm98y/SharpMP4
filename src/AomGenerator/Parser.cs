@@ -245,6 +245,7 @@ namespace AomGenerator
         }
 
         public string ClassName { get; }
+        public bool HasReturn { get; set; }
         public string ClassParameter { get; set; }
         public IEnumerable<AomCode> Fields { get; }
         public int EndOffset { get; }

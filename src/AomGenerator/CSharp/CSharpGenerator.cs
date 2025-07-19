@@ -113,8 +113,14 @@ namespace Sharp{type}
 
             resultCode += BuildRequiredVariables(aomClass);
 
+            string retType = "void";
+            if(aomClass.HasReturn)
+            {
+                retType = "int";
+            }
+
             resultCode += $@"
-         public void Read{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
+         public {retType} Read{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
          {{
 ";
             foreach (var field in aomClass.Fields)
@@ -126,7 +132,7 @@ namespace Sharp{type}
          }}
 ";
             resultCode += $@"
-         public void Write{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
+         public {retType} Write{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
          {{
 ";
             foreach (var field in aomClass.Fields)
@@ -263,6 +269,10 @@ namespace Sharp{type}
                             AddAndResolveDuplicates(b, ret, blockElseField);
                         }
                     }
+                }
+                else if(code is AomReturn rt && !string.IsNullOrEmpty(rt.Parameter))
+                {
+                    b.HasReturn = true;
                 }
             }
 
