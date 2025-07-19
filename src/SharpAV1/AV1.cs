@@ -2,7 +2,10 @@
 
 namespace SharpAV1
 {
-    public interface IAomContext { }
+    public interface IAomContext 
+    {
+        void Read(AomStream stream);
+    }
 
     public interface IAomSerializable
     {
@@ -432,5 +435,12 @@ namespace SharpAV1
         private void ReadInitSymbol(int tileSize) { throw new NotImplementedException(); }
         private void WriteInitSymbol(int tileSize) { throw new NotImplementedException(); }
         private int ChooseOperatingPoint() { throw new NotImplementedException(); }
+
+        public void Read(AomStream stream)
+        {
+            this.stream = stream;
+
+            ReadObuHeader();
+        }
     }
 }
