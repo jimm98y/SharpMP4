@@ -9,6 +9,17 @@ namespace SharpAV1
     {
         AomStream stream = null;
         int obu_padding_length = 0;
+        public int[][] PrevGmParams { get; set; }
+        public int[] RefFrameHeight { get; set; }
+        public int[] RefFrameType { get; set; }
+        public int[] RefRenderWidth { get; set; }
+        public int[] RefRenderHeight { get; set; }
+        public int[] RefUpscaledWidth { get; set; }
+        public int[] Remap_Lr_Type { get; set; }
+        public int[] Segmentation_Feature_Bits { get; set; }
+        public int[] Segmentation_Feature_Max { get; set; }
+        public int[] Segmentation_Feature_Signed { get; set; }
+
         private void ReadDropObu() { }
         private void WriteDropObu() { }
         private void ReadSetFrameRefs() { }
