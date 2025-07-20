@@ -531,6 +531,12 @@ namespace AomGenerator.CSharp
                 case "LoopRestorationSize":
                     return "new int[4]";
 
+                case "loop_filter_ref_deltas":
+                    return "new int[8]";
+
+                case "loop_filter_mode_deltas":
+                    return "new int[2]";
+
                 default:
                     return "";
             }

@@ -4210,8 +4210,8 @@ lr_params() {
  }
     */
 		private int[] loop_filter_level= new int[4];
-		private int[] loop_filter_ref_deltas;
-		private int[] loop_filter_mode_deltas;
+		private int[] loop_filter_ref_deltas= new int[8];
+		private int[] loop_filter_mode_deltas= new int[2];
 		private int loop_filter_sharpness;
 		private int loop_filter_delta_enabled;
 		private int loop_filter_delta_update;
