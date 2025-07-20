@@ -5,7 +5,7 @@
 	  <ImplicitUsings>disable</ImplicitUsings>
 	  <Nullable>disable</Nullable>
 	  <!-- Used to enable/disable the source code generator -->
-	  <AutoGenerateCode>false</AutoGenerateCode>
+	  <AutoGenerateCode>true</AutoGenerateCode>
   </PropertyGroup>
 
 	<ItemGroup>

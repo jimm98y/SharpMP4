@@ -358,7 +358,7 @@ while ( nbBits > 0 ) {
 
 
 byte_alignment() { 
- while ( (get_position() & 7) == 7 )
+ while ( (get_position() & 7) > 0 )
  zero_bit f(1)
 }
     */
@@ -368,7 +368,7 @@ byte_alignment() {
          {
 
 
-			while ( (stream.GetPosition() & 7) == 7 )
+			while ( (stream.GetPosition() & 7) > 0 )
 			{
 				stream.ReadFixed(1, out this.zero_bit, "zero_bit"); 
 			}
@@ -378,7 +378,7 @@ byte_alignment() {
          {
 
 
-			while ( (stream.GetPosition() & 7) == 7 )
+			while ( (stream.GetPosition() & 7) > 0 )
 			{
 				stream.WriteFixed(1, this.zero_bit, "zero_bit"); 
 			}
@@ -1353,21 +1353,77 @@ color_config() {
 
 
 frame_header_obu() { 
- skip_obu()
+ if ( SeenFrameHeader == 1 ) {
+ frame_header_copy()
+ } else {
+ SeenFrameHeader = 1
+ uncompressed_header()
+ if ( show_existing_frame ) {
+ decode_frame_wrapup()
+ SeenFrameHeader = 0
+ } else {
+ TileNum = 0
+ SeenFrameHeader = 1
+ }
+ }
  }
     */
-		private int skip_obu;
+		private int frame_header_copy;
+		private int SeenFrameHeader;
+		private int uncompressed_header;
+		private int decode_frame_wrapup;
+		private int TileNum;
 
          public void ReadFrameHeaderObu()
          {
 
-			ReadSkipObu(); 
+
+			if ( SeenFrameHeader == 1 )
+			{
+				ReadFrameHeaderCopy(); 
+			}
+			else 
+			{
+				SeenFrameHeader= 1;
+				ReadUncompressedHeader(); 
+
+				if ( show_existing_frame != 0 )
+				{
+					ReadDecodeFrameWrapup(); 
+					SeenFrameHeader= 0;
+				}
+				else 
+				{
+					TileNum= 0;
+					SeenFrameHeader= 1;
+				}
+			}
          }
 
          public void WriteFrameHeaderObu()
          {
 
-			WriteSkipObu(); 
+
+			if ( SeenFrameHeader == 1 )
+			{
+				WriteFrameHeaderCopy(); 
+			}
+			else 
+			{
+				SeenFrameHeader= 1;
+				WriteUncompressedHeader(); 
+
+				if ( show_existing_frame != 0 )
+				{
+					WriteDecodeFrameWrapup(); 
+					SeenFrameHeader= 0;
+				}
+				else 
+				{
+					TileNum= 0;
+					SeenFrameHeader= 1;
+				}
+			}
          }
 
     /*
@@ -5669,7 +5725,6 @@ temporal_delimiter_obu() {
  SeenFrameHeader = 0
 }
     */
-		private int SeenFrameHeader;
 
          public void ReadTemporalDelimiterObu()
          {
@@ -6226,41 +6281,182 @@ metadata_timecode() {
     /*
 
 
- frame_obu( sz ) { 
-  skip_obu()
+frame_obu( sz ) { 
+ startBitPos = get_position()
+ frame_header_obu()
+ byte_alignment()
+ endBitPos = get_position()
+ headerBytes = (endBitPos - startBitPos) / 8
+ sz -= headerBytes
+ tile_group_obu( sz )
  }
     */
+		private int startBitPos;
+		private int byte_alignment;
+		private int endBitPos;
+		private int headerBytes;
 
          public void ReadFrameObu(int sz)
          {
 
-			ReadSkipObu(); 
+			startBitPos= stream.GetPosition();
+			ReadFrameHeaderObu(); 
+			ReadByteAlignment(); 
+			endBitPos= stream.GetPosition();
+			headerBytes= (endBitPos - startBitPos) / 8;
+			sz-= headerBytes;
+			ReadTileGroupObu( sz ); 
          }
 
          public void WriteFrameObu(int sz)
          {
 
-			WriteSkipObu(); 
+			startBitPos= stream.GetPosition();
+			WriteFrameHeaderObu(); 
+			WriteByteAlignment(); 
+			endBitPos= stream.GetPosition();
+			headerBytes= (endBitPos - startBitPos) / 8;
+			sz-= headerBytes;
+			WriteTileGroupObu( sz ); 
          }
 
     /*
 
 
  tile_group_obu( sz ) { 
+ NumTiles = TileCols * TileRows
+ startBitPos = get_position()
+ tile_start_and_end_present_flag = 0
+ if ( NumTiles > 1 )
+ tile_start_and_end_present_flag f(1)
+ if ( NumTiles == 1 || !tile_start_and_end_present_flag ) {
+ tg_start = 0
+ tg_end = NumTiles - 1
+ } else {
+ tileBits = TileColsLog2 + TileRowsLog2
+ tg_start f(tileBits)
+ tg_end f(tileBits)
+ }
+ byte_alignment()
+ endBitPos = get_position()
+ headerBytes = (endBitPos - startBitPos) / 8
+ sz -= headerBytes
+ /*for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {
+ tileRow = TileNum / TileCols
+ tileCol = TileNum % TileCols
+ lastTile = (TileNum == tg_end) ? 1 : 0
+ if ( lastTile ) {
+ tileSize = sz
+ } else {
+ tile_size_minus_1 le(TileSizeBytes)
+ tileSize = tile_size_minus_1 + 1
+ sz -= tileSize + TileSizeBytes
+ }
+ MiRowStart = MiRowStarts[ tileRow ]
+ MiRowEnd = MiRowStarts[ tileRow + 1 ]
+ MiColStart = MiColStarts[ tileCol ]
+ MiColEnd = MiColStarts[ tileCol + 1 ]
+ CurrentQIndex = base_q_idx
+ init_symbol( tileSize )
+ decode_tile()
+ exit_symbol()
+ }*//*
  skip_obu()
+
+ if ( tg_end == NumTiles - 1 ) {
+ /* if ( !disable_frame_end_update_cdf ) {
+ frame_end_update_cdf()
+ } *//*
+ decode_frame_wrapup()
+ SeenFrameHeader = 0
+ }
  }
     */
+		private int NumTiles;
+		private int tile_start_and_end_present_flag;
+		private int tg_start;
+		private int tg_end;
+		private int tileBits;
+		private int skip_obu;
 
          public void ReadTileGroupObu(int sz)
          {
 
+			NumTiles= TileCols * TileRows;
+			startBitPos= stream.GetPosition();
+			tile_start_and_end_present_flag= 0;
+
+			if ( NumTiles > 1 )
+			{
+				stream.ReadFixed(1, out this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
+			}
+
+			if ( NumTiles == 1 || tile_start_and_end_present_flag== 0 )
+			{
+				tg_start= 0;
+				tg_end= NumTiles - 1;
+			}
+			else 
+			{
+				tileBits= TileColsLog2 + TileRowsLog2;
+				stream.ReadVariable(tileBits, out this.tg_start, "tg_start"); 
+				stream.ReadVariable(tileBits, out this.tg_end, "tg_end"); 
+			}
+			ReadByteAlignment(); 
+			endBitPos= stream.GetPosition();
+			headerBytes= (endBitPos - startBitPos) / 8;
+			sz-= headerBytes;
 			ReadSkipObu(); 
+
+			if ( tg_end == NumTiles - 1 )
+			{
+/*  if ( !disable_frame_end_update_cdf ) {
+ frame_end_update_cdf()
+ }  */
+
+				ReadDecodeFrameWrapup(); 
+				SeenFrameHeader= 0;
+			}
          }
 
          public void WriteTileGroupObu(int sz)
          {
 
+			NumTiles= TileCols * TileRows;
+			startBitPos= stream.GetPosition();
+			tile_start_and_end_present_flag= 0;
+
+			if ( NumTiles > 1 )
+			{
+				stream.WriteFixed(1, this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
+			}
+
+			if ( NumTiles == 1 || tile_start_and_end_present_flag== 0 )
+			{
+				tg_start= 0;
+				tg_end= NumTiles - 1;
+			}
+			else 
+			{
+				tileBits= TileColsLog2 + TileRowsLog2;
+				stream.WriteVariable(tileBits, this.tg_start, "tg_start"); 
+				stream.WriteVariable(tileBits, this.tg_end, "tg_end"); 
+			}
+			WriteByteAlignment(); 
+			endBitPos= stream.GetPosition();
+			headerBytes= (endBitPos - startBitPos) / 8;
+			sz-= headerBytes;
 			WriteSkipObu(); 
+
+			if ( tg_end == NumTiles - 1 )
+			{
+/*  if ( !disable_frame_end_update_cdf ) {
+ frame_end_update_cdf()
+ }  */
+
+				WriteDecodeFrameWrapup(); 
+				SeenFrameHeader= 0;
+			}
          }
 
     /*
