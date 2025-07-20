@@ -130,9 +130,30 @@ namespace SharpAV1
 
         #endregion // Bit read/write
 
-        public ulong ReadLeb128(out int value, string name)
+        public ulong ReadLeb128(out int v, string name)
         {
-            throw new NotImplementedException();
+            int value = 0;
+            int Leb128Bytes = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                int leb128_byte = ReadByte();
+                Leb128Bytes += 1;
+                if((leb128_byte & 0x80) == 0)
+                {
+                    break;
+                }
+            }
+
+            if (value <= ((1 << 32) - 1))
+            {
+                v = value;
+            }
+            else
+            {
+                throw new InvalidDataException($"Invalid LEB128 value: {value}");
+            }
+
+            return (ulong)Leb128Bytes << 3;
         }
 
         public ulong WriteLeb128(int value, string name)
@@ -213,7 +234,7 @@ namespace SharpAV1
 
         public int GetPosition()
         {
-            throw new NotImplementedException();
+            return _bitsPosition;
         }
 
         public static int Clip3(int v, int limit, int feature_value)

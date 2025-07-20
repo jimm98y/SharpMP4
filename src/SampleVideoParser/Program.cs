@@ -540,11 +540,11 @@ static ulong ReadSample(int length, object context, VideoFormat format, StreamMa
 {
     if (format == VideoFormat.H264 || format == VideoFormat.H265 || format == VideoFormat.H266)
     {
-        return ReadH26XSample(length, context, format, marker, sampleSizeInBytes, dts, pts, duration);
+        return ReadH26XSample(length, (IItuContext)context, format, marker, sampleSizeInBytes, dts, pts, duration);
     }
     else if (format == VideoFormat.AV1)
     {
-        return ReadAVXSample(length, context, format, marker, sampleSizeInBytes, dts, pts, duration);
+        return ReadAVXSample(length, (IAomContext)context, format, marker, sampleSizeInBytes, dts, pts, duration);
     }
     else
     {
@@ -552,7 +552,7 @@ static ulong ReadSample(int length, object context, VideoFormat format, StreamMa
     }
 }
 
-static ulong ReadH26XSample(int nalLengthSize, object context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+static ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     ulong size = 0;
     long offsetInBytes = 0;
@@ -593,7 +593,7 @@ static ulong ReadH26XSample(int nalLengthSize, object context, VideoFormat forma
         size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData);
         offsetInBytes += sampleData.Length;
 
-        ParseNALU((IItuContext)context, format, sampleData);
+        ParseNALU(context, format, sampleData);
 
     } while (offsetInBytes < sampleSizeInBytes);
 
@@ -1203,26 +1203,28 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
     }
 }
 
-static ulong ReadAVXSample(int length, object context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     ulong size = 0;
     long offsetInBytes = 0;
 
     SharpISOBMFF.Log.Debug($"Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
-    do
+    size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData);
+    using(AomStream stream = new AomStream(new MemoryStream(sampleData)))
     {
-        using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
-        {
-            context.Read(stream);
-        }
+        context.Read(stream, (int)sampleSizeInBytes);
 
-        size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData);
-        offsetInBytes += sampleData.Length;
+        //do
+        //{
+        //    int obuLen = 0;
 
-        ParseOBU((IAomContext)context, format, sampleData);
+        //    offsetInBytes += obuLen;
 
-    } while (offsetInBytes < sampleSizeInBytes);
+        //    ParseOBU(context, format, obuData);
+
+        //} while (offsetInBytes < sampleSizeInBytes);
+    }
 
     if (offsetInBytes != sampleSizeInBytes)
         throw new Exception("Mismatch!");
@@ -1236,7 +1238,7 @@ static void ParseOBU(IAomContext context, VideoFormat format, byte[] sampleData)
 {
     using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
     {
-        context.Read(stream);
+        
     }
 }
 
