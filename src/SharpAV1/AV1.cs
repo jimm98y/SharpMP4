@@ -434,7 +434,10 @@ namespace SharpAV1
         private void WriteDecodeFrameWrapup() { throw new NotImplementedException(); }
         private void ReadInitSymbol(int tileSize) { throw new NotImplementedException(); }
         private void WriteInitSymbol(int tileSize) { throw new NotImplementedException(); }
-        private int ChooseOperatingPoint() { throw new NotImplementedException(); }
+        private int ChooseOperatingPoint() 
+        {
+            return 0;
+        }
 
         public void Read(AomStream stream, int size)
         {

@@ -537,11 +537,11 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		private int decoder_model_info_present_flag;
 		private int initial_display_delay_present_flag;
 		private int operating_points_cnt_minus_1;
-		private int[] operating_point_idc;
-		private int[] seq_level_idx;
-		private int[] seq_tier;
-		private int[] decoder_model_present_for_this_op;
-		private int[] initial_display_delay_present_for_this_op;
+		private int[] operating_point_idc= new int[1];
+		private int[] seq_level_idx= new int[1];
+		private int[] seq_tier= new int[1];
+		private int[] decoder_model_present_for_this_op= new int[1];
+		private int[] initial_display_delay_present_for_this_op= new int[1];
 		private int timing_info;
 		private int decoder_model_info;
 		private int operating_parameters_info;

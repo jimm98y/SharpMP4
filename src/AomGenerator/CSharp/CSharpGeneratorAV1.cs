@@ -460,6 +460,13 @@ namespace AomGenerator.CSharp
         {
             switch (field.Name)
             {
+                case "operating_point_idc":
+                case "seq_level_idx":
+                case "seq_tier":
+                case "decoder_model_present_for_this_op":
+                case "initial_display_delay_present_for_this_op":
+                    return "new int[1]";
+
                 default:
                     return "";
             }
