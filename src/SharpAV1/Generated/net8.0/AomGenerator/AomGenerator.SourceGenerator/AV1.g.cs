@@ -1672,9 +1672,9 @@ frame_header_obu() {
 		private int display_frame_id;
 		private int load_grain_params;
 		private int error_resilient_mode;
-		private int[] RefValid;
-		private int[] RefOrderHint;
-		private int[] OrderHints;
+		private int[] RefValid= new int[AV1Constants.NUM_REF_FRAMES];
+		private int[] RefOrderHint= new int[AV1Constants.NUM_REF_FRAMES];
+		private int[] OrderHints= new int[AV1RefFrames.LAST_FRAME + AV1Constants.REFS_PER_FRAME];
 		private int disable_cdf_update;
 		private int allow_screen_content_tools;
 		private int force_integer_mv;
@@ -2969,13 +2969,13 @@ tile_info () {
 		private int TileColsLog2;
 		private int increment_tile_cols_log2;
 		private int tileWidthSb;
-		private int[] MiColStarts;
+		private int[] MiColStarts= new int[AV1Constants.MAX_TILE_COLS];
 		private int TileCols;
 		private int minLog2TileRows;
 		private int TileRowsLog2;
 		private int increment_tile_rows_log2;
 		private int tileHeightSb;
-		private int[] MiRowStarts;
+		private int[] MiRowStarts= new int[AV1Constants.MAX_TILE_ROWS];
 		private int TileRows;
 		private int widestTileSb;
 		private int startSb;
@@ -3544,11 +3544,11 @@ tile_log2( blkSize, target ) {
 		private int segmentation_update_data;
 		private int feature_value;
 		private int feature_enabled;
-		private int[][] FeatureEnabled;
+		private int[][] FeatureEnabled= new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX] };
 		private int clippedValue;
 		private int bitsToRead;
 		private int limit;
-		private int[][] FeatureData;
+		private int[][] FeatureData= new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX] };
 		private int SegIdPreSkip;
 		private int LastActiveSegId;
 

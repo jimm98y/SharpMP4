@@ -137,6 +137,7 @@ namespace SharpAV1
             for (int i = 0; i < 8; i++)
             {
                 int leb128_byte = ReadByte();
+                value |= ((leb128_byte & 0x7f) << (i * 7));
                 Leb128Bytes += 1;
                 if((leb128_byte & 0x80) == 0)
                 {
@@ -144,7 +145,7 @@ namespace SharpAV1
                 }
             }
 
-            if (value <= ((1 << 32) - 1))
+            if (value <= int.MaxValue)
             {
                 v = value;
             }
@@ -177,7 +178,9 @@ namespace SharpAV1
 
         public ulong ReadVariable(long length, out int value, string name)
         {
-            throw new NotImplementedException();
+            var size = ReadUnsignedInt((int)length, out uint v, name);
+            value = (int)v;
+            return size;
         }
 
         public ulong WriteVariable(long length, int value, string name)

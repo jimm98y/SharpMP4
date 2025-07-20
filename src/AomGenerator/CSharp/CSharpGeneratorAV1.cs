@@ -467,6 +467,23 @@ namespace AomGenerator.CSharp
                 case "initial_display_delay_present_for_this_op":
                     return "new int[1]";
 
+                case "RefValid":
+                case "RefOrderHint":
+                    return "new int[AV1Constants.NUM_REF_FRAMES]";
+                
+                case "OrderHints":
+                    return "new int[AV1RefFrames.LAST_FRAME + AV1Constants.REFS_PER_FRAME]";
+
+                case "MiColStarts":
+                    return "new int[AV1Constants.MAX_TILE_COLS]";
+
+                case "MiRowStarts":
+                    return "new int[AV1Constants.MAX_TILE_ROWS]";
+
+                case "FeatureEnabled":
+                case "FeatureData":
+                    return "new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX] }";
+
                 default:
                     return "";
             }

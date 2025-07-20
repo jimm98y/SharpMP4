@@ -1206,28 +1206,19 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
 static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     ulong size = 0;
-    long offsetInBytes = 0;
 
     SharpISOBMFF.Log.Debug($"Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
     size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData);
     using(AomStream stream = new AomStream(new MemoryStream(sampleData)))
     {
-        context.Read(stream, (int)sampleSizeInBytes);
-
-        //do
-        //{
-        //    int obuLen = 0;
-
-        //    offsetInBytes += obuLen;
-
-        //    ParseOBU(context, format, obuData);
-
-        //} while (offsetInBytes < sampleSizeInBytes);
+        int len = (int)sampleSizeInBytes;
+        do
+        {
+            context.Read(stream, (int)sampleSizeInBytes);
+            len -= context.ObuSize;
+        } while (len > 0);
     }
-
-    if (offsetInBytes != sampleSizeInBytes)
-        throw new Exception("Mismatch!");
 
     SharpISOBMFF.Log.Debug("Sample end");
 
