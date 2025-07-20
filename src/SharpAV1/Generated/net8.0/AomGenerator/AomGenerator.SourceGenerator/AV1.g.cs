@@ -1431,149 +1431,149 @@ frame_header_obu() {
 
  uncompressed_header() { 
  if ( frame_id_numbers_present_flag ) {
- idLen = ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 )
+    idLen = ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 )
  }
  allFrames = (1 << NUM_REF_FRAMES) - 1
  if ( reduced_still_picture_header ) {
- show_existing_frame = 0
- frame_type = KEY_FRAME
- FrameIsIntra = 1
- show_frame = 1
- showable_frame = 0
+    show_existing_frame = 0
+    frame_type = KEY_FRAME
+    FrameIsIntra = 1
+    show_frame = 1
+    showable_frame = 0
  } else {
- show_existing_frame f(1)
- if ( show_existing_frame == 1 ) {
- frame_to_show_map_idx f(3)
- if ( decoder_model_info_present_flag && !equal_picture_interval ) {
- temporal_point_info()
- }
- refresh_frame_flags = 0
- if ( frame_id_numbers_present_flag ) {
- display_frame_id f(idLen)
- }
- frame_type = RefFrameType[ frame_to_show_map_idx ]
- if ( frame_type == KEY_FRAME ) {
- refresh_frame_flags = allFrames
- }
- if ( film_grain_params_present ) {
- load_grain_params( frame_to_show_map_idx )
- }
- return
- }
- frame_type f(2)
- FrameIsIntra = ((frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? 1 : 0)
- show_frame f(1)
- if ( show_frame && decoder_model_info_present_flag && !equal_picture_interval ) {
- temporal_point_info()
- }
- if ( show_frame ) {
- showable_frame = (frame_type != KEY_FRAME) ? 1 : 0
- } else {
- showable_frame f(1)
+    show_existing_frame f(1)
+    if ( show_existing_frame == 1 ) {
+       frame_to_show_map_idx f(3)
+       /* if ( decoder_model_info_present_flag && !equal_picture_interval ) {
+          temporal_point_info()
+       }
+       refresh_frame_flags = 0
+       if ( frame_id_numbers_present_flag ) {
+          display_frame_id f(idLen)
+       }
+       frame_type = RefFrameType[ frame_to_show_map_idx ]
+       if ( frame_type == KEY_FRAME ) {
+          refresh_frame_flags = allFrames
+       }
+       if ( film_grain_params_present ) {
+          load_grain_params( frame_to_show_map_idx )
+       } *//*
+       
+       return
+    }
+    frame_type f(2)
+    FrameIsIntra = ((frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? 1 : 0)
+    show_frame f(1)
+    if ( show_frame && decoder_model_info_present_flag && !equal_picture_interval ) {
+       temporal_point_info()
+    }
+    if ( show_frame ) {
+       showable_frame = (frame_type != KEY_FRAME) ? 1 : 0
+    } else {
+    showable_frame f(1)
  }
  if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame ) )
- error_resilient_mode = 1
+    error_resilient_mode = 1
  else
- error_resilient_mode f(1)
+    error_resilient_mode f(1)
  }
  if ( frame_type == KEY_FRAME && show_frame ) {
- for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
- RefValid[ i ] = 0
- RefOrderHint[ i ] = 0
- }
- for ( i = 0; i < REFS_PER_FRAME; i++ ) {
- OrderHints[ LAST_FRAME + i ] = 0
- }
+    for ( i = 0; i < NUM_REF_FRAMES; i++ ) {
+       RefValid[ i ] = 0
+       RefOrderHint[ i ] = 0
+    }
+    for ( i = 0; i < REFS_PER_FRAME; i++ ) {
+       OrderHints[ LAST_FRAME + i ] = 0
+    }
  }
  disable_cdf_update f(1)
  if ( seq_force_screen_content_tools == SELECT_SCREEN_CONTENT_TOOLS ) {
- allow_screen_content_tools f(1)
+    allow_screen_content_tools f(1)
  } else {
- allow_screen_content_tools = seq_force_screen_content_tools
+    allow_screen_content_tools = seq_force_screen_content_tools
  }
  if ( allow_screen_content_tools ) {
- if ( seq_force_integer_mv == SELECT_INTEGER_MV ) {
- force_integer_mv f(1)
+    if ( seq_force_integer_mv == SELECT_INTEGER_MV ) {
+       force_integer_mv f(1)
+    } else {
+       force_integer_mv = seq_force_integer_mv
+    }
  } else {
- force_integer_mv = seq_force_integer_mv
- }
- } else {
- force_integer_mv = 0
+    force_integer_mv = 0
  }
  if ( FrameIsIntra ) {
- force_integer_mv = 1
+    force_integer_mv = 1
  }
  if ( frame_id_numbers_present_flag ) {
- PrevFrameID = current_frame_id
- current_frame_id f(idLen)
- mark_ref_frames( idLen )
+    PrevFrameID = current_frame_id
+    current_frame_id f(idLen)
+    mark_ref_frames( idLen )
  } else {
- current_frame_id = 0
+    current_frame_id = 0
  }
  if ( frame_type == SWITCH_FRAME )
- frame_size_override_flag = 1
+    frame_size_override_flag = 1
  else if ( reduced_still_picture_header )
- frame_size_override_flag = 0
+    frame_size_override_flag = 0
  else
- frame_size_override_flag f(1)
+    frame_size_override_flag f(1)
  order_hint f(OrderHintBits)
  OrderHint = order_hint
  if ( FrameIsIntra || error_resilient_mode ) {
- primary_ref_frame = PRIMARY_REF_NONE
+    primary_ref_frame = PRIMARY_REF_NONE
  } else {
- primary_ref_frame f(3)
+    primary_ref_frame f(3)
  }
  if ( decoder_model_info_present_flag ) {
- buffer_removal_time_present_flag f(1)
- if ( buffer_removal_time_present_flag ) {
- for ( opNum = 0; opNum <= operating_points_cnt_minus_1; opNum++ ) {
- if ( decoder_model_present_for_this_op[ opNum ] ) {
- opPtIdc = operating_point_idc[ opNum ]
- inTemporalLayer = ( opPtIdc >> temporal_id ) & 1
- inSpatialLayer = ( opPtIdc >> ( spatial_id + 8 ) ) & 1
- if ( opPtIdc == 0 || ( inTemporalLayer && inSpatialLayer ) ) {
- n = buffer_removal_time_length_minus_1 + 1
- buffer_removal_time[ opNum ] f(n)
- }
- }
- }
- }
+    buffer_removal_time_present_flag f(1)
+    if ( buffer_removal_time_present_flag ) {
+       for ( opNum = 0; opNum <= operating_points_cnt_minus_1; opNum++ ) {
+          if ( decoder_model_present_for_this_op[ opNum ] ) {
+             opPtIdc = operating_point_idc[ opNum ]
+             inTemporalLayer = ( opPtIdc >> temporal_id ) & 1
+             inSpatialLayer = ( opPtIdc >> ( spatial_id + 8 ) ) & 1
+             if ( opPtIdc == 0 || ( inTemporalLayer && inSpatialLayer ) ) {
+                n = buffer_removal_time_length_minus_1 + 1
+                buffer_removal_time[ opNum ] f(n)
+             }
+          }
+       }
+    }
  }
  allow_high_precision_mv = 0
  use_ref_frame_mvs = 0
  allow_intrabc = 0
- if ( frame_type == SWITCH_FRAME ||
- ( frame_type == KEY_FRAME && show_frame ) ) {
- refresh_frame_flags = allFrames
+ if ( frame_type == SWITCH_FRAME || ( frame_type == KEY_FRAME && show_frame ) ) {
+    refresh_frame_flags = allFrames
  } else {
- refresh_frame_flags f(8)
+    refresh_frame_flags f(8)
  }
  if ( !FrameIsIntra || refresh_frame_flags != allFrames ) {
- if ( error_resilient_mode && enable_order_hint ) {
- for ( i = 0; i < NUM_REF_FRAMES; i++) {
- ref_order_hint[ i ] f(OrderHintBits)
- if ( ref_order_hint[ i ] != RefOrderHint[ i ] ) {
- RefValid[ i ] = 0
- }
- }
- }
+    if ( error_resilient_mode && enable_order_hint ) {
+       for ( i = 0; i < NUM_REF_FRAMES; i++) {
+          ref_order_hint[ i ] f(OrderHintBits)
+          if ( ref_order_hint[ i ] != RefOrderHint[ i ] ) {
+             RefValid[ i ] = 0
+          }
+       }
+    }
  }
  if (  FrameIsIntra ) {
- frame_size()
- render_size()
- if ( allow_screen_content_tools && UpscaledWidth == FrameWidth ) {
- allow_intrabc f(1)
- }
+    frame_size()
+    render_size()
+    if ( allow_screen_content_tools && UpscaledWidth == FrameWidth ) {
+       allow_intrabc f(1)
+    }
  } else {
  if ( !enable_order_hint ) {
- frame_refs_short_signaling = 0
+    frame_refs_short_signaling = 0
  } else {
- frame_refs_short_signaling f(1)
- if ( frame_refs_short_signaling ) {
- last_frame_idx f(3)
- gold_frame_idx f(3)
- set_frame_refs()
- }
+    frame_refs_short_signaling f(1)
+    if ( frame_refs_short_signaling ) {
+       last_frame_idx f(3)
+       gold_frame_idx f(3)
+       set_frame_refs()
+    }
  }
  for ( i = 0; i < REFS_PER_FRAME; i++ ) {
  if ( !frame_refs_short_signaling )
@@ -1680,9 +1680,6 @@ frame_header_obu() {
 		private int showable_frame;
 		private int frame_to_show_map_idx;
 		private int temporal_point_info;
-		private int refresh_frame_flags;
-		private int display_frame_id;
-		private int load_grain_params;
 		private int error_resilient_mode;
 		private int[] RefValid= new int[AV1Constants.NUM_REF_FRAMES];
 		private int[] RefOrderHint= new int[AV1Constants.NUM_REF_FRAMES];
@@ -1703,6 +1700,7 @@ frame_header_obu() {
 		private int allow_high_precision_mv;
 		private int use_ref_frame_mvs;
 		private int allow_intrabc;
+		private int refresh_frame_flags;
 		private int[] ref_order_hint;
 		private int frame_size;
 		private int render_size;
@@ -1776,28 +1774,21 @@ frame_header_obu() {
 				if ( show_existing_frame == 1 )
 				{
 					stream.ReadFixed(3, out this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
+/*  if ( decoder_model_info_present_flag && !equal_picture_interval ) {
+          temporal_point_info()
+       }
+       refresh_frame_flags = 0
+       if ( frame_id_numbers_present_flag ) {
+          display_frame_id f(idLen)
+       }
+       frame_type = RefFrameType[ frame_to_show_map_idx ]
+       if ( frame_type == KEY_FRAME ) {
+          refresh_frame_flags = allFrames
+       }
+       if ( film_grain_params_present ) {
+          load_grain_params( frame_to_show_map_idx )
+       }  */
 
-					if ( decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
-					{
-						ReadTemporalPointInfo(); 
-					}
-					refresh_frame_flags= 0;
-
-					if ( frame_id_numbers_present_flag != 0 )
-					{
-						stream.ReadVariable(idLen, out this.display_frame_id, "display_frame_id"); 
-					}
-					frame_type= RefFrameType[ frame_to_show_map_idx ];
-
-					if ( frame_type == AV1FrameTypes.KEY_FRAME )
-					{
-						refresh_frame_flags= allFrames;
-					}
-
-					if ( film_grain_params_present != 0 )
-					{
-						ReadLoadGrainParams( frame_to_show_map_idx ); 
-					}
 					return;
 				}
 				stream.ReadFixed(2, out this.frame_type, "frame_type"); 
@@ -1939,8 +1930,7 @@ frame_header_obu() {
 			use_ref_frame_mvs= 0;
 			allow_intrabc= 0;
 
-			if ( frame_type == AV1FrameTypes.SWITCH_FRAME ||
- ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
+			if ( frame_type == AV1FrameTypes.SWITCH_FRAME || ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
 			{
 				refresh_frame_flags= allFrames;
 			}
@@ -2173,28 +2163,21 @@ frame_header_obu() {
 				if ( show_existing_frame == 1 )
 				{
 					stream.WriteFixed(3, this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
+/*  if ( decoder_model_info_present_flag && !equal_picture_interval ) {
+          temporal_point_info()
+       }
+       refresh_frame_flags = 0
+       if ( frame_id_numbers_present_flag ) {
+          display_frame_id f(idLen)
+       }
+       frame_type = RefFrameType[ frame_to_show_map_idx ]
+       if ( frame_type == KEY_FRAME ) {
+          refresh_frame_flags = allFrames
+       }
+       if ( film_grain_params_present ) {
+          load_grain_params( frame_to_show_map_idx )
+       }  */
 
-					if ( decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
-					{
-						WriteTemporalPointInfo(); 
-					}
-					refresh_frame_flags= 0;
-
-					if ( frame_id_numbers_present_flag != 0 )
-					{
-						stream.WriteVariable(idLen, this.display_frame_id, "display_frame_id"); 
-					}
-					frame_type= RefFrameType[ frame_to_show_map_idx ];
-
-					if ( frame_type == AV1FrameTypes.KEY_FRAME )
-					{
-						refresh_frame_flags= allFrames;
-					}
-
-					if ( film_grain_params_present != 0 )
-					{
-						WriteLoadGrainParams( frame_to_show_map_idx ); 
-					}
 					return;
 				}
 				stream.WriteFixed(2, this.frame_type, "frame_type"); 
@@ -2336,8 +2319,7 @@ frame_header_obu() {
 			use_ref_frame_mvs= 0;
 			allow_intrabc= 0;
 
-			if ( frame_type == AV1FrameTypes.SWITCH_FRAME ||
- ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
+			if ( frame_type == AV1FrameTypes.SWITCH_FRAME || ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
 			{
 				refresh_frame_flags= allFrames;
 			}
@@ -5103,6 +5085,7 @@ read_global_param( type, refc, idx ) {
 		private int update_grain;
 		private int film_grain_params_ref_idx;
 		private int tempGrainSeed;
+		private int load_grain_params;
 		private int num_y_points;
 		private int[] point_y_value;
 		private int[] point_y_scaling;

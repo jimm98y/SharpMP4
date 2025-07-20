@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SharpAV1
 {
@@ -15,12 +16,15 @@ namespace SharpAV1
         AomStream stream = null;
         private int obu_padding_length = 0;
         private int obu_size_len = 0;
-        public int[][] PrevGmParams { get; set; }
-        public int[] RefFrameHeight { get; set; }
-        public int[] RefFrameType { get; set; }
-        public int[] RefRenderWidth { get; set; }
-        public int[] RefRenderHeight { get; set; }
-        public int[] RefUpscaledWidth { get; set; }
+        private int prevFrame;
+
+        public int[][] PrevGmParams { get; set; } = new int[8][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] };
+        public int[][][] SavedGmParams { get; set; } = null;
+        public int[] RefFrameHeight { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
+        public int[] RefFrameType { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
+        public int[] RefRenderWidth { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
+        public int[] RefRenderHeight { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
+        public int[] RefUpscaledWidth { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] Remap_Lr_Type { get; set; } = new int[] { AV1FrameRestorationType.RESTORE_NONE, AV1FrameRestorationType.RESTORE_SWITCHABLE, AV1FrameRestorationType.RESTORE_WIENER, AV1FrameRestorationType.RESTORE_SGRPROJ };
         public int[] Segmentation_Feature_Bits { get; set; }
         public int[] Segmentation_Feature_Max { get; set; }
@@ -60,9 +64,23 @@ namespace SharpAV1
         private void WriteInitCoeffCdfs() { /* nothing */ }
         private void WriteLoadPreviousSegmentIds() { /* nothing */ }
         private void ReadInitNonCoeffCdfs() { /* nothing */ }
-        private void ReadSetupPastIndependence() { /* nothing */ }
+        private void ReadSetupPastIndependence() 
+        {
+            for (int r = AV1RefFrames.LAST_FRAME; r <= AV1RefFrames.ALTREF_FRAME; r++)
+            {
+                for (int ri = 0; ri <= 5; ri++)
+                {
+                    PrevGmParams[r][ri] = ((ri % 3 == 2) ? (1 << AV1Constants.WARPEDMODEL_PREC_BITS) : 0);
+                }
+            }
+        }
         private void ReadLoadCdfs(int value) { /* nothing */ }
-        private void ReadLoadPrevious() { /* nothing */ }
+        private void ReadLoadPrevious() 
+        {
+            prevFrame = ref_frame_idx[primary_ref_frame];
+            PrevGmParams = SavedGmParams[prevFrame];
+            // TODO
+        }
         private void ReadMotionFieldEstimation() { /* nothing */ }
         private void ReadInitCoeffCdfs() { /* nothing */ }
         private void ReadLoadPreviousSegmentIds() { /* nothing */ }
@@ -70,10 +88,6 @@ namespace SharpAV1
         private void WriteMarkRefFrames(int idLen) { /* nothing */ }
         private void ReadItutT35PayloadBytes() { /* nothing */ }
         private void WriteItutT35PayloadBytes() { /* nothing */ }
-        private void ReadFrameEndUpdateCdf() { /* nothing */ }
-        private void WriteFrameEndUpdateCdf() { /* nothing */ }
-        private void ReadExitSymbol() { /* nothing */ }
-        private void WriteExitSymbol() { /* nothing */ }
         private void ReadSkipObu() 
         {
             long totalObuSizeBits = obu_size << 3;
@@ -81,14 +95,48 @@ namespace SharpAV1
             stream.Skip(totalObuSizeBits - currentBits);
         }
         private void WriteSkipObu() { /* nothing */ }
-        private void ReadDecodeTile() { /* nothing */ }
-        private void WriteDecodeTile() { /* nothing */ }
         private void ReadFrameHeaderCopy() { /* nothing */ }
         private void WriteFrameHeaderCopy() { /* nothing */ }
-        private void ReadDecodeFrameWrapup() { /* nothing */ }
+        private void ReadDecodeFrameWrapup() 
+        {
+            for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            {
+                if (((refresh_frame_flags >> i) & 1) == 1)
+                {
+                    RefValid[i] = 1;
+                    RefUpscaledWidth[i] = UpscaledWidth;
+                    RefFrameHeight[i] = FrameHeight;
+                    RefRenderWidth[i] = RenderWidth;
+                    RefRenderHeight[i] = RenderHeight;
+                    RefFrameType[i] = frame_type;
+
+                    if(SavedGmParams == null)
+                    {
+                        SavedGmParams = new int[AV1Constants.NUM_REF_FRAMES][][];
+                        for (int j = 0; j < SavedGmParams.Length; j++)
+                        {
+                            SavedGmParams[j] = new int[AV1Constants.TOTAL_REFS_PER_FRAME][];
+                            for (int k = 0; k < SavedGmParams[j].Length; k++)
+                            {
+                                SavedGmParams[j][k] = new int[6];
+                            }
+                        }
+                    }
+
+                    for (int ri = AV1RefFrames.LAST_FRAME; ri < AV1RefFrames.ALTREF_FRAME; ri++)
+                    {
+                        for (int j = 0; j <= 5; j++)
+                        {
+                            SavedGmParams[i][ri][j] = gm_params[ri][j];
+                        }
+                    }
+
+                    // TODO
+                }
+            }            
+        }
+
         private void WriteDecodeFrameWrapup() { /* nothing */ }
-        private void ReadInitSymbol(int tileSize) { /* nothing */ }
-        private void WriteInitSymbol(int tileSize) { /* nothing */ }
         private int ChooseOperatingPoint()
         {
             return 0;

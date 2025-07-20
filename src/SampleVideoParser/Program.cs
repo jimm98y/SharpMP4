@@ -439,8 +439,8 @@ foreach (var file in files)
                                 if (sample_idx >= t2s_next_run)
                                 {
                                     t2s_sample_delta = time_to_sample_box.SampleDelta[t2s_index];
-                                    t2s_index += 1;
                                     t2s_next_run += (t2s_index < time_to_sample_box.SampleCount.Length) ? time_to_sample_box.SampleCount[t2s_index] : (uint)(chunkOffsets.Length + 1);
+                                    t2s_index += 1;
                                 }
 
                                 if (composition_offset_box != null && sample_idx >= co_next_run)
