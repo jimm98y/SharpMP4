@@ -363,7 +363,7 @@ namespace AomGenerator.CSharp
 
             value = value.Replace("choose_operating_point", "ChooseOperatingPoint");
             value = value.Replace("Clip3", "AomStream.Clip3");
-            value = value.Replace("get_qindex", "AomStream.GetQIndex");
+            value = value.Replace("get_qindex", "GetQIndex");
             value = value.Replace("mark_ref_frames", "AomStream.MarkRefFrames");
 
             value = value.Replace("tile_log2", methodType + "TileLog2");
@@ -483,6 +483,30 @@ namespace AomGenerator.CSharp
                 case "FeatureEnabled":
                 case "FeatureData":
                     return "new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX],new int[AV1Constants.SEG_LVL_MAX] }";
+
+                case "LosslessArray":
+                    return "new int[AV1Constants.MAX_SEGMENTS]";
+
+                case "loop_filter_level":
+                    return "new int[4]";
+
+                case "cdef_y_pri_strength":
+                case "cdef_y_sec_strength":
+                case "cdef_uv_pri_strength":
+                case "cdef_uv_sec_strength":
+                    return "new int[1]";
+
+                case "FrameRestorationType":
+                    return "new int[3]";
+
+                case "Remap_Lr_Type":
+                    return "new int[1]";
+
+                case "GmType":
+                    return "new int[AV1RefFrames.ALTREF_FRAME + 1]";
+
+                case "gm_params":
+                    return "new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6],new int[6],new int[6],new int[6],new int[6],new int[6],new int[6],new int[6] }";
 
                 default:
                     return "";

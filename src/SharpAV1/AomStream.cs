@@ -225,9 +225,18 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadLeVar(int length, out int value, string name)
+        public ulong ReadLeVar(int n, out int value, string name)
         {
-            throw new NotImplementedException();
+            uint size = 0;
+            int t = 0;
+            for (int i = 0; i < n; i++)
+            {
+                int b = ReadByte();
+                size++;
+                t += (b << (i * 8));
+            }
+            value = t;
+            return size << 3;
         }
 
         public ulong WriteLeVar(int length, int value, string name)
@@ -241,11 +250,6 @@ namespace SharpAV1
         }
 
         public static int Clip3(int v, int limit, int feature_value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int GetQIndex(int v, int segmentId)
         {
             throw new NotImplementedException();
         }

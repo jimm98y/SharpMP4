@@ -1723,7 +1723,7 @@ frame_header_obu() {
 		private int load_previous_segment_ids;
 		private int CodedLossless;
 		private int qindex;
-		private int[] LosslessArray;
+		private int[] LosslessArray= new int[AV1Constants.MAX_SEGMENTS];
 		private int[][] SegQMLevel;
 		private int AllLossless;
 		private int loop_filter_params;
@@ -2090,7 +2090,7 @@ frame_header_obu() {
 
 			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
-				qindex= AomStream.GetQIndex( 1, segmentId );
+				qindex= GetQIndex( 1, segmentId );
 				LosslessArray[ segmentId ]= (qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0) ? 1 : 0;
 
 				if ( LosslessArray[ segmentId ]== 0 )
@@ -2487,7 +2487,7 @@ frame_header_obu() {
 
 			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
 			{
-				qindex= AomStream.GetQIndex( 1, segmentId );
+				qindex= GetQIndex( 1, segmentId );
 				LosslessArray[ segmentId ]= (qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0) ? 1 : 0;
 
 				if ( LosslessArray[ segmentId ]== 0 )
@@ -3891,10 +3891,10 @@ cdef_params() {
  }
     */
 		private int cdef_bits;
-		private int[] cdef_y_pri_strength;
-		private int[] cdef_y_sec_strength;
-		private int[] cdef_uv_pri_strength;
-		private int[] cdef_uv_sec_strength;
+		private int[] cdef_y_pri_strength= new int[1];
+		private int[] cdef_y_sec_strength= new int[1];
+		private int[] cdef_uv_pri_strength= new int[1];
+		private int[] cdef_uv_sec_strength= new int[1];
 		private int CdefDamping;
 		private int cdef_damping_minus_3;
 
@@ -4029,7 +4029,7 @@ lr_params() {
  }
  }
     */
-		private int[] FrameRestorationType;
+		private int[] FrameRestorationType= new int[3];
 		private int UsesLr;
 		private int usesChromaLr;
 		private int lr_type;
@@ -4215,7 +4215,7 @@ lr_params() {
  }
  }
     */
-		private int[] loop_filter_level;
+		private int[] loop_filter_level= new int[4];
 		private int[] loop_filter_ref_deltas;
 		private int[] loop_filter_mode_deltas;
 		private int loop_filter_sharpness;
@@ -4764,8 +4764,8 @@ lr_params() {
  }
  }
     */
-		private int[] GmType;
-		private int[][] gm_params;
+		private int[] GmType= new int[AV1RefFrames.ALTREF_FRAME + 1];
+		private int[][] gm_params= new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6],new int[6],new int[6],new int[6],new int[6],new int[6],new int[6],new int[6] };
 		private int is_global;
 		private int is_rot_zoom;
 		private int type;
