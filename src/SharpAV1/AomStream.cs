@@ -322,6 +322,27 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
+        public ulong Read_ns(int n, out uint value, string name)
+        {
+            int w = (int)Math.Floor(Math.Log2(n)) + 1;
+            int m = (1 << w) - n;
+            ulong size = ReadUnsignedInt(w - 1, out var v, name);
+            if (v < m)
+            {
+                value = v;
+                return size;
+            }
+
+            int extraBit = ReadBit();
+            value = (uint)((v << 1) - m + extraBit);
+            return size;
+        }
+
+        public void Write_ns(int n, uint value, string name)
+        {
+            throw new NotImplementedException();
+        }
+
         #region IDisposable implementation
 
         protected virtual void Dispose(bool disposing)

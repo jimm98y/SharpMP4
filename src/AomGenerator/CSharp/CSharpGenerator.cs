@@ -791,7 +791,7 @@ namespace Sharp{type}
                 { "L(SGRPROJ_PARAMS_BITS)",     "int" },
                 { "le(TileSizeBytes)",          "int" },
                 { "leb128()",                   "int" },
-                { "ns(32)",                     "uint" },
+                { "uint(32)",                   "uint" },
                 { "ns(maxWidth)",               "uint" },
                 { "ns(maxHeight)",              "uint" },
                 { "ns(numSyms - mk)",           "uint" },
@@ -912,21 +912,23 @@ namespace Sharp{type}
                 case "leb128()":
                     return "obu_size_len = (int)stream.ReadLeb128(";
 
-                case "ns(32)":
+                case "uint(32)":
                     return "stream.ReadUnsignedInt32(size,";
 
                 case "ns(maxHeight)":
-                    return "stream.ReadUnsignedInt(maxHeight,";
+                    return "stream.Read_ns(maxHeight,";
 
                 case "ns(maxWidth)":
-                    return "stream.ReadUnsignedInt(maxWidth,";
+                    return "stream.Read_ns(maxWidth,";
+
+                case "ns(numSyms - mk)":
+                    return "stream.Read_ns(numSyms - mk,";
 
                 case "NS(numSyms - mk)":
-                case "ns(numSyms - mk)":
-                    return "stream.ReadUnsignedInt(numSyms - mk,";
+                    return "stream.Read_NS(numSyms - mk,";
 
                 case "NS(PaletteSizeUV)":
-                    return "stream.ReadNS(PaletteSizeUV,";
+                    return "stream.Read_NS(PaletteSizeUV,";
 
                 case "S()":
                     return "stream.ReadS(size,";
@@ -1064,21 +1066,23 @@ namespace Sharp{type}
                 case "leb128()":
                     return "stream.WriteLeb128(";
 
-                case "ns(32)":
+                case "uint(32)":
                     return "stream.WriteUnsignedInt32(";
 
                 case "ns(maxHeight)":
-                    return "stream.WriteUnsignedInt(maxHeight,";
+                    return "stream.Write_ns(maxHeight,";
 
                 case "ns(maxWidth)":
-                    return "stream.WriteUnsignedInt(maxWidth,";
+                    return "stream.Write_ns(maxWidth,";
+
+                case "ns(numSyms - mk)":
+                    return "stream.Write_ns(numSyms - mk,";
 
                 case "NS(numSyms - mk)":
-                case "ns(numSyms - mk)":
-                    return "stream.WriteUnsignedInt(numSyms - mk,";
+                    return "stream.Write_NS(numSyms - mk,";
 
                 case "NS(PaletteSizeUV)":
-                    return "stream.WriteNS(PaletteSizeUV,";
+                    return "stream.Write_NS(PaletteSizeUV,";
 
                 case "S()":
                     return "stream.WriteS(";

@@ -3061,7 +3061,7 @@ tile_info () {
 				{
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
-					stream.ReadUnsignedInt(maxWidth, out this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
+					stream.Read_ns(maxWidth, out this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
 					sizeSb= (int)(width_in_sbs_minus_1 + 1);
 					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
@@ -3085,7 +3085,7 @@ tile_info () {
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
-					stream.ReadUnsignedInt(maxHeight, out this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
+					stream.Read_ns(maxHeight, out this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
 					sizeSb= (int)(height_in_sbs_minus_1 + 1);
 					startSb+= sizeSb;
 				}
@@ -3184,7 +3184,7 @@ tile_info () {
 				{
 					MiColStarts[ i ]= startSb << sbShift;
 					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
-					stream.WriteUnsignedInt(maxWidth, this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
+					stream.Write_ns(maxWidth, this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
 					sizeSb= (int)(width_in_sbs_minus_1 + 1);
 					widestTileSb= Math.Max( sizeSb, widestTileSb );
 					startSb+= sizeSb;
@@ -3208,7 +3208,7 @@ tile_info () {
 				{
 					MiRowStarts[ i ]= startSb << sbShift;
 					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
-					stream.WriteUnsignedInt(maxHeight, this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
+					stream.Write_ns(maxHeight, this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
 					sizeSb= (int)(height_in_sbs_minus_1 + 1);
 					startSb+= sizeSb;
 				}
@@ -5596,7 +5596,7 @@ decode_subexp( numSyms ) {
 
 				if ( numSyms <= mk + 3 * a )
 				{
-					stream.ReadUnsignedInt(numSyms - mk, out this.subexp_final_bits, "subexp_final_bits"); 
+					stream.Read_ns(numSyms - mk, out this.subexp_final_bits, "subexp_final_bits"); 
 					return (int)subexp_final_bits + mk;
 				}
 				else 
@@ -5631,7 +5631,7 @@ decode_subexp( numSyms ) {
 
 				if ( numSyms <= mk + 3 * a )
 				{
-					stream.WriteUnsignedInt(numSyms - mk, this.subexp_final_bits, "subexp_final_bits"); 
+					stream.Write_ns(numSyms - mk, this.subexp_final_bits, "subexp_final_bits"); 
 					return (int)subexp_final_bits + mk;
 				}
 				else 
