@@ -81,7 +81,7 @@ open_bitstream_unit( sz ) {
 
 			if ( obu_has_size_field != 0 )
 			{
-				stream.ReadLeb128( out this.obu_size, "obu_size"); 
+				obu_size_len = (int)stream.ReadLeb128( out this.obu_size, "obu_size"); 
 			}
 			else 
 			{
@@ -617,7 +617,13 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					decoder_model_info_present_flag= 0;
 				}
 				stream.ReadFixed(1, out this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
-				stream.ReadFixed(5, out this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
+				stream.ReadFixed(5, out this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); operating_point_idc = new int[operating_points_cnt_minus_1 + 1];
+seq_level_idx = new int[operating_points_cnt_minus_1 + 1];
+seq_tier = new int[operating_points_cnt_minus_1 + 1];
+decoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
+initial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
+initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];
+
 
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
@@ -800,7 +806,13 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					decoder_model_info_present_flag= 0;
 				}
 				stream.WriteFixed(1, this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
-				stream.WriteFixed(5, this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
+				stream.WriteFixed(5, this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); operating_point_idc = new int[operating_points_cnt_minus_1 + 1];
+seq_level_idx = new int[operating_points_cnt_minus_1 + 1];
+seq_tier = new int[operating_points_cnt_minus_1 + 1];
+decoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
+initial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
+initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];
+
 
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
@@ -1341,77 +1353,21 @@ color_config() {
 
 
 frame_header_obu() { 
- if ( SeenFrameHeader == 1 ) {
- frame_header_copy()
- } else {
- SeenFrameHeader = 1
- uncompressed_header()
- if ( show_existing_frame ) {
- decode_frame_wrapup()
- SeenFrameHeader = 0
- } else {
- TileNum = 0
- SeenFrameHeader = 1
- }
- }
+ skip_obu()
  }
     */
-		private int frame_header_copy;
-		private int SeenFrameHeader;
-		private int uncompressed_header;
-		private int decode_frame_wrapup;
-		private int TileNum;
+		private int skip_obu;
 
          public void ReadFrameHeaderObu()
          {
 
-
-			if ( SeenFrameHeader == 1 )
-			{
-				ReadFrameHeaderCopy(); 
-			}
-			else 
-			{
-				SeenFrameHeader= 1;
-				ReadUncompressedHeader(); 
-
-				if ( show_existing_frame != 0 )
-				{
-					ReadDecodeFrameWrapup(); 
-					SeenFrameHeader= 0;
-				}
-				else 
-				{
-					TileNum= 0;
-					SeenFrameHeader= 1;
-				}
-			}
+			ReadSkipObu(); 
          }
 
          public void WriteFrameHeaderObu()
          {
 
-
-			if ( SeenFrameHeader == 1 )
-			{
-				WriteFrameHeaderCopy(); 
-			}
-			else 
-			{
-				SeenFrameHeader= 1;
-				WriteUncompressedHeader(); 
-
-				if ( show_existing_frame != 0 )
-				{
-					WriteDecodeFrameWrapup(); 
-					SeenFrameHeader= 0;
-				}
-				else 
-				{
-					TileNum= 0;
-					SeenFrameHeader= 1;
-				}
-			}
+			WriteSkipObu(); 
          }
 
     /*
@@ -1698,7 +1654,7 @@ frame_header_obu() {
 		private int last_frame_idx;
 		private int gold_frame_idx;
 		private int set_frame_refs;
-		private int[] ref_frame_idx;
+		private int[] ref_frame_idx= new int[AV1Constants.REFS_PER_FRAME];
 		private int delta_frame_id_minus_1;
 		private int DeltaFrameId;
 		private int[] expectedFrameId;
@@ -1707,7 +1663,7 @@ frame_header_obu() {
 		private int is_motion_mode_switchable;
 		private int refFrame;
 		private int hint;
-		private int[] RefFrameSignBias;
+		private int[] RefFrameSignBias= new int[AV1Constants.REFS_PER_FRAME + AV1RefFrames.LAST_FRAME];
 		private int disable_frame_end_update_cdf;
 		private int init_non_coeff_cdfs;
 		private int setup_past_independence;
@@ -4035,7 +3991,7 @@ lr_params() {
 		private int lr_type;
 		private int lr_unit_shift;
 		private int lr_unit_extra_shift;
-		private int[] LoopRestorationSize;
+		private int[] LoopRestorationSize= new int[4];
 		private int lr_uv_shift;
 
          public void ReadLrParams()
@@ -5713,6 +5669,7 @@ temporal_delimiter_obu() {
  SeenFrameHeader = 0
 }
     */
+		private int SeenFrameHeader;
 
          public void ReadTemporalDelimiterObu()
          {
@@ -5783,7 +5740,7 @@ metadata_obu() {
          public void ReadMetadataObu()
          {
 
-			stream.ReadLeb128( out this.metadata_type, "metadata_type"); 
+			obu_size_len = (int)stream.ReadLeb128( out this.metadata_type, "metadata_type"); 
 
 			if ( metadata_type == AV1MetadataType.METADATA_TYPE_ITUT_T35 )
 			{
@@ -6270,244 +6227,40 @@ metadata_timecode() {
 
 
  frame_obu( sz ) { 
- startBitPos = get_position()
- frame_header_obu()
- byte_alignment()
- endBitPos = get_position()
- headerBytes = (endBitPos - startBitPos) / 8
- sz -= headerBytes
- tile_group_obu( sz )
+  skip_obu()
  }
     */
-		private int startBitPos;
-		private int byte_alignment;
-		private int endBitPos;
-		private int headerBytes;
 
          public void ReadFrameObu(int sz)
          {
 
-			startBitPos= stream.GetPosition();
-			ReadFrameHeaderObu(); 
-			ReadByteAlignment(); 
-			endBitPos= stream.GetPosition();
-			headerBytes= (endBitPos - startBitPos) / 8;
-			sz-= headerBytes;
-			ReadTileGroupObu( sz ); 
+			ReadSkipObu(); 
          }
 
          public void WriteFrameObu(int sz)
          {
 
-			startBitPos= stream.GetPosition();
-			WriteFrameHeaderObu(); 
-			WriteByteAlignment(); 
-			endBitPos= stream.GetPosition();
-			headerBytes= (endBitPos - startBitPos) / 8;
-			sz-= headerBytes;
-			WriteTileGroupObu( sz ); 
+			WriteSkipObu(); 
          }
 
     /*
 
 
  tile_group_obu( sz ) { 
- NumTiles = TileCols * TileRows
- startBitPos = get_position()
- tile_start_and_end_present_flag = 0
- if ( NumTiles > 1 )
- tile_start_and_end_present_flag f(1)
- if ( NumTiles == 1 || !tile_start_and_end_present_flag ) {
- tg_start = 0
- tg_end = NumTiles - 1
- } else {
- tileBits = TileColsLog2 + TileRowsLog2
- tg_start f(tileBits)
- tg_end f(tileBits)
- }
- byte_alignment()
- endBitPos = get_position()
- headerBytes = (endBitPos - startBitPos) / 8
- sz -= headerBytes
- for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ ) {
- tileRow = TileNum / TileCols
- tileCol = TileNum % TileCols
- lastTile = (TileNum == tg_end) ? 1 : 0
- if ( lastTile ) {
- tileSize = sz
- } else {
- tile_size_minus_1 le(TileSizeBytes)
- tileSize = tile_size_minus_1 + 1
- sz -= tileSize + TileSizeBytes
- }
- MiRowStart = MiRowStarts[ tileRow ]
- MiRowEnd = MiRowStarts[ tileRow + 1 ]
- MiColStart = MiColStarts[ tileCol ]
- MiColEnd = MiColStarts[ tileCol + 1 ]
- CurrentQIndex = base_q_idx
- init_symbol( tileSize )
- decode_tile()
- exit_symbol()
- }
- if ( tg_end == NumTiles - 1 ) {
- if ( !disable_frame_end_update_cdf ) {
- frame_end_update_cdf()
- }
- decode_frame_wrapup()
- SeenFrameHeader = 0
- }
+ skip_obu()
  }
     */
-		private int NumTiles;
-		private int tile_start_and_end_present_flag;
-		private int tg_start;
-		private int tg_end;
-		private int tileBits;
-		private int tileRow;
-		private int tileCol;
-		private int lastTile;
-		private int tileSize;
-		private int tile_size_minus_1;
-		private int MiRowStart;
-		private int MiRowEnd;
-		private int MiColStart;
-		private int MiColEnd;
-		private int CurrentQIndex;
-		private int init_symbol;
-		private int decode_tile;
-		private int exit_symbol;
-		private int frame_end_update_cdf;
 
          public void ReadTileGroupObu(int sz)
          {
 
-			NumTiles= TileCols * TileRows;
-			startBitPos= stream.GetPosition();
-			tile_start_and_end_present_flag= 0;
-
-			if ( NumTiles > 1 )
-			{
-				stream.ReadFixed(1, out this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
-			}
-
-			if ( NumTiles == 1 || tile_start_and_end_present_flag== 0 )
-			{
-				tg_start= 0;
-				tg_end= NumTiles - 1;
-			}
-			else 
-			{
-				tileBits= TileColsLog2 + TileRowsLog2;
-				stream.ReadVariable(tileBits, out this.tg_start, "tg_start"); 
-				stream.ReadVariable(tileBits, out this.tg_end, "tg_end"); 
-			}
-			ReadByteAlignment(); 
-			endBitPos= stream.GetPosition();
-			headerBytes= (endBitPos - startBitPos) / 8;
-			sz-= headerBytes;
-
-			for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ )
-			{
-				tileRow= TileNum / TileCols;
-				tileCol= TileNum % TileCols;
-				lastTile= (TileNum == tg_end) ? 1 : 0;
-
-				if ( lastTile != 0 )
-				{
-					tileSize= sz;
-				}
-				else 
-				{
-					stream.ReadLeVar(TileSizeBytes, out this.tile_size_minus_1, "tile_size_minus_1"); 
-					tileSize= tile_size_minus_1 + 1;
-					sz-= tileSize + TileSizeBytes;
-				}
-				MiRowStart= MiRowStarts[ tileRow ];
-				MiRowEnd= MiRowStarts[ tileRow + 1 ];
-				MiColStart= MiColStarts[ tileCol ];
-				MiColEnd= MiColStarts[ tileCol + 1 ];
-				CurrentQIndex= base_q_idx;
-				ReadInitSymbol( tileSize ); 
-				ReadDecodeTile(); 
-				ReadExitSymbol(); 
-			}
-
-			if ( tg_end == NumTiles - 1 )
-			{
-
-				if ( disable_frame_end_update_cdf== 0 )
-				{
-					ReadFrameEndUpdateCdf(); 
-				}
-				ReadDecodeFrameWrapup(); 
-				SeenFrameHeader= 0;
-			}
+			ReadSkipObu(); 
          }
 
          public void WriteTileGroupObu(int sz)
          {
 
-			NumTiles= TileCols * TileRows;
-			startBitPos= stream.GetPosition();
-			tile_start_and_end_present_flag= 0;
-
-			if ( NumTiles > 1 )
-			{
-				stream.WriteFixed(1, this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
-			}
-
-			if ( NumTiles == 1 || tile_start_and_end_present_flag== 0 )
-			{
-				tg_start= 0;
-				tg_end= NumTiles - 1;
-			}
-			else 
-			{
-				tileBits= TileColsLog2 + TileRowsLog2;
-				stream.WriteVariable(tileBits, this.tg_start, "tg_start"); 
-				stream.WriteVariable(tileBits, this.tg_end, "tg_end"); 
-			}
-			WriteByteAlignment(); 
-			endBitPos= stream.GetPosition();
-			headerBytes= (endBitPos - startBitPos) / 8;
-			sz-= headerBytes;
-
-			for ( TileNum = tg_start; TileNum <= tg_end; TileNum++ )
-			{
-				tileRow= TileNum / TileCols;
-				tileCol= TileNum % TileCols;
-				lastTile= (TileNum == tg_end) ? 1 : 0;
-
-				if ( lastTile != 0 )
-				{
-					tileSize= sz;
-				}
-				else 
-				{
-					stream.WriteLeVar(TileSizeBytes,  this.tile_size_minus_1, "tile_size_minus_1"); 
-					tileSize= tile_size_minus_1 + 1;
-					sz-= tileSize + TileSizeBytes;
-				}
-				MiRowStart= MiRowStarts[ tileRow ];
-				MiRowEnd= MiRowStarts[ tileRow + 1 ];
-				MiColStart= MiColStarts[ tileCol ];
-				MiColEnd= MiColStarts[ tileCol + 1 ];
-				CurrentQIndex= base_q_idx;
-				WriteInitSymbol( tileSize ); 
-				WriteDecodeTile(); 
-				WriteExitSymbol(); 
-			}
-
-			if ( tg_end == NumTiles - 1 )
-			{
-
-				if ( disable_frame_end_update_cdf== 0 )
-				{
-					WriteFrameEndUpdateCdf(); 
-				}
-				WriteDecodeFrameWrapup(); 
-				SeenFrameHeader= 0;
-			}
+			WriteSkipObu(); 
          }
 
     /*
@@ -6571,7 +6324,7 @@ tile_list_entry() {
 		private int anchor_tile_col;
 		private int tile_data_size_minus_1;
 		private int N;
-		private int coded_tile_data;
+		private byte[] coded_tile_data;
 
          public void ReadTileListEntry()
          {
@@ -6581,7 +6334,7 @@ tile_list_entry() {
 			stream.ReadFixed(8, out this.anchor_tile_col, "anchor_tile_col"); 
 			stream.ReadFixed(16, out this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
 			N= 8 * (tile_data_size_minus_1 + 1);
-			stream.ReadVariable(N, out this.coded_tile_data, "coded_tile_data"); 
+			stream.ReadBytes(N, out this.coded_tile_data, "coded_tile_data"); 
          }
 
          public void WriteTileListEntry()
@@ -6592,7 +6345,7 @@ tile_list_entry() {
 			stream.WriteFixed(8, this.anchor_tile_col, "anchor_tile_col"); 
 			stream.WriteFixed(16, this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
 			N= 8 * (tile_data_size_minus_1 + 1);
-			stream.WriteVariable(N, this.coded_tile_data, "coded_tile_data"); 
+			stream.WriteBytes(N, this.coded_tile_data, "coded_tile_data"); 
          }
 
         }

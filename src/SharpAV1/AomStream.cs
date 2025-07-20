@@ -154,6 +154,8 @@ namespace SharpAV1
                 throw new InvalidDataException($"Invalid LEB128 value: {value}");
             }
 
+            LogEnd(name, (ulong)Leb128Bytes << 3, value);
+
             return (ulong)Leb128Bytes << 3;
         }
 
@@ -236,6 +238,7 @@ namespace SharpAV1
                 t += (b << (i * 8));
             }
             value = t;
+            LogEnd(name, (ulong)size << 3, value);
             return size << 3;
         }
 
@@ -249,9 +252,9 @@ namespace SharpAV1
             return _bitsPosition;
         }
 
-        public static int Clip3(int v, int limit, int feature_value)
+        public static int Clip3(int low, int high, int value)
         {
-            throw new NotImplementedException();
+            return Math.Clamp(value, low, high);
         }
 
         private int _logLevel = 0;
@@ -282,6 +285,41 @@ namespace SharpAV1
             }
 
             Log.Info($"{padding} {name}{endPadding}{size}   {value}");
+        }
+
+        public void Skip(long bits)
+        {
+            while (_bitsPosition % 8 != 0)
+            {
+                ReadBit();
+                bits--;
+            }
+
+            _bitsPosition += (int)bits;
+
+            long bytes = (bits >> 3);
+            _stream.Seek(bytes, SeekOrigin.Current);
+        }
+
+        public ulong ReadBytes(int n, out byte[] value, string name)
+        {
+            byte[] bytes = new byte[n / 8];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                long bb = ReadBits(8);
+                if (bb == -1)
+                    throw new EndOfStreamException();
+
+                bytes[i] = (byte)bb;
+            }
+            value = bytes.ToArray();
+            LogEnd(name, (ulong)(bytes.Length * 8), "byte[]");
+            return (ulong)(bytes.Length * 8);
+        }
+
+        public void WriteBytes(int n, byte[] coded_tile_data, string name)
+        {
+            throw new NotImplementedException();
         }
 
         #region IDisposable implementation

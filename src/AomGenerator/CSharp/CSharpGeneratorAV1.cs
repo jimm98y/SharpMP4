@@ -5,6 +5,20 @@ namespace AomGenerator.CSharp
 {
     public class CSharpGeneratorAV1 : ICustomGenerator
     {
+        public string AppendMethod(AomCode field, MethodType methodType, string spacing, string retm)
+        {
+            switch((field as AomField).Name)
+            {
+                case "operating_points_cnt_minus_1":
+                    return retm + "operating_point_idc = new int[operating_points_cnt_minus_1 + 1];\r\nseq_level_idx = new int[operating_points_cnt_minus_1 + 1];\r\nseq_tier = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "decoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\ninitial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];\r\n";
+
+                default:
+                    return retm;
+            }
+        }
+
         public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
         {
             return "";
@@ -507,6 +521,15 @@ namespace AomGenerator.CSharp
 
                 case "gm_params":
                     return "new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6],new int[6],new int[6],new int[6],new int[6],new int[6],new int[6],new int[6] }";
+
+                case "ref_frame_idx":
+                    return "new int[AV1Constants.REFS_PER_FRAME]";
+
+                case "RefFrameSignBias":
+                    return "new int[AV1Constants.REFS_PER_FRAME + AV1RefFrames.LAST_FRAME]";
+
+                case "LoopRestorationSize":
+                    return "new int[4]";
 
                 default:
                     return "";

@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-// .\ffmpeg.exe - i "frag_bunny.mp4" - c:v copy -bsf:v trace_headers -f null -  > log.txt 2>&1
+// .\ffmpeg.exe -i "002.mp4" -c:v copy -bsf:v trace_headers -f null - > log.txt 2>&1
 
 var logger = new FileLogger("C:\\Temp\\video_debug2.txt");
 
@@ -1210,14 +1210,25 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
     SharpISOBMFF.Log.Debug($"Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
     size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData);
-    using(AomStream stream = new AomStream(new MemoryStream(sampleData)))
+    var ms = new MemoryStream(sampleData);
+    using (AomStream stream = new AomStream(ms))
     {
         int len = (int)sampleSizeInBytes;
         do
         {
-            context.Read(stream, (int)sampleSizeInBytes);
-            len -= context.ObuSize;
+            SharpISOBMFF.Log.Debug($"---OBU begin {len}---");
+
+            context.Read(stream, len);
+            int obuTotalCize = (context.ObuSize + 1 /* obu header */ + (context.ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + context.ObuSizeLen);
+            len -= obuTotalCize;
+
+            SharpISOBMFF.Log.Debug($"---OBU end {obuTotalCize}---");
         } while (len > 0);
+
+        if(ms.Position != ms.Length)
+        {
+            SharpISOBMFF.Log.Debug($"---!!!OBU error---");
+        }
     }
 
     SharpISOBMFF.Log.Debug("Sample end");
@@ -1229,7 +1240,9 @@ static void ParseOBU(IAomContext context, VideoFormat format, byte[] sampleData)
 {
     using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
     {
-        
+        SharpISOBMFF.Log.Debug("---OBU begin---");
+        context.Read(stream, sampleData.Length);
+        SharpISOBMFF.Log.Debug("---OBU end---");
     }
 }
 

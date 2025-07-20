@@ -26,6 +26,7 @@ namespace AomGenerator.CSharp
         string GetCtorParameterType(string parameter);
         string FixFieldValue(string fieldValue);
         void FixNestedIndexes(List<string> ret, AomField field);
+        string AppendMethod(AomCode field, MethodType methodType, string spacing, string retm);
     }
 
     public class CSharpGenerator
@@ -511,6 +512,8 @@ namespace Sharp{type}
                 retm = $"{spacing}{m}; {fieldComment}";
             }
 
+            retm = specificGenerator.AppendMethod(field, methodType, spacing, retm);
+
             return retm;
         }
 
@@ -769,7 +772,7 @@ namespace Sharp{type}
                 { "f(b2)",                      "int" },
                 { "f(bitsToRead)",              "int" },
                 { "f(idLen)",                   "int" },
-                { "f(N)",                       "int" },
+                { "f(N)",                       "byte[]" },
                 { "f(n)",                       "int" },
                 { "f(OrderHintBits)",           "int" },
                 { "f(SUPERRES_DENOM_BITS)",     "int" },
@@ -853,7 +856,7 @@ namespace Sharp{type}
                     return "stream.ReadVariable(idLen,";
 
                 case "f(N)":
-                    return "stream.ReadVariable(N,";
+                    return "stream.ReadBytes(N,";
 
                 case "f(n)":
                     return "stream.ReadVariable(n,";
@@ -907,7 +910,7 @@ namespace Sharp{type}
                     return "stream.ReadLeVar(TileSizeBytes,";
 
                 case "leb128()":
-                    return "stream.ReadLeb128(";
+                    return "obu_size_len = (int)stream.ReadLeb128(";
 
                 case "ns(32)":
                     return "stream.ReadUnsignedInt32(size,";
@@ -1002,7 +1005,7 @@ namespace Sharp{type}
                     return "stream.WriteVariable(idLen,";
 
                 case "f(N)":
-                    return "stream.WriteVariable(N,";
+                    return "stream.WriteBytes(N,";
 
                 case "f(n)":
                     return "stream.WriteVariable(n,";

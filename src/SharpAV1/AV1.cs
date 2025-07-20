@@ -5,6 +5,8 @@ namespace SharpAV1
     public interface IAomContext 
     {
         public int ObuSize { get; }
+        int ObuExtensionFlag { get; }
+        int ObuSizeLen { get; }
         void Read(AomStream stream, int size);
     }
 
@@ -12,18 +14,21 @@ namespace SharpAV1
     {
         AomStream stream = null;
         private int obu_padding_length = 0;
+        private int obu_size_len = 0;
         public int[][] PrevGmParams { get; set; }
         public int[] RefFrameHeight { get; set; }
         public int[] RefFrameType { get; set; }
         public int[] RefRenderWidth { get; set; }
         public int[] RefRenderHeight { get; set; }
         public int[] RefUpscaledWidth { get; set; }
-        public int[] Remap_Lr_Type { get; set; } = new int[1];
+        public int[] Remap_Lr_Type { get; set; } = new int[] { AV1FrameRestorationType.RESTORE_NONE, AV1FrameRestorationType.RESTORE_SWITCHABLE, AV1FrameRestorationType.RESTORE_WIENER, AV1FrameRestorationType.RESTORE_SGRPROJ };
         public int[] Segmentation_Feature_Bits { get; set; }
         public int[] Segmentation_Feature_Max { get; set; }
         public int[] Segmentation_Feature_Signed { get; set; }
 
         public int ObuSize { get { return obu_size; } }
+        public int ObuExtensionFlag { get { return obu_extension_flag; } }
+        public int ObuSizeLen { get { return obu_size_len >> 3; } }
 
         public void Read(AomStream stream, int size)
         {
@@ -69,6 +74,13 @@ namespace SharpAV1
         private void WriteFrameEndUpdateCdf() { /* nothing */ }
         private void ReadExitSymbol() { /* nothing */ }
         private void WriteExitSymbol() { /* nothing */ }
+        private void ReadSkipObu() 
+        {
+            long totalObuSizeBits = obu_size << 3;
+            int currentBits = stream.GetPosition() - startPosition;
+            stream.Skip(totalObuSizeBits - currentBits);
+        }
+        private void WriteSkipObu() { /* nothing */ }
         private void ReadDecodeTile() { /* nothing */ }
         private void WriteDecodeTile() { /* nothing */ }
         private void ReadFrameHeaderCopy() { /* nothing */ }
