@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace SharpAV1
+﻿namespace SharpAV1
 {
     public interface IAomContext 
     {

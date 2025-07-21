@@ -30,6 +30,7 @@ namespace AomGenerator.CSharp
         private ICustomGenerator specificGenerator = null;
 
         private HashSet<string> _fields = new HashSet<string>();
+        private HashSet<string> _properties = new HashSet<string>();
 
         public CSharpGenerator(ICustomGenerator specificGenerator)
         {
@@ -48,8 +49,7 @@ namespace Sharp{type}
 ";
             resultCode += @$"
     public partial class {type}Context : IAomContext
-    {{
-";
+    {{";
 
             foreach (var aomClass in aomClasses)
             {
@@ -89,28 +89,24 @@ namespace Sharp{type}
             }
 
             resultCode += $@"
-         public {retType} Read{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
-         {{
-";
+        public {retType} Read{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
+        {{";
             foreach (var field in aomClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(aomClass, null, field, 3, MethodType.Read);
             }
-            aomClass.AddedFields.Clear();
             resultCode += $@"
-         }}
+        }}
 ";
             resultCode += $@"
-         public {retType} Write{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
-         {{
-";
+        public {retType} Write{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
+        {{";
             foreach (var field in aomClass.Fields)
             {
                 resultCode += "\r\n" + BuildMethod(aomClass, null, field, 3, MethodType.Write);
             }
-            aomClass.AddedFields.Clear();
             resultCode += $@"
-         }}
+        }}
 ";
 
             return resultCode;
@@ -306,7 +302,7 @@ namespace Sharp{type}
                         value = v.Value;
                     }
 
-                    resultCode += $"\r\n\t\t\t{type} {v.Name} {value};";
+                    resultCode += $"\t\tprivate {type} {v.Name} {value};\r\n";
                 }
                 else
                 {
@@ -349,7 +345,7 @@ namespace Sharp{type}
                             array += "[]";
                         }
                     }
-                    resultCode += $"\r\n\t\t\t{type}{array} {v.Name} = null;"; // TODO: size
+                    resultCode += $"\r\n\t\t\t{type}{array} {v.Name} = null;\r\n"; // TODO: size
                 }
             }
 
@@ -369,59 +365,28 @@ namespace Sharp{type}
             string defaultInitializer = specificGenerator.GetFieldDefaultValue(field);
             string initializer = string.IsNullOrEmpty(defaultInitializer) ? "" : $"= {defaultInitializer}";
 
-            string propertyName = field.Name.ToPropertyCase();
-            if (propertyName == ituClass.ClassName.ToPropertyCase())
-            {
-                propertyName = $"_{propertyName}";
-            }
-
             if (_fields.Add(field.Name))
             {
-                return $"\t\tprivate {type} {field.Name}{initializer};\r\n";
+                string ret = $"\t\tprivate {type} {field.Name}{initializer};\r\n";
+                if (field.Name.Length > 1)
+                {
+                    string propertyName = $"_{field.Name.ToPropertyCase()}";
+                    while(_fields.Contains(propertyName) || _properties.Contains(propertyName))
+                    {
+                        propertyName = $"_{propertyName}";
+                    }
+
+                    if(!_properties.Add(propertyName))
+                        throw new Exception();
+
+                    ret += $"\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
+                }
+                return ret;
             }
             else
             {
                 return "";
             }
-        }
-
-        public void AddRequiresAllocation(AomField field)
-        {
-            AomBlock parent = null;
-            parent = field.Parent;
-            while (parent != null)
-            {
-                if (parent.Type == "for")
-                {
-                    // add the allocation above the first for in the hierarchy
-                    parent.RequiresAllocation.Add(field);
-                }
-
-                parent = parent.Parent;
-            }
-        }
-
-        public int GetLoopNestingLevel(AomCode code)
-        {
-            int ret = 0;
-            var field = code as AomField;
-            var block = code as AomBlock;
-            AomBlock parent = null;
-
-            if (field != null)
-                parent = field.Parent;
-
-            if (block != null)
-                parent = block.Parent;
-
-            while (parent != null)
-            {
-                if (parent.Type == "for" || parent.Type == "while")
-                    ret++;
-                parent = parent.Parent;
-            }
-
-            return ret;
         }
 
         private string GetSpacing(int level)

@@ -36,9 +36,7 @@
     reserved_obu()
  currentPosition = get_position()
  payloadBits = currentPosition - startPosition
- if ( obu_size > 0 && obu_type != OBU_TILE_GROUP &&
-    obu_type != OBU_TILE_LIST &&
-    obu_type != OBU_FRAME ) {
+ if ( obu_size > 0 && obu_type != OBU_TILE_GROUP && obu_type != OBU_TILE_LIST && obu_type != OBU_FRAME ) {
     trailing_bits( obu_size * 8 - payloadBits )
  }
 }
@@ -53,13 +51,11 @@ obu_header() {
   obu_extension_header()
 }
 
-
  obu_extension_header() { 
  temporal_id f(3)
  spatial_id f(2)
  extension_header_reserved_3bits f(3)
  }
-
 
 trailing_bits( nbBits ) { 
  trailing_one_bit f(1)
@@ -70,16 +66,13 @@ while ( nbBits > 0 ) {
 }
 }
 
-
 byte_alignment() { 
  while ( get_position() & 7 )
  zero_bit f(1)
 }
 
-
 reserved_obu() { 
 }
-
 
 sequence_header_obu() { 
  seq_profile f(3)
@@ -708,7 +701,6 @@ tile_info () {
  }
  }
 
-
 tile_log2( blkSize, target ) { 
  for ( k = 0; (blkSize << k) < target; k++ ) {
  }
@@ -842,8 +834,7 @@ delta_lf_params() {
  }
 
 cdef_params() { 
- if ( CodedLossless || allow_intrabc ||
- !enable_cdef) {
+ if ( CodedLossless || allow_intrabc || !enable_cdef) {
  cdef_bits = 0
  cdef_y_pri_strength[0] = 0
  cdef_y_sec_strength[0] = 0
@@ -869,10 +860,8 @@ cdef_params() {
  }
  }
 
-
 lr_params() { 
- if ( AllLossless || allow_intrabc ||
- !enable_restoration ) {
+ if ( AllLossless || allow_intrabc || !enable_restoration ) {
  FrameRestorationType[0] = RESTORE_NONE
  FrameRestorationType[1] = RESTORE_NONE
  FrameRestorationType[2] = RESTORE_NONE
@@ -1269,7 +1258,6 @@ metadata_obu() {
  metadata_timecode()
  }
 
-
 metadata_itut_t35() { 
  itu_t_t35_country_code f(8)
  if ( itu_t_t35_country_code == 0xFF ) {
@@ -1278,12 +1266,10 @@ metadata_itut_t35() {
  itu_t_t35_payload_bytes
 }
 
-
 metadata_hdr_cll() { 
  max_cll f(16)
  max_fall f(16)
 }
-
 
 metadata_hdr_mdcv() { 
  for ( i = 0; i < 3; i++ ) {
@@ -1296,13 +1282,11 @@ metadata_hdr_mdcv() {
  luminance_min f(32)
 }
 
-
 metadata_scalability() { 
  scalability_mode_idc f(8)
  if ( scalability_mode_idc == SCALABILITY_SS )
  scalability_structure()
 }
-
 
 scalability_structure() { 
  spatial_layers_cnt_minus_1 f(2)
@@ -1333,7 +1317,6 @@ scalability_structure() {
  }
  }
  }
-
 
 metadata_timecode() { 
  counting_type f(5)
@@ -1431,7 +1414,6 @@ frame_obu( sz ) {
  for ( tile = 0; tile <= tile_count_minus_1; tile++ )
  tile_list_entry()
  }
-
 
 tile_list_entry() {
  anchor_frame_idx f(8)

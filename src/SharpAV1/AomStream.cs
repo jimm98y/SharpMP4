@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpAV1
 {
@@ -12,14 +9,8 @@ namespace SharpAV1
         private int _bitsPosition;
         private int _currentBytePosition = -1;
         private byte _currentByte = 0;
-        private int _prevByte = -1;
-        private int _prevPrevByte = -1;
 
         private readonly Stream _stream;
-
-        private int _rbspDataCounter = -1;
-        private int _readNextBitsCounter = -1;
-        private int _readNextBitsIndex = 0;
 
         private bool _disposedValue;
 
@@ -74,7 +65,6 @@ namespace SharpAV1
                 }
 
                 byte b = (byte)bb;
-                _prevByte = _currentByte;
 
                 _currentByte = b;
                 _currentBytePosition = bytePos;
@@ -109,7 +99,7 @@ namespace SharpAV1
 
         public void WriteBit(int value)
         {
-            int posInByte = 7 - (int)_bitsPosition % 8;
+            int posInByte = 7 - _bitsPosition % 8;
             int bit = (value & 1) << posInByte;
             _currentByte = (byte)(_currentByte | bit);
             ++_bitsPosition;
@@ -125,9 +115,6 @@ namespace SharpAV1
                                
                 WriteByte(_currentByte);
                 _currentBytePosition = bytePos;
-
-                _prevPrevByte = _prevByte;
-                _prevByte = _currentByte;
 
                 _currentByte = 0;
             }
