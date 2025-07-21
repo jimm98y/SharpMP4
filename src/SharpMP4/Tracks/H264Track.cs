@@ -16,7 +16,7 @@ namespace SharpMP4.Tracks
     /// https://yumichan.net/video-processing/video-compression/introduction-to-h264-nal-unit/
     /// https://stackoverflow.com/questions/38094302/how-to-understand-header-of-h264
     /// </remarks>
-    public class H264Track : TrackBase, IH26XTrack
+    public class H264Track : TrackBase, IVideoTrack, IH26XTrack
     {
         public const string BRAND = "avc1";
         public override string HandlerName => HandlerNames.Video;
@@ -548,7 +548,7 @@ namespace SharpMP4.Tracks
             return (timescale, frametick);
         }
 
-        public byte[][] GetVideoNALUs()
+        public byte[][] GetVideoUnits()
         {
             return SpsRaw.Values.ToArray().Concat(PpsRaw.Values.ToArray()).ToArray();
         }

@@ -31,10 +31,10 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
             var parsedTrack = parsed.Tracks[t];
             if (parsedTrack.Track.HandlerType == HandlerTypes.Video)
             {
-                IH26XTrack h26xTrack = parsedTrack.Track as IH26XTrack;
-                if (h26xTrack != null)
+                IVideoTrack videoTrack = parsedTrack.Track as IVideoTrack;
+                if (videoTrack != null)
                 {
-                    var videoNalus = h26xTrack.GetVideoNALUs();
+                    var videoNalus = videoTrack.GetVideoUnits();
                     foreach (var nal in videoNalus)
                     {
                         builder.ProcessTrackSample(parsedTrack.Track.TrackID, nal);
@@ -43,7 +43,8 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                     Mp4Sample sample = null;
                     while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
                     {
-                        var nalus = Mp4Reader.ReadAU(h26xTrack.NalLengthSize, sample.Data);
+#warning Generalize for H26x as well as AVx
+                        var nalus = Mp4Reader.ReadAU((videoTrack as IH26XTrack).NalLengthSize, sample.Data);
                         foreach (var nal in nalus)
                         {
                             builder.ProcessTrackSample(parsedTrack.Track.TrackID, nal);

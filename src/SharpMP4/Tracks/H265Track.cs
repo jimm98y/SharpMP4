@@ -12,7 +12,7 @@ namespace SharpMP4.Tracks
     /// H265 track.
     /// </summary>
     /// <remarks>https://www.itu.int/rec/T-REC-H.265/en</remarks>
-    public class H265Track : TrackBase, IH26XTrack
+    public class H265Track : TrackBase, IVideoTrack, IH26XTrack
     {
         public const string BRAND = "hvc1";
 
@@ -612,7 +612,7 @@ namespace SharpMP4.Tracks
             }
         }
 
-        public byte[][] GetVideoNALUs()
+        public byte[][] GetVideoUnits()
         {
             return VpsRaw.Values.ToArray().Concat(SpsRaw.Values.ToArray()).Concat(PpsRaw.Values.ToArray()).Concat(PrefixSeiRaw).ToArray();
         }

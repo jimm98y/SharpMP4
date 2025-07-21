@@ -2,7 +2,7 @@
 
 namespace SharpAV1
 {
-    public interface IAomContext 
+    public interface IAomContext : IAomSerializable
     {
         public int ObuSize { get; }
         int ObuExtensionFlag { get; }
@@ -15,7 +15,7 @@ namespace SharpAV1
         void Write(AomStream stream, int size);
     }
 
-    public partial class AV1Context : IAomSerializable
+    public partial class AV1Context
     {
         private AomStream stream;
 
