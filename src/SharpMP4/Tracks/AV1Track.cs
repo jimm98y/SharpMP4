@@ -2,6 +2,7 @@
 using SharpAV1;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace SharpMP4.Tracks
 {
@@ -43,7 +44,8 @@ namespace SharpMP4.Tracks
 
         public AV1Track()
         {
-            // TODO
+            CompatibleBrand = BRAND; // av01
+            DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
         }
 
         public AV1Track(Box sampleEntry, uint timescale, int sampleDuration)
@@ -59,6 +61,28 @@ namespace SharpMP4.Tracks
 
         public override Box CreateSampleEntryBox()
         {
+            VisualSampleEntry visualSampleEntry = new VisualSampleEntry(IsoStream.FromFourCC(BRAND));
+            visualSampleEntry.Children = new List<Box>();
+            visualSampleEntry.ReservedSampleEntry = new byte[6]; // TODO simplify API
+            visualSampleEntry.PreDefined0 = new uint[3]; // TODO simplify API
+
+            visualSampleEntry.DataReferenceIndex = 1;
+            visualSampleEntry.Depth = 24;
+            visualSampleEntry.FrameCount = 1;
+            // convert to fixed point 1616
+            visualSampleEntry.Horizresolution = 72 << 16; // TODO simplify API
+            visualSampleEntry.Vertresolution = 72 << 16; // TODO simplify API
+
+            visualSampleEntry.Width = (ushort)_context._RenderWidth;
+            visualSampleEntry.Height = (ushort)_context._RenderHeight;
+            visualSampleEntry.Compressorname = BinaryUTF8String.GetBytes("\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+
+            AV1CodecConfigurationBox av01ConfigurationBox = new AV1CodecConfigurationBox();
+            av01ConfigurationBox.SetParent(visualSampleEntry);
+
+            av01ConfigurationBox.Av1Config = new AV1CodecConfigurationRecord();
+
+            // TODO
             throw new NotImplementedException();
         }
 
