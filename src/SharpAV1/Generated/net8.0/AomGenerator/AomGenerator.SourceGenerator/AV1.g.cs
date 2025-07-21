@@ -90,7 +90,7 @@ open_bitstream_unit( sz ) {
 		private int trailing_bits;
 		public int _TrailingBits { get { return trailing_bits; } set { trailing_bits = value; } }
 
-        public void ReadOpenBitstreamUnit(int sz)
+        private void ReadOpenBitstreamUnit(int sz)
         {
 			ReadObuHeader(); 
 
@@ -165,7 +165,7 @@ open_bitstream_unit( sz ) {
 			}
         }
 
-        public void WriteOpenBitstreamUnit(int sz)
+        private void WriteOpenBitstreamUnit(int sz)
         {
 			WriteObuHeader(); 
 
@@ -264,7 +264,7 @@ obu_header() {
 		private int obu_extension_header;
 		public int _ObuExtensionHeader { get { return obu_extension_header; } set { obu_extension_header = value; } }
 
-        public void ReadObuHeader()
+        private void ReadObuHeader()
         {
 			stream.ReadFixed(1, out this.obu_forbidden_bit, "obu_forbidden_bit"); 
 			stream.ReadFixed(4, out this.obu_type, "obu_type"); 
@@ -278,7 +278,7 @@ obu_header() {
 			}
         }
 
-        public void WriteObuHeader()
+        private void WriteObuHeader()
         {
 			stream.WriteFixed(1, this.obu_forbidden_bit, "obu_forbidden_bit"); 
 			stream.WriteFixed(4, this.obu_type, "obu_type"); 
@@ -306,14 +306,14 @@ obu_extension_header() {
 		private int extension_header_reserved_3bits;
 		public int _ExtensionHeaderReserved3bits { get { return extension_header_reserved_3bits; } set { extension_header_reserved_3bits = value; } }
 
-        public void ReadObuExtensionHeader()
+        private void ReadObuExtensionHeader()
         {
 			stream.ReadFixed(3, out this.temporal_id, "temporal_id"); 
 			stream.ReadFixed(2, out this.spatial_id, "spatial_id"); 
 			stream.ReadFixed(3, out this.extension_header_reserved_3bits, "extension_header_reserved_3bits"); 
         }
 
-        public void WriteObuExtensionHeader()
+        private void WriteObuExtensionHeader()
         {
 			stream.WriteFixed(3, this.temporal_id, "temporal_id"); 
 			stream.WriteFixed(2, this.spatial_id, "spatial_id"); 
@@ -337,7 +337,7 @@ while ( nbBits > 0 ) {
 		private int trailing_zero_bit;
 		public int _TrailingZeroBit { get { return trailing_zero_bit; } set { trailing_zero_bit = value; } }
 
-        public void ReadTrailingBits(long nbBits)
+        private void ReadTrailingBits(long nbBits)
         {
 			stream.ReadFixed(1, out this.trailing_one_bit, "trailing_one_bit"); 
 			nbBits--;
@@ -349,7 +349,7 @@ while ( nbBits > 0 ) {
 			}
         }
 
-        public void WriteTrailingBits(long nbBits)
+        private void WriteTrailingBits(long nbBits)
         {
 			stream.WriteFixed(1, this.trailing_one_bit, "trailing_one_bit"); 
 			nbBits--;
@@ -370,7 +370,7 @@ byte_alignment() {
 		private int zero_bit;
 		public int _ZeroBit { get { return zero_bit; } set { zero_bit = value; } }
 
-        public void ReadByteAlignment()
+        private void ReadByteAlignment()
         {
 
 			while ( (stream.GetPosition() & 7) > 0 )
@@ -379,7 +379,7 @@ byte_alignment() {
 			}
         }
 
-        public void WriteByteAlignment()
+        private void WriteByteAlignment()
         {
 
 			while ( (stream.GetPosition() & 7) > 0 )
@@ -393,11 +393,11 @@ reserved_obu() {
 }
     */
 
-        public void ReadReservedObu()
+        private void ReadReservedObu()
         {
         }
 
-        public void WriteReservedObu()
+        private void WriteReservedObu()
         {
         }
 
@@ -621,7 +621,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		public int _FilmGrainParamsPresent { get { return film_grain_params_present; } set { film_grain_params_present = value; } }
 		private int i = 0;
 
-        public void ReadSequenceHeaderObu()
+        private void ReadSequenceHeaderObu()
         {
 			stream.ReadFixed(3, out this.seq_profile, "seq_profile"); 
 			stream.ReadFixed(1, out this.still_picture, "still_picture"); 
@@ -813,7 +813,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 			stream.ReadFixed(1, out this.film_grain_params_present, "film_grain_params_present"); 
         }
 
-        public void WriteSequenceHeaderObu()
+        private void WriteSequenceHeaderObu()
         {
 			stream.WriteFixed(3, this.seq_profile, "seq_profile"); 
 			stream.WriteFixed(1, this.still_picture, "still_picture"); 
@@ -1023,7 +1023,7 @@ timing_info() {
 		private uint num_ticks_per_picture_minus_1;
 		public uint _NumTicksPerPictureMinus1 { get { return num_ticks_per_picture_minus_1; } set { num_ticks_per_picture_minus_1 = value; } }
 
-        public void ReadTimingInfo()
+        private void ReadTimingInfo()
         {
 			stream.ReadFixed(32, out this.num_units_in_display_tick, "num_units_in_display_tick"); 
 			stream.ReadFixed(32, out this.time_scale, "time_scale"); 
@@ -1035,7 +1035,7 @@ timing_info() {
 			}
         }
 
-        public void WriteTimingInfo()
+        private void WriteTimingInfo()
         {
 			stream.WriteFixed(32, this.num_units_in_display_tick, "num_units_in_display_tick"); 
 			stream.WriteFixed(32, this.time_scale, "time_scale"); 
@@ -1064,7 +1064,7 @@ decoder_model_info() {
 		private int frame_presentation_time_length_minus_1;
 		public int _FramePresentationTimeLengthMinus1 { get { return frame_presentation_time_length_minus_1; } set { frame_presentation_time_length_minus_1 = value; } }
 
-        public void ReadDecoderModelInfo()
+        private void ReadDecoderModelInfo()
         {
 			stream.ReadFixed(5, out this.buffer_delay_length_minus_1, "buffer_delay_length_minus_1"); 
 			stream.ReadFixed(32, out this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
@@ -1072,7 +1072,7 @@ decoder_model_info() {
 			stream.ReadFixed(5, out this.frame_presentation_time_length_minus_1, "frame_presentation_time_length_minus_1"); 
         }
 
-        public void WriteDecoderModelInfo()
+        private void WriteDecoderModelInfo()
         {
 			stream.WriteFixed(5, this.buffer_delay_length_minus_1, "buffer_delay_length_minus_1"); 
 			stream.WriteFixed(32, this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
@@ -1097,7 +1097,7 @@ operating_parameters_info( op ) {
 		private int[] low_delay_mode_flag= new int[1];
 		public int[] _LowDelayModeFlag { get { return low_delay_mode_flag; } set { low_delay_mode_flag = value; } }
 
-        public void ReadOperatingParametersInfo(int op)
+        private void ReadOperatingParametersInfo(int op)
         {
 			n= buffer_delay_length_minus_1 + 1;
 			stream.ReadVariable(n, out this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
@@ -1105,7 +1105,7 @@ operating_parameters_info( op ) {
 			stream.ReadFixed(1, out this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
         }
 
-        public void WriteOperatingParametersInfo(int op)
+        private void WriteOperatingParametersInfo(int op)
         {
 			n= buffer_delay_length_minus_1 + 1;
 			stream.WriteVariable(n, this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
@@ -1207,7 +1207,7 @@ color_config() {
 		private int separate_uv_delta_q;
 		public int _SeparateUvDeltaq { get { return separate_uv_delta_q; } set { separate_uv_delta_q = value; } }
 
-        public void ReadColorConfig()
+        private void ReadColorConfig()
         {
 			stream.ReadFixed(1, out this.high_bitdepth, "high_bitdepth"); 
 
@@ -1307,7 +1307,7 @@ color_config() {
 			stream.ReadFixed(1, out this.separate_uv_delta_q, "separate_uv_delta_q"); 
         }
 
-        public void WriteColorConfig()
+        private void WriteColorConfig()
         {
 			stream.WriteFixed(1, this.high_bitdepth, "high_bitdepth"); 
 
@@ -1435,7 +1435,7 @@ frame_header_obu() {
 		private int TileNum;
 		public int _TileNum { get { return TileNum; } set { TileNum = value; } }
 
-        public void ReadFrameHeaderObu()
+        private void ReadFrameHeaderObu()
         {
 
 			if ( SeenFrameHeader == 1 )
@@ -1460,7 +1460,7 @@ frame_header_obu() {
 			}
         }
 
-        public void WriteFrameHeaderObu()
+        private void WriteFrameHeaderObu()
         {
 
 			if ( SeenFrameHeader == 1 )
@@ -1881,7 +1881,7 @@ uncompressed_header() {
 		private int opNum = 0;
 		private int segmentId = 0;
 
-        public void ReadUncompressedHeader()
+        private void ReadUncompressedHeader()
         {
 
 			if ( frame_id_numbers_present_flag != 0 )
@@ -2269,7 +2269,7 @@ uncompressed_header() {
 			ReadFilmGrainParams(); 
         }
 
-        public void WriteUncompressedHeader()
+        private void WriteUncompressedHeader()
         {
 
 			if ( frame_id_numbers_present_flag != 0 )
@@ -2666,13 +2666,13 @@ temporal_point_info() {
 		private int frame_presentation_time;
 		public int _FramePresentationTime { get { return frame_presentation_time; } set { frame_presentation_time = value; } }
 
-        public void ReadTemporalPointInfo()
+        private void ReadTemporalPointInfo()
         {
 			n= frame_presentation_time_length_minus_1 + 1;
 			stream.ReadVariable(n, out this.frame_presentation_time, "frame_presentation_time"); 
         }
 
-        public void WriteTemporalPointInfo()
+        private void WriteTemporalPointInfo()
         {
 			n= frame_presentation_time_length_minus_1 + 1;
 			stream.WriteVariable(n, this.frame_presentation_time, "frame_presentation_time"); 
@@ -2708,7 +2708,7 @@ frame_size() {
 		private int compute_image_size;
 		public int _ComputeImageSize { get { return compute_image_size; } set { compute_image_size = value; } }
 
-        public void ReadFrameSize()
+        private void ReadFrameSize()
         {
 
 			if ( frame_size_override_flag != 0 )
@@ -2729,7 +2729,7 @@ frame_size() {
 			ReadComputeImageSize(); 
         }
 
-        public void WriteFrameSize()
+        private void WriteFrameSize()
         {
 
 			if ( frame_size_override_flag != 0 )
@@ -2775,7 +2775,7 @@ render_size() {
 		private int RenderHeight;
 		public int _RenderHeight { get { return RenderHeight; } set { RenderHeight = value; } }
 
-        public void ReadRenderSize()
+        private void ReadRenderSize()
         {
 			stream.ReadFixed(1, out this.render_and_frame_size_different, "render_and_frame_size_different"); 
 
@@ -2793,7 +2793,7 @@ render_size() {
 			}
         }
 
-        public void WriteRenderSize()
+        private void WriteRenderSize()
         {
 			stream.WriteFixed(1, this.render_and_frame_size_different, "render_and_frame_size_different"); 
 
@@ -2838,7 +2838,7 @@ frame_size_with_refs() {
 		private int UpscaledWidth;
 		public int _UpscaledWidth { get { return UpscaledWidth; } set { UpscaledWidth = value; } }
 
-        public void ReadFrameSizeWithRefs()
+        private void ReadFrameSizeWithRefs()
         {
 
 			for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
@@ -2868,7 +2868,7 @@ frame_size_with_refs() {
 			}
         }
 
-        public void WriteFrameSizeWithRefs()
+        private void WriteFrameSizeWithRefs()
         {
 
 			for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
@@ -2913,7 +2913,7 @@ read_interpolation_filter() {
 		private int interpolation_filter;
 		public int _InterpolationFilter { get { return interpolation_filter; } set { interpolation_filter = value; } }
 
-        public void ReadReadInterpolationFilter()
+        private void ReadReadInterpolationFilter()
         {
 			stream.ReadFixed(1, out this.is_filter_switchable, "is_filter_switchable"); 
 
@@ -2927,7 +2927,7 @@ read_interpolation_filter() {
 			}
         }
 
-        public void WriteReadInterpolationFilter()
+        private void WriteReadInterpolationFilter()
         {
 			stream.WriteFixed(1, this.is_filter_switchable, "is_filter_switchable"); 
 
@@ -2957,7 +2957,7 @@ get_relative_dist( a, b ) {
 		public int _Diff { get { return diff; } set { diff = value; } }
 		private int m;
 
-        public int ReadGetRelativeDist(int a, int b)
+        private int ReadGetRelativeDist(int a, int b)
         {
 
 			if ( enable_order_hint== 0 )
@@ -2970,7 +2970,7 @@ get_relative_dist( a, b ) {
 			return diff;
         }
 
-        public int WriteGetRelativeDist(int a, int b)
+        private int WriteGetRelativeDist(int a, int b)
         {
 
 			if ( enable_order_hint== 0 )
@@ -3137,7 +3137,7 @@ tile_info () {
 		private int TileSizeBytes;
 		public int _TileSizeBytes { get { return TileSizeBytes; } set { TileSizeBytes = value; } }
 
-        public void ReadTileInfo()
+        private void ReadTileInfo()
         {
 			sbCols= use_128x128_superblock != 0 ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
 			sbRows= use_128x128_superblock != 0 ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
@@ -3259,7 +3259,7 @@ tile_info () {
 			}
         }
 
-        public void WriteTileInfo()
+        private void WriteTileInfo()
         {
 			sbCols= use_128x128_superblock != 0 ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
 			sbRows= use_128x128_superblock != 0 ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
@@ -3394,7 +3394,7 @@ tile_log2( blkSize, target ) {
 		public int _Target { get { return target; } set { target = value; } }
 		private int k = 0;
 
-        public int ReadTileLog2(int blkSize, int target)
+        private int ReadTileLog2(int blkSize, int target)
         {
 
 			for ( k = 0; (blkSize << (int) k) < target; k++ )
@@ -3403,7 +3403,7 @@ tile_log2( blkSize, target ) {
 			return k;
         }
 
-        public int WriteTileLog2(int blkSize, int target)
+        private int WriteTileLog2(int blkSize, int target)
         {
 
 			for ( k = 0; (blkSize << (int) k) < target; k++ )
@@ -3470,7 +3470,7 @@ quantization_params() {
 		private int qm_v;
 		public int _Qmv { get { return qm_v; } set { qm_v = value; } }
 
-        public void ReadQuantizationParams()
+        private void ReadQuantizationParams()
         {
 			stream.ReadFixed(8, out this.base_q_idx, "base_q_idx"); 
 			DeltaQYDc= ReadReadDeltaq();
@@ -3525,7 +3525,7 @@ quantization_params() {
 			}
         }
 
-        public void WriteQuantizationParams()
+        private void WriteQuantizationParams()
         {
 			stream.WriteFixed(8, this.base_q_idx, "base_q_idx"); 
 			DeltaQYDc= WriteReadDeltaq();
@@ -3596,7 +3596,7 @@ read_delta_q() {
 		private int delta_q;
 		public int _Deltaq { get { return delta_q; } set { delta_q = value; } }
 
-        public int ReadReadDeltaq()
+        private int ReadReadDeltaq()
         {
 			stream.ReadFixed(1, out this.delta_coded, "delta_coded"); 
 
@@ -3611,7 +3611,7 @@ read_delta_q() {
 			return delta_q;
         }
 
-        public int WriteReadDeltaq()
+        private int WriteReadDeltaq()
         {
 			stream.WriteFixed(1, this.delta_coded, "delta_coded"); 
 
@@ -3712,7 +3712,7 @@ segmentation_params() {
 		public int _LastActiveSegId { get { return LastActiveSegId; } set { LastActiveSegId = value; } }
 		private int j = 0;
 
-        public void ReadSegmentationParams()
+        private void ReadSegmentationParams()
         {
 			stream.ReadFixed(1, out this.segmentation_enabled, "segmentation_enabled"); 
 
@@ -3805,7 +3805,7 @@ segmentation_params() {
 			}
         }
 
-        public void WriteSegmentationParams()
+        private void WriteSegmentationParams()
         {
 			stream.WriteFixed(1, this.segmentation_enabled, "segmentation_enabled"); 
 
@@ -3915,7 +3915,7 @@ delta_q_params() {
 		private int delta_q_present;
 		public int _DeltaqPresent { get { return delta_q_present; } set { delta_q_present = value; } }
 
-        public void ReadDeltaqParams()
+        private void ReadDeltaqParams()
         {
 			delta_q_res= 0;
 			delta_q_present= 0;
@@ -3931,7 +3931,7 @@ delta_q_params() {
 			}
         }
 
-        public void WriteDeltaqParams()
+        private void WriteDeltaqParams()
         {
 			delta_q_res= 0;
 			delta_q_present= 0;
@@ -3969,7 +3969,7 @@ delta_lf_params() {
 		private int delta_lf_multi;
 		public int _DeltaLfMulti { get { return delta_lf_multi; } set { delta_lf_multi = value; } }
 
-        public void ReadDeltaLfParams()
+        private void ReadDeltaLfParams()
         {
 			delta_lf_present= 0;
 			delta_lf_res= 0;
@@ -3991,7 +3991,7 @@ delta_lf_params() {
 			}
         }
 
-        public void WriteDeltaLfParams()
+        private void WriteDeltaLfParams()
         {
 			delta_lf_present= 0;
 			delta_lf_res= 0;
@@ -4056,7 +4056,7 @@ cdef_params() {
 		private int cdef_damping_minus_3;
 		public int _CdefDampingMinus3 { get { return cdef_damping_minus_3; } set { cdef_damping_minus_3 = value; } }
 
-        public void ReadCdefParams()
+        private void ReadCdefParams()
         {
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 || enable_cdef== 0)
@@ -4096,7 +4096,7 @@ cdef_params() {
 			}
         }
 
-        public void WriteCdefParams()
+        private void WriteCdefParams()
         {
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 || enable_cdef== 0)
@@ -4196,7 +4196,7 @@ lr_params() {
 		private int lr_uv_shift;
 		public int _LrUvShift { get { return lr_uv_shift; } set { lr_uv_shift = value; } }
 
-        public void ReadLrParams()
+        private void ReadLrParams()
         {
 
 			if ( AllLossless != 0 || allow_intrabc != 0 || enable_restoration== 0 )
@@ -4259,7 +4259,7 @@ lr_params() {
 			}
         }
 
-        public void WriteLrParams()
+        private void WriteLrParams()
         {
 
 			if ( AllLossless != 0 || allow_intrabc != 0 || enable_restoration== 0 )
@@ -4384,7 +4384,7 @@ loop_filter_params() {
 		private int update_mode_delta;
 		public int _UpdateModeDelta { get { return update_mode_delta; } set { update_mode_delta = value; } }
 
-        public void ReadLoopFilterParams()
+        private void ReadLoopFilterParams()
         {
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 )
@@ -4451,7 +4451,7 @@ loop_filter_params() {
 			}
         }
 
-        public void WriteLoopFilterParams()
+        private void WriteLoopFilterParams()
         {
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 )
@@ -4537,7 +4537,7 @@ read_tx_mode() {
 		private int tx_mode_select;
 		public int _TxModeSelect { get { return tx_mode_select; } set { tx_mode_select = value; } }
 
-        public void ReadReadTxMode()
+        private void ReadReadTxMode()
         {
 
 			if ( CodedLossless == 1 )
@@ -4559,7 +4559,7 @@ read_tx_mode() {
 			}
         }
 
-        public void WriteReadTxMode()
+        private void WriteReadTxMode()
         {
 
 			if ( CodedLossless == 1 )
@@ -4593,7 +4593,7 @@ frame_reference_mode() {
 		private int reference_select;
 		public int _ReferenceSelect { get { return reference_select; } set { reference_select = value; } }
 
-        public void ReadFrameReferenceMode()
+        private void ReadFrameReferenceMode()
         {
 
 			if ( FrameIsIntra != 0 )
@@ -4606,7 +4606,7 @@ frame_reference_mode() {
 			}
         }
 
-        public void WriteFrameReferenceMode()
+        private void WriteFrameReferenceMode()
         {
 
 			if ( FrameIsIntra != 0 )
@@ -4697,7 +4697,7 @@ skip_mode_params() {
 		private int skip_mode_present;
 		public int _SkipModePresent { get { return skip_mode_present; } set { skip_mode_present = value; } }
 
-        public void ReadSkipModeParams()
+        private void ReadSkipModeParams()
         {
 
 			if ( FrameIsIntra != 0 || reference_select== 0 || enable_order_hint== 0 )
@@ -4788,7 +4788,7 @@ skip_mode_params() {
 			}
         }
 
-        public void WriteSkipModeParams()
+        private void WriteSkipModeParams()
         {
 
 			if ( FrameIsIntra != 0 || reference_select== 0 || enable_order_hint== 0 )
@@ -4937,7 +4937,7 @@ global_motion_params() {
 		public int _ReadGlobalParam { get { return read_global_param; } set { read_global_param = value; } }
 		private int refc = 0;
 
-        public void ReadGlobalMotionParams()
+        private void ReadGlobalMotionParams()
         {
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
@@ -5004,7 +5004,7 @@ global_motion_params() {
 			}
         }
 
-        public void WriteGlobalMotionParams()
+        private void WriteGlobalMotionParams()
         {
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
@@ -5108,7 +5108,7 @@ read_global_param( type, refc, idx ) {
 		public int _Mx { get { return mx; } set { mx = value; } }
 		private int r;
 
-        public void ReadReadGlobalParam(int type, int refc, int idx)
+        private void ReadReadGlobalParam(int type, int refc, int idx)
         {
 			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
 			precBits= AV1Constants.GM_ALPHA_PREC_BITS;
@@ -5135,7 +5135,7 @@ read_global_param( type, refc, idx ) {
 			gm_params[refc][idx]= (ReadDecodeSignedSubexpWithRef( -mx, mx + 1, r ) << precDiff) + round;
         }
 
-        public void WriteReadGlobalParam(int type, int refc, int idx)
+        private void WriteReadGlobalParam(int type, int refc, int idx)
         {
 			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
 			precBits= AV1Constants.GM_ALPHA_PREC_BITS;
@@ -5317,7 +5317,7 @@ film_grain_params() {
 		private int clip_to_restricted_range;
 		public int _ClipToRestrictedRange { get { return clip_to_restricted_range; } set { clip_to_restricted_range = value; } }
 
-        public void ReadFilmGrainParams()
+        private void ReadFilmGrainParams()
         {
 
 			if ( film_grain_params_present== 0 ||
@@ -5449,7 +5449,7 @@ film_grain_params() {
 			stream.ReadFixed(1, out this.clip_to_restricted_range, "clip_to_restricted_range"); 
         }
 
-        public void WriteFilmGrainParams()
+        private void WriteFilmGrainParams()
         {
 
 			if ( film_grain_params_present== 0 ||
@@ -5604,7 +5604,7 @@ superres_params() {
 		private int SuperresDenom;
 		public int _SuperresDenom { get { return SuperresDenom; } set { SuperresDenom = value; } }
 
-        public void ReadSuperresParams()
+        private void ReadSuperresParams()
         {
 
 			if ( enable_superres != 0 )
@@ -5629,7 +5629,7 @@ superres_params() {
 			FrameWidth= (UpscaledWidth * AV1Constants.SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
         }
 
-        public void WriteSuperresParams()
+        private void WriteSuperresParams()
         {
 
 			if ( enable_superres != 0 )
@@ -5665,13 +5665,13 @@ compute_image_size() {
 		private int MiRows;
 		public int _MiRows { get { return MiRows; } set { MiRows = value; } }
 
-        public void ReadComputeImageSize()
+        private void ReadComputeImageSize()
         {
 			MiCols= 2 * ( ( FrameWidth + 7 ) >> (int)3 );
 			MiRows= 2 * ( ( FrameHeight + 7 ) >> (int)3 );
         }
 
-        public void WriteComputeImageSize()
+        private void WriteComputeImageSize()
         {
 			MiCols= 2 * ( ( FrameWidth + 7 ) >> (int)3 );
 			MiRows= 2 * ( ( FrameHeight + 7 ) >> (int)3 );
@@ -5689,13 +5689,13 @@ decode_signed_subexp_with_ref( low, high, r ) {
 		public int _High { get { return high; } set { high = value; } }
 		private int x;
 
-        public int ReadDecodeSignedSubexpWithRef(int low, int high, int r)
+        private int ReadDecodeSignedSubexpWithRef(int low, int high, int r)
         {
 			x= ReadDecodeUnsignedSubexpWithRef(high - low, r - low);
 			return x + low;
         }
 
-        public int WriteDecodeSignedSubexpWithRef(int low, int high, int r)
+        private int WriteDecodeSignedSubexpWithRef(int low, int high, int r)
         {
 			x= WriteDecodeUnsignedSubexpWithRef(high - low, r - low);
 			return x + low;
@@ -5713,7 +5713,7 @@ decode_unsigned_subexp_with_ref( mx, r ) {
     */
 		private int v;
 
-        public int ReadDecodeUnsignedSubexpWithRef(int mx, int r)
+        private int ReadDecodeUnsignedSubexpWithRef(int mx, int r)
         {
 			v= ReadDecodeSubexp( mx );
 
@@ -5727,7 +5727,7 @@ decode_unsigned_subexp_with_ref( mx, r ) {
 			}
         }
 
-        public int WriteDecodeUnsignedSubexpWithRef(int mx, int r)
+        private int WriteDecodeUnsignedSubexpWithRef(int mx, int r)
         {
 			v= WriteDecodeSubexp( mx );
 
@@ -5778,7 +5778,7 @@ decode_subexp( numSyms ) {
 		private int subexp_bits;
 		public int _SubexpBits { get { return subexp_bits; } set { subexp_bits = value; } }
 
-        public int ReadDecodeSubexp(int numSyms)
+        private int ReadDecodeSubexp(int numSyms)
         {
 			i= 0;
 			mk= 0;
@@ -5812,7 +5812,7 @@ decode_subexp( numSyms ) {
 			}
         }
 
-        public int WriteDecodeSubexp(int numSyms)
+        private int WriteDecodeSubexp(int numSyms)
         {
 			i= 0;
 			mk= 0;
@@ -5857,7 +5857,7 @@ inverse_recenter( r, v ) {
  }
     */
 
-        public int ReadInverseRecenter(int r, int v)
+        private int ReadInverseRecenter(int r, int v)
         {
 
 			if ( v > 2 * r )
@@ -5874,7 +5874,7 @@ inverse_recenter( r, v ) {
 			}
         }
 
-        public int WriteInverseRecenter(int r, int v)
+        private int WriteInverseRecenter(int r, int v)
         {
 
 			if ( v > 2 * r )
@@ -5897,12 +5897,12 @@ temporal_delimiter_obu() {
 }
     */
 
-        public void ReadTemporalDelimiterObu()
+        private void ReadTemporalDelimiterObu()
         {
 			SeenFrameHeader= 0;
         }
 
-        public void WriteTemporalDelimiterObu()
+        private void WriteTemporalDelimiterObu()
         {
 			SeenFrameHeader= 0;
         }
@@ -5916,7 +5916,7 @@ padding_obu() {
 		private int obu_padding_byte;
 		public int _ObuPaddingByte { get { return obu_padding_byte; } set { obu_padding_byte = value; } }
 
-        public void ReadPaddingObu()
+        private void ReadPaddingObu()
         {
 
 			for ( i = 0; i < obu_padding_length; i++ )
@@ -5925,7 +5925,7 @@ padding_obu() {
 			}
         }
 
-        public void WritePaddingObu()
+        private void WritePaddingObu()
         {
 
 			for ( i = 0; i < obu_padding_length; i++ )
@@ -5962,7 +5962,7 @@ metadata_obu() {
 		private int metadata_timecode;
 		public int _MetadataTimecode { get { return metadata_timecode; } set { metadata_timecode = value; } }
 
-        public void ReadMetadataObu()
+        private void ReadMetadataObu()
         {
 			obu_size_len = (int)stream.ReadLeb128( out this.metadata_type, "metadata_type"); 
 
@@ -5988,7 +5988,7 @@ metadata_obu() {
 			}
         }
 
-        public void WriteMetadataObu()
+        private void WriteMetadataObu()
         {
 			stream.WriteLeb128( this.metadata_type, "metadata_type"); 
 
@@ -6030,7 +6030,7 @@ metadata_itut_t35() {
 		private int itu_t_t35_payload_bytes;
 		public int _ItutT35PayloadBytes { get { return itu_t_t35_payload_bytes; } set { itu_t_t35_payload_bytes = value; } }
 
-        public void ReadMetadataItutT35()
+        private void ReadMetadataItutT35()
         {
 			stream.ReadFixed(8, out this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
 
@@ -6041,7 +6041,7 @@ metadata_itut_t35() {
 			ReadItutT35PayloadBytes(); 
         }
 
-        public void WriteMetadataItutT35()
+        private void WriteMetadataItutT35()
         {
 			stream.WriteFixed(8, this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
 
@@ -6063,13 +6063,13 @@ metadata_hdr_cll() {
 		private int max_fall;
 		public int _MaxFall { get { return max_fall; } set { max_fall = value; } }
 
-        public void ReadMetadataHdrCll()
+        private void ReadMetadataHdrCll()
         {
 			stream.ReadFixed(16, out this.max_cll, "max_cll"); 
 			stream.ReadFixed(16, out this.max_fall, "max_fall"); 
         }
 
-        public void WriteMetadataHdrCll()
+        private void WriteMetadataHdrCll()
         {
 			stream.WriteFixed(16, this.max_cll, "max_cll"); 
 			stream.WriteFixed(16, this.max_fall, "max_fall"); 
@@ -6100,7 +6100,7 @@ metadata_hdr_mdcv() {
 		private int luminance_min;
 		public int _LuminanceMin { get { return luminance_min; } set { luminance_min = value; } }
 
-        public void ReadMetadataHdrMdcv()
+        private void ReadMetadataHdrMdcv()
         {
 
 			for ( i = 0; i < 3; i++ )
@@ -6114,7 +6114,7 @@ metadata_hdr_mdcv() {
 			stream.ReadFixed(32, out this.luminance_min, "luminance_min"); 
         }
 
-        public void WriteMetadataHdrMdcv()
+        private void WriteMetadataHdrMdcv()
         {
 
 			for ( i = 0; i < 3; i++ )
@@ -6140,7 +6140,7 @@ metadata_scalability() {
 		private int scalability_structure;
 		public int _ScalabilityStructure { get { return scalability_structure; } set { scalability_structure = value; } }
 
-        public void ReadMetadataScalability()
+        private void ReadMetadataScalability()
         {
 			stream.ReadFixed(8, out this.scalability_mode_idc, "scalability_mode_idc"); 
 
@@ -6150,7 +6150,7 @@ metadata_scalability() {
 			}
         }
 
-        public void WriteMetadataScalability()
+        private void WriteMetadataScalability()
         {
 			stream.WriteFixed(8, this.scalability_mode_idc, "scalability_mode_idc"); 
 
@@ -6220,7 +6220,7 @@ scalability_structure() {
 		private int[][] temporal_group_ref_pic_diff;
 		public int[][] _TemporalGroupRefPicDiff { get { return temporal_group_ref_pic_diff; } set { temporal_group_ref_pic_diff = value; } }
 
-        public void ReadScalabilityStructure()
+        private void ReadScalabilityStructure()
         {
 			stream.ReadFixed(2, out this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];
 				spatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];
@@ -6277,7 +6277,7 @@ scalability_structure() {
 			}
         }
 
-        public void WriteScalabilityStructure()
+        private void WriteScalabilityStructure()
         {
 			stream.WriteFixed(2, this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];
 				spatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];
@@ -6392,7 +6392,7 @@ metadata_timecode() {
 		private int time_offset_value;
 		public int _TimeOffsetValue { get { return time_offset_value; } set { time_offset_value = value; } }
 
-        public void ReadMetadataTimecode()
+        private void ReadMetadataTimecode()
         {
 			stream.ReadFixed(5, out this.counting_type, "counting_type"); 
 			stream.ReadFixed(1, out this.full_timestamp_flag, "full_timestamp_flag"); 
@@ -6435,7 +6435,7 @@ metadata_timecode() {
 			}
         }
 
-        public void WriteMetadataTimecode()
+        private void WriteMetadataTimecode()
         {
 			stream.WriteFixed(5, this.counting_type, "counting_type"); 
 			stream.WriteFixed(1, this.full_timestamp_flag, "full_timestamp_flag"); 
@@ -6498,7 +6498,7 @@ frame_obu( sz ) {
 		private int headerBytes;
 		public int _HeaderBytes { get { return headerBytes; } set { headerBytes = value; } }
 
-        public void ReadFrameObu(int sz)
+        private void ReadFrameObu(int sz)
         {
 			startBitPos= stream.GetPosition();
 			ReadFrameHeaderObu(); 
@@ -6509,7 +6509,7 @@ frame_obu( sz ) {
 			ReadTileGroupObu( sz ); 
         }
 
-        public void WriteFrameObu(int sz)
+        private void WriteFrameObu(int sz)
         {
 			startBitPos= stream.GetPosition();
 			WriteFrameHeaderObu(); 
@@ -6583,7 +6583,7 @@ tile_group_obu( sz ) {
 		private int skip_obu;
 		public int _SkipObu { get { return skip_obu; } set { skip_obu = value; } }
 
-        public void ReadTileGroupObu(int sz)
+        private void ReadTileGroupObu(int sz)
         {
 			NumTiles= TileCols * TileRows;
 			startBitPos= stream.GetPosition();
@@ -6622,7 +6622,7 @@ tile_group_obu( sz ) {
 			}
         }
 
-        public void WriteTileGroupObu(int sz)
+        private void WriteTileGroupObu(int sz)
         {
 			NumTiles= TileCols * TileRows;
 			startBitPos= stream.GetPosition();
@@ -6680,7 +6680,7 @@ tile_list_obu() {
 		public int _TileListEntry { get { return tile_list_entry; } set { tile_list_entry = value; } }
 		private int tile = 0;
 
-        public void ReadTileListObu()
+        private void ReadTileListObu()
         {
 			stream.ReadFixed(8, out this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
 			stream.ReadFixed(8, out this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
@@ -6692,7 +6692,7 @@ tile_list_obu() {
 			}
         }
 
-        public void WriteTileListObu()
+        private void WriteTileListObu()
         {
 			stream.WriteFixed(8, this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
 			stream.WriteFixed(8, this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
@@ -6726,7 +6726,7 @@ tile_list_entry() {
 		private byte[] coded_tile_data;
 		public byte[] _CodedTileData { get { return coded_tile_data; } set { coded_tile_data = value; } }
 
-        public void ReadTileListEntry()
+        private void ReadTileListEntry()
         {
 			stream.ReadFixed(8, out this.anchor_frame_idx, "anchor_frame_idx"); 
 			stream.ReadFixed(8, out this.anchor_tile_row, "anchor_tile_row"); 
@@ -6736,7 +6736,7 @@ tile_list_entry() {
 			stream.ReadBytes(N, out this.coded_tile_data, "coded_tile_data"); 
         }
 
-        public void WriteTileListEntry()
+        private void WriteTileListEntry()
         {
 			stream.WriteFixed(8, this.anchor_frame_idx, "anchor_frame_idx"); 
 			stream.WriteFixed(8, this.anchor_tile_row, "anchor_tile_row"); 

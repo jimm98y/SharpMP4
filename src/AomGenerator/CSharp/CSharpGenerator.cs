@@ -89,7 +89,7 @@ namespace Sharp{type}
             }
 
             resultCode += $@"
-        public {retType} Read{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
+        private {retType} Read{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
         {{";
             foreach (var field in aomClass.Fields)
             {
@@ -99,7 +99,7 @@ namespace Sharp{type}
         }}
 ";
             resultCode += $@"
-        public {retType} Write{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
+        private {retType} Write{aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
         {{";
             foreach (var field in aomClass.Fields)
             {

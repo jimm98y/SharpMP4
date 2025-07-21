@@ -1,16 +1,24 @@
-﻿namespace SharpAV1
+﻿using System;
+
+namespace SharpAV1
 {
     public interface IAomContext 
     {
         public int ObuSize { get; }
         int ObuExtensionFlag { get; }
         int ObuSizeLen { get; }
+        
+    }
+    public interface IAomSerializable
+    {
         void Read(AomStream stream, int size);
+        void Write(AomStream stream, int size);
     }
 
-    public partial class AV1Context : IAomContext
+    public partial class AV1Context : IAomSerializable
     {
-        AomStream stream = null;
+        private AomStream stream;
+
         private int obu_padding_length = 0;
         private int obu_size_len = 0;
         private int prevFrame;
@@ -33,9 +41,14 @@
 
         public void Read(AomStream stream, int size)
         {
-            this.stream = stream;
-
+            this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
             ReadOpenBitstreamUnit(size);
+        }
+
+        public void Write(AomStream stream, int size)
+        {
+            this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            WriteOpenBitstreamUnit(size);
         }
 
         private int GetQIndex(int ignoreDeltaQ, int segmentId)
@@ -138,12 +151,6 @@
         {
             return 0;
         }
-    }
-
-    public interface IAomSerializable
-    {
-        ulong Read(IAomContext context, AomStream stream);
-        ulong Write(IAomContext context, AomStream stream);
     }
 
     public static class AV1RefFrames
