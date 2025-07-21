@@ -12,7 +12,20 @@ namespace AomGenerator.CSharp
                 case "operating_points_cnt_minus_1":
                     return retm + "operating_point_idc = new int[operating_points_cnt_minus_1 + 1];\r\nseq_level_idx = new int[operating_points_cnt_minus_1 + 1];\r\nseq_tier = new int[operating_points_cnt_minus_1 + 1];\r\n" +
                         "decoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\ninitial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];\r\n";
+                        "initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];\r\n buffer_removal_time = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "decoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n encoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "low_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];\r\n ";
+
+                case "spatial_layers_cnt_minus_1":
+                    return retm + "spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];\r\n spatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];\r\n " +
+                        "spatial_layer_ref_id = new int[spatial_layers_cnt_minus_1 + 1];\r\n ";
+
+                case "temporal_group_size":
+                    return retm + "temporal_group_temporal_id = new int[temporal_group_size];\r\n temporal_group_temporal_switching_up_point_flag = new int[temporal_group_size];\r\n " +
+                        "temporal_group_spatial_switching_up_point_flag = new int[temporal_group_size];\r\n temporal_group_ref_cnt = new int[temporal_group_size];\r\n ";
+
+                case "temporal_group_ref_cnt":
+                    return retm + "temporal_group_ref_pic_diff = new int[temporal_group_size][];\r\n for(int k = 0; k < temporal_group_size; k++) { \r\n temporal_group_ref_pic_diff[k] = new int[temporal_group_ref_cnt[ i ]]; \r\n }\r\n";
 
                 default:
                     return retm;
@@ -479,10 +492,16 @@ namespace AomGenerator.CSharp
                 case "seq_tier":
                 case "decoder_model_present_for_this_op":
                 case "initial_display_delay_present_for_this_op":
+                case "initial_display_delay_minus_1":
+                case "decoder_buffer_delay":
+                case "encoder_buffer_delay":
+                case "low_delay_mode_flag":
+                case "buffer_removal_time":
                     return "new int[1]";
 
                 case "RefValid":
                 case "RefOrderHint":
+                case "ref_order_hint":
                     return "new int[AV1Constants.NUM_REF_FRAMES]";
                 
                 case "OrderHints":
@@ -522,6 +541,7 @@ namespace AomGenerator.CSharp
                 case "gm_params":
                     return "new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6],new int[6],new int[6],new int[6],new int[6],new int[6],new int[6],new int[6] }";
 
+                case "expectedFrameId":
                 case "ref_frame_idx":
                     return "new int[AV1Constants.REFS_PER_FRAME]";
 
@@ -536,6 +556,35 @@ namespace AomGenerator.CSharp
 
                 case "loop_filter_mode_deltas":
                     return "new int[2]";
+
+                case "SegQMLevel":
+                    return "new int[3][] { new int[8],new int[8],new int[8] }";
+
+                case "SkipModeFrame":
+                    return "new int[2]";
+
+                case "point_y_value":
+                case "point_y_scaling":
+                    return "new int[14]";
+
+                case "point_cb_value":
+                case "point_cb_scaling":
+                    return "new int[10]";
+
+                case "point_cr_value":
+                case "point_cr_scaling":
+                    return "new int[10]";
+
+                case "ar_coeffs_y_plus_128":
+                    return "new int[24]";
+
+                case "ar_coeffs_cb_plus_128":
+                case "ar_coeffs_cr_plus_128":
+                    return "new int[25]";
+
+                case "primary_chromaticity_x":
+                case "primary_chromaticity_y":
+                    return "new int[3]";
 
                 default:
                     return "";

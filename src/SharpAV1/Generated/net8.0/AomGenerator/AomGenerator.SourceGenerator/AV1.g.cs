@@ -545,7 +545,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		private int timing_info;
 		private int decoder_model_info;
 		private int operating_parameters_info;
-		private int[] initial_display_delay_minus_1;
+		private int[] initial_display_delay_minus_1= new int[1];
 		private int operatingPoint;
 		private int OperatingPointIdc;
 		private int frame_width_bits_minus_1;
@@ -623,7 +623,11 @@ seq_tier = new int[operating_points_cnt_minus_1 + 1];
 decoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
 initial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
 initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];
-
+ buffer_removal_time = new int[operating_points_cnt_minus_1 + 1];
+decoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];
+ encoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];
+low_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];
+ 
 
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
@@ -812,7 +816,11 @@ seq_tier = new int[operating_points_cnt_minus_1 + 1];
 decoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
 initial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
 initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];
-
+ buffer_removal_time = new int[operating_points_cnt_minus_1 + 1];
+decoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];
+ encoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];
+low_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];
+ 
 
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
@@ -1043,9 +1051,9 @@ operating_parameters_info( op ) {
 }
     */
 		private int op;
-		private int[] decoder_buffer_delay;
-		private int[] encoder_buffer_delay;
-		private int[] low_delay_mode_flag;
+		private int[] decoder_buffer_delay= new int[1];
+		private int[] encoder_buffer_delay= new int[1];
+		private int[] low_delay_mode_flag= new int[1];
 
          public void ReadOperatingParametersInfo(int op)
          {
@@ -1696,12 +1704,12 @@ frame_header_obu() {
 		private int primary_ref_frame;
 		private int buffer_removal_time_present_flag;
 		private int opPtIdc;
-		private int[] buffer_removal_time;
+		private int[] buffer_removal_time= new int[1];
 		private int allow_high_precision_mv;
 		private int use_ref_frame_mvs;
 		private int allow_intrabc;
 		private int refresh_frame_flags;
-		private int[] ref_order_hint;
+		private int[] ref_order_hint= new int[AV1Constants.NUM_REF_FRAMES];
 		private int frame_size;
 		private int render_size;
 		private int frame_refs_short_signaling;
@@ -1711,7 +1719,7 @@ frame_header_obu() {
 		private int[] ref_frame_idx= new int[AV1Constants.REFS_PER_FRAME];
 		private int delta_frame_id_minus_1;
 		private int DeltaFrameId;
-		private int[] expectedFrameId;
+		private int[] expectedFrameId= new int[AV1Constants.REFS_PER_FRAME];
 		private int frame_size_with_refs;
 		private int read_interpolation_filter;
 		private int is_motion_mode_switchable;
@@ -1734,7 +1742,7 @@ frame_header_obu() {
 		private int CodedLossless;
 		private int qindex;
 		private int[] LosslessArray= new int[AV1Constants.MAX_SEGMENTS];
-		private int[][] SegQMLevel;
+		private int[][] SegQMLevel= new int[3][] { new int[8],new int[8],new int[8] };
 		private int AllLossless;
 		private int loop_filter_params;
 		private int cdef_params;
@@ -4525,7 +4533,7 @@ lr_params() {
 		private int refHint;
 		private int forwardHint;
 		private int backwardHint;
-		private int[] SkipModeFrame;
+		private int[] SkipModeFrame= new int[2];
 		private int secondForwardIdx;
 		private int secondForwardHint;
 		private int skip_mode_present;
@@ -5087,22 +5095,22 @@ read_global_param( type, refc, idx ) {
 		private int tempGrainSeed;
 		private int load_grain_params;
 		private int num_y_points;
-		private int[] point_y_value;
-		private int[] point_y_scaling;
+		private int[] point_y_value= new int[14];
+		private int[] point_y_scaling= new int[14];
 		private int chroma_scaling_from_luma;
 		private int num_cb_points;
 		private int num_cr_points;
-		private int[] point_cb_value;
-		private int[] point_cb_scaling;
-		private int[] point_cr_value;
-		private int[] point_cr_scaling;
+		private int[] point_cb_value= new int[10];
+		private int[] point_cb_scaling= new int[10];
+		private int[] point_cr_value= new int[10];
+		private int[] point_cr_scaling= new int[10];
 		private int grain_scaling_minus_8;
 		private int ar_coeff_lag;
 		private int numPosLuma;
 		private int numPosChroma;
-		private int[] ar_coeffs_y_plus_128;
-		private int[] ar_coeffs_cb_plus_128;
-		private int[] ar_coeffs_cr_plus_128;
+		private int[] ar_coeffs_y_plus_128= new int[24];
+		private int[] ar_coeffs_cb_plus_128= new int[25];
+		private int[] ar_coeffs_cr_plus_128= new int[25];
 		private int ar_coeff_shift_minus_6;
 		private int grain_scale_shift;
 		private int cb_mult;
@@ -5910,8 +5918,8 @@ metadata_hdr_mdcv() {
  luminance_min f(32)
 }
     */
-		private int[] primary_chromaticity_x;
-		private int[] primary_chromaticity_y;
+		private int[] primary_chromaticity_x= new int[3];
+		private int[] primary_chromaticity_y= new int[3];
 		private int white_point_chromaticity_x;
 		private int white_point_chromaticity_y;
 		private int luminance_max;
@@ -6034,7 +6042,10 @@ scalability_structure() {
          public void ReadScalabilityStructure()
          {
 
-			stream.ReadFixed(2, out this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); 
+			stream.ReadFixed(2, out this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];
+ spatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];
+ spatial_layer_ref_id = new int[spatial_layers_cnt_minus_1 + 1];
+ 
 			stream.ReadFixed(1, out this.spatial_layer_dimensions_present_flag, "spatial_layer_dimensions_present_flag"); 
 			stream.ReadFixed(1, out this.spatial_layer_description_present_flag, "spatial_layer_description_present_flag"); 
 			stream.ReadFixed(1, out this.temporal_group_description_present_flag, "temporal_group_description_present_flag"); 
@@ -6061,14 +6072,22 @@ scalability_structure() {
 
 			if ( temporal_group_description_present_flag != 0 )
 			{
-				stream.ReadFixed(8, out this.temporal_group_size, "temporal_group_size"); 
+				stream.ReadFixed(8, out this.temporal_group_size, "temporal_group_size"); temporal_group_temporal_id = new int[temporal_group_size];
+ temporal_group_temporal_switching_up_point_flag = new int[temporal_group_size];
+ temporal_group_spatial_switching_up_point_flag = new int[temporal_group_size];
+ temporal_group_ref_cnt = new int[temporal_group_size];
+ 
 
 				for ( i = 0; i < temporal_group_size; i++ )
 				{
 					stream.ReadFixed(3, out this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
 					stream.ReadFixed(1, out this.temporal_group_temporal_switching_up_point_flag[ i ], "temporal_group_temporal_switching_up_point_flag"); 
 					stream.ReadFixed(1, out this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
-					stream.ReadFixed(3, out this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
+					stream.ReadFixed(3, out this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); temporal_group_ref_pic_diff = new int[temporal_group_size][];
+ for(int k = 0; k < temporal_group_size; k++) { 
+ temporal_group_ref_pic_diff[k] = new int[temporal_group_ref_cnt[ i ]]; 
+ }
+
 
 					for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ )
 					{
@@ -6081,7 +6100,10 @@ scalability_structure() {
          public void WriteScalabilityStructure()
          {
 
-			stream.WriteFixed(2, this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); 
+			stream.WriteFixed(2, this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];
+ spatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];
+ spatial_layer_ref_id = new int[spatial_layers_cnt_minus_1 + 1];
+ 
 			stream.WriteFixed(1, this.spatial_layer_dimensions_present_flag, "spatial_layer_dimensions_present_flag"); 
 			stream.WriteFixed(1, this.spatial_layer_description_present_flag, "spatial_layer_description_present_flag"); 
 			stream.WriteFixed(1, this.temporal_group_description_present_flag, "temporal_group_description_present_flag"); 
@@ -6108,14 +6130,22 @@ scalability_structure() {
 
 			if ( temporal_group_description_present_flag != 0 )
 			{
-				stream.WriteFixed(8, this.temporal_group_size, "temporal_group_size"); 
+				stream.WriteFixed(8, this.temporal_group_size, "temporal_group_size"); temporal_group_temporal_id = new int[temporal_group_size];
+ temporal_group_temporal_switching_up_point_flag = new int[temporal_group_size];
+ temporal_group_spatial_switching_up_point_flag = new int[temporal_group_size];
+ temporal_group_ref_cnt = new int[temporal_group_size];
+ 
 
 				for ( i = 0; i < temporal_group_size; i++ )
 				{
 					stream.WriteFixed(3, this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
 					stream.WriteFixed(1, this.temporal_group_temporal_switching_up_point_flag[ i ], "temporal_group_temporal_switching_up_point_flag"); 
 					stream.WriteFixed(1, this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
-					stream.WriteFixed(3, this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
+					stream.WriteFixed(3, this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); temporal_group_ref_pic_diff = new int[temporal_group_size][];
+ for(int k = 0; k < temporal_group_size; k++) { 
+ temporal_group_ref_pic_diff[k] = new int[temporal_group_ref_cnt[ i ]]; 
+ }
+
 
 					for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ )
 					{

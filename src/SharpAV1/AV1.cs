@@ -26,9 +26,9 @@ namespace SharpAV1
         public int[] RefRenderHeight { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefUpscaledWidth { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] Remap_Lr_Type { get; set; } = new int[] { AV1FrameRestorationType.RESTORE_NONE, AV1FrameRestorationType.RESTORE_SWITCHABLE, AV1FrameRestorationType.RESTORE_WIENER, AV1FrameRestorationType.RESTORE_SGRPROJ };
-        public int[] Segmentation_Feature_Bits { get; set; }
-        public int[] Segmentation_Feature_Max { get; set; }
-        public int[] Segmentation_Feature_Signed { get; set; }
+        public int[] Segmentation_Feature_Bits { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
+        public int[] Segmentation_Feature_Max { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
+        public int[] Segmentation_Feature_Signed { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
 
         public int ObuSize { get { return obu_size; } }
         public int ObuExtensionFlag { get { return obu_extension_flag; } }
