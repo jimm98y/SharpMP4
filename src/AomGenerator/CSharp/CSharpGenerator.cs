@@ -14,9 +14,6 @@ namespace AomGenerator.CSharp
 
     public interface ICustomGenerator
     {
-        string FixVariableType(string variableType);
-        string FixAppendType(string appendType, string variableName);
-        string FixAllocations(string spacing, string appendType, string variableType, string variableName);
         string PreprocessDefinitionsFile(string definitions);
         string GetFieldDefaultValue(AomField field);
         void FixClassParameters(AomClass ituClass);
@@ -25,7 +22,6 @@ namespace AomGenerator.CSharp
         string FixStatement(string fieldValue, MethodType methodType);
         string GetCtorParameterType(string parameter);
         string FixFieldValue(string fieldValue);
-        void FixNestedIndexes(List<string> ret, AomField field);
         string AppendMethod(AomCode field, MethodType methodType, string spacing, string retm);
     }
 
@@ -55,9 +51,9 @@ namespace Sharp{type}
     {{
 ";
 
-            foreach (var ituClass in aomClasses)
+            foreach (var aomClass in aomClasses)
             {
-                resultCode += GenerateMethods(ituClass);
+                resultCode += GenerateMethods(aomClass);
             }
 
             resultCode += @$"

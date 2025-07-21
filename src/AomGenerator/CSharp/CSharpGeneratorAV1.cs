@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace AomGenerator.CSharp
 {
@@ -10,36 +9,37 @@ namespace AomGenerator.CSharp
             switch((field as AomField).Name)
             {
                 case "operating_points_cnt_minus_1":
-                    return retm + "operating_point_idc = new int[operating_points_cnt_minus_1 + 1];\r\nseq_level_idx = new int[operating_points_cnt_minus_1 + 1];\r\nseq_tier = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "decoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\ninitial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];\r\n buffer_removal_time = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "decoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n encoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "low_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];\r\n ";
+                    return retm + "operating_point_idc = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tseq_level_idx = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tseq_tier = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tdecoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tinitial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tinitial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tbuffer_removal_time = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tdecoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tencoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tlow_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];\r\n ";
 
                 case "spatial_layers_cnt_minus_1":
-                    return retm + "spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];\r\n spatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];\r\n " +
-                        "spatial_layer_ref_id = new int[spatial_layers_cnt_minus_1 + 1];\r\n ";
+                    return retm + "spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tspatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];\r\n" +
+                        "\t\t\t\tspatial_layer_ref_id = new int[spatial_layers_cnt_minus_1 + 1];\r\n ";
 
                 case "temporal_group_size":
-                    return retm + "temporal_group_temporal_id = new int[temporal_group_size];\r\n temporal_group_temporal_switching_up_point_flag = new int[temporal_group_size];\r\n " +
-                        "temporal_group_spatial_switching_up_point_flag = new int[temporal_group_size];\r\n temporal_group_ref_cnt = new int[temporal_group_size];\r\n ";
+                    return retm + "temporal_group_temporal_id = new int[temporal_group_size];\r\n" +
+                        "\t\t\t\ttemporal_group_temporal_switching_up_point_flag = new int[temporal_group_size];\r\n" +
+                        "\t\t\t\ttemporal_group_spatial_switching_up_point_flag = new int[temporal_group_size];\r\n" +
+                        "\t\t\t\ttemporal_group_ref_cnt = new int[temporal_group_size];\r\n ";
 
                 case "temporal_group_ref_cnt":
-                    return retm + "temporal_group_ref_pic_diff = new int[temporal_group_size][];\r\n for(int k = 0; k < temporal_group_size; k++) { \r\n temporal_group_ref_pic_diff[k] = new int[temporal_group_ref_cnt[ i ]]; \r\n }\r\n";
+                    return retm + "temporal_group_ref_pic_diff = new int[temporal_group_size][];\r\n" +
+                        "\t\t\t\tfor(int k = 0; k < temporal_group_size; k++) { \r\n" +
+                        "\t\t\t\t\t temporal_group_ref_pic_diff[k] = new int[temporal_group_ref_cnt[ i ]]; \r\n" +
+                        "\t\t\t\t }\r\n";
 
                 default:
                     return retm;
             }
-        }
-
-        public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
-        {
-            return "";
-        }
-
-        public string FixAppendType(string appendType, string variableName)
-        {
-            return appendType;
         }
 
         public void FixClassParameters(AomClass ituClass)
@@ -55,11 +55,6 @@ namespace AomGenerator.CSharp
         public string FixFieldValue(string fieldValue)
         {
             return fieldValue;
-        }
-
-        public void FixNestedIndexes(List<string> ret, AomField field)
-        {
-            // nothing to do
         }
 
         public string FixStatement(string value, MethodType methodType)
@@ -402,11 +397,6 @@ namespace AomGenerator.CSharp
             value = value.Replace("decode_subexp", methodType + "DecodeSubexp");
 
             return value;
-        }
-
-        public string FixVariableType(string variableType)
-        {
-            return variableType;
         }
 
         public string GetCtorParameterType(string parameter)
