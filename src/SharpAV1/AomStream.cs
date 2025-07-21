@@ -28,6 +28,25 @@ namespace SharpAV1
             this._stream = stream ?? new MemoryStream();
         }
 
+        public int GetPosition()
+        {
+            return _bitsPosition;
+        }
+
+        public void Skip(long bits)
+        {
+            while (_bitsPosition % 8 != 0)
+            {
+                ReadBit();
+                bits--;
+            }
+
+            _bitsPosition += (int)bits;
+
+            long bytes = (bits >> 3);
+            _stream.Seek(bytes, SeekOrigin.Current);
+        }
+
         #region Bit read/write
 
         private int ReadByte()
@@ -192,7 +211,35 @@ namespace SharpAV1
 
         public ulong ReadUvlc(out uint value, string name)
         {
-            throw new NotImplementedException();
+            ulong size = 0;
+            int leadingZeros = 0;
+            while (true) 
+            {
+                int done = ReadBit();
+                if(done == -1)
+                    throw new EndOfStreamException();
+
+                size++;
+
+                if (done != 0)
+                    break;
+
+                leadingZeros++;
+             }
+            if (leadingZeros >= 32)
+            {
+                value = (1 << 32) - 1;
+                LogEnd(name, size, value);
+                return size;
+            }
+            else
+            {
+                long v = ReadBits(leadingZeros);
+                size += (ulong)leadingZeros;
+                value = (uint)(v + (1 << leadingZeros) - 1);
+                LogEnd(name, size, value);
+                return size;
+            }
         }
 
         public ulong WriteUvlc(uint value, string name)
@@ -200,9 +247,16 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadSignedIntVar(int length, out int value, string name)
+        public ulong ReadSignedIntVar(int n, out int value, string name)
         {
-            throw new NotImplementedException();
+            ulong size = ReadUnsignedInt(n, out uint v, name);
+            long signMask = 1 << (n - 1);
+            if ((v & signMask) > 0)
+                value = (int)(v - 2 * signMask);
+            else
+                value = (int)v;
+            LogEnd(name, size, value);
+            return size;
         }
 
         public ulong WriteSignedIntVar(int length, int value, string name)
@@ -214,7 +268,7 @@ namespace SharpAV1
         {
             if (count > 32)
                 throw new ArgumentOutOfRangeException(nameof(count));
-            long ret = ReadBits((int)count);
+            long ret = ReadBits(count);
             if (ret == -1)
                 throw new EndOfStreamException();
             value = (uint)ret;
@@ -224,7 +278,9 @@ namespace SharpAV1
 
         public ulong WriteUnsignedInt(int length, uint value, string name)
         {
-            throw new NotImplementedException();
+            WriteBits(length, value);
+            LogEnd(name, (ulong)length, value);
+            return (ulong)length;
         }
 
         public ulong ReadLeVar(int n, out int value, string name)
@@ -247,9 +303,52 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public int GetPosition()
+        public ulong ReadBytes(int n, out byte[] value, string name)
         {
-            return _bitsPosition;
+            byte[] bytes = new byte[n / 8];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                long bb = ReadBits(8);
+                if (bb == -1)
+                    throw new EndOfStreamException();
+
+                bytes[i] = (byte)bb;
+            }
+            value = bytes.ToArray();
+            LogEnd(name, (ulong)(bytes.Length * 8), "byte[]");
+            return (ulong)(bytes.Length * 8);
+        }
+
+        public ulong WriteBytes(int n, byte[] value, string name)
+        {
+            ulong size = 0;
+            byte[] bytes = value;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                size += WriteUnsignedInt(8, bytes[i], name);
+            }
+            return size;
+        }
+
+        public ulong Read_ns(int n, out uint value, string name)
+        {
+            int w = (int)Math.Floor(Math.Log2(n)) + 1;
+            int m = (1 << w) - n;
+            ulong size = ReadUnsignedInt(w - 1, out var v, name);
+            if (v < m)
+            {
+                value = v;
+                return size;
+            }
+
+            int extraBit = ReadBit();
+            value = (uint)((v << 1) - m + extraBit);
+            return size;
+        }
+
+        public ulong Write_ns(int n, uint value, string name)
+        {
+            throw new NotImplementedException();
         }
 
         public static int Clip3(int low, int high, int value)
@@ -285,62 +384,6 @@ namespace SharpAV1
             }
 
             Log.Info($"{padding} {name}{endPadding}{size}   {value}");
-        }
-
-        public void Skip(long bits)
-        {
-            while (_bitsPosition % 8 != 0)
-            {
-                ReadBit();
-                bits--;
-            }
-
-            _bitsPosition += (int)bits;
-
-            long bytes = (bits >> 3);
-            _stream.Seek(bytes, SeekOrigin.Current);
-        }
-
-        public ulong ReadBytes(int n, out byte[] value, string name)
-        {
-            byte[] bytes = new byte[n / 8];
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                long bb = ReadBits(8);
-                if (bb == -1)
-                    throw new EndOfStreamException();
-
-                bytes[i] = (byte)bb;
-            }
-            value = bytes.ToArray();
-            LogEnd(name, (ulong)(bytes.Length * 8), "byte[]");
-            return (ulong)(bytes.Length * 8);
-        }
-
-        public void WriteBytes(int n, byte[] coded_tile_data, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ulong Read_ns(int n, out uint value, string name)
-        {
-            int w = (int)Math.Floor(Math.Log2(n)) + 1;
-            int m = (1 << w) - n;
-            ulong size = ReadUnsignedInt(w - 1, out var v, name);
-            if (v < m)
-            {
-                value = v;
-                return size;
-            }
-
-            int extraBit = ReadBit();
-            value = (uint)((v << 1) - m + extraBit);
-            return size;
-        }
-
-        public void Write_ns(int n, uint value, string name)
-        {
-            throw new NotImplementedException();
         }
 
         #region IDisposable implementation
