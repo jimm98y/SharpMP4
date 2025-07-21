@@ -136,14 +136,14 @@ namespace SharpAV1
 
         #endregion // Bit read/write
 
-        public ulong ReadLeb128(out int v, string name)
+        public ulong ReadLeb128(out int value, string name)
         {
-            int value = 0;
+            int v = 0;
             int Leb128Bytes = 0;
             for (int i = 0; i < 8; i++)
             {
                 int leb128_byte = ReadByte();
-                value |= ((leb128_byte & 0x7f) << (i * 7));
+                v |= ((leb128_byte & 0x7f) << (i * 7));
                 Leb128Bytes += 1;
                 if((leb128_byte & 0x80) == 0)
                 {
@@ -151,16 +151,16 @@ namespace SharpAV1
                 }
             }
 
-            if (value <= int.MaxValue)
+            if (v <= int.MaxValue)
             {
-                v = value;
+                value = v;
             }
             else
             {
-                throw new InvalidDataException($"Invalid LEB128 value: {value}");
+                throw new InvalidDataException($"Invalid LEB128 value: {v}");
             }
 
-            LogEnd(name, (ulong)Leb128Bytes << 3, value);
+            LogEnd(name, (ulong)Leb128Bytes << 3, v);
 
             return (ulong)Leb128Bytes << 3;
         }
@@ -184,16 +184,17 @@ namespace SharpAV1
             return WriteUnsignedInt(count, (uint)value, name);
         }
 
-        public ulong ReadVariable(long length, out int value, string name)
+        public ulong ReadVariable(long count, out int value, string name)
         {
-            var size = ReadUnsignedInt((int)length, out uint v, name);
+            var size = ReadUnsignedInt((int)count, out uint v, name);
             value = (int)v;
             return size;
         }
 
-        public ulong WriteVariable(long length, int value, string name)
+        public ulong WriteVariable(long count, int value, string name)
         {
-            throw new NotImplementedException();
+            var size = WriteUnsignedInt((int)count, (uint)value, name);
+            return size;
         }
 
         public ulong ReadUvlc(out uint value, string name)
@@ -234,10 +235,10 @@ namespace SharpAV1
             throw new NotImplementedException();
         }
 
-        public ulong ReadSignedIntVar(int n, out int value, string name)
+        public ulong ReadSignedIntVar(int count, out int value, string name)
         {
-            ulong size = ReadUnsignedInt(n, out uint v, name);
-            long signMask = 1 << (n - 1);
+            ulong size = ReadUnsignedInt(count, out uint v, name);
+            long signMask = 1 << (count - 1);
             if ((v & signMask) > 0)
                 value = (int)(v - 2 * signMask);
             else
@@ -246,7 +247,7 @@ namespace SharpAV1
             return size;
         }
 
-        public ulong WriteSignedIntVar(int length, int value, string name)
+        public ulong WriteSignedIntVar(int count, int value, string name)
         {
             throw new NotImplementedException();
         }
@@ -263,18 +264,18 @@ namespace SharpAV1
             return (ulong)count;
         }
 
-        public ulong WriteUnsignedInt(int length, uint value, string name)
+        public ulong WriteUnsignedInt(int count, uint value, string name)
         {
-            WriteBits(length, value);
-            LogEnd(name, (ulong)length, value);
-            return (ulong)length;
+            WriteBits(count, value);
+            LogEnd(name, (ulong)count, value);
+            return (ulong)count;
         }
 
-        public ulong ReadLeVar(int n, out int value, string name)
+        public ulong ReadLeVar(int count, out int value, string name)
         {
             uint size = 0;
             int t = 0;
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < count; i++)
             {
                 int b = ReadByte();
                 size++;
@@ -285,14 +286,14 @@ namespace SharpAV1
             return size << 3;
         }
 
-        public ulong WriteLeVar(int length, int value, string name)
+        public ulong WriteLeVar(int count, int value, string name)
         {
             throw new NotImplementedException();
         }
 
-        public ulong ReadBytes(int n, out byte[] value, string name)
+        public ulong ReadBytes(int count, out byte[] value, string name)
         {
-            byte[] bytes = new byte[n / 8];
+            byte[] bytes = new byte[count / 8];
             for (int i = 0; i < bytes.Length; i++)
             {
                 long bb = ReadBits(8);
@@ -306,7 +307,7 @@ namespace SharpAV1
             return (ulong)(bytes.Length * 8);
         }
 
-        public ulong WriteBytes(int n, byte[] value, string name)
+        public ulong WriteBytes(int count, byte[] value, string name)
         {
             ulong size = 0;
             byte[] bytes = value;
@@ -317,10 +318,10 @@ namespace SharpAV1
             return size;
         }
 
-        public ulong Read_ns(int n, out uint value, string name)
+        public ulong Read_ns(int count, out uint value, string name)
         {
-            int w = (int)Math.Floor(Math.Log2(n)) + 1;
-            int m = (1 << w) - n;
+            int w = (int)Math.Floor(Math.Log2(count)) + 1;
+            int m = (1 << w) - count;
             ulong size = ReadUnsignedInt(w - 1, out var v, name);
             if (v < m)
             {
@@ -333,7 +334,7 @@ namespace SharpAV1
             return size;
         }
 
-        public ulong Write_ns(int n, uint value, string name)
+        public ulong Write_ns(int count, uint value, string name)
         {
             throw new NotImplementedException();
         }
