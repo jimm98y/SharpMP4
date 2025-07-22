@@ -40,6 +40,11 @@ namespace SharpMP4.Tracks
         /// </summary>
         public int FrameTickFallback { get; set; } = 25;
 
+        /// <summary>
+        /// Sequence Header Open Bitstream Unit.
+        /// </summary>
+        public byte[] SequenceHeaderOBU { get; set; } = null;
+
         private AV1Context _context = new AV1Context();
 
         public AV1Track()
@@ -56,7 +61,28 @@ namespace SharpMP4.Tracks
             VisualSampleEntry visualSampleEntry = (VisualSampleEntry)sampleEntry;
             AV1CodecConfigurationBox av01 = visualSampleEntry.Children.OfType<AV1CodecConfigurationBox>().Single();
 
+            ProcessSample(av01.Av1Config.ConfigOBUs, out _, out _);
+        }
+
+        /// <summary>
+        /// Process 1 OBU.
+        /// </summary>
+        /// <param name="sample">OBU bytes.</param>
+        /// <param name="isRandomAccessPoint">true when the sample contains a keyframe.</param>
+        public override void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
+        {
+            isRandomAccessPoint = false; // TODO
+            output = null;
+
+            if (sample == null)
+            {
+                // flush the last OBU
+                // TODO
+                return;
+            }
+
             // TODO
+            base.ProcessSample(sample, out output, out isRandomAccessPoint);
         }
 
         public override Box CreateSampleEntryBox()
@@ -81,9 +107,26 @@ namespace SharpMP4.Tracks
             av01ConfigurationBox.SetParent(visualSampleEntry);
 
             av01ConfigurationBox.Av1Config = new AV1CodecConfigurationRecord();
+            av01ConfigurationBox.Av1Config.Reserved = 0;
+            av01ConfigurationBox.Av1Config.Reserved0 = 0;
+            av01ConfigurationBox.Av1Config.Version = 1;
+            av01ConfigurationBox.Av1Config.InitialPresentationDelayMinusOne = 0;
+            av01ConfigurationBox.Av1Config.InitialPresentationDelayPresent = false;
+            av01ConfigurationBox.Av1Config.ChromaSamplePosition = (byte)_context._ChromaSamplePosition;
+            av01ConfigurationBox.Av1Config.ChromaSubsamplingx = _context._Subsamplingx != 0;
+            av01ConfigurationBox.Av1Config.ChromaSubsamplingy = _context._Subsamplingy != 0;
+            av01ConfigurationBox.Av1Config.ConfigOBUs = SequenceHeaderOBU; 
+            av01ConfigurationBox.Av1Config.HighBitdepth = _context._HighBitdepth != 0;
+            av01ConfigurationBox.Av1Config.Marker = true; // shall be set to true
+            av01ConfigurationBox.Av1Config.Monochrome = _context._MonoChrome != 0;
+            av01ConfigurationBox.Av1Config.SeqLevelIdx0 = (byte)_context._SeqLevelIdx[0];
+            av01ConfigurationBox.Av1Config.SeqProfile = (byte)_context._SeqProfile;
+            av01ConfigurationBox.Av1Config.SeqTier0 = _context._SeqTier[0] != 0;
+            av01ConfigurationBox.Av1Config.TwelveBit = _context._TwelveBit != 0;
 
-            // TODO
-            throw new NotImplementedException();
+            visualSampleEntry.Children.Add(av01ConfigurationBox);
+
+            return visualSampleEntry;
         }
 
         public override void FillTkhdBox(TrackHeaderBox tkhd)
@@ -94,7 +137,10 @@ namespace SharpMP4.Tracks
 
         public byte[][] GetVideoUnits()
         {
-            throw new NotImplementedException();
+            if(SequenceHeaderOBU == null)
+                return null;
+
+            return new byte[][] { SequenceHeaderOBU };
         }
     }
 }
