@@ -3,6 +3,7 @@ using SharpAV1;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SharpMP4.Tracks
 {
@@ -79,6 +80,88 @@ namespace SharpMP4.Tracks
                 // flush the last OBU
                 // TODO
                 return;
+            }
+
+            var ms = new MemoryStream(sample);
+            using (AomStream stream = new AomStream(ms))
+            {
+                int len = sample.Length;
+                do
+                {
+                    SharpISOBMFF.Log.Debug($"---OBU begin {len}---");
+
+                    _context.Read(stream, len);
+                    int obuTotalCize = (_context.ObuSize + 1 /* obu header */ + (_context.ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + _context.ObuSizeLen);
+                    len -= obuTotalCize;
+
+                    if (_context._ObuType == AV1ObuTypes.OBU_SEQUENCE_HEADER)
+                    {
+                        SequenceHeaderOBU = sample;
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
+                    {
+
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
+                    {
+
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
+                    {
+
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_METADATA)
+                    {
+
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_FRAME)
+                    {
+
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER)
+                    {
+
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_TILE_LIST)
+                    {
+
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_PADDING)
+                    {
+
+                    }
+                    else if(
+                        _context._ObuType == AV1ObuTypes.OBU_RESERVED_0 || 
+                        _context._ObuType == AV1ObuTypes.OBU_RESERVED_10 || 
+                        _context._ObuType == AV1ObuTypes.OBU_RESERVED_11 || 
+                        _context._ObuType == AV1ObuTypes.OBU_RESERVED_12 || 
+                        _context._ObuType == AV1ObuTypes.OBU_RESERVED_13 || 
+                        _context._ObuType == AV1ObuTypes.OBU_RESERVED_14 
+                        )
+                    {
+                        // reserved
+                    }
+                    else
+                    {
+                        // invalid
+                    }
+
+                        SharpISOBMFF.Log.Debug($"---OBU end {obuTotalCize}---");
+                } while (len > 0);
+
+                if (ms.Position != ms.Length)
+                {
+                    SharpISOBMFF.Log.Debug($"---!!!OBU error---");
+                }
+
+
+
+
+
+
+
+
+                
             }
 
             // TODO
