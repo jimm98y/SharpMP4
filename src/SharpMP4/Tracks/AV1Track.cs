@@ -13,7 +13,7 @@ namespace SharpMP4.Tracks
     /// <remarks>
     /// https://aomedia.org/specifications/av1/
     /// </remarks>
-    public class AV1Track : TrackBase, IVideoTrack
+    public class AV1Track : TrackBase
     {
         public const string BRAND = "av01";
 
@@ -28,26 +28,6 @@ namespace SharpMP4.Tracks
         private bool _obuBufferContainsSequenceHeader = false;
 
         /// <summary>
-        /// Overrides any auto-detected timescale.
-        /// </summary>
-        public uint TimescaleOverride { get; set; } = 0;
-
-        /// <summary>
-        /// Overrides any auto-detected frame tick.
-        /// </summary>
-        public int FrameTickOverride { get; set; } = 0;
-
-        /// <summary>
-        /// If it is not possible to retrieve timescale from the video, use this value as a fallback.
-        /// </summary>
-        public uint TimescaleFallback { get; set; } = 90000;
-
-        /// <summary>
-        /// If it is not possible to retrieve frame tick from the video, use this value as a fallback.
-        /// </summary>
-        public int FrameTickFallback { get; set; } = 3750;
-
-        /// <summary>
         /// Sequence Header Open Bitstream Unit.
         /// </summary>
         public byte[] SequenceHeaderOBU { get; set; } = null;
@@ -58,9 +38,11 @@ namespace SharpMP4.Tracks
         {
             CompatibleBrand = BRAND; // av01
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
+            TimescaleFallback = 24000;
+            FrameTickFallback = 1001;
         }
 
-        public AV1Track(Box sampleEntry, uint timescale, int sampleDuration)
+        public AV1Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
         {
             Timescale = timescale;
             DefaultSampleDuration = sampleDuration;
@@ -348,7 +330,7 @@ namespace SharpMP4.Tracks
             return result;
         }
 
-        public IEnumerable<byte[]> GetVideoUnits()
+        public IEnumerable<byte[]> GetContainerSamples()
         {
             if(SequenceHeaderOBU == null)
                 return null;

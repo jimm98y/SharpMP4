@@ -459,10 +459,7 @@ namespace SharpMP4.Readers
         public static IEnumerable<byte[]> ParseSample(ContainerContext context, uint trackID, byte[] sample)
         {
             var trackContext = context.Tracks[trackID - 1];
-            if(trackContext.Track is IVideoTrack videoTrack)
-                return videoTrack.ParseSample(sample);
-            else
-                return new List<byte[]> { sample }; // for audio tracks, we return the sample data as is
+            return trackContext.Track.ParseSample(sample);
         }
     }    
 

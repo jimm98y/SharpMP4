@@ -32,28 +32,20 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
             var parsedTrack = parsed.Tracks[t];
             if (parsedTrack.Track.HandlerType == HandlerTypes.Video)
             {
-                IVideoTrack videoTrack = parsedTrack.Track as IVideoTrack;
-                if (videoTrack != null)
+                var videoUnits = parsedTrack.Track.GetContainerSamples();
+                foreach (var unit in videoUnits)
                 {
-                    var videoUnits = videoTrack.GetVideoUnits();
-                    foreach (var unit in videoUnits)
+                    builder.ProcessTrackSample(parsedTrack.Track.TrackID, unit);
+                }
+
+                Mp4Sample sample = null;
+                while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
+                {
+                    var units = Mp4Reader.ParseSample(parsed, parsedTrack.Track.TrackID, sample.Data);
+                    foreach (var unit in units)
                     {
                         builder.ProcessTrackSample(parsedTrack.Track.TrackID, unit);
                     }
-
-                    Mp4Sample sample = null;
-                    while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
-                    {
-                        var units = Mp4Reader.ParseSample(parsed, parsedTrack.Track.TrackID, sample.Data);
-                        foreach (var unit in units)
-                        {
-                            builder.ProcessTrackSample(parsedTrack.Track.TrackID, unit);
-                        }
-                    }
-                }
-                else
-                {
-                    throw new NotSupportedException();
                 }
             }
             else if (parsedTrack.Track.HandlerType == HandlerTypes.Sound)

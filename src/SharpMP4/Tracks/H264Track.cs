@@ -16,7 +16,7 @@ namespace SharpMP4.Tracks
     /// https://yumichan.net/video-processing/video-compression/introduction-to-h264-nal-unit/
     /// https://stackoverflow.com/questions/38094302/how-to-understand-header-of-h264
     /// </remarks>
-    public class H264Track : TrackBase, IVideoTrack, IH26XTrack
+    public class H264Track : TrackBase
     {
         public const string BRAND = "avc1";
         public override string HandlerName => HandlerNames.Video;
@@ -55,26 +55,6 @@ namespace SharpMP4.Tracks
         public Dictionary<ulong, PicParameterSetRbsp> Pps { get; set; } = new Dictionary<ulong, PicParameterSetRbsp>();
         public Dictionary<ulong, byte[]> PpsRaw { get; set; } = new Dictionary<ulong, byte[]>();
 
-        /// <summary>
-        /// Overrides any auto-detected timescale.
-        /// </summary>
-        public uint TimescaleOverride { get; set; } = 0;
-
-        /// <summary>
-        /// Overrides any auto-detected frame tick.
-        /// </summary>
-        public int FrameTickOverride { get; set; } = 0;
-
-        /// <summary>
-        /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
-        /// </summary>
-        public uint TimescaleFallback { get; set; } = 600;
-
-        /// <summary>
-        /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
-        /// </summary>
-        public int FrameTickFallback { get; set; } = 25;
-
         private H264Context _context = new H264Context();
 
         /// <summary>
@@ -84,6 +64,8 @@ namespace SharpMP4.Tracks
         {
             CompatibleBrand = BRAND; // avc1
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
+            TimescaleFallback = 24000;
+            FrameTickFallback = 1001;
         }
 
         public H264Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
@@ -548,12 +530,12 @@ namespace SharpMP4.Tracks
             return (timescale, frametick);
         }
 
-        public IEnumerable<byte[]> ParseSample(byte[] sample)
+        public override IEnumerable<byte[]> ParseSample(byte[] sample)
         {
             return H26XTrackUtils.ParseSample(sample, NalLengthSize);
         }
 
-        public IEnumerable<byte[]> GetVideoUnits()
+        public override IEnumerable<byte[]> GetContainerSamples()
         {
             return SpsRaw.Values.ToArray().Concat(PpsRaw.Values.ToArray()).ToArray();
         }

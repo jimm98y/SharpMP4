@@ -12,7 +12,7 @@ namespace SharpMP4.Tracks
     /// H266 track.
     /// </summary>
     /// <remarks>https://www.itu.int/rec/T-REC-H.266/en</remarks>
-    public class H266Track : TrackBase, IVideoTrack, IH26XTrack
+    public class H266Track : TrackBase
     {
         public const string BRAND = "vvc1";
 
@@ -49,26 +49,6 @@ namespace SharpMP4.Tracks
         public override string Language { get; set; } = "und";
         public int NalLengthSize { get; set; } = 4;
 
-        /// <summary>
-        /// Overrides any auto-detected timescale.
-        /// </summary>
-        public uint TimescaleOverride { get; set; } = 0;
-
-        /// <summary>
-        /// Overrides any auto-detected frame tick.
-        /// </summary>
-        public int FrameTickOverride { get; set; } = 0;
-
-        /// <summary>
-        /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
-        /// </summary>
-        public uint TimescaleFallback { get; set; } = 24000;
-
-        /// <summary>
-        /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
-        /// </summary>
-        public int FrameTickFallback { get; set; } = 1001;
-
         private H266Context _context = new H266Context();
 
         /// <summary>
@@ -78,6 +58,8 @@ namespace SharpMP4.Tracks
         {
             CompatibleBrand = BRAND; // vvc1
             DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
+            TimescaleFallback = 24000;
+            FrameTickFallback = 1001;
         }
 
         public H266Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
@@ -660,12 +642,12 @@ namespace SharpMP4.Tracks
             return ((uint)width, (uint)height);
         }
 
-        public IEnumerable<byte[]> ParseSample(byte[] sample)
+        public override IEnumerable<byte[]> ParseSample(byte[] sample)
         {
             return H26XTrackUtils.ParseSample(sample, NalLengthSize);
         }
 
-        public IEnumerable<byte[]> GetVideoUnits()
+        public override IEnumerable<byte[]> GetContainerSamples()
         {
             return VpsRaw.Values.ToArray().Concat(SpsRaw.Values.ToArray()).Concat(PpsRaw.Values.ToArray()).Concat(PrefixSeiRaw).ToArray();
         }
