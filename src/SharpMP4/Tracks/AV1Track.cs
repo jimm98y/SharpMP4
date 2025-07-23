@@ -297,7 +297,7 @@ namespace SharpMP4.Tracks
             tkhd.Height = (uint)_context._RenderHeight << 16;
         }
 
-        public IEnumerable<byte[]> ParseSample(byte[] sample)
+        public override IEnumerable<byte[]> ParseSample(byte[] sample)
         {
             List<byte[]> result = new List<byte[]>();
             var ms = new MemoryStream(sample);
@@ -330,7 +330,7 @@ namespace SharpMP4.Tracks
             return result;
         }
 
-        public IEnumerable<byte[]> GetContainerSamples()
+        public override IEnumerable<byte[]> GetContainerSamples()
         {
             if(SequenceHeaderOBU == null)
                 return null;
