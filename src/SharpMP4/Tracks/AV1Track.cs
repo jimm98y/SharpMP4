@@ -348,7 +348,7 @@ namespace SharpMP4.Tracks
             return result;
         }
 
-        public byte[][] GetVideoUnits()
+        public IEnumerable<byte[]> GetVideoUnits()
         {
             if(SequenceHeaderOBU == null)
                 return null;

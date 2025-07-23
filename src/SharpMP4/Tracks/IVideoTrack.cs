@@ -8,7 +8,7 @@ namespace SharpMP4.Tracks
         int FrameTickOverride { get; set; }
         uint TimescaleFallback { get; set; }
         int FrameTickFallback { get; set; }
-        byte[][] GetVideoUnits();
+        IEnumerable<byte[]> GetVideoUnits();
         IEnumerable<byte[]> ParseSample(byte[] sample);
     }
 }
