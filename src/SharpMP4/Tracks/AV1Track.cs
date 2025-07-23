@@ -317,7 +317,35 @@ namespace SharpMP4.Tracks
 
         public IEnumerable<byte[]> ParseSample(byte[] sample)
         {
-            throw new NotImplementedException();
+            List<byte[]> result = new List<byte[]>();
+            var ms = new MemoryStream(sample);
+            using (AomStream stream = new AomStream(ms))
+            {
+                int len = sample.Length;
+                int currentPosition = 0;
+
+                do
+                {
+                    _context.Read(stream, len);
+
+                    int obuTotalSize = 0;
+                    if (_context._ObuHasSizeField != 0)
+                    {
+                        obuTotalSize = _context._ObuSize + 1 /* obu header */ + (_context._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (_context.ObuSizeLen >> 3);
+                    }
+                    else
+                    {
+                        obuTotalSize = len;
+                    }
+
+                    result.Add(sample.Skip(currentPosition).Take(obuTotalSize).ToArray());
+                    currentPosition += obuTotalSize;
+
+                    len -= obuTotalSize;
+                } while (len > 0);
+            }
+
+            return result;
         }
 
         public byte[][] GetVideoUnits()
