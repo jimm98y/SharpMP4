@@ -24,6 +24,7 @@ namespace SharpMP4.Tracks
         private List<byte[]> _obuBuffer = new List<byte[]>();
         private bool _obuBufferContainsKeyframeRandomAccessPoint = false;
         private bool _obuBufferContainsDelayedRandomAccessPoint = false;
+        private bool _obuBufferContainsKeyFrameDependentRecoveryPoint = false;
         private bool _obuBufferContainsSequenceHeader = false;
 
         /// <summary>
@@ -128,9 +129,10 @@ namespace SharpMP4.Tracks
                         {
                             output = CreateSample(_obuBuffer);
                             _obuBuffer.Clear();
-                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint;
+                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint || _obuBufferContainsKeyFrameDependentRecoveryPoint;
                             _obuBufferContainsKeyframeRandomAccessPoint = false;
                             _obuBufferContainsDelayedRandomAccessPoint = false;
+                            _obuBufferContainsKeyFrameDependentRecoveryPoint = false;
                             _obuBufferContainsSequenceHeader = false;
                         }
 
@@ -146,9 +148,10 @@ namespace SharpMP4.Tracks
                         {
                             output = CreateSample(_obuBuffer);
                             _obuBuffer.Clear();
-                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint;
+                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint || _obuBufferContainsKeyFrameDependentRecoveryPoint;
                             _obuBufferContainsKeyframeRandomAccessPoint = false;
                             _obuBufferContainsDelayedRandomAccessPoint = false;
+                            _obuBufferContainsKeyFrameDependentRecoveryPoint = false;
                             _obuBufferContainsSequenceHeader = false;
                         }
                     }
@@ -178,14 +181,19 @@ namespace SharpMP4.Tracks
                         {
                             _obuBufferContainsDelayedRandomAccessPoint = true;
                         }
+                        else if(_context._ShowExistingFrame == 1 && _context.RefFrameType[_context._FrameToShowMapIdx] == AV1FrameTypes.KEY_FRAME)
+                        {
+                            _obuBufferContainsKeyFrameDependentRecoveryPoint = true;
+                        }
 
                         if (_obuBuffer.Count > 0 && _context._ShowFrame != 0)
                         {
                             output = CreateSample(_obuBuffer);
                             _obuBuffer.Clear();
-                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint;
+                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint || _obuBufferContainsKeyFrameDependentRecoveryPoint;
                             _obuBufferContainsKeyframeRandomAccessPoint = false;
                             _obuBufferContainsDelayedRandomAccessPoint = false;
+                            _obuBufferContainsKeyFrameDependentRecoveryPoint = false;
                             _obuBufferContainsSequenceHeader = false;
                         }
                     }
@@ -199,9 +207,10 @@ namespace SharpMP4.Tracks
                         {
                             output = CreateSample(_obuBuffer);
                             _obuBuffer.Clear();
-                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint;
+                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint || _obuBufferContainsKeyFrameDependentRecoveryPoint;
                             _obuBufferContainsKeyframeRandomAccessPoint = false;
                             _obuBufferContainsDelayedRandomAccessPoint = false;
+                            _obuBufferContainsKeyFrameDependentRecoveryPoint = false;
                             _obuBufferContainsSequenceHeader = false;
                         }
                     }
