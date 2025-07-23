@@ -382,6 +382,10 @@ namespace SharpAV1
             {
                 if (disposing)
                 {
+                    if (_stream != null)
+                    {
+                        _stream.Dispose();
+                    }
                 }
 
                 _disposedValue = true;

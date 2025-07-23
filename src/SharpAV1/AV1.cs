@@ -4,11 +4,9 @@ namespace SharpAV1
 {
     public interface IAomContext : IAomSerializable
     {
-        public int ObuSize { get; }
-        int ObuExtensionFlag { get; }
-        int ObuSizeLen { get; }
-        
+        int ObuSizeLen { get; }        
     }
+
     public interface IAomSerializable
     {
         void Read(AomStream stream, int size);
@@ -23,6 +21,8 @@ namespace SharpAV1
         private int obu_size_len = 0;
         private int prevFrame;
 
+        public int ObuSizeLen { get { return obu_size_len; } }
+
         public int[][] PrevGmParams { get; set; } = new int[8][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] };
         public int[][][] SavedGmParams { get; set; } = null;
         public int[] RefFrameHeight { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
@@ -34,10 +34,6 @@ namespace SharpAV1
         public int[] Segmentation_Feature_Bits { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
         public int[] Segmentation_Feature_Max { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
         public int[] Segmentation_Feature_Signed { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
-
-        public int ObuSize { get { return obu_size; } }
-        public int ObuExtensionFlag { get { return obu_extension_flag; } }
-        public int ObuSizeLen { get { return obu_size_len >> 3; } }
 
         public void Read(AomStream stream, int size)
         {

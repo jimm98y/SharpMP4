@@ -21,6 +21,11 @@ namespace SharpMP4.Tracks
         public override string HandlerType => HandlerTypes.Video;
         public override string Language { get; set; } = "eng";
 
+        private List<byte[]> _obuBuffer = new List<byte[]>();
+        private bool _obuBufferContainsKeyframeRandomAccessPoint = false;
+        private bool _obuBufferContainsDelayedRandomAccessPoint = false;
+        private bool _obuBufferContainsSequenceHeader = false;
+
         /// <summary>
         /// Overrides any auto-detected timescale.
         /// </summary>
@@ -34,12 +39,12 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// If it is not possible to retrieve timescale from the video, use this value as a fallback.
         /// </summary>
-        public uint TimescaleFallback { get; set; } = 600;
+        public uint TimescaleFallback { get; set; } = 90000;
 
         /// <summary>
         /// If it is not possible to retrieve frame tick from the video, use this value as a fallback.
         /// </summary>
-        public int FrameTickFallback { get; set; } = 25;
+        public int FrameTickFallback { get; set; } = 3750;
 
         /// <summary>
         /// Sequence Header Open Bitstream Unit.
@@ -72,13 +77,11 @@ namespace SharpMP4.Tracks
         /// <param name="isRandomAccessPoint">true when the sample contains a keyframe.</param>
         public override void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint)
         {
-            isRandomAccessPoint = false; // TODO
+            isRandomAccessPoint = false; 
             output = null;
 
             if (sample == null)
             {
-                // flush the last OBU
-                // TODO
                 return;
             }
 
@@ -88,47 +91,131 @@ namespace SharpMP4.Tracks
                 int len = sample.Length;
                 do
                 {
-                    SharpISOBMFF.Log.Debug($"---OBU begin {len}---");
+                    if (Log.DebugEnabled) Log.Debug($"---OBU begin {len}---");
 
                     _context.Read(stream, len);
-                    int obuTotalCize = (_context.ObuSize + 1 /* obu header */ + (_context.ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + _context.ObuSizeLen);
-                    len -= obuTotalCize;
+
+                    int obuTotalSize = 0;
+                    if (_context._ObuHasSizeField != 0)
+                    {
+                        obuTotalSize = _context._ObuSize + 1 /* obu header */ + (_context._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (_context.ObuSizeLen >> 3);
+                    }
+                    else
+                    {
+                        obuTotalSize = len;
+                    }
+                    
+                    len -= obuTotalSize;
 
                     if (_context._ObuType == AV1ObuTypes.OBU_SEQUENCE_HEADER)
                     {
-                        SequenceHeaderOBU = sample;
+                        if (Log.DebugEnabled) Log.Debug($"OBU Sequence Header");
+
+                        _obuBuffer.Add(sample);
+                        _obuBufferContainsSequenceHeader = true;
+
+                        if (SequenceHeaderOBU == null)
+                        {
+                            // The configOBUs field SHALL contain at most one present, it SHALL be the first OBU.
+                            SequenceHeaderOBU = sample;
+                        }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
                     {
+                        if (Log.DebugEnabled) Log.Debug($"OBU Temporal Delimiter");
 
+                        if (_obuBuffer.Count > 0)
+                        {
+                            output = CreateSample(_obuBuffer);
+                            _obuBuffer.Clear();
+                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint;
+                            _obuBufferContainsKeyframeRandomAccessPoint = false;
+                            _obuBufferContainsDelayedRandomAccessPoint = false;
+                            _obuBufferContainsSequenceHeader = false;
+                        }
+
+                        _obuBuffer.Add(sample);
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
                     {
+                        if (Log.DebugEnabled) Log.Debug($"OBU Frame Header");
 
+                        _obuBuffer.Add(sample);
+
+                        if (_obuBuffer.Count > 0 && _context._ShowFrame != 0)
+                        {
+                            output = CreateSample(_obuBuffer);
+                            _obuBuffer.Clear();
+                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint;
+                            _obuBufferContainsKeyframeRandomAccessPoint = false;
+                            _obuBufferContainsDelayedRandomAccessPoint = false;
+                            _obuBufferContainsSequenceHeader = false;
+                        }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
                     {
+                        if (Log.DebugEnabled) Log.Debug($"OBU Tile Group");
 
+                        _obuBuffer.Add(sample);
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_METADATA)
                     {
+                        if (Log.DebugEnabled) Log.Debug($"OBU Metadata");
 
+                        _obuBuffer.Add(sample);
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_FRAME)
                     {
+                        if (Log.DebugEnabled) Log.Debug($"OBU Frame");
 
+                        _obuBuffer.Add(sample);
+
+                        if(_context._FrameType == AV1FrameTypes.KEY_FRAME && _context._ShowFrame != 0)
+                        {
+                            _obuBufferContainsKeyframeRandomAccessPoint = true; 
+                        }
+                        else if(_context._FrameType == AV1FrameTypes.KEY_FRAME && _context._ShowFrame == 0 && _obuBufferContainsSequenceHeader)
+                        {
+                            _obuBufferContainsDelayedRandomAccessPoint = true;
+                        }
+
+                        if (_obuBuffer.Count > 0 && _context._ShowFrame != 0)
+                        {
+                            output = CreateSample(_obuBuffer);
+                            _obuBuffer.Clear();
+                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint;
+                            _obuBufferContainsKeyframeRandomAccessPoint = false;
+                            _obuBufferContainsDelayedRandomAccessPoint = false;
+                            _obuBufferContainsSequenceHeader = false;
+                        }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER)
                     {
+                        if (Log.DebugEnabled) Log.Debug($"OBU Redundant Frame Header");
 
+                        _obuBuffer.Add(sample);
+
+                        if (_obuBuffer.Count > 0 && _context._ShowFrame != 0)
+                        {
+                            output = CreateSample(_obuBuffer);
+                            _obuBuffer.Clear();
+                            isRandomAccessPoint = _obuBufferContainsKeyframeRandomAccessPoint || _obuBufferContainsDelayedRandomAccessPoint;
+                            _obuBufferContainsKeyframeRandomAccessPoint = false;
+                            _obuBufferContainsDelayedRandomAccessPoint = false;
+                            _obuBufferContainsSequenceHeader = false;
+                        }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TILE_LIST)
                     {
+                        if (Log.DebugEnabled) Log.Debug($"OBU Tile List");
 
+                        _obuBuffer.Add(sample);
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_PADDING)
                     {
+                        if (Log.DebugEnabled) Log.Debug($"OBU Padding");
 
+                        _obuBuffer.Add(sample);
                     }
                     else if(
                         _context._ObuType == AV1ObuTypes.OBU_RESERVED_0 || 
@@ -140,32 +227,33 @@ namespace SharpMP4.Tracks
                         )
                     {
                         // reserved
+                        if (Log.DebugEnabled) Log.Debug($"OBU Reserved");
+
+                        _obuBuffer.Add(sample);
                     }
                     else
                     {
                         // invalid
+                        if (Log.DebugEnabled) Log.Debug($"Invalid OBU!!!");
                     }
 
-                        SharpISOBMFF.Log.Debug($"---OBU end {obuTotalCize}---");
+                    if (Log.DebugEnabled) Log.Debug($"---OBU end {obuTotalSize}---");
                 } while (len > 0);
 
                 if (ms.Position != ms.Length)
                 {
-                    SharpISOBMFF.Log.Debug($"---!!!OBU error---");
+                    if (Log.DebugEnabled) Log.Debug($"---OBU error---");
                 }
-
-
-
-
-
-
-
-
-                
             }
+        }
 
-            // TODO
-            base.ProcessSample(sample, out output, out isRandomAccessPoint);
+        private byte[] CreateSample(List<byte[]> buffer)
+        {
+            if (buffer.Count == 0)
+                return null;
+
+            var result = buffer.SelectMany(x => x);
+            return result.ToArray();
         }
 
         public override Box CreateSampleEntryBox()
@@ -214,8 +302,8 @@ namespace SharpMP4.Tracks
 
         public override void FillTkhdBox(TrackHeaderBox tkhd)
         {
-            tkhd.Width = (uint)_context._RenderWidth;
-            tkhd.Height = (uint)_context._RenderHeight;
+            tkhd.Width = (uint)_context._RenderWidth << 16;
+            tkhd.Height = (uint)_context._RenderHeight << 16;
         }
 
         public byte[][] GetVideoUnits()
