@@ -12,7 +12,7 @@ namespace SharpMP4.Tracks
     /// H265 track.
     /// </summary>
     /// <remarks>https://www.itu.int/rec/T-REC-H.265/en</remarks>
-    public class H265Track : TrackBase
+    public class H265Track : H26XTrackBase
     {
         public const string BRAND = "hvc1";
 
@@ -44,22 +44,15 @@ namespace SharpMP4.Tracks
         public List<SeiRbsp> PrefixSei { get; set; } = new List<SeiRbsp>();
         public List<byte[]> PrefixSeiRaw { get; set; } = new List<byte[]>();
 
-        public override string HandlerName => HandlerNames.Video;
-        public override string HandlerType => HandlerTypes.Video;
-        public override string Language { get; set; } = "und";
-        public int NalLengthSize { get; set; } = 4;
 
         private H265Context _context = new H265Context();
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        public H265Track()
+        public H265Track() : base()
         {
             CompatibleBrand = BRAND; // hvc1
-            DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
-            TimescaleFallback = 24000;
-            FrameTickFallback = 1001;
         }
 
         public H265Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
@@ -592,11 +585,6 @@ namespace SharpMP4.Tracks
                     ((ulong)bytes[5]);
                 return ret;
             }
-        }
-
-        public override IEnumerable<byte[]> ParseSample(byte[] sample)
-        {
-            return H26XTrackUtils.ParseSample(sample, NalLengthSize);
         }
 
         public override IEnumerable<byte[]> GetContainerSamples()

@@ -12,7 +12,7 @@ namespace SharpMP4.Tracks
     /// H266 track.
     /// </summary>
     /// <remarks>https://www.itu.int/rec/T-REC-H.266/en</remarks>
-    public class H266Track : TrackBase
+    public class H266Track : H26XTrackBase
     {
         public const string BRAND = "vvc1";
 
@@ -44,22 +44,14 @@ namespace SharpMP4.Tracks
         public List<SeiRbsp> PrefixSei { get; set; } = new List<SeiRbsp>();
         public List<byte[]> PrefixSeiRaw { get; set; } = new List<byte[]>();
 
-        public override string HandlerName => HandlerNames.Video;
-        public override string HandlerType => HandlerTypes.Video;
-        public override string Language { get; set; } = "und";
-        public int NalLengthSize { get; set; } = 4;
-
         private H266Context _context = new H266Context();
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        public H266Track()
+        public H266Track() : base()
         {
             CompatibleBrand = BRAND; // vvc1
-            DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
-            TimescaleFallback = 24000;
-            FrameTickFallback = 1001;
         }
 
         public H266Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
@@ -640,11 +632,6 @@ namespace SharpMP4.Tracks
             ulong width = sps.SpsPicWidthMaxInLumaSamples;
             ulong height = sps.SpsPicHeightMaxInLumaSamples;
             return ((uint)width, (uint)height);
-        }
-
-        public override IEnumerable<byte[]> ParseSample(byte[] sample)
-        {
-            return H26XTrackUtils.ParseSample(sample, NalLengthSize);
         }
 
         public override IEnumerable<byte[]> GetContainerSamples()

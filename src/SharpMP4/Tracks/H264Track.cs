@@ -16,13 +16,9 @@ namespace SharpMP4.Tracks
     /// https://yumichan.net/video-processing/video-compression/introduction-to-h264-nal-unit/
     /// https://stackoverflow.com/questions/38094302/how-to-understand-header-of-h264
     /// </remarks>
-    public class H264Track : TrackBase
+    public class H264Track : H26XTrackBase
     {
         public const string BRAND = "avc1";
-        public override string HandlerName => HandlerNames.Video;
-        public override string HandlerType => HandlerTypes.Video;
-        public override string Language { get; set; } = "eng";
-        public int NalLengthSize { get; set; } = 4;
 
         private List<byte[]> _nalBuffer = new List<byte[]>();
         private bool _nalBufferContainsVCL = false; 
@@ -60,12 +56,9 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// Ctor.
         /// </summary>
-        public H264Track()
+        public H264Track() : base()
         {
             CompatibleBrand = BRAND; // avc1
-            DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
-            TimescaleFallback = 24000;
-            FrameTickFallback = 1001;
         }
 
         public H264Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
@@ -528,11 +521,6 @@ namespace SharpMP4.Tracks
             }
 
             return (timescale, frametick);
-        }
-
-        public override IEnumerable<byte[]> ParseSample(byte[] sample)
-        {
-            return H26XTrackUtils.ParseSample(sample, NalLengthSize);
         }
 
         public override IEnumerable<byte[]> GetContainerSamples()

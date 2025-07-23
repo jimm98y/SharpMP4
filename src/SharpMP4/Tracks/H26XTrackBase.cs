@@ -5,14 +5,27 @@ using System.IO;
 
 namespace SharpMP4.Tracks
 {
-    public static class H26XTrackUtils
+    public abstract class H26XTrackBase : TrackBase
     {
-        public static IEnumerable<byte[]> ParseSample(byte[] sample, int nalLengthSize)
+        public override string HandlerName => HandlerNames.Video;
+        public override string HandlerType => HandlerTypes.Video;
+        public override string Language { get; set; } = "eng";
+
+        public int NalLengthSize { get; set; } = 4;
+
+        protected H26XTrackBase() : base()
+        {
+            DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
+            TimescaleFallback = 24000;
+            FrameTickFallback = 1001;
+        }
+
+        public IEnumerable<byte[]> ParseSample(byte[] sample, int nalLengthSize)
         {
             ulong size = 0;
             long offsetInBytes = 0;
 
-            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(H26XTrackUtils)}: AU begin {sample.Length}");
+            if (Log.DebugEnabled) Log.Debug($"{nameof(H26XTrackBase)}: AU begin {sample.Length}");
 
             List<byte[]> naluList = new List<byte[]>();
 
@@ -26,7 +39,7 @@ namespace SharpMP4.Tracks
 
                     if (nalUnitLength > (sample.Length - offsetInBytes))
                     {
-                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(H26XTrackUtils)}: Invalid NALU size: {nalUnitLength}");
+                        if (Log.ErrorEnabled) Log.Error($"{nameof(H26XTrackBase)}: Invalid NALU size: {nalUnitLength}");
                         nalUnitLength = (uint)(sample.Length - offsetInBytes);
                         size += nalUnitLength;
                         offsetInBytes += nalUnitLength;
@@ -41,7 +54,7 @@ namespace SharpMP4.Tracks
                 if (offsetInBytes != sample.Length)
                     throw new Exception("Mismatch!");
 
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(H26XTrackUtils)}: AU end");
+                if (Log.DebugEnabled) Log.Debug($"{nameof(H26XTrackBase)}: AU end");
 
                 return naluList;
             }
