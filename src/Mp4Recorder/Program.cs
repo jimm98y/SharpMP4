@@ -41,25 +41,15 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
                 Mp4Sample sample = null;
                 while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
                 {
-                    var units = Mp4Reader.ParseSample(parsed, parsedTrack.Track.TrackID, sample.Data);
+                    IEnumerable<byte[]> units = Mp4Reader.ParseSample(parsed, parsedTrack.Track.TrackID, sample.Data);
                     foreach (var unit in units)
                     {
                         builder.ProcessTrackSample(parsedTrack.Track.TrackID, unit);
                     }
                 }
             }
-            else if (parsedTrack.Track.HandlerType == HandlerTypes.Sound)
-            {
-                // sound
-                Mp4Sample sample = null;
-                while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
-                {
-                    builder.ProcessTrackSample(parsedTrack.Track.TrackID, sample.Data, -1);
-                }
-            }
             else
             {
-                // other
                 Mp4Sample sample = null;
                 while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
                 {
