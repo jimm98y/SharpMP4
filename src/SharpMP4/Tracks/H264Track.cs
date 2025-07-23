@@ -548,6 +548,11 @@ namespace SharpMP4.Tracks
             return (timescale, frametick);
         }
 
+        public IEnumerable<byte[]> ParseSample(byte[] sample)
+        {
+            return H26XTrackUtils.ParseSample(sample, NalLengthSize);
+        }
+
         public byte[][] GetVideoUnits()
         {
             return SpsRaw.Values.ToArray().Concat(PpsRaw.Values.ToArray()).ToArray();

@@ -456,44 +456,13 @@ namespace SharpMP4.Readers
             return new Mp4Sample(pts, dts, (int)sampleDuration, sampleData);
         }
 
-        public static List<byte[]> ReadAU(int nalLengthSize, byte[] sample)
+        public static IEnumerable<byte[]> ParseSample(ContainerContext context, uint trackID, byte[] sample)
         {
-            ulong size = 0;
-            long offsetInBytes = 0;
-
-            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU begin {sample.Length}");
-
-            List<byte[]> naluList = new List<byte[]>();
-
-            using (var markerStream = new IsoStream(new MemoryStream(sample)))
-            {
-                do
-                {
-                    uint nalUnitLength = 0;
-                    size += markerStream.ReadVariableLengthSize((uint)nalLengthSize, out nalUnitLength);
-                    offsetInBytes += nalLengthSize;
-
-                    if (nalUnitLength > (sample.Length - offsetInBytes))
-                    {
-                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Invalid NALU size: {nalUnitLength}");
-                        nalUnitLength = (uint)(sample.Length - offsetInBytes);
-                        size += nalUnitLength;
-                        offsetInBytes += nalUnitLength;
-                        break;
-                    }
-
-                    size += markerStream.ReadUInt8Array(size, (ulong)sample.Length, nalUnitLength, out byte[] sampleData);
-                    offsetInBytes += sampleData.Length;
-                    naluList.Add(sampleData);
-                } while (offsetInBytes < sample.Length);
-
-                if (offsetInBytes != sample.Length)
-                    throw new Exception("Mismatch!");
-
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU end");
-
-                return naluList;
-            }
+            var trackContext = context.Tracks[trackID - 1];
+            if(trackContext.Track is IVideoTrack videoTrack)
+                return videoTrack.ParseSample(sample);
+            else
+                return new List<byte[]> { sample }; // for audio tracks, we return the sample data as is
         }
     }    
 

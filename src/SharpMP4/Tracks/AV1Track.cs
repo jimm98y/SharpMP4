@@ -315,6 +315,11 @@ namespace SharpMP4.Tracks
             tkhd.Height = (uint)_context._RenderHeight << 16;
         }
 
+        public IEnumerable<byte[]> ParseSample(byte[] sample)
+        {
+            throw new NotImplementedException();
+        }
+
         public byte[][] GetVideoUnits()
         {
             if(SequenceHeaderOBU == null)
