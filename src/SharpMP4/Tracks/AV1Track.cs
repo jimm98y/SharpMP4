@@ -102,6 +102,21 @@ namespace SharpMP4.Tracks
                             // The configOBUs field SHALL contain at most one present, it SHALL be the first OBU.
                             SequenceHeaderOBU = sample;
                         }
+
+                        if (Timescale == 0 || DefaultSampleDuration == 0)
+                        {
+                            Timescale = TimescaleFallback;
+                            DefaultSampleDuration = FrameTickFallback;
+                        }
+
+                        if (TimescaleOverride != 0)
+                        {
+                            Timescale = TimescaleOverride;
+                        }
+                        if (FrameTickOverride != 0)
+                        {
+                            DefaultSampleDuration = (int)FrameTickOverride;
+                        }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
                     {
