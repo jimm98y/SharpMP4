@@ -252,7 +252,7 @@ namespace SharpMP4.Builders
                 stts.SetParent(stbl);
                 stbl.Children.Add(stts);
                 stts.SampleCount = new uint[] { (uint)_trackSampleOffsets[i].Count };
-                stts.SampleDelta = new uint[] { (uint)(_trackEndTimes[i] / (ulong)_trackSampleSizes[i].Count) };
+                stts.SampleDelta = new uint[] { (uint)(_trackEndTimes[i] / (ulong)Math.Max(1, _trackSampleSizes[i].Count)) };
                 stts.EntryCount = (uint)stts.SampleCount.Length;
 
                 if (_tracks[i].HandlerType == HandlerTypes.Video)

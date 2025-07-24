@@ -20,7 +20,7 @@ namespace SharpMP4.Tracks
             FrameTickFallback = 1001;
         }
 
-        public IEnumerable<byte[]> ParseSample(byte[] sample, int nalLengthSize)
+        public override IEnumerable<byte[]> ParseSample(byte[] sample)
         {
             ulong size = 0;
             long offsetInBytes = 0;
@@ -34,8 +34,8 @@ namespace SharpMP4.Tracks
                 do
                 {
                     uint nalUnitLength = 0;
-                    size += markerStream.ReadVariableLengthSize((uint)nalLengthSize, out nalUnitLength);
-                    offsetInBytes += nalLengthSize;
+                    size += markerStream.ReadVariableLengthSize((uint)NalLengthSize, out nalUnitLength);
+                    offsetInBytes += NalLengthSize;
 
                     if (nalUnitLength > (sample.Length - offsetInBytes))
                     {
