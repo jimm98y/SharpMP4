@@ -11,6 +11,8 @@ SharpAV1.Log.SinkInfo = (o, e) => { };
 SharpAV1.Log.SinkDebug = (o, e) => { };
 SharpISOBMFF.Log.SinkInfo = (o, e) => { };
 SharpISOBMFF.Log.SinkDebug = (o, e) => { };
+SharpMP4.Log.SinkInfo = (o, e) => { };
+SharpMP4.Log.SinkDebug = (o, e) => { };
 
 using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
