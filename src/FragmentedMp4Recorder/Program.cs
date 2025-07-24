@@ -13,8 +13,9 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
     var fmp4 = new Container();
     fmp4.Read(new IsoStream(inputFileStream));
 
-    ContainerContext parsed = Mp4Reader.Parse(fmp4);
-    IEnumerable<ITrack> parsedTracks = parsed.GetTracks();
+    Mp4Reader reader = new Mp4Reader();
+    reader.Parse(fmp4);
+    IEnumerable<ITrack> parsedTracks = reader.GetTracks();
 
     using (Stream output = new BufferedStream(new FileStream("frag_bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
@@ -25,9 +26,9 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
             builder.AddTrack(track);
         }
 
-        for (int t = 0; t < parsed.Tracks.Length; t++)
+        for (int t = 0; t < reader.Tracks.Length; t++)
         {
-            var parsedTrack = parsed.Tracks[t];
+            var parsedTrack = reader.Tracks[t];
             if (parsedTrack.Track.HandlerType == HandlerTypes.Video)
             {
                 var videoUnits = parsedTrack.Track.GetContainerSamples();
@@ -37,9 +38,9 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                 }
 
                 Mp4Sample sample = null;
-                while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
+                while ((sample = reader.ReadSample(parsedTrack.Track.TrackID)) != null)
                 {
-                    IEnumerable<byte[]> units = Mp4Reader.ParseSample(parsed, parsedTrack.Track.TrackID, sample.Data);
+                    IEnumerable<byte[]> units = reader.ParseSample(parsedTrack.Track.TrackID, sample.Data);
                     foreach (var unit in units)
                     {
                         builder.ProcessTrackSample(parsedTrack.Track.TrackID, unit);
@@ -49,7 +50,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
             else
             {
                 Mp4Sample sample = null;
-                while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
+                while ((sample = reader.ReadSample(parsedTrack.Track.TrackID)) != null)
                 {
                     builder.ProcessTrackSample(parsedTrack.Track.TrackID, sample.Data, sample.Duration);
                 }

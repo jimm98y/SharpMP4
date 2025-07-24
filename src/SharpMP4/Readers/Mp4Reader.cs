@@ -8,33 +8,45 @@ namespace SharpMP4.Readers
 {
     public class Mp4Reader
     {
-        public static ContainerContext Parse(Container container, ContainerContext context = null)
+        public FileTypeBox Ftyp { get; set; }
+        public Container Container { get; set; }
+        public MovieBox Moov { get; set; }
+        public TrackBox[] Track { get; set; }
+        public MediaDataBox Mdat { get; set; }
+        public TrackContext[] Tracks { get; set; }
+
+        public bool IsFragmented { get; set; } = false;
+        public MovieExtendsBox Mvex { get; set; }
+
+
+        public IEnumerable<ITrack> GetTracks()
+        {
+            return Tracks.Select(x => x.Track);
+        }
+
+        public void Parse(Container container)
         {
             if (container.Children.Count == 0)
-                return null;
+                return;
 
-            if (context == null)
-            {
-                context = new ContainerContext();
-            }
-            context.Container = container;
+            this.Container = container;
    
             for (int i = 0; i < container.Children.Count; i++)
             {
                 if (container.Children[i] is FileTypeBox)
                 {
-                    context.Ftyp = (FileTypeBox)container.Children[i];
+                    this.Ftyp = (FileTypeBox)container.Children[i];
                 }
                 else if (container.Children[i] is MovieBox)
                 {
-                    context.Moov = (MovieBox)container.Children[i];
-                    context.Track = context.Moov.Children.OfType<TrackBox>().ToArray();
-                    context.Tracks = new TrackContext[context.Track.Length];
+                    this.Moov = (MovieBox)container.Children[i];
+                    this.Track = this.Moov.Children.OfType<TrackBox>().ToArray();
+                    this.Tracks = new TrackContext[this.Track.Length];
 
-                    context.Mvex = context.Moov.Children.OfType<MovieExtendsBox>().SingleOrDefault(); // fmp4
-                    context.IsFragmented = context.Mvex != null;
+                    this.Mvex = this.Moov.Children.OfType<MovieExtendsBox>().SingleOrDefault(); // fmp4
+                    this.IsFragmented = this.Mvex != null;
 
-                    foreach (var track in context.Track)
+                    foreach (var track in this.Track)
                     {
                         HandlerBox hdlr = track.Children.OfType<MediaBox>().Single().Children.OfType<HandlerBox>().Single();
                         TrackHeaderBox tkhd = track.Children.OfType<TrackHeaderBox>().First();
@@ -44,9 +56,9 @@ namespace SharpMP4.Readers
                         uint trackTimescale = mdhd.Timescale;
 
                         var trackContext = new TrackContext();
-                        context.Tracks[(int)(trackID - 1)] = trackContext;
+                        this.Tracks[(int)(trackID - 1)] = trackContext;
 
-                        trackContext.Trex = context.Mvex?.Children.OfType<TrackExtendsBox>().SingleOrDefault(x => x.TrackID == trackID); // fmp4
+                        trackContext.Trex = this.Mvex?.Children.OfType<TrackExtendsBox>().SingleOrDefault(x => x.TrackID == trackID); // fmp4
                         
                         SampleTableBox stbl = mdia
                             .Children.OfType<MediaInformationBox>().Single()
@@ -59,8 +71,8 @@ namespace SharpMP4.Readers
                         trackContext.Stts = stbl.Children.OfType<TimeToSampleBox>().Single();
 
                         // TODO: review, this is needed because of AV1 where we cannot calculate the sample rate
-                        int defaultSampleDuration = trackContext.Stts.SampleDelta != null && trackContext.Stts.SampleDelta.Length > 0 ? (int)trackContext.Stts.SampleDelta[0] : 0; 
-                        context.Tracks[(int)(trackID - 1)].Track = TrackFactory.CreateTrack(sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
+                        int defaultSampleDuration = trackContext.Stts.SampleDelta != null && trackContext.Stts.SampleDelta.Length > 0 ? (int)trackContext.Stts.SampleDelta[0] : 0;
+                        this.Tracks[(int)(trackID - 1)].Track = TrackFactory.CreateTrack(sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
                                                 
                         var stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
                         var co64 = stbl.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
@@ -96,28 +108,26 @@ namespace SharpMP4.Readers
 
                     if (currentMdat.Size > 8) // mdat smaller than 8 bytes is empty and invalid
                     {
-                        context.Mdat = currentMdat;
+                        this.Mdat = currentMdat;
                     }
                     
                     // in case of multiple MDAT boxes, the offset is determined by the MOOV
                 }
                 else if (container.Children[i] is MovieFragmentBox)
                 {
-                    context.IsFragmented = true;
+                    this.IsFragmented = true;
                     break;
                 }
             }
-
-            return context;
         }
 
-        public static ContainerContext ReadFragment(ContainerContext context, uint trackID)
+        private void ReadFragment(uint trackID)
         {
-            if (context.Moov == null)
+            if (this.Moov == null)
                 throw new InvalidOperationException();
 
-            var container = context.Container;
-            var trackContext = context.Tracks[trackID - 1];
+            var container = this.Container;
+            var trackContext = this.Tracks[trackID - 1];
 
             MovieFragmentBox moof = null;
 
@@ -246,28 +256,26 @@ namespace SharpMP4.Readers
                     }
                 }
             }
-
-            return context;
         }
 
-        public static Mp4Sample ReadSample(ContainerContext context, uint trackID)
+        public Mp4Sample ReadSample(uint trackID)
         {
-            if (context.Moov == null)
+            if (this.Moov == null)
                 throw new InvalidOperationException();
 
-            if (context.IsFragmented)
+            if (this.IsFragmented)
             {
-                return ReadFragmentedMp4Sample(context, trackID);
+                return ReadFragmentedMp4Sample(trackID);
             }
             else
             {
-                return ReadMp4Sample(context, trackID);
+                return ReadMp4Sample(trackID);
             }
         }
 
-        private static Mp4Sample ReadMp4Sample(ContainerContext context, uint trackID)
+        private Mp4Sample ReadMp4Sample(uint trackID)
         {
-            var trackContext = context.Tracks[trackID - 1];
+            var trackContext = this.Tracks[trackID - 1];
 
             int sttsIndex = 0;
             uint sttsNextRun = 0;
@@ -367,21 +375,21 @@ namespace SharpMP4.Readers
             uint sampleSize = trackContext.SizesList[sampleIndex];
             long pts = dts + cttsSampleDelta;
 
-            if (context.Mdat.Data.Stream.GetCurrentOffset() != startAddress)
+            if (this.Mdat.Data.Stream.GetCurrentOffset() != startAddress)
             {
-                context.Mdat.Data.Stream.SeekFromBeginning(startAddress);
+                this.Mdat.Data.Stream.SeekFromBeginning(startAddress);
             }
 
-            ulong size = context.Mdat.Data.Stream.ReadBytes(sampleSize, out byte[] sampleData);
+            ulong size = this.Mdat.Data.Stream.ReadBytes(sampleSize, out byte[] sampleData);
 
             trackContext.SampleIndex++;
 
             return new Mp4Sample(pts, dts, (int)sttsSampleDelta, sampleData, isRandomAccessPoint);
         }
 
-        private static Mp4Sample ReadFragmentedMp4Sample(ContainerContext context, uint trackID)
+        private Mp4Sample ReadFragmentedMp4Sample(uint trackID)
         {
-            var trackContext = context.Tracks[trackID - 1];
+            var trackContext = this.Tracks[trackID - 1];
 
             if (trackContext.Moof == null || trackContext.SampleIndex >= trackContext.FragmentSampleCount || trackContext.SampleIndex < 0) // TODO: sample streaming backwards
             {
@@ -389,7 +397,7 @@ namespace SharpMP4.Readers
                 trackContext.Moof = null;
                 trackContext.Mdat = null;
 
-                context = ReadFragment(context, trackID);
+                ReadFragment(trackID);
 
                 if (trackContext.Moof == null || trackContext.Mdat == null) // no more fragments available
                 {
@@ -457,9 +465,9 @@ namespace SharpMP4.Readers
             return new Mp4Sample(pts, dts, (int)sampleDuration, sampleData);
         }
 
-        public static IEnumerable<byte[]> ParseSample(ContainerContext context, uint trackID, byte[] sample)
+        public IEnumerable<byte[]> ParseSample(uint trackID, byte[] sample)
         {
-            var trackContext = context.Tracks[trackID - 1];
+            var trackContext = this.Tracks[trackID - 1];
             return trackContext.Track.ParseSample(sample);
         }
     }    
@@ -478,24 +486,6 @@ namespace SharpMP4.Readers
             this.Duration = duration;
             this.Data = data;
             this.IsRandomAccessPoint = isRandomAccessPoint;
-        }
-    }
-
-    public class ContainerContext
-    {
-        public FileTypeBox Ftyp { get; set; }
-        public Container Container { get; set; }
-        public MovieBox Moov { get; set; }
-        public TrackBox[] Track { get; set; }
-        public MediaDataBox Mdat { get; set; }
-        public TrackContext[] Tracks { get; set; }
-
-        public bool IsFragmented { get; set; } = false; 
-        public MovieExtendsBox Mvex { get; set; }
-
-        public IEnumerable<ITrack> GetTracks()
-        {
-            return Tracks.Select(x => x.Track);
         }
     }
 

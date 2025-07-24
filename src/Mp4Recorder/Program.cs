@@ -15,8 +15,9 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
     var mp4 = new Container();
     mp4.Read(new IsoStream(inputFileStream));
 
-    ContainerContext parsed = Mp4Reader.Parse(mp4);
-    IEnumerable<ITrack> parsedTracks = parsed.GetTracks();
+    Mp4Reader reader = new Mp4Reader();
+    reader.Parse(mp4);
+    IEnumerable<ITrack> parsedTracks = reader.GetTracks();
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
@@ -29,7 +30,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
 
         for (int t = 0; t < parsedTracks.Count(); t++)
         {
-            var parsedTrack = parsed.Tracks[t];
+            var parsedTrack = reader.Tracks[t];
             if (parsedTrack.Track.HandlerType == HandlerTypes.Video)
             {
                 var videoUnits = parsedTrack.Track.GetContainerSamples();
@@ -39,9 +40,9 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
                 }
 
                 Mp4Sample sample = null;
-                while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
+                while ((sample = reader.ReadSample(parsedTrack.Track.TrackID)) != null)
                 {
-                    IEnumerable<byte[]> units = Mp4Reader.ParseSample(parsed, parsedTrack.Track.TrackID, sample.Data);
+                    IEnumerable<byte[]> units = reader.ParseSample(parsedTrack.Track.TrackID, sample.Data);
                     foreach (var unit in units)
                     {
                         builder.ProcessTrackSample(parsedTrack.Track.TrackID, unit);
@@ -51,7 +52,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
             else
             {
                 Mp4Sample sample = null;
-                while ((sample = Mp4Reader.ReadSample(parsed, parsedTrack.Track.TrackID)) != null)
+                while ((sample = reader.ReadSample(parsedTrack.Track.TrackID)) != null)
                 {
                     builder.ProcessTrackSample(parsedTrack.Track.TrackID, sample.Data, sample.Duration);
                 }
