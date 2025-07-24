@@ -10,17 +10,13 @@ namespace SharpMP4.Tracks
 
         public Box SampleEntry { get; }
 
-        public GenericTrack(uint timescale, int defaultSampleDuration, uint handlerType, string handlerName) : base()
-        {
-            Timescale = timescale;
-            DefaultSampleDuration = defaultSampleDuration;
-            HandlerType = IsoStream.ToFourCC(handlerType);
-            HandlerName = handlerName;
-        }
-
-        public GenericTrack(Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName) : this(timescale, sampleDuration, handlerType, handlerName)  
+        public GenericTrack(Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName) : base()
         {
             SampleEntry = sampleEntry;
+            Timescale = timescale;
+            DefaultSampleDuration = sampleDuration;
+            HandlerType = IsoStream.ToFourCC(handlerType);
+            HandlerName = handlerName;
         }
 
         public override Box CreateSampleEntryBox()
@@ -35,7 +31,7 @@ namespace SharpMP4.Tracks
 
         public override ITrack Clone()
         {
-            return new GenericTrack(Timescale, DefaultSampleDuration, IsoStream.FromFourCC(HandlerType), HandlerName);
+            return new GenericTrack(SampleEntry, Timescale, DefaultSampleDuration, IsoStream.FromFourCC(HandlerType), HandlerName);
         }
     }
 } 

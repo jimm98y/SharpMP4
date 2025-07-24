@@ -13,19 +13,19 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
     var fmp4 = new Container();
     fmp4.Read(new IsoStream(inputFileStream));
 
-    Mp4Reader reader = new Mp4Reader();
-    reader.Parse(fmp4);
-    IEnumerable<ITrack> inputTracks = reader.GetTracks();
+    Mp4Reader inputReader = new Mp4Reader();
+    inputReader.Parse(fmp4);
+    IEnumerable<ITrack> inputTracks = inputReader.GetTracks();
 
     using (Stream output = new BufferedStream(new FileStream("frag_bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        IMp4Builder builder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2000);
+        IMp4Builder outputBuilder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2000);
         Dictionary<uint, uint> mapping = new Dictionary<uint, uint>();
 
         foreach (var inputTrack in inputTracks)
         {
             var outputTrack = inputTrack.Clone();
-            builder.AddTrack(outputTrack);
+            outputBuilder.AddTrack(outputTrack);
             mapping.Add(inputTrack.TrackID, outputTrack.TrackID);
         }
 
@@ -36,29 +36,29 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                 var videoUnits = inputTrack.GetContainerSamples();
                 foreach (var unit in videoUnits)
                 {
-                    builder.ProcessTrackSample(mapping[inputTrack.TrackID], unit);
+                    outputBuilder.ProcessTrackSample(mapping[inputTrack.TrackID], unit);
                 }
 
                 Mp4Sample sample = null;
-                while ((sample = reader.ReadSample(inputTrack.TrackID)) != null)
+                while ((sample = inputReader.ReadSample(inputTrack.TrackID)) != null)
                 {
-                    IEnumerable<byte[]> units = reader.ParseSample(inputTrack.TrackID, sample.Data);
+                    IEnumerable<byte[]> units = inputReader.ParseSample(inputTrack.TrackID, sample.Data);
                     foreach (var unit in units)
                     {
-                        builder.ProcessTrackSample(mapping[inputTrack.TrackID], unit);
+                        outputBuilder.ProcessTrackSample(mapping[inputTrack.TrackID], unit);
                     }
                 }
             }
             else
             {
                 Mp4Sample sample = null;
-                while ((sample = reader.ReadSample(inputTrack.TrackID)) != null)
+                while ((sample = inputReader.ReadSample(inputTrack.TrackID)) != null)
                 {
-                    builder.ProcessTrackSample(mapping[inputTrack.TrackID], sample.Data, sample.Duration);
+                    outputBuilder.ProcessTrackSample(mapping[inputTrack.TrackID], sample.Data, sample.Duration);
                 }
             }
         }
 
-        builder.FinalizeMedia();
+        outputBuilder.FinalizeMedia();
     }
 }
