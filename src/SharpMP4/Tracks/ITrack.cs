@@ -28,5 +28,7 @@ namespace SharpMP4.Tracks
         void FillTkhdBox(TrackHeaderBox tkhd);
 
         void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint);
+
+        ITrack Clone();
     }
 }

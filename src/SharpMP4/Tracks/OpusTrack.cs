@@ -136,5 +136,10 @@ namespace SharpMP4.Tracks
         {
             tkhd.Volume = 256;
         }
+
+        public override ITrack Clone()
+        {
+            return new OpusTrack(ChannelCount, PreSkip, OutputGain, ChannelMappingFamily, StreamCount, CoupledCount, ChannelMapping);
+        }
     }
 }

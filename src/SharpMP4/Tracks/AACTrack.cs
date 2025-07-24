@@ -205,6 +205,11 @@ namespace SharpMP4.Tracks
         {
             tkhd.Volume = 256;
         }
+
+        public override ITrack Clone()
+        {
+            return new AACTrack(ChannelCount, SamplingRate, SampleSize, ChannelConfiguration);
+        }
     }
 
     /// <summary>

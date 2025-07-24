@@ -98,7 +98,7 @@ namespace SharpMP4.Builders
                 _writeInitialization = false;
             }
 
-            uint currentSampleDuration = sampleDuration < 0 ? (uint)_tracks[(int)trackID - 1].DefaultSampleDuration : (uint)sampleDuration;
+            uint currentSampleDuration = sampleDuration <= 0 ? (uint)_tracks[(int)trackID - 1].DefaultSampleDuration : (uint)sampleDuration;
             var track = _tracks[(int)trackID - 1];
             _trackSampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
             _storage.Write(sample, 0, sample.Length);
@@ -252,7 +252,7 @@ namespace SharpMP4.Builders
                 stts.SetParent(stbl);
                 stbl.Children.Add(stts);
                 stts.SampleCount = new uint[] { (uint)_trackSampleOffsets[i].Count };
-                stts.SampleDelta = new uint[] { (uint)(_trackEndTimes[i] / (ulong)Math.Max(1, _trackSampleSizes[i].Count)) };
+                stts.SampleDelta = new uint[] { (uint)(_trackEndTimes[i] / (uint)Math.Max(1, _trackSampleSizes[i].Count)) };
                 stts.EntryCount = (uint)stts.SampleCount.Length;
 
                 if (_tracks[i].HandlerType == HandlerTypes.Video)

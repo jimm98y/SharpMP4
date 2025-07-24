@@ -42,6 +42,12 @@ namespace SharpMP4.Tracks
             FrameTickFallback = 1001;
         }
 
+        public AV1Track(uint timescale, int sampleDuration) : this()
+        {
+            Timescale = timescale;
+            DefaultSampleDuration = sampleDuration;
+        }
+
         public AV1Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
         {
             Timescale = timescale;
@@ -94,13 +100,15 @@ namespace SharpMP4.Tracks
                     {
                         if (Log.DebugEnabled) Log.Debug($"OBU Sequence Header");
 
-                        _obuBuffer.Add(sample);
-                        _obuBufferContainsSequenceHeader = true;
-
                         if (SequenceHeaderOBU == null)
                         {
                             // The configOBUs field SHALL contain at most one present, it SHALL be the first OBU.
                             SequenceHeaderOBU = sample;
+                        }
+                        else
+                        {
+                            _obuBuffer.Add(sample);
+                            _obuBufferContainsSequenceHeader = true;
                         }
 
                         if (Timescale == 0 || DefaultSampleDuration == 0)
@@ -115,7 +123,7 @@ namespace SharpMP4.Tracks
                         }
                         if (FrameTickOverride != 0)
                         {
-                            DefaultSampleDuration = (int)FrameTickOverride;
+                            DefaultSampleDuration = FrameTickOverride;
                         }
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
@@ -351,6 +359,11 @@ namespace SharpMP4.Tracks
                 return null;
 
             return new byte[][] { SequenceHeaderOBU };
+        }
+
+        public override ITrack Clone()
+        {
+            return new AV1Track(Timescale, DefaultSampleDuration);
         }
     }
 }

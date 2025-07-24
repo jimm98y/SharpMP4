@@ -55,5 +55,7 @@ namespace SharpMP4.Tracks
         {
             return [ sample ];
         }
+
+        public abstract ITrack Clone();
     }
 }

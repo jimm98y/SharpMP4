@@ -54,11 +54,14 @@ namespace SharpMP4.Tracks
             CompatibleBrand = BRAND; // vvc1
         }
 
-        public H266Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
+        public H266Track(uint timescale, int sampleDuration) : this()
         {
             Timescale = timescale;
             DefaultSampleDuration = sampleDuration;
+        }
 
+        public H266Track(Box sampleEntry, uint timescale, int sampleDuration) : this(timescale, sampleDuration)
+        {
             VisualSampleEntry visualSampleEntry = (VisualSampleEntry)sampleEntry;
             VvcConfigurationBox vvcC = visualSampleEntry.Children.OfType<VvcConfigurationBox>().Single();
 
@@ -637,6 +640,11 @@ namespace SharpMP4.Tracks
         public override IEnumerable<byte[]> GetContainerSamples()
         {
             return VpsRaw.Values.ToArray().Concat(SpsRaw.Values.ToArray()).Concat(PpsRaw.Values.ToArray()).Concat(PrefixSeiRaw).ToArray();
+        }
+
+        public override ITrack Clone()
+        {
+            return new H266Track(Timescale, DefaultSampleDuration);
         }
     }
 }
