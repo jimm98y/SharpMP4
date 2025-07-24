@@ -1,4 +1,5 @@
 ﻿using SharpISOBMFF;
+using System.Collections.Generic;
 
 namespace SharpMP4.Tracks
 {
@@ -15,6 +16,26 @@ namespace SharpMP4.Tracks
         public int DefaultSampleDuration { get; set; }
         public uint DefaultSampleFlags { get; set; }
 
+        /// <summary>
+        /// Overrides any auto-detected timescale.
+        /// </summary>
+        public uint TimescaleOverride { get; set; }
+
+        /// <summary>
+        /// Overrides any auto-detected frame tick.
+        /// </summary>
+        public int FrameTickOverride { get; set; }
+
+        /// <summary>
+        /// If it is not possible to retrieve timescale from the video, use this value as a fallback.
+        /// </summary>
+        public uint TimescaleFallback { get; set; }
+
+        /// <summary>
+        /// If it is not possible to retrieve frame tick from the video, use this value as a fallback.
+        /// </summary>
+        public int FrameTickFallback { get; set; }
+
         public abstract Box CreateSampleEntryBox();
 
         public abstract void FillTkhdBox(TrackHeaderBox tkhd);
@@ -23,6 +44,16 @@ namespace SharpMP4.Tracks
         {
             isRandomAccessPoint = true;
             output = sample;
+        }
+
+        public virtual IEnumerable<byte[]> GetContainerSamples()
+        {
+            return [];
+        }
+
+        public virtual IEnumerable<byte[]> ParseSample(byte[] sample)
+        {
+            return [ sample ];
         }
     }
 }

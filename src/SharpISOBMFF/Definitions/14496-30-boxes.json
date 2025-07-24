@@ -30,6 +30,56 @@
       "containers": [ "stsd" ],
       "type": "PlainTextSampleEntry",
       "syntax": "class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){\r\n\tWebVTTConfigurationBox\tconfig;\r\n\tWebVTTSourceLabelBox\t\tlabel;\t// recommended\r\n\tBitRateBox (); \t\t\t\t\t// optional\r\n}"
+    },
+
+    {
+      "fourcc": "vsid",
+      "description": "",
+      "containers": [],
+      "type": "Box",
+      "syntax": "class CueSourceIDBox() extends Box ('vsid') {\r\n unsigned int(32) sourceID; \r\n }"
+    },
+    {
+      "fourcc": "ctim",
+      "description": "",
+      "containers": [],
+      "type": "Box",
+      "syntax": "class CueTimeBox() extends Box ('ctim') {\r\n boxstring cueCurrentTime; \r\n }"
+    },
+    {
+      "fourcc": "iden",
+      "description": "",
+      "containers": [],
+      "type": "Box",
+      "syntax": "class CueIDBox() extends Box ('iden') {\r\n boxstring cueID; \r\n }"
+    },
+    {
+      "fourcc": "sttg",
+      "description": "",
+      "containers": [],
+      "type": "Box",
+      "syntax": "class CueSettingsBox() extends Box ('sttg') {\r\n boxstring settings; \r\n }"
+    },
+    {
+      "fourcc": "payl",
+      "description": "",
+      "containers": [],
+      "type": "Box",
+      "syntax": "class CuePayloadBox() extends Box ('payl') {\r\n boxstring cueText; \r\n }"
+    },
+    {
+      "fourcc": "vtte",
+      "description": "",
+      "containers": [],
+      "type": "Box",
+      "syntax": "class VTTEmptyBox() extends Box ('vtte') { }"
+    },
+    {
+      "fourcc": "vtta",
+      "description": "",
+      "containers": [],
+      "type": "Box",
+      "syntax": "class VTTAdditionalBox() extends Box ('vtta') {\r\n boxstring cueAdditionalText; \r\n }"
     }
   ]
 }

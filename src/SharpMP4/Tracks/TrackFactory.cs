@@ -45,6 +45,9 @@ namespace SharpMP4.Tracks
                 case "vvcN":
                     return new H266Track(sampleEntry, timescale, sampleDuration);
 
+                case "av01":
+                    return new AV1Track(sampleEntry, timescale, sampleDuration);
+
                 default:
                     return CreateGenericTrack(sampleEntry, timescale, sampleDuration, IsoStream.FromFourCC(HandlerTypes.Video), HandlerNames.Video);
             }

@@ -12,7 +12,7 @@ namespace SharpMP4.Tracks
     /// H266 track.
     /// </summary>
     /// <remarks>https://www.itu.int/rec/T-REC-H.266/en</remarks>
-    public class H266Track : TrackBase, IH26XTrack
+    public class H266Track : H26XTrackBase
     {
         public const string BRAND = "vvc1";
 
@@ -44,40 +44,14 @@ namespace SharpMP4.Tracks
         public List<SeiRbsp> PrefixSei { get; set; } = new List<SeiRbsp>();
         public List<byte[]> PrefixSeiRaw { get; set; } = new List<byte[]>();
 
-        public override string HandlerName => HandlerNames.Video;
-        public override string HandlerType => HandlerTypes.Video;
-        public override string Language { get; set; } = "und";
-        public int NalLengthSize { get; set; } = 4;
-
-        /// <summary>
-        /// Overrides any auto-detected timescale.
-        /// </summary>
-        public uint TimescaleOverride { get; set; } = 0;
-
-        /// <summary>
-        /// Overrides any auto-detected frame tick.
-        /// </summary>
-        public int FrameTickOverride { get; set; } = 0;
-
-        /// <summary>
-        /// If it is not possible to retrieve timescale from the SPS, use this value as a fallback.
-        /// </summary>
-        public uint TimescaleFallback { get; set; } = 24000;
-
-        /// <summary>
-        /// If it is not possible to retrieve frame tick from the SPS, use this value as a fallback.
-        /// </summary>
-        public int FrameTickFallback { get; set; } = 1001;
-
         private H266Context _context = new H266Context();
 
         /// <summary>
         /// Ctor.
         /// </summary>
-        public H266Track()
+        public H266Track() : base()
         {
             CompatibleBrand = BRAND; // vvc1
-            DefaultSampleFlags = new SampleFlags() { SampleDependsOn = 1, SampleIsDifferenceSample = true };
         }
 
         public H266Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
@@ -660,7 +634,7 @@ namespace SharpMP4.Tracks
             return ((uint)width, (uint)height);
         }
 
-        public byte[][] GetVideoNALUs()
+        public override IEnumerable<byte[]> GetContainerSamples()
         {
             return VpsRaw.Values.ToArray().Concat(SpsRaw.Values.ToArray()).Concat(PpsRaw.Values.ToArray()).Concat(PrefixSeiRaw).ToArray();
         }

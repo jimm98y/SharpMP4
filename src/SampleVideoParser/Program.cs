@@ -1,4 +1,5 @@
-﻿using SharpH264;
+﻿using SharpAV1;
+using SharpH264;
 using SharpH265;
 using SharpH266;
 using SharpH26X;
@@ -10,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-// .\ffmpeg.exe - i "frag_bunny.mp4" - c:v copy -bsf:v trace_headers -f null -  > log.txt 2>&1
+// .\ffmpeg.exe -i "002.mp4" -c:v copy -bsf:v trace_headers -f null - > log.txt 2>&1
 
 var logger = new FileLogger("C:\\Temp\\video_debug2.txt");
 
@@ -37,12 +38,13 @@ SharpH26X.Log.SinkInfo = (o, e) =>
     //logger.Log(o + "\r\n");
 };
 
-var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
+//var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
 //var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
 //var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
 //var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
 //var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
 //var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
+var files = new string[] { "C:\\Temp\\002.mp4" };
 
 foreach (var file in files)
 {
@@ -64,7 +66,7 @@ foreach (var file in files)
             }
 
             int nalLengthSize = 4;
-            IItuContext context = null;
+            object context = null;
             VideoFormat format = VideoFormat.Unknown;
             uint videoTrackId = 0;
             uint primaryItemID = 0;
@@ -78,6 +80,7 @@ foreach (var file in files)
             AVCConfigurationBox avcC = null;
             HEVCConfigurationBox hvcC = null;
             VvcConfigurationBox vvcC = null;
+            AV1CodecConfigurationBox av1C = null;
 
             if (inputMp4.Children.Count == 0)
                 continue;
@@ -148,6 +151,7 @@ foreach (var file in files)
                 avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
                 hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
                 vvcC = visualSample.Children.OfType<VvcConfigurationBox>().SingleOrDefault();
+                av1C = visualSample.Children.OfType<AV1CodecConfigurationBox>().SingleOrDefault();
             }
 
             if (avcC != null)
@@ -161,7 +165,7 @@ foreach (var file in files)
                 {
                     try
                     {
-                        ParseNALU(context, format, spsBinary);
+                        ParseNALU((IItuContext)context, format, spsBinary);
                     }
                     catch (Exception ex)
                     {
@@ -175,7 +179,7 @@ foreach (var file in files)
                 {
                     try
                     {
-                        ParseNALU(context, format, ppsBinary);
+                        ParseNALU((IItuContext)context, format, ppsBinary);
                     }
                     catch (Exception ex)
                     {
@@ -198,7 +202,7 @@ foreach (var file in files)
                     {
                         try 
                         { 
-                            ParseNALU(context, format, nalu);
+                            ParseNALU((IItuContext)context, format, nalu);
                         }
                         catch (Exception ex)
                         {
@@ -222,7 +226,7 @@ foreach (var file in files)
                     {
                         try 
                         { 
-                            ParseNALU(context, format, nalu);
+                            ParseNALU((IItuContext)context, format, nalu);
                         }
                         catch (Exception ex)
                         {
@@ -232,6 +236,13 @@ foreach (var file in files)
                         }
                     }
                 }
+            }
+            else if(av1C != null)
+            {
+                context = new AV1Context();
+                format = VideoFormat.AV1;
+
+                ParseOBU((IAomContext)context, format, av1C.Av1Config.ConfigOBUs);
             }
             else
             {
@@ -350,7 +361,7 @@ foreach (var file in files)
 
                                     try
                                     {
-                                        size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts, video_pts, sampleDuration);
+                                        size += ReadSample(nalLengthSize, (IItuContext)context, format, mdat.Data, sampleSize, video_dts, video_pts, sampleDuration);
                                     }
                                     catch (Exception ex)
                                     {
@@ -413,8 +424,8 @@ foreach (var file in files)
                             if (k >= s2c_next_run)
                             {
                                 s2c_samples_per_chunk = sample_to_chunks.SamplesPerChunk[s2c_index];
-                                s2c_next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
                                 s2c_index += 1;
+                                s2c_next_run = (s2c_index < sample_to_chunks.FirstChunk.Length) ? sample_to_chunks.FirstChunk[s2c_index] : (uint)(chunkOffsets.Length + 1);
                             }
 
                             long chunkOffset = (long)chunkOffsets[k - 1];
@@ -435,8 +446,8 @@ foreach (var file in files)
                                 if (composition_offset_box != null && sample_idx >= co_next_run)
                                 {
                                     co_sample_delta = composition_offset_box.Version == 0 ? (int)composition_offset_box.SampleOffset[co_index] : composition_offset_box.SampleOffset0[co_index];
-                                    co_next_run += (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
                                     co_index += 1;
+                                    co_next_run += (co_index < composition_offset_box.SampleCount.Length) ? composition_offset_box.SampleCount[co_index] : (uint)(chunkOffsets.Length + 1);
                                 }
 
                                 uint sampleSize = sampleSizes[sample_idx++];
@@ -445,7 +456,7 @@ foreach (var file in files)
 
                                 try
                                 {
-                                    size += ReadAU(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts, video_pts, t2s_sample_delta);
+                                    size += ReadSample(nalLengthSize, context, format, mdat.Data, sampleSize, video_dts, video_pts, t2s_sample_delta);
                                 }
                                 catch (Exception ex)
                                 {
@@ -483,7 +494,7 @@ foreach (var file in files)
 
                             try
                             {
-                                size += ReadAU(nalLengthSize, context, format, mdat.Data, length, video_dts, video_pts, 0);
+                                size += ReadSample(nalLengthSize, (IItuContext)context, format, mdat.Data, length, video_dts, video_pts, 0);
                             }
                             catch (Exception ex)
                             {
@@ -525,12 +536,28 @@ int GetVariableInt(byte size, byte[] bytes)
     }
 }
 
-static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+static ulong ReadSample(int length, object context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+{
+    if (format == VideoFormat.H264 || format == VideoFormat.H265 || format == VideoFormat.H266)
+    {
+        return ReadH26XSample(length, (IItuContext)context, format, marker, sampleSizeInBytes, dts, pts, duration);
+    }
+    else if (format == VideoFormat.AV1)
+    {
+        return ReadAVXSample(length, (IAomContext)context, format, marker, sampleSizeInBytes, dts, pts, duration);
+    }
+    else
+    {
+        throw new NotSupportedException();
+    }
+}
+
+static ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     ulong size = 0;
     long offsetInBytes = 0;
 
-    SharpISOBMFF.Log.Debug($"AU begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
+    SharpISOBMFF.Log.Debug($"Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
     do
     {
@@ -565,13 +592,15 @@ static ulong ReadAU(int nalLengthSize, IItuContext context, VideoFormat format, 
 
         size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData);
         offsetInBytes += sampleData.Length;
+
         ParseNALU(context, format, sampleData);
+
     } while (offsetInBytes < sampleSizeInBytes);
 
     if (offsetInBytes != sampleSizeInBytes)
         throw new Exception("Mismatch!");
 
-    SharpISOBMFF.Log.Debug("AU end");
+    SharpISOBMFF.Log.Debug("Sample end");
 
     return size;
 }
@@ -1174,6 +1203,113 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
     }
 }
 
+static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+{
+    ulong size = 0;
+
+    SharpISOBMFF.Log.Debug($"+++ Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
+
+    size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData);
+    var ms = new MemoryStream(sampleData);
+    using (AomStream stream = new AomStream(ms))
+    {
+        int len = (int)sampleSizeInBytes;
+        do
+        {
+            SharpISOBMFF.Log.Debug($"---OBU begin {len}---");
+
+            context.Read(stream, len);
+
+            int obuTotalCize = 0;
+            if (((AV1Context)context)._ObuHasSizeField != 0)
+            {
+                obuTotalCize = ((AV1Context)context)._ObuSize + 1 /* obu header */ + (((AV1Context)context)._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (((AV1Context)context).ObuSizeLen >> 3);
+            }
+            else
+            {
+                obuTotalCize = len;
+            }
+
+            len -= obuTotalCize;
+
+            if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_SEQUENCE_HEADER)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Sequence Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Temporal Delimiter {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Tile Group {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_METADATA)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Metadata {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Redundant Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_LIST)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Tile List {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_PADDING)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Padding {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_0 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_10 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_11 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_12 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_13 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_14
+                )
+            {
+                // reserved
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Reserved {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else
+            {
+                // invalid
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"Invalid OBU!!!");
+            }
+
+            SharpISOBMFF.Log.Debug($"---OBU end {obuTotalCize}---");
+        } while (len > 0);
+
+        if(ms.Position != ms.Length)
+        {
+            SharpISOBMFF.Log.Debug($"---!!!OBU error---");
+        }
+    }
+
+    SharpISOBMFF.Log.Debug("+++ Sample end");
+
+    return size;
+}
+
+static void ParseOBU(IAomContext context, VideoFormat format, byte[] sampleData)
+{
+    using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
+    {
+        SharpISOBMFF.Log.Debug("---OBU begin---");
+        context.Read(stream, sampleData.Length);
+        SharpISOBMFF.Log.Debug("---OBU end---");
+    }
+}
+
 static string[] DirSearch(string sDir)
 {
     List<string> files = new List<string>();
@@ -1210,6 +1346,7 @@ public enum VideoFormat
     H264,
     H265,
     H266,
+    AV1,
 }
 
 public static class NaluDebug

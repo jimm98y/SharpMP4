@@ -2,7 +2,6 @@
 using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace SharpMP4.Readers
@@ -43,7 +42,6 @@ namespace SharpMP4.Readers
                         MediaHeaderBox mdhd = mdia.Children.OfType<MediaHeaderBox>().Single();
                         uint trackID = tkhd.TrackID;
                         uint trackTimescale = mdhd.Timescale;
-                        int defaultSampleDuration = 0;
 
                         var trackContext = new TrackContext();
                         context.Tracks[(int)(trackID - 1)] = trackContext;
@@ -58,13 +56,16 @@ namespace SharpMP4.Readers
                             .Children.OfType<SampleDescriptionBox>().Single()
                             .Children.Single();
 
+                        trackContext.Stts = stbl.Children.OfType<TimeToSampleBox>().Single();
+
+                        // TODO: review, this is needed because of AV1 where we cannot calculate the sample rate
+                        int defaultSampleDuration = trackContext.Stts.SampleDelta != null && trackContext.Stts.SampleDelta.Length > 0 ? (int)trackContext.Stts.SampleDelta[0] : 0; 
                         context.Tracks[(int)(trackID - 1)].Track = TrackFactory.CreateTrack(sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
                                                 
                         var stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
                         var co64 = stbl.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
                         var stsc = stbl.Children.OfType<SampleToChunkBox>().Single();
                         var stsz = stbl.Children.OfType<SampleSizeBox>().Single();
-                        trackContext.Stts = stbl.Children.OfType<TimeToSampleBox>().Single();
                         trackContext.Ctts = stbl.Children.OfType<CompositionOffsetBox>().SingleOrDefault();
                         trackContext.Stss = stbl.Children.OfType<SyncSampleBox>().SingleOrDefault(); // optional
                         trackContext.SizesList = stsz.SampleSize > 0 ? Enumerable.Repeat(stsz.SampleSize, (int)stsz.SampleCount).ToArray() : stsz.EntrySize;
@@ -456,44 +457,10 @@ namespace SharpMP4.Readers
             return new Mp4Sample(pts, dts, (int)sampleDuration, sampleData);
         }
 
-        public static List<byte[]> ReadAU(int nalLengthSize, byte[] sample)
+        public static IEnumerable<byte[]> ParseSample(ContainerContext context, uint trackID, byte[] sample)
         {
-            ulong size = 0;
-            long offsetInBytes = 0;
-
-            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU begin {sample.Length}");
-
-            List<byte[]> naluList = new List<byte[]>();
-
-            using (var markerStream = new IsoStream(new MemoryStream(sample)))
-            {
-                do
-                {
-                    uint nalUnitLength = 0;
-                    size += markerStream.ReadVariableLengthSize((uint)nalLengthSize, out nalUnitLength);
-                    offsetInBytes += nalLengthSize;
-
-                    if (nalUnitLength > (sample.Length - offsetInBytes))
-                    {
-                        if (SharpISOBMFF.Log.ErrorEnabled) SharpISOBMFF.Log.Error($"{nameof(Mp4Extensions)}: Invalid NALU size: {nalUnitLength}");
-                        nalUnitLength = (uint)(sample.Length - offsetInBytes);
-                        size += nalUnitLength;
-                        offsetInBytes += nalUnitLength;
-                        break;
-                    }
-
-                    size += markerStream.ReadUInt8Array(size, (ulong)sample.Length, nalUnitLength, out byte[] sampleData);
-                    offsetInBytes += sampleData.Length;
-                    naluList.Add(sampleData);
-                } while (offsetInBytes < sample.Length);
-
-                if (offsetInBytes != sample.Length)
-                    throw new Exception("Mismatch!");
-
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"{nameof(Mp4Extensions)}: AU end");
-
-                return naluList;
-            }
+            var trackContext = context.Tracks[trackID - 1];
+            return trackContext.Track.ParseSample(sample);
         }
     }    
 
