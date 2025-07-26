@@ -313,10 +313,10 @@ namespace SharpMP4.Builders
             mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 
             WriteMoov(_mp4);
-            var stream = _output.GetStream(1);
+            var stream = _output.GetStream(0);
             var fragmentStream = new IsoStream(stream);
             _mp4.Write(fragmentStream);
-            _output.Flush(stream, 1);
+            _output.Flush(stream, 0);
         }
     }
 }
