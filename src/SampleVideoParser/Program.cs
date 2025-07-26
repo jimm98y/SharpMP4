@@ -242,7 +242,10 @@ foreach (var file in files)
                 context = new AV1Context();
                 format = VideoFormat.AV1;
 
-                ParseOBU((IAomContext)context, format, av1C.Av1Config.ConfigOBUs);
+                using (AomStream stream = new AomStream(new MemoryStream(av1C.Av1Config.ConfigOBUs)))
+                {
+                    ParseOBU((AV1Context)context, stream, av1C.Av1Config.ConfigOBUs.Length);
+                }
             }
             else
             {
@@ -1210,93 +1213,83 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
     SharpISOBMFF.Log.Debug($"+++ Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
     size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData);
-    var ims = new MemoryStream(sampleData);
-    var ms = new MemoryStream();
-    using (AomStream output = new AomStream(ms))
+    using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
     {
-        using (AomStream stream = new AomStream(ims))
+        int len = (int)sampleSizeInBytes;
+        do
         {
-            int len = (int)sampleSizeInBytes;
-            do
+            SharpISOBMFF.Log.Debug($"---OBU begin {len}---");
+
+            ParseOBU(context, stream, len);
+
+            int obuTotalCize = 0;
+            if (((AV1Context)context)._ObuHasSizeField != 0)
             {
-                SharpISOBMFF.Log.Debug($"---OBU begin {len}---");
-
-                context.Read(stream, len);
-
-                int obuTotalCize = 0;
-                if (((AV1Context)context)._ObuHasSizeField != 0)
-                {
-                    obuTotalCize = ((AV1Context)context)._ObuSize + 1 /* obu header */ + (((AV1Context)context)._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (((AV1Context)context).ObuSizeLen >> 3);
-                }
-                else
-                {
-                    obuTotalCize = len;
-                }
-
-                len -= obuTotalCize;
-
-                if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_SEQUENCE_HEADER)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Sequence Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Temporal Delimiter {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Tile Group {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_METADATA)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Metadata {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Redundant Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_LIST)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Tile List {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_PADDING)
-                {
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Padding {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else if (
-                    ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_0 ||
-                    ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_10 ||
-                    ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_11 ||
-                    ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_12 ||
-                    ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_13 ||
-                    ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_14
-                    )
-                {
-                    // reserved
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Reserved {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
-                }
-                else
-                {
-                    // invalid
-                    if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"Invalid OBU!!!");
-                }
-
-                SharpISOBMFF.Log.Debug($"---OBU end {obuTotalCize}---");
-            } while (len > 0);
-
-            if (ims.Position != ims.Length)
-            {
-                SharpISOBMFF.Log.Debug($"---!!!OBU error---");
+                obuTotalCize = ((AV1Context)context)._ObuSize + 1 /* obu header */ + (((AV1Context)context)._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (((AV1Context)context).ObuSizeLen >> 3);
             }
-        }
+            else
+            {
+                obuTotalCize = len;
+            }
+
+            len -= obuTotalCize;
+
+            if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_SEQUENCE_HEADER)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Sequence Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Temporal Delimiter {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Tile Group {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_METADATA)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Metadata {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Redundant Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_LIST)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Tile List {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_PADDING)
+            {
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Padding {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else if (
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_0 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_10 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_11 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_12 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_13 ||
+                ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_14
+                )
+            {
+                // reserved
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Reserved {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+            }
+            else
+            {
+                // invalid
+                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"Invalid OBU!!!");
+            }
+
+            SharpISOBMFF.Log.Debug($"---OBU end {obuTotalCize}---");
+        } while (len > 0);
     }
 
     SharpISOBMFF.Log.Debug("+++ Sample end");
@@ -1304,14 +1297,9 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
     return size;
 }
 
-static void ParseOBU(IAomContext context, VideoFormat format, byte[] sampleData)
+static void ParseOBU(IAomContext context, AomStream stream, int sz)
 {
-    using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
-    {
-        SharpISOBMFF.Log.Debug("---OBU begin---");
-        context.Read(stream, sampleData.Length);
-        SharpISOBMFF.Log.Debug("---OBU end---");
-    }
+    context.Read(stream, sz);
 }
 
 static string[] DirSearch(string sDir)

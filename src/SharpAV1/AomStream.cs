@@ -226,9 +226,7 @@ namespace SharpAV1
             int extraBit = ReadBit();
             value = (uint)((v << 1) - m + extraBit);
             return size;
-        }
-
-        
+        }        
 
         private int _logLevel = 0;
 
