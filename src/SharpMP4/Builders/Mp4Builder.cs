@@ -45,7 +45,7 @@ namespace SharpMP4.Builders
             _trackSampleSizes.Add(new List<uint>());
             _trackSampleOffsets.Add(new List<uint>());
             _trackRandomAccessPoints.Add(new List<uint>());
-            track.TrackID = (uint)_tracks.IndexOf(track) + 1;
+            track.TrackID = Mp4Utils.TrackIndexToTrackId(_tracks.IndexOf(track));
         }               
 
         private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
@@ -89,7 +89,7 @@ namespace SharpMP4.Builders
                 _mdatOffset = (_mp4.CalculateSize() >> 3) + 8; // 8 bytes will be the MDAT box header (4cc + size)
             }
 
-            int trackIndex = GetTrackIndex(trackID);
+            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
             uint currentSampleDuration = sampleDuration <= 0 ? (uint)_tracks[trackIndex].DefaultSampleDuration : (uint)sampleDuration;
             var track = _tracks[trackIndex];
             _trackSampleOffsets[trackIndex].Add((uint)(_mdatOffset + (uint)_storage.GetPosition()));
@@ -282,18 +282,13 @@ namespace SharpMP4.Builders
 
         public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration)
         {
-            int trackIndex = GetTrackIndex(trackID);
+            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
             _tracks[trackIndex].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
             if (processedSample != null)
             {
                 ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
             }
-        }
-
-        private static int GetTrackIndex(uint trackID)
-        {
-            return (int)trackID - 1;
         }
 
         public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
