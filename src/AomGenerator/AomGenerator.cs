@@ -24,7 +24,7 @@ namespace AomGenerator
 
             content = customGenerator.PreprocessDefinitionsFile(content);
 
-            IEnumerable<AomClass> parsed = Parser.AomClasses.ParseOrThrow(content);
+            IEnumerable<AomMethod> parsed = Parser.AomClasses.ParseOrThrow(content);
 
             long startOffset = 0;
             foreach (var c in parsed)

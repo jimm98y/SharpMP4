@@ -152,15 +152,15 @@ namespace AomGenerator
         public static Parser<char, IEnumerable<AomCode>> CodeBlocks => SkipWhitespaces.Then(CodeBlock.SeparatedAndOptionallyTerminated(SkipWhitespaces));
 
 
-        public static Parser<char, AomClass> AomClass =>
-            Map((className, classParameter, fields, endOffset) => new AomClass(className, classParameter, fields, endOffset),
+        public static Parser<char, AomMethod> AomClass =>
+            Map((className, classParameter, fields, endOffset) => new AomMethod(className, classParameter, fields, endOffset),
                 SkipWhitespaces.Then(Identifier),
                 SkipWhitespaces.Then(Parentheses.Optional()).Before(SkipWhitespaces),
                 Char('{').Then(SkipWhitespaces).Then(CodeBlocks).Before(Char('}')),
                 CurrentOffset
             );
 
-        public static Parser<char, IEnumerable<AomClass>> AomClasses => SkipWhitespaces.Then(AomClass.SeparatedAndOptionallyTerminated(SkipWhitespaces));
+        public static Parser<char, IEnumerable<AomMethod>> AomClasses => SkipWhitespaces.Then(AomClass.SeparatedAndOptionallyTerminated(SkipWhitespaces));
     }
 
     [SuppressMessage("naming", "CA1724:The type name conflicts with the namespace name", Justification = "Example code")]
@@ -234,19 +234,19 @@ namespace AomGenerator
         public bool MakeList { get; internal set; }
     }
 
-    public class AomClass : AomCode
+    public class AomMethod : AomCode
     {
-        public AomClass(string className, Maybe<string> classParameter, IEnumerable<AomCode> fields, int endOffset)
+        public AomMethod(string className, Maybe<string> methodParameter, IEnumerable<AomCode> fields, int endOffset)
         {
-            ClassName = className;
-            ClassParameter = classParameter.GetValueOrDefault();
+            MethodName = className;
+            MethodParameter = methodParameter.GetValueOrDefault();
             Fields = fields;
             EndOffset = endOffset;
         }
 
-        public string ClassName { get; }
+        public string MethodName { get; }
         public bool HasReturn { get; set; }
-        public string ClassParameter { get; set; }
+        public string MethodParameter { get; set; }
         public IEnumerable<AomCode> Fields { get; }
         public int EndOffset { get; }
 

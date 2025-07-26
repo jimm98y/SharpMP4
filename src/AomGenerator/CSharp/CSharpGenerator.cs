@@ -27,7 +27,7 @@ namespace AomGenerator.CSharp
             this.specificGenerator = specificGenerator ?? throw new ArgumentNullException(nameof(specificGenerator));
         }
 
-        public string GenerateParser(string type, IEnumerable<AomClass> aomClasses)
+        public string GenerateParser(string type, IEnumerable<AomMethod> aomClasses)
         {
             string resultCode =
             $@"using System;
@@ -53,7 +53,7 @@ namespace Sharp{type}
             return resultCode;
         }
 
-        private string GenerateMethods(AomClass aomClass)
+        private string GenerateMethods(AomMethod aomClass)
         {
             string resultCode = @$"
     /*
@@ -77,7 +77,7 @@ namespace Sharp{type}
             }
 
             resultCode += $@"
-        private {retType} {aomClass.ClassName.ToPropertyCase()}({ituClassParameters})
+        private {retType} {aomClass.MethodName.ToPropertyCase()}({ituClassParameters})
         {{";
             foreach (var field in aomClass.Fields)
             {
@@ -90,9 +90,9 @@ namespace Sharp{type}
             return resultCode;
         }
 
-        private string[] GetMethodParameters(AomClass aomClass)
+        private string[] GetMethodParameters(AomMethod aomClass)
         {
-            var parameters = aomClass.ClassParameter.Substring(1, aomClass.ClassParameter.Length - 2).Split(',').Select(x => x.Trim()).ToArray();
+            var parameters = aomClass.MethodParameter.Substring(1, aomClass.MethodParameter.Length - 2).Split(',').Select(x => x.Trim()).ToArray();
             if (parameters.Length == 1 && string.IsNullOrEmpty(parameters[0]))
             {
                 return new string[] { };
@@ -100,7 +100,7 @@ namespace Sharp{type}
             return parameters;
         }
 
-        private string GenerateFields(AomClass aomClass)
+        private string GenerateFields(AomMethod aomClass)
         {
             string resultCode = "";
             aomClass.FlattenedFields = FlattenFields(aomClass, aomClass.Fields);
@@ -113,7 +113,7 @@ namespace Sharp{type}
             return resultCode;
         }
 
-        private List<AomField> FlattenFields(AomClass b, IEnumerable<AomCode> fields, AomBlock parent = null)
+        private List<AomField> FlattenFields(AomMethod b, IEnumerable<AomCode> fields, AomBlock parent = null)
         {
             Dictionary<string, AomField> ret = new Dictionary<string, AomField>();
 
@@ -222,7 +222,7 @@ namespace Sharp{type}
             return ret.Values.ToList();
         }
 
-        private void AddAndResolveDuplicates(AomClass b, Dictionary<string, AomField> ret, AomField field)
+        private void AddAndResolveDuplicates(AomMethod b, Dictionary<string, AomField> ret, AomField field)
         {
             string name = field.Name;
             if (!ret.TryAdd(name, field))
@@ -239,13 +239,13 @@ namespace Sharp{type}
                     else
                     {
                         // just log a warning for now
-                        Debug.WriteLine($"-------Field {field.Name} already exists in {b.ClassName} class, possible issue with the value being overwritten! Type: {field.Type}, Value: {field.Value}");
+                        Debug.WriteLine($"-------Field {field.Name} already exists in {b.MethodName} class, possible issue with the value being overwritten! Type: {field.Type}, Value: {field.Value}");
                     }
                 }
                 else
                 {
                     // just log a warning for now
-                    Debug.WriteLine($"-------Field {field.Name} already exists in {b.ClassName} class, possible issue with the value being overwritten! Type: {field.Type}, Value: {field.Value}");
+                    Debug.WriteLine($"-------Field {field.Name} already exists in {b.MethodName} class, possible issue with the value being overwritten! Type: {field.Type}, Value: {field.Value}");
                 }
             }
         }
@@ -262,7 +262,7 @@ namespace Sharp{type}
             field.Name = $"{name}{index}";
         }
 
-        private string BuildRequiredVariables(AomClass aomClass)
+        private string BuildRequiredVariables(AomMethod aomClass)
         {
             string resultCode = "";
 
@@ -330,7 +330,7 @@ namespace Sharp{type}
             return resultCode;
         }
 
-        private string BuildField(AomClass ituClass, AomField field)
+        private string BuildField(AomMethod ituClass, AomField field)
         {
             string type = GetCSharpType(field);
             if (ituClass.AddedFields != null && ituClass.AddedFields.FirstOrDefault(x => x.Name == field.Name) != null)
@@ -377,7 +377,7 @@ namespace Sharp{type}
             return ret;
         }
 
-        private string BuildMethod(AomClass b, AomBlock parent, AomCode field, int level)
+        private string BuildMethod(AomMethod b, AomBlock parent, AomCode field, int level)
         {
             string spacing = GetSpacing(level);
             var block = field as AomBlock;
@@ -451,7 +451,7 @@ namespace Sharp{type}
             return retm;
         }
 
-        private string BuildReturn(AomClass b, AomBlock parent, AomReturn retrn, int level)
+        private string BuildReturn(AomMethod b, AomBlock parent, AomReturn retrn, int level)
         {
             string p = "";
             if (!string.IsNullOrEmpty(retrn.Parameter))
@@ -460,7 +460,7 @@ namespace Sharp{type}
             return $"{GetSpacing(level)}return" + p + ";";
         }
 
-        private string BuildStatement(AomClass b, AomBlock parent, AomField field, int level)
+        private string BuildStatement(AomMethod b, AomBlock parent, AomField field, int level)
         {
             string fieldValue = field.Value;
             string fieldArray = field.FieldArray;
@@ -500,12 +500,12 @@ namespace Sharp{type}
             }
         }
 
-        private string BuildComment(AomClass b, AomComment comment, int level)
+        private string BuildComment(AomMethod b, AomComment comment, int level)
         {
             return $"/* {comment.Comment} */\r\n";
         }
 
-        private string BuildBlock(AomClass b, AomBlock parent, AomBlock block, int level)
+        private string BuildBlock(AomMethod b, AomBlock parent, AomBlock block, int level)
         {
             string spacing = GetSpacing(level);
             string ret = "";
@@ -542,7 +542,7 @@ namespace Sharp{type}
             return ret;
         }
 
-        private string FixCondition(AomClass b, string condition)
+        private string FixCondition(AomMethod b, string condition)
         {
             string[] parts = condition.Substring(1, condition.Length - 2).Split(new string[] { "||", "&&" }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -654,7 +654,6 @@ namespace Sharp{type}
                 }
             }
 
-
             string arraySuffix = "";
             for (int i = 0; i < arrayDimensions; i++)
             {
@@ -720,7 +719,7 @@ namespace Sharp{type}
             return map;
         }
 
-        private string GetReadMethod(AomClass b, AomField aomField)
+        private string GetReadMethod(AomMethod b, AomField aomField)
         {
             switch (aomField.Type)
             {
