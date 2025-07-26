@@ -42,19 +42,9 @@ namespace AomGenerator.CSharp
             }
         }
 
-        public void FixClassParameters(AomClass ituClass)
-        {
-            
-        }
-
         public string FixCondition(string value)
         {
             return FixStatement(value);
-        }
-
-        public string FixFieldValue(string fieldValue)
-        {
-            return fieldValue;
         }
 
         public string FixStatement(string value)
@@ -611,16 +601,6 @@ namespace AomGenerator.CSharp
             definitions = definitions.Replace("frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME", "(frame_type == INTRA_ONLY_FRAME || frame_type == KEY_FRAME) ? 1 : 0");
 
             return definitions;
-        }
-
-        public string ReplaceParameter(string parameter)
-        {
-            switch (parameter)
-            {
-                default:
-                    //throw new NotImplementedException(parameter);
-                    return parameter;
-            }
         }
     }
 }

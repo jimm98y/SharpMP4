@@ -10,12 +10,9 @@ namespace AomGenerator.CSharp
     {
         string PreprocessDefinitionsFile(string definitions);
         string GetFieldDefaultValue(AomField field);
-        void FixClassParameters(AomClass ituClass);
-        string ReplaceParameter(string parameter);
         string FixCondition(string condition);
         string FixStatement(string fieldValue);
         string GetCtorParameterType(string parameter);
-        string FixFieldValue(string fieldValue);
         string AppendMethod(AomCode field, string spacing, string retm);
     }
 
@@ -59,8 +56,6 @@ namespace Sharp{type}
 
         private string GenerateMethods(AomClass aomClass)
         {
-            specificGenerator.FixClassParameters(aomClass);
-
             string resultCode = @$"
     /*
 {aomClass.Syntax.Replace("*/", "*//*")}
@@ -477,7 +472,6 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(fieldValue))
             {
                 fieldValue = specificGenerator.FixStatement(fieldValue);
-                fieldValue = specificGenerator.FixFieldValue(fieldValue);
 
                 string trimmed = fieldValue.TrimStart(new char[] { ' ', '=' });
                 if (trimmed.StartsWith("!"))
@@ -487,8 +481,6 @@ namespace Sharp{type}
 
                 if (fieldValue.Contains("flag") && !fieldValue.Contains(")"))
                     fieldValue = fieldValue.Replace("||", "|").Replace("&&", "&");
-
-                fieldValue = FixMissingFields(b, fieldValue);
             }
 
             if (b.FlattenedFields.FirstOrDefault(x => x.Name == field.Name) != null || parent != null)
@@ -507,24 +499,6 @@ namespace Sharp{type}
                     return $"{GetSpacing(level)}{field.Name}{fieldArray}{field.Increment}{fieldValue}".TrimEnd() + ";";
                 }
             }
-        }
-
-        private string FixMissingFields(AomClass b, string condition)
-        {
-            Regex r = new Regex("\\b[a-zA-Z_][\\w_]+");
-            var matches = r.Matches(condition).OfType<Match>().Select(x => x.Value).Distinct().ToArray();
-            foreach (var match in matches)
-            {
-                if (b.FlattenedFields.FirstOrDefault(x => x.Name == match) == null &&
-                    b.AddedFields.FirstOrDefault(x => x.Name == match) == null &&
-                    b.RequiresDefinition.FirstOrDefault(x => x.Name == match) == null
-                    )
-                {
-                    condition = condition.Replace(match, specificGenerator.ReplaceParameter(match));
-                }
-            }
-
-            return condition;
         }
 
         private string BuildComment(AomClass b, AomComment comment, int level)
@@ -555,8 +529,6 @@ namespace Sharp{type}
             if (!string.IsNullOrEmpty(condition))
             {
                 condition = condition.Replace("<<", "<< (int)");
-
-                condition = FixMissingFields(b, condition);
             }
 
             ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
