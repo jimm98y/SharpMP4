@@ -87,7 +87,8 @@ namespace SharpMP4.Builders
 
         public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1)
         {
-            _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
+            int trackIndex = GetTrackIndex(trackID);
+            _tracks[trackIndex].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
             if (processedSample != null)
             {
@@ -97,26 +98,27 @@ namespace SharpMP4.Builders
 
         public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
-            uint currentSampleDuration = sampleDuration < 0 ? (uint)_tracks[(int)trackID - 1].DefaultSampleDuration : (uint)sampleDuration;
-            ulong nextFragmentTime = _tracks[(int)trackID - 1].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[(int)trackID - 1] + 1);
-            ulong currentFragmentTime = _trackEndTimes[(int)trackID - 1] * 1000;
+            int trackIndex = GetTrackIndex(trackID);
+            uint currentSampleDuration = sampleDuration < 0 ? (uint)_tracks[trackIndex].DefaultSampleDuration : (uint)sampleDuration;
+            ulong nextFragmentTime = _tracks[trackIndex].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[trackIndex] + 1);
+            ulong currentFragmentTime = _trackEndTimes[trackIndex] * 1000;
 
-            if (_trackSampleSizes[(int)trackID - 1].Count > 0 && nextFragmentTime <= currentFragmentTime)
+            if (_trackSampleSizes[trackIndex].Count > 0 && nextFragmentTime <= currentFragmentTime)
             {
                 var fragment = CreateNewFragment(trackID);
-                _trackReadyFragments[(int)trackID - 1].Enqueue(fragment);
+                _trackReadyFragments[trackIndex].Enqueue(fragment);
 
-                _trackCurrentFragments[(int)trackID - 1] = TemporaryStorage.Factory.Create();
-                _trackStartTimes[(int)trackID - 1] = _trackEndTimes[(int)trackID - 1];
-                _trackSampleSizes[(int)trackID - 1].Clear();
-                _trackSampleDurations[(int)trackID - 1].Clear();
-                _trackFragmentCounts[(int)trackID - 1]++;
+                _trackCurrentFragments[trackIndex] = TemporaryStorage.Factory.Create();
+                _trackStartTimes[trackIndex] = _trackEndTimes[trackIndex];
+                _trackSampleSizes[trackIndex].Clear();
+                _trackSampleDurations[trackIndex].Clear();
+                _trackFragmentCounts[trackIndex]++;
             }
 
-            _trackCurrentFragments[(int)trackID - 1].Write(sample, 0, sample.Length);
-            _trackSampleSizes[(int)trackID - 1].Add((uint)sample.Length);
-            _trackSampleDurations[(int)trackID - 1].Add(currentSampleDuration);
-            _trackEndTimes[(int)trackID - 1] += currentSampleDuration;
+            _trackCurrentFragments[trackIndex].Write(sample, 0, sample.Length);
+            _trackSampleSizes[trackIndex].Add((uint)sample.Length);
+            _trackSampleDurations[trackIndex].Add(currentSampleDuration);
+            _trackEndTimes[trackIndex] += currentSampleDuration;
 
             bool isFragmentReady = true;
             for (int i = 0; i < _tracks.Count; i++)
@@ -136,9 +138,9 @@ namespace SharpMP4.Builders
 
         private MediaFragment CreateNewFragment(uint trackID)
         {
-            int index = (int)trackID - 1;
-            var ret = new MediaFragment(_trackCurrentFragments[index], _trackStartTimes[index], _trackEndTimes[index], _trackSampleSizes[index].ToArray(), _trackSampleDurations[index].ToArray());
-            _trackSampleSizes[index].Clear();
+            int trackIndex = GetTrackIndex(trackID);
+            var ret = new MediaFragment(_trackCurrentFragments[trackIndex], _trackStartTimes[trackIndex], _trackEndTimes[trackIndex], _trackSampleSizes[trackIndex].ToArray(), _trackSampleDurations[trackIndex].ToArray());
+            _trackSampleSizes[trackIndex].Clear();
             return ret;
         }
 
@@ -483,6 +485,11 @@ namespace SharpMP4.Builders
             mdat.SetParent(fmp4);
             fmp4.Children.Add(mdat);
             mdat.Data = new StreamMarker(0, fragment.Storage.GetLength(), new IsoStream(fragment.Storage));
+        }
+
+        private static int GetTrackIndex(uint trackID)
+        {
+            return (int)trackID - 1;
         }
 
         public void FinalizeMedia()

@@ -16,16 +16,14 @@ namespace SharpMP4.Builders
         private readonly IMp4Output _output;
 
         private IStorage _storage;
-        private MediaDataBox _mdat;
-        private ulong _size;
+        private Container _mp4;
+        private ulong _mdatOffset;
 
         private readonly List<ITrack> _tracks = new List<ITrack>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
         private readonly List<List<uint>> _trackSampleSizes = new List<List<uint>>();
         private readonly List<List<uint>> _trackSampleOffsets = new List<List<uint>>();
         private readonly List<List<uint>> _trackRandomAccessPoints = new List<List<uint>>();
-
-        private bool _writeInitialization = true;
 
         /// <summary>
         /// Ctor.
@@ -52,13 +50,13 @@ namespace SharpMP4.Builders
 
         private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
-            Container mp4 = new Container();
-
-            if (_writeInitialization)
+            if (_mp4 == null)
             {
+                _mp4 = new Container();
+
                 var ftyp = new FileTypeBox();
-                ftyp.SetParent(mp4);
-                mp4.Children.Add(ftyp);
+                ftyp.SetParent(_mp4);
+                _mp4.Children.Add(ftyp);
 
                 ftyp.MajorBrand = IsoStream.FromFourCC("isom");
                 ftyp.MinorVersion = 512;
@@ -86,28 +84,22 @@ namespace SharpMP4.Builders
                 //mp4.Children.Add(free);
 
                 _storage = TemporaryStorage.Factory.Create();
-                _mdat = new MediaDataBox();
-                _mdat.SetParent(mp4);
 
-                // write
-                var stream = _output.GetStream(1);
-                var fragmentStream = new IsoStream(stream);
-                _size = mp4.Write(fragmentStream) >> 3;
-                _output.Flush(stream, 1);
-
-                _writeInitialization = false;
+                // calculate the current size of the container to get the offset for the mdat box
+                _mdatOffset = (_mp4.CalculateSize() >> 3) + 8; // 8 bytes will be the MDAT box header (4cc + size)
             }
 
-            uint currentSampleDuration = sampleDuration <= 0 ? (uint)_tracks[(int)trackID - 1].DefaultSampleDuration : (uint)sampleDuration;
-            var track = _tracks[(int)trackID - 1];
-            _trackSampleOffsets[(int)trackID - 1].Add((uint)(_size + 8 + (uint)_storage.GetPosition()));
+            int trackIndex = GetTrackIndex(trackID);
+            uint currentSampleDuration = sampleDuration <= 0 ? (uint)_tracks[trackIndex].DefaultSampleDuration : (uint)sampleDuration;
+            var track = _tracks[trackIndex];
+            _trackSampleOffsets[trackIndex].Add((uint)(_mdatOffset + (uint)_storage.GetPosition()));
             _storage.Write(sample, 0, sample.Length);
-            _trackSampleSizes[(int)trackID - 1].Add((uint)sample.Length);
-            _trackEndTimes[(int)trackID - 1] += currentSampleDuration;
+            _trackSampleSizes[trackIndex].Add((uint)sample.Length);
+            _trackEndTimes[trackIndex] += currentSampleDuration;
 
             if(isRandomAccessPoint)
             {
-                _trackRandomAccessPoints[(int)trackID - 1].Add((uint)_trackSampleSizes[(int)trackID - 1].Count);
+                _trackRandomAccessPoints[trackIndex].Add((uint)_trackSampleSizes[trackIndex].Count);
             }
         }
 
@@ -290,12 +282,18 @@ namespace SharpMP4.Builders
 
         public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration)
         {
-            _tracks[(int)trackID - 1].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
+            int trackIndex = GetTrackIndex(trackID);
+            _tracks[trackIndex].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
             if (processedSample != null)
             {
                 ProcessRawSample(trackID, processedSample, sampleDuration, isRandomAccessPoint);
             }
+        }
+
+        private static int GetTrackIndex(uint trackID)
+        {
+            return (int)trackID - 1;
         }
 
         public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
@@ -310,14 +308,14 @@ namespace SharpMP4.Builders
                 ProcessTrackSample(track.TrackID, null, -1);
             }
 
-            var mp4 = new Container();
-            mp4.Children.Add(_mdat);
-            _mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
+            var mdat = new MediaDataBox();
+            _mp4.Children.Add(mdat);
+            mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 
-            WriteMoov(mp4);
+            WriteMoov(_mp4);
             var stream = _output.GetStream(1);
             var fragmentStream = new IsoStream(stream);
-            mp4.Write(fragmentStream);
+            _mp4.Write(fragmentStream);
             _output.Flush(stream, 1);
         }
     }
