@@ -268,6 +268,8 @@ namespace SharpAV1
 
                     SaveLoopFilterParams(i);
                     SaveSegmentationParams(i);
+
+                    RefOrderHint[i] = OrderHint;
                 }
             }            
         }
