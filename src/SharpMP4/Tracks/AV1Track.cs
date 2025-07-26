@@ -147,6 +147,8 @@ namespace SharpMP4.Tracks
                     {
                         if (Log.DebugEnabled) Log.Debug($"OBU Frame Header");
 
+                        _context.LastObuFrameHeader = sample.Skip(1 /* obu header */ + (_context._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (_context.ObuSizeLen >> 3)).Take(_context._ObuSize).ToArray();
+
                         _obuBuffer.Add(sample);
 
                         if (_obuBuffer.Count > 0 && _context._ShowFrame != 0)
@@ -343,7 +345,13 @@ namespace SharpMP4.Tracks
                         obuTotalSize = len;
                     }
 
-                    result.Add(sample.Skip(currentPosition).Take(obuTotalSize).ToArray());
+                    if (_context._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
+                    {
+                        _context.LastObuFrameHeader = sample.Skip(currentPosition + 1 /* obu header */ + (_context._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (_context.ObuSizeLen >> 3)).Take(_context._ObuSize).ToArray();
+                    }
+
+                    var sampleBytes = sample.Skip(currentPosition).Take(obuTotalSize).ToArray();
+                    result.Add(sampleBytes);
                     currentPosition += obuTotalSize;
 
                     len -= obuTotalSize;

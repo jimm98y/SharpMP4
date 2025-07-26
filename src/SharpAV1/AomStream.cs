@@ -143,7 +143,7 @@ namespace SharpAV1
             for (int i = 0; i < 8; i++)
             {
                 int leb128_byte = ReadByte();
-                v |= ((leb128_byte & 0x7f) << (i * 7));
+                v = v | ((leb128_byte & 0x7f) << (i * 7));
                 Leb128Bytes += 1;
                 if((leb128_byte & 0x80) == 0)
                 {
@@ -167,7 +167,30 @@ namespace SharpAV1
 
         public ulong WriteLeb128(int value, string name)
         {
-            throw new NotImplementedException();
+            if (value > int.MaxValue)
+                throw new InvalidDataException($"Invalid LEB128 value: {value}");
+
+            int v = value;
+            int Leb128Bytes = 0;
+            for (int i = 0; i < 8; i++)
+            {
+                int vv = v & 0x7f;
+                v = v >> 7;
+
+                if (v > 0)
+                {
+                    WriteByte((byte)(vv | 0x80));
+                    Leb128Bytes++;
+                }
+                else
+                {
+                    WriteByte((byte)(vv));
+                    Leb128Bytes++;
+                    break;
+                }
+            }
+
+            return (ulong)Leb128Bytes << 3;
         }
 
         public ulong ReadFixed(int count, out int value, string name)

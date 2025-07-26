@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace SharpAV1
 {
     public interface IAomContext : IAomSerializable
     {
-        int ObuSizeLen { get; }        
+        int ObuSizeLen { get; }
+        byte[] LastObuFrameHeader { get; set; }
     }
 
     public interface IAomSerializable
@@ -20,7 +23,10 @@ namespace SharpAV1
         private int obu_padding_length = 0;
         private int obu_size_len = 0;
         private int prevFrame;
+        private Dictionary<string, Queue<int>> _cachedIncrementValues = new Dictionary<string, Queue<int>>();
 
+
+        public byte[] LastObuFrameHeader { get; set; }
         public int ObuSizeLen { get { return obu_size_len; } }
 
         public int[][] PrevGmParams { get; set; } = new int[8][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] };
@@ -101,7 +107,21 @@ namespace SharpAV1
             stream.Skip(totalObuSizeBits - currentBits);
         }
         private void WriteSkipObu() { /* nothing */ }
-        private void ReadFrameHeaderCopy() { /* nothing */ }
+        private void ReadFrameHeaderCopy() 
+        {
+            using (var aomStream = new AomStream(new MemoryStream(LastObuFrameHeader)))
+            {
+                var oldStream = this.stream;
+                var oldSeenFrameHeader = SeenFrameHeader;
+                var oldObuType = _ObuType;
+                SeenFrameHeader = 0;
+                this.stream = aomStream;
+                ReadFrameHeaderObu();
+                SeenFrameHeader = oldSeenFrameHeader;
+                _ObuType = oldObuType;
+                this.stream = oldStream;
+            }
+        }
         private void WriteFrameHeaderCopy() { /* nothing */ }
         private void ReadDecodeFrameWrapup() 
         {

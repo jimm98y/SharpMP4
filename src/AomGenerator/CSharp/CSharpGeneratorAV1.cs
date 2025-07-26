@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace AomGenerator.CSharp
 {
@@ -6,36 +7,61 @@ namespace AomGenerator.CSharp
     {
         public string AppendMethod(AomCode field, MethodType methodType, string spacing, string retm)
         {
-            switch((field as AomField).Name)
+            switch ((field as AomField).Name)
             {
                 case "operating_points_cnt_minus_1":
-                    return retm + "operating_point_idc = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tseq_level_idx = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tseq_tier = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tdecoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tinitial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tinitial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tbuffer_removal_time = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tdecoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tencoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n" +
-                        "\t\t\t\tlow_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];\r\n ";
+                    if (methodType != MethodType.Read)
+                        return retm;
+                    else
+                        return retm + "operating_point_idc = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tseq_level_idx = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tseq_tier = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tdecoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tinitial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tinitial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tbuffer_removal_time = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tdecoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tencoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];\r\n" +
+                            "\t\t\t\tlow_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];\r\n ";
 
                 case "spatial_layers_cnt_minus_1":
-                    return retm + "spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];\r\n" +
+                    if (methodType != MethodType.Read)
+                        return retm;
+                    else
+                        return retm + "spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];\r\n" +
                         "\t\t\t\tspatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];\r\n" +
                         "\t\t\t\tspatial_layer_ref_id = new int[spatial_layers_cnt_minus_1 + 1];\r\n ";
 
                 case "temporal_group_size":
-                    return retm + "temporal_group_temporal_id = new int[temporal_group_size];\r\n" +
+                    if (methodType != MethodType.Read)
+                        return retm;
+                    else
+                        return retm + "temporal_group_temporal_id = new int[temporal_group_size];\r\n" +
                         "\t\t\t\ttemporal_group_temporal_switching_up_point_flag = new int[temporal_group_size];\r\n" +
                         "\t\t\t\ttemporal_group_spatial_switching_up_point_flag = new int[temporal_group_size];\r\n" +
                         "\t\t\t\ttemporal_group_ref_cnt = new int[temporal_group_size];\r\n ";
 
                 case "temporal_group_ref_cnt":
-                    return retm + "temporal_group_ref_pic_diff = new int[temporal_group_size][];\r\n" +
+                    if (methodType != MethodType.Read)
+                        return retm;
+                    else
+                        return retm + "temporal_group_ref_pic_diff = new int[temporal_group_size][];\r\n" +
                         "\t\t\t\tfor(int k = 0; k < temporal_group_size; k++) { \r\n" +
                         "\t\t\t\t\t temporal_group_ref_pic_diff[k] = new int[temporal_group_ref_cnt[ i ]]; \r\n" +
                         "\t\t\t\t }\r\n";
+
+
+                case "increment_tile_cols_log2":
+                    if (methodType == MethodType.Read)
+                        return retm + "if (!_cachedIncrementValues.ContainsKey(\"increment_tile_cols_log2\"))\r\n                        _cachedIncrementValues.Add(\"increment_tile_cols_log2\", new Queue<int>());\r\n                    _cachedIncrementValues[\"increment_tile_cols_log2\"].Enqueue(this.increment_tile_cols_log2);";
+                    else
+                        return "if (_cachedIncrementValues.ContainsKey(\"increment_tile_cols_log2\"))\r\n                        increment_tile_cols_log2 = _cachedIncrementValues[\"increment_tile_cols_log2\"].Dequeue();\r\n" + retm;
+
+                case "increment_tile_rows_log2":
+                    if (methodType == MethodType.Read)
+                        return retm + "if (!_cachedIncrementValues.ContainsKey(\"increment_tile_rows_log2\"))\r\n                        _cachedIncrementValues.Add(\"increment_tile_rows_log2\", new Queue<int>());\r\n                    _cachedIncrementValues[\"increment_tile_rows_log2\"].Enqueue(this.increment_tile_rows_log2);\r\n";
+                    else
+                        return "if (_cachedIncrementValues.ContainsKey(\"increment_tile_rows_log2\"))\r\n                        increment_tile_rows_log2 = _cachedIncrementValues[\"increment_tile_rows_log2\"].Dequeue();\r\n" + retm;
 
                 default:
                     return retm;

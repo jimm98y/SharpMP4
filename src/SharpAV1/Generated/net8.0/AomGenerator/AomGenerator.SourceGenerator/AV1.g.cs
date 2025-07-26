@@ -850,17 +850,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 					decoder_model_info_present_flag= 0;
 				}
 				stream.WriteFixed(1, this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
-				stream.WriteFixed(5, this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); operating_point_idc = new int[operating_points_cnt_minus_1 + 1];
-				seq_level_idx = new int[operating_points_cnt_minus_1 + 1];
-				seq_tier = new int[operating_points_cnt_minus_1 + 1];
-				decoder_model_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
-				initial_display_delay_present_for_this_op = new int[operating_points_cnt_minus_1 + 1];
-				initial_display_delay_minus_1 = new int[operating_points_cnt_minus_1 + 1];
-				buffer_removal_time = new int[operating_points_cnt_minus_1 + 1];
-				decoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];
-				encoder_buffer_delay = new int[operating_points_cnt_minus_1 + 1];
-				low_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];
- 
+				stream.WriteFixed(5, this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
 
 				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
 				{
@@ -3157,7 +3147,9 @@ tile_info () {
 
 				while ( TileColsLog2 < maxLog2TileCols )
 				{
-					stream.ReadFixed(1, out this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
+					stream.ReadFixed(1, out this.increment_tile_cols_log2, "increment_tile_cols_log2"); if (!_cachedIncrementValues.ContainsKey("increment_tile_cols_log2"))
+                        _cachedIncrementValues.Add("increment_tile_cols_log2", new Queue<int>());
+                    _cachedIncrementValues["increment_tile_cols_log2"].Enqueue(this.increment_tile_cols_log2);
 
 					if ( increment_tile_cols_log2 == 1 )
 					{
@@ -3183,7 +3175,10 @@ tile_info () {
 
 				while ( TileRowsLog2 < maxLog2TileRows )
 				{
-					stream.ReadFixed(1, out this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
+					stream.ReadFixed(1, out this.increment_tile_rows_log2, "increment_tile_rows_log2"); if (!_cachedIncrementValues.ContainsKey("increment_tile_rows_log2"))
+                        _cachedIncrementValues.Add("increment_tile_rows_log2", new Queue<int>());
+                    _cachedIncrementValues["increment_tile_rows_log2"].Enqueue(this.increment_tile_rows_log2);
+
 
 					if ( increment_tile_rows_log2 == 1 )
 					{
@@ -3279,6 +3274,8 @@ tile_info () {
 
 				while ( TileColsLog2 < maxLog2TileCols )
 				{
+if (_cachedIncrementValues.ContainsKey("increment_tile_cols_log2"))
+                        increment_tile_cols_log2 = _cachedIncrementValues["increment_tile_cols_log2"].Dequeue();
 					stream.WriteFixed(1, this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
 
 					if ( increment_tile_cols_log2 == 1 )
@@ -3305,6 +3302,8 @@ tile_info () {
 
 				while ( TileRowsLog2 < maxLog2TileRows )
 				{
+if (_cachedIncrementValues.ContainsKey("increment_tile_rows_log2"))
+                        increment_tile_rows_log2 = _cachedIncrementValues["increment_tile_rows_log2"].Dequeue();
 					stream.WriteFixed(1, this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
 
 					if ( increment_tile_rows_log2 == 1 )
@@ -6279,10 +6278,7 @@ scalability_structure() {
 
         private void WriteScalabilityStructure()
         {
-			stream.WriteFixed(2, this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];
-				spatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];
-				spatial_layer_ref_id = new int[spatial_layers_cnt_minus_1 + 1];
- 
+			stream.WriteFixed(2, this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); 
 			stream.WriteFixed(1, this.spatial_layer_dimensions_present_flag, "spatial_layer_dimensions_present_flag"); 
 			stream.WriteFixed(1, this.spatial_layer_description_present_flag, "spatial_layer_description_present_flag"); 
 			stream.WriteFixed(1, this.temporal_group_description_present_flag, "temporal_group_description_present_flag"); 
@@ -6309,22 +6305,14 @@ scalability_structure() {
 
 			if ( temporal_group_description_present_flag != 0 )
 			{
-				stream.WriteFixed(8, this.temporal_group_size, "temporal_group_size"); temporal_group_temporal_id = new int[temporal_group_size];
-				temporal_group_temporal_switching_up_point_flag = new int[temporal_group_size];
-				temporal_group_spatial_switching_up_point_flag = new int[temporal_group_size];
-				temporal_group_ref_cnt = new int[temporal_group_size];
- 
+				stream.WriteFixed(8, this.temporal_group_size, "temporal_group_size"); 
 
 				for ( i = 0; i < temporal_group_size; i++ )
 				{
 					stream.WriteFixed(3, this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
 					stream.WriteFixed(1, this.temporal_group_temporal_switching_up_point_flag[ i ], "temporal_group_temporal_switching_up_point_flag"); 
 					stream.WriteFixed(1, this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
-					stream.WriteFixed(3, this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); temporal_group_ref_pic_diff = new int[temporal_group_size][];
-				for(int k = 0; k < temporal_group_size; k++) { 
-					 temporal_group_ref_pic_diff[k] = new int[temporal_group_ref_cnt[ i ]]; 
-				 }
-
+					stream.WriteFixed(3, this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
 
 					for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ )
 					{
