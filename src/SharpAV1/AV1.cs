@@ -5,6 +5,7 @@ namespace SharpAV1
 {
     public interface IAomContext : IAomSerializable
     {
+        int SelectedOperatingPoint { get; set; }
         int ObuSizeLen { get; }
         byte[] LastObuFrameHeader { get; set; }
     }
@@ -18,6 +19,11 @@ namespace SharpAV1
     {
         private AomStream stream;
 
+        /// <summary>
+        /// Default selected operating point.
+        /// </summary>
+        public int SelectedOperatingPoint { get; set; } = 0;
+
         private int obu_padding_length = 0;
         private int obu_size_len = 0;
         private int prevFrame;
@@ -25,15 +31,32 @@ namespace SharpAV1
         public byte[] LastObuFrameHeader { get; set; }
         public int ObuSizeLen { get { return obu_size_len; } }
 
+        public int[] RefMiCols { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
+        public int[] RefMiRows { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
+        public int[] RefFrameId { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefFrameHeight { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefFrameType { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefRenderWidth { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefRenderHeight { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefUpscaledWidth { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] Remap_Lr_Type { get; set; } = new int[] { AV1FrameRestorationType.RESTORE_NONE, AV1FrameRestorationType.RESTORE_SWITCHABLE, AV1FrameRestorationType.RESTORE_WIENER, AV1FrameRestorationType.RESTORE_SGRPROJ };
+        public int[] Ref_Frame_List = { AV1RefFrames.LAST2_FRAME, AV1RefFrames.LAST3_FRAME, AV1RefFrames.BWDREF_FRAME, AV1RefFrames.ALTREF2_FRAME, AV1RefFrames.ALTREF_FRAME };
         public int[] Segmentation_Feature_Bits { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
         public int[] Segmentation_Feature_Max { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
         public int[] Segmentation_Feature_Signed { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
+
+        public int[][] PrevSegmentIds { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] };
+        public int[][][] SavedSegmentIds { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
+            new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] },
+            new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] },
+            new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] },
+            new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] },
+            new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] },
+            new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] },
+            new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] },
+            new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] }
+        };
+
         public int[][] PrevGmParams { get; set; } = new int[8][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] };
         public int[][][] SavedGmParams { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
             new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] },
@@ -66,9 +89,17 @@ namespace SharpAV1
             new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
             new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] }
             };
+        
         public int[][] saved_loop_filter_ref_deltas = new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] };
         public int[][] saved_loop_filter_mode_deltas = new int[AV1Constants.NUM_REF_FRAMES][] { new int[2], new int[2], new int[2], new int[2], new int[2], new int[2], new int[2], new int[2] };
-
+        private int[] usedFrame = new int[AV1Constants.NUM_REF_FRAMES];
+        private int[] shiftedOrderHints = new int[AV1Constants.NUM_REF_FRAMES];
+        private int curFrameHint;
+        private int lastOrderHint;
+        private int goldOrderHint;
+        private int earliestOrderHint;
+        private int latestOrderHint;
+        private int diffLen;
 
         public void Read(AomStream stream, int size)
         {
@@ -88,11 +119,191 @@ namespace SharpAV1
             return ignoreDeltaQ;
         }
 
-        private void DropObu() { /* nothing */ }
-        private void SetFrameRefs() { /* nothing */ }
-        private void ResetGrainParams() { /* nothing */ }
-        private void LoadGrainParams(int p) { /* nothing */ }
-        private void InitNonCoeffCdfs() { /* nothing */ }
+        private void DropObu() 
+        { 
+            /* nothing */
+        }
+
+        private void SetFrameRefs() 
+        {
+            for (i = 0; i < AV1Constants.REFS_PER_FRAME; i++)
+                ref_frame_idx[i] = -1;
+            ref_frame_idx[AV1RefFrames.LAST_FRAME - AV1RefFrames.LAST_FRAME] = last_frame_idx;
+            ref_frame_idx[AV1RefFrames.GOLDEN_FRAME - AV1RefFrames.LAST_FRAME] = gold_frame_idx;
+
+            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+                usedFrame[i] = 0;
+
+            usedFrame[last_frame_idx] = 1;
+            usedFrame[gold_frame_idx] = 1;
+
+            curFrameHint = 1 << (OrderHintBits - 1);
+
+            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+                shiftedOrderHints[i] = curFrameHint + GetRelativeDist(RefOrderHint[i], OrderHint);
+
+            lastOrderHint = shiftedOrderHints[last_frame_idx];
+            goldOrderHint = shiftedOrderHints[gold_frame_idx];
+
+            refc = FindLatestBackward();
+            if (refc >= 0)
+            {
+                ref_frame_idx[AV1RefFrames.ALTREF_FRAME - AV1RefFrames.LAST_FRAME] = refc;
+                usedFrame[refc] = 1;
+            }
+
+            refc = FindEarliestBackward();
+            if (refc >= 0)
+            {
+                ref_frame_idx[AV1RefFrames.BWDREF_FRAME - AV1RefFrames.LAST_FRAME] = refc;
+                usedFrame[refc] = 1;
+            }
+
+            refc = FindEarliestBackward();
+            if (refc >= 0)
+            {
+                ref_frame_idx[AV1RefFrames.ALTREF2_FRAME - AV1RefFrames.LAST_FRAME] = refc;
+                usedFrame[refc] = 1;
+            }
+
+            for (i = 0; i < AV1Constants.REFS_PER_FRAME - 2; i++)
+            {
+                refFrame = Ref_Frame_List[i];
+                if (ref_frame_idx[refFrame - AV1RefFrames.LAST_FRAME] < 0)
+                {
+                    refc = FindLatestForward();
+                    if (refc >= 0)
+                    {
+                        ref_frame_idx[refFrame - AV1RefFrames.LAST_FRAME] = refc;
+                        usedFrame[refc] = 1;
+                    }
+                }
+            }
+
+            refc = -1;
+            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            {
+                hint = shiftedOrderHints[i];
+                if (refc < 0 || hint < earliestOrderHint)
+                {
+                    refc = i;
+                    earliestOrderHint = hint;
+                }
+            }
+            for (i = 0; i < AV1Constants.REFS_PER_FRAME; i++)
+            {
+                if (ref_frame_idx[i] < 0)
+                {
+                    ref_frame_idx[i] = refc;
+                }
+            }
+        }
+
+        private int FindLatestForward()
+        {
+            refc = -1;
+            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            {
+                hint = shiftedOrderHints[i];
+                if (usedFrame[i] == 0 &&
+                hint < curFrameHint &&
+                (refc < 0 || hint >= latestOrderHint))
+                {
+                    refc = i;
+                    latestOrderHint = hint;
+                }
+            }
+            return refc;
+        }
+
+        private int FindEarliestBackward()
+        {
+            refc = -1;
+            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            {
+                hint = shiftedOrderHints[i];
+                if (usedFrame[i] == 0 &&
+                hint >= curFrameHint &&
+                (refc < 0 || hint < earliestOrderHint))
+                {
+                    refc = i; 
+                    earliestOrderHint = hint;
+                }
+            }
+            return refc;
+        }
+
+        private int FindLatestBackward()
+        {
+            refc = -1;
+            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            {
+                hint = shiftedOrderHints[i];
+                if (usedFrame[i] == 0 &&
+                hint >= curFrameHint &&
+                (refc < 0 || hint >= latestOrderHint))
+                {
+                    refc = i;
+                    latestOrderHint = hint;
+                }
+            }
+            return refc;
+        }
+
+        private void ResetGrainParams() 
+        {
+            apply_grain = 0;
+            grain_seed = 0;
+            update_grain = 0;
+            film_grain_params_ref_idx = 0;
+            num_y_points = 0;
+            for (int i = 0; i < 14; i++)
+            {
+                point_y_value[i] = 0;
+                point_y_scaling[i] = 0;
+            }
+            chroma_scaling_from_luma = 0;
+            num_cb_points = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                point_cb_value[i] = 0;
+                point_cb_scaling[i] = 0;
+            }
+            num_cr_points = 0;
+            for (int i = 0; i < 10; i++)
+            {
+                point_cr_value[i] = 0;
+                point_cr_scaling[i] = 0;
+            }
+            grain_scaling_minus_8 = 0;
+            ar_coeff_lag = 0;
+            for (int i = 0; i < 24; i++)
+            {
+                ar_coeffs_y_plus_128[i] = 0;
+            }
+            for (int i = 0; i < 25; i++)
+            {
+                ar_coeffs_cb_plus_128[i] = 0;
+                ar_coeffs_cr_plus_128[i] = 0;
+            }
+            ar_coeff_shift_minus_6 = 0;
+            grain_scale_shift = 0;
+            cb_mult = 0;
+            cb_luma_mult = 0;
+            cb_offset = 0;
+            cr_mult = 0;
+            cr_luma_mult = 0;
+            cr_offset = 0;
+            overlap_flag = 0;
+            clip_to_restricted_range = 0;
+        }
+
+        private void LoadGrainParams(int p) 
+        {
+            /* load_grain_params(idx) is a function call that indicates that all the syntax elements read in film_grain_params should be
+            set equal to the values stored in an area of memory indexed by idx. */
+        }
+
         private void SetupPastIndependence() 
         {
             for (int r = AV1RefFrames.LAST_FRAME; r <= AV1RefFrames.ALTREF_FRAME; r++)
@@ -177,48 +388,58 @@ namespace SharpAV1
             }
         }
 
-        private void MotionFieldEstimation() { /* nothing */ }
-        private void InitCoeffCdfs() { /* nothing */ }
+        private void MotionFieldEstimation() 
+        {
+            /* nothing - needed for the decoding */
+        }
+
+        private void InitCoeffCdfs() 
+        {
+            /* nothing - needed for the decoding */ 
+        }
+
+        private void InitNonCoeffCdfs()
+        {
+            /* nothing - needed for the decoding */
+        }
+
+        private void ItutT35PayloadBytes() 
+        {
+            /* nothing - needed for the decoding */
+        }
+
         private void LoadPreviousSegmentIds()
         {
             prevFrame = ref_frame_idx[primary_ref_frame];
-            //if(segmentation_enabled == 1)
-            //{
-            //    RefMiCols[prevFrame] = MiCols;
-            //    RefMiRows[prevFrame] = MiRows;
-            //    for (int row = 0; row < MiRows; row++)
-            //    {
-            //        for (int col = 0; col < MiCols; col++)
-            //        {
-            //            PrevSegmentIds[row][col] = SavedSegmentIds[prevFrame][row][col];
-            //        }
-            //    }
-            //}
-        }
-
-        private void MarkRefFrames(int idLen) { /* nothing */ }
-        private void ItutT35PayloadBytes() { /* nothing */ }
-
-        private void SkipObu() 
-        {
-            long totalObuSizeBits = obu_size << 3;
-            int currentBits = stream.GetPosition() - startPosition;
-            stream.Skip(totalObuSizeBits - currentBits);
-        }
-
-        private void FrameHeaderCopy() 
-        {
-            using (var aomStream = new AomStream(new MemoryStream(LastObuFrameHeader)))
+            if (segmentation_enabled == 1)
             {
-                var oldStream = this.stream;
-                var oldSeenFrameHeader = SeenFrameHeader;
-                var oldObuType = _ObuType;
-                SeenFrameHeader = 0;
-                this.stream = aomStream;
-                FrameHeaderObu();
-                SeenFrameHeader = oldSeenFrameHeader;
-                _ObuType = oldObuType;
-                this.stream = oldStream;
+                RefMiCols[prevFrame] = MiCols;
+                RefMiRows[prevFrame] = MiRows;
+                for (int row = 0; row < MiRows; row++)
+                {
+                    for (int col = 0; col < MiCols; col++)
+                    {
+                        PrevSegmentIds[row][col] = SavedSegmentIds[prevFrame][row][col];
+                    }
+                }
+            }
+        }
+
+        private void MarkRefFrames(int idLen) 
+        {
+            diffLen = delta_frame_id_length_minus_2 + 2;
+            for (i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
+            {
+                if (current_frame_id > (1 << diffLen))
+                {
+                    if (RefFrameId[i] > current_frame_id || RefFrameId[i] < (current_frame_id - (1 << diffLen)))
+                        RefValid[i] = 0;
+                }
+                else
+                {
+                    if (RefFrameId[i] > current_frame_id && RefFrameId[i] < ((1 << idLen) + current_frame_id - (1 << diffLen)))
+                        RefValid[i] = 0;
+                }
             }
         }
 
@@ -229,6 +450,7 @@ namespace SharpAV1
                 if (((refresh_frame_flags >> i) & 1) == 1)
                 {
                     RefValid[i] = 1;
+                    RefFrameId[i] = current_frame_id;
                     RefUpscaledWidth[i] = UpscaledWidth;
                     RefFrameHeight[i] = FrameHeight;
                     RefRenderWidth[i] = RenderWidth;
@@ -253,7 +475,30 @@ namespace SharpAV1
         
         private int ChooseOperatingPoint()
         {
-            return 0;
+            return SelectedOperatingPoint;
+        }
+
+        private void SkipObu()
+        {
+            long totalObuSizeBits = obu_size << 3;
+            int currentBits = stream.GetPosition() - startPosition;
+            stream.Skip(totalObuSizeBits - currentBits);
+        }
+
+        private void FrameHeaderCopy()
+        {
+            using (var aomStream = new AomStream(new MemoryStream(LastObuFrameHeader)))
+            {
+                var oldStream = this.stream;
+                var oldSeenFrameHeader = SeenFrameHeader;
+                var oldObuType = _ObuType;
+                SeenFrameHeader = 0;
+                this.stream = aomStream;
+                FrameHeaderObu();
+                SeenFrameHeader = oldSeenFrameHeader;
+                _ObuType = oldObuType;
+                this.stream = oldStream;
+            }
         }
     }
 
