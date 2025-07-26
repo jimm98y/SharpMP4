@@ -41,11 +41,11 @@ namespace SharpISOBMFF.Extensions
 
                 if (stco != null)
                 {
-                    stco.ModifyChunkOffsets((int)(moov.CalculateSize() >> 3));
+                    stco.ModifyChunkOffsets((int)delta);
                 }
                 else if (co64 != null)
                 {
-                    co64.ModifyChunkOffsets((long)(moov.CalculateSize() >> 3));
+                    co64.ModifyChunkOffsets(delta);
                 }
             }
         }
