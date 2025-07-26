@@ -315,7 +315,7 @@ frame_header_obu() {
     show_existing_frame f(1)
     if ( show_existing_frame == 1 ) {
        frame_to_show_map_idx f(3)
-       /* if ( decoder_model_info_present_flag && !equal_picture_interval ) {
+       if ( decoder_model_info_present_flag && !equal_picture_interval ) {
           temporal_point_info()
        }
        refresh_frame_flags = 0
@@ -328,7 +328,7 @@ frame_header_obu() {
        }
        if ( film_grain_params_present ) {
           load_grain_params( frame_to_show_map_idx )
-       } */
+       } 
        
        return
     }

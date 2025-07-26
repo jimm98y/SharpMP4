@@ -70,16 +70,143 @@ namespace SharpAV1
                 }
             }
         }
-        private void LoadCdfs(int value) { /* nothing */ }
+        private void LoadCdfs(int value) 
+        {
+            /* load_cdfs( ctx ) is a function call that indicates that the CDF tables are loaded from frame context number ctx in the
+            range 0 to (NUM_REF_FRAMES - 1). When this function is invoked, a copy of each CDF array mentioned in the
+            semantics for init_coeff_cdfs and init_non_coeff_cdfs is loaded from an area of memory indexed by ctx. (The memory
+            contents of these frame contexts have been initialized by previous calls to save_cdfs). Once the CDF arrays have been
+            loaded, the last entry in each array, representing the symbol count for that context, is set to 0. */
+        }
+
         private void LoadPrevious() 
         {
             prevFrame = ref_frame_idx[primary_ref_frame];
             PrevGmParams = SavedGmParams[prevFrame];
-            // TODO
+            LoadLoopFilterParams(prevFrame);
+            LoadSegmentationParams(prevFrame);
         }
+
+        public int[][][] SavedFeatureEnabled { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] }
+            };
+        public int[][][] SavedFeatureData { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] }
+            };
+
+        private void LoadSegmentationParams(int i)
+        {
+            /*
+            load_segmentation_params( i ) is a function call that indicates that the values of FeatureEnabled[ j ][ k ] and FeatureData[ j ][ k ] 
+            for j = 0 .. MAX_SEGMENTS-1, for k = 0 .. SEG_LVL_MAX-1 should be loaded from an area of memory indexed by i.
+             */
+            for (int j = 0; j < AV1Constants.MAX_SEGMENTS; j++)
+            {
+                for (int k = 0; k < AV1Constants.SEG_LVL_MAX; k++)
+                {
+                    FeatureEnabled[j][k] = SavedFeatureEnabled[i][j][k];
+                    FeatureData[j][k] = SavedFeatureData[i][j][k];
+                }
+            }
+        }
+
+        private void SaveSegmentationParams(int i)
+        {
+            for (int j = 0; j < AV1Constants.MAX_SEGMENTS; j++)
+            {
+                for (int k = 0; k < AV1Constants.SEG_LVL_MAX; k++)
+                {
+                    SavedFeatureEnabled[i][j][k] = FeatureEnabled[j][k];
+                    SavedFeatureData[i][j][k] = FeatureData[j][k];
+                }
+            }
+        }
+
+        public int[][] saved_loop_filter_ref_deltas = new int[AV1Constants.NUM_REF_FRAMES][]
+        {
+            new int[8],
+            new int[8],
+            new int[8],
+            new int[8],
+            new int[8],
+            new int[8],
+            new int[8],
+            new int[8]
+        };
+        public int[][] saved_loop_filter_mode_deltas = new int[AV1Constants.NUM_REF_FRAMES][]
+        {
+            new int[2],
+            new int[2],
+            new int[2],
+            new int[2],
+            new int[2],
+            new int[2],
+            new int[2],
+            new int[2]
+        };
+
+        private void LoadLoopFilterParams(int i)
+        {
+            /*
+            load_loop_filter_params( i ) is a function call that indicates that the values of loop_filter_ref_deltas[ j ] for j = 0 ..
+            TOTAL_REFS_PER_FRAME-1, and the values of loop_filter_mode_deltas[ j ] for j = 0 .. 1 should be loaded from an area
+            of memory indexed by i.
+            */
+            for (int j = 0; j < AV1Constants.TOTAL_REFS_PER_FRAME; j++)
+            {
+                loop_filter_ref_deltas[j] = saved_loop_filter_ref_deltas[i][j];
+            }
+            for (int j = 0; j <= 1; j++)
+            {
+                loop_filter_mode_deltas[j] = saved_loop_filter_mode_deltas[i][j];
+            }
+        }
+
+        private void SaveLoopFilterParams(int i)
+        {
+            for (int j = 0; j < AV1Constants.TOTAL_REFS_PER_FRAME; j++)
+            {
+                saved_loop_filter_ref_deltas[i][j] = loop_filter_ref_deltas[j]; 
+            }
+            for (int j = 0; j <= 1; j++)
+            {
+                saved_loop_filter_mode_deltas[i][j] = loop_filter_mode_deltas[j];
+            }
+        }
+
         private void MotionFieldEstimation() { /* nothing */ }
         private void InitCoeffCdfs() { /* nothing */ }
-        private void LoadPreviousSegmentIds() { /* nothing */ }
+        private void LoadPreviousSegmentIds()
+        {
+            prevFrame = ref_frame_idx[primary_ref_frame];
+            //if(segmentation_enabled == 1)
+            //{
+            //    RefMiCols[prevFrame] = MiCols;
+            //    RefMiRows[prevFrame] = MiRows;
+            //    for (int row = 0; row < MiRows; row++)
+            //    {
+            //        for (int col = 0; col < MiCols; col++)
+            //        {
+            //            PrevSegmentIds[row][col] = SavedSegmentIds[prevFrame][row][col];
+            //        }
+            //    }
+            //}
+        }
+
         private void MarkRefFrames(int idLen) { /* nothing */ }
         private void ItutT35PayloadBytes() { /* nothing */ }
         private void SkipObu() 
@@ -139,11 +266,12 @@ namespace SharpAV1
                         }
                     }
 
-                    // TODO
+                    SaveLoopFilterParams(i);
+                    SaveSegmentationParams(i);
                 }
             }            
         }
-
+        
         private int ChooseOperatingPoint()
         {
             return 0;

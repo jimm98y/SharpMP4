@@ -1035,7 +1035,7 @@ uncompressed_header() {
     show_existing_frame f(1)
     if ( show_existing_frame == 1 ) {
        frame_to_show_map_idx f(3)
-       /* if ( decoder_model_info_present_flag && !equal_picture_interval ) {
+       if ( decoder_model_info_present_flag && !equal_picture_interval ) {
           temporal_point_info()
        }
        refresh_frame_flags = 0
@@ -1048,7 +1048,7 @@ uncompressed_header() {
        }
        if ( film_grain_params_present ) {
           load_grain_params( frame_to_show_map_idx )
-       } *//*
+       } 
        
        return
     }
@@ -1280,6 +1280,12 @@ uncompressed_header() {
 		public int _FrameToShowMapIdx { get { return frame_to_show_map_idx; } set { frame_to_show_map_idx = value; } }
 		private int temporal_point_info;
 		public int _TemporalPointInfo { get { return temporal_point_info; } set { temporal_point_info = value; } }
+		private int refresh_frame_flags;
+		public int _RefreshFrameFlags { get { return refresh_frame_flags; } set { refresh_frame_flags = value; } }
+		private int display_frame_id;
+		public int _DisplayFrameId { get { return display_frame_id; } set { display_frame_id = value; } }
+		private int load_grain_params;
+		public int _LoadGrainParams { get { return load_grain_params; } set { load_grain_params = value; } }
 		private int error_resilient_mode;
 		public int _ErrorResilientMode { get { return error_resilient_mode; } set { error_resilient_mode = value; } }
 		private int[] RefValid= new int[AV1Constants.NUM_REF_FRAMES];
@@ -1320,8 +1326,6 @@ uncompressed_header() {
 		public int _UseRefFrameMvs { get { return use_ref_frame_mvs; } set { use_ref_frame_mvs = value; } }
 		private int allow_intrabc;
 		public int _AllowIntrabc { get { return allow_intrabc; } set { allow_intrabc = value; } }
-		private int refresh_frame_flags;
-		public int _RefreshFrameFlags { get { return refresh_frame_flags; } set { refresh_frame_flags = value; } }
 		private int[] ref_order_hint= new int[AV1Constants.NUM_REF_FRAMES];
 		public int[] __RefOrderHint { get { return ref_order_hint; } set { ref_order_hint = value; } }
 		private int frame_size;
@@ -1439,21 +1443,28 @@ uncompressed_header() {
 				if ( show_existing_frame == 1 )
 				{
 					stream.ReadFixed(3, out this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
-/*  if ( decoder_model_info_present_flag && !equal_picture_interval ) {
-          temporal_point_info()
-       }
-       refresh_frame_flags = 0
-       if ( frame_id_numbers_present_flag ) {
-          display_frame_id f(idLen)
-       }
-       frame_type = RefFrameType[ frame_to_show_map_idx ]
-       if ( frame_type == KEY_FRAME ) {
-          refresh_frame_flags = allFrames
-       }
-       if ( film_grain_params_present ) {
-          load_grain_params( frame_to_show_map_idx )
-       }  */
 
+					if ( decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
+					{
+						TemporalPointInfo(); 
+					}
+					refresh_frame_flags= 0;
+
+					if ( frame_id_numbers_present_flag != 0 )
+					{
+						stream.ReadVariable(idLen, out this.display_frame_id, "display_frame_id"); 
+					}
+					frame_type= RefFrameType[ frame_to_show_map_idx ];
+
+					if ( frame_type == AV1FrameTypes.KEY_FRAME )
+					{
+						refresh_frame_flags= allFrames;
+					}
+
+					if ( film_grain_params_present != 0 )
+					{
+						LoadGrainParams( frame_to_show_map_idx ); 
+					}
 					return;
 				}
 				stream.ReadFixed(2, out this.frame_type, "frame_type"); 
@@ -3582,8 +3593,6 @@ film_grain_params() {
 		public int _FilmGrainParamsRefIdx { get { return film_grain_params_ref_idx; } set { film_grain_params_ref_idx = value; } }
 		private int tempGrainSeed;
 		public int _TempGrainSeed { get { return tempGrainSeed; } set { tempGrainSeed = value; } }
-		private int load_grain_params;
-		public int _LoadGrainParams { get { return load_grain_params; } set { load_grain_params = value; } }
 		private int num_y_points;
 		public int _NumyPoints { get { return num_y_points; } set { num_y_points = value; } }
 		private int[] point_y_value= new int[14];
