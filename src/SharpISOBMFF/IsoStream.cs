@@ -2211,8 +2211,10 @@ namespace SharpISOBMFF
         #endregion // IDisposable
     }
 
-    public class StreamMarker
+    public class StreamMarker : IDisposable
     {
+        private bool disposedValue;
+
         public long Position { get; set; }
         public long Length { get; set; }
         public IsoStream Stream { get; set; }
@@ -2221,6 +2223,25 @@ namespace SharpISOBMFF
             Position = position;
             Length = length;
             Stream = stream;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Stream.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 
