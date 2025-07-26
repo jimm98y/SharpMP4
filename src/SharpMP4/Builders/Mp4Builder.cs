@@ -1,4 +1,5 @@
 ﻿using SharpISOBMFF;
+using SharpISOBMFF.Extensions;
 using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,6 @@ namespace SharpMP4.Builders
         private readonly IMp4Output _output;
 
         private IStorage _storage;
-        private Container _mp4;
-        private ulong _mdatOffset;
 
         private readonly List<ITrack> _tracks = new List<ITrack>();
         private readonly List<ulong> _trackEndTimes = new List<ulong>();
@@ -50,49 +49,15 @@ namespace SharpMP4.Builders
 
         private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
-            if (_mp4 == null)
+            if (_storage == null)
             {
-                _mp4 = new Container();
-
-                var ftyp = new FileTypeBox();
-                ftyp.SetParent(_mp4);
-                _mp4.Children.Add(ftyp);
-
-                ftyp.MajorBrand = IsoStream.FromFourCC("isom");
-                ftyp.MinorVersion = 512;
-
-                var compatibleBrands = new List<string>()
-                {
-                    "mp41",
-                    "isom",
-                };
-
-                for (int i = 0; i < _tracks.Count; i++)
-                {
-                    if (!string.IsNullOrEmpty(_tracks[i].CompatibleBrand))
-                    {
-                        compatibleBrands.Insert(1, _tracks[i].CompatibleBrand);
-                    }
-                }
-
-                ftyp.CompatibleBrands = compatibleBrands.Distinct().Select(IsoStream.FromFourCC).ToArray();
-
-                //FreeSpaceBox free = new FreeSpaceBox();
-                //var storage = TemporaryStorage.Factory.Create();
-                //free.Data = new StreamMarker(0, 1024 * 1024 * 13, new IsoStream(((TemporaryMemory)storage).Stream)); // should be enough space to fit the moov box (7 GB file has roughly 4 MB)
-                //free.SetParent(mp4);
-                //mp4.Children.Add(free);
-
                 _storage = TemporaryStorage.Factory.Create();
-
-                // calculate the current size of the container to get the offset for the mdat box
-                _mdatOffset = (_mp4.CalculateSize() >> 3) + 8; // 8 bytes will be the MDAT box header (4cc + size)
             }
 
             int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
             uint currentSampleDuration = sampleDuration <= 0 ? (uint)_tracks[trackIndex].DefaultSampleDuration : (uint)sampleDuration;
             var track = _tracks[trackIndex];
-            _trackSampleOffsets[trackIndex].Add((uint)(_mdatOffset + (uint)_storage.GetPosition()));
+            _trackSampleOffsets[trackIndex].Add((uint)((uint)_storage.GetPosition()));
             _storage.Write(sample, 0, sample.Length);
             _trackSampleSizes[trackIndex].Add((uint)sample.Length);
             _trackEndTimes[trackIndex] += currentSampleDuration;
@@ -103,11 +68,9 @@ namespace SharpMP4.Builders
             }
         }
 
-        private void WriteMoov(Container mp4)
+        private MovieBox BuildMoov()
         {
             var moov = new MovieBox();
-            moov.SetParent(mp4);
-            mp4.Children.Add(moov);
 
             var mvhd = new MovieHeaderBox();
             mvhd.SetParent(moov);
@@ -275,9 +238,11 @@ namespace SharpMP4.Builders
                 var stco = new ChunkOffsetBox();
                 stco.SetParent(stbl);
                 stbl.Children.Add(stco);
-                stco.ChunkOffset = _trackSampleOffsets[i].ToArray();
+                stco.ChunkOffset = _trackSampleOffsets[i].ToArray(); // Temporary offset from the beginning of raw data, we have to add mdat offset later
                 stco.EntryCount = (uint)_trackSampleOffsets[i].Count;
             }
+
+            return moov;
         }
 
         public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration)
@@ -303,14 +268,39 @@ namespace SharpMP4.Builders
                 ProcessTrackSample(track.TrackID, null, -1);
             }
 
+            var mp4 = new Container();
+
+            var ftyp = new FileTypeBox();
+            ftyp.SetParent(mp4);
+            mp4.Children.Add(ftyp);
+            ftyp.MajorBrand = IsoStream.FromFourCC("isom");
+            ftyp.MinorVersion = 512;
+            var compatibleBrands = new List<string>() { "mp41", "isom" };
+            for (int i = 0; i < _tracks.Count; i++)
+            {
+                if (!string.IsNullOrEmpty(_tracks[i].CompatibleBrand))
+                {
+                    compatibleBrands.Insert(1, _tracks[i].CompatibleBrand);
+                }
+            }
+            ftyp.CompatibleBrands = compatibleBrands.Distinct().Select(IsoStream.FromFourCC).ToArray();
+
+            // create moov at the beginning of the file (faststart, allowing to play video early while still streaming)
+            var moov = BuildMoov();
+            moov.SetParent(mp4);
+            mp4.Children.Add(moov);
+
             var mdat = new MediaDataBox();
-            _mp4.Children.Add(mdat);
+            mp4.Children.Add(mdat);
             mdat.Data = new StreamMarker(0, _storage.GetLength(), new IsoStream(_storage));
 
-            WriteMoov(_mp4);
+            // we know the final size of the moov box, we can now adjust the stco offsets
+            long mdatOffset = ((int)(ftyp.CalculateSize() + moov.CalculateSize()) >> 3) + 4 + (mdat.HasLargeSize ? 8 : 4);
+            moov.ModifyChunkOffsets(mdatOffset);
+
             var stream = _output.GetStream(0);
-            var fragmentStream = new IsoStream(stream);
-            _mp4.Write(fragmentStream);
+            var outputStream = new IsoStream(stream);
+            mp4.Write(outputStream);
             _output.Flush(stream, 0);
         }
     }
