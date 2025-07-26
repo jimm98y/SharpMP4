@@ -1245,6 +1245,7 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
             {
                 if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                context.LastObuFrameHeader = sampleData.Skip(1 /* obu header */ + (((AV1Context)context)._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (context.ObuSizeLen >> 3)).Take(((AV1Context)context)._ObuSize).ToArray();
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
             {
