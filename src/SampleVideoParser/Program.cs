@@ -1222,13 +1222,6 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
                 SharpISOBMFF.Log.Debug($"---OBU begin {len}---");
 
                 context.Read(stream, len);
-                context.Write(output, ((AV1Context)context)._ObuSize);
-                if (!Convert.ToHexString(sampleData).StartsWith(Convert.ToHexString(ms.ToArray())))
-                {
-                    SharpISOBMFF.Log.Error($"{Convert.ToHexString(sampleData)}");
-                    SharpISOBMFF.Log.Error($"{Convert.ToHexString(ms.ToArray())}");
-                    throw new Exception($"Failed to write OBU {((AV1Context)context)._ObuType}");
-                } 
 
                 int obuTotalCize = 0;
                 if (((AV1Context)context)._ObuHasSizeField != 0)

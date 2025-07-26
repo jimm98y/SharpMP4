@@ -46,12 +46,6 @@ namespace SharpAV1
             return ret;
         }
 
-        private ulong WriteByte(byte value)
-        {
-            _stream.WriteByte(value);
-            return 8;
-        }
-
         private int ReadBit()
         {
             int bytePos = _bitsPosition / 8;
@@ -97,43 +91,6 @@ namespace SharpAV1
             return res;
         }
 
-        public void WriteBit(int value)
-        {
-            int posInByte = 7 - _bitsPosition % 8;
-            int bit = (value & 1) << posInByte;
-            _currentByte = (byte)(_currentByte | bit);
-            ++_bitsPosition;
-
-            int bytePos = _bitsPosition / 8;
-            if (_currentBytePosition != bytePos)
-            {
-                if (_currentBytePosition < 0)
-                {
-                    _currentBytePosition = bytePos;
-                    return;
-                }
-                               
-                WriteByte(_currentByte);
-                _currentBytePosition = bytePos;
-
-                _currentByte = 0;
-            }
-        }
-
-        private void WriteBits(int count, ulong value)
-        {
-            if (count > 64)
-                throw new ArgumentOutOfRangeException(nameof(count));
-
-            while (count > 0)
-            {
-                int bits = count - 1;
-                ulong mask = 0x1ul << bits;
-                WriteBit((int)((value & mask) >> bits));
-                count--;
-            }
-        }
-
         #endregion // Bit read/write
 
         public ulong ReadLeb128(out int value, string name)
@@ -165,34 +122,6 @@ namespace SharpAV1
             return (ulong)Leb128Bytes << 3;
         }
 
-        public ulong WriteLeb128(int value, string name)
-        {
-            if (value > int.MaxValue)
-                throw new InvalidDataException($"Invalid LEB128 value: {value}");
-
-            int v = value;
-            int Leb128Bytes = 0;
-            for (int i = 0; i < 8; i++)
-            {
-                int vv = v & 0x7f;
-                v = v >> 7;
-
-                if (v > 0)
-                {
-                    WriteByte((byte)(vv | 0x80));
-                    Leb128Bytes++;
-                }
-                else
-                {
-                    WriteByte((byte)(vv));
-                    Leb128Bytes++;
-                    break;
-                }
-            }
-
-            return (ulong)Leb128Bytes << 3;
-        }
-
         public ulong ReadFixed(int count, out int value, string name)
         {
             if (count > 32)
@@ -202,21 +131,10 @@ namespace SharpAV1
             return read;
         }
 
-        public ulong WriteFixed(int count, int value, string name)
-        {
-            return WriteUnsignedInt(count, (uint)value, name);
-        }
-
         public ulong ReadVariable(long count, out int value, string name)
         {
             var size = ReadUnsignedInt((int)count, out uint v, name);
             value = (int)v;
-            return size;
-        }
-
-        public ulong WriteVariable(long count, int value, string name)
-        {
-            var size = WriteUnsignedInt((int)count, (uint)value, name);
             return size;
         }
 
@@ -236,7 +154,8 @@ namespace SharpAV1
                     break;
 
                 leadingZeros++;
-             }
+            }
+
             if (leadingZeros >= 32)
             {
                 value = (1 << 32) - 1;
@@ -253,11 +172,6 @@ namespace SharpAV1
             }
         }
 
-        public ulong WriteUvlc(uint value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
         public ulong ReadSignedIntVar(int count, out int value, string name)
         {
             ulong size = ReadUnsignedInt(count, out uint v, name);
@@ -270,11 +184,6 @@ namespace SharpAV1
             return size;
         }
 
-        public ulong WriteSignedIntVar(int count, int value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
         public ulong ReadUnsignedInt(int count, out uint value, string name)
         {
             if (count > 32)
@@ -285,33 +194,6 @@ namespace SharpAV1
             value = (uint)ret;
             LogEnd(name, (ulong)count, value);
             return (ulong)count;
-        }
-
-        public ulong WriteUnsignedInt(int count, uint value, string name)
-        {
-            WriteBits(count, value);
-            LogEnd(name, (ulong)count, value);
-            return (ulong)count;
-        }
-
-        public ulong ReadLeVar(int count, out int value, string name)
-        {
-            uint size = 0;
-            int t = 0;
-            for (int i = 0; i < count; i++)
-            {
-                int b = ReadByte();
-                size++;
-                t += (b << (i * 8));
-            }
-            value = t;
-            LogEnd(name, (ulong)size << 3, value);
-            return size << 3;
-        }
-
-        public ulong WriteLeVar(int count, int value, string name)
-        {
-            throw new NotImplementedException();
         }
 
         public ulong ReadBytes(int count, out byte[] value, string name)
@@ -330,17 +212,6 @@ namespace SharpAV1
             return (ulong)(bytes.Length * 8);
         }
 
-        public ulong WriteBytes(int count, byte[] value, string name)
-        {
-            ulong size = 0;
-            byte[] bytes = value;
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                size += WriteUnsignedInt(8, bytes[i], name);
-            }
-            return size;
-        }
-
         public ulong Read_ns(int count, out uint value, string name)
         {
             int w = (int)Math.Floor(Math.Log2(count)) + 1;
@@ -357,15 +228,7 @@ namespace SharpAV1
             return size;
         }
 
-        public ulong Write_ns(int count, uint value, string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static int Clip3(int low, int high, int value)
-        {
-            return Math.Clamp(value, low, high);
-        }
+        
 
         private int _logLevel = 0;
 

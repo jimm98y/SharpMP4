@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace SharpAV1
@@ -13,7 +12,6 @@ namespace SharpAV1
     public interface IAomSerializable
     {
         void Read(AomStream stream, int size);
-        void Write(AomStream stream, int size);
     }
 
     public partial class AV1Context
@@ -23,8 +21,6 @@ namespace SharpAV1
         private int obu_padding_length = 0;
         private int obu_size_len = 0;
         private int prevFrame;
-        private Dictionary<string, Queue<int>> _cachedIncrementValues = new Dictionary<string, Queue<int>>();
-
 
         public byte[] LastObuFrameHeader { get; set; }
         public int ObuSizeLen { get { return obu_size_len; } }
@@ -44,13 +40,12 @@ namespace SharpAV1
         public void Read(AomStream stream, int size)
         {
             this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
-            ReadOpenBitstreamUnit(size);
+            OpenBitstreamUnit(size);
         }
 
-        public void Write(AomStream stream, int size)
+        public static int Clip3(int low, int high, int value)
         {
-            this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
-            WriteOpenBitstreamUnit(size);
+            return Math.Clamp(value, low, high);
         }
 
         private int GetQIndex(int ignoreDeltaQ, int segmentId)
@@ -60,23 +55,12 @@ namespace SharpAV1
             return ignoreDeltaQ;
         }
 
-        private void ReadDropObu() { /* nothing */ }
-        private void WriteDropObu() { /* nothing */ }
-        private void ReadSetFrameRefs() { /* nothing */ }
-        private void WriteSetFrameRefs() { /* nothing */ }
-        private void ReadResetGrainParams() { /* nothing */ }
-        private void WriteResetGrainParams() { /* nothing */ }
-        private void ReadLoadGrainParams(int p) { /* nothing */ }
-        private void WriteLoadGrainParams(int p) { /* nothing */ }
-        private void WriteInitNonCoeffCdfs() { /* nothing */ }
-        private void WriteSetupPastIndependence() { /* nothing */ }
-        private void WriteLoadCdfs(int value) { /* nothing */ }
-        private void WriteLoadPrevious() { /* nothing */ }
-        private void WriteMotionFieldEstimation() { /* nothing */ }
-        private void WriteInitCoeffCdfs() { /* nothing */ }
-        private void WriteLoadPreviousSegmentIds() { /* nothing */ }
-        private void ReadInitNonCoeffCdfs() { /* nothing */ }
-        private void ReadSetupPastIndependence() 
+        private void DropObu() { /* nothing */ }
+        private void SetFrameRefs() { /* nothing */ }
+        private void ResetGrainParams() { /* nothing */ }
+        private void LoadGrainParams(int p) { /* nothing */ }
+        private void InitNonCoeffCdfs() { /* nothing */ }
+        private void SetupPastIndependence() 
         {
             for (int r = AV1RefFrames.LAST_FRAME; r <= AV1RefFrames.ALTREF_FRAME; r++)
             {
@@ -86,28 +70,26 @@ namespace SharpAV1
                 }
             }
         }
-        private void ReadLoadCdfs(int value) { /* nothing */ }
-        private void ReadLoadPrevious() 
+        private void LoadCdfs(int value) { /* nothing */ }
+        private void LoadPrevious() 
         {
             prevFrame = ref_frame_idx[primary_ref_frame];
             PrevGmParams = SavedGmParams[prevFrame];
             // TODO
         }
-        private void ReadMotionFieldEstimation() { /* nothing */ }
-        private void ReadInitCoeffCdfs() { /* nothing */ }
-        private void ReadLoadPreviousSegmentIds() { /* nothing */ }
-        private void ReadMarkRefFrames(int idLen) { /* nothing */ }
-        private void WriteMarkRefFrames(int idLen) { /* nothing */ }
-        private void ReadItutT35PayloadBytes() { /* nothing */ }
-        private void WriteItutT35PayloadBytes() { /* nothing */ }
-        private void ReadSkipObu() 
+        private void MotionFieldEstimation() { /* nothing */ }
+        private void InitCoeffCdfs() { /* nothing */ }
+        private void LoadPreviousSegmentIds() { /* nothing */ }
+        private void MarkRefFrames(int idLen) { /* nothing */ }
+        private void ItutT35PayloadBytes() { /* nothing */ }
+        private void SkipObu() 
         {
             long totalObuSizeBits = obu_size << 3;
             int currentBits = stream.GetPosition() - startPosition;
             stream.Skip(totalObuSizeBits - currentBits);
         }
-        private void WriteSkipObu() { /* nothing */ }
-        private void ReadFrameHeaderCopy() 
+
+        private void FrameHeaderCopy() 
         {
             using (var aomStream = new AomStream(new MemoryStream(LastObuFrameHeader)))
             {
@@ -116,14 +98,14 @@ namespace SharpAV1
                 var oldObuType = _ObuType;
                 SeenFrameHeader = 0;
                 this.stream = aomStream;
-                ReadFrameHeaderObu();
+                FrameHeaderObu();
                 SeenFrameHeader = oldSeenFrameHeader;
                 _ObuType = oldObuType;
                 this.stream = oldStream;
             }
         }
-        private void WriteFrameHeaderCopy() { /* nothing */ }
-        private void ReadDecodeFrameWrapup() 
+
+        private void DecodeFrameWrapup() 
         {
             for (int i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
             {
@@ -162,7 +144,6 @@ namespace SharpAV1
             }            
         }
 
-        private void WriteDecodeFrameWrapup() { /* nothing */ }
         private int ChooseOperatingPoint()
         {
             return 0;

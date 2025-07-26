@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Security.Cryptography;
 
 namespace AomGenerator.CSharp
 {
     public class CSharpGeneratorAV1 : ICustomGenerator
     {
-        public string AppendMethod(AomCode field, MethodType methodType, string spacing, string retm)
+        public string AppendMethod(AomCode field, string spacing, string retm)
         {
             switch ((field as AomField).Name)
             {
                 case "operating_points_cnt_minus_1":
-                    if (methodType != MethodType.Read)
-                        return retm;
-                    else
                         return retm + "operating_point_idc = new int[operating_points_cnt_minus_1 + 1];\r\n" +
                             "\t\t\t\tseq_level_idx = new int[operating_points_cnt_minus_1 + 1];\r\n" +
                             "\t\t\t\tseq_tier = new int[operating_points_cnt_minus_1 + 1];\r\n" +
@@ -25,43 +21,21 @@ namespace AomGenerator.CSharp
                             "\t\t\t\tlow_delay_mode_flag = new int[operating_points_cnt_minus_1 + 1];\r\n ";
 
                 case "spatial_layers_cnt_minus_1":
-                    if (methodType != MethodType.Read)
-                        return retm;
-                    else
                         return retm + "spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];\r\n" +
                         "\t\t\t\tspatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];\r\n" +
                         "\t\t\t\tspatial_layer_ref_id = new int[spatial_layers_cnt_minus_1 + 1];\r\n ";
 
                 case "temporal_group_size":
-                    if (methodType != MethodType.Read)
-                        return retm;
-                    else
                         return retm + "temporal_group_temporal_id = new int[temporal_group_size];\r\n" +
                         "\t\t\t\ttemporal_group_temporal_switching_up_point_flag = new int[temporal_group_size];\r\n" +
                         "\t\t\t\ttemporal_group_spatial_switching_up_point_flag = new int[temporal_group_size];\r\n" +
                         "\t\t\t\ttemporal_group_ref_cnt = new int[temporal_group_size];\r\n ";
 
                 case "temporal_group_ref_cnt":
-                    if (methodType != MethodType.Read)
-                        return retm;
-                    else
                         return retm + "temporal_group_ref_pic_diff = new int[temporal_group_size][];\r\n" +
                         "\t\t\t\tfor(int k = 0; k < temporal_group_size; k++) { \r\n" +
                         "\t\t\t\t\t temporal_group_ref_pic_diff[k] = new int[temporal_group_ref_cnt[ i ]]; \r\n" +
                         "\t\t\t\t }\r\n";
-
-
-                case "increment_tile_cols_log2":
-                    if (methodType == MethodType.Read)
-                        return retm + "if (!_cachedIncrementValues.ContainsKey(\"increment_tile_cols_log2\"))\r\n                        _cachedIncrementValues.Add(\"increment_tile_cols_log2\", new Queue<int>());\r\n                    _cachedIncrementValues[\"increment_tile_cols_log2\"].Enqueue(this.increment_tile_cols_log2);";
-                    else
-                        return "if (_cachedIncrementValues.ContainsKey(\"increment_tile_cols_log2\"))\r\n                        increment_tile_cols_log2 = _cachedIncrementValues[\"increment_tile_cols_log2\"].Dequeue();\r\n" + retm;
-
-                case "increment_tile_rows_log2":
-                    if (methodType == MethodType.Read)
-                        return retm + "if (!_cachedIncrementValues.ContainsKey(\"increment_tile_rows_log2\"))\r\n                        _cachedIncrementValues.Add(\"increment_tile_rows_log2\", new Queue<int>());\r\n                    _cachedIncrementValues[\"increment_tile_rows_log2\"].Enqueue(this.increment_tile_rows_log2);\r\n";
-                    else
-                        return "if (_cachedIncrementValues.ContainsKey(\"increment_tile_rows_log2\"))\r\n                        increment_tile_rows_log2 = _cachedIncrementValues[\"increment_tile_rows_log2\"].Dequeue();\r\n" + retm;
 
                 default:
                     return retm;
@@ -73,9 +47,9 @@ namespace AomGenerator.CSharp
             
         }
 
-        public string FixCondition(string value, MethodType methodType)
+        public string FixCondition(string value)
         {
-            return FixStatement(value, methodType);
+            return FixStatement(value);
         }
 
         public string FixFieldValue(string fieldValue)
@@ -83,10 +57,8 @@ namespace AomGenerator.CSharp
             return fieldValue;
         }
 
-        public string FixStatement(string value, MethodType methodType)
+        public string FixStatement(string value)
         {
-            string methodPrefix = methodType == MethodType.Read ? "Read" : "Write";
-
             value = value.Replace("Min(", "Math.Min(");
             value = value.Replace("Max(", "Math.Max(");
             value = value.Replace(" >> ", " >> (int)");
@@ -410,17 +382,16 @@ namespace AomGenerator.CSharp
             value = value.Replace("SWITCHABLE", "AV1InterpolationFilter.SWITCHABLE");
 
             value = value.Replace("choose_operating_point", "ChooseOperatingPoint");
-            value = value.Replace("Clip3", "AomStream.Clip3");
             value = value.Replace("get_qindex", "GetQIndex");
             value = value.Replace("mark_ref_frames", "AomStream.MarkRefFrames");
 
-            value = value.Replace("tile_log2", methodType + "TileLog2");
-            value = value.Replace("read_delta_q", methodType + "ReadDeltaq");
-            value = value.Replace("inverse_recenter", methodType + "InverseRecenter");
-            value = value.Replace("get_relative_dist", methodType + "GetRelativeDist");
-            value = value.Replace("decode_unsigned_subexp_with_ref", methodType + "DecodeUnsignedSubexpWithRef");
-            value = value.Replace("decode_signed_subexp_with_ref", methodType + "DecodeSignedSubexpWithRef");
-            value = value.Replace("decode_subexp", methodType + "DecodeSubexp");
+            value = value.Replace("tile_log2", "TileLog2");
+            value = value.Replace("read_delta_q", "ReadDeltaq");
+            value = value.Replace("inverse_recenter", "InverseRecenter");
+            value = value.Replace("get_relative_dist", "GetRelativeDist");
+            value = value.Replace("decode_unsigned_subexp_with_ref", "DecodeUnsignedSubexpWithRef");
+            value = value.Replace("decode_signed_subexp_with_ref", "DecodeSignedSubexpWithRef");
+            value = value.Replace("decode_subexp", "DecodeSubexp");
 
             return value;
         }

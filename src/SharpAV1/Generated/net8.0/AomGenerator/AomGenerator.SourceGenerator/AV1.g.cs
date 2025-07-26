@@ -90,9 +90,9 @@ open_bitstream_unit( sz ) {
 		private int trailing_bits;
 		public int _TrailingBits { get { return trailing_bits; } set { trailing_bits = value; } }
 
-        private void ReadOpenBitstreamUnit(int sz)
+        private void OpenBitstreamUnit(int sz)
         {
-			ReadObuHeader(); 
+			ObuHeader(); 
 
 			if ( obu_has_size_field != 0 )
 			{
@@ -111,132 +111,57 @@ open_bitstream_unit( sz ) {
 
 				if ( inTemporalLayer== 0 ||  inSpatialLayer== 0 )
 				{
-					ReadDropObu(); 
+					DropObu(); 
 					return;
 				}
 			}
 
 			if ( obu_type == AV1ObuTypes.OBU_SEQUENCE_HEADER )
 			{
-				ReadSequenceHeaderObu(); 
+				SequenceHeaderObu(); 
 			}
 			else if ( obu_type == AV1ObuTypes.OBU_TEMPORAL_DELIMITER )
 			{
-				ReadTemporalDelimiterObu(); 
+				TemporalDelimiterObu(); 
 			}
 			else if ( obu_type == AV1ObuTypes.OBU_FRAME_HEADER )
 			{
-				ReadFrameHeaderObu(); 
+				FrameHeaderObu(); 
 			}
 			else if ( obu_type == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER )
 			{
-				ReadFrameHeaderObu(); 
+				FrameHeaderObu(); 
 			}
 			else if ( obu_type == AV1ObuTypes.OBU_TILE_GROUP )
 			{
-				ReadTileGroupObu( obu_size ); 
+				TileGroupObu( obu_size ); 
 			}
 			else if ( obu_type == AV1ObuTypes.OBU_METADATA )
 			{
-				ReadMetadataObu(); 
+				MetadataObu(); 
 			}
 			else if ( obu_type == AV1ObuTypes.OBU_FRAME )
 			{
-				ReadFrameObu( obu_size ); 
+				FrameObu( obu_size ); 
 			}
 			else if ( obu_type == AV1ObuTypes.OBU_TILE_LIST )
 			{
-				ReadTileListObu(); 
+				TileListObu(); 
 			}
 			else if ( obu_type == AV1ObuTypes.OBU_PADDING )
 			{
-				ReadPaddingObu(); 
+				PaddingObu(); 
 			}
 			else 
 			{
-				ReadReservedObu(); 
+				ReservedObu(); 
 			}
 			currentPosition= stream.GetPosition();
 			payloadBits= currentPosition - startPosition;
 
 			if ( obu_size > 0 && obu_type != AV1ObuTypes.OBU_TILE_GROUP && obu_type != AV1ObuTypes.OBU_TILE_LIST && obu_type != AV1ObuTypes.OBU_FRAME )
 			{
-				ReadTrailingBits( obu_size * 8 - payloadBits ); 
-			}
-        }
-
-        private void WriteOpenBitstreamUnit(int sz)
-        {
-			WriteObuHeader(); 
-
-			if ( obu_has_size_field != 0 )
-			{
-				stream.WriteLeb128( this.obu_size, "obu_size"); 
-			}
-			else 
-			{
-				obu_size= sz - 1 - obu_extension_flag;
-			}
-			startPosition= stream.GetPosition();
-
-			if ( obu_type != AV1ObuTypes.OBU_SEQUENCE_HEADER && obu_type != AV1ObuTypes.OBU_TEMPORAL_DELIMITER && OperatingPointIdc != 0 && obu_extension_flag == 1 )
-			{
-				inTemporalLayer= (OperatingPointIdc >> (int)temporal_id ) & 1;
-				inSpatialLayer= (OperatingPointIdc >> (int)( spatial_id + 8 ) ) & 1;
-
-				if ( inTemporalLayer== 0 ||  inSpatialLayer== 0 )
-				{
-					WriteDropObu(); 
-					return;
-				}
-			}
-
-			if ( obu_type == AV1ObuTypes.OBU_SEQUENCE_HEADER )
-			{
-				WriteSequenceHeaderObu(); 
-			}
-			else if ( obu_type == AV1ObuTypes.OBU_TEMPORAL_DELIMITER )
-			{
-				WriteTemporalDelimiterObu(); 
-			}
-			else if ( obu_type == AV1ObuTypes.OBU_FRAME_HEADER )
-			{
-				WriteFrameHeaderObu(); 
-			}
-			else if ( obu_type == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER )
-			{
-				WriteFrameHeaderObu(); 
-			}
-			else if ( obu_type == AV1ObuTypes.OBU_TILE_GROUP )
-			{
-				WriteTileGroupObu( obu_size ); 
-			}
-			else if ( obu_type == AV1ObuTypes.OBU_METADATA )
-			{
-				WriteMetadataObu(); 
-			}
-			else if ( obu_type == AV1ObuTypes.OBU_FRAME )
-			{
-				WriteFrameObu( obu_size ); 
-			}
-			else if ( obu_type == AV1ObuTypes.OBU_TILE_LIST )
-			{
-				WriteTileListObu(); 
-			}
-			else if ( obu_type == AV1ObuTypes.OBU_PADDING )
-			{
-				WritePaddingObu(); 
-			}
-			else 
-			{
-				WriteReservedObu(); 
-			}
-			currentPosition= stream.GetPosition();
-			payloadBits= currentPosition - startPosition;
-
-			if ( obu_size > 0 && obu_type != AV1ObuTypes.OBU_TILE_GROUP && obu_type != AV1ObuTypes.OBU_TILE_LIST && obu_type != AV1ObuTypes.OBU_FRAME )
-			{
-				WriteTrailingBits( obu_size * 8 - payloadBits ); 
+				TrailingBits( obu_size * 8 - payloadBits ); 
 			}
         }
 
@@ -264,7 +189,7 @@ obu_header() {
 		private int obu_extension_header;
 		public int _ObuExtensionHeader { get { return obu_extension_header; } set { obu_extension_header = value; } }
 
-        private void ReadObuHeader()
+        private void ObuHeader()
         {
 			stream.ReadFixed(1, out this.obu_forbidden_bit, "obu_forbidden_bit"); 
 			stream.ReadFixed(4, out this.obu_type, "obu_type"); 
@@ -274,21 +199,7 @@ obu_header() {
 
 			if ( obu_extension_flag == 1 )
 			{
-				ReadObuExtensionHeader(); 
-			}
-        }
-
-        private void WriteObuHeader()
-        {
-			stream.WriteFixed(1, this.obu_forbidden_bit, "obu_forbidden_bit"); 
-			stream.WriteFixed(4, this.obu_type, "obu_type"); 
-			stream.WriteFixed(1, this.obu_extension_flag, "obu_extension_flag"); 
-			stream.WriteFixed(1, this.obu_has_size_field, "obu_has_size_field"); 
-			stream.WriteFixed(1, this.obu_reserved_1bit, "obu_reserved_1bit"); 
-
-			if ( obu_extension_flag == 1 )
-			{
-				WriteObuExtensionHeader(); 
+				ObuExtensionHeader(); 
 			}
         }
 
@@ -306,18 +217,11 @@ obu_extension_header() {
 		private int extension_header_reserved_3bits;
 		public int _ExtensionHeaderReserved3bits { get { return extension_header_reserved_3bits; } set { extension_header_reserved_3bits = value; } }
 
-        private void ReadObuExtensionHeader()
+        private void ObuExtensionHeader()
         {
 			stream.ReadFixed(3, out this.temporal_id, "temporal_id"); 
 			stream.ReadFixed(2, out this.spatial_id, "spatial_id"); 
 			stream.ReadFixed(3, out this.extension_header_reserved_3bits, "extension_header_reserved_3bits"); 
-        }
-
-        private void WriteObuExtensionHeader()
-        {
-			stream.WriteFixed(3, this.temporal_id, "temporal_id"); 
-			stream.WriteFixed(2, this.spatial_id, "spatial_id"); 
-			stream.WriteFixed(3, this.extension_header_reserved_3bits, "extension_header_reserved_3bits"); 
         }
 
     /*
@@ -337,7 +241,7 @@ while ( nbBits > 0 ) {
 		private int trailing_zero_bit;
 		public int _TrailingZeroBit { get { return trailing_zero_bit; } set { trailing_zero_bit = value; } }
 
-        private void ReadTrailingBits(long nbBits)
+        private void TrailingBits(long nbBits)
         {
 			stream.ReadFixed(1, out this.trailing_one_bit, "trailing_one_bit"); 
 			nbBits--;
@@ -345,18 +249,6 @@ while ( nbBits > 0 ) {
 			while ( nbBits > 0 )
 			{
 				stream.ReadFixed(1, out this.trailing_zero_bit, "trailing_zero_bit"); 
-				nbBits--;
-			}
-        }
-
-        private void WriteTrailingBits(long nbBits)
-        {
-			stream.WriteFixed(1, this.trailing_one_bit, "trailing_one_bit"); 
-			nbBits--;
-
-			while ( nbBits > 0 )
-			{
-				stream.WriteFixed(1, this.trailing_zero_bit, "trailing_zero_bit"); 
 				nbBits--;
 			}
         }
@@ -370,7 +262,7 @@ byte_alignment() {
 		private int zero_bit;
 		public int _ZeroBit { get { return zero_bit; } set { zero_bit = value; } }
 
-        private void ReadByteAlignment()
+        private void ByteAlignment()
         {
 
 			while ( (stream.GetPosition() & 7) > 0 )
@@ -379,25 +271,12 @@ byte_alignment() {
 			}
         }
 
-        private void WriteByteAlignment()
-        {
-
-			while ( (stream.GetPosition() & 7) > 0 )
-			{
-				stream.WriteFixed(1, this.zero_bit, "zero_bit"); 
-			}
-        }
-
     /*
 reserved_obu() { 
 }
     */
 
-        private void ReadReservedObu()
-        {
-        }
-
-        private void WriteReservedObu()
+        private void ReservedObu()
         {
         }
 
@@ -621,7 +500,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 		public int _FilmGrainParamsPresent { get { return film_grain_params_present; } set { film_grain_params_present = value; } }
 		private int i = 0;
 
-        private void ReadSequenceHeaderObu()
+        private void SequenceHeaderObu()
         {
 			stream.ReadFixed(3, out this.seq_profile, "seq_profile"); 
 			stream.ReadFixed(1, out this.still_picture, "still_picture"); 
@@ -645,12 +524,12 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 				if ( timing_info_present_flag != 0 )
 				{
-					ReadTimingInfo(); 
+					TimingInfo(); 
 					stream.ReadFixed(1, out this.decoder_model_info_present_flag, "decoder_model_info_present_flag"); 
 
 					if ( decoder_model_info_present_flag != 0 )
 					{
-						ReadDecoderModelInfo(); 
+						DecoderModelInfo(); 
 					}
 				}
 				else 
@@ -690,7 +569,7 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 
 						if ( decoder_model_present_for_this_op[ i ] != 0 )
 						{
-							ReadOperatingParametersInfo( i ); 
+							OperatingParametersInfo( i ); 
 						}
 					}
 					else 
@@ -809,190 +688,8 @@ seq_force_screen_content_tools = SELECT_SCREEN_CONTENT_TOOLS
 			stream.ReadFixed(1, out this.enable_superres, "enable_superres"); 
 			stream.ReadFixed(1, out this.enable_cdef, "enable_cdef"); 
 			stream.ReadFixed(1, out this.enable_restoration, "enable_restoration"); 
-			ReadColorConfig(); 
+			ColorConfig(); 
 			stream.ReadFixed(1, out this.film_grain_params_present, "film_grain_params_present"); 
-        }
-
-        private void WriteSequenceHeaderObu()
-        {
-			stream.WriteFixed(3, this.seq_profile, "seq_profile"); 
-			stream.WriteFixed(1, this.still_picture, "still_picture"); 
-			stream.WriteFixed(1, this.reduced_still_picture_header, "reduced_still_picture_header"); 
-
-			if ( reduced_still_picture_header != 0 )
-			{
-				timing_info_present_flag= 0;
-				decoder_model_info_present_flag= 0;
-				initial_display_delay_present_flag= 0;
-				operating_points_cnt_minus_1= 0;
-				operating_point_idc[ 0 ]= 0;
-				stream.WriteFixed(5, this.seq_level_idx[ 0 ], "seq_level_idx"); 
-				seq_tier[ 0 ]= 0;
-				decoder_model_present_for_this_op[ 0 ]= 0;
-				initial_display_delay_present_for_this_op[ 0 ]= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.timing_info_present_flag, "timing_info_present_flag"); 
-
-				if ( timing_info_present_flag != 0 )
-				{
-					WriteTimingInfo(); 
-					stream.WriteFixed(1, this.decoder_model_info_present_flag, "decoder_model_info_present_flag"); 
-
-					if ( decoder_model_info_present_flag != 0 )
-					{
-						WriteDecoderModelInfo(); 
-					}
-				}
-				else 
-				{
-					decoder_model_info_present_flag= 0;
-				}
-				stream.WriteFixed(1, this.initial_display_delay_present_flag, "initial_display_delay_present_flag"); 
-				stream.WriteFixed(5, this.operating_points_cnt_minus_1, "operating_points_cnt_minus_1"); 
-
-				for ( i = 0; i <= operating_points_cnt_minus_1; i++ )
-				{
-					stream.WriteFixed(12, this.operating_point_idc[ i ], "operating_point_idc"); 
-					stream.WriteFixed(5, this.seq_level_idx[ i ], "seq_level_idx"); 
-
-					if ( seq_level_idx[ i ] > 7 )
-					{
-						stream.WriteFixed(1, this.seq_tier[ i ], "seq_tier"); 
-					}
-					else 
-					{
-						seq_tier[ i ]= 0;
-					}
-
-					if ( decoder_model_info_present_flag != 0 )
-					{
-						stream.WriteFixed(1, this.decoder_model_present_for_this_op[ i ], "decoder_model_present_for_this_op"); 
-
-						if ( decoder_model_present_for_this_op[ i ] != 0 )
-						{
-							WriteOperatingParametersInfo( i ); 
-						}
-					}
-					else 
-					{
-						decoder_model_present_for_this_op[ i ]= 0;
-					}
-
-					if ( initial_display_delay_present_flag != 0 )
-					{
-						stream.WriteFixed(1, this.initial_display_delay_present_for_this_op[ i ], "initial_display_delay_present_for_this_op"); 
-
-						if ( initial_display_delay_present_for_this_op[ i ] != 0 )
-						{
-							stream.WriteFixed(4, this.initial_display_delay_minus_1[ i ], "initial_display_delay_minus_1"); 
-						}
-					}
-				}
-			}
-			operatingPoint= ChooseOperatingPoint();
-			OperatingPointIdc= operating_point_idc[ operatingPoint ];
-			stream.WriteFixed(4, this.frame_width_bits_minus_1, "frame_width_bits_minus_1"); 
-			stream.WriteFixed(4, this.frame_height_bits_minus_1, "frame_height_bits_minus_1"); 
-			n= frame_width_bits_minus_1 + 1;
-			stream.WriteVariable(n, this.max_frame_width_minus_1, "max_frame_width_minus_1"); 
-			n= frame_height_bits_minus_1 + 1;
-			stream.WriteVariable(n, this.max_frame_height_minus_1, "max_frame_height_minus_1"); 
-
-			if ( reduced_still_picture_header != 0 )
-			{
-				frame_id_numbers_present_flag= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.frame_id_numbers_present_flag, "frame_id_numbers_present_flag"); 
-			}
-
-			if ( frame_id_numbers_present_flag != 0 )
-			{
-				stream.WriteFixed(4, this.delta_frame_id_length_minus_2, "delta_frame_id_length_minus_2"); 
-				stream.WriteFixed(3, this.additional_frame_id_length_minus_1, "additional_frame_id_length_minus_1"); 
-			}
-			stream.WriteFixed(1, this.use_128x128_superblock, "use_128x128_superblock"); 
-			stream.WriteFixed(1, this.enable_filter_intra, "enable_filter_intra"); 
-			stream.WriteFixed(1, this.enable_intra_edge_filter, "enable_intra_edge_filter"); 
-
-			if ( reduced_still_picture_header != 0 )
-			{
-				enable_interintra_compound= 0;
-				enable_masked_compound= 0;
-				enable_warped_motion= 0;
-				enable_dual_filter= 0;
-				enable_order_hint= 0;
-				enable_jnt_comp= 0;
-				enable_ref_frame_mvs= 0;
-				seq_force_screen_content_tools= AV1Constants.SELECT_SCREEN_CONTENT_TOOLS;
-				seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
-				OrderHintBits= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.enable_interintra_compound, "enable_interintra_compound"); 
-				stream.WriteFixed(1, this.enable_masked_compound, "enable_masked_compound"); 
-				stream.WriteFixed(1, this.enable_warped_motion, "enable_warped_motion"); 
-				stream.WriteFixed(1, this.enable_dual_filter, "enable_dual_filter"); 
-				stream.WriteFixed(1, this.enable_order_hint, "enable_order_hint"); 
-
-				if ( enable_order_hint != 0 )
-				{
-					stream.WriteFixed(1, this.enable_jnt_comp, "enable_jnt_comp"); 
-					stream.WriteFixed(1, this.enable_ref_frame_mvs, "enable_ref_frame_mvs"); 
-				}
-				else 
-				{
-					enable_jnt_comp= 0;
-					enable_ref_frame_mvs= 0;
-				}
-				stream.WriteFixed(1, this.seq_choose_screen_content_tools, "seq_choose_screen_content_tools"); 
-
-				if ( seq_choose_screen_content_tools != 0 )
-				{
-					seq_force_screen_content_tools= AV1Constants.SELECT_SCREEN_CONTENT_TOOLS;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.seq_force_screen_content_tools, "seq_force_screen_content_tools"); 
-				}
-
-				if ( seq_force_screen_content_tools > 0 )
-				{
-					stream.WriteFixed(1, this.seq_choose_integer_mv, "seq_choose_integer_mv"); 
-
-					if ( seq_choose_integer_mv != 0 )
-					{
-						seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
-					}
-					else 
-					{
-						stream.WriteFixed(1, this.seq_force_integer_mv, "seq_force_integer_mv"); 
-					}
-				}
-				else 
-				{
-					seq_force_integer_mv= AV1Constants.SELECT_INTEGER_MV;
-				}
-
-				if ( enable_order_hint != 0 )
-				{
-					stream.WriteFixed(3, this.order_hint_bits_minus_1, "order_hint_bits_minus_1"); 
-					OrderHintBits= order_hint_bits_minus_1 + 1;
-				}
-				else 
-				{
-					OrderHintBits= 0;
-				}
-			}
-			stream.WriteFixed(1, this.enable_superres, "enable_superres"); 
-			stream.WriteFixed(1, this.enable_cdef, "enable_cdef"); 
-			stream.WriteFixed(1, this.enable_restoration, "enable_restoration"); 
-			WriteColorConfig(); 
-			stream.WriteFixed(1, this.film_grain_params_present, "film_grain_params_present"); 
         }
 
     /*
@@ -1013,7 +710,7 @@ timing_info() {
 		private uint num_ticks_per_picture_minus_1;
 		public uint _NumTicksPerPictureMinus1 { get { return num_ticks_per_picture_minus_1; } set { num_ticks_per_picture_minus_1 = value; } }
 
-        private void ReadTimingInfo()
+        private void TimingInfo()
         {
 			stream.ReadFixed(32, out this.num_units_in_display_tick, "num_units_in_display_tick"); 
 			stream.ReadFixed(32, out this.time_scale, "time_scale"); 
@@ -1022,18 +719,6 @@ timing_info() {
 			if ( equal_picture_interval != 0 )
 			{
 				stream.ReadUvlc( out this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
-			}
-        }
-
-        private void WriteTimingInfo()
-        {
-			stream.WriteFixed(32, this.num_units_in_display_tick, "num_units_in_display_tick"); 
-			stream.WriteFixed(32, this.time_scale, "time_scale"); 
-			stream.WriteFixed(1, this.equal_picture_interval, "equal_picture_interval"); 
-
-			if ( equal_picture_interval != 0 )
-			{
-				stream.WriteUvlc( this.num_ticks_per_picture_minus_1, "num_ticks_per_picture_minus_1"); 
 			}
         }
 
@@ -1054,20 +739,12 @@ decoder_model_info() {
 		private int frame_presentation_time_length_minus_1;
 		public int _FramePresentationTimeLengthMinus1 { get { return frame_presentation_time_length_minus_1; } set { frame_presentation_time_length_minus_1 = value; } }
 
-        private void ReadDecoderModelInfo()
+        private void DecoderModelInfo()
         {
 			stream.ReadFixed(5, out this.buffer_delay_length_minus_1, "buffer_delay_length_minus_1"); 
 			stream.ReadFixed(32, out this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
 			stream.ReadFixed(5, out this.buffer_removal_time_length_minus_1, "buffer_removal_time_length_minus_1"); 
 			stream.ReadFixed(5, out this.frame_presentation_time_length_minus_1, "frame_presentation_time_length_minus_1"); 
-        }
-
-        private void WriteDecoderModelInfo()
-        {
-			stream.WriteFixed(5, this.buffer_delay_length_minus_1, "buffer_delay_length_minus_1"); 
-			stream.WriteFixed(32, this.num_units_in_decoding_tick, "num_units_in_decoding_tick"); 
-			stream.WriteFixed(5, this.buffer_removal_time_length_minus_1, "buffer_removal_time_length_minus_1"); 
-			stream.WriteFixed(5, this.frame_presentation_time_length_minus_1, "frame_presentation_time_length_minus_1"); 
         }
 
     /*
@@ -1087,20 +764,12 @@ operating_parameters_info( op ) {
 		private int[] low_delay_mode_flag= new int[1];
 		public int[] _LowDelayModeFlag { get { return low_delay_mode_flag; } set { low_delay_mode_flag = value; } }
 
-        private void ReadOperatingParametersInfo(int op)
+        private void OperatingParametersInfo(int op)
         {
 			n= buffer_delay_length_minus_1 + 1;
 			stream.ReadVariable(n, out this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
 			stream.ReadVariable(n, out this.encoder_buffer_delay[ op ], "encoder_buffer_delay"); 
 			stream.ReadFixed(1, out this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
-        }
-
-        private void WriteOperatingParametersInfo(int op)
-        {
-			n= buffer_delay_length_minus_1 + 1;
-			stream.WriteVariable(n, this.decoder_buffer_delay[ op ], "decoder_buffer_delay"); 
-			stream.WriteVariable(n, this.encoder_buffer_delay[ op ], "encoder_buffer_delay"); 
-			stream.WriteFixed(1, this.low_delay_mode_flag[ op ], "low_delay_mode_flag"); 
         }
 
     /*
@@ -1197,7 +866,7 @@ color_config() {
 		private int separate_uv_delta_q;
 		public int _SeparateUvDeltaq { get { return separate_uv_delta_q; } set { separate_uv_delta_q = value; } }
 
-        private void ReadColorConfig()
+        private void ColorConfig()
         {
 			stream.ReadFixed(1, out this.high_bitdepth, "high_bitdepth"); 
 
@@ -1297,106 +966,6 @@ color_config() {
 			stream.ReadFixed(1, out this.separate_uv_delta_q, "separate_uv_delta_q"); 
         }
 
-        private void WriteColorConfig()
-        {
-			stream.WriteFixed(1, this.high_bitdepth, "high_bitdepth"); 
-
-			if ( seq_profile == 2 && high_bitdepth != 0 )
-			{
-				stream.WriteFixed(1, this.twelve_bit, "twelve_bit"); 
-				BitDepth= twelve_bit != 0 ? 12 : 10;
-			}
-			else if ( seq_profile <= 2 )
-			{
-				BitDepth= high_bitdepth != 0 ? 10 : 8;
-			}
-
-			if ( seq_profile == 1 )
-			{
-				mono_chrome= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.mono_chrome, "mono_chrome"); 
-			}
-			NumPlanes= mono_chrome != 0 ? 1 : 3;
-			stream.WriteFixed(1, this.color_description_present_flag, "color_description_present_flag"); 
-
-			if ( color_description_present_flag != 0 )
-			{
-				stream.WriteFixed(8, this.color_primaries, "color_primaries"); 
-				stream.WriteFixed(8, this.transfer_characteristics, "transfer_characteristics"); 
-				stream.WriteFixed(8, this.matrix_coefficients, "matrix_coefficients"); 
-			}
-			else 
-			{
-				color_primaries= AV1ColorPrimaries.CP_UNSPECIFIED;
-				transfer_characteristics= AV1TransferCharacteristics.TC_UNSPECIFIED;
-				matrix_coefficients= AV1MatrixCoefficients.MC_UNSPECIFIED;
-			}
-
-			if ( mono_chrome != 0 )
-			{
-				stream.WriteFixed(1, this.color_range, "color_range"); 
-				subsampling_x= 1;
-				subsampling_y= 1;
-				chroma_sample_position= AV1ChromaSamplePosition.CSP_UNKNOWN;
-				separate_uv_delta_q= 0;
-				return;
-			}
-			else if ( color_primaries == AV1ColorPrimaries.CP_BT_709 &&
- transfer_characteristics == AV1TransferCharacteristics.TC_SRGB &&
- matrix_coefficients == AV1MatrixCoefficients.MC_IDENTITY )
-			{
-				color_range= 1;
-				subsampling_x= 0;
-				subsampling_y= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.color_range, "color_range"); 
-
-				if ( seq_profile == 0 )
-				{
-					subsampling_x= 1;
-					subsampling_y= 1;
-				}
-				else if ( seq_profile == 1 )
-				{
-					subsampling_x= 0;
-					subsampling_y= 0;
-				}
-				else 
-				{
-
-					if ( BitDepth == 12 )
-					{
-						stream.WriteFixed(1, this.subsampling_x, "subsampling_x"); 
-
-						if ( subsampling_x != 0 )
-						{
-							stream.WriteFixed(1, this.subsampling_y, "subsampling_y"); 
-						}
-						else 
-						{
-							subsampling_y= 0;
-						}
-					}
-					else 
-					{
-						subsampling_x= 1;
-						subsampling_y= 0;
-					}
-				}
-
-				if ( subsampling_x != 0 && subsampling_y != 0 )
-				{
-					stream.WriteFixed(2, this.chroma_sample_position, "chroma_sample_position"); 
-				}
-			}
-			stream.WriteFixed(1, this.separate_uv_delta_q, "separate_uv_delta_q"); 
-        }
-
     /*
 frame_header_obu() { 
  if ( SeenFrameHeader == 1 ) {
@@ -1425,46 +994,21 @@ frame_header_obu() {
 		private int TileNum;
 		public int _TileNum { get { return TileNum; } set { TileNum = value; } }
 
-        private void ReadFrameHeaderObu()
+        private void FrameHeaderObu()
         {
 
 			if ( SeenFrameHeader == 1 )
 			{
-				ReadFrameHeaderCopy(); 
+				FrameHeaderCopy(); 
 			}
 			else 
 			{
 				SeenFrameHeader= 1;
-				ReadUncompressedHeader(); 
+				UncompressedHeader(); 
 
 				if ( show_existing_frame != 0 )
 				{
-					ReadDecodeFrameWrapup(); 
-					SeenFrameHeader= 0;
-				}
-				else 
-				{
-					TileNum= 0;
-					SeenFrameHeader= 1;
-				}
-			}
-        }
-
-        private void WriteFrameHeaderObu()
-        {
-
-			if ( SeenFrameHeader == 1 )
-			{
-				WriteFrameHeaderCopy(); 
-			}
-			else 
-			{
-				SeenFrameHeader= 1;
-				WriteUncompressedHeader(); 
-
-				if ( show_existing_frame != 0 )
-				{
-					WriteDecodeFrameWrapup(); 
+					DecodeFrameWrapup(); 
 					SeenFrameHeader= 0;
 				}
 				else 
@@ -1871,7 +1415,7 @@ uncompressed_header() {
 		private int opNum = 0;
 		private int segmentId = 0;
 
-        private void ReadUncompressedHeader()
+        private void UncompressedHeader()
         {
 
 			if ( frame_id_numbers_present_flag != 0 )
@@ -1918,7 +1462,7 @@ uncompressed_header() {
 
 				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
 				{
-					ReadTemporalPointInfo(); 
+					TemporalPointInfo(); 
 				}
 
 				if ( show_frame != 0 )
@@ -1991,7 +1535,7 @@ uncompressed_header() {
 			{
 				PrevFrameID= current_frame_id;
 				stream.ReadVariable(idLen, out this.current_frame_id, "current_frame_id"); 
-				ReadMarkRefFrames( idLen ); 
+				MarkRefFrames( idLen ); 
 			}
 			else 
 			{
@@ -2080,8 +1624,8 @@ uncompressed_header() {
 
 			if (  FrameIsIntra != 0 )
 			{
-				ReadFrameSize(); 
-				ReadRenderSize(); 
+				FrameSize(); 
+				RenderSize(); 
 
 				if ( allow_screen_content_tools != 0 && UpscaledWidth == FrameWidth )
 				{
@@ -2103,7 +1647,7 @@ uncompressed_header() {
 					{
 						stream.ReadFixed(3, out this.last_frame_idx, "last_frame_idx"); 
 						stream.ReadFixed(3, out this.gold_frame_idx, "gold_frame_idx"); 
-						ReadSetFrameRefs(); 
+						SetFrameRefs(); 
 					}
 				}
 
@@ -2126,12 +1670,12 @@ uncompressed_header() {
 
 				if ( frame_size_override_flag != 0 && error_resilient_mode== 0 )
 				{
-					ReadFrameSizeWithRefs(); 
+					FrameSizeWithRefs(); 
 				}
 				else 
 				{
-					ReadFrameSize(); 
-					ReadRenderSize(); 
+					FrameSize(); 
+					RenderSize(); 
 				}
 
 				if ( force_integer_mv != 0 )
@@ -2142,7 +1686,7 @@ uncompressed_header() {
 				{
 					stream.ReadFixed(1, out this.allow_high_precision_mv, "allow_high_precision_mv"); 
 				}
-				ReadReadInterpolationFilter(); 
+				ReadInterpolationFilter(); 
 				stream.ReadFixed(1, out this.is_motion_mode_switchable, "is_motion_mode_switchable"); 
 
 				if ( error_resilient_mode != 0 || enable_ref_frame_mvs== 0 )
@@ -2166,7 +1710,7 @@ uncompressed_header() {
 					}
 					else 
 					{
-						RefFrameSignBias[ refFrame ]= (ReadGetRelativeDist( hint, OrderHint) > 0) ? 1 : 0;
+						RefFrameSignBias[ refFrame ]= (GetRelativeDist( hint, OrderHint) > 0) ? 1 : 0;
 					}
 				}
 			}
@@ -2182,32 +1726,32 @@ uncompressed_header() {
 
 			if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
 			{
-				ReadInitNonCoeffCdfs(); 
-				ReadSetupPastIndependence(); 
+				InitNonCoeffCdfs(); 
+				SetupPastIndependence(); 
 			}
 			else 
 			{
-				ReadLoadCdfs( ref_frame_idx[ primary_ref_frame ] ); 
-				ReadLoadPrevious(); 
+				LoadCdfs( ref_frame_idx[ primary_ref_frame ] ); 
+				LoadPrevious(); 
 			}
 
 			if ( use_ref_frame_mvs == 1 )
 			{
-				ReadMotionFieldEstimation(); 
+				MotionFieldEstimation(); 
 			}
-			ReadTileInfo(); 
-			ReadQuantizationParams(); 
-			ReadSegmentationParams(); 
-			ReadDeltaqParams(); 
-			ReadDeltaLfParams(); 
+			TileInfo(); 
+			QuantizationParams(); 
+			SegmentationParams(); 
+			DeltaqParams(); 
+			DeltaLfParams(); 
 
 			if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
 			{
-				ReadInitCoeffCdfs(); 
+				InitCoeffCdfs(); 
 			}
 			else 
 			{
-				ReadLoadPreviousSegmentIds(); 
+				LoadPreviousSegmentIds(); 
 			}
 			CodedLossless= 1;
 
@@ -2239,12 +1783,12 @@ uncompressed_header() {
 				}
 			}
 			AllLossless= (CodedLossless != 0 && ( FrameWidth == UpscaledWidth )) ? 1 : 0;
-			ReadLoopFilterParams(); 
-			ReadCdefParams(); 
-			ReadLrParams(); 
-			ReadReadTxMode(); 
-			ReadFrameReferenceMode(); 
-			ReadSkipModeParams(); 
+			LoopFilterParams(); 
+			CdefParams(); 
+			LrParams(); 
+			ReadTxMode(); 
+			FrameReferenceMode(); 
+			SkipModeParams(); 
 
 			if ( FrameIsIntra != 0 || error_resilient_mode != 0 || enable_warped_motion== 0 )
 			{
@@ -2255,396 +1799,8 @@ uncompressed_header() {
 				stream.ReadFixed(1, out this.allow_warped_motion, "allow_warped_motion"); 
 			}
 			stream.ReadFixed(1, out this.reduced_tx_set, "reduced_tx_set"); 
-			ReadGlobalMotionParams(); 
-			ReadFilmGrainParams(); 
-        }
-
-        private void WriteUncompressedHeader()
-        {
-
-			if ( frame_id_numbers_present_flag != 0 )
-			{
-				idLen= ( additional_frame_id_length_minus_1 + delta_frame_id_length_minus_2 + 3 );
-			}
-			allFrames= (1 << AV1Constants.NUM_REF_FRAMES) - 1;
-
-			if ( reduced_still_picture_header != 0 )
-			{
-				show_existing_frame= 0;
-				frame_type= AV1FrameTypes.KEY_FRAME;
-				FrameIsIntra= 1;
-				show_frame= 1;
-				showable_frame= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.show_existing_frame, "show_existing_frame"); 
-
-				if ( show_existing_frame == 1 )
-				{
-					stream.WriteFixed(3, this.frame_to_show_map_idx, "frame_to_show_map_idx"); 
-/*  if ( decoder_model_info_present_flag && !equal_picture_interval ) {
-          temporal_point_info()
-       }
-       refresh_frame_flags = 0
-       if ( frame_id_numbers_present_flag ) {
-          display_frame_id f(idLen)
-       }
-       frame_type = RefFrameType[ frame_to_show_map_idx ]
-       if ( frame_type == KEY_FRAME ) {
-          refresh_frame_flags = allFrames
-       }
-       if ( film_grain_params_present ) {
-          load_grain_params( frame_to_show_map_idx )
-       }  */
-
-					return;
-				}
-				stream.WriteFixed(2, this.frame_type, "frame_type"); 
-				FrameIsIntra= ((frame_type == AV1FrameTypes.INTRA_ONLY_FRAME || frame_type == AV1FrameTypes.KEY_FRAME) ? 1 : 0);
-				stream.WriteFixed(1, this.show_frame, "show_frame"); 
-
-				if ( show_frame != 0 && decoder_model_info_present_flag != 0 && equal_picture_interval== 0 )
-				{
-					WriteTemporalPointInfo(); 
-				}
-
-				if ( show_frame != 0 )
-				{
-					showable_frame= (frame_type != AV1FrameTypes.KEY_FRAME) ? 1 : 0;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.showable_frame, "showable_frame"); 
-				}
-
-				if ( frame_type == AV1FrameTypes.SWITCH_FRAME || ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
-				{
-					error_resilient_mode= 1;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.error_resilient_mode, "error_resilient_mode"); 
-				}
-			}
-
-			if ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 )
-			{
-
-				for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++ )
-				{
-					RefValid[ i ]= 0;
-					RefOrderHint[ i ]= 0;
-				}
-
-				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
-				{
-					OrderHints[ AV1RefFrames.LAST_FRAME + i ]= 0;
-				}
-			}
-			stream.WriteFixed(1, this.disable_cdf_update, "disable_cdf_update"); 
-
-			if ( seq_force_screen_content_tools == AV1Constants.SELECT_SCREEN_CONTENT_TOOLS )
-			{
-				stream.WriteFixed(1, this.allow_screen_content_tools, "allow_screen_content_tools"); 
-			}
-			else 
-			{
-				allow_screen_content_tools= seq_force_screen_content_tools;
-			}
-
-			if ( allow_screen_content_tools != 0 )
-			{
-
-				if ( seq_force_integer_mv == AV1Constants.SELECT_INTEGER_MV )
-				{
-					stream.WriteFixed(1, this.force_integer_mv, "force_integer_mv"); 
-				}
-				else 
-				{
-					force_integer_mv= seq_force_integer_mv;
-				}
-			}
-			else 
-			{
-				force_integer_mv= 0;
-			}
-
-			if ( FrameIsIntra != 0 )
-			{
-				force_integer_mv= 1;
-			}
-
-			if ( frame_id_numbers_present_flag != 0 )
-			{
-				PrevFrameID= current_frame_id;
-				stream.WriteVariable(idLen, this.current_frame_id, "current_frame_id"); 
-				WriteMarkRefFrames( idLen ); 
-			}
-			else 
-			{
-				current_frame_id= 0;
-			}
-
-			if ( frame_type == AV1FrameTypes.SWITCH_FRAME )
-			{
-				frame_size_override_flag= 1;
-			}
-			else if ( reduced_still_picture_header != 0 )
-			{
-				frame_size_override_flag= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.frame_size_override_flag, "frame_size_override_flag"); 
-			}
-			stream.WriteVariable(OrderHintBits, this.order_hint, "order_hint"); 
-			OrderHint= order_hint;
-
-			if ( FrameIsIntra != 0 || error_resilient_mode != 0 )
-			{
-				primary_ref_frame= AV1Constants.PRIMARY_REF_NONE;
-			}
-			else 
-			{
-				stream.WriteFixed(3, this.primary_ref_frame, "primary_ref_frame"); 
-			}
-
-			if ( decoder_model_info_present_flag != 0 )
-			{
-				stream.WriteFixed(1, this.buffer_removal_time_present_flag, "buffer_removal_time_present_flag"); 
-
-				if ( buffer_removal_time_present_flag != 0 )
-				{
-
-					for ( opNum = 0; opNum <= operating_points_cnt_minus_1; opNum++ )
-					{
-
-						if ( decoder_model_present_for_this_op[ opNum ] != 0 )
-						{
-							opPtIdc= operating_point_idc[ opNum ];
-							inTemporalLayer= ( opPtIdc >> (int)temporal_id ) & 1;
-							inSpatialLayer= ( opPtIdc >> (int)( spatial_id + 8 ) ) & 1;
-
-							if ( opPtIdc == 0 || ( inTemporalLayer != 0 && inSpatialLayer != 0 ) )
-							{
-								n= buffer_removal_time_length_minus_1 + 1;
-								stream.WriteVariable(n, this.buffer_removal_time[ opNum ], "buffer_removal_time"); 
-							}
-						}
-					}
-				}
-			}
-			allow_high_precision_mv= 0;
-			use_ref_frame_mvs= 0;
-			allow_intrabc= 0;
-
-			if ( frame_type == AV1FrameTypes.SWITCH_FRAME || ( frame_type == AV1FrameTypes.KEY_FRAME && show_frame != 0 ) )
-			{
-				refresh_frame_flags= allFrames;
-			}
-			else 
-			{
-				stream.WriteFixed(8, this.refresh_frame_flags, "refresh_frame_flags"); 
-			}
-
-			if ( FrameIsIntra== 0 || refresh_frame_flags != allFrames )
-			{
-
-				if ( error_resilient_mode != 0 && enable_order_hint != 0 )
-				{
-
-					for ( i = 0; i < AV1Constants.NUM_REF_FRAMES; i++)
-					{
-						stream.WriteVariable(OrderHintBits, this.ref_order_hint[ i ], "ref_order_hint"); 
-
-						if ( ref_order_hint[ i ] != RefOrderHint[ i ] )
-						{
-							RefValid[ i ]= 0;
-						}
-					}
-				}
-			}
-
-			if (  FrameIsIntra != 0 )
-			{
-				WriteFrameSize(); 
-				WriteRenderSize(); 
-
-				if ( allow_screen_content_tools != 0 && UpscaledWidth == FrameWidth )
-				{
-					stream.WriteFixed(1, this.allow_intrabc, "allow_intrabc"); 
-				}
-			}
-			else 
-			{
-
-				if ( enable_order_hint== 0 )
-				{
-					frame_refs_short_signaling= 0;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.frame_refs_short_signaling, "frame_refs_short_signaling"); 
-
-					if ( frame_refs_short_signaling != 0 )
-					{
-						stream.WriteFixed(3, this.last_frame_idx, "last_frame_idx"); 
-						stream.WriteFixed(3, this.gold_frame_idx, "gold_frame_idx"); 
-						WriteSetFrameRefs(); 
-					}
-				}
-
-				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
-				{
-
-					if ( frame_refs_short_signaling== 0 )
-					{
-						stream.WriteFixed(3, this.ref_frame_idx[ i ], "ref_frame_idx"); 
-					}
-
-					if ( frame_id_numbers_present_flag != 0 )
-					{
-						n= delta_frame_id_length_minus_2 + 2;
-						stream.WriteVariable(n, this.delta_frame_id_minus_1, "delta_frame_id_minus_1"); 
-						DeltaFrameId= delta_frame_id_minus_1 + 1;
-						expectedFrameId[ i ]= ((current_frame_id + (1 << idLen) - DeltaFrameId ) % (1 << idLen));
-					}
-				}
-
-				if ( frame_size_override_flag != 0 && error_resilient_mode== 0 )
-				{
-					WriteFrameSizeWithRefs(); 
-				}
-				else 
-				{
-					WriteFrameSize(); 
-					WriteRenderSize(); 
-				}
-
-				if ( force_integer_mv != 0 )
-				{
-					allow_high_precision_mv= 0;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.allow_high_precision_mv, "allow_high_precision_mv"); 
-				}
-				WriteReadInterpolationFilter(); 
-				stream.WriteFixed(1, this.is_motion_mode_switchable, "is_motion_mode_switchable"); 
-
-				if ( error_resilient_mode != 0 || enable_ref_frame_mvs== 0 )
-				{
-					use_ref_frame_mvs= 0;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.use_ref_frame_mvs, "use_ref_frame_mvs"); 
-				}
-
-				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
-				{
-					refFrame= AV1RefFrames.LAST_FRAME + i;
-					hint= RefOrderHint[ ref_frame_idx[ i ] ];
-					OrderHints[ refFrame ]= hint;
-
-					if ( enable_order_hint== 0 )
-					{
-						RefFrameSignBias[ refFrame ]= 0;
-					}
-					else 
-					{
-						RefFrameSignBias[ refFrame ]= (WriteGetRelativeDist( hint, OrderHint) > 0) ? 1 : 0;
-					}
-				}
-			}
-
-			if ( reduced_still_picture_header != 0 || disable_cdf_update != 0 )
-			{
-				disable_frame_end_update_cdf= 1;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.disable_frame_end_update_cdf, "disable_frame_end_update_cdf"); 
-			}
-
-			if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
-			{
-				WriteInitNonCoeffCdfs(); 
-				WriteSetupPastIndependence(); 
-			}
-			else 
-			{
-				WriteLoadCdfs( ref_frame_idx[ primary_ref_frame ] ); 
-				WriteLoadPrevious(); 
-			}
-
-			if ( use_ref_frame_mvs == 1 )
-			{
-				WriteMotionFieldEstimation(); 
-			}
-			WriteTileInfo(); 
-			WriteQuantizationParams(); 
-			WriteSegmentationParams(); 
-			WriteDeltaqParams(); 
-			WriteDeltaLfParams(); 
-
-			if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
-			{
-				WriteInitCoeffCdfs(); 
-			}
-			else 
-			{
-				WriteLoadPreviousSegmentIds(); 
-			}
-			CodedLossless= 1;
-
-			for ( segmentId = 0; segmentId < AV1Constants.MAX_SEGMENTS; segmentId++ )
-			{
-				qindex= GetQIndex( 1, segmentId );
-				LosslessArray[ segmentId ]= (qindex == 0 && DeltaQYDc == 0 && DeltaQUAc == 0 && DeltaQUDc == 0 && DeltaQVAc == 0 && DeltaQVDc == 0) ? 1 : 0;
-
-				if ( LosslessArray[ segmentId ]== 0 )
-				{
-					CodedLossless= 0;
-				}
-
-				if ( using_qmatrix != 0 )
-				{
-
-					if ( LosslessArray[ segmentId ] != 0 )
-					{
-						SegQMLevel[ 0 ][ segmentId ]= 15;
-						SegQMLevel[ 1 ][ segmentId ]= 15;
-						SegQMLevel[ 2 ][ segmentId ]= 15;
-					}
-					else 
-					{
-						SegQMLevel[ 0 ][ segmentId ]= qm_y;
-						SegQMLevel[ 1 ][ segmentId ]= qm_u;
-						SegQMLevel[ 2 ][ segmentId ]= qm_v;
-					}
-				}
-			}
-			AllLossless= (CodedLossless != 0 && ( FrameWidth == UpscaledWidth )) ? 1 : 0;
-			WriteLoopFilterParams(); 
-			WriteCdefParams(); 
-			WriteLrParams(); 
-			WriteReadTxMode(); 
-			WriteFrameReferenceMode(); 
-			WriteSkipModeParams(); 
-
-			if ( FrameIsIntra != 0 || error_resilient_mode != 0 || enable_warped_motion== 0 )
-			{
-				allow_warped_motion= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.allow_warped_motion, "allow_warped_motion"); 
-			}
-			stream.WriteFixed(1, this.reduced_tx_set, "reduced_tx_set"); 
-			WriteGlobalMotionParams(); 
-			WriteFilmGrainParams(); 
+			GlobalMotionParams(); 
+			FilmGrainParams(); 
         }
 
     /*
@@ -2656,16 +1812,10 @@ temporal_point_info() {
 		private int frame_presentation_time;
 		public int _FramePresentationTime { get { return frame_presentation_time; } set { frame_presentation_time = value; } }
 
-        private void ReadTemporalPointInfo()
+        private void TemporalPointInfo()
         {
 			n= frame_presentation_time_length_minus_1 + 1;
 			stream.ReadVariable(n, out this.frame_presentation_time, "frame_presentation_time"); 
-        }
-
-        private void WriteTemporalPointInfo()
-        {
-			n= frame_presentation_time_length_minus_1 + 1;
-			stream.WriteVariable(n, this.frame_presentation_time, "frame_presentation_time"); 
         }
 
     /*
@@ -2698,7 +1848,7 @@ frame_size() {
 		private int compute_image_size;
 		public int _ComputeImageSize { get { return compute_image_size; } set { compute_image_size = value; } }
 
-        private void ReadFrameSize()
+        private void FrameSize()
         {
 
 			if ( frame_size_override_flag != 0 )
@@ -2715,29 +1865,8 @@ frame_size() {
 				FrameWidth= max_frame_width_minus_1 + 1;
 				FrameHeight= max_frame_height_minus_1 + 1;
 			}
-			ReadSuperresParams(); 
-			ReadComputeImageSize(); 
-        }
-
-        private void WriteFrameSize()
-        {
-
-			if ( frame_size_override_flag != 0 )
-			{
-				n= frame_width_bits_minus_1 + 1;
-				stream.WriteVariable(n, this.frame_width_minus_1, "frame_width_minus_1"); 
-				n= frame_height_bits_minus_1 + 1;
-				stream.WriteVariable(n, this.frame_height_minus_1, "frame_height_minus_1"); 
-				FrameWidth= frame_width_minus_1 + 1;
-				FrameHeight= frame_height_minus_1 + 1;
-			}
-			else 
-			{
-				FrameWidth= max_frame_width_minus_1 + 1;
-				FrameHeight= max_frame_height_minus_1 + 1;
-			}
-			WriteSuperresParams(); 
-			WriteComputeImageSize(); 
+			SuperresParams(); 
+			ComputeImageSize(); 
         }
 
     /*
@@ -2765,7 +1894,7 @@ render_size() {
 		private int RenderHeight;
 		public int _RenderHeight { get { return RenderHeight; } set { RenderHeight = value; } }
 
-        private void ReadRenderSize()
+        private void RenderSize()
         {
 			stream.ReadFixed(1, out this.render_and_frame_size_different, "render_and_frame_size_different"); 
 
@@ -2773,24 +1902,6 @@ render_size() {
 			{
 				stream.ReadFixed(16, out this.render_width_minus_1, "render_width_minus_1"); 
 				stream.ReadFixed(16, out this.render_height_minus_1, "render_height_minus_1"); 
-				RenderWidth= render_width_minus_1 + 1;
-				RenderHeight= render_height_minus_1 + 1;
-			}
-			else 
-			{
-				RenderWidth= UpscaledWidth;
-				RenderHeight= FrameHeight;
-			}
-        }
-
-        private void WriteRenderSize()
-        {
-			stream.WriteFixed(1, this.render_and_frame_size_different, "render_and_frame_size_different"); 
-
-			if ( render_and_frame_size_different == 1 )
-			{
-				stream.WriteFixed(16, this.render_width_minus_1, "render_width_minus_1"); 
-				stream.WriteFixed(16, this.render_height_minus_1, "render_height_minus_1"); 
 				RenderWidth= render_width_minus_1 + 1;
 				RenderHeight= render_height_minus_1 + 1;
 			}
@@ -2828,7 +1939,7 @@ frame_size_with_refs() {
 		private int UpscaledWidth;
 		public int _UpscaledWidth { get { return UpscaledWidth; } set { UpscaledWidth = value; } }
 
-        private void ReadFrameSizeWithRefs()
+        private void FrameSizeWithRefs()
         {
 
 			for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
@@ -2848,43 +1959,13 @@ frame_size_with_refs() {
 
 			if ( found_ref == 0 )
 			{
-				ReadFrameSize(); 
-				ReadRenderSize(); 
+				FrameSize(); 
+				RenderSize(); 
 			}
 			else 
 			{
-				ReadSuperresParams(); 
-				ReadComputeImageSize(); 
-			}
-        }
-
-        private void WriteFrameSizeWithRefs()
-        {
-
-			for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
-			{
-				stream.WriteFixed(1, this.found_ref, "found_ref"); 
-
-				if ( found_ref == 1 )
-				{
-					UpscaledWidth= RefUpscaledWidth[ ref_frame_idx[ i ] ];
-					FrameWidth= UpscaledWidth;
-					FrameHeight= RefFrameHeight[ ref_frame_idx[ i ] ];
-					RenderWidth= RefRenderWidth[ ref_frame_idx[ i ] ];
-					RenderHeight= RefRenderHeight[ ref_frame_idx[ i ] ];
-					break;
-				}
-			}
-
-			if ( found_ref == 0 )
-			{
-				WriteFrameSize(); 
-				WriteRenderSize(); 
-			}
-			else 
-			{
-				WriteSuperresParams(); 
-				WriteComputeImageSize(); 
+				SuperresParams(); 
+				ComputeImageSize(); 
 			}
         }
 
@@ -2903,7 +1984,7 @@ read_interpolation_filter() {
 		private int interpolation_filter;
 		public int _InterpolationFilter { get { return interpolation_filter; } set { interpolation_filter = value; } }
 
-        private void ReadReadInterpolationFilter()
+        private void ReadInterpolationFilter()
         {
 			stream.ReadFixed(1, out this.is_filter_switchable, "is_filter_switchable"); 
 
@@ -2914,20 +1995,6 @@ read_interpolation_filter() {
 			else 
 			{
 				stream.ReadFixed(2, out this.interpolation_filter, "interpolation_filter"); 
-			}
-        }
-
-        private void WriteReadInterpolationFilter()
-        {
-			stream.WriteFixed(1, this.is_filter_switchable, "is_filter_switchable"); 
-
-			if ( is_filter_switchable == 1 )
-			{
-				interpolation_filter= AV1InterpolationFilter.SWITCHABLE;
-			}
-			else 
-			{
-				stream.WriteFixed(2, this.interpolation_filter, "interpolation_filter"); 
 			}
         }
 
@@ -2947,20 +2014,7 @@ get_relative_dist( a, b ) {
 		public int _Diff { get { return diff; } set { diff = value; } }
 		private int m;
 
-        private int ReadGetRelativeDist(int a, int b)
-        {
-
-			if ( enable_order_hint== 0 )
-			{
-				return 0;
-			}
-			diff= a - b;
-			m= 1 << (OrderHintBits - 1);
-			diff= (diff & (m - 1)) - (diff & m);
-			return diff;
-        }
-
-        private int WriteGetRelativeDist(int a, int b)
+        private int GetRelativeDist(int a, int b)
         {
 
 			if ( enable_order_hint== 0 )
@@ -3127,7 +2181,7 @@ tile_info () {
 		private int TileSizeBytes;
 		public int _TileSizeBytes { get { return TileSizeBytes; } set { TileSizeBytes = value; } }
 
-        private void ReadTileInfo()
+        private void TileInfo()
         {
 			sbCols= use_128x128_superblock != 0 ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
 			sbRows= use_128x128_superblock != 0 ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
@@ -3135,10 +2189,10 @@ tile_info () {
 			sbSize= sbShift + 2;
 			maxTileWidthSb= AV1Constants.MAX_TILE_WIDTH >> (int)sbSize;
 			maxTileAreaSb= AV1Constants.MAX_TILE_AREA >> (int)( 2 * sbSize );
-			minLog2TileCols= ReadTileLog2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= ReadTileLog2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
-			maxLog2TileRows= ReadTileLog2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
-			minLog2Tiles= Math.Max(minLog2TileCols, ReadTileLog2(maxTileAreaSb, sbRows * sbCols));
+			minLog2TileCols= TileLog2(maxTileWidthSb, sbCols);
+			maxLog2TileCols= TileLog2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
+			maxLog2TileRows= TileLog2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
+			minLog2Tiles= Math.Max(minLog2TileCols, TileLog2(maxTileAreaSb, sbRows * sbCols));
 			stream.ReadFixed(1, out this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
 
 			if ( uniform_tile_spacing_flag != 0 )
@@ -3147,9 +2201,7 @@ tile_info () {
 
 				while ( TileColsLog2 < maxLog2TileCols )
 				{
-					stream.ReadFixed(1, out this.increment_tile_cols_log2, "increment_tile_cols_log2"); if (!_cachedIncrementValues.ContainsKey("increment_tile_cols_log2"))
-                        _cachedIncrementValues.Add("increment_tile_cols_log2", new Queue<int>());
-                    _cachedIncrementValues["increment_tile_cols_log2"].Enqueue(this.increment_tile_cols_log2);
+					stream.ReadFixed(1, out this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
 
 					if ( increment_tile_cols_log2 == 1 )
 					{
@@ -3175,10 +2227,7 @@ tile_info () {
 
 				while ( TileRowsLog2 < maxLog2TileRows )
 				{
-					stream.ReadFixed(1, out this.increment_tile_rows_log2, "increment_tile_rows_log2"); if (!_cachedIncrementValues.ContainsKey("increment_tile_rows_log2"))
-                        _cachedIncrementValues.Add("increment_tile_rows_log2", new Queue<int>());
-                    _cachedIncrementValues["increment_tile_rows_log2"].Enqueue(this.increment_tile_rows_log2);
-
+					stream.ReadFixed(1, out this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
 
 					if ( increment_tile_rows_log2 == 1 )
 					{
@@ -3216,7 +2265,7 @@ tile_info () {
 				}
 				MiColStarts[i]= MiCols;
 				TileCols= i;
-				TileColsLog2= ReadTileLog2(1, TileCols);
+				TileColsLog2= TileLog2(1, TileCols);
 
 				if ( minLog2Tiles > 0 )
 				{
@@ -3239,139 +2288,13 @@ tile_info () {
 				}
 				MiRowStarts[ i ]= MiRows;
 				TileRows= i;
-				TileRowsLog2= ReadTileLog2(1, TileRows);
+				TileRowsLog2= TileLog2(1, TileRows);
 			}
 
 			if ( TileColsLog2 > 0 || TileRowsLog2 > 0 )
 			{
 				stream.ReadVariable(TileRowsLog2+TileColsLog2, out this.context_update_tile_id, "context_update_tile_id"); 
 				stream.ReadFixed(2, out this.tile_size_bytes_minus_1, "tile_size_bytes_minus_1"); 
-				TileSizeBytes= tile_size_bytes_minus_1 + 1;
-			}
-			else 
-			{
-				context_update_tile_id= 0;
-			}
-        }
-
-        private void WriteTileInfo()
-        {
-			sbCols= use_128x128_superblock != 0 ? ( ( MiCols + 31 ) >> (int)5 ) : ( ( MiCols + 15 ) >> (int)4 );
-			sbRows= use_128x128_superblock != 0 ? ( ( MiRows + 31 ) >> (int)5 ) : ( ( MiRows + 15 ) >> (int)4 );
-			sbShift= use_128x128_superblock != 0 ? 5 : 4;
-			sbSize= sbShift + 2;
-			maxTileWidthSb= AV1Constants.MAX_TILE_WIDTH >> (int)sbSize;
-			maxTileAreaSb= AV1Constants.MAX_TILE_AREA >> (int)( 2 * sbSize );
-			minLog2TileCols= WriteTileLog2(maxTileWidthSb, sbCols);
-			maxLog2TileCols= WriteTileLog2(1, Math.Min(sbCols, AV1Constants.MAX_TILE_COLS));
-			maxLog2TileRows= WriteTileLog2(1, Math.Min(sbRows, AV1Constants.MAX_TILE_ROWS));
-			minLog2Tiles= Math.Max(minLog2TileCols, WriteTileLog2(maxTileAreaSb, sbRows * sbCols));
-			stream.WriteFixed(1, this.uniform_tile_spacing_flag, "uniform_tile_spacing_flag"); 
-
-			if ( uniform_tile_spacing_flag != 0 )
-			{
-				TileColsLog2= minLog2TileCols;
-
-				while ( TileColsLog2 < maxLog2TileCols )
-				{
-if (_cachedIncrementValues.ContainsKey("increment_tile_cols_log2"))
-                        increment_tile_cols_log2 = _cachedIncrementValues["increment_tile_cols_log2"].Dequeue();
-					stream.WriteFixed(1, this.increment_tile_cols_log2, "increment_tile_cols_log2"); 
-
-					if ( increment_tile_cols_log2 == 1 )
-					{
-						TileColsLog2++;
-					}
-					else 
-					{
-						break;
-					}
-				}
-				tileWidthSb= (sbCols + (1 << TileColsLog2) - 1) >> (int)TileColsLog2;
-				i= 0;
-
-				for ( startSb = 0; startSb < sbCols; startSb += tileWidthSb )
-				{
-					MiColStarts[ i ]= startSb << sbShift;
-					i+= 1;
-				}
-				MiColStarts[i]= MiCols;
-				TileCols= i;
-				minLog2TileRows= Math.Max( minLog2Tiles - TileColsLog2, 0);
-				TileRowsLog2= minLog2TileRows;
-
-				while ( TileRowsLog2 < maxLog2TileRows )
-				{
-if (_cachedIncrementValues.ContainsKey("increment_tile_rows_log2"))
-                        increment_tile_rows_log2 = _cachedIncrementValues["increment_tile_rows_log2"].Dequeue();
-					stream.WriteFixed(1, this.increment_tile_rows_log2, "increment_tile_rows_log2"); 
-
-					if ( increment_tile_rows_log2 == 1 )
-					{
-						TileRowsLog2++;
-					}
-					else 
-					{
-						break;
-					}
-				}
-				tileHeightSb= (sbRows + (1 << TileRowsLog2) - 1) >> (int)TileRowsLog2;
-				i= 0;
-
-				for ( startSb = 0; startSb < sbRows; startSb += tileHeightSb )
-				{
-					MiRowStarts[ i ]= startSb << sbShift;
-					i+= 1;
-				}
-				MiRowStarts[i]= MiRows;
-				TileRows= i;
-			}
-			else 
-			{
-				widestTileSb= 0;
-				startSb= 0;
-
-				for ( i = 0; startSb < sbCols; i++ )
-				{
-					MiColStarts[ i ]= startSb << sbShift;
-					maxWidth= Math.Min(sbCols - startSb, maxTileWidthSb);
-					stream.Write_ns(maxWidth, this.width_in_sbs_minus_1, "width_in_sbs_minus_1"); 
-					sizeSb= (int)(width_in_sbs_minus_1 + 1);
-					widestTileSb= Math.Max( sizeSb, widestTileSb );
-					startSb+= sizeSb;
-				}
-				MiColStarts[i]= MiCols;
-				TileCols= i;
-				TileColsLog2= WriteTileLog2(1, TileCols);
-
-				if ( minLog2Tiles > 0 )
-				{
-					maxTileAreaSb= (sbRows * sbCols) >> (int)(minLog2Tiles + 1);
-				}
-				else 
-				{
-					maxTileAreaSb= sbRows * sbCols;
-				}
-				maxTileHeightSb= Math.Max( maxTileAreaSb / widestTileSb, 1 );
-				startSb= 0;
-
-				for ( i = 0; startSb < sbRows; i++ )
-				{
-					MiRowStarts[ i ]= startSb << sbShift;
-					maxHeight= Math.Min(sbRows - startSb, maxTileHeightSb);
-					stream.Write_ns(maxHeight, this.height_in_sbs_minus_1, "height_in_sbs_minus_1"); 
-					sizeSb= (int)(height_in_sbs_minus_1 + 1);
-					startSb+= sizeSb;
-				}
-				MiRowStarts[ i ]= MiRows;
-				TileRows= i;
-				TileRowsLog2= WriteTileLog2(1, TileRows);
-			}
-
-			if ( TileColsLog2 > 0 || TileRowsLog2 > 0 )
-			{
-				stream.WriteVariable(TileRowsLog2+TileColsLog2, this.context_update_tile_id, "context_update_tile_id"); 
-				stream.WriteFixed(2, this.tile_size_bytes_minus_1, "tile_size_bytes_minus_1"); 
 				TileSizeBytes= tile_size_bytes_minus_1 + 1;
 			}
 			else 
@@ -3393,16 +2316,7 @@ tile_log2( blkSize, target ) {
 		public int _Target { get { return target; } set { target = value; } }
 		private int k = 0;
 
-        private int ReadTileLog2(int blkSize, int target)
-        {
-
-			for ( k = 0; (blkSize << (int) k) < target; k++ )
-			{
-			}
-			return k;
-        }
-
-        private int WriteTileLog2(int blkSize, int target)
+        private int TileLog2(int blkSize, int target)
         {
 
 			for ( k = 0; (blkSize << (int) k) < target; k++ )
@@ -3469,10 +2383,10 @@ quantization_params() {
 		private int qm_v;
 		public int _Qmv { get { return qm_v; } set { qm_v = value; } }
 
-        private void ReadQuantizationParams()
+        private void QuantizationParams()
         {
 			stream.ReadFixed(8, out this.base_q_idx, "base_q_idx"); 
-			DeltaQYDc= ReadReadDeltaq();
+			DeltaQYDc= ReadDeltaq();
 
 			if ( NumPlanes > 1 )
 			{
@@ -3485,13 +2399,13 @@ quantization_params() {
 				{
 					diff_uv_delta= 0;
 				}
-				DeltaQUDc= ReadReadDeltaq();
-				DeltaQUAc= ReadReadDeltaq();
+				DeltaQUDc= ReadDeltaq();
+				DeltaQUAc= ReadDeltaq();
 
 				if ( diff_uv_delta != 0 )
 				{
-					DeltaQVDc= ReadReadDeltaq();
-					DeltaQVAc= ReadReadDeltaq();
+					DeltaQVDc= ReadDeltaq();
+					DeltaQVAc= ReadDeltaq();
 				}
 				else 
 				{
@@ -3524,61 +2438,6 @@ quantization_params() {
 			}
         }
 
-        private void WriteQuantizationParams()
-        {
-			stream.WriteFixed(8, this.base_q_idx, "base_q_idx"); 
-			DeltaQYDc= WriteReadDeltaq();
-
-			if ( NumPlanes > 1 )
-			{
-
-				if ( separate_uv_delta_q != 0 )
-				{
-					stream.WriteFixed(1, this.diff_uv_delta, "diff_uv_delta"); 
-				}
-				else 
-				{
-					diff_uv_delta= 0;
-				}
-				DeltaQUDc= WriteReadDeltaq();
-				DeltaQUAc= WriteReadDeltaq();
-
-				if ( diff_uv_delta != 0 )
-				{
-					DeltaQVDc= WriteReadDeltaq();
-					DeltaQVAc= WriteReadDeltaq();
-				}
-				else 
-				{
-					DeltaQVDc= DeltaQUDc;
-					DeltaQVAc= DeltaQUAc;
-				}
-			}
-			else 
-			{
-				DeltaQUDc= 0;
-				DeltaQUAc= 0;
-				DeltaQVDc= 0;
-				DeltaQVAc= 0;
-			}
-			stream.WriteFixed(1, this.using_qmatrix, "using_qmatrix"); 
-
-			if ( using_qmatrix != 0 )
-			{
-				stream.WriteFixed(4, this.qm_y, "qm_y"); 
-				stream.WriteFixed(4, this.qm_u, "qm_u"); 
-
-				if ( separate_uv_delta_q== 0 )
-				{
-					qm_v= qm_u;
-				}
-				else 
-				{
-					stream.WriteFixed(4, this.qm_v, "qm_v"); 
-				}
-			}
-        }
-
     /*
 read_delta_q() { 
  delta_coded f(1)
@@ -3595,28 +2454,13 @@ read_delta_q() {
 		private int delta_q;
 		public int _Deltaq { get { return delta_q; } set { delta_q = value; } }
 
-        private int ReadReadDeltaq()
+        private int ReadDeltaq()
         {
 			stream.ReadFixed(1, out this.delta_coded, "delta_coded"); 
 
 			if ( delta_coded != 0 )
 			{
 				stream.ReadSignedIntVar(1+6, out this.delta_q, "delta_q"); 
-			}
-			else 
-			{
-				delta_q= 0;
-			}
-			return delta_q;
-        }
-
-        private int WriteReadDeltaq()
-        {
-			stream.WriteFixed(1, this.delta_coded, "delta_coded"); 
-
-			if ( delta_coded != 0 )
-			{
-				stream.WriteSignedIntVar(1+6, this.delta_q, "delta_q"); 
 			}
 			else 
 			{
@@ -3711,7 +2555,7 @@ segmentation_params() {
 		public int _LastActiveSegId { get { return LastActiveSegId; } set { LastActiveSegId = value; } }
 		private int j = 0;
 
-        private void ReadSegmentationParams()
+        private void SegmentationParams()
         {
 			stream.ReadFixed(1, out this.segmentation_enabled, "segmentation_enabled"); 
 
@@ -3756,105 +2600,12 @@ segmentation_params() {
 								if ( Segmentation_Feature_Signed[ j ] == 1 )
 								{
 									stream.ReadSignedIntVar(1+bitsToRead, out this.feature_value, "feature_value"); 
-									clippedValue= AomStream.Clip3( -limit, limit, feature_value);
+									clippedValue= Clip3( -limit, limit, feature_value);
 								}
 								else 
 								{
 									stream.ReadVariable(bitsToRead, out this.feature_value, "feature_value"); 
-									clippedValue= AomStream.Clip3( 0, limit, feature_value);
-								}
-							}
-							FeatureData[ i ][ j ]= clippedValue;
-						}
-					}
-				}
-			}
-			else 
-			{
-
-				for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
-				{
-
-					for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
-					{
-						FeatureEnabled[ i ][ j ]= 0;
-						FeatureData[ i ][ j ]= 0;
-					}
-				}
-			}
-			SegIdPreSkip= 0;
-			LastActiveSegId= 0;
-
-			for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
-			{
-
-				for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
-				{
-
-					if ( FeatureEnabled[ i ][ j ] != 0 )
-					{
-						LastActiveSegId= i;
-
-						if ( j >= AV1Constants.SEG_LVL_REF_FRAME )
-						{
-							SegIdPreSkip= 1;
-						}
-					}
-				}
-			}
-        }
-
-        private void WriteSegmentationParams()
-        {
-			stream.WriteFixed(1, this.segmentation_enabled, "segmentation_enabled"); 
-
-			if ( segmentation_enabled == 1 )
-			{
-
-				if ( primary_ref_frame == AV1Constants.PRIMARY_REF_NONE )
-				{
-					segmentation_update_map= 1;
-					segmentation_temporal_update= 0;
-					segmentation_update_data= 1;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.segmentation_update_map, "segmentation_update_map"); 
-
-					if ( segmentation_update_map == 1 )
-					{
-						stream.WriteFixed(1, this.segmentation_temporal_update, "segmentation_temporal_update"); 
-					}
-					stream.WriteFixed(1, this.segmentation_update_data, "segmentation_update_data"); 
-				}
-
-				if ( segmentation_update_data == 1 )
-				{
-
-					for ( i = 0; i < AV1Constants.MAX_SEGMENTS; i++ )
-					{
-
-						for ( j = 0; j < AV1Constants.SEG_LVL_MAX; j++ )
-						{
-							feature_value= 0;
-							stream.WriteFixed(1, this.feature_enabled, "feature_enabled"); 
-							FeatureEnabled[ i ][ j ]= feature_enabled;
-							clippedValue= 0;
-
-							if ( feature_enabled == 1 )
-							{
-								bitsToRead= Segmentation_Feature_Bits[ j ];
-								limit= Segmentation_Feature_Max[ j ];
-
-								if ( Segmentation_Feature_Signed[ j ] == 1 )
-								{
-									stream.WriteSignedIntVar(1+bitsToRead, this.feature_value, "feature_value"); 
-									clippedValue= AomStream.Clip3( -limit, limit, feature_value);
-								}
-								else 
-								{
-									stream.WriteVariable(bitsToRead, this.feature_value, "feature_value"); 
-									clippedValue= AomStream.Clip3( 0, limit, feature_value);
+									clippedValue= Clip3( 0, limit, feature_value);
 								}
 							}
 							FeatureData[ i ][ j ]= clippedValue;
@@ -3914,7 +2665,7 @@ delta_q_params() {
 		private int delta_q_present;
 		public int _DeltaqPresent { get { return delta_q_present; } set { delta_q_present = value; } }
 
-        private void ReadDeltaqParams()
+        private void DeltaqParams()
         {
 			delta_q_res= 0;
 			delta_q_present= 0;
@@ -3927,22 +2678,6 @@ delta_q_params() {
 			if ( delta_q_present != 0 )
 			{
 				stream.ReadFixed(2, out this.delta_q_res, "delta_q_res"); 
-			}
-        }
-
-        private void WriteDeltaqParams()
-        {
-			delta_q_res= 0;
-			delta_q_present= 0;
-
-			if ( base_q_idx > 0 )
-			{
-				stream.WriteFixed(1, this.delta_q_present, "delta_q_present"); 
-			}
-
-			if ( delta_q_present != 0 )
-			{
-				stream.WriteFixed(2, this.delta_q_res, "delta_q_res"); 
 			}
         }
 
@@ -3968,7 +2703,7 @@ delta_lf_params() {
 		private int delta_lf_multi;
 		public int _DeltaLfMulti { get { return delta_lf_multi; } set { delta_lf_multi = value; } }
 
-        private void ReadDeltaLfParams()
+        private void DeltaLfParams()
         {
 			delta_lf_present= 0;
 			delta_lf_res= 0;
@@ -3986,28 +2721,6 @@ delta_lf_params() {
 				{
 					stream.ReadFixed(2, out this.delta_lf_res, "delta_lf_res"); 
 					stream.ReadFixed(1, out this.delta_lf_multi, "delta_lf_multi"); 
-				}
-			}
-        }
-
-        private void WriteDeltaLfParams()
-        {
-			delta_lf_present= 0;
-			delta_lf_res= 0;
-			delta_lf_multi= 0;
-
-			if ( delta_q_present != 0 )
-			{
-
-				if ( allow_intrabc== 0 )
-				{
-					stream.WriteFixed(1, this.delta_lf_present, "delta_lf_present"); 
-				}
-
-				if ( delta_lf_present != 0 )
-				{
-					stream.WriteFixed(2, this.delta_lf_res, "delta_lf_res"); 
-					stream.WriteFixed(1, this.delta_lf_multi, "delta_lf_multi"); 
 				}
 			}
         }
@@ -4055,7 +2768,7 @@ cdef_params() {
 		private int cdef_damping_minus_3;
 		public int _CdefDampingMinus3 { get { return cdef_damping_minus_3; } set { cdef_damping_minus_3 = value; } }
 
-        private void ReadCdefParams()
+        private void CdefParams()
         {
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 || enable_cdef== 0)
@@ -4086,46 +2799,6 @@ cdef_params() {
 				{
 					stream.ReadFixed(4, out this.cdef_uv_pri_strength[i], "cdef_uv_pri_strength"); 
 					stream.ReadFixed(2, out this.cdef_uv_sec_strength[i], "cdef_uv_sec_strength"); 
-
-					if ( cdef_uv_sec_strength[i] == 3 )
-					{
-						cdef_uv_sec_strength[i]+= 1;
-					}
-				}
-			}
-        }
-
-        private void WriteCdefParams()
-        {
-
-			if ( CodedLossless != 0 || allow_intrabc != 0 || enable_cdef== 0)
-			{
-				cdef_bits= 0;
-				cdef_y_pri_strength[0]= 0;
-				cdef_y_sec_strength[0]= 0;
-				cdef_uv_pri_strength[0]= 0;
-				cdef_uv_sec_strength[0]= 0;
-				CdefDamping= 3;
-				return;
-			}
-			stream.WriteFixed(2, this.cdef_damping_minus_3, "cdef_damping_minus_3"); 
-			CdefDamping= cdef_damping_minus_3 + 3;
-			stream.WriteFixed(2, this.cdef_bits, "cdef_bits"); 
-
-			for ( i = 0; i < (1 << (int) cdef_bits); i++ )
-			{
-				stream.WriteFixed(4, this.cdef_y_pri_strength[i], "cdef_y_pri_strength"); 
-				stream.WriteFixed(2, this.cdef_y_sec_strength[i], "cdef_y_sec_strength"); 
-
-				if ( cdef_y_sec_strength[i] == 3 )
-				{
-					cdef_y_sec_strength[i]+= 1;
-				}
-
-				if ( NumPlanes > 1 )
-				{
-					stream.WriteFixed(4, this.cdef_uv_pri_strength[i], "cdef_uv_pri_strength"); 
-					stream.WriteFixed(2, this.cdef_uv_sec_strength[i], "cdef_uv_sec_strength"); 
 
 					if ( cdef_uv_sec_strength[i] == 3 )
 					{
@@ -4195,7 +2868,7 @@ lr_params() {
 		private int lr_uv_shift;
 		public int _LrUvShift { get { return lr_uv_shift; } set { lr_uv_shift = value; } }
 
-        private void ReadLrParams()
+        private void LrParams()
         {
 
 			if ( AllLossless != 0 || allow_intrabc != 0 || enable_restoration== 0 )
@@ -4248,69 +2921,6 @@ lr_params() {
 				if ( subsampling_x != 0 && subsampling_y != 0 && usesChromaLr != 0 )
 				{
 					stream.ReadFixed(1, out this.lr_uv_shift, "lr_uv_shift"); 
-				}
-				else 
-				{
-					lr_uv_shift= 0;
-				}
-				LoopRestorationSize[ 1 ]= LoopRestorationSize[ 0 ] >> (int)lr_uv_shift;
-				LoopRestorationSize[ 2 ]= LoopRestorationSize[ 0 ] >> (int)lr_uv_shift;
-			}
-        }
-
-        private void WriteLrParams()
-        {
-
-			if ( AllLossless != 0 || allow_intrabc != 0 || enable_restoration== 0 )
-			{
-				FrameRestorationType[0]= AV1FrameRestorationType.RESTORE_NONE;
-				FrameRestorationType[1]= AV1FrameRestorationType.RESTORE_NONE;
-				FrameRestorationType[2]= AV1FrameRestorationType.RESTORE_NONE;
-				UsesLr= 0;
-				return;
-			}
-			UsesLr= 0;
-			usesChromaLr= 0;
-
-			for ( i = 0; i < NumPlanes; i++ )
-			{
-				stream.WriteFixed(2, this.lr_type, "lr_type"); 
-				FrameRestorationType[i]= Remap_Lr_Type[lr_type];
-
-				if ( FrameRestorationType[i] != AV1FrameRestorationType.RESTORE_NONE )
-				{
-					UsesLr= 1;
-
-					if ( i > 0 )
-					{
-						usesChromaLr= 1;
-					}
-				}
-			}
-
-			if ( UsesLr != 0 )
-			{
-
-				if ( use_128x128_superblock != 0 )
-				{
-					stream.WriteFixed(1, this.lr_unit_shift, "lr_unit_shift"); 
-					lr_unit_shift++;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.lr_unit_shift, "lr_unit_shift"); 
-
-					if ( lr_unit_shift != 0 )
-					{
-						stream.WriteFixed(1, this.lr_unit_extra_shift, "lr_unit_extra_shift"); 
-						lr_unit_shift+= lr_unit_extra_shift;
-					}
-				}
-				LoopRestorationSize[ 0 ]= AV1Constants.RESTORATION_TILESIZE_MAX >> (int)(2 - lr_unit_shift);
-
-				if ( subsampling_x != 0 && subsampling_y != 0 && usesChromaLr != 0 )
-				{
-					stream.WriteFixed(1, this.lr_uv_shift, "lr_uv_shift"); 
 				}
 				else 
 				{
@@ -4383,7 +2993,7 @@ loop_filter_params() {
 		private int update_mode_delta;
 		public int _UpdateModeDelta { get { return update_mode_delta; } set { update_mode_delta = value; } }
 
-        private void ReadLoopFilterParams()
+        private void LoopFilterParams()
         {
 
 			if ( CodedLossless != 0 || allow_intrabc != 0 )
@@ -4450,73 +3060,6 @@ loop_filter_params() {
 			}
         }
 
-        private void WriteLoopFilterParams()
-        {
-
-			if ( CodedLossless != 0 || allow_intrabc != 0 )
-			{
-				loop_filter_level[ 0 ]= 0;
-				loop_filter_level[ 1 ]= 0;
-				loop_filter_ref_deltas[ AV1RefFrames.INTRA_FRAME ]= 1;
-				loop_filter_ref_deltas[ AV1RefFrames.LAST_FRAME ]= 0;
-				loop_filter_ref_deltas[ AV1RefFrames.LAST2_FRAME ]= 0;
-				loop_filter_ref_deltas[ AV1RefFrames.LAST3_FRAME ]= 0;
-				loop_filter_ref_deltas[ AV1RefFrames.BWDREF_FRAME ]= 0;
-				loop_filter_ref_deltas[ AV1RefFrames.GOLDEN_FRAME ]= -1;
-				loop_filter_ref_deltas[ AV1RefFrames.ALTREF_FRAME ]= -1;
-				loop_filter_ref_deltas[ AV1RefFrames.ALTREF2_FRAME ]= -1;
-
-				for ( i = 0; i < 2; i++ )
-				{
-					loop_filter_mode_deltas[ i ]= 0;
-				}
-				return;
-			}
-			stream.WriteFixed(6, this.loop_filter_level[ 0 ], "loop_filter_level"); 
-			stream.WriteFixed(6, this.loop_filter_level[ 1 ], "loop_filter_level"); 
-
-			if ( NumPlanes > 1 )
-			{
-
-				if ( loop_filter_level[ 0 ] != 0 || loop_filter_level[ 1 ] != 0 )
-				{
-					stream.WriteFixed(6, this.loop_filter_level[ 2 ], "loop_filter_level"); 
-					stream.WriteFixed(6, this.loop_filter_level[ 3 ], "loop_filter_level"); 
-				}
-			}
-			stream.WriteFixed(3, this.loop_filter_sharpness, "loop_filter_sharpness"); 
-			stream.WriteFixed(1, this.loop_filter_delta_enabled, "loop_filter_delta_enabled"); 
-
-			if ( loop_filter_delta_enabled == 1 )
-			{
-				stream.WriteFixed(1, this.loop_filter_delta_update, "loop_filter_delta_update"); 
-
-				if ( loop_filter_delta_update == 1 )
-				{
-
-					for ( i = 0; i < AV1Constants.TOTAL_REFS_PER_FRAME; i++ )
-					{
-						stream.WriteFixed(1, this.update_ref_delta, "update_ref_delta"); 
-
-						if ( update_ref_delta == 1 )
-						{
-							stream.WriteSignedIntVar(1+6, this.loop_filter_ref_deltas[ i ], "loop_filter_ref_deltas"); 
-						}
-					}
-
-					for ( i = 0; i < 2; i++ )
-					{
-						stream.WriteFixed(1, this.update_mode_delta, "update_mode_delta"); 
-
-						if ( update_mode_delta == 1 )
-						{
-							stream.WriteSignedIntVar(1+6, this.loop_filter_mode_deltas[ i ], "loop_filter_mode_deltas"); 
-						}
-					}
-				}
-			}
-        }
-
     /*
 read_tx_mode() { 
  if ( CodedLossless == 1 ) {
@@ -4536,7 +3079,7 @@ read_tx_mode() {
 		private int tx_mode_select;
 		public int _TxModeSelect { get { return tx_mode_select; } set { tx_mode_select = value; } }
 
-        private void ReadReadTxMode()
+        private void ReadTxMode()
         {
 
 			if ( CodedLossless == 1 )
@@ -4546,28 +3089,6 @@ read_tx_mode() {
 			else 
 			{
 				stream.ReadFixed(1, out this.tx_mode_select, "tx_mode_select"); 
-
-				if ( tx_mode_select != 0 )
-				{
-					TxMode= AV1TxModes.TX_MODE_SELECT;
-				}
-				else 
-				{
-					TxMode= AV1TxModes.TX_MODE_LARGEST;
-				}
-			}
-        }
-
-        private void WriteReadTxMode()
-        {
-
-			if ( CodedLossless == 1 )
-			{
-				TxMode= AV1TxModes.ONLY_4X4;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.tx_mode_select, "tx_mode_select"); 
 
 				if ( tx_mode_select != 0 )
 				{
@@ -4592,7 +3113,7 @@ frame_reference_mode() {
 		private int reference_select;
 		public int _ReferenceSelect { get { return reference_select; } set { reference_select = value; } }
 
-        private void ReadFrameReferenceMode()
+        private void FrameReferenceMode()
         {
 
 			if ( FrameIsIntra != 0 )
@@ -4602,19 +3123,6 @@ frame_reference_mode() {
 			else 
 			{
 				stream.ReadFixed(1, out this.reference_select, "reference_select"); 
-			}
-        }
-
-        private void WriteFrameReferenceMode()
-        {
-
-			if ( FrameIsIntra != 0 )
-			{
-				reference_select= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.reference_select, "reference_select"); 
 			}
         }
 
@@ -4696,7 +3204,7 @@ skip_mode_params() {
 		private int skip_mode_present;
 		public int _SkipModePresent { get { return skip_mode_present; } set { skip_mode_present = value; } }
 
-        private void ReadSkipModeParams()
+        private void SkipModeParams()
         {
 
 			if ( FrameIsIntra != 0 || reference_select== 0 || enable_order_hint== 0 )
@@ -4712,21 +3220,21 @@ skip_mode_params() {
 				{
 					refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
-					if ( ReadGetRelativeDist( refHint, OrderHint ) < 0 )
+					if ( GetRelativeDist( refHint, OrderHint ) < 0 )
 					{
 
 						if ( forwardIdx < 0 ||
- ReadGetRelativeDist( refHint, forwardHint) > 0 )
+ GetRelativeDist( refHint, forwardHint) > 0 )
 						{
 							forwardIdx= i;
 							forwardHint= refHint;
 						}
 					}
-					else if ( ReadGetRelativeDist( refHint, OrderHint) > 0 )
+					else if ( GetRelativeDist( refHint, OrderHint) > 0 )
 					{
 
 						if ( backwardIdx < 0 ||
- ReadGetRelativeDist( refHint, backwardHint) < 0 )
+ GetRelativeDist( refHint, backwardHint) < 0 )
 						{
 							backwardIdx= i;
 							backwardHint= refHint;
@@ -4752,11 +3260,11 @@ skip_mode_params() {
 					{
 						refHint= RefOrderHint[ ref_frame_idx[ i ] ];
 
-						if ( ReadGetRelativeDist( refHint, forwardHint ) < 0 )
+						if ( GetRelativeDist( refHint, forwardHint ) < 0 )
 						{
 
 							if ( secondForwardIdx < 0 ||
- ReadGetRelativeDist( refHint, secondForwardHint ) > 0 )
+ GetRelativeDist( refHint, secondForwardHint ) > 0 )
 							{
 								secondForwardIdx= i;
 								secondForwardHint= refHint;
@@ -4780,97 +3288,6 @@ skip_mode_params() {
 			if ( skipModeAllowed != 0 )
 			{
 				stream.ReadFixed(1, out this.skip_mode_present, "skip_mode_present"); 
-			}
-			else 
-			{
-				skip_mode_present= 0;
-			}
-        }
-
-        private void WriteSkipModeParams()
-        {
-
-			if ( FrameIsIntra != 0 || reference_select== 0 || enable_order_hint== 0 )
-			{
-				skipModeAllowed= 0;
-			}
-			else 
-			{
-				forwardIdx= -1;
-				backwardIdx= -1;
-
-				for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
-				{
-					refHint= RefOrderHint[ ref_frame_idx[ i ] ];
-
-					if ( WriteGetRelativeDist( refHint, OrderHint ) < 0 )
-					{
-
-						if ( forwardIdx < 0 ||
- WriteGetRelativeDist( refHint, forwardHint) > 0 )
-						{
-							forwardIdx= i;
-							forwardHint= refHint;
-						}
-					}
-					else if ( WriteGetRelativeDist( refHint, OrderHint) > 0 )
-					{
-
-						if ( backwardIdx < 0 ||
- WriteGetRelativeDist( refHint, backwardHint) < 0 )
-						{
-							backwardIdx= i;
-							backwardHint= refHint;
-						}
-					}
-				}
-
-				if ( forwardIdx < 0 )
-				{
-					skipModeAllowed= 0;
-				}
-				else if ( backwardIdx >= 0 )
-				{
-					skipModeAllowed= 1;
-					SkipModeFrame[ 0 ]= AV1RefFrames.LAST_FRAME + Math.Min(forwardIdx, backwardIdx);
-					SkipModeFrame[ 1 ]= AV1RefFrames.LAST_FRAME + Math.Max(forwardIdx, backwardIdx);
-				}
-				else 
-				{
-					secondForwardIdx= -1;
-
-					for ( i = 0; i < AV1Constants.REFS_PER_FRAME; i++ )
-					{
-						refHint= RefOrderHint[ ref_frame_idx[ i ] ];
-
-						if ( WriteGetRelativeDist( refHint, forwardHint ) < 0 )
-						{
-
-							if ( secondForwardIdx < 0 ||
- WriteGetRelativeDist( refHint, secondForwardHint ) > 0 )
-							{
-								secondForwardIdx= i;
-								secondForwardHint= refHint;
-							}
-						}
-					}
-
-					if ( secondForwardIdx < 0 )
-					{
-						skipModeAllowed= 0;
-					}
-					else 
-					{
-						skipModeAllowed= 1;
-						SkipModeFrame[ 0 ]= AV1RefFrames.LAST_FRAME + Math.Min(forwardIdx, secondForwardIdx);
-						SkipModeFrame[ 1 ]= AV1RefFrames.LAST_FRAME + Math.Max(forwardIdx, secondForwardIdx);
-					}
-				}
-			}
-
-			if ( skipModeAllowed != 0 )
-			{
-				stream.WriteFixed(1, this.skip_mode_present, "skip_mode_present"); 
 			}
 			else 
 			{
@@ -4936,7 +3353,7 @@ global_motion_params() {
 		public int _ReadGlobalParam { get { return read_global_param; } set { read_global_param = value; } }
 		private int refc = 0;
 
-        private void ReadGlobalMotionParams()
+        private void GlobalMotionParams()
         {
 
 			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
@@ -4980,13 +3397,13 @@ global_motion_params() {
 
 				if ( type >= AV1Constants.ROTZOOM )
 				{
-					ReadReadGlobalParam(type, refc, 2); 
-					ReadReadGlobalParam(type, refc, 3); 
+					ReadGlobalParam(type, refc, 2); 
+					ReadGlobalParam(type, refc, 3); 
 
 					if ( type == AV1Constants.AFFINE )
 					{
-						ReadReadGlobalParam(type, refc, 4); 
-						ReadReadGlobalParam(type, refc, 5); 
+						ReadGlobalParam(type, refc, 4); 
+						ReadGlobalParam(type, refc, 5); 
 					}
 					else 
 					{
@@ -4997,75 +3414,8 @@ global_motion_params() {
 
 				if ( type >= AV1Constants.TRANSLATION )
 				{
-					ReadReadGlobalParam(type, refc, 0); 
-					ReadReadGlobalParam(type, refc, 1); 
-				}
-			}
-        }
-
-        private void WriteGlobalMotionParams()
-        {
-
-			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
-			{
-				GmType[ refc ]= AV1Constants.IDENTITY;
-
-				for ( i = 0; i < 6; i++ )
-				{
-					gm_params[ refc ][ i ]= ( ( i % 3 == 2 ) ? 1 << AV1Constants.WARPEDMODEL_PREC_BITS : 0 );
-				}
-			}
-
-			if ( FrameIsIntra != 0 )
-			{
-				return;
-			}
-
-			for ( refc = AV1RefFrames.LAST_FRAME; refc <= AV1RefFrames.ALTREF_FRAME; refc++ )
-			{
-				stream.WriteFixed(1, this.is_global, "is_global"); 
-
-				if ( is_global != 0 )
-				{
-					stream.WriteFixed(1, this.is_rot_zoom, "is_rot_zoom"); 
-
-					if ( is_rot_zoom != 0 )
-					{
-						type= AV1Constants.ROTZOOM;
-					}
-					else 
-					{
-						stream.WriteFixed(1, this.is_translation, "is_translation"); 
-						type= is_translation != 0 ? AV1Constants.TRANSLATION : AV1Constants.AFFINE;
-					}
-				}
-				else 
-				{
-					type= AV1Constants.IDENTITY;
-				}
-				GmType[refc]= type;
-
-				if ( type >= AV1Constants.ROTZOOM )
-				{
-					WriteReadGlobalParam(type, refc, 2); 
-					WriteReadGlobalParam(type, refc, 3); 
-
-					if ( type == AV1Constants.AFFINE )
-					{
-						WriteReadGlobalParam(type, refc, 4); 
-						WriteReadGlobalParam(type, refc, 5); 
-					}
-					else 
-					{
-						gm_params[refc][4]= -gm_params[refc][3];
-						gm_params[refc][5]= gm_params[refc][2];
-					}
-				}
-
-				if ( type >= AV1Constants.TRANSLATION )
-				{
-					WriteReadGlobalParam(type, refc, 0); 
-					WriteReadGlobalParam(type, refc, 1); 
+					ReadGlobalParam(type, refc, 0); 
+					ReadGlobalParam(type, refc, 1); 
 				}
 			}
         }
@@ -5107,7 +3457,7 @@ read_global_param( type, refc, idx ) {
 		public int _Mx { get { return mx; } set { mx = value; } }
 		private int r;
 
-        private void ReadReadGlobalParam(int type, int refc, int idx)
+        private void ReadGlobalParam(int type, int refc, int idx)
         {
 			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
 			precBits= AV1Constants.GM_ALPHA_PREC_BITS;
@@ -5131,34 +3481,7 @@ read_global_param( type, refc, idx ) {
 			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
 			mx= (1 << absBits);
 			r= (PrevGmParams[refc][idx] >> (int)precDiff) - sub;
-			gm_params[refc][idx]= (ReadDecodeSignedSubexpWithRef( -mx, mx + 1, r ) << precDiff) + round;
-        }
-
-        private void WriteReadGlobalParam(int type, int refc, int idx)
-        {
-			absBits= AV1Constants.GM_ABS_ALPHA_BITS;
-			precBits= AV1Constants.GM_ALPHA_PREC_BITS;
-
-			if ( idx < 2 )
-			{
-
-				if ( type == AV1Constants.TRANSLATION )
-				{
-					absBits= AV1Constants.GM_ABS_TRANS_ONLY_BITS - (allow_high_precision_mv == 0 ? 1 : 0);
-					precBits= AV1Constants.GM_TRANS_ONLY_PREC_BITS - (allow_high_precision_mv == 0 ? 1 : 0);
-				}
-				else 
-				{
-					absBits= AV1Constants.GM_ABS_TRANS_BITS;
-					precBits= AV1Constants.GM_TRANS_PREC_BITS;
-				}
-			}
-			precDiff= AV1Constants.WARPEDMODEL_PREC_BITS - precBits;
-			round= (idx % 3) == 2 ? (1 << AV1Constants.WARPEDMODEL_PREC_BITS) : 0;
-			sub= (idx % 3) == 2 ? (1 << precBits) : 0;
-			mx= (1 << absBits);
-			r= (PrevGmParams[refc][idx] >> (int)precDiff) - sub;
-			gm_params[refc][idx]= (WriteDecodeSignedSubexpWithRef( -mx, mx + 1, r ) << precDiff) + round;
+			gm_params[refc][idx]= (DecodeSignedSubexpWithRef( -mx, mx + 1, r ) << precDiff) + round;
         }
 
     /*
@@ -5316,20 +3639,20 @@ film_grain_params() {
 		private int clip_to_restricted_range;
 		public int _ClipToRestrictedRange { get { return clip_to_restricted_range; } set { clip_to_restricted_range = value; } }
 
-        private void ReadFilmGrainParams()
+        private void FilmGrainParams()
         {
 
 			if ( film_grain_params_present== 0 ||
  (show_frame == 0 && showable_frame== 0) )
 			{
-				ReadResetGrainParams(); 
+				ResetGrainParams(); 
 				return;
 			}
 			stream.ReadFixed(1, out this.apply_grain, "apply_grain"); 
 
 			if ( apply_grain== 0 )
 			{
-				ReadResetGrainParams(); 
+				ResetGrainParams(); 
 				return;
 			}
 			stream.ReadFixed(16, out this.grain_seed, "grain_seed"); 
@@ -5347,7 +3670,7 @@ film_grain_params() {
 			{
 				stream.ReadFixed(3, out this.film_grain_params_ref_idx, "film_grain_params_ref_idx"); 
 				tempGrainSeed= grain_seed;
-				ReadLoadGrainParams( film_grain_params_ref_idx ); 
+				LoadGrainParams( film_grain_params_ref_idx ); 
 				grain_seed= tempGrainSeed;
 				return;
 			}
@@ -5448,138 +3771,6 @@ film_grain_params() {
 			stream.ReadFixed(1, out this.clip_to_restricted_range, "clip_to_restricted_range"); 
         }
 
-        private void WriteFilmGrainParams()
-        {
-
-			if ( film_grain_params_present== 0 ||
- (show_frame == 0 && showable_frame== 0) )
-			{
-				WriteResetGrainParams(); 
-				return;
-			}
-			stream.WriteFixed(1, this.apply_grain, "apply_grain"); 
-
-			if ( apply_grain== 0 )
-			{
-				WriteResetGrainParams(); 
-				return;
-			}
-			stream.WriteFixed(16, this.grain_seed, "grain_seed"); 
-
-			if ( frame_type == AV1FrameTypes.INTER_FRAME )
-			{
-				stream.WriteFixed(1, this.update_grain, "update_grain"); 
-			}
-			else 
-			{
-				update_grain= 1;
-			}
-
-			if ( update_grain== 0 )
-			{
-				stream.WriteFixed(3, this.film_grain_params_ref_idx, "film_grain_params_ref_idx"); 
-				tempGrainSeed= grain_seed;
-				WriteLoadGrainParams( film_grain_params_ref_idx ); 
-				grain_seed= tempGrainSeed;
-				return;
-			}
-			stream.WriteFixed(4, this.num_y_points, "num_y_points"); 
-
-			for ( i = 0; i < num_y_points; i++ )
-			{
-				stream.WriteFixed(8, this.point_y_value[ i ], "point_y_value"); 
-				stream.WriteFixed(8, this.point_y_scaling[ i ], "point_y_scaling"); 
-			}
-
-			if ( mono_chrome != 0 )
-			{
-				chroma_scaling_from_luma= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.chroma_scaling_from_luma, "chroma_scaling_from_luma"); 
-			}
-
-			if ( mono_chrome != 0 || chroma_scaling_from_luma != 0 ||
- ( subsampling_x == 1 && subsampling_y == 1 &&
- num_y_points == 0 )
- )
-			{
-				num_cb_points= 0;
-				num_cr_points= 0;
-			}
-			else 
-			{
-				stream.WriteFixed(4, this.num_cb_points, "num_cb_points"); 
-
-				for ( i = 0; i < num_cb_points; i++ )
-				{
-					stream.WriteFixed(8, this.point_cb_value[ i ], "point_cb_value"); 
-					stream.WriteFixed(8, this.point_cb_scaling[ i ], "point_cb_scaling"); 
-				}
-				stream.WriteFixed(4, this.num_cr_points, "num_cr_points"); 
-
-				for ( i = 0; i < num_cr_points; i++ )
-				{
-					stream.WriteFixed(8, this.point_cr_value[ i ], "point_cr_value"); 
-					stream.WriteFixed(8, this.point_cr_scaling[ i ], "point_cr_scaling"); 
-				}
-			}
-			stream.WriteFixed(2, this.grain_scaling_minus_8, "grain_scaling_minus_8"); 
-			stream.WriteFixed(2, this.ar_coeff_lag, "ar_coeff_lag"); 
-			numPosLuma= 2 * ar_coeff_lag * ( ar_coeff_lag + 1 );
-
-			if ( num_y_points != 0 )
-			{
-				numPosChroma= numPosLuma + 1;
-
-				for ( i = 0; i < numPosLuma; i++ )
-				{
-					stream.WriteFixed(8, this.ar_coeffs_y_plus_128[ i ], "ar_coeffs_y_plus_128"); 
-				}
-			}
-			else 
-			{
-				numPosChroma= numPosLuma;
-			}
-
-			if ( chroma_scaling_from_luma != 0 || num_cb_points != 0 )
-			{
-
-				for ( i = 0; i < numPosChroma; i++ )
-				{
-					stream.WriteFixed(8, this.ar_coeffs_cb_plus_128[ i ], "ar_coeffs_cb_plus_128"); 
-				}
-			}
-
-			if ( chroma_scaling_from_luma != 0 || num_cr_points != 0 )
-			{
-
-				for ( i = 0; i < numPosChroma; i++ )
-				{
-					stream.WriteFixed(8, this.ar_coeffs_cr_plus_128[ i ], "ar_coeffs_cr_plus_128"); 
-				}
-			}
-			stream.WriteFixed(2, this.ar_coeff_shift_minus_6, "ar_coeff_shift_minus_6"); 
-			stream.WriteFixed(2, this.grain_scale_shift, "grain_scale_shift"); 
-
-			if ( num_cb_points != 0 )
-			{
-				stream.WriteFixed(8, this.cb_mult, "cb_mult"); 
-				stream.WriteFixed(8, this.cb_luma_mult, "cb_luma_mult"); 
-				stream.WriteFixed(9, this.cb_offset, "cb_offset"); 
-			}
-
-			if ( num_cr_points != 0 )
-			{
-				stream.WriteFixed(8, this.cr_mult, "cr_mult"); 
-				stream.WriteFixed(8, this.cr_luma_mult, "cr_luma_mult"); 
-				stream.WriteFixed(9, this.cr_offset, "cr_offset"); 
-			}
-			stream.WriteFixed(1, this.overlap_flag, "overlap_flag"); 
-			stream.WriteFixed(1, this.clip_to_restricted_range, "clip_to_restricted_range"); 
-        }
-
     /*
 superres_params() { 
  if ( enable_superres )
@@ -5603,7 +3794,7 @@ superres_params() {
 		private int SuperresDenom;
 		public int _SuperresDenom { get { return SuperresDenom; } set { SuperresDenom = value; } }
 
-        private void ReadSuperresParams()
+        private void SuperresParams()
         {
 
 			if ( enable_superres != 0 )
@@ -5628,31 +3819,6 @@ superres_params() {
 			FrameWidth= (UpscaledWidth * AV1Constants.SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
         }
 
-        private void WriteSuperresParams()
-        {
-
-			if ( enable_superres != 0 )
-			{
-				stream.WriteFixed(1, this.use_superres, "use_superres"); 
-			}
-			else 
-			{
-				use_superres= 0;
-			}
-
-			if ( use_superres != 0 )
-			{
-				stream.WriteVariable(AV1Constants.SUPERRES_DENOM_BITS, this.coded_denom, "coded_denom"); 
-				SuperresDenom= coded_denom + AV1Constants.SUPERRES_DENOM_MIN;
-			}
-			else 
-			{
-				SuperresDenom= AV1Constants.SUPERRES_NUM;
-			}
-			UpscaledWidth= FrameWidth;
-			FrameWidth= (UpscaledWidth * AV1Constants.SUPERRES_NUM + (SuperresDenom / 2)) / SuperresDenom;
-        }
-
     /*
 compute_image_size() { 
  MiCols = 2 * ( ( FrameWidth + 7 ) >> 3 )
@@ -5664,13 +3830,7 @@ compute_image_size() {
 		private int MiRows;
 		public int _MiRows { get { return MiRows; } set { MiRows = value; } }
 
-        private void ReadComputeImageSize()
-        {
-			MiCols= 2 * ( ( FrameWidth + 7 ) >> (int)3 );
-			MiRows= 2 * ( ( FrameHeight + 7 ) >> (int)3 );
-        }
-
-        private void WriteComputeImageSize()
+        private void ComputeImageSize()
         {
 			MiCols= 2 * ( ( FrameWidth + 7 ) >> (int)3 );
 			MiRows= 2 * ( ( FrameHeight + 7 ) >> (int)3 );
@@ -5688,15 +3848,9 @@ decode_signed_subexp_with_ref( low, high, r ) {
 		public int _High { get { return high; } set { high = value; } }
 		private int x;
 
-        private int ReadDecodeSignedSubexpWithRef(int low, int high, int r)
+        private int DecodeSignedSubexpWithRef(int low, int high, int r)
         {
-			x= ReadDecodeUnsignedSubexpWithRef(high - low, r - low);
-			return x + low;
-        }
-
-        private int WriteDecodeSignedSubexpWithRef(int low, int high, int r)
-        {
-			x= WriteDecodeUnsignedSubexpWithRef(high - low, r - low);
+			x= DecodeUnsignedSubexpWithRef(high - low, r - low);
 			return x + low;
         }
 
@@ -5712,31 +3866,17 @@ decode_unsigned_subexp_with_ref( mx, r ) {
     */
 		private int v;
 
-        private int ReadDecodeUnsignedSubexpWithRef(int mx, int r)
+        private int DecodeUnsignedSubexpWithRef(int mx, int r)
         {
-			v= ReadDecodeSubexp( mx );
+			v= DecodeSubexp( mx );
 
 			if ( (r << (int) 1) <= mx )
 			{
-				return ReadInverseRecenter(r, v);
+				return InverseRecenter(r, v);
 			}
 			else 
 			{
-				return mx - 1 - ReadInverseRecenter(mx - 1 - r, v);
-			}
-        }
-
-        private int WriteDecodeUnsignedSubexpWithRef(int mx, int r)
-        {
-			v= WriteDecodeSubexp( mx );
-
-			if ( (r << (int) 1) <= mx )
-			{
-				return WriteInverseRecenter(r, v);
-			}
-			else 
-			{
-				return mx - 1 - WriteInverseRecenter(mx - 1 - r, v);
+				return mx - 1 - InverseRecenter(mx - 1 - r, v);
 			}
         }
 
@@ -5777,7 +3917,7 @@ decode_subexp( numSyms ) {
 		private int subexp_bits;
 		public int _SubexpBits { get { return subexp_bits; } set { subexp_bits = value; } }
 
-        private int ReadDecodeSubexp(int numSyms)
+        private int DecodeSubexp(int numSyms)
         {
 			i= 0;
 			mk= 0;
@@ -5811,40 +3951,6 @@ decode_subexp( numSyms ) {
 			}
         }
 
-        private int WriteDecodeSubexp(int numSyms)
-        {
-			i= 0;
-			mk= 0;
-			k= 3;
-
-			while ( 1 != 0 )
-			{
-				b2= i != 0 ? k + i - 1 : k;
-				a= 1 << b2;
-
-				if ( numSyms <= mk + 3 * a )
-				{
-					stream.Write_ns(numSyms - mk, this.subexp_final_bits, "subexp_final_bits"); 
-					return (int)subexp_final_bits + mk;
-				}
-				else 
-				{
-					stream.WriteFixed(1, this.subexp_more_bits, "subexp_more_bits"); 
-
-					if ( subexp_more_bits != 0 )
-					{
-						i++;
-						mk+= a;
-					}
-					else 
-					{
-						stream.WriteVariable(b2, this.subexp_bits, "subexp_bits"); 
-						return subexp_bits + mk;
-					}
-				}
-			}
-        }
-
     /*
 inverse_recenter( r, v ) { 
  if ( v > 2 * r )
@@ -5856,24 +3962,7 @@ inverse_recenter( r, v ) {
  }
     */
 
-        private int ReadInverseRecenter(int r, int v)
-        {
-
-			if ( v > 2 * r )
-			{
-				return v;
-			}
-			else if (( v & 1 ) != 0)
-			{
-				return r - ((v + 1) >> (int)1);
-			}
-			else 
-			{
-				return r + (v >> (int)1);
-			}
-        }
-
-        private int WriteInverseRecenter(int r, int v)
+        private int InverseRecenter(int r, int v)
         {
 
 			if ( v > 2 * r )
@@ -5896,12 +3985,7 @@ temporal_delimiter_obu() {
 }
     */
 
-        private void ReadTemporalDelimiterObu()
-        {
-			SeenFrameHeader= 0;
-        }
-
-        private void WriteTemporalDelimiterObu()
+        private void TemporalDelimiterObu()
         {
 			SeenFrameHeader= 0;
         }
@@ -5915,21 +3999,12 @@ padding_obu() {
 		private int obu_padding_byte;
 		public int _ObuPaddingByte { get { return obu_padding_byte; } set { obu_padding_byte = value; } }
 
-        private void ReadPaddingObu()
+        private void PaddingObu()
         {
 
 			for ( i = 0; i < obu_padding_length; i++ )
 			{
 				stream.ReadFixed(8, out this.obu_padding_byte, "obu_padding_byte"); 
-			}
-        }
-
-        private void WritePaddingObu()
-        {
-
-			for ( i = 0; i < obu_padding_length; i++ )
-			{
-				stream.WriteFixed(8, this.obu_padding_byte, "obu_padding_byte"); 
 			}
         }
 
@@ -5961,55 +4036,29 @@ metadata_obu() {
 		private int metadata_timecode;
 		public int _MetadataTimecode { get { return metadata_timecode; } set { metadata_timecode = value; } }
 
-        private void ReadMetadataObu()
+        private void MetadataObu()
         {
 			obu_size_len = (int)stream.ReadLeb128( out this.metadata_type, "metadata_type"); 
 
 			if ( metadata_type == AV1MetadataType.METADATA_TYPE_ITUT_T35 )
 			{
-				ReadMetadataItutT35(); 
+				MetadataItutT35(); 
 			}
 			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_HDR_CLL )
 			{
-				ReadMetadataHdrCll(); 
+				MetadataHdrCll(); 
 			}
 			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_HDR_MDCV )
 			{
-				ReadMetadataHdrMdcv(); 
+				MetadataHdrMdcv(); 
 			}
 			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_SCALABILITY )
 			{
-				ReadMetadataScalability(); 
+				MetadataScalability(); 
 			}
 			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_TIMECODE )
 			{
-				ReadMetadataTimecode(); 
-			}
-        }
-
-        private void WriteMetadataObu()
-        {
-			stream.WriteLeb128( this.metadata_type, "metadata_type"); 
-
-			if ( metadata_type == AV1MetadataType.METADATA_TYPE_ITUT_T35 )
-			{
-				WriteMetadataItutT35(); 
-			}
-			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_HDR_CLL )
-			{
-				WriteMetadataHdrCll(); 
-			}
-			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_HDR_MDCV )
-			{
-				WriteMetadataHdrMdcv(); 
-			}
-			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_SCALABILITY )
-			{
-				WriteMetadataScalability(); 
-			}
-			else if ( metadata_type == AV1MetadataType.METADATA_TYPE_TIMECODE )
-			{
-				WriteMetadataTimecode(); 
+				MetadataTimecode(); 
 			}
         }
 
@@ -6029,7 +4078,7 @@ metadata_itut_t35() {
 		private int itu_t_t35_payload_bytes;
 		public int _ItutT35PayloadBytes { get { return itu_t_t35_payload_bytes; } set { itu_t_t35_payload_bytes = value; } }
 
-        private void ReadMetadataItutT35()
+        private void MetadataItutT35()
         {
 			stream.ReadFixed(8, out this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
 
@@ -6037,18 +4086,7 @@ metadata_itut_t35() {
 			{
 				stream.ReadFixed(8, out this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
 			}
-			ReadItutT35PayloadBytes(); 
-        }
-
-        private void WriteMetadataItutT35()
-        {
-			stream.WriteFixed(8, this.itu_t_t35_country_code, "itu_t_t35_country_code"); 
-
-			if ( itu_t_t35_country_code == 0xFF )
-			{
-				stream.WriteFixed(8, this.itu_t_t35_country_code_extension_byte, "itu_t_t35_country_code_extension_byte"); 
-			}
-			WriteItutT35PayloadBytes(); 
+			ItutT35PayloadBytes(); 
         }
 
     /*
@@ -6062,16 +4100,10 @@ metadata_hdr_cll() {
 		private int max_fall;
 		public int _MaxFall { get { return max_fall; } set { max_fall = value; } }
 
-        private void ReadMetadataHdrCll()
+        private void MetadataHdrCll()
         {
 			stream.ReadFixed(16, out this.max_cll, "max_cll"); 
 			stream.ReadFixed(16, out this.max_fall, "max_fall"); 
-        }
-
-        private void WriteMetadataHdrCll()
-        {
-			stream.WriteFixed(16, this.max_cll, "max_cll"); 
-			stream.WriteFixed(16, this.max_fall, "max_fall"); 
         }
 
     /*
@@ -6099,7 +4131,7 @@ metadata_hdr_mdcv() {
 		private int luminance_min;
 		public int _LuminanceMin { get { return luminance_min; } set { luminance_min = value; } }
 
-        private void ReadMetadataHdrMdcv()
+        private void MetadataHdrMdcv()
         {
 
 			for ( i = 0; i < 3; i++ )
@@ -6111,20 +4143,6 @@ metadata_hdr_mdcv() {
 			stream.ReadFixed(16, out this.white_point_chromaticity_y, "white_point_chromaticity_y"); 
 			stream.ReadFixed(32, out this.luminance_max, "luminance_max"); 
 			stream.ReadFixed(32, out this.luminance_min, "luminance_min"); 
-        }
-
-        private void WriteMetadataHdrMdcv()
-        {
-
-			for ( i = 0; i < 3; i++ )
-			{
-				stream.WriteFixed(16, this.primary_chromaticity_x[ i ], "primary_chromaticity_x"); 
-				stream.WriteFixed(16, this.primary_chromaticity_y[ i ], "primary_chromaticity_y"); 
-			}
-			stream.WriteFixed(16, this.white_point_chromaticity_x, "white_point_chromaticity_x"); 
-			stream.WriteFixed(16, this.white_point_chromaticity_y, "white_point_chromaticity_y"); 
-			stream.WriteFixed(32, this.luminance_max, "luminance_max"); 
-			stream.WriteFixed(32, this.luminance_min, "luminance_min"); 
         }
 
     /*
@@ -6139,23 +4157,13 @@ metadata_scalability() {
 		private int scalability_structure;
 		public int _ScalabilityStructure { get { return scalability_structure; } set { scalability_structure = value; } }
 
-        private void ReadMetadataScalability()
+        private void MetadataScalability()
         {
 			stream.ReadFixed(8, out this.scalability_mode_idc, "scalability_mode_idc"); 
 
 			if ( scalability_mode_idc == AV1ScalabilityModeIdc.SCALABILITY_SS )
 			{
-				ReadScalabilityStructure(); 
-			}
-        }
-
-        private void WriteMetadataScalability()
-        {
-			stream.WriteFixed(8, this.scalability_mode_idc, "scalability_mode_idc"); 
-
-			if ( scalability_mode_idc == AV1ScalabilityModeIdc.SCALABILITY_SS )
-			{
-				WriteScalabilityStructure(); 
+				ScalabilityStructure(); 
 			}
         }
 
@@ -6219,7 +4227,7 @@ scalability_structure() {
 		private int[][] temporal_group_ref_pic_diff;
 		public int[][] _TemporalGroupRefPicDiff { get { return temporal_group_ref_pic_diff; } set { temporal_group_ref_pic_diff = value; } }
 
-        private void ReadScalabilityStructure()
+        private void ScalabilityStructure()
         {
 			stream.ReadFixed(2, out this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); spatial_layer_max_width = new int[spatial_layers_cnt_minus_1 + 1];
 				spatial_layer_max_height = new int[spatial_layers_cnt_minus_1 + 1];
@@ -6271,52 +4279,6 @@ scalability_structure() {
 					for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ )
 					{
 						stream.ReadFixed(8, out this.temporal_group_ref_pic_diff[ i ][ j ], "temporal_group_ref_pic_diff"); 
-					}
-				}
-			}
-        }
-
-        private void WriteScalabilityStructure()
-        {
-			stream.WriteFixed(2, this.spatial_layers_cnt_minus_1, "spatial_layers_cnt_minus_1"); 
-			stream.WriteFixed(1, this.spatial_layer_dimensions_present_flag, "spatial_layer_dimensions_present_flag"); 
-			stream.WriteFixed(1, this.spatial_layer_description_present_flag, "spatial_layer_description_present_flag"); 
-			stream.WriteFixed(1, this.temporal_group_description_present_flag, "temporal_group_description_present_flag"); 
-			stream.WriteFixed(3, this.scalability_structure_reserved_3bits, "scalability_structure_reserved_3bits"); 
-
-			if ( spatial_layer_dimensions_present_flag != 0 )
-			{
-
-				for ( i = 0; i <= spatial_layers_cnt_minus_1 ; i++ )
-				{
-					stream.WriteFixed(16, this.spatial_layer_max_width[ i ], "spatial_layer_max_width"); 
-					stream.WriteFixed(16, this.spatial_layer_max_height[ i ], "spatial_layer_max_height"); 
-				}
-			}
-
-			if ( spatial_layer_description_present_flag != 0 )
-			{
-
-				for ( i = 0; i <= spatial_layers_cnt_minus_1; i++ )
-				{
-					stream.WriteFixed(8, this.spatial_layer_ref_id[ i ], "spatial_layer_ref_id"); 
-				}
-			}
-
-			if ( temporal_group_description_present_flag != 0 )
-			{
-				stream.WriteFixed(8, this.temporal_group_size, "temporal_group_size"); 
-
-				for ( i = 0; i < temporal_group_size; i++ )
-				{
-					stream.WriteFixed(3, this.temporal_group_temporal_id[ i ], "temporal_group_temporal_id"); 
-					stream.WriteFixed(1, this.temporal_group_temporal_switching_up_point_flag[ i ], "temporal_group_temporal_switching_up_point_flag"); 
-					stream.WriteFixed(1, this.temporal_group_spatial_switching_up_point_flag[ i ], "temporal_group_spatial_switching_up_point_flag"); 
-					stream.WriteFixed(3, this.temporal_group_ref_cnt[ i ], "temporal_group_ref_cnt"); 
-
-					for ( j = 0; j < temporal_group_ref_cnt[ i ]; j++ )
-					{
-						stream.WriteFixed(8, this.temporal_group_ref_pic_diff[ i ][ j ], "temporal_group_ref_pic_diff"); 
 					}
 				}
 			}
@@ -6380,7 +4342,7 @@ metadata_timecode() {
 		private int time_offset_value;
 		public int _TimeOffsetValue { get { return time_offset_value; } set { time_offset_value = value; } }
 
-        private void ReadMetadataTimecode()
+        private void MetadataTimecode()
         {
 			stream.ReadFixed(5, out this.counting_type, "counting_type"); 
 			stream.ReadFixed(1, out this.full_timestamp_flag, "full_timestamp_flag"); 
@@ -6423,49 +4385,6 @@ metadata_timecode() {
 			}
         }
 
-        private void WriteMetadataTimecode()
-        {
-			stream.WriteFixed(5, this.counting_type, "counting_type"); 
-			stream.WriteFixed(1, this.full_timestamp_flag, "full_timestamp_flag"); 
-			stream.WriteFixed(1, this.discontinuity_flag, "discontinuity_flag"); 
-			stream.WriteFixed(1, this.cnt_dropped_flag, "cnt_dropped_flag"); 
-			stream.WriteFixed(9, this.n_frames, "n_frames"); 
-
-			if ( full_timestamp_flag != 0 )
-			{
-				stream.WriteFixed(6, this.seconds_value, "seconds_value"); 
-				stream.WriteFixed(6, this.minutes_value, "minutes_value"); 
-				stream.WriteFixed(5, this.hours_value, "hours_value"); 
-			}
-			else 
-			{
-				stream.WriteFixed(1, this.seconds_flag, "seconds_flag"); 
-
-				if ( seconds_flag != 0 )
-				{
-					stream.WriteFixed(6, this.seconds_value, "seconds_value"); 
-					stream.WriteFixed(1, this.minutes_flag, "minutes_flag"); 
-
-					if ( minutes_flag != 0 )
-					{
-						stream.WriteFixed(6, this.minutes_value, "minutes_value"); 
-						stream.WriteFixed(1, this.hours_flag, "hours_flag"); 
-
-						if ( hours_flag != 0 )
-						{
-							stream.WriteFixed(5, this.hours_value, "hours_value"); 
-						}
-					}
-				}
-			}
-			stream.WriteFixed(5, this.time_offset_length, "time_offset_length"); 
-
-			if ( time_offset_length > 0 )
-			{
-				stream.WriteVariable(time_offset_length, this.time_offset_value, "time_offset_value"); 
-			}
-        }
-
     /*
 frame_obu( sz ) { 
  startBitPos = get_position()
@@ -6486,26 +4405,15 @@ frame_obu( sz ) {
 		private int headerBytes;
 		public int _HeaderBytes { get { return headerBytes; } set { headerBytes = value; } }
 
-        private void ReadFrameObu(int sz)
+        private void FrameObu(int sz)
         {
 			startBitPos= stream.GetPosition();
-			ReadFrameHeaderObu(); 
-			ReadByteAlignment(); 
+			FrameHeaderObu(); 
+			ByteAlignment(); 
 			endBitPos= stream.GetPosition();
 			headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
-			ReadTileGroupObu( sz ); 
-        }
-
-        private void WriteFrameObu(int sz)
-        {
-			startBitPos= stream.GetPosition();
-			WriteFrameHeaderObu(); 
-			WriteByteAlignment(); 
-			endBitPos= stream.GetPosition();
-			headerBytes= (endBitPos - startBitPos) / 8;
-			sz-= headerBytes;
-			WriteTileGroupObu( sz ); 
+			TileGroupObu( sz ); 
         }
 
     /*
@@ -6571,7 +4479,7 @@ tile_group_obu( sz ) {
 		private int skip_obu;
 		public int _SkipObu { get { return skip_obu; } set { skip_obu = value; } }
 
-        private void ReadTileGroupObu(int sz)
+        private void TileGroupObu(int sz)
         {
 			NumTiles= TileCols * TileRows;
 			startBitPos= stream.GetPosition();
@@ -6593,11 +4501,11 @@ tile_group_obu( sz ) {
 				stream.ReadVariable(tileBits, out this.tg_start, "tg_start"); 
 				stream.ReadVariable(tileBits, out this.tg_end, "tg_end"); 
 			}
-			ReadByteAlignment(); 
+			ByteAlignment(); 
 			endBitPos= stream.GetPosition();
 			headerBytes= (endBitPos - startBitPos) / 8;
 			sz-= headerBytes;
-			ReadSkipObu(); 
+			SkipObu(); 
 
 			if ( tg_end == NumTiles - 1 )
 			{
@@ -6605,46 +4513,7 @@ tile_group_obu( sz ) {
  frame_end_update_cdf()
  }  */
 
-				ReadDecodeFrameWrapup(); 
-				SeenFrameHeader= 0;
-			}
-        }
-
-        private void WriteTileGroupObu(int sz)
-        {
-			NumTiles= TileCols * TileRows;
-			startBitPos= stream.GetPosition();
-			tile_start_and_end_present_flag= 0;
-
-			if ( NumTiles > 1 )
-			{
-				stream.WriteFixed(1, this.tile_start_and_end_present_flag, "tile_start_and_end_present_flag"); 
-			}
-
-			if ( NumTiles == 1 || tile_start_and_end_present_flag== 0 )
-			{
-				tg_start= 0;
-				tg_end= NumTiles - 1;
-			}
-			else 
-			{
-				tileBits= TileColsLog2 + TileRowsLog2;
-				stream.WriteVariable(tileBits, this.tg_start, "tg_start"); 
-				stream.WriteVariable(tileBits, this.tg_end, "tg_end"); 
-			}
-			WriteByteAlignment(); 
-			endBitPos= stream.GetPosition();
-			headerBytes= (endBitPos - startBitPos) / 8;
-			sz-= headerBytes;
-			WriteSkipObu(); 
-
-			if ( tg_end == NumTiles - 1 )
-			{
-/*  if ( !disable_frame_end_update_cdf ) {
- frame_end_update_cdf()
- }  */
-
-				WriteDecodeFrameWrapup(); 
+				DecodeFrameWrapup(); 
 				SeenFrameHeader= 0;
 			}
         }
@@ -6668,7 +4537,7 @@ tile_list_obu() {
 		public int _TileListEntry { get { return tile_list_entry; } set { tile_list_entry = value; } }
 		private int tile = 0;
 
-        private void ReadTileListObu()
+        private void TileListObu()
         {
 			stream.ReadFixed(8, out this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
 			stream.ReadFixed(8, out this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
@@ -6676,19 +4545,7 @@ tile_list_obu() {
 
 			for ( tile = 0; tile <= tile_count_minus_1; tile++ )
 			{
-				ReadTileListEntry(); 
-			}
-        }
-
-        private void WriteTileListObu()
-        {
-			stream.WriteFixed(8, this.output_frame_width_in_tiles_minus_1, "output_frame_width_in_tiles_minus_1"); 
-			stream.WriteFixed(8, this.output_frame_height_in_tiles_minus_1, "output_frame_height_in_tiles_minus_1"); 
-			stream.WriteFixed(16, this.tile_count_minus_1, "tile_count_minus_1"); 
-
-			for ( tile = 0; tile <= tile_count_minus_1; tile++ )
-			{
-				WriteTileListEntry(); 
+				TileListEntry(); 
 			}
         }
 
@@ -6714,7 +4571,7 @@ tile_list_entry() {
 		private byte[] coded_tile_data;
 		public byte[] _CodedTileData { get { return coded_tile_data; } set { coded_tile_data = value; } }
 
-        private void ReadTileListEntry()
+        private void TileListEntry()
         {
 			stream.ReadFixed(8, out this.anchor_frame_idx, "anchor_frame_idx"); 
 			stream.ReadFixed(8, out this.anchor_tile_row, "anchor_tile_row"); 
@@ -6722,16 +4579,6 @@ tile_list_entry() {
 			stream.ReadFixed(16, out this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
 			N= 8 * (tile_data_size_minus_1 + 1);
 			stream.ReadBytes(N, out this.coded_tile_data, "coded_tile_data"); 
-        }
-
-        private void WriteTileListEntry()
-        {
-			stream.WriteFixed(8, this.anchor_frame_idx, "anchor_frame_idx"); 
-			stream.WriteFixed(8, this.anchor_tile_row, "anchor_tile_row"); 
-			stream.WriteFixed(8, this.anchor_tile_col, "anchor_tile_col"); 
-			stream.WriteFixed(16, this.tile_data_size_minus_1, "tile_data_size_minus_1"); 
-			N= 8 * (tile_data_size_minus_1 + 1);
-			stream.WriteBytes(N, this.coded_tile_data, "coded_tile_data"); 
         }
 
         }
