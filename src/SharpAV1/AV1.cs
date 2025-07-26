@@ -25,8 +25,6 @@ namespace SharpAV1
         public byte[] LastObuFrameHeader { get; set; }
         public int ObuSizeLen { get { return obu_size_len; } }
 
-        public int[][] PrevGmParams { get; set; } = new int[8][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] };
-        public int[][][] SavedGmParams { get; set; } = null;
         public int[] RefFrameHeight { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefFrameType { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
         public int[] RefRenderWidth { get; set; } = new int[AV1Constants.NUM_REF_FRAMES];
@@ -36,6 +34,41 @@ namespace SharpAV1
         public int[] Segmentation_Feature_Bits { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
         public int[] Segmentation_Feature_Max { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
         public int[] Segmentation_Feature_Signed { get; set; } = new int[AV1Constants.SEG_LVL_MAX];
+        public int[][] PrevGmParams { get; set; } = new int[8][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] };
+        public int[][][] SavedGmParams { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
+            new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] },
+            new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] },
+            new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] },
+            new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] },
+            new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] },
+            new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] },
+            new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] },
+            new int[AV1RefFrames.ALTREF_FRAME + 1][] { new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6], new int[6] }
+        };
+
+        public int[][][] SavedFeatureEnabled { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] }
+            };
+        public int[][][] SavedFeatureData { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
+            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] }
+            };
+        public int[][] saved_loop_filter_ref_deltas = new int[AV1Constants.NUM_REF_FRAMES][] { new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8], new int[8] };
+        public int[][] saved_loop_filter_mode_deltas = new int[AV1Constants.NUM_REF_FRAMES][] { new int[2], new int[2], new int[2], new int[2], new int[2], new int[2], new int[2], new int[2] };
+
 
         public void Read(AomStream stream, int size)
         {
@@ -87,27 +120,6 @@ namespace SharpAV1
             LoadSegmentationParams(prevFrame);
         }
 
-        public int[][][] SavedFeatureEnabled { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] }
-            };
-        public int[][][] SavedFeatureData { get; set; } = new int[AV1Constants.NUM_REF_FRAMES][][] {
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] },
-            new int[AV1Constants.MAX_SEGMENTS][] { new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX], new int[AV1Constants.SEG_LVL_MAX] }
-            };
-
         private void LoadSegmentationParams(int i)
         {
             /*
@@ -135,29 +147,6 @@ namespace SharpAV1
                 }
             }
         }
-
-        public int[][] saved_loop_filter_ref_deltas = new int[AV1Constants.NUM_REF_FRAMES][]
-        {
-            new int[8],
-            new int[8],
-            new int[8],
-            new int[8],
-            new int[8],
-            new int[8],
-            new int[8],
-            new int[8]
-        };
-        public int[][] saved_loop_filter_mode_deltas = new int[AV1Constants.NUM_REF_FRAMES][]
-        {
-            new int[2],
-            new int[2],
-            new int[2],
-            new int[2],
-            new int[2],
-            new int[2],
-            new int[2],
-            new int[2]
-        };
 
         private void LoadLoopFilterParams(int i)
         {
@@ -209,6 +198,7 @@ namespace SharpAV1
 
         private void MarkRefFrames(int idLen) { /* nothing */ }
         private void ItutT35PayloadBytes() { /* nothing */ }
+
         private void SkipObu() 
         {
             long totalObuSizeBits = obu_size << 3;
@@ -244,20 +234,7 @@ namespace SharpAV1
                     RefRenderWidth[i] = RenderWidth;
                     RefRenderHeight[i] = RenderHeight;
                     RefFrameType[i] = frame_type;
-
-                    if(SavedGmParams == null)
-                    {
-                        SavedGmParams = new int[AV1Constants.NUM_REF_FRAMES][][];
-                        for (int j = 0; j < SavedGmParams.Length; j++)
-                        {
-                            SavedGmParams[j] = new int[AV1Constants.TOTAL_REFS_PER_FRAME][];
-                            for (int k = 0; k < SavedGmParams[j].Length; k++)
-                            {
-                                SavedGmParams[j][k] = new int[6];
-                            }
-                        }
-                    }
-
+                    
                     for (int ri = AV1RefFrames.LAST_FRAME; ri < AV1RefFrames.ALTREF_FRAME; ri++)
                     {
                         for (int j = 0; j <= 5; j++)
