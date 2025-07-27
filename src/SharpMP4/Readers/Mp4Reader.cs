@@ -74,7 +74,18 @@ namespace SharpMP4.Readers
 
                         // TODO: review, this is needed because of AV1 where we cannot calculate the sample rate
                         int defaultSampleDuration = trackContext.Stts.SampleDelta != null && trackContext.Stts.SampleDelta.Length > 0 ? (int)trackContext.Stts.SampleDelta[0] : 0;
-                        this.Tracks[trackIndex].Track = TrackFactory.CreateTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
+
+                        ITrack trackImpl = null;
+                        try
+                        {
+                            trackImpl = TrackFactory.CreateTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
+                        }
+                        catch (NotSupportedException ex)
+                        {
+                            if(Log.ErrorEnabled) Log.Error($"Unsupported track type: {hdlr.HandlerType} ({hdlr.DisplayName}) for track ID {trackID}. Exception: {ex.Message}");
+                            trackImpl = TrackFactory.CreateGenericTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
+                        }
+                        this.Tracks[trackIndex].Track = trackImpl;
 
                         var stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
                         var co64 = stbl.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
