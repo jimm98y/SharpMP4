@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace SharpMP4.Readers
 {
+    /// <summary>
+    /// Reads MP4 and Fragmented MP4.
+    /// </summary>
     public class Mp4Reader
     {
         public FileTypeBox Ftyp { get; set; }

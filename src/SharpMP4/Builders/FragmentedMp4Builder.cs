@@ -7,7 +7,7 @@ using System.Linq;
 namespace SharpMP4.Builders
 {
     /// <summary>
-    /// Fragmented MP4 (fMP4) builder.
+    /// Creates Fragmented MP4.
     /// </summary>
     public class FragmentedMp4Builder : IMp4Builder
     {

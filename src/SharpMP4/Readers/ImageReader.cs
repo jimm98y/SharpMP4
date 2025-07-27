@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace SharpMP4.Readers
 {
+    /// <summary>
+    /// Experimental reader for heif/heic/avif images. 
+    /// </summary>
     public class ImageReader
     {
         public Container Container { get; set; }

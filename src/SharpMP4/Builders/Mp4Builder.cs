@@ -8,7 +8,7 @@ using System.Linq;
 namespace SharpMP4.Builders
 {
     /// <summary>
-    /// Creates MP4 with a MOOV box at the very end of the file.
+    /// Creates MP4.
     /// </summary>
     public class Mp4Builder : IMp4Builder
     {
