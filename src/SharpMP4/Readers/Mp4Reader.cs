@@ -67,7 +67,8 @@ namespace SharpMP4.Readers
 
                         Box sampleEntry = stbl
                             .Children.OfType<SampleDescriptionBox>().Single()
-                            .Children.Single();
+                            .Children.Single() // VisualSampleEntry/AudioSampleEntry
+                            .Children.Single(); // avcC/hvcC/vvcC/esds/dOps...
 
                         trackContext.Stts = stbl.Children.OfType<TimeToSampleBox>().Single();
 

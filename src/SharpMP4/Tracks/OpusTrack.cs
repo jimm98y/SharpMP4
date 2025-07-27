@@ -54,14 +54,16 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// Ctor with initialization from the <see cref="SampleEntry"/>.
         /// </summary>
-        /// <param name="sampleEntry"><see cref="SampleEntry"/>.</param>
-        public OpusTrack(Box sampleEntry, uint timescale = 0, int sampleDuration = -1)
+        /// <param name="config"><see cref="SampleEntry"/>.</param>
+        public OpusTrack(Box config, uint timescale = 0, int sampleDuration = -1)
         {
+            OpusSpecificBox opusSpecificBox = config as OpusSpecificBox;
+            if (opusSpecificBox == null)
+                throw new ArgumentException($"Invalid OpusSpecificBox: {config.FourCC}");
+
             DefaultSampleDuration = sampleDuration <= 0 ? OPUS_SAMPLE_SIZE : sampleDuration;
 
-            OpusSpecificBox opusSpecificBox = null;
-
-            if (sampleEntry is AudioSampleEntry audioSampleEntry)
+            if (config.GetParent() is AudioSampleEntry audioSampleEntry)
             {
                 Timescale = timescale == 0 ? audioSampleEntry.Samplerate >> 16 : timescale;
                 ChannelCount = (byte)audioSampleEntry.Channelcount;
@@ -69,7 +71,7 @@ namespace SharpMP4.Tracks
                 SampleSize = audioSampleEntry.Samplesize;
                 opusSpecificBox = audioSampleEntry.Children.OfType<OpusSpecificBox>().SingleOrDefault();
             }
-            else if (sampleEntry is AudioSampleEntryV1 audioSampleEntryV1)
+            else if (config.GetParent() is AudioSampleEntryV1 audioSampleEntryV1)
             {
                 Timescale = audioSampleEntryV1.Samplerate >> 16;
                 ChannelCount = (byte)audioSampleEntryV1.Channelcount;
@@ -82,20 +84,13 @@ namespace SharpMP4.Tracks
                 throw new NotSupportedException();
             }
 
-            if (opusSpecificBox != null)
+            PreSkip = opusSpecificBox._PreSkip;
+            ChannelMappingFamily = opusSpecificBox._ChannelMappingFamily;
+            if (opusSpecificBox._ChannelMappingTable != null)
             {
-                PreSkip = opusSpecificBox._PreSkip;
-                ChannelMappingFamily = opusSpecificBox._ChannelMappingFamily;
-                if (opusSpecificBox._ChannelMappingTable != null)
-                {
-                    StreamCount = opusSpecificBox._ChannelMappingTable._StreamCount;
-                    CoupledCount = opusSpecificBox._ChannelMappingTable._CoupledCount;
-                    ChannelMapping = opusSpecificBox._ChannelMappingTable._ChannelMapping;
-                }
-                else
-                {
-                    throw new NotSupportedException();
-                }
+                StreamCount = opusSpecificBox._ChannelMappingTable._StreamCount;
+                CoupledCount = opusSpecificBox._ChannelMappingTable._CoupledCount;
+                ChannelMapping = opusSpecificBox._ChannelMappingTable._ChannelMapping;
             }
             else
             {

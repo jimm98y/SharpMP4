@@ -62,69 +62,62 @@ namespace SharpMP4.Tracks
         /// <summary>
         /// Ctor with initialization from the <see cref="SampleEntry"/>.
         /// </summary>
-        /// <param name="sampleEntry"><see cref="SampleEntry"/>.</param>
-        public AACTrack(Box sampleEntry, uint timescale = 0, int sampleDuration = -1)
+        /// <param name="config"><see cref="ESDBox"/>.</param>
+        public AACTrack(Box config, uint timescale = 0, int sampleDuration = -1)
         {
+            ESDBox esd = config as ESDBox;
+            if (esd == null)
+                throw new ArgumentException($"Invalid ESDBox: {config.FourCC}");
+
             DefaultSampleDuration = sampleDuration <= 0 ? AAC_SAMPLE_SIZE : sampleDuration;
 
-            ESDBox esd = null;
-
-            if (sampleEntry is AudioSampleEntry audioSampleEntry)
+            if (config.GetParent() is AudioSampleEntry audioSampleEntry)
             {
                 Timescale = timescale == 0 ? audioSampleEntry.Samplerate >> 16 : timescale; 
                 ChannelCount = (byte)audioSampleEntry.Channelcount;
                 SamplingRate = audioSampleEntry.Samplerate >> 16;
                 SampleSize = audioSampleEntry.Samplesize;
                 ChannelConfiguration = (byte)audioSampleEntry.Channelcount;
-                esd = sampleEntry.Children.OfType<ESDBox>().Single();                       
             }
-            else if(sampleEntry is AudioSampleEntryV1 audioSampleEntryV1)
+            else if(config.GetParent() is AudioSampleEntryV1 audioSampleEntryV1)
             {
                 Timescale = audioSampleEntryV1.Samplerate >> 16;
                 ChannelCount = (byte)audioSampleEntryV1.Channelcount;
                 SamplingRate = audioSampleEntryV1.Samplerate >> 16;
                 SampleSize = audioSampleEntryV1.Samplesize;
                 ChannelConfiguration = (byte)audioSampleEntryV1.Channelcount;
-                esd = sampleEntry.Children.OfType<ESDBox>().Single();
             }
             else
             {
-                throw new NotSupportedException();
+                throw new NotSupportedException("Parent box is not AudioSampleEntry!");
             }
 
-            if (esd != null)
+            DecoderConfigDescriptor decoderConfigDescriptor = esd._ES.Children.OfType<DecoderConfigDescriptor>().SingleOrDefault();
+            if (decoderConfigDescriptor != null)
             {
-                DecoderConfigDescriptor decoderConfigDescriptor = esd._ES.Children.OfType<DecoderConfigDescriptor>().SingleOrDefault();
-                if (decoderConfigDescriptor != null)
+                AudioSpecificConfig audioSpecificConfig = null;
+                audioSpecificConfig = decoderConfigDescriptor.Children.OfType<AudioSpecificConfig>().SingleOrDefault();
+                if (audioSpecificConfig == null)
                 {
-                    AudioSpecificConfig audioSpecificConfig = null;
-                    audioSpecificConfig = decoderConfigDescriptor.Children.OfType<AudioSpecificConfig>().SingleOrDefault();
-                    if (audioSpecificConfig == null)
+                    // TODO: Fix demuxer
+                    GenericDecoderSpecificInfo genericDecoderSpecificInfo = decoderConfigDescriptor.Children.OfType<GenericDecoderSpecificInfo>().SingleOrDefault();
+                    if(genericDecoderSpecificInfo != null)
                     {
-                        // TODO: Fix demuxer
-                        GenericDecoderSpecificInfo genericDecoderSpecificInfo = decoderConfigDescriptor.Children.OfType<GenericDecoderSpecificInfo>().SingleOrDefault();
-                        if(genericDecoderSpecificInfo != null)
+                        using(IsoStream isoStream = new IsoStream(new MemoryStream()))
                         {
-                            using(IsoStream isoStream = new IsoStream(new MemoryStream()))
-                            {
-                                genericDecoderSpecificInfo.Write(isoStream);
-                                isoStream.SeekFromBeginning(0);
-                                audioSpecificConfig = new AudioSpecificConfig();
-                                audioSpecificConfig.Read(isoStream, (ulong)isoStream.GetStreamLength() << 3);
-                            }
+                            genericDecoderSpecificInfo.Write(isoStream);
+                            isoStream.SeekFromBeginning(0);
+                            audioSpecificConfig = new AudioSpecificConfig();
+                            audioSpecificConfig.Read(isoStream, (ulong)isoStream.GetStreamLength() << 3);
                         }
                     }
-
-                    if (audioSpecificConfig != null)
-                    {
-                        ChannelConfiguration = audioSpecificConfig.ChannelConfiguration;
-                        this.AudioSpecificConfig = audioSpecificConfig; // store this for later use, the decoder will need it
-                    }
                 }
-            }
-            else
-            {
-                throw new NotSupportedException();
+
+                if (audioSpecificConfig != null)
+                {
+                    ChannelConfiguration = audioSpecificConfig.ChannelConfiguration;
+                    this.AudioSpecificConfig = audioSpecificConfig; // store this for later use, the decoder will need it
+                }
             }
         }
 

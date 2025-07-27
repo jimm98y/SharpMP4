@@ -3,6 +3,7 @@ using SharpAV1;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace SharpMP4.Tracks
 {
@@ -47,13 +48,11 @@ namespace SharpMP4.Tracks
             DefaultSampleDuration = sampleDuration;
         }
 
-        public AV1Track(Box sampleEntry, uint timescale, int sampleDuration) : this()
+        public AV1Track(Box config, uint timescale, int sampleDuration) : this(timescale, sampleDuration)
         {
-            Timescale = timescale;
-            DefaultSampleDuration = sampleDuration;
-
-            VisualSampleEntry visualSampleEntry = (VisualSampleEntry)sampleEntry;
-            AV1CodecConfigurationBox av01 = visualSampleEntry.Children.OfType<AV1CodecConfigurationBox>().Single();
+            AV1CodecConfigurationBox av01 = config as AV1CodecConfigurationBox;
+            if (av01 == null)
+                throw new ArgumentException($"Invalid AV1CodecConfigurationBox: {config.FourCC}");
 
             ProcessSample(av01.Av1Config.ConfigOBUs, out _, out _);
         }

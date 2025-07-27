@@ -61,10 +61,11 @@ namespace SharpMP4.Tracks
             DefaultSampleDuration = sampleDuration;
         }
 
-        public H265Track(Box sampleEntry, uint timescale, int sampleDuration) : this(timescale, sampleDuration)
+        public H265Track(Box config, uint timescale, int sampleDuration) : this(timescale, sampleDuration)
         {
-            VisualSampleEntry visualSampleEntry = (VisualSampleEntry)sampleEntry;
-            HEVCConfigurationBox hvcC = visualSampleEntry.Children.OfType<HEVCConfigurationBox>().Single();
+            HEVCConfigurationBox hvcC = config as HEVCConfigurationBox;
+            if (hvcC == null)
+                throw new ArgumentException($"Invalid HEVCConfigurationBox: {config.FourCC}");
 
             NalLengthSize = hvcC._HEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
 

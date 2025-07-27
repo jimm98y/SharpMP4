@@ -33,25 +33,16 @@ namespace SharpMP4.Tracks
         {
             switch (IsoStream.ToFourCC(sampleEntry.FourCC))
             {
-                case "avc1":
-                case "avc2":
-                case "avc3":
-                case "avc4":
+                case "avcC":
                     return new H264Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
-                case "hvc1":
-                case "hvc2":
-                case "hvc3":
-                case "hev1":
-                case "hev2":
-                case "hev3":
+                case "hvcC":
                     return new H265Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
-                case "vvc1":
-                case "vvcN":
+                case "vvcC":
                     return new H266Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
-                case "av01":
+                case "av1C":
                     return new AV1Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 default:
@@ -63,10 +54,10 @@ namespace SharpMP4.Tracks
         {
             switch (IsoStream.ToFourCC(sampleEntry.FourCC))
             {
-                case "mp4a":
+                case "esds":
                     return new AACTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
-                case "Opus":
+                case "dOps":
                     return new OpusTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 default:
