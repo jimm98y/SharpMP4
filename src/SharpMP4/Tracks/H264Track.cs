@@ -458,9 +458,7 @@ namespace SharpMP4.Tracks
             // convert to fixed point 1616
             tkhd.Width = dim.Width << 16; // TODO: simplify API
             tkhd.Height = dim.Height << 16; // TODO: simplify API
-        }
-
-        
+        }      
 
         public override IEnumerable<byte[]> GetContainerSamples()
         {

@@ -20,6 +20,7 @@ namespace SharpMP4.Tracks
         public uint SamplingRate { get; private set; }
         public ushort SampleSize { get; private set; }
         public byte ChannelConfiguration { get; private set; }
+        public AudioSpecificConfig AudioSpecificConfig { get; private set; }
 
         public override string HandlerName => HandlerNames.Sound;
         public override string HandlerType => HandlerTypes.Sound;
@@ -117,6 +118,7 @@ namespace SharpMP4.Tracks
                     if (audioSpecificConfig != null)
                     {
                         ChannelConfiguration = audioSpecificConfig.ChannelConfiguration;
+                        this.AudioSpecificConfig = audioSpecificConfig; // store this for later use, the decoder will need it
                     }
                 }
             }
@@ -181,15 +183,15 @@ namespace SharpMP4.Tracks
             decoderConfigDescriptor.AvgBitrate = 0; // TODO: this.SamplingRate;
             decoderConfigDescriptor.BufferSizeDB = 0; // TODO: ???
 
-            AudioSpecificConfig audioSpecificConfig = new AudioSpecificConfig() 
+            AudioSpecificConfig = new AudioSpecificConfig() 
             {
                 SamplingFrequencyIndex = (byte)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate],
                 ChannelConfiguration = ChannelConfiguration // TODO: from the ADTS header
             };
-            audioSpecificConfig.AudioObjectType = new GetAudioObjectType() { AudioObjectType = AAC_AUDIO_OBJECT_TYPE }; // TODO simplify API
-            audioSpecificConfig._GASpecificConfig = new GASpecificConfig((int)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate], ChannelCount, AAC_AUDIO_OBJECT_TYPE);
-            audioSpecificConfig.SetParent(decoderConfigDescriptor);
-            decoderConfigDescriptor.Children.Add(audioSpecificConfig);
+            AudioSpecificConfig.AudioObjectType = new GetAudioObjectType() { AudioObjectType = AAC_AUDIO_OBJECT_TYPE }; // TODO simplify API
+            AudioSpecificConfig._GASpecificConfig = new GASpecificConfig((int)AudioSpecificConfigDescriptor.SamplingFrequencyMap[SamplingRate], ChannelCount, AAC_AUDIO_OBJECT_TYPE);
+            AudioSpecificConfig.SetParent(decoderConfigDescriptor);
+            decoderConfigDescriptor.Children.Add(AudioSpecificConfig);
 
             SLConfigDescriptor slConfigDescriptor = new SLConfigDescriptor();
             slConfigDescriptor.Predefined = 2;
