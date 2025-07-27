@@ -2015,7 +2015,9 @@ namespace SharpISOBMFF
 
         public static int GetInt(byte[] bytes)
         {
-            if (bytes.Length == 1)
+            if (bytes.Length == 0)
+                return 0;
+            else if (bytes.Length == 1)
                 return bytes[0];
             else if (bytes.Length == 2)
                 return (int)(((int)bytes[0] << 8) + ((int)bytes[1]));
