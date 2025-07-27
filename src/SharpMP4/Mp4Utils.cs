@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpMP4.Builders
+namespace SharpMP4
 {
     public static class Mp4Utils
     {

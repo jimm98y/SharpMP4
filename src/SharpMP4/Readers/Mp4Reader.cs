@@ -53,10 +53,11 @@ namespace SharpMP4.Readers
                         MediaBox mdia = track.Children.OfType<MediaBox>().Single();
                         MediaHeaderBox mdhd = mdia.Children.OfType<MediaHeaderBox>().Single();
                         uint trackID = tkhd.TrackID;
+                        int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
                         uint trackTimescale = mdhd.Timescale;
 
                         var trackContext = new TrackContext();
-                        this.Tracks[(int)(trackID - 1)] = trackContext;
+                        this.Tracks[trackIndex] = trackContext;
 
                         trackContext.Trex = this.Mvex?.Children.OfType<TrackExtendsBox>().SingleOrDefault(x => x.TrackID == trackID); // fmp4
                         
@@ -72,7 +73,7 @@ namespace SharpMP4.Readers
 
                         // TODO: review, this is needed because of AV1 where we cannot calculate the sample rate
                         int defaultSampleDuration = trackContext.Stts.SampleDelta != null && trackContext.Stts.SampleDelta.Length > 0 ? (int)trackContext.Stts.SampleDelta[0] : 0;
-                        this.Tracks[(int)(trackID - 1)].Track = TrackFactory.CreateTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
+                        this.Tracks[trackIndex].Track = TrackFactory.CreateTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
 
                         var stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
                         var co64 = stbl.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
@@ -126,8 +127,9 @@ namespace SharpMP4.Readers
             if (this.Moov == null)
                 throw new InvalidOperationException();
 
+            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
             var container = this.Container;
-            var trackContext = this.Tracks[trackID - 1];
+            var trackContext = this.Tracks[trackIndex];
 
             MovieFragmentBox moof = null;
 
@@ -274,7 +276,8 @@ namespace SharpMP4.Readers
 
         private Mp4Sample ReadMp4Sample(uint trackID)
         {
-            var trackContext = this.Tracks[trackID - 1];
+            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
+            var trackContext = this.Tracks[trackIndex];
 
             int sttsIndex = 0;
             uint sttsNextRun = 0;
@@ -388,7 +391,8 @@ namespace SharpMP4.Readers
 
         private Mp4Sample ReadFragmentedMp4Sample(uint trackID)
         {
-            var trackContext = this.Tracks[trackID - 1];
+            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
+            var trackContext = this.Tracks[trackIndex];
 
             if (trackContext.Moof == null || trackContext.SampleIndex >= trackContext.FragmentSampleCount || trackContext.SampleIndex < 0) // TODO: sample streaming backwards
             {
@@ -466,7 +470,8 @@ namespace SharpMP4.Readers
 
         public IEnumerable<byte[]> ParseSample(uint trackID, byte[] sample)
         {
-            var trackContext = this.Tracks[trackID - 1];
+            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
+            var trackContext = this.Tracks[trackIndex];
             return trackContext.Track.ParseSample(sample);
         }
     }    
