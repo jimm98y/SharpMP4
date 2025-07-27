@@ -145,7 +145,6 @@ namespace SharpMP4.Readers
                         {
                             moof = currentMoof;
                             trackContext.Moof = moof;
-                            trackContext.Mfhd = mfhd;
                             trackContext.Tfhd = tfhd;
                             trackContext.Truns = traf.Children.OfType<TrackRunBox>().ToArray(); // there can be 1 or multiple trun boxes, depending upon the encoder
                             var tfdt = traf.Children.OfType<TrackFragmentBaseMediaDecodeTimeBox>().SingleOrDefault();
@@ -505,7 +504,6 @@ namespace SharpMP4.Readers
         // fmp4
         public int FragmentIndex { get; set; }
         public MovieFragmentBox Moof { get; set; }
-        public MovieFragmentHeaderBox Mfhd { get; set; }
         public MediaDataBox Mdat { get; set; }
         public TrackRunBox[] Truns { get; set; }
         public TrackFragmentHeaderBox Tfhd { get; set; }
