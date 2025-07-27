@@ -180,7 +180,7 @@ namespace SharpISOBMFF
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data, nameof(data));
             return boxSize;
         }
 
@@ -188,7 +188,7 @@ namespace SharpISOBMFF
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data, nameof(data));
             return boxSize;
         }
 
@@ -223,7 +223,7 @@ namespace SharpISOBMFF
         {
             ulong boxSize = 0;
             boxSize += base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data, nameof(data));
             return boxSize;
         }
 
@@ -231,7 +231,7 @@ namespace SharpISOBMFF
         {
             ulong boxSize = 0;
             boxSize += base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data, nameof(data));
             return boxSize;
         }
 
@@ -265,14 +265,14 @@ namespace SharpISOBMFF
         public ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = 0;
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data, nameof(data));
             return boxSize;
         }
 
         public ulong Write(IsoStream stream)
         {
             ulong boxSize = 0;
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data, "data");
             return boxSize;
         }
 
@@ -395,14 +395,14 @@ namespace SharpISOBMFF
         public override ulong Read(IsoStream stream, ulong readSize)
         {
             ulong boxSize = base.Read(stream, readSize);
-            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data);
+            boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize, out this.data, nameof(data));
             return boxSize;
         }
 
         public override ulong Write(IsoStream stream)
         {
             ulong boxSize = base.Write(stream);
-            boxSize += stream.WriteUInt8ArrayTillEnd(this.data);
+            boxSize += stream.WriteUInt8ArrayTillEnd(this.data, nameof(data));
             return boxSize;
         }
         public override ulong CalculateSize()

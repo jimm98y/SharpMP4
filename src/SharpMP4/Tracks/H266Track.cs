@@ -596,7 +596,7 @@ namespace SharpMP4.Tracks
                     }
                 }
 
-                isoStream.WriteByteAlignment(0);
+                isoStream.WriteByteAlignment(0, "");
 
                 return ms.ToArray();
             }

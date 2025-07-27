@@ -907,9 +907,9 @@ namespace SharpISOBMFF
             }
 
             if (methodType == MethodType.Read)
-                return $"{spacing}{boxSize}{m} out this.{name}{typedef}); {fieldComment}";
+                return $"{spacing}{boxSize}{m} out this.{name}{typedef}, \"{name}\"); {fieldComment}";
             else if (methodType == MethodType.Write)
-                return $"{spacing}{boxSize}{m} this.{name}{typedef}); {fieldComment}";
+                return $"{spacing}{boxSize}{m} this.{name}{typedef}, \"{name}\"); {fieldComment}";
             else
                 return $"{spacing}{boxSize}{m}; // {name}";
         }

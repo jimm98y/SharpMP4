@@ -223,37 +223,38 @@ namespace SharpISOBMFF
             return (int)(readSize - boxSize);
         }
 
-        public ulong ReadBit(ulong boxSize, ulong readSize, out bool value)
+        public ulong ReadBit(ulong boxSize, ulong readSize, out bool value, string name)
         {
             value = ReadBitInternal() != 0;
+            LogEnd(name, 1, value);
             return 1;
         }
 
-        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte value, string name)
         {
             if (count > 8) throw new ArgumentException();
-            ulong ret = ReadBits(boxSize, readSize, count, out uint v);
+            ulong ret = ReadBits(boxSize, readSize, count, out uint v, name);
             value = (byte)v;
             return ret;
         }
 
-        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out sbyte value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out sbyte value, string name)
         {
             if (count > 8) throw new ArgumentException();
-            ulong ret = ReadBits(boxSize, readSize, count, out uint v);
+            ulong ret = ReadBits(boxSize, readSize, count, out uint v, name);
             value = (sbyte)v;
             return ret;
         }
 
-        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out ushort value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out ushort value, string name)
         {
             if (count > 16) throw new ArgumentException();
-            ulong ret = ReadBits(boxSize, readSize, count, out uint v);
+            ulong ret = ReadBits(boxSize, readSize, count, out uint v, name);
             value = (ushort)v;
             return ret;
         }
 
-        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out short value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out short value, string name)
         {
             if (count > 16) throw new ArgumentException();
             uint originalCount = count;
@@ -277,10 +278,11 @@ namespace SharpISOBMFF
             }
 
             value = (short)(res * sign);
+            LogEnd(name, originalCount, value);
             return originalCount;
         }
 
-        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out uint value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out uint value, string name)
         {
             if (count > 32) throw new ArgumentException();
             uint originalCount = count;
@@ -300,10 +302,11 @@ namespace SharpISOBMFF
             }
 
             value = (uint)res;
+            LogEnd(name, originalCount, value);
             return originalCount;
         }
 
-        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out ulong value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out ulong value, string name)
         {
             if (count > 64) throw new ArgumentException();
             uint originalCount = count;
@@ -323,12 +326,14 @@ namespace SharpISOBMFF
             }
 
             value = (ulong)res;
+            LogEnd(name, originalCount, value);
             return originalCount;
         }
 
-        public ulong WriteBit(bool value)
+        public ulong WriteBit(bool value, string name)
         {
             WriteBitInternal(value ? 1 : 0);
+            LogEnd(name, 1, value);
             return 1;
         }
 
@@ -338,35 +343,49 @@ namespace SharpISOBMFF
             return 1;
         }
 
-        public ulong WriteBits(uint count, byte value)
+        public ulong WriteBit(byte value, string name)
         {
-            if (count > 8)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            return WriteBits(count, (ulong)value);
-        }
-
-        public ulong WriteBits(uint count, ushort value)
-        {
-            if (count > 16)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            return WriteBits(count, (ulong)value);
-        }
-
-        public ulong WriteBits(uint count, short value)
-        {
-            if (count > 16)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            return WriteBits(count, unchecked((ushort)value));
-        }
-
-        public ulong WriteBits(uint count, uint value)
-        {
-            if (count > 32)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            return WriteBits(count, (ulong)value);
+            WriteBitInternal(value);
+            LogEnd(name, 1, value);
+            return 1;
         }
 
         public ulong WriteBits(uint count, ulong value)
+        {
+            if (count > 8)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            return WriteBits(count, (ulong)value, "");
+        }
+
+        public ulong WriteBits(uint count, byte value, string name)
+        {
+            if (count > 8)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            return WriteBits(count, (ulong)value, name);
+        }
+
+        public ulong WriteBits(uint count, ushort value, string name)
+        {
+            if (count > 16)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            return WriteBits(count, (ulong)value, name);
+        }
+
+        public ulong WriteBits(uint count, short value, string name)
+        {
+            if (count > 16)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            return WriteBits(count, unchecked((ushort)value), name);
+        }
+
+        public ulong WriteBits(uint count, uint value, string name)
+        {
+            if (count > 32)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            return WriteBits(count, (ulong)value, name);
+        }
+
+        public ulong WriteBits(uint count, ulong value, string name)
         {
             if (count > 64)
                 throw new ArgumentOutOfRangeException(nameof(count));
@@ -378,10 +397,12 @@ namespace SharpISOBMFF
                 WriteBitInternal((int)((value & mask) >> bits));
                 count--;
             }
+
+            LogEnd(name, originalCount, value);
             return originalCount;
         }
 
-        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte[] value)
+        public ulong ReadBits(ulong boxSize, ulong readSize, uint count, out byte[] value, string name)
         {
             value = new byte[(count >> 3) + (count % 8)];
             int i = 0;
@@ -389,39 +410,42 @@ namespace SharpISOBMFF
             while (i < value.Length && c > 0)
             {
                 byte v = 0;
-                c -= (int)ReadBits((ulong)((long)boxSize + count - c), readSize, (uint)Math.Min(c, 8), out v);
+                c -= (int)ReadBits((ulong)((long)boxSize + count - c), readSize, (uint)Math.Min(c, 8), out v, "");
                 value[i] = v;
                 i++;
             }
+
+            LogEnd(name, count, value);
+
             return count;
         }
 
-        public ulong WriteBits(uint count, byte[] value)
+        public ulong WriteBits(uint count, byte[] value, string name)
         {
             int c = (int)count;
             int i = 0;
             while (i < value.Length && c > 0)
             {
-                c -= (int)WriteBits((uint)Math.Min(c, 8), value[i]);
+                c -= (int)WriteBits((uint)Math.Min(c, 8), value[i], name);
                 i++;
             }
             return count;
         }
 
-        public ulong ReadByteAlignment(ulong boxSize, ulong readSize, out byte value)
+        public ulong ReadByteAlignment(ulong boxSize, ulong readSize, out byte value, string name)
         {
             int bytePos = _bitsPosition >> 3;
             int currentBytePos = bytePos << 3;
             uint bitsToRead = (uint)(8 - (_bitsPosition - currentBytePos));
-            return ReadBits(boxSize, readSize, bitsToRead, out value);
+            return ReadBits(boxSize, readSize, bitsToRead, out value, name);
         }
 
-        public ulong WriteByteAlignment(byte value)
+        public ulong WriteByteAlignment(byte value, string name)
         {
             int bytePos = _bitsPosition >> 3;
             int currentBytePos = bytePos << 3;
             uint bitsToWrite = (uint)(8 - (_bitsPosition - currentBytePos));
-            return WriteBits(bitsToWrite, value);
+            return WriteBits(bitsToWrite, value, name);
         }
 
         public static ulong CalculateByteAlignmentSize(ulong boxSize, byte value)
@@ -433,7 +457,7 @@ namespace SharpISOBMFF
 
         #region Strings
 
-        public ulong ReadStringZeroTerminatedArray(ulong boxSize, ulong readSize, uint count, out BinaryUTF8String[] value)
+        public ulong ReadStringZeroTerminatedArray(ulong boxSize, ulong readSize, uint count, out BinaryUTF8String[] value, string name)
         {
             ulong size = 0;
             BinaryUTF8String[] strings = new BinaryUTF8String[count];
@@ -443,20 +467,24 @@ namespace SharpISOBMFF
                 strings[i] = new BinaryUTF8String(bytes) { IsZeroTerminated = false };
             }
             value = strings;
+
+            LogEnd(name, size, strings);
             return size;
         }
 
-        public ulong WriteStringZeroTerminatedArray(uint count, BinaryUTF8String[] values)
+        public ulong WriteStringZeroTerminatedArray(uint count, BinaryUTF8String[] values, string name)
         {
             ulong size = 0;
             for (int i = 0; i < count && i < values.Length; i++)
             {
-                size += WriteString(values[i]);
+                size += WriteString(values[i], "");
             }
+
+            LogEnd(name, size, values);
             return size;
         }
 
-        public ulong WriteString(BinaryUTF8String value)
+        public ulong WriteString(BinaryUTF8String value, string name)
         {
             if (value.Length == 0)
                 return 0;
@@ -466,15 +494,18 @@ namespace SharpISOBMFF
             {
                 WriteByte(buffer[i]);
             }
-            return (ulong)value.Length << 3;
+
+            ulong size = (ulong)value.Length << 3;
+            LogEnd(name, size, EscapeString(value.ToString()));
+            return size;
         }
 
-        public ulong WriteStringZeroTerminated(BinaryUTF8String value)
+        public ulong WriteStringZeroTerminated(BinaryUTF8String value, string name)
         {
-            return WriteString(value);
+            return WriteString(value, name);
         }
 
-        public ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value)
+        public ulong ReadStringZeroTerminated(ulong boxSize, ulong readSize, out BinaryUTF8String value, string name)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
@@ -497,11 +528,13 @@ namespace SharpISOBMFF
             }
 
             value = new BinaryUTF8String(buffer.ToArray());
-            Log.Debug($"ReadString: {EscapeString(value.ToString())}");
-            return (ulong)buffer.Count * 8;
+
+            ulong size = (ulong)buffer.Count * 8;
+            LogEnd(name, size, EscapeString(value.ToString()));
+            return size;
         }
 
-        public ulong ReadStringSizeLangPrefixed(ulong boxSize, ulong readSize, out MultiLanguageString[] value)
+        public ulong ReadStringSizeLangPrefixed(ulong boxSize, ulong readSize, out MultiLanguageString[] value, string name)
         {
             ulong remaining = readSize - boxSize;
             if (remaining == 0)
@@ -516,15 +549,14 @@ namespace SharpISOBMFF
             while (size < remaining)
             {
                 ushort length;
-                size += ReadUInt16(boxSize + size, readSize, out length);
+                size += ReadUInt16(boxSize + size, readSize, out length, "");
                 ushort lang;
-                size += ReadUInt16(boxSize + size, readSize, out lang);
+                size += ReadUInt16(boxSize + size, readSize, out lang, "");
                 byte[] bytes;
                 size += ReadBytes(length, out bytes);
 
                 BinaryUTF8String str = new BinaryUTF8String(bytes) { IsZeroTerminated = false };
-
-                Log.Debug($"ReadString ({lang}): {EscapeString(str.ToString())}");
+                LogEnd(name, size, EscapeString(str.ToString()));
 
                 MultiLanguageString item = new MultiLanguageString(lang, length, str);
                 items.Add(item);
@@ -532,10 +564,11 @@ namespace SharpISOBMFF
 
             value = items.ToArray();
 
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong WriteStringSizeLangPrefixed(MultiLanguageString[] value)
+        public ulong WriteStringSizeLangPrefixed(MultiLanguageString[] value, string name)
         {
             if (value == null || value.Length == 0)
                 return 0;
@@ -543,10 +576,12 @@ namespace SharpISOBMFF
             ulong size = 0;
             foreach (var item in value)
             {
-                size += WriteUInt16(item.Length);
-                size += WriteUInt16(item.Language);
-                size += WriteString(item.Value);
+                size += WriteUInt16(item.Length, "");
+                size += WriteUInt16(item.Language, "");
+                size += WriteString(item.Value, "");
             }
+
+            LogEnd(name, size, value);
 
             return size;
         }
@@ -613,12 +648,12 @@ namespace SharpISOBMFF
 
         #region Boxes
 
-        public ulong ReadBox(ulong boxSize, IMp4Serializable parent, out Box box)
+        public ulong ReadBox(ulong boxSize, IMp4Serializable parent, out Box box, string name)
         {
-            return ReadBox(boxSize, ulong.MaxValue, parent, out box);
+            return ReadBox(boxSize, ulong.MaxValue, parent, out box, name);
         }
 
-        public ulong WriteBox(Box value)
+        public ulong WriteBox(Box value, string name)
         {
             ulong size = WriteBoxHeader(value);
             size += value.Write(this);
@@ -626,6 +661,7 @@ namespace SharpISOBMFF
             {
                 size += WritePadding(value.Padding);
             }
+            LogEnd(name, size, value);
             return size;
         }
 
@@ -686,8 +722,10 @@ namespace SharpISOBMFF
             return writtenSize;
         }
 
-        public ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T value) where T : Box
+        public ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T value, string name) where T : Box
         {
+            LogBegin(name);
+
             SafeBoxHeader header;
             long headerOffset = this.GetCurrentOffset();
             ulong headerSize = ReadBoxHeader(out header);
@@ -721,6 +759,8 @@ namespace SharpISOBMFF
                 value.SetBoxOffset(headerOffset);
                 value.Size = header.GetBoxSizeInBits() >> 3;
             }
+
+            LogEnd(name, size, value);
 
             return size;
         }
@@ -756,27 +796,29 @@ namespace SharpISOBMFF
             return BoxFactory.CreateBox(ToFourCC(header.Type), parentFourCC, header.Usertype);
         }
 
-        public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value) where T : Box
+        public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value, string name) where T : Box
         {
             return ReadBox(boxSize, readSize, 
                 (header) => DefaultBoxFactory(parent, header),
                 parent,
-                out value);    
+                out value, name);    
         }
 
-        public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] value) where T : Box
+        public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] value, string name) where T : Box
         {
             return ReadBox<T>(boxSize, readSize,
                 (header) => DefaultBoxFactory(parent, header),
                 parent,
-                out value);
+                out value, name);
         }
 
-        public ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T[] value) where T : Box
+        public ulong ReadBox<T>(ulong boxSize, ulong readSize, Func<SafeBoxHeader, Box> factory, IMp4Serializable parent, out T[] value, string name) where T : Box
         {
             var boxes = new List<T>();
 
             ulong consumed = 0;
+
+            LogBegin(name);
 
             if (readSize == 0)
             {
@@ -787,7 +829,7 @@ namespace SharpISOBMFF
                     while (true)
                     {
                         T v;
-                        consumed += ReadBox<T>(consumed, readSize, factory, parent, out v);
+                        consumed += ReadBox<T>(consumed, readSize, factory, parent, out v, name);
                         boxes.Add(v);
                     }
 
@@ -804,20 +846,29 @@ namespace SharpISOBMFF
             while (consumed < remaining)
             {
                 T v;
-                consumed += ReadBox<T>(consumed, readSize, factory, parent, out v);
+                consumed += ReadBox<T>(consumed, readSize, factory, parent, out v, name);
                 boxes.Add(v);
             }
             value = boxes.ToArray();
+
+            LogEnd(name, consumed, value);
+
             return consumed;
         }
 
-        public ulong WriteBox(Box[] value)
+        public ulong WriteBox(Box[] value, string name)
         {
             ulong size = 0;
+
+            LogBegin(name);
+
             foreach (var box in value)
             {
-                size += WriteBox(box);
+                size += WriteBox(box, "");
             }
+
+            LogEnd(name, size, value);
+
             return size;
         }
 
@@ -844,7 +895,7 @@ namespace SharpISOBMFF
                     while (true)
                     {
                         Box v;
-                        ulong readBoxSize = ReadBox(consumed, readSize, box, out v);
+                        ulong readBoxSize = ReadBox(consumed, readSize, box, out v, "");
                         consumed += readBoxSize;
 
                         if (readBoxSize == 0)
@@ -863,7 +914,7 @@ namespace SharpISOBMFF
             while (consumed < remaining && (remaining - consumed) >= 64) // box header is at least 8 bytes
             {
                 Box v;
-                consumed += ReadBox(consumed, remaining, box, out v);
+                consumed += ReadBox(consumed, remaining, box, out v, "");
                 if (consumed > readSize)
                 {
                     Log.Debug($"Box \'{ToFourCC(v.FourCC)}\' read through!");
@@ -882,7 +933,7 @@ namespace SharpISOBMFF
             ulong written = 0;
             foreach (var v in box.Children)
             {
-                written += WriteBox(v);
+                written += WriteBox(v, "");
             }
             return written;
         }
@@ -979,17 +1030,24 @@ namespace SharpISOBMFF
 
         #region Classes
 
-        public ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, Func<T> factory, out T value) where T : IMp4Serializable
+        public ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, Func<T> factory, out T value, string name) where T : IMp4Serializable
         {
             T c = factory();
             c.SetParent(parent);
-            Log.Debug($"CLS:{GetIndentation(c)}{c.DisplayName}");
+
+            LogBegin(name);
+            _logLevel++;
+
             ulong size = c.Read(this, readSize - boxSize);
             value = c;
+
+            _logLevel--;
+            LogEnd(name, size, value);
+            
             return size;
         }
 
-        public ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, uint count, Func<T> factory, out T[] value) where T : IMp4Serializable
+        public ulong ReadClass<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, uint count, Func<T> factory, out T[] value, string name) where T : IMp4Serializable
         {
             ulong consumed = 0;
             ulong remaining = readSize - boxSize;
@@ -997,7 +1055,7 @@ namespace SharpISOBMFF
             for (uint i = 0; i < count && consumed < remaining; i++)
             {
                 T c;
-                consumed += ReadClass<T>(boxSize + consumed, remaining, parent, factory, out c);
+                consumed += ReadClass<T>(boxSize + consumed, remaining, parent, factory, out c, name);
                 if (consumed > readSize)
                 {
                     throw new Exception($"Class read through!");
@@ -1009,23 +1067,31 @@ namespace SharpISOBMFF
             return consumed;
         }
 
-        public ulong WriteClass(IMp4Serializable value)
+        public ulong WriteClass(IMp4Serializable value, string name)
         {
-            ulong writtenSize = 0;
-            writtenSize += value.Write(this);
+            ulong size = 0;
+
+            LogBegin(name);
+            _logLevel++;
+
+            size += value.Write(this);
+
+            _logLevel--;
+            LogEnd(name, size, value);
+
             if (value.Padding != null)
             {
-                writtenSize += WritePadding(value.Padding);
+                size += WritePadding(value.Padding);
             }
-            return writtenSize;
+            return size;
         }
 
-        public ulong WriteClass(IMp4Serializable[] value)
+        public ulong WriteClass(IMp4Serializable[] value, string name)
         {
             ulong size = 0;
             foreach (var cls in value)
             {
-                size += WriteClass(cls);
+                size += WriteClass(cls, name);
             }
             return size;
         }
@@ -1044,8 +1110,10 @@ namespace SharpISOBMFF
 
         #region Descriptors
 
-        public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T descriptor) where T : Descriptor
+        public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T descriptor, string name) where T : Descriptor
         {
+            LogBegin(name);
+
             long availableSize = (long)readSize - (long)boxSize;
             if(availableSize == 0)
             {
@@ -1054,7 +1122,7 @@ namespace SharpISOBMFF
             }
 
             byte tag;
-            ulong size = ReadUInt8(boxSize, readSize, out tag);
+            ulong size = ReadUInt8(boxSize, readSize, out tag, "");
             if (tag == 0)
             {
                 descriptor = null;
@@ -1102,10 +1170,12 @@ namespace SharpISOBMFF
                 Log.Debug($"Calculated descriptor \'{tag}\' size: {calculatedSize >> 3}, read: {sizeOfInstanceBits >> 3}");
             }
 
+            LogEnd(name, size, descriptor);
+
             return size;
         }
 
-        public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] descriptor) where T : Descriptor
+        public ulong ReadDescriptor<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T[] descriptor, string name) where T : Descriptor
         {
             ulong consumed = 0;
 
@@ -1119,7 +1189,7 @@ namespace SharpISOBMFF
                     while (true)
                     {
                         T v;
-                        consumed += ReadDescriptor(consumed, readSize, parent, out v);
+                        consumed += ReadDescriptor(consumed, readSize, parent, out v, name);
                         descriptors.Add(v);
                     }
                 }
@@ -1135,7 +1205,7 @@ namespace SharpISOBMFF
             while (consumed < remaining)
             {
                 T v;
-                consumed += ReadDescriptor(consumed, remaining, parent, out v);
+                consumed += ReadDescriptor(consumed, remaining, parent, out v, name);
                 descriptors.Add(v);
             }
 
@@ -1164,7 +1234,7 @@ namespace SharpISOBMFF
                     while (true)
                     {
                         Descriptor v;
-                        consumed += ReadDescriptor(consumed, readSize, descriptor, out v);
+                        consumed += ReadDescriptor(consumed, readSize, descriptor, out v, "");
                         descriptor.Children.Add(v);
                     }
                 }
@@ -1178,7 +1248,7 @@ namespace SharpISOBMFF
             while (consumed < remaining)
             {
                 Descriptor v;
-                consumed += ReadDescriptor(consumed, remaining, descriptor, out v);
+                consumed += ReadDescriptor(consumed, remaining, descriptor, out v, "");
                 descriptor.Children.Add(v);
             }
             return consumed;
@@ -1228,19 +1298,21 @@ namespace SharpISOBMFF
             ulong size = 0;
             foreach (var d in descriptor.Children)
             {
-                size += WriteDescriptor(d);
+                size += WriteDescriptor(d, "");
             }
             return size;
         }
 
-        public ulong WriteDescriptor(Descriptor descriptor)
+        public ulong WriteDescriptor(Descriptor descriptor, string name)
         {
+            LogBegin(name);
+
             ulong size = 0;
             if (descriptor == null || descriptor.Tag == 0)
             {
                 return size;
             }
-            size += WriteUInt8(descriptor.Tag);
+            size += WriteUInt8(descriptor.Tag, "");
 
             ulong sizeOfInstance = descriptor.CalculateSize() + 8 * (ulong)(descriptor.Padding != null ? descriptor.Padding.Length : 0);
             size += WriteDescriptorSize(sizeOfInstance >> 3, descriptor.SizeOfSize >> 3);
@@ -1249,10 +1321,13 @@ namespace SharpISOBMFF
             {
                 size += WritePadding(descriptor.Padding);
             }
+
+            LogEnd(name, size, descriptor);
+
             return size;
         }
 
-        public ulong WriteDescriptor(Descriptor[] descriptor)
+        public ulong WriteDescriptor(Descriptor[] descriptor, string name)
         {
             ulong size = 0;
             if (descriptor == null || descriptor.Length == 0)
@@ -1262,8 +1337,10 @@ namespace SharpISOBMFF
             
             for (int i = 0; i < descriptor.Length; i++)
             {
-                size += WriteDescriptor(descriptor[i]);
+                size += WriteDescriptor(descriptor[i], "");
             }
+
+            LogEnd(name, size, descriptor);
 
             return size;
         }
@@ -1334,9 +1411,10 @@ namespace SharpISOBMFF
 
         #region Long number arrays
 
-        public ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value)
+        public ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out StreamMarker value, string name)
         {
             StreamMarker marker;
+            ulong size;
             if (CanStreamSeek())
             {
                 if (readSize == ulong.MaxValue)
@@ -1344,7 +1422,9 @@ namespace SharpISOBMFF
                     marker = new StreamMarker(GetCurrentOffset(), GetStreamLength() - GetCurrentOffset(), this);
                     SeekFromEnd(0);
                     value = marker;
-                    return (ulong)(marker.Length << 3);
+                    size = (ulong)(marker.Length << 3);
+                    LogEnd(name, size, value);
+                    return size;
                 }
                 else
                 {
@@ -1353,7 +1433,9 @@ namespace SharpISOBMFF
                     marker = new StreamMarker(GetCurrentOffset(), count, this);
                     SeekFromCurrent(count);
                     value = marker;
-                    return (ulong)(marker.Length << 3);
+                    size = (ulong)(marker.Length << 3);
+                    LogEnd(name, size, value);
+                    return size;
                 }
             }
             else
@@ -1369,8 +1451,9 @@ namespace SharpISOBMFF
 
                     marker = new StreamMarker(offset, (long)count, storage);
                     value = marker;
-
-                    return count << 3;
+                    size = count << 3;
+                    LogEnd(name, size, value);
+                    return size;
                 }
                 else
                 {
@@ -1380,19 +1463,21 @@ namespace SharpISOBMFF
 
                     marker = new StreamMarker(offset, count, storage);
                     value = marker;
-
-                    return copied << 3;
+                    size = copied << 3;
+                    LogEnd(name, size, value);
+                    return size;
                 }
             }
         }
 
-        public ulong WriteUInt8ArrayTillEnd(StreamMarker data)
+        public ulong WriteUInt8ArrayTillEnd(StreamMarker data, string name)
         {
             IsoStream readStream = data.Stream;
             long originalPosition = readStream.GetCurrentOffset();
             readStream.SeekFromBeginning(data.Position);
             ulong size = CopyStream(readStream._stream, _stream, data.Length) << 3;
             readStream.SeekFromBeginning(originalPosition); // because in our test app we're reading and writing at the same time from the same thread, we have to restore the original position
+            LogEnd(name, size, data);
             return size;
         }
 
@@ -1410,7 +1495,7 @@ namespace SharpISOBMFF
             return Math.Max(entry_count, (ulong)entries.Length) * (ulong)entrySize;
         }
 
-        public ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value)
+        public ulong ReadUInt8ArrayTillEnd(ulong boxSize, ulong readSize, out byte[] value, string name)
         {
             if (readSize == ulong.MaxValue)
             {
@@ -1422,7 +1507,7 @@ namespace SharpISOBMFF
             return ReadBytes(count, out value);
         }
 
-        public ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value)
+        public ulong ReadUInt32ArrayTillEnd(ulong boxSize, ulong readSize, out uint[] value, string name)
         {
             ulong consumed = 0;
 
@@ -1435,7 +1520,7 @@ namespace SharpISOBMFF
                     while (true)
                     {
                         uint v;
-                        consumed += ReadUInt32(boxSize + consumed, readSize, out v);
+                        consumed += ReadUInt32(boxSize + consumed, readSize, out v, "");
                         values.Add(v);
                     }
                 }
@@ -1443,6 +1528,8 @@ namespace SharpISOBMFF
                 { }
 
                 value = values.ToArray();
+
+                LogEnd(name, consumed, value);
                 return consumed;
             }
 
@@ -1451,76 +1538,90 @@ namespace SharpISOBMFF
             value = new uint[count];
             for (uint i = 0; i < count; i++)
             {
-                consumed += ReadUInt32(boxSize + consumed, readSize, out value[i]);
+                consumed += ReadUInt32(boxSize + consumed, readSize, out value[i], "");
             }
+
+            LogEnd(name, consumed, value);
             return consumed;
         }
 
-        public ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out ushort[] value)
+        public ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out ushort[] value, string name)
         {
             ulong size = 0;
             value = new ushort[count];
             for (uint i = 0; i < count; i++)
             {
-                size += ReadUInt16(boxSize + size, readSize, out value[i]);
+                size += ReadUInt16(boxSize + size, readSize, out value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong WriteUInt16Array(uint count, ushort[] value)
+        public ulong WriteUInt16Array(uint count, ushort[] value, string name)
         {
             ulong size = 0;
             for (uint i = 0; i < count; i++)
             {
-                size += WriteUInt16(value[i]);
+                size += WriteUInt16(value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out uint[] value)
+        public ulong ReadUInt16Array(ulong boxSize, ulong readSize, uint count, out uint[] value, string name)
         {
             ulong size = 0;
             value = new uint[count];
             for (uint i = 0; i < count; i++)
             {
-                size += ReadUInt16(boxSize + size, readSize, out value[i]);
+                size += ReadUInt16(boxSize + size, readSize, out value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
         
-        public ulong WriteUInt16Array(uint count, uint[] value)
+        public ulong WriteUInt16Array(uint count, uint[] value, string name)
         {
             ulong size = 0;
             for (uint i = 0; i < count; i++)
             {
-                size += WriteUInt16(value[i]);
+                size += WriteUInt16(value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out uint[] value)
+        public ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out uint[] value, string name)
         {
             ulong size = 0;
             value = new uint[count];
             for (uint i = 0; i < count; i++)
             {
-                size += ReadUInt32(boxSize + size, readSize, out value[i]);
+                size += ReadUInt32(boxSize + size, readSize, out value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong ReadInt32Array(ulong boxSize, ulong readSize, uint count, out int[] value)
+        public ulong ReadInt32Array(ulong boxSize, ulong readSize, uint count, out int[] value, string name)
         {
             ulong size = 0;
             value = new int[count];
             for (uint i = 0; i < count; i++)
             {
-                size += ReadInt32(boxSize + size, readSize, out value[i]);
+                size += ReadInt32(boxSize + size, readSize, out value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong WriteUInt32Array(uint count, uint[] value)
+        public ulong WriteUInt32Array(uint count, uint[] value, string name)
         {
             ulong size = 0;
 
@@ -1529,12 +1630,14 @@ namespace SharpISOBMFF
 
             for (uint i = 0; i < count; i++)
             {
-                size += WriteUInt32(value[i]);
+                size += WriteUInt32(value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong WriteInt32Array(uint count, int[] value)
+        public ulong WriteInt32Array(uint count, int[] value, string name)
         {
             ulong size = 0;
 
@@ -1543,50 +1646,60 @@ namespace SharpISOBMFF
 
             for (uint i = 0; i < count; i++)
             {
-                size += WriteInt32(value[i]);
+                size += WriteInt32(value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out ulong[] value)
+        public ulong ReadUInt32Array(ulong boxSize, ulong readSize, uint count, out ulong[] value, string name)
         {
             ulong size = 0;
             value = new ulong[count];
             for (uint i = 0; i < count; i++)
             {
-                size += ReadUInt32(boxSize + size, readSize, out value[i]);
+                size += ReadUInt32(boxSize + size, readSize, out value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong WriteUInt32Array(uint count, ulong[] value)
+        public ulong WriteUInt32Array(uint count, ulong[] value, string name)
         {
             ulong size = 0;
             for (uint i = 0; i < count; i++)
             {
-                size += WriteUInt32(value[i]);
+                size += WriteUInt32(value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong ReadUInt64Array(ulong boxSize, ulong readSize, uint count, out ulong[] value)
+        public ulong ReadUInt64Array(ulong boxSize, ulong readSize, uint count, out ulong[] value, string name)
         {
             ulong size = 0;
             value = new ulong[count];
             for (uint i = 0; i < count; i++)
             {
-                size += ReadUInt64(boxSize + size, readSize, out value[i]);
+                size += ReadUInt64(boxSize + size, readSize, out value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
-        public ulong WriteUInt64Array(uint count, ulong[] value)
+        public ulong WriteUInt64Array(uint count, ulong[] value, string name)
         {
             ulong size = 0;
             for (uint i = 0; i < count; i++)
             {
-                size += WriteUInt64(value[i]);
+                size += WriteUInt64(value[i], "");
             }
+
+            LogEnd(name, size, value);
             return size;
         }
 
@@ -1594,60 +1707,78 @@ namespace SharpISOBMFF
 
         #region Numbers 
 
-        public ulong ReadInt8(ulong boxSize, ulong readSize, out sbyte value)
+        public ulong ReadInt8(ulong boxSize, ulong readSize, out sbyte value, string name)
         {
-            ulong count = unchecked(ReadUInt8(boxSize, readSize, out byte v));
+            ulong count = unchecked(ReadUInt8(boxSize, readSize, out byte v, ""));
             value = unchecked((sbyte)v);
+            
+            LogEnd(name, count, value);
             return count;
         }
 
-        public ulong WriteInt8(sbyte value)
+        public ulong WriteInt8(sbyte value, string name)
         {
-            return WriteUInt8(unchecked((byte)value));
+            ulong size = WriteUInt8(unchecked((byte)value), "");
+            
+            LogEnd(name, size, value);
+            return size;
         }
 
-        public ulong ReadUInt8(ulong boxSize, ulong readSize, out byte value)
+        public ulong ReadUInt8(ulong boxSize, ulong readSize, out byte value, string name)
         {
             value = ReadByte();
+            
+            LogEnd(name, 8, value);
             return 8;
         }
 
-        public ulong WriteUInt8(byte value)
+        public ulong WriteUInt8(byte value, string name)
         {
-            WriteByte(value);
+            WriteByte(value); 
+            
+            LogEnd(name, 8, value);
             return 8;
         }
 
-        public ulong ReadUInt8(ulong boxSize, ulong readSize, out ushort value)
+        public ulong ReadUInt8(ulong boxSize, ulong readSize, out ushort value, string name)
         {
             value = ReadByte();
+           
+            LogEnd(name, 8, value);
             return 8;
         }
 
-        public ulong WriteUInt8(ushort value)
+        public ulong WriteUInt8(ushort value, string name)
         {
-            return WriteByte((byte)value);
+            ulong size = WriteByte((byte)value);
+            
+            LogEnd(name, size, value);
+            return size;
         }
 
-        public ulong ReadUInt8(ulong boxSize, ulong readSize, out uint value)
+        public ulong ReadUInt8(ulong boxSize, ulong readSize, out uint value, string name)
         {
             value = ReadByte();
+            
+            LogEnd(name, 8, value);
             return 8;
         }
 
-        public ulong ReadInt16(ulong boxSize, ulong readSize, out short value)
+        public ulong ReadInt16(ulong boxSize, ulong readSize, out short value, string name)
         {
-            ulong count = ReadUInt16(boxSize, readSize, out ushort v);
+            ulong count = ReadUInt16(boxSize, readSize, out ushort v, "");
             value = unchecked((short)v);
+            
+            LogEnd(name, count, value);
             return count;
         }
 
-        public ulong WriteInt16(short value)
+        public ulong WriteInt16(short value, string name)
         {
-            return WriteUInt16(unchecked((ushort)value));
+            return WriteUInt16(unchecked((ushort)value), name);
         }
 
-        public ulong ReadUInt16(ulong boxSize, ulong readSize, out ushort value)
+        public ulong ReadUInt16(ulong boxSize, ulong readSize, out ushort value, string name)
         {
             int b1 = ReadByteInternal();
             if(b1 == -1)
@@ -1665,32 +1796,38 @@ namespace SharpISOBMFF
                 ((ushort)b1 << 8) +
                 ((ushort)b2)
             );
+           
+            LogEnd(name, 16, value);
             return 16;
         }
 
-        public ulong WriteUInt16(ushort value)
+        public ulong WriteUInt16(ushort value, string name)
         {
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
+            
+            LogEnd(name, 16, value);
             return 16;
         }
 
-        public ulong ReadUInt16(ulong boxSize, ulong readSize, out uint value)
+        public ulong ReadUInt16(ulong boxSize, ulong readSize, out uint value, string name)
         {
             ushort v;
-            ulong size = ReadUInt16(boxSize, readSize, out v);
+            ulong size = ReadUInt16(boxSize, readSize, out v, name);
             value = v;
             return size;
         }
 
-        public ulong WriteUInt16(uint value)
+        public ulong WriteUInt16(uint value, string name)
         {
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
+           
+            LogEnd(name, 16, value);
             return 16;
         }
 
-        public ulong ReadUInt24(ulong boxSize, ulong readSize, out uint value)
+        public ulong ReadUInt24(ulong boxSize, ulong readSize, out uint value, string name)
         {
             int b1 = ReadByteInternal();
             if(b1 == -1)
@@ -1715,50 +1852,64 @@ namespace SharpISOBMFF
                 ((uint)b2 << 8) +
                 ((uint)b3)
             );
+            
+            LogEnd(name, 24, value);
             return 24;
         }
 
-        public ulong WriteUInt24(uint value)
+        public ulong WriteUInt24(uint value, string name)
         {
             value = value & 0xFFFFFF;
             WriteByte((byte)(value >> 16 & 0xFF));
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
+            
+            LogEnd(name, 24, value);
             return 24;
         }
 
-        public ulong ReadInt32(ulong boxSize, ulong readSize, out int value)
+        public ulong ReadInt32(ulong boxSize, ulong readSize, out int value, string name)
         {
-            ulong count = ReadUInt32(boxSize, readSize, out uint v);
+            ulong count = ReadUInt32(boxSize, readSize, out uint v, "");
             value = unchecked((int)v);
+
+            LogEnd(name, count, value);
             return count;
         }
 
-        public ulong ReadInt32(ulong boxSize, ulong readSize, out byte value)
+        public ulong ReadInt32(ulong boxSize, ulong readSize, out byte value, string name)
         {
-            ulong count = ReadUInt32(boxSize, readSize, out uint v);
+            ulong count = ReadUInt32(boxSize, readSize, out uint v, name);
             value = (byte)v;
             return count;
         }
 
-        public ulong WriteInt32(int value)
+        public ulong WriteInt32(int value, string name)
         {
-            return WriteUInt32(unchecked((uint)value));
+            ulong size = WriteUInt32(unchecked((uint)value), "");
+
+            LogEnd(name, size, value);
+            return size;
         }
 
-        public ulong ReadInt32(ulong boxSize, ulong readSize, out long value)
+        public ulong ReadInt32(ulong boxSize, ulong readSize, out long value, string name)
         {
-            ulong count = unchecked(ReadUInt32(boxSize, readSize, out uint v));
+            ulong count = unchecked(ReadUInt32(boxSize, readSize, out uint v, ""));
             value = unchecked((int)v);
+            
+            LogEnd(name, count, value);
             return count;
         }
 
-        public ulong WriteInt32(long value)
+        public ulong WriteInt32(long value, string name)
         {
-            return WriteUInt32(unchecked((uint)value));
+            ulong size = WriteUInt32(unchecked((uint)value), "");
+
+            LogEnd(name, size, value);
+            return size;
         }
 
-        public ulong ReadUInt32(ulong boxSize, ulong readSize, out uint value)
+        public ulong ReadUInt32(ulong boxSize, ulong readSize, out uint value, string name)
         {
             int b1 = ReadByteInternal();
             if(b1 == -1) 
@@ -1790,36 +1941,40 @@ namespace SharpISOBMFF
                 ((uint)b3 << 8) +
                 ((uint)b4)
             );
+
+            LogEnd(name, 32, value);
             return 32;
         }
 
-        public ulong WriteUInt32(uint value)
+        public ulong WriteUInt32(uint value, string name)
         {
             WriteByte((byte)(value >> 24 & 0xFF));
             WriteByte((byte)(value >> 16 & 0xFF));
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
+            LogEnd(name, 32, value);
             return 32;
         }
 
-        public ulong ReadUInt32(ulong boxSize, ulong readSize, out ulong value)
+        public ulong ReadUInt32(ulong boxSize, ulong readSize, out ulong value, string name)
         {
             uint v;
-            ulong size = ReadUInt32(boxSize, readSize, out v);
+            ulong size = ReadUInt32(boxSize, readSize, out v, name);
             value = v;
             return size;
         }
 
-        public ulong WriteUInt32(ulong value)
+        public ulong WriteUInt32(ulong value, string name)
         {
             WriteByte((byte)(value >> 24 & 0xFF));
             WriteByte((byte)(value >> 16 & 0xFF));
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
+            LogEnd(name, 32, value);
             return 32;
         }
 
-        public ulong ReadUInt48(ulong boxSize, ulong readSize, out ulong value)
+        public ulong ReadUInt48(ulong boxSize, ulong readSize, out ulong value, string name)
         {
             int b1 = ReadByteInternal();
             if (b1 == -1)
@@ -1865,10 +2020,11 @@ namespace SharpISOBMFF
                 ((ulong)b5 << 8) +
                 ((ulong)b6)
             );
+            LogEnd(name, 48, value);
             return 48;
         }
 
-        public ulong WriteUInt48(ulong value)
+        public ulong WriteUInt48(ulong value, string name)
         {
             WriteByte((byte)(value >> 40 & 0xFF));
             WriteByte((byte)(value >> 32 & 0xFF));
@@ -1876,22 +2032,28 @@ namespace SharpISOBMFF
             WriteByte((byte)(value >> 16 & 0xFF));
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
+            LogEnd(name, 48, value);
             return 48;
         }
 
-        public ulong ReadInt64(ulong boxSize, ulong readSize, out long value)
+        public ulong ReadInt64(ulong boxSize, ulong readSize, out long value, string name)
         {
-            ulong count = unchecked(ReadUInt64(boxSize, readSize, out ulong v));
+            ulong count = unchecked(ReadUInt64(boxSize, readSize, out ulong v, ""));
             value = unchecked((long)v);
+            
+            LogEnd(name, count, value);
             return count;
         }
 
-        public ulong WriteInt64(long value)
+        public ulong WriteInt64(long value, string name)
         {
-            return WriteUInt64(unchecked((ulong)value));
+            ulong size = WriteUInt64(unchecked((ulong)value), "");
+
+            LogEnd(name, size, value);
+            return size;
         }
 
-        public ulong ReadUInt64(ulong boxSize, ulong readSize, out ulong value)
+        public ulong ReadUInt64(ulong boxSize, ulong readSize, out ulong value, string name)
         {
             int b1 = ReadByteInternal();
             if (b1 == -1)
@@ -1951,10 +2113,12 @@ namespace SharpISOBMFF
                 ((ulong)b7 << 8) +
                 ((ulong)b8)
             );
+
+            LogEnd(name, 64, value);
             return 64;
         }
 
-        public ulong WriteUInt64(ulong value)
+        public ulong WriteUInt64(ulong value, string name)
         {
             WriteByte((byte)(value >> 56 & 0xFF));
             WriteByte((byte)(value >> 48 & 0xFF));
@@ -1964,10 +2128,12 @@ namespace SharpISOBMFF
             WriteByte((byte)(value >> 16 & 0xFF));
             WriteByte((byte)(value >> 8 & 0xFF));
             WriteByte((byte)(value & 0xFF));
+
+            LogEnd(name, 64, value);
             return 64;
         }
 
-        public ulong ReadFixedPoint1616(ulong boxSize, ulong readSize, out double value)
+        public ulong ReadFixedPoint1616(ulong boxSize, ulong readSize, out double value, string name)
         {
             int b1 = ReadByteInternal();
             if (b1 == -1)
@@ -1999,10 +2165,12 @@ namespace SharpISOBMFF
                 ((uint)b3 << 8) +
                 ((uint)b4)
             ) / 65536d;
+
+            LogEnd(name, 32, value);
             return 32;
         }
 
-        public ulong WriteFixedPoint1616(double value)
+        public ulong WriteFixedPoint1616(double value, string name)
         {
             ulong size = 0;
             int result = (int)(value * 65536);
@@ -2010,6 +2178,8 @@ namespace SharpISOBMFF
             size += WriteByte((byte)((result & 0x00FF0000) >> 16));
             size += WriteByte((byte)((result & 0x0000FF00) >> 8));
             size += WriteByte((byte)(result & 0x000000FF));
+
+            LogEnd(name, size, value);
             return size;
         }
 
@@ -2046,10 +2216,10 @@ namespace SharpISOBMFF
 
         #region Iso639
 
-        public ulong ReadIso639(ulong boxSize, ulong readSize, out string value)
+        public ulong ReadIso639(ulong boxSize, ulong readSize, out string value, string name)
         {
             ushort bits;
-            ulong read = ReadBits(boxSize, readSize, 15, out bits);
+            ulong size = ReadBits(boxSize, readSize, 15, out bits, name);
             StringBuilder result = new StringBuilder();
             for (int i = 0; i < 3; i++)
             {
@@ -2057,10 +2227,12 @@ namespace SharpISOBMFF
                 result.Append((char)(c + 0x60));
             }
             value = result.ToString();
-            return read;
+
+            LogEnd(name, size, value);
+            return size;
         }
 
-        public ulong WriteIso639(string value)
+        public ulong WriteIso639(string value, string name)
         {
             if (Encoding.UTF8.GetBytes(value).Length != 3)
             {
@@ -2073,33 +2245,36 @@ namespace SharpISOBMFF
             {
                 bits += bytes[i] - 0x60 << (2 - i) * 5;
             }
-            return WriteBits(15, (ushort)bits);
+            ulong size = WriteBits(15, (ushort)bits, name);
+
+            LogEnd(name, size, value);
+            return size;
         }
 
         #endregion // Iso639
 
         #region Proxy
 
-        public ulong ReadDouble32(ulong boxSize, ulong readSize, out double value)
+        public ulong ReadDouble32(ulong boxSize, ulong readSize, out double value, string name)
         {
             // TODO?
-            return ReadFixedPoint1616(boxSize, readSize, out value);
+            return ReadFixedPoint1616(boxSize, readSize, out value, name);
         }
 
-        public ulong WriteDouble32(double value)
+        public ulong WriteDouble32(double value, string name)
         {
             // TODO?
-            return WriteFixedPoint1616(value);
+            return WriteFixedPoint1616(value, name);
         }
 
         public ulong ReadPadding(ulong size, ulong availableSize, out StreamMarker padding)
         {
-            return ReadUInt8ArrayTillEnd(size, availableSize, out padding);
+            return ReadUInt8ArrayTillEnd(size, availableSize, out padding, "");
         }
 
         public ulong WritePadding(StreamMarker padding)
         {
-            return WriteUInt8ArrayTillEnd(padding);
+            return WriteUInt8ArrayTillEnd(padding, "");
         }
 
         public static ulong CalculateClassSize(IMp4Serializable value)
@@ -2112,24 +2287,30 @@ namespace SharpISOBMFF
             return CalculateBoxSize(value.Children);
         }
 
-        public ulong WriteUInt8ArrayTillEnd(byte[] value)
+        public ulong WriteUInt8ArrayTillEnd(byte[] value, string name)
         {
-            return WriteUInt8Array((uint)value.Length, value);
+            return WriteUInt8Array((uint)value.Length, value, name);
         }
 
-        public ulong WriteUInt32ArrayTillEnd(uint[] value)
+        public ulong WriteUInt32ArrayTillEnd(uint[] value, string name)
         {
-            return WriteUInt32Array((uint)value.Length, value);
+            return WriteUInt32Array((uint)value.Length, value, name);
         }
 
-        public ulong ReadUInt8Array(ulong boxSize, ulong readSize, uint count, out byte[] value)
+        public ulong ReadUInt8Array(ulong boxSize, ulong readSize, uint count, out byte[] value, string name)
         {
-            return ReadBytes(count, out value);
+            ulong size = ReadBytes(count, out value);
+           
+            LogEnd(name, size, value);
+            return size;
         }
 
-        public ulong WriteUInt8Array(uint count, byte[] value)
+        public ulong WriteUInt8Array(uint count, byte[] value, string name)
         {
-            return WriteBytes(count, value);
+            ulong size = WriteBytes(count, value);
+
+            LogEnd(name, size, value);
+            return size;
         }
 
         #endregion Proxy
@@ -2142,16 +2323,16 @@ namespace SharpISOBMFF
             switch (nalLengthSize)
             {
                 case 1:
-                    size += ReadUInt8(size, ulong.MaxValue, out nalUnitLength);
+                    size += ReadUInt8(size, ulong.MaxValue, out nalUnitLength, "");
                     break;
                 case 2:
-                    size += ReadUInt16(size, ulong.MaxValue, out nalUnitLength);
+                    size += ReadUInt16(size, ulong.MaxValue, out nalUnitLength, "");
                     break;
                 case 3:
-                    size += ReadUInt24(size, ulong.MaxValue, out nalUnitLength);
+                    size += ReadUInt24(size, ulong.MaxValue, out nalUnitLength, "");
                     break;
                 case 4:
-                    size += ReadUInt32(size, ulong.MaxValue, out nalUnitLength);
+                    size += ReadUInt32(size, ulong.MaxValue, out nalUnitLength, "");
                     break;
                 default:
                     throw new NotSupportedException($"NAL unit length {nalLengthSize} not supported!");
@@ -2166,19 +2347,19 @@ namespace SharpISOBMFF
             {
                 case 1:
                     if (nalUnitLength > byte.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
-                    size += WriteUInt8((byte)nalUnitLength);
+                    size += WriteUInt8((byte)nalUnitLength, "");
                     break;
                 case 2:
                     if (nalUnitLength > ushort.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
-                    size += WriteUInt16(nalUnitLength);
+                    size += WriteUInt16(nalUnitLength, "");
                     break;
                 case 3:
                     if (nalUnitLength > 16777215) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
-                    size += WriteUInt24(nalUnitLength);
+                    size += WriteUInt24(nalUnitLength, "");
                     break;
                 case 4:
                     if (nalUnitLength > uint.MaxValue) throw new ArgumentOutOfRangeException(nameof(nalUnitLength));
-                    size += WriteUInt32(nalUnitLength);
+                    size += WriteUInt32(nalUnitLength, "");
                     break;
                 default:
                     throw new NotSupportedException($"NAL unit length {nalLengthSize} not supported!");
@@ -2187,6 +2368,43 @@ namespace SharpISOBMFF
         }
 
         #endregion // MDAT
+
+        #region Logging
+
+        private int _logLevel = 0;
+
+        private void LogBegin(string name)
+        {
+            string padding = "-";
+            for (int i = 0; i < _logLevel; i++)
+            {
+                padding += "-";
+            }
+
+            Log.Info($"{padding} {name}");
+        }
+
+        private void LogEnd<T>(string name, ulong size, T value)
+        {
+            if (string.IsNullOrEmpty(name))
+                return;
+
+            string padding = "-";
+            for (int i = 0; i < _logLevel; i++)
+            {
+                padding += "-";
+            }
+
+            string endPadding = "";
+            for (int i = 0; i < 64 - padding.Length - name.Length - size.ToString().Length - 2; i++)
+            {
+                endPadding += " ";
+            }
+
+            Log.Info($"{padding} {name}{endPadding}{size}   {value}");
+        }
+
+        #endregion // Logging
 
         #region IDisposable
 

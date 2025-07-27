@@ -46,7 +46,7 @@ namespace SharpMP4.Tracks
                         break;
                     }
 
-                    size += markerStream.ReadUInt8Array(size, (ulong)sample.Length, nalUnitLength, out byte[] sampleData);
+                    size += markerStream.ReadUInt8Array(size, (ulong)sample.Length, nalUnitLength, out byte[] sampleData, "");
                     offsetInBytes += sampleData.Length;
                     naluList.Add(sampleData);
                 } while (offsetInBytes < sample.Length);
