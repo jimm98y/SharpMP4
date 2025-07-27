@@ -47,8 +47,8 @@ namespace Sharp{type}
             }
 
             resultCode += @$"
-        }}
     }}
+}}
 ";
             return resultCode;
         }
