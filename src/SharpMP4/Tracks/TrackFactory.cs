@@ -9,18 +9,24 @@ namespace SharpMP4.Tracks
 
         public static ITrack DefaultCreateTrack(uint trackID, Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName)
         {
-            if (handlerType == IsoStream.FromFourCC(HandlerTypes.Video))
+            try
             {
-                return CreateVideoTrack(trackID, sampleEntry, timescale, sampleDuration);
+                if (handlerType == IsoStream.FromFourCC(HandlerTypes.Video))
+                {
+                    return CreateVideoTrack(trackID, sampleEntry, timescale, sampleDuration);
+                }
+                else if (handlerType == IsoStream.FromFourCC(HandlerTypes.Sound))
+                {
+                    return CreateAudioTrack(trackID, sampleEntry, timescale, sampleDuration);
+                }
             }
-            else if (handlerType == IsoStream.FromFourCC(HandlerTypes.Sound))
+            catch (NotSupportedException ex)
             {
-                return CreateAudioTrack(trackID, sampleEntry, timescale, sampleDuration);
+                throw new NotSupportedException($"Track creation failed for track ID {trackID} with handler type {handlerType}: {ex.Message}", ex);
             }
-            else
-            {
-                return CreateGenericTrack(trackID, sampleEntry, timescale, sampleDuration, handlerType, handlerName);
-            }
+
+            // fallback
+            return CreateGenericTrack(trackID, sampleEntry, timescale, sampleDuration, handlerType, handlerName);
         }
 
         private static ITrack CreateVideoTrack(uint trackID, Box sampleEntry, uint timescale, int sampleDuration)
@@ -49,7 +55,7 @@ namespace SharpMP4.Tracks
                     return new AV1Track(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 default:
-                    return CreateGenericTrack(trackID, sampleEntry, timescale, sampleDuration, IsoStream.FromFourCC(HandlerTypes.Video), HandlerNames.Video);
+                    throw new NotSupportedException($"Unsupported video codec: {IsoStream.ToFourCC(sampleEntry.FourCC)}");
             }
         }
 
@@ -64,7 +70,7 @@ namespace SharpMP4.Tracks
                     return new OpusTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 default:
-                    return CreateGenericTrack(trackID, sampleEntry, timescale, sampleDuration, IsoStream.FromFourCC(HandlerTypes.Sound), HandlerNames.Sound);
+                    throw new NotSupportedException($"Unsupported audio codec: {IsoStream.ToFourCC(sampleEntry.FourCC)}");
             }
         }
 
