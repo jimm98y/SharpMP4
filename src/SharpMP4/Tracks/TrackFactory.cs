@@ -22,7 +22,7 @@ namespace SharpMP4.Tracks
             }
             catch (NotSupportedException ex)
             {
-                throw new NotSupportedException($"Track creation failed for track ID {trackID} with handler type {handlerType}: {ex.Message}", ex);
+                //throw new NotSupportedException($"Track creation failed for track ID {trackID} with handler type {handlerType}: {ex.Message}", ex);
             }
 
             // fallback
