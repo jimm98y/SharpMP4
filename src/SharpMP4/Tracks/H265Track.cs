@@ -135,7 +135,7 @@ namespace SharpMP4.Tracks
                     // if SPS contains the timescale, set it
                     if (Timescale == 0 || DefaultSampleDuration == 0)
                     {
-                        var timescale = CalculateTimescale(_context.SeqParameterSetRbsp);
+                        var timescale = _context.SeqParameterSetRbsp.CalculateTimescale();
                         if (timescale.Timescale != 0 && timescale.FrameTick != 0)
                         {
                             Timescale = timescale.Timescale;
@@ -280,30 +280,7 @@ namespace SharpMP4.Tracks
             }
         }
 
-        private (uint Timescale, uint FrameTick) CalculateTimescale(SeqParameterSetRbsp sps)
-        {
-            uint timescale = 0;
-            uint frametick = 0;
-            var vui = sps.VuiParameters;
-            if (vui != null && vui.VuiTimingInfoPresentFlag != 0)
-            {
-                timescale = vui.VuiTimeScale;
-                frametick = vui.VuiNumUnitsInTick;
-
-                if (timescale == 0 || frametick == 0)
-                {
-                    if (Log.WarnEnabled) Log.Warn($"{nameof(H265Track)}: Invalid values in vui: timescale: {timescale} and frametick: {frametick}.");
-                    timescale = 0;
-                    frametick = 0;
-                }
-            }
-            else
-            {
-                if (Log.WarnEnabled) Log.Warn($"{nameof(H265Track)}: Can't determine frame rate because SPS does not contain vuiParams");
-            }
-
-            return (timescale, frametick);
-        }
+        
 
         private byte[] CreateSample(List<byte[]> buffer)
         {
@@ -378,7 +355,7 @@ namespace SharpMP4.Tracks
         public override Box CreateSampleEntryBox()
         {
             var sps = Sps.First().Value; // we need at least SPS
-            var dim = CalculateDimensions(sps);
+            var dim = sps.CalculateDimensions();
 
             VisualSampleEntry visualSampleEntry = new VisualSampleEntry(IsoStream.FromFourCC(BRAND));
             visualSampleEntry.Children = new List<Box>();
@@ -482,16 +459,9 @@ namespace SharpMP4.Tracks
 
         public override void FillTkhdBox(TrackHeaderBox tkhd)
         {
-            var dim = CalculateDimensions(Sps.FirstOrDefault().Value);
+            var dim = Sps.FirstOrDefault().Value.CalculateDimensions();
             tkhd.Width = dim.Width << 16; // TODO: simplify API
             tkhd.Height = dim.Height << 16; // TODO: simplify API
-        }
-
-        public (uint Width, uint Height) CalculateDimensions(SeqParameterSetRbsp sps)
-        {
-            ulong width = sps.PicWidthInLumaSamples;
-            ulong height = sps.PicHeightInLumaSamples;
-            return ((uint)width, (uint)height);
         }
 
         public uint BuildGeneralProfileCompatibilityFlags(SeqParameterSetRbsp sps)

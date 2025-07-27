@@ -139,7 +139,7 @@ namespace SharpMP4.Tracks
                     // if SPS contains the timescale, set it
                     if (Timescale == 0 || DefaultSampleDuration == 0)
                     {
-                        var timescale = CalculateTimescale(_context.SeqParameterSetRbsp);
+                        var timescale = _context.SeqParameterSetRbsp.CalculateTimescale();
                         if (timescale.Timescale != 0 && timescale.FrameTick != 0)
                         {
                             Timescale = timescale.Timescale; // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
@@ -404,7 +404,7 @@ namespace SharpMP4.Tracks
         public override Box CreateSampleEntryBox()
         {
             var sps = Sps.First().Value;
-            var dim = CalculateDimensions(sps);
+            var dim = sps.CalculateDimensions();
 
             VisualSampleEntry visualSampleEntry = new VisualSampleEntry(IsoStream.FromFourCC(BRAND));
             visualSampleEntry.Children = new List<Box>();
@@ -454,77 +454,13 @@ namespace SharpMP4.Tracks
 
         public override void FillTkhdBox(TrackHeaderBox tkhd)
         {
-            var dim = CalculateDimensions(Sps.FirstOrDefault().Value);
+            var dim = Sps.First().Value.CalculateDimensions();
             // convert to fixed point 1616
             tkhd.Width = dim.Width << 16; // TODO: simplify API
             tkhd.Height = dim.Height << 16; // TODO: simplify API
         }
 
-        public (uint Width, uint Height) CalculateDimensions(SeqParameterSetRbsp sps)
-        {
-            var spsData = sps.SeqParameterSetData;
-            ulong width = (spsData.PicWidthInMbsMinus1 + 1) * 16;
-            ulong mult = 2;
-            if (spsData.FrameMbsOnlyFlag != 0)
-            {
-                mult = 1;
-            }
-            ulong height = 16 * (spsData.PicHeightInMapUnitsMinus1 + 1) * mult;
-            if (spsData.FrameCroppingFlag != 0)
-            {
-                ulong chromaFormat = spsData.ChromaFormatIdc;
-                ulong chromaArrayType = 0;
-                if (spsData.SeparateColourPlaneFlag == 0)
-                {
-                    chromaArrayType = chromaFormat;
-                }
-
-                ulong cropUnitX = 1;
-                ulong cropUnitY = mult;
-                if (chromaArrayType != 0)
-                {
-                    uint subWidth = 2;
-                    uint subHeight = 1;
-                    if(chromaFormat == 3) 
-                        subWidth = 1;
-                    if(chromaFormat == 1) 
-                        subHeight = 2;
-
-                    cropUnitX = subWidth;
-                    cropUnitY = subHeight * mult;
-                }
-
-                width -= cropUnitX * (spsData.FrameCropLeftOffset + spsData.FrameCropRightOffset);
-                height -= cropUnitY * (spsData.FrameCropTopOffset + spsData.FrameCropBottomOffset);
-            }
-            return ((uint)width, (uint)height);
-        }
-
-        private (uint Timescale, uint FrameTick) CalculateTimescale(SeqParameterSetRbsp sps)
-        {
-            uint timescale = 0;
-            uint frametick = 0;
-            var vui = sps.SeqParameterSetData.VuiParameters;
-            if (vui != null && vui.TimingInfoPresentFlag != 0)
-            {
-                // MaxFPS = Ceil( time_scale / ( 2 * num_units_in_tick ) )
-                timescale = vui.TimeScale;
-                frametick = vui.NumUnitsInTick;
-
-                if (timescale == 0 || frametick == 0)
-                {
-                    if (Log.WarnEnabled) Log.Warn($"{nameof(H264Track)}: Invalid values in vui: timescale: {timescale} and frametick: {frametick}.");
-                    timescale = 0;
-                    frametick = 0;
-                }
-            }
-            else
-            {
-                if (Log.WarnEnabled) Log.Warn($"{nameof(H264Track)}: Can't determine frame rate because SPS does not contain vuiParams");
-            }
-
-            return (timescale, frametick);
-        }
+        
 
         public override IEnumerable<byte[]> GetContainerSamples()
         {

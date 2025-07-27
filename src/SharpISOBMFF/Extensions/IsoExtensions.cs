@@ -1,7 +1,21 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 
 namespace SharpISOBMFF.Extensions
 {
+    public static class IMp4SerializableExtensions
+    {
+        public static byte[] ToBytes(this IMp4Serializable box)
+        {
+            var ms = new MemoryStream();
+            using (var isoStream = new IsoStream(ms))
+            {
+                box.Write(isoStream);
+                return ms.ToArray();
+            }
+        }
+    }
+
     public static class ChunkOffsetBoxExtensions
     {
         public static void ModifyChunkOffsets(this ChunkOffsetBox stco, int delta)
