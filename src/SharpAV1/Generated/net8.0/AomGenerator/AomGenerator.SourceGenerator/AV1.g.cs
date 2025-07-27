@@ -4590,5 +4590,5 @@ tile_list_entry() {
 			stream.ReadBytes(N, out this.coded_tile_data, "coded_tile_data"); 
         }
 
-        }
     }
+}
