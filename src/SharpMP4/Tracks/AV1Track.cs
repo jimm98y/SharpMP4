@@ -71,9 +71,21 @@ namespace SharpMP4.Tracks
             isRandomAccessPoint = false; 
             output = null;
 
-            if (sample == null)
+            if (sample == null || sample.Length == 0)
             {
                 return;
+            }
+
+            // without the sequence header we cannot process AV1
+            if (SequenceHeaderObuRaw == null)
+            {
+                int obuHeader = sample[0];
+                int obuType = (obuHeader & 0x78) >> 3;
+                if (obuType != AV1ObuTypes.OBU_SEQUENCE_HEADER)
+                {
+                    if (Log.ErrorEnabled) Log.Error($"OBU Sequence Header missing, dropping sample");
+                    return;
+                }
             }
 
             var ms = new MemoryStream(sample);
