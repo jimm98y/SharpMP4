@@ -352,7 +352,7 @@ namespace SharpISOBMFF
 
         public ulong WriteBits(uint count, ulong value)
         {
-            if (count > 8)
+            if (count > 64)
                 throw new ArgumentOutOfRangeException(nameof(count));
             return WriteBits(count, (ulong)value, "");
         }
