@@ -749,7 +749,7 @@ abstract aligned(8) expandable(228-1) class BaseDescriptor : bit(8) tag=0 {
  // empty. To be filled by classes extending this class.
  }
 */
-public abstract class BaseDescriptor : Descriptor
+public abstract partial class BaseDescriptor : Descriptor
 {
 	public override string DisplayName { get { return "BaseDescriptor"; } }
 
@@ -786,7 +786,7 @@ abstract class DecoderSpecificInfo extends BaseDescriptor : bit(8) tag=DecSpecif
  // empty. To be filled by classes extending this class.
  }
 */
-public abstract class DecoderSpecificInfo : BaseDescriptor
+public abstract partial class DecoderSpecificInfo : BaseDescriptor
 {
 	public override string DisplayName { get { return "DecoderSpecificInfo"; } }
 
@@ -846,7 +846,7 @@ class ES_Descriptor extends BaseDescriptor : bit(8) tag=ES_DescrTag {
  ExtensionDescriptor extDescr[0 .. 255];
  }
 */
-public class ES_Descriptor : BaseDescriptor
+public partial class ES_Descriptor : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.ES_DescrTag;
 	public override string DisplayName { get { return "ES_Descriptor"; } }
@@ -1042,7 +1042,7 @@ class SLConfigDescriptor extends BaseDescriptor : bit(8) tag=SLConfigDescrTag {
  bit(8) ocr[]; // OCR stream flag, reserved, OCR_ES_id 
  }
 */
-public class SLConfigDescriptor : BaseDescriptor
+public partial class SLConfigDescriptor : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.SLConfigDescrTag;
 	public override string DisplayName { get { return "SLConfigDescriptor"; } }
@@ -1273,7 +1273,7 @@ class DecoderConfigDescriptor extends BaseDescriptor : bit(8) tag=DecoderConfigD
  ProfileLevelIndicationIndexDescriptor profileLevelIndicationIndexDescr [0..255];
  }
 */
-public class DecoderConfigDescriptor : BaseDescriptor
+public partial class DecoderConfigDescriptor : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.DecoderConfigDescrTag;
 	public override string DisplayName { get { return "DecoderConfigDescriptor"; } }
@@ -1364,7 +1364,7 @@ class ProfileLevelIndicationIndexDescriptor () extends BaseDescriptor
  bit(8) profileLevelIndicationIndex;
  }
 */
-public class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
+public partial class ProfileLevelIndicationIndexDescriptor : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.ProfileLevelIndicationIndexDescrTag;
 	public override string DisplayName { get { return "ProfileLevelIndicationIndexDescriptor"; } }
@@ -1407,7 +1407,7 @@ class IPI_DescrPointer extends BaseDescriptor : bit(8) tag=IPI_DescrPointerTag {
  bit(16) IPI_ES_Id;
  }
 */
-public class IPI_DescrPointer : BaseDescriptor
+public partial class IPI_DescrPointer : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.IPI_DescrPointerTag;
 	public override string DisplayName { get { return "IPI_DescrPointer"; } }
@@ -1452,7 +1452,7 @@ abstract class IP_IdentificationDataSet extends BaseDescriptor
  // empty. To be filled by classes extending this class.
  }
 */
-public abstract class IP_IdentificationDataSet : BaseDescriptor
+public abstract partial class IP_IdentificationDataSet : BaseDescriptor
 {
 	public byte TagMin { get; set; } = DescriptorTags.ContentIdentDescrTag;
 	public byte TagMax { get; set; } = DescriptorTags.SupplContentIdentDescrTag;	public override string DisplayName { get { return "IP_IdentificationDataSet"; } }
@@ -1492,7 +1492,7 @@ class IPMP_DescriptorPointer extends BaseDescriptor : bit(8) tag=IPMP_DescrPoint
  bit(8) IPMP_DescriptorID;
  }
 */
-public class IPMP_DescriptorPointer : BaseDescriptor
+public partial class IPMP_DescriptorPointer : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.IPMP_DescrPointerTag;
 	public override string DisplayName { get { return "IPMP_DescriptorPointer"; } }
@@ -1536,7 +1536,7 @@ abstract class OCI_Descriptor extends BaseDescriptor : bit(8) tag=OCIDescrTagSta
  // empty. To be filled by classes extending this class.
 }
 */
-public abstract class OCI_Descriptor : BaseDescriptor
+public abstract partial class OCI_Descriptor : BaseDescriptor
 {
 	public byte TagMin { get; set; } = DescriptorTags.OCIDescrTagStartRange;
 	public byte TagMax { get; set; } = DescriptorTags.OCIDescrTagEndRange;	public override string DisplayName { get { return "OCI_Descriptor"; } }
@@ -1576,7 +1576,7 @@ class LanguageDescriptor extends OCI_Descriptor : bit(8) tag=LanguageDescrTag {
  bit(24) languageCode;
  }
 */
-public class LanguageDescriptor : OCI_Descriptor
+public partial class LanguageDescriptor : OCI_Descriptor
 {
 	public const byte TYPE = DescriptorTags.LanguageDescrTag;
 	public override string DisplayName { get { return "LanguageDescriptor"; } }
@@ -1619,7 +1619,7 @@ class IPMPDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpeci
  // IPMP system specific configuration information
  }
 */
-public class IPMPDecoderConfiguration : DecoderSpecificInfo
+public partial class IPMPDecoderConfiguration : DecoderSpecificInfo
 {
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "IPMPDecoderConfiguration"; } }
@@ -1659,7 +1659,7 @@ class OCIDecoderConfiguration extends DecoderSpecificInfo : bit(8) tag=DecSpecif
  bit(8) versionLabel = 0x01;
  }
 */
-public class OCIDecoderConfiguration : DecoderSpecificInfo
+public partial class OCIDecoderConfiguration : DecoderSpecificInfo
 {
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "OCIDecoderConfiguration"; } }
@@ -1705,7 +1705,7 @@ class JPEG_DecoderConfig extends DecoderSpecificInfo : bit(8) tag=DecSpecificInf
  int(8) numComponents;
  }
 */
-public class JPEG_DecoderConfig : DecoderSpecificInfo
+public partial class JPEG_DecoderConfig : DecoderSpecificInfo
 {
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "JPEG_DecoderConfig"; } }
@@ -1766,7 +1766,7 @@ class GenericDecoderSpecificInfo extends DecoderSpecificInfo : bit(8) tag=DecSpe
  bit(8) data[];
  }
 */
-public class GenericDecoderSpecificInfo : DecoderSpecificInfo
+public partial class GenericDecoderSpecificInfo : DecoderSpecificInfo
 {
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "GenericDecoderSpecificInfo"; } }
@@ -1812,7 +1812,7 @@ class QoS_Descriptor extends BaseDescriptor : bit(8) tag=QoS_DescrTag {
  }
  }
 */
-public class QoS_Descriptor : BaseDescriptor
+public partial class QoS_Descriptor : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.QoS_DescrTag;
 	public override string DisplayName { get { return "QoS_Descriptor"; } }
@@ -1875,7 +1875,7 @@ abstract aligned(8) expandable(228-1) class QoS_Qualifier : bit(8) tag=0x01..0xf
  }
  
 */
-public abstract class QoS_Qualifier : Descriptor
+public abstract partial class QoS_Qualifier : Descriptor
 {
 	public byte TagMin { get; set; } = 0x01;
 	public byte TagMax { get; set; } = 0xff;	public override string DisplayName { get { return "QoS_Qualifier"; } }
@@ -1913,7 +1913,7 @@ class QoS_Qualifier_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x01 {
  }
  
 */
-public class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
+public partial class QoS_Qualifier_MAX_DELAY : QoS_Qualifier
 {
 	public const byte TYPE = 0x01;
 	public override string DisplayName { get { return "QoS_Qualifier_MAX_DELAY"; } }
@@ -1957,7 +1957,7 @@ class QoS_Qualifier_PREF_MAX_DELAY extends QoS_Qualifier : bit(8) tag=0x02 {
  }
  
 */
-public class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
+public partial class QoS_Qualifier_PREF_MAX_DELAY : QoS_Qualifier
 {
 	public const byte TYPE = 0x02;
 	public override string DisplayName { get { return "QoS_Qualifier_PREF_MAX_DELAY"; } }
@@ -2001,7 +2001,7 @@ class QoS_Qualifier_LOSS_PROB extends QoS_Qualifier : bit(8) tag=0x03 {
  }
  
 */
-public class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
+public partial class QoS_Qualifier_LOSS_PROB : QoS_Qualifier
 {
 	public const byte TYPE = 0x03;
 	public override string DisplayName { get { return "QoS_Qualifier_LOSS_PROB"; } }
@@ -2045,7 +2045,7 @@ class QoS_Qualifier_MAX_GAP_LOSS extends QoS_Qualifier : bit(8) tag=0x04 {
  }
  
 */
-public class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
+public partial class QoS_Qualifier_MAX_GAP_LOSS : QoS_Qualifier
 {
 	public const byte TYPE = 0x04;
 	public override string DisplayName { get { return "QoS_Qualifier_MAX_GAP_LOSS"; } }
@@ -2089,7 +2089,7 @@ class QoS_Qualifier_MAX_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x41 {
  }
  
 */
-public class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
+public partial class QoS_Qualifier_MAX_AU_SIZE : QoS_Qualifier
 {
 	public const byte TYPE = 0x41;
 	public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_SIZE"; } }
@@ -2133,7 +2133,7 @@ class QoS_Qualifier_AVG_AU_SIZE extends QoS_Qualifier : bit(8) tag=0x42 {
  }
  
 */
-public class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
+public partial class QoS_Qualifier_AVG_AU_SIZE : QoS_Qualifier
 {
 	public const byte TYPE = 0x42;
 	public override string DisplayName { get { return "QoS_Qualifier_AVG_AU_SIZE"; } }
@@ -2176,7 +2176,7 @@ class QoS_Qualifier_MAX_AU_RATE extends QoS_Qualifier : bit(8) tag=0x43 {
  unsigned int(32) MAX_AU_RATE;
  }
 */
-public class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
+public partial class QoS_Qualifier_MAX_AU_RATE : QoS_Qualifier
 {
 	public const byte TYPE = 0x43;
 	public override string DisplayName { get { return "QoS_Qualifier_MAX_AU_RATE"; } }
@@ -2220,7 +2220,7 @@ class RegistrationDescriptor extends BaseDescriptor : bit(8) tag=RegistrationDes
  bit(8) additionalIdentificationInfo[sizeOfInstance-4];
  }
 */
-public class RegistrationDescriptor : BaseDescriptor
+public partial class RegistrationDescriptor : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.RegistrationDescrTag;
 	public override string DisplayName { get { return "RegistrationDescriptor"; } }
@@ -2269,7 +2269,7 @@ abstract class ExtensionDescriptor extends BaseDescriptor : bit(8) tag=ExtDescrT
  // empty. To be filled by classes extending this class.
  }
 */
-public abstract class ExtensionDescriptor : BaseDescriptor
+public abstract partial class ExtensionDescriptor : BaseDescriptor
 {
 	public byte TagMin { get; set; } = DescriptorTags.ExtDescrTagStartRange;
 	public byte TagMax { get; set; } = DescriptorTags.ExtDescrTagEndRange;	public override string DisplayName { get { return "ExtensionDescriptor"; } }
@@ -2310,7 +2310,7 @@ aligned(8) class ESDBox
  ES_Descriptor ES;
  }
 */
-public class ESDBox : FullBox
+public partial class ESDBox : FullBox
 {
 	public const string TYPE = "esds";
 	public override string DisplayName { get { return "ESDBox"; } }
@@ -2353,7 +2353,7 @@ class MpegSampleEntry() extends SampleEntry ('mp4s') {
  Box ES;
  }
 */
-public class MpegSampleEntry : SampleEntry
+public partial class MpegSampleEntry : SampleEntry
 {
 	public const string TYPE = "mp4s";
 	public override string DisplayName { get { return "MpegSampleEntry"; } }
@@ -2399,7 +2399,7 @@ unsigned int(8) version = v;
 bit(24) flags = f;
  }
 */
-public class FullBox : Box
+public partial class FullBox : Box
 {
 	public override string DisplayName { get { return "FullBox"; } }
 
@@ -2453,7 +2453,7 @@ abstract class SampleGroupDescriptionEntry (unsigned int(32) grouping_type)
 
 
 */
-public abstract class SampleGroupDescriptionEntry : IHasBoxChildren
+public abstract partial class SampleGroupDescriptionEntry : IHasBoxChildren
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -2496,7 +2496,7 @@ SampleGroupDescriptionEntry (grouping_type)
 
 
 */
-public abstract class VisualSampleGroupEntry : SampleGroupDescriptionEntry
+public abstract partial class VisualSampleGroupEntry : SampleGroupDescriptionEntry
 {
 	public override string DisplayName { get { return "VisualSampleGroupEntry"; } }
 
@@ -2535,7 +2535,7 @@ SampleGroupDescriptionEntry (grouping_type)
 
 
 */
-public abstract class AudioSampleGroupEntry : SampleGroupDescriptionEntry
+public abstract partial class AudioSampleGroupEntry : SampleGroupDescriptionEntry
 {
 	public override string DisplayName { get { return "AudioSampleGroupEntry"; } }
 
@@ -2574,7 +2574,7 @@ SampleGroupDescriptionEntry (grouping_type)
 
 
 */
-public abstract class HintSampleGroupEntry : SampleGroupDescriptionEntry
+public abstract partial class HintSampleGroupEntry : SampleGroupDescriptionEntry
 {
 	public override string DisplayName { get { return "HintSampleGroupEntry"; } }
 
@@ -2613,7 +2613,7 @@ SampleGroupDescriptionEntry (grouping_type)
 
 
 */
-public abstract class SubtitleSampleGroupEntry : SampleGroupDescriptionEntry
+public abstract partial class SubtitleSampleGroupEntry : SampleGroupDescriptionEntry
 {
 	public override string DisplayName { get { return "SubtitleSampleGroupEntry"; } }
 
@@ -2650,7 +2650,7 @@ SampleGroupDescriptionEntry (grouping_type)
 { 
 }
 */
-public abstract class TextSampleGroupEntry : SampleGroupDescriptionEntry
+public abstract partial class TextSampleGroupEntry : SampleGroupDescriptionEntry
 {
 	public override string DisplayName { get { return "TextSampleGroupEntry"; } }
 
@@ -2687,7 +2687,7 @@ class SubtitleSampleEntry(codingname) extends SampleEntry (codingname) {
 
 
 */
-public class SubtitleSampleEntry : SampleEntry
+public partial class SubtitleSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "SubtitleSampleEntry"; } }
 
@@ -2728,7 +2728,7 @@ class XMLSubtitleSampleEntry() extends SubtitleSampleEntry ('stpp') {
 
 
 */
-public class XMLSubtitleSampleEntry : SubtitleSampleEntry
+public partial class XMLSubtitleSampleEntry : SubtitleSampleEntry
 {
 	public const string TYPE = "stpp";
 	public override string DisplayName { get { return "XMLSubtitleSampleEntry"; } }
@@ -2793,7 +2793,7 @@ class TextSubtitleSampleEntry() extends SubtitleSampleEntry ('sbtt') {
  TextConfigBox (); // optional 
 }
 */
-public class TextSubtitleSampleEntry : SubtitleSampleEntry
+public partial class TextSubtitleSampleEntry : SubtitleSampleEntry
 {
 	public const string TYPE = "sbtt";
 	public override string DisplayName { get { return "TextSubtitleSampleEntry"; } }
@@ -2868,7 +2868,7 @@ for (i = 1 ; i <= measurement_count; i++){
 } 
 
 */
-public class LoudnessBaseBox : FullBox
+public partial class LoudnessBaseBox : FullBox
 {
 	public override string DisplayName { get { return "LoudnessBaseBox"; } }
 
@@ -3001,7 +3001,7 @@ class MPEG2TSSampleEntry(name) extends HintSampleEntry(name) {
  Box  additionaldata[]; 
 } 
 */
-public class MPEG2TSSampleEntry : HintSampleEntry
+public partial class MPEG2TSSampleEntry : HintSampleEntry
 {
 	public override string DisplayName { get { return "MPEG2TSSampleEntry"; } }
 
@@ -3081,7 +3081,7 @@ aligned(8) class ItemInfoExtension(unsigned int(32) extension_type)
 } 
 
 */
-public class ItemInfoExtension : IMp4Serializable
+public partial class ItemInfoExtension : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -3118,7 +3118,7 @@ class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) {
 } 
 
 */
-public class PlainTextSampleEntry : SampleEntry
+public partial class PlainTextSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "PlainTextSampleEntry"; } }
 
@@ -3160,7 +3160,7 @@ class SimpleTextSampleEntry(codingname) extends PlainTextSampleEntry ('stxt') {
    // optional 
 } 
 */
-public class SimpleTextSampleEntry : PlainTextSampleEntry
+public partial class SimpleTextSampleEntry : PlainTextSampleEntry
 {
 	public const string TYPE = "stxt";
 	public override string DisplayName { get { return "SimpleTextSampleEntry"; } }
@@ -3219,7 +3219,7 @@ public class SimpleTextSampleEntry : PlainTextSampleEntry
 aligned(8) class ItemProperty(property_type) extends Box(property_type){}
 
 */
-public class ItemProperty : Box
+public partial class ItemProperty : Box
 {
 	public override string DisplayName { get { return "ItemProperty"; } }
 
@@ -3253,7 +3253,7 @@ public class ItemProperty : Box
 /*
 aligned(8) class ItemFullProperty(property_type, version, flags) extends FullBox(property_type, version, flags){}
 */
-public class ItemFullProperty : FullBox
+public partial class ItemFullProperty : FullBox
 {
 	public override string DisplayName { get { return "ItemFullProperty"; } }
 
@@ -3291,7 +3291,7 @@ aligned(8) class GeneralTypeBox(code) extends Box(code) {
       unsigned int(32)    compatible_brands[];    // to end of the box
     }
 */
-public class GeneralTypeBox : Box
+public partial class GeneralTypeBox : Box
 {
 	public override string DisplayName { get { return "GeneralTypeBox"; } }
 
@@ -3350,7 +3350,7 @@ aligned(8) class MetaDataKeyBox extends	Box(local_key_id) {
 }
 
 */
-public class MetaDataKeyBox : Box
+public partial class MetaDataKeyBox : Box
 {
 	public override string DisplayName { get { return "MetaDataKeyBox"; } }
 	public MetaDataKeyDeclarationBox _MetaDataKeyDeclarationBox { get { return this.children.OfType<MetaDataKeyDeclarationBox>().FirstOrDefault(); } }
@@ -3412,7 +3412,7 @@ aligned(8) class MetaDataKeyDeclarationBox extends Box('keyd') {
 
 
 */
-public class MetaDataKeyDeclarationBox : Box
+public partial class MetaDataKeyDeclarationBox : Box
 {
 	public const string TYPE = "keyd";
 	public override string DisplayName { get { return "MetaDataKeyDeclarationBox"; } }
@@ -3463,7 +3463,7 @@ aligned(8) class MetaDataLocaleBox extends Box('loca') {
 
 
 */
-public class MetaDataLocaleBox : Box
+public partial class MetaDataLocaleBox : Box
 {
 	public const string TYPE = "loca";
 	public override string DisplayName { get { return "MetaDataLocaleBox"; } }
@@ -3507,7 +3507,7 @@ aligned(8) class MetaDataSetupBox extends Box('setu') { // 'init' instead?
 
 
 */
-public class MetaDataSetupBox : Box
+public partial class MetaDataSetupBox : Box
 {
 	public const string TYPE = "setu";
 	public override string DisplayName { get { return "MetaDataSetupBox"; } }
@@ -3549,7 +3549,7 @@ aligned(8) class MetaDataExtensionsBox extends Box('exte') {
 
 
 */
-public class MetaDataExtensionsBox : Box
+public partial class MetaDataExtensionsBox : Box
 {
 	public const string TYPE = "exte";
 	public override string DisplayName { get { return "MetaDataExtensionsBox"; } }
@@ -3595,7 +3595,7 @@ unsigned int(8) inlineKeyValueBoxesPresent;
 
 
 */
-public class MetaDataInlineKeysPresentBox : Box
+public partial class MetaDataInlineKeysPresentBox : Box
 {
 	public const string TYPE = "keyi";
 	public override string DisplayName { get { return "MetaDataInlineKeysPresentBox"; } }
@@ -3640,7 +3640,7 @@ Box boxes[];
 
 
 */
-public class MetaDataAccessUnit : IMp4Serializable
+public partial class MetaDataAccessUnit : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -3684,7 +3684,7 @@ aligned(8) class MetaDataAUBox extends Box(local_key_id) {
 
 
 */
-public class MetaDataAUBox : Box
+public partial class MetaDataAUBox : Box
 {
 	public override string DisplayName { get { return "MetaDataAUBox"; } }
 
@@ -3722,7 +3722,7 @@ unsigned int(16) data_reference_index;
 }
 
 */
-public abstract class SampleEntry : Box
+public abstract partial class SampleEntry : Box
 {
 	public override string DisplayName { get { return "SampleEntry"; } }
 
@@ -3790,7 +3790,7 @@ aligned(8) class SegmentIndexBox extends FullBox('sidx', version, 0) {
  } 
 } 
 */
-public class SegmentIndexBox : FullBox
+public partial class SegmentIndexBox : FullBox
 {
 	public const string TYPE = "sidx";
 	public override string DisplayName { get { return "SegmentIndexBox"; } }
@@ -3946,7 +3946,7 @@ public class SegmentIndexBox : FullBox
 aligned(8) class MovieBox extends Box('moov'){ 
 } 
 */
-public class MovieBox : Box
+public partial class MovieBox : Box
 {
 	public const string TYPE = "moov";
 	public override string DisplayName { get { return "MovieBox"; } }
@@ -3985,7 +3985,7 @@ public class MovieBox : Box
 aligned(8) class MovieFragmentBox extends Box('moof'){ 
 } 
 */
-public class MovieFragmentBox : Box
+public partial class MovieFragmentBox : Box
 {
 	public const string TYPE = "moof";
 	public override string DisplayName { get { return "MovieFragmentBox"; } }
@@ -4026,7 +4026,7 @@ extends FullBox(entry_type, version = 0, flags) {
 
 } 
 */
-public class DataEntryBaseBox : FullBox
+public partial class DataEntryBaseBox : FullBox
 {
 	public override string DisplayName { get { return "DataEntryBaseBox"; } }
 
@@ -4062,7 +4062,7 @@ class ReceivedSsrcBox extends Box('rssr') {
 	unsigned int(32)	SSRC
 }
 */
-public class ReceivedSsrcBox : Box
+public partial class ReceivedSsrcBox : Box
 {
 	public const string TYPE = "rssr";
 	public override string DisplayName { get { return "ReceivedSsrcBox"; } }
@@ -4106,7 +4106,7 @@ class TimestampSynchrony() extends Box('tssy') {
 	unsigned int(2) timestamp_sync;
 }
 */
-public class TimestampSynchrony : Box
+public partial class TimestampSynchrony : Box
 {
 	public const string TYPE = "tssy";
 	public override string DisplayName { get { return "TimestampSynchrony"; } }
@@ -4157,7 +4157,7 @@ class TimeScaleEntry() extends Box('tims') {
 
 
 */
-public class TimeScaleEntry : Box
+public partial class TimeScaleEntry : Box
 {
 	public const string TYPE = "tims";
 	public override string DisplayName { get { return "TimeScaleEntry"; } }
@@ -4202,7 +4202,7 @@ class TimeOffset() extends Box('tsro') {
 
 
 */
-public class TimeOffset : Box
+public partial class TimeOffset : Box
 {
 	public const string TYPE = "tsro";
 	public override string DisplayName { get { return "TimeOffset"; } }
@@ -4245,7 +4245,7 @@ class SequenceOffset() extends Box('snro') {
 	int(32)		offset;
 }
 */
-public class SequenceOffset : Box
+public partial class SequenceOffset : Box
 {
 	public const string TYPE = "snro";
 	public override string DisplayName { get { return "SequenceOffset"; } }
@@ -4288,7 +4288,7 @@ aligned(8) class HintBytesSent extends Box('trpy') {
 	uint(64)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
 */
-public class HintBytesSent : Box
+public partial class HintBytesSent : Box
 {
 	public const string TYPE = "trpy";
 	public override string DisplayName { get { return "HintBytesSent"; } }
@@ -4331,7 +4331,7 @@ aligned(8) class hintPacketsSent extends Box('nump') {
 	uint(64)	packetssent; }	// total packets sent
 
 */
-public class hintPacketsSent : Box
+public partial class hintPacketsSent : Box
 {
 	public const string TYPE = "nump";
 	public override string DisplayName { get { return "hintPacketsSent"; } }
@@ -4373,7 +4373,7 @@ public class hintPacketsSent : Box
 aligned(8) class HintBytesSent extends Box('tpyl') {
 	uint(64)	bytessent; }	// total bytes sent, not including RTP headers
 */
-public class HintBytesSenttpylDup : Box
+public partial class HintBytesSenttpylDup : Box
 {
 	public const string TYPE = "tpyl";
 	public override string DisplayName { get { return "HintBytesSenttpylDup"; } }
@@ -4416,7 +4416,7 @@ aligned(8) class HintBytesSent extends Box('totl') {
 	uint(32)	bytessent; }	// total bytes sent, including 12-byte RTP headers
 
 */
-public class HintBytesSenttotlDup : Box
+public partial class HintBytesSenttotlDup : Box
 {
 	public const string TYPE = "totl";
 	public override string DisplayName { get { return "HintBytesSenttotlDup"; } }
@@ -4459,7 +4459,7 @@ aligned(8) class hintPacketsSent extends Box('npck') {
 	uint(32)	packetssent; }	// total packets sent
 
 */
-public class hintPacketsSentnpckDup : Box
+public partial class hintPacketsSentnpckDup : Box
 {
 	public const string TYPE = "npck";
 	public override string DisplayName { get { return "hintPacketsSentnpckDup"; } }
@@ -4501,7 +4501,7 @@ public class hintPacketsSentnpckDup : Box
 aligned(8) class HintBytesSent extends Box('tpay') {
 	uint(32)	bytessent; }	// total bytes sent, not including RTP headers
 */
-public class HintBytesSenttpayDup : Box
+public partial class HintBytesSenttpayDup : Box
 {
 	public const string TYPE = "tpay";
 	public override string DisplayName { get { return "HintBytesSenttpayDup"; } }
@@ -4544,7 +4544,7 @@ aligned(8) class HintMaxRate extends Box('maxr') {	// maximum data rate
 	uint(32)	period;			// in milliseconds
 	uint(32)	bytes; }			// max bytes sent in any period 'period' long including RTP headers
 */
-public class HintMaxRate : Box
+public partial class HintMaxRate : Box
 {
 	public const string TYPE = "maxr";
 	public override string DisplayName { get { return "HintMaxRate"; } }
@@ -4596,7 +4596,7 @@ aligned(8) class hintmediaBytesSent extends Box('dmed') {
 	uint(64)	bytessent; }	// total bytes sent from media tracks
 
 */
-public class hintmediaBytesSent : Box
+public partial class hintmediaBytesSent : Box
 {
 	public const string TYPE = "dmed";
 	public override string DisplayName { get { return "hintmediaBytesSent"; } }
@@ -4639,7 +4639,7 @@ aligned(8) class hintimmediateBytesSent extends Box('dimm') {
 	uint(64)	bytessent; }	// total bytes sent immediate mode
 
 */
-public class hintimmediateBytesSent : Box
+public partial class hintimmediateBytesSent : Box
 {
 	public const string TYPE = "dimm";
 	public override string DisplayName { get { return "hintimmediateBytesSent"; } }
@@ -4681,7 +4681,7 @@ public class hintimmediateBytesSent : Box
 aligned(8) class hintrepeatedBytesSent extends Box('drep') {
 	uint(64)	bytessent; }	// total bytes in repeated packets
 */
-public class hintrepeatedBytesSent : Box
+public partial class hintrepeatedBytesSent : Box
 {
 	public const string TYPE = "drep";
 	public override string DisplayName { get { return "hintrepeatedBytesSent"; } }
@@ -4724,7 +4724,7 @@ aligned(8) class HintMinRelativeTime extends Box('tmin') {
 	int(32)		time; }		// smallest relative transmission time, milliseconds
 
 */
-public class HintMinRelativeTime : Box
+public partial class HintMinRelativeTime : Box
 {
 	public const string TYPE = "tmin";
 	public override string DisplayName { get { return "HintMinRelativeTime"; } }
@@ -4766,7 +4766,7 @@ public class HintMinRelativeTime : Box
 aligned(8) class HintMaxRelativeTime extends Box('tmax') {
 	int(32)		time; }		// largest relative transmission time, milliseconds
 */
-public class HintMaxRelativeTime : Box
+public partial class HintMaxRelativeTime : Box
 {
 	public const string TYPE = "tmax";
 	public override string DisplayName { get { return "HintMaxRelativeTime"; } }
@@ -4809,7 +4809,7 @@ aligned(8) class HintLargestPacket extends Box('pmax') {
 	uint(32)	bytes; }			// largest packet sent, including RTP header
 
 */
-public class HintLargestPacket : Box
+public partial class HintLargestPacket : Box
 {
 	public const string TYPE = "pmax";
 	public override string DisplayName { get { return "HintLargestPacket"; } }
@@ -4851,7 +4851,7 @@ public class HintLargestPacket : Box
 aligned(8) class HintLongestPacket extends Box('dmax') {
 	uint(32)	time; }			// longest packet duration, milliseconds
 */
-public class HintLongestPacket : Box
+public partial class HintLongestPacket : Box
 {
 	public const string TYPE = "dmax";
 	public override string DisplayName { get { return "HintLongestPacket"; } }
@@ -4895,7 +4895,7 @@ aligned(8) class HintPayloadID extends Box('payt') {
 	uint(8)		count;
 	char		rtpmap_string[count]; }
 */
-public class HintPayloadID : Box
+public partial class HintPayloadID : Box
 {
 	public const string TYPE = "payt";
 	public override string DisplayName { get { return "HintPayloadID"; } }
@@ -4956,7 +4956,7 @@ aligned(8) class StereoVideoBox extends FullBox('stvi', version = 0, 0)
 	Box[] any_box; // optional
 }
 */
-public class StereoVideoBox : FullBox
+public partial class StereoVideoBox : FullBox
 {
 	public const string TYPE = "stvi";
 	public override string DisplayName { get { return "StereoVideoBox"; } }
@@ -5030,7 +5030,7 @@ aligned(8) class ExtendedLanguageBox extends FullBox('elng', 0, 0) {
 	utf8string	extended_language;
 }
 */
-public class ExtendedLanguageBox : FullBox
+public partial class ExtendedLanguageBox : FullBox
 {
 	public const string TYPE = "elng";
 	public override string DisplayName { get { return "ExtendedLanguageBox"; } }
@@ -5075,7 +5075,7 @@ class BitRateBox extends Box('btrt'){
 	unsigned int(32) avgBitrate;
 }
 */
-public class BitRateBox : Box
+public partial class BitRateBox : Box
 {
 	public const string TYPE = "btrt";
 	public override string DisplayName { get { return "BitRateBox"; } }
@@ -5131,7 +5131,7 @@ class PixelAspectRatioBox extends Box('pasp'){
 	unsigned int(32) vSpacing;
 }
 */
-public class PixelAspectRatioBox : Box
+public partial class PixelAspectRatioBox : Box
 {
 	public const string TYPE = "pasp";
 	public override string DisplayName { get { return "PixelAspectRatioBox"; } }
@@ -5193,7 +5193,7 @@ class CleanApertureBox extends Box('clap'){
 
 }
 */
-public class CleanApertureBox : Box
+public partial class CleanApertureBox : Box
 {
 	public const string TYPE = "clap";
 	public override string DisplayName { get { return "CleanApertureBox"; } }
@@ -5296,7 +5296,7 @@ class ContentColourVolumeBox extends Box('cclv'){
  		unsigned int(32) ccv_avg_luminance_value;
 }
 */
-public class ContentColourVolumeBox : Box
+public partial class ContentColourVolumeBox : Box
 {
 	public const string TYPE = "cclv";
 	public override string DisplayName { get { return "ContentColourVolumeBox"; } }
@@ -5485,7 +5485,7 @@ class ColourInformationBox extends Box('colr'){
 	}
 }
 */
-public class ColourInformationBox : Box
+public partial class ColourInformationBox : Box
 {
 	public const string TYPE = "colr";
 	public override string DisplayName { get { return "ColourInformationBox"; } }
@@ -5616,7 +5616,7 @@ class ContentLightLevelBox extends Box('clli'){
 	unsigned int(16) max_pic_average_light_level;
 }
 */
-public class ContentLightLevelBox : Box
+public partial class ContentLightLevelBox : Box
 {
 	public const string TYPE = "clli";
 	public override string DisplayName { get { return "ContentLightLevelBox"; } }
@@ -5672,7 +5672,7 @@ class MasteringDisplayColourVolumeBox extends Box('mdcv'){
 	unsigned int(32) min_display_mastering_luminance;
 }
 */
-public class MasteringDisplayColourVolumeBox : Box
+public partial class MasteringDisplayColourVolumeBox : Box
 {
 	public const string TYPE = "mdcv";
 	public override string DisplayName { get { return "MasteringDisplayColourVolumeBox"; } }
@@ -5760,7 +5760,7 @@ aligned(8) class ScrambleSchemeInfoBox extends Box('scrb') {
 	SchemeInformationBox info; // optional
 }
 */
-public class ScrambleSchemeInfoBox : Box
+public partial class ScrambleSchemeInfoBox : Box
 {
 	public const string TYPE = "scrb";
 	public override string DisplayName { get { return "ScrambleSchemeInfoBox"; } }
@@ -5857,7 +5857,7 @@ aligned(8) class ChannelLayout extends FullBox('chnl', version, flags=0) {	if (v
 }
 
 */
-public class ChannelLayout : FullBox
+public partial class ChannelLayout : FullBox
 {
 	public const string TYPE = "chnl";
 	public override string DisplayName { get { return "ChannelLayout"; } }
@@ -6218,7 +6218,7 @@ aligned(8) class DownMixInstructions extends FullBox('dmix', version, flags=0) {
 	}
 }
 */
-public class DownMixInstructions : FullBox
+public partial class DownMixInstructions : FullBox
 {
 	public const string TYPE = "dmix";
 	public override string DisplayName { get { return "DownMixInstructions"; } }
@@ -6472,7 +6472,7 @@ aligned(8) class SamplingRateBox extends FullBox('srat') {
 	unsigned int(32) sampling_rate;
 }
 */
-public class SamplingRateBox : FullBox
+public partial class SamplingRateBox : FullBox
 {
 	public const string TYPE = "srat";
 	public override string DisplayName { get { return "SamplingRateBox"; } }
@@ -6515,7 +6515,7 @@ class TextConfigBox() extends FullBox ('txtC', 0, 0) {
 	utf8string text_config;
 }
 */
-public class TextConfigBox : FullBox
+public partial class TextConfigBox : FullBox
 {
 	public const string TYPE = "txtC";
 	public override string DisplayName { get { return "TextConfigBox"; } }
@@ -6559,7 +6559,7 @@ aligned(8) class URIInitBox
 	unsigned int(8) uri_initialization_data[];
 }
 */
-public class URIInitBox : FullBox
+public partial class URIInitBox : FullBox
 {
 	public const string TYPE = "uriI";
 	public override string DisplayName { get { return "URIInitBox"; } }
@@ -6605,7 +6605,7 @@ aligned(8) class CopyrightBox
 	utfstring notice;
 }
 */
-public class CopyrightBox : FullBox
+public partial class CopyrightBox : FullBox
 {
 	public const string TYPE = "cprt";
 	public override string DisplayName { get { return "CopyrightBox"; } }
@@ -6661,7 +6661,7 @@ aligned(8) class KindBox extends FullBox('kind', version = 0, 0) {
 	utf8string value;
 }
 */
-public class KindBox : FullBox
+public partial class KindBox : FullBox
 {
 	public const string TYPE = "kind";
 	public override string DisplayName { get { return "KindBox"; } }
@@ -6712,7 +6712,7 @@ aligned(8) class TrackSelectionBox
 	unsigned int(32) attribute_list[];		// to end of the box
 }
 */
-public class TrackSelectionBox : FullBox
+public partial class TrackSelectionBox : FullBox
 {
 	public const string TYPE = "tsel";
 	public override string DisplayName { get { return "TrackSelectionBox"; } }
@@ -6760,7 +6760,7 @@ public class TrackSelectionBox : FullBox
 aligned(8) class SubTrackBox extends Box('strk') {
 }
 */
-public class SubTrackBox : Box
+public partial class SubTrackBox : Box
 {
 	public const string TYPE = "strk";
 	public override string DisplayName { get { return "SubTrackBox"; } }
@@ -6801,7 +6801,7 @@ aligned(8) class TrackHintInformation extends Box('hnti') {
 
 
 */
-public class TrackHintInformation : Box
+public partial class TrackHintInformation : Box
 {
 	public const string TYPE = "hnti";
 	public override string DisplayName { get { return "TrackHintInformation"; } }
@@ -6841,7 +6841,7 @@ aligned(8) class RtpTrackSdpHintInformation extends Box('sdp ') {
 	char	sdptext[];
 }
 */
-public class RtpTrackSdpHintInformation : Box
+public partial class RtpTrackSdpHintInformation : Box
 {
 	public const string TYPE = "sdp ";
 	public override string DisplayName { get { return "RtpTrackSdpHintInformation"; } }
@@ -6885,7 +6885,7 @@ aligned(8) class MovieHintInformation extends Box('hnti') {
 
 
 */
-public class MovieHintInformation : Box
+public partial class MovieHintInformation : Box
 {
 	public const string TYPE = "hnti";
 	public override string DisplayName { get { return "MovieHintInformation"; } }
@@ -6926,7 +6926,7 @@ aligned(8) class RtpMovieHintInformation extends Box('rtp ') {
 	char  sdptext[];
 }
 */
-public class RtpMovieHintInformation : Box
+public partial class RtpMovieHintInformation : Box
 {
 	public const string TYPE = "rtp ";
 	public override string DisplayName { get { return "RtpMovieHintInformation"; } }
@@ -6977,7 +6977,7 @@ public class RtpMovieHintInformation : Box
 aligned(8) class HintStatisticsBox extends Box('hinf') {
 }
 */
-public class HintStatisticsBox : Box
+public partial class HintStatisticsBox : Box
 {
 	public const string TYPE = "hinf";
 	public override string DisplayName { get { return "HintStatisticsBox"; } }
@@ -7020,7 +7020,7 @@ aligned(8) class LoudnessBox extends Box('ludt') {
 	AlbumLoudnessInfo[] albumLoudness;
 }
 */
-public class LoudnessBox : Box
+public partial class LoudnessBox : Box
 {
 	public const string TYPE = "ludt";
 	public override string DisplayName { get { return "LoudnessBox"; } }
@@ -7069,7 +7069,7 @@ public class LoudnessBox : Box
 /*
 aligned(8) class TrackLoudnessInfo extends LoudnessBaseBox('tlou') { }
 */
-public class TrackLoudnessInfo : LoudnessBaseBox
+public partial class TrackLoudnessInfo : LoudnessBaseBox
 {
 	public const string TYPE = "tlou";
 	public override string DisplayName { get { return "TrackLoudnessInfo"; } }
@@ -7104,7 +7104,7 @@ public class TrackLoudnessInfo : LoudnessBaseBox
 /*
 aligned(8) class AlbumLoudnessInfo extends LoudnessBaseBox ('alou') { }
 */
-public class AlbumLoudnessInfo : LoudnessBaseBox
+public partial class AlbumLoudnessInfo : LoudnessBaseBox
 {
 	public const string TYPE = "alou";
 	public override string DisplayName { get { return "AlbumLoudnessInfo"; } }
@@ -7142,7 +7142,7 @@ aligned(8) class DataEntryUrlBox (bit(24) flags)
 	utf8string location;
 }
 */
-public class DataEntryUrlBox : DataEntryBaseBox
+public partial class DataEntryUrlBox : DataEntryBaseBox
 {
 	public const string TYPE = "url ";
 	public override string DisplayName { get { return "DataEntryUrlBox"; } }
@@ -7187,7 +7187,7 @@ aligned(8) class DataEntryUrnBox (bit(24) flags)
 	utf8string location;
 }
 */
-public class DataEntryUrnBox : DataEntryBaseBox
+public partial class DataEntryUrnBox : DataEntryBaseBox
 {
 	public const string TYPE = "urn ";
 	public override string DisplayName { get { return "DataEntryUrnBox"; } }
@@ -7237,7 +7237,7 @@ aligned(8) class DataEntryImdaBox (bit(24) flags)
 	unsigned int(32) imda_ref_identifier;
 }
 */
-public class DataEntryImdaBox : DataEntryBaseBox
+public partial class DataEntryImdaBox : DataEntryBaseBox
 {
 	public const string TYPE = "imdt";
 	public override string DisplayName { get { return "DataEntryImdaBox"; } }
@@ -7280,7 +7280,7 @@ aligned(8) class DataEntrySeqNumImdaBox (bit(24) flags)
 	extends DataEntryBaseBox ('snim', flags) {
 }
 */
-public class DataEntrySeqNumImdaBox : DataEntryBaseBox
+public partial class DataEntrySeqNumImdaBox : DataEntryBaseBox
 {
 	public const string TYPE = "snim";
 	public override string DisplayName { get { return "DataEntrySeqNumImdaBox"; } }
@@ -7322,7 +7322,7 @@ aligned(8) class ItemPropertyContainerBox
 }
 
 */
-public class ItemPropertyContainerBox : Box
+public partial class ItemPropertyContainerBox : Box
 {
 	public const string TYPE = "ipco";
 	public override string DisplayName { get { return "ItemPropertyContainerBox"; } }
@@ -7389,7 +7389,7 @@ aligned(8) class ItemPropertyAssociationBox
 }
 
 */
-public class ItemPropertyAssociationBox : FullBox
+public partial class ItemPropertyAssociationBox : FullBox
 {
 	public const string TYPE = "ipma";
 	public override string DisplayName { get { return "ItemPropertyAssociationBox"; } }
@@ -7542,7 +7542,7 @@ aligned(8) class ItemPropertiesBox
 	ItemPropertyAssociationBox association[];
  }
 */
-public class ItemPropertiesBox : Box
+public partial class ItemPropertiesBox : Box
 {
 	public const string TYPE = "iprp";
 	public override string DisplayName { get { return "ItemPropertiesBox"; } }
@@ -7599,7 +7599,7 @@ class AlternativeStartupSequencePropertiesBox extends FullBox('assp', version, 0
 	}
 }
 */
-public class AlternativeStartupSequencePropertiesBox : FullBox
+public partial class AlternativeStartupSequencePropertiesBox : FullBox
 {
 	public const string TYPE = "assp";
 	public override string DisplayName { get { return "AlternativeStartupSequencePropertiesBox"; } }
@@ -7699,7 +7699,7 @@ aligned(8) class BinaryXMLBox
 	unsigned int(8) data[];		// to end of box
 }
 */
-public class BinaryXMLBox : FullBox
+public partial class BinaryXMLBox : FullBox
 {
 	public const string TYPE = "bxml";
 	public override string DisplayName { get { return "BinaryXMLBox"; } }
@@ -7742,7 +7742,7 @@ aligned(8) class CompleteTrackInfoBox(fmt) extends Box('cinf') {
 	OriginalFormatBox(fmt)	original_format;
 }
 */
-public class CompleteTrackInfoBox : Box
+public partial class CompleteTrackInfoBox : Box
 {
 	public const string TYPE = "cinf";
 	public override string DisplayName { get { return "CompleteTrackInfoBox"; } }
@@ -7790,7 +7790,7 @@ aligned(8) class ChunkLargeOffsetBox
 	}
 }
 */
-public class ChunkLargeOffsetBox : FullBox
+public partial class ChunkLargeOffsetBox : FullBox
 {
 	public const string TYPE = "co64";
 	public override string DisplayName { get { return "ChunkLargeOffsetBox"; } }
@@ -7871,7 +7871,7 @@ aligned(8) class CompactSampleToGroupBox
 	}
 }
 */
-public class CompactSampleToGroupBox : FullBox
+public partial class CompactSampleToGroupBox : FullBox
 {
 	public const string TYPE = "csgp";
 	public override string DisplayName { get { return "CompactSampleToGroupBox"; } }
@@ -8026,7 +8026,7 @@ class CompositionToDecodeBox extends FullBox('cslg', version, 0) {
 	}
 }
 */
-public class CompositionToDecodeBox : FullBox
+public partial class CompositionToDecodeBox : FullBox
 {
 	public const string TYPE = "cslg";
 	public override string DisplayName { get { return "CompositionToDecodeBox"; } }
@@ -8146,7 +8146,7 @@ aligned(8) class CompositionOffsetBox
 	}
 }
 */
-public class CompositionOffsetBox : FullBox
+public partial class CompositionOffsetBox : FullBox
 {
 	public const string TYPE = "ctts";
 	public override string DisplayName { get { return "CompositionOffsetBox"; } }
@@ -8263,7 +8263,7 @@ public class CompositionOffsetBox : FullBox
 aligned(8) class DataInformationBox extends Box('dinf') {
 }
 */
-public class DataInformationBox : Box
+public partial class DataInformationBox : Box
 {
 	public const string TYPE = "dinf";
 	public override string DisplayName { get { return "DataInformationBox"; } }
@@ -8307,7 +8307,7 @@ aligned(8) class DataReferenceBox
 	}
 }
 */
-public class DataReferenceBox : FullBox
+public partial class DataReferenceBox : FullBox
 {
 	public const string TYPE = "dref";
 	public override string DisplayName { get { return "DataReferenceBox"; } }
@@ -8368,7 +8368,7 @@ public class DataReferenceBox : FullBox
 aligned(8) class EditBox extends Box('edts') {
 }
 */
-public class EditBox : Box
+public partial class EditBox : Box
 {
 	public const string TYPE = "edts";
 	public override string DisplayName { get { return "EditBox"; } }
@@ -8419,7 +8419,7 @@ aligned(8) class EditListBox extends FullBox('elst', version, flags) {
 	}
 }
 */
-public class EditListBox : FullBox
+public partial class EditListBox : FullBox
 {
 	public const string TYPE = "elst";
 	public override string DisplayName { get { return "EditListBox"; } }
@@ -8535,7 +8535,7 @@ aligned(8) class ExtendedTypeBox extends Box('etyp') {
 	TypeCombinationBox	compatible_combinations[];	// to end of the box
 }
 */
-public class ExtendedTypeBox : Box
+public partial class ExtendedTypeBox : Box
 {
 	public const string TYPE = "etyp";
 	public override string DisplayName { get { return "ExtendedTypeBox"; } }
@@ -8585,7 +8585,7 @@ aligned(8) class FDItemInfoExtension() extends ItemInfoExtension ('fdel') {
 		unsigned int(32) group_id;
 }
 */
-public class FDItemInfoExtension : ItemInfoExtension
+public partial class FDItemInfoExtension : ItemInfoExtension
 {
 	public const string TYPE = "fdel";
 	public override string DisplayName { get { return "FDItemInfoExtension"; } }
@@ -8684,7 +8684,7 @@ aligned(8) class FECReservoirBox
 	}
 }
 */
-public class FECReservoirBox : FullBox
+public partial class FECReservoirBox : FullBox
 {
 	public const string TYPE = "fecr";
 	public override string DisplayName { get { return "FECReservoirBox"; } }
@@ -8811,7 +8811,7 @@ aligned(8) class PartitionEntry extends Box('paen') {
 
 
 */
-public class PartitionEntry : Box
+public partial class PartitionEntry : Box
 {
 	public const string TYPE = "paen";
 	public override string DisplayName { get { return "PartitionEntry"; } }
@@ -8867,7 +8867,7 @@ aligned(8) class FDItemInformationBox
 	GroupIdToNameBox	group_id_to_name;	//optional
 }
 */
-public class FDItemInformationBox : FullBox
+public partial class FDItemInformationBox : FullBox
 {
 	public const string TYPE = "fiin";
 	public override string DisplayName { get { return "FDItemInformationBox"; } }
@@ -8938,7 +8938,7 @@ aligned(8) class FileReservoirBox
 	}
 }
 */
-public class FileReservoirBox : FullBox
+public partial class FileReservoirBox : FullBox
 {
 	public const string TYPE = "fire";
 	public override string DisplayName { get { return "FileReservoirBox"; } }
@@ -9083,7 +9083,7 @@ aligned(8) class FilePartitionBox
 	}
 }
 */
-public class FilePartitionBox : FullBox
+public partial class FilePartitionBox : FullBox
 {
 	public const string TYPE = "fpar";
 	public override string DisplayName { get { return "FilePartitionBox"; } }
@@ -9260,7 +9260,7 @@ aligned(8) class FreeSpaceBox extends Box('free') {
 unsigned int(8) data[];
 }
 */
-public class FreeSpaceBox : Box
+public partial class FreeSpaceBox : Box
 {
 	public const string TYPE = "free";
 	public override string DisplayName { get { return "FreeSpaceBox"; } }
@@ -9306,7 +9306,7 @@ aligned(8) class OriginalFormatBox(codingname) extends Box ('frma') {
 			// and complete track information)
 }
 */
-public class OriginalFormatBox : Box
+public partial class OriginalFormatBox : Box
 {
 	public const string TYPE = "frma";
 	public override string DisplayName { get { return "OriginalFormatBox"; } }
@@ -9359,7 +9359,7 @@ unsigned int(32) minor_version;
 unsigned int(32) compatible_brands[];// to end of the box
 }
 */
-public class FileTypeBox : Box
+public partial class FileTypeBox : Box
 {
 	public const string TYPE = "ftyp";
 	public override string DisplayName { get { return "FileTypeBox"; } }
@@ -9419,7 +9419,7 @@ aligned(8) class GroupIdToNameBox
 	}
 }
 */
-public class GroupIdToNameBox : FullBox
+public partial class GroupIdToNameBox : FullBox
 {
 	public const string TYPE = "gitn";
 	public override string DisplayName { get { return "GroupIdToNameBox"; } }
@@ -9487,7 +9487,7 @@ public class GroupIdToNameBox : FullBox
 aligned(8) class GroupsListBox extends Box('grpl') {
 }
 */
-public class GroupsListBox : Box
+public partial class GroupsListBox : Box
 {
 	public const string TYPE = "grpl";
 	public override string DisplayName { get { return "GroupsListBox"; } }
@@ -9530,7 +9530,7 @@ aligned(8) class HandlerBox extends FullBox('hdlr', version = 0, 0) {
 	utf8string	name;
 }
 */
-public class HandlerBox : FullBox
+public partial class HandlerBox : FullBox
 {
 	public const string TYPE = "hdlr";
 	public override string DisplayName { get { return "HandlerBox"; } }
@@ -9596,7 +9596,7 @@ aligned(8) class HintMediaHeaderBox
 	unsigned int(32)	reserved = 0;
 }
 */
-public class HintMediaHeaderBox : FullBox
+public partial class HintMediaHeaderBox : FullBox
 {
 	public const string TYPE = "hmhd";
 	public override string DisplayName { get { return "HintMediaHeaderBox"; } }
@@ -9663,7 +9663,7 @@ aligned(8) class ItemDataBox extends Box('idat') {
 	bit(8) data[];
 }
 */
-public class ItemDataBox : Box
+public partial class ItemDataBox : Box
 {
 	public const string TYPE = "idat";
 	public override string DisplayName { get { return "ItemDataBox"; } }
@@ -9712,7 +9712,7 @@ aligned(8) class ItemInfoBox
 	ItemInfoEntry[ entry_count ]		item_infos;
 }
 */
-public class ItemInfoBox : FullBox
+public partial class ItemInfoBox : FullBox
 {
 	public const string TYPE = "iinf";
 	public override string DisplayName { get { return "ItemInfoBox"; } }
@@ -9822,7 +9822,7 @@ aligned(8) class ItemLocationBox extends FullBox('iloc', version, 0) {
 	}
 }
 */
-public class ItemLocationBox : FullBox
+public partial class ItemLocationBox : FullBox
 {
 	public const string TYPE = "iloc";
 	public override string DisplayName { get { return "ItemLocationBox"; } }
@@ -10088,7 +10088,7 @@ aligned(8) class IdentifiedMediaDataBox extends Box('imda') {
 	bit(8) data[]; // until the end of the box
 }
 */
-public class IdentifiedMediaDataBox : Box
+public partial class IdentifiedMediaDataBox : Box
 {
 	public const string TYPE = "imda";
 	public override string DisplayName { get { return "IdentifiedMediaDataBox"; } }
@@ -10164,7 +10164,7 @@ aligned(8) class ItemInfoEntry
 	}
 }
 */
-public class ItemInfoEntry : FullBox
+public partial class ItemInfoEntry : FullBox
 {
 	public const string TYPE = "infe";
 	public override string DisplayName { get { return "ItemInfoEntry"; } }
@@ -10364,7 +10364,7 @@ aligned(8) class ItemProtectionBox
 	}
 }
 */
-public class ItemProtectionBox : FullBox
+public partial class ItemProtectionBox : FullBox
 {
 	public const string TYPE = "ipro";
 	public override string DisplayName { get { return "ItemProtectionBox"; } }
@@ -10430,7 +10430,7 @@ aligned(8) class ItemReferenceBox extends FullBox('iref', version, 0) {
 	}
 }
 */
-public class ItemReferenceBox : FullBox
+public partial class ItemReferenceBox : FullBox
 {
 	public const string TYPE = "iref";
 	public override string DisplayName { get { return "ItemReferenceBox"; } }
@@ -10524,7 +10524,7 @@ aligned(8) class LevelAssignmentBox extends FullBox('leva', 0, 0)
 	}
 }
 */
-public class LevelAssignmentBox : FullBox
+public partial class LevelAssignmentBox : FullBox
 {
 	public const string TYPE = "leva";
 	public override string DisplayName { get { return "LevelAssignmentBox"; } }
@@ -10693,7 +10693,7 @@ aligned(8) class MediaDataBox extends Box('mdat') {
 	bit(8) data[];
 }
 */
-public class MediaDataBox : Box
+public partial class MediaDataBox : Box
 {
 	public const string TYPE = "mdat";
 	public override string DisplayName { get { return "MediaDataBox"; } }
@@ -10749,7 +10749,7 @@ aligned(8) class MediaHeaderBox extends FullBox('mdhd', version, 0) {
 	unsigned int(16)	pre_defined = 0;
 }
 */
-public class MediaHeaderBox : FullBox
+public partial class MediaHeaderBox : FullBox
 {
 	public const string TYPE = "mdhd";
 	public override string DisplayName { get { return "MediaHeaderBox"; } }
@@ -10866,7 +10866,7 @@ public class MediaHeaderBox : FullBox
 aligned(8) class MediaBox extends Box('mdia') {
 }
 */
-public class MediaBox : Box
+public partial class MediaBox : Box
 {
 	public const string TYPE = "mdia";
 	public override string DisplayName { get { return "MediaBox"; } }
@@ -10910,7 +10910,7 @@ aligned(8) class MovieExtendsHeaderBox extends FullBox('mehd', version, 0) {
 	}
 }
 */
-public class MovieExtendsHeaderBox : FullBox
+public partial class MovieExtendsHeaderBox : FullBox
 {
 	public const string TYPE = "mehd";
 	public override string DisplayName { get { return "MovieExtendsHeaderBox"; } }
@@ -10993,7 +10993,7 @@ aligned(8) class MetaBox (handler_type)
 	Box	other_boxes[];								// optional
 }
 */
-public class MetaBox : FullBox
+public partial class MetaBox : FullBox
 {
 	public const string TYPE = "meta";
 	public override string DisplayName { get { return "MetaBox"; } }
@@ -11075,7 +11075,7 @@ aligned(8) class MovieFragmentHeaderBox
 	unsigned int(32)	sequence_number;
 }
 */
-public class MovieFragmentHeaderBox : FullBox
+public partial class MovieFragmentHeaderBox : FullBox
 {
 	public const string TYPE = "mfhd";
 	public override string DisplayName { get { return "MovieFragmentHeaderBox"; } }
@@ -11119,7 +11119,7 @@ aligned(8) class MovieFragmentRandomAccessBox
 {
 }
 */
-public class MovieFragmentRandomAccessBox : Box
+public partial class MovieFragmentRandomAccessBox : Box
 {
 	public const string TYPE = "mfra";
 	public override string DisplayName { get { return "MovieFragmentRandomAccessBox"; } }
@@ -11160,7 +11160,7 @@ aligned(8) class MovieFragmentRandomAccessOffsetBox
 	unsigned int(32)	parent_size;
 }
 */
-public class MovieFragmentRandomAccessOffsetBox : FullBox
+public partial class MovieFragmentRandomAccessOffsetBox : FullBox
 {
 	public const string TYPE = "mfro";
 	public override string DisplayName { get { return "MovieFragmentRandomAccessOffsetBox"; } }
@@ -11202,7 +11202,7 @@ public class MovieFragmentRandomAccessOffsetBox : FullBox
 aligned(8) class MediaInformationBox extends Box('minf') {
 }
 */
-public class MediaInformationBox : Box
+public partial class MediaInformationBox : Box
 {
 	public const string TYPE = "minf";
 	public override string DisplayName { get { return "MediaInformationBox"; } }
@@ -11243,7 +11243,7 @@ aligned(8) class CompressedMovieFragmentBox
 }
 
 */
-public class CompressedMovieFragmentBox : CompressedBox
+public partial class CompressedMovieFragmentBox : CompressedBox
 {
 	public const string TYPE = "moof";
 	public override string DisplayName { get { return "CompressedMovieFragmentBox"; } }
@@ -11283,7 +11283,7 @@ aligned(8) class CompressedMovieBox
 	extends CompressedBox('!mov', 'moov') {
 }
 */
-public class CompressedMovieBox : CompressedBox
+public partial class CompressedMovieBox : CompressedBox
 {
 	public const string TYPE = "moov";
 	public override string DisplayName { get { return "CompressedMovieBox"; } }
@@ -11322,7 +11322,7 @@ public class CompressedMovieBox : CompressedBox
 aligned(8) class MovieExtendsBox extends Box('mvex'){
 }
 */
-public class MovieExtendsBox : Box
+public partial class MovieExtendsBox : Box
 {
 	public const string TYPE = "mvex";
 	public override string DisplayName { get { return "MovieExtendsBox"; } }
@@ -11381,7 +11381,7 @@ aligned(8) class MovieHeaderBox extends FullBox('mvhd', version, 0) {
 	unsigned int(32)	next_track_ID;
 }
 */
-public class MovieHeaderBox : FullBox
+public partial class MovieHeaderBox : FullBox
 {
 	public const string TYPE = "mvhd";
 	public override string DisplayName { get { return "MovieHeaderBox"; } }
@@ -11524,7 +11524,7 @@ aligned(8) class NullMediaHeaderBox
 	extends FullBox('nmhd', version = 0, flags) {
 }
 */
-public class NullMediaHeaderBox : FullBox
+public partial class NullMediaHeaderBox : FullBox
 {
 	public const string TYPE = "nmhd";
 	public override string DisplayName { get { return "NullMediaHeaderBox"; } }
@@ -11560,7 +11560,7 @@ public class NullMediaHeaderBox : FullBox
 aligned(8) class OriginalFileTypeBox extends Box('otyp') {
 }
 */
-public class OriginalFileTypeBox : Box
+public partial class OriginalFileTypeBox : Box
 {
 	public const string TYPE = "otyp";
 	public override string DisplayName { get { return "OriginalFileTypeBox"; } }
@@ -11607,7 +11607,7 @@ aligned(8) class PaddingBitsBox extends FullBox('padb', version = 0, 0) {
 	}
 }
 */
-public class PaddingBitsBox : FullBox
+public partial class PaddingBitsBox : FullBox
 {
 	public const string TYPE = "padb";
 	public override string DisplayName { get { return "PaddingBitsBox"; } }
@@ -11696,7 +11696,7 @@ aligned(8) class ProgressiveDownloadInfoBox
  }
  
 */
-public class ProgressiveDownloadInfoBox : FullBox
+public partial class ProgressiveDownloadInfoBox : FullBox
 {
 	public const string TYPE = "pdin";
 	public override string DisplayName { get { return "ProgressiveDownloadInfoBox"; } }
@@ -11744,7 +11744,7 @@ aligned(8) class ProgressiveDownloadInfoItem {
  }
 
 */
-public class ProgressiveDownloadInfoItem : IMp4Serializable
+public partial class ProgressiveDownloadInfoItem : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -11798,7 +11798,7 @@ aligned(8) class PrimaryItemBox
 	}
 }
 */
-public class PrimaryItemBox : FullBox
+public partial class PrimaryItemBox : FullBox
 {
 	public const string TYPE = "pitm";
 	public override string DisplayName { get { return "PrimaryItemBox"; } }
@@ -11875,7 +11875,7 @@ aligned(8) class ProducerReferenceTimeBox
 	}
 }
 */
-public class ProducerReferenceTimeBox : FullBox
+public partial class ProducerReferenceTimeBox : FullBox
 {
 	public const string TYPE = "prft";
 	public override string DisplayName { get { return "ProducerReferenceTimeBox"; } }
@@ -11959,7 +11959,7 @@ aligned(8) class RestrictedSchemeInfoBox(fmt) extends Box('rinf') {
 	SchemeInformationBox	info;				// optional
 }
 */
-public class RestrictedSchemeInfoBox : Box
+public partial class RestrictedSchemeInfoBox : Box
 {
 	public const string TYPE = "rinf";
 	public override string DisplayName { get { return "RestrictedSchemeInfoBox"; } }
@@ -12023,7 +12023,7 @@ aligned(8) class SampleAuxiliaryInformationOffsetsBox
 	}
 }
 */
-public class SampleAuxiliaryInformationOffsetsBox : FullBox
+public partial class SampleAuxiliaryInformationOffsetsBox : FullBox
 {
 	public const string TYPE = "saio";
 	public override string DisplayName { get { return "SampleAuxiliaryInformationOffsetsBox"; } }
@@ -12133,7 +12133,7 @@ aligned(8) class SampleAuxiliaryInformationSizesBox
 	}
 }
 */
-public class SampleAuxiliaryInformationSizesBox : FullBox
+public partial class SampleAuxiliaryInformationSizesBox : FullBox
 {
 	public const string TYPE = "saiz";
 	public override string DisplayName { get { return "SampleAuxiliaryInformationSizesBox"; } }
@@ -12235,7 +12235,7 @@ aligned(8) class SampleToGroupBox
 	}
 }
 */
-public class SampleToGroupBox : FullBox
+public partial class SampleToGroupBox : FullBox
 {
 	public const string TYPE = "sbgp";
 	public override string DisplayName { get { return "SampleToGroupBox"; } }
@@ -12328,7 +12328,7 @@ aligned(8) class SchemeInformationBox extends Box('schi') {
 	Box	scheme_specific_data[];
 }
 */
-public class SchemeInformationBox : Box
+public partial class SchemeInformationBox : Box
 {
 	public const string TYPE = "schi";
 	public override string DisplayName { get { return "SchemeInformationBox"; } }
@@ -12376,7 +12376,7 @@ aligned(8) class SchemeTypeBox extends FullBox('schm', 0, flags) {
 	}
 }
 */
-public class SchemeTypeBox : FullBox
+public partial class SchemeTypeBox : FullBox
 {
 	public const string TYPE = "schm";
 	public override string DisplayName { get { return "SchemeTypeBox"; } }
@@ -12449,7 +12449,7 @@ aligned(8) class CompatibleSchemeTypeBox extends FullBox('csch', 0, flags) {
 }
 
 */
-public class CompatibleSchemeTypeBox : FullBox
+public partial class CompatibleSchemeTypeBox : FullBox
 {
 	public const string TYPE = "csch";
 	public override string DisplayName { get { return "CompatibleSchemeTypeBox"; } }
@@ -12525,7 +12525,7 @@ aligned(8) class SampleDependencyTypeBox
 	}
 }
 */
-public class SampleDependencyTypeBox : FullBox
+public partial class SampleDependencyTypeBox : FullBox
 {
 	public const string TYPE = "sdtp";
 	public override string DisplayName { get { return "SampleDependencyTypeBox"; } }
@@ -12618,7 +12618,7 @@ aligned(8) class FDSessionGroupBox extends Box('segr') {
 	}
 }
 */
-public class FDSessionGroupBox : Box
+public partial class FDSessionGroupBox : Box
 {
 	public const string TYPE = "segr";
 	public override string DisplayName { get { return "FDSessionGroupBox"; } }
@@ -12744,7 +12744,7 @@ aligned(8) class SampleGroupDescriptionBox ()
 	}
 }
 */
-public class SampleGroupDescriptionBox : FullBox
+public partial class SampleGroupDescriptionBox : FullBox
 {
 	public const string TYPE = "sgpd";
 	public override string DisplayName { get { return "SampleGroupDescriptionBox"; } }
@@ -12886,7 +12886,7 @@ aligned(8) class CompressedSegmentIndexBox
 }
 
 */
-public class CompressedSegmentIndexBox : CompressedBox
+public partial class CompressedSegmentIndexBox : CompressedBox
 {
 	public const string TYPE = "sidx";
 	public override string DisplayName { get { return "CompressedSegmentIndexBox"; } }
@@ -12926,7 +12926,7 @@ aligned(8) class ProtectionSchemeInfoBox(fmt) extends Box('sinf') {
 	SchemeInformationBox	info;						// optional
 }
 */
-public class ProtectionSchemeInfoBox : Box
+public partial class ProtectionSchemeInfoBox : Box
 {
 	public const string TYPE = "sinf";
 	public override string DisplayName { get { return "ProtectionSchemeInfoBox"; } }
@@ -12978,7 +12978,7 @@ aligned(8) class FreeSpaceBox extends Box('skip') {
 unsigned int(8) data[];
 }
 */
-public class FreeSpaceBoxskipDup : Box
+public partial class FreeSpaceBoxskipDup : Box
 {
 	public const string TYPE = "skip";
 	public override string DisplayName { get { return "FreeSpaceBoxskipDup"; } }
@@ -13023,7 +13023,7 @@ aligned(8) class SoundMediaHeaderBox
 	const unsigned int(16)	reserved = 0;
 }
 */
-public class SoundMediaHeaderBox : FullBox
+public partial class SoundMediaHeaderBox : FullBox
 {
 	public const string TYPE = "smhd";
 	public override string DisplayName { get { return "SoundMediaHeaderBox"; } }
@@ -13077,7 +13077,7 @@ aligned(8) class SRTPProcessBox extends FullBox('srpp', version, 0) {
 	SchemeInformationBox	info;
 }
 */
-public class SRTPProcessBox : FullBox
+public partial class SRTPProcessBox : FullBox
 {
 	public const string TYPE = "srpp";
 	public override string DisplayName { get { return "SRTPProcessBox"; } }
@@ -13149,7 +13149,7 @@ aligned(8) class CompressedSubsegmentIndexBox
 	extends CompressedBox('!ssx', 'ssix') {
 }
 */
-public class CompressedSubsegmentIndexBox : CompressedBox
+public partial class CompressedSubsegmentIndexBox : CompressedBox
 {
 	public const string TYPE = "ssix";
 	public override string DisplayName { get { return "CompressedSubsegmentIndexBox"; } }
@@ -13185,7 +13185,7 @@ public class CompressedSubsegmentIndexBox : CompressedBox
 aligned(8) class SampleTableBox extends Box('stbl') {
 }
 */
-public class SampleTableBox : Box
+public partial class SampleTableBox : Box
 {
 	public const string TYPE = "stbl";
 	public override string DisplayName { get { return "SampleTableBox"; } }
@@ -13229,7 +13229,7 @@ aligned(8) class ChunkOffsetBox
 	}
 }
 */
-public class ChunkOffsetBox : FullBox
+public partial class ChunkOffsetBox : FullBox
 {
 	public const string TYPE = "stco";
 	public override string DisplayName { get { return "ChunkOffsetBox"; } }
@@ -13295,7 +13295,7 @@ aligned(8) class DegradationPriorityBox
 	}
 }
 */
-public class DegradationPriorityBox : FullBox
+public partial class DegradationPriorityBox : FullBox
 {
 	public const string TYPE = "stdp";
 	public override string DisplayName { get { return "DegradationPriorityBox"; } }
@@ -13360,7 +13360,7 @@ aligned(8) class SubtitleMediaHeaderBox
 	extends FullBox ('sthd', version = 0, flags = 0){
 }
 */
-public class SubtitleMediaHeaderBox : FullBox
+public partial class SubtitleMediaHeaderBox : FullBox
 {
 	public const string TYPE = "sthd";
 	public override string DisplayName { get { return "SubtitleMediaHeaderBox"; } }
@@ -13396,7 +13396,7 @@ public class SubtitleMediaHeaderBox : FullBox
 aligned(8) class SubTrackDefinitionBox extends Box('strd') {
 }
 */
-public class SubTrackDefinitionBox : Box
+public partial class SubTrackDefinitionBox : Box
 {
 	public const string TYPE = "strd";
 	public override string DisplayName { get { return "SubTrackDefinitionBox"; } }
@@ -13440,7 +13440,7 @@ aligned(8) class SubTrackInformationBox
 	unsigned int(32)	attribute_list[];	// to the end of the box
 }
 */
-public class SubTrackInformationBox : FullBox
+public partial class SubTrackInformationBox : FullBox
 {
 	public const string TYPE = "stri";
 	public override string DisplayName { get { return "SubTrackInformationBox"; } }
@@ -13507,7 +13507,7 @@ aligned(8) class SampleToChunkBox
 	}
 }
 */
-public class SampleToChunkBox : FullBox
+public partial class SampleToChunkBox : FullBox
 {
 	public const string TYPE = "stsc";
 	public override string DisplayName { get { return "SampleToChunkBox"; } }
@@ -13588,7 +13588,7 @@ aligned(8) class SampleDescriptionBox ()
 	}
 }
 */
-public class SampleDescriptionBox : FullBox
+public partial class SampleDescriptionBox : FullBox
 {
 	public const string TYPE = "stsd";
 	public override string DisplayName { get { return "SampleDescriptionBox"; } }
@@ -13657,7 +13657,7 @@ aligned(8) class SubTrackSampleGroupBox
 		unsigned int(32)	group_description_index;
 }
 */
-public class SubTrackSampleGroupBox : FullBox
+public partial class SubTrackSampleGroupBox : FullBox
 {
 	public const string TYPE = "stsg";
 	public override string DisplayName { get { return "SubTrackSampleGroupBox"; } }
@@ -13731,7 +13731,7 @@ aligned(8) class ShadowSyncSampleBox
 	}
 }
 */
-public class ShadowSyncSampleBox : FullBox
+public partial class ShadowSyncSampleBox : FullBox
 {
 	public const string TYPE = "stsh";
 	public override string DisplayName { get { return "ShadowSyncSampleBox"; } }
@@ -13808,7 +13808,7 @@ aligned(8) class SyncSampleBox
 	}
 }
 */
-public class SyncSampleBox : FullBox
+public partial class SyncSampleBox : FullBox
 {
 	public const string TYPE = "stss";
 	public override string DisplayName { get { return "SyncSampleBox"; } }
@@ -13879,7 +13879,7 @@ aligned(8) class SampleSizeBox extends FullBox('stsz', version = 0, 0) {
 	}
 }
 */
-public class SampleSizeBox : FullBox
+public partial class SampleSizeBox : FullBox
 {
 	public const string TYPE = "stsz";
 	public override string DisplayName { get { return "SampleSizeBox"; } }
@@ -13965,7 +13965,7 @@ aligned(8) class TimeToSampleBox
 	}
 }
 */
-public class TimeToSampleBox : FullBox
+public partial class TimeToSampleBox : FullBox
 {
 	public const string TYPE = "stts";
 	public override string DisplayName { get { return "TimeToSampleBox"; } }
@@ -14036,7 +14036,7 @@ public class TimeToSampleBox : FullBox
 aligned(8) class SegmentTypeBox extends GeneralTypeBox ('styp')
 {}
 */
-public class SegmentTypeBox : GeneralTypeBox
+public partial class SegmentTypeBox : GeneralTypeBox
 {
 	public const string TYPE = "styp";
 	public override string DisplayName { get { return "SegmentTypeBox"; } }
@@ -14079,7 +14079,7 @@ aligned(8) class CompactSampleSizeBox
 	}
 }
 */
-public class CompactSampleSizeBox : FullBox
+public partial class CompactSampleSizeBox : FullBox
 {
 	public const string TYPE = "stz2";
 	public override string DisplayName { get { return "CompactSampleSizeBox"; } }
@@ -14174,7 +14174,7 @@ aligned(8) class SubSampleInformationBox
 	}
 }
 */
-public class SubSampleInformationBox : FullBox
+public partial class SubSampleInformationBox : FullBox
 {
 	public const string TYPE = "subs";
 	public override string DisplayName { get { return "SubSampleInformationBox"; } }
@@ -14334,7 +14334,7 @@ aligned(8) class TrackFragmentBaseMediaDecodeTimeBox
 	}
 }
 */
-public class TrackFragmentBaseMediaDecodeTimeBox : FullBox
+public partial class TrackFragmentBaseMediaDecodeTimeBox : FullBox
 {
 	public const string TYPE = "tfdt";
 	public override string DisplayName { get { return "TrackFragmentBaseMediaDecodeTimeBox"; } }
@@ -14425,7 +14425,7 @@ aligned(8) class TrackFragmentHeaderBox
         }
     }
 */
-public class TrackFragmentHeaderBox : FullBox
+public partial class TrackFragmentHeaderBox : FullBox
 {
 	public const string TYPE = "tfhd";
 	public override string DisplayName { get { return "TrackFragmentHeaderBox"; } }
@@ -14579,7 +14579,7 @@ aligned(8) class TrackFragmentRandomAccessBox
 	}
 }
 */
-public class TrackFragmentRandomAccessBox : FullBox
+public partial class TrackFragmentRandomAccessBox : FullBox
 {
 	public const string TYPE = "tfra";
 	public override string DisplayName { get { return "TrackFragmentRandomAccessBox"; } }
@@ -14752,7 +14752,7 @@ aligned(8) class TrackHeaderBox
 	unsigned int(32) height;
 }
 */
-public class TrackHeaderBox : FullBox
+public partial class TrackHeaderBox : FullBox
 {
 	public const string TYPE = "tkhd";
 	public override string DisplayName { get { return "TrackHeaderBox"; } }
@@ -14912,7 +14912,7 @@ public class TrackHeaderBox : FullBox
 aligned(8) class TrackFragmentBox extends Box('traf'){
 }
 */
-public class TrackFragmentBox : Box
+public partial class TrackFragmentBox : Box
 {
 	public const string TYPE = "traf";
 	public override string DisplayName { get { return "TrackFragmentBox"; } }
@@ -14951,7 +14951,7 @@ public class TrackFragmentBox : Box
 aligned(8) class TrackBox extends Box('trak') {
 }
 */
-public class TrackBox : Box
+public partial class TrackBox : Box
 {
 	public const string TYPE = "trak";
 	public override string DisplayName { get { return "TrackBox"; } }
@@ -14991,7 +14991,7 @@ aligned(8) class TrackReferenceBox extends Box('tref') {
 	TrackReferenceTypeBox [];
 }
 */
-public class TrackReferenceBox : Box
+public partial class TrackReferenceBox : Box
 {
 	public const string TYPE = "tref";
 	public override string DisplayName { get { return "TrackReferenceBox"; } }
@@ -15036,7 +15036,7 @@ class TrackExtensionPropertiesBox extends FullBox('trep', 0, 0) {
 	// Any number of boxes may follow
 }
 */
-public class TrackExtensionPropertiesBox : FullBox
+public partial class TrackExtensionPropertiesBox : FullBox
 {
 	public const string TYPE = "trep";
 	public override string DisplayName { get { return "TrackExtensionPropertiesBox"; } }
@@ -15086,7 +15086,7 @@ aligned(8) class TrackExtendsBox extends FullBox('trex', 0, 0){
 	unsigned int(32)	default_sample_flags;
 }
 */
-public class TrackExtendsBox : FullBox
+public partial class TrackExtendsBox : FullBox
 {
 	public const string TYPE = "trex";
 	public override string DisplayName { get { return "TrackExtendsBox"; } }
@@ -15152,7 +15152,7 @@ public class TrackExtendsBox : FullBox
 aligned(8) class TrackGroupBox extends Box('trgr') {
 }
 */
-public class TrackGroupBox : Box
+public partial class TrackGroupBox : Box
 {
 	public const string TYPE = "trgr";
 	public override string DisplayName { get { return "TrackGroupBox"; } }
@@ -15203,7 +15203,7 @@ aligned(8) class TrackRunBox extends FullBox('trun', version, tr_flags) {
 
 
 */
-public class TrackRunBox : FullBox
+public partial class TrackRunBox : FullBox
 {
 	public const string TYPE = "trun";
 	public override string DisplayName { get { return "TrackRunBox"; } }
@@ -15313,7 +15313,7 @@ aligned(8) class TrunEntry(version, flags) {
    }
 }
 */
-public class TrunEntry : IMp4Serializable
+public partial class TrunEntry : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -15458,7 +15458,7 @@ public class TrunEntry : IMp4Serializable
 aligned(8) class TrackTypeBox extends GeneralTypeBox ('ttyp')
 {}
 */
-public class TrackTypeBox : GeneralTypeBox
+public partial class TrackTypeBox : GeneralTypeBox
 {
 	public const string TYPE = "ttyp";
 	public override string DisplayName { get { return "TrackTypeBox"; } }
@@ -15495,7 +15495,7 @@ aligned(8) class TypeCombinationBox extends Box('tyco') {
 	unsigned int(32)	compatible_brands[];	// to end of the box
 }
 */
-public class TypeCombinationBox : Box
+public partial class TypeCombinationBox : Box
 {
 	public const string TYPE = "tyco";
 	public override string DisplayName { get { return "TypeCombinationBox"; } }
@@ -15537,7 +15537,7 @@ public class TypeCombinationBox : Box
 aligned(8) class UserDataBox extends Box('udta') {
 }
 */
-public class UserDataBox : Box
+public partial class UserDataBox : Box
 {
 	public const string TYPE = "udta";
 	public override string DisplayName { get { return "UserDataBox"; } }
@@ -15588,7 +15588,7 @@ aligned(8) class BoxHeader (
 	}
 }
 */
-public class BoxHeader : IMp4Serializable
+public partial class BoxHeader : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -15692,7 +15692,7 @@ aligned(8) class VideoMediaHeaderBox
 	template unsigned int(16)[3]	opcolor = {0, 0, 0};
 }
 */
-public class VideoMediaHeaderBox : FullBox
+public partial class VideoMediaHeaderBox : FullBox
 {
 	public const string TYPE = "vmhd";
 	public override string DisplayName { get { return "VideoMediaHeaderBox"; } }
@@ -15742,7 +15742,7 @@ aligned(8) class XMLBox
 	utfstring xml;
 }
 */
-public class XMLBox : FullBox
+public partial class XMLBox : FullBox
 {
 	public const string TYPE = "xml ";
 	public override string DisplayName { get { return "XMLBox"; } }
@@ -15787,7 +15787,7 @@ class AmbientViewingEnvironmentBox extends Box('amve'){
 	unsigned int(16) ambient_light_y;
 }
 */
-public class AmbientViewingEnvironmentBox : Box
+public partial class AmbientViewingEnvironmentBox : Box
 {
 	public const string TYPE = "amve";
 	public override string DisplayName { get { return "AmbientViewingEnvironmentBox"; } }
@@ -15843,7 +15843,7 @@ class MetaDataKeyTableBox extends FullBox('keys') {
         MetaDataKeyBox[];
     }
 */
-public class MetaDataKeyTableBox : FullBox
+public partial class MetaDataKeyTableBox : FullBox
 {
 	public const string TYPE = "keys";
 	public override string DisplayName { get { return "MetaDataKeyTableBox"; } }
@@ -15893,7 +15893,7 @@ class URIBox extends FullBox('uri ', version = 0, 0) {
 	utf8string theURI;
 }
 */
-public class URIBox : FullBox
+public partial class URIBox : FullBox
 {
 	public const string TYPE = "uri ";
 	public override string DisplayName { get { return "URIBox"; } }
@@ -15972,7 +15972,7 @@ class AudioSampleEntry(codingname) extends SampleEntry (codingname) {
     Box (); // further boxes as needed
 }
 */
-public class AudioSampleEntry : SampleEntry
+public partial class AudioSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "AudioSampleEntry"; } }
 
@@ -16184,7 +16184,7 @@ class AudioSampleEntryV1(codingname) extends SampleEntry (codingname){
 	ChannelLayout();
 }
 */
-public class AudioSampleEntryV1 : SampleEntry
+public partial class AudioSampleEntryV1 : SampleEntry
 {
 	public override string DisplayName { get { return "AudioSampleEntryV1"; } }
 
@@ -16307,7 +16307,7 @@ class FontSampleEntry(codingname) extends SampleEntry (codingname){
 	//other boxes from derived specifications
 }
 */
-public class FontSampleEntry : SampleEntry
+public partial class FontSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "FontSampleEntry"; } }
 
@@ -16348,7 +16348,7 @@ public class FontSampleEntry : SampleEntry
 class MetaDataSampleEntry(codingname) extends SampleEntry (codingname) {
 }
 */
-public class MetaDataSampleEntry : SampleEntry
+public partial class MetaDataSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "MetaDataSampleEntry"; } }
 
@@ -16395,7 +16395,7 @@ class GenericSampleEntry extends Box('encv') {
 	// For 'avc1', these would include AVCConfigurationBox
 }
 */
-public class GenericSampleEntry : Box
+public partial class GenericSampleEntry : Box
 {
 	public const string TYPE = "encv";
 	public override string DisplayName { get { return "GenericSampleEntry"; } }
@@ -16473,7 +16473,7 @@ class XMLMetaDataSampleEntry() extends MetaDataSampleEntry ('metx') {
 	utf8list schema_location; // optional
 }
 */
-public class XMLMetaDataSampleEntry : MetaDataSampleEntry
+public partial class XMLMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "metx";
 	public override string DisplayName { get { return "XMLMetaDataSampleEntry"; } }
@@ -16530,7 +16530,7 @@ class TextMetaDataSampleEntry() extends MetaDataSampleEntry ('mett') {
 	TextConfigBox (); // optional
 }
 */
-public class TextMetaDataSampleEntry : MetaDataSampleEntry
+public partial class TextMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "mett";
 	public override string DisplayName { get { return "TextMetaDataSampleEntry"; } }
@@ -16587,7 +16587,7 @@ class URIMetaSampleEntry() extends MetaDataSampleEntry ('urim') {
 	URIInitBox		init;		// optional
 }
 */
-public class URIMetaSampleEntry : MetaDataSampleEntry
+public partial class URIMetaSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "urim";
 	public override string DisplayName { get { return "URIMetaSampleEntry"; } }
@@ -16637,7 +16637,7 @@ aligned(8) class BoxedMetaDataSampleEntry
 	BitRateBox ();							// optional
 }
 */
-public class BoxedMetaDataSampleEntry : MetaDataSampleEntry
+public partial class BoxedMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "mebx";
 	public override string DisplayName { get { return "BoxedMetaDataSampleEntry"; } }
@@ -16688,7 +16688,7 @@ class FDHintSampleEntry() extends HintSampleEntry ('fdp ') {
 	unsigned int(16)	FEC_overhead;
 }
 */
-public class FDHintSampleEntry : HintSampleEntry
+public partial class FDHintSampleEntry : HintSampleEntry
 {
 	public const string TYPE = "fdp ";
 	public override string DisplayName { get { return "FDHintSampleEntry"; } }
@@ -16753,7 +16753,7 @@ class IncompleteAVCSampleEntry() extends VisualSampleEntry ('icpv'){
 	AVCConfigurationBox config;
 }
 */
-public class IncompleteAVCSampleEntry : VisualSampleEntry
+public partial class IncompleteAVCSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "icpv";
 	public override string DisplayName { get { return "IncompleteAVCSampleEntry"; } }
@@ -16802,7 +16802,7 @@ class ProtectedMPEG2TransportStreamSampleEntry
 	ProtectionSchemeInfoBox		SchemeInformation;
 }
 */
-public class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
+public partial class ProtectedMPEG2TransportStreamSampleEntry : MPEG2TSSampleEntry
 {
 	public const string TYPE = "pm2t";
 	public override string DisplayName { get { return "ProtectedMPEG2TransportStreamSampleEntry"; } }
@@ -16847,7 +16847,7 @@ class ProtectedRtpReceptionHintSampleEntry
 	ProtectionSchemeInfoBox		SchemeInformation;
 }
 */
-public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
+public partial class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
 {
 	public const string TYPE = "prtp";
 	public override string DisplayName { get { return "ProtectedRtpReceptionHintSampleEntry"; } }
@@ -16889,7 +16889,7 @@ public class ProtectedRtpReceptionHintSampleEntry : RtpReceptionHintSampleEntry
 /*
 class MPEG2TSReceptionSampleEntry extends MPEG2TSSampleEntry('rm2t') {}
 */
-public class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
+public partial class MPEG2TSReceptionSampleEntry : MPEG2TSSampleEntry
 {
 	public const string TYPE = "rm2t";
 	public override string DisplayName { get { return "MPEG2TSReceptionSampleEntry"; } }
@@ -16928,7 +16928,7 @@ class ReceivedRtpHintSampleEntry() extends HintSampleEntry ('rrtp') {
 	uint(32)		maxpacketsize;
 }
 */
-public class ReceivedRtpHintSampleEntry : HintSampleEntry
+public partial class ReceivedRtpHintSampleEntry : HintSampleEntry
 {
 	public const string TYPE = "rrtp";
 	public override string DisplayName { get { return "ReceivedRtpHintSampleEntry"; } }
@@ -16988,7 +16988,7 @@ class ReceivedSrtpHintSampleEntry() extends HintSampleEntry ('rsrp') {
 	uint(32)		maxpacketsize;
 }
 */
-public class ReceivedSrtpHintSampleEntry : HintSampleEntry
+public partial class ReceivedSrtpHintSampleEntry : HintSampleEntry
 {
 	public const string TYPE = "rsrp";
 	public override string DisplayName { get { return "ReceivedSrtpHintSampleEntry"; } }
@@ -17042,7 +17042,7 @@ public class ReceivedSrtpHintSampleEntry : HintSampleEntry
 class HintSampleEntry() extends SampleEntry (protocol) {
 }
 */
-public class HintSampleEntry : SampleEntry
+public partial class HintSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "HintSampleEntry"; } }
 
@@ -17076,7 +17076,7 @@ public class HintSampleEntry : SampleEntry
 /*
 class MPEG2TSServerSampleEntry extends MPEG2TSSampleEntry('sm2t') {}
 */
-public class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
+public partial class MPEG2TSServerSampleEntry : MPEG2TSSampleEntry
 {
 	public const string TYPE = "sm2t";
 	public override string DisplayName { get { return "MPEG2TSServerSampleEntry"; } }
@@ -17115,7 +17115,7 @@ class SrtpHintSampleEntry() extends HintSampleEntry ('srtp') {
 	uint(32)		maxpacketsize;
 }
 */
-public class SrtpHintSampleEntry : HintSampleEntry
+public partial class SrtpHintSampleEntry : HintSampleEntry
 {
 	public const string TYPE = "srtp";
 	public override string DisplayName { get { return "SrtpHintSampleEntry"; } }
@@ -17174,7 +17174,7 @@ aligned(8) class HapticSampleEntry(codingname)
 	Box()[]	otherboxes;
 }
 */
-public class HapticSampleEntry : SampleEntry
+public partial class HapticSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "HapticSampleEntry"; } }
 	public IEnumerable<Box> Otherboxes { get { return this.children.OfType<Box>(); } }
@@ -17219,7 +17219,7 @@ class VolumetricVisualSampleEntry(codingname)
 	// other boxes from derived specifications
 }
 */
-public class VolumetricVisualSampleEntry : SampleEntry
+public partial class VolumetricVisualSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "VolumetricVisualSampleEntry"; } }
 
@@ -17279,7 +17279,7 @@ class VisualSampleEntry(codingname) extends SampleEntry (codingname){
 }
 
 */
-public class VisualSampleEntry : SampleEntry
+public partial class VisualSampleEntry : SampleEntry
 {
 	public override string DisplayName { get { return "VisualSampleEntry"; } }
 
@@ -17400,7 +17400,7 @@ class RtpHintSampleEntry() extends HintSampleEntry ('rtp ') {
 	uint(32)		maxpacketsize;
 }
 */
-public class RtpHintSampleEntry : HintSampleEntry
+public partial class RtpHintSampleEntry : HintSampleEntry
 {
 	public const string TYPE = "rtp ";
 	public override string DisplayName { get { return "RtpHintSampleEntry"; } }
@@ -17463,7 +17463,7 @@ extends FullBox(grouping_type, version, flags) {
 // the remaining data may be specified for a particular grouping_type
 }
 */
-public class EntityToGroupBox : FullBox
+public partial class EntityToGroupBox : FullBox
 {
 	public override string DisplayName { get { return "EntityToGroupBox"; } }
 
@@ -17529,7 +17529,7 @@ public class EntityToGroupBox : FullBox
 aligned(8) class BrandProperty extends GeneralTypeBox ('brnd') 
 { }
 */
-public class BrandProperty : GeneralTypeBox
+public partial class BrandProperty : GeneralTypeBox
 {
 	public const string TYPE = "brnd";
 	public override string DisplayName { get { return "BrandProperty"; } }
@@ -17573,7 +17573,7 @@ aligned(8) class SingleItemTypeReferenceBox(referenceType) extends Box(reference
 
 
 */
-public class SingleItemTypeReferenceBox : Box
+public partial class SingleItemTypeReferenceBox : Box
 {
 	public override string DisplayName { get { return "SingleItemTypeReferenceBox"; } }
 
@@ -17644,7 +17644,7 @@ aligned(8) class SingleItemTypeReferenceBoxLarge(referenceType) extends Box(refe
 	}
 }
 */
-public class SingleItemTypeReferenceBoxLarge : Box
+public partial class SingleItemTypeReferenceBoxLarge : Box
 {
 	public override string DisplayName { get { return "SingleItemTypeReferenceBoxLarge"; } }
 
@@ -17718,7 +17718,7 @@ AlternativeStartupEntryItem items[];
 }
  
 */
-public class AlternativeStartupEntry : VisualSampleGroupEntry
+public partial class AlternativeStartupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "alst";
 	public override string DisplayName { get { return "AlternativeStartupEntry"; } }
@@ -17794,7 +17794,7 @@ aligned(8) class AlternativeStartupEntryItem() {
 }
 
 */
-public class AlternativeStartupEntryItem : IMp4Serializable
+public partial class AlternativeStartupEntryItem : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -17845,7 +17845,7 @@ extends VisualSampleGroupEntry('drap') {
 	unsigned int(29) reserved = 0;
 }
 */
-public class VisualDRAPEntry : VisualSampleGroupEntry
+public partial class VisualDRAPEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "drap";
 	public override string DisplayName { get { return "VisualDRAPEntry"; } }
@@ -17895,7 +17895,7 @@ class AudioPreRollEntry() extends AudioSampleGroupEntry ('prol')
 	signed int(16) roll_distance;
 }
 */
-public class AudioPreRollEntry : AudioSampleGroupEntry
+public partial class AudioPreRollEntry : AudioSampleGroupEntry
 {
 	public const string TYPE = "prol";
 	public override string DisplayName { get { return "AudioPreRollEntry"; } }
@@ -17940,7 +17940,7 @@ class VisualRandomAccessEntry() extends VisualSampleGroupEntry ('rap ')
 	unsigned int(7) num_leading_samples;
 }
 */
-public class VisualRandomAccessEntry : VisualSampleGroupEntry
+public partial class VisualRandomAccessEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "rap ";
 	public override string DisplayName { get { return "VisualRandomAccessEntry"; } }
@@ -18001,7 +18001,7 @@ class RateShareEntry() extends SampleGroupDescriptionEntry('rash') {
 	unsigned int(8)	discard_priority;
 }
 */
-public class RateShareEntry : SampleGroupDescriptionEntry
+public partial class RateShareEntry : SampleGroupDescriptionEntry
 {
 	public const string TYPE = "rash";
 	public override string DisplayName { get { return "RateShareEntry"; } }
@@ -18119,7 +18119,7 @@ class AudioRollRecoveryEntry() extends AudioSampleGroupEntry ('roll')
 	signed int(16) roll_distance;
 }
 */
-public class AudioRollRecoveryEntry : AudioSampleGroupEntry
+public partial class AudioRollRecoveryEntry : AudioSampleGroupEntry
 {
 	public const string TYPE = "roll";
 	public override string DisplayName { get { return "AudioRollRecoveryEntry"; } }
@@ -18165,7 +18165,7 @@ class SAPEntry() extends  SampleGroupDescriptionEntry('sap ')
 	unsigned int(4) SAP_type;
 }
 */
-public class SAPEntry : SampleGroupDescriptionEntry
+public partial class SAPEntry : SampleGroupDescriptionEntry
 {
 	public const string TYPE = "sap ";
 	public override string DisplayName { get { return "SAPEntry"; } }
@@ -18225,7 +18225,7 @@ extends SampleGroupDescriptionEntry('stmi') {
 	}
 }
 */
-public class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
+public partial class SampleToMetadataItemEntry : SampleGroupDescriptionEntry
 {
 	public const string TYPE = "stmi";
 	public override string DisplayName { get { return "SampleToMetadataItemEntry"; } }
@@ -18295,7 +18295,7 @@ class TemporalLevelEntry() extends VisualSampleGroupEntry('tele')
 	bit(7)	reserved=0;
 }
 */
-public class TemporalLevelEntry : VisualSampleGroupEntry
+public partial class TemporalLevelEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "tele";
 	public override string DisplayName { get { return "TemporalLevelEntry"; } }
@@ -18345,7 +18345,7 @@ class PixelAspectRatioEntry() extends VisualSampleGroupEntry ('pasr'){
 	unsigned int(32) vSpacing;
 }
 */
-public class PixelAspectRatioEntry : VisualSampleGroupEntry
+public partial class PixelAspectRatioEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "pasr";
 	public override string DisplayName { get { return "PixelAspectRatioEntry"; } }
@@ -18407,7 +18407,7 @@ class CleanApertureEntry() extends VisualSampleGroupEntry ('casg'){
 
 }
 */
-public class CleanApertureEntry : VisualSampleGroupEntry
+public partial class CleanApertureEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "casg";
 	public override string DisplayName { get { return "CleanApertureEntry"; } }
@@ -18495,7 +18495,7 @@ aligned(8) class TrackGroupTypeBox(boxtype = 'msrc') extends FullBox(boxtype, ve
 	//  for a particular track_group_type
 }
 */
-public class TrackGroupTypeBox : FullBox
+public partial class TrackGroupTypeBox : FullBox
 {
 	public override string DisplayName { get { return "TrackGroupTypeBox"; } }
 
@@ -18542,7 +18542,7 @@ aligned(8) class StereoVideoGroupBox extends TrackGroupTypeBox('ster')
 	bit(31) reserved;
 }
 */
-public class StereoVideoGroupBox : TrackGroupTypeBox
+public partial class StereoVideoGroupBox : TrackGroupTypeBox
 {
 	public const string TYPE = "ster";
 	public override string DisplayName { get { return "StereoVideoGroupBox"; } }
@@ -18591,7 +18591,7 @@ aligned(8) class TrackReferenceTypeBox (unsigned int(32) reference_type) extends
 	unsigned int(32) track_IDs[];
 }
 */
-public class TrackReferenceTypeBox : Box
+public partial class TrackReferenceTypeBox : Box
 {
 	public override string DisplayName { get { return "TrackReferenceTypeBox"; } }
 
@@ -18634,7 +18634,7 @@ class ViewPriorityBox extends Box ('vipr') {
 } 
  
 */
-public class ViewPriorityBox : Box
+public partial class ViewPriorityBox : Box
 {
 	public const string TYPE = "vipr";
 	public override string DisplayName { get { return "ViewPriorityBox"; } }
@@ -18680,7 +18680,7 @@ aligned(8) class ViprEntry() {
  }
 
 */
-public class ViprEntry : IMp4Serializable
+public partial class ViprEntry : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -18739,7 +18739,7 @@ unsigned int(16)  subSequenceIdentifier;
 } 
 
 */
-public class DependencyInfo : IMp4Serializable
+public partial class DependencyInfo : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -18810,7 +18810,7 @@ class AVCSubSequenceEntry () extends VisualSampleGroupEntry ('avss')
  } 
 
 */
-public class AVCSubSequenceEntry : VisualSampleGroupEntry
+public partial class AVCSubSequenceEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "avss";
 	public override string DisplayName { get { return "AVCSubSequenceEntry"; } }
@@ -18952,7 +18952,7 @@ class IntrinsicCameraParametersBox extends FullBox ('icam', version=0, flags) {
  signed   int(64) mantissa_skew_factor; 
 } 
 */
-public class IntrinsicCameraParametersBox : FullBox
+public partial class IntrinsicCameraParametersBox : FullBox
 {
 	public const string TYPE = "icam";
 	public override string DisplayName { get { return "IntrinsicCameraParametersBox"; } }
@@ -19090,7 +19090,7 @@ class ExtrinsicCameraParametersBox extends FullBox ('ecam', version=0, flags) {
  } 
 }
 */
-public class ExtrinsicCameraParametersBox : FullBox
+public partial class ExtrinsicCameraParametersBox : FullBox
 {
 	public const string TYPE = "ecam";
 	public override string DisplayName { get { return "ExtrinsicCameraParametersBox"; } }
@@ -19242,7 +19242,7 @@ aligned(8) class AVCDecoderConfigurationRecord {
  } 
 }
 */
-public class AVCDecoderConfigurationRecord : IMp4Serializable
+public partial class AVCDecoderConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -19490,7 +19490,7 @@ for (i=0; i< numOfPictureParameterSets; i++) {
  } 
 }
 */
-public class MVCDecoderConfigurationRecord : IMp4Serializable
+public partial class MVCDecoderConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -19662,7 +19662,7 @@ for (i=0; i< numOfPictureParameterSets; i++) {
  } 
 }
 */
-public class SVCDecoderConfigurationRecord : IMp4Serializable
+public partial class SVCDecoderConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -19843,7 +19843,7 @@ aligned(8) class HEVCDecoderConfigurationRecord {
 	}
 }
 */
-public class HEVCDecoderConfigurationRecord : IMp4Serializable
+public partial class HEVCDecoderConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -20104,7 +20104,7 @@ aligned(8) class VvcPTLRecord(num_sublayers) {
 		unsigned int(32) general_sub_profile_idc[j];
 } 
 */
-public class VvcPTLRecord : IMp4Serializable
+public partial class VvcPTLRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -20314,7 +20314,7 @@ aligned(8) class VvcDecoderConfigurationRecord {
 	}
 }
 */
-public class VvcDecoderConfigurationRecord : IMp4Serializable
+public partial class VvcDecoderConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -20554,7 +20554,7 @@ for (i=0; i< numOfPictureParameterSets; i++) {
  } 
 }
 */
-public class MVDDecoderConfigurationRecord : IMp4Serializable
+public partial class MVDDecoderConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -20754,7 +20754,7 @@ for (i=0; i<max_layer_count; i++) {
 }
 
 */
-public class VvcOperatingPointsRecord : IMp4Serializable
+public partial class VvcOperatingPointsRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -21120,7 +21120,7 @@ bit(8*nalUnitLength) nalUnit;
 }
 }
 */
-public class EVCDecoderConfigurationRecord : IMp4Serializable
+public partial class EVCDecoderConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -21336,7 +21336,7 @@ bit(8*nalUnitLength) nalUnit;
 unsigned int(16) operationPointIdx;
 }
 */
-public class LHEVCDecoderConfigurationRecord : IMp4Serializable
+public partial class LHEVCDecoderConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -21604,7 +21604,7 @@ class IroiInfoBox extends Box('iroi'){
 	}
 }
 */
-public class IroiInfoBox : Box
+public partial class IroiInfoBox : Box
 {
 	public const string TYPE = "iroi";
 	public override string DisplayName { get { return "IroiInfoBox"; } }
@@ -21730,7 +21730,7 @@ class TierDependencyBox extends Box('ldep'){
 		unsigned int(16) dependencyTierId;
 }
 */
-public class TierDependencyBox : Box
+public partial class TierDependencyBox : Box
 {
 	public const string TYPE = "ldep";
 	public override string DisplayName { get { return "TierDependencyBox"; } }
@@ -21799,7 +21799,7 @@ class SVCDependencyRangeBox extends Box('svdr') {
 	unsigned int(4) max_quality_id;
 }
 */
-public class SVCDependencyRangeBox : Box
+public partial class SVCDependencyRangeBox : Box
 {
 	public const string TYPE = "svdr";
 	public override string DisplayName { get { return "SVCDependencyRangeBox"; } }
@@ -21889,7 +21889,7 @@ class InitialParameterSetBox extends Box ('svip') {
 		unsigned int(8) PPS_index;
 }
 */
-public class InitialParameterSetBox : Box
+public partial class InitialParameterSetBox : Box
 {
 	public const string TYPE = "svip";
 	public override string DisplayName { get { return "InitialParameterSetBox"; } }
@@ -21979,7 +21979,7 @@ class PriorityRangeBox extends Box('svpr') {
 	unsigned int(6) max_priorityId;
 }
 */
-public class PriorityRangeBox : Box
+public partial class PriorityRangeBox : Box
 {
 	public const string TYPE = "svpr";
 	public override string DisplayName { get { return "PriorityRangeBox"; } }
@@ -22053,7 +22053,7 @@ class TranscodingInfoBox extends Box('tran'){
 	}
 }
 */
-public class TranscodingInfoBox : Box
+public partial class TranscodingInfoBox : Box
 {
 	public const string TYPE = "tran";
 	public override string DisplayName { get { return "TranscodingInfoBox"; } }
@@ -22182,7 +22182,7 @@ class RectRegionBox extends Box('rrgn'){
 	}
 }
 */
-public class RectRegionBox : Box
+public partial class RectRegionBox : Box
 {
 	public const string TYPE = "rrgn";
 	public override string DisplayName { get { return "RectRegionBox"; } }
@@ -22280,7 +22280,7 @@ class BufferingBox extends Box('buff'){
 	}
 }
 */
-public class BufferingBox : Box
+public partial class BufferingBox : Box
 {
 	public const string TYPE = "buff";
 	public override string DisplayName { get { return "BufferingBox"; } }
@@ -22376,7 +22376,7 @@ aligned(8) class MVCSubTrackViewBox
 	}
 }
 */
-public class MVCSubTrackViewBox : FullBox
+public partial class MVCSubTrackViewBox : FullBox
 {
 	public const string TYPE = "mstv";
 	public override string DisplayName { get { return "MVCSubTrackViewBox"; } }
@@ -22477,7 +22477,7 @@ aligned(8) class MultiviewGroupBox extends FullBox('mvcg', version = 0, flags) {
 	MultiviewSceneInfoBox multiview_scene_info; 			// optional
 }
 */
-public class MultiviewGroupBox : FullBox
+public partial class MultiviewGroupBox : FullBox
 {
 	public const string TYPE = "mvcg";
 	public override string DisplayName { get { return "MultiviewGroupBox"; } }
@@ -22674,7 +22674,7 @@ aligned(8) class MultiviewInformationBox
 	extends FullBox('mvci', version = 0, flags) {
 }
 */
-public class MultiviewInformationBox : FullBox
+public partial class MultiviewInformationBox : FullBox
 {
 	public const string TYPE = "mvci";
 	public override string DisplayName { get { return "MultiviewInformationBox"; } }
@@ -22728,7 +22728,7 @@ class MVDDepthResolutionBox extends Box('3dpr')
 	}
 }
 */
-public class MVDDepthResolutionBox : Box
+public partial class MVDDepthResolutionBox : Box
 {
 	public const string TYPE = "3dpr";
 	public override string DisplayName { get { return "MVDDepthResolutionBox"; } }
@@ -22860,7 +22860,7 @@ aligned(8) class MultiviewRelationAttributeBox
 		unsigned int(32) differentiating_attribute;
 }
 */
-public class MultiviewRelationAttributeBox : FullBox
+public partial class MultiviewRelationAttributeBox : FullBox
 {
 	public const string TYPE = "mvra";
 	public override string DisplayName { get { return "MultiviewRelationAttributeBox"; } }
@@ -22972,7 +22972,7 @@ aligned(8) class SampleDependencyBox
 	}
 }
 */
-public class SampleDependencyBox : FullBox
+public partial class SampleDependencyBox : FullBox
 {
 	public const string TYPE = "sdep";
 	public override string DisplayName { get { return "SampleDependencyBox"; } }
@@ -23061,7 +23061,7 @@ aligned(8) class SeiInformationBox extends Box('seii') {
 	}
 }
 */
-public class SeiInformationBox : Box
+public partial class SeiInformationBox : Box
 {
 	public const string TYPE = "seii";
 	public override string DisplayName { get { return "SeiInformationBox"; } }
@@ -23159,7 +23159,7 @@ aligned(8) class SVCSubTrackLayerBox
 	}
 }
 */
-public class SVCSubTrackLayerBox : FullBox
+public partial class SVCSubTrackLayerBox : FullBox
 {
 	public const string TYPE = "sstl";
 	public override string DisplayName { get { return "SVCSubTrackLayerBox"; } }
@@ -23274,7 +23274,7 @@ aligned(8) class MVCSubTrackMultiviewGroupBox
 	}
 }
 */
-public class MVCSubTrackMultiviewGroupBox : FullBox
+public partial class MVCSubTrackMultiviewGroupBox : FullBox
 {
 	public const string TYPE = "stmg";
 	public override string DisplayName { get { return "MVCSubTrackMultiviewGroupBox"; } }
@@ -23340,7 +23340,7 @@ aligned(8) class SubTrackTierBox
 	}
 }
 */
-public class SubTrackTierBox : FullBox
+public partial class SubTrackTierBox : FullBox
 {
 	public const string TYPE = "stti";
 	public override string DisplayName { get { return "SubTrackTierBox"; } }
@@ -23405,7 +23405,7 @@ aligned(8) class MultiviewGroupRelationBox() extends FullBox('swtc', version = 0
 	MultiviewRelationAttributeBox relation_attributes;
 }
 */
-public class MultiviewGroupRelationBox : FullBox
+public partial class MultiviewGroupRelationBox : FullBox
 {
 	public const string TYPE = "swtc";
 	public override string DisplayName { get { return "MultiviewGroupRelationBox"; } }
@@ -23480,7 +23480,7 @@ class TierBitRateBox extends Box('tibr'){
 	unsigned int(32) tierAvgBitRate;
 }
 */
-public class TierBitRateBox : Box
+public partial class TierBitRateBox : Box
 {
 	public const string TYPE = "tibr";
 	public override string DisplayName { get { return "TierBitRateBox"; } }
@@ -23565,7 +23565,7 @@ class TierInfoBox extends Box('tiri'){ //Mandatory Box
 	unsigned int(16) frameRate;
 }
 */
-public class TierInfoBox : Box
+public partial class TierInfoBox : Box
 {
 	public const string TYPE = "tiri";
 	public override string DisplayName { get { return "TierInfoBox"; } }
@@ -23674,7 +23674,7 @@ aligned(8) class TileSubTrackGroupBox extends FullBox('tstb', 0, 0) {
 	}
 }
 */
-public class TileSubTrackGroupBox : FullBox
+public partial class TileSubTrackGroupBox : FullBox
 {
 	public const string TYPE = "tstb";
 	public override string DisplayName { get { return "TileSubTrackGroupBox"; } }
@@ -23737,7 +23737,7 @@ class MultiviewSceneInfoBox extends Box ('vwdi')
 	unsigned int(8) 	max_disparity;
 }
 */
-public class MultiviewSceneInfoBox : Box
+public partial class MultiviewSceneInfoBox : Box
 {
 	public const string TYPE = "vwdi";
 	public override string DisplayName { get { return "MultiviewSceneInfoBox"; } }
@@ -23781,7 +23781,7 @@ class MVCDConfigurationBox extends Box('mvdC') {
 	MVDDepthResolutionBox mvdDepthRes;	//Optional
 }
 */
-public class MVCDConfigurationBox : Box
+public partial class MVCDConfigurationBox : Box
 {
 	public const string TYPE = "mvdC";
 	public override string DisplayName { get { return "MVCDConfigurationBox"; } }
@@ -23832,7 +23832,7 @@ class A3DConfigurationBox extends Box('a3dC') {
 	MVDDepthResolutionBox mvdDepthRes;	//Optional
 }
 */
-public class A3DConfigurationBox : Box
+public partial class A3DConfigurationBox : Box
 {
 	public const string TYPE = "a3dC";
 	public override string DisplayName { get { return "A3DConfigurationBox"; } }
@@ -23903,7 +23903,7 @@ class ViewIdentifierBox extends FullBox ('vwid', version=0, flags)
 	}
 }
 */
-public class ViewIdentifierBox : FullBox
+public partial class ViewIdentifierBox : FullBox
 {
 	public const string TYPE = "vwid";
 	public override string DisplayName { get { return "ViewIdentifierBox"; } }
@@ -24082,7 +24082,7 @@ class MVCConfigurationBox extends Box('mvcC') {
 	MVCDecoderConfigurationRecord() MVCConfig;
 }
 */
-public class MVCConfigurationBox : Box
+public partial class MVCConfigurationBox : Box
 {
 	public const string TYPE = "mvcC";
 	public override string DisplayName { get { return "MVCConfigurationBox"; } }
@@ -24125,7 +24125,7 @@ class AVCConfigurationBox extends Box('avcC') {
 	AVCDecoderConfigurationRecord() AVCConfig;
 }
 */
-public class AVCConfigurationBox : Box
+public partial class AVCConfigurationBox : Box
 {
 	public const string TYPE = "avcC";
 	public override string DisplayName { get { return "AVCConfigurationBox"; } }
@@ -24168,7 +24168,7 @@ class HEVCConfigurationBox extends Box('hvcC') {
 	HEVCDecoderConfigurationRecord() HEVCConfig;
 }
 */
-public class HEVCConfigurationBox : Box
+public partial class HEVCConfigurationBox : Box
 {
 	public const string TYPE = "hvcC";
 	public override string DisplayName { get { return "HEVCConfigurationBox"; } }
@@ -24211,7 +24211,7 @@ class LHEVCConfigurationBox extends Box('lhvC') {
 	LHEVCDecoderConfigurationRecord() LHEVCConfig;
 }
 */
-public class LHEVCConfigurationBox : Box
+public partial class LHEVCConfigurationBox : Box
 {
 	public const string TYPE = "lhvC";
 	public override string DisplayName { get { return "LHEVCConfigurationBox"; } }
@@ -24254,7 +24254,7 @@ class MPEG4ExtensionDescriptorsBox extends Box('m4ds') {
 	Descriptor Descr[0 .. 255];
 }
 */
-public class MPEG4ExtensionDescriptorsBox : Box
+public partial class MPEG4ExtensionDescriptorsBox : Box
 {
 	public const string TYPE = "m4ds";
 	public override string DisplayName { get { return "MPEG4ExtensionDescriptorsBox"; } }
@@ -24297,7 +24297,7 @@ class SVCConfigurationBox extends Box('svcC') {
 	SVCDecoderConfigurationRecord() SVCConfig;
 }
 */
-public class SVCConfigurationBox : Box
+public partial class SVCConfigurationBox : Box
 {
 	public const string TYPE = "svcC";
 	public override string DisplayName { get { return "SVCConfigurationBox"; } }
@@ -24341,7 +24341,7 @@ class ScalabilityInformationSEIBox extends Box('seib', size)
 	unsigned int(8*size-64)	scalinfosei; 
 }
 */
-public class ScalabilityInformationSEIBox : Box
+public partial class ScalabilityInformationSEIBox : Box
 {
 	public const string TYPE = "seib";
 	public override string DisplayName { get { return "ScalabilityInformationSEIBox"; } }
@@ -24386,7 +24386,7 @@ class SVCPriorityAssignmentBox extends Box('svcP')
 	string PriorityAssignmentURI[method_count]; 
 }
 */
-public class SVCPriorityAssignmentBox : Box
+public partial class SVCPriorityAssignmentBox : Box
 {
 	public const string TYPE = "svcP";
 	public override string DisplayName { get { return "SVCPriorityAssignmentBox"; } }
@@ -24436,7 +24436,7 @@ class ViewScalabilityInformationSEIBox extends Box('vsib', size)
 	unsigned int(8*size-64)	mvcscalinfosei; 
 }
 */
-public class ViewScalabilityInformationSEIBox : Box
+public partial class ViewScalabilityInformationSEIBox : Box
 {
 	public const string TYPE = "vsib";
 	public override string DisplayName { get { return "ViewScalabilityInformationSEIBox"; } }
@@ -24480,7 +24480,7 @@ class MVDScalabilityInformationSEIBox extends Box('3sib', size)
 	unsigned int(8*size-64)	mvdscalinfosei;
 }
 */
-public class MVDScalabilityInformationSEIBox : Box
+public partial class MVDScalabilityInformationSEIBox : Box
 {
 	public const string TYPE = "3sib";
 	public override string DisplayName { get { return "MVDScalabilityInformationSEIBox"; } }
@@ -24525,7 +24525,7 @@ class MVCViewPriorityAssignmentBox extends Box('mvcP')
 	string PriorityAssignmentURI[method_count]; 
 }
 */
-public class MVCViewPriorityAssignmentBox : Box
+public partial class MVCViewPriorityAssignmentBox : Box
 {
 	public const string TYPE = "mvcP";
 	public override string DisplayName { get { return "MVCViewPriorityAssignmentBox"; } }
@@ -24574,7 +24574,7 @@ class HEVCTileConfigurationBox extends Box('hvtC') {
 	HEVCTileTierLevelConfigurationRecord() HEVCTileTierLevelConfig;
 }
 */
-public class HEVCTileConfigurationBox : Box
+public partial class HEVCTileConfigurationBox : Box
 {
 	public const string TYPE = "hvtC";
 	public override string DisplayName { get { return "HEVCTileConfigurationBox"; } }
@@ -24617,7 +24617,7 @@ class EVCConfigurationBox extends Box('evcC') {
 	EVCDecoderConfigurationRecord() EVCConfig;
 }
 */
-public class EVCConfigurationBox : Box
+public partial class EVCConfigurationBox : Box
 {
 	public const string TYPE = "evcC";
 	public override string DisplayName { get { return "EVCConfigurationBox"; } }
@@ -24666,7 +24666,7 @@ class SVCPriorityLayerInfoBox extends Box('qlif'){
 	}
 }
 */
-public class SVCPriorityLayerInfoBox : Box
+public partial class SVCPriorityLayerInfoBox : Box
 {
 	public const string TYPE = "qlif";
 	public override string DisplayName { get { return "SVCPriorityLayerInfoBox"; } }
@@ -24749,7 +24749,7 @@ class VvcConfigurationBox extends FullBox('vvcC',version=0,flags) {
 	VvcDecoderConfigurationRecord() VvcConfig;
 }
 */
-public class VvcConfigurationBox : FullBox
+public partial class VvcConfigurationBox : FullBox
 {
 	public const string TYPE = "vvcC";
 	public override string DisplayName { get { return "VvcConfigurationBox"; } }
@@ -24793,7 +24793,7 @@ class VvcNALUConfigBox extends FullBox('vvnC',version=0,flags) {
 	unsigned int(2) LengthSizeMinusOne;
 }
 */
-public class VvcNALUConfigBox : FullBox
+public partial class VvcNALUConfigBox : FullBox
 {
 	public const string TYPE = "vvnC";
 	public override string DisplayName { get { return "VvcNALUConfigBox"; } }
@@ -24854,7 +24854,7 @@ class DefaultHevcExtractorConstructorBox extends FullBox('dhec'){
 	}
 }
 */
-public class DefaultHevcExtractorConstructorBox : FullBox
+public partial class DefaultHevcExtractorConstructorBox : FullBox
 {
 	public const string TYPE = "dhec";
 	public override string DisplayName { get { return "DefaultHevcExtractorConstructorBox"; } }
@@ -24999,7 +24999,7 @@ class SVCMetadataSampleConfigBox extends FullBox('svmC')
 	}
 }
 */
-public class SVCMetadataSampleConfigBox : FullBox
+public partial class SVCMetadataSampleConfigBox : FullBox
 {
 	public const string TYPE = "svmC";
 	public override string DisplayName { get { return "SVCMetadataSampleConfigBox"; } }
@@ -25092,7 +25092,7 @@ class EVCSliceComponentTrackConfigurationBox extends Box('evsC') {
 	EVCSliceComponentTrackConfigurationRecord() config;
 }
 */
-public class EVCSliceComponentTrackConfigurationBox : Box
+public partial class EVCSliceComponentTrackConfigurationBox : Box
 {
 	public const string TYPE = "evsC";
 	public override string DisplayName { get { return "EVCSliceComponentTrackConfigurationBox"; } }
@@ -25136,7 +25136,7 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hvc1'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntry : VisualSampleEntry
+public partial class HEVCSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "hvc1";
 	public override string DisplayName { get { return "HEVCSampleEntry"; } }
@@ -25184,7 +25184,7 @@ class HEVCLHVCSampleEntry() extends HEVCSampleEntry() {
 	LHEVCConfigurationBox		lhvcconfig;
 }
 */
-public class HEVCLHVCSampleEntry : HEVCSampleEntry
+public partial class HEVCLHVCSampleEntry : HEVCSampleEntry
 {
 	public override string DisplayName { get { return "HEVCLHVCSampleEntry"; } }
 	public LHEVCConfigurationBox Lhvcconfig { get { return this.children.OfType<LHEVCConfigurationBox>().FirstOrDefault(); } }
@@ -25228,7 +25228,7 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hvc2'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntryhvc2Dup : VisualSampleEntry
+public partial class HEVCSampleEntryhvc2Dup : VisualSampleEntry
 {
 	public const string TYPE = "hvc2";
 	public override string DisplayName { get { return "HEVCSampleEntryhvc2Dup"; } }
@@ -25277,7 +25277,7 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hvc3'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntryhvc3Dup : VisualSampleEntry
+public partial class HEVCSampleEntryhvc3Dup : VisualSampleEntry
 {
 	public const string TYPE = "hvc3";
 	public override string DisplayName { get { return "HEVCSampleEntryhvc3Dup"; } }
@@ -25326,7 +25326,7 @@ class LHEVCSampleEntry() extends VisualSampleEntry ('lhv1') {
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class LHEVCSampleEntry : VisualSampleEntry
+public partial class LHEVCSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "lhv1";
 	public override string DisplayName { get { return "LHEVCSampleEntry"; } }
@@ -25375,7 +25375,7 @@ class LHEVCSampleEntry() extends VisualSampleEntry ('lhe1') {
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class LHEVCSampleEntrylhe1Dup : VisualSampleEntry
+public partial class LHEVCSampleEntrylhe1Dup : VisualSampleEntry
 {
 	public const string TYPE = "lhe1";
 	public override string DisplayName { get { return "LHEVCSampleEntrylhe1Dup"; } }
@@ -25424,7 +25424,7 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hev1'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntryhev1Dup : VisualSampleEntry
+public partial class HEVCSampleEntryhev1Dup : VisualSampleEntry
 {
 	public const string TYPE = "hev1";
 	public override string DisplayName { get { return "HEVCSampleEntryhev1Dup"; } }
@@ -25473,7 +25473,7 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hev2'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntryhev2Dup : VisualSampleEntry
+public partial class HEVCSampleEntryhev2Dup : VisualSampleEntry
 {
 	public const string TYPE = "hev2";
 	public override string DisplayName { get { return "HEVCSampleEntryhev2Dup"; } }
@@ -25522,7 +25522,7 @@ class HEVCSampleEntry() extends VisualSampleEntry ('hev3'){
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class HEVCSampleEntryhev3Dup : VisualSampleEntry
+public partial class HEVCSampleEntryhev3Dup : VisualSampleEntry
 {
 	public const string TYPE = "hev3";
 	public override string DisplayName { get { return "HEVCSampleEntryhev3Dup"; } }
@@ -25570,7 +25570,7 @@ class AVCParameterSampleEntry() extends VisualSampleEntry ('avcp'){
 	AVCConfigurationBox	config;
 }
 */
-public class AVCParameterSampleEntry : VisualSampleEntry
+public partial class AVCParameterSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "avcp";
 	public override string DisplayName { get { return "AVCParameterSampleEntry"; } }
@@ -25615,7 +25615,7 @@ class AVCSampleEntry() extends VisualSampleEntry (type) {
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class AVCSampleEntry : VisualSampleEntry
+public partial class AVCSampleEntry : VisualSampleEntry
 {
 	public override string DisplayName { get { return "AVCSampleEntry"; } }
 	public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
@@ -25670,7 +25670,7 @@ class AVCMVCSampleEntry() extends AVCSampleEntry ('avc1') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class AVCMVCSampleEntry : AVCSampleEntry
+public partial class AVCMVCSampleEntry : AVCSampleEntry
 {
 	public const string TYPE = "avc1";
 	public override string DisplayName { get { return "AVCMVCSampleEntry"; } }
@@ -25754,7 +25754,7 @@ class AVCMVCSampleEntry() extends AVCSampleEntry ('avc3') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class AVCMVCSampleEntryavc3Dup : AVCSampleEntry
+public partial class AVCMVCSampleEntryavc3Dup : AVCSampleEntry
 {
 	public const string TYPE = "avc3";
 	public override string DisplayName { get { return "AVCMVCSampleEntryavc3Dup"; } }
@@ -25831,7 +25831,7 @@ class AVC2SampleEntry() extends VisualSampleEntry (type) {
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class AVC2SampleEntry : VisualSampleEntry
+public partial class AVC2SampleEntry : VisualSampleEntry
 {
 	public override string DisplayName { get { return "AVC2SampleEntry"; } }
 	public AVCConfigurationBox Config { get { return this.children.OfType<AVCConfigurationBox>().FirstOrDefault(); } }
@@ -25886,7 +25886,7 @@ class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc2') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class AVC2MVCSampleEntry : AVC2SampleEntry
+public partial class AVC2MVCSampleEntry : AVC2SampleEntry
 {
 	public const string TYPE = "avc2";
 	public override string DisplayName { get { return "AVC2MVCSampleEntry"; } }
@@ -25970,7 +25970,7 @@ class AVC2MVCSampleEntry() extends AVC2SampleEntry ('avc4') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class AVC2MVCSampleEntryavc4Dup : AVC2SampleEntry
+public partial class AVC2MVCSampleEntryavc4Dup : AVC2SampleEntry
 {
 	public const string TYPE = "avc4";
 	public override string DisplayName { get { return "AVC2MVCSampleEntryavc4Dup"; } }
@@ -26055,7 +26055,7 @@ class MVCSampleEntry() extends VisualSampleEntry ('mvc1') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class MVCSampleEntry : VisualSampleEntry
+public partial class MVCSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "mvc1";
 	public override string DisplayName { get { return "MVCSampleEntry"; } }
@@ -26144,7 +26144,7 @@ class MVCSampleEntry() extends VisualSampleEntry ('mvc2') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class MVCSampleEntrymvc2Dup : VisualSampleEntry
+public partial class MVCSampleEntrymvc2Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvc2";
 	public override string DisplayName { get { return "MVCSampleEntrymvc2Dup"; } }
@@ -26233,7 +26233,7 @@ class MVCSampleEntry() extends VisualSampleEntry ('mvc3') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class MVCSampleEntrymvc3Dup : VisualSampleEntry
+public partial class MVCSampleEntrymvc3Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvc3";
 	public override string DisplayName { get { return "MVCSampleEntrymvc3Dup"; } }
@@ -26322,7 +26322,7 @@ class MVCSampleEntry() extends VisualSampleEntry ('mvc4') {
 	A3DConfigurationBox	a3dconfig;	// optional
 }
 */
-public class MVCSampleEntrymvc4Dup : VisualSampleEntry
+public partial class MVCSampleEntrymvc4Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvc4";
 	public override string DisplayName { get { return "MVCSampleEntrymvc4Dup"; } }
@@ -26409,7 +26409,7 @@ class MVCDSampleEntry() extends VisualSampleEntry ('mvd1') {
 }
 
 */
-public class MVCDSampleEntry : VisualSampleEntry
+public partial class MVCDSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "mvd1";
 	public override string DisplayName { get { return "MVCDSampleEntry"; } }
@@ -26484,7 +26484,7 @@ class MVCDSampleEntry() extends VisualSampleEntry ('mvd2') {
 }
 
 */
-public class MVCDSampleEntrymvd2Dup : VisualSampleEntry
+public partial class MVCDSampleEntrymvd2Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvd2";
 	public override string DisplayName { get { return "MVCDSampleEntrymvd2Dup"; } }
@@ -26559,7 +26559,7 @@ class MVCDSampleEntry() extends VisualSampleEntry ('mvd3') {
 }
 
 */
-public class MVCDSampleEntrymvd3Dup : VisualSampleEntry
+public partial class MVCDSampleEntrymvd3Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvd3";
 	public override string DisplayName { get { return "MVCDSampleEntrymvd3Dup"; } }
@@ -26634,7 +26634,7 @@ class MVCDSampleEntry() extends VisualSampleEntry ('mvd4') {
 }
 
 */
-public class MVCDSampleEntrymvd4Dup : VisualSampleEntry
+public partial class MVCDSampleEntrymvd4Dup : VisualSampleEntry
 {
 	public const string TYPE = "mvd4";
 	public override string DisplayName { get { return "MVCDSampleEntrymvd4Dup"; } }
@@ -26707,7 +26707,7 @@ class A3DSampleEntry() extends VisualSampleEntry ('a3d1') {
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 }
 */
-public class A3DSampleEntry : VisualSampleEntry
+public partial class A3DSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "a3d1";
 	public override string DisplayName { get { return "A3DSampleEntry"; } }
@@ -26776,7 +26776,7 @@ class A3DSampleEntry() extends VisualSampleEntry ('a3d2') {
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 }
 */
-public class A3DSampleEntrya3d2Dup : VisualSampleEntry
+public partial class A3DSampleEntrya3d2Dup : VisualSampleEntry
 {
 	public const string TYPE = "a3d2";
 	public override string DisplayName { get { return "A3DSampleEntrya3d2Dup"; } }
@@ -26845,7 +26845,7 @@ class A3DSampleEntry() extends VisualSampleEntry ('a3d3') {
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 }
 */
-public class A3DSampleEntrya3d3Dup : VisualSampleEntry
+public partial class A3DSampleEntrya3d3Dup : VisualSampleEntry
 {
 	public const string TYPE = "a3d3";
 	public override string DisplayName { get { return "A3DSampleEntrya3d3Dup"; } }
@@ -26914,7 +26914,7 @@ class A3DSampleEntry() extends VisualSampleEntry ('a3d4') {
 	ExtrinsicCameraParametersBox	extrinsic_camera_params;	// optional
 }
 */
-public class A3DSampleEntrya3d4Dup : VisualSampleEntry
+public partial class A3DSampleEntrya3d4Dup : VisualSampleEntry
 {
 	public const string TYPE = "a3d4";
 	public override string DisplayName { get { return "A3DSampleEntrya3d4Dup"; } }
@@ -26980,7 +26980,7 @@ class AVCSVCSampleEntry() extends AVCSampleEntry ('avc1' or 'avc3') {
 	SVCPriorityAssignmentBox	method;			// optional
 }
 */
-public class AVCSVCSampleEntry : AVCSampleEntry
+public partial class AVCSVCSampleEntry : AVCSampleEntry
 {
 	public const string TYPE = "avc1";
 	public override string DisplayName { get { return "AVCSVCSampleEntry"; } }
@@ -27030,7 +27030,7 @@ public class AVCSVCSampleEntry : AVCSampleEntry
 /*
 
 */
-public class AVCSVCSampleEntryavc3Dup : AVCSampleEntry
+public partial class AVCSVCSampleEntryavc3Dup : AVCSampleEntry
 {
 	public const string TYPE = "avc3";
 	public override string DisplayName { get { return "AVCSVCSampleEntryavc3Dup"; } }
@@ -27084,7 +27084,7 @@ class AVC2SVCSampleEntry() extends AVC2SampleEntry('avc2' or 'avc4') {
 	SVCPriorityAssignmentBox	method;			// optional
 }
 */
-public class AVC2SVCSampleEntry : AVC2SampleEntry
+public partial class AVC2SVCSampleEntry : AVC2SampleEntry
 {
 	public const string TYPE = "avc2";
 	public override string DisplayName { get { return "AVC2SVCSampleEntry"; } }
@@ -27134,7 +27134,7 @@ public class AVC2SVCSampleEntry : AVC2SampleEntry
 /*
 
 */
-public class AVC2SVCSampleEntryavc4Dup : AVC2SampleEntry
+public partial class AVC2SVCSampleEntryavc4Dup : AVC2SampleEntry
 {
 	public const string TYPE = "avc4";
 	public override string DisplayName { get { return "AVC2SVCSampleEntryavc4Dup"; } }
@@ -27190,7 +27190,7 @@ class SVCSampleEntry() extends VisualSampleEntry ('svc1' or 'svc2') {
 	SVCPriorityAssignmentBox	method;			// optional
 }
 */
-public class SVCSampleEntry : VisualSampleEntry
+public partial class SVCSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "svc1";
 	public override string DisplayName { get { return "SVCSampleEntry"; } }
@@ -27244,7 +27244,7 @@ public class SVCSampleEntry : VisualSampleEntry
 /*
 
 */
-public class SVCSampleEntrysvc2Dup : VisualSampleEntry
+public partial class SVCSampleEntrysvc2Dup : VisualSampleEntry
 {
 	public const string TYPE = "svc2";
 	public override string DisplayName { get { return "SVCSampleEntrysvc2Dup"; } }
@@ -27300,7 +27300,7 @@ class HEVCTileSampleEntry() extends VisualSampleEntry ('hvt1'){
 	HEVCTileConfigurationBox	config(); // optional
 }
 */
-public class HEVCTileSampleEntry : VisualSampleEntry
+public partial class HEVCTileSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "hvt1";
 	public override string DisplayName { get { return "HEVCTileSampleEntry"; } }
@@ -27343,7 +27343,7 @@ public class HEVCTileSampleEntry : VisualSampleEntry
 class LHEVCTileSampleEntry() extends VisualSampleEntry ('lht1'){
 }
 */
-public class LHEVCTileSampleEntry : VisualSampleEntry
+public partial class LHEVCTileSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "lht1";
 	public override string DisplayName { get { return "LHEVCTileSampleEntry"; } }
@@ -27380,7 +27380,7 @@ class HEVCTileSSHInfoSampleEntry() extends VisualSampleEntry ('hvt3'){
 	HEVCTileConfigurationBox config(); // optional 
 }
 */
-public class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
+public partial class HEVCTileSSHInfoSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "hvt3";
 	public override string DisplayName { get { return "HEVCTileSSHInfoSampleEntry"; } }
@@ -27424,7 +27424,7 @@ class HEVCSliceSegmentDataSampleEntry() extends VisualSampleEntry ('hvt2'){
 	HEVCTileConfigurationBox	config(); // optional
 }
 */
-public class HEVCSliceSegmentDataSampleEntry : VisualSampleEntry
+public partial class HEVCSliceSegmentDataSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "hvt2";
 	public override string DisplayName { get { return "HEVCSliceSegmentDataSampleEntry"; } }
@@ -27469,7 +27469,7 @@ class VvcSampleEntry() extends VisualSampleEntry ('vvc1' or 'vvi1') {
 	MPEG4ExtensionDescriptorsBox () descr;	// optional
 }
 */
-public class VvcSampleEntry : VisualSampleEntry
+public partial class VvcSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "vvc1";
 	public override string DisplayName { get { return "VvcSampleEntry"; } }
@@ -27515,7 +27515,7 @@ public class VvcSampleEntry : VisualSampleEntry
 /*
 
 */
-public class VvcSampleEntryvvi1Dup : VisualSampleEntry
+public partial class VvcSampleEntryvvi1Dup : VisualSampleEntry
 {
 	public const string TYPE = "vvi1";
 	public override string DisplayName { get { return "VvcSampleEntryvvi1Dup"; } }
@@ -27563,7 +27563,7 @@ class VvcSubpicSampleEntry() extends VisualSampleEntry ('vvs1') {
 	VvcNALUConfigBox config;
 }
 */
-public class VvcSubpicSampleEntry : VisualSampleEntry
+public partial class VvcSubpicSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "vvs1";
 	public override string DisplayName { get { return "VvcSubpicSampleEntry"; } }
@@ -27607,7 +27607,7 @@ class VvcNonVCLSampleEntry() extends VisualSampleEntry ('vvcN') {
 	VvcNALUConfigBox config;
 }
 */
-public class VvcNonVCLSampleEntry : VisualSampleEntry
+public partial class VvcNonVCLSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "vvcN";
 	public override string DisplayName { get { return "VvcNonVCLSampleEntry"; } }
@@ -27652,7 +27652,7 @@ class EVCSampleEntry() extends VisualSampleEntry('evc1'){
 	MPEG4ExtensionDescriptorsBox() descr;	// optional
 }
 */
-public class EVCSampleEntry : VisualSampleEntry
+public partial class EVCSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "evc1";
 	public override string DisplayName { get { return "EVCSampleEntry"; } }
@@ -27703,7 +27703,7 @@ class SVCMetaDataSampleEntry () extends MetaDataSampleEntry('svcM')
 	SVCPriorityLayerInfoBox		priorities;	// optional
 }
 */
-public class SVCMetaDataSampleEntry : MetaDataSampleEntry
+public partial class SVCMetaDataSampleEntry : MetaDataSampleEntry
 {
 	public const string TYPE = "svcM";
 	public override string DisplayName { get { return "SVCMetaDataSampleEntry"; } }
@@ -27756,7 +27756,7 @@ class EVCSliceComponentTrackSampleEntry()
 	EVCSliceComponentTrackConfigurationBox	config;
 }
 */
-public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
+public partial class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "evs1";
 	public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntry"; } }
@@ -27798,7 +27798,7 @@ public class EVCSliceComponentTrackSampleEntry : VisualSampleEntry
 /*
 
 */
-public class EVCSliceComponentTrackSampleEntryevs2Dup : VisualSampleEntry
+public partial class EVCSliceComponentTrackSampleEntryevs2Dup : VisualSampleEntry
 {
 	public const string TYPE = "evs2";
 	public override string DisplayName { get { return "EVCSliceComponentTrackSampleEntryevs2Dup"; } }
@@ -27849,7 +27849,7 @@ aligned(8) class SubpicCommonGroupBox extends EntityToGroupBox('acgl',0,0)
 	unsigned int(16) num_active_tracks;
 }
 */
-public class SubpicCommonGroupBox : EntityToGroupBox
+public partial class SubpicCommonGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "acgl";
 	public override string DisplayName { get { return "SubpicCommonGroupBox"; } }
@@ -27959,7 +27959,7 @@ aligned(8) class SubpicMultipleGroupsBox extends EntityToGroupBox('amgl',0,0)
 		unsigned int(16) num_active_tracks[i];
 }
 */
-public class SubpicMultipleGroupsBox : EntityToGroupBox
+public partial class SubpicMultipleGroupsBox : EntityToGroupBox
 {
 	public const string TYPE = "amgl";
 	public override string DisplayName { get { return "SubpicMultipleGroupsBox"; } }
@@ -28147,7 +28147,7 @@ aligned(8) class OperatingPointGroupBox extends EntityToGroupBox('opeg',0,0)
 	}
 }
 */
-public class OperatingPointGroupBox : EntityToGroupBox
+public partial class OperatingPointGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "opeg";
 	public override string DisplayName { get { return "OperatingPointGroupBox"; } }
@@ -28535,7 +28535,7 @@ aligned(8) class SwitchableTracksGroupBox extends EntityToGroupBox('swtk',0,0)
 		unsigned int(16) track_switch_hierarchy_id[i];
 }
 */
-public class SwitchableTracksGroupBox : EntityToGroupBox
+public partial class SwitchableTracksGroupBox : EntityToGroupBox
 {
 	public const string TYPE = "swtk";
 	public override string DisplayName { get { return "SwitchableTracksGroupBox"; } }
@@ -28596,7 +28596,7 @@ extends FullBox('vvcb', version, flags) {
 // the remaining data may be specified for a particular grouping_type
 }
 */
-public class EntityToGroupBoxvvcbDup : FullBox
+public partial class EntityToGroupBoxvvcbDup : FullBox
 {
 	public const string TYPE = "vvcb";
 	public override string DisplayName { get { return "EntityToGroupBoxvvcbDup"; } }
@@ -28665,7 +28665,7 @@ class AUDSampleEntry() extends VisualSampleGroupEntry ('aud ')
 	bit(24) audNalUnit;
 }
 */
-public class AUDSampleEntry : VisualSampleGroupEntry
+public partial class AUDSampleEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "aud ";
 	public override string DisplayName { get { return "AUDSampleEntry"; } }
@@ -28713,7 +28713,7 @@ class AVCLayerEntry() extends VisualSampleGroupEntry ('avll')
 	unsigned int(16) avgFrameRate;
 }
 */
-public class AVCLayerEntry : VisualSampleGroupEntry
+public partial class AVCLayerEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "avll";
 	public override string DisplayName { get { return "AVCLayerEntry"; } }
@@ -28781,7 +28781,7 @@ class DecodingCapabilityInformation extends VisualSampleGroupEntry ('dcfi') {
 	bit(8*dci_nal_unit_length) dci_nal_unit;
 }
 */
-public class DecodingCapabilityInformation : VisualSampleGroupEntry
+public partial class DecodingCapabilityInformation : VisualSampleGroupEntry
 {
 	public const string TYPE = "dcfi";
 	public override string DisplayName { get { return "DecodingCapabilityInformation"; } }
@@ -28834,7 +28834,7 @@ class DecodeRetimingEntry() extends VisualSampleGroupEntry ('dtrt') {
 	}
 }
 */
-public class DecodeRetimingEntry : VisualSampleGroupEntry
+public partial class DecodeRetimingEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "dtrt";
 	public override string DisplayName { get { return "DecodeRetimingEntry"; } }
@@ -28904,7 +28904,7 @@ class EndOfBitstreamSampleEntry() extends VisualSampleGroupEntry ('eob ')
 	bit(16) eobNalUnit;
 }
 */
-public class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
+public partial class EndOfBitstreamSampleEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "eob ";
 	public override string DisplayName { get { return "EndOfBitstreamSampleEntry"; } }
@@ -28950,7 +28950,7 @@ class EndOfSequenceSampleEntry() extends VisualSampleGroupEntry ('eos ')
 		bit(16) eosNalUnit[i];
 }
 */
-public class EndOfSequenceSampleEntry : VisualSampleGroupEntry
+public partial class EndOfSequenceSampleEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "eos ";
 	public override string DisplayName { get { return "EndOfSequenceSampleEntry"; } }
@@ -29016,7 +29016,7 @@ aligned(8) class LhvcExternalBaseLayerInfo() extends VisualSampleGroupEntry('lbl
 	signed   int(8) sample_offset;
 }
 */
-public class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
+public partial class LhvcExternalBaseLayerInfo : VisualSampleGroupEntry
 {
 	public const string TYPE = "lbli";
 	public override string DisplayName { get { return "LhvcExternalBaseLayerInfo"; } }
@@ -29088,7 +29088,7 @@ class LayerInfoGroupEntry extends VisualSampleGroupEntry ('linf') {
 	}
 }
 */
-public class LayerInfoGroupEntry : VisualSampleGroupEntry
+public partial class LayerInfoGroupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "linf";
 	public override string DisplayName { get { return "LayerInfoGroupEntry"; } }
@@ -29212,7 +29212,7 @@ aligned(8) class VvcMixedNALUnitTypePicEntry() extends VisualSampleGroupEntry('m
 	unsigned int(6) pps_id;
 }
 */
-public class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
+public partial class VvcMixedNALUnitTypePicEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "minp";
 	public override string DisplayName { get { return "VvcMixedNALUnitTypePicEntry"; } }
@@ -29313,7 +29313,7 @@ class MultiviewGroupEntry() extends VisualSampleGroupEntry ('mvif') {
 	}
 }
 */
-public class MultiviewGroupEntry : VisualSampleGroupEntry
+public partial class MultiviewGroupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "mvif";
 	public override string DisplayName { get { return "MultiviewGroupEntry"; } }
@@ -29457,7 +29457,7 @@ class NALUMapEntry() extends VisualSampleGroupEntry ('nalm') {
 	}
 }
 */
-public class NALUMapEntry : VisualSampleGroupEntry
+public partial class NALUMapEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "nalm";
 	public override string DisplayName { get { return "NALUMapEntry"; } }
@@ -29610,7 +29610,7 @@ class OperatingPointsInformation extends VisualSampleGroupEntry ('oinf') {
 	OperatingPointsRecord oinf;
 }
 */
-public class OperatingPointsInformation : VisualSampleGroupEntry
+public partial class OperatingPointsInformation : VisualSampleGroupEntry
 {
 	public const string TYPE = "oinf";
 	public override string DisplayName { get { return "OperatingPointsInformation"; } }
@@ -29656,7 +29656,7 @@ extends VisualSampleGroupEntry ('opth')
 }
 
 */
-public class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
+public partial class OperatingPointDecodeTimeHint : VisualSampleGroupEntry
 {
 	public const string TYPE = "opth";
 	public override string DisplayName { get { return "OperatingPointDecodeTimeHint"; } }
@@ -29701,7 +29701,7 @@ class ParameterSetNALUEntry() extends VisualSampleGroupEntry ('pase')
 	bit(8* ps_nalu_length) ps_nal_unit;
 }
 */
-public class ParameterSetNALUEntry : VisualSampleGroupEntry
+public partial class ParameterSetNALUEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "pase";
 	public override string DisplayName { get { return "ParameterSetNALUEntry"; } }
@@ -29754,7 +29754,7 @@ class PSSampleGroupEntry() extends VisualSampleGroupEntry ('pss1')
 	bit(5) reserved = 0;
 }
 */
-public class PSSampleGroupEntry : VisualSampleGroupEntry
+public partial class PSSampleGroupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "pss1";
 	public override string DisplayName { get { return "PSSampleGroupEntry"; } }
@@ -29829,7 +29829,7 @@ aligned(8) class VvcRectRegionOrderEntry () extends VisualSampleGroupEntry('rror
 		VVCSubpicIDRewritingInfomationStruct() subpic_id_rewriting_info;
 }
 */
-public class VvcRectRegionOrderEntry : VisualSampleGroupEntry
+public partial class VvcRectRegionOrderEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "rror";
 	public override string DisplayName { get { return "VvcRectRegionOrderEntry"; } }
@@ -29998,7 +29998,7 @@ class ScalableGroupEntry() extends VisualSampleGroupEntry ('scif') {
 	}
 }
 */
-public class ScalableGroupEntry : VisualSampleGroupEntry
+public partial class ScalableGroupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "scif";
 	public override string DisplayName { get { return "ScalableGroupEntry"; } }
@@ -30155,7 +30155,7 @@ class ScalableNALUMapEntry() extends VisualSampleGroupEntry ('scnm') {
 	}
 
 */
-public class ScalableNALUMapEntry : VisualSampleGroupEntry
+public partial class ScalableNALUMapEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "scnm";
 	public override string DisplayName { get { return "ScalableNALUMapEntry"; } }
@@ -30233,7 +30233,7 @@ aligned(8) class VvcSubpicIDEntry() extends VisualSampleGroupEntry('spid')
 	}
 }
 */
-public class VvcSubpicIDEntry : VisualSampleGroupEntry
+public partial class VvcSubpicIDEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "spid";
 	public override string DisplayName { get { return "VvcSubpicIDEntry"; } }
@@ -30345,7 +30345,7 @@ aligned(8) class SubpicLevelInfoEntry() extends VisualSampleGroupEntry('spli')
 	unsigned int(8) level_idc;
 }
 */
-public class SubpicLevelInfoEntry : VisualSampleGroupEntry
+public partial class SubpicLevelInfoEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "spli";
 	public override string DisplayName { get { return "SubpicLevelInfoEntry"; } }
@@ -30394,7 +30394,7 @@ aligned(8) class VvcSubpicOrderEntry() extends VisualSampleGroupEntry('spor')
 		VVCSubpicIDRewritingInfomationStruct() subpic_id_rewriting_info;
 }
 */
-public class VvcSubpicOrderEntry : VisualSampleGroupEntry
+public partial class VvcSubpicOrderEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "spor";
 	public override string DisplayName { get { return "VvcSubpicOrderEntry"; } }
@@ -30480,7 +30480,7 @@ class StepwiseTemporalLayerEntry() extends VisualSampleGroupEntry ('stsa')
 {
 }
 */
-public class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
+public partial class StepwiseTemporalLayerEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "stsa";
 	public override string DisplayName { get { return "StepwiseTemporalLayerEntry"; } }
@@ -30520,7 +30520,7 @@ class VvcSubpicLayoutMapEntry() extends VisualSampleGroupEntry ('sulm') {
 		unsigned int(16) groupID;
 }
 */
-public class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
+public partial class VvcSubpicLayoutMapEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "sulm";
 	public override string DisplayName { get { return "VvcSubpicLayoutMapEntry"; } }
@@ -30590,7 +30590,7 @@ class SyncSampleEntry() extends VisualSampleGroupEntry ('sync')
 		unsigned int(6) NAL_unit_type;
 }
 */
-public class SyncSampleEntry : VisualSampleGroupEntry
+public partial class SyncSampleEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "sync";
 	public override string DisplayName { get { return "SyncSampleEntry"; } }
@@ -30661,7 +30661,7 @@ class RectangularRegionGroupEntry() extends VisualSampleGroupEntry ('trif')
 }
 }
 */
-public class RectangularRegionGroupEntry : VisualSampleGroupEntry
+public partial class RectangularRegionGroupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "trif";
 	public override string DisplayName { get { return "RectangularRegionGroupEntry"; } }
@@ -30843,7 +30843,7 @@ class TemporalSubLayerEntry() extends VisualSampleGroupEntry ('tsas')
 {
 }
 */
-public class TemporalSubLayerEntry : VisualSampleGroupEntry
+public partial class TemporalSubLayerEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "tsas";
 	public override string DisplayName { get { return "TemporalSubLayerEntry"; } }
@@ -30891,7 +30891,7 @@ class TemporalLayerEntry() extends VisualSampleGroupEntry ('tscl')
 	unsigned int(16) tlAvgFrameRate;
 }
 */
-public class TemporalLayerEntry : VisualSampleGroupEntry
+public partial class TemporalLayerEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "tscl";
 	public override string DisplayName { get { return "TemporalLayerEntry"; } }
@@ -30995,7 +30995,7 @@ class ViewPriorityEntry() extends VisualSampleGroupEntry ('vipr')
 	ViewPriorityBox();
 }
 */
-public class ViewPriorityEntry : VisualSampleGroupEntry
+public partial class ViewPriorityEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "vipr";
 	public override string DisplayName { get { return "ViewPriorityEntry"; } }
@@ -31039,7 +31039,7 @@ class VvcOperatingPointsInformation extends VisualSampleGroupEntry ('vopi') {
 	VvcOperatingPointsRecord oinf;
 }
 */
-public class VvcOperatingPointsInformation : VisualSampleGroupEntry
+public partial class VvcOperatingPointsInformation : VisualSampleGroupEntry
 {
 	public const string TYPE = "vopi";
 	public override string DisplayName { get { return "VvcOperatingPointsInformation"; } }
@@ -31085,7 +31085,7 @@ aligned(8) class AlteTrackGroupTypeBox() extends FullBox('alte', version = 0, fl
 	//  for a particular track_group_type
 }
 */
-public class AlteTrackGroupTypeBox : FullBox
+public partial class AlteTrackGroupTypeBox : FullBox
 {
 	public const string TYPE = "alte";
 	public override string DisplayName { get { return "AlteTrackGroupTypeBox"; } }
@@ -31134,7 +31134,7 @@ aligned(8) class CstgTrackGroupTypeBox() extends FullBox('cstg', version = 0, fl
 	//  for a particular track_group_type
 }
 */
-public class CstgTrackGroupTypeBox : FullBox
+public partial class CstgTrackGroupTypeBox : FullBox
 {
 	public const string TYPE = "cstg";
 	public override string DisplayName { get { return "CstgTrackGroupTypeBox"; } }
@@ -31183,7 +31183,7 @@ aligned(8) class SnutTrackGroupTypeBox() extends FullBox('snut', version = 0, fl
 	//  for a particular track_group_type
 }
 */
-public class SnutTrackGroupTypeBox : FullBox
+public partial class SnutTrackGroupTypeBox : FullBox
 {
 	public const string TYPE = "snut";
 	public override string DisplayName { get { return "SnutTrackGroupTypeBox"; } }
@@ -31291,7 +31291,7 @@ class SymbolicMusicSpecificConfig
     } 
 } 
 */
-public class SymbolicMusicSpecificConfig : IMp4Serializable
+public partial class SymbolicMusicSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -31783,7 +31783,7 @@ class AudioSpecificConfig() extends BaseDescriptor : bit(8) tag=DecSpecificInfoT
 
 
 */
-public class AudioSpecificConfig : BaseDescriptor
+public partial class AudioSpecificConfig : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.DecSpecificInfoTag;
 	public override string DisplayName { get { return "AudioSpecificConfig"; } }
@@ -32572,7 +32572,7 @@ class GetAudioObjectType()
 
 
 */
-public class GetAudioObjectType : IMp4Serializable
+public partial class GetAudioObjectType : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -32670,7 +32670,7 @@ class GASpecificConfig(samplingFrequencyIndex, channelConfiguration, audioObject
 
 
 */
-public class GASpecificConfig : IMp4Serializable
+public partial class GASpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -32927,7 +32927,7 @@ class program_config_element()
 
 
 */
-public class program_config_element : IMp4Serializable
+public partial class program_config_element : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -33284,7 +33284,7 @@ class CelpSpecificConfig(samplingFrequencyIndex)
 
 
 */
-public class CelpSpecificConfig : IMp4Serializable
+public partial class CelpSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -33416,7 +33416,7 @@ class CelpHeader(samplingFrequencyIndex)
 
 
 */
-public class CelpHeader : IMp4Serializable
+public partial class CelpHeader : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -33534,7 +33534,7 @@ class CelpBWSenhHeader()
 
 
 */
-public class CelpBWSenhHeader : IMp4Serializable
+public partial class CelpBWSenhHeader : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -33582,7 +33582,7 @@ class HvxcSpecificConfig() {
 
 
 */
-public class HvxcSpecificConfig : IMp4Serializable
+public partial class HvxcSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -33651,7 +33651,7 @@ class HVXCconfig()
 
 
 */
-public class HVXCconfig : IMp4Serializable
+public partial class HVXCconfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -33723,7 +33723,7 @@ class TTSSpecificConfig() {
 
 
 */
-public class TTSSpecificConfig : IMp4Serializable
+public partial class TTSSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -33777,7 +33777,7 @@ class TTS_Sequence()
 
 
 */
-public class TTS_Sequence : IMp4Serializable
+public partial class TTS_Sequence : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -33883,7 +33883,7 @@ class ErrorResilientCelpSpecificConfig(samplingFrequencyIndex)
 
 
 */
-public class ErrorResilientCelpSpecificConfig : IMp4Serializable
+public partial class ErrorResilientCelpSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34016,7 +34016,7 @@ class ER_SC_CelpHeader(samplingFrequencyIndex)
 
 
 */
-public class ER_SC_CelpHeader : IMp4Serializable
+public partial class ER_SC_CelpHeader : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34146,7 +34146,7 @@ class ErrorResilientHvxcSpecificConfig() {
 
 
 */
-public class ErrorResilientHvxcSpecificConfig : IMp4Serializable
+public partial class ErrorResilientHvxcSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34215,7 +34215,7 @@ class ErHVXCconfig()
 
 
 */
-public class ErHVXCconfig : IMp4Serializable
+public partial class ErHVXCconfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34297,7 +34297,7 @@ class ParametricSpecificConfig()
 
 
 */
-public class ParametricSpecificConfig : IMp4Serializable
+public partial class ParametricSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34389,7 +34389,7 @@ class PARAconfig()
 
 
 */
-public class PARAconfig : IMp4Serializable
+public partial class PARAconfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34496,7 +34496,7 @@ class HILNconfig()
 
 
 */
-public class HILNconfig : IMp4Serializable
+public partial class HILNconfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34569,7 +34569,7 @@ class HILNenexConfig()
 
 
 */
-public class HILNenexConfig : IMp4Serializable
+public partial class HILNenexConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34641,7 +34641,7 @@ class SSCSpecificConfig(channelConfiguration)
 
 
 */
-public class SSCSpecificConfig : IMp4Serializable
+public partial class SSCSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34739,7 +34739,7 @@ class MPEG_1_2_SpecificConfig()
 
 
 */
-public class MPEG_1_2_SpecificConfig : IMp4Serializable
+public partial class MPEG_1_2_SpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34786,7 +34786,7 @@ class DSTSpecificConfig(channelConfiguration) {
 
 
 */
-public class DSTSpecificConfig : IMp4Serializable
+public partial class DSTSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -34893,7 +34893,7 @@ class ALSSpecificConfig()
 
 
 */
-public class ALSSpecificConfig : IMp4Serializable
+public partial class ALSSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -35250,7 +35250,7 @@ class SLSSpecificConfig(samplingFrequencyIndex,
 
 
 */
-public class SLSSpecificConfig : IMp4Serializable
+public partial class SLSSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -35384,7 +35384,7 @@ bslbf(4) eldExtType;
 
 
 */
-public class ELDSpecificConfig : IMp4Serializable
+public partial class ELDSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -35646,7 +35646,7 @@ class ld_sbr_header(channelConfiguration)
 
 
 */
-public class ld_sbr_header : IMp4Serializable
+public partial class ld_sbr_header : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -35818,7 +35818,7 @@ class sbr_header()
 
 
 */
-public class sbr_header : IMp4Serializable
+public partial class sbr_header : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -36014,7 +36014,7 @@ class ErrorProtectionSpecificConfig()
 }
 
 */
-public class ErrorProtectionSpecificConfig : IMp4Serializable
+public partial class ErrorProtectionSpecificConfig : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -36391,7 +36391,7 @@ class WebVTTConfigurationBox extends Box('vttC') {
 	boxstring	config;
 }
 */
-public class WebVTTConfigurationBox : Box
+public partial class WebVTTConfigurationBox : Box
 {
 	public const string TYPE = "vttC";
 	public override string DisplayName { get { return "WebVTTConfigurationBox"; } }
@@ -36434,7 +36434,7 @@ class WebVTTSourceLabelBox extends Box('vlab') {
 	boxstring	source_label;
 }
 */
-public class WebVTTSourceLabelBox : Box
+public partial class WebVTTSourceLabelBox : Box
 {
 	public const string TYPE = "vlab";
 	public override string DisplayName { get { return "WebVTTSourceLabelBox"; } }
@@ -36479,7 +36479,7 @@ class WVTTSampleEntry() extends PlainTextSampleEntry ('wvtt'){
 	BitRateBox (); 					// optional
 }
 */
-public class WVTTSampleEntry : PlainTextSampleEntry
+public partial class WVTTSampleEntry : PlainTextSampleEntry
 {
 	public const string TYPE = "wvtt";
 	public override string DisplayName { get { return "WVTTSampleEntry"; } }
@@ -36531,7 +36531,7 @@ class CueSourceIDBox() extends Box ('vsid') {
  unsigned int(32) sourceID; 
  }
 */
-public class CueSourceIDBox : Box
+public partial class CueSourceIDBox : Box
 {
 	public const string TYPE = "vsid";
 	public override string DisplayName { get { return "CueSourceIDBox"; } }
@@ -36574,7 +36574,7 @@ class CueTimeBox() extends Box ('ctim') {
  boxstring cueCurrentTime; 
  }
 */
-public class CueTimeBox : Box
+public partial class CueTimeBox : Box
 {
 	public const string TYPE = "ctim";
 	public override string DisplayName { get { return "CueTimeBox"; } }
@@ -36617,7 +36617,7 @@ class CueIDBox() extends Box ('iden') {
  boxstring cueID; 
  }
 */
-public class CueIDBox : Box
+public partial class CueIDBox : Box
 {
 	public const string TYPE = "iden";
 	public override string DisplayName { get { return "CueIDBox"; } }
@@ -36660,7 +36660,7 @@ class CueSettingsBox() extends Box ('sttg') {
  boxstring settings; 
  }
 */
-public class CueSettingsBox : Box
+public partial class CueSettingsBox : Box
 {
 	public const string TYPE = "sttg";
 	public override string DisplayName { get { return "CueSettingsBox"; } }
@@ -36703,7 +36703,7 @@ class CuePayloadBox() extends Box ('payl') {
  boxstring cueText; 
  }
 */
-public class CuePayloadBox : Box
+public partial class CuePayloadBox : Box
 {
 	public const string TYPE = "payl";
 	public override string DisplayName { get { return "CuePayloadBox"; } }
@@ -36744,7 +36744,7 @@ public class CuePayloadBox : Box
 /*
 class VTTEmptyBox() extends Box ('vtte') { }
 */
-public class VTTEmptyBox : Box
+public partial class VTTEmptyBox : Box
 {
 	public const string TYPE = "vtte";
 	public override string DisplayName { get { return "VTTEmptyBox"; } }
@@ -36781,7 +36781,7 @@ class VTTAdditionalBox() extends Box ('vtta') {
  boxstring cueAdditionalText; 
  }
 */
-public class VTTAdditionalBox : Box
+public partial class VTTAdditionalBox : Box
 {
 	public const string TYPE = "vtta";
 	public override string DisplayName { get { return "VTTAdditionalBox"; } }
@@ -36825,7 +36825,7 @@ aligned(8) class AuxiliaryTypeInfoBox extends FullBox ('auxi', 0, 0)
 	string aux_track_type;
 }
 */
-public class AuxiliaryTypeInfoBox : FullBox
+public partial class AuxiliaryTypeInfoBox : FullBox
 {
 	public const string TYPE = "auxi";
 	public override string DisplayName { get { return "AuxiliaryTypeInfoBox"; } }
@@ -36872,7 +36872,7 @@ class CodingConstraintsBox extends FullBox('ccst', version = 0, flags = 0){
 }
 
 */
-public class CodingConstraintsBox : FullBox
+public partial class CodingConstraintsBox : FullBox
 {
 	public const string TYPE = "ccst";
 	public override string DisplayName { get { return "CodingConstraintsBox"; } }
@@ -36944,7 +36944,7 @@ extends FullBox('md5i', version = 0, flags) {
 	}
 }
 */
-public class MD5IntegrityBox : FullBox
+public partial class MD5IntegrityBox : FullBox
 {
 	public const string TYPE = "md5i";
 	public override string DisplayName { get { return "MD5IntegrityBox"; } }
@@ -37057,7 +37057,7 @@ extends ItemFullProperty('auxC', version = 0, flags) {
 		// until the end of the box, the semantics depend on the aux_type value
 }
 */
-public class AuxiliaryTypeProperty : ItemFullProperty
+public partial class AuxiliaryTypeProperty : ItemFullProperty
 {
 	public const string TYPE = "auxC";
 	public override string DisplayName { get { return "AuxiliaryTypeProperty"; } }
@@ -37108,7 +37108,7 @@ extends ItemProperty('imir') {
 	unsigned int(1) axis;
 }
 */
-public class ImageMirror : ItemProperty
+public partial class ImageMirror : ItemProperty
 {
 	public const string TYPE = "imir";
 	public override string DisplayName { get { return "ImageMirror"; } }
@@ -37159,7 +37159,7 @@ extends ItemProperty('irot') {
 	unsigned int(2) angle;
 }
 */
-public class ImageRotation : ItemProperty
+public partial class ImageRotation : ItemProperty
 {
 	public const string TYPE = "irot";
 	public override string DisplayName { get { return "ImageRotation"; } }
@@ -37211,7 +37211,7 @@ extends ItemFullProperty('ispe', version = 0, flags = 0) {
 }
 
 */
-public class ImageSpatialExtentsProperty : ItemFullProperty
+public partial class ImageSpatialExtentsProperty : ItemFullProperty
 {
 	public const string TYPE = "ispe";
 	public override string DisplayName { get { return "ImageSpatialExtentsProperty"; } }
@@ -37260,7 +37260,7 @@ class JPEGConfigurationBox extends Box('jpgC') {
 	unsigned int(8) JPEGprefix[];
 }
 */
-public class JPEGConfigurationBox : Box
+public partial class JPEGConfigurationBox : Box
 {
 	public const string TYPE = "jpgC";
 	public override string DisplayName { get { return "JPEGConfigurationBox"; } }
@@ -37304,7 +37304,7 @@ extends ItemProperty('lsel') {
 	unsigned int(16) layer_id;
 }
 */
-public class LayerSelectorProperty : ItemProperty
+public partial class LayerSelectorProperty : ItemProperty
 {
 	public const string TYPE = "lsel";
 	public override string DisplayName { get { return "LayerSelectorProperty"; } }
@@ -37348,7 +37348,7 @@ extends ItemFullProperty('oinf', version = 0, flags = 0){
 	OperatingPointsRecord op_info; // specified in ISO/IEC 14496-15
 }
 */
-public class OperatingPointsInformationProperty : ItemFullProperty
+public partial class OperatingPointsInformationProperty : ItemFullProperty
 {
 	public const string TYPE = "oinf";
 	public override string DisplayName { get { return "OperatingPointsInformationProperty"; } }
@@ -37395,7 +37395,7 @@ extends ItemFullProperty('pixi', version = 0, flags = 0){
 	}
 }
 */
-public class PixelInformationProperty : ItemFullProperty
+public partial class PixelInformationProperty : ItemFullProperty
 {
 	public const string TYPE = "pixi";
 	public override string DisplayName { get { return "PixelInformationProperty"; } }
@@ -37460,7 +37460,7 @@ extends ItemFullProperty('rloc', version = 0, flags = 0)
 	unsigned int(32) vertical_offset;
 }
 */
-public class RelativeLocationProperty : ItemFullProperty
+public partial class RelativeLocationProperty : ItemFullProperty
 {
 	public const string TYPE = "rloc";
 	public override string DisplayName { get { return "RelativeLocationProperty"; } }
@@ -37510,7 +37510,7 @@ extends ItemFullProperty('tols', version = 0, flags = 0){
 	unsigned int(16) target_ols_idx;
 }
 */
-public class TargetOlsProperty : ItemFullProperty
+public partial class TargetOlsProperty : ItemFullProperty
 {
 	public const string TYPE = "tols";
 	public override string DisplayName { get { return "TargetOlsProperty"; } }
@@ -37555,7 +37555,7 @@ extends VisualSampleGroupEntry('aebr') {
 	int(8) exposure_numerator;
 }
 */
-public class AutoExposureBracketingEntry : VisualSampleGroupEntry
+public partial class AutoExposureBracketingEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "aebr";
 	public override string DisplayName { get { return "AutoExposureBracketingEntry"; } }
@@ -37606,7 +37606,7 @@ extends VisualSampleGroupEntry('afbr') {
 	int(8) flash_exposure_denominator;
 }
 */
-public class FlashExposureBracketingEntry : VisualSampleGroupEntry
+public partial class FlashExposureBracketingEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "afbr";
 	public override string DisplayName { get { return "FlashExposureBracketingEntry"; } }
@@ -37658,7 +37658,7 @@ extends ItemFullProperty('altt', version = 0, flags = 0) {
 }
 
 */
-public class AccessibilityTextProperty : ItemFullProperty
+public partial class AccessibilityTextProperty : ItemFullProperty
 {
 	public const string TYPE = "altt";
 	public override string DisplayName { get { return "AccessibilityTextProperty"; } }
@@ -37709,7 +37709,7 @@ extends ItemFullProperty('crtt', version = 0, flags = 0) {
 }
 
 */
-public class CreationTimeProperty : ItemFullProperty
+public partial class CreationTimeProperty : ItemFullProperty
 {
 	public const string TYPE = "crtt";
 	public override string DisplayName { get { return "CreationTimeProperty"; } }
@@ -37754,7 +37754,7 @@ extends VisualSampleGroupEntry('dobr') {
 	int(8) f_stop_denominator;
 }
 */
-public class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
+public partial class DepthOfFieldBracketingEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "dobr";
 	public override string DisplayName { get { return "DepthOfFieldBracketingEntry"; } }
@@ -37805,7 +37805,7 @@ extends VisualSampleGroupEntry('fobr') {
 	unsigned int(16) focus_distance_denominator;
 }
 */
-public class FocusBracketingEntry : VisualSampleGroupEntry
+public partial class FocusBracketingEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "fobr";
 	public override string DisplayName { get { return "FocusBracketingEntry"; } }
@@ -37858,7 +37858,7 @@ extends ItemFullProperty('iscl', version = 0, flags = 0) {
 	unsigned int(16) target_height_denominator;
 }
 */
-public class ImageScaling : ItemFullProperty
+public partial class ImageScaling : ItemFullProperty
 {
 	public const string TYPE = "iscl";
 	public override string DisplayName { get { return "ImageScaling"; } }
@@ -37921,7 +37921,7 @@ extends ItemFullProperty('mdft', version = 0, flags = 0) {
 }
 
 */
-public class ModificationTimeProperty : ItemFullProperty
+public partial class ModificationTimeProperty : ItemFullProperty
 {
 	public const string TYPE = "mdft";
 	public override string DisplayName { get { return "ModificationTimeProperty"; } }
@@ -37966,7 +37966,7 @@ extends VisualSampleGroupEntry('pano') {
 }
 
 */
-public class PanoramaEntry : VisualSampleGroupEntry
+public partial class PanoramaEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "pano";
 	public override string DisplayName { get { return "PanoramaEntry"; } }
@@ -38013,7 +38013,7 @@ extends ItemFullProperty('rref', version = 0, flags = 0){
 	}
 }
 */
-public class RequiredReferenceTypesProperty : ItemFullProperty
+public partial class RequiredReferenceTypesProperty : ItemFullProperty
 {
 	public const string TYPE = "rref";
 	public override string DisplayName { get { return "RequiredReferenceTypesProperty"; } }
@@ -38080,7 +38080,7 @@ extends ItemFullProperty('udes', version = 0, flags = 0){
 }
 
 */
-public class UserDescriptionProperty : ItemFullProperty
+public partial class UserDescriptionProperty : ItemFullProperty
 {
 	public const string TYPE = "udes";
 	public override string DisplayName { get { return "UserDescriptionProperty"; } }
@@ -38143,7 +38143,7 @@ extends VisualSampleGroupEntry('wbbr') {
 	int(8) green_magenta;
 }
 */
-public class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
+public partial class WhiteBalanceBracketingEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "wbbr";
 	public override string DisplayName { get { return "WhiteBalanceBracketingEntry"; } }
@@ -38193,7 +38193,7 @@ extends ItemFullProperty('wipe', version=0, flags=0) {
 	unsigned int(8) transition_direction;
 }
 */
-public class WipeTransitionEffectProperty : ItemFullProperty
+public partial class WipeTransitionEffectProperty : ItemFullProperty
 {
 	public const string TYPE = "wipe";
 	public override string DisplayName { get { return "WipeTransitionEffectProperty"; } }
@@ -38238,7 +38238,7 @@ extends ItemFullProperty('zoom', version=0, flags=0) {
 	unsigned int(7) transition_shape;
 }
 */
-public class ZoomTransitionEffectProperty : ItemFullProperty
+public partial class ZoomTransitionEffectProperty : ItemFullProperty
 {
 	public const string TYPE = "zoom";
 	public override string DisplayName { get { return "ZoomTransitionEffectProperty"; } }
@@ -38288,7 +38288,7 @@ extends ItemFullProperty('fade', version=0, flags=0) {
 	unsigned int(8) transition_direction;
 }
 */
-public class FadeTransitionEffectProperty : ItemFullProperty
+public partial class FadeTransitionEffectProperty : ItemFullProperty
 {
 	public const string TYPE = "fade";
 	public override string DisplayName { get { return "FadeTransitionEffectProperty"; } }
@@ -38332,7 +38332,7 @@ extends ItemFullProperty('splt', version=0, flags=0) {
 	unsigned int(8) transition_direction;
 }
 */
-public class SplitTransitionEffectProperty : ItemFullProperty
+public partial class SplitTransitionEffectProperty : ItemFullProperty
 {
 	public const string TYPE = "splt";
 	public override string DisplayName { get { return "SplitTransitionEffectProperty"; } }
@@ -38376,7 +38376,7 @@ extends ItemFullProperty('stpe', version=0, flags=0) {
 	unsigned int(8) transition_period;
 }
 */
-public class SuggestedTransitionPeriodProperty : ItemFullProperty
+public partial class SuggestedTransitionPeriodProperty : ItemFullProperty
 {
 	public const string TYPE = "stpe";
 	public override string DisplayName { get { return "SuggestedTransitionPeriodProperty"; } }
@@ -38420,7 +38420,7 @@ extends ItemFullProperty('ssld', version=0, flags=0) {
 	unsigned int(16) duration;
 }
 */
-public class SuggestedTimeDisplayDurationProperty : ItemFullProperty
+public partial class SuggestedTimeDisplayDurationProperty : ItemFullProperty
 {
 	public const string TYPE = "ssld";
 	public override string DisplayName { get { return "SuggestedTimeDisplayDurationProperty"; } }
@@ -38464,7 +38464,7 @@ extends ItemFullProperty('mskC', version = 0, flags = 0){
 	unsigned int(8) bits_per_pixel;
 }
 */
-public class MaskConfigurationProperty : ItemFullProperty
+public partial class MaskConfigurationProperty : ItemFullProperty
 {
 	public const string TYPE = "mskC";
 	public override string DisplayName { get { return "MaskConfigurationProperty"; } }
@@ -38508,7 +38508,7 @@ extends ItemFullProperty('spid', version = 0, flags = 0){
 	VvcSubpicIDEntry sid_info; // specified in ISO/IEC 14496-15
 }
 */
-public class VvcSubpicIDProperty : ItemFullProperty
+public partial class VvcSubpicIDProperty : ItemFullProperty
 {
 	public const string TYPE = "spid";
 	public override string DisplayName { get { return "VvcSubpicIDProperty"; } }
@@ -38552,7 +38552,7 @@ extends ItemFullProperty('spor', version = 0, flags = 0){
 	VvcSubpicOrderEntry sor_info; // specified in ISO/IEC 14496-15
 }
 */
-public class VvcSubpicOrderProperty : ItemFullProperty
+public partial class VvcSubpicOrderProperty : ItemFullProperty
 {
 	public const string TYPE = "spor";
 	public override string DisplayName { get { return "VvcSubpicOrderProperty"; } }
@@ -38597,7 +38597,7 @@ class VisualEquivalenceEntry() extends VisualSampleGroupEntry ('eqiv')
 	unsigned int(16) timescale_multiplier;
 }
 */
-public class VisualEquivalenceEntry : VisualSampleGroupEntry
+public partial class VisualEquivalenceEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "eqiv";
 	public override string DisplayName { get { return "VisualEquivalenceEntry"; } }
@@ -38651,7 +38651,7 @@ extends VisualSampleGroupEntry ('refs') {
 	}
 }
 */
-public class DirectReferenceSamplesList : VisualSampleGroupEntry
+public partial class DirectReferenceSamplesList : VisualSampleGroupEntry
 {
 	public const string TYPE = "refs";
 	public override string DisplayName { get { return "DirectReferenceSamplesList"; } }
@@ -38720,7 +38720,7 @@ aligned(8) class AppleItemListBox() extends Box('ilst') {
 }
  
 */
-public class AppleItemListBox : Box
+public partial class AppleItemListBox : Box
 {
 	public const string TYPE = "ilst";
 	public override string DisplayName { get { return "AppleItemListBox"; } }
@@ -38763,7 +38763,7 @@ public class AppleItemListBox : Box
 aligned(8) class IlstKey(unsigned int(32) format) extends Box(format) {
  Box boxes[]; }
 */
-public class IlstKey : Box
+public partial class IlstKey : Box
 {
 	public override string DisplayName { get { return "IlstKey"; } }
 	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
@@ -38806,7 +38806,7 @@ aligned(8) class AppleCameraModelBox() extends Box('©mod') {
  bit(8) data[];
  } 
 */
-public class AppleCameraModelBox : Box
+public partial class AppleCameraModelBox : Box
 {
 	public const string TYPE = "©mod";
 	public override string DisplayName { get { return "AppleCameraModelBox"; } }
@@ -38849,7 +38849,7 @@ aligned(8) class AppleEncoderToolBox() extends Box('©too') {
  Box boxes[];
  } 
 */
-public class AppleEncoderToolBox : Box
+public partial class AppleEncoderToolBox : Box
 {
 	public const string TYPE = "©too";
 	public override string DisplayName { get { return "AppleEncoderToolBox"; } }
@@ -38893,7 +38893,7 @@ aligned(8) class AppleComposersBox() extends Box('©wrt') {
  Box boxes[];
  } 
 */
-public class AppleComposersBox : Box
+public partial class AppleComposersBox : Box
 {
 	public const string TYPE = "©wrt";
 	public override string DisplayName { get { return "AppleComposersBox"; } }
@@ -38937,7 +38937,7 @@ aligned(8) class AppleSoftwareBox() extends Box('©swr') {
  bit(8) data[];
  } 
 */
-public class AppleSoftwareBox : Box
+public partial class AppleSoftwareBox : Box
 {
 	public const string TYPE = "©swr";
 	public override string DisplayName { get { return "AppleSoftwareBox"; } }
@@ -38980,7 +38980,7 @@ aligned(8) class AppleCreatorBox() extends Box('©swf') {
  bit(8) data[];
  } 
 */
-public class AppleCreatorBox : Box
+public partial class AppleCreatorBox : Box
 {
 	public const string TYPE = "©swf";
 	public override string DisplayName { get { return "AppleCreatorBox"; } }
@@ -39023,7 +39023,7 @@ aligned(8) class AppleCommentBox() extends Box('©cmt') {
  Box boxes[];
  } 
 */
-public class AppleCommentBox : Box
+public partial class AppleCommentBox : Box
 {
 	public const string TYPE = "©cmt";
 	public override string DisplayName { get { return "AppleCommentBox"; } }
@@ -39067,7 +39067,7 @@ aligned(8) class AppleStartTimecode() extends Box('©TIM') {
  MultiLanguageString value[]; 
  } 
 */
-public class AppleStartTimecode : Box
+public partial class AppleStartTimecode : Box
 {
 	public const string TYPE = "©TIM";
 	public override string DisplayName { get { return "AppleStartTimecode"; } }
@@ -39110,7 +39110,7 @@ aligned(8) class AppleStartTimeScale() extends Box('©TSC') {
  MultiLanguageString value[]; 
  } 
 */
-public class AppleStartTimeScale : Box
+public partial class AppleStartTimeScale : Box
 {
 	public const string TYPE = "©TSC";
 	public override string DisplayName { get { return "AppleStartTimeScale"; } }
@@ -39153,7 +39153,7 @@ aligned(8) class AppleStartTimeSampleSize() extends Box('©TSZ') {
  MultiLanguageString value[]; 
  } 
 */
-public class AppleStartTimeSampleSize : Box
+public partial class AppleStartTimeSampleSize : Box
 {
 	public const string TYPE = "©TSZ";
 	public override string DisplayName { get { return "AppleStartTimeSampleSize"; } }
@@ -39196,7 +39196,7 @@ aligned(8) class AppleNameBox() extends Box('©nam') {
  Box boxes[];
  } 
 */
-public class AppleNameBox : Box
+public partial class AppleNameBox : Box
 {
 	public const string TYPE = "©nam";
 	public override string DisplayName { get { return "AppleNameBox"; } }
@@ -39240,7 +39240,7 @@ aligned(8) class AppleRequirementsBox() extends FullBox('©req', version = 0, 0)
 string requirement;
  } 
 */
-public class AppleRequirementsBox : FullBox
+public partial class AppleRequirementsBox : FullBox
 {
 	public const string TYPE = "©req";
 	public override string DisplayName { get { return "AppleRequirementsBox"; } }
@@ -39283,7 +39283,7 @@ aligned(8) class AppleLyricsBox() extends Box('©lyr') {
 Box boxes[];
  } 
 */
-public class AppleLyricsBox : Box
+public partial class AppleLyricsBox : Box
 {
 	public const string TYPE = "©lyr";
 	public override string DisplayName { get { return "AppleLyricsBox"; } }
@@ -39327,7 +39327,7 @@ aligned(8) class AppleGroupingBox() extends Box('©grp') {
 Box boxes[];
  } 
 */
-public class AppleGroupingBox : Box
+public partial class AppleGroupingBox : Box
 {
 	public const string TYPE = "©grp";
 	public override string DisplayName { get { return "AppleGroupingBox"; } }
@@ -39371,7 +39371,7 @@ aligned(8) class AppleAlbumBox() extends Box('©alb') {
  Box boxes[];
  } 
 */
-public class AppleAlbumBox : Box
+public partial class AppleAlbumBox : Box
 {
 	public const string TYPE = "©alb";
 	public override string DisplayName { get { return "AppleAlbumBox"; } }
@@ -39415,7 +39415,7 @@ aligned(8) class AppleArtistBox() extends Box('©ART') {
  Box boxes[];
  } 
 */
-public class AppleArtistBox : Box
+public partial class AppleArtistBox : Box
 {
 	public const string TYPE = "©ART";
 	public override string DisplayName { get { return "AppleArtistBox"; } }
@@ -39459,7 +39459,7 @@ aligned(8) class AppleArtist2Box() extends Box('aART') {
  Box boxes[];
  } 
 */
-public class AppleArtist2Box : Box
+public partial class AppleArtist2Box : Box
 {
 	public const string TYPE = "aART";
 	public override string DisplayName { get { return "AppleArtist2Box"; } }
@@ -39503,7 +39503,7 @@ aligned(8) class AppleCopyrightBox() extends Box('cprt') {
  Box boxes[];
  } 
 */
-public class AppleCopyrightBox : Box
+public partial class AppleCopyrightBox : Box
 {
 	public const string TYPE = "cprt";
 	public override string DisplayName { get { return "AppleCopyrightBox"; } }
@@ -39547,7 +39547,7 @@ aligned(8) class AppleCopyright2Box() extends Box('©cpy') {
  Box boxes[];
  } 
 */
-public class AppleCopyright2Box : Box
+public partial class AppleCopyright2Box : Box
 {
 	public const string TYPE = "©cpy";
 	public override string DisplayName { get { return "AppleCopyright2Box"; } }
@@ -39591,7 +39591,7 @@ aligned(8) class AppleRecordingYear2Box() extends Box('©day') {
  Box boxes[];
  } 
 */
-public class AppleRecordingYear2Box : Box
+public partial class AppleRecordingYear2Box : Box
 {
 	public const string TYPE = "©day";
 	public override string DisplayName { get { return "AppleRecordingYear2Box"; } }
@@ -39635,7 +39635,7 @@ aligned(8) class AppleGenreBox() extends Box('©gen') {
  Box boxes[];
  } 
 */
-public class AppleGenreBox : Box
+public partial class AppleGenreBox : Box
 {
 	public const string TYPE = "©gen";
 	public override string DisplayName { get { return "AppleGenreBox"; } }
@@ -39679,7 +39679,7 @@ aligned(8) class AppleGPSCoordinatesBox() extends Box('©xyz') {
  MultiLanguageString value[]; 
  } 
 */
-public class AppleGPSCoordinatesBox : Box
+public partial class AppleGPSCoordinatesBox : Box
 {
 	public const string TYPE = "©xyz";
 	public override string DisplayName { get { return "AppleGPSCoordinatesBox"; } }
@@ -39722,7 +39722,7 @@ aligned(8) class AppleCompilationBox() extends Box('cpil') {
  Box boxes[];
  } 
 */
-public class AppleCompilationBox : Box
+public partial class AppleCompilationBox : Box
 {
 	public const string TYPE = "cpil";
 	public override string DisplayName { get { return "AppleCompilationBox"; } }
@@ -39766,7 +39766,7 @@ aligned(8) class AppleName2Box() extends Box('name') {
  string name;
  } 
 */
-public class AppleName2Box : Box
+public partial class AppleName2Box : Box
 {
 	public const string TYPE = "name";
 	public override string DisplayName { get { return "AppleName2Box"; } }
@@ -39809,7 +39809,7 @@ aligned(8) class AppleDescriptionBox() extends Box('desc') {
  Box boxes[];
  } 
 */
-public class AppleDescriptionBox : Box
+public partial class AppleDescriptionBox : Box
 {
 	public const string TYPE = "desc";
 	public override string DisplayName { get { return "AppleDescriptionBox"; } }
@@ -39853,7 +39853,7 @@ aligned(8) class AppleLongDescriptionBox() extends Box('ldes') {
  Box boxes[];
  } 
 */
-public class AppleLongDescriptionBox : Box
+public partial class AppleLongDescriptionBox : Box
 {
 	public const string TYPE = "ldes";
 	public override string DisplayName { get { return "AppleLongDescriptionBox"; } }
@@ -39897,7 +39897,7 @@ aligned(8) class UserBox(uuid) extends Box('uuid') {
  bit(8) data[];
  } 
 */
-public class UserBox : Box
+public partial class UserBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UserBox"; } }
@@ -39940,7 +39940,7 @@ aligned(8) class AppleInitialObjectDescriptorBox() extends FullBox('iods') {
  Descriptor descriptor[0 .. 255];
  } 
 */
-public class AppleInitialObjectDescriptorBox : FullBox
+public partial class AppleInitialObjectDescriptorBox : FullBox
 {
 	public const string TYPE = "iods";
 	public override string DisplayName { get { return "AppleInitialObjectDescriptorBox"; } }
@@ -39985,7 +39985,7 @@ aligned(8) class ThreeGPPTitleBox() extends Box('titl') {
 	string value;
 } 
 */
-public class ThreeGPPTitleBox : Box
+public partial class ThreeGPPTitleBox : Box
 {
 	public const string TYPE = "titl";
 	public override string DisplayName { get { return "ThreeGPPTitleBox"; } }
@@ -40042,7 +40042,7 @@ aligned(8) class ThreeGPPAuthorBox() extends Box('auth') {
 	string value;
 } 
 */
-public class ThreeGPPAuthorBox : Box
+public partial class ThreeGPPAuthorBox : Box
 {
 	public const string TYPE = "auth";
 	public override string DisplayName { get { return "ThreeGPPAuthorBox"; } }
@@ -40116,7 +40116,7 @@ aligned(8) class TextMediaBox() extends Box('text') {
  string name;
  } 
 */
-public class TextMediaBox : Box
+public partial class TextMediaBox : Box
 {
 	public const string TYPE = "text";
 	public override string DisplayName { get { return "TextMediaBox"; } }
@@ -40273,7 +40273,7 @@ aligned(8) class TextGmhdMediaBox() extends Box('text') {
  unsigned int(8) textData[36];
  } 
 */
-public class TextGmhdMediaBox : Box
+public partial class TextGmhdMediaBox : Box
 {
 	public const string TYPE = "text";
 	public override string DisplayName { get { return "TextGmhdMediaBox"; } }
@@ -40317,7 +40317,7 @@ aligned(8) class WindowsMediaXtraBox() extends Box('Xtra') {
  }
  
 */
-public class WindowsMediaXtraBox : Box
+public partial class WindowsMediaXtraBox : Box
 {
 	public const string TYPE = "Xtra";
 	public override string DisplayName { get { return "WindowsMediaXtraBox"; } }
@@ -40365,7 +40365,7 @@ aligned(8) class XtraTag() {
  }
  
 */
-public class XtraTag : IMp4Serializable
+public partial class XtraTag : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -40434,7 +40434,7 @@ aligned(8) class XtraValue() {
  unsigned int(8) value[length-6];
  }
 */
-public class XtraValue : IMp4Serializable
+public partial class XtraValue : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -40489,7 +40489,7 @@ aligned(8) class AC3SpecificBox() extends Box('dac3') {
  bit(8) data[];
  } 
 */
-public class AC3SpecificBox : Box
+public partial class AC3SpecificBox : Box
 {
 	public const string TYPE = "dac3";
 	public override string DisplayName { get { return "AC3SpecificBox"; } }
@@ -40534,7 +40534,7 @@ unsigned int(5)[3] language;
 	string value;
 }
 */
-public class ThreeGPPDescriptionBox : Box
+public partial class ThreeGPPDescriptionBox : Box
 {
 	public const string TYPE = "dscp";
 	public override string DisplayName { get { return "ThreeGPPDescriptionBox"; } }
@@ -40589,7 +40589,7 @@ aligned(8) class GenericMediaHeaderAtom() extends Box('gmhd') {
  Box boxes[];
  } 
 */
-public class GenericMediaHeaderAtom : Box
+public partial class GenericMediaHeaderAtom : Box
 {
 	public const string TYPE = "gmhd";
 	public override string DisplayName { get { return "GenericMediaHeaderAtom"; } }
@@ -40635,7 +40635,7 @@ unsigned int(5)[3] language;
 	string value;
 }
 */
-public class ThreeGPPKeywordsBox : Box
+public partial class ThreeGPPKeywordsBox : Box
 {
 	public const string TYPE = "kywd";
 	public override string DisplayName { get { return "ThreeGPPKeywordsBox"; } }
@@ -40690,7 +40690,7 @@ aligned(8) class AppleMediaTypeBox() extends Box('stik') {
  Box boxes[];
  } 
 */
-public class AppleMediaTypeBox : Box
+public partial class AppleMediaTypeBox : Box
 {
 	public const string TYPE = "stik";
 	public override string DisplayName { get { return "AppleMediaTypeBox"; } }
@@ -40734,7 +40734,7 @@ aligned(8) class AppleRatingBox() extends Box('rtng') {
  Box boxes[];
  } 
 */
-public class AppleRatingBox : Box
+public partial class AppleRatingBox : Box
 {
 	public const string TYPE = "rtng";
 	public override string DisplayName { get { return "AppleRatingBox"; } }
@@ -40778,7 +40778,7 @@ aligned(8) class ApplePlayGapBox() extends Box('pgap') {
  Box boxes[];
  } 
 */
-public class ApplePlayGapBox : Box
+public partial class ApplePlayGapBox : Box
 {
 	public const string TYPE = "pgap";
 	public override string DisplayName { get { return "ApplePlayGapBox"; } }
@@ -40822,7 +40822,7 @@ aligned(8) class AppleStoreCatalogIDBox() extends Box('cnID') {
  Box boxes[];
  } 
 */
-public class AppleStoreCatalogIDBox : Box
+public partial class AppleStoreCatalogIDBox : Box
 {
 	public const string TYPE = "cnID";
 	public override string DisplayName { get { return "AppleStoreCatalogIDBox"; } }
@@ -40866,7 +40866,7 @@ aligned(8) class TimeCodeBox() extends Box('tmcd') {
  bit(8) data[];
  } 
 */
-public class TimeCodeBox : Box
+public partial class TimeCodeBox : Box
 {
 	public const string TYPE = "tmcd";
 	public override string DisplayName { get { return "TimeCodeBox"; } }
@@ -40909,7 +40909,7 @@ aligned(8) class AppleBeatsPerMinuteBox() extends Box('tmpo') {
  Box boxes[];
  } 
 */
-public class AppleBeatsPerMinuteBox : Box
+public partial class AppleBeatsPerMinuteBox : Box
 {
 	public const string TYPE = "tmpo";
 	public override string DisplayName { get { return "AppleBeatsPerMinuteBox"; } }
@@ -40953,7 +40953,7 @@ aligned(8) class AppleTVEpisodeBox() extends Box('tves') {
  Box boxes[];
  } 
 */
-public class AppleTVEpisodeBox : Box
+public partial class AppleTVEpisodeBox : Box
 {
 	public const string TYPE = "tves";
 	public override string DisplayName { get { return "AppleTVEpisodeBox"; } }
@@ -40997,7 +40997,7 @@ aligned(8) class AppleTVSeasonBox() extends Box('tvsn') {
  Box boxes[];
  } 
 */
-public class AppleTVSeasonBox : Box
+public partial class AppleTVSeasonBox : Box
 {
 	public const string TYPE = "tvsn";
 	public override string DisplayName { get { return "AppleTVSeasonBox"; } }
@@ -41041,7 +41041,7 @@ aligned(8) class HdvdBox() extends Box('hdvd') {
  Box boxes[];
  } 
 */
-public class HdvdBox : Box
+public partial class HdvdBox : Box
 {
 	public const string TYPE = "hdvd";
 	public override string DisplayName { get { return "HdvdBox"; } }
@@ -41085,7 +41085,7 @@ aligned(8) class SyncBox() extends Box('sync') {
  unsigned int(32) trackId;
  } 
 */
-public class SyncBox : Box
+public partial class SyncBox : Box
 {
 	public const string TYPE = "sync";
 	public override string DisplayName { get { return "SyncBox"; } }
@@ -41128,7 +41128,7 @@ aligned(8) class DiskNumberBox() extends Box('disk') {
  Box boxes[];
  } 
 */
-public class DiskNumberBox : Box
+public partial class DiskNumberBox : Box
 {
 	public const string TYPE = "disk";
 	public override string DisplayName { get { return "DiskNumberBox"; } }
@@ -41172,7 +41172,7 @@ aligned(8) class HintBox() extends Box('hint') {
  unsigned int(32) trackId;
  } 
 */
-public class HintBox : Box
+public partial class HintBox : Box
 {
 	public const string TYPE = "hint";
 	public override string DisplayName { get { return "HintBox"; } }
@@ -41215,7 +41215,7 @@ aligned(8) class FreeSpaceBox() extends Box('wide') {
  bit(8) data[];
  } 
 */
-public class FreeSpaceBoxwideDup : Box
+public partial class FreeSpaceBoxwideDup : Box
 {
 	public const string TYPE = "wide";
 	public override string DisplayName { get { return "FreeSpaceBoxwideDup"; } }
@@ -41259,7 +41259,7 @@ aligned(8) class FielBox() extends Box('fiel') {
  unsigned int(8) order;
  } 
 */
-public class FielBox : Box
+public partial class FielBox : Box
 {
 	public const string TYPE = "fiel";
 	public override string DisplayName { get { return "FielBox"; } }
@@ -41308,7 +41308,7 @@ aligned(8) class Amf0Box() extends Box('amf0') {
  unsigned int(32) unknown1; unsigned int(32) unknown2;
  } 
 */
-public class Amf0Box : Box
+public partial class Amf0Box : Box
 {
 	public const string TYPE = "amf0";
 	public override string DisplayName { get { return "Amf0Box"; } }
@@ -41357,7 +41357,7 @@ aligned(8) class MpodBox() extends Box('mpod') {
  unsigned int(32) unknown1; unsigned int(32) unknown2;
  } 
 */
-public class MpodBox : Box
+public partial class MpodBox : Box
 {
 	public const string TYPE = "mpod";
 	public override string DisplayName { get { return "MpodBox"; } }
@@ -41406,7 +41406,7 @@ aligned(8) class GoogleStartTimeBox() extends Box('gsst') {
  bit(8) data[];
  } 
 */
-public class GoogleStartTimeBox : Box
+public partial class GoogleStartTimeBox : Box
 {
 	public const string TYPE = "gsst";
 	public override string DisplayName { get { return "GoogleStartTimeBox"; } }
@@ -41449,7 +41449,7 @@ aligned(8) class GoogleSourceDataBox() extends Box('gssd') {
  Box boxes[];
  } 
 */
-public class GoogleSourceDataBox : Box
+public partial class GoogleSourceDataBox : Box
 {
 	public const string TYPE = "gssd";
 	public override string DisplayName { get { return "GoogleSourceDataBox"; } }
@@ -41493,7 +41493,7 @@ aligned(8) class GoogleTrackDurationBox() extends Box('gstd') {
  bit(8) data[];
  } 
 */
-public class GoogleTrackDurationBox : Box
+public partial class GoogleTrackDurationBox : Box
 {
 	public const string TYPE = "gstd";
 	public override string DisplayName { get { return "GoogleTrackDurationBox"; } }
@@ -41536,7 +41536,7 @@ aligned(8) class TrackNumberBox() extends Box('trkn') {
  Box boxes[]; 
  } 
 */
-public class TrackNumberBox : Box
+public partial class TrackNumberBox : Box
 {
 	public const string TYPE = "trkn";
 	public override string DisplayName { get { return "TrackNumberBox"; } }
@@ -41580,7 +41580,7 @@ aligned(8) class ZeroBox() extends Box('0000') {
  bit(8) data[];
  } 
 */
-public class ZeroBox : Box
+public partial class ZeroBox : Box
 {
 	public const string TYPE = "0000";
 	public override string DisplayName { get { return "ZeroBox"; } }
@@ -41623,7 +41623,7 @@ aligned(8) class DpndBox() extends Box('dpnd') {
  bit(8) data[];
  } 
 */
-public class DpndBox : Box
+public partial class DpndBox : Box
 {
 	public const string TYPE = "dpnd";
 	public override string DisplayName { get { return "DpndBox"; } }
@@ -41666,7 +41666,7 @@ aligned(8) class GooglePingUrlBox() extends Box('gspu') {
  Box boxes[];
  } 
 */
-public class GooglePingUrlBox : Box
+public partial class GooglePingUrlBox : Box
 {
 	public const string TYPE = "gspu";
 	public override string DisplayName { get { return "GooglePingUrlBox"; } }
@@ -41710,7 +41710,7 @@ aligned(8) class GooglePingMessageBox() extends Box('gspm') {
  Box boxes[];
  } 
 */
-public class GooglePingMessageBox : Box
+public partial class GooglePingMessageBox : Box
 {
 	public const string TYPE = "gspm";
 	public override string DisplayName { get { return "GooglePingMessageBox"; } }
@@ -41754,7 +41754,7 @@ aligned(8) class GooglesHostHeaderBox() extends Box('gshh') {
  Box boxes[];
  } 
 */
-public class GooglesHostHeaderBox : Box
+public partial class GooglesHostHeaderBox : Box
 {
 	public const string TYPE = "gshh";
 	public override string DisplayName { get { return "GooglesHostHeaderBox"; } }
@@ -41798,7 +41798,7 @@ aligned(8) class TVEpisodeIDBox() extends Box('tven') {
  Box boxes[];
  } 
 */
-public class TVEpisodeIDBox : Box
+public partial class TVEpisodeIDBox : Box
 {
 	public const string TYPE = "tven";
 	public override string DisplayName { get { return "TVEpisodeIDBox"; } }
@@ -41842,7 +41842,7 @@ aligned(8) class AppleCoverArtBox() extends Box('covr') {
  Box boxes[];
  } 
 */
-public class AppleCoverArtBox : Box
+public partial class AppleCoverArtBox : Box
 {
 	public const string TYPE = "covr";
 	public override string DisplayName { get { return "AppleCoverArtBox"; } }
@@ -41886,7 +41886,7 @@ aligned(8) class LoadBox() extends Box('load') {
  bit(8) data[];
  } 
 */
-public class LoadBox : Box
+public partial class LoadBox : Box
 {
 	public const string TYPE = "load";
 	public override string DisplayName { get { return "LoadBox"; } }
@@ -41929,7 +41929,7 @@ aligned(8) class AppleHintVersionBox() extends Box('hinv') {
  string version;
  } 
 */
-public class AppleHintVersionBox : Box
+public partial class AppleHintVersionBox : Box
 {
 	public const string TYPE = "hinv";
 	public override string DisplayName { get { return "AppleHintVersionBox"; } }
@@ -41972,7 +41972,7 @@ aligned(8) class AppleTrackApertureBox() extends Box('tapt') {
  Box boxes[];
  } 
 */
-public class AppleTrackApertureBox : Box
+public partial class AppleTrackApertureBox : Box
 {
 	public const string TYPE = "tapt";
 	public override string DisplayName { get { return "AppleTrackApertureBox"; } }
@@ -42016,7 +42016,7 @@ aligned(8) class AppleCleanApertureDimensionsBox() extends Box('clef') {
  bit(8) data[];
  } 
 */
-public class AppleCleanApertureDimensionsBox : Box
+public partial class AppleCleanApertureDimensionsBox : Box
 {
 	public const string TYPE = "clef";
 	public override string DisplayName { get { return "AppleCleanApertureDimensionsBox"; } }
@@ -42059,7 +42059,7 @@ aligned(8) class AppleEncodedPixelsDimensionsBox() extends Box('enof') {
  bit(8) data[];
  } 
 */
-public class AppleEncodedPixelsDimensionsBox : Box
+public partial class AppleEncodedPixelsDimensionsBox : Box
 {
 	public const string TYPE = "enof";
 	public override string DisplayName { get { return "AppleEncodedPixelsDimensionsBox"; } }
@@ -42102,7 +42102,7 @@ aligned(8) class AppleProductionApertureDimensionsBox() extends Box('prof') {
  bit(8) data[];
  } 
 */
-public class AppleProductionApertureDimensionsBox : Box
+public partial class AppleProductionApertureDimensionsBox : Box
 {
 	public const string TYPE = "prof";
 	public override string DisplayName { get { return "AppleProductionApertureDimensionsBox"; } }
@@ -42145,7 +42145,7 @@ aligned(8) class AppleApertureModeBox() extends Box('apmd') {
  string mode;
  } 
 */
-public class AppleApertureModeBox : Box
+public partial class AppleApertureModeBox : Box
 {
 	public const string TYPE = "apmd";
 	public override string DisplayName { get { return "AppleApertureModeBox"; } }
@@ -42188,7 +42188,7 @@ aligned(8) class AppleWaveBox() extends Box('wave') {
  Box boxes[];
  } 
 */
-public class AppleWaveBox : Box
+public partial class AppleWaveBox : Box
 {
 	public const string TYPE = "wave";
 	public override string DisplayName { get { return "AppleWaveBox"; } }
@@ -42232,7 +42232,7 @@ aligned(8) class AppleEndiannessBox() extends Box('enda') {
  bit(8) data[];
  } 
 */
-public class AppleEndiannessBox : Box
+public partial class AppleEndiannessBox : Box
 {
 	public const string TYPE = "enda";
 	public override string DisplayName { get { return "AppleEndiannessBox"; } }
@@ -42275,7 +42275,7 @@ aligned(8) class AlisBox() extends Box('alis') {
  bit(8) data[];
  } 
 */
-public class AlisBox : Box
+public partial class AlisBox : Box
 {
 	public const string TYPE = "alis";
 	public override string DisplayName { get { return "AlisBox"; } }
@@ -42318,7 +42318,7 @@ aligned(8) class ChanBox() extends Box('chan') {
  bit(8) data[];
  } 
 */
-public class ChanBox : Box
+public partial class ChanBox : Box
 {
 	public const string TYPE = "chan";
 	public override string DisplayName { get { return "ChanBox"; } }
@@ -42361,7 +42361,7 @@ aligned(8) class MdtaBox() extends Box('mdta') {
  bit(8) data[];
  } 
 */
-public class MdtaBox : Box
+public partial class MdtaBox : Box
 {
 	public const string TYPE = "mdta";
 	public override string DisplayName { get { return "MdtaBox"; } }
@@ -42404,7 +42404,7 @@ aligned(8) class ChapBox() extends Box('chap') {
  bit(8) data[];
  } 
 */
-public class ChapBox : Box
+public partial class ChapBox : Box
 {
 	public const string TYPE = "chap";
 	public override string DisplayName { get { return "ChapBox"; } }
@@ -42449,7 +42449,7 @@ aligned(8) class AdobeChapterBox() extends FullBox('chpl', version = 0, 0) {
  }
  
 */
-public class AdobeChapterBox : FullBox
+public partial class AdobeChapterBox : FullBox
 {
 	public const string TYPE = "chpl";
 	public override string DisplayName { get { return "AdobeChapterBox"; } }
@@ -42505,7 +42505,7 @@ aligned(8) class AdobeChapterRecord() {
  unsigned int(8) count; char title[count];
  }
 */
-public class AdobeChapterRecord : IMp4Serializable
+public partial class AdobeChapterRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -42560,7 +42560,7 @@ aligned(8) class AppleKeywordBox() extends Box('keyw') {
  Box boxes[];
  } 
 */
-public class AppleKeywordBox : Box
+public partial class AppleKeywordBox : Box
 {
 	public const string TYPE = "keyw";
 	public override string DisplayName { get { return "AppleKeywordBox"; } }
@@ -42604,7 +42604,7 @@ aligned(8) class ClfnBox() extends Box('clfn') {
  bit(8) data[];
  } 
 */
-public class ClfnBox : Box
+public partial class ClfnBox : Box
 {
 	public const string TYPE = "clfn";
 	public override string DisplayName { get { return "ClfnBox"; } }
@@ -42647,7 +42647,7 @@ aligned(8) class ThmbBox() extends Box('thmb') {
  bit(8) data[];
  } 
 */
-public class ThmbBox : Box
+public partial class ThmbBox : Box
 {
 	public const string TYPE = "thmb";
 	public override string DisplayName { get { return "ThmbBox"; } }
@@ -42690,7 +42690,7 @@ aligned(8) class FallBox() extends Box('fall') {
  bit(8) data[];
  } 
 */
-public class FallBox : Box
+public partial class FallBox : Box
 {
 	public const string TYPE = "fall";
 	public override string DisplayName { get { return "FallBox"; } }
@@ -42733,7 +42733,7 @@ aligned(8) class TVShowBox() extends Box('tvsh') {
  Box boxes[];
  } 
 */
-public class TVShowBox : Box
+public partial class TVShowBox : Box
 {
 	public const string TYPE = "tvsh";
 	public override string DisplayName { get { return "TVShowBox"; } }
@@ -42777,7 +42777,7 @@ aligned(8) class AppleEncoderNameBox() extends Box('©enc') {
  Box boxes[];
  } 
 */
-public class AppleEncoderNameBox : Box
+public partial class AppleEncoderNameBox : Box
 {
 	public const string TYPE = "©enc";
 	public override string DisplayName { get { return "AppleEncoderNameBox"; } }
@@ -42836,7 +42836,7 @@ aligned(8) class DTSSpecificBox() extends Box('ddts') {
  bit(5) reserved;
  } 
 */
-public class DTSSpecificBox : Box
+public partial class DTSSpecificBox : Box
 {
 	public const string TYPE = "ddts";
 	public override string DisplayName { get { return "DTSSpecificBox"; } }
@@ -42971,7 +42971,7 @@ unsigned int(32) dataType;
  bit(8) data[];
  } 
 */
-public class DataBox : Box
+public partial class DataBox : Box
 {
 	public const string TYPE = "data";
 	public override string DisplayName { get { return "DataBox"; } }
@@ -43026,7 +43026,7 @@ aligned(8) class NikonExifBox() extends Box('NCTG') {
  bit(8) data[];
  } 
 */
-public class NikonExifBox : Box
+public partial class NikonExifBox : Box
 {
 	public const string TYPE = "NCTG";
 	public override string DisplayName { get { return "NikonExifBox"; } }
@@ -43069,7 +43069,7 @@ aligned(8) class CustomBox() extends Box('----') {
  bit(8) data[];
  } 
 */
-public class CustomBox : Box
+public partial class CustomBox : Box
 {
 	public const string TYPE = "----";
 	public override string DisplayName { get { return "CustomBox"; } }
@@ -43116,7 +43116,7 @@ aligned(8) class ApplePartialSyncSamplesBox() extends FullBox('stps', version = 
 	}
 }
 */
-public class ApplePartialSyncSamplesBox : FullBox
+public partial class ApplePartialSyncSamplesBox : FullBox
 {
 	public const string TYPE = "stps";
 	public override string DisplayName { get { return "ApplePartialSyncSamplesBox"; } }
@@ -43183,7 +43183,7 @@ aligned(8) class SampleScaleBox() extends FullBox('stsl', version = 0, 0) {
 	}
 
 */
-public class SampleScaleBox : FullBox
+public partial class SampleScaleBox : FullBox
 {
 	public const string TYPE = "stsl";
 	public override string DisplayName { get { return "SampleScaleBox"; } }
@@ -43256,7 +43256,7 @@ unsigned int(16) odid; unsigned int(8) odProfileLevel;
  }
  
 */
-public class IOD_Descriptor : BaseDescriptor
+public partial class IOD_Descriptor : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.MP4_IOD_Tag;
 	public override string DisplayName { get { return "IOD_Descriptor"; } }
@@ -43337,7 +43337,7 @@ aligned(8) class IodsSample() {
 	unsigned int(32) trackId;
  } 
 */
-public class IodsSample : IMp4Serializable
+public partial class IodsSample : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -43399,7 +43399,7 @@ class IPMP_Descriptor() extends BaseDescriptor : bit(8) tag=IPMP_DescrTag {
  }
  }
 */
-public class IPMP_Descriptor : BaseDescriptor
+public partial class IPMP_Descriptor : BaseDescriptor
 {
 	public const byte TYPE = DescriptorTags.IPMP_DescrTag;
 	public override string DisplayName { get { return "IPMP_Descriptor"; } }
@@ -43485,7 +43485,7 @@ aligned(8) class IPMPControlBox() extends FullBox('ipmc') {
  unsigned int(8) count; Descriptor descriptor[count];
  }
 */
-public class IPMPControlBox : FullBox
+public partial class IPMPControlBox : FullBox
 {
 	public const string TYPE = "ipmc";
 	public override string DisplayName { get { return "IPMPControlBox"; } }
@@ -43540,7 +43540,7 @@ aligned(8) class IPMPInfoBox() extends FullBox('imif') {
  Descriptor descriptor[0 .. 255];
  }
 */
-public class IPMPInfoBox : FullBox
+public partial class IPMPInfoBox : FullBox
 {
 	public const string TYPE = "imif";
 	public override string DisplayName { get { return "IPMPInfoBox"; } }
@@ -43583,7 +43583,7 @@ aligned(8) class GenreBox() extends FullBox('gnre') {
  Box boxes[]; 
  }
 */
-public class GenreBox : FullBox
+public partial class GenreBox : FullBox
 {
 	public const string TYPE = "gnre";
 	public override string DisplayName { get { return "GenreBox"; } }
@@ -43627,7 +43627,7 @@ aligned(8) class FairPlayUserIDBox() extends Box('user') {
  bit(8) data[]; 
  }
 */
-public class FairPlayUserIDBox : Box
+public partial class FairPlayUserIDBox : Box
 {
 	public const string TYPE = "user";
 	public override string DisplayName { get { return "FairPlayUserIDBox"; } }
@@ -43670,7 +43670,7 @@ aligned(8) class FairPlayUserNameBox() extends Box('name') {
  bit(8) data[]; 
  }
 */
-public class FairPlayUserNameBox : Box
+public partial class FairPlayUserNameBox : Box
 {
 	public const string TYPE = "name";
 	public override string DisplayName { get { return "FairPlayUserNameBox"; } }
@@ -43713,7 +43713,7 @@ aligned(8) class FairPlayUserKeyBox() extends Box('key ') {
  bit(8) data[]; 
  }
 */
-public class FairPlayUserKeyBox : Box
+public partial class FairPlayUserKeyBox : Box
 {
 	public const string TYPE = "key ";
 	public override string DisplayName { get { return "FairPlayUserKeyBox"; } }
@@ -43756,7 +43756,7 @@ aligned(8) class FairPlayIvBox() extends Box('iviv') {
  bit(8) data[]; 
  }
 */
-public class FairPlayIvBox : Box
+public partial class FairPlayIvBox : Box
 {
 	public const string TYPE = "iviv";
 	public override string DisplayName { get { return "FairPlayIvBox"; } }
@@ -43799,7 +43799,7 @@ aligned(8) class FairPlayPrivateKeyBox() extends Box('priv') {
  bit(8) data[]; 
  }
 */
-public class FairPlayPrivateKeyBox : Box
+public partial class FairPlayPrivateKeyBox : Box
 {
 	public const string TYPE = "priv";
 	public override string DisplayName { get { return "FairPlayPrivateKeyBox"; } }
@@ -43844,7 +43844,7 @@ aligned(8) class MetaBoxRelationBox() extends FullBox('mere') {
  bit(8) metaboxRelation; 
  }
 */
-public class MetaBoxRelationBox : FullBox
+public partial class MetaBoxRelationBox : FullBox
 {
 	public const string TYPE = "mere";
 	public override string DisplayName { get { return "MetaBoxRelationBox"; } }
@@ -43899,7 +43899,7 @@ aligned(8) class ID3TagBox() extends FullBox('id32') {
  bit(8) data[]; 
  }
 */
-public class ID3TagBox : FullBox
+public partial class ID3TagBox : FullBox
 {
 	public const string TYPE = "id32";
 	public override string DisplayName { get { return "ID3TagBox"; } }
@@ -43942,7 +43942,7 @@ aligned(8) class ITunesMetadataMeanBox() extends FullBox('mean') {
  string domain; 
  }
 */
-public class ITunesMetadataMeanBox : FullBox
+public partial class ITunesMetadataMeanBox : FullBox
 {
 	public const string TYPE = "mean";
 	public override string DisplayName { get { return "ITunesMetadataMeanBox"; } }
@@ -43985,7 +43985,7 @@ aligned(8) class AlbumArtistSortBox() extends Box('soaa') {
  Box boxes[]; 
  }
 */
-public class AlbumArtistSortBox : Box
+public partial class AlbumArtistSortBox : Box
 {
 	public const string TYPE = "soaa";
 	public override string DisplayName { get { return "AlbumArtistSortBox"; } }
@@ -44029,7 +44029,7 @@ aligned(8) class AlbumSortBox() extends Box('soal') {
  Box boxes[]; 
  }
 */
-public class AlbumSortBox : Box
+public partial class AlbumSortBox : Box
 {
 	public const string TYPE = "soal";
 	public override string DisplayName { get { return "AlbumSortBox"; } }
@@ -44073,7 +44073,7 @@ aligned(8) class ArtistSortBox() extends Box('soar') {
  Box boxes[]; 
  }
 */
-public class ArtistSortBox : Box
+public partial class ArtistSortBox : Box
 {
 	public const string TYPE = "soar";
 	public override string DisplayName { get { return "ArtistSortBox"; } }
@@ -44117,7 +44117,7 @@ aligned(8) class CategoryBox() extends Box('catg') {
  Box boxes[]; 
  }
 */
-public class CategoryBox : Box
+public partial class CategoryBox : Box
 {
 	public const string TYPE = "catg";
 	public override string DisplayName { get { return "CategoryBox"; } }
@@ -44161,7 +44161,7 @@ aligned(8) class ComposerSortBox() extends Box('soco') {
  Box boxes[]; 
  }
 */
-public class ComposerSortBox : Box
+public partial class ComposerSortBox : Box
 {
 	public const string TYPE = "soco";
 	public override string DisplayName { get { return "ComposerSortBox"; } }
@@ -44205,7 +44205,7 @@ aligned(8) class EpisodeGlobalUniqueIdBox() extends Box('egid') {
  Box boxes[]; 
  }
 */
-public class EpisodeGlobalUniqueIdBox : Box
+public partial class EpisodeGlobalUniqueIdBox : Box
 {
 	public const string TYPE = "egid";
 	public override string DisplayName { get { return "EpisodeGlobalUniqueIdBox"; } }
@@ -44249,7 +44249,7 @@ aligned(8) class ITunesPurchaseAccountBox() extends Box('apID') {
  Box boxes[]; 
  }
 */
-public class ITunesPurchaseAccountBox : Box
+public partial class ITunesPurchaseAccountBox : Box
 {
 	public const string TYPE = "apID";
 	public override string DisplayName { get { return "ITunesPurchaseAccountBox"; } }
@@ -44293,7 +44293,7 @@ aligned(8) class ITunesAccountTypeBox() extends Box('akID') {
  Box boxes[]; 
  }
 */
-public class ITunesAccountTypeBox : Box
+public partial class ITunesAccountTypeBox : Box
 {
 	public const string TYPE = "akID";
 	public override string DisplayName { get { return "ITunesAccountTypeBox"; } }
@@ -44337,7 +44337,7 @@ aligned(8) class ITunesCountryCodeBox() extends Box('sfID') {
  Box boxes[]; 
  }
 */
-public class ITunesCountryCodeBox : Box
+public partial class ITunesCountryCodeBox : Box
 {
 	public const string TYPE = "sfID";
 	public override string DisplayName { get { return "ITunesCountryCodeBox"; } }
@@ -44381,7 +44381,7 @@ aligned(8) class CmIDBox() extends Box('cmID') {
 	 Box boxes[];
  } 
 */
-public class CmIDBox : Box
+public partial class CmIDBox : Box
 {
 	public const string TYPE = "cmID";
 	public override string DisplayName { get { return "CmIDBox"; } }
@@ -44425,7 +44425,7 @@ aligned(8) class PlIDBox() extends Box('plID') {
 	 Box boxes[];
  } 
 */
-public class PlIDBox : Box
+public partial class PlIDBox : Box
 {
 	public const string TYPE = "plID";
 	public override string DisplayName { get { return "PlIDBox"; } }
@@ -44469,7 +44469,7 @@ aligned(8) class PodcastBox() extends Box('pcst') {
  Box boxes[]; 
  }
 */
-public class PodcastBox : Box
+public partial class PodcastBox : Box
 {
 	public const string TYPE = "pcst";
 	public override string DisplayName { get { return "PodcastBox"; } }
@@ -44513,7 +44513,7 @@ aligned(8) class PodcastUrlBox() extends Box('purl') {
  Box boxes[]; 
  }
 */
-public class PodcastUrlBox : Box
+public partial class PodcastUrlBox : Box
 {
 	public const string TYPE = "purl";
 	public override string DisplayName { get { return "PodcastUrlBox"; } }
@@ -44557,7 +44557,7 @@ aligned(8) class PurchaseDateBox() extends Box('purd') {
  Box boxes[]; 
  }
 */
-public class PurchaseDateBox : Box
+public partial class PurchaseDateBox : Box
 {
 	public const string TYPE = "purd";
 	public override string DisplayName { get { return "PurchaseDateBox"; } }
@@ -44601,7 +44601,7 @@ aligned(8) class TrackSortBox() extends Box('sonm') {
  Box boxes[]; 
  }
 */
-public class TrackSortBox : Box
+public partial class TrackSortBox : Box
 {
 	public const string TYPE = "sonm";
 	public override string DisplayName { get { return "TrackSortBox"; } }
@@ -44645,7 +44645,7 @@ aligned(8) class TVNetworkNameBox() extends Box('tvnn') {
  Box boxes[]; 
  }
 */
-public class TVNetworkNameBox : Box
+public partial class TVNetworkNameBox : Box
 {
 	public const string TYPE = "tvnn";
 	public override string DisplayName { get { return "TVNetworkNameBox"; } }
@@ -44689,7 +44689,7 @@ aligned(8) class TVShowSortBox() extends Box('sosn') {
  Box boxes[]; 
  }
 */
-public class TVShowSortBox : Box
+public partial class TVShowSortBox : Box
 {
 	public const string TYPE = "sosn";
 	public override string DisplayName { get { return "TVShowSortBox"; } }
@@ -44736,7 +44736,7 @@ aligned(8) class ThreeGPPAlbumBox() extends Box('albm') {
  bit(8) trackNumber; // optional
 } 
 */
-public class ThreeGPPAlbumBox : Box
+public partial class ThreeGPPAlbumBox : Box
 {
 	public const string TYPE = "albm";
 	public override string DisplayName { get { return "ThreeGPPAlbumBox"; } }
@@ -44799,7 +44799,7 @@ aligned(8) class ThreeGPPClassificationBox() extends Box('clsf') {
 	string value; 
 } 
 */
-public class ThreeGPPClassificationBox : Box
+public partial class ThreeGPPClassificationBox : Box
 {
 	public const string TYPE = "clsf";
 	public override string DisplayName { get { return "ThreeGPPClassificationBox"; } }
@@ -44861,7 +44861,7 @@ aligned(8) class ThreeGPPLocationInformationBox() extends Box('loci') {
  string additionalNotes;
  }
 */
-public class ThreeGPPLocationInformationBox : Box
+public partial class ThreeGPPLocationInformationBox : Box
 {
 	public const string TYPE = "loci";
 	public override string DisplayName { get { return "ThreeGPPLocationInformationBox"; } }
@@ -44960,7 +44960,7 @@ aligned(8) class ThreeGPPPerformerBox() extends Box('perf') {
 	string value; 
 } 
 */
-public class ThreeGPPPerformerBox : Box
+public partial class ThreeGPPPerformerBox : Box
 {
 	public const string TYPE = "perf";
 	public override string DisplayName { get { return "ThreeGPPPerformerBox"; } }
@@ -45018,7 +45018,7 @@ aligned(8) class ThreeGPPRecordingYearBox() extends Box('yrrc') {
  unsigned int(16) year;
  } 
 */
-public class ThreeGPPRecordingYearBox : Box
+public partial class ThreeGPPRecordingYearBox : Box
 {
 	public const string TYPE = "yrrc";
 	public override string DisplayName { get { return "ThreeGPPRecordingYearBox"; } }
@@ -45082,7 +45082,7 @@ aligned(8) class OMAAccessUnitFormatBox() extends FullBox('odaf') {
  unsigned int(8) initialVectorLength;
  } 
 */
-public class OMAAccessUnitFormatBox : FullBox
+public partial class OMAAccessUnitFormatBox : FullBox
 {
 	public const string TYPE = "odaf";
 	public override string DisplayName { get { return "OMAAccessUnitFormatBox"; } }
@@ -45151,7 +45151,7 @@ aligned(8) class OMACommonHeadersBox() extends FullBox('ohdr') {
  unsigned int(8) textualHeaders[textualHeadersLength];
  } 
 */
-public class OMACommonHeadersBox : FullBox
+public partial class OMACommonHeadersBox : FullBox
 {
 	public const string TYPE = "ohdr";
 	public override string DisplayName { get { return "OMACommonHeadersBox"; } }
@@ -45243,7 +45243,7 @@ aligned(8) class OMAContentIDBox() extends FullBox('ccid') {
  unsigned int(8) contentID[contentIDLength];
  } 
 */
-public class OMAContentIDBox : FullBox
+public partial class OMAContentIDBox : FullBox
 {
 	public const string TYPE = "ccid";
 	public override string DisplayName { get { return "OMAContentIDBox"; } }
@@ -45293,7 +45293,7 @@ aligned(8) class OMAContentObjectBox() extends FullBox('odda') {
  unsigned int(8) data[count];
  } 
 */
-public class OMAContentObjectBox : FullBox
+public partial class OMAContentObjectBox : FullBox
 {
 	public const string TYPE = "odda";
 	public override string DisplayName { get { return "OMAContentObjectBox"; } }
@@ -45342,7 +45342,7 @@ aligned(8) class OMACoverURLBox() extends FullBox('cvru') {
 	 string content;
  } 
 */
-public class OMACoverURLBox : FullBox
+public partial class OMACoverURLBox : FullBox
 {
 	public const string TYPE = "cvru";
 	public override string DisplayName { get { return "OMACoverURLBox"; } }
@@ -45387,7 +45387,7 @@ aligned(8) class OMADiscreteMediaHeadersBox () extends FullBox('odhe') {
  Box boxes[]; 
  } 
 */
-public class OMADiscreteMediaHeadersBox : FullBox
+public partial class OMADiscreteMediaHeadersBox : FullBox
 {
 	public const string TYPE = "odhe";
 	public override string DisplayName { get { return "OMADiscreteMediaHeadersBox"; } }
@@ -45443,7 +45443,7 @@ aligned(8) class OMADrmContainerBox() extends FullBox('odrm') {
 	 Box boxes[]; 
  } 
 */
-public class OMADrmContainerBox : FullBox
+public partial class OMADrmContainerBox : FullBox
 {
 	public const string TYPE = "odrm";
 	public override string DisplayName { get { return "OMADrmContainerBox"; } }
@@ -45487,7 +45487,7 @@ aligned(8) class OMAIconURLBox() extends FullBox('icnu') {
 	 string content;
  } 
 */
-public class OMAIconURLBox : FullBox
+public partial class OMAIconURLBox : FullBox
 {
 	public const string TYPE = "icnu";
 	public override string DisplayName { get { return "OMAIconURLBox"; } }
@@ -45530,7 +45530,7 @@ aligned(8) class OMAInfoURLBox() extends FullBox('infu') {
 	 string content;
  } 
 */
-public class OMAInfoURLBox : FullBox
+public partial class OMAInfoURLBox : FullBox
 {
 	public const string TYPE = "infu";
 	public override string DisplayName { get { return "OMAInfoURLBox"; } }
@@ -45573,7 +45573,7 @@ aligned(8) class OMALyricsURLBox() extends FullBox('lrcu') {
 	 string content;
  } 
 */
-public class OMALyricsURLBox : FullBox
+public partial class OMALyricsURLBox : FullBox
 {
 	public const string TYPE = "lrcu";
 	public override string DisplayName { get { return "OMALyricsURLBox"; } }
@@ -45616,7 +45616,7 @@ aligned(8) class OMAMutableDRMBox() extends Box('mdri') {
 	 Box boxes[];
  } 
 */
-public class OMAMutableDRMBox : Box
+public partial class OMAMutableDRMBox : Box
 {
 	public const string TYPE = "mdri";
 	public override string DisplayName { get { return "OMAMutableDRMBox"; } }
@@ -45660,7 +45660,7 @@ aligned(8) class OMAKeyManagementBox() extends FullBox('odkm') {
 	 Box boxes[];
  } 
 */
-public class OMAKeyManagementBox : FullBox
+public partial class OMAKeyManagementBox : FullBox
 {
 	public const string TYPE = "odkm";
 	public override string DisplayName { get { return "OMAKeyManagementBox"; } }
@@ -45704,7 +45704,7 @@ aligned(8) class OMARightsObjectBox() extends FullBox('odrb') {
 	 unsigned int(8) data[];
  } 
 */
-public class OMARightsObjectBox : FullBox
+public partial class OMARightsObjectBox : FullBox
 {
 	public const string TYPE = "odrb";
 	public override string DisplayName { get { return "OMARightsObjectBox"; } }
@@ -45747,7 +45747,7 @@ aligned(8) class OMATransactionTrackingBox() extends FullBox('odtt') {
 	 unsigned int(8) transactionID[16];
  } 
 */
-public class OMATransactionTrackingBox : FullBox
+public partial class OMATransactionTrackingBox : FullBox
 {
 	public const string TYPE = "odtt";
 	public override string DisplayName { get { return "OMATransactionTrackingBox"; } }
@@ -45790,7 +45790,7 @@ aligned(8) class NeroMetadataTagsBox() extends Box('tags') {
 	 bit(8) data[];
  } 
 */
-public class NeroMetadataTagsBox : Box
+public partial class NeroMetadataTagsBox : Box
 {
 	public const string TYPE = "tags";
 	public override string DisplayName { get { return "NeroMetadataTagsBox"; } }
@@ -45833,7 +45833,7 @@ aligned(8) class AppleSelOBox() extends Box('SelO') {
 	 bit(8) data[];
  } 
 */
-public class AppleSelOBox : Box
+public partial class AppleSelOBox : Box
 {
 	public const string TYPE = "SelO";
 	public override string DisplayName { get { return "AppleSelOBox"; } }
@@ -45876,7 +45876,7 @@ aligned(8) class AppleWLOCBox() extends Box('WLOC') {
 	 bit(8) data[];
  } 
 */
-public class AppleWLOCBox : Box
+public partial class AppleWLOCBox : Box
 {
 	public const string TYPE = "WLOC";
 	public override string DisplayName { get { return "AppleWLOCBox"; } }
@@ -45919,7 +45919,7 @@ aligned(8) class AppleAllfBox() extends Box('Allf') {
 	 bit(8) data[];
  } 
 */
-public class AppleAllfBox : Box
+public partial class AppleAllfBox : Box
 {
 	public const string TYPE = "Allf";
 	public override string DisplayName { get { return "AppleAllfBox"; } }
@@ -45962,7 +45962,7 @@ aligned(8) class AppleLOOPBox() extends Box('LOOP') {
 	 bit(8) data[];
  } 
 */
-public class AppleLOOPBox : Box
+public partial class AppleLOOPBox : Box
 {
 	public const string TYPE = "LOOP";
 	public override string DisplayName { get { return "AppleLOOPBox"; } }
@@ -46005,7 +46005,7 @@ aligned(8) class ApplePtvBox() extends Box('ptv ') {
 	 bit(8) data[];
  } 
 */
-public class ApplePtvBox : Box
+public partial class ApplePtvBox : Box
 {
 	public const string TYPE = "ptv ";
 	public override string DisplayName { get { return "ApplePtvBox"; } }
@@ -46048,7 +46048,7 @@ aligned(8) class AppleArgBox() extends Box('©arg') {
 	 bit(8) data[];
  } 
 */
-public class AppleArgBox : Box
+public partial class AppleArgBox : Box
 {
 	public const string TYPE = "©arg";
 	public override string DisplayName { get { return "AppleArgBox"; } }
@@ -46091,7 +46091,7 @@ aligned(8) class AppleArkBox() extends Box('©ark') {
 	 bit(8) data[];
  } 
 */
-public class AppleArkBox : Box
+public partial class AppleArkBox : Box
 {
 	public const string TYPE = "©ark";
 	public override string DisplayName { get { return "AppleArkBox"; } }
@@ -46134,7 +46134,7 @@ aligned(8) class AppleCokBox() extends Box('©cok') {
 	 bit(8) data[];
  } 
 */
-public class AppleCokBox : Box
+public partial class AppleCokBox : Box
 {
 	public const string TYPE = "©cok";
 	public override string DisplayName { get { return "AppleCokBox"; } }
@@ -46177,7 +46177,7 @@ aligned(8) class AppleComBox() extends Box('©com') {
 	 bit(8) data[];
  } 
 */
-public class AppleComBox : Box
+public partial class AppleComBox : Box
 {
 	public const string TYPE = "©com";
 	public override string DisplayName { get { return "AppleComBox"; } }
@@ -46220,7 +46220,7 @@ aligned(8) class AppleDirBox() extends Box('©dir') {
 	 bit(8) data[];
  } 
 */
-public class AppleDirBox : Box
+public partial class AppleDirBox : Box
 {
 	public const string TYPE = "©dir";
 	public override string DisplayName { get { return "AppleDirBox"; } }
@@ -46263,7 +46263,7 @@ aligned(8) class AppleEd1Box() extends Box('©ed1') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd1Box : Box
+public partial class AppleEd1Box : Box
 {
 	public const string TYPE = "©ed1";
 	public override string DisplayName { get { return "AppleEd1Box"; } }
@@ -46306,7 +46306,7 @@ aligned(8) class AppleEd2Box() extends Box('©ed2') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd2Box : Box
+public partial class AppleEd2Box : Box
 {
 	public const string TYPE = "©ed2";
 	public override string DisplayName { get { return "AppleEd2Box"; } }
@@ -46349,7 +46349,7 @@ aligned(8) class AppleEd3Box() extends Box('©ed3') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd3Box : Box
+public partial class AppleEd3Box : Box
 {
 	public const string TYPE = "©ed3";
 	public override string DisplayName { get { return "AppleEd3Box"; } }
@@ -46392,7 +46392,7 @@ aligned(8) class AppleEd4Box() extends Box('©ed4') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd4Box : Box
+public partial class AppleEd4Box : Box
 {
 	public const string TYPE = "©ed4";
 	public override string DisplayName { get { return "AppleEd4Box"; } }
@@ -46435,7 +46435,7 @@ aligned(8) class AppleEd5Box() extends Box('©ed5') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd5Box : Box
+public partial class AppleEd5Box : Box
 {
 	public const string TYPE = "©ed5";
 	public override string DisplayName { get { return "AppleEd5Box"; } }
@@ -46478,7 +46478,7 @@ aligned(8) class AppleEd6Box() extends Box('©ed6') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd6Box : Box
+public partial class AppleEd6Box : Box
 {
 	public const string TYPE = "©ed6";
 	public override string DisplayName { get { return "AppleEd6Box"; } }
@@ -46521,7 +46521,7 @@ aligned(8) class AppleEd7Box() extends Box('©ed7') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd7Box : Box
+public partial class AppleEd7Box : Box
 {
 	public const string TYPE = "©ed7";
 	public override string DisplayName { get { return "AppleEd7Box"; } }
@@ -46564,7 +46564,7 @@ aligned(8) class AppleEd8Box() extends Box('©ed8') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd8Box : Box
+public partial class AppleEd8Box : Box
 {
 	public const string TYPE = "©ed8";
 	public override string DisplayName { get { return "AppleEd8Box"; } }
@@ -46607,7 +46607,7 @@ aligned(8) class AppleEd9Box() extends Box('©ed9') {
 	 bit(8) data[];
  } 
 */
-public class AppleEd9Box : Box
+public partial class AppleEd9Box : Box
 {
 	public const string TYPE = "©ed9";
 	public override string DisplayName { get { return "AppleEd9Box"; } }
@@ -46650,7 +46650,7 @@ aligned(8) class AppleFmtBox() extends Box('©fmt') {
 	 bit(8) data[];
  } 
 */
-public class AppleFmtBox : Box
+public partial class AppleFmtBox : Box
 {
 	public const string TYPE = "©fmt";
 	public override string DisplayName { get { return "AppleFmtBox"; } }
@@ -46693,7 +46693,7 @@ aligned(8) class AppleInfBox() extends Box('©inf') {
 	 bit(8) data[];
  } 
 */
-public class AppleInfBox : Box
+public partial class AppleInfBox : Box
 {
 	public const string TYPE = "©inf";
 	public override string DisplayName { get { return "AppleInfBox"; } }
@@ -46736,7 +46736,7 @@ aligned(8) class AppleIsrBox() extends Box('©isr') {
 	 bit(8) data[];
  } 
 */
-public class AppleIsrBox : Box
+public partial class AppleIsrBox : Box
 {
 	public const string TYPE = "©isr";
 	public override string DisplayName { get { return "AppleIsrBox"; } }
@@ -46779,7 +46779,7 @@ aligned(8) class AppleLabBox() extends Box('©lab') {
 	 bit(8) data[];
  } 
 */
-public class AppleLabBox : Box
+public partial class AppleLabBox : Box
 {
 	public const string TYPE = "©lab";
 	public override string DisplayName { get { return "AppleLabBox"; } }
@@ -46822,7 +46822,7 @@ aligned(8) class AppleLalBox() extends Box('©lal') {
 	 bit(8) data[];
  } 
 */
-public class AppleLalBox : Box
+public partial class AppleLalBox : Box
 {
 	public const string TYPE = "©lal";
 	public override string DisplayName { get { return "AppleLalBox"; } }
@@ -46865,7 +46865,7 @@ aligned(8) class AppleMakBox() extends Box('©mak') {
 	 bit(8) data[];
  } 
 */
-public class AppleMakBox : Box
+public partial class AppleMakBox : Box
 {
 	public const string TYPE = "©mak";
 	public override string DisplayName { get { return "AppleMakBox"; } }
@@ -46908,7 +46908,7 @@ aligned(8) class AppleNakBox() extends Box('©nak') {
 	 bit(8) data[];
  } 
 */
-public class AppleNakBox : Box
+public partial class AppleNakBox : Box
 {
 	public const string TYPE = "©nak";
 	public override string DisplayName { get { return "AppleNakBox"; } }
@@ -46951,7 +46951,7 @@ aligned(8) class ApplePdkBox() extends Box('©pdk') {
 	 bit(8) data[];
  } 
 */
-public class ApplePdkBox : Box
+public partial class ApplePdkBox : Box
 {
 	public const string TYPE = "©pdk";
 	public override string DisplayName { get { return "ApplePdkBox"; } }
@@ -46994,7 +46994,7 @@ aligned(8) class ApplePhgBox() extends Box('©phg') {
 	 bit(8) data[];
  } 
 */
-public class ApplePhgBox : Box
+public partial class ApplePhgBox : Box
 {
 	public const string TYPE = "©phg";
 	public override string DisplayName { get { return "ApplePhgBox"; } }
@@ -47037,7 +47037,7 @@ aligned(8) class ApplePrdBox() extends Box('©prd') {
 	 bit(8) data[];
  } 
 */
-public class ApplePrdBox : Box
+public partial class ApplePrdBox : Box
 {
 	public const string TYPE = "©prd";
 	public override string DisplayName { get { return "ApplePrdBox"; } }
@@ -47080,7 +47080,7 @@ aligned(8) class ApplePrfBox() extends Box('©prf') {
 	 bit(8) data[];
  } 
 */
-public class ApplePrfBox : Box
+public partial class ApplePrfBox : Box
 {
 	public const string TYPE = "©prf";
 	public override string DisplayName { get { return "ApplePrfBox"; } }
@@ -47123,7 +47123,7 @@ aligned(8) class ApplePrkBox() extends Box('©prk') {
 	 bit(8) data[];
  } 
 */
-public class ApplePrkBox : Box
+public partial class ApplePrkBox : Box
 {
 	public const string TYPE = "©prk";
 	public override string DisplayName { get { return "ApplePrkBox"; } }
@@ -47166,7 +47166,7 @@ aligned(8) class ApplePrlBox() extends Box('©prl') {
 	 bit(8) data[];
  } 
 */
-public class ApplePrlBox : Box
+public partial class ApplePrlBox : Box
 {
 	public const string TYPE = "©prl";
 	public override string DisplayName { get { return "ApplePrlBox"; } }
@@ -47209,7 +47209,7 @@ aligned(8) class AppleSnkBox() extends Box('©snk') {
 	 bit(8) data[];
  } 
 */
-public class AppleSnkBox : Box
+public partial class AppleSnkBox : Box
 {
 	public const string TYPE = "©snk";
 	public override string DisplayName { get { return "AppleSnkBox"; } }
@@ -47252,7 +47252,7 @@ aligned(8) class AppleSnmBox() extends Box('©snm') {
 	 bit(8) data[];
  } 
 */
-public class AppleSnmBox : Box
+public partial class AppleSnmBox : Box
 {
 	public const string TYPE = "©snm";
 	public override string DisplayName { get { return "AppleSnmBox"; } }
@@ -47295,7 +47295,7 @@ aligned(8) class AppleSrcBox() extends Box('©src') {
 	 bit(8) data[];
  } 
 */
-public class AppleSrcBox : Box
+public partial class AppleSrcBox : Box
 {
 	public const string TYPE = "©src";
 	public override string DisplayName { get { return "AppleSrcBox"; } }
@@ -47338,7 +47338,7 @@ aligned(8) class AppleSwkBox() extends Box('©swk') {
 	 bit(8) data[];
  } 
 */
-public class AppleSwkBox : Box
+public partial class AppleSwkBox : Box
 {
 	public const string TYPE = "©swk";
 	public override string DisplayName { get { return "AppleSwkBox"; } }
@@ -47381,7 +47381,7 @@ aligned(8) class AdditionalMetadataContainerBox() extends Box('meco') {
 	 Box boxes[];
  } 
 */
-public class AdditionalMetadataContainerBox : Box
+public partial class AdditionalMetadataContainerBox : Box
 {
 	public const string TYPE = "meco";
 	public override string DisplayName { get { return "AdditionalMetadataContainerBox"; } }
@@ -47428,7 +47428,7 @@ aligned(8) class H263SpecificBox() extends Box('d263') {
  unsigned int(8) profile;
  } 
 */
-public class H263SpecificBox : Box
+public partial class H263SpecificBox : Box
 {
 	public const string TYPE = "d263";
 	public override string DisplayName { get { return "H263SpecificBox"; } }
@@ -47491,7 +47491,7 @@ aligned(8) class EVRCSpecificBox() extends Box('devc') {
  unsigned int(8) framesPerSample;
  } 
 */
-public class EVRCSpecificBox : Box
+public partial class EVRCSpecificBox : Box
 {
 	public const string TYPE = "devc";
 	public override string DisplayName { get { return "EVRCSpecificBox"; } }
@@ -47548,7 +47548,7 @@ aligned(8) class QCELPSpecificBox() extends Box('dqcp') {
  unsigned int(8) framesPerSample;
  } 
 */
-public class QCELPSpecificBox : Box
+public partial class QCELPSpecificBox : Box
 {
 	public const string TYPE = "dqcp";
 	public override string DisplayName { get { return "QCELPSpecificBox"; } }
@@ -47605,7 +47605,7 @@ aligned(8) class SMVSpecificBox() extends Box('dsmv') {
  unsigned int(8) framesPerSample;
  } 
 */
-public class SMVSpecificBox : Box
+public partial class SMVSpecificBox : Box
 {
 	public const string TYPE = "dsmv";
 	public override string DisplayName { get { return "SMVSpecificBox"; } }
@@ -47660,7 +47660,7 @@ aligned(8) class AppleReferenceMovieBox() extends Box('rmra') {
  Box boxes[];
  } 
 */
-public class AppleReferenceMovieBox : Box
+public partial class AppleReferenceMovieBox : Box
 {
 	public const string TYPE = "rmra";
 	public override string DisplayName { get { return "AppleReferenceMovieBox"; } }
@@ -47704,7 +47704,7 @@ aligned(8) class AppleReferenceMovieDescriptorBox() extends Box('rmda') {
  Box boxes[];
  } 
 */
-public class AppleReferenceMovieDescriptorBox : Box
+public partial class AppleReferenceMovieDescriptorBox : Box
 {
 	public const string TYPE = "rmda";
 	public override string DisplayName { get { return "AppleReferenceMovieDescriptorBox"; } }
@@ -47748,7 +47748,7 @@ aligned(8) class AppleDataRateBox() extends Box('rmdr') {
  Box boxes[];
  } 
 */
-public class AppleDataRateBox : Box
+public partial class AppleDataRateBox : Box
 {
 	public const string TYPE = "rmdr";
 	public override string DisplayName { get { return "AppleDataRateBox"; } }
@@ -47794,7 +47794,7 @@ aligned(8) class AppleDataReferenceBox() extends FullBox('rdrf') {
  unsigned int(8) dataReference[count];
  } 
 */
-public class AppleDataReferenceBox : FullBox
+public partial class AppleDataReferenceBox : FullBox
 {
 	public const string TYPE = "rdrf";
 	public override string DisplayName { get { return "AppleDataReferenceBox"; } }
@@ -47856,7 +47856,7 @@ aligned(8) class TextSampleEntry() extends FullBox('enct') {
  }
  
 */
-public class TextSampleEntry : FullBox
+public partial class TextSampleEntry : FullBox
 {
 	public const string TYPE = "enct";
 	public override string DisplayName { get { return "TextSampleEntry"; } }
@@ -47949,7 +47949,7 @@ aligned(8) class TextSampleEntry() extends FullBox('tx3g') {
  }
  
 */
-public class TextSampleEntrytx3gDup : FullBox
+public partial class TextSampleEntrytx3gDup : FullBox
 {
 	public const string TYPE = "tx3g";
 	public override string DisplayName { get { return "TextSampleEntrytx3gDup"; } }
@@ -48039,7 +48039,7 @@ aligned(8) class RectRecord() {
  }
  
 */
-public class RectRecord : IMp4Serializable
+public partial class RectRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -48104,7 +48104,7 @@ aligned(8) class StyleRecord() {
  unsigned int(8) fontSize;
  unsigned int(8) textColor[4]; }
 */
-public class StyleRecord : IMp4Serializable
+public partial class StyleRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -48180,7 +48180,7 @@ aligned(8) class EC3SpecificBox() extends Box('dec3') {
  }
  
 */
-public class EC3SpecificBox : Box
+public partial class EC3SpecificBox : Box
 {
 	public const string TYPE = "dec3";
 	public override string DisplayName { get { return "EC3SpecificBox"; } }
@@ -48249,7 +48249,7 @@ aligned(8) class EC3SpecificEntry() {
  }
  
 */
-public class EC3SpecificEntry : IMp4Serializable
+public partial class EC3SpecificEntry : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -48367,7 +48367,7 @@ aligned(8) class MLPSpecificBox() extends Box('dmlp') {
  unsigned int(32) reserved2; 
  } 
 */
-public class MLPSpecificBox : Box
+public partial class MLPSpecificBox : Box
 {
 	public const string TYPE = "dmlp";
 	public override string DisplayName { get { return "MLPSpecificBox"; } }
@@ -48430,7 +48430,7 @@ aligned(8) class Ovc1VisualSampleEntryImpl() extends Box('ovc1') {
  bit(8) vc1Content[];
  } 
 */
-public class Ovc1VisualSampleEntryImpl : Box
+public partial class Ovc1VisualSampleEntryImpl : Box
 {
 	public const string TYPE = "ovc1";
 	public override string DisplayName { get { return "Ovc1VisualSampleEntryImpl"; } }
@@ -48492,7 +48492,7 @@ aligned(8) class VPCodecConfigurationBox() extends FullBox('vpcC') {
  unsigned int(16) codecInitializationData;
  } 
 */
-public class VPCodecConfigurationBox : FullBox
+public partial class VPCodecConfigurationBox : FullBox
 {
 	public const string TYPE = "vpcC";
 	public override string DisplayName { get { return "VPCodecConfigurationBox"; } }
@@ -48586,7 +48586,7 @@ aligned(8) class AmrSpecificBox() extends Box('damr') {
  unsigned int(8) framesPerSecond;
  } 
 */
-public class AmrSpecificBox : Box
+public partial class AmrSpecificBox : Box
 {
 	public const string TYPE = "damr";
 	public override string DisplayName { get { return "AmrSpecificBox"; } }
@@ -48652,7 +48652,7 @@ aligned(8) class BaseMediaInfoAtom() extends Box('gmin') {
  unsigned int(16) reserved
  } 
 */
-public class BaseMediaInfoAtom : Box
+public partial class BaseMediaInfoAtom : Box
 {
 	public const string TYPE = "gmin";
 	public override string DisplayName { get { return "BaseMediaInfoAtom"; } }
@@ -48727,7 +48727,7 @@ aligned(8) class BaseLocationBox() extends FullBox('bloc') {
  unsigned int(8) reserved[512];
  } 
 */
-public class BaseLocationBox : FullBox
+public partial class BaseLocationBox : FullBox
 {
 	public const string TYPE = "bloc";
 	public override string DisplayName { get { return "BaseLocationBox"; } }
@@ -48783,7 +48783,7 @@ aligned(8) class FontTableBox() extends Box('ftab') {
  }
  
 */
-public class FontTableBox : Box
+public partial class FontTableBox : Box
 {
 	public const string TYPE = "ftab";
 	public override string DisplayName { get { return "FontTableBox"; } }
@@ -48828,7 +48828,7 @@ aligned(8) class FontRecord() {
  unsigned int(8) fontName[count];
  }
 */
-public class FontRecord : IMp4Serializable
+public partial class FontRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -48883,7 +48883,7 @@ aligned(8) class AvcNalUnitStorageBox() extends Box('avcn') {
  AVCDecoderConfigurationRecord() AVCConfig;
  } 
 */
-public class AvcNalUnitStorageBox : Box
+public partial class AvcNalUnitStorageBox : Box
 {
 	public const string TYPE = "avcn";
 	public override string DisplayName { get { return "AvcNalUnitStorageBox"; } }
@@ -48927,7 +48927,7 @@ aligned(8) class AssetInformationBox() extends FullBox('ainf') {
  string apid;
  } 
 */
-public class AssetInformationBox : FullBox
+public partial class AssetInformationBox : FullBox
 {
 	public const string TYPE = "ainf";
 	public override string DisplayName { get { return "AssetInformationBox"; } }
@@ -48981,7 +48981,7 @@ aligned(8) class ProtectionSystemSpecificHeaderBox() extends FullBox('pssh') {
   }
  
 */
-public class ProtectionSystemSpecificHeaderBox : FullBox
+public partial class ProtectionSystemSpecificHeaderBox : FullBox
 {
 	public const string TYPE = "pssh";
 	public override string DisplayName { get { return "ProtectionSystemSpecificHeaderBox"; } }
@@ -49048,7 +49048,7 @@ aligned(8) class ProtectionSystemSpecificKeyID() {
  unsigned int(8) key[16];
  } 
 */
-public class ProtectionSystemSpecificKeyID : IMp4Serializable
+public partial class ProtectionSystemSpecificKeyID : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -49092,7 +49092,7 @@ aligned(8) class TrickPlayBox() extends FullBox('trik') {
  }
  
 */
-public class TrickPlayBox : FullBox
+public partial class TrickPlayBox : FullBox
 {
 	public const string TYPE = "trik";
 	public override string DisplayName { get { return "TrickPlayBox"; } }
@@ -49135,7 +49135,7 @@ aligned(8) class TrickPlayEntry() {
  unsigned int(2) picType; unsigned int(6) dependencyLevel;
  } 
 */
-public class TrickPlayEntry : IMp4Serializable
+public partial class TrickPlayEntry : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -49201,7 +49201,7 @@ aligned(8) class ItemEncryptionBox extends ItemFullProperty('ienc', version, fla
 }
 
 */
-public class ItemEncryptionBox : ItemFullProperty
+public partial class ItemEncryptionBox : ItemFullProperty
 {
 	public const string TYPE = "ienc";
 	public override string DisplayName { get { return "ItemEncryptionBox"; } }
@@ -49349,7 +49349,7 @@ aligned(8) class TrackEncryptionBox() extends FullBox('tenc') {
  unsigned int(8) defaultKID[16];
  } 
 */
-public class TrackEncryptionBox : FullBox
+public partial class TrackEncryptionBox : FullBox
 {
 	public const string TYPE = "tenc";
 	public override string DisplayName { get { return "TrackEncryptionBox"; } }
@@ -49408,7 +49408,7 @@ aligned(8) class SampleEncryptionBox extends FullBox('senc', version, flags)
 
 
 */
-public class SampleEncryptionBox : FullBox
+public partial class SampleEncryptionBox : FullBox
 {
 	public const string TYPE = "senc";
 	public override string DisplayName { get { return "SampleEncryptionBox"; } }
@@ -49475,7 +49475,7 @@ aligned(8) class SampleEncryptionSample(version, flags, Per_Sample_IV_Size) {
 
 
 */
-public class SampleEncryptionSample : IMp4Serializable
+public partial class SampleEncryptionSample : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -49624,7 +49624,7 @@ aligned(8) class SampleEncryptionSubsample(version) {
   }
 }
 */
-public class SampleEncryptionSubsample : IMp4Serializable
+public partial class SampleEncryptionSubsample : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -49713,7 +49713,7 @@ aligned(8) class AppleAtIDBox() extends Box('atID') {
  Box boxes[];
  } 
 */
-public class AppleAtIDBox : Box
+public partial class AppleAtIDBox : Box
 {
 	public const string TYPE = "atID";
 	public override string DisplayName { get { return "AppleAtIDBox"; } }
@@ -49757,7 +49757,7 @@ aligned(8) class AppleGeIDBox() extends Box('geID') {
  Box boxes[];
  } 
 */
-public class AppleGeIDBox : Box
+public partial class AppleGeIDBox : Box
 {
 	public const string TYPE = "geID";
 	public override string DisplayName { get { return "AppleGeIDBox"; } }
@@ -49801,7 +49801,7 @@ aligned(8) class AppleXidBox() extends Box('xid ') {
  Box boxes[];
  } 
 */
-public class AppleXidBox : Box
+public partial class AppleXidBox : Box
 {
 	public const string TYPE = "xid ";
 	public override string DisplayName { get { return "AppleXidBox"; } }
@@ -49845,7 +49845,7 @@ aligned(8) class AppleFlvrBox() extends Box('flvr') {
  Box boxes[];
  } 
 */
-public class AppleFlvrBox : Box
+public partial class AppleFlvrBox : Box
 {
 	public const string TYPE = "flvr";
 	public override string DisplayName { get { return "AppleFlvrBox"; } }
@@ -49889,7 +49889,7 @@ aligned(8) class AppleShortDescriptionBox() extends Box('sdes') {
  Box boxes[];
  } 
 */
-public class AppleShortDescriptionBox : Box
+public partial class AppleShortDescriptionBox : Box
 {
 	public const string TYPE = "sdes";
 	public override string DisplayName { get { return "AppleShortDescriptionBox"; } }
@@ -49938,7 +49938,7 @@ aligned(8) class EventMessageBox() extends Box('emsg') {
  unsigned int(32) id;
  unsigned int(8) messageData[]; } 
 */
-public class EventMessageBox : Box
+public partial class EventMessageBox : Box
 {
 	public const string TYPE = "emsg";
 	public override string DisplayName { get { return "EventMessageBox"; } }
@@ -50017,7 +50017,7 @@ aligned(8) class TrackReferenceTypeBox() extends Box('hind') {
  unsigned int(32) trackIds[];
  } 
 */
-public class TrackReferenceTypeBoxhindDup : Box
+public partial class TrackReferenceTypeBoxhindDup : Box
 {
 	public const string TYPE = "hind";
 	public override string DisplayName { get { return "TrackReferenceTypeBoxhindDup"; } }
@@ -50060,7 +50060,7 @@ aligned(8) class TrackReferenceTypeBox() extends Box('vdep') {
  unsigned int(32) trackIds[];
  } 
 */
-public class TrackReferenceTypeBoxvdepDup : Box
+public partial class TrackReferenceTypeBoxvdepDup : Box
 {
 	public const string TYPE = "vdep";
 	public override string DisplayName { get { return "TrackReferenceTypeBoxvdepDup"; } }
@@ -50103,7 +50103,7 @@ aligned(8) class TrackReferenceTypeBox() extends Box('vplx') {
  unsigned int(32) trackIds[];
  } 
 */
-public class TrackReferenceTypeBoxvplxDup : Box
+public partial class TrackReferenceTypeBoxvplxDup : Box
 {
 	public const string TYPE = "vplx";
 	public override string DisplayName { get { return "TrackReferenceTypeBoxvplxDup"; } }
@@ -50153,7 +50153,7 @@ unsigned int(32) reserved4;
  
  } 
 */
-public class DoViConfigurationBox : Box
+public partial class DoViConfigurationBox : Box
 {
 	public const string TYPE = "dvcC";
 	public override string DisplayName { get { return "DoViConfigurationBox"; } }
@@ -50231,7 +50231,7 @@ public class DoViConfigurationBox : Box
 aligned(8) class DfxpSampleEntry() extends SampleEntry('dfxp') {
  } 
 */
-public class DfxpSampleEntry : SampleEntry
+public partial class DfxpSampleEntry : SampleEntry
 {
 	public const string TYPE = "dfxp";
 	public override string DisplayName { get { return "DfxpSampleEntry"; } }
@@ -50269,7 +50269,7 @@ aligned(8) class ContentLightLevelBox() extends FullBox('CoLL') {
  unsigned int(8) maxFALL;
  } 
 */
-public class ContentLightLevelBoxCoLLDup : FullBox
+public partial class ContentLightLevelBoxCoLLDup : FullBox
 {
 	public const string TYPE = "CoLL";
 	public override string DisplayName { get { return "ContentLightLevelBoxCoLLDup"; } }
@@ -50325,7 +50325,7 @@ unsigned int(16) primaryBChromaticityY;
  unsigned int(32) luminanceMin;
  } 
 */
-public class SMPTE2086MasteringDisplayMetadataBox : FullBox
+public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 {
 	public const string TYPE = "SmDm";
 	public override string DisplayName { get { return "SMPTE2086MasteringDisplayMetadataBox"; } }
@@ -50417,7 +50417,7 @@ unsigned int(16) dataReferenceIndex;
  unsigned int(16) colorTableId;
  } 
 */
-public class SVQ3Box : Box
+public partial class SVQ3Box : Box
 {
 	public const string TYPE = "SVQ3";
 	public override string DisplayName { get { return "SVQ3Box"; } }
@@ -50508,7 +50508,7 @@ aligned(8) class SMIBox() extends Box('SMI ') {
 	 bit(8) metadata[];
  } 
 */
-public class SMIBox : Box
+public partial class SMIBox : Box
 {
 	public const string TYPE = "SMI ";
 	public override string DisplayName { get { return "SMIBox"; } }
@@ -50560,7 +50560,7 @@ aligned(8) class AlawBox() extends Box('alaw') {
  Box[] boxes; 
  } 
 */
-public class AlawBox : Box
+public partial class AlawBox : Box
 {
 	public const string TYPE = "alaw";
 	public override string DisplayName { get { return "AlawBox"; } }
@@ -50659,7 +50659,7 @@ aligned(8) class C608Box() extends Box('c608') {
  unsigned int(16) dataReferenceIndex;
  } 
 */
-public class C608Box : Box
+public partial class C608Box : Box
 {
 	public const string TYPE = "c608";
 	public override string DisplayName { get { return "C608Box"; } }
@@ -50721,7 +50721,7 @@ aligned(8) class H263Box() extends Box('h263') {
  unsigned int(16) colorTableId;
  } 
 */
-public class H263Box : Box
+public partial class H263Box : Box
 {
 	public const string TYPE = "h263";
 	public override string DisplayName { get { return "H263Box"; } }
@@ -50814,7 +50814,7 @@ aligned(8) class HrefBox() extends Box('href') {
  Box boxes[];
  } 
 */
-public class HrefBox : Box
+public partial class HrefBox : Box
 {
 	public const string TYPE = "href";
 	public override string DisplayName { get { return "HrefBox"; } }
@@ -50871,7 +50871,7 @@ aligned(8) class IpirBox() extends Box('ipir') {
  unsigned int(32) trackIDs[ entry_count ];
  } 
 */
-public class IpirBox : Box
+public partial class IpirBox : Box
 {
 	public const string TYPE = "ipir";
 	public override string DisplayName { get { return "IpirBox"; } }
@@ -50928,7 +50928,7 @@ aligned(8) class Ima4Box() extends Box('ima4') {
  Box boxes[];
  } 
 */
-public class Ima4Box : Box
+public partial class Ima4Box : Box
 {
 	public const string TYPE = "ima4";
 	public override string DisplayName { get { return "Ima4Box"; } }
@@ -51027,7 +51027,7 @@ aligned(8) class JpegBox() extends Box('jpeg') {
  unsigned int(16) colorTableId;
  } 
 */
-public class JpegBox : Box
+public partial class JpegBox : Box
 {
 	public const string TYPE = "jpeg";
 	public override string DisplayName { get { return "JpegBox"; } }
@@ -51125,7 +51125,7 @@ aligned(8) class RawBox() extends Box('raw ') {
  unsigned int(16) colorTableId;
  } 
 */
-public class RawBox : Box
+public partial class RawBox : Box
 {
 	public const string TYPE = "raw ";
 	public override string DisplayName { get { return "RawBox"; } }
@@ -51224,7 +51224,7 @@ aligned(8) class TwosBox() extends Box('twos') {
  Box boxes[];
  } 
 */
-public class TwosBox : Box
+public partial class TwosBox : Box
 {
 	public const string TYPE = "twos";
 	public override string DisplayName { get { return "TwosBox"; } }
@@ -51324,7 +51324,7 @@ aligned(8) class UlawBox() extends Box('ulaw') {
  Box boxes[];
  } 
 */
-public class UlawBox : Box
+public partial class UlawBox : Box
 {
 	public const string TYPE = "ulaw";
 	public override string DisplayName { get { return "UlawBox"; } }
@@ -51423,7 +51423,7 @@ aligned(8) class Yuv2Box() extends Box('yuv2') {
  unsigned int(16) colorTableId;
  } 
 */
-public class Yuv2Box : Box
+public partial class Yuv2Box : Box
 {
 	public const string TYPE = "yuv2";
 	public override string DisplayName { get { return "Yuv2Box"; } }
@@ -51514,7 +51514,7 @@ aligned(8) class XMPBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {
 	 string data;
  }
 */
-public class XMPBox : Box
+public partial class XMPBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "XMPBox"; } }
@@ -51557,7 +51557,7 @@ aligned(8) class PspUsmtExtensionBox() extends Box('uuid 55534d5421d24fcebb88695
 	 Box boxes[];
  }
 */
-public class PspUsmtExtensionBox : Box
+public partial class PspUsmtExtensionBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PspUsmtExtensionBox"; } }
@@ -51603,7 +51603,7 @@ aligned(8) class PspProfExtensionBox() extends Box('uuid 50524f4621d24fcebb88695
  Box boxes[];
  }
 */
-public class PspProfExtensionBox : Box
+public partial class PspProfExtensionBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PspProfExtensionBox"; } }
@@ -51661,7 +51661,7 @@ aligned(8) class PspMtdtBox() extends Box('MTDT') {
  }
  
 */
-public class PspMtdtBox : Box
+public partial class PspMtdtBox : Box
 {
 	public const string TYPE = "MTDT";
 	public override string DisplayName { get { return "PspMtdtBox"; } }
@@ -51716,7 +51716,7 @@ unsigned int(5)[3] language;
  }
 
 */
-public class MtdtEntry : IMp4Serializable
+public partial class MtdtEntry : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -51791,7 +51791,7 @@ aligned(8) class PspFprfBox() extends Box('FPRF') {
  unsigned int(32) unknown3;
  }
 */
-public class PspFprfBox : Box
+public partial class PspFprfBox : Box
 {
 	public const string TYPE = "FPRF";
 	public override string DisplayName { get { return "PspFprfBox"; } }
@@ -51854,7 +51854,7 @@ aligned(8) class PspAprfBox() extends Box('APRF') {
  unsigned int(32) channels;
  }
 */
-public class PspAprfBox : Box
+public partial class PspAprfBox : Box
 {
 	public const string TYPE = "APRF";
 	public override string DisplayName { get { return "PspAprfBox"; } }
@@ -51956,7 +51956,7 @@ aligned(8) class PspVprfBox() extends Box('VPRF') {
  unsigned int(32) unknown5;
  }
 */
-public class PspVprfBox : Box
+public partial class PspVprfBox : Box
 {
 	public const string TYPE = "VPRF";
 	public override string DisplayName { get { return "PspVprfBox"; } }
@@ -52073,7 +52073,7 @@ aligned(8) class PiffSampleEncryptionBox() extends FullBox('uuid a2394f525a9b4f1
 }
 
 */
-public class PiffSampleEncryptionBox : FullBox
+public partial class PiffSampleEncryptionBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PiffSampleEncryptionBox"; } }
@@ -52156,7 +52156,7 @@ aligned(8) class PiffTrackEncryptionBox() extends FullBox('uuid 8974dbce7be74c51
  }
 
 */
-public class PiffTrackEncryptionBox : FullBox
+public partial class PiffTrackEncryptionBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "PiffTrackEncryptionBox"; } }
@@ -52219,7 +52219,7 @@ aligned(8) class TfrfBox() extends FullBox('uuid d4807ef2ca3946958e5426cb9e46a79
  }
  } }
 */
-public class TfrfBox : FullBox
+public partial class TfrfBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "TfrfBox"; } }
@@ -52323,7 +52323,7 @@ aligned(8) class TfxdBox() extends FullBox('uuid 6d1d9b0542d544e680e2141daff757b
  unsigned int(32) fragmentAbsoluteDuration;
  } }
 */
-public class TfxdBox : FullBox
+public partial class TfxdBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "TfxdBox"; } }
@@ -52404,7 +52404,7 @@ aligned(8) class UuidBasedProtectionSystemSpecificHeaderBox() extends FullBox('u
  unsigned int(8) data[count];
  }
 */
-public class UuidBasedProtectionSystemSpecificHeaderBox : FullBox
+public partial class UuidBasedProtectionSystemSpecificHeaderBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidBasedProtectionSystemSpecificHeaderBox"; } }
@@ -52459,7 +52459,7 @@ aligned(8) class PadsBox() extends Box('pads') {
 	 bit(8) data[];
  } 
 */
-public class PadsBox : Box
+public partial class PadsBox : Box
 {
 	public const string TYPE = "pads";
 	public override string DisplayName { get { return "PadsBox"; } }
@@ -52503,7 +52503,7 @@ aligned(8) class AlternativesEntityGroupBox() extends TrackGroupTypeBox('altr') 
  unsigned int(32) entity_ids[]; 
  } 
 */
-public class AlternativesEntityGroupBox : TrackGroupTypeBox
+public partial class AlternativesEntityGroupBox : TrackGroupTypeBox
 {
 	public const string TYPE = "altr";
 	public override string DisplayName { get { return "AlternativesEntityGroupBox"; } }
@@ -52553,7 +52553,7 @@ aligned(8) class StereoEntityGroupBox() extends TrackGroupTypeBox('ster') {
  unsigned int(32) entity_ids[]; 
  } 
 */
-public class StereoEntityGroupBox : TrackGroupTypeBox
+public partial class StereoEntityGroupBox : TrackGroupTypeBox
 {
 	public const string TYPE = "ster";
 	public override string DisplayName { get { return "StereoEntityGroupBox"; } }
@@ -52603,7 +52603,7 @@ aligned(8) class ImagePyramidEntityGroupBox() extends TrackGroupTypeBox('pymd') 
  unsigned int(32) entity_ids[]; 
  } 
 */
-public class ImagePyramidEntityGroupBox : TrackGroupTypeBox
+public partial class ImagePyramidEntityGroupBox : TrackGroupTypeBox
 {
 	public const string TYPE = "pymd";
 	public override string DisplayName { get { return "ImagePyramidEntityGroupBox"; } }
@@ -52652,7 +52652,7 @@ aligned(8) class TimeSynchronizedCaptureEntityGroupBox() extends TrackGroupTypeB
 	 bit(8) data[];
  } 
 */
-public class TimeSynchronizedCaptureEntityGroupBox : TrackGroupTypeBox
+public partial class TimeSynchronizedCaptureEntityGroupBox : TrackGroupTypeBox
 {
 	public const string TYPE = "tsyn";
 	public override string DisplayName { get { return "TimeSynchronizedCaptureEntityGroupBox"; } }
@@ -52697,7 +52697,7 @@ aligned(8) class MicrosoftWindowsVersionBox() extends Box('uuid 5ca708fb328e4205
  char version[count];
  }
 */
-public class MicrosoftWindowsVersionBox : Box
+public partial class MicrosoftWindowsVersionBox : Box
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "MicrosoftWindowsVersionBox"; } }
@@ -52758,7 +52758,7 @@ aligned(8) class CameraIntrinsicMatrixBox() extends FullBox('cmin') {
  }
  } 
 */
-public class CameraIntrinsicMatrixBox : FullBox
+public partial class CameraIntrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "cmin";
 	public override string DisplayName { get { return "CameraIntrinsicMatrixBox"; } }
@@ -52843,7 +52843,7 @@ aligned(8) class UuidCameraIntrinsicMatrixBox() extends FullBox('uuid 22cc04c7d6
  }
  } 
 */
-public class UuidCameraIntrinsicMatrixBox : FullBox
+public partial class UuidCameraIntrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidCameraIntrinsicMatrixBox"; } }
@@ -52923,7 +52923,7 @@ aligned(8) class GenericCompressionConfigurationBox() extends FullBox('cmpC') {
  unsigned int(8) unit_type;
  } 
 */
-public class GenericCompressionConfigurationBox : FullBox
+public partial class GenericCompressionConfigurationBox : FullBox
 {
 	public const string TYPE = "cmpC";
 	public override string DisplayName { get { return "GenericCompressionConfigurationBox"; } }
@@ -52972,7 +52972,7 @@ aligned(8) class J2kHBox() extends Box('j2kH') {
 	 Box boxes[];
  } 
 */
-public class J2kHBox : Box
+public partial class J2kHBox : Box
 {
 	public const string TYPE = "j2kH";
 	public override string DisplayName { get { return "J2kHBox"; } }
@@ -53017,7 +53017,7 @@ aligned(8) class J2kChannelDefinitionBox() extends Box('cdef') {
  Channel channels[];
  } 
 */
-public class J2kChannelDefinitionBox : Box
+public partial class J2kChannelDefinitionBox : Box
 {
 	public const string TYPE = "cdef";
 	public override string DisplayName { get { return "J2kChannelDefinitionBox"; } }
@@ -53068,7 +53068,7 @@ aligned(8) class Channel() {
  unsigned int(16) channel_association;
  } 
 */
-public class Channel : IMp4Serializable
+public partial class Channel : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -53124,7 +53124,7 @@ aligned(8) class ItaiBox() extends FullBox('itai') {
  unsigned int(8) status_bits;
  } 
 */
-public class ItaiBox : FullBox
+public partial class ItaiBox : FullBox
 {
 	public const string TYPE = "itai";
 	public override string DisplayName { get { return "ItaiBox"; } }
@@ -53176,7 +53176,7 @@ aligned(8) class TaicBox() extends FullBox('taic') {
  unsigned int(8) clock_type;
  } 
 */
-public class TaicBox : FullBox
+public partial class TaicBox : FullBox
 {
 	public const string TYPE = "taic";
 	public override string DisplayName { get { return "TaicBox"; } }
@@ -53237,7 +53237,7 @@ aligned(8) class UncompressedFrameConfigurationBox() extends FullBox('uncC') {
 	 bit(8) data[];
  } 
 */
-public class UncompressedFrameConfigurationBox : FullBox
+public partial class UncompressedFrameConfigurationBox : FullBox
 {
 	public const string TYPE = "uncC";
 	public override string DisplayName { get { return "UncompressedFrameConfigurationBox"; } }
@@ -53280,7 +53280,7 @@ aligned(8) class GenericCompressedUnitsItemInfoBox() extends FullBox('icef') {
 	 bit(8) data[];
  } 
 */
-public class GenericCompressedUnitsItemInfoBox : FullBox
+public partial class GenericCompressedUnitsItemInfoBox : FullBox
 {
 	public const string TYPE = "icef";
 	public override string DisplayName { get { return "GenericCompressedUnitsItemInfoBox"; } }
@@ -53323,7 +53323,7 @@ aligned(8) class CameraExtrinsicMatrixBox() extends FullBox('cmex') {
 	 bit(8) data[];
  } 
 */
-public class CameraExtrinsicMatrixBox : FullBox
+public partial class CameraExtrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "cmex";
 	public override string DisplayName { get { return "CameraExtrinsicMatrixBox"; } }
@@ -53366,7 +53366,7 @@ aligned(8) class UuidCameraExtrinsicMatrixBox() extends FullBox('uuid 4363e9145b
 	 bit(8) data[];
  } 
 */
-public class UuidCameraExtrinsicMatrixBox : FullBox
+public partial class UuidCameraExtrinsicMatrixBox : FullBox
 {
 	public const string TYPE = "uuid";
 	public override string DisplayName { get { return "UuidCameraExtrinsicMatrixBox"; } }
@@ -53409,7 +53409,7 @@ aligned(8) class ComponentDefinitionBox() extends Box('cmpd') {
 	 bit(8) data[];
  } 
 */
-public class ComponentDefinitionBox : Box
+public partial class ComponentDefinitionBox : Box
 {
 	public const string TYPE = "cmpd";
 	public override string DisplayName { get { return "ComponentDefinitionBox"; } }
@@ -53452,7 +53452,7 @@ aligned(8) class ComponentPatternDefinitionBox() extends FullBox('cpat') {
 	 bit(8) data[];
  } 
 */
-public class ComponentPatternDefinitionBox : FullBox
+public partial class ComponentPatternDefinitionBox : FullBox
 {
 	public const string TYPE = "cpat";
 	public override string DisplayName { get { return "ComponentPatternDefinitionBox"; } }
@@ -53495,7 +53495,7 @@ aligned(8) class J2kComponentMappingBox() extends Box('cmap') {
 	 bit(8) data[];
  } 
 */
-public class J2kComponentMappingBox : Box
+public partial class J2kComponentMappingBox : Box
 {
 	public const string TYPE = "cmap";
 	public override string DisplayName { get { return "J2kComponentMappingBox"; } }
@@ -53538,7 +53538,7 @@ aligned(8) class TiledImageBox() extends FullBox('tilC') {
 	 bit(8) data[];
  } 
 */
-public class TiledImageBox : FullBox
+public partial class TiledImageBox : FullBox
 {
 	public const string TYPE = "tilC";
 	public override string DisplayName { get { return "TiledImageBox"; } }
@@ -53581,7 +53581,7 @@ aligned(8) class J2kPaletteBox() extends Box('pclr') {
 	 bit(8) data[];
  } 
 */
-public class J2kPaletteBox : Box
+public partial class J2kPaletteBox : Box
 {
 	public const string TYPE = "pclr";
 	public override string DisplayName { get { return "J2kPaletteBox"; } }
@@ -53624,7 +53624,7 @@ aligned(8) class J2kLayersBox() extends Box('j2kL') {
 	 bit(8) data[];
  } 
 */
-public class J2kLayersBox : Box
+public partial class J2kLayersBox : Box
 {
 	public const string TYPE = "j2kL";
 	public override string DisplayName { get { return "J2kLayersBox"; } }
@@ -53667,7 +53667,7 @@ aligned(8) class MiniBox() extends Box('mini') {
 	 bit(8) data[];
  } 
 */
-public class MiniBox : Box
+public partial class MiniBox : Box
 {
 	public const string TYPE = "mini";
 	public override string DisplayName { get { return "MiniBox"; } }
@@ -53710,7 +53710,7 @@ aligned(8) class IpcmBox() extends Box('ipcm') {
 	 Box boxes[];
  } 
 */
-public class IpcmBox : Box
+public partial class IpcmBox : Box
 {
 	public const string TYPE = "ipcm";
 	public override string DisplayName { get { return "IpcmBox"; } }
@@ -53754,7 +53754,7 @@ aligned(8) class FpcmBox() extends Box('fpcm') {
 	 Box boxes[];
  } 
 */
-public class FpcmBox : Box
+public partial class FpcmBox : Box
 {
 	public const string TYPE = "fpcm";
 	public override string DisplayName { get { return "FpcmBox"; } }
@@ -53799,7 +53799,7 @@ aligned(8) class PcmCBox() extends FullBox('pcmC') {
 	 unsigned int(8) pcmSampleSize;
  } 
 */
-public class PcmCBox : FullBox
+public partial class PcmCBox : FullBox
 {
 	public const string TYPE = "pcmC";
 	public override string DisplayName { get { return "PcmCBox"; } }
@@ -53848,7 +53848,7 @@ aligned(8) class SmrdBox() extends Box('smrd') {
 	 bit(8) data[];
  } 
 */
-public class SmrdBox : Box
+public partial class SmrdBox : Box
 {
 	public const string TYPE = "smrd";
 	public override string DisplayName { get { return "SmrdBox"; } }
@@ -53891,7 +53891,7 @@ aligned(8) class SmtaBox() extends Box('smta') {
 	 bit(8) data[];
  } 
 */
-public class SmtaBox : Box
+public partial class SmtaBox : Box
 {
 	public const string TYPE = "smta";
 	public override string DisplayName { get { return "SmtaBox"; } }
@@ -53934,7 +53934,7 @@ aligned(8) class SDLNBox() extends Box('SDLN') {
 	 bit(8) data[];
  } 
 */
-public class SDLNBox : Box
+public partial class SDLNBox : Box
 {
 	public const string TYPE = "SDLN";
 	public override string DisplayName { get { return "SDLNBox"; } }
@@ -53977,7 +53977,7 @@ aligned(8) class MoatBox() extends Box('moat') {
 	 bit(8) data[];
  } 
 */
-public class MoatBox : Box
+public partial class MoatBox : Box
 {
 	public const string TYPE = "moat";
 	public override string DisplayName { get { return "MoatBox"; } }
@@ -54020,7 +54020,7 @@ aligned(8) class SeigBox() extends Box('seig') {
 	 bit(8) data[];
  } 
 */
-public class SeigBox : Box
+public partial class SeigBox : Box
 {
 	public const string TYPE = "seig";
 	public override string DisplayName { get { return "SeigBox"; } }
@@ -54063,7 +54063,7 @@ aligned(8) class UratBox() extends Box('urat') {
 	 bit(8) data[];
  } 
 */
-public class UratBox : Box
+public partial class UratBox : Box
 {
 	public const string TYPE = "urat";
 	public override string DisplayName { get { return "UratBox"; } }
@@ -54106,7 +54106,7 @@ aligned(8) class OrieBox() extends Box('orie') {
 	 bit(8) data[];
  } 
 */
-public class OrieBox : Box
+public partial class OrieBox : Box
 {
 	public const string TYPE = "orie";
 	public override string DisplayName { get { return "OrieBox"; } }
@@ -54149,7 +54149,7 @@ aligned(8) class NoneBox() extends Box('NONE') {
 	 bit(8) data[];
  } 
 */
-public class NoneBox : Box
+public partial class NoneBox : Box
 {
 	public const string TYPE = "NONE";
 	public override string DisplayName { get { return "NoneBox"; } }
@@ -54195,7 +54195,7 @@ extends VisualSampleEntry('av01')
 }
 
 */
-public class AV1SampleEntry : VisualSampleEntry
+public partial class AV1SampleEntry : VisualSampleEntry
 {
 	public const string TYPE = "av01";
 	public override string DisplayName { get { return "AV1SampleEntry"; } }
@@ -54242,7 +54242,7 @@ extends Box('av1C')
 }
 
 */
-public class AV1CodecConfigurationBox : Box
+public partial class AV1CodecConfigurationBox : Box
 {
 	public const string TYPE = "av1C";
 	public override string DisplayName { get { return "AV1CodecConfigurationBox"; } }
@@ -54307,7 +54307,7 @@ aligned(8) class AV1CodecConfigurationRecord
 }
 
 */
-public class AV1CodecConfigurationRecord : IMp4Serializable
+public partial class AV1CodecConfigurationRecord : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -54467,7 +54467,7 @@ extends VisualSampleGroupEntry('av1f')
 }
 
 */
-public class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
+public partial class AV1ForwardKeyFrameSampleGroupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "av1f";
 	public override string DisplayName { get { return "AV1ForwardKeyFrameSampleGroupEntry"; } }
@@ -54512,7 +54512,7 @@ extends VisualSampleGroupEntry('av1s')
 }
 
 */
-public class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
+public partial class AV1SwitchFrameSampleGroupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "av1s";
 	public override string DisplayName { get { return "AV1SwitchFrameSampleGroupEntry"; } }
@@ -54551,7 +54551,7 @@ extends VisualSampleGroupEntry('av1M')
 }
 
 */
-public class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
+public partial class AV1MetadataSampleGroupEntry : VisualSampleGroupEntry
 {
 	public const string TYPE = "av1M";
 	public override string DisplayName { get { return "AV1MetadataSampleGroupEntry"; } }
@@ -54589,7 +54589,7 @@ class OperatingPointSelectorProperty extends ItemProperty('a1op') {
 }
 
 */
-public class OperatingPointSelectorProperty : ItemProperty
+public partial class OperatingPointSelectorProperty : ItemProperty
 {
 	public const string TYPE = "a1op";
 	public override string DisplayName { get { return "OperatingPointSelectorProperty"; } }
@@ -54639,7 +54639,7 @@ class AV1LayeredImageIndexingProperty extends ItemProperty('a1lx') {
     }
 }
 */
-public class AV1LayeredImageIndexingProperty : ItemProperty
+public partial class AV1LayeredImageIndexingProperty : ItemProperty
 {
 	public const string TYPE = "a1lx";
 	public override string DisplayName { get { return "AV1LayeredImageIndexingProperty"; } }
@@ -54721,7 +54721,7 @@ class OpusSampleEntry() extends AudioSampleEntry ('Opus'){
  OpusSpecificBox();
  }
 */
-public class OpusSampleEntry : AudioSampleEntry
+public partial class OpusSampleEntry : AudioSampleEntry
 {
 	public const string TYPE = "Opus";
 	public override string DisplayName { get { return "OpusSampleEntry"; } }
@@ -54769,7 +54769,7 @@ class ChannelMappingTable (unsigned int(8) OutputChannelCount){
 
  
 */
-public class ChannelMappingTable : IMp4Serializable
+public partial class ChannelMappingTable : IMp4Serializable
 {
 	public StreamMarker Padding { get; set; }
 	protected IMp4Serializable parent = null;
@@ -54836,7 +54836,7 @@ aligned(8) class OpusSpecificBox extends Box('dOps'){
  }
  }
 */
-public class OpusSpecificBox : Box
+public partial class OpusSpecificBox : Box
 {
 	public const string TYPE = "dOps";
 	public override string DisplayName { get { return "OpusSpecificBox"; } }

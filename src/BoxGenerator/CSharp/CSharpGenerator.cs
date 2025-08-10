@@ -367,7 +367,7 @@ namespace SharpISOBMFF
 
             cls += $"/*\r\n{b.Syntax.Replace("*/", "*//*")}\r\n*/\r\n";
 
-            cls += @$"public {optAbstract}class {b.BoxName}";
+            cls += @$"public {optAbstract}partial class {b.BoxName}";
             if (b.Extended != null && !string.IsNullOrWhiteSpace(b.Extended.BoxName))
             {
                 cls += $" : {b.Extended.BoxName}\r\n{{\r\n";
