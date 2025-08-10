@@ -92,10 +92,6 @@ namespace SharpMP4.Tracks
                 CoupledCount = opusSpecificBox._ChannelMappingTable._CoupledCount;
                 ChannelMapping = opusSpecificBox._ChannelMappingTable._ChannelMapping;
             }
-            else
-            {
-                throw new NotSupportedException();
-            }
         }
 
         public override Box CreateSampleEntryBox()

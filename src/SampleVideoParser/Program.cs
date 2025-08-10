@@ -378,7 +378,7 @@ foreach (var file in files)
                                 else
                                 {
                                     audio_pts = audio_dts + sampleCompositionTime;
-                                    size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData);
+                                    size += mdat.Data.Stream.ReadUInt8Array(size, (ulong)mdat.Data.Length, sampleSize, out byte[] sampleData, "");
                                     audio_dts += sampleDuration;
                                 }
                             }
@@ -565,23 +565,7 @@ static ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat 
     do
     {
         uint nalUnitLength = 0;
-        switch (nalLengthSize)
-        {
-            case 1:
-                size += marker.Stream.ReadUInt8(size, (ulong)marker.Length, out nalUnitLength);
-                break;
-            case 2:
-                size += marker.Stream.ReadUInt16(size, (ulong)marker.Length, out nalUnitLength);
-                break;
-            case 3:
-                size += marker.Stream.ReadUInt24(size, (ulong)marker.Length, out nalUnitLength);
-                break;
-            case 4:
-                size += marker.Stream.ReadUInt32(size, (ulong)marker.Length, out nalUnitLength);
-                break;
-            default:
-                throw new Exception($"NAL unit length {nalLengthSize} not supported!");
-        }
+        size += marker.Stream.ReadVariableLengthSize((uint)nalLengthSize, out nalUnitLength);
         offsetInBytes += nalLengthSize;
 
         if (nalUnitLength > (sampleSizeInBytes - offsetInBytes))
@@ -593,7 +577,7 @@ static ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat 
             break;
         }
 
-        size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData);
+        size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, nalUnitLength, out byte[] sampleData, "");
         offsetInBytes += sampleData.Length;
 
         ParseNALU(context, format, sampleData);
@@ -1212,7 +1196,7 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
 
     SharpISOBMFF.Log.Debug($"+++ Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
-    size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData);
+    size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData, "");
     using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
     {
         int len = (int)sampleSizeInBytes;

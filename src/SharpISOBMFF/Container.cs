@@ -22,7 +22,7 @@ namespace SharpISOBMFF
             try
             {
                 box = null;
-                size += stream.ReadBox(size, null, out box);
+                size += stream.ReadBox(size, null, out box, "");
 
                 if (box != null)
                 {
@@ -76,16 +76,16 @@ namespace SharpISOBMFF
             ulong size = 0;
             for (int i = 0; i < Children.Count; i++)
             {
-                size += stream.WriteBox(Children[i]);
+                size += stream.WriteBox(Children[i], "");
             }
 
             if(this.Padding != null)
             {
-                size += stream.WriteUInt8ArrayTillEnd(this.Padding);
+                size += stream.WriteUInt8ArrayTillEnd(this.Padding, "");
             }
             else if(this.PaddingBytes != null)
             {
-                size += stream.WriteUInt8ArrayTillEnd(this.PaddingBytes);
+                size += stream.WriteUInt8ArrayTillEnd(this.PaddingBytes, "");
             }
 
             return size;

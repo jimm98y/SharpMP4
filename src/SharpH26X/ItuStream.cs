@@ -280,7 +280,7 @@ namespace SharpH26X
                 throw new EndOfStreamException();
             value = (ulong)ret;
             LogEnd(name, (ulong)count, value);
-            return (ulong)count;
+            return (ulong)count;    
         }
 
         public ulong WriteUnsignedInt(ulong count, ulong value, string name)
@@ -714,6 +714,8 @@ namespace SharpH26X
 
         #endregion // Lists in do/while loops
 
+        #region Logging
+
         private int _logLevel = 0;
 
         private void LogBegin(string name)
@@ -743,6 +745,8 @@ namespace SharpH26X
 
             Log.Info($"{padding} {name}{endPadding}{size}   {value}");
         }
+
+        #endregion // Logging
 
         #region IDisposable 
 

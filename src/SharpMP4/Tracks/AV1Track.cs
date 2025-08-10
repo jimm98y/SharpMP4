@@ -28,9 +28,13 @@ namespace SharpMP4.Tracks
         private bool _obuBufferContainsSequenceHeader = false;
 
         /// <summary>
+        /// Sequence Header Open Bitstream Unit - raw bytes.
+        /// </summary>
+        public byte[] SequenceHeaderObuRaw { get; set; } = null;
+        /// <summary>
         /// Sequence Header Open Bitstream Unit.
         /// </summary>
-        public byte[] SequenceHeaderOBU { get; set; } = null;
+        public AV1Context SequenceHeaderObu { get; set; } = null;
 
         private AV1Context _context = new AV1Context();
 
@@ -67,9 +71,21 @@ namespace SharpMP4.Tracks
             isRandomAccessPoint = false; 
             output = null;
 
-            if (sample == null)
+            if (sample == null || sample.Length == 0)
             {
                 return;
+            }
+
+            // without the sequence header we cannot process AV1
+            if (SequenceHeaderObuRaw == null)
+            {
+                int obuHeader = sample[0];
+                int obuType = (obuHeader & 0x78) >> 3;
+                if (obuType != AV1ObuTypes.OBU_SEQUENCE_HEADER)
+                {
+                    if (Log.ErrorEnabled) Log.Error($"OBU Sequence Header missing, dropping sample");
+                    return;
+                }
             }
 
             var ms = new MemoryStream(sample);
@@ -98,10 +114,15 @@ namespace SharpMP4.Tracks
                     {
                         if (Log.DebugEnabled) Log.Debug($"OBU Sequence Header");
 
-                        if (SequenceHeaderOBU == null)
+                        if (SequenceHeaderObuRaw == null)
                         {
                             // The configOBUs field SHALL contain at most one present, it SHALL be the first OBU.
-                            SequenceHeaderOBU = sample;
+                            SequenceHeaderObuRaw = sample;
+                            using (var aomStream = new AomStream(new MemoryStream(SequenceHeaderObuRaw)))
+                            {
+                                SequenceHeaderObu = new AV1Context();
+                                SequenceHeaderObu.Read(aomStream, sample.Length); 
+                            }
                         }
                         else
                         {
@@ -300,7 +321,7 @@ namespace SharpMP4.Tracks
             av01ConfigurationBox.Av1Config.ChromaSamplePosition = (byte)_context._ChromaSamplePosition;
             av01ConfigurationBox.Av1Config.ChromaSubsamplingx = _context._Subsamplingx != 0;
             av01ConfigurationBox.Av1Config.ChromaSubsamplingy = _context._Subsamplingy != 0;
-            av01ConfigurationBox.Av1Config.ConfigOBUs = SequenceHeaderOBU; 
+            av01ConfigurationBox.Av1Config.ConfigOBUs = SequenceHeaderObuRaw; 
             av01ConfigurationBox.Av1Config.HighBitdepth = _context._HighBitdepth != 0;
             av01ConfigurationBox.Av1Config.Marker = true; // shall be set to true
             av01ConfigurationBox.Av1Config.Monochrome = _context._MonoChrome != 0;
@@ -343,7 +364,19 @@ namespace SharpMP4.Tracks
                         obuTotalSize = len;
                     }
 
-                    if (_context._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
+                    if(_context._ObuType == AV1ObuTypes.OBU_SEQUENCE_HEADER)
+                    {
+                        if (SequenceHeaderObuRaw == null) // we care only about the first one
+                        {
+                            SequenceHeaderObuRaw = sample.Skip(currentPosition).Take(1 + (_context._ObuExtensionFlag != 0 ? 1 : 0) + (_context.ObuSizeLen >> 3) + _context._ObuSize).ToArray();
+                            using (var aomStream = new AomStream(new MemoryStream(SequenceHeaderObuRaw)))
+                            {
+                                SequenceHeaderObu = new AV1Context();
+                                SequenceHeaderObu.Read(aomStream, sample.Length);
+                            }
+                        }
+                    }
+                    else if (_context._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
                     {
                         _context.LastObuFrameHeader = sample.Skip(currentPosition + 1 /* obu header */ + (_context._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (_context.ObuSizeLen >> 3)).Take(_context._ObuSize).ToArray();
                     }
@@ -361,10 +394,10 @@ namespace SharpMP4.Tracks
 
         public override IEnumerable<byte[]> GetContainerSamples()
         {
-            if(SequenceHeaderOBU == null)
+            if(SequenceHeaderObuRaw == null)
                 return null;
 
-            return new byte[][] { SequenceHeaderOBU };
+            return new byte[][] { SequenceHeaderObuRaw };
         }
 
         public override ITrack Clone()
