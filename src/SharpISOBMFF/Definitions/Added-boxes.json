@@ -86,7 +86,17 @@
     {
       "containers": [ "*" ],
       "type": "Box",
+      "syntax": "aligned(8) class AppleArtist3Box() extends Box('©art') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
       "syntax": "aligned(8) class AppleArtist2Box() extends Box('aART') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleAuthorBox() extends Box('©aut') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -106,7 +116,37 @@
     {
       "containers": [ "*" ],
       "type": "Box",
+      "syntax": "aligned(8) class AppleHostComputerBox() extends Box('©hst') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
       "syntax": "aligned(8) class AppleGenreBox() extends Box('©gen') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleComposerBox() extends Box('©ope') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleTrackBox() extends Box('©trk') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleUrlBox() extends Box('©url') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleProductBox() extends Box('©PRD') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleWarningBox() extends Box('©wrn') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -725,6 +765,11 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class AppleAllfBox() extends Box('Allf') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class PlayAllFramesBox() extends Box('AllF') {\r\n\t bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
