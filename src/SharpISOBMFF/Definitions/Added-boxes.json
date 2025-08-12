@@ -754,27 +754,27 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleSelOBox() extends Box('SelO') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleWindowLocationBox() extends Box('WLOC') {\r\n\t signed int(16) locationX;\r\n signed int(16) locationY;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleWLOCBox() extends Box('WLOC') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class PlayAllFramesBox() extends Box('AllF') {\r\n\t unsigned int(8) data;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleAllfBox() extends Box('Allf') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleLoopingBox() extends Box('LOOP') {\r\n\t unsigned int(8) data;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class PlayAllFramesBox() extends Box('AllF') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleSelectionOnlyBox() extends Box('SelO') {\r\n\t unsigned int(8) data;\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleLOOPBox() extends Box('LOOP') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleAutoPlayBox() extends Box('play') {\r\n\t unsigned int(8) autoplay;\r\n } "
     },
     {
       "containers": [ "*" ],
