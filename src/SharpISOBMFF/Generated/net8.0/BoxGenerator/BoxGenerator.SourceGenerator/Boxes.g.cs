@@ -17,6 +17,11 @@ namespace SharpISOBMFF
             switch(fourCC)
             {
                case "----":  return new CustomBox();
+               case ".mp3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC(".mp3"));break;
+               case "\0\0\0\0": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\0\0\0\0"));break;
+               case "\x6D\x73\x00\x02": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x02"));break;
+               case "\x6D\x73\x00\x11": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x11"));break;
+               case "\x6D\x73\x00\x55": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x55"));break;
                case "©alb":  return new AppleAlbumBox();
                case "©arg":  return new AppleArgBox();
                case "©ark":  return new AppleArkBox();
@@ -77,6 +82,7 @@ namespace SharpISOBMFF
                case "©wrt":  return new AppleComposersBox();
                case "©xyz":  return new AppleGPSCoordinatesBox();
                case "0000":  return new ZeroBox();
+               case "2vuY": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("2vuY"));break;
                case "3dpr":  return new MVDDepthResolutionBox();
                case "3sib":  return new MVDScalabilityInformationSEIBox();
                case "a1lx":  return new AV1LayeredImageIndexingProperty();
@@ -92,7 +98,7 @@ namespace SharpISOBMFF
                case "ainf":  return new AssetInformationBox();
                case "akID":  return new ITunesAccountTypeBox();
                case "alac": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("alac"));break;
-               case "alaw":  return new AlawBox();
+               case "alaw": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("alaw"));break;
                case "albm":  return new ThreeGPPAlbumBox();
                case "alis":  return new AlisBox();
                case "AllF":  return new PlayAllFramesBox();
@@ -169,6 +175,7 @@ namespace SharpISOBMFF
                case "ctim":  return new CueTimeBox();
                case "ctry":  return new AppleCountryListBox();
                case "ctts":  return new CompositionOffsetBox();
+               case "cvid": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("cvid"));break;
                case "cvru":  return new OMACoverURLBox();
                case "d263":  return new H263SpecificBox();
                case "dac3":  return new AC3SpecificBox();
@@ -203,7 +210,10 @@ namespace SharpISOBMFF
                case "dtsh": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsh"));break;
                case "dtsl": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsl"));break;
                case "dvav": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvav"));break;
+               case "dvc ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvc "));break;
+               case "dvca": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dvca"));break;
                case "dvcC":  return new DoViConfigurationBox();
+               case "dvcp": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvcp"));break;
                case "dvhe": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvhe"));break;
                case "ec-3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ec-3"));break;
                case "ecam":  return new ExtrinsicCameraParametersBox();
@@ -232,6 +242,8 @@ namespace SharpISOBMFF
                case "fiel":  return new FielBox();
                case "fiin":  return new FDItemInformationBox();
                case "fire":  return new FileReservoirBox();
+               case "fl32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fl32"));break;
+               case "fl64": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("fl64"));break;
                case "flvr":  return new AppleFlvrBox();
                case "fpar":  return new FilePartitionBox();
                case "fpcm":  return new FpcmBox();
@@ -241,6 +253,7 @@ namespace SharpISOBMFF
                case "ftab":  return new FontTableBox();
                case "ftyp":  return new FileTypeBox();
                case "geID":  return new AppleGeIDBox();
+               case "gif ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("gif "));break;
                case "gitn":  return new GroupIdToNameBox();
                case "gmhd":  return new GenericMediaHeaderAtom();
                case "gmin":  return new BaseMediaInfoAtom();
@@ -252,7 +265,7 @@ namespace SharpISOBMFF
                case "gssd":  return new GoogleSourceDataBox();
                case "gsst":  return new GoogleStartTimeBox();
                case "gstd":  return new GoogleTrackDurationBox();
-               case "h263":  return new H263Box();
+               case "h263": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("h263"));break;
                case "hdlr":  return new HandlerBox();
                case "hdvd":  return new HdvdBox();
                case "hev1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("hev1"));break;
@@ -284,11 +297,13 @@ namespace SharpISOBMFF
                case "iinf":  return new ItemInfoBox();
                case "iloc":  return new ItemLocationBox();
                case "ilst":  return new AppleItemListBox();
-               case "ima4":  return new Ima4Box();
+               case "ima4": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ima4"));break;
                case "imda":  return new IdentifiedMediaDataBox();
                case "imdt":  return new DataEntryImdaBox();
                case "imif":  return new IPMPInfoBox();
                case "imir":  return new ImageMirror();
+               case "in24": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("in24"));break;
+               case "in32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("in32"));break;
                case "infe":  return new ItemInfoEntry();
                case "infu":  return new OMAInfoURLBox();
                case "iods":  return new AppleInitialObjectDescriptorBox();
@@ -309,7 +324,7 @@ namespace SharpISOBMFF
                case "j2kH":  return new J2kHBox();
                case "j2ki": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("j2ki"));break;
                case "j2kL":  return new J2kLayersBox();
-               case "jpeg":  return new JpegBox();
+               case "jpeg": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("jpeg"));break;
                case "jpgC":  return new JPEGConfigurationBox();
                case "junk":  return new AppleJunkBox();
                case "key ":  return new FairPlayUserKeyBox();
@@ -319,6 +334,7 @@ namespace SharpISOBMFF
                case "keyw":  return new AppleKeywordBox();
                case "kind":  return new KindBox();
                case "kmat":  return new AppleCompressedMatteBox();
+               case "kpcd": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("kpcd"));break;
                case "kywd":  return new ThreeGPPKeywordsBox();
                case "ldep":  return new TierDependencyBox();
                case "ldes":  return new AppleLongDescriptionBox();
@@ -336,6 +352,8 @@ namespace SharpISOBMFF
                case "lsel":  return new LayerSelectorProperty();
                case "ludt":  return new LoudnessBox();
                case "m4ds":  return new MPEG4ExtensionDescriptorsBox();
+               case "MAC3 ": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC3 "));break;
+               case "MAC6 ": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC6 "));break;
                case "matt":  return new AppleTrackMatteBox();
                case "maxr":  return new HintMaxRate();
                case "md5i":  return new MD5IntegrityBox();
@@ -359,6 +377,8 @@ namespace SharpISOBMFF
                case "mfro":  return new MovieFragmentRandomAccessOffsetBox();
                case "minf":  return new MediaInformationBox();
                case "mini":  return new MiniBox();
+               case "mjpa": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpa"));break;
+               case "mjpb": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpb"));break;
                case "mjpg": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpg"));break;
                case "mlpa": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mlpa"));break;
                case "moat":  return new MoatBox();
@@ -390,7 +410,7 @@ namespace SharpISOBMFF
                case "name": return new AppleName2Box(); // TODO: box is ambiguous in between AppleName2Box and FairPlayUserNameBox
                case "NCTG":  return new NikonExifBox();
                case "nmhd":  return new NullMediaHeaderBox();
-               case "NONE":  return new NoneBox();
+               case "NONE": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("NONE"));break;
                case "npck":  return new hintPacketsSentnpckDup(); // TODO: fix duplicate
                case "nump":  return new hintPacketsSent();
                case "odaf":  return new OMAAccessUnitFormatBox();
@@ -427,6 +447,7 @@ namespace SharpISOBMFF
                case "plID":  return new PlIDBox();
                case "pm2t":  return new ProtectedMPEG2TransportStreamSampleEntry();
                case "pmax":  return new HintLargestPacket();
+               case "png ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("png "));break;
                case "pnot":  return new AppleImagePreviewBox();
                case "prft":  return new ProducerReferenceTimeBox();
                case "priv":  return new FairPlayPrivateKeyBox();
@@ -436,13 +457,17 @@ namespace SharpISOBMFF
                case "purd":  return new PurchaseDateBox();
                case "purl":  return new PodcastUrlBox();
                case "pymd":  return new ImagePyramidEntityGroupBox();
+               case "Qclp": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("Qclp"));break;
+               case "QDM2": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDM2"));break;
+               case "QDMC": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDMC"));break;
                case "qlif":  return new SVCPriorityLayerInfoBox();
                case "rati":  return new AppleRating2Box();
-               case "raw ":  return new RawBox();
+               case "raw ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("raw "));break;
                case "rdrf":  return new AppleDataReferenceBox();
                case "resa": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("resa"));break;
                case "resv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("resv"));break;
                case "rinf":  return new RestrictedSchemeInfoBox();
+               case "rle ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("rle "));break;
                case "rloc":  return new RelativeLocationProperty();
                case "rm2t":  return new MPEG2TSReceptionSampleEntry();
                case "rmcd":  return new AppleComponentDetectBox();
@@ -452,6 +477,7 @@ namespace SharpISOBMFF
                case "rmqu":  return new AppleQualityBox();
                case "rmra":  return new AppleReferenceMovieBox();
                case "rmvc":  return new AppleVersionCheckBox();
+               case "rpza": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("rpza"));break;
                case "rref":  return new RequiredReferenceTypesProperty();
                case "rrgn":  return new RectRegionBox();
                case "rrtp":  return new ReceivedRtpHintSampleEntry();
@@ -488,6 +514,7 @@ namespace SharpISOBMFF
                case "sinf":  return new ProtectionSchemeInfoBox();
                case "skip":  return new FreeSpaceBoxskipDup(); // TODO: fix duplicate
                case "sm2t":  return new MPEG2TSServerSampleEntry();
+               case "smc ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("smc "));break;
                case "SmDm":  return new SMPTE2086MasteringDisplayMetadataBox();
                case "smhd":  return new SoundMediaHeaderBox();
                case "SMI ":  return new SMIBox();
@@ -551,7 +578,8 @@ namespace SharpISOBMFF
                case "svip":  return new InitialParameterSetBox();
                case "svmC":  return new SVCMetadataSampleConfigBox();
                case "svpr":  return new PriorityRangeBox();
-               case "SVQ3":  return new SVQ3Box();
+               case "SVQ1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("SVQ1"));break;
+               case "SVQ3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("SVQ3"));break;
                case "swtc":  return new MultiviewGroupRelationBox();
                case "swtk":  return new SwitchableTracksGroupBox();
                case "sync":  return new SyncBox();
@@ -565,6 +593,7 @@ namespace SharpISOBMFF
                case "tfra":  return new TrackFragmentRandomAccessBox();
                case "thmb":  return new ThmbBox();
                case "tibr":  return new TierBitRateBox();
+               case "tiff": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("tiff"));break;
                case "tilC":  return new TiledImageBox();
                case "tims":  return new TimeScaleEntry();
                case "tiri":  return new TierInfoBox();
@@ -601,13 +630,13 @@ namespace SharpISOBMFF
                case "tvnn":  return new TVNetworkNameBox();
                case "tvsh":  return new TVShowBox();
                case "tvsn":  return new AppleTVSeasonBox();
-               case "twos":  return new TwosBox();
+               case "twos": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("twos"));break;
                case "tx3g":  return new TextSampleEntrytx3gDup(); // TODO: fix duplicate
                case "txtC":  return new TextConfigBox();
                case "tyco":  return new TypeCombinationBox();
                case "udes":  return new UserDescriptionProperty();
                case "udta":  return new UserDataBox();
-               case "ulaw":  return new UlawBox();
+               case "ulaw": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ulaw"));break;
                case "uncC":  return new UncompressedFrameConfigurationBox();
                case "uncv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("uncv"));break;
                case "urat":  return new UratBox();
@@ -629,6 +658,11 @@ namespace SharpISOBMFF
                case "uuid be7acfcb97a942e89c71999491e3afac":  return new XMPBox();
                case "uuid d08a4f1810f34a82b6c832d8aba183d3":  return new UuidBasedProtectionSystemSpecificHeaderBox();
                case "uuid d4807ef2ca3946958e5426cb9e46a79f":  return new TfrfBox();
+               case "v210": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v210"));break;
+               case "v216": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v216"));break;
+               case "v308": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v308"));break;
+               case "v408": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v408"));break;
+               case "v410": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v410"));break;
                case "vdep":  return new TrackReferenceTypeBoxvdepDup(); // TODO: fix duplicate
                case "vipr":  return new ViewPriorityBox();
                case "vlab":  return new WebVTTSourceLabelBox();
@@ -663,7 +697,7 @@ namespace SharpISOBMFF
                case "xml ":  return new XMLBox();
                case "Xtra":  return new WindowsMediaXtraBox();
                case "yrrc":  return new ThreeGPPRecordingYearBox();
-               case "yuv2":  return new Yuv2Box();
+               case "yuv2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("yuv2"));break;
                case "zoom":  return new ZoomTransitionEffectProperty();
             }
 
@@ -50878,104 +50912,6 @@ public partial class SMPTE2086MasteringDisplayMetadataBox : FullBox
 
 
 /*
-aligned(8) class SVQ3Box() extends Box('SVQ3') {
-	 unsigned int(8) reserved1[6];
-unsigned int(16) dataReferenceIndex;
- unsigned int(8) reserved2[16]; unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(8) reserved3[14];
- unsigned int(8) compressorName[32];
- unsigned int(16) depth;
- unsigned int(16) colorTableId;
- } 
-*/
-public partial class SVQ3Box : Box
-{
-	public const string TYPE = "SVQ3";
-	public override string DisplayName { get { return "SVQ3Box"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected byte[] reserved2; 
-	public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-	protected ushort width; 
-	public ushort Width { get { return this.width; } set { this.width = value; } }
-
-	protected ushort height; 
-	public ushort Height { get { return this.height; } set { this.height = value; } }
-
-	protected byte[] reserved3; 
-	public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
-
-	protected byte[] compressorName; 
-	public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
-
-	protected ushort depth; 
-	public ushort Depth { get { return this.depth; } set { this.depth = value; } }
-
-	protected ushort colorTableId; 
-	public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
-
-	public SVQ3Box(): base(IsoStream.FromFourCC("SVQ3"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 16,  out this.reserved2, "reserved2"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.width, "width"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.height, "height"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 14,  out this.reserved3, "reserved3"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 32,  out this.compressorName, "compressorName"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.depth, "depth"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt8Array(16,  this.reserved2, "reserved2"); 
-		boxSize += stream.WriteUInt16( this.width, "width"); 
-		boxSize += stream.WriteUInt16( this.height, "height"); 
-		boxSize += stream.WriteUInt8Array(14,  this.reserved3, "reserved3"); 
-		boxSize += stream.WriteUInt8Array(32,  this.compressorName, "compressorName"); 
-		boxSize += stream.WriteUInt16( this.depth, "depth"); 
-		boxSize += stream.WriteUInt16( this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16 * 8; // reserved2
-		boxSize += 16; // width
-		boxSize += 16; // height
-		boxSize += 14 * 8; // reserved3
-		boxSize += 32 * 8; // compressorName
-		boxSize += 16; // depth
-		boxSize += 16; // colorTableId
-		return boxSize;
-	}
-}
-
-
-/*
 aligned(8) class SMIBox() extends Box('SMI ') {
 	 bit(8) metadata[];
  } 
@@ -51013,113 +50949,6 @@ public partial class SMIBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)metadata.Length * 8); // metadata
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class AlawBox() extends Box('alaw') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(16) soundVersion;
- unsigned int(8) reserved2[6];
- unsigned int(16) channels;
- unsigned int(16) sampleSize;
- unsigned int(16) compressionId;
- unsigned int(16) packetSize;
- unsigned int(32) timeScale;
- Box[] boxes; 
- } 
-*/
-public partial class AlawBox : Box
-{
-	public const string TYPE = "alaw";
-	public override string DisplayName { get { return "AlawBox"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected ushort soundVersion; 
-	public ushort SoundVersion { get { return this.soundVersion; } set { this.soundVersion = value; } }
-
-	protected byte[] reserved2; 
-	public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-	protected ushort channels; 
-	public ushort Channels { get { return this.channels; } set { this.channels = value; } }
-
-	protected ushort sampleSize; 
-	public ushort SampleSize { get { return this.sampleSize; } set { this.sampleSize = value; } }
-
-	protected ushort compressionId; 
-	public ushort CompressionId { get { return this.compressionId; } set { this.compressionId = value; } }
-
-	protected ushort packetSize; 
-	public ushort PacketSize { get { return this.packetSize; } set { this.packetSize = value; } }
-
-	protected uint timeScale; 
-	public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
-
-	public AlawBox(): base(IsoStream.FromFourCC("alaw"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.soundVersion, "soundVersion"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved2, "reserved2"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.channels, "channels"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.sampleSize, "sampleSize"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.compressionId, "compressionId"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.packetSize, "packetSize"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.timeScale, "timeScale"); 
-		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
-		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt16( this.soundVersion, "soundVersion"); 
-		boxSize += stream.WriteUInt8Array(6,  this.reserved2, "reserved2"); 
-		boxSize += stream.WriteUInt16( this.channels, "channels"); 
-		boxSize += stream.WriteUInt16( this.sampleSize, "sampleSize"); 
-		boxSize += stream.WriteUInt16( this.compressionId, "compressionId"); 
-		boxSize += stream.WriteUInt16( this.packetSize, "packetSize"); 
-		boxSize += stream.WriteUInt32( this.timeScale, "timeScale"); 
-		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
-		boxSize += stream.WriteBoxArrayTillEnd(this);
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16; // soundVersion
-		boxSize += 6 * 8; // reserved2
-		boxSize += 16; // channels
-		boxSize += 16; // sampleSize
-		boxSize += 16; // compressionId
-		boxSize += 16; // packetSize
-		boxSize += 32; // timeScale
-		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
-		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
 }
@@ -51176,104 +51005,6 @@ public partial class C608Box : Box
 		boxSize += 4 * 8; // reserved1
 		boxSize += 16; // reserved2
 		boxSize += 16; // dataReferenceIndex
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class H263Box() extends Box('h263') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(8) reserved2[16]; unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(8) reserved3[14];
- unsigned int(8) compressorName[32];
- unsigned int(16) depth;
- unsigned int(16) colorTableId;
- } 
-*/
-public partial class H263Box : Box
-{
-	public const string TYPE = "h263";
-	public override string DisplayName { get { return "H263Box"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected byte[] reserved2; 
-	public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-	protected ushort width; 
-	public ushort Width { get { return this.width; } set { this.width = value; } }
-
-	protected ushort height; 
-	public ushort Height { get { return this.height; } set { this.height = value; } }
-
-	protected byte[] reserved3; 
-	public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
-
-	protected byte[] compressorName; 
-	public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
-
-	protected ushort depth; 
-	public ushort Depth { get { return this.depth; } set { this.depth = value; } }
-
-	protected ushort colorTableId; 
-	public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
-
-	public H263Box(): base(IsoStream.FromFourCC("h263"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 16,  out this.reserved2, "reserved2"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.width, "width"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.height, "height"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 14,  out this.reserved3, "reserved3"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 32,  out this.compressorName, "compressorName"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.depth, "depth"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt8Array(16,  this.reserved2, "reserved2"); 
-		boxSize += stream.WriteUInt16( this.width, "width"); 
-		boxSize += stream.WriteUInt16( this.height, "height"); 
-		boxSize += stream.WriteUInt8Array(14,  this.reserved3, "reserved3"); 
-		boxSize += stream.WriteUInt8Array(32,  this.compressorName, "compressorName"); 
-		boxSize += stream.WriteUInt16( this.depth, "depth"); 
-		boxSize += stream.WriteUInt16( this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16 * 8; // reserved2
-		boxSize += 16; // width
-		boxSize += 16; // height
-		boxSize += 14 * 8; // reserved3
-		boxSize += 32 * 8; // compressorName
-		boxSize += 16; // depth
-		boxSize += 16; // colorTableId
 		return boxSize;
 	}
 }
@@ -51382,600 +51113,6 @@ public partial class IpirBox : Box
 		boxSize += base.CalculateSize();
 		boxSize += 32; // entry_count
 		boxSize += ((ulong)( entry_count ) * 32); // trackIDs
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class Ima4Box() extends Box('ima4') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(16) soundVersion;
- unsigned int(16) channels;
- unsigned int(16) sampleSize;
- unsigned int(16) compressionId;
- unsigned int(16) packetSize;
- unsigned int(32) timeScale;
- Box boxes[];
- } 
-*/
-public partial class Ima4Box : Box
-{
-	public const string TYPE = "ima4";
-	public override string DisplayName { get { return "Ima4Box"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected ushort soundVersion; 
-	public ushort SoundVersion { get { return this.soundVersion; } set { this.soundVersion = value; } }
-
-	protected ushort channels; 
-	public ushort Channels { get { return this.channels; } set { this.channels = value; } }
-
-	protected ushort sampleSize; 
-	public ushort SampleSize { get { return this.sampleSize; } set { this.sampleSize = value; } }
-
-	protected ushort compressionId; 
-	public ushort CompressionId { get { return this.compressionId; } set { this.compressionId = value; } }
-
-	protected ushort packetSize; 
-	public ushort PacketSize { get { return this.packetSize; } set { this.packetSize = value; } }
-
-	protected uint timeScale; 
-	public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
-
-	public Ima4Box(): base(IsoStream.FromFourCC("ima4"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.soundVersion, "soundVersion"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.channels, "channels"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.sampleSize, "sampleSize"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.compressionId, "compressionId"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.packetSize, "packetSize"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.timeScale, "timeScale"); 
-		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
-		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt16( this.soundVersion, "soundVersion"); 
-		boxSize += stream.WriteUInt16( this.channels, "channels"); 
-		boxSize += stream.WriteUInt16( this.sampleSize, "sampleSize"); 
-		boxSize += stream.WriteUInt16( this.compressionId, "compressionId"); 
-		boxSize += stream.WriteUInt16( this.packetSize, "packetSize"); 
-		boxSize += stream.WriteUInt32( this.timeScale, "timeScale"); 
-		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
-		boxSize += stream.WriteBoxArrayTillEnd(this);
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16; // soundVersion
-		boxSize += 16; // channels
-		boxSize += 16; // sampleSize
-		boxSize += 16; // compressionId
-		boxSize += 16; // packetSize
-		boxSize += 32; // timeScale
-		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
-		boxSize += IsoStream.CalculateBoxArray(this);
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class JpegBox() extends Box('jpeg') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(8) reserved2[16]; unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(8) reserved3[14];
- unsigned int(8) compressorName[32];
- unsigned int(16) depth;
- unsigned int(16) colorTableId;
- } 
-*/
-public partial class JpegBox : Box
-{
-	public const string TYPE = "jpeg";
-	public override string DisplayName { get { return "JpegBox"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected byte[] reserved2; 
-	public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-	protected ushort width; 
-	public ushort Width { get { return this.width; } set { this.width = value; } }
-
-	protected ushort height; 
-	public ushort Height { get { return this.height; } set { this.height = value; } }
-
-	protected byte[] reserved3; 
-	public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
-
-	protected byte[] compressorName; 
-	public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
-
-	protected ushort depth; 
-	public ushort Depth { get { return this.depth; } set { this.depth = value; } }
-
-	protected ushort colorTableId; 
-	public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
-
-	public JpegBox(): base(IsoStream.FromFourCC("jpeg"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 16,  out this.reserved2, "reserved2"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.width, "width"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.height, "height"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 14,  out this.reserved3, "reserved3"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 32,  out this.compressorName, "compressorName"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.depth, "depth"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt8Array(16,  this.reserved2, "reserved2"); 
-		boxSize += stream.WriteUInt16( this.width, "width"); 
-		boxSize += stream.WriteUInt16( this.height, "height"); 
-		boxSize += stream.WriteUInt8Array(14,  this.reserved3, "reserved3"); 
-		boxSize += stream.WriteUInt8Array(32,  this.compressorName, "compressorName"); 
-		boxSize += stream.WriteUInt16( this.depth, "depth"); 
-		boxSize += stream.WriteUInt16( this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16 * 8; // reserved2
-		boxSize += 16; // width
-		boxSize += 16; // height
-		boxSize += 14 * 8; // reserved3
-		boxSize += 32 * 8; // compressorName
-		boxSize += 16; // depth
-		boxSize += 16; // colorTableId
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class RawBox() extends Box('raw ') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(8) reserved2[16]; unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(8) reserved3[14];
- unsigned int(8) compressorName[32];
- unsigned int(16) depth;
- unsigned int(16) colorTableId;
- } 
-*/
-public partial class RawBox : Box
-{
-	public const string TYPE = "raw ";
-	public override string DisplayName { get { return "RawBox"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected byte[] reserved2; 
-	public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-	protected ushort width; 
-	public ushort Width { get { return this.width; } set { this.width = value; } }
-
-	protected ushort height; 
-	public ushort Height { get { return this.height; } set { this.height = value; } }
-
-	protected byte[] reserved3; 
-	public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
-
-	protected byte[] compressorName; 
-	public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
-
-	protected ushort depth; 
-	public ushort Depth { get { return this.depth; } set { this.depth = value; } }
-
-	protected ushort colorTableId; 
-	public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
-
-	public RawBox(): base(IsoStream.FromFourCC("raw "))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 16,  out this.reserved2, "reserved2"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.width, "width"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.height, "height"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 14,  out this.reserved3, "reserved3"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 32,  out this.compressorName, "compressorName"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.depth, "depth"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt8Array(16,  this.reserved2, "reserved2"); 
-		boxSize += stream.WriteUInt16( this.width, "width"); 
-		boxSize += stream.WriteUInt16( this.height, "height"); 
-		boxSize += stream.WriteUInt8Array(14,  this.reserved3, "reserved3"); 
-		boxSize += stream.WriteUInt8Array(32,  this.compressorName, "compressorName"); 
-		boxSize += stream.WriteUInt16( this.depth, "depth"); 
-		boxSize += stream.WriteUInt16( this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16 * 8; // reserved2
-		boxSize += 16; // width
-		boxSize += 16; // height
-		boxSize += 14 * 8; // reserved3
-		boxSize += 32 * 8; // compressorName
-		boxSize += 16; // depth
-		boxSize += 16; // colorTableId
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class TwosBox() extends Box('twos') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(16) soundVersion;
- unsigned int(16) channels;
- unsigned int(16) sampleSize;
- unsigned int(16) compressionId;
- unsigned int(16) packetSize;
- unsigned int(32) timeScale;
- Box boxes[];
- } 
-*/
-public partial class TwosBox : Box
-{
-	public const string TYPE = "twos";
-	public override string DisplayName { get { return "TwosBox"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected ushort soundVersion; 
-	public ushort SoundVersion { get { return this.soundVersion; } set { this.soundVersion = value; } }
-
-	protected ushort channels; 
-	public ushort Channels { get { return this.channels; } set { this.channels = value; } }
-
-	protected ushort sampleSize; 
-	public ushort SampleSize { get { return this.sampleSize; } set { this.sampleSize = value; } }
-
-	protected ushort compressionId; 
-	public ushort CompressionId { get { return this.compressionId; } set { this.compressionId = value; } }
-
-	protected ushort packetSize; 
-	public ushort PacketSize { get { return this.packetSize; } set { this.packetSize = value; } }
-
-	protected uint timeScale; 
-	public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
-
-	public TwosBox(): base(IsoStream.FromFourCC("twos"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.soundVersion, "soundVersion"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.channels, "channels"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.sampleSize, "sampleSize"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.compressionId, "compressionId"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.packetSize, "packetSize"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.timeScale, "timeScale"); 
-		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
-		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt16( this.soundVersion, "soundVersion"); 
-		boxSize += stream.WriteUInt16( this.channels, "channels"); 
-		boxSize += stream.WriteUInt16( this.sampleSize, "sampleSize"); 
-		boxSize += stream.WriteUInt16( this.compressionId, "compressionId"); 
-		boxSize += stream.WriteUInt16( this.packetSize, "packetSize"); 
-		boxSize += stream.WriteUInt32( this.timeScale, "timeScale"); 
-		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
-		boxSize += stream.WriteBoxArrayTillEnd(this);
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16; // soundVersion
-		boxSize += 16; // channels
-		boxSize += 16; // sampleSize
-		boxSize += 16; // compressionId
-		boxSize += 16; // packetSize
-		boxSize += 32; // timeScale
-		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
-		boxSize += IsoStream.CalculateBoxArray(this);
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class UlawBox() extends Box('ulaw') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(16) soundVersion;
- unsigned int(16) channels;
- unsigned int(16) sampleSize;
- unsigned int(16) compressionId;
- unsigned int(16) packetSize;
- unsigned int(32) timeScale;
- Box boxes[];
- } 
-*/
-public partial class UlawBox : Box
-{
-	public const string TYPE = "ulaw";
-	public override string DisplayName { get { return "UlawBox"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected ushort soundVersion; 
-	public ushort SoundVersion { get { return this.soundVersion; } set { this.soundVersion = value; } }
-
-	protected ushort channels; 
-	public ushort Channels { get { return this.channels; } set { this.channels = value; } }
-
-	protected ushort sampleSize; 
-	public ushort SampleSize { get { return this.sampleSize; } set { this.sampleSize = value; } }
-
-	protected ushort compressionId; 
-	public ushort CompressionId { get { return this.compressionId; } set { this.compressionId = value; } }
-
-	protected ushort packetSize; 
-	public ushort PacketSize { get { return this.packetSize; } set { this.packetSize = value; } }
-
-	protected uint timeScale; 
-	public uint TimeScale { get { return this.timeScale; } set { this.timeScale = value; } }
-	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
-
-	public UlawBox(): base(IsoStream.FromFourCC("ulaw"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.soundVersion, "soundVersion"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.channels, "channels"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.sampleSize, "sampleSize"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.compressionId, "compressionId"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.packetSize, "packetSize"); 
-		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.timeScale, "timeScale"); 
-		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
-		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt16( this.soundVersion, "soundVersion"); 
-		boxSize += stream.WriteUInt16( this.channels, "channels"); 
-		boxSize += stream.WriteUInt16( this.sampleSize, "sampleSize"); 
-		boxSize += stream.WriteUInt16( this.compressionId, "compressionId"); 
-		boxSize += stream.WriteUInt16( this.packetSize, "packetSize"); 
-		boxSize += stream.WriteUInt32( this.timeScale, "timeScale"); 
-		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
-		boxSize += stream.WriteBoxArrayTillEnd(this);
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16; // soundVersion
-		boxSize += 16; // channels
-		boxSize += 16; // sampleSize
-		boxSize += 16; // compressionId
-		boxSize += 16; // packetSize
-		boxSize += 32; // timeScale
-		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
-		boxSize += IsoStream.CalculateBoxArray(this);
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class Yuv2Box() extends Box('yuv2') {
-	 unsigned int(8) reserved1[6];
- unsigned int(16) dataReferenceIndex;
- unsigned int(8) reserved2[16]; unsigned int(16) width;
- unsigned int(16) height;
- unsigned int(8) reserved3[14];
- unsigned int(8) compressorName[32];
- unsigned int(16) depth;
- unsigned int(16) colorTableId;
- } 
-*/
-public partial class Yuv2Box : Box
-{
-	public const string TYPE = "yuv2";
-	public override string DisplayName { get { return "Yuv2Box"; } }
-
-	protected byte[] reserved1; 
-	public byte[] Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
-
-	protected ushort dataReferenceIndex; 
-	public ushort DataReferenceIndex { get { return this.dataReferenceIndex; } set { this.dataReferenceIndex = value; } }
-
-	protected byte[] reserved2; 
-	public byte[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
-
-	protected ushort width; 
-	public ushort Width { get { return this.width; } set { this.width = value; } }
-
-	protected ushort height; 
-	public ushort Height { get { return this.height; } set { this.height = value; } }
-
-	protected byte[] reserved3; 
-	public byte[] Reserved3 { get { return this.reserved3; } set { this.reserved3 = value; } }
-
-	protected byte[] compressorName; 
-	public byte[] CompressorName { get { return this.compressorName; } set { this.compressorName = value; } }
-
-	protected ushort depth; 
-	public ushort Depth { get { return this.depth; } set { this.depth = value; } }
-
-	protected ushort colorTableId; 
-	public ushort ColorTableId { get { return this.colorTableId; } set { this.colorTableId = value; } }
-
-	public Yuv2Box(): base(IsoStream.FromFourCC("yuv2"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 6,  out this.reserved1, "reserved1"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 16,  out this.reserved2, "reserved2"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.width, "width"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.height, "height"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 14,  out this.reserved3, "reserved3"); 
-		boxSize += stream.ReadUInt8Array(boxSize, readSize, 32,  out this.compressorName, "compressorName"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.depth, "depth"); 
-		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8Array(6,  this.reserved1, "reserved1"); 
-		boxSize += stream.WriteUInt16( this.dataReferenceIndex, "dataReferenceIndex"); 
-		boxSize += stream.WriteUInt8Array(16,  this.reserved2, "reserved2"); 
-		boxSize += stream.WriteUInt16( this.width, "width"); 
-		boxSize += stream.WriteUInt16( this.height, "height"); 
-		boxSize += stream.WriteUInt8Array(14,  this.reserved3, "reserved3"); 
-		boxSize += stream.WriteUInt8Array(32,  this.compressorName, "compressorName"); 
-		boxSize += stream.WriteUInt16( this.depth, "depth"); 
-		boxSize += stream.WriteUInt16( this.colorTableId, "colorTableId"); 
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += 6 * 8; // reserved1
-		boxSize += 16; // dataReferenceIndex
-		boxSize += 16 * 8; // reserved2
-		boxSize += 16; // width
-		boxSize += 16; // height
-		boxSize += 14 * 8; // reserved3
-		boxSize += 32 * 8; // compressorName
-		boxSize += 16; // depth
-		boxSize += 16; // colorTableId
 		return boxSize;
 	}
 }
@@ -54587,49 +53724,6 @@ public partial class OrieBox : Box
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public OrieBox(): base(IsoStream.FromFourCC("orie"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class NoneBox() extends Box('NONE') {
-	 bit(8) data[];
- } 
-*/
-public partial class NoneBox : Box
-{
-	public const string TYPE = "NONE";
-	public override string DisplayName { get { return "NoneBox"; } }
-
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-	public NoneBox(): base(IsoStream.FromFourCC("NONE"))
 	{
 	}
 
