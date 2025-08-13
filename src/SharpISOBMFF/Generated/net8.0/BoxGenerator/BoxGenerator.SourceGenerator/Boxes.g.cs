@@ -260,6 +260,7 @@ namespace SharpISOBMFF
                case "gmhd":  return new GenericMediaHeaderAtom();
                case "gmin":  return new BaseMediaInfoAtom();
                case "gnre":  return new GenreBox();
+               case "gps ":  return new GpsBox();
                case "grpl":  return new GroupsListBox();
                case "gshh":  return new GooglesHostHeaderBox();
                case "gspm":  return new GooglePingMessageBox();
@@ -55661,6 +55662,49 @@ public partial class AppleColor : IMp4Serializable
 		boxSize += 16; // red
 		boxSize += 16; // green
 		boxSize += 16; // blue
+		return boxSize;
+	}
+}
+
+
+/*
+class GpsBox() extends Box ('gps '){
+ bit(8) data[];
+ }
+*/
+public partial class GpsBox : Box
+{
+	public const string TYPE = "gps ";
+	public override string DisplayName { get { return "GpsBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public GpsBox(): base(IsoStream.FromFourCC("gps "))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
 		return boxSize;
 	}
 }

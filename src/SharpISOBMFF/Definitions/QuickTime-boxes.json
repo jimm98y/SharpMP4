@@ -115,6 +115,12 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class AppleColorTableBox() extends Box ('ctab'){\r\n signed int(32) color_table_seed;\r\n signed int(16) flags;\r\n signed int(16) color_table_size;\r\n AppleColor colors[];\r\n }\r\n class AppleColor() {\r\nunsigned int(16) alpha;\r\n unsigned int(16) red;\r\n unsigned int(16) green;\r\n unsigned int(16) blue;\r\n }\r\n"
+    },
+    {
+      "fourcc": "gps ",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GpsBox() extends Box ('gps '){\r\n bit(8) data[];\r\n }"
     }
   ]
 }
