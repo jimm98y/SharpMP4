@@ -352,8 +352,8 @@ namespace SharpISOBMFF
                case "lsel":  return new LayerSelectorProperty();
                case "ludt":  return new LoudnessBox();
                case "m4ds":  return new MPEG4ExtensionDescriptorsBox();
-               case "MAC3 ": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC3 "));break;
-               case "MAC6 ": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC6 "));break;
+               case "MAC3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC3"));break;
+               case "MAC6": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC6"));break;
                case "matt":  return new AppleTrackMatteBox();
                case "maxr":  return new HintMaxRate();
                case "md5i":  return new MD5IntegrityBox();

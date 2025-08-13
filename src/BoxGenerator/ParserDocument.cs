@@ -162,7 +162,7 @@ namespace BoxGenerator
             {
             "samr","sawb","mp4a","drms","alac","owma","ac-3","ec-3","mlpa","dtsl","dtsh","dtse","Opus","enca","resa","sevc","sqcp","ssmv","lpcm","dtsc","sowt",
             // quicktime https://developer.apple.com/documentation/quicktime-file-format/sound_sample_descriptions
-            "\\0\\0\\0\\0","NONE","raw ","twos","sowt","MAC3 ","MAC6 ","ima4","fl32","fl64","in24","in32","ulaw","alaw","\\x6D\\x73\\x00\\x02","\\x6D\\x73\\x00\\x11",
+            "\\0\\0\\0\\0","NONE","raw ","twos","sowt","MAC3","MAC6","ima4","fl32","fl64","in24","in32","ulaw","alaw","\\x6D\\x73\\x00\\x02","\\x6D\\x73\\x00\\x11",
             "dvca","QDMC","QDM2","Qclp","\\x6D\\x73\\x00\\x55",".mp3"
             };
             string[] visualSampleEntryTypes = new string[]
