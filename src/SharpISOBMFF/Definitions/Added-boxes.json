@@ -421,7 +421,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AlisBox() extends Box('alis') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleDataReferenceAliasBox() extends Box('alis') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

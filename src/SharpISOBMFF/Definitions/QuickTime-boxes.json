@@ -97,6 +97,24 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class AppleCountryListBox() extends Box ('ctry') {\r\n unsigned int(16) entry_count;\r\n CountryListEntry entries[];\r\n }\r\n class CountryListEntry() { \r\n unsigned int(16) country_count;\r\n unsigned int(16) country[ country_count ];\r\n }\r\n"
+    },
+    {
+      "fourcc": "rsrc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleDataReferenceResourceBox() extends Box ('rsrc'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "qtvr",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleQTVRTrackBox() extends Box ('qtvr'){\r\n unsigned int(32) reserved1;\r\n unsigned int(16) reserved2;\r\n unsigned int(16) dataRefIndex;\r\n unsigned int(32) data;\r\n }"
+    },
+    {
+      "fourcc": "ctab",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleColorTableBox() extends Box ('ctab'){\r\n signed int(32) color_table_seed;\r\n signed int(16) flags;\r\n signed int(16) color_table_size;\r\n AppleColor colors[];\r\n }\r\n class AppleColor() {\r\nunsigned int(16) alpha;\r\n unsigned int(16) red;\r\n unsigned int(16) green;\r\n unsigned int(16) blue;\r\n }\r\n"
     }
   ]
 }

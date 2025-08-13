@@ -100,7 +100,7 @@ namespace SharpISOBMFF
                case "alac": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("alac"));break;
                case "alaw": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("alaw"));break;
                case "albm":  return new ThreeGPPAlbumBox();
-               case "alis":  return new AlisBox();
+               case "alis":  return new AppleDataReferenceAliasBox();
                case "AllF":  return new PlayAllFramesBox();
                case "alou":  return new AlbumLoudnessInfo();
                case "alte":  return new AlteTrackGroupTypeBox();
@@ -172,6 +172,7 @@ namespace SharpISOBMFF
                case "csgp":  return new CompactSampleToGroupBox();
                case "cslg":  return new CompositionToDecodeBox();
                case "cstg":  return new CstgTrackGroupTypeBox();
+               case "ctab":  return new AppleColorTableBox();
                case "ctim":  return new CueTimeBox();
                case "ctry":  return new AppleCountryListBox();
                case "ctts":  return new CompositionOffsetBox();
@@ -461,6 +462,7 @@ namespace SharpISOBMFF
                case "QDM2": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDM2"));break;
                case "QDMC": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDMC"));break;
                case "qlif":  return new SVCPriorityLayerInfoBox();
+               case "qtvr":  return new AppleQTVRTrackBox();
                case "rati":  return new AppleRating2Box();
                case "raw ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("raw "));break;
                case "rdrf":  return new AppleDataReferenceBox();
@@ -481,6 +483,7 @@ namespace SharpISOBMFF
                case "rref":  return new RequiredReferenceTypesProperty();
                case "rrgn":  return new RectRegionBox();
                case "rrtp":  return new ReceivedRtpHintSampleEntry();
+               case "rsrc":  return new AppleDataReferenceResourceBox();
                case "rsrp":  return new ReceivedSrtpHintSampleEntry();
                case "rssr":  return new ReceivedSsrcBox();
                case "rtng":  return new AppleRatingBox();
@@ -42727,19 +42730,19 @@ public partial class AppleEndiannessBox : Box
 
 
 /*
-aligned(8) class AlisBox() extends Box('alis') {
+aligned(8) class AppleDataReferenceAliasBox() extends Box('alis') {
  bit(8) data[];
  } 
 */
-public partial class AlisBox : Box
+public partial class AppleDataReferenceAliasBox : Box
 {
 	public const string TYPE = "alis";
-	public override string DisplayName { get { return "AlisBox"; } }
+	public override string DisplayName { get { return "AppleDataReferenceAliasBox"; } }
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public AlisBox(): base(IsoStream.FromFourCC("alis"))
+	public AppleDataReferenceAliasBox(): base(IsoStream.FromFourCC("alis"))
 	{
 	}
 
@@ -55196,6 +55199,243 @@ public partial class CountryListEntry : IMp4Serializable
 		ulong boxSize = 0;
 		boxSize += 16; // country_count
 		boxSize += ((ulong)( country_count ) * 16); // country
+		return boxSize;
+	}
+}
+
+
+/*
+class AppleDataReferenceResourceBox() extends Box ('rsrc'){
+ bit(8) data[];
+ }
+*/
+public partial class AppleDataReferenceResourceBox : Box
+{
+	public const string TYPE = "rsrc";
+	public override string DisplayName { get { return "AppleDataReferenceResourceBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public AppleDataReferenceResourceBox(): base(IsoStream.FromFourCC("rsrc"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class AppleQTVRTrackBox() extends Box ('qtvr'){
+ unsigned int(32) reserved1;
+ unsigned int(16) reserved2;
+ unsigned int(16) dataRefIndex;
+ unsigned int(32) data;
+ }
+*/
+public partial class AppleQTVRTrackBox : Box
+{
+	public const string TYPE = "qtvr";
+	public override string DisplayName { get { return "AppleQTVRTrackBox"; } }
+
+	protected uint reserved1; 
+	public uint Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+	protected ushort reserved2; 
+	public ushort Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+	protected ushort dataRefIndex; 
+	public ushort DataRefIndex { get { return this.dataRefIndex; } set { this.dataRefIndex = value; } }
+
+	protected uint data; 
+	public uint Data { get { return this.data; } set { this.data = value; } }
+
+	public AppleQTVRTrackBox(): base(IsoStream.FromFourCC("qtvr"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.reserved1, "reserved1"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.reserved2, "reserved2"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.dataRefIndex, "dataRefIndex"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.reserved1, "reserved1"); 
+		boxSize += stream.WriteUInt16( this.reserved2, "reserved2"); 
+		boxSize += stream.WriteUInt16( this.dataRefIndex, "dataRefIndex"); 
+		boxSize += stream.WriteUInt32( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // reserved1
+		boxSize += 16; // reserved2
+		boxSize += 16; // dataRefIndex
+		boxSize += 32; // data
+		return boxSize;
+	}
+}
+
+
+/*
+class AppleColorTableBox() extends Box ('ctab'){
+ signed int(32) color_table_seed;
+ signed int(16) flags;
+ signed int(16) color_table_size;
+ AppleColor colors[];
+ }
+ 
+*/
+public partial class AppleColorTableBox : Box
+{
+	public const string TYPE = "ctab";
+	public override string DisplayName { get { return "AppleColorTableBox"; } }
+
+	protected int color_table_seed; 
+	public int ColorTableSeed { get { return this.color_table_seed; } set { this.color_table_seed = value; } }
+
+	protected short flags; 
+	public short Flags { get { return this.flags; } set { this.flags = value; } }
+
+	protected short color_table_size; 
+	public short ColorTableSize { get { return this.color_table_size; } set { this.color_table_size = value; } }
+
+	protected AppleColor[] colors; 
+	public AppleColor[] Colors { get { return this.colors; } set { this.colors = value; } }
+
+	public AppleColorTableBox(): base(IsoStream.FromFourCC("ctab"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadInt32(boxSize, readSize,  out this.color_table_seed, "color_table_seed"); 
+		boxSize += stream.ReadInt16(boxSize, readSize,  out this.flags, "flags"); 
+		boxSize += stream.ReadInt16(boxSize, readSize,  out this.color_table_size, "color_table_size"); 
+		boxSize += stream.ReadClass(boxSize, readSize, this, (uint)(uint.MaxValue), () => new AppleColor(),  out this.colors, "colors"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteInt32( this.color_table_seed, "color_table_seed"); 
+		boxSize += stream.WriteInt16( this.flags, "flags"); 
+		boxSize += stream.WriteInt16( this.color_table_size, "color_table_size"); 
+		boxSize += stream.WriteClass( this.colors, "colors"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // color_table_seed
+		boxSize += 16; // flags
+		boxSize += 16; // color_table_size
+		boxSize += IsoStream.CalculateClassSize(colors); // colors
+		return boxSize;
+	}
+}
+
+
+/*
+class AppleColor() {
+unsigned int(16) alpha;
+ unsigned int(16) red;
+ unsigned int(16) green;
+ unsigned int(16) blue;
+ }
+
+*/
+public partial class AppleColor : IMp4Serializable
+{
+	public StreamMarker Padding { get; set; }
+	protected IMp4Serializable parent = null;
+	public IMp4Serializable GetParent() { return parent; }
+	public void SetParent(IMp4Serializable parent) { this.parent = parent; }
+	public virtual string DisplayName { get { return "AppleColor"; } }
+
+	protected ushort alpha; 
+	public ushort Alpha { get { return this.alpha; } set { this.alpha = value; } }
+
+	protected ushort red; 
+	public ushort Red { get { return this.red; } set { this.red = value; } }
+
+	protected ushort green; 
+	public ushort Green { get { return this.green; } set { this.green = value; } }
+
+	protected ushort blue; 
+	public ushort Blue { get { return this.blue; } set { this.blue = value; } }
+
+	public AppleColor(): base()
+	{
+	}
+
+	public virtual ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.alpha, "alpha"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.red, "red"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.green, "green"); 
+		boxSize += stream.ReadUInt16(boxSize, readSize,  out this.blue, "blue"); 
+		return boxSize;
+	}
+
+	public virtual ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += stream.WriteUInt16( this.alpha, "alpha"); 
+		boxSize += stream.WriteUInt16( this.red, "red"); 
+		boxSize += stream.WriteUInt16( this.green, "green"); 
+		boxSize += stream.WriteUInt16( this.blue, "blue"); 
+		return boxSize;
+	}
+
+	public virtual ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += 16; // alpha
+		boxSize += 16; // red
+		boxSize += 16; // green
+		boxSize += 16; // blue
 		return boxSize;
 	}
 }
