@@ -291,7 +291,7 @@ namespace SharpISOBMFF
                case "icef":  return new GenericCompressedUnitsItemInfoBox();
                case "icnu":  return new OMAIconURLBox();
                case "icpv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("icpv"));break;
-               case "id32":  return new ID3TagBox();
+               case "ID32":  return new ID3TagBox();
                case "idat":  return new ItemDataBox();
                case "iden":  return new CueIDBox();
                case "ienc":  return new ItemEncryptionBox();
@@ -44354,19 +44354,19 @@ public partial class MetaBoxRelationBox : FullBox
 
 
 /*
-aligned(8) class ID3TagBox() extends FullBox('id32') {
+aligned(8) class ID3TagBox() extends FullBox('ID32') {
  bit(8) data[]; 
  }
 */
 public partial class ID3TagBox : FullBox
 {
-	public const string TYPE = "id32";
+	public const string TYPE = "ID32";
 	public override string DisplayName { get { return "ID3TagBox"; } }
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public ID3TagBox(): base(IsoStream.FromFourCC("id32"))
+	public ID3TagBox(): base(IsoStream.FromFourCC("ID32"))
 	{
 	}
 

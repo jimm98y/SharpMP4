@@ -563,7 +563,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ID3TagBox() extends FullBox('id32') {\r\n bit(8) data[]; \r\n }"
+      "syntax": "aligned(8) class ID3TagBox() extends FullBox('ID32') {\r\n bit(8) data[]; \r\n }"
     },
     {
       "containers": [ "*" ],
