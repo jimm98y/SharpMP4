@@ -149,6 +149,7 @@ namespace SharpISOBMFF
                case "cmin":  return new CameraIntrinsicMatrixBox();
                case "cmpC":  return new GenericCompressionConfigurationBox();
                case "cmpd":  return new ComponentDefinitionBox();
+               case "cmvd":  return new CompressedMoovDataBox();
                case "cnID":  return new AppleStoreCatalogIDBox();
                case "co64":  return new ChunkLargeOffsetBox();
                case "CoLL":  return new ContentLightLevelBoxCoLLDup(); // TODO: fix duplicate
@@ -169,6 +170,7 @@ namespace SharpISOBMFF
                case "dac3":  return new AC3SpecificBox();
                case "damr":  return new AmrSpecificBox();
                case "data":  return new DataBox();
+               case "dcom":  return new DecompressorBox();
                case "ddts":  return new DTSSpecificBox();
                case "dec3":  return new EC3SpecificBox();
                case "desc":  return new AppleDescriptionBox();
@@ -55122,6 +55124,99 @@ public partial class AV1LayeredImageIndexingProperty : ItemProperty
 		{
 			boxSize += 3 * 16; // layer_size
 		}
+		return boxSize;
+	}
+}
+
+
+/*
+class CompressedMoovDataBox() extends Box ('cmvd'){
+ unsigned int(32) uncompressedSize;
+bit(8) compressedData;
+ }
+*/
+public partial class CompressedMoovDataBox : Box
+{
+	public const string TYPE = "cmvd";
+	public override string DisplayName { get { return "CompressedMoovDataBox"; } }
+
+	protected uint uncompressedSize; 
+	public uint UncompressedSize { get { return this.uncompressedSize; } set { this.uncompressedSize = value; } }
+
+	protected byte compressedData; 
+	public byte CompressedData { get { return this.compressedData; } set { this.compressedData = value; } }
+
+	public CompressedMoovDataBox(): base(IsoStream.FromFourCC("cmvd"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.uncompressedSize, "uncompressedSize"); 
+		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.compressedData, "compressedData"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.uncompressedSize, "uncompressedSize"); 
+		boxSize += stream.WriteUInt8( this.compressedData, "compressedData"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // uncompressedSize
+		boxSize += 8; // compressedData
+		return boxSize;
+	}
+}
+
+
+/*
+class DecompressorBox() extends Box ('dcom'){
+ unsigned int(32) decompressor;
+ }
+*/
+public partial class DecompressorBox : Box
+{
+	public const string TYPE = "dcom";
+	public override string DisplayName { get { return "DecompressorBox"; } }
+
+	protected uint decompressor; 
+	public uint Decompressor { get { return this.decompressor; } set { this.decompressor = value; } }
+
+	public DecompressorBox(): base(IsoStream.FromFourCC("dcom"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.decompressor, "decompressor"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.decompressor, "decompressor"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // decompressor
 		return boxSize;
 	}
 }

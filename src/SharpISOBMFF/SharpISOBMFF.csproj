@@ -39,6 +39,7 @@
 		<AdditionalFiles Include="Definitions\Added-boxes.json" />
 		<AdditionalFiles Include="Definitions\AV1-boxes.json" />
 		<AdditionalFiles Include="Definitions\AVIF-boxes.json" />
+		<AdditionalFiles Include="Definitions\QuickTime-boxes.json" />
 		<AdditionalFiles Include="Definitions\Opus-boxes.json" />
 	</ItemGroup>
 

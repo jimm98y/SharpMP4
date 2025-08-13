@@ -1,0 +1,18 @@
+﻿{
+  "name": "Boxes",
+  "description": "Boxes (also called atoms)",
+  "entries": [
+    {
+      "fourcc": "cmvd",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CompressedMoovDataBox() extends Box ('cmvd'){\r\n unsigned int(32) uncompressedSize;\r\nbit(8) compressedData;\r\n }"
+    },
+    {
+      "fourcc": "dcom",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class DecompressorBox() extends Box ('dcom'){\r\n unsigned int(32) decompressor;\r\n }"
+    }
+  ]
+}
