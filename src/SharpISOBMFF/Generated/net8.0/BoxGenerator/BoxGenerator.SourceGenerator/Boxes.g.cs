@@ -18,6 +18,8 @@ namespace SharpISOBMFF
             {
                case "----":  return new CustomBox();
                case ".mp3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC(".mp3"));break;
+               case "@PRM":  return new AdobePremiereVersionBox();
+               case "@PRQ":  return new AdobePremiereQuickTimeVersionBox();
                case "\0\0\0\0": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\0\0\0\0"));break;
                case "\x6D\x73\x00\x02": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x02"));break;
                case "\x6D\x73\x00\x11": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x11"));break;
@@ -55681,6 +55683,92 @@ public partial class GpsBox : Box
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public GpsBox(): base(IsoStream.FromFourCC("gps "))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class AdobePremiereVersionBox() extends Box ('@PRM'){
+ bit(8) data[];
+ }
+*/
+public partial class AdobePremiereVersionBox : Box
+{
+	public const string TYPE = "@PRM";
+	public override string DisplayName { get { return "AdobePremiereVersionBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public AdobePremiereVersionBox(): base(IsoStream.FromFourCC("@PRM"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class AdobePremiereQuickTimeVersionBox() extends Box ('@PRQ'){
+ bit(8) data[];
+ }
+*/
+public partial class AdobePremiereQuickTimeVersionBox : Box
+{
+	public const string TYPE = "@PRQ";
+	public override string DisplayName { get { return "AdobePremiereQuickTimeVersionBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public AdobePremiereQuickTimeVersionBox(): base(IsoStream.FromFourCC("@PRQ"))
 	{
 	}
 

@@ -121,6 +121,18 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class GpsBox() extends Box ('gps '){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "@PRM",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AdobePremiereVersionBox() extends Box ('@PRM'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "@PRQ",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AdobePremiereQuickTimeVersionBox() extends Box ('@PRQ'){\r\n bit(8) data[];\r\n }"
     }
   ]
 }
