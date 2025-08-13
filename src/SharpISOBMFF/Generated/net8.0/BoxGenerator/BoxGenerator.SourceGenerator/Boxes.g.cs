@@ -249,6 +249,7 @@ namespace SharpISOBMFF
                case "fpar":  return new FilePartitionBox();
                case "fpcm":  return new FpcmBox();
                case "FPRF":  return new PspFprfBox();
+               case "frea":  return new KodakFreaBox();
                case "free":  return new FreeSpaceBox();
                case "frma":  return new OriginalFormatBox();
                case "ftab":  return new FontTableBox();
@@ -497,6 +498,7 @@ namespace SharpISOBMFF
                case "sbtt":  return new TextSubtitleSampleEntry();
                case "schi":  return new SchemeInformationBox();
                case "schm":  return new SchemeTypeBox();
+               case "scra":  return new KodakPreviewImageBox();
                case "scrb":  return new ScrambleSchemeInfoBox();
                case "sdep":  return new SampleDependencyBox();
                case "sdes":  return new AppleShortDescriptionBox();
@@ -594,10 +596,12 @@ namespace SharpISOBMFF
                case "tfdt":  return new TrackFragmentBaseMediaDecodeTimeBox();
                case "tfhd":  return new TrackFragmentHeaderBox();
                case "tfra":  return new TrackFragmentRandomAccessBox();
+               case "thma":  return new KodakThumbnailImageBox();
                case "thmb":  return new ThmbBox();
                case "tibr":  return new TierBitRateBox();
                case "tiff": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("tiff"));break;
                case "tilC":  return new TiledImageBox();
+               case "tima": throw new NotSupportedException($"'tima' under '{parent}' is ambiguous in between KodakDurationBox and KodakVersionBox");
                case "tims":  return new TimeScaleEntry();
                case "tiri":  return new TierInfoBox();
                case "titl":  return new ThreeGPPTitleBox();
@@ -53727,6 +53731,227 @@ public partial class OrieBox : Box
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public OrieBox(): base(IsoStream.FromFourCC("orie"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class KodakFreaBox() extends Box ('frea'){
+ Box boxes[];
+ }
+
+*/
+public partial class KodakFreaBox : Box
+{
+	public const string TYPE = "frea";
+	public override string DisplayName { get { return "KodakFreaBox"; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+	public KodakFreaBox(): base(IsoStream.FromFourCC("frea"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+}
+
+
+/*
+class KodakThumbnailImageBox() extends Box ('thma'){
+ bit(8) data[];
+ }
+
+*/
+public partial class KodakThumbnailImageBox : Box
+{
+	public const string TYPE = "thma";
+	public override string DisplayName { get { return "KodakThumbnailImageBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public KodakThumbnailImageBox(): base(IsoStream.FromFourCC("thma"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class KodakPreviewImageBox() extends Box ('scra'){
+ bit(8) data[];
+ }
+
+*/
+public partial class KodakPreviewImageBox : Box
+{
+	public const string TYPE = "scra";
+	public override string DisplayName { get { return "KodakPreviewImageBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public KodakPreviewImageBox(): base(IsoStream.FromFourCC("scra"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class KodakDurationBox() extends Box ('tima'){
+ unsigned int(32) duration;
+ }
+
+*/
+public partial class KodakDurationBox : Box
+{
+	public const string TYPE = "tima";
+	public override string DisplayName { get { return "KodakDurationBox"; } }
+
+	protected uint duration; 
+	public uint Duration { get { return this.duration; } set { this.duration = value; } }
+
+	public KodakDurationBox(): base(IsoStream.FromFourCC("tima"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.duration, "duration"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.duration, "duration"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // duration
+		return boxSize;
+	}
+}
+
+
+/*
+class KodakVersionBox() extends Box ('tima'){
+ bit(8) data[];
+ }
+
+*/
+public partial class KodakVersionBox : Box
+{
+	public const string TYPE = "tima";
+	public override string DisplayName { get { return "KodakVersionBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public KodakVersionBox(): base(IsoStream.FromFourCC("tima"))
 	{
 	}
 

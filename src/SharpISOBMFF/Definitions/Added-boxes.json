@@ -1389,6 +1389,36 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class OrieBox() extends Box('orie') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "fourcc": "frea",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class KodakFreaBox() extends Box ('frea'){\r\n Box boxes[];\r\n }\r\n"
+    },
+    {
+      "fourcc": "thma",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class KodakThumbnailImageBox() extends Box ('thma'){\r\n bit(8) data[];\r\n }\r\n"
+    },
+    {
+      "fourcc": "scra",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class KodakPreviewImageBox() extends Box ('scra'){\r\n bit(8) data[];\r\n }\r\n"
+    },
+    {
+      "fourcc": "tima",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class KodakDurationBox() extends Box ('tima'){\r\n unsigned int(32) duration;\r\n }\r\n"
+    },
+    {
+      "fourcc": "ver ",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class KodakVersionBox() extends Box ('tima'){\r\n bit(8) data[];\r\n }\r\n"
     }
   ]
 }
