@@ -67,6 +67,36 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class MicrosoftWaveFormatExBox() extends Box ('wfex'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "clip",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleClippingBox() extends Box ('clip'){\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "crgn",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleClippingRegionBox() extends Box ('crgn'){\r\n unsigned int(16) regionSize;\r\n unsigned int(64) regionBoundaryBox;\r\n unsigned int(8) clippingRegionData[];\r\n }"
+    },
+    {
+      "fourcc": "matt",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleTrackMatteBox() extends Box ('matt'){\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "kmat",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleCompressedMatteBox() extends FullBox ('kmat'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "ctry",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleCountryListBox() extends Box ('ctry') {\r\n unsigned int(16) entry_count;\r\n CountryListEntry entries[];\r\n }\r\n class CountryListEntry() { \r\n unsigned int(16) country_count;\r\n unsigned int(16) country[ country_count ];\r\n }\r\n"
     }
   ]
 }

@@ -241,6 +241,11 @@
     {
       "containers": [ "*" ],
       "type": "Box",
+      "syntax": "aligned(8) class AppleRating2Box() extends Box('rati') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
       "syntax": "aligned(8) class ApplePlayGapBox() extends Box('pgap') {\r\n Box boxes[];\r\n } "
     },
     {
