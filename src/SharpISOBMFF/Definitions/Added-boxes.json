@@ -436,7 +436,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ChapBox() extends Box('chap') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleChapterListBox() extends Box('chap') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

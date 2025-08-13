@@ -140,7 +140,7 @@ namespace SharpISOBMFF
                case "cdef":  return new J2kChannelDefinitionBox();
                case "cdsc":  return new TrackReferenceTypeBox(IsoStream.FromFourCC("cdsc"));
                case "chan":  return new ChanBox();
-               case "chap":  return new ChapBox();
+               case "chap":  return new AppleChapterListBox();
                case "chnl":  return new ChannelLayout();
                case "chpl":  return new AdobeChapterBox();
                case "cinf":  return new CompleteTrackInfoBox();
@@ -42864,19 +42864,19 @@ public partial class MdtaBox : Box
 
 
 /*
-aligned(8) class ChapBox() extends Box('chap') {
+aligned(8) class AppleChapterListBox() extends Box('chap') {
  bit(8) data[];
  } 
 */
-public partial class ChapBox : Box
+public partial class AppleChapterListBox : Box
 {
 	public const string TYPE = "chap";
-	public override string DisplayName { get { return "ChapBox"; } }
+	public override string DisplayName { get { return "AppleChapterListBox"; } }
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public ChapBox(): base(IsoStream.FromFourCC("chap"))
+	public AppleChapterListBox(): base(IsoStream.FromFourCC("chap"))
 	{
 	}
 
