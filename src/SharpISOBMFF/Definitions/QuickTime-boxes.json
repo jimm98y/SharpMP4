@@ -6,13 +6,67 @@
       "fourcc": "cmvd",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class CompressedMoovDataBox() extends Box ('cmvd'){\r\n unsigned int(32) uncompressedSize;\r\nbit(8) compressedData;\r\n }"
+      "syntax": "class AppleCompressedMoovDataBox() extends Box ('cmvd'){\r\n unsigned int(32) uncompressedSize;\r\nbit(8) compressedData[];\r\n }"
     },
     {
       "fourcc": "dcom",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class DecompressorBox() extends Box ('dcom'){\r\n unsigned int(32) decompressor;\r\n }"
+      "syntax": "class AppleDecompressorBox() extends Box ('dcom'){\r\n unsigned int(32) decompressor;\r\n }"
+    },
+    {
+      "fourcc": "cmov",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleCompressedMoovBox() extends Box ('cmov'){\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "junk",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleJunkBox() extends Box ('junk'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "pict",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ApplePreviewPictureBox() extends Box ('pict'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "pnot",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleImagePreviewBox() extends Box ('pnot'){\r\n unsigned int(32) modificationDate;\r\n signed int(16) version;\r\n signed int(32) atomType;\r\n signed int(16) atomIndex;\r\n }"
+    },
+    {
+      "fourcc": "rmcd",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleComponentDetectBox() extends Box ('rmcd'){\r\n unsigned int(32) flags;\r\n ComponentDescription description;\r\n unsigned int(32) minimumVersion;\r\n } class ComponentDescription() { \r\n unsigned int(32) componentType;\r\n unsigned int(32) componentSubType;\r\n unsigned int(32) componentManufacturer;\r\n unsigned int(32) componentFlags;\r\n unsigned int(32) componentFlagsMask;\r\n }"
+    },
+    {
+      "fourcc": "rmcs",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleCpuSpeedBox() extends Box ('rmcs'){\r\n unsigned int(32) flags;\r\n unsigned int(32) cpuSpeed;\r\n }"
+    },
+    {
+      "fourcc": "rmqu",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleQualityBox() extends Box ('rmqu'){\r\n unsigned int(32) flags;\r\n unsigned int(32) quality;\r\n }"
+    },
+    {
+      "fourcc": "rmvc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleVersionCheckBox() extends Box ('rmvc'){\r\n unsigned int(32) flags;\r\n unsigned int(32) softwarePackage;\r\n unsigned int(32) version;\r\n unsigned int(32) mask;\r\n signed int(16) checkType;\r\n }"
+    },
+    {
+      "fourcc": "wfex",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MicrosoftWaveFormatExBox() extends Box ('wfex'){\r\n bit(8) data[];\r\n }"
     }
   ]
 }
