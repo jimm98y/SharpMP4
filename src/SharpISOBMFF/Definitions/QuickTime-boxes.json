@@ -133,6 +133,43 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class AdobePremiereQuickTimeVersionBox() extends Box ('@PRQ'){\r\n bit(8) data[];\r\n }"
+    },
+
+    {
+      "fourcc": "rndu",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RnduBox() extends Box ('rndu'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "rpdu",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RpduBox() extends Box ('rpdu'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "MCPS",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MediaCleanerProBox() extends Box ('MCPS'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "rmla",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ReferenceMovieLanguageBox() extends Box ('rmla'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "scpt",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TranscriptBox() extends Box ('scpt'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "ssrc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NonPrimarySourceBox() extends Box ('ssrc'){\r\n bit(8) data[];\r\n }"
     }
   ]
 }

@@ -256,7 +256,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class TimeCodeBox() extends Box('tmcd') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class TimeCodeTrackBox() extends Box('tmcd') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -426,7 +426,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ChanBox() extends Box('chan') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AudioChannelLayoutBox() extends Box('chan') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -456,12 +456,12 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ThmbBox() extends Box('thmb') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleThumbnailReferenceBox() extends Box('thmb') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class FallBox() extends Box('fall') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AlternateFormatTrackBox() extends Box('fall') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -904,7 +904,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class ApplePrdBox() extends Box('©prd') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleProducerBox() extends Box('©prd') {\r\n\t bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -1383,7 +1383,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class UratBox() extends Box('urat') {\r\n\t bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class UserRatingBox() extends Box('urat') {\r\n\t bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
