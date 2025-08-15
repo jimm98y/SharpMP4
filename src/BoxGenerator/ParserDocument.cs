@@ -490,6 +490,7 @@ namespace BoxGenerator
                     info.IsSigned = false;
                     break;
 
+                case "float":
                 case "double":
                 case "fixedpoint1616":
                     info.ElementSizeInBits = 32;

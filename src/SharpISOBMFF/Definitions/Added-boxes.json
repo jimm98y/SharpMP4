@@ -1569,6 +1569,65 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class KodakVersionBox() extends Box ('tima'){\r\n bit(8) data[];\r\n }\r\n"
+    },
+    {
+      "fourcc": "st3d",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Stereoscopic3D extends FullBox('st3d', 0, 0) {\r\n    unsigned int(8) stereo_mode;\r\n }\r\n"
+    },
+    {
+      "fourcc": "sv3d",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SphericalVideoBox extends Box('sv3d') {\r\n Box boxes[];\r\n }\r\n"
+    },
+    {
+      "fourcc": "svhd",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SphericalVideoHeader extends FullBox('svhd', 0, 0) {\r\n string metadata_source;\r\n }\r\n"
+    },
+    {
+      "fourcc": "proj",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ProjectionBox extends Box('proj') {\r\n Box boxes[];\r\n}\r\n"
+    },
+    {
+      "fourcc": "prhd",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ProjectionHeader extends FullBox('prhd', 0, 0) {\r\n    int(32) pose_yaw_degrees;\r\n    int(32) pose_pitch_degrees;\r\n    int(32) pose_roll_degrees;\r\n }\r\n"
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ProjectionDataBox(unsigned int(32) proj_type, unsigned int(8) version, unsigned int(24) flags) extends FullBox(proj_type, version, flags) {\r\n }\r\n"
+    },
+    {
+      "fourcc": "cbmp",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CubemapProjection ProjectionDataBox('cbmp', 0, 0) {\r\n    unsigned int(32) layout;\r\n    unsigned int(32) projection_padding;\r\n }\r\n"
+    },
+    {
+      "fourcc": "equi",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class EquirectangularProjection ProjectionDataBox('equi', 0, 0) {\r\n    unsigned int(32) projection_bounds_top;\r\n    unsigned int(32) projection_bounds_bottom;\r\n    unsigned int(32) projection_bounds_left;\r\n    unsigned int(32) projection_bounds_right;\r\n }\r\n"
+    },
+    {
+      "fourcc": "mshp",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MeshProjection ProjectionDataBox('mshp', 0, 0) {\r\n    unsigned int(32) crc;\r\n    unsigned int(32) encoding_four_cc;\r\n\r\n    // All bytes below this point are compressed according to\r\n    // the algorithm specified by the encoding_four_cc field.\r\n    // MeshBox() meshes[]; // At least 1 mesh box must be present.\r\n    Box boxes[]; // further boxes as needed\r\n}"
+    },
+    {
+      "fourcc": "mesh",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class Mesh Box('mesh') {\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) coordinate_count;\r\n     for (i = 0; i < coordinate_count; i++) {\r\n      float(32) coordinate;\r\n    }\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) vertex_count;\r\n    for (i = 0; i < vertex_count; i++) {\r\n      unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;\r\n    }\r\n    const unsigned int(1) mesh_padding;\r\n\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) vertex_list_count;\r\n    for (i = 0; i < vertex_list_count; i++) {\r\n      unsigned int(8) texture_id;\r\n      unsigned int(8) index_type;\r\n      const unsigned int(1) reserved = 0;\r\n      unsigned int(31) index_count;\r\n      for (j = 0; j < index_count; j++) {\r\n        unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;\r\n      }\r\n      const unsigned int(1) mesh_padding2;\r\n    }\r\n}"
     }
   ]
 }

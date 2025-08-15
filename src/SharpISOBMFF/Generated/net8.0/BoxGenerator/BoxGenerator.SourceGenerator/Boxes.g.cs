@@ -167,6 +167,7 @@ namespace SharpISOBMFF
                case "c608":  return new C608Box();
                case "CAME":  return new CameraFirmwareBox();
                case "catg":  return new CategoryBox();
+               case "cbmp":  return new CubemapProjection();
                case "ccid":  return new OMAContentIDBox();
                case "cclv":  return new ContentColourVolumeBox();
                case "ccst":  return new CodingConstraintsBox();
@@ -263,6 +264,7 @@ namespace SharpISOBMFF
                case "encv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("encv"));break;
                case "enda":  return new AppleEndiannessBox();
                case "enof":  return new AppleEncodedPixelsDimensionsBox();
+               case "equi":  return new EquirectangularProjection();
                case "esds":  return new ESDBox();
                case "etyp":  return new ExtendedTypeBox();
                case "evc1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("evc1"));break;
@@ -410,6 +412,7 @@ namespace SharpISOBMFF
                case "meco":  return new AdditionalMetadataContainerBox();
                case "mehd":  return new MovieExtendsHeaderBox();
                case "mere":  return new MetaBoxRelationBox();
+               case "mesh":  return new Mesh();
                case "meta":  return new MetaBox();
                case "mett":  return new TextMetaDataSampleEntry();
                case "metx":  return new XMLMetaDataSampleEntry();
@@ -429,6 +432,7 @@ namespace SharpISOBMFF
                case "mp4s": if(parent == "stsd")  return new MpegSampleEntry();break;
                case "mp4v": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mp4v"));break;
                case "mpod":  return new MpodBox();
+               case "mshp":  return new MeshProjection();
                case "mskC":  return new MaskConfigurationProperty();
                case "mstv":  return new MVCSubTrackViewBox();
                case "MTDT":  return new PspMtdtBox();
@@ -499,8 +503,10 @@ namespace SharpISOBMFF
                case "png ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("png "));break;
                case "pnot":  return new AppleImagePreviewBox();
                case "prft":  return new ProducerReferenceTimeBox();
+               case "prhd":  return new ProjectionHeader();
                case "priv":  return new FairPlayPrivateKeyBox();
                case "prof":  return new AppleProductionApertureDimensionsBox();
+               case "proj":  return new ProjectionBox();
                case "pssh":  return new ProtectionSystemSpecificHeaderBox();
                case "ptv ":  return new ApplePtvBox();
                case "purd":  return new PurchaseDateBox();
@@ -599,6 +605,7 @@ namespace SharpISOBMFF
                case "ssmv": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("ssmv"));break;
                case "ssrc":  return new NonPrimarySourceBox();
                case "sstl":  return new SVCSubTrackLayerBox();
+               case "st3d":  return new Stereoscopic3D();
                case "stbl":  return new SampleTableBox();
                case "stco":  return new ChunkOffsetBox();
                case "stdp":  return new DegradationPriorityBox();
@@ -627,12 +634,14 @@ namespace SharpISOBMFF
                case "styp":  return new SegmentTypeBox();
                case "stz2":  return new CompactSampleSizeBox();
                case "subs":  return new SubSampleInformationBox();
+               case "sv3d":  return new SphericalVideoBox();
                case "svc1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("svc1"));break;
                case "svc2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("svc2"));break;
                case "svcC":  return new SVCConfigurationBox();
                case "svcM":  return new SVCMetaDataSampleEntry();
                case "svcP":  return new SVCPriorityAssignmentBox();
                case "svdr":  return new SVCDependencyRangeBox();
+               case "svhd":  return new SphericalVideoHeader();
                case "svip":  return new InitialParameterSetBox();
                case "svmC":  return new SVCMetadataSampleConfigBox();
                case "svpr":  return new PriorityRangeBox();
@@ -55346,6 +55355,701 @@ public partial class KodakVersionBox : Box
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class Stereoscopic3D extends FullBox('st3d', 0, 0) {
+    unsigned int(8) stereo_mode;
+ }
+
+*/
+public partial class Stereoscopic3D : FullBox
+{
+	public const string TYPE = "st3d";
+	public override string DisplayName { get { return "Stereoscopic3D"; } }
+
+	protected byte stereo_mode; 
+	public byte StereoMode { get { return this.stereo_mode; } set { this.stereo_mode = value; } }
+
+	public Stereoscopic3D(): base(IsoStream.FromFourCC("st3d"), 0, 0)
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8(boxSize, readSize,  out this.stereo_mode, "stereo_mode"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8( this.stereo_mode, "stereo_mode"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 8; // stereo_mode
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class SphericalVideoBox extends Box('sv3d') {
+ Box boxes[];
+ }
+
+*/
+public partial class SphericalVideoBox : Box
+{
+	public const string TYPE = "sv3d";
+	public override string DisplayName { get { return "SphericalVideoBox"; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+	public SphericalVideoBox(): base(IsoStream.FromFourCC("sv3d"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class SphericalVideoHeader extends FullBox('svhd', 0, 0) {
+ string metadata_source;
+ }
+
+*/
+public partial class SphericalVideoHeader : FullBox
+{
+	public const string TYPE = "svhd";
+	public override string DisplayName { get { return "SphericalVideoHeader"; } }
+
+	protected BinaryUTF8String metadata_source; 
+	public BinaryUTF8String MetadataSource { get { return this.metadata_source; } set { this.metadata_source = value; } }
+
+	public SphericalVideoHeader(): base(IsoStream.FromFourCC("svhd"), 0, 0)
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadStringZeroTerminated(boxSize, readSize,  out this.metadata_source, "metadata_source"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteStringZeroTerminated( this.metadata_source, "metadata_source"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += IsoStream.CalculateStringSize(metadata_source); // metadata_source
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class ProjectionBox extends Box('proj') {
+ Box boxes[];
+}
+
+*/
+public partial class ProjectionBox : Box
+{
+	public const string TYPE = "proj";
+	public override string DisplayName { get { return "ProjectionBox"; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+	public ProjectionBox(): base(IsoStream.FromFourCC("proj"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class ProjectionHeader extends FullBox('prhd', 0, 0) {
+    int(32) pose_yaw_degrees;
+    int(32) pose_pitch_degrees;
+    int(32) pose_roll_degrees;
+ }
+
+*/
+public partial class ProjectionHeader : FullBox
+{
+	public const string TYPE = "prhd";
+	public override string DisplayName { get { return "ProjectionHeader"; } }
+
+	protected int pose_yaw_degrees; 
+	public int PoseYawDegrees { get { return this.pose_yaw_degrees; } set { this.pose_yaw_degrees = value; } }
+
+	protected int pose_pitch_degrees; 
+	public int PosePitchDegrees { get { return this.pose_pitch_degrees; } set { this.pose_pitch_degrees = value; } }
+
+	protected int pose_roll_degrees; 
+	public int PoseRollDegrees { get { return this.pose_roll_degrees; } set { this.pose_roll_degrees = value; } }
+
+	public ProjectionHeader(): base(IsoStream.FromFourCC("prhd"), 0, 0)
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadInt32(boxSize, readSize,  out this.pose_yaw_degrees, "pose_yaw_degrees"); 
+		boxSize += stream.ReadInt32(boxSize, readSize,  out this.pose_pitch_degrees, "pose_pitch_degrees"); 
+		boxSize += stream.ReadInt32(boxSize, readSize,  out this.pose_roll_degrees, "pose_roll_degrees"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteInt32( this.pose_yaw_degrees, "pose_yaw_degrees"); 
+		boxSize += stream.WriteInt32( this.pose_pitch_degrees, "pose_pitch_degrees"); 
+		boxSize += stream.WriteInt32( this.pose_roll_degrees, "pose_roll_degrees"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // pose_yaw_degrees
+		boxSize += 32; // pose_pitch_degrees
+		boxSize += 32; // pose_roll_degrees
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class ProjectionDataBox(unsigned int(32) proj_type, unsigned int(8) version, unsigned int(24) flags) extends FullBox(proj_type, version, flags) {
+ }
+
+*/
+public partial class ProjectionDataBox : FullBox
+{
+	public override string DisplayName { get { return "ProjectionDataBox"; } }
+
+	public ProjectionDataBox(uint proj_type, byte version = 0, uint flags = 0): base(proj_type, version, flags)
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class CubemapProjection ProjectionDataBox('cbmp', 0, 0) {
+    unsigned int(32) layout;
+    unsigned int(32) projection_padding;
+ }
+
+*/
+public partial class CubemapProjection : ProjectionDataBox
+{
+	public const string TYPE = "cbmp";
+	public override string DisplayName { get { return "CubemapProjection"; } }
+
+	protected uint layout; 
+	public uint Layout { get { return this.layout; } set { this.layout = value; } }
+
+	protected uint projection_padding; 
+	public uint ProjectionPadding { get { return this.projection_padding; } set { this.projection_padding = value; } }
+
+	public CubemapProjection(): base(IsoStream.FromFourCC("cbmp"), 0, 0)
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.layout, "layout"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.projection_padding, "projection_padding"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.layout, "layout"); 
+		boxSize += stream.WriteUInt32( this.projection_padding, "projection_padding"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // layout
+		boxSize += 32; // projection_padding
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class EquirectangularProjection ProjectionDataBox('equi', 0, 0) {
+    unsigned int(32) projection_bounds_top;
+    unsigned int(32) projection_bounds_bottom;
+    unsigned int(32) projection_bounds_left;
+    unsigned int(32) projection_bounds_right;
+ }
+
+*/
+public partial class EquirectangularProjection : ProjectionDataBox
+{
+	public const string TYPE = "equi";
+	public override string DisplayName { get { return "EquirectangularProjection"; } }
+
+	protected uint projection_bounds_top; 
+	public uint ProjectionBoundsTop { get { return this.projection_bounds_top; } set { this.projection_bounds_top = value; } }
+
+	protected uint projection_bounds_bottom; 
+	public uint ProjectionBoundsBottom { get { return this.projection_bounds_bottom; } set { this.projection_bounds_bottom = value; } }
+
+	protected uint projection_bounds_left; 
+	public uint ProjectionBoundsLeft { get { return this.projection_bounds_left; } set { this.projection_bounds_left = value; } }
+
+	protected uint projection_bounds_right; 
+	public uint ProjectionBoundsRight { get { return this.projection_bounds_right; } set { this.projection_bounds_right = value; } }
+
+	public EquirectangularProjection(): base(IsoStream.FromFourCC("equi"), 0, 0)
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.projection_bounds_top, "projection_bounds_top"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.projection_bounds_bottom, "projection_bounds_bottom"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.projection_bounds_left, "projection_bounds_left"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.projection_bounds_right, "projection_bounds_right"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.projection_bounds_top, "projection_bounds_top"); 
+		boxSize += stream.WriteUInt32( this.projection_bounds_bottom, "projection_bounds_bottom"); 
+		boxSize += stream.WriteUInt32( this.projection_bounds_left, "projection_bounds_left"); 
+		boxSize += stream.WriteUInt32( this.projection_bounds_right, "projection_bounds_right"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // projection_bounds_top
+		boxSize += 32; // projection_bounds_bottom
+		boxSize += 32; // projection_bounds_left
+		boxSize += 32; // projection_bounds_right
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class MeshProjection ProjectionDataBox('mshp', 0, 0) {
+    unsigned int(32) crc;
+    unsigned int(32) encoding_four_cc;
+
+    // All bytes below this point are compressed according to
+    // the algorithm specified by the encoding_four_cc field.
+    // MeshBox() meshes[]; // At least 1 mesh box must be present.
+    Box boxes[]; // further boxes as needed
+}
+*/
+public partial class MeshProjection : ProjectionDataBox
+{
+	public const string TYPE = "mshp";
+	public override string DisplayName { get { return "MeshProjection"; } }
+
+	protected uint crc; 
+	public uint Crc { get { return this.crc; } set { this.crc = value; } }
+
+	protected uint encoding_four_cc;  //  All bytes below this point are compressed according to
+	public uint EncodingFourCc { get { return this.encoding_four_cc; } set { this.encoding_four_cc = value; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+	public MeshProjection(): base(IsoStream.FromFourCC("mshp"), 0, 0)
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.crc, "crc"); 
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.encoding_four_cc, "encoding_four_cc"); // All bytes below this point are compressed according to
+		/*  the algorithm specified by the encoding_four_cc field. */
+		/*  MeshBox() meshes[]; // At least 1 mesh box must be present. */
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); // further boxes as needed
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.crc, "crc"); 
+		boxSize += stream.WriteUInt32( this.encoding_four_cc, "encoding_four_cc"); // All bytes below this point are compressed according to
+		/*  the algorithm specified by the encoding_four_cc field. */
+		/*  MeshBox() meshes[]; // At least 1 mesh box must be present. */
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); // further boxes as needed
+		boxSize += stream.WriteBoxArrayTillEnd(this);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // crc
+		boxSize += 32; // encoding_four_cc
+		/*  the algorithm specified by the encoding_four_cc field. */
+		/*  MeshBox() meshes[]; // At least 1 mesh box must be present. */
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class Mesh Box('mesh') {
+    const unsigned int(1) reserved = 0;
+    unsigned int(31) coordinate_count;
+     for (i = 0; i < coordinate_count; i++) {
+      float(32) coordinate;
+    }
+    const unsigned int(1) reserved = 0;
+    unsigned int(31) vertex_count;
+    for (i = 0; i < vertex_count; i++) {
+      unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;
+      unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;
+      unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;
+      unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;
+      unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;
+    }
+    const unsigned int(1) mesh_padding;
+
+    const unsigned int(1) reserved = 0;
+    unsigned int(31) vertex_list_count;
+    for (i = 0; i < vertex_list_count; i++) {
+      unsigned int(8) texture_id;
+      unsigned int(8) index_type;
+      const unsigned int(1) reserved = 0;
+      unsigned int(31) index_count;
+      for (j = 0; j < index_count; j++) {
+        unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;
+      }
+      const unsigned int(1) mesh_padding2;
+    }
+}
+*/
+public partial class Mesh : Box
+{
+	public const string TYPE = "mesh";
+	public override string DisplayName { get { return "Mesh"; } }
+
+	protected bool reserved = false; 
+	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
+
+	protected uint coordinate_count; 
+	public uint CoordinateCount { get { return this.coordinate_count; } set { this.coordinate_count = value; } }
+
+	protected double[] coordinate; 
+	public double[] Coordinate { get { return this.coordinate; } set { this.coordinate = value; } }
+
+	protected bool reserved0 = false; 
+	public bool Reserved0 { get { return this.reserved0; } set { this.reserved0 = value; } }
+
+	protected uint vertex_count; 
+	public uint VertexCount { get { return this.vertex_count; } set { this.vertex_count = value; } }
+
+	protected byte[][] x_index_delta; 
+	public byte[][] xIndexDelta { get { return this.x_index_delta; } set { this.x_index_delta = value; } }
+
+	protected byte[][] y_index_delta; 
+	public byte[][] yIndexDelta { get { return this.y_index_delta; } set { this.y_index_delta = value; } }
+
+	protected byte[][] z_index_delta; 
+	public byte[][] zIndexDelta { get { return this.z_index_delta; } set { this.z_index_delta = value; } }
+
+	protected byte[][] u_index_delta; 
+	public byte[][] uIndexDelta { get { return this.u_index_delta; } set { this.u_index_delta = value; } }
+
+	protected byte[][] v_index_delta; 
+	public byte[][] vIndexDelta { get { return this.v_index_delta; } set { this.v_index_delta = value; } }
+
+	protected bool mesh_padding; 
+	public bool MeshPadding { get { return this.mesh_padding; } set { this.mesh_padding = value; } }
+
+	protected bool reserved1 = false; 
+	public bool Reserved1 { get { return this.reserved1; } set { this.reserved1 = value; } }
+
+	protected uint vertex_list_count; 
+	public uint VertexListCount { get { return this.vertex_list_count; } set { this.vertex_list_count = value; } }
+
+	protected byte[] texture_id; 
+	public byte[] TextureId { get { return this.texture_id; } set { this.texture_id = value; } }
+
+	protected byte[] index_type; 
+	public byte[] IndexType { get { return this.index_type; } set { this.index_type = value; } }
+
+	protected bool[] reserved2; 
+	public bool[] Reserved2 { get { return this.reserved2; } set { this.reserved2 = value; } }
+
+	protected uint[] index_count; 
+	public uint[] IndexCount { get { return this.index_count; } set { this.index_count = value; } }
+
+	protected byte[][][] index_as_delta; 
+	public byte[][][] IndexAsDelta { get { return this.index_as_delta; } set { this.index_as_delta = value; } }
+
+	protected bool[] mesh_padding2; 
+	public bool[] MeshPadding2 { get { return this.mesh_padding2; } set { this.mesh_padding2 = value; } }
+
+	public Mesh(): base(IsoStream.FromFourCC("mesh"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved, "reserved"); 
+		boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.coordinate_count, "coordinate_count"); 
+
+		this.coordinate = new double[IsoStream.GetInt( coordinate_count)];
+		for (int i = 0; i < coordinate_count; i++)
+		{
+			boxSize += stream.ReadDouble32(boxSize, readSize,  out this.coordinate[i], "coordinate"); 
+		}
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved0, "reserved0"); 
+		boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.vertex_count, "vertex_count"); 
+
+		this.x_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
+		this.y_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
+		this.z_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
+		this.u_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
+		this.v_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
+		for (int i = 0; i < vertex_count; i++)
+		{
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.x_index_delta[i], "x_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.y_index_delta[i], "y_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.z_index_delta[i], "z_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.u_index_delta[i], "u_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.v_index_delta[i], "v_index_delta"); 
+		}
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.mesh_padding, "mesh_padding"); 
+		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved1, "reserved1"); 
+		boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.vertex_list_count, "vertex_list_count"); 
+
+		this.texture_id = new byte[IsoStream.GetInt( vertex_list_count)];
+		this.index_type = new byte[IsoStream.GetInt( vertex_list_count)];
+		this.reserved2 = new bool[IsoStream.GetInt( vertex_list_count)];
+		this.index_count = new uint[IsoStream.GetInt( vertex_list_count)];
+		this.index_as_delta = new byte[IsoStream.GetInt( vertex_list_count)][][];
+		this.mesh_padding2 = new bool[IsoStream.GetInt( vertex_list_count)];
+		for (int i = 0; i < vertex_list_count; i++)
+		{
+			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.texture_id[i], "texture_id"); 
+			boxSize += stream.ReadUInt8(boxSize, readSize,  out this.index_type[i], "index_type"); 
+			boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved2[i], "reserved2"); 
+			boxSize += stream.ReadBits(boxSize, readSize, 31,  out this.index_count[i], "index_count"); 
+
+			this.index_as_delta[i] = new byte[IsoStream.GetInt( index_count[i])][];
+			for (int j = 0; j < index_count[i]; j++)
+			{
+				boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(vertex_count * 2)) ),  out this.index_as_delta[i][j], "index_as_delta"); 
+			}
+			boxSize += stream.ReadBit(boxSize, readSize,  out this.mesh_padding2[i], "mesh_padding2"); 
+		}
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteBit( this.reserved, "reserved"); 
+		boxSize += stream.WriteBits(31,  this.coordinate_count, "coordinate_count"); 
+
+		for (int i = 0; i < coordinate_count; i++)
+		{
+			boxSize += stream.WriteDouble32( this.coordinate[i], "coordinate"); 
+		}
+		boxSize += stream.WriteBit( this.reserved0, "reserved0"); 
+		boxSize += stream.WriteBits(31,  this.vertex_count, "vertex_count"); 
+
+		for (int i = 0; i < vertex_count; i++)
+		{
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.x_index_delta[i], "x_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.y_index_delta[i], "y_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.z_index_delta[i], "z_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.u_index_delta[i], "u_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.v_index_delta[i], "v_index_delta"); 
+		}
+		boxSize += stream.WriteBit( this.mesh_padding, "mesh_padding"); 
+		boxSize += stream.WriteBit( this.reserved1, "reserved1"); 
+		boxSize += stream.WriteBits(31,  this.vertex_list_count, "vertex_list_count"); 
+
+		for (int i = 0; i < vertex_list_count; i++)
+		{
+			boxSize += stream.WriteUInt8( this.texture_id[i], "texture_id"); 
+			boxSize += stream.WriteUInt8( this.index_type[i], "index_type"); 
+			boxSize += stream.WriteBit( this.reserved2[i], "reserved2"); 
+			boxSize += stream.WriteBits(31,  this.index_count[i], "index_count"); 
+
+			for (int j = 0; j < index_count[i]; j++)
+			{
+				boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(vertex_count * 2)) ),  this.index_as_delta[i][j], "index_as_delta"); 
+			}
+			boxSize += stream.WriteBit( this.mesh_padding2[i], "mesh_padding2"); 
+		}
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 1; // reserved
+		boxSize += 31; // coordinate_count
+
+		for (int i = 0; i < coordinate_count; i++)
+		{
+			boxSize += 32; // coordinate
+		}
+		boxSize += 1; // reserved0
+		boxSize += 31; // vertex_count
+
+		for (int i = 0; i < vertex_count; i++)
+		{
+			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // x_index_delta
+			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // y_index_delta
+			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // z_index_delta
+			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // u_index_delta
+			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // v_index_delta
+		}
+		boxSize += 1; // mesh_padding
+		boxSize += 1; // reserved1
+		boxSize += 31; // vertex_list_count
+
+		for (int i = 0; i < vertex_list_count; i++)
+		{
+			boxSize += 8; // texture_id
+			boxSize += 8; // index_type
+			boxSize += 1; // reserved2
+			boxSize += 31; // index_count
+
+			for (int j = 0; j < index_count[i]; j++)
+			{
+				boxSize += (ulong)(Math.Ceiling(Math.Log2(vertex_count * 2)) ); // index_as_delta
+			}
+			boxSize += 1; // mesh_padding2
+		}
 		return boxSize;
 	}
 }

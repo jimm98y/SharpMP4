@@ -133,6 +133,7 @@ namespace BoxGenerator.CSharp
                 { "0, tf_flags",                      "uint tf_flags = 0" },
                 { "0, flags",                         "uint flags = 0" },
                 { "version, tr_flags",                "byte version = 0, uint tr_flags = 0" },
+                { "unsigned int(32) proj_type, unsigned int(8) version, unsigned int(24) flags",                "uint proj_type, byte version = 0, uint flags = 0" },
             };
 
             return map[par];            
@@ -1330,6 +1331,8 @@ namespace SharpISOBMFF
                             .Replace("f(pattern_size_code)", "pattern_size_code")
                             .Replace("f(count_size_code)", "count_size_code")
                             .Replace("f(index_size_code)", "index_size_code")
+                            .Replace("log2(", "Math.Log2(")
+                            .Replace("ceil(", "Math.Ceiling(")
                             ;
                         csharpResult = $"stream.ReadBits{arraySuffix}(boxSize, readSize, (uint)({elSizeVar} ), ";
                     }
@@ -1467,6 +1470,8 @@ namespace SharpISOBMFF
                             .Replace("f(pattern_size_code)", "pattern_size_code")
                             .Replace("f(count_size_code)", "count_size_code")
                             .Replace("f(index_size_code)", "index_size_code")
+                            .Replace("log2(", "Math.Log2(")
+                            .Replace("ceil(", "Math.Ceiling(")
                             ;
                         csharpResult = $"stream.WriteBits{arraySuffix}((uint)({elSizeVar} ), ";
                     }
@@ -1544,6 +1549,8 @@ namespace SharpISOBMFF
                         .Replace("f(pattern_size_code)", "pattern_size_code")
                         .Replace("f(count_size_code)", "count_size_code")
                         .Replace("f(index_size_code)", "index_size_code")
+                        .Replace("log2(", "Math.Log2(")
+                        .Replace("ceil(", "Math.Ceiling(")
                         ;
                     csharpResult = $"(ulong)({elSizeVar} )";
                 }
