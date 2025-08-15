@@ -373,6 +373,126 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class Url0Box() extends Box ('url\\0'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "@PST",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ParentShortTitleBox() extends Box ('@PST'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "@ppi",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ParentProductIDBox() extends Box ('@ppi'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "@pti",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ParentTitleBox() extends Box ('@pti'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "@sti",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ShortTitleBox() extends Box ('@sti'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "GUID",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GUIDBox() extends Box ('GUID'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "VERS",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ProductVersionBox() extends Box ('VERS'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "grup",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GroupingBox() extends Box ('grup'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "itnu",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ITunesUBox() extends Box ('itnu'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "prID",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ProductIDBox() extends Box ('prID'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "rate",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RatingPercentBox() extends Box ('rate'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "rldt",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ReleaseDateBox() extends Box ('rldt'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "shwm",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ShowMovementBox() extends Box ('shwm'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "snal",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PreviewImageBox() extends Box ('snal'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "tnal",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ThumbnailImageBox() extends Box ('tnal'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "auxl",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AuxiliaryImageReferenceBox() extends Box ('auxl'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "htka",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class HTCTrackBox() extends Box ('htka'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "tcmi",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TCMediaInfoBox() extends Box ('tcmi'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "pinf",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PurchaseInfoBox() extends Box ('pinf'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "cert",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CertificateBox() extends Box ('cert'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "righ",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RightsBox() extends Box ('righ'){\r\n bit(8) data[];\r\n }"
     }
   ]
 }
