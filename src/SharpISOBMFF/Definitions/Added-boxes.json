@@ -1623,6 +1623,12 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class Mesh Box('mesh') {\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) coordinate_count;\r\n     for (i = 0; i < coordinate_count; i++) {\r\n      float(32) coordinate;\r\n    }\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) vertex_count;\r\n    for (i = 0; i < vertex_count; i++) {\r\n      unsigned int(ceil(log2(coordinate_count * 2))) x_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) y_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) z_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) u_index_delta;\r\n      unsigned int(ceil(log2(coordinate_count * 2))) v_index_delta;\r\n    }\r\n    const unsigned int(1) mesh_padding;\r\n\r\n    const unsigned int(1) reserved = 0;\r\n    unsigned int(31) vertex_list_count;\r\n    for (i = 0; i < vertex_list_count; i++) {\r\n      unsigned int(8) texture_id;\r\n      unsigned int(8) index_type;\r\n      const unsigned int(1) reserved = 0;\r\n      unsigned int(31) index_count;\r\n      for (j = 0; j < index_count; j++) {\r\n        unsigned int(ceil(log2(vertex_count * 2))) index_as_delta;\r\n      }\r\n      const unsigned int(1) mesh_padding2;\r\n    }\r\n}"
+    },
+    {
+      "fourcc": "SA3D",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SpatialAudioBox extends Box('SA3D') {\r\n    unsigned int(8)  version;\r\n    unsigned int(8)  ambisonic_type;\r\n    unsigned int(32) ambisonic_order;\r\n    unsigned int(8)  ambisonic_channel_ordering;\r\n    unsigned int(8)  ambisonic_normalization;\r\n    unsigned int(32) num_channels;\r\n    for (i = 0; i < num_channels; i++) {\r\n        unsigned int(32) channel_map;\r\n    }\r\n}"
     }
   ]
 }
