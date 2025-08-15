@@ -11,7 +11,7 @@ namespace BoxGenerator
     public class Parser
     {
         public static Parser<char, string> Identifier => LetterOrDigit.Then(Token(c => char.IsLetterOrDigit(c) || c == '_').ManyString(), (first, rest) => first + rest);
-        public static Parser<char, string> IdentifierWithSpace => Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ' || c == '©' || c == '@' || c == '-').ManyString();
+        public static Parser<char, string> IdentifierWithSpace => Token(c => char.IsLetterOrDigit(c) || c == '_' || c == ' ' || c == '©' || c == '@' || c == '-' || c == '\\').ManyString();
         public static Parser<char, char> LetterOrDigitOrUnderscore => Token(c => char.IsLetterOrDigit(c) || c == '_');
         public static Parser<char, char> LetterOrDigitOrUnderscoreOrDot => Token(c => char.IsLetterOrDigit(c) || c == '_' || c == '.');
         public static Parser<char, string> Parentheses => Char('(').Then(Rec(() => Expr).Until(Char(')'))).Select(x => $"({string.Concat(x)})");

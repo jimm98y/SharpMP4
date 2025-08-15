@@ -259,6 +259,120 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class AppleOrientationBox() extends Box ('rcif'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "GPS ",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GPSDataList2Box() extends Box ('GPS '){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "IDIT",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class DateTimeOriginalBox() extends Box ('IDIT'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "PICT",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PreviewPICTBox() extends Box ('PICT'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "SEAL",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SEALBox() extends Box ('SEAL'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "_htc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class HTCInfoBox() extends Box ('_htc'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "ardt",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ARDroneFileBox() extends Box ('ardt'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "cust",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CustomInfoBox() extends Box ('cust'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "gdat",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GPSDataBox() extends Box ('gdat'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "gps0",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GPSTrackBox() extends Box ('gps0'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "gsen",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GSensorBox() extends Box ('gsen'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "inst",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class Insta360InfoBox() extends Box ('inst'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "mpvd",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MotionPhotoVideoBox() extends Box ('mpvd'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "nbmt",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NextbaseMetaBox() extends Box ('nbmt'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "prrt",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ARDroneTelemetryBox() extends Box ('prrt'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "sefd",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SamsungTrailerBox() extends Box ('sefd'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "thm ",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ThumbnailImageBox() extends Box ('thm '){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "thum",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ThumbnailImage2Box() extends Box ('thum'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "udat",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GPSLogBox() extends Box ('udat'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "url\\0",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class Url0Box() extends Box ('url\\0'){\r\n bit(8) data[];\r\n }"
     }
   ]
 }

@@ -394,8 +394,11 @@ namespace SharpISOBMFF
                 if (b.Extended.BoxType.Length > 4)
                 {
                     string[] parts = b.Extended.BoxType.Split(' ');
-                    b.Extended.BoxType = parts[0];
-                    b.Extended.UserType = parts[1];
+                    if (parts.Length > 1)
+                    {
+                        b.Extended.BoxType = parts[0];
+                        b.Extended.UserType = parts[1];
+                    }
                 }
 
                 cls += $"\tpublic const string TYPE = \"{b.Extended.BoxType}\";\r\n";
