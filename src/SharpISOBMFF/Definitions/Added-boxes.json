@@ -426,11 +426,6 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class SyncBox() extends Box('sync') {\r\n unsigned int(32) trackId;\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
       "syntax": "aligned(8) class DiskNumberBox() extends Box('disk') {\r\n Box boxes[];\r\n } "
     },
     {

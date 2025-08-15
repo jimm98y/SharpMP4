@@ -493,6 +493,85 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class RightsBox() extends Box ('righ'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "iicc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleICCProfileBox() extends Box ('iicc'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "idsc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleImageDescriptionBox() extends Box ('idsc'){\r\n Box boxes[];\r\n }"
+    },
+
+    {
+      "fourcc": "CDI1",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CanonCDI1TagsBox() extends Box ('CDI1'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "CMP1",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CanonCMP1TagsBox() extends Box ('CMP1'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "JPEG",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class JPEGInfoBox() extends Box ('JPEG'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "gama",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GammaBox() extends Box ('gama'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "mrld",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MarlinDictionaryBox() extends Box ('mrld'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "mrlh",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MarlinHeaderBox() extends Box ('mrlh'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "mrlv",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MarlinValuesBox() extends Box ('mrlv'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "clcp",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ClosedCaptionTrackBox() extends Box ('clcp'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "folw",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SubtitleTrackBox() extends Box ('folw'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "forc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ForcedSubtitleTrackBox() extends Box ('forc'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "sync",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SynchronizedTrackBox() extends Box ('sync'){\r\n bit(8) data[];\r\n }"
     }
   ]
 }
