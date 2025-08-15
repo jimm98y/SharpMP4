@@ -10,7 +10,137 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class AppleCameraModelBox() extends Box('©mod') {\r\n bit(8) data[];\r\n } "
+      "syntax": "aligned(8) class AppleCameraModelBox() extends Box('©mod') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class SamsungSecBox() extends Box('@sec') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class RicohAppleCameraModelBox() extends Box('@mod') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ApplePitchBox() extends Box('©fpt') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleRollBox() extends Box('©frl') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleYawBox() extends Box('©fyw') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCameraPitchBox() extends Box('©gpt') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCameraRollBox() extends Box('©grl') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleMakerUrlBox() extends Box('©mal') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleModelBox() extends Box('©mdl') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCameraYawBox() extends Box('©gyw') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSpeedXBox() extends Box('©xsp') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSpeedYBox() extends Box('©ysp') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSpeedZBox() extends Box('©zsp') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleArtDirectorBox() extends Box('©ard') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleConductorBox() extends Box('©con') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleDescriptionBox() extends Box('©des') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleMovementCountBox() extends Box('©mvc') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleMovementNumberBox() extends Box('©mvi') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleNarratorBox() extends Box('©nrt') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ApplePublisherBox() extends Box('©pub') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSoundEngineerBox() extends Box('©sne') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSoloistBox() extends Box('©sol') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSubtitleBox() extends Box('©st3') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleWorkBox() extends Box('©wrk') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleExecutiveProducerBox() extends Box('©xpd') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleMovementNameBox() extends Box('©mvn') {\r\n Box boxes[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -26,6 +156,11 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class AppleSoftwareBox() extends Box('©swr') {\r\n bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class RicohAppleSoftwareBox() extends Box('@swr') {\r\n bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],
@@ -116,6 +251,11 @@
     {
       "containers": [ "*" ],
       "type": "Box",
+      "syntax": "aligned(8) class RicohAppleRecordingYear2Box() extends Box('@day') {\r\n Box boxes[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
       "syntax": "aligned(8) class AppleHostComputerBox() extends Box('©hst') {\r\n Box boxes[];\r\n } "
     },
     {
@@ -152,6 +292,11 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class AppleGPSCoordinatesBox() extends Box('©xyz') {\r\n MultiLanguageString value[]; \r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class RicohAppleGPSCoordinatesBox() extends Box('@xyz') {\r\n MultiLanguageString value[]; \r\n } "
     },
     {
       "containers": [ "*" ],
@@ -885,6 +1030,11 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class AppleMakBox() extends Box('©mak') {\r\n\t bit(8) data[];\r\n } "
+    },
+    {
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class RicohAppleMakBox() extends Box('@mak') {\r\n\t bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

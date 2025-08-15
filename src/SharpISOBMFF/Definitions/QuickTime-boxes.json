@@ -170,6 +170,96 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class NonPrimarySourceBox() extends Box ('ssrc'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "nsav",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleNoSaveBox() extends Box ('nsav'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "ctyp",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ControllerTypeBox() extends Box ('ctyp'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "imgt",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ImageTrackReferenceBox() extends Box ('imgt'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "NCDT",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NikonNCDTBox() extends Box ('NCDT'){\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "NCTH",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NikonCameraThumbnailImageBox() extends Box ('NCTH'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "NCVW",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NikonCameraPreviewImageBox() extends Box ('NCVW'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "NCVW",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NikonCameraPreviewImage1Box() extends Box ('NCM1'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "NCM2",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NikonCameraPreviewImage2Box() extends Box ('NCM2'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "NCHD",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NikonMakerNoteVersionBox() extends Box ('NCHD'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "NCTG",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NikonTagsBox() extends Box ('NCTG'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "NCDB",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class NikonNCDBBox() extends Box ('NCDB'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "CNCV",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CanonCompressorVersionBox() extends Box ('CNCV'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "FIRM",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class FirmwareBox() extends Box ('FIRM'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "CAME",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CameraFirmwareBox() extends Box ('CAME'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "rcif",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleOrientationBox() extends Box ('rcif'){\r\n bit(8) data[];\r\n }"
     }
   ]
 }
