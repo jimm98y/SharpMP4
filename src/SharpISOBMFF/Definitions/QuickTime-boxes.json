@@ -226,10 +226,9 @@
       "syntax": "class NikonMakerNoteVersionBox() extends Box ('NCHD'){\r\n bit(8) data[];\r\n }"
     },
     {
-      "fourcc": "NCTG",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class NikonTagsBox() extends Box ('NCTG'){\r\n bit(8) data[];\r\n }"
+      "syntax": "aligned(8) class NikonExifBox() extends Box('NCTG') {\r\n bit(8) data[];\r\n } "
     },
     {
       "fourcc": "NCDB",

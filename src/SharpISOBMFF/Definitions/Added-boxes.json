@@ -631,11 +631,6 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class NikonExifBox() extends Box('NCTG') {\r\n bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
       "syntax": "aligned(8) class CustomBox() extends Box('----') {\r\n bit(8) data[];\r\n } "
     },
     {
@@ -1568,7 +1563,7 @@
       "fourcc": "ver ",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class KodakVersionBox() extends Box ('tima'){\r\n bit(8) data[];\r\n }\r\n"
+      "syntax": "class KodakVersionBox() extends Box ('ver '){\r\n bit(8) data[];\r\n }\r\n"
     },
     {
       "fourcc": "st3d",

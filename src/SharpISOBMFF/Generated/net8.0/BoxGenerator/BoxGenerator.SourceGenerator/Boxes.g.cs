@@ -458,7 +458,7 @@ namespace SharpISOBMFF
                case "NCHD":  return new NikonMakerNoteVersionBox();
                case "NCM1":  return new NikonCameraPreviewImage1Box();
                case "NCM2":  return new NikonCameraPreviewImage2Box();
-               case "NCTG": throw new NotSupportedException($"'NCTG' under '{parent}' is ambiguous in between NikonExifBox and NikonTagsBox");
+               case "NCTG":  return new NikonExifBox();
                case "NCTH":  return new NikonCameraThumbnailImageBox();
                case "NCVW":  return new NikonCameraPreviewImageBox();
                case "nmhd":  return new NullMediaHeaderBox();
@@ -663,7 +663,7 @@ namespace SharpISOBMFF
                case "tibr":  return new TierBitRateBox();
                case "tiff": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("tiff"));break;
                case "tilC":  return new TiledImageBox();
-               case "tima": throw new NotSupportedException($"'tima' under '{parent}' is ambiguous in between KodakDurationBox and KodakVersionBox");
+               case "tima":  return new KodakDurationBox();
                case "tims":  return new TimeScaleEntry();
                case "tiri":  return new TierInfoBox();
                case "titl":  return new ThreeGPPTitleBox();
@@ -733,6 +733,7 @@ namespace SharpISOBMFF
                case "v408": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v408"));break;
                case "v410": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v410"));break;
                case "vdep":  return new TrackReferenceTypeBoxvdepDup(); // TODO: fix duplicate
+               case "ver ":  return new KodakVersionBox();
                case "vipr":  return new ViewPriorityBox();
                case "vlab":  return new WebVTTSourceLabelBox();
                case "vmhd":  return new VideoMediaHeaderBox();
@@ -44821,49 +44822,6 @@ public partial class DataBox : Box
 
 
 /*
-aligned(8) class NikonExifBox() extends Box('NCTG') {
- bit(8) data[];
- } 
-*/
-public partial class NikonExifBox : Box
-{
-	public const string TYPE = "NCTG";
-	public override string DisplayName { get { return "NikonExifBox"; } }
-
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-	public NikonExifBox(): base(IsoStream.FromFourCC("NCTG"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
-		return boxSize;
-	}
-}
-
-
-/*
 aligned(8) class CustomBox() extends Box('----') {
  bit(8) data[];
  } 
@@ -55317,20 +55275,20 @@ public partial class KodakDurationBox : Box
 
 
 /*
-class KodakVersionBox() extends Box ('tima'){
+class KodakVersionBox() extends Box ('ver '){
  bit(8) data[];
  }
 
 */
 public partial class KodakVersionBox : Box
 {
-	public const string TYPE = "tima";
+	public const string TYPE = "ver ";
 	public override string DisplayName { get { return "KodakVersionBox"; } }
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public KodakVersionBox(): base(IsoStream.FromFourCC("tima"))
+	public KodakVersionBox(): base(IsoStream.FromFourCC("ver "))
 	{
 	}
 
@@ -58516,19 +58474,19 @@ public partial class NikonMakerNoteVersionBox : Box
 
 
 /*
-class NikonTagsBox() extends Box ('NCTG'){
+aligned(8) class NikonExifBox() extends Box('NCTG') {
  bit(8) data[];
- }
+ } 
 */
-public partial class NikonTagsBox : Box
+public partial class NikonExifBox : Box
 {
 	public const string TYPE = "NCTG";
-	public override string DisplayName { get { return "NikonTagsBox"; } }
+	public override string DisplayName { get { return "NikonExifBox"; } }
 
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public NikonTagsBox(): base(IsoStream.FromFourCC("NCTG"))
+	public NikonExifBox(): base(IsoStream.FromFourCC("NCTG"))
 	{
 	}
 
