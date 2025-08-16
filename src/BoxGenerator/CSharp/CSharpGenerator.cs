@@ -193,7 +193,13 @@ namespace SharpISOBMFF
                             item.Value.Single().BoxName == "MpegSampleEntry")
                             optCondition = "if(parent == \"stsd\") ";
 
-                        factory += $"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? "break;" : "")}{comment}\r\n";
+                        string elseBlock = "";
+                        if(item.Key == "mp4a")
+                        {
+                            elseBlock = "else return new Mp4aBox();";
+                        }
+
+                        factory += $"               case \"{item.Key}\": {optCondition} return new {item.Value.Single().BoxName}({optParams});{(optCondition != "" ? $"{elseBlock}break;" : "")}{comment}\r\n";
                     }
                 }
                 else
