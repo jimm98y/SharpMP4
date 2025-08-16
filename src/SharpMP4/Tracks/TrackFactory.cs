@@ -48,7 +48,8 @@ namespace SharpMP4.Tracks
         {
             switch (IsoStream.ToFourCC(sampleEntry.FourCC))
             {
-                case "esds":
+                case "esds": // mp4
+                case "wave": // quicktime
                     return new AACTrack(sampleEntry, timescale, sampleDuration) { TrackID = trackID };
 
                 case "dOps":

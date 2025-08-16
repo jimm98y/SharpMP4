@@ -67,23 +67,32 @@ namespace SharpMP4.Tracks
         {
             ESDBox esd = config as ESDBox;
             if (esd == null)
-                throw new ArgumentException($"Invalid ESDBox: {config.FourCC}");
+            {
+                // this box can be nested inside a wave box
+                if(config.Children != null && config.Children.Count > 0)
+                {
+                    esd = config.Children.OfType<ESDBox>().SingleOrDefault();
+                }
+                
+                if(esd == null)
+                    throw new ArgumentException($"Invalid ESDBox: {config.FourCC}");
+            }
 
             DefaultSampleDuration = sampleDuration <= 0 ? AAC_SAMPLE_SIZE : sampleDuration;
 
             if (config.GetParent() is AudioSampleEntry audioSampleEntry)
             {
                 Timescale = timescale == 0 ? audioSampleEntry.Samplerate >> 16 : timescale; 
-                ChannelCount = (byte)audioSampleEntry.Channelcount;
-                SamplingRate = audioSampleEntry.Samplerate >> 16;
+                ChannelCount = (byte)Math.Min(2, (int)audioSampleEntry.Channelcount); // must only be 1 or 2
+                SamplingRate = Timescale;
                 SampleSize = audioSampleEntry.Samplesize;
                 ChannelConfiguration = (byte)audioSampleEntry.Channelcount;
             }
             else if(config.GetParent() is AudioSampleEntryV1 audioSampleEntryV1)
             {
-                Timescale = audioSampleEntryV1.Samplerate >> 16;
-                ChannelCount = (byte)audioSampleEntryV1.Channelcount;
-                SamplingRate = audioSampleEntryV1.Samplerate >> 16;
+                Timescale = timescale == 0 ? audioSampleEntryV1.Samplerate >> 16 : timescale;
+                ChannelCount = (byte)Math.Min(2, (int)audioSampleEntryV1.Channelcount);
+                SamplingRate = Timescale;
                 SampleSize = audioSampleEntryV1.Samplesize;
                 ChannelConfiguration = (byte)audioSampleEntryV1.Channelcount;
             }
