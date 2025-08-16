@@ -12,17 +12,27 @@ namespace SharpMP4.Builders
     /// </summary>
     public class Mp4Builder : IMp4Builder
     {
+        private class TrackContext
+        {
+            public ITrack Track { get; set; }
+            public ulong EndTime { get; set; }
+            public List<uint> SampleSizes { get; set; } = new List<uint>();
+            public List<uint> SampleOffsets { get; set; } = new List<uint>();
+            public List<uint> RandomAccessPoints { get; set; } = new List<uint>();
+
+            public TrackContext(ITrack track)
+            {
+                Track = track;
+            }
+        }
+
         public uint MovieTimescale { get; set; } = 1000;
 
         private readonly IMp4Output _output;
 
         private IStorage _storage;
 
-        private readonly List<ITrack> _tracks = new List<ITrack>();
-        private readonly List<ulong> _trackEndTimes = new List<ulong>();
-        private readonly List<List<uint>> _trackSampleSizes = new List<List<uint>>();
-        private readonly List<List<uint>> _trackSampleOffsets = new List<List<uint>>();
-        private readonly List<List<uint>> _trackRandomAccessPoints = new List<List<uint>>();
+        private readonly Dictionary<uint, TrackContext> _trackContexts = new Dictionary<uint, TrackContext>();        
 
         /// <summary>
         /// Ctor.
@@ -39,13 +49,18 @@ namespace SharpMP4.Builders
         /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
         public void AddTrack(ITrack track)
         {
-            _tracks.Add(track);
-            _trackEndTimes.Add(0);
-            _trackSampleSizes.Add(new List<uint>());
-            _trackSampleOffsets.Add(new List<uint>());
-            _trackRandomAccessPoints.Add(new List<uint>());
-            track.TrackID = Mp4Utils.TrackIndexToTrackId(_tracks.IndexOf(track));
-        }               
+            uint trackID = GetNextTrackId();
+            track.TrackID = trackID;
+            _trackContexts.Add(trackID, new TrackContext(track));
+        }
+        
+        private uint GetNextTrackId()
+        {
+            uint trackID = 1;
+            while (_trackContexts.ContainsKey(trackID))
+                trackID++;
+            return trackID;
+        }
 
         private void WriteSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
@@ -54,17 +69,16 @@ namespace SharpMP4.Builders
                 _storage = TemporaryStorage.Factory.Create();
             }
 
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
-            uint currentSampleDuration = sampleDuration <= 0 ? (uint)_tracks[trackIndex].DefaultSampleDuration : (uint)sampleDuration;
-            var track = _tracks[trackIndex];
-            _trackSampleOffsets[trackIndex].Add((uint)((uint)_storage.GetPosition()));
+            uint currentSampleDuration = sampleDuration <= 0 ? (uint)_trackContexts[trackID].Track.DefaultSampleDuration : (uint)sampleDuration;
+            var track = _trackContexts[trackID];
+            track.SampleOffsets.Add((uint)_storage.GetPosition());
             _storage.Write(sample, 0, sample.Length);
-            _trackSampleSizes[trackIndex].Add((uint)sample.Length);
-            _trackEndTimes[trackIndex] += currentSampleDuration;
+            track.SampleSizes.Add((uint)sample.Length);
+            track.EndTime += currentSampleDuration;
 
             if(isRandomAccessPoint)
             {
-                _trackRandomAccessPoints[trackIndex].Add((uint)_trackSampleSizes[trackIndex].Count);
+                track.RandomAccessPoints.Add((uint)track.SampleSizes.Count);
             }
         }
 
@@ -79,9 +93,9 @@ namespace SharpMP4.Builders
 
             // maximum duration of all the tracks
             ulong movieDuration = 0;
-            for (int i = 0; i < _trackEndTimes.Count; i++)
+            foreach(var track in _trackContexts.Values)
             {
-                ulong trackDuration = (ulong)Math.Ceiling(_trackEndTimes[i] * 1000 / (double)_tracks[i].Timescale);
+                ulong trackDuration = (ulong)Math.Ceiling(track.EndTime * 1000 / (double)track.Track.Timescale);
                 if (trackDuration > movieDuration)
                 {
                     movieDuration = trackDuration;
@@ -89,12 +103,12 @@ namespace SharpMP4.Builders
             }
 
             mvhd.Duration = movieDuration * MovieTimescale / 1000;
-            mvhd.NextTrackID = (uint)_tracks.Count + 2;
+            mvhd.NextTrackID = 0xFFFFFFFF;
             mvhd.Timescale = MovieTimescale; // just for movie time: https://stackoverflow.com/questions/77803940/diffrence-between-mvhd-box-timescale-and-mdhd-box-timescale-in-isobmff-format
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
             mvhd.PreDefined = new uint[6]; // TODO simplify API
 
-            for (int i = 0; i < _tracks.Count; i++)
+            foreach (var track in _trackContexts.Values)
             {
                 var trak = new TrackBox();
                 trak.SetParent(moov);
@@ -104,9 +118,9 @@ namespace SharpMP4.Builders
                 var tkhd = new TrackHeaderBox();
                 tkhd.SetParent(trak);
                 trak.Children.Add(tkhd);
-                tkhd.TrackID = _tracks[i].TrackID;
+                tkhd.TrackID = track.Track.TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
-                if (_tracks[i].HandlerType == HandlerTypes.Video)
+                if (track.Track.HandlerType == HandlerTypes.Video)
                 {
                     // 0x1 - track enabled, 0x2 - track is used in the movie, 0x4 - track is used in movie's preview, 0x8 - track is used in movie poster
                     tkhd.Flags = 0x01 | 0x02 | 0x04 | 0x08;
@@ -115,7 +129,7 @@ namespace SharpMP4.Builders
                 {
                     tkhd.Flags = 0x01 | 0x02;
                 }
-                _tracks[i].FillTkhdBox(tkhd);
+                track.Track.FillTkhdBox(tkhd);
                 tkhd.Duration = movieDuration * MovieTimescale / 1000;
 
                 var mdia = new MediaBox();
@@ -126,15 +140,15 @@ namespace SharpMP4.Builders
                 mdhd.SetParent(mdia);
                 mdia.Children = new List<Box>();
                 mdia.Children.Add(mdhd);
-                mdhd.Duration = movieDuration * _tracks[i].Timescale / 1000;
-                mdhd.Timescale = _tracks[i].Timescale;
-                mdhd.Language = _tracks[i].Language;
+                mdhd.Duration = movieDuration * track.Track.Timescale / 1000;
+                mdhd.Timescale = track.Track.Timescale;
+                mdhd.Language = track.Track.Language;
 
                 HandlerBox hdlr = new HandlerBox();
                 hdlr.SetParent(mdia);
                 mdia.Children.Add(hdlr);
-                hdlr.HandlerType = IsoStream.FromFourCC(_tracks[i].HandlerType);
-                hdlr.Name = new BinaryUTF8String(_tracks[i].HandlerName);
+                hdlr.HandlerType = IsoStream.FromFourCC(track.Track.HandlerType);
+                hdlr.Name = new BinaryUTF8String(track.Track.HandlerName);
                 hdlr.Reserved = new uint[3]; // TODO simplify API
 
                 MediaInformationBox minf = new MediaInformationBox();
@@ -142,7 +156,7 @@ namespace SharpMP4.Builders
                 mdia.Children.Add(minf);
                 minf.Children = new List<Box>();
 
-                switch (_tracks[i].HandlerType)
+                switch (track.Track.HandlerType)
                 {
                     case HandlerTypes.Video:
                         {
@@ -169,7 +183,7 @@ namespace SharpMP4.Builders
                         break;
 
                     default:
-                        throw new NotSupportedException(_tracks[i].HandlerType);
+                        throw new NotSupportedException(track.Track.HandlerType);
                 }
 
                 var dinf = new DataInformationBox();
@@ -198,7 +212,7 @@ namespace SharpMP4.Builders
                 stbl.Children.Add(stsd);
                 stsd.Children = new List<Box>();
 
-                var sampleEntryBox = _tracks[i].CreateSampleEntryBox();
+                var sampleEntryBox = track.Track.CreateSampleEntryBox();
                 sampleEntryBox.SetParent(stsd);
                 stsd.Children.Add(sampleEntryBox);
                 stsd.EntryCount = 1;
@@ -206,17 +220,17 @@ namespace SharpMP4.Builders
                 var stts = new TimeToSampleBox();
                 stts.SetParent(stbl);
                 stbl.Children.Add(stts);
-                stts.SampleCount = new uint[] { (uint)_trackSampleOffsets[i].Count };
-                stts.SampleDelta = new uint[] { (uint)(_trackEndTimes[i] / (uint)Math.Max(1, _trackSampleSizes[i].Count)) };
+                stts.SampleCount = new uint[] { (uint)track.SampleOffsets.Count };
+                stts.SampleDelta = new uint[] { (uint)(track.EndTime / (uint)Math.Max(1, track.SampleSizes.Count)) };
                 stts.EntryCount = (uint)stts.SampleCount.Length;
 
-                if (_tracks[i].HandlerType == HandlerTypes.Video)
+                if (track.Track.HandlerType == HandlerTypes.Video)
                 {
                     // this box is optional, but it allows for seeking without picture artifacts
                     var stss = new SyncSampleBox();
                     stss.SetParent(stbl);
                     stbl.Children.Add(stss);
-                    stss.SampleNumber = _trackRandomAccessPoints[i].ToArray(); 
+                    stss.SampleNumber = track.RandomAccessPoints.ToArray(); 
                     stss.EntryCount = stss.SampleNumber != null ? (uint)stss.SampleNumber.Length : 0;
                 }
 
@@ -232,14 +246,14 @@ namespace SharpMP4.Builders
                 var stsz = new SampleSizeBox();
                 stsz.SetParent(stbl);
                 stbl.Children.Add(stsz);
-                stsz.EntrySize = _trackSampleSizes[i].ToArray();
-                stsz.SampleCount = (uint)_trackSampleSizes[i].Count;
+                stsz.EntrySize = track.SampleSizes.ToArray();
+                stsz.SampleCount = (uint)track.SampleSizes.Count;
 
                 var stco = new ChunkOffsetBox();
                 stco.SetParent(stbl);
                 stbl.Children.Add(stco);
-                stco.ChunkOffset = _trackSampleOffsets[i].ToArray(); // Temporary offset from the beginning of raw data, we have to add mdat offset later
-                stco.EntryCount = (uint)_trackSampleOffsets[i].Count;
+                stco.ChunkOffset = track.SampleOffsets.ToArray(); // Temporary offset from the beginning of raw data, we have to add mdat offset later
+                stco.EntryCount = (uint)track.SampleOffsets.Count;
             }
 
             return moov;
@@ -247,8 +261,7 @@ namespace SharpMP4.Builders
 
         public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration)
         {
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
-            _tracks[trackIndex].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
+            _trackContexts[trackID].Track.ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
             if (processedSample != null)
             {
@@ -263,9 +276,9 @@ namespace SharpMP4.Builders
 
         public void FinalizeMedia()
         {
-            foreach(var track in _tracks)
+            foreach(var track in _trackContexts.Values)
             {
-                ProcessTrackSample(track.TrackID, null, -1);
+                ProcessTrackSample(track.Track.TrackID, null, -1);
             }
 
             var mp4 = new Container();
@@ -276,11 +289,11 @@ namespace SharpMP4.Builders
             ftyp.MajorBrand = IsoStream.FromFourCC("isom");
             ftyp.MinorVersion = 512;
             var compatibleBrands = new List<string>() { "mp41", "isom" };
-            for (int i = 0; i < _tracks.Count; i++)
+            foreach(var track in _trackContexts.Values)
             {
-                if (!string.IsNullOrEmpty(_tracks[i].CompatibleBrand))
+                if (!string.IsNullOrEmpty(track.Track.CompatibleBrand))
                 {
-                    compatibleBrands.Insert(1, _tracks[i].CompatibleBrand);
+                    compatibleBrands.Insert(1, track.Track.CompatibleBrand);
                 }
             }
             ftyp.CompatibleBrands = compatibleBrands.Distinct().Select(IsoStream.FromFourCC).ToArray();

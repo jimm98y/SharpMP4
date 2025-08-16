@@ -11,7 +11,7 @@ namespace SharpMP4.Builders
     /// </summary>
     public class FragmentedMp4Builder : IMp4Builder
     {
-        public class MediaFragment
+        private class MediaFragment
         {
             public MediaFragment(IStorage storage, ulong startTime, ulong endTime, uint[] sampleSizes, uint[] sampleDurations)
             {
@@ -29,6 +29,29 @@ namespace SharpMP4.Builders
             public IStorage Storage { get; set; }
         }
 
+        private class TrackContext
+        {
+            public TrackContext(ITrack track)
+            {
+                Track = track;
+                MoofTime.Add(0); // initial time is 0
+                CurrentFragments = TemporaryStorage.Factory.Create();
+            }
+
+            public ITrack Track { get; set; }
+
+            public ulong StartTime { get; set; }
+            public ulong EndTime { get; set; }
+            public List<uint> SampleSizes { get; set; } = new List<uint>();
+            public List<uint> SampleDurations { get; set; } = new List<uint>();
+            public uint FragmentCounts { get; set; }
+
+            public IStorage CurrentFragments { get; set; }
+            public Queue<MediaFragment> ReadyFragments { get; set; } = new Queue<MediaFragment>();
+            public List<ulong> MoofOffsets { get; set; } = new List<ulong>();
+            public List<ulong> MoofTime { get; set; } = new List<ulong>();
+        }
+
         public uint MovieTimescale { get; set; } = 1000;
 
         private readonly IMp4Output _output;
@@ -37,17 +60,7 @@ namespace SharpMP4.Builders
         private readonly ulong _durationInMs = 0;
         private readonly bool _appendMovieFragmentRandomAccessBox;
 
-        private readonly List<ITrack> _tracks = new List<ITrack>();
-        private readonly List<ulong> _trackStartTimes = new List<ulong>();
-        private readonly List<ulong> _trackEndTimes = new List<ulong>();
-        private readonly List<List<uint>> _trackSampleSizes = new List<List<uint>>();
-        private readonly List<List<uint>> _trackSampleDurations = new List<List<uint>>();
-        private readonly List<uint> _trackFragmentCounts = new List<uint>();
-        private readonly List<IStorage> _trackCurrentFragments = new List<IStorage>();
-        private readonly List<Queue<MediaFragment>> _trackReadyFragments = new List<Queue<MediaFragment>>();
-                
-        private readonly List<List<ulong>> _trackMoofOffsets = new List<List<ulong>>();
-        private readonly List<List<ulong>> _trackMoofTime = new List<List<ulong>>();
+        private readonly Dictionary<uint, TrackContext> _trackContexts = new Dictionary<uint, TrackContext>();
         
         private uint _moofSequenceNumber = 1;
 
@@ -72,23 +85,22 @@ namespace SharpMP4.Builders
         /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
         public void AddTrack(ITrack track)
         {
-            _tracks.Add(track);
-            _trackStartTimes.Add(0);
-            _trackEndTimes.Add(0);
-            _trackFragmentCounts.Add(0);
-            _trackSampleSizes.Add(new List<uint>());
-            _trackSampleDurations.Add(new List<uint>());
-            _trackCurrentFragments.Add(TemporaryStorage.Factory.Create());
-            _trackReadyFragments.Add(new Queue<MediaFragment>());
-            _trackMoofOffsets.Add(new List<ulong>());
-            _trackMoofTime.Add(new List<ulong>() { 0 }); // initial time is 0
-            track.TrackID = Mp4Utils.TrackIndexToTrackId(_tracks.IndexOf(track));
+            uint trackID = GetNextTrackId();
+            track.TrackID = trackID;
+            _trackContexts.Add(trackID, new TrackContext(track));
+        }
+
+        private uint GetNextTrackId()
+        {
+            uint trackID = 1;
+            while (_trackContexts.ContainsKey(trackID))
+                trackID++;
+            return trackID;
         }
 
         public void ProcessTrackSample(uint trackID, byte[] sample, int sampleDuration = -1)
         {
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
-            _tracks[trackIndex].ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
+            _trackContexts[trackID].Track.ProcessSample(sample, out var processedSample, out var isRandomAccessPoint);
 
             if (processedSample != null)
             {
@@ -98,32 +110,32 @@ namespace SharpMP4.Builders
 
         public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
-            uint currentSampleDuration = sampleDuration < 0 ? (uint)_tracks[trackIndex].DefaultSampleDuration : (uint)sampleDuration;
-            ulong nextFragmentTime = _tracks[trackIndex].Timescale * _maxFragmentLengthInMs * (_trackFragmentCounts[trackIndex] + 1);
-            ulong currentFragmentTime = _trackEndTimes[trackIndex] * 1000;
+            TrackContext track = _trackContexts[trackID];
+            uint currentSampleDuration = sampleDuration < 0 ? (uint)track.Track.DefaultSampleDuration : (uint)sampleDuration;
+            ulong nextFragmentTime = track.Track.Timescale * _maxFragmentLengthInMs * (track.FragmentCounts + 1);
+            ulong currentFragmentTime = track.EndTime * 1000;
 
-            if (_trackSampleSizes[trackIndex].Count > 0 && nextFragmentTime <= currentFragmentTime)
+            if (track.SampleSizes.Count > 0 && nextFragmentTime <= currentFragmentTime)
             {
-                var fragment = CreateNewFragment(trackID);
-                _trackReadyFragments[trackIndex].Enqueue(fragment);
+                var fragment = CreateNewFragment(track);
+                track.ReadyFragments.Enqueue(fragment);
 
-                _trackCurrentFragments[trackIndex] = TemporaryStorage.Factory.Create();
-                _trackStartTimes[trackIndex] = _trackEndTimes[trackIndex];
-                _trackSampleSizes[trackIndex].Clear();
-                _trackSampleDurations[trackIndex].Clear();
-                _trackFragmentCounts[trackIndex]++;
+                track.CurrentFragments = TemporaryStorage.Factory.Create();
+                track.StartTime = _trackContexts[trackID].EndTime;
+                track.SampleSizes.Clear();
+                track.SampleDurations.Clear();
+                track.FragmentCounts++;
             }
 
-            _trackCurrentFragments[trackIndex].Write(sample, 0, sample.Length);
-            _trackSampleSizes[trackIndex].Add((uint)sample.Length);
-            _trackSampleDurations[trackIndex].Add(currentSampleDuration);
-            _trackEndTimes[trackIndex] += currentSampleDuration;
+            track.CurrentFragments.Write(sample, 0, sample.Length);
+            track.SampleSizes.Add((uint)sample.Length);
+            track.SampleDurations.Add(currentSampleDuration);
+            track.EndTime += currentSampleDuration;
 
             bool isFragmentReady = true;
-            for (int i = 0; i < _tracks.Count; i++)
+            foreach (var ctx in _trackContexts.Values)
             {
-                if (_trackReadyFragments[i].Count == 0)
+                if (ctx.ReadyFragments.Count == 0)
                 {
                     isFragmentReady = false;
                     break;
@@ -136,11 +148,10 @@ namespace SharpMP4.Builders
             }
         }
 
-        private MediaFragment CreateNewFragment(uint trackID)
+        private MediaFragment CreateNewFragment(TrackContext track)
         {
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
-            var ret = new MediaFragment(_trackCurrentFragments[trackIndex], _trackStartTimes[trackIndex], _trackEndTimes[trackIndex], _trackSampleSizes[trackIndex].ToArray(), _trackSampleDurations[trackIndex].ToArray());
-            _trackSampleSizes[trackIndex].Clear();
+            var ret = new MediaFragment(track.CurrentFragments, track.StartTime, track.EndTime, track.SampleSizes.ToArray(), track.SampleDurations.ToArray());
+            track.SampleSizes.Clear();
             return ret;
         }
 
@@ -164,48 +175,48 @@ namespace SharpMP4.Builders
             {
                 // VLC requires the first MOOF to be video, otherwise we get choppy playback
                 // first video tracks
-                for (int i = 0; i < _tracks.Count; i++)
+                foreach(var track in _trackContexts.Values)
                 {
-                    if (_tracks[i].HandlerType == HandlerTypes.Video)
+                    if (track.Track.HandlerType == HandlerTypes.Video)
                     {
-                        WriteTrackFragment(isFlushing, i);
+                        WriteTrackFragment(isFlushing, track);
                     }
                 }
 
                 // then audio tracks
-                for (int i = 0; i < _tracks.Count; i++)
+                foreach (var track in _trackContexts.Values)
                 {
-                    if (_tracks[i].HandlerType == HandlerTypes.Sound)
+                    if (track.Track.HandlerType == HandlerTypes.Sound)
                     {
-                        WriteTrackFragment(isFlushing, i);
+                        WriteTrackFragment(isFlushing, track);
                     }
                 }
 
                 // then the rest
-                for (int i = 0; i < _tracks.Count; i++)
+                foreach (var track in _trackContexts.Values)
                 {
-                    if (_tracks[i].HandlerType != HandlerTypes.Video && _tracks[i].HandlerType != HandlerTypes.Sound)
+                    if (track.Track.HandlerType != HandlerTypes.Video && track.Track.HandlerType != HandlerTypes.Sound)
                     {
-                        WriteTrackFragment(isFlushing, i);
+                        WriteTrackFragment(isFlushing, track);
                     }
                 }
             }
-            while (isFlushing && (_trackReadyFragments.Any(x => x.Count > 0) || _trackSampleSizes.Any(x => x.Count > 0)));
+            while (isFlushing && _trackContexts.Values.Any(x => x.ReadyFragments.Count > 0 || x.SampleSizes.Count > 0));
         }
 
-        private void WriteTrackFragment(bool isFlushing, int index)
+        private void WriteTrackFragment(bool isFlushing, TrackContext track)
         {
             MediaFragment fragment;
 
             if (isFlushing)
             {
-                if (_trackReadyFragments[index].Count > 0)
+                if (track.ReadyFragments.Count > 0)
                 {
-                    fragment = _trackReadyFragments[index].Dequeue();
+                    fragment = track.ReadyFragments.Dequeue();
                 }
-                else if (_trackSampleSizes[index].Count > 0)
+                else if (track.SampleSizes.Count > 0)
                 {
-                    fragment = CreateNewFragment((uint)index + 1);
+                    fragment = CreateNewFragment(track);
                 }
                 else
                 {
@@ -215,19 +226,19 @@ namespace SharpMP4.Builders
             }
             else
             {
-                fragment = _trackReadyFragments[index].Dequeue();
+                fragment = track.ReadyFragments.Dequeue();
             }
 
             Container fmp4 = new Container();
             uint sequenceNumber = _moofSequenceNumber++;
 
-            CreateMediaFragmentAsync(fmp4, _tracks[index], fragment, sequenceNumber);
+            CreateMediaFragmentAsync(fmp4, track.Track, fragment, sequenceNumber);
 
             var outputStream = _output.GetStream(sequenceNumber);
             var fragmentStream = new IsoStream(outputStream);
 
-            _trackMoofOffsets[index].Add((ulong)fragmentStream.GetCurrentOffset());
-            _trackMoofTime[index].Add(fragment.EndTime);
+            track.MoofOffsets.Add((ulong)fragmentStream.GetCurrentOffset());
+            track.MoofTime.Add(fragment.EndTime);
 
             fmp4.Write(fragmentStream);
             _output.Flush(outputStream, sequenceNumber);
@@ -248,11 +259,11 @@ namespace SharpMP4.Builders
                 "isom",
             };
 
-            for (int i = 0; i < _tracks.Count; i++)
+            foreach (var track in _trackContexts.Values)
             {
-                if (!string.IsNullOrEmpty(_tracks[i].CompatibleBrand))
+                if (!string.IsNullOrEmpty(track.Track.CompatibleBrand))
                 {
-                    compatibleBrands.Insert(1, _tracks[i].CompatibleBrand);
+                    compatibleBrands.Insert(1, track.Track.CompatibleBrand);
                 }
             }
 
@@ -272,7 +283,7 @@ namespace SharpMP4.Builders
             mvhd.Reserved0 = new uint[2]; // TODO simplify API
             mvhd.PreDefined = new uint[6]; // TODO simplify API
 
-            for (int i = 0; i < _tracks.Count; i++)
+            foreach (var track in _trackContexts.Values)
             {
                 var trak = new TrackBox();
                 trak.SetParent(moov);
@@ -282,10 +293,10 @@ namespace SharpMP4.Builders
                 var tkhd = new TrackHeaderBox();
                 tkhd.SetParent(trak);
                 trak.Children.Add(tkhd);
-                tkhd.TrackID = _tracks[i].TrackID;
+                tkhd.TrackID = track.Track.TrackID;
                 tkhd.Reserved1 = new uint[2]; // TODO simplify API
                 tkhd.Flags = 0x07;
-                _tracks[i].FillTkhdBox(tkhd);
+                track.Track.FillTkhdBox(tkhd);
                 tkhd.Duration = _durationInMs * MovieTimescale / 1000; 
 
                 var mdia = new MediaBox();
@@ -297,14 +308,14 @@ namespace SharpMP4.Builders
                 mdia.Children = new List<Box>();
                 mdia.Children.Add(mdhd);
                 mdhd.Duration = 0;
-                mdhd.Timescale = _tracks[i].Timescale;
-                mdhd.Language = _tracks[i].Language;
+                mdhd.Timescale = track.Track.Timescale;
+                mdhd.Language = track.Track.Language;
 
                 HandlerBox hdlr = new HandlerBox();
                 hdlr.SetParent(mdia);
                 mdia.Children.Add(hdlr);
-                hdlr.HandlerType = IsoStream.FromFourCC(_tracks[i].HandlerType);
-                hdlr.Name = new BinaryUTF8String(_tracks[i].HandlerName);
+                hdlr.HandlerType = IsoStream.FromFourCC(track.Track.HandlerType);
+                hdlr.Name = new BinaryUTF8String(track.Track.HandlerName);
                 hdlr.Reserved = new uint[3]; // TODO simplify API
 
                 MediaInformationBox minf = new MediaInformationBox();
@@ -312,7 +323,7 @@ namespace SharpMP4.Builders
                 mdia.Children.Add(minf);
                 minf.Children = new List<Box>();
 
-                switch (_tracks[i].HandlerType)
+                switch (track.Track.HandlerType)
                 {
                     case HandlerTypes.Video:
                         {
@@ -339,7 +350,7 @@ namespace SharpMP4.Builders
                         break;
 
                     default:
-                        throw new NotSupportedException(_tracks[i].HandlerType);
+                        throw new NotSupportedException(track.Track.HandlerType);
                 }
 
                 DataInformationBox dinf = new DataInformationBox();
@@ -368,7 +379,7 @@ namespace SharpMP4.Builders
                 stbl.Children.Add(stsd);
                 stsd.Children = new List<Box>();
                 
-                var sampleEntryBox = _tracks[i].CreateSampleEntryBox();
+                var sampleEntryBox = track.Track.CreateSampleEntryBox();
                 sampleEntryBox.SetParent(stsd);
                 stsd.Children.Add(sampleEntryBox);
                 stsd.EntryCount = 1;
@@ -404,13 +415,13 @@ namespace SharpMP4.Builders
                 mehd.FragmentDuration = _durationInMs * MovieTimescale / 1000;
             }
 
-            for (int i = 0; i < _tracks.Count; i++)
+            foreach (var track in _trackContexts.Values)
             {
                 TrackExtendsBox trex = new TrackExtendsBox();
                 trex.SetParent(mvex);
                 mvex.Children.Add(trex);
 
-                trex.TrackID = _tracks[i].TrackID;
+                trex.TrackID = track.Track.TrackID;
                 trex.DefaultSampleDescriptionIndex = 1;
                 trex.DefaultSampleDuration = 0;
                 trex.DefaultSampleSize = 0;
@@ -489,7 +500,7 @@ namespace SharpMP4.Builders
 
         public void FinalizeMedia()
         {
-            if (_trackCurrentFragments.Any(x => x.GetLength() > 0))
+            if (_trackContexts.Values.Any(x => x.CurrentFragments.GetLength() > 0))
             {
                 WriteFragment(true);
             }
@@ -503,25 +514,23 @@ namespace SharpMP4.Builders
                 fmp4.Children.Add(mfra);
                 mfra.Children = new List<Box>();
 
-                for (int i = 0; i < _tracks.Count; i++)
+                foreach (var track in _trackContexts.Values)
                 {
-                    var track = _tracks[i];
-
                     var tfra = new TrackFragmentRandomAccessBox();
                     tfra.SetParent(mfra);
                     mfra.Children.Add(tfra);
                     tfra.LengthSizeOfSampleNum = 1;
                     tfra.LengthSizeOfTrafNum = 1;
                     tfra.LengthSizeOfTrunNum = 1;
-                    tfra.TrackID = _tracks[i].TrackID;
-                    tfra.MoofOffset = _trackMoofOffsets[i].ToArray();
-                    tfra.Time = _trackMoofTime[i].ToArray();
+                    tfra.TrackID = track.Track.TrackID;
+                    tfra.MoofOffset = track.MoofOffsets.ToArray();
+                    tfra.Time = track.MoofTime.ToArray();
                     // TODO: hadrcoded for now
-                    tfra.TrafNumber = _trackMoofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
-                    tfra.TrunNumber = _trackMoofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
-                    tfra.SampleDelta = _trackMoofOffsets[i].Select(x => new byte[] { 0, 1 }).ToArray();
+                    tfra.TrafNumber = track.MoofOffsets.Select(x => new byte[] { 0, 1 }).ToArray();
+                    tfra.TrunNumber = track.MoofOffsets.Select(x => new byte[] { 0, 1 }).ToArray();
+                    tfra.SampleDelta = track.MoofOffsets.Select(x => new byte[] { 0, 1 }).ToArray();
 
-                    tfra.NumberOfEntry = (uint)_trackMoofOffsets[i].Count;
+                    tfra.NumberOfEntry = (uint)track.MoofOffsets.Count;
                 }
 
                 var mfro = new MovieFragmentRandomAccessOffsetBox();

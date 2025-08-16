@@ -16,7 +16,7 @@ namespace SharpMP4.Readers
         public MovieBox Moov { get; set; }
         public TrackBox[] Track { get; set; }
         public MediaDataBox Mdat { get; set; }
-        public TrackContext[] Tracks { get; set; }
+        public Dictionary<uint, TrackContext> Tracks { get; set; } = new Dictionary<uint, TrackContext>();
 
         public bool IsFragmented { get; set; } = false;
         public MovieExtendsBox Mvex { get; set; }
@@ -24,7 +24,7 @@ namespace SharpMP4.Readers
 
         public IEnumerable<ITrack> GetTracks()
         {
-            return Tracks.Select(x => x.Track);
+            return Tracks.Select(x => x.Value.Track);
         }
 
         public void Parse(Container container)
@@ -44,7 +44,6 @@ namespace SharpMP4.Readers
                 {
                     this.Moov = (MovieBox)container.Children[i];
                     this.Track = this.Moov.Children.OfType<TrackBox>().ToArray();
-                    this.Tracks = new TrackContext[this.Track.Length];
 
                     this.Mvex = this.Moov.Children.OfType<MovieExtendsBox>().SingleOrDefault(); // fmp4
                     this.IsFragmented = this.Mvex != null;
@@ -56,11 +55,10 @@ namespace SharpMP4.Readers
                         MediaBox mdia = track.Children.OfType<MediaBox>().Single();
                         MediaHeaderBox mdhd = mdia.Children.OfType<MediaHeaderBox>().Single();
                         uint trackID = tkhd.TrackID;
-                        int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
                         uint trackTimescale = mdhd.Timescale;
 
                         var trackContext = new TrackContext();
-                        this.Tracks[trackIndex] = trackContext;
+                        this.Tracks.Add(trackID, trackContext);
 
                         trackContext.Trex = this.Mvex?.Children.OfType<TrackExtendsBox>().SingleOrDefault(x => x.TrackID == trackID); // fmp4
                         
@@ -93,7 +91,7 @@ namespace SharpMP4.Readers
                             if(Log.ErrorEnabled) Log.Error($"Unsupported track type: {hdlr.HandlerType} ({hdlr.DisplayName}) for track ID {trackID}. Exception: {ex.Message}");
                             trackImpl = TrackFactory.CreateGenericTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
                         }
-                        this.Tracks[trackIndex].Track = trackImpl;
+                        this.Tracks[trackID].Track = trackImpl;
 
                         var stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
                         var co64 = stbl.Children.OfType<ChunkLargeOffsetBox>().SingleOrDefault();
@@ -147,9 +145,8 @@ namespace SharpMP4.Readers
             if (this.Moov == null)
                 throw new InvalidOperationException();
 
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
             var container = this.Container;
-            var trackContext = this.Tracks[trackIndex];
+            var trackContext = this.Tracks[trackID];
 
             MovieFragmentBox moof = null;
 
@@ -296,8 +293,7 @@ namespace SharpMP4.Readers
 
         private MediaSample ReadMp4Sample(uint trackID)
         {
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
-            var trackContext = this.Tracks[trackIndex];
+            var trackContext = this.Tracks[trackID];
 
             int sttsIndex = 0;
             uint sttsNextRun = 0;
@@ -411,8 +407,7 @@ namespace SharpMP4.Readers
 
         private MediaSample ReadFragmentedMp4Sample(uint trackID)
         {
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
-            var trackContext = this.Tracks[trackIndex];
+            var trackContext = this.Tracks[trackID];
 
             if (trackContext.Moof == null || trackContext.SampleIndex >= trackContext.FragmentSampleCount || trackContext.SampleIndex < 0) // TODO: sample streaming backwards
             {
@@ -490,8 +485,7 @@ namespace SharpMP4.Readers
 
         public IEnumerable<byte[]> ParseSample(uint trackID, byte[] sample)
         {
-            int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
-            var trackContext = this.Tracks[trackIndex];
+            var trackContext = this.Tracks[trackID];
             return trackContext.Track.ParseSample(sample);
         }
     }    
