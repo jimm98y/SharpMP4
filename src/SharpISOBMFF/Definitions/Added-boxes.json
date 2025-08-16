@@ -1300,7 +1300,7 @@
     {
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class XMPBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {\r\n\t string data;\r\n }"
+      "syntax": "aligned(8) class XMPCustomBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {\r\n\t string data;\r\n }"
     },
     {
       "containers": [ "*" ],
@@ -1477,7 +1477,6 @@
       "type": "Box",
       "syntax": "aligned(8) class MiniBox() extends Box('mini') {\r\n\t bit(8) data[];\r\n } "
     },
-
     {
       "containers": [ "*" ],
       "type": "Box",
@@ -1494,7 +1493,6 @@
       "syntax": "aligned(8) class PcmCBox() extends FullBox('pcmC') {\r\n\t unsigned int(8) formatFlags;\r\n\t unsigned int(8) pcmSampleSize;\r\n } "
     },
 
-
     {
       "containers": [ "*" ],
       "type": "Box",
@@ -1504,11 +1502,6 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class SmtaBox() extends Box('smta') {\r\n\t bit(8) data[];\r\n } "
-    },
-    {
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class SDLNBox() extends Box('SDLN') {\r\n\t bit(8) data[];\r\n } "
     },
     {
       "containers": [ "*" ],

@@ -372,7 +372,7 @@
       "fourcc": "url\\0",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class Url0Box() extends Box ('url\\0'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class Url0Box() extends Box ('url\\0') {\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "@PST",
@@ -776,6 +776,258 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class YawBox() extends Box ('_yaw'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "CNFV",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CanonFirmwareVersionBox() extends Box ('CNFV'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "CNMN",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CanonModelBox() extends Box ('CNMN'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "CNOP",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CanonCNOPBox() extends Box ('CNOP'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "CNTH",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CanonCNTHBox() extends Box ('CNTH'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "DcMD",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class KodakDcMDBox() extends Box ('DcMD'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "FFMV",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class FujiFilmFFMVBox() extends Box ('FFMV'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "GPMF",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GoProGPMFBox() extends Box ('GPMF') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "GoPr",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GoProTypeBox() extends Box ('GoPr') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "INFO",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SamsungINFOBox() extends Box ('INFO') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "LEIC",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class LeicaLEICBox() extends Box ('LEIC') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "LENS",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class LensSerialNumberBox() extends Box ('LENS') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "Lvlm",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class LevelMeterBox() extends Box ('Lvlm') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "MMA0",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MinoltaMMA0Box() extends Box ('MMA0') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "MMA1",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MinoltaMMA1Box() extends Box ('MMA1') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "MUID",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MediaUIDBox() extends Box ('MUID') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "MVTG",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class FujiFilmMVTGBox() extends Box ('MVTG') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "PANA",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PanasonicPANABox() extends Box ('PANA') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "PENT",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PentaxPENTBox() extends Box ('PENT') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "PXMN",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MakerNotePentaxBox() extends Box ('PXMN') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "PXTH",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PentaxPreviewBox() extends Box ('PXTH') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "QVMI",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CasioQVMIBox() extends Box ('QVMI') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "RDTA",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RicohRDTABox() extends Box ('RDTA') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "RDTB",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RicohRDTBBox() extends Box ('RDTB') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "RDTC",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RicohRDTCBox() extends Box ('RDTC') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "RDTG",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RicohRDTGBox() extends Box ('RDTG') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "RDTL",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RicohRDTLBox() extends Box ('RDTL') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "RICO",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RicohRICOBox() extends Box ('RICO') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "RMKN",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RicohRMKNBox() extends Box ('RMKN') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "RTHU",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RTHUPreviewImageBox() extends Box ('RTHU') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "SDLN",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PlayModeBox() extends Box ('SDLN') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "SIGM",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SigmaEXIFBox() extends Box ('SIGM') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "SNum",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SerialNumberBox() extends Box ('SNum') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "TAGS",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TagsBox() extends Box ('TAGS') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "TTMD",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TomTomMetaDataBox() extends Box ('TTMD') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "TTAD",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TomTomADBox() extends Box ('TTAD') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "TTHL",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TomTomHLBox() extends Box ('TTHL') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "TTID",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TomTomIDBox() extends Box ('TTID') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "TTVD",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TomTomVDBox() extends Box ('TTVD') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "TTVI",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TomTomVIBox() extends Box ('TTVI') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "XMP_",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class XMPBox() extends Box ('XMP_') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "OLYM",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class OlympusOLYMBox() extends Box ('OLYM') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "FOV\\0",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class FieldOfViewBox() extends Box ('FOV\\0') {\r\n bit(8) data[];\r\n }"
     }
   ]
 }

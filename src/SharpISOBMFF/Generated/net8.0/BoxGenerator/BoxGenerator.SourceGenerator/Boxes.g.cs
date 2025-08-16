@@ -213,7 +213,11 @@ namespace SharpISOBMFF
                case "cmpd":  return new ComponentDefinitionBox();
                case "cmvd":  return new AppleCompressedMoovDataBox();
                case "CNCV":  return new CanonCompressorVersionBox();
+               case "CNFV":  return new CanonFirmwareVersionBox();
                case "cnID":  return new AppleStoreCatalogIDBox();
+               case "CNMN":  return new CanonModelBox();
+               case "CNOP":  return new CanonCNOPBox();
+               case "CNTH":  return new CanonCNTHBox();
                case "co64":  return new ChunkLargeOffsetBox();
                case "coll":  return new CollectionNameBox();
                case "CoLL":  return new ContentLightLevelBoxCoLLDup(); // TODO: fix duplicate
@@ -242,6 +246,7 @@ namespace SharpISOBMFF
                case "damr":  return new AmrSpecificBox();
                case "data":  return new DataBox();
                case "date":  return new DateTimeOriginalBox();
+               case "DcMD":  return new KodakDcMDBox();
                case "dcom":  return new AppleDecompressorBox();
                case "ddts":  return new DTSSpecificBox();
                case "dec3":  return new EC3SpecificBox();
@@ -301,6 +306,7 @@ namespace SharpISOBMFF
                case "fall":  return new AlternateFormatTrackBox();
                case "fdp ":  return new FDHintSampleEntry();
                case "fecr":  return new FECReservoirBox();
+               case "FFMV":  return new FujiFilmFFMVBox();
                case "fiel":  return new FielBox();
                case "fiin":  return new FDItemInformationBox();
                case "finm":  return new OriginalFileNameBox();
@@ -311,6 +317,7 @@ namespace SharpISOBMFF
                case "flvr":  return new AppleFlvrBox();
                case "folw":  return new SubtitleTrackBox();
                case "forc":  return new ForcedSubtitleTrackBox();
+               case "FOV\0":  return new FieldOfViewBox();
                case "fpar":  return new FilePartitionBox();
                case "fpcm":  return new FpcmBox();
                case "FPRF":  return new PspFprfBox();
@@ -328,6 +335,8 @@ namespace SharpISOBMFF
                case "gmhd":  return new GenericMediaHeaderAtom();
                case "gmin":  return new BaseMediaInfoAtom();
                case "gnre":  return new GenreBox();
+               case "GoPr":  return new GoProTypeBox();
+               case "GPMF":  return new GoProGPMFBox();
                case "gps ":  return new GpsBox();
                case "GPS ":  return new GPSDataList2Box();
                case "gps0":  return new GPSTrackBox();
@@ -388,6 +397,7 @@ namespace SharpISOBMFF
                case "in32": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("in32"));break;
                case "infe":  return new ItemInfoEntry();
                case "infi":  return new CameraInfoBox();
+               case "INFO":  return new SamsungINFOBox();
                case "infu":  return new OMAInfoURLBox();
                case "inst":  return new Insta360InfoBox();
                case "iods":  return new AppleInitialObjectDescriptorBox();
@@ -425,6 +435,8 @@ namespace SharpISOBMFF
                case "kywd":  return new ThreeGPPKeywordsBox();
                case "ldep":  return new TierDependencyBox();
                case "ldes":  return new AppleLongDescriptionBox();
+               case "LEIC":  return new LeicaLEICBox();
+               case "LENS":  return new LensSerialNumberBox();
                case "leva":  return new LevelAssignmentBox();
                case "lhe1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("lhe1"));break;
                case "lht1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("lht1"));break;
@@ -438,6 +450,7 @@ namespace SharpISOBMFF
                case "lrcu":  return new OMALyricsURLBox();
                case "lsel":  return new LayerSelectorProperty();
                case "ludt":  return new LoudnessBox();
+               case "Lvlm":  return new LevelMeterBox();
                case "m4ds":  return new MPEG4ExtensionDescriptorsBox();
                case "MAC3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC3"));break;
                case "MAC6": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("MAC6"));break;
@@ -472,6 +485,8 @@ namespace SharpISOBMFF
                case "mjpb": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpb"));break;
                case "mjpg": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mjpg"));break;
                case "mlpa": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("mlpa"));break;
+               case "MMA0":  return new MinoltaMMA0Box();
+               case "MMA1":  return new MinoltaMMA1Box();
                case "moat":  return new MoatBox();
                case "modl":  return new ModelBoxmodlDup(); // TODO: fix duplicate
                case "moof": return new MovieFragmentBox(); // TODO: box is ambiguous in between MovieFragmentBox and CompressedMovieFragmentBox
@@ -488,6 +503,7 @@ namespace SharpISOBMFF
                case "mskC":  return new MaskConfigurationProperty();
                case "mstv":  return new MVCSubTrackViewBox();
                case "MTDT":  return new PspMtdtBox();
+               case "MUID":  return new MediaUIDBox();
                case "mvc1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mvc1"));break;
                case "mvc2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mvc2"));break;
                case "mvc3": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("mvc3"));break;
@@ -504,6 +520,7 @@ namespace SharpISOBMFF
                case "mvex":  return new MovieExtendsBox();
                case "mvhd":  return new MovieHeaderBox();
                case "mvra":  return new MultiviewRelationAttributeBox();
+               case "MVTG":  return new FujiFilmMVTGBox();
                case "nail":  return new ThumbnailTIFFBox();
                case "name": return new AppleName2Box(); // TODO: box is ambiguous in between AppleName2Box and FairPlayUserNameBox
                case "nbmt":  return new NextbaseMetaBox();
@@ -529,6 +546,7 @@ namespace SharpISOBMFF
                case "odtt":  return new OMATransactionTrackingBox();
                case "ohdr":  return new OMACommonHeadersBox();
                case "oinf":  return new OperatingPointsInformationProperty();
+               case "OLYM":  return new OlympusOLYMBox();
                case "opeg":  return new OperatingPointGroupBox();
                case "Opus": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("Opus"));break;
                case "orie":  return new OrieBox();
@@ -538,6 +556,7 @@ namespace SharpISOBMFF
                case "padb":  return new PaddingBitsBox();
                case "pads":  return new PadsBox();
                case "paen":  return new PartitionEntry();
+               case "PANA":  return new PanasonicPANABox();
                case "pasp":  return new PixelAspectRatioBox();
                case "payl":  return new CuePayloadBox();
                case "payt":  return new HintPayloadID();
@@ -545,6 +564,7 @@ namespace SharpISOBMFF
                case "pcmC":  return new PcmCBox();
                case "pcst":  return new PodcastBox();
                case "pdin":  return new ProgressiveDownloadInfoBox();
+               case "PENT":  return new PentaxPENTBox();
                case "perf":  return new ThreeGPPPerformerBox();
                case "pgap":  return new ApplePlayGapBox();
                case "pict":  return new ApplePreviewPictureBox();
@@ -572,21 +592,30 @@ namespace SharpISOBMFF
                case "ptv ":  return new ApplePtvBox();
                case "purd":  return new PurchaseDateBox();
                case "purl":  return new PodcastUrlBox();
+               case "PXMN":  return new MakerNotePentaxBox();
+               case "PXTH":  return new PentaxPreviewBox();
                case "pymd":  return new ImagePyramidEntityGroupBox();
                case "Qclp": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("Qclp"));break;
                case "QDM2": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDM2"));break;
                case "QDMC": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDMC"));break;
                case "qlif":  return new SVCPriorityLayerInfoBox();
                case "qtvr":  return new AppleQTVRTrackBox();
+               case "QVMI":  return new CasioQVMIBox();
                case "rads":  return new RadsBox();
                case "rate":  return new RatingPercentBox();
                case "rati":  return new AppleRating2Box();
                case "raw ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("raw "));break;
                case "rcif":  return new AppleOrientationBox();
                case "rdrf":  return new AppleDataReferenceBox();
+               case "RDTA":  return new RicohRDTABox();
+               case "RDTB":  return new RicohRDTBBox();
+               case "RDTC":  return new RicohRDTCBox();
+               case "RDTG":  return new RicohRDTGBox();
+               case "RDTL":  return new RicohRDTLBox();
                case "reel":  return new ReelNameBox();
                case "resa": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("resa"));break;
                case "resv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("resv"));break;
+               case "RICO":  return new RicohRICOBox();
                case "righ":  return new RightsBox();
                case "rinf":  return new RestrictedSchemeInfoBox();
                case "rldt":  return new ReleaseDateBox();
@@ -597,6 +626,7 @@ namespace SharpISOBMFF
                case "rmcs":  return new AppleCpuSpeedBox();
                case "rmda":  return new AppleReferenceMovieDescriptorBox();
                case "rmdr":  return new AppleDataRateBox();
+               case "RMKN":  return new RicohRMKNBox();
                case "rmla":  return new ReferenceMovieLanguageBox();
                case "rmqu":  return new AppleQualityBox();
                case "rmra":  return new AppleReferenceMovieBox();
@@ -610,6 +640,7 @@ namespace SharpISOBMFF
                case "rsrc":  return new AppleDataReferenceResourceBox();
                case "rsrp":  return new ReceivedSrtpHintSampleEntry();
                case "rssr":  return new ReceivedSsrcBox();
+               case "RTHU":  return new RTHUPreviewImageBox();
                case "rtng":  return new AppleRatingBox();
                case "rtp ": return new RtpMovieHintInformation(); // TODO: box is ambiguous in between RtpMovieHintInformation and RtpHintSampleEntry
                case "s263": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("s263"));break;
@@ -629,7 +660,7 @@ namespace SharpISOBMFF
                case "scrn":  return new OlympusPreviewBox();
                case "sdep":  return new SampleDependencyBox();
                case "sdes":  return new AppleShortDescriptionBox();
-               case "SDLN":  return new SDLNBox();
+               case "SDLN":  return new PlayModeBox();
                case "sdp ":  return new RtpTrackSdpHintInformation();
                case "sdtp":  return new SampleDependencyTypeBox();
                case "SEAL":  return new SEALBox();
@@ -647,6 +678,7 @@ namespace SharpISOBMFF
                case "shot":  return new ShotNameBox();
                case "shwm":  return new ShowMovementBox();
                case "sidx": return new SegmentIndexBox(); // TODO: box is ambiguous in between SegmentIndexBox and CompressedSegmentIndexBox
+               case "SIGM":  return new SigmaEXIFBox();
                case "sinf":  return new ProtectionSchemeInfoBox();
                case "skip":  return new FreeSpaceBoxskipDup(); // TODO: fix duplicate
                case "slno":  return new SerialNumberBox();
@@ -660,6 +692,7 @@ namespace SharpISOBMFF
                case "snal":  return new ItemListPreviewImageBox();
                case "snim":  return new DataEntrySeqNumImdaBox();
                case "snro":  return new SequenceOffset();
+               case "SNum":  return new SerialNumberBoxSNumDup(); // TODO: fix duplicate
                case "snut":  return new SnutTrackGroupTypeBox();
                case "soaa":  return new AlbumArtistSortBox();
                case "soal":  return new AlbumSortBox();
@@ -726,6 +759,7 @@ namespace SharpISOBMFF
                case "swtk":  return new SwitchableTracksGroupBox();
                case "sync":  return new SynchronizedTrackBox();
                case "tags":  return new NeroMetadataTagsBox();
+               case "TAGS":  return new TagsBox();
                case "taic":  return new TaicBox();
                case "tapt":  return new AppleTrackApertureBox();
                case "tcmi":  return new TCMediaInfoBox();
@@ -774,6 +808,12 @@ namespace SharpISOBMFF
                case "tssy":  return new TimestampSynchrony();
                case "tstb":  return new TileSubTrackGroupBox();
                case "tsyn":  return new TimeSynchronizedCaptureEntityGroupBox();
+               case "TTAD":  return new TomTomADBox();
+               case "TTHL":  return new TomTomHLBox();
+               case "TTID":  return new TomTomIDBox();
+               case "TTMD":  return new TomTomMetaDataBox();
+               case "TTVD":  return new TomTomVDBox();
+               case "TTVI":  return new TomTomVIBox();
                case "ttyp":  return new TrackTypeBox();
                case "tven":  return new TVEpisodeIDBox();
                case "tves":  return new AppleTVEpisodeBox();
@@ -807,7 +847,7 @@ namespace SharpISOBMFF
                case "uuid 6d1d9b0542d544e680e2141daff757b2":  return new TfxdBox();
                case "uuid 8974dbce7be74c5184f97148f9882554":  return new PiffTrackEncryptionBox();
                case "uuid a2394f525a9b4f14a2446c427c648df4":  return new PiffSampleEncryptionBox();
-               case "uuid be7acfcb97a942e89c71999491e3afac":  return new XMPBox();
+               case "uuid be7acfcb97a942e89c71999491e3afac":  return new XMPCustomBox();
                case "uuid d08a4f1810f34a82b6c832d8aba183d3":  return new UuidBasedProtectionSystemSpecificHeaderBox();
                case "uuid d4807ef2ca3946958e5426cb9e46a79f":  return new TfrfBox();
                case "v210": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("v210"));break;
@@ -851,6 +891,7 @@ namespace SharpISOBMFF
                case "wvtt":  return new WVTTSampleEntry();
                case "xid ":  return new AppleXidBox();
                case "xml ":  return new XMLBox();
+               case "XMP_":  return new XMPBox();
                case "Xtra":  return new WindowsMediaXtraBox();
                case "yrrc":  return new ThreeGPPRecordingYearBox();
                case "yuv2": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("yuv2"));break;
@@ -52506,19 +52547,19 @@ public partial class IpirBox : Box
 
 
 /*
-aligned(8) class XMPBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {
+aligned(8) class XMPCustomBox() extends Box('uuid be7acfcb97a942e89c71999491e3afac') {
 	 string data;
  }
 */
-public partial class XMPBox : Box
+public partial class XMPCustomBox : Box
 {
 	public const string TYPE = "uuid";
-	public override string DisplayName { get { return "XMPBox"; } }
+	public override string DisplayName { get { return "XMPCustomBox"; } }
 
 	protected BinaryUTF8String data; 
 	public BinaryUTF8String Data { get { return this.data; } set { this.data = value; } }
 
-	public XMPBox(): base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("be7acfcb97a942e89c71999491e3afac"))
+	public XMPCustomBox(): base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("be7acfcb97a942e89c71999491e3afac"))
 	{
 	}
 
@@ -54896,49 +54937,6 @@ public partial class SmtaBox : Box
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public SmtaBox(): base(IsoStream.FromFourCC("smta"))
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		boxSize += ((ulong)data.Length * 8); // data
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class SDLNBox() extends Box('SDLN') {
-	 bit(8) data[];
- } 
-*/
-public partial class SDLNBox : Box
-{
-	public const string TYPE = "SDLN";
-	public override string DisplayName { get { return "SDLNBox"; } }
-
-	protected byte[] data; 
-	public byte[] Data { get { return this.data; } set { this.data = value; } }
-
-	public SDLNBox(): base(IsoStream.FromFourCC("SDLN"))
 	{
 	}
 
@@ -59649,7 +59647,7 @@ public partial class GPSLogBox : Box
 
 
 /*
-class Url0Box() extends Box ('url\0'){
+class Url0Box() extends Box ('url\0') {
  bit(8) data[];
  }
 */
@@ -62544,6 +62542,1813 @@ public partial class YawBox : Box
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
 	public YawBox(): base(IsoStream.FromFourCC("_yaw"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class CanonFirmwareVersionBox() extends Box ('CNFV'){
+ bit(8) data[];
+ }
+*/
+public partial class CanonFirmwareVersionBox : Box
+{
+	public const string TYPE = "CNFV";
+	public override string DisplayName { get { return "CanonFirmwareVersionBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public CanonFirmwareVersionBox(): base(IsoStream.FromFourCC("CNFV"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class CanonModelBox() extends Box ('CNMN'){
+ bit(8) data[];
+ }
+*/
+public partial class CanonModelBox : Box
+{
+	public const string TYPE = "CNMN";
+	public override string DisplayName { get { return "CanonModelBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public CanonModelBox(): base(IsoStream.FromFourCC("CNMN"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class CanonCNOPBox() extends Box ('CNOP'){
+ bit(8) data[];
+ }
+*/
+public partial class CanonCNOPBox : Box
+{
+	public const string TYPE = "CNOP";
+	public override string DisplayName { get { return "CanonCNOPBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public CanonCNOPBox(): base(IsoStream.FromFourCC("CNOP"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class CanonCNTHBox() extends Box ('CNTH'){
+ bit(8) data[];
+ }
+*/
+public partial class CanonCNTHBox : Box
+{
+	public const string TYPE = "CNTH";
+	public override string DisplayName { get { return "CanonCNTHBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public CanonCNTHBox(): base(IsoStream.FromFourCC("CNTH"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class KodakDcMDBox() extends Box ('DcMD'){
+ bit(8) data[];
+ }
+*/
+public partial class KodakDcMDBox : Box
+{
+	public const string TYPE = "DcMD";
+	public override string DisplayName { get { return "KodakDcMDBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public KodakDcMDBox(): base(IsoStream.FromFourCC("DcMD"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class FujiFilmFFMVBox() extends Box ('FFMV'){
+ bit(8) data[];
+ }
+*/
+public partial class FujiFilmFFMVBox : Box
+{
+	public const string TYPE = "FFMV";
+	public override string DisplayName { get { return "FujiFilmFFMVBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public FujiFilmFFMVBox(): base(IsoStream.FromFourCC("FFMV"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class GoProGPMFBox() extends Box ('GPMF') {
+ bit(8) data[];
+ }
+*/
+public partial class GoProGPMFBox : Box
+{
+	public const string TYPE = "GPMF";
+	public override string DisplayName { get { return "GoProGPMFBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public GoProGPMFBox(): base(IsoStream.FromFourCC("GPMF"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class GoProTypeBox() extends Box ('GoPr') {
+ bit(8) data[];
+ }
+*/
+public partial class GoProTypeBox : Box
+{
+	public const string TYPE = "GoPr";
+	public override string DisplayName { get { return "GoProTypeBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public GoProTypeBox(): base(IsoStream.FromFourCC("GoPr"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class SamsungINFOBox() extends Box ('INFO') {
+ bit(8) data[];
+ }
+*/
+public partial class SamsungINFOBox : Box
+{
+	public const string TYPE = "INFO";
+	public override string DisplayName { get { return "SamsungINFOBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public SamsungINFOBox(): base(IsoStream.FromFourCC("INFO"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class LeicaLEICBox() extends Box ('LEIC') {
+ bit(8) data[];
+ }
+*/
+public partial class LeicaLEICBox : Box
+{
+	public const string TYPE = "LEIC";
+	public override string DisplayName { get { return "LeicaLEICBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public LeicaLEICBox(): base(IsoStream.FromFourCC("LEIC"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class LensSerialNumberBox() extends Box ('LENS') {
+ bit(8) data[];
+ }
+*/
+public partial class LensSerialNumberBox : Box
+{
+	public const string TYPE = "LENS";
+	public override string DisplayName { get { return "LensSerialNumberBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public LensSerialNumberBox(): base(IsoStream.FromFourCC("LENS"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class LevelMeterBox() extends Box ('Lvlm') {
+ bit(8) data[];
+ }
+*/
+public partial class LevelMeterBox : Box
+{
+	public const string TYPE = "Lvlm";
+	public override string DisplayName { get { return "LevelMeterBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public LevelMeterBox(): base(IsoStream.FromFourCC("Lvlm"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class MinoltaMMA0Box() extends Box ('MMA0') {
+ bit(8) data[];
+ }
+*/
+public partial class MinoltaMMA0Box : Box
+{
+	public const string TYPE = "MMA0";
+	public override string DisplayName { get { return "MinoltaMMA0Box"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public MinoltaMMA0Box(): base(IsoStream.FromFourCC("MMA0"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class MinoltaMMA1Box() extends Box ('MMA1') {
+ bit(8) data[];
+ }
+*/
+public partial class MinoltaMMA1Box : Box
+{
+	public const string TYPE = "MMA1";
+	public override string DisplayName { get { return "MinoltaMMA1Box"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public MinoltaMMA1Box(): base(IsoStream.FromFourCC("MMA1"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class MediaUIDBox() extends Box ('MUID') {
+ bit(8) data[];
+ }
+*/
+public partial class MediaUIDBox : Box
+{
+	public const string TYPE = "MUID";
+	public override string DisplayName { get { return "MediaUIDBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public MediaUIDBox(): base(IsoStream.FromFourCC("MUID"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class FujiFilmMVTGBox() extends Box ('MVTG') {
+ bit(8) data[];
+ }
+*/
+public partial class FujiFilmMVTGBox : Box
+{
+	public const string TYPE = "MVTG";
+	public override string DisplayName { get { return "FujiFilmMVTGBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public FujiFilmMVTGBox(): base(IsoStream.FromFourCC("MVTG"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class PanasonicPANABox() extends Box ('PANA') {
+ bit(8) data[];
+ }
+*/
+public partial class PanasonicPANABox : Box
+{
+	public const string TYPE = "PANA";
+	public override string DisplayName { get { return "PanasonicPANABox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public PanasonicPANABox(): base(IsoStream.FromFourCC("PANA"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class PentaxPENTBox() extends Box ('PENT') {
+ bit(8) data[];
+ }
+*/
+public partial class PentaxPENTBox : Box
+{
+	public const string TYPE = "PENT";
+	public override string DisplayName { get { return "PentaxPENTBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public PentaxPENTBox(): base(IsoStream.FromFourCC("PENT"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class MakerNotePentaxBox() extends Box ('PXMN') {
+ bit(8) data[];
+ }
+*/
+public partial class MakerNotePentaxBox : Box
+{
+	public const string TYPE = "PXMN";
+	public override string DisplayName { get { return "MakerNotePentaxBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public MakerNotePentaxBox(): base(IsoStream.FromFourCC("PXMN"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class PentaxPreviewBox() extends Box ('PXTH') {
+ bit(8) data[];
+ }
+*/
+public partial class PentaxPreviewBox : Box
+{
+	public const string TYPE = "PXTH";
+	public override string DisplayName { get { return "PentaxPreviewBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public PentaxPreviewBox(): base(IsoStream.FromFourCC("PXTH"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class CasioQVMIBox() extends Box ('QVMI') {
+ bit(8) data[];
+ }
+*/
+public partial class CasioQVMIBox : Box
+{
+	public const string TYPE = "QVMI";
+	public override string DisplayName { get { return "CasioQVMIBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public CasioQVMIBox(): base(IsoStream.FromFourCC("QVMI"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class RicohRDTABox() extends Box ('RDTA') {
+ bit(8) data[];
+ }
+*/
+public partial class RicohRDTABox : Box
+{
+	public const string TYPE = "RDTA";
+	public override string DisplayName { get { return "RicohRDTABox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public RicohRDTABox(): base(IsoStream.FromFourCC("RDTA"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class RicohRDTBBox() extends Box ('RDTB') {
+ bit(8) data[];
+ }
+*/
+public partial class RicohRDTBBox : Box
+{
+	public const string TYPE = "RDTB";
+	public override string DisplayName { get { return "RicohRDTBBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public RicohRDTBBox(): base(IsoStream.FromFourCC("RDTB"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class RicohRDTCBox() extends Box ('RDTC') {
+ bit(8) data[];
+ }
+*/
+public partial class RicohRDTCBox : Box
+{
+	public const string TYPE = "RDTC";
+	public override string DisplayName { get { return "RicohRDTCBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public RicohRDTCBox(): base(IsoStream.FromFourCC("RDTC"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class RicohRDTGBox() extends Box ('RDTG') {
+ bit(8) data[];
+ }
+*/
+public partial class RicohRDTGBox : Box
+{
+	public const string TYPE = "RDTG";
+	public override string DisplayName { get { return "RicohRDTGBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public RicohRDTGBox(): base(IsoStream.FromFourCC("RDTG"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class RicohRDTLBox() extends Box ('RDTL') {
+ bit(8) data[];
+ }
+*/
+public partial class RicohRDTLBox : Box
+{
+	public const string TYPE = "RDTL";
+	public override string DisplayName { get { return "RicohRDTLBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public RicohRDTLBox(): base(IsoStream.FromFourCC("RDTL"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class RicohRICOBox() extends Box ('RICO') {
+ bit(8) data[];
+ }
+*/
+public partial class RicohRICOBox : Box
+{
+	public const string TYPE = "RICO";
+	public override string DisplayName { get { return "RicohRICOBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public RicohRICOBox(): base(IsoStream.FromFourCC("RICO"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class RicohRMKNBox() extends Box ('RMKN') {
+ bit(8) data[];
+ }
+*/
+public partial class RicohRMKNBox : Box
+{
+	public const string TYPE = "RMKN";
+	public override string DisplayName { get { return "RicohRMKNBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public RicohRMKNBox(): base(IsoStream.FromFourCC("RMKN"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class RTHUPreviewImageBox() extends Box ('RTHU') {
+ bit(8) data[];
+ }
+*/
+public partial class RTHUPreviewImageBox : Box
+{
+	public const string TYPE = "RTHU";
+	public override string DisplayName { get { return "RTHUPreviewImageBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public RTHUPreviewImageBox(): base(IsoStream.FromFourCC("RTHU"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class PlayModeBox() extends Box ('SDLN') {
+ bit(8) data[];
+ }
+*/
+public partial class PlayModeBox : Box
+{
+	public const string TYPE = "SDLN";
+	public override string DisplayName { get { return "PlayModeBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public PlayModeBox(): base(IsoStream.FromFourCC("SDLN"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class SigmaEXIFBox() extends Box ('SIGM') {
+ bit(8) data[];
+ }
+*/
+public partial class SigmaEXIFBox : Box
+{
+	public const string TYPE = "SIGM";
+	public override string DisplayName { get { return "SigmaEXIFBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public SigmaEXIFBox(): base(IsoStream.FromFourCC("SIGM"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class SerialNumberBox() extends Box ('SNum') {
+ bit(8) data[];
+ }
+*/
+public partial class SerialNumberBoxSNumDup : Box
+{
+	public const string TYPE = "SNum";
+	public override string DisplayName { get { return "SerialNumberBoxSNumDup"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public SerialNumberBoxSNumDup(): base(IsoStream.FromFourCC("SNum"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class TagsBox() extends Box ('TAGS') {
+ bit(8) data[];
+ }
+*/
+public partial class TagsBox : Box
+{
+	public const string TYPE = "TAGS";
+	public override string DisplayName { get { return "TagsBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public TagsBox(): base(IsoStream.FromFourCC("TAGS"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class TomTomMetaDataBox() extends Box ('TTMD') {
+ Box boxes[];
+ }
+*/
+public partial class TomTomMetaDataBox : Box
+{
+	public const string TYPE = "TTMD";
+	public override string DisplayName { get { return "TomTomMetaDataBox"; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+	public TomTomMetaDataBox(): base(IsoStream.FromFourCC("TTMD"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+}
+
+
+/*
+class TomTomADBox() extends Box ('TTAD') {
+ bit(8) data[];
+ }
+*/
+public partial class TomTomADBox : Box
+{
+	public const string TYPE = "TTAD";
+	public override string DisplayName { get { return "TomTomADBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public TomTomADBox(): base(IsoStream.FromFourCC("TTAD"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class TomTomHLBox() extends Box ('TTHL') {
+ bit(8) data[];
+ }
+*/
+public partial class TomTomHLBox : Box
+{
+	public const string TYPE = "TTHL";
+	public override string DisplayName { get { return "TomTomHLBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public TomTomHLBox(): base(IsoStream.FromFourCC("TTHL"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class TomTomIDBox() extends Box ('TTID') {
+ bit(8) data[];
+ }
+*/
+public partial class TomTomIDBox : Box
+{
+	public const string TYPE = "TTID";
+	public override string DisplayName { get { return "TomTomIDBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public TomTomIDBox(): base(IsoStream.FromFourCC("TTID"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class TomTomVDBox() extends Box ('TTVD') {
+ bit(8) data[];
+ }
+*/
+public partial class TomTomVDBox : Box
+{
+	public const string TYPE = "TTVD";
+	public override string DisplayName { get { return "TomTomVDBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public TomTomVDBox(): base(IsoStream.FromFourCC("TTVD"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class TomTomVIBox() extends Box ('TTVI') {
+ bit(8) data[];
+ }
+*/
+public partial class TomTomVIBox : Box
+{
+	public const string TYPE = "TTVI";
+	public override string DisplayName { get { return "TomTomVIBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public TomTomVIBox(): base(IsoStream.FromFourCC("TTVI"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class XMPBox() extends Box ('XMP_') {
+ bit(8) data[];
+ }
+*/
+public partial class XMPBox : Box
+{
+	public const string TYPE = "XMP_";
+	public override string DisplayName { get { return "XMPBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public XMPBox(): base(IsoStream.FromFourCC("XMP_"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class OlympusOLYMBox() extends Box ('OLYM') {
+ bit(8) data[];
+ }
+*/
+public partial class OlympusOLYMBox : Box
+{
+	public const string TYPE = "OLYM";
+	public override string DisplayName { get { return "OlympusOLYMBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public OlympusOLYMBox(): base(IsoStream.FromFourCC("OLYM"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.data, "data"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+class FieldOfViewBox() extends Box ('FOV\0') {
+ bit(8) data[];
+ }
+*/
+public partial class FieldOfViewBox : Box
+{
+	public const string TYPE = "FOV\0";
+	public override string DisplayName { get { return "FieldOfViewBox"; } }
+
+	protected byte[] data; 
+	public byte[] Data { get { return this.data; } set { this.data = value; } }
+
+	public FieldOfViewBox(): base(IsoStream.FromFourCC("FOV\0"))
 	{
 	}
 
