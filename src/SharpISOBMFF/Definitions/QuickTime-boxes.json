@@ -270,7 +270,7 @@
       "fourcc": "IDIT",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class DateTimeOriginalBox() extends Box ('IDIT'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class DateTimeOriginal2Box() extends Box ('IDIT'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "PICT",
@@ -450,7 +450,7 @@
       "fourcc": "snal",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class PreviewImageBox() extends Box ('snal'){\r\n bit(8) data[];\r\n }"
+      "syntax": "class ItemListPreviewImageBox() extends Box ('snal'){\r\n bit(8) data[];\r\n }"
     },
     {
       "fourcc": "tnal",
@@ -572,6 +572,210 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class SynchronizedTrackBox() extends Box ('sync'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "albr",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AlbumArtistBox() extends Box ('albr'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "angl",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CameraAngleBox() extends Box ('angl'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "btec",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GlamourSettingsBox() extends Box ('btec'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "cdis",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ContentDistributorIDBox() extends Box ('cdis'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "clid",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ClipIDBox() extends Box ('clid'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "cmnm",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ModelBox() extends Box ('cmnm'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "coll",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CollectionNameBox() extends Box ('coll'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "cver",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CodeVersionBox() extends Box ('cver'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "date",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class DateTimeOriginalBox() extends Box ('date'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "finm",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class OriginalFileNameBox() extends Box ('finm'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "fsid",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class OriginalFilePathBox() extends Box ('fsid'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "htcb",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class HTCBinaryBox() extends Box ('htcb'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "infi",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CameraInfoBox() extends Box ('infi'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "kgtt",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AppleTrackTypeBox() extends Box ('kgtt'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "manu",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class MakeBox() extends Box ('manu'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "mcvr",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PreviewImageBox() extends Box ('mcvr'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "modl",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ModelBox() extends Box ('modl'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "nail",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ThumbnailTIFFBox() extends Box ('nail'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "pmcc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class GarminSettingsBox() extends Box ('pmcc'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "pose",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class KodakPoseBox() extends Box ('pose'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "ptch",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class PitchBox() extends Box ('ptch'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "rads",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RadsBox() extends Box ('rads'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "reel",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ReelNameBox() extends Box ('reel'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "scen",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SceneBox() extends Box ('scen'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "scrn",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class OlympusPreviewBox() extends Box ('scrn'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "shot",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class ShotNameBox() extends Box ('shot'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "slno",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class SerialNumberBox() extends Box ('slno'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "time",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TimeStampBox() extends Box ('time'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "tnam",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class TrackNameBox() extends Box ('tnam'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "vndr",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class VendorBox() extends Box ('vndr'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "vrot",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class AccelerometerDataBox() extends Box ('vrot'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "_cx_",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CxBox() extends Box ('_cx_'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "_cy_",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class CyBox() extends Box ('_cy_'){\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "_yaw",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class YawBox() extends Box ('_yaw'){\r\n bit(8) data[];\r\n }"
     }
   ]
 }
