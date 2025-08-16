@@ -73,7 +73,7 @@ namespace SharpMP4.Readers
                             .Children.Single(); // VisualSampleEntry/AudioSampleEntry/RtpHint
 
                         // in case of RtpHint, this box has no children
-                        if (sampleEntry.Children.Count > 0)
+                        if (sampleEntry.Children != null && sampleEntry.Children.Count > 0)
                         {
                             sampleEntry = sampleEntry.Children.First(); // avcC/hvcC/vvcC/esds/dOps...
                         }
