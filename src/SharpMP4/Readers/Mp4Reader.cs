@@ -279,7 +279,7 @@ namespace SharpMP4.Readers
             }
         }
 
-        public Mp4Sample ReadSample(uint trackID)
+        public MediaSample ReadSample(uint trackID)
         {
             if (this.Moov == null)
                 throw new InvalidOperationException();
@@ -294,7 +294,7 @@ namespace SharpMP4.Readers
             }
         }
 
-        private Mp4Sample ReadMp4Sample(uint trackID)
+        private MediaSample ReadMp4Sample(uint trackID)
         {
             int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
             var trackContext = this.Tracks[trackIndex];
@@ -406,10 +406,10 @@ namespace SharpMP4.Readers
 
             trackContext.SampleIndex++;
 
-            return new Mp4Sample(pts, dts, (int)sttsSampleDelta, sampleData, isRandomAccessPoint);
+            return new MediaSample(pts, dts, (int)sttsSampleDelta, sampleData, isRandomAccessPoint);
         }
 
-        private Mp4Sample ReadFragmentedMp4Sample(uint trackID)
+        private MediaSample ReadFragmentedMp4Sample(uint trackID)
         {
             int trackIndex = Mp4Utils.TrackIdToTrackIndex(trackID);
             var trackContext = this.Tracks[trackIndex];
@@ -485,7 +485,7 @@ namespace SharpMP4.Readers
             ulong size = trackContext.Mdat.Data.Stream.ReadBytes(sampleSize, out byte[] sampleData);
                         
             trackContext.SampleIndex++;
-            return new Mp4Sample(pts, dts, (int)sampleDuration, sampleData);
+            return new MediaSample(pts, dts, (int)sampleDuration, sampleData);
         }
 
         public IEnumerable<byte[]> ParseSample(uint trackID, byte[] sample)
@@ -495,23 +495,6 @@ namespace SharpMP4.Readers
             return trackContext.Track.ParseSample(sample);
         }
     }    
-
-    public class Mp4Sample
-    {
-        public long PTS { get; set; }
-        public long DTS { get; set; }
-        public int Duration { get; set; } = -1;
-        public byte[] Data { get; set; }
-        public bool IsRandomAccessPoint { get; set; }
-        public Mp4Sample(long pts, long dts, int duration, byte[] data, bool isRandomAccessPoint = true)
-        {
-            this.PTS = pts;
-            this.DTS = dts;
-            this.Duration = duration;
-            this.Data = data;
-            this.IsRandomAccessPoint = isRandomAccessPoint;
-        }
-    }
 
     public class TrackContext
     {

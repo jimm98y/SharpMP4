@@ -45,7 +45,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
                     outputBuilder.ProcessTrackSample(mapping[inputTrack.TrackID], unit);
                 }
 
-                Mp4Sample sample = null;
+                MediaSample sample = null;
                 while ((sample = inputReader.ReadSample(inputTrack.TrackID)) != null)
                 {
                     IEnumerable<byte[]> units = inputReader.ParseSample(inputTrack.TrackID, sample.Data);
@@ -57,7 +57,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp
             }
             else
             {
-                Mp4Sample sample = null;
+                MediaSample sample = null;
                 while ((sample = inputReader.ReadSample(inputTrack.TrackID)) != null)
                 {
                     outputBuilder.ProcessTrackSample(mapping[inputTrack.TrackID], sample.Data, sample.Duration);
