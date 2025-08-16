@@ -9,18 +9,19 @@ namespace SharpMP4.Readers
     /// <summary>
     /// Reads MP4 and Fragmented MP4.
     /// </summary>
-    public class Mp4Reader
+    public class VideoReader
     {
         public FileTypeBox Ftyp { get; set; }
         public Container Container { get; set; }
         public MovieBox Moov { get; set; }
         public TrackBox[] Track { get; set; }
+        public MovieExtendsBox Mvex { get; set; }
         public MediaDataBox Mdat { get; set; }
         public Dictionary<uint, TrackContext> Tracks { get; set; } = new Dictionary<uint, TrackContext>();
 
-        public bool IsFragmented { get; set; } = false;
-        public MovieExtendsBox Mvex { get; set; }
 
+        public bool IsQuickTime { get; set; } = false;
+        public bool IsFragmented { get; set; } = false;
 
         public IEnumerable<ITrack> GetTracks()
         {
@@ -39,6 +40,9 @@ namespace SharpMP4.Readers
                 if (container.Children[i] is FileTypeBox)
                 {
                     this.Ftyp = (FileTypeBox)container.Children[i];
+
+                    if (this.Ftyp.MajorBrand == IsoStream.FromFourCC("qt  "))
+                        this.IsQuickTime = true;
                 }
                 else if (container.Children[i] is MovieBox)
                 {
@@ -135,6 +139,11 @@ namespace SharpMP4.Readers
                 else if (container.Children[i] is MovieFragmentBox)
                 {
                     this.IsFragmented = true;
+                    break;
+                }
+                else if (container.Children[i] is FreeSpaceBox)
+                {
+                    this.IsQuickTime = true; // wide atom in the root is only in QuickTime
                     break;
                 }
             }

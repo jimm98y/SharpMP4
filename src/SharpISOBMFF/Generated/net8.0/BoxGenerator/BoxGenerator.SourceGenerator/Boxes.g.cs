@@ -30,7 +30,7 @@ namespace SharpISOBMFF
                case "@sti":  return new ShortTitleBox();
                case "@swr":  return new RicohAppleSoftwareBox();
                case "@xyz":  return new RicohAppleGPSCoordinatesBox();
-               case "\0\0\0\0": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\0\0\0\0"));break;
+               case "\0\0\0\0":  return new TerminatorBox();
                case "\x6D\x73\x00\x02": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x02"));break;
                case "\x6D\x73\x00\x11": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x11"));break;
                case "\x6D\x73\x00\x55": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x55"));break;

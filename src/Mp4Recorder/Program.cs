@@ -19,7 +19,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
     var mp4 = new Container();
     mp4.Read(new IsoStream(inputFileStream));
 
-    Mp4Reader inputReader = new Mp4Reader();
+    VideoReader inputReader = new VideoReader();
     inputReader.Parse(mp4);
     IEnumerable<ITrack> inputTracks = inputReader.GetTracks();
 
