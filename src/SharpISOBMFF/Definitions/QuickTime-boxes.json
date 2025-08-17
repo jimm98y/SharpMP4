@@ -1120,12 +1120,6 @@
       "syntax": "aligned(8) class RectilinearProjectionBox extends FullBox('rect', 0, 0) { \r\n// fields reserved for future use \r\n}"
     },
     {
-      "fourcc": "equi",
-      "containers": [ "*" ],
-      "type": "Box",
-      "syntax": "aligned(8) class FullEquirectangularProjectionBox extends FullBox('equi', 0, 0) { \r\n// fields reserved for future use \r\n}"
-    },
-    {
       "fourcc": "hequ",
       "containers": [ "*" ],
       "type": "Box",

@@ -301,7 +301,7 @@ namespace SharpISOBMFF
                case "encv": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("encv"));break;
                case "enda":  return new AppleEndiannessBox();
                case "enof":  return new AppleEncodedPixelsDimensionsBox();
-               case "equi": throw new NotSupportedException($"'equi' under '{parent}' is ambiguous in between EquirectangularProjection and FullEquirectangularProjectionBox");
+               case "equi":  return new EquirectangularProjection();
                case "esds":  return new ESDBox();
                case "etyp":  return new ExtendedTypeBox();
                case "evc1": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("evc1"));break;
@@ -752,7 +752,7 @@ namespace SharpISOBMFF
                case "stpp":  return new XMLSubtitleSampleEntry();
                case "stps":  return new ApplePartialSyncSamplesBox();
                case "strd":  return new SubTrackDefinitionBox();
-               case "stri": throw new NotSupportedException($"'stri' under '{parent}' is ambiguous in between SubTrackInformationBox and StereoViewInformationBox");
+               case "stri": if(parent == "eyes") return new StereoViewInformationBox(); else return new SubTrackInformationBox();
                case "strk":  return new SubTrackBox();
                case "stsc":  return new SampleToChunkBox();
                case "stsd":  return new SampleDescriptionBox();
@@ -55557,7 +55557,7 @@ public partial class ProjectionDataBox : FullBox
 
 
 /*
-aligned(8) class CubemapProjection ProjectionDataBox('cbmp', 0, 0) {
+aligned(8) class CubemapProjection extends ProjectionDataBox('cbmp', 0, 0) {
     unsigned int(32) layout;
     unsigned int(32) projection_padding;
  }
@@ -55608,7 +55608,7 @@ public partial class CubemapProjection : ProjectionDataBox
 
 
 /*
-aligned(8) class EquirectangularProjection ProjectionDataBox('equi', 0, 0) {
+aligned(8) class EquirectangularProjection extends ProjectionDataBox('equi', 0, 0) {
     unsigned int(32) projection_bounds_top;
     unsigned int(32) projection_bounds_bottom;
     unsigned int(32) projection_bounds_left;
@@ -55673,7 +55673,7 @@ public partial class EquirectangularProjection : ProjectionDataBox
 
 
 /*
-aligned(8) class MeshProjection ProjectionDataBox('mshp', 0, 0) {
+aligned(8) class MeshProjection extends ProjectionDataBox('mshp', 0, 0) {
     unsigned int(32) crc;
     unsigned int(32) encoding_four_cc;
 
@@ -64953,46 +64953,6 @@ public partial class RectilinearProjectionBox : FullBox
 	public override string DisplayName { get { return "RectilinearProjectionBox"; } }
 
 	public RectilinearProjectionBox(): base(IsoStream.FromFourCC("rect"), 0, 0)
-	{
-	}
-
-	public override ulong Read(IsoStream stream, ulong readSize)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Read(stream, readSize);
-		/*  fields reserved for future use  */
-		return boxSize;
-	}
-
-	public override ulong Write(IsoStream stream)
-	{
-		ulong boxSize = 0;
-		boxSize += base.Write(stream);
-		/*  fields reserved for future use  */
-		return boxSize;
-	}
-
-	public override ulong CalculateSize()
-	{
-		ulong boxSize = 0;
-		boxSize += base.CalculateSize();
-		/*  fields reserved for future use  */
-		return boxSize;
-	}
-}
-
-
-/*
-aligned(8) class FullEquirectangularProjectionBox extends FullBox('equi', 0, 0) { 
-// fields reserved for future use 
-}
-*/
-public partial class FullEquirectangularProjectionBox : FullBox
-{
-	public const string TYPE = "equi";
-	public override string DisplayName { get { return "FullEquirectangularProjectionBox"; } }
-
-	public FullEquirectangularProjectionBox(): base(IsoStream.FromFourCC("equi"), 0, 0)
 	{
 	}
 

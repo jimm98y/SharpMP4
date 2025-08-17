@@ -1592,19 +1592,19 @@
       "fourcc": "cbmp",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class CubemapProjection ProjectionDataBox('cbmp', 0, 0) {\r\n    unsigned int(32) layout;\r\n    unsigned int(32) projection_padding;\r\n }\r\n"
+      "syntax": "aligned(8) class CubemapProjection extends ProjectionDataBox('cbmp', 0, 0) {\r\n    unsigned int(32) layout;\r\n    unsigned int(32) projection_padding;\r\n }\r\n"
     },
     {
       "fourcc": "equi",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class EquirectangularProjection ProjectionDataBox('equi', 0, 0) {\r\n    unsigned int(32) projection_bounds_top;\r\n    unsigned int(32) projection_bounds_bottom;\r\n    unsigned int(32) projection_bounds_left;\r\n    unsigned int(32) projection_bounds_right;\r\n }\r\n"
+      "syntax": "aligned(8) class EquirectangularProjection extends ProjectionDataBox('equi', 0, 0) {\r\n    unsigned int(32) projection_bounds_top;\r\n    unsigned int(32) projection_bounds_bottom;\r\n    unsigned int(32) projection_bounds_left;\r\n    unsigned int(32) projection_bounds_right;\r\n }\r\n"
     },
     {
       "fourcc": "mshp",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "aligned(8) class MeshProjection ProjectionDataBox('mshp', 0, 0) {\r\n    unsigned int(32) crc;\r\n    unsigned int(32) encoding_four_cc;\r\n\r\n    // All bytes below this point are compressed according to\r\n    // the algorithm specified by the encoding_four_cc field.\r\n    // MeshBox() meshes[]; // At least 1 mesh box must be present.\r\n    Box boxes[]; // further boxes as needed\r\n}"
+      "syntax": "aligned(8) class MeshProjection extends ProjectionDataBox('mshp', 0, 0) {\r\n    unsigned int(32) crc;\r\n    unsigned int(32) encoding_four_cc;\r\n\r\n    // All bytes below this point are compressed according to\r\n    // the algorithm specified by the encoding_four_cc field.\r\n    // MeshBox() meshes[]; // At least 1 mesh box must be present.\r\n    Box boxes[]; // further boxes as needed\r\n}"
     },
     {
       "fourcc": "mesh",

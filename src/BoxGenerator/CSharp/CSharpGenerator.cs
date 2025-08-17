@@ -229,6 +229,10 @@ namespace SharpISOBMFF
                     {
                         factory += $"               case \"{item.Key}\": if(parent == \"gmhd\") return new TextGmhdMediaBox(); else if(parent == \"stsd\") return new TextMediaBox(); break;\r\n";
                     }
+                    else if (item.Key == "stri")
+                    {
+                        factory += $"               case \"{item.Key}\": if(parent == \"eyes\") return new StereoViewInformationBox(); else return new SubTrackInformationBox();\r\n";
+                    }
                     else
                     {
                         factory += $"               case \"{item.Key}\": throw new NotSupportedException($\"\'{item.Key}\' under \'{{parent}}\' is ambiguous in between {string.Join(" and ", item.Value.Select(x => x.BoxName))}\");\r\n";
