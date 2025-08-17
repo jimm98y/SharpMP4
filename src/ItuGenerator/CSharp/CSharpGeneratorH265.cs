@@ -269,7 +269,7 @@ namespace ItuGenerator.CSharp
                 case "vps_max_layers_minus1":
                     return "((H265Context)context).OnVpsMaxLayersMinus1();";
                 case "num_add_layer_sets":
-                    return "((H265Context)context).OnNumAddLayerSets();";
+                    return "((H265Context)context).OnNumAddLayerSets();\r\n }\r\n else \r\n {\r\n ((H265Context)context).OnNumAddLayerSets(); \r\n";
                 case "highest_layer_idx_plus1":
                     return "((H265Context)context).OnHighestLayerIdxPlus1(i);";
                 case "direct_dependency_flag":
@@ -285,7 +285,7 @@ namespace ItuGenerator.CSharp
                 case "log2_diff_max_min_luma_coding_block_size":
                     return "((H265Context)context).OnLog2DiffMaxMinLumaCodingBlockSize();";
                 case "layer_set_idx_for_ols_minus1":
-                    return "((H265Context)context).OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);";
+                    return "((H265Context)context).OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);\r\n\t\t\t\t}\r\n\t\t\t\telse\r\n\t\t\t\t{\r\n\t\t\t\t\t((H265Context)context).OnLayerSetIdxForOlsMinus1(i, NumOutputLayerSets);";
                 case "output_layer_flag":
                     return "((H265Context)context).OnOutputLayerFlag(i, j);";
                 case "layer_id_in_nuh":
@@ -320,6 +320,8 @@ namespace ItuGenerator.CSharp
                     return "((H265Context)context).OnInterLayerPredLayerIdc();";
                 case "slice_type":
                     return "((H265Context)context).OnSliceType();";
+                case "layer_id_included_flag":
+                    return "((H265Context)context).OnLayerIDIncludedFlag(i, j);";
             }
 
             return "";
@@ -485,7 +487,7 @@ namespace ItuGenerator.CSharp
                 case "target_pivot_value":
                     return "( ( target_bit_depth + 7 )  >>  3 )  <<  3";
                 case "dimension_id":
-                    return "(dimension_id_len_minus1[i] + 1)";
+                    return "(dimension_id_len_minus1[j] + 1)";
                 case "reserved_payload_extension_data":
                     return "0 /* TODO */"; // TODO: specification shall ignore this, but when present it's 8 * payloadSize − nEarlierBits − nPayloadZeroBits − 1
                 case "cpb_delay_offset":
@@ -608,6 +610,23 @@ namespace ItuGenerator.CSharp
 
         public string FixAllocations(string spacing, string appendType, string variableType, string variableName)
         {
+            if(variableName == "layer_id_included_flag[ i ]")
+            {
+                return $"\r\n{spacing}this.{variableName} = new {variableType.Replace("vps_max_layer_id", "vps_max_layer_id + 1")}{appendType};";
+            }
+            else if(variableName == "dimension_id")
+            {
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}this.{variableName}[0] = new ulong[ NumScalabilityTypes];";
+            }
+            else if(variableName == "direct_dependency_flag")
+            {
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}this.{variableName}[0] = new byte[((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1];";
+            }
+            else if(variableName == "direct_dependency_flag[ i ]")
+            {
+                return $"\r\n{spacing}this.{variableName} = new {variableType.Replace(" i", "((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1")}{appendType};";
+            }
+
             return "";
         }
 

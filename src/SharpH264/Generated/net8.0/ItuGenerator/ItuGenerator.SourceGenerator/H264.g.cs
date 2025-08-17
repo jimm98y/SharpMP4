@@ -14668,7 +14668,7 @@ seq_parameter_set_mvcd_extension() {
 		private ulong num_views_minus1;
 		public ulong NumViewsMinus1 { get { return num_views_minus1; } set { num_views_minus1 = value; } }
 		private uint numDepthViews;
-		public uint NumDepthViews { get { return NumDepthViews; } set { NumDepthViews = value; } }
+		public uint NumDepthViews { get { return numDepthViews; } set { numDepthViews = value; } }
 		private ulong[] view_id;
 		public ulong[] ViewId { get { return view_id; } set { view_id = value; } }
 		private byte[] depth_view_present_flag;

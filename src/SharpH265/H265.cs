@@ -432,6 +432,36 @@ namespace SharpH265
             VclInitialArrivalDelayPresent = value;
         }
 
+        public void OnLayerIDIncludedFlag(uint i, uint j)
+        {
+            if (LayerSetLayerIdList == null)
+            {
+                NumLayersInIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
+            }
+
+            if (LayerSetLayerIdList == null)
+            {
+                LayerSetLayerIdList = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1][];
+
+                for (int k = 0; k < LayerSetLayerIdList.Length; k++)
+                {
+                    LayerSetLayerIdList[k] = new int[VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1];
+                }
+            }
+
+            NumLayersInIdList[0] = 1;
+            LayerSetLayerIdList[0][0] = 0;
+
+            var layer_id_included_flag = VideoParameterSetRbsp.LayerIdIncludedFlag;
+            var vps_max_layer_id = VideoParameterSetRbsp.VpsMaxLayerId;
+
+            int n = 0;
+            for (int m = 0; m <= vps_max_layer_id; m++)
+                if (layer_id_included_flag[i][m] != 0)
+                    LayerSetLayerIdList[i][n++] = m;
+            NumLayersInIdList[i] = n;
+        }
+
         public void OnLayerSetIdxForOlsMinus1(uint i, ulong NumOutputLayerSets) // F-11
         {
             var layer_set_idx_for_ols_minus1 = VideoParameterSetRbsp.VpsExtension.LayerSetIdxForOlsMinus1;
@@ -606,9 +636,6 @@ namespace SharpH265
         {
             var sub_layers_vps_max_minus1 = VideoParameterSetRbsp.VpsExtension.SubLayersVpsMaxMinus1;
 
-            if (MaxSubLayersInLayerSetMinus1 == null || MaxSubLayersInLayerSetMinus1.Length < (int)NumLayerSets)
-                MaxSubLayersInLayerSetMinus1 = new int[NumLayerSets];
-
             for (int i = 0; i < (int)NumLayerSets; i++)
             {
                 uint maxSlMinus1 = 0;
@@ -645,6 +672,9 @@ namespace SharpH265
                 FirstAddLayerSetIdx = vps_num_layer_sets_minus1 + 1;
                 LastAddLayerSetIdx = FirstAddLayerSetIdx + num_add_layer_sets - 1;
             }
+
+            if (MaxSubLayersInLayerSetMinus1 == null || MaxSubLayersInLayerSetMinus1.Length < (int)NumLayerSets)
+                MaxSubLayersInLayerSetMinus1 = new int[NumLayerSets];
         }
 
         public void OnHighestLayerIdxPlus1(uint i) // F-9
@@ -653,20 +683,10 @@ namespace SharpH265
             var vps_num_layer_sets_minus1 = VideoParameterSetRbsp.VpsNumLayerSetsMinus1;
             var highest_layer_idx_plus1 = VideoParameterSetRbsp.VpsExtension.HighestLayerIdxPlus1;
 
-            if (LayerSetLayerIdList == null || LayerSetLayerIdList.Length < (int)vps_num_layer_sets_minus1 + 1 + (int)num_add_layer_sets)
-            {
-                LayerSetLayerIdList = new int[vps_num_layer_sets_minus1 + 1 + num_add_layer_sets][];
-            }
-
             int layerNum = 0;
             uint lsIdx = (uint)vps_num_layer_sets_minus1 + 1 + i;
             for (int treeIdx = 1; treeIdx < NumIndependentLayers; treeIdx++)
             {
-                if (LayerSetLayerIdList[lsIdx] == null || LayerSetLayerIdList[lsIdx].Length < (int)(NumIndependentLayers * (highest_layer_idx_plus1[i][treeIdx])))
-                {
-                    LayerSetLayerIdList[lsIdx] = new int[layerNum + 1];
-                }
-
                 for (int layerCnt = 0; layerCnt < (int)highest_layer_idx_plus1[i][treeIdx]; layerCnt++)
                 {
                     LayerSetLayerIdList[lsIdx][layerNum++] = TreePartitionLayerIdList[treeIdx][layerCnt];

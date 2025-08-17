@@ -1427,7 +1427,8 @@ vps_extension() {
  for( i = 1; i < NumOutputLayerSets; i++ ) {  
   if( NumLayerSets > 2  &&  i >= NumLayerSets )  
    layer_set_idx_for_ols_minus1[ i ] u(v) 
-  if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 )  
+  /* TODO: Review and fix */
+  /* if( i > vps_num_layer_sets_minus1  ||  defaultOutputLayerIdc == 2 ) */  
    for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  
     output_layer_flag[ i ][ j ] u(1) 
   for( j = 0; j < NumLayersInIdList[ OlsIdxToLsIdx[ i ] ]; j++ )  

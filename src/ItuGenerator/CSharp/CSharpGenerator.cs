@@ -1176,7 +1176,7 @@ namespace Sharp{type}
                 propertyName = $"_{propertyName}";
             }
 
-            return $"\t\tprivate {type} {field.Name.ToFirstLower()}{initializer};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name}; }} set {{ {field.Name} = value; }} }}\r\n";
+            return $"\t\tprivate {type} {field.Name.ToFirstLower()}{initializer};\r\n\t\tpublic {type} {propertyName} {{ get {{ return {field.Name.ToFirstLower()}; }} set {{ {field.Name.ToFirstLower()} = value; }} }}\r\n";
         }
 
         public void AddRequiresAllocation(ItuField field)
