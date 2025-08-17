@@ -8,7 +8,6 @@ namespace SharpH265
 
     public partial class H265Context : IItuContext
     {
-		string aa = "aligned(8) class HorizontalFieldOfViewBox extends Box('hfov') { \r\nunsigned int(32) field_of_view; \r\n} ";
         public NalUnit NalHeader { get; set; }
 		public PicParameterSetRbsp PicParameterSetRbsp { get; set; }
 		public SeiRbsp SeiRbsp { get; set; }
@@ -11312,7 +11311,7 @@ seq_parameter_set_rbsp() {
   sps_multilayer_extension_flag u(1) 
   sps_3d_extension_flag u(1) 
   sps_scc_extension_flag u(1) 
-  sps_extension_4bits u(5) 
+  sps_extension_4bits u(4) 
  }  
  if( sps_range_extension_flag )  
   sps_range_extension()  
@@ -11628,7 +11627,7 @@ seq_parameter_set_rbsp() {
 				size += stream.ReadUnsignedInt(size, 1, out this.sps_multilayer_extension_flag, "sps_multilayer_extension_flag"); 
 				size += stream.ReadUnsignedInt(size, 1, out this.sps_3d_extension_flag, "sps_3d_extension_flag"); 
 				size += stream.ReadUnsignedInt(size, 1, out this.sps_scc_extension_flag, "sps_scc_extension_flag"); 
-				size += stream.ReadUnsignedInt(size, 5, out this.sps_extension_4bits, "sps_extension_4bits"); 
+				size += stream.ReadUnsignedInt(size, 4, out this.sps_extension_4bits, "sps_extension_4bits"); 
 			}
 
 			if ( sps_range_extension_flag != 0 )
@@ -11820,7 +11819,7 @@ seq_parameter_set_rbsp() {
 				size += stream.WriteUnsignedInt(1, this.sps_multilayer_extension_flag, "sps_multilayer_extension_flag"); 
 				size += stream.WriteUnsignedInt(1, this.sps_3d_extension_flag, "sps_3d_extension_flag"); 
 				size += stream.WriteUnsignedInt(1, this.sps_scc_extension_flag, "sps_scc_extension_flag"); 
-				size += stream.WriteUnsignedInt(5, this.sps_extension_4bits, "sps_extension_4bits"); 
+				size += stream.WriteUnsignedInt(4, this.sps_extension_4bits, "sps_extension_4bits"); 
 			}
 
 			if ( sps_range_extension_flag != 0 )

@@ -1721,7 +1721,7 @@ seq_parameter_set_rbsp() {
   sps_multilayer_extension_flag u(1) 
   sps_3d_extension_flag u(1) 
   sps_scc_extension_flag u(1) 
-  sps_extension_4bits u(5) 
+  sps_extension_4bits u(4) 
  }  
  if( sps_range_extension_flag )  
   sps_range_extension()  
