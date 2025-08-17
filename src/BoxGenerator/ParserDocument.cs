@@ -493,6 +493,7 @@ namespace BoxGenerator
 
                 case "float":
                 case "double":
+                case "BEFloat32":
                 case "fixedpoint1616":
                     info.ElementSizeInBits = 32;
                     info.IsFloatingPoint = true;

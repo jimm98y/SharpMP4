@@ -1046,6 +1046,198 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "class Mp4aBox() extends Box ('mp4a') {\r\n bit(8) data[];\r\n }"
+    },
+    {
+      "fourcc": "vexu",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class VideoExtendedUsageBox() extends Box ('vexu') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "must",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class RequiredBoxTypesBox() extends FullBox ('must', 0, 0) {\r\n unsigned int(32) required_box_types[];\r\n }"
+    },
+    {
+      "fourcc": "eyes",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "class StereoViewBox() extends FullBox ('eyes', 0, 0) {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "stri",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class StereoViewInformationBox extends FullBox('stri', 0, 0) { \r\nunsigned int(4) reserved;   \r\n// reserved, set to 0 \r\nunsigned int(1) eye_views_reversed; \r\nunsigned int(1) has_additional_views; \r\nunsigned int(1) has_right_eye_view; // video contains a right-eye view \r\nunsigned int(1) has_left_eye_view; \r\n// video contains a left-eye view \r\n} "
+    },
+    {
+      "fourcc": "hero",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class HeroStereoEyeDescriptionBox extends FullBox('hero', 0, 0) \r\n{ \r\nunsigned int(8) hero_eye_indicator; // 0 = none, 1 = left, 2 = right, >= 3 reserved \r\n} "
+    },
+    {
+      "fourcc": "cams",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class StereoCameraSystemBox extends Box('cams') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "blin",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class StereoCameraSystemBaselineBox extends FullBox('blin') {\r\n  unsigned int(32) baseline_value;\r\n }\r\n"
+    },
+    {
+      "fourcc": "cmfy",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class StereoComfortBox extends FullBox('cmfy') {\r\n  unsigned int(32) baseline_value;\r\n }\r\n"
+    },
+    {
+      "fourcc": "dadj",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class StereoComfortDisparityAdjustmentBox extends \r\nFullBox('dadj') { \r\nint(32) disparity_adjustment; \r\n} "
+    },
+    {
+      "fourcc": "proj",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ProjectionBox extends Box('proj') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "prji",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ProjectionInformationBox extends FullBox('prji', 0, 0) { \r\nunsigned int(32) projection_kind; \r\n// a FourCC for the kind of projection \r\n}"
+    },
+    {
+      "fourcc": "rect",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class RectilinearProjectionBox extends FullBox('rect', 0, 0) { \r\n// fields reserved for future use \r\n}"
+    },
+    {
+      "fourcc": "equi",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class FullEquirectangularProjectionBox extends FullBox('equi', 0, 0) { \r\n// fields reserved for future use \r\n}"
+    },
+    {
+      "fourcc": "hequ",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class HalfEquirectangularProjectionBox extends FullBox('hequ', 0, 0) { \r\n// fields reserved for future use \r\n}"
+    },
+    {
+      "fourcc": "fish",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class FisheyeProjectionBox extends FullBox('fish', 0, 0) { \r\n// fields reserved for future use \r\n}"
+    },
+    {
+      "fourcc": "prim",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ParametricImmersiveMediaProjectionBox extends \r\nFullBox('prim', 0, 0) { \r\n// fields reserved for future use \r\n} "
+    },
+    {
+      "fourcc": "pack",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ViewPackingBox extends Box('pack') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "pkin",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class ViewPackingInformationBox extends FullBox('pkin', 0, 0) { \r\nunsigned int(32) view_packing_kind; // a FourCC for the kind of projection \r\n} "
+    },
+    {
+      "fourcc": "lnsc",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemLensCollectionBox extends Box('lnsc') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "lens",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemLensBox extends FullBox('lens') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "lnhd",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemLensHeaderBox extends FullBox('lnhd', 0, 0) { \r\n unsigned int(32) lens_identifier; // an integer unique to the enclosing CameraSystemLensBox \r\n unsigned int(32) lens_algorithm_kind; // a FourCC for the kind of projection \r\n unsigned int(32) lens_domain; // a FourCC for the kind of lens (e.g., color) \r\n unsigned int(32) lens_role; // a FourCC indicating which lens this is (e.g., left or right for a stereo system) \r\n}"
+    },
+    {
+      "fourcc": "rdim",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemLensReferenceDimensionsBox extends FullBox('rdim', 0, 0) { \r\nunsigned int(32) reference_width; \r\nunsigned int(32) reference_height; \r\n}"
+    },
+    {
+      "fourcc": "lnin",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemLensIntrinsicsBox extends FullBox('lnin', version = 0, flags) { \r\nsigned int(16) denominator_shift_operand; \r\nsigned int(16) skew_denominator_shift_operand; \r\nsigned int(32) focal_length_x; \r\nsigned int(32) principal_point_x; \r\nsigned int(32) principal_point_y; \r\nif (flags & 1) { \r\nsigned int(32) focal_length_y; \r\nsigned int(32) skew_factor; \r\n} \r\nif (flags & 2) { \r\nBEFloat32 projection_offset; \r\n} \r\n}"
+    },
+    {
+      "fourcc": "ldst",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemLensDistortionsBox extends FullBox('ldst', version = 0, flags) { \r\nBEFloat32 k1; // radial parameter k1 \r\nBEFloat32 k2; // radial parameter k2 \r\nBEFloat32 p1; // tangential parameter p1 \r\nBEFloat32 p2; // tangential parameter p2 \r\nif (flags & 1) { \r\nBEFloat32 calibration_limit_radial_angle; \r\n} \r\n}"
+    },
+    {
+      "fourcc": "lfad",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemLensFrameAdjustmentBox extends FullBox('lfad', version = 0, 0) { \r\nBEFloat32 polynomialParametersX0;\r\n BEFloat32 polynomialParametersX1;\r\n BEFloat32 polynomialParametersX2; // parameters for X axis \r\nBEFloat32 polynomialParametersY0;\r\n BEFloat32 polynomialParametersY1;\r\n BEFloat32 polynomialParametersY2; // parameters for Y axis \r\n} "
+    },
+    {
+      "fourcc": "lnex",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemLensExtrinsicsBox extends Box('lnex') {\r\n Box boxes[];\r\n }"
+    },
+    {
+      "fourcc": "corg",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemOriginSourceBox extends FullBox('corg', 0, 0) { \r\nunsigned int(32) source_of_origin; \r\n// e.g., 'blin'  \r\n} "
+    },
+    {
+      "fourcc": "cxfm",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemTransformBox extends Box('cxfm') { \r\n Box boxes[];\r\n} "
+    },
+    {
+      "fourcc": "uqua",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class CameraSystemUnitQuaternionTransformBox extends \r\nFullBox('uqua', 0, 0) { \r\nBEFloat32 xyz0;\r\nBEFloat32 xyz1;\r\nBEFloat32 xyz2; \r\n} "
+    },
+    {
+      "fourcc": "hfov",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class HorizontalFieldOfViewBox extends Box('hfov') { \r\nunsigned int(32) field_of_view; \r\n} "
+    },
+    {
+      "fourcc": "ctrs",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class VideoContourCollectionBox extends Box('ctrs') { \r\n Box boxes[]; \r\n} "
+    },
+    {
+      "fourcc": "ctrm",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) { \r\n bit(8) data[]; // TODO requires switch/case \r\n} "
     }
   ]
 }

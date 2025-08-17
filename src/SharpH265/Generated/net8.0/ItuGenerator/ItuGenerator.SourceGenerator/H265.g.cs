@@ -8,6 +8,7 @@ namespace SharpH265
 
     public partial class H265Context : IItuContext
     {
+		string aa = "aligned(8) class HorizontalFieldOfViewBox extends Box('hfov') { \r\nunsigned int(32) field_of_view; \r\n} ";
         public NalUnit NalHeader { get; set; }
 		public PicParameterSetRbsp PicParameterSetRbsp { get; set; }
 		public SeiRbsp SeiRbsp { get; set; }
