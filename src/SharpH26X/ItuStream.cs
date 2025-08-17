@@ -78,6 +78,7 @@ namespace SharpH26X
                     }
                     b = (byte)bb;
                     _bitsPosition += 8;
+                    _lastMarkBeginPosition += 8; // compensate for emulation prevention bytes
                     bytePos++;
                 }
                 else
@@ -140,6 +141,7 @@ namespace SharpH26X
                         WriteByte(0x03);
                         bytePos++;
                         _bitsPosition += 8;
+                        _lastMarkBeginPosition += 8; // compensate for emulation prevention
                         _prevByte = 0x03;
                     }
                 }
