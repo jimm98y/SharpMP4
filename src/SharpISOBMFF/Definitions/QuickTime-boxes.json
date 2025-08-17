@@ -1063,7 +1063,7 @@
       "fourcc": "eyes",
       "containers": [ "*" ],
       "type": "Box",
-      "syntax": "class StereoViewBox() extends FullBox ('eyes', 0, 0) {\r\n Box boxes[];\r\n }"
+      "syntax": "class StereoViewBox() extends Box ('eyes') {\r\n Box boxes[];\r\n }"
     },
     {
       "fourcc": "stri",
@@ -1232,6 +1232,30 @@
       "containers": [ "*" ],
       "type": "Box",
       "syntax": "aligned(8) class VideoContourMapBox extends FullBox('ctrm', 0, 0) { \r\n bit(8) data[]; // TODO requires switch/case \r\n} "
+    },
+    {
+      "fourcc": "dtyp",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class MetaDatatypeDefinitionBox extends Box('dtyp') {\r\n unsigned int(32) datatype_namespace;\r\n unsigned int(8) datatype_array[];\r\n}\r\n"
+    },
+    {
+      "fourcc": "sdpd",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSdpdBox extends Box('sdpd') {\r\n Box boxes[];\r\n}\r\n"
+    },
+    {
+      "fourcc": "sdpi",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleSdpiBox extends Box('sdpi') {\r\n unsigned int(32) data; //TODO \r\n}\r\n"
+    },
+    {
+      "fourcc": "ctps",
+      "containers": [ "*" ],
+      "type": "Box",
+      "syntax": "aligned(8) class AppleCtpsBox extends Box('ctps') {\r\n Box boxes[];\r\n}\r\n"
     }
   ]
 }

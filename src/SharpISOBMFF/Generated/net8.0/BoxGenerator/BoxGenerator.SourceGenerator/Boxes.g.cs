@@ -238,6 +238,7 @@ namespace SharpISOBMFF
                case "cstg":  return new CstgTrackGroupTypeBox();
                case "ctab":  return new AppleColorTableBox();
                case "ctim":  return new CueTimeBox();
+               case "ctps":  return new AppleCtpsBox();
                case "ctrm":  return new VideoContourMapBox();
                case "ctrs":  return new VideoContourCollectionBox();
                case "ctry":  return new AppleCountryListBox();
@@ -283,6 +284,7 @@ namespace SharpISOBMFF
                case "dtse": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtse"));break;
                case "dtsh": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsh"));break;
                case "dtsl": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dtsl"));break;
+               case "dtyp":  return new MetaDatatypeDefinitionBox();
                case "dvav": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvav"));break;
                case "dvc ": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("dvc "));break;
                case "dvca": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("dvca"));break;
@@ -689,6 +691,8 @@ namespace SharpISOBMFF
                case "sdes":  return new AppleShortDescriptionBox();
                case "SDLN":  return new PlayModeBox();
                case "sdp ":  return new RtpTrackSdpHintInformation();
+               case "sdpd":  return new AppleSdpdBox();
+               case "sdpi":  return new AppleSdpiBox();
                case "sdtp":  return new SampleDependencyTypeBox();
                case "SEAL":  return new SEALBox();
                case "sefd":  return new SamsungTrailerBox();
@@ -64562,17 +64566,17 @@ public partial class RequiredBoxTypesBox : FullBox
 
 
 /*
-class StereoViewBox() extends FullBox ('eyes', 0, 0) {
+class StereoViewBox() extends Box ('eyes') {
  Box boxes[];
  }
 */
-public partial class StereoViewBox : FullBox
+public partial class StereoViewBox : Box
 {
 	public const string TYPE = "eyes";
 	public override string DisplayName { get { return "StereoViewBox"; } }
 	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
 
-	public StereoViewBox(): base(IsoStream.FromFourCC("eyes"), 0, 0)
+	public StereoViewBox(): base(IsoStream.FromFourCC("eyes"))
 	{
 	}
 
@@ -65990,6 +65994,191 @@ public partial class VideoContourMapBox : FullBox
 		ulong boxSize = 0;
 		boxSize += base.CalculateSize();
 		boxSize += ((ulong)data.Length * 8); // data
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class MetaDatatypeDefinitionBox extends Box('dtyp') {
+ unsigned int(32) datatype_namespace;
+ unsigned int(8) datatype_array[];
+}
+
+*/
+public partial class MetaDatatypeDefinitionBox : Box
+{
+	public const string TYPE = "dtyp";
+	public override string DisplayName { get { return "MetaDatatypeDefinitionBox"; } }
+
+	protected uint datatype_namespace; 
+	public uint DatatypeNamespace { get { return this.datatype_namespace; } set { this.datatype_namespace = value; } }
+
+	protected byte[] datatype_array; 
+	public byte[] DatatypeArray { get { return this.datatype_array; } set { this.datatype_array = value; } }
+
+	public MetaDatatypeDefinitionBox(): base(IsoStream.FromFourCC("dtyp"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.datatype_namespace, "datatype_namespace"); 
+		boxSize += stream.ReadUInt8ArrayTillEnd(boxSize, readSize,  out this.datatype_array, "datatype_array"); 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.datatype_namespace, "datatype_namespace"); 
+		boxSize += stream.WriteUInt8ArrayTillEnd( this.datatype_array, "datatype_array"); 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // datatype_namespace
+		boxSize += ((ulong)datatype_array.Length * 8); // datatype_array
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class AppleSdpdBox extends Box('sdpd') {
+ Box boxes[];
+}
+
+*/
+public partial class AppleSdpdBox : Box
+{
+	public const string TYPE = "sdpd";
+	public override string DisplayName { get { return "AppleSdpdBox"; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+	public AppleSdpdBox(): base(IsoStream.FromFourCC("sdpd"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class AppleSdpiBox extends Box('sdpi') {
+ unsigned int(32) data; //TODO 
+}
+
+*/
+public partial class AppleSdpiBox : Box
+{
+	public const string TYPE = "sdpi";
+	public override string DisplayName { get { return "AppleSdpiBox"; } }
+
+	protected uint data;  // TODO 
+	public uint Data { get { return this.data; } set { this.data = value; } }
+
+	public AppleSdpiBox(): base(IsoStream.FromFourCC("sdpi"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		boxSize += stream.ReadUInt32(boxSize, readSize,  out this.data, "data"); //TODO 
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		boxSize += stream.WriteUInt32( this.data, "data"); //TODO 
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		boxSize += 32; // data
+		return boxSize;
+	}
+}
+
+
+/*
+aligned(8) class AppleCtpsBox extends Box('ctps') {
+ Box boxes[];
+}
+
+*/
+public partial class AppleCtpsBox : Box
+{
+	public const string TYPE = "ctps";
+	public override string DisplayName { get { return "AppleCtpsBox"; } }
+	public IEnumerable<Box> Boxes { get { return this.children.OfType<Box>(); } }
+
+	public AppleCtpsBox(): base(IsoStream.FromFourCC("ctps"))
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		// boxSize += stream.ReadBox(boxSize, readSize, this,  out this.boxes, "boxes"); 
+		boxSize += stream.ReadBoxArrayTillEnd(boxSize, readSize, this);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		// boxSize += stream.WriteBox( this.boxes, "boxes"); 
+		boxSize += stream.WriteBoxArrayTillEnd(this);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		// boxSize += IsoStream.CalculateBoxSize(boxes); // boxes
+		boxSize += IsoStream.CalculateBoxArray(this);
 		return boxSize;
 	}
 }
