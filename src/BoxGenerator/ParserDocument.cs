@@ -173,7 +173,7 @@ namespace BoxGenerator
             "avc2","avc3","avc4","vp08","vp09","vp10","apcn","dvhe","dvav","mjpg","uncv","j2ki",
             // quicktime https://developer.apple.com/documentation/quicktime-file-format/video_sample_description
             "cvid","jpeg","smc ","rle ","rpza","kpcd","png ","mjpa","mjpb","SVQ1","SVQ3","dvc ","dvcp","gif ","h263","tiff","raw ","2vuY","yuv2","v308","v408",
-            "v216","v410","v210"
+            "v216","v410","v210","qhvc"
             };
 
             foreach (var type in audioSampleEntryTypes)

@@ -625,6 +625,7 @@ namespace SharpISOBMFF
                case "Qclp": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("Qclp"));break;
                case "QDM2": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDM2"));break;
                case "QDMC": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("QDMC"));break;
+               case "qhvc": if(parent == "stsd")  return new VisualSampleEntry(IsoStream.FromFourCC("qhvc"));break;
                case "qlif":  return new SVCPriorityLayerInfoBox();
                case "qtvr":  return new AppleQTVRTrackBox();
                case "QVMI":  return new CasioQVMIBox();
