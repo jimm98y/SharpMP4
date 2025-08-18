@@ -20,7 +20,7 @@ using System.Xml;
 //string[] files = [""];
 //string[] files = ["C:\\Users\\lukas\\Downloads\\Arknights - Reimei Zensou - 01 [VVC_1080p_AAC].mp4"];
 //string[] files = DirSearch("C:\\Git\\mp4parser").Where(x => x.EndsWith(".mp4")).ToArray();
-string[] files = ["C:\\Temp\\big_buck_bunny_480p_h264.mov"];
+string[] files = ["C:\\Temp\\IMG_7881.MOV"];
 
 HttpClient httpClient = new HttpClient();
 foreach (var file in files)

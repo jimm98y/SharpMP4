@@ -44,7 +44,7 @@ SharpH26X.Log.SinkInfo = (o, e) =>
 //var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
 //var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
 //var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
-var files = new string[] { "C:\\Temp\\002.mp4" };
+var files = new string[] { "C:\\Temp\\IMG_7881.MOV" };
 
 foreach (var file in files)
 {
@@ -79,6 +79,7 @@ foreach (var file in files)
 
             AVCConfigurationBox avcC = null;
             HEVCConfigurationBox hvcC = null;
+            LHEVCConfigurationBox lhvC = null;
             VvcConfigurationBox vvcC = null;
             AV1CodecConfigurationBox av1C = null;
 
@@ -115,6 +116,7 @@ foreach (var file in files)
                         indexes = ipmaBox.PropertyIndex[tile - 1];
                         propertyBoxes = ipcoBox.Children.Where((x, idx) => indexes.Contains((ushort)(idx + 1))).ToArray();
                         hvcC = propertyBoxes.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                        lhvC = propertyBoxes.OfType<LHEVCConfigurationBox>().SingleOrDefault();
                         avcC = propertyBoxes.OfType<AVCConfigurationBox>().SingleOrDefault();
                         vvcC = propertyBoxes.OfType<VvcConfigurationBox>().SingleOrDefault();
                     }
@@ -122,6 +124,7 @@ foreach (var file in files)
                 else if (iinfBox.ItemInfos.Single(x => x.ItemID == primaryItemID).ItemType == IsoStream.FromFourCC("hvc1"))
                 {
                     hvcC = propertyBoxes.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                    lhvC = propertyBoxes.OfType<LHEVCConfigurationBox>().SingleOrDefault();
                     avcC = propertyBoxes.OfType<AVCConfigurationBox>().SingleOrDefault();
                     vvcC = propertyBoxes.OfType<VvcConfigurationBox>().SingleOrDefault();
                 }
@@ -150,6 +153,7 @@ foreach (var file in files)
 
                 avcC = visualSample.Children.OfType<AVCConfigurationBox>().SingleOrDefault();
                 hvcC = visualSample.Children.OfType<HEVCConfigurationBox>().SingleOrDefault();
+                lhvC = visualSample.Children.OfType<LHEVCConfigurationBox>().SingleOrDefault();
                 vvcC = visualSample.Children.OfType<VvcConfigurationBox>().SingleOrDefault();
                 av1C = visualSample.Children.OfType<AV1CodecConfigurationBox>().SingleOrDefault();
             }
@@ -209,6 +213,28 @@ foreach (var file in files)
                             SharpISOBMFF.Log.Error($"---Error (3) reading {file}, exception: {ex.Message}");
                             logger.Flush();
                             throw;
+                        }
+                    }
+                }
+
+                if(lhvC != null)
+                {
+                    nalLengthSize = lhvC._LHEVCConfig.LengthSizeMinusOne + 1; // usually 4 bytes
+
+                    foreach (var nalus in lhvC._LHEVCConfig.NalUnit)
+                    {
+                        foreach (var nalu in nalus)
+                        {
+                            try
+                            {
+                                ParseNALU((IItuContext)context, format, nalu);
+                            }
+                            catch (Exception ex)
+                            {
+                                SharpISOBMFF.Log.Error($"---Error (13) reading {file}, exception: {ex.Message}");
+                                logger.Flush();
+                                throw;
+                            }
                         }
                     }
                 }
