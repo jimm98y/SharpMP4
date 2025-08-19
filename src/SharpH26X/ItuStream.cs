@@ -367,7 +367,7 @@ namespace SharpH26X
             //value = (val % 2 == 0 ? -1L : 1L) * (long)((val + 1) / 2);
             long sign = (((long)val & 0x1) << 1) - 1;
             value = (((long)val >> 1) + ((long)val & 0x1)) * sign;
-            LogEnd(name, size, value);
+            LogEnd(name, read, value);
             return read;
         }
 
