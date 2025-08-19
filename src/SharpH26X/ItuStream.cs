@@ -363,10 +363,11 @@ namespace SharpH26X
         public ulong ReadSignedIntGolomb(ulong size, out long value, string name)
         {
             ulong val;
-            ulong read = ReadUnsignedIntGolomb(size, out val, name);
+            ulong read = ReadUnsignedIntGolomb(size, out val, "");
             //value = (val % 2 == 0 ? -1L : 1L) * (long)((val + 1) / 2);
             long sign = (((long)val & 0x1) << 1) - 1;
             value = (((long)val >> 1) + ((long)val & 0x1)) * sign;
+            LogEnd(name, size, value);
             return read;
         }
 
@@ -374,7 +375,9 @@ namespace SharpH26X
         {
             //ulong mapped = (ulong)(value <= 0 ? -2 * value : 2 * value - 1);
             ulong mapped = (ulong)((value << 1) * (value < 0 ? -1 : 1) - (value > 0 ? 1 : 0));
-            return WriteUnsignedIntGolomb(mapped, name);
+            var size = WriteUnsignedIntGolomb(mapped, "");
+            LogEnd(name, size, value);
+            return size;
         }
 
         public bool ReadMoreRbspData(IItuSerializable serializable, ulong maxPayloadSize = ulong.MaxValue)
@@ -733,6 +736,9 @@ namespace SharpH26X
 
         private void LogEnd<T>(string name, ulong size, T value)
         {
+            if (string.IsNullOrEmpty(name))
+                return;
+
             string padding = "-";
             for (int i = 0; i < _logLevel; i++)
             {
