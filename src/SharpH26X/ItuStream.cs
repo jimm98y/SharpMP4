@@ -662,10 +662,11 @@ namespace SharpH26X
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            if (!list.ContainsKey(whileIndex))
-                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+            uint value = 0;
+            if (list.ContainsKey(whileIndex))
+                value = list[whileIndex];
 
-            ulong size = WriteFixed(count, list[whileIndex], name);
+            ulong size = WriteFixed(count, value, name);
             return size;
         }
 
@@ -674,10 +675,11 @@ namespace SharpH26X
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            if (!list.ContainsKey(whileIndex))
-                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+            byte value = 0;
+            if (list.ContainsKey(whileIndex))
+                value = list[whileIndex];
 
-            ulong size = WriteUnsignedInt(count, list[whileIndex], name);
+            ulong size = WriteUnsignedInt(count, value, name);
             return size;
         }
 
@@ -686,10 +688,11 @@ namespace SharpH26X
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            if (!list.ContainsKey(whileIndex))
-                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+            ulong value = 0;
+            if (list.ContainsKey(whileIndex))
+                value = list[whileIndex];
 
-            ulong size = WriteUnsignedIntGolomb(list[whileIndex], name);
+            ulong size = WriteUnsignedIntGolomb(value, name);
             return size;
         }
 
@@ -698,10 +701,11 @@ namespace SharpH26X
             if (list == null)
                 throw new ArgumentNullException(nameof(list));
 
-            if (!list.ContainsKey(whileIndex))
-                throw new ArgumentOutOfRangeException(nameof(whileIndex));
+            byte value = 0;
+            if (list.ContainsKey(whileIndex))
+                value = list[whileIndex];
 
-            ulong size = WriteBits(count, list[whileIndex], name);
+            ulong size = WriteBits(count, value, name);
             return size;
         }
 
