@@ -494,7 +494,7 @@ namespace SharpISOBMFF
                case "meco":  return new AdditionalMetadataContainerBox();
                case "mehd":  return new MovieExtendsHeaderBox();
                case "mere":  return new MetaBoxRelationBox();
-               case "mesh":  return new Mesh();
+               case "mesh":  return new MeshBox();
                case "meta":  return new MetaBox();
                case "mett":  return new TextMetaDataSampleEntry();
                case "metx":  return new XMLMetaDataSampleEntry();
@@ -55746,7 +55746,7 @@ public partial class MeshProjection : ProjectionDataBox
 
 
 /*
-aligned(8) class Mesh Box('mesh') {
+aligned(8) class MeshBox extends Box('mesh') {
     const unsigned int(1) reserved = 0;
     unsigned int(31) coordinate_count;
      for (i = 0; i < coordinate_count; i++) {
@@ -55777,10 +55777,10 @@ aligned(8) class Mesh Box('mesh') {
     }
 }
 */
-public partial class Mesh : Box
+public partial class MeshBox : Box
 {
 	public const string TYPE = "mesh";
-	public override string DisplayName { get { return "Mesh"; } }
+	public override string DisplayName { get { return "MeshBox"; } }
 
 	protected bool reserved = false; 
 	public bool Reserved { get { return this.reserved; } set { this.reserved = value; } }
@@ -55839,7 +55839,7 @@ public partial class Mesh : Box
 	protected bool[] mesh_padding2; 
 	public bool[] MeshPadding2 { get { return this.mesh_padding2; } set { this.mesh_padding2 = value; } }
 
-	public Mesh(): base(IsoStream.FromFourCC("mesh"))
+	public MeshBox(): base(IsoStream.FromFourCC("mesh"))
 	{
 	}
 

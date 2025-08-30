@@ -479,7 +479,7 @@
 |meco|AdditionalMetadataContainerBox|
 |mehd|MovieExtendsHeaderBox|
 |mere|MetaBoxRelationBox|
-|mesh|Mesh|
+|mesh|MeshBox|
 |meta|MetaBox|
 |mett|TextMetaDataSampleEntry|
 |metx|XMLMetaDataSampleEntry|
