@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 
 namespace BoxGenerator;
@@ -155,4 +156,137 @@ public static class BoxGenerator
         Debug.WriteLine(v);
         Console.WriteLine(v);
     }
+
+    public static string GenerateDocumentation(string[] jsonFiles, string[] jsonContents)
+    {
+        int success = 0;
+        int duplicated = 0;
+        int fail = 0;
+
+        var parsedClasses = new Dictionary<string, PseudoClass>();
+        List<PseudoClass> duplicates = new List<PseudoClass>();
+        List<string> containers = new List<string>();
+
+        for (int i = 0; i < jsonFiles.Length; i++)
+        {
+            string file = jsonFiles[i];
+            string json = jsonContents[i];
+
+            using (JsonDocument document = JsonDocument.Parse(json, new JsonDocumentOptions()))
+            {
+                foreach (JsonElement element in document.RootElement.GetProperty("entries").EnumerateArray())
+                {
+                    string fourCC = element.TryGetProperty("fourcc", out _) ? element.GetProperty("fourcc").GetString() : null;
+                    string sample = element.GetProperty("syntax").GetString()!;
+
+                    string[] cont = element.GetProperty("containers").EnumerateArray().Select(x => x.ToString()).ToArray();
+                    foreach (var con in cont)
+                    {
+                        if (con.StartsWith("{"))
+                        {
+                            var des = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(con);
+                            foreach (var dc in des.Values)
+                            {
+                                foreach (var ddd in dc)
+                                    containers.Add(ddd);
+                            }
+                        }
+                        else
+                        {
+                            containers.Add(con);
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(sample))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        var result = Parser.Boxes.ParseOrThrow(sample);
+                        long offset = 0;
+                        result = DeduplicateBoxes(result);
+
+                        foreach (var item in result)
+                        {
+                            item.Syntax = GetSampleCode(sample, offset, item.CurrentOffset);
+                            offset = item.CurrentOffset;
+
+                            if (parsedClasses.TryAdd(item.BoxName, item))
+                            {
+                                success++;
+                            }
+                            else
+                            {
+                                duplicated++;
+                                duplicates.Add(item);
+                                Debug.WriteLine($"Duplicated: {item.BoxName}");
+
+                                if (item.Extended != null && item.Extended.BoxType != parsedClasses[item.BoxName].Extended.BoxType)
+                                {
+                                    if (!parsedClasses.TryAdd($"{item.BoxName}_{item.Extended.BoxType}", item))
+                                    {
+                                        LogConsole($"Duplicated and failed to add: {item.BoxName}");
+                                    }
+                                    // override the name
+                                    item.BoxName = $"{item.BoxName}{item.Extended.BoxType}Dup";
+                                }
+                            }
+                        }
+
+                        Debug.WriteLine($"Succeeded parsing: {fourCC}");
+
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.Message);
+                        LogConsole($"Failed to parse: {fourCC}");
+                        fail++;
+                    }
+                }
+            }
+        }
+
+        LogConsole($"Successful: {success}, Failed: {fail}, Duplicated: {duplicated}, Total: {success + fail + duplicated}");
+
+        ParserDocument parserDocument = new ParserDocument(parsedClasses, containers);
+        StringBuilder docs = new StringBuilder();
+
+        // table header
+        docs.AppendLine("| 4CC | Name |");
+        docs.AppendLine("|-----|------|");
+
+        foreach (var item in parserDocument.Boxes)
+        {
+            var box = item.Value.First();
+            string boxType = item.Key.Replace("©", "&copy;").Replace("_", "\\_");
+            docs.AppendLine($"|{boxType}|{box.BoxName}|");
+        }
+
+        docs.AppendLine();
+        docs.AppendLine("| 4CC | Name |");
+        docs.AppendLine("|-----|------|");
+
+        foreach (var item in parserDocument.Entries)
+        {
+            var entry = item.Value.First();
+            string boxType = item.Key.Replace("©", "&copy;").Replace("_", "\\_");
+            docs.AppendLine($"|{boxType}|{entry.BoxName}|");
+        }
+
+        docs.AppendLine();
+        docs.AppendLine("| ID  | Name |");
+        docs.AppendLine("|-----|------|");
+        
+        foreach (var item in parserDocument.Descriptors)
+        {
+            var descriptor = item.Value.First();
+            string boxType = item.Key.Replace("©", "&copy;").Replace("_", "\\_");
+            docs.AppendLine($"|{boxType}|{descriptor.BoxName}|");
+        }
+
+        return docs.ToString();
+    }
+
 }

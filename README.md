@@ -1,5 +1,8 @@
 # SharpMP4
-Simple lightweight fragmented mp4 (fmp4) reader/writer. Supports H264/H265/H266/AV1 for video and AAC/Opus for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into fragmented MP4.
+Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H264/H265/H266/AV1 for video and AAC/Opus for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into MP4 and fragmented MP4.
+
+## Supported boxes
+The list of all supported boxes, entries and descriptors is [here](Boxes.md).
 
 ## Read MP4
 To parse an existing mp4/mov/m4v file, first you have to get the stream:
@@ -18,7 +21,7 @@ mp4.Read(new IsoStream(inputFileStream));    ...
 To process this in-memory representation and read the audio/video samples, create a new `VideoReader`:
 ```cs
 VideoReader videoReader = new VideoReader();
-videoReader.Parse(fmp4);
+videoReader.Parse(mp4);
 ```
 Now it is possible to get all the tracks from the video:
 ```cs
@@ -43,6 +46,12 @@ Next, create the builder depending upon the output format. Currently, there are 
 ```cs
 IMp4Builder outputBuilder = new Mp4Builder(new SingleStreamOutput(output));
 ```
+For fragmented MP4 output, use `FragmentedMp4Builder` with the fragment duration in miliseconds:
+```cs
+// use fragment duration 2 seconds
+IMp4Builder outputBuilder = new FragmentedMp4Builder(new SingleStreamOutput(output), 2000);
+```
+
 Add the H264 video track to the builder instance:
 ```cs
 var videoTrack = new H264Track();
@@ -57,9 +66,7 @@ Pass the track samples to the builder as follows:
 ```cs
 byte[] nalu = ...;
 outputBuilder.ProcessTrackSample(videoTrack.TrackID, nalu);
-
 ...
-
 byte[] aac = ...;
 outputBuilder.ProcessTrackSample(audioTrack.TrackID, aac);
 ```
@@ -67,7 +74,6 @@ When done, call `FinalizeMedia` to create the video file:
 ```cs
 outputBuilder.FinalizeMedia();
 ```
-
 ## Extensibility
 ### Logging
 There is a `Log` class where you can supply your own delegates for all the actions like:

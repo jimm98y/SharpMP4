@@ -13,6 +13,7 @@ if (string.IsNullOrEmpty(directoryPath))
 string[] jsonFiles = Directory.GetFiles(directoryPath, "*.json");
 string[] jsonContent = jsonFiles.Select(File.ReadAllText).ToArray();
 
+//string code = BoxGenerator.BoxGenerator.GenerateDocumentation(jsonFiles, jsonContent);
 string code = BoxGenerator.BoxGenerator.Generate(jsonFiles, jsonContent);
 
 Console.WriteLine(code);
