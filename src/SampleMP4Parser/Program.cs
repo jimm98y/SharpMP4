@@ -5,62 +5,31 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Xml;
 
-//string[] files = Directory.GetFiles("C:\\_videoFingerprints\\").ToArray();
-//string[] files1 = DirSearch("\\\\HOME-DS\\video").Where(x => x.EndsWith(".mp4")).ToArray();
-//string[] files1 = DirSearch("\\\\192.168.1.250\\misc").Where(x => x.EndsWith(".mp4")).ToArray();
-//string[] files2 = DirSearch("\\\\192.168.1.250\\misc2").Where(x => x.EndsWith(".mp4")).ToArray();
-//string[] files = files1.Concat(files2).ToArray();
-//File.WriteAllLines("C:\\Temp\\testFiles3.txt", files1);
-//string[] files = File.ReadAllLines("C:\\Temp\\errors.txt");
-//string[] files = File.ReadAllLines("C:\\Temp\\testFiles5.txt");
-//string[] files = [""];
-//string[] files = ["C:\\Users\\lukas\\Downloads\\Arknights - Reimei Zensou - 01 [VVC_1080p_AAC].mp4"];
-//string[] files = DirSearch("C:\\Git\\mp4parser").Where(x => x.EndsWith(".mp4")).ToArray();
-string[] files = ["C:\\Temp\\IMG_7881.MOV"];
+string[] files = ["bunny.mp4"];
 
-HttpClient httpClient = new HttpClient();
 foreach (var file in files)
 {
-    Debug.WriteLine($"----Reading: {file}");
-    //using (Stream inputFileStream = await httpClient.GetStreamAsync(file))
+    Debug.WriteLine($"Reading: {file}");
     using (Stream inputFileStream = new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read))
     {
         var inputMp4 = new Container();
         inputMp4.Read(new IsoStream(new MyStream(inputFileStream)));
         
-        // seek enabled
-        //inputMp4.Read(new IsoStream(inputFileStream));
-
         using (var outputFileStream = new FileStream("test.mp4", FileMode.Create, FileAccess.ReadWrite))
         {
-            //using (var fingerprintStream = new FileStream("C:\\_videoFingerprints\\" + System.IO.Path.GetFileName(file), FileMode.Create, FileAccess.ReadWrite))
+            inputMp4.Write(new IsoStream(outputFileStream));
+            outputFileStream.Flush();
+            outputFileStream.Seek(0, SeekOrigin.Begin);
+
+            if (!AreStreamsEqual(inputFileStream, outputFileStream))
             {
-                inputMp4.Write(new IsoStream(outputFileStream));
-                //inputMp4.Write(new IsoStream(fingerprintStream));
-
-                outputFileStream.Flush();
-                //fingerprintStream.Flush();
-
-                outputFileStream.Seek(0, SeekOrigin.Begin);
-                //inputFileStream.Seek(0, SeekOrigin.Begin);
-
-                //using (Stream inputFileStream2 = await httpClient.GetStreamAsync(file))
-                {
-                    if (!AreStreamsEqual(inputFileStream, outputFileStream))
-                    //if (!AreStreamsEqual(inputFileStream2, outputFileStream))
-                    {
-                        Debug.WriteLine($"Streams mismatch!!!!! {file}");
-                        Console.WriteLine($"Streams mismatch!!!!! {file}");
-                    }
-                    else
-                    {
-                        Debug.WriteLine("------------------------ Streams are equal ------------------------");
-                    }
-                }
+                Debug.WriteLine($"Streams mismatch!!! {file}");
+                Console.WriteLine($"Streams mismatch!!! {file}");
+            }
+            else
+            {
+                Debug.WriteLine("- Streams are equal -");
             }
         }
     }

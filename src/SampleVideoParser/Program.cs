@@ -13,38 +13,28 @@ using System.Text;
 
 // .\ffmpeg.exe -i "002.mp4" -c:v copy -bsf:v trace_headers -f null - > log.txt 2>&1
 
-var logger = new FileLogger("C:\\Temp\\video_debug2.txt");
+var logger = new FileLogger("debug.txt");
 
 //Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
 SharpISOBMFF.Log.SinkInfo = (o, e) => 
 { 
     Console.WriteLine($"{DateTime.UtcNow} {o}");
-    File.AppendAllText("C:\\Temp\\_decoding_progress2.txt", o + "\r\n");
 };
 SharpISOBMFF.Log.SinkError = (o, e) => 
 { 
     Debug.WriteLine(o);
-    File.AppendAllText("C:\\Temp\\_decoding_errors2.txt", o + "\r\n");
 };
 
 SharpISOBMFF.Log.SinkDebug = (o, e) =>
 {
     Debug.WriteLine(o);
-    //logger.Log(o + "\r\n");
 };
 SharpH26X.Log.SinkInfo = (o, e) =>
 {
     Debug.WriteLine(o);
-    //logger.Log(o + "\r\n");
 };
 
-//var files = File.ReadAllLines("C:\\Temp\\testFiles.txt");
-//var files = File.ReadAllLines("C:\\Temp\\_h265.txt");
-//var files = new string[] { "C:\\Git\\heif_howto\\test_images\\nokia\\winter_1440x960.heic" };
-//var files = new string[] { "\\\\192.168.1.250\\photo2\\Santiago3\\0_IMG_1060.HEIC" };
-//var files = new string[] { "C:\\Users\\lukasvolf\\Downloads\\NovosobornayaSquare_3840x2160.mp4" };
-//var files = new string[] { "C:\\Git\\SharpMP4\\src\\FragmentedMp4Recorder\\frag_bunny.mp4" };
-var files = new string[] { "C:\\Temp\\IMG_7881.MOV" };
+var files = new string[] { "bunny.mp4" };
 
 foreach (var file in files)
 {
