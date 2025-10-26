@@ -154,7 +154,6 @@ public static class BoxGenerator
     private static void LogConsole(string v)
     {
         Debug.WriteLine(v);
-        Console.WriteLine(v);
     }
 
     public static string GenerateDocumentation(string[] jsonFiles, string[] jsonContents)
