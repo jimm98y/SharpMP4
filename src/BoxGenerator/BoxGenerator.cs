@@ -12,12 +12,12 @@ namespace BoxGenerator;
 
 public interface ICodeGenerator
 {
-    string GenerateParser();
+    Dictionary<string, string> GenerateParser();
 }
 
 public static class BoxGenerator
 {
-    public static string Generate(string[] jsonFiles, string[] jsonContents)
+    public static Dictionary<string, string> Generate(string[] jsonFiles, string[] jsonContents)
     {
         int success = 0;
         int duplicated = 0;
@@ -112,7 +112,7 @@ public static class BoxGenerator
 
         ParserDocument parserDocument = new ParserDocument(parsedClasses, containers);
         ICodeGenerator generator = new CSharpGenerator(parserDocument);
-        string code = generator.GenerateParser();
+        Dictionary<string, string> code = generator.GenerateParser();
         return code;
     }
 

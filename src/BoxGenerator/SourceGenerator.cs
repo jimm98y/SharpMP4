@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BoxGenerator
@@ -20,8 +21,12 @@ namespace BoxGenerator
             // generate a class that contains their values as const strings
             initContext.RegisterSourceOutput(compilationAndFiles, (productionContext, sourceContext) =>
             {
-                string code = BoxGenerator.Generate(sourceContext.Right.Select(x => x.GetText().ToString()).ToArray(), sourceContext.Right.Select(x => x.GetText().ToString()).ToArray());
-                productionContext.AddSource($"Boxes.g.cs", code);
+                Dictionary<string, string> code = BoxGenerator.Generate(sourceContext.Right.Select(x => x.GetText().ToString()).ToArray(), sourceContext.Right.Select(x => x.GetText().ToString()).ToArray());
+
+                foreach (var file in code)
+                {
+                    productionContext.AddSource($"{file.Key}.g.cs", file.Value);
+                }
             });
         }
     }

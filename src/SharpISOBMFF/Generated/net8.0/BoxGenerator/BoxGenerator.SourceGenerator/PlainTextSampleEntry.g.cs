@@ -1,0 +1,42 @@
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+
+namespace SharpISOBMFF
+{
+/*
+class PlainTextSampleEntry(codingname) extends SampleEntry (codingname) { 
+} 
+
+*/
+public partial class PlainTextSampleEntry : SampleEntry
+{
+	public override string DisplayName { get { return "PlainTextSampleEntry"; } }
+
+	public PlainTextSampleEntry(uint codingname = 0): base(codingname)
+	{
+	}
+
+	public override ulong Read(IsoStream stream, ulong readSize)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Read(stream, readSize);
+		return boxSize;
+	}
+
+	public override ulong Write(IsoStream stream)
+	{
+		ulong boxSize = 0;
+		boxSize += base.Write(stream);
+		return boxSize;
+	}
+
+	public override ulong CalculateSize()
+	{
+		ulong boxSize = 0;
+		boxSize += base.CalculateSize();
+		return boxSize;
+	}
+}
+
+}

@@ -139,10 +139,10 @@ namespace BoxGenerator.CSharp
             return map[par];            
         }
 
-        public string GenerateParser()
+        public Dictionary<string, string> GenerateParser()
         {
-            string resultCode =
-            @"using System;
+            Dictionary<string, string> ret = new Dictionary<string, string>();
+            string namespaceHeader  = @"using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -150,7 +150,8 @@ namespace SharpISOBMFF
 {
 ";
             // build box factory
-            string factory =
+            string factory = namespaceHeader;
+            factory += 
     @"    public class BoxFactory
     {
         public static Func<string, string, byte[], Box> CreateBox = DefaultCreateBox;
@@ -349,21 +350,23 @@ namespace SharpISOBMFF
             factory +=
     @"
     }
-
+}
 ";
-            resultCode += factory;
+            ret.Add("BoxFactory", factory);
 
             foreach (var b in parserDocument.Classes.Values.ToArray())
             {
+                string resultCode = namespaceHeader;
                 string code = BuildCode(b, parserDocument.Containers);
-                resultCode += code + "\r\n\r\n";
-            }
-
-            resultCode +=
+                resultCode += code;
+                resultCode +=
     @"
 }
 ";
-            return resultCode;
+                ret.Add(b.BoxName, resultCode);
+            }
+                        
+            return ret;
         }
 
         private string BuildCode(PseudoClass b, List<string> containers)
