@@ -1,6 +1,8 @@
 # SharpMP4
 Simple lightweight mp4/fmp4/mov/m4v reader/writer. Supports H264/H265/H266/AV1 for video and AAC/Opus for audio. No platform dependencies, easily portable cross-platform. It was designed to be a stream-in and stream-out solution for recording streams from IP cameras into MP4 and fragmented MP4.
 
+[![NuGet version](https://img.shields.io/nuget/v/SharpMP4.svg?style=flat-square)](https://www.nuget.org/packages/SharpMP4)
+
 ## Supported boxes
 The list of all supported boxes, entries and descriptors is [here](Boxes.md).
 
