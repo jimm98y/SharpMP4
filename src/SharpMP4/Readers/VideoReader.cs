@@ -144,7 +144,6 @@ namespace SharpMP4.Readers
                 else if (container.Children[i] is FreeSpaceBox)
                 {
                     this.IsQuickTime = true; // wide atom in the root is only in QuickTime
-                    break;
                 }
             }
         }
