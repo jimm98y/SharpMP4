@@ -4,14 +4,14 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<Nullable>disable</Nullable>
 		<Title>$(ProjectName)</Title>
-		<Version>0.1.3</Version>
+		<Version>0.2.0</Version>
 		<Authors>Lukas Volf</Authors>
 		<Copyright>MIT</Copyright>
 		<PackageProjectUrl>https://github.com/jimm98y/SharpMP4</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<RepositoryUrl>https://github.com/jimm98y/SharpMP4</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>video;audio;isobmff;mp4;fmp4;m4v;mov;heif;heic;avif;h264;h265;h266;av1;aac;opus;netstandard20;net8</PackageTags>
+		<PackageTags>video;audio;isobmff;mp4;fmp4;m4v;mov;heif;heic;avif;h264;h265;h266;av1;aac;opus;netstandard20;net10</PackageTags>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>$(Version)</FileVersion>
