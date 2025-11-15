@@ -16,6 +16,10 @@ namespace SharpISOBMFF
 
             switch(fourCC)
             {
+               case "_cx_":  return new CxBox();
+               case "_cy_":  return new CyBox();
+               case "_htc":  return new HTCInfoBox();
+               case "_yaw":  return new YawBox();
                case "----":  return new CustomBox();
                case ".mp3": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC(".mp3"));break;
                case "@day":  return new RicohAppleRecordingYear2Box();
@@ -34,10 +38,6 @@ namespace SharpISOBMFF
                case "\x6D\x73\x00\x02": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x02"));break;
                case "\x6D\x73\x00\x11": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x11"));break;
                case "\x6D\x73\x00\x55": if(parent == "stsd")  return new AudioSampleEntry(IsoStream.FromFourCC("\x6D\x73\x00\x55"));break;
-               case "_cx_":  return new CxBox();
-               case "_cy_":  return new CyBox();
-               case "_htc":  return new HTCInfoBox();
-               case "_yaw":  return new YawBox();
                case "©alb":  return new AppleAlbumBox();
                case "©ard":  return new AppleArtDirectorBox();
                case "©arg":  return new AppleArgBox();
