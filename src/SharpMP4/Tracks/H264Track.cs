@@ -109,6 +109,12 @@ namespace SharpMP4.Tracks
                 return;
             }
 
+            // check for Annex-B
+            if (sample.Length >= 3 && sample[0] == 0 && sample[1] == 0 && (sample[2] == 1 || (sample.Length >= 4 && sample[2] == 0 && sample[3] == 1)))
+            {
+                throw new ArgumentException("NAL unit must not have Annex-B prefix!");
+            }
+
             using (ItuStream stream = new ItuStream(new MemoryStream(sample)))
             {
                 ulong ituSize = 0;

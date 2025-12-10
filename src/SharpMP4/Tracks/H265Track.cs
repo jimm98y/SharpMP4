@@ -102,9 +102,14 @@ namespace SharpMP4.Tracks
                 return;
             }
 
+            // check for Annex-B
+            if (sample.Length >= 3 && sample[0] == 0 && sample[1] == 0 && (sample[2] == 1 || (sample.Length >= 4 && sample[2] == 0 && sample[3] == 1)))
+            {
+                throw new ArgumentException("NAL unit must not have Annex-B prefix!");
+            }
+
             using (ItuStream stream = new ItuStream(new MemoryStream(sample)))
             {
-                // https://www.bing.com/search?pglt=43&q=hevc+hvc1&cvid=a9d4d6d6a96a4cddb12f3d94ac802bdd&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQABhAMgYIAhAAGEAyBggDEAAYQDIGCAQQABhAMgYIBRAAGEAyBggGEEUYPNIBCDMyMjhqMGoxqAIAsAIA&FORM=ANNTA1&PC=U531
                 // for hvc1, SPS, PPS, VPS should not be in MDAT
                 // for hev1, SPS, PPS, VPS may be in MDAT
                 ulong ituSize = 0;
@@ -280,8 +285,6 @@ namespace SharpMP4.Tracks
                 }
             }
         }
-
-        
 
         private byte[] CreateSample(List<byte[]> buffer)
         {
