@@ -17,7 +17,7 @@ public partial class XMPCustomBox : Box
 	protected BinaryUTF8String data; 
 	public BinaryUTF8String Data { get { return this.data; } set { this.data = value; } }
 
-	public XMPCustomBox(): base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("be7acfcb97a942e89c71999491e3afac"))
+	public XMPCustomBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("be7acfcb97a942e89c71999491e3afac"))
 	{
 	}
 

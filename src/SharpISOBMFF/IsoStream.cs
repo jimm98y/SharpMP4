@@ -770,7 +770,7 @@ namespace SharpISOBMFF
             string uuid = "";
             if (header.Usertype != null)
             {
-                uuid = $" (uuid: {Convert.ToHexString(header.Usertype).ToLowerInvariant()})";
+                uuid = $" (uuid: {ConvertEx.ToHexString(header.Usertype).ToLowerInvariant()})";
             }
             Log.Debug($"BOX:{indentation}\'{EscapeString(ToFourCC(header.Type))}\'{uuid}");
         }

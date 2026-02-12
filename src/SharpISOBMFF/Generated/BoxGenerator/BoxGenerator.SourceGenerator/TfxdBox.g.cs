@@ -25,7 +25,7 @@ public partial class TfxdBox : FullBox
 	protected ulong fragmentAbsoluteDuration; 
 	public ulong FragmentAbsoluteDuration { get { return this.fragmentAbsoluteDuration; } set { this.fragmentAbsoluteDuration = value; } }
 
-	public TfxdBox(): base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("6d1d9b0542d544e680e2141daff757b2"))
+	public TfxdBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("6d1d9b0542d544e680e2141daff757b2"))
 	{
 	}
 

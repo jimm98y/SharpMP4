@@ -17,7 +17,7 @@ public partial class UuidCameraExtrinsicMatrixBox : FullBox
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public UuidCameraExtrinsicMatrixBox(): base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("4363e9145b7d4aab97aebea69803b434"))
+	public UuidCameraExtrinsicMatrixBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("4363e9145b7d4aab97aebea69803b434"))
 	{
 	}
 

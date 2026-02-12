@@ -35,7 +35,7 @@ public partial class UuidCameraIntrinsicMatrixBox : FullBox
 	protected int matrix_skew; 
 	public int MatrixSkew { get { return this.matrix_skew; } set { this.matrix_skew = value; } }
 
-	public UuidCameraIntrinsicMatrixBox(): base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("22cc04c7d6d94e079d904eb6ecbaf3a3"))
+	public UuidCameraIntrinsicMatrixBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("22cc04c7d6d94e079d904eb6ecbaf3a3"))
 	{
 	}
 

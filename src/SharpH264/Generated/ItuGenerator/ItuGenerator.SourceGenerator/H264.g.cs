@@ -1214,7 +1214,7 @@ pic_parameter_set_rbsp() {
 					this.slice_group_id = new ulong[ pic_size_in_map_units_minus1 + 1];
 					for ( i = 0; i <= pic_size_in_map_units_minus1; i++ )
 					{
-						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[ i ], "slice_group_id"); 
+						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(MathEx.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[ i ], "slice_group_id"); 
 					}
 				}
 			}
@@ -1321,7 +1321,7 @@ pic_parameter_set_rbsp() {
 
 					for ( i = 0; i <= pic_size_in_map_units_minus1; i++ )
 					{
-						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[ i ], "slice_group_id"); 
+						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(MathEx.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[ i ], "slice_group_id"); 
 					}
 				}
 			}
@@ -5857,7 +5857,7 @@ motion_constrained_slice_group_set( payloadSize ) {
 				this.slice_group_id = new ulong[ num_slice_groups_in_set_minus1 + 1];
 				for ( i = 0; i <= num_slice_groups_in_set_minus1; i++ )
 				{
-					size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[ i ], "slice_group_id"); 
+					size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling(MathEx.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), out this.slice_group_id[ i ], "slice_group_id"); 
 				}
 			}
 			size += stream.ReadUnsignedInt(size, 1, out this.exact_sample_value_match_flag, "exact_sample_value_match_flag"); 
@@ -5883,7 +5883,7 @@ motion_constrained_slice_group_set( payloadSize ) {
 
 				for ( i = 0; i <= num_slice_groups_in_set_minus1; i++ )
 				{
-					size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[ i ], "slice_group_id"); 
+					size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling(MathEx.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1)), this.slice_group_id[ i ], "slice_group_id"); 
 				}
 			}
 			size += stream.WriteUnsignedInt(1, this.exact_sample_value_match_flag, "exact_sample_value_match_flag"); 

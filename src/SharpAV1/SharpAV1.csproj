@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-      <TargetFramework>net10.0</TargetFramework>
+      <TargetFrameworks>net481;net8.0;net10.0</TargetFrameworks>
 	  <ImplicitUsings>disable</ImplicitUsings>
 	  <Nullable>disable</Nullable>
 	  <!-- Used to enable/disable the source code generator -->
 	  <AutoGenerateCode>true</AutoGenerateCode>
+	  <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -17,10 +18,14 @@
 		<Compile Remove="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
 		<None Include="$(CompilerGeneratedFilesOutputPath)/**/*.cs" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Generated\" />
+	</ItemGroup>
 	<PropertyGroup Condition="$(AutoGenerateCode) == 'true'">
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<GeneratedFolder>Generated</GeneratedFolder>
-		<CompilerGeneratedFilesOutputPath>$(GeneratedFolder)\$(TargetFramework)</CompilerGeneratedFilesOutputPath>
+		<CompilerGeneratedFilesOutputPath>$(GeneratedFolder)</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
 	
 </Project>

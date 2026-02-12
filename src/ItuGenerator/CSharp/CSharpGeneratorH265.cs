@@ -112,7 +112,7 @@ namespace ItuGenerator.CSharp
                 case "NumOutputLayersInOutputLayerSet":
                     return "((H265Context)context).NumOutputLayersInOutputLayerSet";
                 case "inter_layer_pred_layer_idc":
-                    return " (uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ) ";
+                    return " (uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) ) ";
                 case "ChromaArrayType":
                     return "(((H265Context)context).SeqParameterSetRbsp.SeparateColourPlaneFlag == 0 ? ((H265Context)context).SeqParameterSetRbsp.ChromaFormatIdc : 0)";
                 case "sei_ols_idx":
@@ -518,21 +518,21 @@ namespace ItuGenerator.CSharp
                 case "post_lut_target_value":
                     return "(( ( colour_remap_output_bit_depth + 7 )  >>  3 )  <<  3)";
                 case "output_slice_segment_address":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
                 case "view_id_val":
                     return "view_id_len";
                 case "highest_layer_idx_plus1":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumLayersInTreePartition[ j ] + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumLayersInTreePartition[ j ] + 1 ) )";
                 case "layer_set_idx_for_ols_minus1":
-                    return "(uint)Math.Ceiling( Math.Log2( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
+                    return "(uint)Math.Ceiling( MathEx.Log2( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
                 case "profile_tier_level_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( vps_num_profile_tier_level_minus1 + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( vps_num_profile_tier_level_minus1 + 1 ) )";
                 case "vps_rep_format_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( vps_num_rep_formats_minus1 + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( vps_num_rep_formats_minus1 + 1 ) )";
                 case "direct_dependency_all_layers_type":
                     return "direct_dep_type_len_minus2 + 2";
                 case "bsp_hrd_idx":
-                    return "(uint)Math.Ceiling( Math.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) )";
                 case "lt_ref_pic_poc_lsb_sps":
                     return "(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "res_coeff_r":
@@ -566,11 +566,11 @@ namespace ItuGenerator.CSharp
                 case "max_diff":
                     return "((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
                 case "min_diff_minus1":
-                    return "(uint)Math.Ceiling( Math.Log2( max_diff + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( max_diff + 1 ) )";
                 case "delta_dlt_val0":
                     return "((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
                 case "delta_val_diff_minus_min":
-                    return "(uint)Math.Ceiling( Math.Log2( max_diff - min_diff_minus1 + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( max_diff - min_diff_minus1 + 1 ) )";
                 case "man_gvd_z_near":
                     return "(man_len_gvd_z_near_minus1[ i ] + 1)";
                 case "man_gvd_z_far":
@@ -584,22 +584,22 @@ namespace ItuGenerator.CSharp
                 case "man_gvd_principal_point_y":
                     return "(exp_gvd_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_y[ i ] + prec_gvd_principal_point - 31 ))";
                 case "slice_segment_address":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
                 case "slice_pic_order_cnt_lsb":
                     return "((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4";
                 case "short_term_ref_pic_set_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets ) )";
                 case "lt_idx_sps":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) )";
                 case "poc_lsb_lt":
                     return "( ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "list_entry_l0":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
                 case "list_entry_l1":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
                 case "inter_layer_pred_layer_idc":
                 case "num_inter_layer_ref_pics_minus1":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) )";
                 case "poc_lsb_val":
                     return "((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4";
             }

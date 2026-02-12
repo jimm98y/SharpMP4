@@ -160,7 +160,7 @@ namespace SharpISOBMFF
 
         public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null)
         {
-            if (uuid != null) fourCC = $""{fourCC} {Convert.ToHexString(uuid).ToLowerInvariant()}"";
+            if (uuid != null) fourCC = $""{fourCC} {ConvertEx.ToHexString(uuid).ToLowerInvariant()}"";
 
             switch(fourCC)
             {
@@ -501,7 +501,7 @@ namespace SharpISOBMFF
                 }
                 else if (!string.IsNullOrEmpty(b.Extended.UserType))
                 {
-                    base4ccparams = $"Convert.FromHexString(\"{b.Extended.UserType}\")";
+                    base4ccparams = $"ConvertEx.FromHexString(\"{b.Extended.UserType}\")";
                 }
                 else if (b.Extended != null && !string.IsNullOrEmpty(b.Extended.DescriptorTag))
                 {
@@ -1347,7 +1347,7 @@ namespace SharpISOBMFF
                             .Replace("f(pattern_size_code)", "pattern_size_code")
                             .Replace("f(count_size_code)", "count_size_code")
                             .Replace("f(index_size_code)", "index_size_code")
-                            .Replace("log2(", "Math.Log2(")
+                            .Replace("log2(", "MathEx.Log2(")
                             .Replace("ceil(", "Math.Ceiling(")
                             ;
                         csharpResult = $"stream.ReadBits{arraySuffix}(boxSize, readSize, (uint)({elSizeVar} ), ";
@@ -1486,7 +1486,7 @@ namespace SharpISOBMFF
                             .Replace("f(pattern_size_code)", "pattern_size_code")
                             .Replace("f(count_size_code)", "count_size_code")
                             .Replace("f(index_size_code)", "index_size_code")
-                            .Replace("log2(", "Math.Log2(")
+                            .Replace("log2(", "MathEx.Log2(")
                             .Replace("ceil(", "Math.Ceiling(")
                             ;
                         csharpResult = $"stream.WriteBits{arraySuffix}((uint)({elSizeVar} ), ";
@@ -1565,7 +1565,7 @@ namespace SharpISOBMFF
                         .Replace("f(pattern_size_code)", "pattern_size_code")
                         .Replace("f(count_size_code)", "count_size_code")
                         .Replace("f(index_size_code)", "index_size_code")
-                        .Replace("log2(", "Math.Log2(")
+                        .Replace("log2(", "MathEx.Log2(")
                         .Replace("ceil(", "Math.Ceiling(")
                         ;
                     csharpResult = $"(ulong)({elSizeVar} )";

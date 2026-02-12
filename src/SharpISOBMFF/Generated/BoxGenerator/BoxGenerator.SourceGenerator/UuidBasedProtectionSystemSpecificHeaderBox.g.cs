@@ -25,7 +25,7 @@ public partial class UuidBasedProtectionSystemSpecificHeaderBox : FullBox
 	protected byte[] data; 
 	public byte[] Data { get { return this.data; } set { this.data = value; } }
 
-	public UuidBasedProtectionSystemSpecificHeaderBox(): base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("d08a4f1810f34a82b6c832d8aba183d3"))
+	public UuidBasedProtectionSystemSpecificHeaderBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("d08a4f1810f34a82b6c832d8aba183d3"))
 	{
 	}
 

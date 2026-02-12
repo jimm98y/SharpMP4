@@ -604,11 +604,11 @@ namespace ItuGenerator.CSharp
             switch(parameter)
             {
                 case "sps_subpic_ctu_top_left_x":
-                    return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
                 case "sps_subpic_width_minus1":
                 case "sps_subpic_height_minus1":
                 case "sps_subpic_ctu_top_left_y":
-                    return "(uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
                 case "sps_subpic_id":
                     return "sps_subpic_id_len_minus1 + 1";
                 case "ph_pic_order_cnt_lsb":
@@ -616,7 +616,7 @@ namespace ItuGenerator.CSharp
                 case "ph_poc_msb_cycle_val":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsPocMsbCycleLenMinus1 + 1";
                 case "alf_luma_coeff_delta_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) )";
                 case "ar_object_confidence":
                     return "ar_object_confidence_length_minus1 + 1";
                 case "lmcs_delta_abs_cw":
@@ -691,7 +691,7 @@ namespace ItuGenerator.CSharp
                 case "sn_subpic_id":
                     return "sn_subpic_id_len_minus1 + 1";
                 case "pt_cpb_removal_delay_delta_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) )";
                 case "pt_du_cpb_removal_delay_increment_minus1":
                     return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "dui_du_cpb_removal_delay_increment":
@@ -699,13 +699,13 @@ namespace ItuGenerator.CSharp
                 case "dui_dpb_output_du_delay":
                     return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1 + 1";
                 case "rpl_idx":
-                    return "(uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) )";
                 case "poc_lsb_lt":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
                 case "sh_subpic_id":
                     return "((H266Context)context).SeqParameterSetRbsp.SpsSubpicIdLenMinus1 + 1";
                 case "sh_slice_address":
-                    return "(uint)(((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( Math.Log2 ( ((H266Context)context).NumTilesInPic ) )  :  Math.Ceiling( Math.Log2( ((H266Context)context).NumSlicesInSubpic[ ((H266Context)context).CurrSubpicIdx ] ) ) )";
+                    return "(uint)(((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( MathEx.Log2 ( ((H266Context)context).NumTilesInPic ) )  :  Math.Ceiling( MathEx.Log2( ((H266Context)context).NumSlicesInSubpic[ ((H266Context)context).CurrSubpicIdx ] ) ) )";
                 case "sh_entry_point_offset_minus1":
                     return "sh_entry_offset_len_minus1 + 1";
             }

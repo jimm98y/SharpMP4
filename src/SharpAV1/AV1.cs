@@ -109,7 +109,7 @@ namespace SharpAV1
 
         public static int Clip3(int low, int high, int value)
         {
-            return Math.Clamp(value, low, high);
+            return MathEx.Clamp(value, low, high);
         }
 
         private int GetQIndex(int ignoreDeltaQ, int segmentId)

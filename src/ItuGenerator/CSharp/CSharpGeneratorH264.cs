@@ -360,7 +360,7 @@ namespace ItuGenerator.CSharp
                 case "alpha_transparent_value":
                     return "(this.bit_depth_aux_minus8 + 9)";
                 case "slice_group_id":
-                    return "(uint)Math.Ceiling(Math.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1))";
+                    return "(uint)Math.Ceiling(MathEx.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1))";
                 case "frame_num":
                     return "(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4)";
                 case "depth_disp_delay_offset_fp":

@@ -12,7 +12,7 @@ namespace SharpISOBMFF
 
         public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null)
         {
-            if (uuid != null) fourCC = $"{fourCC} {Convert.ToHexString(uuid).ToLowerInvariant()}";
+            if (uuid != null) fourCC = $"{fourCC} {ConvertEx.ToHexString(uuid).ToLowerInvariant()}";
 
             switch(fourCC)
             {

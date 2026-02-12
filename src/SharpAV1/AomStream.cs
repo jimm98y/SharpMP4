@@ -214,7 +214,7 @@ namespace SharpAV1
 
         public ulong Read_ns(int count, out uint value, string name)
         {
-            int w = (int)Math.Floor(Math.Log2(count)) + 1;
+            int w = (int)Math.Floor(MathEx.Log2(count)) + 1;
             int m = (1 << w) - count;
             ulong size = ReadUnsignedInt(w - 1, out var v, name);
             if (v < m)

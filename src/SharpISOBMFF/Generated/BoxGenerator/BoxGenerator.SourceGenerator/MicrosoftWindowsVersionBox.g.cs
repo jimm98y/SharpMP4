@@ -25,7 +25,7 @@ public partial class MicrosoftWindowsVersionBox : Box
 	protected byte[] version; 
 	public byte[] Version { get { return this.version; } set { this.version = value; } }
 
-	public MicrosoftWindowsVersionBox(): base(IsoStream.FromFourCC("uuid"), Convert.FromHexString("5ca708fb328e4205a861650eca0a9596"))
+	public MicrosoftWindowsVersionBox(): base(IsoStream.FromFourCC("uuid"), ConvertEx.FromHexString("5ca708fb328e4205a861650eca0a9596"))
 	{
 	}
 

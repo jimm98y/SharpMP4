@@ -124,11 +124,11 @@ public partial class MeshBox : Box
 		this.v_index_delta = new byte[IsoStream.GetInt( vertex_count)][];
 		for (int i = 0; i < vertex_count; i++)
 		{
-			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.x_index_delta[i], "x_index_delta"); 
-			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.y_index_delta[i], "y_index_delta"); 
-			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.z_index_delta[i], "z_index_delta"); 
-			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.u_index_delta[i], "u_index_delta"); 
-			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  out this.v_index_delta[i], "v_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  out this.x_index_delta[i], "x_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  out this.y_index_delta[i], "y_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  out this.z_index_delta[i], "z_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  out this.u_index_delta[i], "u_index_delta"); 
+			boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  out this.v_index_delta[i], "v_index_delta"); 
 		}
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.mesh_padding, "mesh_padding"); 
 		boxSize += stream.ReadBit(boxSize, readSize,  out this.reserved1, "reserved1"); 
@@ -150,7 +150,7 @@ public partial class MeshBox : Box
 			this.index_as_delta[i] = new byte[IsoStream.GetInt( index_count[i])][];
 			for (int j = 0; j < index_count[i]; j++)
 			{
-				boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(Math.Log2(vertex_count * 2)) ),  out this.index_as_delta[i][j], "index_as_delta"); 
+				boxSize += stream.ReadBits(boxSize, readSize, (uint)(Math.Ceiling(MathEx.Log2(vertex_count * 2)) ),  out this.index_as_delta[i][j], "index_as_delta"); 
 			}
 			boxSize += stream.ReadBit(boxSize, readSize,  out this.mesh_padding2[i], "mesh_padding2"); 
 		}
@@ -173,11 +173,11 @@ public partial class MeshBox : Box
 
 		for (int i = 0; i < vertex_count; i++)
 		{
-			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.x_index_delta[i], "x_index_delta"); 
-			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.y_index_delta[i], "y_index_delta"); 
-			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.z_index_delta[i], "z_index_delta"); 
-			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.u_index_delta[i], "u_index_delta"); 
-			boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ),  this.v_index_delta[i], "v_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  this.x_index_delta[i], "x_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  this.y_index_delta[i], "y_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  this.z_index_delta[i], "z_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  this.u_index_delta[i], "u_index_delta"); 
+			boxSize += stream.WriteBits((uint)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ),  this.v_index_delta[i], "v_index_delta"); 
 		}
 		boxSize += stream.WriteBit( this.mesh_padding, "mesh_padding"); 
 		boxSize += stream.WriteBit( this.reserved1, "reserved1"); 
@@ -192,7 +192,7 @@ public partial class MeshBox : Box
 
 			for (int j = 0; j < index_count[i]; j++)
 			{
-				boxSize += stream.WriteBits((uint)(Math.Ceiling(Math.Log2(vertex_count * 2)) ),  this.index_as_delta[i][j], "index_as_delta"); 
+				boxSize += stream.WriteBits((uint)(Math.Ceiling(MathEx.Log2(vertex_count * 2)) ),  this.index_as_delta[i][j], "index_as_delta"); 
 			}
 			boxSize += stream.WriteBit( this.mesh_padding2[i], "mesh_padding2"); 
 		}
@@ -215,11 +215,11 @@ public partial class MeshBox : Box
 
 		for (int i = 0; i < vertex_count; i++)
 		{
-			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // x_index_delta
-			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // y_index_delta
-			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // z_index_delta
-			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // u_index_delta
-			boxSize += (ulong)(Math.Ceiling(Math.Log2(coordinate_count * 2)) ); // v_index_delta
+			boxSize += (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ); // x_index_delta
+			boxSize += (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ); // y_index_delta
+			boxSize += (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ); // z_index_delta
+			boxSize += (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ); // u_index_delta
+			boxSize += (ulong)(Math.Ceiling(MathEx.Log2(coordinate_count * 2)) ); // v_index_delta
 		}
 		boxSize += 1; // mesh_padding
 		boxSize += 1; // reserved1
@@ -234,7 +234,7 @@ public partial class MeshBox : Box
 
 			for (int j = 0; j < index_count[i]; j++)
 			{
-				boxSize += (ulong)(Math.Ceiling(Math.Log2(vertex_count * 2)) ); // index_as_delta
+				boxSize += (ulong)(Math.Ceiling(MathEx.Log2(vertex_count * 2)) ); // index_as_delta
 			}
 			boxSize += 1; // mesh_padding2
 		}

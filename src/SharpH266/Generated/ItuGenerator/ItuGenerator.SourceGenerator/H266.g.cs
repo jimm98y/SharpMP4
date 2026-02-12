@@ -1641,24 +1641,24 @@ seq_parameter_set_rbsp() {
 
 						if ( i > 0  &&  sps_pic_width_max_in_luma_samples > ((H266Context)context).CtbSizeY )
 						{
-							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( Math.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), out this.sps_subpic_ctu_top_left_x[ i ], "sps_subpic_ctu_top_left_x"); 
+							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), out this.sps_subpic_ctu_top_left_x[ i ], "sps_subpic_ctu_top_left_x"); 
 						}
 
 						if ( i > 0  &&  sps_pic_height_max_in_luma_samples > ((H266Context)context).CtbSizeY )
 						{
-							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), out this.sps_subpic_ctu_top_left_y[ i ], "sps_subpic_ctu_top_left_y"); 
+							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), out this.sps_subpic_ctu_top_left_y[ i ], "sps_subpic_ctu_top_left_y"); 
 						}
 
 						if ( i < sps_num_subpics_minus1  && 
       sps_pic_width_max_in_luma_samples > ((H266Context)context).CtbSizeY )
 						{
-							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), out this.sps_subpic_width_minus1[ i ], "sps_subpic_width_minus1"); 
+							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), out this.sps_subpic_width_minus1[ i ], "sps_subpic_width_minus1"); 
 						}
 
 						if ( i < sps_num_subpics_minus1  && 
       sps_pic_height_max_in_luma_samples > ((H266Context)context).CtbSizeY )
 						{
-							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), out this.sps_subpic_height_minus1[ i ], "sps_subpic_height_minus1"); 
+							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), out this.sps_subpic_height_minus1[ i ], "sps_subpic_height_minus1"); 
 						}
 					}
 
@@ -2126,24 +2126,24 @@ if (((H266Context)context).num_ref_entries[i] == null)
 
 						if ( i > 0  &&  sps_pic_width_max_in_luma_samples > ((H266Context)context).CtbSizeY )
 						{
-							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( Math.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), this.sps_subpic_ctu_top_left_x[ i ], "sps_subpic_ctu_top_left_x"); 
+							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), this.sps_subpic_ctu_top_left_x[ i ], "sps_subpic_ctu_top_left_x"); 
 						}
 
 						if ( i > 0  &&  sps_pic_height_max_in_luma_samples > ((H266Context)context).CtbSizeY )
 						{
-							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), this.sps_subpic_ctu_top_left_y[ i ], "sps_subpic_ctu_top_left_y"); 
+							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), this.sps_subpic_ctu_top_left_y[ i ], "sps_subpic_ctu_top_left_y"); 
 						}
 
 						if ( i < sps_num_subpics_minus1  && 
       sps_pic_width_max_in_luma_samples > ((H266Context)context).CtbSizeY )
 						{
-							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), this.sps_subpic_width_minus1[ i ], "sps_subpic_width_minus1"); 
+							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), this.sps_subpic_width_minus1[ i ], "sps_subpic_width_minus1"); 
 						}
 
 						if ( i < sps_num_subpics_minus1  && 
       sps_pic_height_max_in_luma_samples > ((H266Context)context).CtbSizeY )
 						{
-							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( Math.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), this.sps_subpic_height_minus1[ i ], "sps_subpic_height_minus1"); 
+							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) ), this.sps_subpic_height_minus1[ i ], "sps_subpic_height_minus1"); 
 						}
 					}
 
@@ -3726,7 +3726,7 @@ slice_header() {
 			if ((((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag != 0 && ((H266Context)context).NumSlicesInSubpic[((H266Context)context).CurrSubpicIdx] > 1) ||
         (((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 && ((H266Context)context).NumTilesInPic > 1))
 			{
-				size += stream.ReadUnsignedIntVariable(size, (uint)(((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( Math.Log2 ( ((H266Context)context).NumTilesInPic ) )  :  Math.Ceiling( Math.Log2( ((H266Context)context).NumSlicesInSubpic[ ((H266Context)context).CurrSubpicIdx ] ) ) ), out this.sh_slice_address, "sh_slice_address"); 
+				size += stream.ReadUnsignedIntVariable(size, (uint)(((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( MathEx.Log2 ( ((H266Context)context).NumTilesInPic ) )  :  Math.Ceiling( MathEx.Log2( ((H266Context)context).NumSlicesInSubpic[ ((H266Context)context).CurrSubpicIdx ] ) ) ), out this.sh_slice_address, "sh_slice_address"); 
 			}
 
 			this.sh_extra_bit = new byte[ ((H266Context)context).NumExtraShBits];
@@ -3989,7 +3989,7 @@ slice_header() {
 			if ((((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag != 0 && ((H266Context)context).NumSlicesInSubpic[((H266Context)context).CurrSubpicIdx] > 1) ||
         (((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 && ((H266Context)context).NumTilesInPic > 1))
 			{
-				size += stream.WriteUnsignedIntVariable((uint)(((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( Math.Log2 ( ((H266Context)context).NumTilesInPic ) )  :  Math.Ceiling( Math.Log2( ((H266Context)context).NumSlicesInSubpic[ ((H266Context)context).CurrSubpicIdx ] ) ) ), this.sh_slice_address, "sh_slice_address"); 
+				size += stream.WriteUnsignedIntVariable((uint)(((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( MathEx.Log2 ( ((H266Context)context).NumTilesInPic ) )  :  Math.Ceiling( MathEx.Log2( ((H266Context)context).NumSlicesInSubpic[ ((H266Context)context).CurrSubpicIdx ] ) ) ), this.sh_slice_address, "sh_slice_address"); 
 			}
 
 			for (i = 0; i < ((H266Context)context).NumExtraShBits; i++)
@@ -5375,7 +5375,7 @@ if (((H266Context)context).num_ref_entries == null)
 					if (((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[i] > 1 &&
                 (i == 0 || (i == 1 && ((H266Context)context).PicParameterSetRbsp.PpsRpl1IdxPresentFlag != 0)))
 					{
-						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) ), out this.rpl_idx[i], "rpl_idx"); 
+						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) ), out this.rpl_idx[i], "rpl_idx"); 
 						((H266Context)context).OnRplIdx(this, i);
 					}
 				}
@@ -5429,7 +5429,7 @@ if (((H266Context)context).num_ref_entries == null)
 					if (((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[i] > 1 &&
                 (i == 0 || (i == 1 && ((H266Context)context).PicParameterSetRbsp.PpsRpl1IdxPresentFlag != 0)))
 					{
-						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) ), this.rpl_idx[i], "rpl_idx"); 
+						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) ), this.rpl_idx[i], "rpl_idx"); 
 						((H266Context)context).OnRplIdx(this, i);
 					}
 				}
@@ -6275,7 +6275,7 @@ alf_cc_cr_filter_signal_flag u(1)
 					this.alf_luma_coeff_delta_idx = new ulong[ ((H266Context)context).NumAlfFilters];
 					for ( filtIdx = 0; filtIdx < ((H266Context)context).NumAlfFilters; filtIdx++ )
 					{
-						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( Math.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) ), out this.alf_luma_coeff_delta_idx[ filtIdx ], "alf_luma_coeff_delta_idx"); 
+						size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) ), out this.alf_luma_coeff_delta_idx[ filtIdx ], "alf_luma_coeff_delta_idx"); 
 					}
 				}
 
@@ -6426,7 +6426,7 @@ alf_cc_cr_filter_signal_flag u(1)
 
 					for ( filtIdx = 0; filtIdx < ((H266Context)context).NumAlfFilters; filtIdx++ )
 					{
-						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( Math.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) ), this.alf_luma_coeff_delta_idx[ filtIdx ], "alf_luma_coeff_delta_idx"); 
+						size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) ), this.alf_luma_coeff_delta_idx[ filtIdx ], "alf_luma_coeff_delta_idx"); 
 					}
 				}
 
@@ -12795,7 +12795,7 @@ this.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.Buffering
 
 						if ( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 > 0 )
 						{
-							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) ), out this.pt_cpb_removal_delay_delta_idx[ i ], "pt_cpb_removal_delay_delta_idx"); 
+							size += stream.ReadUnsignedIntVariable(size, (uint)Math.Ceiling( MathEx.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) ), out this.pt_cpb_removal_delay_delta_idx[ i ], "pt_cpb_removal_delay_delta_idx"); 
 						}
 					}
 					else 
@@ -12950,7 +12950,7 @@ if(this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = 
 
 						if ( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 > 0 )
 						{
-							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( Math.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) ), this.pt_cpb_removal_delay_delta_idx[ i ], "pt_cpb_removal_delay_delta_idx"); 
+							size += stream.WriteUnsignedIntVariable((uint)Math.Ceiling( MathEx.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) ), this.pt_cpb_removal_delay_delta_idx[ i ], "pt_cpb_removal_delay_delta_idx"); 
 						}
 					}
 					else 
