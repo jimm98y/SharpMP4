@@ -4,11 +4,6 @@ using System.IO;
 
 namespace SharpISOBMFF
 {
-    public static class TemporaryStorage
-    {
-        public static ITemporaryStorageFactory Factory { get; set; } = new TemporaryFileStorageFactory();
-    }
-
     public interface ITemporaryStorageFactory
     {
         IStorage Create(IMp4Logger logger = null);
@@ -140,7 +135,7 @@ namespace SharpISOBMFF
         public TemporaryFile(IMp4Logger logger = null)
         {
             // NOTE: Make sure to only log if the user actually passed a valid logger
-            logger?.LogInfo($"{nameof(TemporaryStorage)}: Using {nameof(TemporaryFile)}");
+            logger?.LogInfo($"Temporary Storage: Using {nameof(TemporaryFile)}");
             
             _stream = File.Create(Path.GetRandomFileName(), 1024, FileOptions.DeleteOnClose);
 

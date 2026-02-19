@@ -25,7 +25,7 @@ namespace SharpISOBMFF
         public IsoStream(IStorage stream, ITemporaryStorageFactory storageFactory = null, IMp4Logger logger = null)
         {
             _stream = stream;
-            _storageFactory = storageFactory ?? TemporaryStorage.Factory;
+            _storageFactory = storageFactory ?? new TemporaryFileStorageFactory();
 
             this.Logger = logger ?? new DefaultMp4Logger();
         }
@@ -46,7 +46,7 @@ namespace SharpISOBMFF
         private IsoStream GetOrCreateTemporaryStorage()
         {
             if (_temp == null)
-                _temp = new IsoStream(_storageFactory.Create());
+                _temp = new IsoStream(_storageFactory.Create(Logger));
             return _temp;
         }
 
