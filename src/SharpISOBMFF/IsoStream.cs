@@ -24,6 +24,13 @@ namespace SharpISOBMFF
             _storageFactory = storageFactory ?? TemporaryStorage.Factory;
         }
 
+        // In case users would like to change it later, for example to use memory storage instead of file storage
+        public ITemporaryStorageFactory TemporaryStorageFactory
+        {
+            get => _storageFactory;
+            set => _storageFactory = value;
+        }
+
         private IsoStream GetOrCreateTemporaryStorage()
         {
             if (_temp == null)
