@@ -23,7 +23,7 @@ namespace SharpMP4Common
     /// </summary>
     public sealed class NullMp4Logger : IMp4Logger
     {
-        public static readonly NullMp4Logger Instance = new();
+        public static readonly NullMp4Logger Instance = new NullMp4Logger();
         
         private NullMp4Logger() { }
         public void LogError(string error) { }
@@ -44,7 +44,7 @@ namespace SharpMP4Common
     /// </summary>
     public sealed class ConsoleMp4Logger : IMp4Logger
     {
-        public static readonly ConsoleMp4Logger Instance = new();
+        public static readonly ConsoleMp4Logger Instance = new ConsoleMp4Logger();
 
         public void LogError(string error) => Console.Error.WriteLine($"ERROR: {error}");
         public void LogWarning(string warning) => Console.WriteLine($"WARNING: {warning}");

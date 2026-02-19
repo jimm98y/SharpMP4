@@ -7,4 +7,8 @@
 		<LangVersion>latest</LangVersion>
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\SharpMP4Common\SharpMP4Common.csproj" />
+	</ItemGroup>
+
 </Project>
