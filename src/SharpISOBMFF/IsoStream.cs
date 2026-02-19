@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpMP4Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -15,13 +16,17 @@ namespace SharpISOBMFF
         private ITemporaryStorageFactory _storageFactory;
         private IsoStream _temp;
 
+        public IMp4Logger Logger { get; set; }
+
         public IsoStream(Stream stream, ITemporaryStorageFactory storageFactory = null) : this(new StreamWrapper(stream), storageFactory)
         { }
 
-        public IsoStream(IStorage stream, ITemporaryStorageFactory storageFactory = null)
+        public IsoStream(IStorage stream, ITemporaryStorageFactory storageFactory = null, IMp4Logger logger = null)
         {
             _stream = stream;
             _storageFactory = storageFactory ?? TemporaryStorage.Factory;
+
+            this.Logger = logger ?? new DefaultMp4Logger();
         }
 
         // In case users would like to change it later, for example to use memory storage instead of file storage
@@ -795,12 +800,12 @@ namespace SharpISOBMFF
             return sb.ToString();
         }
 
-        private static Box DefaultBoxFactory(IMp4Serializable parent, SafeBoxHeader header)
+        private Box DefaultBoxFactory(IMp4Serializable parent, SafeBoxHeader header)
         {
             string parentFourCC = "";
             if (parent != null)
                 parentFourCC = ToFourCC(((Box)parent).FourCC);
-            return BoxFactory.CreateBox(ToFourCC(header.Type), parentFourCC, header.Usertype);
+            return BoxFactory.CreateBox(ToFourCC(header.Type), parentFourCC, header.Usertype, this.Logger);
         }
 
         public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value, string name) where T : Box
@@ -1139,7 +1144,7 @@ namespace SharpISOBMFF
             ulong sizeOfSize = ReadDescriptorSize(out int sizeOfInstance);
             size += sizeOfSize;
             long sizeOfInstanceBits = (long)sizeOfInstance << 3;
-            descriptor = (T)BoxFactory.CreateDescriptor(tag);
+            descriptor = (T)BoxFactory.CreateDescriptor(tag, this.Logger);
             descriptor.SizeOfSize = sizeOfSize;
             descriptor.SetParent(parent);
 

@@ -8,6 +8,11 @@ namespace BoxGenerator.CSharp
 {
     public class CSharpGenerator : ICodeGenerator
     {
+        /// <summary>
+        /// Where common types such as IMp4Logger are located
+        /// </summary>
+        private const string CommonLibrary = "SharpMP4Common";
+
         private ParserDocument parserDocument;
 
         public CSharpGenerator(ParserDocument parserDocument)
@@ -142,23 +147,24 @@ namespace BoxGenerator.CSharp
         public Dictionary<string, string> GenerateParser()
         {
             Dictionary<string, string> ret = new Dictionary<string, string>();
-            string namespaceHeader  = @"using System;
+            string namespaceHeader  = $@"using System;
 using System.Linq;
 using System.Collections.Generic;
+using {CommonLibrary};
 
 namespace SharpISOBMFF
-{
+{{
 ";
             // build box factory
             string factory = namespaceHeader;
-            factory += 
+            factory +=
     @"    public class BoxFactory
     {
-        public static Func<string, string, byte[], Box> CreateBox = DefaultCreateBox;
-        public static Func<string, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
-        public static Func<byte, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
+        public static Func<string, string, byte[], IMp4Logger, Box> CreateBox = DefaultCreateBox;
+        public static Func<string, IMp4Logger, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
+        public static Func<byte, IMp4Logger, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
 
-        public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null)
+        public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null, IMp4Logger logger = null)
         {
             if (uuid != null) fourCC = $""{fourCC} {ConvertEx.ToHexString(uuid).ToLowerInvariant()}"";
 
@@ -250,19 +256,21 @@ namespace SharpISOBMFF
             }
             else if(uuid != null)
             {
-                Log.Debug($""Unknown 'uuid' box: '{fourCC}'"");
+                if (logger != null)
+                    logger.LogDebug($""Unknown 'uuid' box: '{fourCC}'"");
                 return new UserBox(uuid);
             }
 
             //throw new NotImplementedException(fourCC);
-            Log.Debug($""Unknown box: '{fourCC}'"");
+            if (logger != null)
+                    logger.LogDebug($""Unknown box: '{fourCC}'"");
             return new UnknownBox(IsoStream.FromFourCC(fourCC));
         }
 ";
 
 
             factory += @"
-        public static SampleGroupDescriptionEntry DefaultCreateEntry(string fourCC)
+        public static SampleGroupDescriptionEntry DefaultCreateEntry(string fourCC, IMp4Logger logger = null)
         {
             switch(fourCC)
             {
@@ -309,13 +317,14 @@ namespace SharpISOBMFF
 @"            }
 
             //throw new NotImplementedException(fourCC);
-            Log.Debug($""Unknown entry: '{fourCC}'"");
+            if (logger != null)
+                logger.LogDebug($""Unknown entry: '{fourCC}'"");
             return new UnknownEntry(IsoStream.FromFourCC(fourCC));
         }
 ";
 
             factory += @"
-        public static Descriptor DefaultCreateDescriptor(byte tag)
+        public static Descriptor DefaultCreateDescriptor(byte tag, IMp4Logger logger = null)
         {
             switch (tag)
             {
@@ -340,7 +349,8 @@ namespace SharpISOBMFF
     @"          }
 
             //throw new NotImplementedException($""Unknown descriptor: 'tag'"");
-            Log.Debug($""Unknown descriptor: '{tag}'"");
+            if (logger != null)
+                logger.LogDebug($""Unknown descriptor: '{tag}'"");
             return new UnknownDescriptor(tag);";
 
             factory += @"
