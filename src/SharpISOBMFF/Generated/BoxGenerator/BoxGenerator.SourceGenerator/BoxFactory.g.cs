@@ -7,9 +7,13 @@ namespace SharpISOBMFF
 {
     public class BoxFactory
     {
-        public static Func<string, string, byte[], IMp4Logger, Box> CreateBox = DefaultCreateBox;
-        public static Func<string, IMp4Logger, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
-        public static Func<byte, IMp4Logger, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
+        public static Func<string, string, byte[], IMp4Logger, Box> GlobalCreateBox = DefaultCreateBox;
+        public static Func<string, IMp4Logger, SampleGroupDescriptionEntry> GlobalCreateEntry = DefaultCreateEntry;
+        public static Func<byte, IMp4Logger, Descriptor> GlobalCreateDescriptor = DefaultCreateDescriptor;
+
+        public Func<string, string, byte[], IMp4Logger, Box> CreateBox = GlobalCreateBox;
+        public Func<string, IMp4Logger, SampleGroupDescriptionEntry> CreateEntry = GlobalCreateEntry;
+        public Func<byte, IMp4Logger, Descriptor> CreateDescriptor = GlobalCreateDescriptor;
 
         public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null, IMp4Logger logger = null)
         {

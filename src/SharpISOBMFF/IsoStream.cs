@@ -15,6 +15,7 @@ namespace SharpISOBMFF
         private bool _disposedValue;
         private ITemporaryStorageFactory _storageFactory;
         private IsoStream _temp;
+        private BoxFactory _boxFactory = new();
 
         public IMp4Logger Logger { get; set; }
 
@@ -34,6 +35,12 @@ namespace SharpISOBMFF
         {
             get => _storageFactory;
             set => _storageFactory = value;
+        }
+
+        public BoxFactory BoxFactory
+        {
+            get => _boxFactory;
+            set => _boxFactory = value;
         }
 
         private IsoStream GetOrCreateTemporaryStorage()

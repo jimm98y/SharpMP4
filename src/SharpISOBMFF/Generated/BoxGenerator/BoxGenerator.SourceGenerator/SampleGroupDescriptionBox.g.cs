@@ -85,7 +85,7 @@ public partial class SampleGroupDescriptionBox : FullBox
 					boxSize += stream.ReadUInt32(boxSize, readSize,  out this.description_length[i], "description_length"); 
 				}
 			}
-			boxSize += stream.ReadClass(boxSize, readSize, this, () => BoxFactory.CreateEntry(IsoStream.ToFourCC(grouping_type), stream.Logger),  out this.SampleGroupDescriptionEntry[i], "SampleGroupDescriptionEntry"); // an instance of a class derived from SampleGroupDescriptionEntry
+			boxSize += stream.ReadClass(boxSize, readSize, this, () => stream.BoxFactory.CreateEntry(IsoStream.ToFourCC(grouping_type), stream.Logger),  out this.SampleGroupDescriptionEntry[i], "SampleGroupDescriptionEntry"); // an instance of a class derived from SampleGroupDescriptionEntry
 			/*   that is appropriate and permitted for the media type */
 		}
 		return boxSize;
