@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpMP4Common;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -14,9 +15,17 @@ namespace SharpAV1
 
         private bool _disposedValue;
 
-        public AomStream(Stream stream)
+        public IMp4Logger Logger { get; set; }
+
+        public AomStream(Stream stream, IMp4Logger logger)
         {
             this._stream = stream ?? new MemoryStream();
+            this.Logger = logger ?? new DefaultMp4Logger();
+        }
+
+        public AomStream(Stream stream)
+            : this(stream, null)
+        {
         }
 
         public int GetPosition()
@@ -238,7 +247,7 @@ namespace SharpAV1
                 padding += "-";
             }
 
-            Log.Info($"{padding} {name}");
+            this.Logger.LogInfo($"{padding} {name}");
         }
 
         private void LogEnd<T>(string name, ulong size, T value)
@@ -255,7 +264,7 @@ namespace SharpAV1
                 endPadding += " ";
             }
 
-            Log.Info($"{padding} {name}{endPadding}{size}   {value}");
+            this.Logger.LogInfo($"{padding} {name}{endPadding}{size}   {value}");
         }
 
         #region IDisposable implementation
