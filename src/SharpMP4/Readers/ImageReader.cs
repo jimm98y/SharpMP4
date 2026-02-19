@@ -1,5 +1,6 @@
 ﻿using SharpISOBMFF;
 using SharpMP4.Tracks;
+using SharpMP4Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,19 @@ namespace SharpMP4.Readers
         public ItemLocationBox Iloc { get; private set; }
         public ImageSpatialExtentsProperty Ispe { get; private set; }
         public int ImageIndex { get; private set; }
+
+        public TrackFactory TrackFactory { get; set; } = new();
+        public IMp4Logger Logger { get; set; }
+
+        public ImageReader(IMp4Logger logger)
+        {
+            Logger = logger ?? new DefaultMp4Logger();
+        }
+
+        public ImageReader()
+            : this(new DefaultMp4Logger())
+        {
+        }
 
         public void Parse(Container container)
         {
@@ -64,7 +78,7 @@ namespace SharpMP4.Readers
             {
                 try
                 {
-                    this.Track = TrackFactory.CreateTrack(0, box, 0, 0, IsoStream.FromFourCC(HandlerTypes.Video), HandlerNames.Video);
+                    this.Track = TrackFactory.CreateTrack(0, box, 0, 0, IsoStream.FromFourCC(HandlerTypes.Video), HandlerNames.Video, Logger);
                     break;
                 }
                 catch (NotSupportedException)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpMP4Common;
+using System;
 using System.IO;
 
 namespace SharpMP4.Builders
@@ -18,6 +19,11 @@ namespace SharpMP4.Builders
         /// <param name="output">Stream returned by <see cref="GetStream(uint)"/>.</param>
         /// <param name="sequenceNumber">Sequence number. 0 = initialization that contains the MOOV. 1 and onwards = MOOF fragment.</param>
         void Flush(Stream output, uint sequenceNumber);
+        
+        /// <summary>
+        /// The logger used by the implementation of this interface.
+        /// </summary>
+        IMp4Logger Logger { get; set; }
     }
 
     /// <summary>
@@ -27,10 +33,17 @@ namespace SharpMP4.Builders
     {
         private readonly Stream _output;
 
-        public SingleStreamOutput(Stream output)
+        public IMp4Logger Logger { get; set; }
+
+        public SingleStreamOutput(Stream output, IMp4Logger logger)
         {
             // var output = File.Open("test.mp4", FileMode.Create, FileAccess.Write, FileShare.Read); // record and allow simultaneous playback
             _output = output ?? throw new ArgumentNullException(nameof(output));
+            Logger = logger;
+        }
+
+        public SingleStreamOutput(Stream output) : this(output, new DefaultMp4Logger())
+        {
         }
 
         public Stream GetStream(uint sequenceNumber)
@@ -54,11 +67,20 @@ namespace SharpMP4.Builders
         private readonly string _fileName;
         private readonly string _fileExtension;
 
-        public MultiStreamFileOutput(string path, string fileName, string fileExtension = "mp4")
+        public IMp4Logger Logger { get; set; }
+
+        public MultiStreamFileOutput(string path, string fileName, IMp4Logger logger, string fileExtension = "mp4")
         {
             _path = path ?? throw new ArgumentNullException(nameof(path));
             _fileName = fileName ?? throw new ArgumentNullException(nameof(fileName));
             _fileExtension = fileExtension ?? throw new ArgumentNullException(nameof(fileExtension));
+
+            this.Logger = logger;
+        }
+
+        public MultiStreamFileOutput(string path, string fileName, string fileExtension = "mp4")
+            : this(path, fileName, new DefaultMp4Logger(), fileExtension)
+        {
         }
 
         public Stream GetStream(uint sequenceNumber)
@@ -76,7 +98,11 @@ namespace SharpMP4.Builders
             }
             catch (Exception ex)
             {
-                if (Log.ErrorEnabled) Log.Error($"{nameof(IMp4Output)}: Failed to create file: {ex.Message}");
+                if (this.Logger.IsErrorEnabled)
+                {
+                    this.Logger.LogError($"{nameof(IMp4Output)}: Failed to create file: {ex.Message}");
+                }
+
                 throw;
             }
         }
@@ -109,6 +135,18 @@ namespace SharpMP4.Builders
         private uint _currentSequenceNumber = 0;
         private Stream _currentOutputStream = null;
         private bool _disposedValue;
+
+        public IMp4Logger Logger { get; set; }
+
+        public FragmentedBlobOutput(IMp4Logger logger)
+        {
+            Logger = logger;
+        }
+
+        public FragmentedBlobOutput()
+            : this(new DefaultMp4Logger())
+        {
+        }
 
         public Stream GetStream(uint sequenceNumber)
         {

@@ -1,4 +1,5 @@
 ﻿using SharpISOBMFF;
+using SharpMP4Common;
 using System.Collections.Generic;
 
 namespace SharpMP4.Tracks
@@ -30,5 +31,7 @@ namespace SharpMP4.Tracks
         void ProcessSample(byte[] sample, out byte[] output, out bool isRandomAccessPoint);
 
         ITrack Clone();
+
+        IMp4Logger Logger { get; set; }
     }
 }

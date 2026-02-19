@@ -1,5 +1,6 @@
 ﻿using SharpISOBMFF;
 using SharpMP4.Tracks;
+using SharpMP4Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,21 @@ namespace SharpMP4.Readers
         public MovieExtendsBox Mvex { get; set; }
         public MediaDataBox Mdat { get; set; }
         public Dictionary<uint, TrackContext> Tracks { get; set; } = new Dictionary<uint, TrackContext>();
+        public TrackFactory TrackFactory { get; set; } = new();
 
+        public IMp4Logger Logger { get; set; }
 
         public bool IsQuickTime { get; set; } = false;
         public bool IsFragmented { get; set; } = false;
+
+        public VideoReader(IMp4Logger logger)
+        {
+            this.Logger = logger ?? new DefaultMp4Logger();
+        }
+
+        public VideoReader() : this(new DefaultMp4Logger())
+        {
+        }
 
         public IEnumerable<ITrack> GetTracks()
         {
@@ -88,11 +100,13 @@ namespace SharpMP4.Readers
                         ITrack trackImpl = null;
                         try
                         {
-                            trackImpl = TrackFactory.CreateTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
+                            trackImpl = TrackFactory.CreateTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName, Logger);
                         }
                         catch (NotSupportedException ex)
                         {
-                            if(Log.ErrorEnabled) Log.Error($"Unsupported track type: {hdlr.HandlerType} ({hdlr.DisplayName}) for track ID {trackID}. Exception: {ex.Message}");
+                            if (Logger.IsErrorEnabled)
+                                Logger.LogError($"Unsupported track type: {hdlr.HandlerType} ({hdlr.DisplayName}) for track ID {trackID}. Exception: {ex.Message}");
+                            
                             trackImpl = TrackFactory.CreateGenericTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
                         }
                         this.Tracks[trackID].Track = trackImpl;
@@ -276,7 +290,7 @@ namespace SharpMP4.Readers
                         }
                         else
                         {
-                            Log.Error($"Fragmented MP4 with empty MDAT box");
+                            this.Logger.LogError("Fragmented MP4 with empty MDAT box");
                         }
                         break;
                     }

@@ -83,7 +83,7 @@ namespace SharpMP4.Tracks
                 int obuType = (obuHeader & 0x78) >> 3;
                 if (obuType != AV1ObuTypes.OBU_SEQUENCE_HEADER)
                 {
-                    if (Log.ErrorEnabled) Log.Error($"OBU Sequence Header missing, dropping sample");
+                    if (this.Logger.IsErrorEnabled) this.Logger.LogError("OBU Sequence Header missing, dropping sample");
                     return;
                 }
             }
@@ -94,7 +94,7 @@ namespace SharpMP4.Tracks
                 int len = sample.Length;
                 do
                 {
-                    if (Log.DebugEnabled) Log.Debug($"---OBU begin {len}---");
+                    if (this.Logger.IsDebugEnabled) this.Logger.LogDebug($"---OBU begin {len}---");
 
                     _context.Read(stream, len);
 
@@ -112,7 +112,7 @@ namespace SharpMP4.Tracks
 
                     if (_context._ObuType == AV1ObuTypes.OBU_SEQUENCE_HEADER)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Sequence Header");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug($"OBU Sequence Header");
 
                         if (SequenceHeaderObuRaw == null)
                         {
@@ -147,7 +147,7 @@ namespace SharpMP4.Tracks
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Temporal Delimiter");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Temporal Delimiter");
 
                         if (_obuBuffer.Count > 0)
                         {
@@ -164,7 +164,7 @@ namespace SharpMP4.Tracks
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Frame Header");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Frame Header");
 
                         _context.LastObuFrameHeader = sample.Skip(1 /* obu header */ + (_context._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (_context.ObuSizeLen >> 3)).Take(_context._ObuSize).ToArray();
 
@@ -183,19 +183,19 @@ namespace SharpMP4.Tracks
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Tile Group");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Tile Group");
 
                         _obuBuffer.Add(sample);
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_METADATA)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Metadata");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Metadata");
 
                         _obuBuffer.Add(sample);
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_FRAME)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Frame");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Frame");
 
                         _obuBuffer.Add(sample);
 
@@ -225,7 +225,7 @@ namespace SharpMP4.Tracks
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Redundant Frame Header");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Redundant Frame Header");
 
                         _obuBuffer.Add(sample);
 
@@ -242,13 +242,13 @@ namespace SharpMP4.Tracks
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_TILE_LIST)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Tile List");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Tile List");
 
                         _obuBuffer.Add(sample);
                     }
                     else if (_context._ObuType == AV1ObuTypes.OBU_PADDING)
                     {
-                        if (Log.DebugEnabled) Log.Debug($"OBU Padding");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Padding");
 
                         _obuBuffer.Add(sample);
                     }
@@ -262,22 +262,22 @@ namespace SharpMP4.Tracks
                         )
                     {
                         // reserved
-                        if (Log.DebugEnabled) Log.Debug($"OBU Reserved");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("OBU Reserved");
 
                         _obuBuffer.Add(sample);
                     }
                     else
                     {
                         // invalid
-                        if (Log.DebugEnabled) Log.Debug($"Invalid OBU!!!");
+                        if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("Invalid OBU!!!");
                     }
 
-                    if (Log.DebugEnabled) Log.Debug($"---OBU end {obuTotalSize}---");
+                    if (this.Logger.IsDebugEnabled) this.Logger.LogDebug($"---OBU end {obuTotalSize}---");
                 } while (len > 0);
 
                 if (ms.Position != ms.Length)
                 {
-                    if (Log.DebugEnabled) Log.Debug($"---OBU error---");
+                    if (this.Logger.IsDebugEnabled) this.Logger.LogDebug("---OBU error---");
                 }
             }
         }
