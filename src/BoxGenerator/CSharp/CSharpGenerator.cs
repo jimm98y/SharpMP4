@@ -1223,7 +1223,7 @@ namespace SharpISOBMFF
                 string factory;
                 if (info.Type == "SampleGroupDescriptionEntry") // info.IsEntry? 
                 {
-                    factory = $"() => BoxFactory.CreateEntry(IsoStream.ToFourCC({parameter}))";
+                    factory = $"() => BoxFactory.CreateEntry(IsoStream.ToFourCC({parameter}), stream.Logger)";
                 }
                 else
                 {
