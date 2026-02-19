@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpMP4Common;
+using System;
 using System.IO;
 
 namespace SharpISOBMFF
@@ -10,14 +11,14 @@ namespace SharpISOBMFF
 
     public interface ITemporaryStorageFactory
     {
-        IStorage Create();
+        IStorage Create(IMp4Logger logger = null);
     }
 
     public class TemporaryMemoryStorageFactory : ITemporaryStorageFactory
     {
-        public IStorage Create()
+        public IStorage Create(IMp4Logger logger = null)
         {
-            return new TemporaryMemory();
+            return new TemporaryMemory(logger);
         }
     }
 
@@ -29,9 +30,13 @@ namespace SharpISOBMFF
 
         private bool disposedValue;
 
-        public TemporaryMemory()
+        public IMp4Logger Logger { get; set; }
+
+        public TemporaryMemory(IMp4Logger logger = null)
         {
             _stream = new MemoryStream();
+
+            Logger = logger ?? new DefaultMp4Logger();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -116,9 +121,9 @@ namespace SharpISOBMFF
 
     public class TemporaryFileStorageFactory : ITemporaryStorageFactory
     {
-        public IStorage Create()
+        public IStorage Create(IMp4Logger logger = null)
         {
-            return new TemporaryFile();
+            return new TemporaryFile(logger);
         }
     }
 
@@ -130,10 +135,16 @@ namespace SharpISOBMFF
 
         private bool _disposedValue;
 
-        public TemporaryFile()
+        public IMp4Logger Logger { get; set; }
+
+        public TemporaryFile(IMp4Logger logger = null)
         {
-            if (Log.InfoEnabled) Log.Info($"{nameof(TemporaryStorage)}: Using {nameof(TemporaryFile)}");
+            // NOTE: Make sure to only log if the user actually passed a valid logger
+            logger?.LogInfo($"{nameof(TemporaryStorage)}: Using {nameof(TemporaryFile)}");
+            
             _stream = File.Create(Path.GetRandomFileName(), 1024, FileOptions.DeleteOnClose);
+
+            Logger = logger ?? new DefaultMp4Logger();
         }
 
         protected virtual void Dispose(bool disposing)
