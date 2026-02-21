@@ -43,6 +43,14 @@ namespace SharpMP4.Builders
             _output = output;
         }
 
+        public IStorage Storage
+        {
+            get => _storage;
+            set => _storage = value;
+        }
+
+        public ITemporaryStorageFactory TemporaryStorageFactory { get; set; } = new TemporaryFileStorageFactory();
+
         /// <summary>
         /// Add a track to the MP4.
         /// </summary>
@@ -66,7 +74,7 @@ namespace SharpMP4.Builders
         {
             if (_storage == null)
             {
-                _storage = TemporaryStorage.Factory.Create();
+                _storage = this.TemporaryStorageFactory.Create();
             }
 
             uint currentSampleDuration = sampleDuration <= 0 ? (uint)_trackContexts[trackID].Track.DefaultSampleDuration : (uint)sampleDuration;

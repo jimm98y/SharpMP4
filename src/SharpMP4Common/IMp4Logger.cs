@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpMP4Common
+namespace SharpMP4.Common
 {
     public interface IMp4Logger
     {

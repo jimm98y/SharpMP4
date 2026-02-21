@@ -11,7 +11,7 @@ namespace BoxGenerator.CSharp
         /// <summary>
         /// Where common types such as IMp4Logger are located
         /// </summary>
-        private const string CommonLibrary = "SharpMP4Common";
+        private const string CommonLibrary = "SharpMP4.Common";
 
         private ParserDocument parserDocument;
 
