@@ -78,16 +78,13 @@ outputBuilder.FinalizeMedia();
 ```
 ## Extensibility
 ### Logging
-There is a `Log` class where you can supply your own delegates for all the actions like:
+There is an `IMp4Logger` interface exposed on the `Mp4Builder`, `FragmentedMp4Builder`, `VideoReader` and `ImageReader` instances where you can supply your own logger implementation, or use an existing one:
 ```cs
-Log.SinkWarn = (message, exception) => 
-{
-    ...
-};
+mp4Builder.Logger = new ConsoleMp4Logger();
 ```
 You can also enable/disable different trace levels like:
 ```cs
-Log.WarnEnabled = false;
+mp4Builder.Logger.WarnEnabled = false;
 ```
 
 ## Credits
