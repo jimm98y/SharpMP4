@@ -1,4 +1,5 @@
-﻿using SharpAV1;
+﻿using SampleVideoParser;
+using SharpAV1;
 using SharpH264;
 using SharpH265;
 using SharpH266;
@@ -14,31 +15,14 @@ using System.Text;
 // .\ffmpeg.exe -i "002.mp4" -c:v copy -bsf:v trace_headers -f null - > log.txt 2>&1
 
 var logger = new FileLogger("debug.txt");
-
-//Log.SinkDebug = (o, e) => { Console.WriteLine(o); };
-SharpISOBMFF.Log.SinkInfo = (o, e) => 
-{ 
-    Console.WriteLine($"{DateTime.UtcNow} {o}");
-};
-SharpISOBMFF.Log.SinkError = (o, e) => 
-{ 
-    Debug.WriteLine(o);
-};
-
-SharpISOBMFF.Log.SinkDebug = (o, e) =>
-{
-    Debug.WriteLine(o);
-};
-SharpH26X.Log.SinkInfo = (o, e) =>
-{
-    Debug.WriteLine(o);
-};
+var isobmffLogger = new IsoBmffLogger();
+var h26xLogger = new H26XLogger();
 
 var files = new string[] { "bunny.mp4" };
 
 foreach (var file in files)
 {
-    SharpISOBMFF.Log.Info(file);
+    isobmffLogger.LogInfo(file);
 
     try
     {
@@ -51,7 +35,7 @@ foreach (var file in files)
             }
             catch (IsoEndOfStreamException)
             {
-                SharpISOBMFF.Log.Error($"Invalid file: {file}");
+                isobmffLogger.LogError($"Invalid file: {file}");
                 continue;
             }
 
@@ -163,7 +147,7 @@ foreach (var file in files)
                     }
                     catch (Exception ex)
                     {
-                        SharpISOBMFF.Log.Error($"---Error (1) reading {file}, exception: {ex.Message}");
+                        isobmffLogger.LogError($"---Error (1) reading {file}, exception: {ex.Message}");
                         logger.Flush();
                         throw;
                     }
@@ -177,7 +161,7 @@ foreach (var file in files)
                     }
                     catch (Exception ex)
                     {
-                        SharpISOBMFF.Log.Error($"---Error (2) reading {file}, exception: {ex.Message}");
+                        isobmffLogger.LogError($"---Error (2) reading {file}, exception: {ex.Message}");
                         logger.Flush();
                         throw;
                     }
@@ -200,7 +184,7 @@ foreach (var file in files)
                         }
                         catch (Exception ex)
                         {
-                            SharpISOBMFF.Log.Error($"---Error (3) reading {file}, exception: {ex.Message}");
+                            isobmffLogger.LogError($"---Error (3) reading {file}, exception: {ex.Message}");
                             logger.Flush();
                             throw;
                         }
@@ -221,7 +205,7 @@ foreach (var file in files)
                             }
                             catch (Exception ex)
                             {
-                                SharpISOBMFF.Log.Error($"---Error (13) reading {file}, exception: {ex.Message}");
+                                isobmffLogger.LogError($"---Error (13) reading {file}, exception: {ex.Message}");
                                 logger.Flush();
                                 throw;
                             }
@@ -246,7 +230,7 @@ foreach (var file in files)
                         }
                         catch (Exception ex)
                         {
-                            SharpISOBMFF.Log.Error($"---Error (4) reading {file}, exception: {ex.Message}");
+                            isobmffLogger.LogError($"---Error (4) reading {file}, exception: {ex.Message}");
                             logger.Flush();
                             throw;
                         }
@@ -266,7 +250,7 @@ foreach (var file in files)
             else
             {
                 //throw new NotSupportedException();
-                SharpISOBMFF.Log.Error($"{file}");
+                isobmffLogger.LogError($"{file}");
                 continue;
             }
 
@@ -328,7 +312,7 @@ foreach (var file in files)
                                     audio_dts = (long)tfdt.BaseMediaDecodeTime;
                             }
 
-                            if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"--TRUN: {(isVideo ? "video" : "audio")}");
+                            if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"--TRUN: {(isVideo ? "video" : "audio")}");
 
                             var firstSampleFlags = trun.FirstSampleFlags;
                             if ((trun.Flags & 0x4) != 0x4)
@@ -384,7 +368,7 @@ foreach (var file in files)
                                     }
                                     catch (Exception ex)
                                     {
-                                        SharpISOBMFF.Log.Error($"---Error (5) reading {file}, exception: {ex.Message}");
+                                        isobmffLogger.LogError($"---Error (5) reading {file}, exception: {ex.Message}");
                                         logger.Flush();
                                         throw;
                                     }
@@ -479,7 +463,7 @@ foreach (var file in files)
                                 }
                                 catch (Exception ex)
                                 {
-                                    SharpISOBMFF.Log.Error($"---Error (6) reading {file}, exception: {ex.Message}");
+                                    isobmffLogger.LogError($"---Error (6) reading {file}, exception: {ex.Message}");
                                     logger.Flush();
                                     throw;
                                 }
@@ -517,7 +501,7 @@ foreach (var file in files)
                             }
                             catch (Exception ex)
                             {
-                                SharpISOBMFF.Log.Error($"---Error (7) reading {file}, exception: {ex.Message}");
+                                isobmffLogger.LogError($"---Error (7) reading {file}, exception: {ex.Message}");
                                 logger.Flush();
                                 throw;
                             }
@@ -529,7 +513,7 @@ foreach (var file in files)
     }
     catch(Exception ex)
     {
-        SharpISOBMFF.Log.Error($"---Error (8) reading {file}, exception: {ex.Message}");
+        isobmffLogger.LogError($"---Error (8) reading {file}, exception: {ex.Message}");
         logger.Flush();
     }
 }
@@ -555,7 +539,7 @@ int GetVariableInt(byte size, byte[] bytes)
     }
 }
 
-static ulong ReadSample(int length, object context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+ulong ReadSample(int length, object context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     if (format == VideoFormat.H264 || format == VideoFormat.H265 || format == VideoFormat.H266)
     {
@@ -571,12 +555,12 @@ static ulong ReadSample(int length, object context, VideoFormat format, StreamMa
     }
 }
 
-static ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     ulong size = 0;
     long offsetInBytes = 0;
 
-    SharpISOBMFF.Log.Debug($"Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
+    isobmffLogger.LogDebug($"Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
     do
     {
@@ -586,7 +570,7 @@ static ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat 
 
         if (nalUnitLength > (sampleSizeInBytes - offsetInBytes))
         {
-            SharpISOBMFF.Log.Error($"Invalid NALU size: {nalUnitLength}");
+            isobmffLogger.LogError($"Invalid NALU size: {nalUnitLength}");
             nalUnitLength = (uint)(sampleSizeInBytes - offsetInBytes);
             size += nalUnitLength;
             offsetInBytes += nalUnitLength;
@@ -603,12 +587,12 @@ static ulong ReadH26XSample(int nalLengthSize, IItuContext context, VideoFormat 
     if (offsetInBytes != sampleSizeInBytes)
         throw new Exception("Mismatch!");
 
-    SharpISOBMFF.Log.Debug("Sample end");
+    isobmffLogger.LogDebug("Sample end");
 
     return size;
 }
 
-static void ParseNALU(IItuContext ctx, VideoFormat format, byte[] sampleData)
+void ParseNALU(IItuContext ctx, VideoFormat format, byte[] sampleData)
 {
     if(format == VideoFormat.H264)
     {
@@ -628,7 +612,7 @@ static void ParseNALU(IItuContext ctx, VideoFormat format, byte[] sampleData)
     }
 }
 
-static void ParseH264NALU(H264Context context, byte[] sampleData)
+void ParseH264NALU(H264Context context, byte[] sampleData)
 {
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
     {
@@ -646,12 +630,12 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
             {
                 if (nu.NalUnitType == H264NALTypes.UNSPECIFIED0) // 0
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 0, Unspecified {nu.NalUnitType}, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 0, Unspecified {nu.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (nu.NalUnitType == H264NALTypes.SLICE) // 1
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 1, slice of non-IDR picture, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 1, slice of non-IDR picture, {sampleData.Length} bytes");
                     context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
                     context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
                     context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
@@ -660,7 +644,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.DPA) // 2
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 2, coded slice data partition A, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 2, coded slice data partition A, {sampleData.Length} bytes");
                     context.SliceDataPartitionaLayerRbsp = new SliceDataPartitionaLayerRbsp();
                     context.SliceDataPartitionaLayerRbsp.Read(context, stream);
                     context.SliceDataPartitionaLayerRbsp.Write(context, wstream);
@@ -669,7 +653,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.DPB) // 3
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 3, coded slice data partition B, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 3, coded slice data partition B, {sampleData.Length} bytes");
                     context.SliceDataPartitionbLayerRbsp = new SliceDataPartitionbLayerRbsp();
                     context.SliceDataPartitionbLayerRbsp.Read(context, stream);
                     context.SliceDataPartitionbLayerRbsp.Write(context, wstream);
@@ -678,7 +662,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.DPC) // 4
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 4, coded slice data partition C, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 4, coded slice data partition C, {sampleData.Length} bytes");
                     context.SliceDataPartitioncLayerRbsp = new SliceDataPartitioncLayerRbsp();
                     context.SliceDataPartitioncLayerRbsp.Read(context, stream);
                     context.SliceDataPartitioncLayerRbsp.Write(context, wstream);
@@ -687,7 +671,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.IDR_SLICE) // 5
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 5, slice of non-IDR picture, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 5, slice of non-IDR picture, {sampleData.Length} bytes");
                     context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
                     context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
                     context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
@@ -696,7 +680,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SEI) // 6
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 6, SEI, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 6, SEI, {sampleData.Length} bytes");
                     context.SeiRbsp = new SharpH264.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
@@ -705,7 +689,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SPS) // 7
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 7, SPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 7, SPS, {sampleData.Length} bytes");
                     context.SeqParameterSetRbsp = new SharpH264.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
@@ -714,7 +698,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.PPS) // 8
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 8, PPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 8, PPS, {sampleData.Length} bytes");
                     context.PicParameterSetRbsp = new SharpH264.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
@@ -723,7 +707,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.AUD) // 9
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 9, AU Delimiter, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 9, AU Delimiter, {sampleData.Length} bytes");
                     context.AccessUnitDelimiterRbsp = new SharpH264.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
@@ -732,7 +716,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.END_OF_SEQUENCE) // 10
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 10, End of Sequence, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 10, End of Sequence, {sampleData.Length} bytes");
                     context.EndOfSeqRbsp = new SharpH264.EndOfSeqRbsp();
                     context.EndOfSeqRbsp.Read(context, stream);
                     context.EndOfSeqRbsp.Write(context, wstream);
@@ -741,7 +725,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.END_OF_STREAM) // 11
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 11, End of Stream, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 11, End of Stream, {sampleData.Length} bytes");
                     context.EndOfStreamRbsp = new EndOfStreamRbsp();
                     context.EndOfStreamRbsp.Read(context, stream);
                     context.EndOfStreamRbsp.Write(context, wstream);
@@ -750,7 +734,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.FILLER_DATA) // 12
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 12, Filler Data, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 12, Filler Data, {sampleData.Length} bytes");
                     context.FillerDataRbsp = new SharpH264.FillerDataRbsp();
                     context.FillerDataRbsp.Read(context, stream);
                     context.FillerDataRbsp.Write(context, wstream);
@@ -759,7 +743,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SPS_EXT) // 13
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 13, SPS Extension, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 13, SPS Extension, {sampleData.Length} bytes");
                     context.SeqParameterSetExtensionRbsp = new SeqParameterSetExtensionRbsp();
                     context.SeqParameterSetExtensionRbsp.Read(context, stream);
                     context.SeqParameterSetExtensionRbsp.Write(context, wstream);
@@ -768,7 +752,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.PREFIX_NAL) // 14
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 14, Prefix NAL, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 14, Prefix NAL, {sampleData.Length} bytes");
                     context.PrefixNalUnitRbsp = new PrefixNalUnitRbsp();
                     context.PrefixNalUnitRbsp.Read(context, stream);
                     context.PrefixNalUnitRbsp.Write(context, wstream);
@@ -777,7 +761,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SUBSET_SPS) // 15
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 15, Subset SPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 15, Subset SPS, {sampleData.Length} bytes");
                     context.SubsetSeqParameterSetRbsp = new SubsetSeqParameterSetRbsp();
                     context.SubsetSeqParameterSetRbsp.Read(context, stream);
                     context.SubsetSeqParameterSetRbsp.Write(context, wstream);
@@ -786,7 +770,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.DPS) // 16
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 16, DPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 16, DPS, {sampleData.Length} bytes");
                     context.DepthParameterSetRbsp = new DepthParameterSetRbsp();
                     context.DepthParameterSetRbsp.Read(context, stream);
                     context.DepthParameterSetRbsp.Write(context, wstream);
@@ -795,17 +779,17 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED0) // 17
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 17, Reserved {nu.NalUnitType}, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 17, Reserved {nu.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED1) // 18
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 18, Reserved {nu.NalUnitType}, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 18, Reserved {nu.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (nu.NalUnitType == H264NALTypes.SLICE_NOPARTITIONING) // 19
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 19, Auxiliary coded picture without partitioning, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 19, Auxiliary coded picture without partitioning, {sampleData.Length} bytes");
                     context.SliceLayerWithoutPartitioningRbsp = new SliceLayerWithoutPartitioningRbsp();
                     context.SliceLayerWithoutPartitioningRbsp.Read(context, stream);
                     context.SliceLayerWithoutPartitioningRbsp.Write(context, wstream);
@@ -814,7 +798,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SLICE_EXT) // 20
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 20, Slice Layer Extension, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 20, Slice Layer Extension, {sampleData.Length} bytes");
                     context.SliceLayerExtensionRbsp = new SliceLayerExtensionRbsp();
                     context.SliceLayerExtensionRbsp.Read(context, stream);
                     context.SliceLayerExtensionRbsp.Write(context, wstream);
@@ -823,7 +807,7 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.SLICE_EXT_VIEW_COMPONENT) // 21
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 21, Slice Extension for Depth View or a 3D AVC texture view component, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 21, Slice Extension for Depth View or a 3D AVC texture view component, {sampleData.Length} bytes");
                     context.SliceLayerExtensionRbsp = new SliceLayerExtensionRbsp();
                     context.SliceLayerExtensionRbsp.Read(context, stream);
                     context.SliceLayerExtensionRbsp.Write(context, wstream);
@@ -832,32 +816,32 @@ static void ParseH264NALU(H264Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED2) // 22
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 22, Reserved, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 22, Reserved, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (nu.NalUnitType == H264NALTypes.RESERVED3) // 23
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 23, Reserved, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 23, Reserved, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: Unspecified {nu.NalUnitType}, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: Unspecified {nu.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
             }
             catch (Exception ex)
             {
-                SharpISOBMFF.Log.Error($"Error: {ex.Message}");
-                SharpISOBMFF.Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
-                SharpISOBMFF.Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
+                isobmffLogger.LogError($"Error: {ex.Message}");
+                isobmffLogger.LogError($"SampleData: {Convert.ToHexString(sampleData)}");
+                isobmffLogger.LogError($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
                 throw;
             }
         }
     }
 }
 
-static void ParseH265NALU(H265Context context, byte[] sampleData)
+void ParseH265NALU(H265Context context, byte[] sampleData)
 {
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
     {
@@ -875,7 +859,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
             {
                 if (nu.NalUnitHeader.NalUnitType >= H265NALTypes.UNSPEC48) // unspecified
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (
@@ -897,7 +881,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                     nu.NalUnitHeader.NalUnitType == H265NALTypes.CRA_NUT         // 21
                     )
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
                     context.SliceSegmentLayerRbsp = new SharpH265.SliceSegmentLayerRbsp();
                     context.SliceSegmentLayerRbsp.Read(context, stream);
                     context.SliceSegmentLayerRbsp.Write(context, wstream);
@@ -907,7 +891,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.VPS_NUT) // 32
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 32, VPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 32, VPS, {sampleData.Length} bytes");
                     context.VideoParameterSetRbsp = new SharpH265.VideoParameterSetRbsp();
                     context.VideoParameterSetRbsp.Read(context, stream);
                     context.VideoParameterSetRbsp.Write(context, wstream);
@@ -916,7 +900,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SPS_NUT) // 33
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 33, SPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 33, SPS, {sampleData.Length} bytes");
                     context.SeqParameterSetRbsp = new SharpH265.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
@@ -925,7 +909,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PPS_NUT) // 34
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 34, PPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 34, PPS, {sampleData.Length} bytes");
                     context.PicParameterSetRbsp = new SharpH265.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
@@ -934,7 +918,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.AUD_NUT) // 35
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 35, AUD, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 35, AUD, {sampleData.Length} bytes");
                     context.AccessUnitDelimiterRbsp = new SharpH265.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
@@ -943,7 +927,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.EOS_NUT) // 36
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 36, EOS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 36, EOS, {sampleData.Length} bytes");
                     context.EndOfSeqRbsp = new SharpH265.EndOfSeqRbsp();
                     context.EndOfSeqRbsp.Read(context, stream);
                     context.EndOfSeqRbsp.Write(context, wstream);
@@ -952,7 +936,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.EOB_NUT) // 37
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 37, EOB, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 37, EOB, {sampleData.Length} bytes");
                     context.EndOfBitstreamRbsp = new SharpH265.EndOfBitstreamRbsp();
                     context.EndOfBitstreamRbsp.Read(context, stream);
                     context.EndOfBitstreamRbsp.Write(context, wstream);
@@ -961,7 +945,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.FD_NUT) // 38
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 38, FillerData, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 38, FillerData, {sampleData.Length} bytes");
                     context.FillerDataRbsp = new SharpH265.FillerDataRbsp();
                     context.FillerDataRbsp.Read(context, stream);
                     context.FillerDataRbsp.Write(context, wstream);
@@ -970,7 +954,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.PREFIX_SEI_NUT) // 39
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 39, Prefix SEI, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 39, Prefix SEI, {sampleData.Length} bytes");
                     context.SeiRbsp = new SharpH265.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
@@ -979,7 +963,7 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H265NALTypes.SUFFIX_SEI_NUT) // 40
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 40, Suffix SEI, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 40, Suffix SEI, {sampleData.Length} bytes");
                     var oldSei = context.SeiRbsp;
                     context.SeiRbsp = new SharpH265.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
@@ -990,23 +974,22 @@ static void ParseH265NALU(H265Context context, byte[] sampleData)
                 else
                 {
                     // 10-15, 22-31, 41-47
-                    SharpISOBMFF.Log.Debug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
             }
             catch (Exception ex)
             {
-                SharpISOBMFF.Log.Error($"Error: {ex.Message}");
-                SharpISOBMFF.Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
-                SharpISOBMFF.Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
+                isobmffLogger.LogError($"Error: {ex.Message}");
+                isobmffLogger.LogError($"SampleData: {Convert.ToHexString(sampleData)}");
+                isobmffLogger.LogError($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
                 throw;
             }
         }
     }
 }
 
-
-static void ParseH266NALU(H266Context context, byte[] sampleData)
+void ParseH266NALU(H266Context context, byte[] sampleData)
 {
     NaluDebug.NaluCounter++;
     using (ItuStream stream = new ItuStream(new MemoryStream(sampleData)))
@@ -1025,7 +1008,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
             {
                 if (nu.NalUnitHeader.NalUnitType >= H266NALTypes.UNSPEC_28) // unspecified
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: Unspecified {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
                 else if (
@@ -1039,7 +1022,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                     nu.NalUnitHeader.NalUnitType == H266NALTypes.GDR_NUT         // 10
                     )
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: {nu.NalUnitHeader.NalUnitType}, Slice, {sampleData.Length} bytes");
                     context.SliceLayerRbsp = new SharpH266.SliceLayerRbsp();
                     context.SliceLayerRbsp.Read(context, stream);
                     context.SliceLayerRbsp.Write(context, wstream);
@@ -1049,7 +1032,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.OPI_NUT) // 12
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 12, OPI, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 12, OPI, {sampleData.Length} bytes");
                     context.OperatingPointInformationRbsp = new SharpH266.OperatingPointInformationRbsp();
                     context.OperatingPointInformationRbsp.Read(context, stream);
                     context.OperatingPointInformationRbsp.Write(context, wstream);
@@ -1059,7 +1042,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.DCI_NUT) // 13
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 13, DCI, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 13, DCI, {sampleData.Length} bytes");
                     context.DecodingCapabilityInformationRbsp = new SharpH266.DecodingCapabilityInformationRbsp();
                     context.DecodingCapabilityInformationRbsp.Read(context, stream);
                     context.DecodingCapabilityInformationRbsp.Write(context, wstream);
@@ -1069,7 +1052,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.VPS_NUT) // 14
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 14, VPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 14, VPS, {sampleData.Length} bytes");
                     context.VideoParameterSetRbsp = new SharpH266.VideoParameterSetRbsp();
                     context.VideoParameterSetRbsp.Read(context, stream);
                     context.VideoParameterSetRbsp.Write(context, wstream);
@@ -1079,7 +1062,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SPS_NUT) // 15
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 15, SPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 15, SPS, {sampleData.Length} bytes");
                     context.SeqParameterSetRbsp = new SharpH266.SeqParameterSetRbsp();
                     context.SeqParameterSetRbsp.Read(context, stream);
                     context.SeqParameterSetRbsp.Write(context, wstream);
@@ -1089,7 +1072,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PPS_NUT) // 16
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 16, PPS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 16, PPS, {sampleData.Length} bytes");
                     context.PicParameterSetRbsp = new SharpH266.PicParameterSetRbsp();
                     context.PicParameterSetRbsp.Read(context, stream);
                     context.PicParameterSetRbsp.Write(context, wstream);
@@ -1099,7 +1082,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_APS_NUT) // 17
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 17, Prefix APS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 17, Prefix APS, {sampleData.Length} bytes");
                     context.AdaptationParameterSetRbsp = new SharpH266.AdaptationParameterSetRbsp();
                     context.AdaptationParameterSetRbsp.Read(context, stream);
                     context.AdaptationParameterSetRbsp.Write(context, wstream);
@@ -1109,7 +1092,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SUFFIX_APS_NUT) // 18
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 18, Suffix APS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 18, Suffix APS, {sampleData.Length} bytes");
                     context.AdaptationParameterSetRbsp = new SharpH266.AdaptationParameterSetRbsp();
                     context.AdaptationParameterSetRbsp.Read(context, stream);
                     context.AdaptationParameterSetRbsp.Write(context, wstream);
@@ -1119,7 +1102,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PH_NUT) // 19
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 19, Picture Header, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 19, Picture Header, {sampleData.Length} bytes");
                     context.PictureHeaderRbsp = new SharpH266.PictureHeaderRbsp();
                     context.PictureHeaderRbsp.Read(context, stream);
                     context.PictureHeaderRbsp.Write(context, wstream);
@@ -1129,7 +1112,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.AUD_NUT) // 20
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 20, AUD, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 20, AUD, {sampleData.Length} bytes");
                     context.AccessUnitDelimiterRbsp = new SharpH266.AccessUnitDelimiterRbsp();
                     context.AccessUnitDelimiterRbsp.Read(context, stream);
                     context.AccessUnitDelimiterRbsp.Write(context, wstream);
@@ -1139,7 +1122,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.EOS_NUT) // 21
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 21, EOS, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 21, EOS, {sampleData.Length} bytes");
                     context.EndOfSeqRbsp = new SharpH266.EndOfSeqRbsp();
                     context.EndOfSeqRbsp.Read(context, stream);
                     context.EndOfSeqRbsp.Write(context, wstream);
@@ -1149,7 +1132,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.EOB_NUT) // 22
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 22, EOB, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 22, EOB, {sampleData.Length} bytes");
                     context.EndOfBitstreamRbsp = new SharpH266.EndOfBitstreamRbsp();
                     context.EndOfBitstreamRbsp.Read(context, stream);
                     context.EndOfBitstreamRbsp.Write(context, wstream);
@@ -1159,7 +1142,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.PREFIX_SEI_NUT) // 23
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 23, Prefix SEI, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 23, Prefix SEI, {sampleData.Length} bytes");
                     context.SeiRbsp = new SharpH266.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
@@ -1169,7 +1152,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.SUFFIX_SEI_NUT) // 24
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 24, Suffix SEI, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 24, Suffix SEI, {sampleData.Length} bytes");
                     context.SeiRbsp = new SharpH266.SeiRbsp();
                     context.SeiRbsp.Read(context, stream);
                     context.SeiRbsp.Write(context, wstream);
@@ -1179,7 +1162,7 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 }
                 else if (nu.NalUnitHeader.NalUnitType == H266NALTypes.FD_NUT) // 25
                 {
-                    SharpISOBMFF.Log.Debug($"NALU: 25, Filler Data, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: 25, Filler Data, {sampleData.Length} bytes");
                     context.FillerDataRbsp = new SharpH266.FillerDataRbsp();
                     context.FillerDataRbsp.Read(context, stream);
                     context.FillerDataRbsp.Write(context, wstream);
@@ -1190,27 +1173,27 @@ static void ParseH266NALU(H266Context context, byte[] sampleData)
                 else
                 {
                     // 4-6, 11, 26-27
-                    SharpISOBMFF.Log.Debug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
+                    isobmffLogger.LogDebug($"NALU: Reserved {nu.NalUnitHeader.NalUnitType}, {sampleData.Length} bytes");
                     throw new InvalidOperationException();
                 }
             }
             catch (Exception ex)
             {
-                SharpISOBMFF.Log.Error($"NALU counter: {NaluDebug.NaluCounter}");
-                SharpISOBMFF.Log.Error($"Error: {ex.Message}");
-                SharpISOBMFF.Log.Error($"SampleData: {Convert.ToHexString(sampleData)}");
-                SharpISOBMFF.Log.Error($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
+                isobmffLogger.LogError($"NALU counter: {NaluDebug.NaluCounter}");
+                isobmffLogger.LogError($"Error: {ex.Message}");
+                isobmffLogger.LogError($"SampleData: {Convert.ToHexString(sampleData)}");
+                isobmffLogger.LogError($"WriteData:  {Convert.ToHexString(ms.ToArray())}");
                 throw;
             }
         }
     }
 }
 
-static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
+ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, StreamMarker marker, uint sampleSizeInBytes, long dts, long pts, uint duration)
 {
     ulong size = 0;
 
-    SharpISOBMFF.Log.Debug($"+++ Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
+    isobmffLogger.LogDebug($"+++ Sample begin {sampleSizeInBytes}, PTS: {pts}, DTS: {dts}, duration: {duration}");
 
     size += marker.Stream.ReadUInt8Array(size, (ulong)marker.Length, sampleSizeInBytes, out byte[] sampleData, "");
     using (AomStream stream = new AomStream(new MemoryStream(sampleData)))
@@ -1218,7 +1201,7 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
         int len = (int)sampleSizeInBytes;
         do
         {
-            SharpISOBMFF.Log.Debug($"---OBU begin {len}---");
+            isobmffLogger.LogDebug($"---OBU begin {len}---");
 
             ParseOBU(context, stream, len);
 
@@ -1236,40 +1219,40 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
 
             if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_SEQUENCE_HEADER)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Sequence Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Sequence Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TEMPORAL_DELIMITER)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Temporal Delimiter {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Temporal Delimiter {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME_HEADER)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
                 context.LastObuFrameHeader = sampleData.Skip(1 /* obu header */ + (((AV1Context)context)._ObuExtensionFlag != 0 ? 1 : 0) /* obu extension */ + (context.ObuSizeLen >> 3)).Take(((AV1Context)context)._ObuSize).ToArray();
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_GROUP)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Tile Group {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Tile Group {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_METADATA)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Metadata {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Metadata {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_FRAME)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Frame {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Frame {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_REDUNDANT_FRAME_HEADER)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Redundant Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Redundant Frame Header {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_TILE_LIST)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Tile List {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Tile List {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else if (((AV1Context)context)._ObuType == AV1ObuTypes.OBU_PADDING)
             {
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Padding {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Padding {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else if (
                 ((AV1Context)context)._ObuType == AV1ObuTypes.OBU_RESERVED_0 ||
@@ -1281,19 +1264,19 @@ static ulong ReadAVXSample(int length, IAomContext context, VideoFormat format, 
                 )
             {
                 // reserved
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"+++ OBU Reserved {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"+++ OBU Reserved {((AV1Context)context)._TemporalId}, {((AV1Context)context)._SpatialId}, {((AV1Context)context)._ShowFrame}");
             }
             else
             {
                 // invalid
-                if (SharpISOBMFF.Log.DebugEnabled) SharpISOBMFF.Log.Debug($"Invalid OBU!!!");
+                if (isobmffLogger.IsDebugEnabled) isobmffLogger.LogDebug($"Invalid OBU!!!");
             }
 
-            SharpISOBMFF.Log.Debug($"---OBU end {obuTotalCize}---");
+            isobmffLogger.LogDebug($"---OBU end {obuTotalCize}---");
         } while (len > 0);
     }
 
-    SharpISOBMFF.Log.Debug("+++ Sample end");
+    isobmffLogger.LogDebug("+++ Sample end");
 
     return size;
 }

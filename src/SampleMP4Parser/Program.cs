@@ -1,5 +1,4 @@
-﻿
-using SharpISOBMFF;
+﻿using SharpISOBMFF;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

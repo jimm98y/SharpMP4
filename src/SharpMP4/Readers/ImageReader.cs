@@ -87,8 +87,10 @@ namespace SharpMP4.Readers
                 }
             }
 
-            if(this.Track == null)
+            if (this.Track == null)
                 throw new NotSupportedException("No supported track found in image file.");
+            else
+                this.Track.Logger = this.Logger;
 
             var ispe = propertyBoxes.OfType<ImageSpatialExtentsProperty>().SingleOrDefault();
             this.Ispe = ispe;

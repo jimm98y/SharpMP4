@@ -106,9 +106,12 @@ namespace SharpMP4.Readers
                         {
                             if (Logger.IsErrorEnabled)
                                 Logger.LogError($"Unsupported track type: {hdlr.HandlerType} ({hdlr.DisplayName}) for track ID {trackID}. Exception: {ex.Message}");
-                            
+
                             trackImpl = TrackFactory.CreateGenericTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
                         }
+
+                        trackImpl?.Logger = this.Logger;
+
                         this.Tracks[trackID].Track = trackImpl;
 
                         var stco = stbl.Children.OfType<ChunkOffsetBox>().SingleOrDefault();
