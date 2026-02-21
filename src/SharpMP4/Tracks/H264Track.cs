@@ -403,7 +403,7 @@ namespace SharpMP4.Tracks
                 result = result.Concat(size).Concat(nal);
             }
 
-            if (Log.DebugEnabled) Log.Debug($"{nameof(H264Track)}: AU: {_nalBuffer.Count}");
+            if (this.Logger.IsDebugEnabled) this.Logger.LogDebug($"{nameof(H264Track)}: AU: {_nalBuffer.Count}");
 
             return result.ToArray();
         }

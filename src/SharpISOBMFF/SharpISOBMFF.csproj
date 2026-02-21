@@ -53,6 +53,10 @@
 	<ItemGroup>
 	  <Folder Include="Generated\" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\SharpMP4Common\SharpMP4Common.csproj" />
+	</ItemGroup>
 	<PropertyGroup Condition="$(AutoGenerateCode) == 'true'">
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 		<GeneratedFolder>Generated</GeneratedFolder>

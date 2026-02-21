@@ -1,4 +1,5 @@
 ﻿using SharpISOBMFF;
+using SharpMP4.Common;
 using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
@@ -31,11 +32,21 @@ namespace SharpMP4.Builders
 
         private class TrackContext
         {
-            public TrackContext(ITrack track)
+            public TrackContext(ITrack track, IStorage storage)
             {
                 Track = track;
                 MoofTime.Add(0); // initial time is 0
-                CurrentFragments = TemporaryStorage.Factory.Create();
+                CurrentFragments = storage;
+            }
+
+            public TrackContext(ITrack track, ITemporaryStorageFactory temporaryStorageFactory)
+                : this(track, temporaryStorageFactory.Create())
+            {
+            }
+
+            public TrackContext(ITrack track)
+                : this(track, new TemporaryFileStorageFactory())
+            {
             }
 
             public ITrack Track { get; set; }
@@ -63,6 +74,8 @@ namespace SharpMP4.Builders
         private readonly Dictionary<uint, TrackContext> _trackContexts = new Dictionary<uint, TrackContext>();
         
         private uint _moofSequenceNumber = 1;
+
+        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
 
         /// <summary>
         /// Ctor.
@@ -110,6 +123,16 @@ namespace SharpMP4.Builders
 
         public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint)
         {
+            ProcessRawSample(trackID, sample, sampleDuration, isRandomAccessPoint, new TemporaryFileStorageFactory());
+        }
+
+        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, ITemporaryStorageFactory temporaryStorageFactory)
+        {
+            ProcessRawSample(trackID, sample, sampleDuration, isRandomAccessPoint, temporaryStorageFactory.Create());
+        }
+
+        public void ProcessRawSample(uint trackID, byte[] sample, int sampleDuration, bool isRandomAccessPoint, IStorage storage)
+        {
             TrackContext track = _trackContexts[trackID];
             uint currentSampleDuration = sampleDuration < 0 ? (uint)track.Track.DefaultSampleDuration : (uint)sampleDuration;
             ulong nextFragmentTime = track.Track.Timescale * _maxFragmentLengthInMs * (track.FragmentCounts + 1);
@@ -120,7 +143,7 @@ namespace SharpMP4.Builders
                 var fragment = CreateNewFragment(track);
                 track.ReadyFragments.Enqueue(fragment);
 
-                track.CurrentFragments = TemporaryStorage.Factory.Create();
+                track.CurrentFragments = storage;
                 track.StartTime = _trackContexts[trackID].EndTime;
                 track.SampleSizes.Clear();
                 track.SampleDurations.Clear();

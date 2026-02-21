@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using SharpMP4.Common;
 
 namespace SharpISOBMFF
 {
     public class BoxFactory
     {
-        public static Func<string, string, byte[], Box> CreateBox = DefaultCreateBox;
-        public static Func<string, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
-        public static Func<byte, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
+        public Func<string, string, byte[], IMp4Logger, Box> CreateBox = DefaultCreateBox;
+        public Func<string, IMp4Logger, SampleGroupDescriptionEntry> CreateEntry = DefaultCreateEntry;
+        public Func<byte, IMp4Logger, Descriptor> CreateDescriptor = DefaultCreateDescriptor;
 
-        public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null)
+        public static Box DefaultCreateBox(string fourCC, string parent, byte[] uuid = null, IMp4Logger logger = null)
         {
             if (uuid != null) fourCC = $"{fourCC} {ConvertEx.ToHexString(uuid).ToLowerInvariant()}";
 
@@ -939,16 +940,18 @@ namespace SharpISOBMFF
             }
             else if(uuid != null)
             {
-                Log.Debug($"Unknown 'uuid' box: '{fourCC}'");
+                if (logger != null)
+                    logger.LogDebug($"Unknown 'uuid' box: '{fourCC}'");
                 return new UserBox(uuid);
             }
 
             //throw new NotImplementedException(fourCC);
-            Log.Debug($"Unknown box: '{fourCC}'");
+            if (logger != null)
+                    logger.LogDebug($"Unknown box: '{fourCC}'");
             return new UnknownBox(IsoStream.FromFourCC(fourCC));
         }
 
-        public static SampleGroupDescriptionEntry DefaultCreateEntry(string fourCC)
+        public static SampleGroupDescriptionEntry DefaultCreateEntry(string fourCC, IMp4Logger logger = null)
         {
             switch(fourCC)
             {
@@ -1007,11 +1010,12 @@ namespace SharpISOBMFF
             }
 
             //throw new NotImplementedException(fourCC);
-            Log.Debug($"Unknown entry: '{fourCC}'");
+            if (logger != null)
+                logger.LogDebug($"Unknown entry: '{fourCC}'");
             return new UnknownEntry(IsoStream.FromFourCC(fourCC));
         }
 
-        public static Descriptor DefaultCreateDescriptor(byte tag)
+        public static Descriptor DefaultCreateDescriptor(byte tag, IMp4Logger logger = null)
         {
             switch (tag)
             {
@@ -1030,7 +1034,8 @@ namespace SharpISOBMFF
           }
 
             //throw new NotImplementedException($"Unknown descriptor: 'tag'");
-            Log.Debug($"Unknown descriptor: '{tag}'");
+            if (logger != null)
+                logger.LogDebug($"Unknown descriptor: '{tag}'");
             return new UnknownDescriptor(tag);
         }
 

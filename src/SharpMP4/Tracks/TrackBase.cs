@@ -1,4 +1,5 @@
 ﻿using SharpISOBMFF;
+using SharpMP4.Common;
 using System.Collections.Generic;
 
 namespace SharpMP4.Tracks
@@ -15,6 +16,8 @@ namespace SharpMP4.Tracks
 
         public int DefaultSampleDuration { get; set; }
         public uint DefaultSampleFlags { get; set; }
+
+        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
 
         /// <summary>
         /// Overrides any auto-detected timescale.

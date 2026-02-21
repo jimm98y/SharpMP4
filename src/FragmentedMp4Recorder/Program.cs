@@ -1,25 +1,19 @@
-﻿using SharpISOBMFF;
+﻿using FragmentedMp4Recorder;
+using SharpISOBMFF;
 using SharpMP4.Builders;
 using SharpMP4.Readers;
 using SharpMP4.Tracks;
 using System.Collections.Generic;
 using System.IO;
 
-SharpH26X.Log.SinkDebug = (o, e) => { };
-SharpH26X.Log.SinkInfo = (o, e) => { };
-SharpAV1.Log.SinkInfo = (o, e) => { };
-SharpAV1.Log.SinkDebug = (o, e) => { };
-SharpISOBMFF.Log.SinkInfo = (o, e) => { };
-SharpISOBMFF.Log.SinkDebug = (o, e) => { };
-SharpMP4.Log.SinkInfo = (o, e) => { };
-SharpMP4.Log.SinkDebug = (o, e) => { };
+var logger = ConsoleWithoutInfoDebugLogger.Instance;
 
 using (Stream inputFileStream = new BufferedStream(new FileStream("frag_bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
-    var fmp4 = new Container();
-    fmp4.Read(new IsoStream(inputFileStream));
+    var fmp4 = new Container(logger);
+    fmp4.Read(new IsoStream(inputFileStream) { Logger = logger });
 
-    VideoReader inputReader = new VideoReader();
+    VideoReader inputReader = new VideoReader(logger);
     inputReader.Parse(fmp4);
     IEnumerable<ITrack> inputTracks = inputReader.GetTracks();
 

@@ -25,7 +25,7 @@ namespace SharpMP4.Tracks
             ulong size = 0;
             long offsetInBytes = 0;
 
-            if (Log.DebugEnabled) Log.Debug($"{nameof(H26XTrackBase)}: AU begin {sample.Length}");
+            if (this.Logger.IsDebugEnabled) this.Logger.LogDebug($"{nameof(H26XTrackBase)}: AU begin {sample.Length}");
 
             List<byte[]> naluList = new List<byte[]>();
 
@@ -39,7 +39,7 @@ namespace SharpMP4.Tracks
 
                     if (nalUnitLength > (sample.Length - offsetInBytes))
                     {
-                        if (Log.ErrorEnabled) Log.Error($"{nameof(H26XTrackBase)}: Invalid NALU size: {nalUnitLength}");
+                        if (this.Logger.IsErrorEnabled) this.Logger.LogError($"{nameof(H26XTrackBase)}: Invalid NALU size: {nalUnitLength}");
                         nalUnitLength = (uint)(sample.Length - offsetInBytes);
                         size += nalUnitLength;
                         offsetInBytes += nalUnitLength;
@@ -54,7 +54,7 @@ namespace SharpMP4.Tracks
                 if (offsetInBytes != sample.Length)
                     throw new Exception("Mismatch!");
 
-                if (Log.DebugEnabled) Log.Debug($"{nameof(H26XTrackBase)}: AU end");
+                if (this.Logger.IsDebugEnabled) this.Logger.LogDebug($"{nameof(H26XTrackBase)}: AU end");
 
                 return naluList;
             }

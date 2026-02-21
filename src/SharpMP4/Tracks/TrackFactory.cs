@@ -1,13 +1,25 @@
 ﻿using SharpISOBMFF;
+using SharpMP4.Common;
 using System;
 
 namespace SharpMP4.Tracks
 {
+    public delegate ITrack TrackCreator(uint trackID, Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName, IMp4Logger logger);
+
     public class TrackFactory
     {
-        public static Func<uint, Box, uint, int, uint, string, ITrack> CreateTrack = DefaultCreateTrack;
+        public TrackCreator CreateTrack { get; set; } = DefaultCreateTrack;
 
-        public static ITrack DefaultCreateTrack(uint trackID, Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName)
+        public static ITrack DefaultCreateTrack(uint trackID, Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName, IMp4Logger logger)
+        {
+            ITrack track = DefaultCreateTrackInternal(trackID, sampleEntry, timescale, sampleDuration, handlerType, handlerName);
+
+            track.Logger = logger ?? new DefaultMp4Logger();
+
+            return track;
+        }
+
+        private static ITrack DefaultCreateTrackInternal(uint trackID, Box sampleEntry, uint timescale, int sampleDuration, uint handlerType, string handlerName)
         {
             if (handlerType == IsoStream.FromFourCC(HandlerTypes.Video))
             {

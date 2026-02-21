@@ -1,10 +1,12 @@
-﻿using System;
+﻿using SharpMP4.Common;
+using System;
 using System.IO;
 
 namespace SharpISOBMFF
 {
     public interface IStorage : IDisposable
     {
+        IMp4Logger Logger { get; set; }
         bool CanStreamSeek();
         void Flush();
         long GetLength();
@@ -24,9 +26,12 @@ namespace SharpISOBMFF
         public Stream _stream;
         private bool _disposedValue;
 
-        public StreamWrapper(Stream stream)
+        public IMp4Logger Logger { get; set; }
+
+        public StreamWrapper(Stream stream, IMp4Logger logger = null)
         {
             _stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            Logger = logger ?? new DefaultMp4Logger();
         }
 
         public void Flush()

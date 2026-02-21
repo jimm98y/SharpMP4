@@ -1,15 +1,15 @@
-﻿using SharpISOBMFF;
+﻿using MoveMdat;
+using SharpISOBMFF;
 using SharpISOBMFF.Extensions;
 using System.IO;
 using System.Linq;
 
-SharpISOBMFF.Log.SinkInfo = (o, e) => { };
-SharpISOBMFF.Log.SinkDebug = (o, e) => { };
+var logger = ConsoleWithoutInfoDebugLogger.Instance;
 
 using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
-    var mp4 = new Container();
-    mp4.Read(new IsoStream(inputFileStream));
+    var mp4 = new Container(logger);
+    mp4.Read(new IsoStream(inputFileStream) { Logger = logger });
 
     var moov = mp4.Children.OfType<MovieBox>().Single(); // there should be a single moov
     var mdat = mp4.Children.OfType<MediaDataBox>().FirstOrDefault(); // there can be multiple mdat boxes

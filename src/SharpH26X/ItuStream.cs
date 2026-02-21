@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpMP4.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,9 +26,17 @@ namespace SharpH26X
         private bool _disposedValue;
         private int _lastMarkBeginPosition;
 
-        public ItuStream(Stream stream)
+        public IMp4Logger Logger { get; set; }
+
+        public ItuStream(Stream stream, IMp4Logger logger)
         {
             this._stream = stream;
+            this.Logger = logger;
+        }
+
+        public ItuStream(Stream stream)
+            : this(stream, new DefaultMp4Logger())
+        {
         }
 
         public ItuStream(Stream stream, int bitsPosition, int currentBytePosition, byte currentByte, int prevByte, int prevPrevByte) : this(stream)
@@ -735,7 +744,7 @@ namespace SharpH26X
                 padding += "-";
             }
 
-            Log.Info($"{padding} {name}");
+            this.Logger.LogInfo($"{padding} {name}");
         }
 
         private void LogEnd<T>(string name, ulong size, T value)
@@ -755,7 +764,7 @@ namespace SharpH26X
                 endPadding += " ";
             }
 
-            Log.Info($"{padding} {name}{endPadding}{size}   {value}");
+            this.Logger.LogInfo($"{padding} {name}{endPadding}{size}   {value}");
         }
 
         #endregion // Logging

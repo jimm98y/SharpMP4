@@ -1,5 +1,6 @@
 ﻿using SharpISOBMFF;
 using SharpISOBMFF.Extensions;
+using SharpMP4.Common;
 using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
@@ -43,12 +44,23 @@ namespace SharpMP4.Builders
             _output = output;
         }
 
+        public IStorage Storage
+        {
+            get => _storage;
+            set => _storage = value;
+        }
+
+        public ITemporaryStorageFactory TemporaryStorageFactory { get; set; } = new TemporaryFileStorageFactory();
+        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
+
         /// <summary>
         /// Add a track to the MP4.
         /// </summary>
         /// <param name="track">Track to add: <see cref="TrackBase"/>.</param>
         public void AddTrack(ITrack track)
         {
+            track.Logger ??= this.Logger;
+
             uint trackID = GetNextTrackId();
             track.TrackID = trackID;
             _trackContexts.Add(trackID, new TrackContext(track));
@@ -66,7 +78,7 @@ namespace SharpMP4.Builders
         {
             if (_storage == null)
             {
-                _storage = TemporaryStorage.Factory.Create();
+                _storage = this.TemporaryStorageFactory.Create();
             }
 
             uint currentSampleDuration = sampleDuration <= 0 ? (uint)_trackContexts[trackID].Track.DefaultSampleDuration : (uint)sampleDuration;

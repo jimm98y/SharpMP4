@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpMP4.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -14,20 +15,38 @@ namespace SharpISOBMFF
         private bool _disposedValue;
         private ITemporaryStorageFactory _storageFactory;
         private IsoStream _temp;
+        private BoxFactory _boxFactory = new();
+
+        public IMp4Logger Logger { get; set; }
 
         public IsoStream(Stream stream, ITemporaryStorageFactory storageFactory = null) : this(new StreamWrapper(stream), storageFactory)
         { }
 
-        public IsoStream(IStorage stream, ITemporaryStorageFactory storageFactory = null)
+        public IsoStream(IStorage stream, ITemporaryStorageFactory storageFactory = null, IMp4Logger logger = null)
         {
             _stream = stream;
-            _storageFactory = storageFactory ?? TemporaryStorage.Factory;
+            _storageFactory = storageFactory ?? new TemporaryFileStorageFactory();
+
+            this.Logger = logger ?? new DefaultMp4Logger();
+        }
+
+        // In case users would like to change it later, for example to use memory storage instead of file storage
+        public ITemporaryStorageFactory TemporaryStorageFactory
+        {
+            get => _storageFactory;
+            set => _storageFactory = value;
+        }
+
+        public BoxFactory BoxFactory
+        {
+            get => _boxFactory;
+            set => _boxFactory = value;
         }
 
         private IsoStream GetOrCreateTemporaryStorage()
         {
             if (_temp == null)
-                _temp = new IsoStream(_storageFactory.Create());
+                _temp = new IsoStream(_storageFactory.Create(Logger));
             return _temp;
         }
 
@@ -60,7 +79,7 @@ namespace SharpISOBMFF
             }
             catch (Exception e) 
             {
-                Log.Debug($"Getting the current stream offset failed: {e.Message}");
+                this.Logger.LogDebug($"Getting the current stream offset failed: {e.Message}");
                 return -1;
             }
         }
@@ -80,7 +99,7 @@ namespace SharpISOBMFF
             }
             catch (Exception e)
             {
-                Log.Debug($"Getting the current stream length failed: {e.Message}");
+                this.Logger.LogDebug($"Getting the current stream length failed: {e.Message}");
                 return -1;
             }
         }
@@ -765,14 +784,14 @@ namespace SharpISOBMFF
             return size;
         }
 
-        public static void LogBox(SafeBoxHeader header, string indentation = "")
+        public void LogBox(SafeBoxHeader header, string indentation = "")
         {
             string uuid = "";
             if (header.Usertype != null)
             {
                 uuid = $" (uuid: {ConvertEx.ToHexString(header.Usertype).ToLowerInvariant()})";
             }
-            Log.Debug($"BOX:{indentation}\'{EscapeString(ToFourCC(header.Type))}\'{uuid}");
+            this.Logger.LogDebug($"BOX:{indentation}\'{EscapeString(ToFourCC(header.Type))}\'{uuid}");
         }
 
         public static string EscapeString(string text)
@@ -788,12 +807,12 @@ namespace SharpISOBMFF
             return sb.ToString();
         }
 
-        private static Box DefaultBoxFactory(IMp4Serializable parent, SafeBoxHeader header)
+        private Box DefaultBoxFactory(IMp4Serializable parent, SafeBoxHeader header)
         {
             string parentFourCC = "";
             if (parent != null)
                 parentFourCC = ToFourCC(((Box)parent).FourCC);
-            return BoxFactory.CreateBox(ToFourCC(header.Type), parentFourCC, header.Usertype);
+            return BoxFactory.CreateBox(ToFourCC(header.Type), parentFourCC, header.Usertype, this.Logger);
         }
 
         public ulong ReadBox<T>(ulong boxSize, ulong readSize, IMp4Serializable parent, out T value, string name) where T : Box
@@ -876,7 +895,7 @@ namespace SharpISOBMFF
         {
             if (box.Children != null)
             {
-                Log.Debug($"Box reading repeated Children read");
+                this.Logger.LogDebug("Box reading repeated Children read");
                 return 0;
             }
 
@@ -917,7 +936,7 @@ namespace SharpISOBMFF
                 consumed += ReadBox(consumed, remaining, box, out v, "");
                 if (consumed > readSize)
                 {
-                    Log.Debug($"Box \'{ToFourCC(v.FourCC)}\' read through!");
+                    this.Logger.LogDebug($"Box \'{ToFourCC(v.FourCC)}\' read through!");
                     break;
                 }
                 box.Children.Add(v);
@@ -984,7 +1003,7 @@ namespace SharpISOBMFF
                     StreamMarker missing;
                     size += ReadPadding(size, availableSize, out missing);
                     box.Padding = missing;
-                    Log.Debug($"Box \'{ToFourCC(box.FourCC)}\' has extra padding of {missing.Length} bytes");
+                    this.Logger.LogDebug($"Box \'{ToFourCC(box.FourCC)}\' has extra padding of {missing.Length} bytes");
                 }
                 else
                 {
@@ -996,7 +1015,7 @@ namespace SharpISOBMFF
             if (calculatedSize != GetBoxSize(header))
             {
                 if (box.FourCC != FromFourCC("mdat"))
-                    Log.Debug($"Calculated \'{ToFourCC(box.FourCC)}\' size: {calculatedSize / 8}, read: {GetBoxSize(header) / 8}");
+                    this.Logger.LogDebug($"Calculated \'{ToFourCC(box.FourCC)}\' size: {calculatedSize / 8}, read: {GetBoxSize(header) / 8}");
             }
 
             return size + GetHeaderSize(header);
@@ -1132,7 +1151,7 @@ namespace SharpISOBMFF
             ulong sizeOfSize = ReadDescriptorSize(out int sizeOfInstance);
             size += sizeOfSize;
             long sizeOfInstanceBits = (long)sizeOfInstance << 3;
-            descriptor = (T)BoxFactory.CreateDescriptor(tag);
+            descriptor = (T)BoxFactory.CreateDescriptor(tag, this.Logger);
             descriptor.SizeOfSize = sizeOfSize;
             descriptor.SetParent(parent);
 
@@ -1140,12 +1159,12 @@ namespace SharpISOBMFF
             if (availableSize < sizeOfInstanceBits)
             {
                 descriptor = new InvalidDescriptor(tag) as T;
-                Log.Debug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
+                this.Logger.LogDebug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
                 size += descriptor.Read(this, (ulong) availableSize);
                 return size;
             }
 
-            Log.Debug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
+            this.Logger.LogDebug($"DES:{GetIndentation(descriptor)}\'{descriptor.DisplayName}\'");
 
             ulong readInstanceSizeBits = descriptor.Read(this, (ulong)sizeOfInstanceBits);
             if (readInstanceSizeBits != (ulong)sizeOfInstanceBits)
@@ -1155,11 +1174,11 @@ namespace SharpISOBMFF
                     StreamMarker missing;
                     size += ReadPadding((ulong)sizeOfInstanceBits, readInstanceSizeBits, out missing);
                     descriptor.Padding = missing;
-                    Log.Debug($"Descriptor \'{tag}\' has extra padding of {missing.Length} bytes");
+                    this.Logger.LogDebug($"Descriptor \'{tag}\' has extra padding of {missing.Length} bytes");
                 }
                 else
                 {
-                    Log.Debug($"Descriptor \'{tag}\' read through!");
+                    this.Logger.LogDebug($"Descriptor \'{tag}\' read through!");
                 }
             }
             size += readInstanceSizeBits;
@@ -1167,7 +1186,7 @@ namespace SharpISOBMFF
             ulong calculatedSize = descriptor.CalculateSize();
             if (calculatedSize != (ulong)sizeOfInstanceBits)
             {
-                Log.Debug($"Calculated descriptor \'{tag}\' size: {calculatedSize >> 3}, read: {sizeOfInstanceBits >> 3}");
+                this.Logger.LogDebug($"Calculated descriptor \'{tag}\' size: {calculatedSize >> 3}, read: {sizeOfInstanceBits >> 3}");
             }
 
             LogEnd(name, size, descriptor);
@@ -1218,7 +1237,7 @@ namespace SharpISOBMFF
         {
             if (descriptor.Children != null)
             {
-                Log.Debug($"Descriptor reading repeated Children read");
+                this.Logger.LogDebug($"Descriptor reading repeated Children read");
                 return 0;
             }
 
@@ -2381,7 +2400,7 @@ namespace SharpISOBMFF
                 padding += "-";
             }
 
-            Log.Info($"{padding} {name}");
+            this.Logger.LogInfo($"{padding} {name}");
         }
 
         private void LogEnd<T>(string name, ulong size, T value)
@@ -2401,7 +2420,7 @@ namespace SharpISOBMFF
                 endPadding += " ";
             }
 
-            Log.Info($"{padding} {name}{endPadding}{size}   {value}");
+            this.Logger.LogInfo($"{padding} {name}{endPadding}{size}   {value}");
         }
 
         #endregion // Logging

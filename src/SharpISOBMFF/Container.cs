@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpMP4.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -13,7 +14,17 @@ namespace SharpISOBMFF
         public StreamMarker Padding { get; set; }
         public byte[] PaddingBytes { get; set; }
         public List<Box> Children { get; set; } = new List<Box>();
+        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
 
+        public Container()
+        {
+        }
+
+        public Container(IMp4Logger logger)
+        {
+            this.Logger = logger;
+        }
+        
         public ulong ReadSingleBox(IsoStream stream)
         {
             Box box = null;
@@ -40,7 +51,7 @@ namespace SharpISOBMFF
             }
             catch (Exception ex)
             {
-                Log.Debug($"Error: {ex.Message}");
+                this.Logger.LogDebug($"Error: {ex.Message}");
                 throw;
             }
 

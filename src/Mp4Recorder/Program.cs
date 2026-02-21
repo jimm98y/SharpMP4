@@ -1,31 +1,25 @@
-﻿using SharpISOBMFF;
+﻿using Mp4Recorder;
+using SharpISOBMFF;
 using SharpMP4.Builders;
 using SharpMP4.Readers;
 using SharpMP4.Tracks;
 using System.Collections.Generic;
 using System.IO;
 
-SharpH26X.Log.SinkDebug = (o, e) => { };
-SharpH26X.Log.SinkInfo = (o, e) => { };
-SharpAV1.Log.SinkInfo = (o, e) => { };
-SharpAV1.Log.SinkDebug = (o, e) => { };
-SharpISOBMFF.Log.SinkInfo = (o, e) => { };
-SharpISOBMFF.Log.SinkDebug = (o, e) => { };
-SharpMP4.Log.SinkInfo = (o, e) => { };
-SharpMP4.Log.SinkDebug = (o, e) => { };
+var logger = ConsoleWithoutInfoDebugLogger.Instance;
 
 using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", FileMode.Open, FileAccess.Read, FileShare.Read)))
 {
-    var mp4 = new Container();
-    mp4.Read(new IsoStream(inputFileStream));
+    var mp4 = new Container(logger);
+    mp4.Read(new IsoStream(inputFileStream) { Logger = logger });
 
-    VideoReader inputReader = new VideoReader();
+    VideoReader inputReader = new VideoReader(logger);
     inputReader.Parse(mp4);
     IEnumerable<ITrack> inputTracks = inputReader.GetTracks();
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        IMp4Builder outputBuilder = new Mp4Builder(new SingleStreamOutput(output));
+        IMp4Builder outputBuilder = new Mp4Builder(new SingleStreamOutput(output)) { Logger = logger };
         Dictionary<uint, uint> mapping = new Dictionary<uint, uint>();
 
         foreach (var inputTrack in inputTracks)
