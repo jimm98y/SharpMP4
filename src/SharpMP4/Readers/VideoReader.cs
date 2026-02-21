@@ -110,7 +110,7 @@ namespace SharpMP4.Readers
                             trackImpl = TrackFactory.CreateGenericTrack(trackID, sampleEntry, trackTimescale, defaultSampleDuration, hdlr.HandlerType, hdlr.DisplayName);
                         }
 
-                        trackImpl?.Logger = this.Logger;
+                        trackImpl?.Logger ??= this.Logger;
 
                         this.Tracks[trackID].Track = trackImpl;
 

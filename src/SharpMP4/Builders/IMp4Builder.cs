@@ -1,4 +1,5 @@
-﻿using SharpMP4.Tracks;
+﻿using SharpMP4.Common;
+using SharpMP4.Tracks;
 
 namespace SharpMP4.Builders
 {
@@ -11,6 +12,12 @@ namespace SharpMP4.Builders
         /// Timescale of the movie.
         /// </summary>
         uint MovieTimescale { get; set; }
+
+        /// <summary>
+        /// MP4 logger. The logger is also passed to the tracks and can be used for logging inside the track logic. The logger can be set at any time, but it is recommended to set it before adding any tracks or processing any samples.
+        /// The default logger is <see cref="DefaultMp4Logger"/>.
+        /// </summary>
+        IMp4Logger Logger { get; set; }
 
         /// <summary>
         /// Adds a new track to the MP4 container.

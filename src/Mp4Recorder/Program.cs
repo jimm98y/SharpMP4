@@ -19,7 +19,7 @@ using (Stream inputFileStream = new BufferedStream(new FileStream("bunny.mp4", F
 
     using (Stream output = new BufferedStream(new FileStream("bunny_out.mp4", FileMode.Create, FileAccess.Write, FileShare.Read)))
     {
-        IMp4Builder outputBuilder = new Mp4Builder(new SingleStreamOutput(output));
+        IMp4Builder outputBuilder = new Mp4Builder(new SingleStreamOutput(output)) { Logger = logger };
         Dictionary<uint, uint> mapping = new Dictionary<uint, uint>();
 
         foreach (var inputTrack in inputTracks)

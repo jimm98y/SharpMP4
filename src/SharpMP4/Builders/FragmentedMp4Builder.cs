@@ -1,4 +1,5 @@
 ﻿using SharpISOBMFF;
+using SharpMP4.Common;
 using SharpMP4.Tracks;
 using System;
 using System.Collections.Generic;
@@ -73,6 +74,8 @@ namespace SharpMP4.Builders
         private readonly Dictionary<uint, TrackContext> _trackContexts = new Dictionary<uint, TrackContext>();
         
         private uint _moofSequenceNumber = 1;
+
+        public IMp4Logger Logger { get; set; } = new DefaultMp4Logger();
 
         /// <summary>
         /// Ctor.
