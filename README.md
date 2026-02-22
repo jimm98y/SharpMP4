@@ -84,7 +84,7 @@ mp4Builder.Logger = new ConsoleMp4Logger();
 ```
 You can also enable/disable different trace levels like:
 ```cs
-mp4Builder.Logger.WarnEnabled = false;
+mp4Builder.Logger.IsWarnEnabled = false;
 ```
 
 ## Credits
