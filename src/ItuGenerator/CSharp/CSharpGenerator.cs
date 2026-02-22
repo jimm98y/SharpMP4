@@ -32,6 +32,7 @@ namespace ItuGenerator.CSharp
         void FixMethodAllocation(string name, ref string method, ref string typedef);
         string GetDerivedVariables(string name);
         void FixNestedIndexes(List<string> ret, ItuField field);
+        string ContextClass { get; }
     }
 
     public class CSharpGenerator
@@ -110,6 +111,10 @@ namespace Sharp{type}
             resultCode += $@"
          public ulong Read(IItuContext context, ItuStream stream)
          {{
+            {specificGenerator.ContextClass} ituContext = context as {specificGenerator.ContextClass};
+            if (ituContext == null)
+                throw new ArgumentException($""Context should be of type {specificGenerator.ContextClass}"");
+
             ulong size = 0;
 ";
             resultCode += BuildRequiredVariables(ituClass);
@@ -128,6 +133,9 @@ namespace Sharp{type}
             resultCode += $@"
          public ulong Write(IItuContext context, ItuStream stream)
          {{
+            {specificGenerator.ContextClass} ituContext = context as {specificGenerator.ContextClass};
+            if (ituContext == null)
+                throw new ArgumentException($""Context should be of type {specificGenerator.ContextClass}"");
             ulong size = 0;
 ";
             resultCode += BuildRequiredVariables(ituClass);
