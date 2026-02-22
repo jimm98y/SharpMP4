@@ -10,7 +10,7 @@ namespace SharpH26X
 {
     public class ItuStream : IDisposable
     {
-        private bool _shouldEscapeNals = true;
+        private readonly bool _shouldEscapeNals = true;
         private int _bitsPosition;
         private int _currentBytePosition = -1;
         private byte _currentByte = 0;
