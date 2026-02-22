@@ -16,15 +16,35 @@ namespace SharpMP4.Common
             set => _loggingEnabled = value;
         }
 
-        public bool IsErrorEnabled => _loggingEnabled;
+        public bool IsErrorEnabled
+        {
+            get => _loggingEnabled;
+            set => _loggingEnabled = value;
+        }
 
-        public bool IsWarningEnabled => _loggingEnabled;
+        public bool IsWarningEnabled
+        {
+            get => _loggingEnabled;
+            set => _loggingEnabled = value;
+        }
 
-        public bool IsInfoEnabled => _loggingEnabled;
+        public bool IsInfoEnabled
+        {
+            get => _loggingEnabled;
+            set => _loggingEnabled = value;
+        }
 
-        public bool IsDebugEnabled => _loggingEnabled;
+        public bool IsDebugEnabled
+        {
+            get => _loggingEnabled;
+            set => _loggingEnabled = value;
+        }
 
-        public bool IsTraceEnabled => _loggingEnabled;
+        public bool IsTraceEnabled
+        {
+            get => _loggingEnabled;
+            set => _loggingEnabled = value;
+        }
 
         public void LogDebug(string debug)
         {

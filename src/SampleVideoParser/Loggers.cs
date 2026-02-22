@@ -10,15 +10,35 @@ namespace SampleVideoParser;
 /// </summary>
 internal class IsoBmffLogger : IMp4Logger
 {
-    public bool IsErrorEnabled => true;
+    public bool IsErrorEnabled
+    {
+        get => true;
+        set { }
+    }
 
-    public bool IsWarningEnabled => false;
+    public bool IsWarningEnabled
+    {
+        get => false;
+        set { }
+    }
 
-    public bool IsInfoEnabled => true;
+    public bool IsInfoEnabled
+    {
+        get => true;
+        set { }
+    }
 
-    public bool IsDebugEnabled => true;
+    public bool IsDebugEnabled
+    {
+        get => true;
+        set { }
+    }
 
-    public bool IsTraceEnabled => false;
+    public bool IsTraceEnabled
+    {
+        get => false;
+        set { }
+    }
 
     public void LogDebug(string debug)
     {
@@ -49,15 +69,15 @@ internal class IsoBmffLogger : IMp4Logger
 /// </summary>
 internal class H26XLogger : IMp4Logger
 {
-    public bool IsErrorEnabled => false;
+    public bool IsErrorEnabled { get; set; } = false;
 
-    public bool IsWarningEnabled => false;
+    public bool IsWarningEnabled { get; set; } = true;
 
-    public bool IsInfoEnabled => true;
+    public bool IsInfoEnabled { get; set; } = true;
 
-    public bool IsDebugEnabled => false;
+    public bool IsDebugEnabled { get; set; } = false;
 
-    public bool IsTraceEnabled => false;
+    public bool IsTraceEnabled { get; set; } = false;
 
     public void LogDebug(string debug)
     {

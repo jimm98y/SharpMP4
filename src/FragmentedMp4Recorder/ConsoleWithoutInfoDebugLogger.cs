@@ -9,15 +9,35 @@ internal class ConsoleWithoutInfoDebugLogger : IMp4Logger
 {
     public static readonly ConsoleWithoutInfoDebugLogger Instance = new();
 
-    public bool IsErrorEnabled => true;
+    public bool IsErrorEnabled
+    {
+        get => true;
+        set { }
+    }
 
-    public bool IsWarningEnabled => true;
+    public bool IsWarningEnabled
+    {
+        get => true;
+        set { }
+    }
 
-    public bool IsInfoEnabled => false;
+    public bool IsInfoEnabled
+    {
+        get => false;
+        set { }
+    }
 
-    public bool IsDebugEnabled => false;
+    public bool IsDebugEnabled
+    {
+        get => false;
+        set { }
+    }
 
-    public bool IsTraceEnabled => true;
+    public bool IsTraceEnabled
+    {
+        get => true;
+        set { }
+    }
 
     public void LogDebug(string debug)
     {
