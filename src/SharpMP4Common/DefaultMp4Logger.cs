@@ -10,49 +10,75 @@ namespace SharpMP4.Common
     {
         private bool _loggingEnabled = false;
 
-        public bool LoggingEnabled
+        private bool _isErrorEnabled = true;
+        private bool _isWarningEnabled = true;
+        private bool _isInfoEnabled = true;
+        private bool _isDebugEnabled = true;
+        private bool _isTraceEnabled = true;
+
+        public bool IsLoggingEnabled
         {
             get => _loggingEnabled;
             set => _loggingEnabled = value;
         }
 
-        public bool IsErrorEnabled => _loggingEnabled;
+        public bool IsErrorEnabled
+        {
+            get => _isErrorEnabled;
+            set => _isErrorEnabled = value;
+        }
 
-        public bool IsWarningEnabled => _loggingEnabled;
+        public bool IsWarningEnabled
+        {
+            get => _isWarningEnabled;
+            set => _isWarningEnabled = value;
+        }
 
-        public bool IsInfoEnabled => _loggingEnabled;
+        public bool IsInfoEnabled
+        {
+            get => _isInfoEnabled;
+            set => _isInfoEnabled = value;
+        }
 
-        public bool IsDebugEnabled => _loggingEnabled;
+        public bool IsDebugEnabled
+        {
+            get => _isDebugEnabled;
+            set => _isDebugEnabled = value;
+        }
 
-        public bool IsTraceEnabled => _loggingEnabled;
+        public bool IsTraceEnabled
+        {
+            get => _isTraceEnabled;
+            set => _isTraceEnabled = value;
+        }
 
         public void LogDebug(string debug)
         {
-            if (LoggingEnabled)
+            if (IsLoggingEnabled && IsDebugEnabled)
                 Console.WriteLine(debug);
         }
 
         public void LogError(string error)
         {
-            if (LoggingEnabled)
+            if (IsLoggingEnabled && IsErrorEnabled)
                 Console.WriteLine(error);
         }
 
         public void LogInfo(string info)
         {
-            if (LoggingEnabled)
+            if (IsLoggingEnabled && IsInfoEnabled)
                 Console.WriteLine(info);
         }
 
         public void LogTrace(string trace)
         {
-            if (LoggingEnabled)
+            if (IsLoggingEnabled && IsTraceEnabled)
                 Console.WriteLine(trace);
         }
 
         public void LogWarning(string warning)
         {
-            if (LoggingEnabled)
+            if (IsLoggingEnabled && IsWarningEnabled)
                 Console.WriteLine(warning);
         }
     }

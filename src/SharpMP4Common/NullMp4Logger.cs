@@ -14,10 +14,35 @@
         public void LogInfo(string info) { }
         public void LogDebug(string debug) { }
         public void LogTrace(string trace) { }
-        public bool IsErrorEnabled => false;
-        public bool IsWarningEnabled => false;
-        public bool IsInfoEnabled => false;
-        public bool IsDebugEnabled => false;
-        public bool IsTraceEnabled => false;
+
+        public bool IsErrorEnabled
+        {
+            get => false;
+            set { }
+        }
+
+        public bool IsWarningEnabled
+        {
+            get => false;
+            set { }
+        }
+
+        public bool IsInfoEnabled
+        {
+            get => false;
+            set { }
+        }
+
+        public bool IsDebugEnabled
+        {
+            get => false;
+            set { }
+        }
+
+        public bool IsTraceEnabled
+        {
+            get => false;
+            set { }
+        }
     }
 }

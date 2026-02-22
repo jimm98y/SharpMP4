@@ -15,10 +15,15 @@ namespace SharpMP4.Common
         public void LogInfo(string info) => Console.WriteLine($"INFO: {info}");
         public void LogDebug(string debug) => Console.WriteLine($"DEBUG: {debug}");
         public void LogTrace(string trace) => Console.WriteLine($"TRACE: {trace}");
-        public bool IsErrorEnabled => true;
-        public bool IsWarningEnabled => true;
-        public bool IsInfoEnabled => true;
-        public bool IsDebugEnabled => true;
-        public bool IsTraceEnabled => true;
+
+        public bool IsErrorEnabled { get; set; } = true;
+
+        public bool IsWarningEnabled { get; set; } = true;
+
+        public bool IsInfoEnabled { get; set; } = true;
+
+        public bool IsDebugEnabled { get; set; } = true;
+
+        public bool IsTraceEnabled { get; set; } = true;
     }
 }

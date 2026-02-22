@@ -8,10 +8,10 @@
         void LogDebug(string debug);
         void LogTrace(string trace);
 
-        bool IsErrorEnabled { get; }
-        bool IsWarningEnabled { get; }
-        bool IsInfoEnabled { get; }
-        bool IsDebugEnabled { get; }
-        bool IsTraceEnabled { get; }
+        bool IsErrorEnabled { get; set; }
+        bool IsWarningEnabled { get; set; }
+        bool IsInfoEnabled { get; set; }
+        bool IsDebugEnabled { get; set; }
+        bool IsTraceEnabled { get; set; }
     }
 }
