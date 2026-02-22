@@ -194,7 +194,7 @@ namespace ItuGenerator.CSharp
                 case "MaxTemporalId":
                     return "ituContext.MaxTemporalId";
                 case "OlsIdxToLsIdx":
-                    return "ituContext.OlsIdxToLsIdx";
+                    return "((H265Context)context).OlsIdxToLsIdx";
                 case "PicOrderCnt":
                     return "ituContext.PicOrderCnt";
                 case "pic_layer_id":
@@ -455,7 +455,7 @@ namespace ItuGenerator.CSharp
             switch (parameter)
             {
                 case "sps_palette_predictor_initializer":
-                    return "(ituContext.SeqParameterSetRbsp.BitDepthChromaMinus8 + 8)";
+                    return "(((H265Context)context).SeqParameterSetRbsp.BitDepthChromaMinus8 + 8)";
                 case "direct_dependency_type":
                     return "(direct_dep_type_len_minus2 + 2)";
                 case "overlay_element_label_min":
@@ -466,9 +466,9 @@ namespace ItuGenerator.CSharp
                 case "mantissa_t":
                     return "(exponent_t[ i ][ j ]  == 0 ? Math.Max( 0, prec_translation_param - 30 ) : Math.Max( 0, exponent_t[ i ][ j ] + prec_translation_param - 31 ))";
                 case "pps_palette_predictor_initializer":
-                    return "comp == 0 ? (ituContext.PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (ituContext.PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8)";
+                    return "comp == 0 ? (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.LumaBitDepthEntryMinus8 + 8) : (((H265Context)context).PicParameterSetRbsp.PpsSccExtension.ChromaBitDepthEntryMinus8 + 8)";
                 case "nal_initial_arrival_delay":
-                    return "(ituContext.VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1)";
+                    return "(((H265Context)context).VideoParameterSetRbsp.HrdParameters[i].InitialCpbRemovalDelayLengthMinus1 + 1)";
                 case "nal_initial_cpb_removal_delay":
                 case "nal_initial_cpb_removal_offset":
                 case "nal_initial_alt_cpb_removal_delay":
@@ -478,9 +478,9 @@ namespace ItuGenerator.CSharp
                 case "vcl_initial_alt_cpb_removal_delay":
                 case "vcl_initial_alt_cpb_removal_offset":
                 case "vcl_initial_arrival_delay":
-                    return "(ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1)";
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 + 1)";
                 case "du_cpb_removal_delay_increment_minus1":
-                    return "(ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1)";
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1)";
                 case "start_of_coded_interval":
                 case "coded_pivot_value":
                     return "( ( coded_data_bit_depth + 7 )  >>  3 )  <<  3";
@@ -491,22 +491,22 @@ namespace ItuGenerator.CSharp
                 case "reserved_payload_extension_data":
                     return "0 /* TODO */"; // TODO: specification shall ignore this, but when present it's 8 * payloadSize − nEarlierBits − nPayloadZeroBits − 1
                 case "cpb_delay_offset":
-                    return "ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1";
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1";
                 case "dpb_delay_offset":
-                    return "ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1";
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1";
                 case "au_cpb_removal_delay_delta_minus1":
-                    return "ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1";
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1";
                 case "au_cpb_removal_delay_minus1":
-                    return "(ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1)";
+                    return "(((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.AuCpbRemovalDelayLengthMinus1 + 1)";
                 case "pic_dpb_output_delay":
-                    return "ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1";
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 + 1";
                 case "pic_dpb_output_du_delay":
-                    return "ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1";
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1";
                 case "du_common_cpb_removal_delay_increment_minus1":
                 case "du_spt_cpb_removal_delay_increment":
-                    return "ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "pic_spt_dpb_output_du_delay":
-                    return "ituContext.SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1";
+                    return "((H265Context)context).SeqParameterSetRbsp.VuiParameters.HrdParameters.DpbOutputDelayDuLengthMinus1 + 1";
                 case "time_offset_value":
                     return "time_offset_length[i]";
                 case "pre_lut_coded_value":
@@ -518,13 +518,13 @@ namespace ItuGenerator.CSharp
                 case "post_lut_target_value":
                     return "(( ( colour_remap_output_bit_depth + 7 )  >>  3 )  <<  3)";
                 case "output_slice_segment_address":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.PicSizeInCtbsY ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
                 case "view_id_val":
                     return "view_id_len";
                 case "highest_layer_idx_plus1":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.NumLayersInTreePartition[ j ] + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumLayersInTreePartition[ j ] + 1 ) )";
                 case "layer_set_idx_for_ols_minus1":
-                    return "(uint)Math.Ceiling( MathEx.Log2( (ituContext.VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ituContext.VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
+                    return "(uint)Math.Ceiling( MathEx.Log2( (((H265Context)context).VideoParameterSetRbsp.VpsNumLayerSetsMinus1 + 1 + ((H265Context)context).VideoParameterSetRbsp.VpsExtension.NumAddLayerSets) - 1 ) ) ";
                 case "profile_tier_level_idx":
                     return "(uint)Math.Ceiling( MathEx.Log2( vps_num_profile_tier_level_minus1 + 1 ) )";
                 case "vps_rep_format_idx":
@@ -532,11 +532,11 @@ namespace ItuGenerator.CSharp
                 case "direct_dependency_all_layers_type":
                     return "direct_dep_type_len_minus2 + 2";
                 case "bsp_hrd_idx":
-                    return "(uint)Math.Ceiling( MathEx.Log2(ituContext.VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2(((H265Context)context).VideoParameterSetRbsp.VpsNumHrdParameters + vps_num_add_hrd_params ) )";
                 case "lt_ref_pic_poc_lsb_sps":
-                    return "(ituContext.SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
+                    return "(((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "res_coeff_r":
-                    return "((uint)Math.Max( 0, ( 10 + (8 + ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmInputMinus8) - (8 + ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmOutputMinus8) - ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmResQuantBits - ( ituContext.PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmDeltaFlcBitsMinus1 + 1 ) ) ))";
+                    return "((uint)Math.Max( 0, ( 10 + (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmInputMinus8) - (8 + ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.LumaBitDepthCmOutputMinus8) - ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmResQuantBits - ( ((H265Context)context).PicParameterSetRbsp.PpsMultilayerExtension.ColourMappingTable.CmDeltaFlcBitsMinus1 + 1 ) ) ))";
                 case "man_gvd_r":
                     return "(exp_gvd_r[ i ][ j ][ k ] == 0 ? Math.Max( 0, prec_gvd_rotation_param - 30 ) : Math.Max( 0, exp_gvd_r[ i ][ j ][ k ] + prec_gvd_rotation_param - 31 ))";
                 case "entry_point_offset_minus1":
@@ -564,11 +564,11 @@ namespace ItuGenerator.CSharp
                     return "(this.da_mantissa_len_minus1 + 1)";
                 case "num_val_delta_dlt":
                 case "max_diff":
-                    return "ituContext.PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
+                    return "((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
                 case "min_diff_minus1":
                     return "(uint)Math.Ceiling( MathEx.Log2( max_diff + 1 ) )";
                 case "delta_dlt_val0":
-                    return "ituContext.PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
+                    return "((H265Context)context).PicParameterSetRbsp.Pps3dExtension.PpsBitDepthForDepthLayersMinus8 + 8";
                 case "delta_val_diff_minus_min":
                     return "(uint)Math.Ceiling( MathEx.Log2( max_diff - min_diff_minus1 + 1 ) )";
                 case "man_gvd_z_near":
@@ -584,24 +584,24 @@ namespace ItuGenerator.CSharp
                 case "man_gvd_principal_point_y":
                     return "(exp_gvd_principal_point_y[ i ] == 0 ? Math.Max( 0, prec_gvd_principal_point - 30 ) : Math.Max( 0, exp_gvd_principal_point_y[ i ] + prec_gvd_principal_point - 31 ))";
                 case "slice_segment_address":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.PicSizeInCtbsY ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).PicSizeInCtbsY ) )";
                 case "slice_pic_order_cnt_lsb":
-                    return "ituContext.SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4";
+                    return "((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4";
                 case "short_term_ref_pic_set_idx":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.SeqParameterSetRbsp.NumShortTermRefPicSets ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).SeqParameterSetRbsp.NumShortTermRefPicSets ) )";
                 case "lt_idx_sps":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.SeqParameterSetRbsp.NumLongTermRefPicsSps ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).SeqParameterSetRbsp.NumLongTermRefPicsSps ) )";
                 case "poc_lsb_lt":
-                    return "( ituContext.SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
+                    return "( ((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "list_entry_l0":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.NumPicTotalCurr ) ) ";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
                 case "list_entry_l1":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.NumPicTotalCurr ) ) ";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumPicTotalCurr ) ) ";
                 case "inter_layer_pred_layer_idc":
                 case "num_inter_layer_ref_pics_minus1":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.NumDirectRefLayers[ ituContext.NalHeader.NalUnitHeader.NuhLayerId ] ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ((H265Context)context).NumDirectRefLayers[ ((H265Context)context).NalHeader.NalUnitHeader.NuhLayerId ] ) )";
                 case "poc_lsb_val":
-                    return "ituContext.SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4";
+                    return "((H265Context)context).SeqParameterSetRbsp.Log2MaxPicOrderCntLsbMinus4 + 4";
             }
 
             Debug.WriteLine(parameter);
@@ -620,11 +620,11 @@ namespace ItuGenerator.CSharp
             }
             else if(variableName == "direct_dependency_flag")
             {
-                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}this.{variableName}[0] = new byte[ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1];";
+                return $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};\r\n{spacing}this.{variableName}[0] = new byte[((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1];";
             }
             else if(variableName == "direct_dependency_flag[ i ]")
             {
-                return $"\r\n{spacing}this.{variableName} = new {variableType.Replace(" i", "ituContext.VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1")}{appendType};";
+                return $"\r\n{spacing}this.{variableName} = new {variableType.Replace(" i", "((H265Context)context).VideoParameterSetRbsp.VpsMaxLayersMinus1 + 1")}{appendType};";
             }
 
             return "";
