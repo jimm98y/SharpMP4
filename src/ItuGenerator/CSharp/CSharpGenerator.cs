@@ -93,23 +93,23 @@ namespace Sharp{type}
         {
             specificGenerator.FixClassParameters(ituClass);
 
-            string resultCode = @$"
+            var resultCode = new StringBuilder(@$"
     /*
 {ituClass.Syntax.Replace("*/", "*//*")}
     */
     public class {ituClass.ClassName.ToPropertyCase()} : IItuSerializable
     {{
-";
-            resultCode += GenerateFields(ituClass);
+");
+            resultCode.Append(GenerateFields(ituClass));
 
-            resultCode += @"
+            resultCode.Append(@"
          public int HasMoreRbspData { get; set; }
          public int[] ReadNextBits { get; set; }
-";
+");
 
-            resultCode += GenerateCtor(ituClass);
+            resultCode.Append(GenerateCtor(ituClass));
 
-            resultCode += $@"
+            resultCode.Append($@"
          public ulong Read(IItuContext context, ItuStream stream)
          {{
             {specificGenerator.ContextClass} ituContext = context as {specificGenerator.ContextClass};
@@ -117,45 +117,45 @@ namespace Sharp{type}
                 throw new ArgumentException($""Context should be of type {specificGenerator.ContextClass}"");
 
             ulong size = 0;
-";
-            resultCode += BuildRequiredVariables(ituClass);
+");
+            resultCode.Append(BuildRequiredVariables(ituClass));
 
             foreach (var field in ituClass.Fields)
             {
-                resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Read);
+                resultCode.Append("\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Read));
             }
             ituClass.AddedFields.Clear();
-            resultCode += $@"
+            resultCode.Append($@"
 
             return size;
          }}
-";
+");
 
-            resultCode += $@"
+            resultCode.Append($@"
          public ulong Write(IItuContext context, ItuStream stream)
          {{
             {specificGenerator.ContextClass} ituContext = context as {specificGenerator.ContextClass};
             if (ituContext == null)
                 throw new ArgumentException($""Context should be of type {specificGenerator.ContextClass}"");
             ulong size = 0;
-";
-            resultCode += BuildRequiredVariables(ituClass);
+");
+            resultCode.Append(BuildRequiredVariables(ituClass));
 
             foreach (var field in ituClass.Fields)
             {
-                resultCode += "\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Write);
+                resultCode.Append("\r\n" + BuildMethod(ituClass, null, field, 3, MethodType.Write));
             }
             ituClass.AddedFields.Clear();
-            resultCode += $@"
+            resultCode.Append($@"
 
             return size;
          }}
-";
+");
 
-            resultCode += $@"
+            resultCode.Append($@"
     }}
-";
-            return resultCode;
+");
+            return resultCode.ToString();
         }
                 
         private static string BuildRequiredVariables(ItuClass ituClass)
@@ -274,7 +274,7 @@ namespace Sharp{type}
             var comment = field as ItuComment;
             if (comment != null)
             {
-                return BuildComment(b, comment, level, methodType);
+                return BuildComment(comment, level, methodType);
             }
 
             if ((field as ItuField).Type == null && (!string.IsNullOrWhiteSpace((field as ItuField).Value) || !string.IsNullOrWhiteSpace((field as ItuField).Increment)))
@@ -665,17 +665,16 @@ namespace Sharp{type}
                 }
             }
 
-            
-            string arraySuffix = "";
+            var arraySuffix = new StringBuilder();
             for (int i = 0; i < arrayDimensions; i++)
             {
-                arraySuffix += "[]";
+                arraySuffix.Append("[]");
             }
 
-            return map[field.Type] + arraySuffix;
+            return map[field.Type] + arraySuffix.ToString();
         }
 
-        private string BuildComment(ItuClass b, ItuComment comment, int level, MethodType methodType)
+        private string BuildComment(ItuComment comment, int level, MethodType methodType)
         {
             return $"/* {comment.Comment} */\r\n";
         }
@@ -683,7 +682,7 @@ namespace Sharp{type}
         private string BuildBlock(ItuClass b, ItuBlock block, int level, MethodType methodType)
         {
             string spacing = GetSpacing(level);
-            string ret = "";
+            var ret = new StringBuilder();
 
             string condition = block.Condition;
             string blockType = block.Type;
@@ -736,14 +735,14 @@ namespace Sharp{type}
                                     int blockSuffixLevel = GetNestedInLoopSuffix(block, "", out suffix);
                                     int fieldSuffixLevel = GetNestedInLoopSuffix(req, "", out _);
 
-                                    string appendType = "";
+                                    var appendType = new StringBuilder();
                                     if (fieldSuffixLevel - blockSuffixLevel > 1)
                                     {
                                         int count = fieldSuffixLevel - blockSuffixLevel - 1;
 
                                         for (int i = 0; i < count; i++)
                                         {
-                                            appendType += "[]";
+                                            appendType.Append("[]");
                                         }
                                     }
 
@@ -764,7 +763,7 @@ namespace Sharp{type}
                                     }
                                     else
                                     {
-                                        variableType = variableType + $"[{variable}]";
+                                        variableType += $"[{variable}]";
                                     }
 
                                     if (variableType.Contains("_minus1[ c ]"))
@@ -796,29 +795,29 @@ namespace Sharp{type}
                                     else if (variableType.Contains("MaxSubLayersVal"))
                                         variableType = variableType.Replace("MaxSubLayersVal", "MaxSubLayersVal + 1");
 
-                                    appendType = specificGenerator.FixAppendType(appendType, variableName);
+                                    appendType = new StringBuilder(specificGenerator.FixAppendType(appendType.ToString(), variableName));
 
                                     // H266
                                     variableType = specificGenerator.FixVariableType(variableType);
 
                                     if (methodType == MethodType.Read)
                                     {
-                                        string fixedAllocations = specificGenerator.FixAllocations(spacing, appendType, variableType, variableName);
+                                        string fixedAllocations = specificGenerator.FixAllocations(spacing, appendType.ToString(), variableType, variableName);
                                         if (!string.IsNullOrEmpty(fixedAllocations))
                                         {
-                                            ret += fixedAllocations;
+                                            ret.Append(fixedAllocations);
                                         }
 
                                         if (fixedAllocations == "") // when null, don't append anything
                                         {
-                                            ret += $"\r\n{spacing}this.{variableName} = new {variableType}{appendType};";
+                                            ret.Append($"\r\n{spacing}this.{variableName} = new {variableType}{appendType};");
                                         }
                                     }
 
                                     if (variableName == "pt_sublayer_delays_present_flag")
                                     {
                                         if (methodType == MethodType.Read)
-                                            ret += "\r\nthis.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1] = 1;"; // The value of pt_sublayer_delays_present_flag[bp_max_sublayers_minus1] is inferred to be equal to 1
+                                            ret.Append("\r\nthis.pt_sublayer_delays_present_flag[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1] = 1;"); // The value of pt_sublayer_delays_present_flag[bp_max_sublayers_minus1] is inferred to be equal to 1
                                     }
                                 }
                             }
@@ -832,24 +831,24 @@ namespace Sharp{type}
             }
 
             if (block.Type == "do")
-                ret += $"\r\n{spacing}{blockType}\r\n{spacing}{{";
+                ret.Append($"\r\n{spacing}{blockType}\r\n{spacing}{{");
             else
-                ret += $"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{";
+                ret.Append($"\r\n{spacing}{blockType} {condition}\r\n{spacing}{{");
 
             if (blockType == "do" || blockType == "while")
-                ret += $"\r\n{spacing}\twhileIndex++;\r\n";
+                ret.Append($"\r\n{spacing}\twhileIndex++;\r\n");
 
             foreach (var field in block.Content)
             {
-                ret += "\r\n" + BuildMethod(b, block, field, level + 1, methodType);
+                ret.Append("\r\n" + BuildMethod(b, block, field, level + 1, methodType));
             }
 
-            ret += $"\r\n{spacing}}}";
+            ret.Append($"\r\n{spacing}}}");
 
             if(block.Type == "do")
-                ret += $" while {condition};";
+                ret.Append($" while {condition};");
 
-            return ret;
+            return ret.ToString();
         }       
 
         private string FixCondition(string condition, MethodType methodType)
