@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace SharpAV1
 {
@@ -239,29 +240,30 @@ namespace SharpAV1
 
         private int _logLevel = 0;
 
-        private void LogBegin(string name)
-        {
-            string padding = "-";
-            for (int i = 0; i < _logLevel; i++)
-            {
-                padding += "-";
-            }
+        // Note: This function was not used, so I commented it out.
+        //private void LogBegin(string name)
+        //{
+        //    string padding = "-";
+        //    for (int i = 0; i < _logLevel; i++)
+        //    {
+        //        padding += "-";
+        //    }
 
-            this.Logger.LogInfo($"{padding} {name}");
-        }
+        //    this.Logger.LogInfo($"{padding} {name}");
+        //}
 
         private void LogEnd<T>(string name, ulong size, T value)
         {
-            string padding = "-";
+            var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
-                padding += "-";
+                padding.Append('-');
             }
 
-            string endPadding = "";
+            var endPadding = new StringBuilder();
             for (int i = 0; i < 64 - padding.Length - name.Length - size.ToString().Length - 2; i++)
             {
-                endPadding += " ";
+                endPadding.Append(' ');
             }
 
             this.Logger.LogInfo($"{padding} {name}{endPadding}{size}   {value}");

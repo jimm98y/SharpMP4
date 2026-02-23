@@ -1,6 +1,7 @@
 ﻿using SharpMP4.Common;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -738,10 +739,10 @@ namespace SharpH26X
 
         private void LogBegin(string name)
         {
-            string padding = "-";
+            var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
-                padding += "-";
+                padding.Append('-');
             }
 
             this.Logger.LogInfo($"{padding} {name}");
@@ -752,16 +753,16 @@ namespace SharpH26X
             if (string.IsNullOrEmpty(name))
                 return;
 
-            string padding = "-";
+            var padding = new StringBuilder();
             for (int i = 0; i < _logLevel; i++)
             {
-                padding += "-";
+                padding.Append('-');
             }
 
-            string endPadding = "";
+            var endPadding = new StringBuilder();
             for (int i = 0; i < 64 - padding.Length - name.Length - size.ToString().Length - 2; i++)
             {
-                endPadding += " ";
+                endPadding.Append(' ');
             }
 
             this.Logger.LogInfo($"{padding} {name}{endPadding}{size}   {value}");
