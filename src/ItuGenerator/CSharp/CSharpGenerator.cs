@@ -258,16 +258,16 @@ namespace Sharp{type}
             var blockIf = field as ItuBlockIfThenElse;
             if (blockIf != null)
             {
-                string ret = BuildBlock(b, (ItuBlock)blockIf.BlockIf, level, methodType);
+                var ret = new StringBuilder(BuildBlock(b, (ItuBlock)blockIf.BlockIf, level, methodType));
                 foreach (var elseBlock in blockIf.BlockElseIf)
                 {
-                    ret += BuildBlock(b, (ItuBlock)elseBlock, level, methodType);
+                    ret.Append(BuildBlock(b, (ItuBlock)elseBlock, level, methodType));
                 }
                 if (blockIf.BlockElse != null)
                 {
-                    ret += BuildBlock(b, (ItuBlock)blockIf.BlockElse, level, methodType);
+                    ret.Append(BuildBlock(b, (ItuBlock)blockIf.BlockElse, level, methodType));
                 }
-                return ret;
+                return ret.ToString();
             }
 
             var comment = field as ItuComment;
