@@ -252,20 +252,20 @@ namespace Sharp{type}
             var block = field as ItuBlock;
             if (block != null)
             {
-                return BuildBlock(b, parent, block, level, methodType);
+                return BuildBlock(b, block, level, methodType);
             }
 
             var blockIf = field as ItuBlockIfThenElse;
             if (blockIf != null)
             {
-                string ret = BuildBlock(b, parent, (ItuBlock)blockIf.BlockIf, level, methodType);
+                string ret = BuildBlock(b, (ItuBlock)blockIf.BlockIf, level, methodType);
                 foreach (var elseBlock in blockIf.BlockElseIf)
                 {
-                    ret += BuildBlock(b, parent, (ItuBlock)elseBlock, level, methodType);
+                    ret += BuildBlock(b, (ItuBlock)elseBlock, level, methodType);
                 }
                 if (blockIf.BlockElse != null)
                 {
-                    ret += BuildBlock(b, parent, (ItuBlock)blockIf.BlockElse, level, methodType);
+                    ret += BuildBlock(b, (ItuBlock)blockIf.BlockElse, level, methodType);
                 }
                 return ret;
             }
@@ -679,7 +679,7 @@ namespace Sharp{type}
             return $"/* {comment.Comment} */\r\n";
         }
 
-        private string BuildBlock(ItuClass b, ItuBlock parent, ItuBlock block, int level, MethodType methodType)
+        private string BuildBlock(ItuClass b, ItuBlock block, int level, MethodType methodType)
         {
             string spacing = GetSpacing(level);
             string ret = "";
