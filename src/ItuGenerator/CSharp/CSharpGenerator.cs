@@ -160,7 +160,7 @@ namespace Sharp{type}
                 
         private static string BuildRequiredVariables(ItuClass ituClass)
         {
-            string resultCode = "";
+            var resultCode = new StringBuilder();
 
             foreach (var v in ituClass.RequiresDefinition)
             {
@@ -173,7 +173,7 @@ namespace Sharp{type}
                         value = v.Value;
                     }
 
-                    resultCode += $"\r\n\t\t\t{type} {v.Name} {value};";
+                    resultCode.Append($"\r\n\t\t\t{type} {v.Name} {value};");
                 }
                 else
                 {
@@ -199,28 +199,29 @@ namespace Sharp{type}
                         }
                     }
 
-                    string array = "";
+                    var array = new StringBuilder();
                     if (arrayDimensions == 1 && indicesArrayDimensions > 0)
                     {
-                        array += "[";
+                        array.Append("[");
                         for (int i = 0; i < indicesArrayDimensions; i++)
                         {
-                            array += ",";
+                            array.Append(",");
                         }
-                        array += "]";
+                        array.Append("]");
                     }
                     else
                     {
                         for (int i = 0; i < arrayDimensions; i++)
                         {
-                            array += "[]";
+                            array.Append("[]");
                         }
                     }
-                    resultCode += $"\r\n\t\t\t{type}{array} {v.Name} = null;"; // TODO: size
+
+                    resultCode.Append($"\r\n\t\t\t{type}{array} {v.Name} = null;"); // TODO: size
                 }
             }
 
-            return resultCode;
+            return resultCode.ToString();
         }
 
         public int GetLoopNestingLevel(ItuCode code)
