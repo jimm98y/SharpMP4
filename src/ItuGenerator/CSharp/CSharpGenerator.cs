@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace ItuGenerator.CSharp
@@ -1080,14 +1081,17 @@ namespace Sharp{type}
             result = string.Concat(ret);
             return ret.Count;
         }
-        private string GetSpacing(int level)
+
+        private static string GetSpacing(int level)
         {
-            string ret = "";
+            var ret = new StringBuilder();
+
             for (int i = 0; i < level; i++)
             {
-                ret += "\t";
+                ret.Append("\t");
             }
-            return ret;
+
+            return ret.ToString();
         }
 
         private string GenerateCtor(ItuClass ituClass)
