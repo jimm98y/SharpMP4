@@ -1193,8 +1193,7 @@ namespace Sharp{type}
 
         public void AddRequiresAllocation(ItuField field)
         {
-            ItuBlock parent = null;
-            parent = field.Parent;
+            ItuBlock parent = field.Parent;
             while (parent != null)
             {
                 if (parent.Type == "for")
