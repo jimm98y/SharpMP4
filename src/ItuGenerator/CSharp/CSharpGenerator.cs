@@ -1124,15 +1124,15 @@ namespace Sharp{type}
 
         private string GenerateFields(ItuClass ituClass)
         {
-            string resultCode = "";
+            var resultCode = new StringBuilder();
             ituClass.FlattenedFields = FlattenFields(ituClass, ituClass.Fields);
 
-            foreach(var field in ituClass.FlattenedFields)
+            foreach (var field in ituClass.FlattenedFields)
             {
-                resultCode += BuildField(ituClass, field);
+                resultCode.Append(BuildField(ituClass, field));
             }
 
-            return resultCode;
+            return resultCode.ToString();
         }
 
         private string BuildField(ItuClass ituClass, ItuField field)
