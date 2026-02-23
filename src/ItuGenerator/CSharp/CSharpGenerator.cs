@@ -1208,7 +1208,7 @@ namespace Sharp{type}
 
         private List<ItuField> FlattenFields(ItuClass b, IEnumerable<ItuCode> fields, ItuBlock parent = null)
         {
-            Dictionary<string, ItuField> ret = new Dictionary<string, ItuField>();
+            var ret = new Dictionary<string, ItuField>();
 
             if (parent == null)
             {
