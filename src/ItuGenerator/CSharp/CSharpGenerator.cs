@@ -914,11 +914,13 @@ namespace Sharp{type}
             if (string.IsNullOrEmpty(condition))
                 return condition;
 
-            List<string> ret = new List<string>();
+            var ret = new List<string>();
             ItuBlock parent = null;
+
             var field = code as ItuField;
             if (field != null)
                 parent = field.Parent;
+
             var block = code as ItuBlock;
             if (block != null)
                 parent = block.Parent;
@@ -1016,9 +1018,10 @@ namespace Sharp{type}
                     {
                         if (string.IsNullOrWhiteSpace(ff.Name) || !string.IsNullOrEmpty(ff.Value))
                             continue;
+
                         if (condition.Contains(prefix + ff.Name + suffix) && !condition.Contains(prefix + ff.Name + "["))
                         {
-                            if(!condition.Contains("slice_segment_header_extension_length"))
+                            if (!condition.Contains("slice_segment_header_extension_length"))
                                 condition = condition.Replace(prefix + ff.Name + suffix, prefix + ff.Name + str + suffix);
                         }
                     }
@@ -1030,6 +1033,7 @@ namespace Sharp{type}
                             {
                                 if (string.IsNullOrWhiteSpace(ffff.Name) || !string.IsNullOrEmpty(ffff.Value))
                                     continue;
+
                                 if (condition.Contains(prefix + ffff.Name + suffix) && !condition.Contains(prefix + ffff.Name + "["))
                                 {
                                     condition = condition.Replace(prefix + ffff.Name + suffix, prefix + ffff.Name + str + suffix);
@@ -1047,11 +1051,13 @@ namespace Sharp{type}
 
         private int GetNestedInLoopSuffix(ItuCode code, string currentSuffix, out string result)
         {
-            List<string> ret = new List<string>();
+            var ret = new List<string>();
             ItuBlock parent = null;
+
             var field = code as ItuField;
             if (field != null)
                 parent = field.Parent;
+
             var block = code as ItuBlock;
             if (block != null)
                 parent = block.Parent;
