@@ -124,7 +124,7 @@ namespace SharpISOBMFF
 
     public class TemporaryFile : IStorage
     {
-        private FileStream _stream;
+        private readonly FileStream _stream;
 
         public Stream Stream { get { return _stream; } }
 

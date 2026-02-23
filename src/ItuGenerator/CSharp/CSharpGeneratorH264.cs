@@ -55,123 +55,123 @@ namespace ItuGenerator.CSharp
             switch (parameter)
             {
                 case "NumClockTS":
-                    return "((H264Context)context).NumClockTS";
+                    return "ituContext.NumClockTS";
                 case "AllViewsPairedFlag":
-                    return "((H264Context)context).AllViewsPairedFlag";
+                    return "ituContext.AllViewsPairedFlag";
                 case "ChromaArrayType":
-                    return "((H264Context)context).ChromaArrayType";
+                    return "ituContext.ChromaArrayType";
                 case "IdrPicFlag":
-                    return "((H264Context)context).IdrPicFlag";
+                    return "ituContext.IdrPicFlag";
                 case "DepthFlag":
-                    return "((H264Context)context).DepthFlag";
+                    return "ituContext.DepthFlag";
                 case "CpbDpbDelaysPresentFlag":
-                    return "((H264Context)context).CpbDpbDelaysPresentFlag";
+                    return "ituContext.CpbDpbDelaysPresentFlag";
                 case "PicSizeInMapUnits":
-                    return "((H264Context)context).PicSizeInMapUnits";
+                    return "ituContext.PicSizeInMapUnits";
                 case "deltaFlag":
-                    return "((H264Context)context).deltaFlag";
+                    return "ituContext.deltaFlag";
                 // TODO: artificially added because there are many different slice_header types - unify?
                 case "num_ref_idx_l0_active_minus1":
-                    return "((H264Context)context).NumRefIdxL0ActiveMinus1";
+                    return "ituContext.NumRefIdxL0ActiveMinus1";
                 case "num_ref_idx_l1_active_minus1":
-                    return "((H264Context)context).NumRefIdxL1ActiveMinus1";
+                    return "ituContext.NumRefIdxL1ActiveMinus1";
                 case "slice_type":
-                    return "((H264Context)context).SliceType";
+                    return "ituContext.SliceType";
                 case "time_offset_length":
-                    return "((H264Context)context).TimeOffsetLength";
+                    return "ituContext.TimeOffsetLength";
 
                 case "additional_shift_present":
-                    return "((H264Context)context).SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag";
+                    return "ituContext.SeiPayload.ThreeDimensionalReferenceDisplaysInfo.AdditionalShiftPresentFlag";
                 case "texture_view_present_flag":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.TextureViewPresentFlag";
                 case "cpb_cnt_minus1":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbCntMinus1";
                 case "NalHrdBpPresentFlag":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.NalHrdParametersPresentFlag";
                 case "VclHrdBpPresentFlag":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.VclHrdParametersPresentFlag";
                 case "profile_idc":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.ProfileIdc";
                 case "chroma_format_idc":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.ChromaFormatIdc";
                 case "pic_struct_present_flag":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.PicStructPresentFlag";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.PicStructPresentFlag";
                 case "NumDepthViews":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcdExtension.NumDepthViews";
                 case "frame_mbs_only_flag":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.FrameMbsOnlyFlag";
                 case "num_slice_groups_minus1":
-                    return "((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1";
+                    return "ituContext.PicParameterSetRbsp.NumSliceGroupsMinus1";
                 case "num_views_minus1":
-                    return "(int)((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1";
+                    return "(int)ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumViewsMinus1";
                 case "anchor_pic_flag":
-                    return "((H264Context)context).NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag";
+                    return "ituContext.NalHeader.NalUnitHeaderMvcExtension.AnchorPicFlag";
                 case "ref_dps_id0":
-                    return "((H264Context)context).DepthParameterSetRbsp.RefDpsId0";
+                    return "ituContext.DepthParameterSetRbsp.RefDpsId0";
                 case "predWeight0":
-                    return "((H264Context)context).DepthParameterSetRbsp.PredWeight0";
+                    return "ituContext.DepthParameterSetRbsp.PredWeight0";
                 case "ref_dps_id1":
-                    return "((H264Context)context).DepthParameterSetRbsp.RefDpsId1";
+                    return "ituContext.DepthParameterSetRbsp.RefDpsId1";
                 case "num_anchor_refs_l0":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL0";
                 case "num_anchor_refs_l1":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumAnchorRefsL1";
                 case "num_non_anchor_refs_l0":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL0";
                 case "num_non_anchor_refs_l1":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetMvcExtension.NumNonAnchorRefsL1";
                 case "num_init_pic_parameter_set_minus1":
-                    return "((H264Context)context).SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1"; // looks like there is a typo...
+                    return "ituContext.SeiPayload.MvcdViewScalabilityInfo.NumPicParameterSetMinus1"; // looks like there is a typo...
                 case "separate_colour_plane_flag":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.SeparateColourPlaneFlag";
                 case "redundant_pic_cnt_present_flag":
-                    return "((H264Context)context).PicParameterSetRbsp.RedundantPicCntPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.RedundantPicCntPresentFlag";
                 case "entropy_coding_mode_flag":
-                    return "((H264Context)context).PicParameterSetRbsp.EntropyCodingModeFlag";
+                    return "ituContext.PicParameterSetRbsp.EntropyCodingModeFlag";
                 case "svc_extension_flag":
-                    return "((H264Context)context).NalHeader.SvcExtensionFlag";
+                    return "ituContext.NalHeader.SvcExtensionFlag";
                 case "avc_3d_extension_flag":
-                    return "((H264Context)context).NalHeader.Avc3dExtensionFlag";
+                    return "ituContext.NalHeader.Avc3dExtensionFlag";
                 case "pic_order_cnt_type":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.PicOrderCntType";
                 case "bottom_field_pic_order_in_frame_present_flag":
-                    return "((H264Context)context).PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag";
+                    return "ituContext.PicParameterSetRbsp.BottomFieldPicOrderInFramePresentFlag";
                 case "delta_pic_order_always_zero_flag":
-                    return "((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag";
+                    return "ituContext.SeqParameterSetRbsp.SeqParameterSetData.DeltaPicOrderAlwaysZeroFlag";
                 case "nal_unit_type":
-                    return "((H264Context)context).NalHeader.NalUnitType";
+                    return "ituContext.NalHeader.NalUnitType";
                 case "weighted_pred_flag":
-                    return "((H264Context)context).PicParameterSetRbsp.WeightedPredFlag";
+                    return "ituContext.PicParameterSetRbsp.WeightedPredFlag";
                 case "weighted_bipred_idc":
-                    return "((H264Context)context).PicParameterSetRbsp.WeightedBipredIdc";
+                    return "ituContext.PicParameterSetRbsp.WeightedBipredIdc";
                 case "nal_ref_idc":
-                    return "((H264Context)context).NalHeader.NalRefIdc";
+                    return "ituContext.NalHeader.NalRefIdc";
                 case "deblocking_filter_control_present_flag":
-                    return "((H264Context)context).PicParameterSetRbsp.DeblockingFilterControlPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.DeblockingFilterControlPresentFlag";
                 case "slice_group_map_type":
-                    return "((H264Context)context).PicParameterSetRbsp.SliceGroupMapType";
+                    return "ituContext.PicParameterSetRbsp.SliceGroupMapType";
                 case "use_ref_base_pic_flag":
-                    return "((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag";
+                    return "ituContext.NalHeader.NalUnitHeaderSvcExtension.UseRefBasePicFlag";
                 case "idr_flag":
-                    return "((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.IdrFlag";
+                    return "ituContext.NalHeader.NalUnitHeaderSvcExtension.IdrFlag";
                 case "quality_id":
-                    return "((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.QualityId";
+                    return "ituContext.NalHeader.NalUnitHeaderSvcExtension.QualityId";
                 case "no_inter_layer_pred_flag":
-                    return "((H264Context)context).NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag";
+                    return "ituContext.NalHeader.NalUnitHeaderSvcExtension.NoInterLayerPredFlag";
                 case "slice_header_restriction_flag":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.SliceHeaderRestrictionFlag";
                 case "inter_layer_deblocking_filter_control_present_flag":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.InterLayerDeblockingFilterControlPresentFlag";
                 case "extended_spatial_scalability_idc":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.ExtendedSpatialScalabilityIdc";
                 case "adaptive_tcoeff_level_prediction_flag":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSetSvcExtension.AdaptiveTcoeffLevelPredictionFlag";
                 case "slice_header_prediction_flag":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SliceHeaderPredictionFlag";
                 case "seq_view_synthesis_flag":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SeqViewSynthesisFlag";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.SeqViewSynthesisFlag";
                 case "three_dv_acquisition_idc":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.ThreeDvAcquisitionIdc";
 
                 default:
                     //throw new NotImplementedException(parameter);
@@ -312,42 +312,42 @@ namespace ItuGenerator.CSharp
             switch(field)
             {
                 case "sei_payload":
-                    return "((H264Context)context).SetSeiPayload(sei_payload);";
+                    return "ituContext.SetSeiPayload(sei_payload);";
                 case "pic_parameter_set_id":
-                    return "((H264Context)context).SetPicParameterSetId(pic_parameter_set_id);";
+                    return "ituContext.SetPicParameterSetId(pic_parameter_set_id);";
                 case "seq_parameter_set_id":
-                    return "((H264Context)context).SetSeqParameterSetId(seq_parameter_set_id);";
+                    return "ituContext.SetSeqParameterSetId(seq_parameter_set_id);";
 
                 case "pic_struct":
-                    return "((H264Context)context).OnPicStruct(pic_struct);";
+                    return "ituContext.OnPicStruct(pic_struct);";
                 case "enable_rle_skip_flag":
-                    return "((H264Context)context).OnEnableRleSkipFlag();";
+                    return "ituContext.OnEnableRleSkipFlag();";
                 case "separate_colour_plane_flag":
-                    return "((H264Context)context).OnSeparateColourPlaneFlag();";
+                    return "ituContext.OnSeparateColourPlaneFlag();";
                 case "nal_unit_type":
-                    return "((H264Context)context).OnNalUnitType();";
+                    return "ituContext.OnNalUnitType();";
                 case "avc_3d_extension_flag":
-                    return "((H264Context)context).OnAvc3dExtensionFlag();";
+                    return "ituContext.OnAvc3dExtensionFlag();";
                 case "vcl_hrd_parameters_present_flag":
-                    return "((H264Context)context).OnVclHrdParametersPresentFlag();";
+                    return "ituContext.OnVclHrdParametersPresentFlag();";
                 case "pic_height_in_map_units_minus1":
-                    return "((H264Context)context).OnPicHeightInMapUnitsMinus1();";
+                    return "ituContext.OnPicHeightInMapUnitsMinus1();";
                 case "pic_width_in_mbs_minus1":
-                    return "((H264Context)context).OnPicWidthInMbsMinus1();";
+                    return "ituContext.OnPicWidthInMbsMinus1();";
 
                 // TODO: artificially added because there are many different slice_header types - unify?
                 case "time_offset_length":
-                    return "((H264Context)context).OnTimeOffsetLength(time_offset_length);";
+                    return "ituContext.OnTimeOffsetLength(time_offset_length);";
                 case "slice_type":
-                    return "((H264Context)context).OnSliceType(slice_type);";
+                    return "ituContext.OnSliceType(slice_type);";
                 case "num_ref_idx_l0_active_minus1":
-                    return "((H264Context)context).OnNumRefIdxL0ActiveMinus1(num_ref_idx_l0_active_minus1);";
+                    return "ituContext.OnNumRefIdxL0ActiveMinus1(num_ref_idx_l0_active_minus1);";
                 case "num_ref_idx_l1_active_minus1":
-                    return "((H264Context)context).OnNumRefIdxL1ActiveMinus1(num_ref_idx_l1_active_minus1);";
+                    return "ituContext.OnNumRefIdxL1ActiveMinus1(num_ref_idx_l1_active_minus1);";
                 case "chroma_format_idc":
-                    return "((H264Context)context).OnChromaFormatIdc();";
+                    return "ituContext.OnChromaFormatIdc();";
                 case "num_ref_idx_active_override_flag":
-                    return "((H264Context)context).OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);";
+                    return "ituContext.OnNumRefIdxActiveOverrideFlag(num_ref_idx_active_override_flag);";
             }
             return "";
         }
@@ -360,21 +360,21 @@ namespace ItuGenerator.CSharp
                 case "alpha_transparent_value":
                     return "(this.bit_depth_aux_minus8 + 9)";
                 case "slice_group_id":
-                    return "(uint)Math.Ceiling(MathEx.Log2(((H264Context)context).PicParameterSetRbsp.NumSliceGroupsMinus1 + 1))";
+                    return "(uint)Math.Ceiling(MathEx.Log2(ituContext.PicParameterSetRbsp.NumSliceGroupsMinus1 + 1))";
                 case "frame_num":
-                    return "(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4)";
+                    return "(ituContext.SeqParameterSetRbsp.SeqParameterSetData.Log2MaxFrameNumMinus4 + 4)";
                 case "depth_disp_delay_offset_fp":
                     return "(this.offset_len_minus1 + 1)";
                 case "ar_object_confidence":
-                    return "(((H264Context)context).SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1)";
+                    return "(ituContext.SeiPayload.AnnotatedRegions.ArObjectConfidenceLengthMinus1 + 1)";
                 case "da_mantissa":
                     return "(this.da_mantissa_len_minus1 + 1)";
                 case "exponent0":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
                 case "mantissa0":
-                    return "(((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1)";
+                    return "(ituContext.SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.MantissaLenMinus1[i] + 1)";
                 case "exponent1":
-                    return "((H264Context)context).SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
+                    return "ituContext.SubsetSeqParameterSetRbsp.SeqParameterSet3davcExtension.DepthRanges.ThreeDvAcquisitionElement.ExpLen";
                 case "mantissa_focal_length_x":
                     return "(exponent_focal_length_x[ i ] == 0) ? (Math.Max( 0, prec_focal_length - 30 )) : (Math.Max( 0, exponent_focal_length_x[ i ] + prec_focal_length - 31))";
                 case "mantissa_focal_length_y":
@@ -412,30 +412,30 @@ namespace ItuGenerator.CSharp
                 case "man_gvd_t_x":
                     return "(exp_gvd_t_x[ i ] == 0) ? (Math.Max( 0, prec_gvd_translation_param - 30 )) : (Math.Max( 0,  exp_gvd_t_x[ i ] + prec_gvd_translation_param - 31))";
                 case "pic_order_cnt_lsb":
-                    return "(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4)";
+                    return "(ituContext.SeqParameterSetRbsp.SeqParameterSetData.Log2MaxPicOrderCntLsbMinus4 + 4)";
                 case "initial_cpb_removal_delay":
                 case "initial_cpb_removal_delay_offset":
                 case "initial_cpb_removal_delay0":
                 case "initial_cpb_removal_delay_offset0":
-                    return "((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1)";
+                    return "((ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.InitialCpbRemovalDelayLengthMinus1 : 23) + 1)";
                 case "cpb_removal_delay":
-                    return "((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 : 23) + 1)";
+                    return "((ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.CpbRemovalDelayLengthMinus1 : 23) + 1)";
                 case "dpb_output_delay":
-                    return "((((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 : 23) + 1)";
+                    return "((ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.DpbOutputDelayLengthMinus1 : 23) + 1)";
                 case "time_offset":
-                    return "(((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ((H264Context)context).SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength : 24)";
+                    return "(ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters != null && ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters != null ? ituContext.SeqParameterSetRbsp.SeqParameterSetData.VuiParameters.HrdParameters.TimeOffsetLength : 24)";
                 case "start_of_coded_interval":
                 case "coded_pivot_value":
                 case "target_pivot_value":
-                    return "(((((H264Context)context).SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3)";
+                    return "(((ituContext.SeiPayload.ToneMappingInfo.CodedDataBitDepth + 7) >> 3) << 3)";
                 case "pre_lut_coded_value":
                 case "pre_lut_target_value":
-                    return "(((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3)";
+                    return "(((ituContext.SeiPayload.ColourRemappingInfo.ColourRemapInputBitDepth + 7) >> 3) << 3)";
                 case "post_lut_coded_value":
                 case "post_lut_target_value":
-                    return "(((((H264Context)context).SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3)";
+                    return "(((ituContext.SeiPayload.ColourRemappingInfo.ColourRemapOutputBitDepth + 7) >> 3) << 3)";
                 case "slice_group_change_cycle":
-                    return "((H264Context)context).SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle";
+                    return "ituContext.SliceLayerWithoutPartitioningRbsp.SliceHeader.SliceGroupChangeCycle";
             }
 
             Debug.WriteLine(parameter);
@@ -475,5 +475,7 @@ namespace ItuGenerator.CSharp
         {
             // nothing to do
         }
+
+        public string ContextClass => "H264Context";
     }
 }

@@ -16,12 +16,12 @@ namespace ItuGenerator.CSharp
             }
             else if (name == "pt_cpb_removal_delay_minus1")
             {
-                retm = $"if(this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new ulong[((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];\r\n{retm}";
+                retm = $"if(this.pt_cpb_removal_delay_minus1 == null) this.pt_cpb_removal_delay_minus1 = new ulong[ituContext.SeiPayload.BufferingPeriod.BpMaxSublayersMinus1 + 1];\r\n{retm}";
             }
             else if (name == "num_ref_entries")
             {
                 if (methodType == MethodType.Read)
-                    retm = "    \r\nthis.num_ref_entries = ((H266Context)context).num_ref_entries;\r\n            this.inter_layer_ref_pic_flag = ((H266Context)context).inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ((H266Context)context).st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ((H266Context)context).abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ((H266Context)context).strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ((H266Context)context).rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ((H266Context)context).ilrp_idx;\r\n" + retm + "\r\n ((H266Context)context).inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ((H266Context)context).ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];";
+                    retm = "    \r\nthis.num_ref_entries = ituContext.num_ref_entries;\r\n            this.inter_layer_ref_pic_flag = ituContext.inter_layer_ref_pic_flag;\r\n            this.st_ref_pic_flag = ituContext.st_ref_pic_flag;\r\n            this.abs_delta_poc_st = ituContext.abs_delta_poc_st;\r\n            this.strp_entry_sign_flag = ituContext.strp_entry_sign_flag;\r\n            this.rpls_poc_lsb_lt = ituContext.rpls_poc_lsb_lt;\r\n            this.ilrp_idx = ituContext.ilrp_idx;\r\n" + retm + "\r\n ituContext.inter_layer_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.st_ref_pic_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.abs_delta_poc_st[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.strp_entry_sign_flag[listIdx][rplsIdx] = new byte[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.rpls_poc_lsb_lt[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];\r\n            ituContext.ilrp_idx[listIdx][rplsIdx] = new ulong[this.num_ref_entries[listIdx][rplsIdx]];";
             }
 
             if (methodType == MethodType.Write)
@@ -35,7 +35,7 @@ namespace ItuGenerator.CSharp
                     }
                     else if ((field as ItuField).Parameter == "(i, sps_num_ref_pic_lists[i])")
                     {
-                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[i];\r\n";
+                        setVariables = "this.ref_pic_list_struct.ListIdx = i;\r\n                    this.ref_pic_list_struct.RplsIdx = ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[i];\r\n";
                     }
                     else
                     {
@@ -89,309 +89,309 @@ namespace ItuGenerator.CSharp
             switch (parameter)
             {
                 case "TotalNumOlss":
-                    return "((H266Context)context).TotalNumOlss";
+                    return "ituContext.TotalNumOlss";
                 case "VpsNumDpbParams":
-                    return "((H266Context)context).VpsNumDpbParams";
+                    return "ituContext.VpsNumDpbParams";
                 case "NumOutputLayersInOls":
-                    return "((H266Context)context).NumOutputLayersInOls";
+                    return "ituContext.NumOutputLayersInOls";
                 case "OutputLayerIdInOls":
-                    return "((H266Context)context).OutputLayerIdInOls";
+                    return "ituContext.OutputLayerIdInOls";
                 case "NumSubLayersInLayerInOLS":
-                    return "((H266Context)context).NumSubLayersInLayerInOLS";
+                    return "ituContext.NumSubLayersInLayerInOLS";
                 case "layerIncludedInOlsFlag":
-                    return "((H266Context)context).layerIncludedInOlsFlag";
+                    return "ituContext.layerIncludedInOlsFlag";
                 case "LayerUsedAsOutputLayerFlag":
-                    return "((H266Context)context).LayerUsedAsOutputLayerFlag";
+                    return "ituContext.LayerUsedAsOutputLayerFlag";
                 case "OutputLayerIdx":
-                    return "((H266Context)context).OutputLayerIdx";
+                    return "ituContext.OutputLayerIdx";
                 case "NumMultiLayerOlss":
-                    return "((H266Context)context).NumMultiLayerOlss";
+                    return "ituContext.NumMultiLayerOlss";
                 case "MultiLayerOlsIdx":
-                    return "((H266Context)context).MultiLayerOlsIdx";
+                    return "ituContext.MultiLayerOlsIdx";
                 case "LayerUsedAsRefLayerFlag":
-                    return "((H266Context)context).LayerUsedAsRefLayerFlag";
+                    return "ituContext.LayerUsedAsRefLayerFlag";
                 case "NumDirectRefLayers":
-                    return "((H266Context)context).NumDirectRefLayers";
+                    return "ituContext.NumDirectRefLayers";
                 case "NumRefLayers":
-                    return "((H266Context)context).NumRefLayers";
+                    return "ituContext.NumRefLayers";
                 case "GeneralLayerIdx":
-                    return "((H266Context)context).GeneralLayerIdx";
+                    return "ituContext.GeneralLayerIdx";
                 case "DirectRefLayerIdx":
-                    return "((H266Context)context).DirectRefLayerIdx";
+                    return "ituContext.DirectRefLayerIdx";
                 case "ReferenceLayerIdx":
-                    return "((H266Context)context).ReferenceLayerIdx";
+                    return "ituContext.ReferenceLayerIdx";
                 case "NumLayersInOls":
-                    return "((H266Context)context).NumLayersInOls";
+                    return "ituContext.NumLayersInOls";
                 case "LayerIdInOls":
-                    return "((H266Context)context).LayerIdInOls";
+                    return "ituContext.LayerIdInOls";
                 case "CtbLog2SizeY":
-                    return "((H266Context)context).CtbLog2SizeY";
+                    return "ituContext.CtbLog2SizeY";
                 case "CtbSizeY":
-                    return "((H266Context)context).CtbSizeY";
+                    return "ituContext.CtbSizeY";
                 case "MaxNumMergeCand":
-                    return "((H266Context)context).MaxNumMergeCand";
+                    return "ituContext.MaxNumMergeCand";
                 case "NumAlfFilters":
-                    return "((H266Context)context).NumAlfFilters";
+                    return "ituContext.NumAlfFilters";
                 case "LmcsMaxBinIdx":
-                    return "((H266Context)context).LmcsMaxBinIdx";
+                    return "ituContext.LmcsMaxBinIdx";
                 case "sps_poc_msb_cycle_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsPocMsbCycleFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsPocMsbCycleFlag";
                 case "sps_alf_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsAlfEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsAlfEnabledFlag";
                 case "sps_chroma_format_idc":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsChromaFormatIdc";
+                    return "ituContext.SeqParameterSetRbsp.SpsChromaFormatIdc";
                 case "sps_explicit_scaling_list_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsExplicitScalingListEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsExplicitScalingListEnabledFlag";
                 case "sps_virtual_boundaries_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsVirtualBoundariesEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsVirtualBoundariesEnabledFlag";
                 case "sps_virtual_boundaries_present_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsVirtualBoundariesPresentFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsVirtualBoundariesPresentFlag";
                 case "pps_alf_info_in_ph_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsAlfInfoInPhFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsAlfInfoInPhFlag";
                 case "pps_output_flag_present_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsOutputFlagPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsOutputFlagPresentFlag";
                 case "pps_rpl_info_in_ph_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsRplInfoInPhFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsRplInfoInPhFlag";
                 case "sps_partition_constraints_override_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsPartitionConstraintsOverrideEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsPartitionConstraintsOverrideEnabledFlag";
                 case "sps_qtbtt_dual_tree_intra_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsQtbttDualTreeIntraFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsQtbttDualTreeIntraFlag";
                 case "pps_cu_qp_delta_enabled_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsCuQpDeltaEnabledFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsCuQpDeltaEnabledFlag";
                 case "pps_cu_chroma_qp_offset_list_enabled_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsCuChromaQpOffsetListEnabledFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsCuChromaQpOffsetListEnabledFlag";
                 case "sps_temporal_mvp_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsTemporalMvpEnabledFlag";
                 case "NumExtraPhBits":
-                    return "((H266Context)context).NumExtraPhBits";
+                    return "ituContext.NumExtraPhBits";
                 case "sps_ccalf_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsCcalfEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsCcalfEnabledFlag";
                 case "sps_lmcs_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsLmcsEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsLmcsEnabledFlag";
                 case "sps_mmvd_fullpel_only_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsMmvdFullpelOnlyEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsMmvdFullpelOnlyEnabledFlag";
                 case "sps_bdof_control_present_in_ph_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsBdofControlPresentInPhFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsBdofControlPresentInPhFlag";
                 case "sps_dmvr_control_present_in_ph_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsDmvrControlPresentInPhFlag";  
+                    return "ituContext.SeqParameterSetRbsp.SpsDmvrControlPresentInPhFlag";  
                 case "sps_prof_control_present_in_ph_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsProfControlPresentInPhFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsProfControlPresentInPhFlag";
                 case "sps_joint_cbcr_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsJointCbcrEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsJointCbcrEnabledFlag";
                 case "sps_long_term_ref_pics_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsLongTermRefPicsFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsLongTermRefPicsFlag";
                 case "sps_num_ref_pic_lists":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists";
+                    return "ituContext.SeqParameterSetRbsp.SpsNumRefPicLists";
                 case "sps_num_ref_pic_lists[i]":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[i]";
+                    return "ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[i]";
                 case "sps_sao_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsSaoEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsSaoEnabledFlag";
                 case "sps_inter_layer_prediction_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsInterLayerPredictionEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsInterLayerPredictionEnabledFlag";
                 case "pps_picture_header_extension_present_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsPictureHeaderExtensionPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsPictureHeaderExtensionPresentFlag";
                 case "pps_chroma_tool_offsets_present_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsChromaToolOffsetsPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsChromaToolOffsetsPresentFlag";
                 case "pps_deblocking_filter_disabled_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsDeblockingFilterDisabledFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsDeblockingFilterDisabledFlag";
                 case "pps_dbf_info_in_ph_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsDbfInfoInPhFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsDbfInfoInPhFlag";
                 case "pps_weighted_pred_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsWeightedPredFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsWeightedPredFlag";
                 case "pps_weighted_bipred_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsWeightedBipredFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsWeightedBipredFlag";
                 case "pps_qp_delta_info_in_ph_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsQpDeltaInfoInPhFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsQpDeltaInfoInPhFlag";
                 case "pps_sao_info_in_ph_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsSaoInfoInPhFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsSaoInfoInPhFlag";
                 case "pps_wp_info_in_ph_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsWpInfoInPhFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsWpInfoInPhFlag";
                 case "pps_rpl1_idx_present_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsRpl1IdxPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsRpl1IdxPresentFlag";
                 case "aps_chroma_present_flag":
-                    return "((H266Context)context).AdaptationParameterSetRbsp.ApsChromaPresentFlag";
+                    return "ituContext.AdaptationParameterSetRbsp.ApsChromaPresentFlag";
                 case "bp_max_sublayers_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpMaxSublayersMinus1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpMaxSublayersMinus1";
                 case "bp_cpb_cnt_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbCntMinus1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpCpbCntMinus1";
                 case "bp_du_hrd_params_present_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuHrdParamsPresentFlag"; 
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDuHrdParamsPresentFlag"; 
                 case "bp_du_dpb_params_in_pic_timing_sei_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuDpbParamsInPicTimingSeiFlag";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDuDpbParamsInPicTimingSeiFlag";
                 case "bp_cpb_removal_delay_deltas_present_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayDeltasPresentFlag";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpCpbRemovalDelayDeltasPresentFlag";
                 case "bp_du_cpb_params_in_pic_timing_sei_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbParamsInPicTimingSeiFlag";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDuCpbParamsInPicTimingSeiFlag";
                 case "bp_alt_cpb_params_present_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpAltCpbParamsPresentFlag";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpAltCpbParamsPresentFlag";
                 case "bp_nal_hrd_params_present_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpNalHrdParamsPresentFlag";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpNalHrdParamsPresentFlag";
                 case "bp_additional_concatenation_info_present_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpAdditionalConcatenationInfoPresentFlag"; 
+                    return "ituContext.SeiPayload.BufferingPeriod.BpAdditionalConcatenationInfoPresentFlag"; 
                 case "bp_num_cpb_removal_delay_deltas_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1"; 
+                    return "ituContext.SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1"; 
                 case "bp_vcl_hrd_params_present_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpVclHrdParamsPresentFlag"; 
+                    return "ituContext.SeiPayload.BufferingPeriod.BpVclHrdParamsPresentFlag"; 
                 case "bp_sublayer_initial_cpb_removal_delay_present_flag":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpSublayerInitialCpbRemovalDelayPresentFlag"; 
+                    return "ituContext.SeiPayload.BufferingPeriod.BpSublayerInitialCpbRemovalDelayPresentFlag"; 
                 case "general_nal_hrd_params_present_flag":
-                    return "((H266Context)context).GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag";
+                    return "ituContext.GeneralTimingHrdParameters.GeneralNalHrdParamsPresentFlag";
                 case "general_vcl_hrd_params_present_flag":
-                    return "((H266Context)context).GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag";
+                    return "ituContext.GeneralTimingHrdParameters.GeneralVclHrdParamsPresentFlag";
                 case "general_du_hrd_params_present_flag":
-                    return "((H266Context)context).GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag";
+                    return "ituContext.GeneralTimingHrdParameters.GeneralDuHrdParamsPresentFlag";
                 case "hrd_cpb_cnt_minus1":
-                    return "((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1";
+                    return "ituContext.GeneralTimingHrdParameters.HrdCpbCntMinus1";
                 case "NumTilesInPic":
-                    return "((H266Context)context).NumTilesInPic";
+                    return "ituContext.NumTilesInPic";
                 case "ltrp_in_header_flag":
                     return "ref_pic_list_struct.LtrpInHeaderFlag";
                 case "colourTransformSize":
                     return "( (1  <<  ( (int)colour_transform_log2_number_of_points_per_lut_minus1 + 1 ) ) + 1 )";
                 case "nal_unit_type":
-                    return "((H266Context)context).NalHeader.NalUnitHeader.NalUnitType";
+                    return "ituContext.NalHeader.NalUnitHeader.NalUnitType";
                 case "num_ref_entries":
-                    return "((H266Context)context).num_ref_entries";
+                    return "ituContext.num_ref_entries";
                 case "TemporalId":
-                    return "(((H266Context)context).NalHeader.NalUnitHeader.NuhTemporalIdPlus1 - 1)";
+                    return "(ituContext.NalHeader.NalUnitHeader.NuhTemporalIdPlus1 - 1)";
                 case "PicWidthInCtbsY":
-                    return "((H266Context)context).PicWidthInCtbsY";
+                    return "ituContext.PicWidthInCtbsY";
                 case "PicHeightInCtbsY":
-                    return "((H266Context)context).PicHeightInCtbsY";
+                    return "ituContext.PicHeightInCtbsY";
                 case "PicSizeInCtbsY":
-                    return "((H266Context)context).PicSizeInCtbsY";
+                    return "ituContext.PicSizeInCtbsY";
                 case "PicWidthInMinCbsY":
-                    return "((H266Context)context).PicWidthInMinCbsY";
+                    return "ituContext.PicWidthInMinCbsY";
                 case "PicHeightInMinCbsY":
-                    return "((H266Context)context).PicHeightInMinCbsY";
+                    return "ituContext.PicHeightInMinCbsY";
                 case "PicSizeInMinCbsY":
-                    return "((H266Context)context).PicSizeInMinCbsY";
+                    return "ituContext.PicSizeInMinCbsY";
                 case "PicSizeInSamplesY":
-                    return "((H266Context)context).PicSizeInSamplesY";
+                    return "ituContext.PicSizeInSamplesY";
                 case "PicWidthInSamplesC":
-                    return "((H266Context)context).PicWidthInSamplesC";
+                    return "ituContext.PicWidthInSamplesC";
                 case "PicHeightInSamplesC":
-                    return "((H266Context)context).PicHeightInSamplesC";
+                    return "ituContext.PicHeightInSamplesC";
                 case "SubWidthC":
-                    return "((H266Context)context).SubWidthC";
+                    return "ituContext.SubWidthC";
                 case "SubHeightC":
-                    return "((H266Context)context).SubHeightC";
+                    return "ituContext.SubHeightC";
                 case "MinCbLog2SizeY":
-                    return "((H266Context)context).MinCbLog2SizeY";
+                    return "ituContext.MinCbLog2SizeY";
                 case "MinCbSizeY":
-                    return "((H266Context)context).MinCbSizeY";
+                    return "ituContext.MinCbSizeY";
                 case "IbcBufWidthY":
-                    return "((H266Context)context).IbcBufWidthY";
+                    return "ituContext.IbcBufWidthY";
                 case "IbcBufWidthC":
-                    return "((H266Context)context).IbcBufWidthC";
+                    return "ituContext.IbcBufWidthC";
                 case "VSize":
-                    return "((H266Context)context).VSize";
+                    return "ituContext.VSize";
                 case "CtbWidthC":
-                    return "((H266Context)context).CtbWidthC";
+                    return "ituContext.CtbWidthC";
                 case "CtbHeightC":
-                    return "((H266Context)context).CtbHeightC";
+                    return "ituContext.CtbHeightC";
                 case "NumTileColumns":
-                    return "((H266Context)context).NumTileColumns";
+                    return "ituContext.NumTileColumns";
                 case "NumTileRows":
-                    return "((H266Context)context).NumTileRows";
+                    return "ituContext.NumTileRows";
                 case "ColWidthVal":
-                    return "((H266Context)context).ColWidthVal";
+                    return "ituContext.ColWidthVal";
                 case "RowHeightVal":
-                    return "((H266Context)context).RowHeightVal";
+                    return "ituContext.RowHeightVal";
                 case "TileColBdVal":
-                    return "((H266Context)context).TileColBdVal";
+                    return "ituContext.TileColBdVal";
                 case "TileRowBdVal":
-                    return "((H266Context)context).TileRowBdVal";
+                    return "ituContext.TileRowBdVal";
                 case "CtbToTileColBd":
-                    return "((H266Context)context).CtbToTileColBd";
+                    return "ituContext.CtbToTileColBd";
                 case "ctbToTileColIdx":
-                    return "((H266Context)context).ctbToTileColIdx";
+                    return "ituContext.ctbToTileColIdx";
                 case "CtbToTileRowBd":
-                    return "((H266Context)context).CtbToTileRowBd";
+                    return "ituContext.CtbToTileRowBd";
                 case "ctbToTileRowIdx":
-                    return "((H266Context)context).ctbToTileRowIdx";
+                    return "ituContext.ctbToTileRowIdx";
                 case "SubpicWidthInTiles":
-                    return "((H266Context)context).SubpicWidthInTiles";
+                    return "ituContext.SubpicWidthInTiles";
                 case "SubpicHeightInTiles":
-                    return "((H266Context)context).SubpicHeightInTiles";
+                    return "ituContext.SubpicHeightInTiles";
                 case "subpicHeightLessThanOneTileFlag":
-                    return "((H266Context)context).subpicHeightLessThanOneTileFlag";
+                    return "ituContext.subpicHeightLessThanOneTileFlag";
                 case "NumCtusInSlice":
-                    return "((H266Context)context).NumCtusInSlice";
+                    return "ituContext.NumCtusInSlice";
                 case "SliceTopLeftTileIdx":
-                    return "((H266Context)context).SliceTopLeftTileIdx";
+                    return "ituContext.SliceTopLeftTileIdx";
                 case "sliceWidthInTiles":
-                    return "((H266Context)context).sliceWidthInTiles";
+                    return "ituContext.sliceWidthInTiles";
                 case "sliceHeightInTiles":
-                    return "((H266Context)context).sliceHeightInTiles";
+                    return "ituContext.sliceHeightInTiles";
                 case "NumSlicesInTile":
-                    return "((H266Context)context).NumSlicesInTile";
+                    return "ituContext.NumSlicesInTile";
                 case "sliceHeightInCtus":
-                    return "((H266Context)context).sliceHeightInCtus";
+                    return "ituContext.sliceHeightInCtus";
                 case "CtbAddrInSlice":
-                    return "((H266Context)context).CtbAddrInSlice";
+                    return "ituContext.CtbAddrInSlice";
                 case "NumSlicesInSubpic":
-                    return "((H266Context)context).NumSlicesInSubpic";
+                    return "ituContext.NumSlicesInSubpic";
                 case "SubpicIdxForSlice":
-                    return "((H266Context)context).SubpicIdxForSlice";
+                    return "ituContext.SubpicIdxForSlice";
                 case "SubpicLevelSliceIdx":
-                    return "((H266Context)context).SubpicLevelSliceIdx";
+                    return "ituContext.SubpicLevelSliceIdx";
                 case "NumLtrpEntries":
-                    return "((H266Context)context).NumLtrpEntries";
+                    return "ituContext.NumLtrpEntries";
                 case "RplsIdx":
-                    return "((H266Context)context).RplsIdx";
+                    return "ituContext.RplsIdx";
                 case "OnNumL0Weights":
-                    return "((H266Context)context).OnNumL0Weights";
+                    return "ituContext.OnNumL0Weights";
                 case "NumExtraShBits":
-                    return "((H266Context)context).NumExtraShBits";
+                    return "ituContext.NumExtraShBits";
                 case "CurrSubpicIdx":
-                    return "((H266Context)context).CurrSubpicIdx";
+                    return "ituContext.CurrSubpicIdx";
                 case "sps_subpic_info_present_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsSubpicInfoPresentFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsSubpicInfoPresentFlag";
                 case "pps_rect_slice_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsRectSliceFlag";
                 case "pps_slice_chroma_qp_offsets_present_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsSliceChromaQpOffsetsPresentFlag";
                 case "pps_cabac_init_present_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsCabacInitPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsCabacInitPresentFlag";
                 case "sps_subpic_id_len_minus1":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsSubpicIdLenMinus1";
+                    return "ituContext.SeqParameterSetRbsp.SpsSubpicIdLenMinus1";
                 case "sps_idr_rpl_present_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsIdrRplPresentFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsIdrRplPresentFlag";
                 case "ph_inter_slice_allowed_flag":
-                    return "((H266Context)context).SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhInterSliceAllowedFlag";   
+                    return "ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhInterSliceAllowedFlag";   
                 case "ph_lmcs_enabled_flag":
-                    return "((H266Context)context).SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhLmcsEnabledFlag";
+                    return "ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhLmcsEnabledFlag";
                 case "ph_explicit_scaling_list_enabled_flag":
-                    return "((H266Context)context).SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhExplicitScalingListEnabledFlag";
+                    return "ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhExplicitScalingListEnabledFlag";
                 case "ph_temporal_mvp_enabled_flag":
-                    return "((H266Context)context).SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhTemporalMvpEnabledFlag";
+                    return "ituContext.SliceLayerRbsp.SliceHeader.PictureHeaderStructure.PhTemporalMvpEnabledFlag";
                 case "pps_deblocking_filter_override_enabled_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsDeblockingFilterOverrideEnabledFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsDeblockingFilterOverrideEnabledFlag";
                 case "pps_slice_header_extension_present_flag":
-                    return "((H266Context)context).PicParameterSetRbsp.PpsSliceHeaderExtensionPresentFlag";
+                    return "ituContext.PicParameterSetRbsp.PpsSliceHeaderExtensionPresentFlag";
                 case "sps_dep_quant_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsDepQuantEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsDepQuantEnabledFlag";
                 case "sps_sign_data_hiding_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsSignDataHidingEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsSignDataHidingEnabledFlag";
                 case "sps_transform_skip_enabled_flag":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsTransformSkipEnabledFlag";
+                    return "ituContext.SeqParameterSetRbsp.SpsTransformSkipEnabledFlag";
                 case "NumWeightsL0":
-                    return "((H266Context)context).NumWeightsL0";
+                    return "ituContext.NumWeightsL0";
                 case "NumRefIdxActive":
-                    return "((H266Context)context).NumRefIdxActive";
+                    return "ituContext.NumRefIdxActive";
                 case "SubpicIdVal":
-                    return "((H266Context)context).SubpicIdVal";
+                    return "ituContext.SubpicIdVal";
                 case "NumEntryPoints":
-                    return "((H266Context)context).NumEntryPoints";
+                    return "ituContext.NumEntryPoints";
                 case "NumWeightsL1":
-                    return "((H266Context)context).NumWeightsL1";
+                    return "ituContext.NumWeightsL1";
                 case "CtbAddrInCurrSlice":
-                    return "((H266Context)context).CtbAddrInCurrSlice";
+                    return "ituContext.CtbAddrInCurrSlice";
                 case "NumCtusInCurrSlice":
-                    return "((H266Context)context).NumCtusInCurrSlice";
+                    return "ituContext.NumCtusInCurrSlice";
                 case "AbsDeltaPocSt":
-                    return "((H266Context)context).AbsDeltaPocSt";
+                    return "ituContext.AbsDeltaPocSt";
 
                 default:
                     //throw new NotImplementedException(parameter);
@@ -404,64 +404,64 @@ namespace ItuGenerator.CSharp
             switch(name)
             {
                 case "sei_payload":
-                    return "((H266Context)context).SetSeiPayload(sei_payload);";
+                    return "ituContext.SetSeiPayload(sei_payload);";
                 case "pps_pic_parameter_set_id":
-                    return "((H266Context)context).SetPpsPicParameterSetId(pps_pic_parameter_set_id);";
+                    return "ituContext.SetPpsPicParameterSetId(pps_pic_parameter_set_id);";
                 case "ph_pic_parameter_set_id":
-                    return "((H266Context)context).SetPhPicParameterSetId(ph_pic_parameter_set_id);";
+                    return "ituContext.SetPhPicParameterSetId(ph_pic_parameter_set_id);";
                 case "sps_seq_parameter_set_id":
-                    return "((H266Context)context).SetSpsSeqParameterSetId(sps_seq_parameter_set_id);";
+                    return "ituContext.SetSpsSeqParameterSetId(sps_seq_parameter_set_id);";
                 case "pps_seq_parameter_set_id":
-                    return "((H266Context)context).SetPpsSeqParameterSetId(pps_seq_parameter_set_id);";
+                    return "ituContext.SetPpsSeqParameterSetId(pps_seq_parameter_set_id);";
 
                 case "general_timing_hrd_parameters":
-                    return "((H266Context)context).SetGeneralTimingHrdParameters(general_timing_hrd_parameters);";
+                    return "ituContext.SetGeneralTimingHrdParameters(general_timing_hrd_parameters);";
                 case "vps_num_output_layer_sets_minus2":
-                    return "((H266Context)context).OnVpsNumOutputLayerSetsMinus2();";
+                    return "ituContext.OnVpsNumOutputLayerSetsMinus2();";
                 case "vps_num_dpb_params_minus1":
-                    return "((H266Context)context).OnVpsNumDpbParamsMinus1();";
+                    return "ituContext.OnVpsNumDpbParamsMinus1();";
                 case "vps_ols_output_layer_flag":
-                    return "((H266Context)context).OnVpsOlsOutputLayerFlag(j);";
+                    return "ituContext.OnVpsOlsOutputLayerFlag(j);";
                 case "vps_direct_ref_layer_flag":
-                    return "((H266Context)context).OnVpsDirectRefLayerFlag();";
+                    return "ituContext.OnVpsDirectRefLayerFlag();";
                 case "alf_chroma_filter_signal_flag":
-                    return "((H266Context)context).OnAlfChromaFilterSignalFlag();";
+                    return "ituContext.OnAlfChromaFilterSignalFlag();";
                 case "lmcs_delta_max_bin_idx":
-                    return "((H266Context)context).OnLmcsDeltaMaxBinIdx();";
+                    return "ituContext.OnLmcsDeltaMaxBinIdx();";
                 case "sps_extra_ph_bit_present_flag":
-                    return "((H266Context)context).OnSpsExtraPhBitPresentFlag();";
+                    return "ituContext.OnSpsExtraPhBitPresentFlag();";
                 case "sps_six_minus_max_num_merge_cand":
-                    return "((H266Context)context).OnSpsSixMinusMaxNumMergeCand();";
+                    return "ituContext.OnSpsSixMinusMaxNumMergeCand();";
                 case "sps_log2_ctu_size_minus5":
-                    return "((H266Context)context).OnSpsLog2CtuSizeMinus5();";
+                    return "ituContext.OnSpsLog2CtuSizeMinus5();";
                 case "pps_pic_height_in_luma_samples":
-                    return "((H266Context)context).OnPpsPicHeightInLumaSamples();";
+                    return "ituContext.OnPpsPicHeightInLumaSamples();";
                 case "sps_log2_min_luma_coding_block_size_minus2":
-                    return "((H266Context)context).OnSpsLog2MinLumaCodingBlockSizeMinus2();";
+                    return "ituContext.OnSpsLog2MinLumaCodingBlockSizeMinus2();";
                 case "pps_tile_row_height_minus1": // TODO: not sure this is the right place
-                    return "((H266Context)context).OnPpsTileRowHeightMinus1();";
+                    return "ituContext.OnPpsTileRowHeightMinus1();";
                 case "st_ref_pic_flag": 
-                    return "((H266Context)context).OnStRefPicFlag(listIdx, rplsIdx, this);";
+                    return "ituContext.OnStRefPicFlag(listIdx, rplsIdx, this);";
                 case "rpl_idx": 
-                    return "((H266Context)context).OnRplIdx(this, i);";
+                    return "ituContext.OnRplIdx(this, i);";
                 case "num_l0_weights": 
-                    return "((H266Context)context).OnNumL0Weights(num_l0_weights);";
+                    return "ituContext.OnNumL0Weights(num_l0_weights);";
                 case "sh_num_ref_idx_active_minus1": 
-                    return "((H266Context)context).OnShNumRefIdxActiveMinus1();";
+                    return "ituContext.OnShNumRefIdxActiveMinus1();";
                 case "sh_subpic_id": 
-                    return "((H266Context)context).OnShSubpicId(sh_subpic_id);";
+                    return "ituContext.OnShSubpicId(sh_subpic_id);";
                 case "pps_subpic_id": 
-                    return "((H266Context)context).OnPpsSubpicId();";
+                    return "ituContext.OnPpsSubpicId();";
                 case "sps_extra_sh_bit_present_flag": 
-                    return "((H266Context)context).OnSpsExtraShBitPresentFlag();";
+                    return "ituContext.OnSpsExtraShBitPresentFlag();";
                 case "sh_slice_header_extension_data_byte": 
-                    return "((H266Context)context).OnShSliceHeaderExtensionDataByte();";
+                    return "ituContext.OnShSliceHeaderExtensionDataByte();";
                 case "sh_num_tiles_in_slice_minus1": 
-                    return "((H266Context)context).OnShNumTilesInSliceMinus1();";
+                    return "ituContext.OnShNumTilesInSliceMinus1();";
                 case "num_l1_weights": 
-                    return "((H266Context)context).OnNumL1Weights(num_l1_weights);";
+                    return "ituContext.OnNumL1Weights(num_l1_weights);";
                 case "abs_delta_poc_st": 
-                    return "((H266Context)context).OnAbsDeltaPocSt(listIdx, rplsIdx, i, this);";
+                    return "ituContext.OnAbsDeltaPocSt(listIdx, rplsIdx, i, this);";
             }
             return "";
         }
@@ -494,7 +494,7 @@ namespace ItuGenerator.CSharp
             condition = condition.Replace("payload_type_byte  ==  0xFF", "payload_type_byte[whileIndex]  ==  0xFF");
             condition = condition.Replace("payload_size_byte  ==  0xFF", "payload_size_byte[whileIndex]  ==  0xFF");
 
-            condition = condition.Replace("AbsDeltaPocSt[ i ]", "(((((H266Context)context).SeqParameterSetRbsp.SpsWeightedPredFlag != 0 || ((H266Context)context).SeqParameterSetRbsp.SpsWeightedBipredFlag != 0) && i != 0) ? abs_delta_poc_st[i] : (abs_delta_poc_st[i] + 1))");
+            condition = condition.Replace("AbsDeltaPocSt[ i ]", "(((ituContext.SeqParameterSetRbsp.SpsWeightedPredFlag != 0 || ituContext.SeqParameterSetRbsp.SpsWeightedBipredFlag != 0) && i != 0) ? abs_delta_poc_st[i] : (abs_delta_poc_st[i] + 1))");
             condition = condition.Replace("- sh_slice_address", "- (int)sh_slice_address");
 
             condition = condition.Replace("ALF_APS", "H266Constants.ALF_APS");
@@ -523,7 +523,7 @@ namespace ItuGenerator.CSharp
             fieldValue = fieldValue.Replace("Min(", "(uint)Math.Min(");
             fieldValue = fieldValue.Replace("Max(", "(uint)Math.Max(");
 
-            fieldValue = fieldValue.Replace("/* LukasV added default */", "/* LukasV added default */;\r\n((H266Context)context).OnStRefPicFlag(listIdx, rplsIdx, this)");
+            fieldValue = fieldValue.Replace("/* LukasV added default */", "/* LukasV added default */;\r\nituContext.OnStRefPicFlag(listIdx, rplsIdx, this)");
             return fieldValue;
         }
 
@@ -604,17 +604,17 @@ namespace ItuGenerator.CSharp
             switch(parameter)
             {
                 case "sps_subpic_ctu_top_left_x":
-                    return "(uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_width_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_width_max_in_luma_samples + ituContext.CtbSizeY - 1 ) / ituContext.CtbSizeY ) )";
                 case "sps_subpic_width_minus1":
                 case "sps_subpic_height_minus1":
                 case "sps_subpic_ctu_top_left_y":
-                    return "(uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ((H266Context)context).CtbSizeY - 1 ) / ((H266Context)context).CtbSizeY ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2(  ( sps_pic_height_max_in_luma_samples + ituContext.CtbSizeY - 1 ) / ituContext.CtbSizeY ) )";
                 case "sps_subpic_id":
                     return "sps_subpic_id_len_minus1 + 1";
                 case "ph_pic_order_cnt_lsb":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
+                    return "ituContext.SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
                 case "ph_poc_msb_cycle_val":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsPocMsbCycleLenMinus1 + 1";
+                    return "ituContext.SeqParameterSetRbsp.SpsPocMsbCycleLenMinus1 + 1";
                 case "alf_luma_coeff_delta_idx":
                     return "(uint)Math.Ceiling( MathEx.Log2( alf_luma_num_filters_signalled_minus1 + 1 ) )";
                 case "ar_object_confidence":
@@ -626,26 +626,26 @@ namespace ItuGenerator.CSharp
                 case "bp_cpb_removal_delay_delta_val":
                     return "bp_cpb_removal_delay_length_minus1 + 1";
                 case "pt_dpb_output_delay":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDpbOutputDelayLengthMinus1 + 1";
                 case "pt_dpb_output_du_delay":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1 + 1";
                 case "pt_nal_cpb_alt_initial_removal_delay_delta":
                 case "pt_nal_cpb_alt_initial_removal_offset_delta":
                 case "pt_vcl_cpb_alt_initial_removal_delay_delta":
                 case "pt_vcl_cpb_alt_initial_removal_offset_delta":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbInitialRemovalDelayLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpCpbInitialRemovalDelayLengthMinus1 + 1";
                 case "pt_nal_cpb_delay_offset":
                 case "pt_vcl_cpb_delay_offset":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1";
                 case "pt_nal_dpb_delay_offset":
                 case "pt_vcl_dpb_delay_offset":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDpbOutputDelayLengthMinus1 + 1";
                 case "pps_subpic_id":
                     return "pps_subpic_id_len_minus1 + 1";
                 case "vui_reserved_payload_extension_data":
                     return "0 /* TODO */"; // TODO: this should not be present, but if present, then it's 8 * payloadSize - nEarlierBits - nPayloadZeroBits - 1
                 case "rpls_poc_lsb_lt":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
+                    return "ituContext.SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
                 case "sei_reserved_payload_extension_data":
                     return "0 /* TODO */"; // TODO: this should not be present, but if present, then it's 8 * payloadSize - nEarlierBits - nPayloadZeroBits - 1
                 case "mantissa_focal_length_x":
@@ -685,27 +685,27 @@ namespace ItuGenerator.CSharp
                 case "bp_vcl_initial_alt_cpb_removal_offset":
                     return "bp_cpb_initial_removal_delay_length_minus1 + 1";
                 case "pt_cpb_removal_delay_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpCpbRemovalDelayLengthMinus1 + 1";
                 case "pt_du_common_cpb_removal_delay_increment_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "sn_subpic_id":
                     return "sn_subpic_id_len_minus1 + 1";
                 case "pt_cpb_removal_delay_delta_idx":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ((H266Context)context).SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.SeiPayload.BufferingPeriod.BpNumCpbRemovalDelayDeltasMinus1 + 1 ) )";
                 case "pt_du_cpb_removal_delay_increment_minus1":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "dui_du_cpb_removal_delay_increment":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDuCpbRemovalDelayIncrementLengthMinus1 + 1";
                 case "dui_dpb_output_du_delay":
-                    return "((H266Context)context).SeiPayload.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1 + 1";
+                    return "ituContext.SeiPayload.BufferingPeriod.BpDpbOutputDelayDuLengthMinus1 + 1";
                 case "rpl_idx":
-                    return "(uint)Math.Ceiling( MathEx.Log2( ((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) )";
+                    return "(uint)Math.Ceiling( MathEx.Log2( ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[ i ] ) )";
                 case "poc_lsb_lt":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
+                    return "ituContext.SeqParameterSetRbsp.SpsLog2MaxPicOrderCntLsbMinus4 + 4";
                 case "sh_subpic_id":
-                    return "((H266Context)context).SeqParameterSetRbsp.SpsSubpicIdLenMinus1 + 1";
+                    return "ituContext.SeqParameterSetRbsp.SpsSubpicIdLenMinus1 + 1";
                 case "sh_slice_address":
-                    return "(uint)(((H266Context)context).PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( MathEx.Log2 ( ((H266Context)context).NumTilesInPic ) )  :  Math.Ceiling( MathEx.Log2( ((H266Context)context).NumSlicesInSubpic[ ((H266Context)context).CurrSubpicIdx ] ) ) )";
+                    return "(uint)(ituContext.PicParameterSetRbsp.PpsRectSliceFlag == 0 ? Math.Ceiling( MathEx.Log2 ( ituContext.NumTilesInPic ) )  :  Math.Ceiling( MathEx.Log2( ituContext.NumSlicesInSubpic[ ituContext.CurrSubpicIdx ] ) ) )";
                 case "sh_entry_point_offset_minus1":
                     return "sh_entry_offset_len_minus1 + 1";
             }
@@ -721,17 +721,17 @@ namespace ItuGenerator.CSharp
             if (variableName == "ref_pic_list_struct")
             {
                 if (variableType == "RefPicListStruct[ 2]")
-                    ret = "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new ulong[2][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][] { new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new ulong[2][][] { new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[((H266Context)context).SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };";
+                    ret = "\r\nif (ituContext.num_ref_entries == null)\r\n                ituContext.num_ref_entries = new ulong[2][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1] };\r\n            if (ituContext.inter_layer_ref_pic_flag == null)\r\n                ituContext.inter_layer_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.st_ref_pic_flag == null)\r\n                ituContext.st_ref_pic_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.abs_delta_poc_st == null)\r\n                ituContext.abs_delta_poc_st = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.strp_entry_sign_flag == null)\r\n                ituContext.strp_entry_sign_flag = new byte[2][][] { new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new byte[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.rpls_poc_lsb_lt == null)\r\n                ituContext.rpls_poc_lsb_lt = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };\r\n            if (ituContext.ilrp_idx == null)\r\n                ituContext.ilrp_idx = new ulong[2][][] { new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[0] + 1][], new ulong[ituContext.SeqParameterSetRbsp.SpsNumRefPicLists[1] + 1][] };";
                 else
-                    ret = "\r\nif (((H266Context)context).num_ref_entries == null)\r\n                ((H266Context)context).num_ref_entries = new ulong[2][];\r\n            if (((H266Context)context).inter_layer_ref_pic_flag == null)\r\n                ((H266Context)context).inter_layer_ref_pic_flag = new byte[2][][];\r\n            if (((H266Context)context).st_ref_pic_flag == null)\r\n                ((H266Context)context).st_ref_pic_flag = new byte[2][][];\r\n            if (((H266Context)context).abs_delta_poc_st == null)\r\n                ((H266Context)context).abs_delta_poc_st = new ulong[2][][];\r\n            if (((H266Context)context).strp_entry_sign_flag == null)\r\n                ((H266Context)context).strp_entry_sign_flag = new byte[2][][];\r\n            if (((H266Context)context).rpls_poc_lsb_lt == null)\r\n                ((H266Context)context).rpls_poc_lsb_lt = new ulong[2][][];\r\n            if (((H266Context)context).ilrp_idx == null)\r\n                ((H266Context)context).ilrp_idx = new ulong[2][][];";
+                    ret = "\r\nif (ituContext.num_ref_entries == null)\r\n                ituContext.num_ref_entries = new ulong[2][];\r\n            if (ituContext.inter_layer_ref_pic_flag == null)\r\n                ituContext.inter_layer_ref_pic_flag = new byte[2][][];\r\n            if (ituContext.st_ref_pic_flag == null)\r\n                ituContext.st_ref_pic_flag = new byte[2][][];\r\n            if (ituContext.abs_delta_poc_st == null)\r\n                ituContext.abs_delta_poc_st = new ulong[2][][];\r\n            if (ituContext.strp_entry_sign_flag == null)\r\n                ituContext.strp_entry_sign_flag = new byte[2][][];\r\n            if (ituContext.rpls_poc_lsb_lt == null)\r\n                ituContext.rpls_poc_lsb_lt = new ulong[2][][];\r\n            if (ituContext.ilrp_idx == null)\r\n                ituContext.ilrp_idx = new ulong[2][][];";
             }
             else if (variableName == "ref_pic_list_struct[ i ]")
             {
-                ret = "\r\nif (((H266Context)context).num_ref_entries[i] == null)\r\n                    ((H266Context)context).num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];\r\n                if (((H266Context)context).inter_layer_ref_pic_flag[i] == null)\r\n                    ((H266Context)context).inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).st_ref_pic_flag[i] == null)\r\n                    ((H266Context)context).st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).abs_delta_poc_st[i] == null)\r\n                    ((H266Context)context).abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).strp_entry_sign_flag[i] == null)\r\n                    ((H266Context)context).strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).rpls_poc_lsb_lt[i] == null)\r\n                    ((H266Context)context).rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (((H266Context)context).ilrp_idx[i] == null)\r\n                    ((H266Context)context).ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];";
+                ret = "\r\nif (ituContext.num_ref_entries[i] == null)\r\n                    ituContext.num_ref_entries[i] = new ulong[sps_num_ref_pic_lists[i] + 1];\r\n                if (ituContext.inter_layer_ref_pic_flag[i] == null)\r\n                    ituContext.inter_layer_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.st_ref_pic_flag[i] == null)\r\n                    ituContext.st_ref_pic_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.abs_delta_poc_st[i] == null)\r\n                    ituContext.abs_delta_poc_st[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.strp_entry_sign_flag[i] == null)\r\n                    ituContext.strp_entry_sign_flag[i] = new byte[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.rpls_poc_lsb_lt[i] == null)\r\n                    ituContext.rpls_poc_lsb_lt[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];\r\n                if (ituContext.ilrp_idx[i] == null)\r\n                    ituContext.ilrp_idx[i] = new ulong[sps_num_ref_pic_lists[i] + 1][];";
             }
             else if (variableName.StartsWith("sublayer_hrd_parameters"))
             {
-                ret = "\r\nif(((H266Context)context).cbr_flag == null)\r\n                ((H266Context)context).cbr_flag = new byte[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).bit_rate_du_value_minus1 == null)\r\n                ((H266Context)context).bit_rate_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).cpb_size_du_value_minus1 == null)\r\n                ((H266Context)context).cpb_size_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).bit_rate_value_minus1 == null)\r\n                ((H266Context)context).bit_rate_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(((H266Context)context).cpb_size_value_minus1 == null)\r\n                ((H266Context)context).cpb_size_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n";
+                ret = "\r\nif(ituContext.cbr_flag == null)\r\n                ituContext.cbr_flag = new byte[MaxSubLayersVal + 1][];\r\n            if(ituContext.bit_rate_du_value_minus1 == null)\r\n                ituContext.bit_rate_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(ituContext.cpb_size_du_value_minus1 == null)\r\n                ituContext.cpb_size_du_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(ituContext.bit_rate_value_minus1 == null)\r\n                ituContext.bit_rate_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n            if(ituContext.cpb_size_value_minus1 == null)\r\n                ituContext.cpb_size_value_minus1 = new ulong[MaxSubLayersVal + 1][];\r\n";
             }
             else if (
                 variableName.StartsWith("bit_rate_value_minus1") ||
@@ -744,7 +744,7 @@ namespace ItuGenerator.CSharp
             }
             else if (variableName.StartsWith("cbr_flag"))
             {
-                ret = "((H266Context)context).cbr_flag[subLayerId] = new byte[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_du_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_du_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).bit_rate_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ((H266Context)context).cpb_size_value_minus1[subLayerId] = new ulong[((H266Context)context).GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            this.bit_rate_value_minus1 = ((H266Context)context).bit_rate_value_minus1;\r\n            this.cpb_size_value_minus1 = ((H266Context)context).cpb_size_value_minus1;\r\n            this.cpb_size_du_value_minus1 = ((H266Context)context).cpb_size_du_value_minus1;\r\n            this.bit_rate_du_value_minus1 = ((H266Context)context).bit_rate_du_value_minus1;\r\n            this.cbr_flag = ((H266Context)context).cbr_flag;\r\n";
+                ret = "ituContext.cbr_flag[subLayerId] = new byte[ituContext.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ituContext.bit_rate_du_value_minus1[subLayerId] = new ulong[ituContext.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ituContext.cpb_size_du_value_minus1[subLayerId] = new ulong[ituContext.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ituContext.bit_rate_value_minus1[subLayerId] = new ulong[ituContext.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            ituContext.cpb_size_value_minus1[subLayerId] = new ulong[ituContext.GeneralTimingHrdParameters.HrdCpbCntMinus1 + 1];\r\n            this.bit_rate_value_minus1 = ituContext.bit_rate_value_minus1;\r\n            this.cpb_size_value_minus1 = ituContext.cpb_size_value_minus1;\r\n            this.cpb_size_du_value_minus1 = ituContext.cpb_size_du_value_minus1;\r\n            this.bit_rate_du_value_minus1 = ituContext.bit_rate_du_value_minus1;\r\n            this.cbr_flag = ituContext.cbr_flag;\r\n";
             }
             else if (
                 variableName.StartsWith("rpls_poc_lsb_lt") ||
@@ -806,5 +806,7 @@ namespace ItuGenerator.CSharp
                 ret.Clear();
             }
         }
+
+        public string ContextClass => "H266Context";
     }
 }
