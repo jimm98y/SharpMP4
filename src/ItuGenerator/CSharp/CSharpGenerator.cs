@@ -1117,7 +1117,7 @@ namespace Sharp{type}
             var parameters = ituClass.ClassParameter.Substring(1, ituClass.ClassParameter.Length - 2).Split(',').Select(x => x.Trim()).ToArray();
             if (parameters.Length == 1 && string.IsNullOrEmpty(parameters[0]))
             {
-                return new string[] { };
+                return [];
             }
             return parameters;
         }
