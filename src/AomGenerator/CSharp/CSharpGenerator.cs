@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace AomGenerator.CSharp
 {
@@ -369,12 +370,12 @@ namespace Sharp{type}
 
         private string GetSpacing(int level)
         {
-            string ret = "";
+            var ret = new StringBuilder();
             for (int i = 0; i < level; i++)
             {
-                ret += "\t";
+                ret.Append("\t");
             }
-            return ret;
+            return ret.ToString();
         }
 
         private string BuildMethod(AomMethod b, AomBlock parent, AomCode field, int level)
