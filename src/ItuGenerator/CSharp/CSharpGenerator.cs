@@ -47,7 +47,7 @@ namespace ItuGenerator.CSharp
 
         public string GenerateParser(string type, IEnumerable<ItuClass> ituClasses)
         {
-            string resultCode =
+            var resultCode = new StringBuilder(
             $@"using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -55,38 +55,38 @@ using SharpH26X;
 
 namespace Sharp{type}
 {{
-";
-            resultCode += GenerateContext(type, ituClasses);
+");
+            resultCode.Append(GenerateContext(type, ituClasses));
 
             foreach (var ituClass in ituClasses)
             {
-                resultCode += GenerateClass(ituClass);
+                resultCode.Append(GenerateClass(ituClass));
             }
 
-            resultCode +=
+            resultCode.Append(
                 @"
 }
-";
-            return resultCode;
+");
+            return resultCode.ToString();
         }
 
         private string GenerateContext(string type, IEnumerable<ItuClass> ituClasses)
         {
-            string ret = @$"
+            var ret = new StringBuilder(@$"
     public partial class {type}Context : IItuContext
     {{
         public NalUnit NalHeader {{ get; set; }}
-";
+");
             var rbsp = ituClasses.Where(x => x.ClassName.EndsWith("rbsp")).ToArray();
             foreach (var cls in rbsp)
             {
-                ret += $"\t\tpublic {cls.ClassName.ToPropertyCase()} {cls.ClassName.ToPropertyCase()} {{ get; set; }}\r\n";
+                ret.Append($"\t\tpublic {cls.ClassName.ToPropertyCase()} {cls.ClassName.ToPropertyCase()} {{ get; set; }}\r\n");
             }
 
-            ret += @$"
+            ret.Append(@$"
     }}
-";
-            return ret;
+");
+            return ret.ToString();
         }
 
         private string GenerateClass(ItuClass ituClass)
