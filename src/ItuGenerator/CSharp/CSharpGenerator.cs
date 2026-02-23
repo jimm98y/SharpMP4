@@ -691,7 +691,7 @@ namespace Sharp{type}
             {
                 if(blockType == "if" || blockType == "else if" || blockType == "while" || blockType == "do")
                 {
-                    condition = FixCondition(b, condition, methodType);
+                    condition = FixCondition(condition, methodType);
                 }
                 else if(blockType == "for")
                 {
@@ -851,7 +851,7 @@ namespace Sharp{type}
             return ret;
         }       
 
-        private string FixCondition(ItuClass b, string condition, MethodType methodType)
+        private string FixCondition(string condition, MethodType methodType)
         {
             string[] parts = condition.Substring(1, condition.Length - 2).Split(new string[] { "||", "&&" }, StringSplitOptions.RemoveEmptyEntries);
 
