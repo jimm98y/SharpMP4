@@ -27,6 +27,8 @@ namespace SharpH26X
         private bool _disposedValue;
         private int _lastMarkBeginPosition;
 
+        private readonly Stack<byte[]> _readNextBitsBuffers = [];
+
         public IMp4Logger Logger { get; set; }
 
         public ItuStream(Stream stream, IMp4Logger logger)
