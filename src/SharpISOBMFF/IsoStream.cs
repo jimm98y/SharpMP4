@@ -285,7 +285,7 @@ namespace SharpISOBMFF
             int res = 0;
             while (count > 0)
             {
-                res = res << 1;
+                res <<= 1;
                 int u1 = ReadBitInternal();
 
                 if (u1 == -1)
@@ -309,7 +309,7 @@ namespace SharpISOBMFF
             int res = 0;
             while (count > 0)
             {
-                res = res << 1;
+                res <<= 1;
                 int u1 = ReadBitInternal();
 
                 if (u1 == -1)
@@ -333,7 +333,7 @@ namespace SharpISOBMFF
             long res = 0;
             while (count > 0)
             {
-                res = res << 1;
+                res <<= 1;
                 long u1 = ReadBitInternal();
 
                 if (u1 == -1)
