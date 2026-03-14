@@ -26,10 +26,6 @@ namespace SharpH26X
         private bool _disposedValue;
         private int _lastMarkBeginPosition;
 
-        // Used by ReadNextBits(n) for increased performance.
-        private ulong _readNextBitsCache = 0;
-        private int _readNextBitsRemaining = 0;
-
         public IMp4Logger Logger { get; set; }
 
         public ItuStream(Stream stream, IMp4Logger logger)
@@ -70,12 +66,6 @@ namespace SharpH26X
         {
             int bytePos = _bitsPosition / 8;
 
-            if (_readNextBitsRemaining > 0)
-            {
-                _readNextBitsRemaining--;
-                return (_readNextBitsCache & (ulong)(1 << _readNextBitsRemaining)) != 0 ? 1 : 0;
-            }
-
             if (_currentBytePosition != bytePos)
             {
                 int bb = ReadByte();
@@ -91,7 +81,7 @@ namespace SharpH26X
                 {
                     _prevByte = b;
                     bb = ReadByte();
-                    if(bb == -1)
+                    if (bb == -1)
                     {
                         return -1;
                     }
@@ -146,7 +136,7 @@ namespace SharpH26X
             int bytePos = _bitsPosition / 8;
             if (_currentBytePosition != bytePos)
             {
-                if(_currentBytePosition < 0)
+                if (_currentBytePosition < 0)
                 {
                     _currentBytePosition = bytePos;
                     return;
@@ -246,7 +236,7 @@ namespace SharpH26X
             value = (byte)v;
             return read;
         }
-        
+
         public ulong ReadUnsignedInt(ulong size, ulong count, int index, Dictionary<int, uint> value, string name)
         {
             if (count > 32)
@@ -301,7 +291,7 @@ namespace SharpH26X
                 throw new EndOfStreamException();
             value = (ulong)ret;
             LogEnd(name, (ulong)count, value);
-            return (ulong)count;    
+            return (ulong)count;
         }
 
         public ulong WriteUnsignedInt(ulong count, ulong value, string name)
@@ -409,14 +399,14 @@ namespace SharpH26X
             var msstream = new MemoryStream(bytes);
             msstream.Seek(_stream.Position, SeekOrigin.Begin);
             using (var ituStream = new ItuStream(msstream, _bitsPosition, _currentBytePosition, _currentByte, _prevByte, _prevPrevByte))
-            {               
+            {
                 int one = ituStream.ReadBit();
                 if (one == -1)
                     return false;
 
                 if (one == 0)
                 {
-                    
+
                     if (maxPayloadSize == ulong.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
                     {
                         serializable.HasMoreRbspData++;
@@ -444,7 +434,7 @@ namespace SharpH26X
                 }
                 else
                 {
-                    
+
                     if (maxPayloadSize == ulong.MaxValue || GetBitsPositionSinceLastMark() < (maxPayloadSize * 8))
                     {
                         serializable.HasMoreRbspData++;
@@ -462,21 +452,37 @@ namespace SharpH26X
         {
             if (serializable.HasMoreRbspData == 0 || _rbspDataCounter == 0)
                 return false;
-            else if(_rbspDataCounter == -1)
+            else if (_rbspDataCounter == -1)
                 _rbspDataCounter = serializable.HasMoreRbspData;
             return _rbspDataCounter-- != 0;
         }
 
         public int ReadNextBits(IItuSerializable serializable, ulong count)
         {
-            for (ulong i = 0; i < count; i++)
+            var bytes = (_stream as MemoryStream).ToArray();
+            var msstream = new MemoryStream(bytes);
+            msstream.Seek(_stream.Position, SeekOrigin.Begin);
+            using (var ituStream = new ItuStream(msstream, _bitsPosition, _currentBytePosition, _currentByte, _prevByte, _prevPrevByte))
             {
-                _readNextBitsCache <<= 1;
-                _readNextBitsCache |= (byte)ReadBit();
-            }
+                if (serializable.ReadNextBits == null)
+                {
+                    serializable.ReadNextBits = new int[1];
+                }
 
-            _readNextBitsRemaining += (int)count;
-            return (int)_readNextBitsCache;
+                int ret = (int)ituStream.ReadBits(8);
+
+                if (ret == 0xFF)
+                {
+                    serializable.ReadNextBits[serializable.ReadNextBits.Length - 1]++;
+                }
+                else
+                {
+                    var old = serializable.ReadNextBits;
+                    serializable.ReadNextBits = new int[old.Length + 1];
+                    Array.Copy(old, serializable.ReadNextBits, old.Length);
+                }
+                return ret;
+            }
         }
 
         public int WriteNextBits(IItuSerializable serializable, ulong count)
@@ -498,7 +504,7 @@ namespace SharpH26X
             {
                 _readNextBitsIndex++;
 
-                if(_readNextBitsIndex >= serializable.ReadNextBits.Length)
+                if (_readNextBitsIndex >= serializable.ReadNextBits.Length)
                 {
                     _readNextBitsIndex = 0;
                 }
@@ -542,7 +548,7 @@ namespace SharpH26X
         {
             //LogBegin(name);
             long bits = ReadBits((int)count);
-            if(bits == -1)
+            if (bits == -1)
                 throw new EndOfStreamException();
             value = (byte)bits;
             LogEnd(name, (ulong)count, (long)value);
@@ -594,7 +600,7 @@ namespace SharpH26X
             //LogBegin(name);
             List<byte> bytes = new List<byte>();
             int b = -1;
-            while((b = ReadByte()) != -1)
+            while ((b = ReadByte()) != -1)
             {
                 if (b == 0)
                     break;
@@ -771,7 +777,7 @@ namespace SharpH26X
             {
                 if (disposing)
                 {
-                    if(_stream != null)
+                    if (_stream != null)
                     {
                         _stream.Dispose();
                     }
